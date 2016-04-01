@@ -13,6 +13,30 @@
         {
             "type": "composer",
             "url": "https://packagist.drupal-composer.org"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "mediacurrent/ci-scripts",
+                "version": "dev-master",
+                "source": {
+                    "url": "git@bitbucket.org:mediacurrent/ci-scripts.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
+        {
+            "type": "package",
+            "package": {
+                "name": "mediacurrent/ci-tests",
+                "version": "dev-master",
+                "source": {
+                    "url": "git@bitbucket.org:joestewart/ci-tests.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
         }
     ],
     "require": {
@@ -30,7 +54,9 @@
         "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
         "mikey179/vfsStream": "~1.2",
         "phpunit/phpunit": "~4.8",
-        "symfony/css-selector": "2.7.*"
+        "symfony/css-selector": "2.7.*",
+        "mediacurrent/ci-scripts": "dev-master"
+        "mediacurrent/ci-tests": "dev-master"
     },
     "conflict": {
         "drupal/drupal": "*"

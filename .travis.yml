@@ -22,12 +22,13 @@ before_install:
 
 install:
   - composer --verbose install
-  - apt-get update
-  - apt-get install phantomjs
+  # - apt-get update
+  # - apt-get install phantomjs
   - npm install -g pa11y
-  - npm install forever -g
+  # - npm install forever -g
 
 script:
+  - printf "127.0.0.1 example.mcdev" >> /etc/hosts
   - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.0.x-dev; fi;
   - if [[ $RELEASE = dev ]]; then composer --verbose update; fi;
   - cd ./web
@@ -43,4 +44,4 @@ script:
   # Drupal accessibiity tests
   - ./../tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
   # Drupal behat tests
-  - ./../tests/behat/behat-run.sh http://127.0.0.1:8080
+  # - ./../tests/behat/behat-run.sh http://127.0.0.1:8080

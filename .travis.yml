@@ -32,5 +32,7 @@ script:
   - sleep 3
   # Skip core/tests/Drupal/Tests/ComposerIntegrationTest.php because web/ has no composer.json
   # - ./../vendor/bin/phpunit -c core --exclude-group Composer
+  # Drupal coding standards test on custom modules
+  - ./../tests/code-sniffer.sh ./web
   - ./../vendor/bin/drush
   - ./../vendor/bin/drupal

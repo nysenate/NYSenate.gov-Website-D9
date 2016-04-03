@@ -22,6 +22,8 @@ before_install:
 
 install:
   - composer --verbose install
+  - apt-get update
+  - apt-get install phantomjs
 
 script:
   - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.0.x-dev; fi;
@@ -32,7 +34,7 @@ script:
   - sleep 3
   # Skip core/tests/Drupal/Tests/ComposerIntegrationTest.php because web/ has no composer.json
   # - ./../vendor/bin/phpunit -c core --exclude-group Composer
-  # Drupal coding standards test on custom modules
-  - ./../tests/code-sniffer.sh ./web
   - ./../vendor/bin/drush
   - ./../vendor/bin/drupal
+  # Drupal coding standards test on custom modules
+  - ./../tests/code-sniffer.sh ./web

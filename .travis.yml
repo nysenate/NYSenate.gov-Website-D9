@@ -24,6 +24,7 @@ install:
   - composer --verbose install
   - apt-get update
   - apt-get install phantomjs
+  - npm install -g pa11y
 
 script:
   - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.0.x-dev; fi;

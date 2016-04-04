@@ -22,10 +22,10 @@ before_install:
 
 install:
   - composer --verbose install
-  # - apt-get update
-  # - apt-get install phantomjs
+  - apt-get update
+  - apt-get install phantomjs
   - npm install -g pa11y
-  # - npm install forever -g
+  - npm install forever -g
 
 script:
   - printf "127.0.0.1 example.mcdev" >> /etc/hosts

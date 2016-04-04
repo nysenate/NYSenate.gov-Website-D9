@@ -44,6 +44,5 @@ script:
   # Drupal accessibiity tests
   - ./../tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
   # Drupal behat tests
-  - which behat
   - ls -l ./../bin/behat
   - ./../tests/behat/behat-run.sh http://127.0.0.1:8080

@@ -38,10 +38,12 @@ script:
   # Skip core/tests/Drupal/Tests/ComposerIntegrationTest.php because web/ has no composer.json
   # - ./../vendor/bin/phpunit -c core --exclude-group Composer
   - ./../bin/drush
-  - ./../bin/drupal
+  - ./../vendor/bin/drupal
   # Drupal coding standards test on custom modules
   - ./../tests/code-sniffer.sh ./web
   # Drupal accessibiity tests
   - ./../tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
   # Drupal behat tests
-  # - ./../tests/behat/behat-run.sh http://127.0.0.1:8080
+  - which behat
+  - ls -l ./../bin/behat
+  - ./../tests/behat/behat-run.sh http://127.0.0.1:8080

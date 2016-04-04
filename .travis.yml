@@ -16,7 +16,7 @@ env:
 
 before_install:
   # - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  # - phpenv config-rm xdebug.ini
+  - php5dismod xdebug
   - composer --verbose self-update
   - composer --version
 
@@ -32,13 +32,13 @@ script:
   - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.0.x-dev; fi;
   - if [[ $RELEASE = dev ]]; then composer --verbose update; fi;
   - cd ./web
-  - ./../vendor/bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
-  - ./../vendor/bin/drush runserver http://127.0.0.1:8080 &
+  - ./../bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
+  - ./../bin/drush runserver http://127.0.0.1:8080 &
   - sleep 3
   # Skip core/tests/Drupal/Tests/ComposerIntegrationTest.php because web/ has no composer.json
   # - ./../vendor/bin/phpunit -c core --exclude-group Composer
-  - ./../vendor/bin/drush
-  - ./../vendor/bin/drupal
+  - ./../bin/drush
+  - ./../bin/drupal
   # Drupal coding standards test on custom modules
   - ./../tests/code-sniffer.sh ./web
   # Drupal accessibiity tests

@@ -38,7 +38,7 @@ script:
   # Skip core/tests/Drupal/Tests/ComposerIntegrationTest.php because web/ has no composer.json
   # - ./../vendor/bin/phpunit -c core --exclude-group Composer
   - ./../bin/drush
-  - ./../vendor/bin/drupal
+  - ./../bin/drupal
   # Drupal coding standards test on custom modules
   - ./../tests/code-sniffer.sh ./web
   # Drupal accessibiity tests

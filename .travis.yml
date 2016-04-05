@@ -29,6 +29,7 @@ install:
 
 script:
   - printf "127.0.0.1 example.mcdev" >> /etc/hosts
+  - printf "http://127.0.0.1:8080" >> ./../tests/behat/behat.local.yml
   - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.0.x-dev; fi;
   - if [[ $RELEASE = dev ]]; then composer --verbose update; fi;
   - cd ./web
@@ -36,7 +37,7 @@ script:
   - ./../bin/drush runserver http://127.0.0.1:8080 &
   - sleep 3
   # Skip core/tests/Drupal/Tests/ComposerIntegrationTest.php because web/ has no composer.json
-  - ./../bin/phpunit --log-junit shippable/testresults/junit.xml -c core --exclude-group Composer
+  # - ./../bin/phpunit --log-junit shippable/testresults/junit.xml -c core --exclude-group Composer
   - ./../bin/drush
   - ./../bin/drupal
   # Drupal coding standards test on custom modules
@@ -44,4 +45,4 @@ script:
   # Drupal accessibiity tests
   - ./../tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
   # Drupal behat tests
-  # - ./../tests/behat/behat-run.sh http://127.0.0.1:8080
+  - ./../tests/behat/behat-run.sh http://127.0.0.1:8080

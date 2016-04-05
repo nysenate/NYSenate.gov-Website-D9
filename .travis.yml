@@ -36,7 +36,7 @@ script:
   - ./../bin/drush runserver http://127.0.0.1:8080 &
   - sleep 3
   # Skip core/tests/Drupal/Tests/ComposerIntegrationTest.php because web/ has no composer.json
-  # - ./../bin/phpunit --log-junit shippable/testresults/junit.xml --coverage-xml shippable/codecoverage -c core --exclude-group Composer
+  - ./../bin/phpunit --log-junit shippable/testresults/junit.xml -c core --exclude-group Composer
   - ./../bin/drush
   - ./../bin/drupal
   # Drupal coding standards test on custom modules

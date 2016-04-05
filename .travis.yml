@@ -46,5 +46,5 @@ script:
   - ./../tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
   # Drupal behat tests
   # - ./../tests/behat/behat-run.sh http://127.0.0.1:8080
-  - cd ./../tests/behat/ && ./../../bin/behat -f junit -o ./../../shippable/testresults/behat.xml
+  - cd ./../tests/behat/ && ./../../bin/behat --format pretty --out=std -f junit -o ./../../shippable/testresults
   - ls -l ./../../shippable/testresults/

@@ -29,7 +29,7 @@ install:
 
 script:
   - printf "127.0.0.1 example.mcdev" >> /etc/hosts
-  - cp ./tests/behat/behat.local.shippable ./tests/behat/behat.local.yml
+  - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
   - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.0.x-dev; fi;
   - if [[ $RELEASE = dev ]]; then composer --verbose update; fi;
   - cd ./web

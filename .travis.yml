@@ -29,7 +29,7 @@ install:
 
 script:
   - printf "127.0.0.1 example.mcdev" >> /etc/hosts
-  - printf "      base_url: http://127.0.0.1:8080" >> ./tests/behat/behat.local.yml
+  - echo -n "http://127.0.0.1:8080" >> ./tests/behat/behat.local.yml
   - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.0.x-dev; fi;
   - if [[ $RELEASE = dev ]]; then composer --verbose update; fi;
   - cd ./web

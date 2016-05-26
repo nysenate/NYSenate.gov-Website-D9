@@ -45,4 +45,4 @@ function parse_yaml {
 }
 
 # Read DrupalVM configuration
-eval $(parse_yaml config/drupal-vm.config.yml "DRUPALVM_")
+eval $(parse_yaml config/config.yml "DRUPALVM_")

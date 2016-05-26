@@ -53,23 +53,23 @@
     ],
     "require": {
         "composer/installers": "^1.0.20",
-        "drupal-composer/drupal-scaffold": "~1",
+        "drupal-composer/drupal-scaffold": "^2.0.1",
         "cweagans/composer-patches": "~1.0",
         "drupal/core": "~8.0",
         "drush/drush": "~8.0",
         "drupal/console": "~0.10"
     },
     "require-dev": {
-        "behat/mink": "~1.6",
+       "behat/mink": "~1.7",
         "behat/mink-goutte-driver": "~1.2",
         "drush-ops/behat-drush-endpoint": "*",
         "drupal/drupal-extension": "*",
         "drupal/drupal-driver": "dev-master",
-        "jcalderonzumba/gastonjs": "^1.1@dev",
+        "jcalderonzumba/gastonjs": "~1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
         "mikey179/vfsStream": "~1.2",
         "phpunit/phpunit": "~4.8",
-        "symfony/css-selector": "2.7.*",
+        "symfony/css-selector": "~2.8",
         "mediacurrent/ci-scripts": "dev-master",
         "mediacurrent/ci-tests": "dev-master",
         "mediacurrent/mis_vagrant": "dev-master"
@@ -87,12 +87,10 @@
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
         "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::buildScaffold",
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
             "./vendor/mediacurrent/ci-tests/scripts/tests-init.sh"
         ],
         "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::buildScaffold",
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
             "./vendor/mediacurrent/ci-tests/scripts/tests-init.sh"
         ]

@@ -30,8 +30,8 @@ install:
 script:
   - printf "127.0.0.1 example.mcdev" >> /etc/hosts
   - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
-  - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.1.x-dev; fi;
-  - if [[ $RELEASE = dev ]]; then composer --verbose update; fi;
+  # - if [[ $RELEASE = dev ]]; then composer --verbose require --no-update drupal/core:8.1.x-dev; fi;
+  # - if [[ $RELEASE = dev ]]; then composer --verbose update; fi;
   - cd ./web
   - ./../bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
   - ./../bin/drush runserver http://127.0.0.1:8080 &

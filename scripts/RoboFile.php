@@ -7,6 +7,8 @@ class RoboFile extends \Robo\Tasks
 
     use \Mediacurrent\CiScripts\Task\loadTasks;
     use \Mediacurrent\CiScripts\Command\Project;
+    use \Mediacurrent\CiScripts\Command\Site;
+    use \Boedah\Robo\Task\Drush\loadTasks;
 
     private $vm;
     private $configuration;

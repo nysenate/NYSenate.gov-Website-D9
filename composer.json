@@ -18,11 +18,16 @@
             "type": "package",
             "package": {
                 "name": "mediacurrent/ci-scripts",
-                "version": "0.0.3",
+                "version": "0.0.4",
                 "source": {
                     "url": "git@bitbucket.org:mediacurrent/ci-scripts.git",
                     "type": "git",
                     "reference": "origin/master"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Mediacurrent\\CiScripts\\": "src"
+                    }
                 }
             }
         },
@@ -72,7 +77,10 @@
         "symfony/css-selector": "~2.8",
         "mediacurrent/ci-scripts": "*",
         "mediacurrent/ci-tests": "dev-master",
-        "mediacurrent/mis_vagrant": "*"
+        "mediacurrent/mis_vagrant": "*",
+        "joestewart/robo-drupalvm": "^0.1.1",
+        "joestewart/robo-vagrant": "^0.1.1",
+        "boedah/robo-drush": "^2.2"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -86,6 +94,7 @@
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "robo": "$(pwd)/bin/robo --ansi --load-from $(pwd)/scripts",
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
             "./vendor/mediacurrent/ci-tests/scripts/tests-init.sh"

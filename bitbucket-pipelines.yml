@@ -1,0 +1,51 @@
+
+image: phpunit/phpunit:5.3.0
+
+pipelines:
+  default:
+    - step:
+        script:
+          - uname -a
+          - mkdir -p /root/.ssh
+          - echo "bitbucket.org,104.192.143.2 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==" >> /root/.ssh/known_hosts
+          - echo -e "$SSH_ID_RSA" >> ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - echo -e "$SSH_ID_RSA_PUB" >> ~/.ssh/id_rsa.pub
+          - chmod 600 ~/.ssh/id_rsa.pub
+          - chmod 700 ~/.ssh
+          - php --version
+          - rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+          - composer --verbose self-update
+          - composer --version
+          - phpunit --version
+          - composer --verbose install
+          - ls -l ./bin
+          - ./bin/behat --version
+          - ./bin/drupal --version
+          - ./bin/drush --version
+          - ./bin/phpunit --version
+          # - ./bin/robo --version
+          - curl -sL https://deb.nodesource.com/setup_6.x | bash -
+          - apt-get install nodejs bzip2 libfontconfig libfreetype6 sqlite3 -y
+          - npm --version
+          - node --version
+          - npm install -g phantomjs-prebuilt
+          - npm install -g pa11y
+          - npm install forever -g
+          - phantomjs --version
+          - pa11y --version
+          # Drupal coding standards test on custom modules
+          - ./tests/code-sniffer.sh ./web
+          - printf "127.0.0.1 example.mcdev" >> /etc/hosts
+          - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
+          - cd ./web
+          - ./../bin/drush site-install --verbose --yes --db-url=sqlite:///tmp/site.sqlite
+          - ./../bin/drush status
+          - ./../bin/drush --verbose runserver 8080 &
+          - sleep 3
+          # Drupal accessibiity tests
+          - ./../tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
+          # Drupal behat tests
+          - ./../tests/behat/behat-run.sh http://127.0.0.1:8080
+          # - cd ./../tests/behat/ && ./../../bin/behat --format pretty --out=std -f junit -o ./../../shippable/testresults
+

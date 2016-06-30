@@ -18,7 +18,7 @@
             "type": "package",
             "package": {
                 "name": "mediacurrent/ci-scripts",
-                "version": "0.0.4",
+                "version": "0.1.1",
                 "source": {
                     "url": "git@bitbucket.org:mediacurrent/ci-scripts.git",
                     "type": "git",
@@ -78,7 +78,7 @@
         "mediacurrent/ci-scripts": "*",
         "mediacurrent/ci-tests": "dev-master",
         "mediacurrent/mis_vagrant": "*",
-        "joestewart/robo-drupalvm": "^0.1.1",
+        "joestewart/robo-drupalvm": "^0.1.2",
         "joestewart/robo-vagrant": "^0.1.1",
         "boedah/robo-drush": "^2.2"
     },
@@ -96,12 +96,10 @@
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
         "robo": "$(pwd)/bin/robo --ansi --load-from $(pwd)/scripts",
         "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "./vendor/mediacurrent/ci-tests/scripts/tests-init.sh"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],
         "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "./vendor/mediacurrent/ci-tests/scripts/tests-init.sh"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ]
     },
     "config": {

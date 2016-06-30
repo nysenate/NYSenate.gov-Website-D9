@@ -24,7 +24,8 @@ pipelines:
           - ./bin/drupal --version
           - ./bin/drush --version
           - ./bin/phpunit --version
-          # - ./bin/robo --version
+          - composer robo --version
+          - composer robo list
           - curl -sL https://deb.nodesource.com/setup_6.x | bash -
           - apt-get install nodejs bzip2 libfontconfig libfreetype6 sqlite3 -y
           - npm --version
@@ -34,6 +35,7 @@ pipelines:
           - npm install forever -g
           - phantomjs --version
           - pa11y --version
+          - composer robo project:init example.mcdev 127.0.0.1
           # Drupal coding standards test on custom modules
           - ./tests/code-sniffer.sh ./web
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
@@ -43,9 +45,11 @@ pipelines:
           - ./../bin/drush status
           - ./../bin/drush --verbose runserver 8080 &
           - sleep 3
+          - cd ..
+          - composer robo test
           # Drupal accessibiity tests
-          - ./../tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
+          - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
           # Drupal behat tests
-          - ./../tests/behat/behat-run.sh http://127.0.0.1:8080
+          - ./tests/behat/behat-run.sh http://127.0.0.1:8080
           # - cd ./../tests/behat/ && ./../../bin/behat --format pretty --out=std -f junit -o ./../../shippable/testresults
 

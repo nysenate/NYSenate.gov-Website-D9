@@ -21,11 +21,13 @@ before_install:
   - composer --version
 
 install:
-  - composer --verbose install
   - apt-get update
   - apt-get install phantomjs
   - npm install -g pa11y
   - npm install forever -g
+  - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+  - . ~/.nvm/nvm.sh
+  - composer --verbose install
 
 script:
   - ls -l ./bin
@@ -35,6 +37,11 @@ script:
   - ./bin/phpunit --version
   - composer robo --version
   - composer robo list
+  - node --version
+  - npm --version
+  - nvm help
+  - phantomjs --version
+  - pa11y --version
   - printf "127.0.0.1 example.mcdev" >> /etc/hosts
   - composer robo project:init example.mcdev 127.0.0.1
   - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml

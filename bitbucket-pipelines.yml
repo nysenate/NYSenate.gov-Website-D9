@@ -24,9 +24,11 @@ pipelines:
           - node --version
           - npm install -g phantomjs-prebuilt
           - phantomjs --version
+          - npm install -g slack-cli
+          - slackcli --help
           - npm install -g pa11y
           - pa11y --version
-          - npm install forever -g
+          - npm install -g forever
           - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
           - source /root/.bashrc
           - chown -R root:root /root/.nvm/
@@ -41,7 +43,9 @@ pipelines:
           - composer robo list
           - composer robo project:init example.mcdev 127.0.0.1
           # Drupal coding standards test on custom modules
+          - echo "Coding Standards"
           - ./tests/code-sniffer.sh ./web
+          # - CMD=$(./tests/code-sniffer.sh ./web 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
           - cd ./web
@@ -50,10 +54,14 @@ pipelines:
           - ./../bin/drush --verbose runserver 8080 &
           - sleep 3
           - cd ..
+          - echo "PHP Unit tests"
           - composer robo test
+          # - CMD=$(composer robo test 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           # Drupal accessibiity tests
+          - echo "Accessibility tests"
           - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
+          # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           # Drupal behat tests
+          - echo "Behat tests"
           - ./tests/behat/behat-run.sh http://127.0.0.1:8080
-          # - cd ./../tests/behat/ && ./../../bin/behat --format pretty --out=std -f junit -o ./../../shippable/testresults
-
+          # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )

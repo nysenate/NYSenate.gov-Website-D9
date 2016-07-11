@@ -18,7 +18,7 @@
             "type": "package",
             "package": {
                 "name": "mediacurrent/ci-scripts",
-                "version": "0.1.4",
+                "version": "0.1.5",
                 "source": {
                     "url": "git@bitbucket.org:mediacurrent/ci-scripts.git",
                     "type": "git",
@@ -95,6 +95,12 @@
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
         "robo": "$(pwd)/bin/robo --ansi --load-from $(pwd)/scripts",
+        "pre-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "pre-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],

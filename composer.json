@@ -62,7 +62,7 @@
         "cweagans/composer-patches": "~1.0",
         "drupal/core": "~8.0",
         "drush/drush": "~8.0",
-        "drupal/console": "~0.10"
+        "drupal/console": "~1.0"
     },
     "require-dev": {
         "behat/mink": "~1.7",
@@ -95,7 +95,10 @@
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+<<<<<<< HEAD
         "robo": "$(pwd)/bin/robo --ansi --load-from $(pwd)/scripts",
+=======
+>>>>>>> e4c56cc340629930d9b20577b34bd08ed451ca02
         "pre-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
         ],

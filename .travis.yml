@@ -17,7 +17,7 @@ env:
 before_install:
   # - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   # - php5dismod xdebug
-  - composer --verbose self-update
+  - composer --verbose self-update --stable
   - composer --version
 
 install:

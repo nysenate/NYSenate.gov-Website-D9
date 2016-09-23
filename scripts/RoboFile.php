@@ -12,6 +12,7 @@ class RoboFile extends \Robo\Tasks
     use \Mediacurrent\CiScripts\Command\Project;
     use \Mediacurrent\CiScripts\Command\Release;
     use \Mediacurrent\CiScripts\Command\Site;
+    use \Mediacurrent\CiScripts\Command\Theme;
     use \Mediacurrent\CiScripts\Command\Vagrant;
     use \Boedah\Robo\Task\Drush\loadTasks;
 

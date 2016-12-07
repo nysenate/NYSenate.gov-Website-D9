@@ -54,6 +54,7 @@ pipelines:
           - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
           - cd ./web
           -  /usr/bin/env PHP_OPTIONS='-d sendmail_path=/bin/true' ../bin/drush site-install --verbose --yes --db-url=sqlite:///tmp/site.sqlite
+          # -  /usr/bin/env PHP_OPTIONS='-d sendmail_path=/bin/true' ../bin/drush site-install config_installer --verbose --yes --db-url=sqlite:///tmp/site.sqlite
           - ./../bin/drush status
           - ./../bin/drush --verbose runserver 8080 &
           - sleep 3

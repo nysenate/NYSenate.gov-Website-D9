@@ -17,7 +17,6 @@ pipelines:
           - rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
           - composer --verbose self-update --stable
           - composer --version
-          - phpunit --version
           - curl -sL https://deb.nodesource.com/setup_6.x | bash -
           - apt-get install nodejs bzip2 libfontconfig libfreetype6 sqlite3 -y
           - npm --version

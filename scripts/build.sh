@@ -12,7 +12,7 @@ if [ -z "${COMPOSER_INSTALLED}" ]; then
   exit 1;
 fi
 
-if [ ! -d ${BASE_DIR}/vendor ]; then
+if [ ! -d ${BASE_DIR}/vendor/mediacurrent/ci-scripts ]; then
   composer install
 fi
 

@@ -32,8 +32,6 @@ pipelines:
           - source /root/.bashrc
           - chown -R root:root /root/.nvm/
           - nvm help
-          - composer global require "drupal/coder"
-          - phpcs --config-set installed_paths /composer/vendor/drupal/coder/coder_sniffer
           - composer --verbose install
           - ls -l ./bin
           - ./bin/behat --version

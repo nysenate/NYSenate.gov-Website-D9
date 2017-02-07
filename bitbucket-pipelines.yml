@@ -1,5 +1,5 @@
 
-image: phpunit/phpunit:5.3.0
+image: mediacurrent/mc-bb-pipelines:latest
 
 pipelines:
   default:
@@ -14,24 +14,9 @@ pipelines:
           - chmod 600 ~/.ssh/id_rsa.pub
           - chmod 700 ~/.ssh
           - php --version
-          - rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-          - composer --verbose self-update --stable
-          - composer --version
-          - curl -sL https://deb.nodesource.com/setup_6.x | bash -
-          - apt-get install nodejs bzip2 libfontconfig libfreetype6 sqlite3 -y
-          - npm --version
-          - node --version
-          - npm install -g phantomjs-prebuilt
-          - phantomjs --version
-          - npm install -g slack-cli
-          - slackcli --help
-          - npm install -g pa11y
-          - pa11y --version
-          - npm install -g forever
-          - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+          - service mysql start
+          - mysql -uroot -ppassword -e "CREATE DATABASE drupal"
           - source /root/.bashrc
-          - chown -R root:root /root/.nvm/
-          - nvm help
           - composer --verbose install
           - ls -l ./bin
           - ./bin/behat --version
@@ -43,6 +28,8 @@ pipelines:
           - composer robo --version
           - composer robo list
           - composer robo project:init example.mcdev 127.0.0.1
+          # - nvm install v7.4.0
+          # - nvm use v7.4.0
           # Drupal coding standards test on custom modules
           - echo "Coding Standards"
           - ./tests/code-sniffer.sh ./web
@@ -50,7 +37,7 @@ pipelines:
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
           - cd ./web
-          -  /usr/bin/env PHP_OPTIONS='-d sendmail_path=/bin/true' ../bin/drush site-install --verbose --yes --db-url=sqlite:///tmp/site.sqlite
+          -  /usr/bin/env PHP_OPTIONS='-d sendmail_path=/bin/true' ../bin/drush site-install --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal --yes
           # -  /usr/bin/env PHP_OPTIONS='-d sendmail_path=/bin/true' ../bin/drush site-install config_installer --verbose --yes --db-url=sqlite:///tmp/site.sqlite
           - ./../bin/drush status
           - ./../bin/drush --verbose runserver 8080 &

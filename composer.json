@@ -18,11 +18,11 @@
             "type": "package",
             "package": {
                 "name": "mediacurrent/ci-scripts",
-                "version": "0.6.1",
+                "version": "0.7.0",
                 "source": {
                     "url": "git@bitbucket.org:mediacurrent/ci-scripts.git",
                     "type": "git",
-                    "reference": "0.6.1"
+                    "reference": "0.7.0"
                 },
                 "autoload": {
                     "psr-4": {
@@ -75,7 +75,7 @@
         "mikey179/vfsStream": "~1.2",
         "phpunit/phpunit": "~4.8",
         "symfony/css-selector": "~2.8",
-        "mediacurrent/ci-scripts": "0.6.1",
+        "mediacurrent/ci-scripts": "0.7.0",
         "mediacurrent/ci-tests": "dev-master",
         "mediacurrent/mis_vagrant": "4.2.1",
         "joestewart/robo-drupalvm": "^0.1.7",
@@ -120,6 +120,11 @@
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/contrib/{$name}": ["type:drupal-drush"]
+        },
+        "patches": {
+            "drush/drush": {
+                "https://github.com/drush-ops/drush/issues/2285": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/2286.patch"
+            }
         }
     }
 }

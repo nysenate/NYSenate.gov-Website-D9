@@ -37,8 +37,8 @@ pipelines:
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
           - cd ./web
-          -  /usr/bin/env PHP_OPTIONS='-d sendmail_path=/bin/true' ../bin/drush site-install --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal --yes
-          # -  /usr/bin/env PHP_OPTIONS='-d sendmail_path=/bin/true' ../bin/drush site-install config_installer --verbose --yes --db-url=sqlite:///tmp/site.sqlite
+          - ../bin/drush site-install --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal install_configure_form.update_status_module='array(FALSE,FALSE)'
+          # - ../bin/drush site-install config_installer --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal install_configure_form.update_status_module='array(FALSE,FALSE)'
           - ./../bin/drush status
           - ./../bin/drush --verbose runserver 8080 &
           - sleep 3

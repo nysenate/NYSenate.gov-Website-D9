@@ -16,4 +16,10 @@ if [ ! -d ${BASE_DIR}/vendor/mediacurrent/ci-scripts ]; then
   composer install
 fi
 
-${BASE_DIR}/bin/robo --ansi --load-from ${BASE_DIR}/scripts site:build
+CMD=$@
+# Default to run "site:build" if no commands provided.
+if [ -z "${CMD}" ]; then
+  CMD="site:build"
+fi
+
+${BASE_DIR}/bin/robo --ansi --load-from ${BASE_DIR}/scripts ${CMD}

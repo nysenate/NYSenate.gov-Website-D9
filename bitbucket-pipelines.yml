@@ -37,9 +37,11 @@ pipelines:
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
           - cd ./web
+          # Install site using options to disable email notification.
           - ../bin/drush site-install standard --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal install_configure_form.update_status_module='array(FALSE,FALSE)'
           # - ../bin/drush site-install config_installer --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal install_configure_form.update_status_module='array(FALSE,FALSE)'
           - ./../bin/drush status
+          # Start an http server to test site pages.
           - ./../bin/drush --verbose runserver 8080 &
           - sleep 3
           - cd ..

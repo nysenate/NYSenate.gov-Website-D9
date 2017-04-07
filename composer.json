@@ -91,7 +91,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-      "sort-packages": true
+      "sort-packages": true,
+      "bin-dir": "bin/"
     },
     "autoload": {
         "classmap": [
@@ -113,9 +114,6 @@
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ]
-    },
-    "config": {
-        "bin-dir": "bin/"
     },
     "extra": {
         "installer-paths": {

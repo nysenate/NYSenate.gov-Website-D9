@@ -34,6 +34,9 @@ pipelines:
           - echo "Coding Standards"
           - ./tests/code-sniffer.sh ./web
           # - CMD=$(./tests/code-sniffer.sh ./web 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+          # - echo "PHPUnit unit tests"
+          # - composer robo test:php-unit-tests
+          # - CMD=$(composer robo test:php-unit-tests 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
           - cd ./web
@@ -45,9 +48,6 @@ pipelines:
           - ./../bin/drush --verbose runserver 8080 &
           - sleep 3
           - cd ..
-          - echo "PHP Unit tests"
-          - composer robo test
-          # - CMD=$(composer robo test 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           # Drupal accessibiity tests
           - echo "Accessibility tests"
           - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080

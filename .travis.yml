@@ -54,12 +54,13 @@ script:
   - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
   # Drupal coding standards test on custom modules
   - ./tests/code-sniffer.sh ./web
+  # - echo "PHPUnit unit tests"
+  # - composer robo test:php-unit-tests
   - cd ./web
   - ./../bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
   - ./../bin/drush runserver http://127.0.0.1:8080 &
   - sleep 3
   - cd ..
-  - composer robo test
   # Drupal accessibiity tests
   - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
   # Drupal behat tests

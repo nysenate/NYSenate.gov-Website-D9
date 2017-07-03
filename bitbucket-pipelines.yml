@@ -4,6 +4,8 @@ image: mediacurrent/mc-bb-pipelines:latest
 pipelines:
   default:
     - step:
+        caches:
+          - composer
         script:
           - uname -a
           - mkdir -p /root/.ssh

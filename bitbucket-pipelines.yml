@@ -6,6 +6,7 @@ pipelines:
     - step:
         caches:
           - composer
+          - composer-project-vendor
         script:
           - uname -a
           - mkdir -p /root/.ssh
@@ -58,3 +59,7 @@ pipelines:
           - echo "Behat tests"
           - ./tests/behat/behat-run.sh http://127.0.0.1:8080
           # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+
+definitions:
+  caches:
+    composer-project-vendor: vendor/

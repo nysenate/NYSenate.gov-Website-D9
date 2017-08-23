@@ -57,7 +57,7 @@ script:
   # - echo "PHPUnit unit tests"
   # - composer robo test:php-unit-tests
   - cd ./web
-  - ./../bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
+  - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install standard install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=sqlite://tmp/site.sqlite
   - ./../bin/drush runserver http://127.0.0.1:8080 &
   - sleep 3
   - cd ..

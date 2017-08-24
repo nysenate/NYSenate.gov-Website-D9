@@ -20,6 +20,7 @@ pipelines:
           - service mysql start
           - mysql -uroot -ppassword -e "CREATE DATABASE drupal"
           - source /root/.bashrc
+          - composer selfupdate
           - composer --verbose install
           - ls -l ./bin
           - ./bin/behat --version

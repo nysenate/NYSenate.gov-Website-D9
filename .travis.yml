@@ -2,8 +2,7 @@ language: php
 php:
   # - 5.5
   - 5.6
-  - 7.0
-  - 7.1
+  - "7.0"
 
 sudo: false
 
@@ -28,7 +27,7 @@ install:
   - apt-get install phantomjs
   - npm install -g pa11y
   - npm install -g forever
-  - npm install -g slack-cli
+  # - npm install -g slack-cli
   - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
   - . ~/.nvm/nvm.sh
   - composer --verbose install
@@ -48,7 +47,7 @@ script:
   - nvm help
   - phantomjs --version
   - pa11y --version
-  - slackcli --help
+  # - slackcli --help
   - printf "127.0.0.1 example.mcdev" >> /etc/hosts
   - composer robo project:init example.mcdev 127.0.0.1
   - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
@@ -57,7 +56,7 @@ script:
   # - echo "PHPUnit unit tests"
   # - composer robo test:php-unit-tests
   - cd ./web
-  - ./../bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
+  - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install standard install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=sqlite://tmp/site.sqlite
   - ./../bin/drush runserver http://127.0.0.1:8080 &
   - sleep 3
   - cd ..

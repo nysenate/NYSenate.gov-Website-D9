@@ -1,4 +1,4 @@
-#
+# Composer template for Drupal projects
 ## Package features
 ### Asset packagist support
 The Asset packagist package acts as a bridge between Composer and the popular NPM and Bower repositories, which catalog 

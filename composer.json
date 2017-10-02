@@ -15,6 +15,10 @@
             "url": "https://packages.drupal.org/8"
         },
         {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        {
             "type": "vcs",
             "url": "git@bitbucket.org:mediacurrent/mis_vagrant.git"
         },
@@ -25,17 +29,28 @@
         {
             "type": "vcs",
             "url": "git@bitbucket.org:mediacurrent/ci-tests.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:mediacurrent/mis_rain.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.drupal.org/project/guardr.git"
         }
     ],
     "require": {
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
+        "oomphinc/composer-installers-extender": "^1.1",
         "drupal-composer/drupal-scaffold": "^2.2",
         "drupal/console": "^1.0.1",
         "drupal/core": "~8.0",
         "drush/drush": "~8.0",
         "webflo/drupal-finder": "^1.0.0",
-        "webmozart/path-util": "^2.3"
+        "webmozart/path-util": "^2.3",
+        "mediacurrent/mis_rain": "dev-develop",
+        "guardrdistro/guardr": "dev-8.x-1.x"
     },
     "require-dev": {
         "behat/mink": "~1.7",
@@ -88,15 +103,24 @@
     },
     "extra": {
         "composer-exit-on-patch-failure": true,
+        "installer-types": [
+            "library",
+            "bower-asset",
+            "npm-asset"
+        ],
         "installer-paths": {
             "web/core": ["type:drupal-core"],
-            "web/libraries/{$name}": ["type:drupal-library"],
+            "web/libraries/{$name}": ["type:drupal-library", "type:bower-asset", "type:npm-asset"],
             "web/modules/contrib/{$name}": ["type:drupal-module"],
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/contrib/{$name}": ["type:drupal-drush"]
         },
         "patches": {
+            "drupal/core": {
+                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/1356276-360.patch",
+                "Allow a profile to be installed from existing config (#2788777)": "https://www.drupal.org/files/issues/2788777-91.patch"
+            },
             "drush/drush": {
                 "https://github.com/drush-ops/drush/issues/2285": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/2286.patch"
             }

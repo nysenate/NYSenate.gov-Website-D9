@@ -31,9 +31,9 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.2",
-        "drupal/console": "^1.0.1",
+        "drupal/console": "~1.0",
         "drupal/core": "~8.0",
-        "drush/drush": "~8.0",
+        "drush/drush": "~9.0",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3"
     },
@@ -48,12 +48,12 @@
         "mikey179/vfsStream": "~1.2",
         "phpunit/phpunit": ">=4.8.28 <5",
         "symfony/css-selector": "~2.8",
-        "mediacurrent/ci-scripts": "~0.7.7",
+        "mediacurrent/ci-scripts": "~1.0.0",
         "mediacurrent/ci-tests": "dev-master",
         "mediacurrent/mis_vagrant": "~4.6.0",
-        "joestewart/robo-drupalvm": "^0.1.7",
-        "joestewart/robo-vagrant": "^0.1.6",
-        "boedah/robo-drush": "^2.2.2",
+        "joestewart/robo-drupalvm": "~1.0.2",
+        "joestewart/robo-vagrant": "~1.0.0",
+        "boedah/robo-drush": "~3.0.0",
         "drupal/coder": "~8.2.12"
     },
     "conflict": {
@@ -62,8 +62,11 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-      "sort-packages": true,
-      "bin-dir": "bin/"
+        "sort-packages": true,
+        "bin-dir": "bin/",
+        "platform": {
+            "php": "5.6"
+        }
     },
     "autoload": {
         "classmap": [
@@ -95,11 +98,6 @@
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/contrib/{$name}": ["type:drupal-drush"]
-        },
-        "patches": {
-            "drush/drush": {
-                "https://github.com/drush-ops/drush/issues/2285": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/2286.patch"
-            }
         }
     }
 }

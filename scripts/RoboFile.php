@@ -15,6 +15,7 @@ class RoboFile extends \Robo\Tasks
     use \Mediacurrent\CiScripts\Command\Theme;
     use \Mediacurrent\CiScripts\Command\Vagrant;
     use \Boedah\Robo\Task\Drush\loadTasks;
+    use \JoeStewart\RoboDrupalVM\Task\loadTasks;
 
     private $vm;
     private $configuration;

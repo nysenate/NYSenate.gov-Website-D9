@@ -48,9 +48,9 @@
         "cweagans/composer-patches": "^1.6",
         "oomphinc/composer-installers-extender": "^1.1",
         "drupal-composer/drupal-scaffold": "^2.2",
-        "drupal/console": "^1.0.1",
+        "drupal/console": "~1.0",
         "drupal/core": "~8.0",
-        "drush/drush": "~8.0",
+        "drush/drush": "~9.0",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
         "mediacurrent/mis_rain": "dev-develop",
@@ -71,9 +71,9 @@
         "mediacurrent/ci-scripts": "dev-feature/rain-guardr",
         "mediacurrent/ci-tests": "dev-master",
         "mediacurrent/mis_vagrant": "~4.6.0",
-        "joestewart/robo-drupalvm": "^0.1.7",
-        "joestewart/robo-vagrant": "^0.1.6",
-        "boedah/robo-drush": "^2.2.2",
+        "joestewart/robo-drupalvm": "~1.0.2",
+        "joestewart/robo-vagrant": "~1.0.0",
+        "boedah/robo-drush": "~3.0.0",
         "drupal/coder": "~8.2.12"
     },
     "conflict": {
@@ -82,8 +82,11 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-      "sort-packages": true,
-      "bin-dir": "bin/"
+        "sort-packages": true,
+        "bin-dir": "bin/",
+        "platform": {
+            "php": "5.6"
+        }
     },
     "autoload": {
         "classmap": [

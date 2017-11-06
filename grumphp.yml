@@ -9,6 +9,14 @@ parameters:
       file: ./composer.json
       no_check_all: true
       no_check_publish: true
+    git_blacklist:
+      keywords:
+        - "<<<<<<< HEAD"
+        - "======="
+        - ">>>>>>>"
+        - "die("
+        - "var_dump("
+      regexp_type: G
     phpcs:
       standard: vendor/drupal/coder/coder_sniffer/Drupal/
       ignore_patterns:

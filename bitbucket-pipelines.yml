@@ -21,6 +21,7 @@ pipelines:
           - mysql -uroot -ppassword -e "CREATE DATABASE drupal"
           - source /root/.bashrc
           - composer selfupdate
+          - composer validate --no-check-all --no-check-publish
           - composer --verbose install
           - ls -l ./bin
           - ./bin/behat --version

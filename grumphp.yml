@@ -1,0 +1,47 @@
+---
+# grumphp.yml
+parameters:
+  ascii:
+    failed:
+    succeeded:
+  tasks:
+    composer:
+      file: ./composer.json
+      no_check_all: true
+      no_check_publish: true
+    git_blacklist:
+      keywords:
+        - "<<<<<<< HEAD"
+        - "======="
+        - ">>>>>>>"
+        - "die("
+        - "var_dump("
+      triggered_by:
+        - inc
+        - install
+        - js
+        - lock
+        - module
+        - php
+        - profile
+        - test
+        - theme
+        - yml
+      regexp_type: G
+    phpcs:
+      standard: vendor/drupal/coder/coder_sniffer/Drupal/
+      ignore_patterns:
+        - libraries/
+        - sites/*/settings.php
+      triggered_by:
+        - inc
+        - install
+        - module
+        - php
+        - profile
+        - test
+        - theme
+      whitelist_patterns:
+        - /^web\/profiles\/custom\/(.*)/
+        - /^web\/modules\/custom\/(.*)/
+        - /^web\/themes\/custom\/(.*)/

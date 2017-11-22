@@ -5,6 +5,7 @@ parameters:
     failed:
     succeeded:
   tasks:
+    # Confirm composer file is valid after changes.
     composer:
       file: ./composer.json
       no_check_all: true
@@ -28,6 +29,9 @@ parameters:
         - theme
         - yml
       regexp_type: G
+    # Lint our JSON files.
+    jsonlint: ~
+    # Confirm we're following Drupal standards.
     phpcs:
       standard: vendor/drupal/coder/coder_sniffer/Drupal/
       ignore_patterns:
@@ -45,3 +49,5 @@ parameters:
         - /^web\/profiles\/custom\/(.*)/
         - /^web\/modules\/custom\/(.*)/
         - /^web\/themes\/custom\/(.*)/
+    # Lint our YAML files.
+    yamllint: ~

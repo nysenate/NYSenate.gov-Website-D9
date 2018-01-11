@@ -36,3 +36,25 @@ function policy_drush_help_alter(&$command) {
     $command['options']['pm-force'] = 'Override site policy and allow Drush codebase management (pm-* commands)';
   }
 }
+
+/**
+ * Prevent production databases from being overwritten using drush sql-sync.
+ *
+ * Acquia and Pantheon standard prod alias names covered.
+ */
+function drush_policy_sql_sync_validate($source = NULL, $destination = NULL) {
+  if (strpos($destination, 'prod') !== FALSE || strpos($destination, 'live') !== FALSE) {
+    return drush_set_error('POLICY_DENY', dt('You may never overwrite a production database.'));
+  }
+}
+
+/**
+ * Prevent production files from being overwritten using drush core-rsync.
+ *
+ * Acquia and Pantheon standard prod alias names covered.
+ */
+function drush_policy_core_rsync_validate($source = NULL, $destination = NULL) {
+  if (strpos($destination, 'prod') !== FALSE || strpos($destination, 'live') !== FALSE) {
+    return drush_set_error('POLICY_DENY', dt('You may never rsync to a production site.'));
+  }
+}

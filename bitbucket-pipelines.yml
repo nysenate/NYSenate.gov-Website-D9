@@ -58,8 +58,8 @@ pipelines:
           - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
           # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           # Drupal behat tests
-          - echo "Behat tests"
-          - ./tests/behat/behat-run.sh http://127.0.0.1:8080
+          # - echo "Behat tests"
+          # - ./tests/behat/behat-run.sh http://127.0.0.1:8080
           # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
 
 definitions:

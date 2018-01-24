@@ -46,7 +46,7 @@ pipelines:
           - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
           - cd ./web
           # Install site using options to disable email notification.
-          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install standard install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal
+          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install mis_profile install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal
           # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install config_installer install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal
           - ./../bin/drush status
           # Start an http server to test site pages.
@@ -58,8 +58,8 @@ pipelines:
           - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
           # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           # Drupal behat tests
-          - echo "Behat tests"
-          - ./tests/behat/behat-run.sh http://127.0.0.1:8080
+          # - echo "Behat tests"
+          # - ./tests/behat/behat-run.sh http://127.0.0.1:8080
           # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
 
 definitions:

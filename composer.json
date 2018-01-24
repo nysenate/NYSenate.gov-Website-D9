@@ -48,12 +48,11 @@
         "cweagans/composer-patches": "^1.6",
         "oomphinc/composer-installers-extender": "^1.1",
         "drupal-composer/drupal-scaffold": "^2.2",
-        "drupal/console": "~1.0",
         "drupal/core": "~8.0",
         "drush/drush": "^8.1.15",
         "guardrdistro/guardr": "dev-8.x-1.x",
-        "mediacurrent/mis_profile": "dev-feature/rain-guardr",
-        "mediacurrent/mis_rain": "dev-develop",
+        "mediacurrent/mis_profile": "1.0",
+        "mediacurrent/mis_rain": "1.4.1",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3"
     },
@@ -68,7 +67,7 @@
         "jcalderonzumba/gastonjs": "~1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
         "symfony/css-selector": "~2.8 | ~3.0",
-        "mediacurrent/ci-scripts": "~1.0.1",
+        "mediacurrent/ci-scripts": "~1.2",
         "mediacurrent/ci-tests": "dev-master",
         "joestewart/robo-drupalvm": "~1.0.2",
         "joestewart/robo-vagrant": "~1.0.0",
@@ -127,7 +126,7 @@
         },
         "patches": {
             "drupal/core": {
-                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/1356276-408--8.4.x.patch",
+                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/1356276-419--8.4.4.patch",
                 "Allow a profile to be installed from existing config (#2788777)": "https://www.drupal.org/files/issues/2788777-91.patch"
             },
             "drush/drush": {
@@ -136,4 +135,3 @@
         }
     }
 }
-

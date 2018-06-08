@@ -30,6 +30,7 @@ install:
   # - npm install -g slack-cli
   - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
   - . ~/.nvm/nvm.sh
+  - composer --verbose validate
   - composer --verbose install
 
 script:

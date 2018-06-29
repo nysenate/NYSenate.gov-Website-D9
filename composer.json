@@ -2,7 +2,7 @@
     "name": "drupal-composer/drupal-project",
     "description": "Project template for Drupal 8 projects with composer",
     "type": "project",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "",
@@ -47,34 +47,25 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
         "oomphinc/composer-installers-extender": "^1.1",
-        "drupal-composer/drupal-scaffold": "^2.2",
-        "drupal/core": "~8.0",
+        "drupal-composer/drupal-scaffold": "^2.5",
+        "drupal/console": "^1.0.2",
+        "drupal/core": "~8.5.3",
         "drush/drush": "^8.1.15",
         "guardrdistro/guardr": "dev-8.x-1.x",
         "mediacurrent/mis_profile": "1.0",
         "mediacurrent/mis_rain": "~1.0",
+        "vlucas/phpdotenv": "^2.4",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3"
     },
     "require-dev": {
-        "behat/mink": "~1.7",
-        "behat/mink-goutte-driver": "~1.2",
-        "boedah/robo-drush": "~3.0.0",
-        "drupal/coder": "~8.2.12",
-        "drupal/drupal-driver": "dev-master",
-        "drupal/drupal-extension": "*",
+        "drupal/drupal-extension": "^3.4",
         "drush-ops/behat-drush-endpoint": "*",
-        "jcalderonzumba/gastonjs": "~1.0.2",
-        "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
-        "symfony/css-selector": "~2.8 | ~3.0",
         "mediacurrent/ci-scripts": "~1.2",
         "mediacurrent/ci-tests": "dev-master",
-        "joestewart/robo-drupalvm": "~1.0.2",
-        "joestewart/robo-vagrant": "~1.0.0",
         "mediacurrent/mis_vagrant": "~4.7.0",
-        "mikey179/vfsStream": "~1.2",
         "phpro/grumphp": "^0.11.6",
-        "phpunit/phpunit": ">=4.8.28 <5"
+        "webflo/drupal-core-require-dev": "~8.5.3"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -91,7 +82,8 @@
     "autoload": {
         "classmap": [
             "scripts/composer/ScriptHandler.php"
-        ]
+        ],
+        "files": ["load.environment.php"]
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
@@ -122,7 +114,7 @@
             "web/modules/contrib/{$name}": ["type:drupal-module"],
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
-            "drush/contrib/{$name}": ["type:drupal-drush"]
+            "drush/Commands/{$name}": ["type:drupal-drush"]
         },
         "patches": {
             "drupal/core": {

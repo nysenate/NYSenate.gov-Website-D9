@@ -54,7 +54,6 @@
         "guardrdistro/guardr": "dev-8.x-1.x",
         "mediacurrent/mis_profile": "1.0",
         "mediacurrent/mis_rain": "~1.0",
-        "vlucas/phpdotenv": "^2.4",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3"
     },
@@ -63,8 +62,9 @@
         "drush-ops/behat-drush-endpoint": "*",
         "mediacurrent/ci-scripts": "~1.2",
         "mediacurrent/ci-tests": "dev-master",
-        "mediacurrent/mis_vagrant": "~4.7.0",
+        "mediacurrent/mis_vagrant": "~4.7",
         "phpro/grumphp": "^0.11.6",
+        "vlucas/phpdotenv": "^2.4",
         "webflo/drupal-core-require-dev": "~8.5.3"
     },
     "conflict": {
@@ -82,7 +82,9 @@
     "autoload": {
         "classmap": [
             "scripts/composer/ScriptHandler.php"
-        ],
+        ]
+    },
+    "autoload-dev": {
         "files": ["load.environment.php"]
     },
     "scripts": {

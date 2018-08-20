@@ -1,21 +1,21 @@
 # Composer template for Drupal projects
 ## Package features
 ### Asset packagist support
-The Asset packagist package acts as a bridge between Composer and the popular NPM and Bower repositories, which catalog 
+The Asset packagist package acts as a bridge between Composer and the popular NPM and Bower repositories, which catalog
 thousands of useful front-end and JavaScript packages. This allows developers to easily pull in packages like DropZoneJS
-and many others without requiring local Node.js to be installed. 
+and many others without requiring local Node.js to be installed.
 
 Read more: https://lightning.acquia.com/blog/round-your-front-end-javascript-libraries-composer
 
 ### Guardr core security
-Guardr is a Drupal distribution with a combination of modules and settings to enhance a Drupal application's security 
+Guardr is a Drupal distribution with a combination of modules and settings to enhance a Drupal application's security
 and availability to meet enterprise security requirements. This project leverages Guardr's package management and
 module configuration.
 
 ### Sub-profile support
 A Drupal core patch has been included to add support for "Sub-profiles".
 
-See: https://www.drupal.org/node/1356276 
+See: https://www.drupal.org/node/1356276
 
 ### Support for installs from existing configuration
 A Drupal core patch has been included to allow projects to be installed from existing configuration.
@@ -23,25 +23,27 @@ A Drupal core patch has been included to allow projects to be installed from exi
 See: https://www.drupal.org/node/2788777
 
 ### Rain base profile features
-The [Mediacurrent Rain base install profile](https://bitbucket.org/mediacurrent/mis_rain/) includes many of the most 
+The [Mediacurrent Rain base install profile](https://bitbucket.org/mediacurrent/mis_rain/) includes many of the most
 common packages pre-configured for rapid site development and optional content features.
 
 ## Setting up a local [Vagrant](http://vagrantup.com) environment
 
-### Clone this repository into the directory of your choice:
+### Install composer on host machine
+- On MacOS ```brew install composer```
+- Otherwise, see instructions here https://getcomposer.org/
+
+### Clone this project and follow the New Project Setup procedure up to the "Build Site" step:
 - `$ git clone git@bitbucket.org:mediacurrent/drupal-project.git`
+- Follow this, stop before "Build Site": https://codeandtheory.atlassian.net/wiki/spaces/MC/pages/63242682/New+Project+Setup
+- Before the first time you run the build script, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
 
 ### Rename & configure sample 'mis_profile' install profile
-- Change this to the name of your project name
+- Rename the mis_profile directory to the name of your project
 - Find and replace all instances of 'mis_profile' with your project name
 - Enable desired base profile features and modules (see mis_profile.install for more instructions).
 
 ### Edit your local `/etc/hosts` file to include the new box IP
     192.168.50.4 example.mcdev
-
-### Install composer on host machine
-- On MacOS ```brew install composer```
-- Otherwise, see instructions here https://getcomposer.org/
 
 ### Run the build script.
 - `$ ./scripts/build.sh`
@@ -55,6 +57,8 @@ This script automates the following steps:
 
 The initial pass of the build script downloads several dependencies and an intermittent internet connection will affect the initial build process.
 
+At this point, you can return to the procedure outlined in the [New Project Setup document](https://codeandtheory.atlassian.net/wiki/spaces/MC/pages/63242682/New+Project+Setup).
+
 ### Troubleshooting
 * Ensure Vagrant has provisioned without errors. Correct errors before proceeding. After vagrant provision is successful it maybe be helpful to vagrant halt && vagrant up`
 
@@ -65,10 +69,10 @@ The initial pass of the build script downloads several dependencies and an inter
 ## Logging In
 * Use `drush @example.mcdev uli` to login to your local installation.
 
-## Adding the sync folder to be used with new installs 
+## Adding the sync folder to be used with new installs
 * The first time build.sh runs successfully you will be able to export configuration back to your project's sync folder.
 * Add an empty folder named 'sync' at profile/profilename/config/sync.
-* Add `$config_directories['sync'] = $app_root . '/profiles/profilename/config/sync';` to your local settings.php. 
+* Add `$config_directories['sync'] = $app_root . '/profiles/profilename/config/sync';` to your local settings.php.
 * Run `drush @example.mcdev cex` to export configuration to the sync folder.
 * Re-run `$ ./scripts/build.sh` to test install with sync configuration.
 * Once this is working as expected, add the sync folder to git and commit.

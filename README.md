@@ -82,7 +82,7 @@ At this point, you can return to the procedure outlined in the [New Project Setu
 
 # Development Workflow
 
-* [Use Composer](https://bitbucket.org/mediacurrent/drupal-project/src/HEAD/README.md) to add 3rd party dependencies and patches.
+* [Use Composer](https://www.drupal.org/docs/develop/using-composer/using-composer-to-manage-drupal-site-dependencies#managing-contributed) to add 3rd party dependencies and patches.
 * Write custom modules, themes etc. to the ./web/ directory.
 * Run `drush @example.mcdev cex` to export Drupal configuration to the profile/profilename/config/sync folder.
 * Run `$ ./scripts/build.sh` before starting a new ticket. Run build.sh again to test work completed prior to submitting a pull request.
@@ -93,3 +93,5 @@ At this point, you can return to the procedure outlined in the [New Project Setu
 ## Additional Links
 * [Project Drupal Theme Guide](https://bitbucket.org/mediacurrent/drupal-project.git/src/HEAD/web/themes/custom/project_theme/README.md?fileviewer=file-view-default)
 * [Using Vagrant](https://bitbucket.org/mediacurrent/mis_vagrant/src/HEAD/README.md)
+* This repository created from [Composer template for Drupal projects](https://github.com/drupal-composer/drupal-project/blob/8.x/README.md) which has some addition information on usage.
+* [Using Composer](https://www.drupal.org/docs/develop/using-composer) with Drupal.

@@ -33,11 +33,11 @@
     ],
     "require": {
         "composer/installers": "^1.2",
-        "cweagans/composer-patches": "^1.6",
         "oomphinc/composer-installers-extender": "^1.1",
+        "cweagans/composer-patches": "^1.6.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/console": "^1.0.2",
-        "drupal/core": "~8.5.3",
+        "drupal/core": "^8.6.0",
         "drush/drush": "^8.1.15",
         "guardrdistro/guardr": "dev-8.x-1.x",
         "mediacurrent/mis_profile": "1.0",
@@ -53,7 +53,7 @@
         "mediacurrent/mis_vagrant": "~4.7",
         "phpro/grumphp": "^0.11.6",
         "vlucas/phpdotenv": "^2.4",
-        "webflo/drupal-core-require-dev": "~8.5.3"
+        "webflo/drupal-core-require-dev": "^8.6.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -98,6 +98,9 @@
             "bower-asset",
             "npm-asset"
         ],
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
         "installer-paths": {
             "web/core": ["type:drupal-core"],
             "web/libraries/{$name}": ["type:drupal-library", "type:bower-asset", "type:npm-asset"],
@@ -105,6 +108,12 @@
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/Commands/{$name}": ["type:drupal-drush"]
+        },
+        "drupal-scaffold": {
+          "initial": {
+            ".editorconfig": "../.editorconfig",
+            ".gitattributes": "../.gitattributes"
+          }
         },
         "patches": {
             "drupal/core": {

@@ -20,7 +20,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://git.drupal.org/project/guardr.git"
+            "url": "https://git.drupal.org/project/guardr_core.git"
         }
     ],
     "require": {
@@ -31,7 +31,7 @@
         "drupal/console": "^1.0.2",
         "drupal/core": "^8.6.0",
         "drush/drush": "^9.0.0",
-        "guardrdistro/guardr": "dev-core-86",
+        "drupal/guardr_core": "dev-feature/3008975-composer-json",
         "mediacurrent/mis_profile": "~1.1",
         "mediacurrent/mis_rain": "~1.0",
         "webflo/drupal-finder": "^1.0.0",
@@ -107,9 +107,6 @@
         "patches": {
             "drupal/core": {
                 "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2018-10-23/1356276-549-8.6.x.patch"
-            },
-            "drush/drush": {
-                "https://github.com/drush-ops/drush/issues/2285": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/2286.patch"
             }
         }
     }

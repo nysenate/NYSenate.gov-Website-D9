@@ -20,27 +20,19 @@
         },
         {
             "type": "vcs",
-            "url": "https://bitbucket.org/mediacurrent/mis_rain.git"
-        },
-        {
-            "type": "vcs",
             "url": "https://git.drupal.org/project/guardr_core.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://bitbucket.org/mediacurrent/mis_profile.git"
         }
     ],
     "require": {
         "composer/installers": "^1.2",
-        "cweagans/composer-patches": "^1.6",
         "oomphinc/composer-installers-extender": "^1.1",
+        "cweagans/composer-patches": "^1.6.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/console": "^1.0.2",
-        "drupal/core": "~8.5.3",
-        "drush/drush": "^8.1.15",
+        "drupal/core": "^8.6.0",
+        "drush/drush": "^8.2.1",
         "drupal/guardr_core": "dev-feature/3008975-composer-json",
-        "mediacurrent/mis_profile": "1.0",
+        "mediacurrent/mis_profile": "~1.1",
         "mediacurrent/mis_rain": "~1.0",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3"
@@ -53,7 +45,7 @@
         "mediacurrent/mis_vagrant": "~4.7",
         "phpro/grumphp": "^0.11.6",
         "vlucas/phpdotenv": "^2.4",
-        "webflo/drupal-core-require-dev": "~8.5.3"
+        "webflo/drupal-core-require-dev": "^8.6.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -62,10 +54,7 @@
     "prefer-stable": true,
     "config": {
         "sort-packages": true,
-        "bin-dir": "bin/",
-        "platform": {
-            "php": "5.6"
-        }
+        "bin-dir": "bin/"
     },
     "autoload": {
         "classmap": [
@@ -98,6 +87,9 @@
             "bower-asset",
             "npm-asset"
         ],
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
         "installer-paths": {
             "web/core": ["type:drupal-core"],
             "web/libraries/{$name}": ["type:drupal-library", "type:bower-asset", "type:npm-asset"],
@@ -106,10 +98,15 @@
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/Commands/{$name}": ["type:drupal-drush"]
         },
+        "drupal-scaffold": {
+          "initial": {
+            ".editorconfig": "../.editorconfig",
+            ".gitattributes": "../.gitattributes"
+          }
+        },
         "patches": {
             "drupal/core": {
-                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/drupal-n1356276-417-d8.5.x.patch",
-                "Allow a profile to be installed from existing config (#2788777)": "https://www.drupal.org/files/issues/2788777-91.patch"
+                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2018-10-23/1356276-549-8.6.x.patch"
             },
             "drush/drush": {
                 "https://github.com/drush-ops/drush/issues/2285": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/2286.patch"

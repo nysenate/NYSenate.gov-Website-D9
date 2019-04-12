@@ -24,6 +24,7 @@
         }
     ],
     "require": {
+        "php": ">=5.6",
         "composer/installers": "^1.2",
         "oomphinc/composer-installers-extender": "^1.1",
         "cweagans/composer-patches": "^1.6.5",
@@ -35,7 +36,8 @@
         "mediacurrent/mis_profile": "~1.1",
         "mediacurrent/mis_rain": "~1.0",
         "webflo/drupal-finder": "^1.0.0",
-        "webmozart/path-util": "^2.3"
+        "webmozart/path-util": "^2.3",
+        "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
         "drupal/drupal-extension": "^3.4",
@@ -107,6 +109,9 @@
         "patches": {
             "drupal/core": {
                 "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2018-10-23/1356276-549-8.6.x.patch"
+            },
+            "drupal/password_policy": {
+                "Field field_last_password_reset is unknown": "https://www.drupal.org/files/issues/2019-03-28/password_policy-config_import_field_error-2771129-75.patch"
             }
         }
     }

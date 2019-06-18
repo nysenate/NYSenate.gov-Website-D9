@@ -57,8 +57,6 @@ This script automates the following steps:
 
 The initial pass of the build script downloads several dependencies and an intermittent internet connection will affect the initial build process.
 
-At this point, you can return to the procedure outlined in the [New Project Setup document](https://codeandtheory.atlassian.net/wiki/spaces/MC/pages/63242682/New+Project+Setup).
-
 ### Troubleshooting
 * Ensure Vagrant has provisioned without errors. Correct errors before proceeding. After vagrant provision is successful it maybe be helpful to vagrant halt && vagrant up`
 

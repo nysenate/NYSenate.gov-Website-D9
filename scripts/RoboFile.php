@@ -44,14 +44,13 @@ class RoboFile extends \Robo\Tasks
      */
     public function testPhpUnitCustomModulesTests()
     {
-        $this->taskPhpUnit($this->vm->getVendorBin() . '/phpunit')
+        $this->taskPhpUnit($this->_getProjectRoot() . '/bin//phpunit')
             ->option('disallow-test-output')
-            ->option('report-useless-tests')
             ->option('strict-coverage')
             ->option('-v')
             ->option('-d error_reporting=-1')
-            ->configFile($this->vm->getProjectRoot() . '/tests/phpunit/phpunit.xml')
-            ->arg($this->vm->getWebRoot() . '/modules/custom')
+            ->configFile($this->_getProjectRoot() . '/tests/phpunit/phpunit.xml')
+            ->arg($this->_getProjectRoot() . '/web//modules/custom')
             ->run();
     }
 
@@ -63,8 +62,15 @@ class RoboFile extends \Robo\Tasks
      */
     public function watchCustomModules()
     {
-        $this->taskWatch()->monitor($this->vm->getWebRoot() . '/modules/custom', function () {
+        $this->taskWatch()->monitor($this->_getProjectRoot() . '/web//modules/custom', function () {
             $this->testPhpUnitCustomModulesTests();
         })->run();
+    }
+
+    public function _getProjectRoot($project_root =  null) {
+      if(!$project_root) {
+        $project_root = __DIR__ . '/../';
+      }
+      return realpath($project_root);
     }
 }

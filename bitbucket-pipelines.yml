@@ -109,6 +109,7 @@ pipelines:
             - mysql
       - step:
           caches:
+            - docker
             - visual-regression-ci-reference
             - visual-regression-node-modules
           script:
@@ -118,7 +119,7 @@ pipelines:
             - cd web
             - ../bin/drush sqlc < ../bin/db.sql
             - ../bin/drush status
-            - ../bin/drush -vvv --debug runserver 8080 &
+            - ../bin/drush -vvv --debug runserver 172.17.0.1:8080 &
             - sleep 3
             - cd ..
             - cd tests/visual-regression
@@ -128,10 +129,11 @@ pipelines:
             - if [ ! "$(ls -A backstop_data/ci_reference)" ]; then
             - aws s3 cp s3://mis-ci-tests/vrt/reference-${BITBUCKET_REPO_SLUG} backstop_data --recursive
             - if [ ! "$(ls -A backstop_data/ci_reference)" ]; then
-            - make ci-reference
+            - make -i ci-reference
             - fi
             - fi
-            - make ci-test
+            - mkdir -p ./backstop_data/ci_test ./backstop_data/ci_html_report
+            - make -i ci-test
             - aws s3 cp backstop_data s3://mis-ci-tests/vrt/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER} --recursive
             # link to results posted to Bitbucket
             - export VRT_URL="http://vrt.mediacurrentstaging.info/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER}/ci_html_report/"
@@ -139,7 +141,7 @@ pipelines:
             - curl -H "Content-Type:application/json" -X POST --user "${BB_AUTH_STRING}" -d "${BUILD_STATUS}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/commit/${BITBUCKET_COMMIT}/statuses/build"
             # Use current develop as reference
             - if [ "${BITBUCKET_BRANCH}" == "develop" ]; then
-            - make ci-approve;
+            - make -i ci-approve;
             - aws s3 cp backstop_data s3://mis-ci-tests/vrt/reference-${BITBUCKET_REPO_SLUG} --recursive
             - fi
           services:
@@ -154,6 +156,8 @@ definitions:
     visual-regression-ci-reference: tests/visual-regression/backstop_data/ci_reference
     visual-regression-node-modules: tests/visual-regression/node_modules
   services:
+    docker:
+      memory: 2048
     mysql:
       image: mysql:5.7
       environment:

@@ -145,6 +145,7 @@ pipelines:
             - aws s3 cp backstop_data s3://mis-ci-tests/vrt/reference-${BITBUCKET_REPO_SLUG} --recursive
             - fi
           services:
+            - docker
             - mysql
           artifacts:
             - tests/visual-regression/backstop_data/**

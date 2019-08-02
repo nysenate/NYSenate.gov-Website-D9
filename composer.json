@@ -17,24 +17,23 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.drupal.org/project/guardr_core.git"
         }
     ],
     "require": {
         "php": ">=5.6",
         "composer/installers": "^1.2",
-        "oomphinc/composer-installers-extender": "^1.1",
         "cweagans/composer-patches": "^1.6.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/console": "^1.0.2",
-        "drupal/core": "^8.6.0",
+        "drupal/core": "^8.7.0",
+        "drupal/guardr_core": "1.x-dev",
         "drush/drush": "^9.0.0",
-        "drupal/guardr_core": "dev-feature/3008975-composer-json",
-        "mediacurrent/mis_profile": "~1.1",
-        "mediacurrent/mis_rain": "~1.0",
+        "mediacurrent/mis_profile": "^2.0",
+        "mediacurrent/rain": "^3.0",
+        "mediacurrent/rain_features": "^1.0",
+        "mediacurrent/rain_admin": "^1.0",
+        "mediacurrent/rain_theme": "^1.0",
+        "oomphinc/composer-installers-extender": "^1.1",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
         "zaporylie/composer-drupal-optimizations": "^1.0"
@@ -44,7 +43,7 @@
         "drush-ops/behat-drush-endpoint": "^8.2.4",
         "mediacurrent/ci-scripts": "~1.7",
         "mediacurrent/ci-tests": "dev-master",
-        "mediacurrent/mis_vagrant": "~4.7",
+        "mediacurrent/mis_vagrant": "~4.7 | ^5.0.0",
         "phpro/grumphp": "^0.11.6",
         "vlucas/phpdotenv": "^2.4",
         "webflo/drupal-core-require-dev": "^8.6.0"
@@ -56,7 +55,10 @@
     "prefer-stable": true,
     "config": {
         "sort-packages": true,
-        "bin-dir": "bin/"
+        "bin-dir": "bin/",
+        "platform": {
+            "php": "7.1"
+        }
     },
     "autoload": {
         "classmap": [
@@ -108,10 +110,10 @@
         },
         "patches": {
             "drupal/core": {
-                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2018-10-23/1356276-549-8.6.x.patch"
+                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2018-12-10/1356276-572.patch"
             },
             "drupal/password_policy": {
-                "Field field_last_password_reset is unknown": "https://www.drupal.org/files/issues/2019-03-28/password_policy-config_import_field_error-2771129-75.patch"
+                "Field field_last_password_reset is unknown": "https://www.drupal.org/files/issues/2019-07-23/password_policy-n2771129-95.patch"
             }
         }
     }

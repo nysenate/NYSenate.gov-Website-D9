@@ -56,12 +56,7 @@ pipelines:
           - bin/*
           - tests/**
           - vendor/**
-          - web/core/**
-          - web/modules/contrib/**
-          - web/profiles/contrib/**
-          - web/themes/contrib/**
-          - web/sites/default/files/**
-          - web/sites/default/settings.php
+          - web/**
     - parallel:
       - step:
           script:

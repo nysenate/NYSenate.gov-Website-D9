@@ -57,6 +57,7 @@ pipelines:
           - vendor/**
           - web/core/**
           - web/modules/contrib/**
+          - web/profiles/contrib/**
           - web/themes/contrib/**
           - web/sites/default/files/**
           - web/sites/default/settings.php
@@ -75,8 +76,8 @@ pipelines:
             # Drupal accessibiity tests
             - echo "Accessibility tests"
             - pa11y --version
-            # - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
-            # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+            - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html
+            # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
             # Drupal behat tests
             - echo "Behat tests"
             - ./tests/behat/behat-run.sh http://127.0.0.1:8080
@@ -123,6 +124,7 @@ pipelines:
             - sleep 3
             - cd ..
             - cd tests/visual-regression
+            - chmod -R o+w ./backstop_data
             - npm install
             - set +e
             # Generate new reference if needed
@@ -132,7 +134,6 @@ pipelines:
             - make -i ci-reference
             - fi
             - fi
-            - mkdir -p ./backstop_data/ci_test ./backstop_data/ci_html_report
             - make -i ci-test
             - aws s3 cp backstop_data s3://mis-ci-tests/vrt/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER} --recursive
             # link to results posted to Bitbucket

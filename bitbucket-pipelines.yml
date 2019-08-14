@@ -62,7 +62,6 @@ pipelines:
           script:
             - ls -l
             - ls -l ./bin
-            - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
             - cd web
             - ../bin/drush sqlc < ../bin/db.sql
             - ../bin/drush status

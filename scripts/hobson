@@ -16,4 +16,4 @@ if [ ! -d ${BASE_DIR}/vendor/mediacurrent/ci-scripts ]; then
   composer install
 fi
 
-${BASE_DIR}/bin/robo --load-from ${BASE_DIR}/scripts "$@"
+${BASE_DIR}/vendor/bin/robo --load-from ${BASE_DIR}/scripts "$@"

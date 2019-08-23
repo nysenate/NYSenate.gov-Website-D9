@@ -45,7 +45,7 @@ pipelines:
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cd ./web
           # Install site using options to disable email notification.
-          - echo "$config['system.mail']['interface']['default'] = 'test_mail_collector';" >> ./sites/default/settings.php
+          - echo "\$config['system.mail']['interface']['default'] = 'test_mail_collector';" >> ./sites/default/settings.php
           - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install mis_profile install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
           # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install config_installer install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
           - ../bin/drush status

@@ -42,9 +42,6 @@ common packages pre-configured for rapid site development and optional content f
 - Find and replace all instances of 'mis_profile' with your project name
 - Enable desired base profile features and modules (see mis_profile.install for more instructions).
 
-### Edit your local `/etc/hosts` file to include the new box IP
-    192.168.50.4 example.mcdev
-
 ### Run the build script.
 - `$ ./scripts/build.sh`
 

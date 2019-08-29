@@ -89,6 +89,7 @@ pipelines:
             - cd web
             - ../bin/drush sqlc < ../bin/db.sql
             - ../bin/drush status
+            - ../bin/drush pm:security
             - ../bin/drush -vvv --debug runserver 8080 &
             - cd ..
             # OWASP Zap Baseline report

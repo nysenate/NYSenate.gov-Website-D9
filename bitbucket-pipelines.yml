@@ -45,7 +45,7 @@ pipelines:
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cd ./web
           # Check for pending security updates.
-          - PMSECURITY=$(../bin/drush pm:security)
+          - PMSECURITY=$(../bin/drush pm:security 2>&1)
           - echo ${PMSECURITY}
           - if grep -vq '[success]' <<< ${PMSECURITY} ; then 
           - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - pm:security \`\`\`${PMSECURITY}\`\`\`"

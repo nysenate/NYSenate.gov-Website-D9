@@ -108,6 +108,10 @@ pipelines:
             - CMD=$(/zap/zap-baseline.py -d -c owasp-zap.conf -p owasp-zap-progress.json -t http://127.0.0.1:8080) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - OWASP Zap Baseline report \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
             # Set script to stop on failure.
             - set -e
+            # Run Security Review checks
+            - cd web
+            - ../bin/drush en security_review
+            - ../bin/drush secrev --skip=file_perms,views_access,trusted_hosts
           services:
             - docker
             - mysql

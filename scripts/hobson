@@ -16,4 +16,9 @@ if [ ! -d ${BASE_DIR}/vendor/mediacurrent/ci-scripts ]; then
   composer install
 fi
 
-${BASE_DIR}/bin/robo --load-from ${BASE_DIR}/scripts "$@"
+CMD="${BASE_DIR}/bin/robo --load-from ${BASE_DIR}/scripts $@"
+if [ -z "${DDEV_PROJECT}" ]; then
+  CMD="ddev . ../bin/hobson $@"
+fi
+
+$CMD

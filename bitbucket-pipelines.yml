@@ -47,7 +47,7 @@ pipelines:
           # Check for pending security updates.
           - PMSECURITY=$(../bin/drush pm:security 2>&1)
           - echo ${PMSECURITY}
-          - if grep -vq '[success]' <<< ${PMSECURITY} ; then 
+          - if grep -vq '[success]' <<< ${PMSECURITY} ; then
           - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - pm:security \`\`\`${PMSECURITY}\`\`\`"
           - fi
           # Install site using options to disable email notification.
@@ -95,7 +95,7 @@ pipelines:
             - cd web
             - ../bin/drush sqlc < ../bin/db.sql
             - ../bin/drush status
-            - ../bin/drush -vvv --debug runserver 8080 &
+            - ../bin/drush -vvv --debug runserver 172.17.0.1:8080 &
             - cd ..
             # OWASP Zap Baseline report
             - echo "OWASP ZAP Baseline report"
@@ -105,7 +105,7 @@ pipelines:
             - ln -s $(pwd) /zap/wrk
             - ls -l /zap/wrk/
             # - /zap/zap-baseline.py -c owasp-zap.conf -p owasp-zap-progress.json -t http://127.0.0.1:8080
-            - CMD=$(/zap/zap-baseline.py -d -c owasp-zap.conf -p owasp-zap-progress.json -t http://127.0.0.1:8080) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - OWASP Zap Baseline report \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+            - CMD=$(/zap/zap-baseline.py -d -c owasp-zap.conf -p owasp-zap-progress.json -t http://172.17.0.1:8080) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - OWASP Zap Baseline report \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
             # Set script to stop on failure.
             - set -e
             # Run Security Review checks

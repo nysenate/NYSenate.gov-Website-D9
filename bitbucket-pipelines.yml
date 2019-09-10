@@ -115,7 +115,8 @@ pipelines:
             - SECURITYREVIEW=$(../bin/drush secrev --skip=file_perms,views_access,trusted_hosts 2>&1)
             - echo ${SECURITYREVIEW}
             - if grep -q 'failed' <<< ${SECURITYREVIEW} ; then
-            - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - secrev \`\`\`${SECURITYREVIEW}\`\`\`"
+            - exit 1
+            # - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - secrev \`\`\`${SECURITYREVIEW}\`\`\`"
             - fi
           services:
             - docker

@@ -49,6 +49,7 @@ pipelines:
           - echo ${PMSECURITY}
           - if grep -vq '[success]' <<< ${PMSECURITY} ; then
           - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - pm:security \`\`\`${PMSECURITY}\`\`\`"
+          # - exit 1
           - fi
           # Install site using options to disable email notification.
           - echo "\$config['system.mail']['interface']['default'] = 'test_mail_collector';" >> ./sites/default/settings.php
@@ -110,8 +111,14 @@ pipelines:
             - set -e
             # Run Security Review checks
             - cd web
+            # Check security review.
             - ../bin/drush en security_review
-            - ../bin/drush secrev --skip=file_perms,views_access,trusted_hosts
+            - SECURITYREVIEW=$(../bin/drush secrev --skip=failed_logins,file_perms,views_access,trusted_hosts 2>&1)
+            - echo ${SECURITYREVIEW}
+            - if grep -q 'failed' <<< ${SECURITYREVIEW} ; then
+            - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - secrev \`\`\`${SECURITYREVIEW}\`\`\`"
+            - exit 1
+            - fi
           services:
             - docker
             - mysql

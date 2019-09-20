@@ -17,6 +17,12 @@ parameters:
         - ">>>>>>>"
         - "die("
         - "var_dump("
+        - "syslog("
+        - "print_r("
+        - "dpm("
+        - "{{ debug() }}"
+      whitelist_patterns:
+        - /^(?!grumphp.yml).)*$/
       triggered_by:
         - inc
         - install

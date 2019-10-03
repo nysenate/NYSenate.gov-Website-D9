@@ -22,4 +22,4 @@ if [ -z "${CMD}" ]; then
   CMD="site:build"
 fi
 
-${BASE_DIR}/vendor/bin/robo --ansi --load-from ${BASE_DIR}/scripts ${CMD}
+${BASE_DIR}/scripts/hobson ${CMD}

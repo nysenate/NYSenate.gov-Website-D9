@@ -32,9 +32,15 @@ common packages pre-configured for rapid site development and optional content f
 - On MacOS ```brew install composer```
 - Otherwise, see instructions here https://getcomposer.org/
 
-### Clone this project and follow the New Project Setup procedure up to the "Build Site" step:
+### Clone this project and Initialize Project:
 - `$ git clone git@bitbucket.org:mediacurrent/drupal-project.git`
-- Follow this, stop before "Build Site": https://codeandtheory.atlassian.net/wiki/spaces/MC/pages/63242682/New+Project+Setup
+- `$ cd drupal-project`
+- `$ composer install`
+- `$ composer drupal-scaffold`
+- `$ ./scripts/hobson project:init example.mcdev 192.168.50.4`
+- `$ ./scripts/hobson project:create-drush-alias`
+*	This runs composer install.  As this is the first time being run, it is a composer update and calculates all dependencies.
+* This command ensures the config/config.yml is in place and has the domain and IP set. Edit config/config.yml to enable any additional features.
 - Before the first time you run the build script, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
 
 ### Rename & configure sample 'mis_profile' install profile

@@ -22,7 +22,7 @@ parameters:
         - "dpm("
         - "{{ debug() }}"
       whitelist_patterns:
-        - /^(?!grumphp.yml).)*$/
+        - /^((?!grumphp.yml).)*$/
       triggered_by:
         - inc
         - install

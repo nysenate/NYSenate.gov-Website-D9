@@ -18,12 +18,12 @@ if [ -z "${COMPOSER_INSTALLED}" ]; then
   exit 1;
 fi
 
-if [ ! -d ${BASE_DIR}/vendor/mediacurrent/ci-scripts ]; then
+if [ ! -d "${BASE_DIR}/vendor/mediacurrent/ci-scripts" ]; then
   composer install
 fi
 
 CMD="${BASE_DIR}/vendor/bin/robo --load-from ${BASE_DIR}/scripts $@"
-if [ -z "${DDEV_PROJECT}" ]; then
+if [ -z "${DDEV_PROJECT}" ] && [ -d "${BASE_DIR}/.ddev" ]; then
   CMD="ddev . ../scripts/bin/hobson $@"
 fi
 

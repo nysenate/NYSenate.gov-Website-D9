@@ -7,6 +7,7 @@ class RoboFile extends \Robo\Tasks
 
     use \Mediacurrent\CiScripts\Task\loadTasks;
     use \Mediacurrent\CiScripts\Command\Console;
+    use \Mediacurrent\CiScripts\Command\Ddev;
     use \Mediacurrent\CiScripts\Command\Drush;
     use \Mediacurrent\CiScripts\Command\Database;
     use \Mediacurrent\CiScripts\Command\Project;

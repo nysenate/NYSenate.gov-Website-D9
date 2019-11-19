@@ -60,6 +60,11 @@ This script automates the following steps:
 
 The initial pass of the build script downloads several dependencies and an intermittent internet connection will affect the initial build process.
 
+### Compile the theme (required).
+Note that the theme will not render correctly without running npm.
+
+Follow the [rain_theme project README](https://bitbucket.org/mediacurrent/rain_theme/src/master/README.md) for build instructions.
+
 ### Troubleshooting
 * Ensure Vagrant has provisioned without errors. Correct errors before proceeding. After vagrant provision is successful it maybe be helpful to vagrant halt && vagrant up`
 

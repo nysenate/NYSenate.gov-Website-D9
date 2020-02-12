@@ -22,12 +22,12 @@ pipelines:
           - composer validate --no-check-all --no-check-publish
           - composer --verbose install
           - ls -l ./bin
-          - ./bin/behat --version
+          - ./vendor/bin/behat --version
           - cd ./web
-          - ../bin/drupal --version
+          - ../vendor/bin/drupal --version
           - cd ..
-          - ./bin/drush version
-          - ./bin/phpunit --version
+          - ./vendor/bin/drush version
+          - ./vendor/bin/phpunit --version
           - composer robo --version
           - composer robo list
           - composer robo project:init example.mcdev 127.0.0.1
@@ -43,13 +43,13 @@ pipelines:
           - fi
           - echo "Drupal-check custom modules for Drupal 9 readiness"
           - if [ "$(ls -A web/modules/custom/)" ]; then
-          - ./bin/drupal-check ./web/modules/custom/
+          - ./vendor/bin/drupal-check ./web/modules/custom/
           - fi
           # - CMD=$(composer robo test:php-unit-tests 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cd ./web
           # Check for pending security updates.
-          - PMSECURITY=$(../bin/drush pm:security 2>&1)
+          - PMSECURITY=$(../vendor/bin/drush pm:security 2>&1)
           - echo ${PMSECURITY}
           - if grep -vq '[success]' <<< ${PMSECURITY} ; then
           - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - pm:security \`\`\`${PMSECURITY}\`\`\`"
@@ -57,11 +57,11 @@ pipelines:
           - fi
           # Install site using options to disable email notification.
           - echo "\$config['system.mail']['interface']['default'] = 'test_mail_collector';" >> ./sites/default/settings.php
-          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install mis_profile install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
-          # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install config_installer install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
-          - ../bin/drush status
-          - ../bin/drush sget system.test_mail_collector
-          - ../bin/drush sql-dump > ../bin/db.sql
+          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install mis_profile install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
+          # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install config_installer install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
+          - ../vendor/bin/drush status
+          - ../vendor/bin/drush sget system.test_mail_collector
+          - ../vendor/bin/drush sql-dump > ../vendor/bin/db.sql
           - cd ..
         services:
           - mysql
@@ -76,9 +76,9 @@ pipelines:
             - ls -l
             - ls -l ./bin
             - cd web
-            - ../bin/drush sqlc < ../bin/db.sql
-            - ../bin/drush status
-            - ../bin/drush -vvv --debug runserver 8080 &
+            - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
+            - ../vendor/bin/drush status
+            - ../vendor/bin/drush -vvv --debug runserver 8080 &
             - sleep 3
             - cd ..
             # Drupal accessibiity tests
@@ -98,9 +98,9 @@ pipelines:
           script:
             - echo "expose_php = Off" >> /etc/php/7.2/cli/php.ini
             - cd web
-            - ../bin/drush sqlc < ../bin/db.sql
-            - ../bin/drush status
-            - ../bin/drush -vvv --debug runserver 172.17.0.1:8080 &
+            - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
+            - ../vendor/bin/drush status
+            - ../vendor/bin/drush -vvv --debug runserver 172.17.0.1:8080 &
             - cd ..
             # OWASP Zap Baseline report
             - echo "OWASP ZAP Baseline report"
@@ -116,8 +116,8 @@ pipelines:
             # Run Security Review checks
             - cd web
             # Check security review.
-            - ../bin/drush en security_review
-            - SECURITYREVIEW=$(../bin/drush secrev --skip=failed_logins,file_perms,views_access,trusted_hosts 2>&1)
+            - ../vendor/bin/drush en security_review
+            - SECURITYREVIEW=$(../vendor/bin/drush secrev --skip=failed_logins,file_perms,views_access,trusted_hosts 2>&1)
             - echo ${SECURITYREVIEW}
             - if grep -q 'failed' <<< ${SECURITYREVIEW} ; then
             - slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - secrev \`\`\`${SECURITYREVIEW}\`\`\`"
@@ -136,9 +136,9 @@ pipelines:
             - ls -l
             - ls -l ./bin
             - cd web
-            - ../bin/drush sqlc < ../bin/db.sql
-            - ../bin/drush status
-            - ../bin/drush -vvv --debug runserver 172.17.0.1:8080 &
+            - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
+            - ../vendor/bin/drush status
+            - ../vendor/bin/drush -vvv --debug runserver 172.17.0.1:8080 &
             - sleep 3
             - cd ..
             - cd tests/visual-regression

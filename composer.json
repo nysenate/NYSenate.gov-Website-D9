@@ -20,14 +20,14 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.2",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6.5",
-        "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/console": "^1.0.2",
         "drupal/core": "^8.8.0",
+        "drupal/core-composer-scaffold": "^8.8.0",
         "drupal/guardr_core": "^1.0",
-        "drush/drush": "^9.0.0",
+        "drush/drush": "^9.7.1 | ^10.0.0",
         "mediacurrent/mis_profile": "^2.0",
         "mediacurrent/rain": "^3.0",
         "mediacurrent/rain_features": "^1.0",
@@ -35,20 +35,19 @@
         "mediacurrent/rain_theme": "^2.0",
         "oomphinc/composer-installers-extender": "^1.1",
         "webflo/drupal-finder": "^1.0.0",
-        "webmozart/path-util": "^2.3",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
+        "drupal/core-dev": "^8.8.0",
         "drupal/drupal-extension": "^3.4",
         "drush-ops/behat-drush-endpoint": "^9.3.0",
         "mediacurrent/ci-scripts": "^1.11.0",
         "mediacurrent/ci-tests": "dev-master",
         "mediacurrent/mis_vagrant": "~4.7 | ^5.0.0",
         "mglaman/drupal-check": "^1.0",
-        "phpro/grumphp": "^0.16.1",
+        "phpro/grumphp": "^0.17.0",
         "sensiolabs/security-checker": "^5.0",
-        "vlucas/phpdotenv": "^2.4",
-        "webflo/drupal-core-require-dev": "^8.6.0"
+        "vlucas/phpdotenv": "^2.4"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -95,6 +94,11 @@
         "patchLevel": {
             "drupal/core": "-p2"
         },
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            }
+        },
         "installer-paths": {
             "web/core": ["type:drupal-core"],
             "web/libraries/{$name}": ["type:drupal-library", "type:bower-asset", "type:npm-asset"],
@@ -102,12 +106,6 @@
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/Commands/{$name}": ["type:drupal-drush"]
-        },
-        "drupal-scaffold": {
-          "initial": {
-            ".editorconfig": "../.editorconfig",
-            ".gitattributes": "../.gitattributes"
-          }
         },
         "patches": {
             "drupal/core": {

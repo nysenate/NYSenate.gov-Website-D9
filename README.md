@@ -26,7 +26,39 @@ See: https://www.drupal.org/node/2788777
 The [Mediacurrent Rain base install profile](https://bitbucket.org/mediacurrent/mis_rain/) includes many of the most
 common packages pre-configured for rapid site development and optional content features.
 
-## Setting up a local [Vagrant](http://vagrantup.com) environment
+## Setting up a [DDEV-Local](https://ddev.readthedocs.io/en/stable/) environment
+
+### Install DDEV-Local on host machine
+* Follow installation instructions at https://ddev.readthedocs.io/en/stable/
+
+### Install composer on host machine
+- On MacOS ```brew install composer```
+- Otherwise, see instructions here https://getcomposer.org/
+
+### Clone this project:
+- `$ git clone git@bitbucket.org:mediacurrent/drupal-project.git`
+- `$ cd drupal-project`
+
+### Configure DDEV-Local
+* Non-interactive configuration. Project names must be alphanumeric and/or hyphenated.
+- `$ ddev config --docroot=web --project-name="project" --project-type=drupal8 --webserver-type="nginx-fpm" --create-docroot`
+* Interactive configuration
+- `$ ddev config`
+
+### Start DDEV
+- `$ ddev start`
+
+### Initialize Project:
+- `$ composer install`
+- `$ composer drupal-scaffold`
+- `$ ./scripts/hobson project:init project.ddev.site`
+- `$ ddev restart`
+*	This runs composer install.  As this is the first time being run, it is a composer update and calculates all dependencies.
+* The domain is shown in the output of ddev start,  It is also available via ddev describe.
+* This command ensures the config/config.yml is in place and has the domain set.
+- Before the first time you run the build script, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
+
+## (Alternate) Setting up a local [Vagrant](http://vagrantup.com) environment
 
 ### Install composer on host machine
 - On MacOS ```brew install composer```
@@ -36,12 +68,17 @@ common packages pre-configured for rapid site development and optional content f
 - `$ git clone git@bitbucket.org:mediacurrent/drupal-project.git`
 - `$ cd drupal-project`
 - `$ composer install`
-- `$ composer drupal-scaffold`
 - `$ ./scripts/hobson project:init example.mcdev 192.168.50.4`
 - `$ ./scripts/hobson project:create-drush-alias`
-*	This runs composer install.  As this is the first time being run, it is a composer update and calculates all dependencies.
+* This runs composer install.  As this is the first time being run, it is a composer update and calculates all dependencies.
 * This command ensures the config/config.yml is in place and has the domain and IP set. Edit config/config.yml to enable any additional features.
 - Before the first time you run the build script, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
+
+## Configure the Site
+After configuring either DDEV or Drupal VM, complete the remaining configuration steps.
+
+### Configure Visual Regression test urls
+- Edit "tests/visual-regression/backstop.js" environments to use the correct urls for any of the local, dev, staging, or prod urls known. 
 
 ### Rename & configure sample 'mis_profile' install profile
 - Rename the mis_profile directory to the name of your project
@@ -78,7 +115,8 @@ Follow the [rain_theme project README](https://bitbucket.org/mediacurrent/rain_t
 ## Adding the sync folder to be used with new installs
 * The first time build.sh runs successfully you will be able to export configuration back to your project's sync folder.
 * Add an empty folder named 'sync' at profile/profilename/config/sync.
-* Add `$config_directories['sync'] = $app_root . '/profiles/profilename/config/sync';` to your local settings.php.
+* Add `
+$settings['config_sync_directory'] = $app_root . '/profiles/profilename/config/sync';` to your local settings.php.
 * Run `drush @example.mcdev cex` to export configuration to the sync folder.
 * Re-run `$ ./scripts/build.sh` to test install with sync configuration.
 * Once this is working as expected, add the sync folder to git and commit.

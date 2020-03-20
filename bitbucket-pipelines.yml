@@ -81,7 +81,7 @@ pipelines:
             - ../vendor/bin/drush -vvv --debug runserver 8080 &
             - sleep 3
             - cd ..
-            # Drupal accessibiity tests
+            # Drupal accessibility tests
             - echo "Accessibility tests"
             - pa11y --version
             - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html

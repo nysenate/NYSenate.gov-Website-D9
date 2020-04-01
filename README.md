@@ -62,10 +62,11 @@ common packages pre-configured for rapid site development and optional content f
 
 ### Install composer on host machine
 - On MacOS ```brew install composer```
+* MacOS users may need to install the developer command line tools.
 - Otherwise, see instructions here https://getcomposer.org/
 
 ### Clone this project and Initialize Project:
-- `$ git clone git@bitbucket.org:mediacurrent/drupal-project.git`
+- `$ git clone https://bitbucket.org/mediacurrent/drupal-project.git`
 - `$ cd drupal-project`
 - `$ composer install`
 - `$ ./scripts/hobson project:init example.mcdev 192.168.50.4`

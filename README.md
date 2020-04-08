@@ -50,7 +50,6 @@ common packages pre-configured for rapid site development and optional content f
 
 ### Initialize Project:
 - `$ composer install`
-- `$ composer drupal-scaffold`
 - `$ ./scripts/hobson project:init project.ddev.site`
 - `$ ddev restart`
 *	This runs composer install.  As this is the first time being run, it is a composer update and calculates all dependencies.

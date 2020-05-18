@@ -15,11 +15,11 @@ parameters:
         - "<<<<<<< HEAD"
         - "======="
         - ">>>>>>>"
-        - "die("
-        - "var_dump("
-        - "syslog("
-        - "print_r("
-        - "dpm("
+        - "die\\("
+        - "var_dump\\("
+        - "syslog\\("
+        - "print_r\\("
+        - "dpm\\("
         - "{{ debug() }}"
       whitelist_patterns:
         - /^((?!grumphp.yml).)*$/
@@ -36,7 +36,7 @@ parameters:
         - test
         - theme
         - yml
-      regexp_type: G
+      regexp_type: E
     # Lint our JSON files.
     jsonlint: ~
     # Confirm we're following Drupal standards.

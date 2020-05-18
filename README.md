@@ -40,10 +40,10 @@ common packages pre-configured for rapid site development and optional content f
 - `$ cd drupal-project`
 
 ### Configure DDEV-Local
-* Non-interactive configuration. Project names must be alphanumeric and/or hyphenated.
-- `$ ddev config --docroot=web --project-name="project" --project-type=drupal8 --webserver-type="nginx-fpm" --create-docroot`
-* Interactive configuration
-- `$ ddev config`
+* Non-interactive configuration. Project names must be alphanumeric and/or hyphenated.  
+`$ ddev config --docroot=web --project-name="project" --project-type=drupal8 --webserver-type="nginx-fpm" --create-docroot`
+* Interactive configuration  
+`$ ddev config`
 
 ### Start DDEV
 - `$ ddev start`

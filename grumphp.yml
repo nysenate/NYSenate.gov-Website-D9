@@ -20,7 +20,7 @@ parameters:
         - "syslog\\("
         - "print_r\\("
         - "dpm\\("
-        - "{{ debug() }}"
+        - "\\{\\{ debug\\(\\) \\}\\}"
       whitelist_patterns:
         - /^((?!grumphp.yml).)*$/
       triggered_by:

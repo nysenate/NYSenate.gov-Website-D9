@@ -65,7 +65,7 @@ common packages pre-configured for rapid site development and optional content f
 - Otherwise, see instructions here https://getcomposer.org/
 
 ### Clone this project and Initialize Project:
-- `$ tgit clone https://bitbucket.org/mediacurrent/drupal-project.gi`
+- `$ git clone https://bitbucket.org/mediacurrent/drupal-project.git`
 - `$ cd drupal-project`
 - `$ composer install`
 - `$ ./scripts/hobson project:init example.mcdev 192.168.50.4`

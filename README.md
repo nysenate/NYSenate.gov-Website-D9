@@ -36,13 +36,13 @@ common packages pre-configured for rapid site development and optional content f
 - Otherwise, see instructions here https://getcomposer.org/
 
 ### Clone this project:
-- `$ git clone git@bitbucket.org:mediacurrent/drupal-project.git`
+- `$ git clone https://bitbucket.org/mediacurrent/drupal-project.git`
 - `$ cd drupal-project`
 
 ### Configure DDEV-Local
-* Non-interactive configuration. Project names must be alphanumeric and/or hyphenated.  
+* Non-interactive configuration. Project names must be alphanumeric and/or hyphenated.
 `$ ddev config --docroot=web --project-name="project" --project-type=drupal8 --webserver-type="nginx-fpm" --create-docroot`
-* Interactive configuration  
+* Interactive configuration
 `$ ddev config`
 
 ### Start DDEV
@@ -65,7 +65,7 @@ common packages pre-configured for rapid site development and optional content f
 - Otherwise, see instructions here https://getcomposer.org/
 
 ### Clone this project and Initialize Project:
-- `$ git clone https://bitbucket.org/mediacurrent/drupal-project.git`
+- `$ tgit clone https://bitbucket.org/mediacurrent/drupal-project.gi`
 - `$ cd drupal-project`
 - `$ composer install`
 - `$ ./scripts/hobson project:init example.mcdev 192.168.50.4`
@@ -78,7 +78,7 @@ common packages pre-configured for rapid site development and optional content f
 After configuring either DDEV or Drupal VM, complete the remaining configuration steps.
 
 ### Configure Visual Regression test urls
-- Edit "tests/visual-regression/backstop.js" environments to use the correct urls for any of the local, dev, staging, or prod urls known. 
+- Edit "tests/visual-regression/backstop.js" environments to use the correct urls for any of the local, dev, staging, or prod urls known.
 
 ### Rename & configure sample 'mis_profile' install profile
 - Rename the mis_profile directory to the name of your project
@@ -154,11 +154,11 @@ achieve that by registering `@composer drupal:scaffold` as post-install and post
 ```
 ### How can I apply patches to downloaded modules?
 
-If you need to apply patches (depending on the project being modified, a pull 
-request is often a better solution), you can do so with the 
+If you need to apply patches (depending on the project being modified, a pull
+request is often a better solution), you can do so with the
 [composer-patches](https://github.com/cweagans/composer-patches) plugin.
 
-To add a patch to drupal module foobar insert the patches section in the extra 
+To add a patch to drupal module foobar insert the patches section in the extra
 section of composer.json:
 ```json
 "extra": {

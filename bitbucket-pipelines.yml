@@ -100,7 +100,6 @@ pipelines:
           caches:
             - docker
           script:
-            - echo "expose_php = Off" >> /etc/php/7.2/cli/php.ini
             - cd web
             - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
             - ../vendor/bin/drush status

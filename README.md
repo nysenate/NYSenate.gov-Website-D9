@@ -26,7 +26,9 @@ See: https://www.drupal.org/node/2788777
 The [Mediacurrent Rain base install profile](https://bitbucket.org/mediacurrent/mis_rain/) includes many of the most
 common packages pre-configured for rapid site development and optional content features.
 
-## Setting up a [DDEV-Local](https://ddev.readthedocs.io/en/stable/) environment
+# Setup & Installation Steps
+
+## 1. Setting up a [DDEV-Local](https://ddev.readthedocs.io/en/stable/) environment
 
 ### Install DDEV-Local on host machine
 * Follow installation instructions at https://ddev.readthedocs.io/en/stable/
@@ -66,7 +68,7 @@ For more information about DDEV's NFS feature, see:
 * This command ensures the config/config.yml is in place and has the domain set.
 - Before the first time you run the build script, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
 
-## (Alternate) Setting up a local [Vagrant](http://vagrantup.com) environment
+## 1a. (Alternate) Setting up a local [Vagrant](http://vagrantup.com) environment
 
 ### Install composer on host machine
 - On MacOS ```brew install composer```
@@ -83,7 +85,7 @@ For more information about DDEV's NFS feature, see:
 * This command ensures the config/config.yml is in place and has the domain and IP set. Edit config/config.yml to enable any additional features.
 - Before the first time you run the build script, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
 
-## Configure the Site
+## 2. Configure the Site
 After configuring either DDEV or Drupal VM, complete the remaining configuration steps.
 
 ### Configure Visual Regression test urls
@@ -114,14 +116,14 @@ Follow the [rain_theme project README](https://bitbucket.org/mediacurrent/rain_t
 ### Troubleshooting
 * Ensure Vagrant has provisioned without errors. Correct errors before proceeding. After vagrant provision is successful it maybe be helpful to vagrant halt && vagrant up`
 
-## Drush Alias
+## 3. Drush Alias
 * Use the project's [drush alias file](drush/example.mcdev.aliases.drushrc.php)
 * Optionally copy into your user's drush directory at ~/.drush/ for global use or customization.
 
-## Logging In
+## 4. Logging In
 * Use `drush @example.mcdev uli` to login to your local installation.
 
-## Adding the sync folder to be used with new installs
+## 5. Adding the sync folder to be used with new installs
 * The first time build.sh runs successfully you will be able to export configuration back to your project's sync folder.
 * Add an empty folder named 'sync' at profile/profilename/config/sync.
 * Add `
@@ -130,7 +132,7 @@ $settings['config_sync_directory'] = $app_root . '/profiles/profilename/config/s
 * Re-run `$ ./scripts/build.sh` to test install with sync configuration.
 * Once this is working as expected, add the sync folder to git and commit.
 
-## Development Settings
+## 6. Development Settings
 * The ./web/sites/example.mcdev/settings.local.php contains settings for customizing the development environment.  This disables Drupal's built in caching and additionally activates sites/development.services.yml for further customizing the development environment.
 
 # Development Workflow
@@ -140,7 +142,7 @@ $settings['config_sync_directory'] = $app_root . '/profiles/profilename/config/s
 * Run `drush @example.mcdev cex` to export Drupal configuration to the profile/profilename/config/sync folder.
 * Run `$ ./scripts/build.sh` before starting a new ticket. Run build.sh again to test work completed prior to submitting a pull request.
 
-## Demo Content
+## 5. Demo Content
 * TBD
 
 The [drupal-scaffold](https://github.com/drupal-composer/drupal-scaffold) plugin can download the scaffold files (like

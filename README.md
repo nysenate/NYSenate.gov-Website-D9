@@ -45,6 +45,15 @@ common packages pre-configured for rapid site development and optional content f
 * Interactive configuration
 `$ ddev config`
 
+#### Using NFS for Better Performance
+On both MacOS and Windows hosts, Docker performance can be sluggish on large projects with many directories. In those cases, it's recommended that you use DDEV's NFS volume feature to mitigate the performance losses. If you're on Linux, you shouldn't have to enable NFS due to its native support for Docker volumes.
+
+For more information about DDEV's NFS feature, see:
+
+- https://ddev.readthedocs.io/en/stable/users/performance/#using-nfs-to-mount-the-project-into-the-container
+- https://github.com/drud/ddev/blob/master/scripts/macos_ddev_nfs_setup.sh#L41
+
+
 ### Start DDEV
 - `$ ddev start`
 

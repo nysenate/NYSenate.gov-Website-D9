@@ -21,7 +21,7 @@ pipelines:
           - composer selfupdate
           - composer validate --no-check-all --no-check-publish
           - composer --verbose install
-          - ls -l ./bin
+          - ls -l ./vendor/bin
           - ./vendor/bin/behat --version
           - cd ./web
           - ../vendor/bin/drupal --version
@@ -78,7 +78,7 @@ pipelines:
       - step:
           script:
             - ls -l
-            - ls -l ./bin
+            - ls -l ./vendor/bin
             - cd web
             - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
             - ../vendor/bin/drush status
@@ -137,7 +137,7 @@ pipelines:
           script:
             - aws --version
             - ls -l
-            - ls -l ./bin
+            - ls -l ./vendor/bin
             - cd web
             - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
             - ../vendor/bin/drush status

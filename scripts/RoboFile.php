@@ -45,7 +45,7 @@ class RoboFile extends \Robo\Tasks
      */
     public function testPhpUnitCustomModulesTests()
     {
-        $this->taskPhpUnit($this->_getProjectRoot() . '/bin//phpunit')
+        $this->taskPhpUnit($this->_getProjectRoot() . '/vendor/bin/phpunit')
             ->option('disallow-test-output')
             ->option('strict-coverage')
             ->option('-v')

@@ -24,8 +24,8 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6.5",
         "drupal/console": "^1.0.2",
-        "drupal/core": "^8.8.0",
         "drupal/core-composer-scaffold": "^8.8.0",
+        "drupal/core-recommended": "^8.8",
         "drupal/guardr_core": "^1.0",
         "drush/drush": "^9.7.1 | ^10.0.0",
         "mediacurrent/mis_profile": "^2.0",
@@ -38,7 +38,7 @@
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
-        "drupal/core-dev": "^8.8.0",
+        "drupal/core-dev": "^8.8",
         "drupal/drupal-extension": "^3.4",
         "drush-ops/behat-drush-endpoint": "^9.3.0",
         "mediacurrent/ci-scripts": "^1.11.0",
@@ -103,7 +103,9 @@
             "web/modules/contrib/{$name}": ["type:drupal-module"],
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
-            "drush/Commands/{$name}": ["type:drupal-drush"]
+            "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
+            "web/modules/custom/{$name}": ["type:drupal-custom-module"],
+            "web/themes/custom/{$name}": ["type:drupal-custom-theme"]
         },
         "patches": {
             "drupal/core": {

@@ -23,9 +23,6 @@ pipelines:
           - composer --verbose install
           - ls -l ./vendor/bin
           - ./vendor/bin/behat --version
-          - cd ./web
-          - ../vendor/bin/drupal --version
-          - cd ..
           - ./vendor/bin/drush version
           - ./vendor/bin/phpunit --version
           - composer robo --version

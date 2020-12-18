@@ -58,8 +58,8 @@ pipelines:
           - set -e
           # Install site using options to disable email notification.
           - echo "\$config['system.mail']['interface']['default'] = 'test_mail_collector';" >> ./sites/default/settings.php
-          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install mis_profile install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
-          # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install config_installer install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
+          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install rain_demo install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
+          # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install rain_demo install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
           - ../vendor/bin/drush status
           - ../vendor/bin/drush sget system.test_mail_collector
           - ../vendor/bin/drush sql-dump > ../vendor/bin/db.sql
@@ -83,9 +83,9 @@ pipelines:
             - sleep 3
             - cd ..
             # Drupal accessibility tests
-            - echo "Accessibility tests"
-            - pa11y --version
-            - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html
+            # - echo "Accessibility tests"
+            # - pa11y --version
+            # - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html
             # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
             # Drupal behat tests
             - echo "Behat tests"

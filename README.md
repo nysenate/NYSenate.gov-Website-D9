@@ -17,11 +17,6 @@ A Drupal core patch has been included to add support for "Sub-profiles".
 
 See: https://www.drupal.org/node/1356276
 
-### Support for installs from existing configuration
-A Drupal core patch has been included to allow projects to be installed from existing configuration.
-
-See: https://www.drupal.org/node/2788777
-
 ### Rain base profile features
 The [Mediacurrent Rain base install profile](https://bitbucket.org/mediacurrent/mis_rain/) includes many of the most
 common packages pre-configured for rapid site development and optional content features.
@@ -66,7 +61,7 @@ For more information about DDEV's NFS feature, see:
 *	This runs composer install.  As this is the first time being run, it is a composer update and calculates all dependencies.
 * The domain is shown in the output of ddev start,  It is also available via ddev describe.
 * This command ensures the config/config.yml is in place and has the domain set.
-- Before the first time you run the build script, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
+- For continued project development, proceed to the next section: "Rename & configure sample 'mis_profile' install profile".
 
 ## 1a. (Alternate) Setting up a local [Vagrant](http://vagrantup.com) environment
 
@@ -92,7 +87,7 @@ After configuring either DDEV or Drupal VM, complete the remaining configuration
 - Edit "tests/visual-regression/backstop.js" environments to use the correct urls for any of the local, dev, staging, or prod urls known.
 
 ### Rename & configure sample 'mis_profile' install profile
-- Rename the mis_profile directory to the name of your project
+- Change this to the name of your project name ( Copy contrib/mis_profile directory to custom/profilename)
 - Find and replace all instances of 'mis_profile' with your project name
 - Enable desired base profile features and modules (see mis_profile.install for more instructions).
 
@@ -114,7 +109,7 @@ Note that the theme will not render correctly without running npm.
 Follow the [rain_theme project README](https://bitbucket.org/mediacurrent/rain_theme/src/master/README.md) for build instructions.
 
 ### Troubleshooting
-* Ensure Vagrant has provisioned without errors. Correct errors before proceeding. After vagrant provision is successful it maybe be helpful to vagrant halt && vagrant up`
+* Ensure Vagrant has provisioned without errors. Correct errors before proceeding. After vagrant provision is successful it maybe be helpful to vagrant halt && vagrant up
 
 ## 3. Drush Alias
 * Use the project's [drush alias file](drush/example.mcdev.aliases.drushrc.php)

@@ -33,7 +33,7 @@ pipelines:
           # Drupal coding standards test on custom modules
           - echo "Coding Standards"
           - ./tests/code-sniffer.sh ./web
-          # - CMD=$(./tests/code-sniffer.sh ./web 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+          # - CMD=$(./tests/code-sniffer.sh ./web 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           - echo "PHPUnit unit tests"
           - if [ "$(ls -A web/modules/custom/)" ]; then
           - composer robo test:php-unit-tests
@@ -42,7 +42,7 @@ pipelines:
           - if [ "$(ls -A web/modules/custom/)" ]; then
           - ./vendor/bin/drupal-check ./web/modules/custom/
           - fi
-          # - CMD=$(composer robo test:php-unit-tests 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+          # - CMD=$(composer robo test:php-unit-tests 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cd ./web
           # Set script to continue on failure.
@@ -86,11 +86,11 @@ pipelines:
             # - echo "Accessibility tests"
             # - pa11y --version
             # - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html
-            # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+            # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
             # Drupal behat tests
             - echo "Behat tests"
             - ./tests/behat/behat-run.sh http://127.0.0.1:8080
-            # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+            # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           services:
             - mysql
       - step:
@@ -110,7 +110,7 @@ pipelines:
             - ln -s $(pwd) /zap/wrk
             - ls -l /zap/wrk/
             # - /zap/zap-baseline.py -c owasp-zap.conf -p owasp-zap-progress.json -t http://127.0.0.1:8080
-            - CMD=$(/zap/zap-baseline.py -d -c owasp-zap.conf -p owasp-zap-progress.json -t http://172.17.0.1:8080) && echo ${CMD}|| ( slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - OWASP Zap Baseline report \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+            - CMD=$(/zap/zap-baseline.py -d -c owasp-zap.conf -p owasp-zap-progress.json -t http://172.17.0.1:8080) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - OWASP Zap Baseline report \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
             # Set script to stop on failure.
             - set -e
             # Run Security Review checks

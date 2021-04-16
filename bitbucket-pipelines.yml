@@ -42,7 +42,7 @@ pipelines:
           - if [ "$(ls -A web/modules/custom/)" ]; then
           - ./vendor/bin/drupal-check ./web/modules/custom/
           - fi
-          - CMD=$(composer robo test:phpunit-tests 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
+          # - CMD=$(composer robo test:phpunit-tests 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cd ./web
           # Set script to continue on failure.

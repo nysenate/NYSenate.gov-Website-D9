@@ -74,7 +74,7 @@ pipelines:
           - web/**
     - parallel:
       - step:
-          name: A11y and functional regression tests
+          name: A11y and regression tests
           script:
             - ls -l
             - ls -l ./vendor/bin

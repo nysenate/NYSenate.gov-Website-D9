@@ -4,6 +4,7 @@ image: mediacurrent/mc-bb-pipelines:latest
 pipelines:
   default:
     - step:
+        name: Build and test
         caches:
           - composer
           - composer-project-vendor
@@ -73,6 +74,7 @@ pipelines:
           - web/**
     - parallel:
       - step:
+          name: A11y and regression tests
           script:
             - ls -l
             - ls -l ./vendor/bin
@@ -94,6 +96,7 @@ pipelines:
           services:
             - mysql
       - step:
+          name: Security tests
           caches:
             - docker
           script:
@@ -127,6 +130,7 @@ pipelines:
             - docker
             - mysql
       - step:
+          name: Visual Regression
           caches:
             - docker
             - visual-regression-ci-reference

@@ -63,3 +63,7 @@ grumphp:
         - /^web\/themes\/custom\/(.*)/
     # Lint our YAML files.
     yamllint: ~
+    # Run Enlightn Security Checker.
+    securitychecker_enlightn:
+      lockfile: ./composer.lock
+      run_always: false

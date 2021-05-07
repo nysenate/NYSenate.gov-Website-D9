@@ -37,13 +37,13 @@ pipelines:
           # - CMD=$(./tests/code-sniffer.sh ./web 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           - echo "PHPUnit unit tests"
           - if [ "$(ls -A web/modules/custom/)" ]; then
-          - composer robo test:php-unit-tests
+          - composer robo test:phpunit-tests
           - fi
           - echo "Drupal-check custom modules for Drupal 9 readiness"
           - if [ "$(ls -A web/modules/custom/)" ]; then
           - ./vendor/bin/drupal-check ./web/modules/custom/
           - fi
-          # - CMD=$(composer robo test:php-unit-tests 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
+          # - CMD=$(composer robo test:phpunit-tests 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h alerts-mis-devops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cd ./web
           # Set script to continue on failure.
@@ -84,6 +84,13 @@ pipelines:
             - ../vendor/bin/drush -vvv --debug runserver 8080 &
             - sleep 3
             - cd ..
+            - if [ "$(ls -A web/modules/custom/)" ]; then
+            # The SIMPLETEST_DB var is needed for Kernel and Functional tests.
+            - echo 'SIMPLETEST_DB="mysql://drupal:drupal@127.0.0.1:3306/drupal"' >> .env
+            # PHPUnit - Kernel and Functional tests
+            - composer robo test:phpunit-tests --filter="/Kernel\|Functional/"
+            # - CMD=$(composer robo test:phpunit-tests --filter="/Kernel\|Functional/" 2>&1) && echo ${CMD}|| ( slackcli -h $ALERTS_CHANNEL -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+            - fi
             # Drupal accessibility tests
             # - echo "Accessibility tests"
             # - pa11y --version

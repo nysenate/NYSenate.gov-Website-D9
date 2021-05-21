@@ -90,7 +90,7 @@ pipelines:
             # PHPUnit - Kernel and Functional tests
             - composer robo test:phpunit-tests --filter="/Kernel\|Functional/"
             # PHPUnit - Drupal Test Trait ExistingSite tests
-            - composer robo test:phpunit-tests --config_file=tests/dtt/phpunit.xml --filter="ExistingSite"
+            - DTT_BASE_URL=http://127.0.0.1:8080 ./vendor/bin/phpunit --configuration=./tests/dtt/phpunit.xml ./web/modules/custom/
             - fi
             # Drupal accessibility tests
             # - echo "Accessibility tests"

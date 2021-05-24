@@ -89,7 +89,8 @@ pipelines:
             - echo 'SIMPLETEST_DB="mysql://drupal:drupal@127.0.0.1:3306/drupal"' >> .env
             # PHPUnit - Kernel and Functional tests
             - composer robo test:phpunit-tests --filter="/Kernel\|Functional/"
-            # - CMD=$(composer robo test:phpunit-tests --filter="/Kernel\|Functional/" 2>&1) && echo ${CMD}|| ( slackcli -h $ALERTS_CHANNEL -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+            # PHPUnit - Drupal Test Trait ExistingSite tests
+            - DTT_BASE_URL=http://127.0.0.1:8080 ./vendor/bin/phpunit --configuration=./tests/dtt/phpunit.xml ./web/modules/custom/
             - fi
             # Drupal accessibility tests
             # - echo "Accessibility tests"

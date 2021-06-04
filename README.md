@@ -38,8 +38,8 @@ common packages pre-configured for rapid site development and optional content f
 
 ### Configure DDEV-Local
 * Non-interactive configuration. Project names must be alphanumeric and/or hyphenated.
-`$ ddev config --docroot=web --project-name="project" --project-type=drupal8 --webserver-type="nginx-fpm" --create-docroot`
-* Interactive configuration
+`$ ddev config --docroot=web --project-name="example" --project-type=drupal9 --webserver-type="nginx-fpm" --create-docroot`
+* Interactive configuration alternative
 `$ ddev config`
 
 #### Using NFS for Better Performance
@@ -56,7 +56,7 @@ For more information about DDEV's NFS feature, see:
 
 ### Initialize Project:
 - `$ composer install`
-- `$ ./scripts/hobson project:init project.ddev.site`
+- `$ ./scripts/hobson project:init example.ddev.site`
 - `$ ddev restart`
 *	This runs composer install.  As this is the first time being run, it is a composer update and calculates all dependencies.
 * The domain is shown in the output of ddev start,  It is also available via ddev describe.
@@ -106,7 +106,7 @@ The initial pass of the build script downloads several dependencies and an inter
 ### Compile the theme (required).
 Note that the theme will not render correctly without running npm.
 
-Follow the [rain_theme project README](https://bitbucket.org/mediacurrent/rain_theme/src/master/README.md) for build instructions.
+Follow the [rain_theme project README](https://bitbucket.org/mediacurrent/rain_theme/src/4.x/README.md) for build instructions.
 
 ### Troubleshooting
 * Ensure Vagrant has provisioned without errors. Correct errors before proceeding. After vagrant provision is successful it maybe be helpful to vagrant halt && vagrant up

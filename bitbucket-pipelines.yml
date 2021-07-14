@@ -167,7 +167,7 @@ pipelines:
             - make -i ci-test
             - aws s3 cp backstop_data s3://mis-ci-tests/vrt/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER} --recursive
             # link to results posted to Bitbucket
-            - export VRT_URL="http://vrt.mediacurrentstaging.info/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER}/ci_html_report/"
+            - export VRT_URL="http://vrt.mediacurrent.com/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER}/ci_html_report/"
             - export BUILD_STATUS="{\"key\":\"doc\", \"state\":\"SUCCESSFUL\", \"name\":\"VRT Results\", \"url\":\"${VRT_URL}\"}"
             - curl -H "Content-Type:application/json" -X POST --user "${BB_AUTH_STRING}" -d "${BUILD_STATUS}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/commit/${BITBUCKET_COMMIT}/statuses/build"
             # Use current develop as reference

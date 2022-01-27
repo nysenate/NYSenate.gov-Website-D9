@@ -19,7 +19,7 @@ fi
 CMD=$@
 # Default to run "site:build" if no commands provided.
 if [ -z "${CMD}" ]; then
-  CMD="site:build"
+  CMD="site:build -Dexisting_config"
 fi
 
 ${BASE_DIR}/scripts/hobson ${CMD}

@@ -33,6 +33,7 @@
         "mediacurrent/rain_features": "^3.0@beta",
         "mediacurrent/rain_theme": "^4.0@beta",
         "oomphinc/composer-installers-extender": "^2.0",
+        "pantheon-systems/drupal-integrations": "^9.0",
         "webflo/drupal-finder": "^1.0.0"
     },
     "require-dev": {
@@ -92,8 +93,16 @@
             "drupal/core": "-p2"
         },
         "drupal-scaffold": {
+            "allowed-packages": [
+                "pantheon-systems/drupal-integrations"
+            ],
             "locations": {
                 "web-root": "web/"
+            },
+            "file-mapping": {
+                "[project-root]/.editorconfig": false,
+                "[project-root]/pantheon.upstream.yml": false,
+                "[project-root]/.gitattributes": false
             }
         },
         "installer-paths": {

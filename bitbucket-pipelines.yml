@@ -202,7 +202,7 @@ pipelines:
             - chmod 700 ~/.ssh
             - composer selfupdate
             - composer global require -n "consolidation/cgr"
-            - export PATH=$PATH:$HOME/.composer/vendor/bin
+            - PATH="$(composer config -g home)/vendor/bin:$PATH"
             - cgr "pantheon-systems/terminus:~2" --stability beta
             - terminus --version
             # Install the copy of the Build Tools Plugin cloned by Bitbucket as a plugin

@@ -201,9 +201,8 @@ pipelines:
             - chmod 600 ~/.ssh/id_rsa.pub
             - chmod 700 ~/.ssh
             - composer selfupdate
-            - composer global require -n "consolidation/cgr"
             - export PATH="$(composer config -g home)/vendor/bin:$PATH"
-            - cgr "pantheon-systems/terminus:~2" --stability beta
+            - composer global require -n "pantheon-systems/terminus:~2"
             - terminus --version
             # Install the copy of the Build Tools Plugin cloned by Bitbucket as a plugin
             # in Terminus, so that all build-env commands run the System-Under-Test.

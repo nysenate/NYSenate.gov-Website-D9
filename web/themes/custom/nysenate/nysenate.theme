@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_preprocess_HOOK() for paragraphs.
  */
-function rain_theme_preprocess_paragraph(&$variables) {
+function nysenate_theme_preprocess_paragraph(&$variables) {
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
 
@@ -24,7 +24,7 @@ function rain_theme_preprocess_paragraph(&$variables) {
     }
   }
 
-  $paragraph_preprocess_function = 'rain_theme_preprocess_paragraph__' . $paragraph->bundle();
+  $paragraph_preprocess_function = 'nysenate_theme_preprocess_paragraph__' . $paragraph->bundle();
   if (function_exists($paragraph_preprocess_function)) {
     $paragraph_preprocess_function($variables);
   }
@@ -33,7 +33,7 @@ function rain_theme_preprocess_paragraph(&$variables) {
 /**
  * Callback to preprocess the Quote Carousel block.
  */
-function rain_theme_preprocess_block_content__quote_carousel(&$variables) {
+function nysenate_theme_preprocess_block_content__quote_carousel(&$variables) {
   $total_items = $variables['content']['field_quotes']['#items']->count();
   $carousel_items = [];
   if ($total_items) {
@@ -47,7 +47,7 @@ function rain_theme_preprocess_block_content__quote_carousel(&$variables) {
 /**
  * Callback to preprocess the Views block.
  */
-function rain_theme_preprocess_block_content__view(&$variables) {
+function nysenate_theme_preprocess_block_content__view(&$variables) {
   $views_ref = $variables['block_content']->field_views_ref->getValue();
   if ($views_ref[0]['target_id'] === 'events' && $views_ref[0]['display_id'] === 'carousel') {
     $variables['links'] = Link::fromTextAndUrl('View All Events', Url::fromUri('internal:/events'));
@@ -89,7 +89,7 @@ function rain_theme_theme_suggestions_input_alter(array &$suggestions, array $va
 /**
  * Implements hook_preprocess_HOOK() for html.html.twig.
  */
-function rain_theme_preprocess_html(array &$variables) {
+function nysenate_theme_preprocess_html(array &$variables) {
 
 }
 
@@ -103,7 +103,7 @@ function rain_theme_page_attachments_alter(array &$page) {
 /**
  * Implements hook_preprocess_page() for page.html.twig.
  */
-function rain_theme_preprocess_page(array &$variables) {
+function nysenate_theme_preprocess_page(array &$variables) {
 
 }
 
@@ -124,7 +124,7 @@ function rain_theme_theme_suggestions_node_alter(array &$suggestions, array $var
 /**
  * Implements hook_preprocess_HOOK().
  */
-function rain_theme_preprocess_block(array &$variables) {
+function nysenate_theme_preprocess_block(array &$variables) {
   // Use inline svg in the branding block.
   if ($variables['plugin_id'] == 'system_branding_block') {
     if (isset($variables['site_logo'])) {
@@ -140,7 +140,7 @@ function rain_theme_preprocess_block(array &$variables) {
 /**
  * Preprocess function for block content template.
  */
-function rain_theme_preprocess_block_content(array &$variables) {
+function nysenate_theme_preprocess_block_content(array &$variables) {
   $block_content = $variables['elements']['#block_content'];
 
   if ($block_content->bundle() === 'views') {
@@ -197,7 +197,7 @@ function rain_theme_preprocess_block_content(array &$variables) {
     }
   }
 
-  $block_preprocess_function = 'rain_theme_preprocess_block_content__' . $block_content->bundle();
+  $block_preprocess_function = 'nysenate_theme_preprocess_block_content__' . $block_content->bundle();
   if (function_exists($block_preprocess_function)) {
     $block_preprocess_function($variables);
   }
@@ -220,7 +220,7 @@ function rain_theme_theme_suggestions_fieldset_alter(array &$suggestions, array 
 /**
  * Implements hook_preprocess_node().
  */
-function rain_theme_preprocess_node(array &$variables) {
+function nysenate_theme_preprocess_node(array &$variables) {
   if (!empty($variables['elements']['#node']) && is_object($variables['elements']['#node']) && method_exists($variables['elements']['#node'], 'getType')) {
     // Ensure that the node variable exists and is an object.
     $function = __FUNCTION__ . '_' . $variables['elements']['#node']->getType();
@@ -299,25 +299,25 @@ function rain_theme_theme_suggestions_views_view_alter(array &$suggestions, arra
 /**
  * Implements hook_preprocess_form().
  */
-function rain_theme_preprocess_form(array &$variables) {
+function nysenate_theme_preprocess_form(array &$variables) {
 }
 
 /**
  * Implements hook_preprocess_select().
  */
-function rain_theme_preprocess_select(array &$variables) {
+function nysenate_theme_preprocess_select(array &$variables) {
 }
 
 /**
  * Implements hook_preprocess_field().
  */
-function rain_theme_preprocess_field(array &$variables, $hook) {
+function nysenate_theme_preprocess_field(array &$variables, $hook) {
 }
 
 /**
  * Implements hook_preprocess_details().
  */
-function rain_theme_preprocess_details(array &$variables) {
+function nysenate_theme_preprocess_details(array &$variables) {
 
 }
 
@@ -338,7 +338,7 @@ function rain_theme_theme_suggestions_paragraph_alter(array &$suggestions, array
 /**
  * Implements hook_preprocess_preprocess_views_view_fields().
  */
-function rain_theme_preprocess_views_view_fields__latest_news__block_1(array &$variables) {
+function nysenate_theme_preprocess_views_view_fields__latest_news__block_1(array &$variables) {
   // Separate the link and the text for the more link.
   if (isset($variables['fields']['view_node'])) {
     $more_link = Url::fromRoute('entity.node.canonical', ['node' => $variables['row']->nid]);

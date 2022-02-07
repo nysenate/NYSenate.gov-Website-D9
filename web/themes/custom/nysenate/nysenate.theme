@@ -57,7 +57,7 @@ function nysenate_theme_preprocess_block_content__view(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter() for search_api_page_block_form_search_results().
  */
-function rain_theme_form_search_api_page_block_form_search_results_alter(&$form, $form_state, $form_id) {
+function nysenate_form_search_api_page_block_form_search_results_alter(&$form, $form_state, $form_id) {
   // Remove the 'invisible' option on the label.
   unset($form['keys']['#title_display']);
 
@@ -74,7 +74,7 @@ function rain_theme_form_search_api_page_block_form_search_results_alter(&$form,
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for 'input'.
  */
-function rain_theme_theme_suggestions_input_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_input_alter(array &$suggestions, array $variables) {
   // On submit buttons, add a theme suggestion that appends the submit button's
   // label to the filename, e.g. if the submit button is "Search" then the file
   // suggestion becomes "input__submit__search".
@@ -96,7 +96,7 @@ function nysenate_theme_preprocess_html(array &$variables) {
 /**
  * Implements hook_page_attachments_alter().
  */
-function rain_theme_page_attachments_alter(array &$page) {
+function nysenate_page_attachments_alter(array &$page) {
 
 }
 
@@ -110,14 +110,14 @@ function nysenate_theme_preprocess_page(array &$variables) {
 /**
  * Implements hook_theme_suggestions_page_alter().
  */
-function rain_theme_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_page_alter(array &$suggestions, array $variables) {
 
 }
 
 /**
  * Implements hook_theme_suggestions_node_alter().
  */
-function rain_theme_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_node_alter(array &$suggestions, array $variables) {
 
 }
 
@@ -206,14 +206,14 @@ function nysenate_theme_preprocess_block_content(array &$variables) {
 /**
  * Implements hook_theme_suggestions_field_alter().
  */
-function rain_theme_theme_suggestions_field_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_field_alter(array &$suggestions, array $variables) {
 
 }
 
 /**
  * Implements hook_theme_suggestions_field_alter().
  */
-function rain_theme_theme_suggestions_fieldset_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_fieldset_alter(array &$suggestions, array $variables) {
 
 }
 
@@ -293,7 +293,7 @@ function nysenate_theme_preprocess_node(array &$variables) {
 /**
  * Implements hook_theme_suggestions_views_view_alter().
  */
-function rain_theme_theme_suggestions_views_view_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_views_view_alter(array &$suggestions, array $variables) {
 }
 
 /**
@@ -324,14 +324,14 @@ function nysenate_theme_preprocess_details(array &$variables) {
 /**
  * Implements hook_theme_suggestions_details_alter().
  */
-function rain_theme_theme_suggestions_details_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_details_alter(array &$suggestions, array $variables) {
 
 }
 
 /**
  * Implements hook_theme_suggestions_paragraph_alter().
  */
-function rain_theme_theme_suggestions_paragraph_alter(array &$suggestions, array $variables) {
+function nysenate_theme_suggestions_paragraph_alter(array &$suggestions, array $variables) {
 
 }
 
@@ -359,6 +359,6 @@ function nysenate_theme_preprocess_views_view_fields__latest_news__block_1(array
 /**
  * Implements hook_theme_suggestions_views_view_unformatted_alter().
  */
-function rain_theme_theme_suggestions_views_view_unformatted__media_library_alter(&$suggestions, &$vars) {
+function nysenate_theme_suggestions_views_view_unformatted__media_library_alter(&$suggestions, &$vars) {
   $suggestions[] = 'views_view_unformatted__media_library__rain';
 }

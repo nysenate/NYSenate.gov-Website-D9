@@ -1,0 +1,49 @@
+// Styling for Event Date Tiles.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.event-date-tiles {
+  display: flex;
+  margin-bottom: 15px;
+
+  @include breakpoint($bp-sm) {
+    align-items: flex-start;
+    align-self: flex-start;
+    margin-right: 15px;
+  }
+}
+
+.event-date-tiles__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: flex-start;
+  background-color: $color-white;
+  border: 1px solid $color-tundora;
+  margin-right: 15px;
+}
+
+.event-date-tiles__date-month {
+  color: $color-white;
+  background-color: $color-blue;
+  padding: 5px 15px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.event-date-tiles__date-day {
+  font-size: 1.25rem;
+  margin: 5px 15px;
+}
+
+.event-date-tiles__date-year {
+  margin: 0 15px 5px;
+}
+
+.event-date-tiles__date-separator {
+  display: flex;
+  align-self: center;
+  margin-right: 15px;
+}

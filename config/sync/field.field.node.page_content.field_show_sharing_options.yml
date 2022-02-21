@@ -1,0 +1,23 @@
+uuid: a66f9463-48f8-4549-b84e-cf8f867826e0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_show_sharing_options
+    - node.type.page_content
+id: node.page_content.field_show_sharing_options
+field_name: field_show_sharing_options
+entity_type: node
+bundle: page_content
+label: 'Show Sharing Options'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

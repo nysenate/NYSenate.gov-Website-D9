@@ -1,0 +1,23 @@
+uuid: f0efde5a-48c5-4c49-96f1-e2aa71ffc9b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_active
+    - node.type.page_content
+id: node.page_content.field_active
+field_name: field_active
+entity_type: node
+bundle: page_content
+label: 'FOIL Request Form'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,101 @@
+uuid: 2e937541-bc8e-47e7-8bf4-a486c6aceec5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.page_content.body
+    - field.field.node.page_content.field_active
+    - field.field.node.page_content.field_chapters
+    - field.field.node.page_content.field_date
+    - field.field.node.page_content.field_image_main
+    - field.field.node.page_content.field_metatags
+    - field.field.node.page_content.field_paragraphs
+    - field.field.node.page_content.field_show_sharing_options
+    - node.type.page_content
+  module:
+    - datetime
+    - entity_reference_revisions
+    - metatag
+    - text
+    - user
+id: node.page_content.default
+targetEntityType: node
+bundle: page_content
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_active:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_chapters:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_image_main:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_metatags:
+    type: metatag_empty_formatter
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_paragraphs:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_show_sharing_options:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true

@@ -1,0 +1,23 @@
+uuid: b06dc38a-a6d6-452b-b5dd-c00156138482
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bill_no_issue_tags
+    - node.type.bill
+id: node.bill.field_bill_no_issue_tags
+field_name: field_bill_no_issue_tags
+entity_type: node
+bundle: bill
+label: 'No Issue Tags'
+description: 'Check this box if no issue tags are required for bill discovery (i.e. this is a routine home-rule bill). If checked, this bill will not be included in Staff dashboard count of bills with no tags.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Issue Tags not Needed'
+  off_label: 'Needs issue tags'
+field_type: boolean

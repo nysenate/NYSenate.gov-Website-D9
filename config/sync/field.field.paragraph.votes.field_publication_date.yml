@@ -1,0 +1,21 @@
+uuid: e1c002ea-de69-40b4-96a5-246ca1596406
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_publication_date
+    - paragraphs.paragraphs_type.votes
+  module:
+    - datetime
+id: paragraph.votes.field_publication_date
+field_name: field_publication_date
+entity_type: paragraph
+bundle: votes
+label: 'Vote Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

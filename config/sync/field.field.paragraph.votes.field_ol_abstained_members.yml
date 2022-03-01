@@ -1,0 +1,29 @@
+uuid: ca2f5d5a-6068-4e8a-b668-cb170a028ebb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ol_abstained_members
+    - node.type.page_content
+    - paragraphs.paragraphs_type.votes
+id: paragraph.votes.field_ol_abstained_members
+field_name: field_ol_abstained_members
+entity_type: paragraph
+bundle: votes
+label: 'Abstained Members'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

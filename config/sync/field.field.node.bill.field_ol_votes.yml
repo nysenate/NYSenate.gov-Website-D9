@@ -1,0 +1,31 @@
+uuid: 7b40957d-3058-45ba-a3fe-a42d12bf984c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_votes
+    - node.type.bill
+    - paragraphs.paragraphs_type.votes
+  module:
+    - entity_reference_revisions
+id: node.bill.field_ol_votes
+field_name: field_ol_votes
+entity_type: node
+bundle: bill
+label: Votes
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      votes: votes
+    negate: 0
+    target_bundles_drag_drop:
+      votes:
+        weight: 2
+        enabled: true
+field_type: entity_reference_revisions

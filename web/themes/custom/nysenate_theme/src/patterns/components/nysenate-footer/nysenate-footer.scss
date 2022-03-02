@@ -3,30 +3,38 @@
 footer {
   width: 100%;
   background-color: #eee;
-  color: #565656;
+  color: #444;
+
+  .c-senator-footer {
+    display: flex;
+    padding: 0px 20px 30px 20px;
+
+    @include breakpoint($bp-sm) {
+      padding: 35px 40px 30px;
+    }
+  }
 
   .l-row {
-    display: flex;
-    flex-direction: column;
-    max-width: 840px;
-    padding: 35px 40px 30px;
     position: relative;
     clear: both;
     margin: 0 auto;
     width: 100%;
+    max-width: 440px;
 
-    @include breakpoint($bp-md) {
-      flex-direction: row;
+    @include breakpoint($bp-sm) {
+      display: flex;
+      justify-content: center;
+      max-width: 840px;
     }
   }
 }
 
 .c-senator-footer-col {
-  border-bottom: 2px solid #E4E4E6;
+  float: left;
 
-  @include breakpoint($bp-md) {
+  @include breakpoint($bp-sm) {
     border-bottom: 0;
-    border-right: 2px solid #E4E4E6;
+    border-right: 2px solid #e1e1e3;
   }
 
   &:last-child {
@@ -36,59 +44,111 @@ footer {
 
 /* BOTTOM LINKS */
 .c-site-footer {
-  padding: 0 40px;
+  overflow: hidden;
+  min-height: 75px;
+  padding: 0px 20px 25px;
   background-color: #EAEAEC;
+  float: left;
+  width: 100%;
+  margin: 0 auto;
+
+  @include breakpoint($bp-sm) {
+    padding: 0 9%;
+  }
 
   ul {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+
+    @include breakpoint($bp-sm) {
+      max-width: 840px;
+    }
+
+    @include breakpoint($bp-lg) {
+      max-width: unset;
+      display: flex;
+      justify-content: space-between;
+    }
   }
 
   li {
-    display: inline-block;
-    text-align: center;
-    line-height: 75px;
-    list-style: none;
-    margin: 0 8px;
+    margin-top: 15px;
+    width: 50%;
+    float: left;
+
+    @include breakpoint($bp-sm) {
+      display: inline-block;
+      text-align: center;
+      width: 25%;
+      margin: 15px 0 0 0;
+      line-height: 75px;
+    }
+
+    @include breakpoint($bp-md) {
+      width: 20%;
+    }
   }
 
   a {
     font-size: 11px;
     text-decoration: none;
-    color: #565656;
+    color: #444;
   }
 }
 
 /* LOGO */
 .c-senator-footer-col__home {
-  width: auto;
-  padding-bottom: 25px;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e1e1e3;
+  margin-bottom: 20px;
 
-  @include breakpoint($bp-md) {
+  @include breakpoint($bp-sm) {
     width: 31%;
     padding-right: 35px;
     padding-bottom: 0;
+    border-bottom: 0;
+    margin-bottom: 0;
   }
 
   a {
+    float: left;
     text-transform: uppercase;
-    color: #565656;
+    color: #444;
     text-decoration: none;
     font-weight: bold;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
+    font-size: 11px;
+    width: 100%;
+    margin-top: 25px;
+
+    @include breakpoint($bp-sm) {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 12px;
+      float: none;
+      margin-top: 0;
+    }
   }
 
   img {
-    display: inline-block;
-    float: none;
-    width: 100px;
-    height: 100px;
-    margin-top: 20px;
+    display: block;
+    float: left;
+    width: 42px;
+    height: 42px;
+    margin-top: -15px;
+    margin-right: 20px;
+
+    @include breakpoint($bp-sm) {
+      float: none;
+      margin-top: 25px;
+      width: 100px;
+      height: 100px;
+      margin-right: 0;
+    }
 
     @include breakpoint($bp-md) {
       width: 112px;
@@ -99,23 +159,21 @@ footer {
 
 /* LINKS */
 .c-senator-footer-col__nav {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 25px 0;
+  width: 70%;
+  border-right: 2px solid #e1e1e3;
+  min-height: 150px;
 
-  @include breakpoint($bp-md) {
+  @include breakpoint($bp-sm) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding: 0 35px;
+    float: none;
+    width: 37%;
   }
 
   ul {
     list-style: none;
-    text-align: center;
-
-    @include breakpoint($bp-md) {
-      text-align: left;
-    }
   }
 
   li {
@@ -127,51 +185,73 @@ footer {
   }
 
   a {
-    color: #565656;
+    color: #444;
     text-decoration: none;
     text-transform: uppercase;
     font-weight: bold;
+    font-size: 11px;
+
+    @include breakpoint($bp-sm) {
+      font-size: 12px;
+    }
   }
 }
 
 /* SOCIALS */
 .c-senator-footer-col__social {
-  padding-top: 25px;
+  width: 30%;
+  padding-left: 30px;
 
-  @include breakpoint($bp-md) {
+  @include breakpoint($bp-sm) {
     padding-top: 0;
     padding-left: 35px;
+    float: none;
+    width: 33%;
+  }
+
+  @include breakpoint($bp-md) {
+    width: 31%;
   }
 
   p {
+    display: none;
     margin: 0 0 20px;
-    text-align: center;
+    color: #666;
+    font-size: 11px;
 
-    @include breakpoint($bp-md) {
-      text-align: left;
+    @include breakpoint($bp-sm) {
+      font-size: 12px;
+      display: block;
     }
   }
   
   ul {
     list-style: none;
     display: flex;
-    padding: 0 35px;
+    padding: 0;
     justify-content: center;
+    flex-direction: column;
 
-    @include breakpoint($bp-md) {
-      padding: 0 15px;
-      justify-content: space-between;
+    @include breakpoint($bp-sm) {
+      flex-direction: row;
+      justify-content: flex-start;
     }
   }
 
   li {
-    margin-right: 40px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
 
-    @include breakpoint($bp-md) {
-      margin-right: 10px;
+    @include breakpoint($bp-sm) {
+      margin-bottom: 0;
+      margin-right: 30px;
     }
 
     &:last-child {
+      margin-bottom: 0;
       margin-right: 0;
     }
   }

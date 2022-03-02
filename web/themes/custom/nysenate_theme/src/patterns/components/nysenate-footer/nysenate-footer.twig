@@ -20,7 +20,7 @@
 							<nav>
 								<ul>
 									{% for menu_item in menu_items %}
-										<li>
+										<li class="{% if loop.first %}first {% endif %}leaf">
 											<a class="lgt-text" href="{{ menu_item.url }}">{{ menu_item.title }}</a>
 										</li>
 									{% endfor %}
@@ -32,7 +32,7 @@
 							<p class="c-senator-footer-caption">Follow the New York Senate</p>
 							<ul>
 								{% for social in socials %}
-									<li>
+									<li class="{% if loop.first %}first {% endif %}leaf">
 										<a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
 									</li>
 								{% endfor %}
@@ -52,7 +52,7 @@
 			<div class="pane-content">
 				<ul class="menu">
 					{% for policy in policies %}
-						<li>
+						<li class="{% if loop.first %}first {% endif %}leaf">
 							<a href="{{ policy.link }}">{{ policy.text }}</a>
 						</li>
 					{% endfor %}

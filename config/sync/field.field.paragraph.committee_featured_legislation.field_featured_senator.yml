@@ -1,0 +1,21 @@
+uuid: 59eea7b4-f196-47d5-9954-07be66a030dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_featured_senator
+    - paragraphs.paragraphs_type.committee_featured_legislation
+id: paragraph.committee_featured_legislation.field_featured_senator
+field_name: field_featured_senator
+entity_type: paragraph
+bundle: committee_featured_legislation
+label: Senator
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings: {  }
+field_type: entity_reference

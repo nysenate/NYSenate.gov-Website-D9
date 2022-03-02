@@ -1,0 +1,20 @@
+uuid: 1644edbc-f0c3-42b0-974f-801c09da7a6a
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - taxonomy
+id: taxonomy_term.field_image_hero
+field_name: field_image_hero
+entity_type: taxonomy_term
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

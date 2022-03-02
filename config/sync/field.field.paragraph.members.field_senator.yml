@@ -1,0 +1,29 @@
+uuid: 4cc0bc63-ed0c-4d1e-8b80-a36c16e2a514
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_senator
+    - node.type.page_content
+    - paragraphs.paragraphs_type.members
+id: paragraph.members.field_senator
+field_name: field_senator
+entity_type: paragraph
+bundle: members
+label: Senator
+description: 'If a Senator is referenced, it will show on the committee detail page and override any Assemblymen information entered.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,224 @@
+uuid: b8a0a081-5a69-4203-ad20-a2d6c3cf164e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.committees.field_archive_date
+    - field.field.taxonomy_term.committees.field_assemblymen_chair
+    - field.field.taxonomy_term.committees.field_chair
+    - field.field.taxonomy_term.committees.field_committee_types
+    - field.field.taxonomy_term.committees.field_featured_legislation_commi
+    - field.field.taxonomy_term.committees.field_frontend_display_type
+    - field.field.taxonomy_term.committees.field_group_members
+    - field.field.taxonomy_term.committees.field_image_hero
+    - field.field.taxonomy_term.committees.field_learn_more_page
+    - field.field.taxonomy_term.committees.field_meeting_frequency
+    - field.field.taxonomy_term.committees.field_members
+    - taxonomy.vocabulary.committees
+  module:
+    - datetime
+    - field_group
+    - media_library
+    - paragraphs
+    - path
+    - text
+third_party_settings:
+  field_group:
+    group_committee_name:
+      children:
+        - name
+      label: 'Committee Name'
+      region: content
+      parent_name: ''
+      weight: 0
+      format_type: fieldset
+      format_settings:
+        classes: 'group-committee-name field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: 'Do not edit the committee name. It should be a single term, without any descriptive language. (e.g. this field, for the Senate Standing Committee on Aging, should simply read "Aging")'
+        required_fields: true
+    group_committee_mission:
+      children:
+        - description
+        - field_learn_more_page
+      label: 'Committee Mission'
+      region: content
+      parent_name: ''
+      weight: 6
+      format_type: fieldset
+      format_settings:
+        classes: 'group-description field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: 'A short overviews describing the mission of the committee. Descriptions longer than 180 characters are truncated with an ellipsis. If you''d like to create a longer document about the committee''s mission, create an <a href=/node/add/article>article</a>, associate it with the committee under "Discoverability > Committee Settings", and use the "Learn More Page" field below to link to that article.'
+        required_fields: true
+    group_comm_featured_legislation:
+      children:
+        - field_featured_legislation_commi
+      label: 'Featured Legislation'
+      region: content
+      parent_name: ''
+      weight: 8
+      format_type: fieldset
+      format_settings:
+        classes: 'group-comm-featured-legislation field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: 'Committee chairs can feature any member''s legislation on the committee page if it is important to the committee chair. The chair can attribute the quote to himself or herself, or to any member of the committee.'
+        required_fields: true
+    group_members:
+      children:
+        - field_members
+        - field_group_members
+      label: Members
+      region: content
+      parent_name: ''
+      weight: 9
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+id: taxonomy_term.committees.default
+targetEntityType: taxonomy_term
+bundle: committees
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 9
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_archive_date:
+    type: datetime_default
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_assemblymen_chair:
+    type: boolean_checkbox
+    weight: 16
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_chair:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_committee_types:
+    type: options_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_featured_legislation_commi:
+    type: entity_reference_paragraphs
+    weight: 13
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+  field_frontend_display_type:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_members:
+    type: entity_reference_paragraphs
+    weight: 15
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+  field_image_hero:
+    type: media_library_widget
+    weight: 1
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_learn_more_page:
+    type: entity_reference_autocomplete
+    weight: 10
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_meeting_frequency:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_members:
+    type: entity_reference_paragraphs
+    weight: 14
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 10
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden: {  }

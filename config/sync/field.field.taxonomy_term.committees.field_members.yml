@@ -1,0 +1,34 @@
+uuid: fa25a390-ae27-44bf-8d4c-aa091031e691
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_members
+    - paragraphs.paragraphs_type.members
+    - taxonomy.vocabulary.committees
+  module:
+    - entity_reference_revisions
+id: taxonomy_term.committees.field_members
+field_name: field_members
+entity_type: taxonomy_term
+bundle: committees
+label: Members
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      members: members
+    negate: 0
+    target_bundles_drag_drop:
+      committee_featured_legislation:
+        weight: 3
+        enabled: false
+      members:
+        weight: 4
+        enabled: true
+field_type: entity_reference_revisions

@@ -1,0 +1,20 @@
+uuid: 8ba0fe63-a966-4654-abc4-5e79ac2e87b3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: taxonomy_term.field_chair
+field_name: field_chair
+entity_type: taxonomy_term
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

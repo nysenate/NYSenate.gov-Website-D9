@@ -1,0 +1,21 @@
+uuid: 68d35fdb-760a-44b7-a67d-ba234dc2dc8b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_committee_member_role_type
+    - paragraphs.paragraphs_type.misc_legislative_group_members
+  module:
+    - options
+id: paragraph.misc_legislative_group_members.field_committee_member_role_type
+field_name: field_committee_member_role_type
+entity_type: paragraph
+bundle: misc_legislative_group_members
+label: 'Committee Member Role Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

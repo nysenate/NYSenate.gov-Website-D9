@@ -1,0 +1,21 @@
+uuid: 01f138c7-06f8-43d1-9ef4-b69303e81831
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_committee_types
+    - taxonomy.vocabulary.committees
+  module:
+    - options
+id: taxonomy_term.committees.field_committee_types
+field_name: field_committee_types
+entity_type: taxonomy_term
+bundle: committees
+label: 'Committee Type'
+description: 'Choose whether this is a "Standing Committee," "Temporary Committee," or  "Task Force."'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

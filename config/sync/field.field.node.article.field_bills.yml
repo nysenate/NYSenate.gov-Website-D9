@@ -1,0 +1,29 @@
+uuid: 12bb35f4-8894-4213-ba68-055328c5daee
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bills
+    - node.type.article
+    - node.type.bill
+id: node.article.field_bills
+field_name: field_bills
+entity_type: node
+bundle: article
+label: 'Associated Bills'
+description: 'Attach teasers for bills related to this article. Use the autocomplete to find the bill (e.g. "S120 . . ."). The bill(s) in this field will show at bottom of the article. If you want to embed an associated bill next to where you reference the bill in the article, try using "Featured Bill" in the Custom Layout Components above.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      bill: bill
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

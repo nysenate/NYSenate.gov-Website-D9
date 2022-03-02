@@ -1,0 +1,21 @@
+uuid: f2eda5b9-184f-4ea1-bc78-77e7fb44be6d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_committee
+    - node.type.article
+id: node.article.field_committee
+field_name: field_committee
+entity_type: node
+bundle: article
+label: Committee
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

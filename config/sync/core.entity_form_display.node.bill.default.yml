@@ -1,0 +1,442 @@
+uuid: f94ca078-cb7c-4ec8-b055-ec5bdd84807c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.bill.field_bill_multi_session_root
+    - field.field.node.bill.field_bill_no_issue_tags
+    - field.field.node.bill.field_issues
+    - field.field.node.bill.field_majority_issue_tag
+    - field.field.node.bill.field_metatags
+    - field.field.node.bill.field_ol_active_version
+    - field.field.node.bill.field_ol_add_sponsor_names
+    - field.field.node.bill.field_ol_add_sponsors
+    - field.field.node.bill.field_ol_all_actions
+    - field.field.node.bill.field_ol_all_statuses
+    - field.field.node.bill.field_ol_amendments
+    - field.field.node.bill.field_ol_base_print_no
+    - field.field.node.bill.field_ol_chamber
+    - field.field.node.bill.field_ol_co_sponsor_names
+    - field.field.node.bill.field_ol_co_sponsors
+    - field.field.node.bill.field_ol_full_text
+    - field.field.node.bill.field_ol_has_same_as
+    - field.field.node.bill.field_ol_is_active_version
+    - field.field.node.bill.field_ol_is_amended
+    - field.field.node.bill.field_ol_last_status
+    - field.field.node.bill.field_ol_last_status_date
+    - field.field.node.bill.field_ol_latest_status
+    - field.field.node.bill.field_ol_latest_status_committee
+    - field.field.node.bill.field_ol_law_code
+    - field.field.node.bill.field_ol_law_section
+    - field.field.node.bill.field_ol_memo
+    - field.field.node.bill.field_ol_multi_sponsor_names
+    - field.field.node.bill.field_ol_multi_sponsors
+    - field.field.node.bill.field_ol_name
+    - field.field.node.bill.field_ol_previous_versions
+    - field.field.node.bill.field_ol_print_no
+    - field.field.node.bill.field_ol_program_info
+    - field.field.node.bill.field_ol_program_info_seq
+    - field.field.node.bill.field_ol_publish_date
+    - field.field.node.bill.field_ol_same_as
+    - field.field.node.bill.field_ol_session
+    - field.field.node.bill.field_ol_sponsor
+    - field.field.node.bill.field_ol_sponsor_name
+    - field.field.node.bill.field_ol_substituted_by
+    - field.field.node.bill.field_ol_summary
+    - field.field.node.bill.field_ol_votes
+    - node.type.bill
+  module:
+    - datetime
+    - inline_entity_form
+    - metatag
+    - path
+id: node.bill.default
+targetEntityType: node
+bundle: bill
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 44
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_bill_multi_session_root:
+    type: options_select
+    weight: 41
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_bill_no_issue_tags:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_majority_issue_tag:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_metatags:
+    type: metatag_firehose
+    weight: 4
+    region: content
+    settings:
+      sidebar: true
+      use_details: true
+    third_party_settings: {  }
+  field_ol_active_version:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_add_sponsor_names:
+    type: string_textarea
+    weight: 16
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_add_sponsors:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_all_actions:
+    type: string_textarea
+    weight: 18
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_all_statuses:
+    type: string_textarea
+    weight: 17
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_amendments:
+    type: string_textarea
+    weight: 24
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_base_print_no:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_chamber:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_co_sponsor_names:
+    type: string_textarea
+    weight: 33
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_co_sponsors:
+    type: options_select
+    weight: 32
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_full_text:
+    type: string_textarea
+    weight: 31
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_has_same_as:
+    type: boolean_checkbox
+    weight: 26
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_ol_is_active_version:
+    type: boolean_checkbox
+    weight: 40
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_ol_is_amended:
+    type: boolean_checkbox
+    weight: 10
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_ol_last_status:
+    type: options_select
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_last_status_date:
+    type: datetime_default
+    weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_latest_status:
+    type: string_textfield
+    weight: 19
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_latest_status_committee:
+    type: string_textfield
+    weight: 22
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_law_code:
+    type: string_textarea
+    weight: 29
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_law_section:
+    type: string_textfield
+    weight: 28
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_memo:
+    type: string_textarea
+    weight: 30
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_multi_sponsor_names:
+    type: string_textarea
+    weight: 35
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_multi_sponsors:
+    type: options_select
+    weight: 34
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_name:
+    type: string_textarea
+    weight: 11
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_previous_versions:
+    type: string_textarea
+    weight: 25
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_print_no:
+    type: string_textfield
+    weight: 9
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_program_info:
+    type: string_textfield
+    weight: 38
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_program_info_seq:
+    type: number
+    weight: 39
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_publish_date:
+    type: datetime_default
+    weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_same_as:
+    type: string_textarea
+    weight: 27
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_session:
+    type: number
+    weight: 6
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_sponsor:
+    type: entity_reference_autocomplete
+    weight: 13
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_sponsor_name:
+    type: string_textfield
+    weight: 14
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_substituted_by:
+    type: string_textfield
+    weight: 37
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_summary:
+    type: string_textarea
+    weight: 23
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_votes:
+    type: inline_entity_form_complex
+    weight: 36
+    region: content
+    settings:
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: true
+      allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: false
+      collapsed: false
+      revision: false
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 42
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 47
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 45
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 49
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 46
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 43
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 48
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

@@ -1,0 +1,21 @@
+uuid: 43822cf0-8c5f-4f9e-bb69-807ef0f2268e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ol_vote_type
+    - paragraphs.paragraphs_type.votes
+  module:
+    - options
+id: paragraph.votes.field_ol_vote_type
+field_name: field_ol_vote_type
+entity_type: paragraph
+bundle: votes
+label: 'Vote Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

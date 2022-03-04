@@ -1,0 +1,27 @@
+uuid: 0d2455a4-e6d7-40bd-a68e-253eae2ffdc7
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_ol_chamber
+field_name: field_ol_chamber
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: assembly
+      label: Assembly
+    -
+      value: senate
+      label: Senate
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,23 @@
+uuid: 44dfa793-79ee-4391-80e0-390dfe40315c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_has_same_as
+    - node.type.bill
+id: node.bill.field_ol_has_same_as
+field_name: field_ol_has_same_as
+entity_type: node
+bundle: bill
+label: 'Has Same As'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

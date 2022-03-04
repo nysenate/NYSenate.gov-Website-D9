@@ -1,0 +1,29 @@
+uuid: 5c811d89-c712-4f5d-9eff-69b9805217be
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ol_aye_members
+    - node.type.page_content
+    - paragraphs.paragraphs_type.votes
+id: paragraph.votes.field_ol_aye_members
+field_name: field_ol_aye_members
+entity_type: paragraph
+bundle: votes
+label: 'Aye Members'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

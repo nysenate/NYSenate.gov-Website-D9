@@ -1,0 +1,29 @@
+uuid: 02028a0a-a2d6-4066-a31d-c26fbd2c4269
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_multi_sponsors
+    - node.type.bill
+    - node.type.page_content
+id: node.bill.field_ol_multi_sponsors
+field_name: field_ol_multi_sponsors
+entity_type: node
+bundle: bill
+label: 'Multi Sponsors'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

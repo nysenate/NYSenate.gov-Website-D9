@@ -1,0 +1,23 @@
+uuid: 119be004-c627-40fa-a3eb-ad0c026afd11
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_is_active_version
+    - node.type.bill
+id: node.bill.field_ol_is_active_version
+field_name: field_ol_is_active_version
+entity_type: node
+bundle: bill
+label: 'Is Active Version'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

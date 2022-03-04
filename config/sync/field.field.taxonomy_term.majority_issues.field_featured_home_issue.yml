@@ -1,0 +1,23 @@
+uuid: 2d6f16b7-8fb2-42de-84e2-d7cff5b21fa7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_featured_home_issue
+    - taxonomy.vocabulary.majority_issues
+id: taxonomy_term.majority_issues.field_featured_home_issue
+field_name: field_featured_home_issue
+entity_type: taxonomy_term
+bundle: majority_issues
+label: 'Featured Home Issue'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

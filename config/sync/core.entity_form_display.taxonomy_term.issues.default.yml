@@ -1,0 +1,72 @@
+uuid: c5d312d7-9680-470f-9825-4b2891a296be
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.issues.field_drupal_6_tid
+    - field.field.taxonomy_term.issues.field_keywords
+    - field.field.taxonomy_term.issues.field_metatags
+    - taxonomy.vocabulary.issues
+  module:
+    - metatag
+    - path
+    - text
+id: taxonomy_term.issues.default
+targetEntityType: taxonomy_term
+bundle: issues
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_keywords:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_metatags:
+    type: metatag_firehose
+    weight: 6
+    region: content
+    settings:
+      sidebar: true
+      use_details: true
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 3
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  field_drupal_6_tid: true

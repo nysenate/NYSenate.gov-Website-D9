@@ -1,0 +1,23 @@
+uuid: 13dbf08d-6d65-4c62-9e52-04d759f67320
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_active_senator
+    - taxonomy.vocabulary.senator
+id: taxonomy_term.senator.field_active_senator
+field_name: field_active_senator
+entity_type: taxonomy_term
+bundle: senator
+label: 'Active Senator'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: Active
+  off_label: Inactive
+field_type: boolean

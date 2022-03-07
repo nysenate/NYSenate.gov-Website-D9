@@ -1,0 +1,21 @@
+uuid: 272c0049-e35c-40ca-b8c9-221674e60ef9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_party
+    - taxonomy.vocabulary.senator
+  module:
+    - options
+id: taxonomy_term.senator.field_party
+field_name: field_party
+entity_type: taxonomy_term
+bundle: senator
+label: 'Party Affiliation'
+description: "D|Democrat\r\nR|Republican\r\nC|Conservative\r\nCNST|Constitution\r\nG|Green\r\nIP|Independence Party\r\nI|Independent/No Party\r\nInd|Independent Party\r\nL|Liberal\r\nLIBT|Libertarian\r\nNL|Natural Law\r\nRFM|Reform Party\r\nRTL|Right to Life\r\nSJ|Save Jobs\r\nSC|School Choice\r\nSWP|Socialist Workers\r\nWEP|Women's Equality Party\r\nWF|Working Families"
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,27 @@
+uuid: 7581ec8b-46e7-463d-a557-af99b1008126
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_ol_vote_type
+field_name: field_ol_vote_type
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: committee
+      label: Committee
+    -
+      value: floor
+      label: Floor
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

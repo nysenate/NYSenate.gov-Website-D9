@@ -1,0 +1,21 @@
+uuid: 859cf6cc-5137-4e5e-9c82-eeb9f486cb49
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_majority_issue_tag
+    - node.type.bill
+id: node.bill.field_majority_issue_tag
+field_name: field_majority_issue_tag
+entity_type: node
+bundle: bill
+label: 'Majority Issue Tag'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

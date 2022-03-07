@@ -1,0 +1,21 @@
+uuid: 99a98674-a649-45b6-8ff0-1fa66297fa4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_issues
+    - node.type.article
+id: node.article.field_issues
+field_name: field_issues
+entity_type: node
+bundle: article
+label: Issues
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

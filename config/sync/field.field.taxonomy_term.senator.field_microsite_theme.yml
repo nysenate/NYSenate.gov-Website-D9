@@ -1,0 +1,21 @@
+uuid: cc6a8ce0-4385-491c-a86c-c0fb6441a47e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_microsite_theme
+    - taxonomy.vocabulary.senator
+  module:
+    - options
+id: taxonomy_term.senator.field_microsite_theme
+field_name: field_microsite_theme
+entity_type: taxonomy_term
+bundle: senator
+label: 'Microsite Theme'
+description: 'Select your desired color scheme for your senator''s section.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

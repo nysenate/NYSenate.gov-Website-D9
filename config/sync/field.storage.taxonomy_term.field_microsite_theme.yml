@@ -1,0 +1,45 @@
+uuid: 222a4949-83b9-4722-8b0c-26a1f1ca8e0c
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - taxonomy
+id: taxonomy_term.field_microsite_theme
+field_name: field_microsite_theme
+entity_type: taxonomy_term
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: trad_blue
+      label: 'Traditional Blue'
+    -
+      value: cont_blue
+      label: 'Contemporary Blue'
+    -
+      value: purple
+      label: 'Individualistic Purple'
+    -
+      value: trad_red
+      label: 'Traditional Red'
+    -
+      value: cont_red
+      label: 'Contemporary Red'
+    -
+      value: orange
+      label: 'Enthusiastic Orange'
+    -
+      value: trad_green
+      label: 'Traditional Green'
+    -
+      value: cont_green
+      label: 'Contemporary Green'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

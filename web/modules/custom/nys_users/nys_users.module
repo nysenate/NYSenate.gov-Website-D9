@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Users and User entities within NY Senate.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_users_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // On User create/edit forms make Senator field visible on the MCP Role.
+  if ($form_id === 'user_form' || $form_id === 'user_register_form') {
+
+    // Adds visible and required states.
+    $form['field_senator_multiref']["widget"]['#states'] = [
+      'visible' => [
+        'input[name="roles[microsite_content_producer]"]' => ['checked' => TRUE],
+      ],
+      'required' => [
+        'input[name="roles[microsite_content_producer]"]' => ['checked' => TRUE],
+      ],
+    ];
+
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function nys_users_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+
+  // If on User form, add constraint to the Senator field for validation.
+  if ($entity_type->get('id') === 'user' && !empty($fields['field_senator_multiref'])) {
+
+    $fields['field_senator_multiref']->addConstraint('RequiredSenator');
+
+  }
+}

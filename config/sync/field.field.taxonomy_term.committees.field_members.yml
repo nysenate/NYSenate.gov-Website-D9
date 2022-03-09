@@ -14,7 +14,7 @@ entity_type: taxonomy_term
 bundle: committees
 label: Members
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -31,4 +31,7 @@ settings:
       members:
         weight: 4
         enabled: true
+      misc_legislative_group_members:
+        weight: 6
+        enabled: false
 field_type: entity_reference_revisions

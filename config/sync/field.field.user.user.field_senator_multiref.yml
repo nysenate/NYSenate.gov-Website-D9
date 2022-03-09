@@ -1,0 +1,26 @@
+uuid: b650da75-03e4-4da0-9a8a-23c7d22136b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_senator_multiref
+  module:
+    - user
+id: user.user.field_senator_multiref
+field_name: field_senator_multiref
+entity_type: user
+bundle: user
+label: Senator(s)
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: active_senators_reference
+      display_name: entity_reference_1
+      arguments: {  }
+field_type: entity_reference

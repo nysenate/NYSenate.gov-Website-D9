@@ -1,0 +1,14 @@
+uuid: 9b8be423-a30e-460c-a198-e6f22f247db0
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.microsite_content_producer
+  module:
+    - user
+id: user_add_role_action.microsite_content_producer
+label: 'Add the Microsite Content Producer role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: microsite_content_producer

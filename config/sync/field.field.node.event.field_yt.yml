@@ -1,0 +1,25 @@
+uuid: 3ba5f5af-3222-4da2-a905-9c03e49cc3c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_yt
+    - node.type.event
+  module:
+    - video_embed_field
+id: node.event.field_yt
+field_name: field_yt
+entity_type: node
+bundle: event
+label: 'Video Archive'
+description: 'If there is a video recording of this event available on Youtube, past the URL in the field below. Note that it must be a Youtube URL.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_providers:
+    vimeo: vimeo
+    youtube: youtube
+    youtube_playlist: '0'
+field_type: video_embed_field

@@ -1,16 +1,16 @@
-uuid: 2596df86-710a-4edc-91b9-64789443ef81
+uuid: c98b8725-ad7e-4d4c-bb33-1c0ee5762795
 langcode: en
 status: true
 dependencies:
   module:
-    - media
-    - node
-id: node.field_yt
-field_name: field_yt
-entity_type: node
+    - taxonomy
+    - user
+id: user.field_senator_multiref
+field_name: field_senator_multiref
+entity_type: user
 type: entity_reference
 settings:
-  target_type: media
+  target_type: taxonomy_term
 module: core
 locked: false
 cardinality: -1

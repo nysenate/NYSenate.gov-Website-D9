@@ -35,7 +35,6 @@ dependencies:
     - media_library
     - path
     - text
-    - video_embed_field
 third_party_settings:
   field_group:
     group_event_content:
@@ -83,7 +82,7 @@ third_party_settings:
       label: Discoverability
       region: content
       parent_name: ''
-      weight: 6
+      weight: 5
       format_type: fieldset
       format_settings:
         classes: 'group-discoverability field-group-fieldset'
@@ -107,21 +106,6 @@ third_party_settings:
         id: ''
         direction: horizontal
         width_breakpoint: 640
-    group_sitewide_settings:
-      children:
-        - field_accessible_sitewide
-      label: 'Sitewide Settings'
-      region: hidden
-      parent_name: group_promotion
-      weight: 9
-      format_type: tab
-      format_settings:
-        classes: 'group-sitewide-settings field-group-htab'
-        show_empty_fields: false
-        id: ''
-        formatter: open
-        description: ''
-        required_fields: true
     group_microsite_settings:
       children:
         - field_senator
@@ -129,7 +113,7 @@ third_party_settings:
       label: 'Senator Microsite Settings'
       region: content
       parent_name: group_promotion
-      weight: 10
+      weight: 8
       format_type: tab
       format_settings:
         classes: 'group-microsite-settings field-group-htab'
@@ -145,7 +129,7 @@ third_party_settings:
       label: '  Committee Settings'
       region: content
       parent_name: group_promotion
-      weight: 11
+      weight: 9
       format_type: tab
       format_settings:
         classes: 'group-committee-settings field-group-htab'
@@ -169,6 +153,21 @@ third_party_settings:
         id: ''
         description: ''
         required_fields: true
+    group_sitewide_settings:
+      children:
+        - field_accessible_sitewide
+      label: 'Sitewide Settings'
+      region: hidden
+      parent_name: group_promotion
+      weight: 6
+      format_type: tab
+      format_settings:
+        classes: 'group-sitewide-settings field-group-htab'
+        show_empty_fields: false
+        id: ''
+        formatter: open
+        description: ''
+        required_fields: true
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -186,13 +185,13 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 9
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   field_accessible_sitewide:
     type: boolean_checkbox
-    weight: 10
+    weight: 7
     region: content
     settings:
       display_label: true
@@ -216,7 +215,7 @@ content:
     third_party_settings: {  }
   field_committee_featured:
     type: boolean_checkbox
-    weight: 11
+    weight: 10
     region: content
     settings:
       display_label: true
@@ -262,7 +261,7 @@ content:
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox
-    weight: 9
+    weight: 8
     region: content
     settings:
       display_label: true
@@ -419,39 +418,40 @@ content:
             selector: ''
   field_video_status:
     type: options_select
-    weight: 15
+    weight: 27
     region: content
     settings: {  }
     third_party_settings: {  }
   field_yt:
-    type: video_embed_field_textfield
-    weight: 14
+    type: media_library_widget
+    weight: 26
     region: content
-    settings: {  }
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 12
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 10
+    weight: 9
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 7
+    weight: 6
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 11
+    weight: 10
     region: content
     settings:
       display_label: true
@@ -466,7 +466,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 7
     region: content
     settings:
       match_operator: CONTAINS
@@ -475,7 +475,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 13
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }

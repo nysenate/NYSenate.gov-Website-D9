@@ -1,12 +1,11 @@
-uuid: 3ba5f5af-3222-4da2-a905-9c03e49cc3c4
+uuid: ed0ae32c-ce00-4653-acc4-e87c51f1d870
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_yt
+    - media.type.remote_video
     - node.type.event
-  module:
-    - video_embed_field
 id: node.event.field_yt
 field_name: field_yt
 entity_type: node
@@ -18,8 +17,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  allowed_providers:
-    vimeo: vimeo
-    youtube: youtube
-    youtube_playlist: '0'
-field_type: video_embed_field
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      remote_video: remote_video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

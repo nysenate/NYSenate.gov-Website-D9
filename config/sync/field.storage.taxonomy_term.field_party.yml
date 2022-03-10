@@ -1,0 +1,75 @@
+uuid: b4981437-7206-4470-8e2f-a9a2b4fbcdcf
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - taxonomy
+id: taxonomy_term.field_party
+field_name: field_party
+entity_type: taxonomy_term
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: D
+      label: Democrat
+    -
+      value: R
+      label: Republican
+    -
+      value: C
+      label: Conservative
+    -
+      value: CNST
+      label: Constitution
+    -
+      value: G
+      label: Green
+    -
+      value: IP
+      label: 'Independence Party'
+    -
+      value: I
+      label: 'Independent/No Party'
+    -
+      value: Ind
+      label: 'Independent Party'
+    -
+      value: L
+      label: Liberal
+    -
+      value: LIBT
+      label: Libertarian
+    -
+      value: NL
+      label: 'Natural Law'
+    -
+      value: RFM
+      label: 'Reform Party'
+    -
+      value: RTL
+      label: 'Right to Life'
+    -
+      value: SJ
+      label: 'Save Jobs'
+    -
+      value: SC
+      label: 'School Choice'
+    -
+      value: SWP
+      label: 'Socialist Workers'
+    -
+      value: WEP
+      label: 'Women''s Equality Party'
+    -
+      value: WF
+      label: 'Working Families'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

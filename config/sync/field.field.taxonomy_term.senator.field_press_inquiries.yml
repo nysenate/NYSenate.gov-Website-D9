@@ -1,0 +1,19 @@
+uuid: ffbe6b13-a96a-4f13-a10b-887e2560d807
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_press_inquiries
+    - taxonomy.vocabulary.senator
+id: taxonomy_term.senator.field_press_inquiries
+field_name: field_press_inquiries
+entity_type: taxonomy_term
+bundle: senator
+label: 'Press Inquiries Email Address'
+description: 'If you would like press inquiries from the contact form to go to an address other than the Senator''s, please enter it here. (This address does not display on the website. It is used to properly route the contact form submission). '
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

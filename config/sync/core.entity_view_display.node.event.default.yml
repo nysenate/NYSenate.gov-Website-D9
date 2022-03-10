@@ -34,7 +34,6 @@ dependencies:
     - options
     - text
     - user
-    - video_embed_field
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -219,13 +218,11 @@ content:
     weight: 21
     region: content
   field_yt:
-    type: video_embed_field_video
+    type: entity_reference_entity_view
     label: above
     settings:
-      autoplay: true
-      responsive: true
-      width: 854
-      height: 480
+      view_mode: default
+      link: false
     third_party_settings: {  }
     weight: 22
     region: content

@@ -23,6 +23,7 @@ dependencies:
     - field.field.node.event.field_social_teaser
     - field.field.node.event.field_teleconference_id_number
     - field.field.node.event.field_teleconference_number
+    - field.field.node.event.field_ustream_url
     - field.field.node.event.field_video_status
     - field.field.node.event.field_yt
     - node.type.event
@@ -141,6 +142,7 @@ third_party_settings:
     group_video_settings:
       children:
         - field_yt
+        - field_ustream_url
         - field_video_status
       label: 'Event Video Settings'
       region: content
@@ -185,7 +187,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -215,7 +217,7 @@ content:
     third_party_settings: {  }
   field_committee_featured:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: true
@@ -358,7 +360,7 @@ content:
     third_party_settings: {  }
   field_social_teaser:
     type: string_textarea
-    weight: 7
+    weight: 8
     region: content
     settings:
       rows: 5
@@ -416,9 +418,16 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_ustream_url:
+    type: media_library_widget
+    weight: 27
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
   field_video_status:
     type: options_select
-    weight: 27
+    weight: 28
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -431,13 +440,13 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 9
+    weight: 10
     region: content
     settings:
       display_label: true
@@ -451,7 +460,7 @@ content:
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: true
@@ -475,7 +484,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }

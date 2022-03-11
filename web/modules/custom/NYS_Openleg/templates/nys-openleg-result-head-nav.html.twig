@@ -1,0 +1,19 @@
+{#
+/**
+ * @file nys-openleg-result-head-nav.tpl.php
+ *
+ * @var $nav array With expected keys for 'previous', 'next', and 'up'.  Each
+ *   value is an array, which can describe 'name', 'description', and 'url'.
+ *   Any key not present will be rendered as an empty element.
+ */
+#}
+<div class="nys-openleg-result-nav-bar">
+  {% for key in ['previous','up','next'] %}
+  <div class="nys-openleg-result-nav-bar-item nys-openleg-result-nav-bar-item-{{ key }}">
+    {% if nav[key]['description'] is not empty and nav[key]['url'] is not empty %}
+    <div class="nys-openleg-result-nav-item-dir">{{ key }}</div>
+    {{ include('nys-openleg-result-item.html.twig', nav[key]|merge({'item_type': 'nav-item'})) }}
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>

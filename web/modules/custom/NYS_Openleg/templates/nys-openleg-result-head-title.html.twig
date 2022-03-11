@@ -1,0 +1,21 @@
+{#
+/**
+ * @file nys-openleg-result-head-title.html.twig
+ *
+ * @var $title_parts string[]
+ *   An array of up to three strings representing location, short title, and parents
+ */
+#}
+{% set headline = title_parts[0] ?? (title ?? 'No Title <!-- empty theme var -->') %}
+{% set short_title = title_parts[1] ?? '' %}
+{% set location = title_parts[2] ?? '' %}
+<div class="nys-openleg-result-title">
+    <div class="nys-openleg-result-title-headline">{{ headline }}</div>
+    {% if short_title is not empty %}
+        <div class="nys-openleg-result-title-short">{{ short_title }}</div>
+    {% endif %}
+    {% if location is not empty %}
+        <div class="nys-openleg-result-title-location">{{ location }}</div>
+    {% endif %}
+</div>
+

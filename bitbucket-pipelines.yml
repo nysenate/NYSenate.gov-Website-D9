@@ -81,14 +81,14 @@ pipelines:
             - ../vendor/bin/drush -vvv --debug runserver 8080 &
             - sleep 3
             - cd ..
-            - if [ "$(ls -A web/modules/custom/)" ]; then
+            #- if [ "$(ls -A web/modules/custom/)" ]; then
             # The SIMPLETEST_DB var is needed for Kernel and Functional tests.
-            - echo 'SIMPLETEST_DB="mysql://drupal:drupal@127.0.0.1:3306/drupal"' >> .env
+            #- echo 'SIMPLETEST_DB="mysql://drupal:drupal@127.0.0.1:3306/drupal"' >> .env
             # PHPUnit - Kernel and Functional tests
-            - composer robo test:phpunit-tests --filter="/Kernel\|Functional/"
+            #- composer robo test:phpunit-tests --filter="/Kernel\|Functional/"
             # PHPUnit - Drupal Test Trait ExistingSite tests
-            - DTT_BASE_URL=http://127.0.0.1:8080 ./vendor/bin/phpunit --configuration=./tests/dtt/phpunit.xml ./web/modules/custom/
-            - fi
+            #- DTT_BASE_URL=http://127.0.0.1:8080 ./vendor/bin/phpunit --configuration=./tests/dtt/phpunit.xml ./web/modules/custom/
+            #- fi
             # Drupal accessibility tests
             # - echo "Accessibility tests"
             # - pa11y --version

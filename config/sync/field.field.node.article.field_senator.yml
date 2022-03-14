@@ -1,0 +1,29 @@
+uuid: 77e88cec-eac5-4f99-aa43-9d42c24c4784
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_senator
+    - node.type.article
+    - node.type.page_content
+id: node.article.field_senator
+field_name: field_senator
+entity_type: node
+bundle: article
+label: Senator
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

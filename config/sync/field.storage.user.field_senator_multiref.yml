@@ -1,0 +1,20 @@
+uuid: c98b8725-ad7e-4d4c-bb33-1c0ee5762795
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+    - user
+id: user.field_senator_multiref
+field_name: field_senator_multiref
+entity_type: user
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -771,6 +771,16 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && is_readable($ddev_settings)) {
   require $ddev_settings;
 }
 
+// If a private settings file exists within the files directory, load it.
+if (file_exists($app_root . '/sites/default/files/private/private_settings.php')) {
+  include $app_root . '/sites/default/files/private/private_settings.php';
+}
+
+// Local version of the private settings file.
+if (file_exists($app_root . '/' . $site_path . '/private_settings.php')) {
+  include $app_root . '/' . $site_path . '/private_settings.php';
+}
+
 /**
  * Load local development override configuration, if available.
  *

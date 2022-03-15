@@ -4,10 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.issues.field_drupal_6_tid
+    - field.field.taxonomy_term.issues.field_geolocation
     - field.field.taxonomy_term.issues.field_keywords
+    - field.field.taxonomy_term.issues.field_location
     - field.field.taxonomy_term.issues.field_metatags
     - taxonomy.vocabulary.issues
   module:
+    - address
+    - geolocation
     - metatag
     - text
 id: taxonomy_term.issues.default
@@ -22,6 +26,13 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  field_geolocation:
+    type: geolocation_latlng
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
   field_keywords:
     type: string
     label: above
@@ -29,6 +40,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_location:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
     region: content
   field_metatags:
     type: metatag_empty_formatter

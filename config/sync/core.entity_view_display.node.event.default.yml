@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.event.field_date
     - field.field.node.event.field_date_range
     - field.field.node.event.field_event_online_link
+    - field.field.node.event.field_event_type
     - field.field.node.event.field_feature_image
     - field.field.node.event.field_featured
     - field.field.node.event.field_general_location
@@ -113,6 +114,13 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 16
+    region: content
+  field_event_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_feature_image:
     type: entity_reference_entity_view

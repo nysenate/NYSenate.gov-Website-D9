@@ -9,7 +9,6 @@ dependencies:
     - field.field.node.event.field_attachment
     - field.field.node.event.field_committee
     - field.field.node.event.field_committee_featured
-    - field.field.node.event.field_date
     - field.field.node.event.field_date_range
     - field.field.node.event.field_event_online_link
     - field.field.node.event.field_event_type
@@ -31,7 +30,6 @@ dependencies:
     - node.type.event
   module:
     - address
-    - datetime
     - options
     - user
 id: node.event.search_index
@@ -41,31 +39,22 @@ mode: search_index
 content:
   field_committee:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
     weight: 4
     region: content
-  field_date:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 0
-    region: content
   field_general_location:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 3
     region: content
   field_issues:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }

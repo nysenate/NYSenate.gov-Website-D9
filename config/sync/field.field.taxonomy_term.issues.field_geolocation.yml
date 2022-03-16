@@ -6,7 +6,24 @@ dependencies:
     - field.storage.taxonomy_term.field_geolocation
     - taxonomy.vocabulary.issues
   module:
+    - geocoder_field
     - geolocation
+third_party_settings:
+  geocoder_field:
+    method: geocode
+    weight: 0
+    field: field_location
+    skip_not_empty_value: false
+    disabled: true
+    hidden: false
+    providers:
+      - googlemaps
+    dumper: geolocation
+    delta_handling: default
+    failure:
+      handling: preserve
+      status_message: true
+      log: true
 id: taxonomy_term.issues.field_geolocation
 field_name: field_geolocation
 entity_type: taxonomy_term

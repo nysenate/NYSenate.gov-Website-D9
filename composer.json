@@ -23,14 +23,27 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
         "drupal/auto_entitylabel": "^3.0@beta",
+        "drupal/better_exposed_filters": "^5.0",
+        "drupal/charts": "^3.3",
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/core-composer-scaffold": "^9.0",
         "drupal/core-recommended": "^9.0@stable",
         "drupal/devel": "^4.1",
+        "drupal/fancy_file_delete": "^2.0",
+        "drupal/field_permissions": "^1.1",
+        "drupal/field_validation": "^1.0@beta",
         "drupal/filefield_paths": "^1.0@beta",
+        "drupal/flag": "^4.0@beta",
+        "drupal/fullcalendar_view": "^5.1",
         "drupal/guardr_core": "^2.0",
+        "drupal/htmlpurifier": "^1.0@RC",
+        "drupal/image_style_quality": "^1.4",
+        "drupal/imagemagick": "^3.3",
+        "drupal/inline_entity_form": "^1.0@RC",
         "drupal/name": "^1.0@RC",
         "drupal/oembed_providers": "^2.0",
+        "drupal/permissions_filter": "^1.2",
+        "drupal/transliterate_filenames": "^2.0",
         "drush/drush": "^10.3",
         "kint-php/kint": "^4.1",
         "mediacurrent/mis_profile": "^2.0",
@@ -125,7 +138,8 @@
         },
         "patches": {
             "drupal/core": {
-                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2021-11-18/1356276-675.patch"
+                "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2021-11-18/1356276-675.patch",
+                "2949017 - There is no way to delete or update file entities of other users": "https://www.drupal.org/files/issues/2021-12-01/2949017-85.patch"
             }
         }
     }

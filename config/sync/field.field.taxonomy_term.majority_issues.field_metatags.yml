@@ -1,0 +1,21 @@
+uuid: 77c7906c-be22-4f40-aca7-50da619cadc4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_metatags
+    - taxonomy.vocabulary.majority_issues
+  module:
+    - metatag
+id: taxonomy_term.majority_issues.field_metatags
+field_name: field_metatags
+entity_type: taxonomy_term
+bundle: majority_issues
+label: 'Meta tags'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag

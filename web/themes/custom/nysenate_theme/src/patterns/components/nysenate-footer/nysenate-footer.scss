@@ -88,6 +88,7 @@ footer {
 
     @include breakpoint($bp-md) {
       width: 20%;
+      margin: 0;
     }
   }
 
@@ -95,6 +96,11 @@ footer {
     font-size: 11px;
     text-decoration: none;
     color: #444;
+    line-height: 1em;
+
+    @include breakpoint($bp-sm) {
+      line-height: 1.2em;
+    }
   }
 }
 
@@ -118,10 +124,11 @@ footer {
     text-transform: uppercase;
     color: #444;
     text-decoration: none;
-    font-weight: bold;
     font-size: 11px;
+    line-height: 11px;
     width: 100%;
     margin-top: 25px;
+    letter-spacing: 0.1em;
 
     @include breakpoint($bp-sm) {
       display: flex;
@@ -131,6 +138,7 @@ footer {
       font-size: 12px;
       float: none;
       margin-top: 0;
+      line-height: 18px;
     }
   }
 
@@ -178,6 +186,9 @@ footer {
 
   li {
     margin-bottom: 10px;
+    font-size: 11px;
+    line-height: 1em;
+    margin-bottom: 25px;
 
     &:last-child {
       margin: 0;
@@ -188,11 +199,12 @@ footer {
     color: #444;
     text-decoration: none;
     text-transform: uppercase;
-    font-weight: bold;
     font-size: 11px;
 
     @include breakpoint($bp-sm) {
       font-size: 12px;
+      line-height: 11px;
+      letter-spacing: 1.2px;
     }
   }
 }
@@ -218,6 +230,7 @@ footer {
     margin: 0 0 20px;
     color: #666;
     font-size: 11px;
+    line-height: 1em;
 
     @include breakpoint($bp-sm) {
       font-size: 12px;

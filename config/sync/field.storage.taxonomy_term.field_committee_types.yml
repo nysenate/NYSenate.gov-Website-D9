@@ -1,0 +1,42 @@
+uuid: 53d90d16-a8ae-443b-8350-e8eca0dfe80a
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - taxonomy
+id: taxonomy_term.field_committee_types
+field_name: field_committee_types
+entity_type: taxonomy_term
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: standing
+      label: 'Standing Committee'
+    -
+      value: taskforce
+      label: 'Task Force & Other Entities'
+    -
+      value: conferences_caucuses
+      label: Caucuses
+    -
+      value: temporary
+      label: 'Temporary Committee'
+    -
+      value: legislative_commissions
+      label: 'Legislative Commissions'
+    -
+      value: subcommittee
+      label: Subcommittee
+    -
+      value: inactive
+      label: Inactive
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

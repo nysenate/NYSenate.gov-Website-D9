@@ -1,0 +1,23 @@
+uuid: 389e7a2b-111c-434a-b98a-6a4a8697be09
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_assemblymen_chair
+    - taxonomy.vocabulary.committees
+id: taxonomy_term.committees.field_assemblymen_chair
+field_name: field_assemblymen_chair
+entity_type: taxonomy_term
+bundle: committees
+label: 'Has Assemblymen Chair'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

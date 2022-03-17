@@ -1,0 +1,21 @@
+uuid: 0634fc5f-34df-42f2-a301-e084b0a1ba2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_archive_date
+    - taxonomy.vocabulary.committees
+  module:
+    - datetime
+id: taxonomy_term.committees.field_archive_date
+field_name: field_archive_date
+entity_type: taxonomy_term
+bundle: committees
+label: 'Archive all committee content published on or before . . .'
+description: 'Prevents content published before this date from appearing on the committee home page feeds.  Leave this field blank to disable archiving for the committee.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

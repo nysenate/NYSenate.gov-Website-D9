@@ -5,7 +5,9 @@ namespace Drupal\NYS_Openleg;
 use Drupal\NYS_Openleg\Api\ApiRequest;
 
 /**
+ * Class ApiWrapper.
  *
+ * A collection of wrapper and meta-functions for Openleg.
  */
 class ApiWrapper {
 
@@ -23,6 +25,7 @@ class ApiWrapper {
 
   /**
    * Translates the official law type code into a friendly name.
+   *
    * As of 2022, there is no canonical source for these names.
    */
   const LAW_TYPE_NAMES = [
@@ -37,17 +40,21 @@ class ApiWrapper {
    * Sets the API key for future requests.
    *
    * @param string $api_key
+   *   The API key.
    */
   public static function setKey(string $api_key) {
     ApiRequest::useKey($api_key);
   }
 
   /**
-   * Fetches the known law types, based on the population of books
-   * from OpenLeg API.  Returns an array in which the keys are the
-   * type code, and values are arrays with name, description, and url.
+   * Fetches the known law types.
    *
-   * @return array In the form:
+   * Law types are gleaned from the population of books found in OpenLeg API.
+   * Returns an array in which the keys are the type code, and values are arrays
+   * with name, description, and url.
+   *
+   * @return array
+   *   In the form:
    *   [
    *      'type name' => ['name' => '', 'description' => '', 'url' => ''],
    *      ...,
@@ -55,10 +62,11 @@ class ApiWrapper {
    */
   public static function getLawTypes(): array {
     // Get the types from the known books if it is not already set.
-    if (!$ret = (static::_check_cache('law-types')->data ?? [])) {
+    if (!$ret = (static::shouldNotBeCamelCaseGetCache('law-types')->data ?? [])) {
       // Each law type comes pre-formatted as a list item template structure.
       foreach (static::getLawBooks() as $v) {
-        $ret[$v->lawType] = $ret[$v->lawType] ?? [
+        $ret[$v->lawType] = $ret[$v->lawType]
+          ?? [
             'name' => ucwords(strtolower(str_replace('_', ' ', $v->lawType ?: 'no description'))),
             'description' => self::LAW_TYPE_NAMES[$v->lawType] ?? 'no description',
             'url' => self::PATH_PREFIX . '/' . $v->lawType,
@@ -66,7 +74,7 @@ class ApiWrapper {
       }
 
       // Store for posterity.
-      static::_set_cache('law-types', $ret);
+      static::shouldNotBeCamelCaseSetCache('law-types', $ret);
     }
 
     return $ret;
@@ -74,30 +82,28 @@ class ApiWrapper {
 
   /**
    * Fetches a cache value.
-   *
-   * @param string $name
-   *
-   * @return mixed
    */
-  protected static function _check_cache(string $name) {
+  protected static function shouldNotBeCamelCaseGetCache(string $name) {
     return \Drupal::cache()->get('openleg:' . $name);
   }
 
   /**
-   * Fetches a list of all known books of law from OpenLeg API.  The
-   * list becomes an array, keyed by the book code (e.g., ABP, PEN),
-   * with the values being JSON-decoded objects from the response.
+   * Fetches a list of all known books of law.
+   *
+   * The list retrieved from OpenLeg becomes an array, keyed by the book
+   * code (e.g., ABP, PEN), with the values being JSON-decoded objects from
+   * the response.
    *
    * @return array
+   *   An array of book objects.
    *
    * @see https://legislation.nysenate.gov/static/docs/html/laws.html#get-a-list-of-law-ids
    *
    * @todo create a static cache at this level, break out the cache fetch.
-   *
    */
   public static function getLawBooks(): array {
     // Check the cache for an existing list.
-    $ret = (static::_check_cache('law-tree')->data) ?? [];
+    $ret = (static::shouldNotBeCamelCaseGetCache('law-tree')->data) ?? [];
 
     // Call OpenLeg if the cache is not populated.
     if (!$ret) {
@@ -111,7 +117,7 @@ class ApiWrapper {
         ksort($ret);
 
         // Save the tree in cache.
-        static::_set_cache('law-tree', $ret);
+        static::shouldNotBeCamelCaseSetCache('law-tree', $ret);
       }
     }
 
@@ -122,24 +128,31 @@ class ApiWrapper {
    * Sets a cache value, with default retention of 1 day.
    *
    * @param string $name
+   *   The cache entry name.
    * @param mixed $data
+   *   The cache entry value.
    * @param int $retain
+   *   (Optional) Retention time in seconds, defaults to 1 day.
    */
-  protected static function _set_cache(string $name, $data, int $retain = 86400) {
+  protected static function shouldNotBeCamelCaseSetCache(string $name, $data, int $retain = 86400) {
     \Drupal::cache()->set('openleg:' . $name, $data, time() + $retain);
   }
 
   /**
-   * Retrieve all books belonging to the passed type, e.g., CONSOLIDATED.
+   * Retrieve all books of a specified type, e.g., CONSOLIDATED.
+   *
    * The $sort parameter can be a property name, or one of the pre-defined
    * constants.
    *
    * @param string $type
+   *   The type of book to retrieve.
    * @param mixed $sort
+   *   (Optional) A constant value, or the name of a property to sort by.
    *
    * @return array
+   *   An array of book objects.
    */
-  public static function getBooksByType($type, $sort = self::SORT_BY_CODE): array {
+  public static function getBooksByType(string $type, $sort = self::SORT_BY_CODE): array {
     $books = array_filter(
       static::getLawBooks(),
       function ($v) use ($type) {
@@ -150,15 +163,20 @@ class ApiWrapper {
   }
 
   /**
-   * Sorts an array of objects, presumably an array of book entries, but
-   * any array of objects will suffice.  The $sort parameter can be one of
-   * the pre-defined constants, or the name of a property found in each
-   * object.  Sort is always implemented as a string comparison.
+   * Sorts an array of objects.
+   *
+   * The $list parameter is presumably an array of book entries, but any array
+   * of objects will suffice.  The $sort parameter can be one of the pre-defined
+   * constants, or the name of a property found in each object.  Sort is always
+   * implemented as a string comparison.
    *
    * @param array $list
+   *   An array of objects.
    * @param mixed $sort
+   *   A sort by constant, or property name.
    *
    * @return array
+   *   The sorted array.
    */
   public static function sortList(array $list, $sort = self::SORT_BY_CODE): array {
     switch ($sort) {
@@ -184,19 +202,24 @@ class ApiWrapper {
   }
 
   /**
-   * Generates an array of breadcrumb items.  If no law_type is provided,
-   * the return will be an empty array.  With a law_type, the return will
-   * have at least the top-level breadcrumb.  If parents is also an array,
-   * a second breadcrumb pointing to law_type will be added.  If parents
-   * is also populated, each entry generates an additional elements.
+   * Generates an array of breadcrumb items.
+   *
+   * If no law_type is provided, the return will be an empty array.  With a
+   * law_type, the return will have at least the top-level breadcrumb.  If
+   * parents is also an array, a second breadcrumb pointing to law_type will
+   * be added.  If parents is also populated, each entry generates an additional
+   * elements.
    *
    * All elements conform to the requirements for rendering with the
    * result-item twig template.
    *
    * @param string $law_type
-   * @param ?array $parents
+   *   (Optional) The entry's law type.
+   * @param array $parents
+   *   (Optional) An array of parent entries.
    *
    * @return array
+   *   An array of breadcrumb items.
    *
    * @see templates/nys-openleg-result-item.html.twig
    */

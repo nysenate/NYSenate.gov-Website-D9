@@ -40,28 +40,35 @@ class ApiRequest {
   const DEFAULT_PATH_PREFIX = ['api'];
 
   /**
-   * Sets an API key to be used by default with any future call.
+   * An API key to be used by default with any future call.
    *
    * @var string
+   *
+   * This should absolutely not be in upperCamelCase.
+   * Class properties should be constructed using lower_underscore.
    */
-  protected static string $default_api_key = '';
+  protected static string $shouldNotBeCamelCaseDefaultApiKey = '';
 
   /**
-   * API key set for the most recent call.
+   * API key currently in use.
    *
    * @var string
+   *
+   * This should absolutely not be in upperCamelCase.
+   * Class properties should be constructed using lower_underscore.
    */
-  protected string $api_key;
+  protected string $shouldNotBeCamelCaseApikey;
+
 
   /**
-   * Host used for the most recent call.
+   * Host for API calls.
    *
    * @var string
    */
   protected string $host;
 
   /**
-   * Version used for the most recent call.
+   * Version for API calls.
    *
    * @var string
    */
@@ -71,8 +78,11 @@ class ApiRequest {
    * A string, or array of strings, indicating current prefix.
    *
    * @var string|string[]
+   *
+   * This should absolutely not be in upperCamelCase.
+   * Class properties should be constructed using lower_underscore.
    */
-  protected $path_prefix;
+  protected $shouldNotBeCamelCasePathprefix;
 
   /**
    * A string, or array of strings, indicating endpoints.
@@ -89,7 +99,9 @@ class ApiRequest {
   protected Client $client;
 
   /**
-   * Api constructor.  Receives an endpoint (as a string, or an array of
+   * Api constructor.
+   *
+   * Receives an endpoint (as a string, or an array of
    * strings; see buildPathArray()), and an array of options.
    *
    * Known options:
@@ -100,7 +112,6 @@ class ApiRequest {
    *
    * @param string|string[] $endpoint
    *   A string or array of strings (path array) specifying the API endpoint.
-   *
    * @param array $options
    *   Connection options.
    */
@@ -122,20 +133,21 @@ class ApiRequest {
    * @return $this
    */
   public function setApiKey(string $api_key = ''): ApiRequest {
-    $this->api_key = $api_key ?: static::$default_api_key;
+    $this->shouldNotBeCamelCaseApikey = $api_key ?: static::$shouldNotBeCamelCaseDefaultApiKey;
     return $this;
   }
 
   /**
-   * A convenience wrapper around (new self())->get().  The parameters
-   * are as with __construct(), with two additional keys in $options:
+   * A convenience wrapper around (new self())->get().
+   *
+   * The parameters are as with __construct(), with two additional keys
+   * in $options:
    *
    *  - resource: the resource parameter for get()
    *  - params:   the params parameter for get()
    *
    * @param string|string[] $endpoint
    *   A string or array of strings (path array) specifying the API endpoint.
-   *
    * @param array $options
    *   Connection options.
    *
@@ -149,6 +161,7 @@ class ApiRequest {
 
   /**
    * Instantiates an API client based on the host and path for this call.
+   *
    * The URL to be called is built as:
    *
    * Https://<host>/<path_prefix>/<version>/<endpoint>/<resource>?<params>
@@ -168,7 +181,7 @@ class ApiRequest {
     $extra_path = $this->buildEndpoint() . $resource;
 
     // Build URL parameters.
-    $params += $this->api_key ? ['key' => $this->api_key] : [];
+    $params += $this->shouldNotBeCamelCaseApikey ? ['key' => $this->shouldNotBeCamelCaseApikey] : [];
 
     // Instantiate the client and make the call.
     $this->client = new Client($url, NULL, $this->getVersion(), [$extra_path]);
@@ -181,11 +194,7 @@ class ApiRequest {
   }
 
   /**
-   * Builds a host string, including host and "path prefix".  It is
-   * always terminated with '/'.
-   *
-   * @return string
-   *   The build host with path prefix.
+   * Builds a host string, including host and "path prefix".
    */
   protected function buildHost(): string {
     $host = [
@@ -198,8 +207,6 @@ class ApiRequest {
 
   /**
    * Gets the host.
-   *
-   * @return string The host.
    */
   public function getHost(): string {
     return $this->host;
@@ -207,10 +214,6 @@ class ApiRequest {
 
   /**
    * Sets the host as provided, or the default host.
-   *
-   * @param string $host  The host to use.
-   *
-   * @return $this
    */
   public function setHost(string $host = ''): ApiRequest {
     if (!$host) {
@@ -221,40 +224,34 @@ class ApiRequest {
   }
 
   /**
-   * Returns the source array of path parts if $as_array is true.
-   * Otherwise, returns the built string.
-   *
-   * @return string|string[]
-   *   Either a built path string, or an array of the parts.
+   * Returns the path prefix as either a string or array.
    */
   public function getPathPrefix($as_array = FALSE) {
     if ($as_array) {
-      $ret = $this->path_prefix;
+      $ret = $this->shouldNotBeCamelCasePathprefix;
     }
     else {
-      $ret = implode('/', $this->path_prefix);
+      $ret = implode('/', $this->shouldNotBeCamelCasePathprefix);
     }
 
     return $ret;
   }
 
   /**
-   * Sets the path prefix for the next API call.
-   *
-   * @param mixed $path_prefix
-   *   A string path, or an array of parts.
-   *
-   * @return $this
+   * Sets the path prefix.
    */
   public function setPathPrefix($path_prefix): ApiRequest {
-    $this->path_prefix = $this->buildPathArray($path_prefix);
+    $this->shouldNotBeCamelCasePathprefix = $this->buildPathArray($path_prefix);
     return $this;
   }
 
   /**
-   * Builds an array of path parts from a slash-delimited string, or an
-   * existing array of parts.  The return is filtered to remove blank
-   * parts.
+   * Builds a path array from a slash-delimited string, or an existing array.
+   *
+   * A path array is defined as an array of strings, with each member value
+   * being one part of file/URL path.  This function can take either a slash-
+   * delimited string or an existing array of strings as its parameter.  The
+   * return is filtered to remove blank parts.
    *
    * @param array|string $path
    *   A string or array of strings (path parts).
@@ -270,8 +267,9 @@ class ApiRequest {
   }
 
   /**
-   * Builds the endpoint portion of the call's URL.  May also reset
-   * the current endpoint, if a new one is passed.  The return is
+   * Builds the endpoint portion of the call's URL.
+   *
+   * May also reset the current endpoint, if a new one is passed.  The return is
    * always terminated with '/'.
    *
    * @param string|string[]|null $endpoint
@@ -295,8 +293,6 @@ class ApiRequest {
 
   /**
    * Get the API version.
-   *
-   * @return string The version
    */
   public function getVersion(): string {
     return $this->version;
@@ -304,10 +300,6 @@ class ApiRequest {
 
   /**
    * Sets the API version.
-   *
-   * @param string $version The version to use with the next call.
-   *
-   * @return $this
    */
   public function setVersion(string $version): ApiRequest {
     $this->version = trim($version, '/');
@@ -315,30 +307,21 @@ class ApiRequest {
   }
 
   /**
-   * Sets an API key to be used for all future calls by default.
-   *
-   * @param string $api_key The API key to use with future calls.
+   * Sets the default API key for all future calls.
    */
   public static function useKey(string $api_key) {
-    self::$default_api_key = $api_key;
+    self::$shouldNotBeCamelCaseDefaultApiKey = $api_key;
   }
 
   /**
    * Gets the endpoint for the current call.
-   *
-   * @return string|string[] The current endpoint.
    */
   public function getEndpoint() {
     return $this->endpoint;
   }
 
   /**
-   * Sets the endpoint for the next call.
-   *
-   * @param string|string[] $endpoint
-   *   A string or array of strings (path parts).
-   *
-   * @return $this
+   * Sets the endpoint.
    */
   public function setEndpoint($endpoint): ApiRequest {
     $this->endpoint = $this->buildPathArray($endpoint);
@@ -346,8 +329,9 @@ class ApiRequest {
   }
 
   /**
-   * Sets the internal options for the next API call.  The $options array
-   * recognizes 'api_key', 'host', 'version', 'path_prefix'.
+   * Sets the internal options for the next API call.
+   *
+   * The $options array recognizes 'api_key', 'host', 'version', 'path_prefix'.
    *
    * @param array $options
    *   An array of connection options.

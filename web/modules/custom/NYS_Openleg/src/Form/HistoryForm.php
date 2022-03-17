@@ -6,24 +6,27 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\NYS_Openleg\Api\Request\Statute;
 
 /**
+ * Class HistoryForm.
  *
+ * Form-handling class for NYS Openleg history selector.
  */
 class HistoryForm extends FormBase {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getFormId(): string {
     return 'nys_openleg_history_form';
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    *
    * Requires an instance of Drupal\NYS_Openleg\Api\Request\Statute as the
    * first buildInfo argument.
    *
-   * @throws \InvalidArgumentException If no Statute is received.
+   * @throws \InvalidArgumentException
+   *   If no Statute is received.
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     // Validate the required buildInfo argument.
@@ -56,7 +59,7 @@ class HistoryForm extends FormBase {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    *
    * Submissions are handled by MainController::browse().
    */

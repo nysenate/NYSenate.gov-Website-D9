@@ -5,17 +5,22 @@ namespace Drupal\NYS_Openleg\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\NYS_Openleg\ApiWrapper;
 
+/**
+ * Class SearchForm.
+ *
+ * Form-handling class for NYS Openleg search.
+ */
 class SearchForm extends FormBase {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getFormId(): string {
     return 'nys_openleg_search_form';
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     // In order of precedence, look for a search term in build_info,
@@ -40,7 +45,7 @@ class SearchForm extends FormBase {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->disableRedirect();

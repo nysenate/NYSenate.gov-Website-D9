@@ -4,7 +4,7 @@ nys_openleg.top:
     _controller: Drupal\NYS_Openleg\Controller\MainController::browse
     _title: "NYS Open Legislation"
   requirements:
-    _access: 'TRUE'
+    _permission: 'access content'
 
 nys_openleg.book:
   path: /legislation/laws/{book}
@@ -13,7 +13,7 @@ nys_openleg.book:
     _title: "NYS Open Legislation"
     book: "all"
   requirements:
-    _access: 'TRUE'
+    _permission: 'access content'
 
 nys_openleg.location:
   path: /legislation/laws/{book}/{location}
@@ -23,7 +23,7 @@ nys_openleg.location:
     book: "all"
     location: ""
   requirements:
-    _access: 'TRUE'
+    _permission: 'access content'
 
 nys_openleg.search:
   path: /legislation/laws/search/{search_term}
@@ -32,4 +32,4 @@ nys_openleg.search:
     _title: "NYS Open Legislation: Search"
     search_term: ''
   requirements:
-    _access: 'TRUE'
+    _permission: 'access content'

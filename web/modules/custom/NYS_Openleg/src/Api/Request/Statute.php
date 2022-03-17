@@ -5,7 +5,9 @@ namespace Drupal\NYS_Openleg\Api\Request;
 use Drupal\NYS_Openleg\Api\ApiRequest;
 
 /**
+ * Class Statute.
  *
+ * Wrapper around ApiRequest for requesting a single statute.
  */
 class Statute {
 
@@ -35,24 +37,37 @@ class Statute {
   protected string $endpoint = 'laws';
 
   /**
-   * @var string Stores the book being requested.
+   * The book being requested.
+   *
+   * @var string
    */
   protected string $book = '';
 
   /**
-   * @var mixed|string Stores location being requested.
+   * The location being requested.
+   *
+   * @var string
    */
-  protected $location = '';
+  protected string $location = '';
 
   /**
-   * @var false|string Stores the history marker being requested.
+   * Stores the history marker being requested.
+   *
+   * @var string
    */
-  protected $history = '';
+  protected string $history = '';
 
   /**
    * Instantiate and execute the request.
+   *
+   * @param string $book
+   *   The book to request.
+   * @param string $location
+   *   (Optional) The location to request.
+   * @param string $history
+   *   (Optional) The history marker to request.
    */
-  public function __construct($book, $location = '', $history = '') {
+  public function __construct(string $book, string $location = '', string $history = '') {
     $this->book = $book;
     $this->location = $location;
     $this->history = $this->resolveHistoryDate($history);
@@ -66,8 +81,10 @@ class Statute {
    * Formats a date for proper usage in an OpenLeg request.
    *
    * @param string $date
+   *   The date to format, acceptable for strtotime().
    *
    * @return string
+   *   The formatted date, or a blank string.
    */
   protected function resolveHistoryDate(string $date = ''): string {
     if (!$date) {
@@ -78,16 +95,22 @@ class Statute {
   }
 
   /**
-   * Executes an API call to OpenLeg for the given book, location,
-   * and history marker.
+   * Executes an API call to OpenLeg.
+   *
+   * The passed book, location, and history marker are used for the request,
+   * and remembered for later use. If any are not passed, the current settings
+   * are used.
    *
    * @param string $book
+   *   The book to retrieve.
    * @param string $location
-   * @param null $history
+   *   The location to retrieve.
+   * @param string|null $history
+   *   The history marker to retrieve.
    *
-   * @return Statute
+   * @return $this
    */
-  public function retrieveFull(string $book = '', string $location = '', $history = NULL): Statute {
+  public function retrieveFull(string $book = '', string $location = '', string $history = NULL): Statute {
     // Reset local properties if a new request is being made.
     if (!is_null($book)) {
       $this->book = $book;
@@ -116,10 +139,12 @@ class Statute {
   }
 
   /**
-   * Gets the document object of the most recent call, including the
-   * detail's text as an added property.
+   * Gets the document object.
+   *
+   * The detail's text property is added to this return.
    *
    * @return object
+   *   The document object.
    */
   public function document(): object {
     $ret = $this->tree->result->documents ?? (object) [];
@@ -131,16 +156,17 @@ class Statute {
    * Gets the array of child objects from the most recent call.
    *
    * @return array
+   *   Array of child objects.
    */
   public function children(): array {
     return $this->tree->result->documents->documents->items ?? [];
   }
 
   /**
-   * Gets an array of the siblings associated with the current
-   * entry.  The return array has keys for 'previous' and 'next'.
+   * Gets an array of the siblings associated with the current entry.
    *
    * @return array
+   *   The return array has keys for 'previous' and 'next'.
    */
   public function siblings(): array {
     return [
@@ -150,10 +176,13 @@ class Statute {
   }
 
   /**
-   * Gets the full title, including parent references, of the
-   * most recent call.
+   * Gets the full title.
+   *
+   * The full title is array which includes the current location title, as
+   * well as titles of any parent references.
    *
    * @return array
+   *   An array of titles, from current location through all parents.
    */
   public function fullTitle(): array {
     $detail = $this->detail->result;
@@ -177,6 +206,7 @@ class Statute {
    * Gets the array of parent objects from the most recent call.
    *
    * @return array
+   *   An array of parent objects.
    */
   public function parents(): array {
     return $this->detail->result->parents ?? [];
@@ -186,6 +216,7 @@ class Statute {
    * Gets a sorted list of history markers for the most recent call.
    *
    * @return array
+   *   An array of available history markers.
    */
   public function publishDates(): array {
     $sorted = $this->tree->result->publishedDates;
@@ -194,12 +225,17 @@ class Statute {
   }
 
   /**
-   * Gets the text of the current entry, mangled for proper presentation
-   * in HTML.
+   * Gets the text of the current entry.
    *
-   * @returns string
+   * If $raw is TRUE, the text is mangled for proper presentation in HTML.
+   *
+   * @param bool $raw
+   *   Indicates if raw text should be returned.
+   *
+   * @return string
+   *   The text.
    */
-  public function text($raw = FALSE): string {
+  public function text(bool $raw = FALSE): string {
     $ret = $this->detail->result->text ?? '';
     if (!$raw) {
       $ret = str_replace('\\n', '<br />', str_replace('\\n  ', '<br /><br />', htmlentities($ret, ENT_QUOTES)));

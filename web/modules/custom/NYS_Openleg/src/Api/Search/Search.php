@@ -12,28 +12,33 @@ use Drupal\NYS_Openleg\Api\ApiRequest;
  *
  * NOTE: OL Search API indices start with 1.  This class does
  * not assume any zero-based values.
- *
- * @package Nys_Openleg\Search
  */
 abstract class Search {
 
   /**
-   * @var int Current page number.
+   * Current page number.
+   *
+   * @var int
    */
   protected int $page;
 
   /**
-   * @var int Number of items per search page.
+   * Number of items per search page.
+   *
+   * @var int
    */
-  protected int $per_page;
+  protected int $shouldNotBeCamelCasePerPage;
 
   /**
-   * @var int Indicates the starting point for paging the returns.
+   * The starting point for paging the returns.
+   *
+   * @var int
    */
   protected int $offset;
 
   /**
    * Holds counter information relevant to the current search return.
+   *
    * Has array keys for 'start', 'end', and 'total'.
    *
    * @var array
@@ -41,17 +46,23 @@ abstract class Search {
   protected array $count;
 
   /**
-   * @var array Holds the results of the most recent search.
+   * Holds the results of the most recent search.
+   *
+   * @var array
    */
   protected array $data;
 
   /**
-   * @var string The search term for the current search.
+   * The search term for the current search.
+   *
+   * @var string
    */
-  protected string $search_term;
+  protected string $shouldNotBeCamelCaseSearchTerm;
 
   /**
-   * @var string The endpoint to call for a search request.
+   * The endpoint to call for a search request.
+   *
+   * @var string
    */
   protected string $endpoint = '';
 
@@ -59,7 +70,9 @@ abstract class Search {
    * Instantiate and execute the search.
    *
    * @param string $search_term
+   *   The search term to search for.
    * @param array $params
+   *   Array of page options to set.
    */
   public function __construct(string $search_term, array $params = []) {
     $this->setParams($params);
@@ -67,29 +80,34 @@ abstract class Search {
   }
 
   /**
-   * Sets the parameters for the next Search API call.  The params
-   * array recognizes keys for 'page', 'per_page', and 'offset'.
+   * Sets the parameters for the API calls.
+   *
+   * The params array recognizes keys for 'page', 'per_page', and 'offset'.
    *
    * @param array $params
+   *   Array of page options to set.
    */
-  public function setParams($params = []) {
+  public function setParams(array $params = []) {
     $this->page = (int) ($params['page'] ?? 1);
-    $this->per_page = (int) ($params['per_page'] ?? 10);
+    $this->shouldNotBeCamelCasePerPage = (int) ($params['per_page'] ?? 10);
     $this->offset = (int) ($params['offset'] ?? 0);
   }
 
   /**
-   * Executes a search request to Openleg, based on the provided search
-   * term, or (if blank) the term previously set.
+   * Executes a search request to Openleg.
+   *
+   * Searches for the provided search term, or the term previously set.
    *
    * @param string $search_term
+   *   The search term.  If not passed, the last search term set is used.
    */
   public function execute(string $search_term = '') {
-    $offset = $this->offset ?: ((($this->page - 1) * $this->per_page) + 1);
+    $this->shouldNotBeCamelCaseSearchTerm = $search_term ?: $this->shouldNotBeCamelCaseSearchTerm;
+    $offset = $this->offset ?: ((($this->page - 1) * $this->shouldNotBeCamelCasePerPage) + 1);
     $params = [
-      'term' => urlencode($search_term),
+      'term' => urlencode($this->shouldNotBeCamelCaseSearchTerm),
       'offset' => $offset,
-      'limit' => $this->per_page,
+      'limit' => $this->shouldNotBeCamelCasePerPage,
     ];
 
     $request = new ApiRequest($this->endpoint . '/search');
@@ -103,9 +121,10 @@ abstract class Search {
   }
 
   /**
-   * Gets a count stat from the current request.  If a count $type is
-   * provided, that individual integer is returned.  Otherwise, the
-   * array of count markers is returned.
+   * Gets a count stat from the current request.
+   *
+   * If a count $type is provided, that individual integer is returned.
+   * Otherwise, the array of count markers is returned.
    *
    * @returns array|int
    */

@@ -2,52 +2,78 @@
 
 namespace Drupal\NYS_Openleg\Controller;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Http\RequestStack;
+use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\NYS_Openleg\Api\Request\Statute;
 use Drupal\NYS_Openleg\Api\Search\Statute as StatuteSearch;
 use Drupal\NYS_Openleg\ApiWrapper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
+ * Class MainController.
  *
+ * Handles routing for NYS_Openleg module.
  */
 class MainController extends ControllerBase {
 
   /**
    * The request context used to direct API and rendering behavior.
    *
-   * @var Request
+   * @var \Symfony\Component\HttpFoundation\Request
    */
   protected Request $request;
 
   /**
    * The app-level config object.
    *
-   * @var ImmutableConfig
+   * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected ImmutableConfig $config;
 
   /**
-   * @var string The book being requested.
+   * The book being requested.
+   *
+   * @var string
    */
   protected string $book;
 
   /**
-   * @var string The location being requested.
+   * The location being requested.
+   *
+   * @var string
    */
   protected string $location;
 
   /**
+   * The pager manager service.
+   *
+   * @var \Drupal\Core\Pager\PagerManagerInterface
+   */
+  protected PagerManagerInterface $pager;
+
+  /**
+   * Constructor.
+   *
    * Sets up the request and config objects, and configures the API
    * key to be used by ApiRequest objects.
    */
-  public function __construct() {
+  public function __construct(RequestStack $request, ConfigFactory $config, FormBuilderInterface $formBuilder, PagerManagerInterface $pager) {
     // Set the request context to the current request by default.
-    $this->setRequest(\Drupal::request());
+    $this->setRequest($request->getCurrentRequest());
 
     // Set the app config as a local reference.
-    $this->config = \Drupal::config('nys_openleg.settings');
+    $this->config = $config->get('nys_openleg.settings');
+
+    // Set the form builder.
+    $this->formBuilder = $formBuilder;
+
+    // Set the pager.
+    $this->pager = $pager;
 
     // Configure the OpenLeg API library to use the stored key.
     ApiWrapper::setKey($this->config->get('api_key'));
@@ -57,54 +83,69 @@ class MainController extends ControllerBase {
   /**
    * Sets the request context.
    *
-   * @param Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
    */
   public function setRequest(Request $request) {
     $this->request = $request;
   }
 
   /**
+   * Injects the request and config objects into construction.
+   *
+   * @return static
+   */
+  public static function create(ContainerInterface $container): MainController {
+    return new static(
+      $container->get('request_stack'),
+      $container->get('config.factory'),
+      $container->get('form_builder'),
+      $container->get('pager.manager')
+    );
+  }
+
+  /**
    * Route handler for browsing statutes.  Returns a renderable array.
    *
-   * @return string[]
+   * Every request will conform to one of three conditions:
+   *   - No book or location, or book == 'all'
+   *     At the top level, requires rendering all book types.
+   *   - A book name matching a law type identifier
+   *     At the type level, requires rendering all books within that type.
+   *   - Any other book name, and optional location
+   *     At the book/location level, requires rendering that location.
+   *
+   * Note that book entries do have a location specified in OL.  If a
+   * valid book is detected, but no location is provided, the location
+   * for the book will be used instead.
+   *
+   * @return array
+   *   A renderable array.
    */
   public function browse(string $book = 'all', string $location = ''): array {
     // Standardize the incoming request parts.
-    $book = ((string) $book) ?: 'all';
-    $location = (string) $location;
-    $search_term = $GLOBALS['_POST']['search_term'] ?? '';
+    $book = $book ?: 'all';
 
     // Fetch all the types, initialize the search.
     $law_types = ApiWrapper::getLawTypes();
     $suppress_search = FALSE;
 
-    // Initialize the return.
+    // Initialize important paths.
     $base_share_path = $this->request->getSchemeAndHttpHost() . ApiWrapper::PATH_PREFIX;
+    $share_path = $base_share_path . '/' .
+      implode('/', array_filter([$book, $location]));
 
+    // Initialize the return.
     $ret = [
       '#theme' => 'nys_openleg_result',
       '#attached' => ['library' => ['NYS_Openleg/openleg']],
-      '#share_path' => $share_path = $base_share_path . '/' .
-        implode('/', array_filter([$book, $location])),
+      '#share_path' => $share_path,
     ];
 
     // Initialize the breadcrumb sources.
     $law_type = '';
     $parents = NULL;
 
-    /**
-     * Every request will conform to one of three conditions:
-     *   - No book or location, or book == 'all'
-     *     At the top level, requires rendering all book types.
-     *   - A book name matching a law type identifier
-     *     At the type level, requires rendering all books within that type.
-     *   - Any other book name, and optional location
-     *     At the book/location level, requires rendering that location.
-     *
-     * Note that book entries do have a location specified in OL.  If a
-     * valid book is detected, but no location is provided, the location
-     * for the book will be used instead.
-     */
     // CONDITION ONE: all, or no book type.
     if ($book == 'all') {
       // Just need title and a list of book types.
@@ -130,7 +171,6 @@ class MainController extends ControllerBase {
       );
     }
     // CONDITION THREE: not either of the other two conditions.
-    // If a valid book (with optional location) is not found, render an error response.
     else {
       // Get the statute.  Consider any historical milestone being requested.
       $history = $GLOBALS['_POST']['history'] ?? '';
@@ -167,7 +207,7 @@ class MainController extends ControllerBase {
       );
 
       // Include the milestone selection form.
-      $ret['#history'] = \Drupal::formBuilder()
+      $ret['#history'] = $this->formBuilder
         ->getForm('Drupal\NYS_Openleg\Form\HistoryForm', $statute);
 
       // Generate the list_items from the statute children.
@@ -181,7 +221,7 @@ class MainController extends ControllerBase {
         },
         $statute->children()
       );
-    } // end condition 3
+    }
 
     // Set up the email sharing variables.
     $ret['#mail_title'] = (is_array($ret['#title']))
@@ -195,7 +235,7 @@ class MainController extends ControllerBase {
 
     // Only render the search box if it has not been suppressed.
     if (!$suppress_search) {
-      $ret['#search'] = \Drupal::formBuilder()
+      $ret['#search'] = $this->formBuilder
         ->getForm('Drupal\NYS_Openleg\Form\SearchForm');
     }
 
@@ -216,12 +256,11 @@ class MainController extends ControllerBase {
       );
 
     // Get the search form.
-    $form = \Drupal::formBuilder()
+    $form = $this->formBuilder
       ->getForm('Drupal\NYS_Openleg\Form\SearchForm', $search_term);
 
     // Initialize the pager values.  Pager is zero-based, search is not.
-    $pager_manager = \Drupal::service('pager.manager');
-    $page = ((int) $pager_manager->findPage()) + 1;
+    $page = $this->pager->findPage() + 1;
     $per_page = (int) $this->request->query->get('per_page', 10);
 
     // Execute the search and reformat into the results array.
@@ -244,12 +283,13 @@ class MainController extends ControllerBase {
       // Location could be empty.
       if ($lawId && $docType && $docLevelId && $title) {
         // Create the data structure for the template.
+        $url = ApiWrapper::PATH_PREFIX . '/' .
+          implode('/', array_filter([$lawId, $locationId]));
         $results[] = [
           'name' => implode(' ', [$lawId, $docType, $docLevelId]),
           'title' => $title,
           'snippets' => $item->highlights->text ?? [],
-          'url' => ApiWrapper::PATH_PREFIX . '/' .
-            implode('/', array_filter([$lawId, $locationId])),
+          'url' => $url,
         ];
       }
     }
@@ -257,7 +297,7 @@ class MainController extends ControllerBase {
     // Only use the pager theme if the results make sense.
     $counts = $search->getCount();
     if ($use_pager = ($counts['total'] > 0) && ($counts['start'] < $counts['end'])) {
-      $pager_manager->createPager($counts['total'], $per_page);
+      $this->pager->createPager($counts['total'], $per_page);
     }
 
     return [

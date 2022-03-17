@@ -1,0 +1,19 @@
+uuid: 4e9d7122-f4dc-4342-9854-3ff8514dc4c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_assemblymen_name
+    - paragraphs.paragraphs_type.members
+id: paragraph.members.field_assemblymen_name
+field_name: field_assemblymen_name
+entity_type: paragraph
+bundle: members
+label: 'Assemblymen Name'
+description: 'Do not reference a Senator if you would like to display an Assemblymen.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

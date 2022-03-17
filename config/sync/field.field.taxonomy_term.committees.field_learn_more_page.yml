@@ -1,0 +1,29 @@
+uuid: 4980a40b-85ef-4508-9de6-152a34d5b511
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_learn_more_page
+    - node.type.page_content
+    - taxonomy.vocabulary.committees
+id: taxonomy_term.committees.field_learn_more_page
+field_name: field_learn_more_page
+entity_type: taxonomy_term
+bundle: committees
+label: 'Learn More Page'
+description: 'Start typing the title of an article that you have already created, and allow it to autocomplete. A "Learn more" link will appear at the end of the Committee mission description that  links to that page.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

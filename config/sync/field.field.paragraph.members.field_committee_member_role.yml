@@ -1,0 +1,21 @@
+uuid: 30cfbc34-aeb0-4b06-99d6-0eb676e13afe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_committee_member_role
+    - paragraphs.paragraphs_type.members
+  module:
+    - options
+id: paragraph.members.field_committee_member_role
+field_name: field_committee_member_role
+entity_type: paragraph
+bundle: members
+label: Role
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

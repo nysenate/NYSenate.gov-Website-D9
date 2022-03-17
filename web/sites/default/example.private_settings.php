@@ -40,3 +40,5 @@ $config['smtp.settings']['smtp_password'] = 'super-secret-123';
 // Widen.
 $config['widencollective_field.settings']['account_id'] = 'MYACCOUNT';
 
+// Google API Geocoder Provider
+$config['geocoder.geocoder_provider.googlemaps']['configuration']['apiKey'] = 'AIzaSyBCpOK4S3WePhcy2-U-wqa8AeGVw8hx6uU';

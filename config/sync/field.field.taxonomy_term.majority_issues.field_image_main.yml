@@ -1,0 +1,29 @@
+uuid: 7a271fc1-db6b-49b3-b520-49039377dffa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_image_main
+    - media.type.image
+    - taxonomy.vocabulary.majority_issues
+id: taxonomy_term.majority_issues.field_image_main
+field_name: field_image_main
+entity_type: taxonomy_term
+bundle: majority_issues
+label: 'Image Main'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

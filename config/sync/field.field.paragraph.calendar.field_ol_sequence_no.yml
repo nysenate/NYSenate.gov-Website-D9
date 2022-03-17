@@ -1,0 +1,25 @@
+uuid: 3faba5d3-0aed-4640-b68e-eebe53f89396
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ol_sequence_no
+    - paragraphs.paragraphs_type.calendar
+id: paragraph.calendar.field_ol_sequence_no
+field_name: field_ol_sequence_no
+entity_type: paragraph
+bundle: calendar
+label: 'Sequence Number'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

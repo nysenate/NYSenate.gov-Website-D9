@@ -1,0 +1,29 @@
+uuid: 7feb2a19-5c0a-4e52-97a5-b735f5483783
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.session.body
+    - node.type.session
+  module:
+    - text
+    - user
+id: node.session.default
+targetEntityType: node
+bundle: session
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true

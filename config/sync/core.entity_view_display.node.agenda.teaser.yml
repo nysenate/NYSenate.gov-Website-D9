@@ -1,0 +1,25 @@
+uuid: 1f94ddf0-32d4-41e1-990d-e479fca07d11
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.agenda.field_ol_week
+    - field.field.node.agenda.field_ol_year
+    - node.type.agenda
+  module:
+    - user
+id: node.agenda.teaser
+targetEntityType: node
+bundle: agenda
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_ol_week: true
+  field_ol_year: true
+  langcode: true

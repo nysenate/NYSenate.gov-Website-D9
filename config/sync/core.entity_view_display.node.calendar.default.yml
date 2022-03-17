@@ -1,0 +1,90 @@
+uuid: 25634246-0270-4fdc-b552-52fd27d2631f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.calendar.field_calendar_bill_list
+    - field.field.node.calendar.field_calendar_type
+    - field.field.node.calendar.field_ol_cal
+    - field.field.node.calendar.field_ol_cal_no
+    - field.field.node.calendar.field_ol_calendar_date
+    - field.field.node.calendar.field_ol_year
+    - field.field.node.calendar.field_publication_date
+    - node.type.calendar
+  module:
+    - datetime
+    - entity_reference_revisions
+    - options
+    - user
+id: node.calendar.default
+targetEntityType: node
+bundle: calendar
+mode: default
+content:
+  field_calendar_bill_list:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_calendar_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ol_cal:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_ol_cal_no:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_ol_calendar_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_ol_year:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_publication_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+hidden:
+  langcode: true

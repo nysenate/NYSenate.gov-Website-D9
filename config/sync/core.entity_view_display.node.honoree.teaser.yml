@@ -1,0 +1,57 @@
+uuid: 1c5b9634-ba5e-49dd-8650-1a8a10bad510
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.honoree.body
+    - field.field.node.honoree.field_add_honoree_list
+    - field.field.node.honoree.field_attachment
+    - field.field.node.honoree.field_date
+    - field.field.node.honoree.field_featured
+    - field.field.node.honoree.field_honoree_contact_email
+    - field.field.node.honoree.field_honoree_contact_name
+    - field.field.node.honoree.field_honoree_military_branch
+    - field.field.node.honoree.field_honoree_name
+    - field.field.node.honoree.field_honoree_rank
+    - field.field.node.honoree.field_honoree_type
+    - field.field.node.honoree.field_image_main
+    - field.field.node.honoree.field_issues
+    - field.field.node.honoree.field_senator
+    - node.type.honoree
+  module:
+    - text
+    - user
+id: node.honoree.teaser
+targetEntityType: node
+bundle: honoree
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_add_honoree_list: true
+  field_attachment: true
+  field_date: true
+  field_featured: true
+  field_honoree_contact_email: true
+  field_honoree_contact_name: true
+  field_honoree_military_branch: true
+  field_honoree_name: true
+  field_honoree_rank: true
+  field_honoree_type: true
+  field_image_main: true
+  field_issues: true
+  field_senator: true
+  langcode: true

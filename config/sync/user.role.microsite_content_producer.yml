@@ -1,9 +1,14 @@
 uuid: 1d98882b-f4ab-4eec-a8dd-6bb175777612
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - field_permissions
 id: microsite_content_producer
 label: 'Microsite Content Producer'
 weight: 2
 is_admin: null
-permissions: {  }
+permissions:
+  - 'create field_featured'
+  - 'edit own field_featured'
+  - 'view own field_featured'

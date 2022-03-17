@@ -1,0 +1,35 @@
+uuid: 8747643a-9c91-4b93-ad65-fbc56a215fa3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.calendar.field_calendar_bill_list
+    - field.field.node.calendar.field_calendar_type
+    - field.field.node.calendar.field_ol_cal
+    - field.field.node.calendar.field_ol_cal_no
+    - field.field.node.calendar.field_ol_calendar_date
+    - field.field.node.calendar.field_ol_year
+    - field.field.node.calendar.field_publication_date
+    - node.type.calendar
+  module:
+    - user
+id: node.calendar.teaser
+targetEntityType: node
+bundle: calendar
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_calendar_bill_list: true
+  field_calendar_type: true
+  field_ol_cal: true
+  field_ol_cal_no: true
+  field_ol_calendar_date: true
+  field_ol_year: true
+  field_publication_date: true
+  langcode: true

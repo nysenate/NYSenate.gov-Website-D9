@@ -1,0 +1,40 @@
+uuid: 2ddcc710-ca82-4f2b-8332-78f789573025
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.agenda.field_ol_week
+    - field.field.node.agenda.field_ol_year
+    - node.type.agenda
+  module:
+    - user
+id: node.agenda.default
+targetEntityType: node
+bundle: agenda
+mode: default
+content:
+  field_ol_week:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_ol_year:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true

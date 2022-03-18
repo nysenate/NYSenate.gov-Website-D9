@@ -1,20 +1,21 @@
-uuid: 2681ca3a-34dc-439e-bf36-8554684841d5
+uuid: 7f911325-511f-4d14-b751-1cea78270b82
 langcode: en
 status: true
 dependencies:
   module:
     - field_permissions
-    - paragraphs
+    - node
 third_party_settings:
   field_permissions:
     permission_type: public
-id: paragraph.field_ol_aye_count
-field_name: field_ol_aye_count
-entity_type: paragraph
-type: integer
+id: node.field_ol_agenda_addendum
+field_name: field_ol_agenda_addendum
+entity_type: node
+type: string
 settings:
-  unsigned: false
-  size: normal
+  max_length: 2
+  case_sensitive: false
+  is_ascii: false
 module: core
 locked: false
 cardinality: 1

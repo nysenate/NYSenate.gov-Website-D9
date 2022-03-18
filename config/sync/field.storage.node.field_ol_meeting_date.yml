@@ -1,21 +1,21 @@
-uuid: 2681ca3a-34dc-439e-bf36-8554684841d5
+uuid: 18be4f0d-e12a-420e-add6-978286d990e7
 langcode: en
 status: true
 dependencies:
   module:
+    - datetime
     - field_permissions
-    - paragraphs
+    - node
 third_party_settings:
   field_permissions:
     permission_type: public
-id: paragraph.field_ol_aye_count
-field_name: field_ol_aye_count
-entity_type: paragraph
-type: integer
+id: node.field_ol_meeting_date
+field_name: field_ol_meeting_date
+entity_type: node
+type: datetime
 settings:
-  unsigned: false
-  size: normal
-module: core
+  datetime_type: datetime
+module: datetime
 locked: false
 cardinality: 1
 translatable: true

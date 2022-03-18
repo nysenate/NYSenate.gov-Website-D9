@@ -5,6 +5,14 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.session.body
+    - field.field.node.session.field_calendar_number
+    - field.field.node.session.field_issues
+    - field.field.node.session.field_live_message_override
+    - field.field.node.session.field_live_message_status
+    - field.field.node.session.field_session_calendars
+    - field.field.node.session.field_transcript
+    - field.field.node.session.field_video_redirect
+    - field.field.node.session.field_video_status
     - node.type.session
   module:
     - text
@@ -28,4 +36,12 @@ content:
     weight: 100
     region: content
 hidden:
+  field_calendar_number: true
+  field_issues: true
+  field_live_message_override: true
+  field_live_message_status: true
+  field_session_calendars: true
+  field_transcript: true
+  field_video_redirect: true
+  field_video_status: true
   langcode: true

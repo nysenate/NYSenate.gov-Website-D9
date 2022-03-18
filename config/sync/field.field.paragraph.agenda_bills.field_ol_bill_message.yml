@@ -1,0 +1,19 @@
+uuid: 88fbbd1f-e419-4127-9286-9a3028c1fb63
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ol_bill_message
+    - paragraphs.paragraphs_type.agenda_bills
+id: paragraph.agenda_bills.field_ol_bill_message
+field_name: field_ol_bill_message
+entity_type: paragraph
+bundle: agenda_bills
+label: 'Bill Message'
+description: 'If referred to a committee, the name of the committee. i.e. "Finance". The frontend will display "Referred to Finance Committee".'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

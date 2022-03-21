@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "471f3bec91e111fb77d0c7cf15d5da35",
+    "content-hash": "081eb6acd31b895667d149e27f027c87",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3930,17 +3930,17 @@
         },
         {
             "name": "drupal/fontawesome",
-            "version": "2.20.0",
+            "version": "2.21.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/fontawesome.git",
-                "reference": "8.x-2.20"
+                "reference": "8.x-2.21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/fontawesome-8.x-2.20.zip",
-                "reference": "8.x-2.20",
-                "shasum": "cf97301de4890a5088dac9d66c5814221022c325"
+                "url": "https://ftp.drupal.org/files/projects/fontawesome-8.x-2.21.zip",
+                "reference": "8.x-2.21",
+                "shasum": "45868613f54e43c08c4afc3a60974ef73465ec35"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -3948,8 +3948,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.20",
-                    "datestamp": "1647454351",
+                    "version": "8.x-2.21",
+                    "datestamp": "1647616835",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -8062,6 +8062,66 @@
             }
         },
         {
+            "name": "drupal/twitter_block",
+            "version": "3.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/twitter_block.git",
+                "reference": "8.x-3.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/twitter_block-8.x-3.0-alpha1.zip",
+                "reference": "8.x-3.0-alpha1",
+                "shasum": "1ca5c6e30cda07b633273916bc0c3206e3928d81"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.0-alpha1",
+                    "datestamp": "1603037906",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Devin Carlson",
+                    "homepage": "https://www.drupal.org/user/290182"
+                },
+                {
+                    "name": "ZenDoodles",
+                    "homepage": "https://www.drupal.org/user/226976"
+                },
+                {
+                    "name": "cweagans",
+                    "homepage": "https://www.drupal.org/user/404732"
+                },
+                {
+                    "name": "naveenvalecha",
+                    "homepage": "https://www.drupal.org/user/2665733"
+                },
+                {
+                    "name": "subhojit777",
+                    "homepage": "https://www.drupal.org/user/1812492"
+                }
+            ],
+            "description": "Provides configurable blocks for a Twitter feed.",
+            "homepage": "http://drupal.org/project/twitter_block",
+            "support": {
+                "source": "https://git.drupalcode.org/project/twitter_block"
+            }
+        },
+        {
             "name": "drupal/username_enumeration_prevention",
             "version": "1.2.0",
             "source": {
@@ -8220,20 +8280,20 @@
         },
         {
             "name": "drupal/views_bulk_operations",
-            "version": "4.1.0",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_bulk_operations.git",
-                "reference": "4.1.0"
+                "reference": "4.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_bulk_operations-4.1.0.zip",
-                "reference": "4.1.0",
-                "shasum": "acb6891afda4f973f043155e4f53e1b7d8ffe63d"
+                "url": "https://ftp.drupal.org/files/projects/views_bulk_operations-4.1.2.zip",
+                "reference": "4.1.2",
+                "shasum": "1cfa10f755240cae46de8d8684272a9a8907a730"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9"
             },
             "require-dev": {
                 "drush/drush": "^10"
@@ -8244,8 +8304,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "4.1.0",
-                    "datestamp": "1646055586",
+                    "version": "4.1.2",
+                    "datestamp": "1647723469",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -22862,6 +22922,7 @@
         "drupal/inline_entity_form": 5,
         "drupal/name": 5,
         "drupal/site_verify": 20,
+        "drupal/twitter_block": 15,
         "drupal/views_exclude_previous": 20,
         "drupal/views_field_view": 10,
         "drupal/votingapi": 10,

@@ -112,13 +112,13 @@ class Statute {
    */
   public function retrieveFull(string $book = '', string $location = '', string $history = NULL): Statute {
     // Reset local properties if a new request is being made.
-    if (!is_null($book)) {
+    if ($book) {
       $this->book = $book;
     }
-    if (!is_null($location)) {
+    if ($location) {
       $this->location = $location;
     }
-    if (!is_null($history)) {
+    if ($history) {
       $this->history = $this->resolveHistoryDate($history);
     }
     $history = $this->history ? ['date' => $this->history] : [];
@@ -219,7 +219,7 @@ class Statute {
    *   An array of available history markers.
    */
   public function publishDates(): array {
-    $sorted = $this->tree->result->publishedDates;
+    $sorted = $this->tree->result->publishedDates ?? [];
     sort($sorted);
     return $sorted;
   }

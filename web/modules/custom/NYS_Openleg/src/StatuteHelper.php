@@ -9,19 +9,15 @@ use Drupal\NYS_Openleg\Api\ApiRequest;
  *
  * A collection of wrapper and meta-functions for Openleg.
  */
-class ApiWrapper {
+class StatuteHelper {
 
   // Constants for sort order of OpenLeg result sets.
   const SORT_BY_CODE = 1;
 
   const SORT_BY_NAME = 2;
 
-  /**
-   * An easy reference to the path to which this module responds.
-   *
-   * @todo this should be dynamic
-   */
-  const PATH_PREFIX = '/legislation/laws';
+  // Default URL for statutes.  Can be configured.
+  const DEFAULT_LANDING_URL = '/legislation/laws';
 
   /**
    * Translates the official law type code into a friendly name.
@@ -35,6 +31,13 @@ class ApiWrapper {
     'RULES' => 'Legislative House Rules',
     'MISC' => 'Misc / Other',
   ];
+
+  /**
+   * The base path to which the statute pages respond.
+   *
+   * @var string
+   */
+  protected static string $landingUrl = '';
 
   /**
    * Sets the API key for future requests.
@@ -62,19 +65,19 @@ class ApiWrapper {
    */
   public static function getLawTypes(): array {
     // Get the types from the known books if it is not already set.
-    if (!$ret = (static::shouldNotBeCamelCaseGetCache('law-types')->data ?? [])) {
+    if (!$ret = (static::getCache('law-types')->data ?? [])) {
       // Each law type comes pre-formatted as a list item template structure.
       foreach (static::getLawBooks() as $v) {
         $ret[$v->lawType] = $ret[$v->lawType]
           ?? [
             'name' => ucwords(strtolower(str_replace('_', ' ', $v->lawType ?: 'no description'))),
             'description' => self::LAW_TYPE_NAMES[$v->lawType] ?? 'no description',
-            'url' => self::PATH_PREFIX . '/' . $v->lawType,
+            'url' => static::baseUrl() . '/' . $v->lawType,
           ];
       }
 
       // Store for posterity.
-      static::shouldNotBeCamelCaseSetCache('law-types', $ret);
+      static::setCache('law-types', $ret);
     }
 
     return $ret;
@@ -83,7 +86,7 @@ class ApiWrapper {
   /**
    * Fetches a cache value.
    */
-  protected static function shouldNotBeCamelCaseGetCache(string $name) {
+  protected static function getCache(string $name) {
     return \Drupal::cache()->get('openleg:' . $name);
   }
 
@@ -103,7 +106,7 @@ class ApiWrapper {
    */
   public static function getLawBooks(): array {
     // Check the cache for an existing list.
-    $ret = (static::shouldNotBeCamelCaseGetCache('law-tree')->data) ?? [];
+    $ret = (static::getCache('law-tree')->data) ?? [];
 
     // Call OpenLeg if the cache is not populated.
     if (!$ret) {
@@ -117,7 +120,7 @@ class ApiWrapper {
         ksort($ret);
 
         // Save the tree in cache.
-        static::shouldNotBeCamelCaseSetCache('law-tree', $ret);
+        static::setCache('law-tree', $ret);
       }
     }
 
@@ -134,8 +137,19 @@ class ApiWrapper {
    * @param int $retain
    *   (Optional) Retention time in seconds, defaults to 1 day.
    */
-  protected static function shouldNotBeCamelCaseSetCache(string $name, $data, int $retain = 86400) {
+  protected static function setCache(string $name, $data, int $retain = 86400) {
     \Drupal::cache()->set('openleg:' . $name, $data, time() + $retain);
+  }
+
+  /**
+   * Resolves and returns the base URL used by statutes.
+   */
+  public static function baseUrl(): string {
+    if (!static::$landingUrl) {
+      static::$landingUrl = \Drupal::config('nys_openleg.settings')
+        ->get('base_path') ?: static::DEFAULT_LANDING_URL;
+    }
+    return static::$landingUrl;
   }
 
   /**
@@ -226,26 +240,26 @@ class ApiWrapper {
   public static function breadcrumbs(string $law_type = '', array $parents = NULL): array {
     $ret = [];
     if ($type_name = (self::LAW_TYPE_NAMES[$law_type] ?? '')) {
+      $base_url = static::baseUrl();
       $ret[] = [
         'name' => 'The Laws of New York',
-        'url' => '/legislation/laws/all',
+        'url' => $base_url . '/all',
       ];
       if (is_array($parents)) {
         $ret[] = [
           'name' => $type_name,
-          'url' => self::PATH_PREFIX . '/' . $law_type,
+          'url' => $base_url . '/' . $law_type,
         ];
         foreach ($parents as $v) {
           $ret[] = [
             'name' => $v->docType . ' ' . $v->docLevelId,
             'description' => $v->title,
-            'url' => self::PATH_PREFIX . '/' . $v->lawId . '/' . $v->locationId,
+            'url' => $base_url . '/' . $v->lawId . '/' . $v->locationId,
           ];
         }
       }
     }
     return $ret;
-
   }
 
 }

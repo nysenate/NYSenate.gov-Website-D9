@@ -1,35 +1,10 @@
-nys_openleg.top:
-  path: /legislation/laws
+nys_openleg.config:
+  path: /admin/config/nys_openleg
   defaults:
-    _controller: Drupal\NYS_Openleg\Controller\MainController::browse
-    _title: "NYS Open Legislation"
+    _form: '\Drupal\NYS_Openleg\Form\ConfigForm'
+    _title: "NYS Open Legislation Configuration"
   requirements:
-    _permission: 'access content'
+    _permission: 'administer site configuration'
 
-nys_openleg.book:
-  path: /legislation/laws/{book}
-  defaults:
-    _controller: Drupal\NYS_Openleg\Controller\MainController::browse
-    _title: "NYS Open Legislation"
-    book: "all"
-  requirements:
-    _permission: 'access content'
-
-nys_openleg.location:
-  path: /legislation/laws/{book}/{location}
-  defaults:
-    _controller: Drupal\NYS_Openleg\Controller\MainController::browse
-    _title: "NYS Open Legislation"
-    book: "all"
-    location: ""
-  requirements:
-    _permission: 'access content'
-
-nys_openleg.search:
-  path: /legislation/laws/search/{search_term}
-  defaults:
-    _controller: Drupal\NYS_Openleg\Controller\MainController::search
-    _title: "NYS Open Legislation: Search"
-    search_term: ''
-  requirements:
-    _permission: 'access content'
+route_callbacks:
+  - Drupal\NYS_Openleg\Routing\DynamicRouting::routes

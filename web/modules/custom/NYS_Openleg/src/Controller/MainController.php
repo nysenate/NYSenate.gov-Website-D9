@@ -8,7 +8,7 @@ use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\NYS_Openleg\Api\Request\Statute;
 use Drupal\NYS_Openleg\Api\Search\Statute as StatuteSearch;
-use Drupal\NYS_Openleg\ApiWrapper;
+use Drupal\NYS_Openleg\StatuteHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Config\ImmutableConfig;
@@ -76,8 +76,7 @@ class MainController extends ControllerBase {
     $this->pager = $pager;
 
     // Configure the OpenLeg API library to use the stored key.
-    ApiWrapper::setKey($this->config->get('api_key'));
-
+    StatuteHelper::setKey($this->config->get('api_key'));
   }
 
   /**
@@ -127,11 +126,11 @@ class MainController extends ControllerBase {
     $book = $book ?: 'all';
 
     // Fetch all the types, initialize the search.
-    $law_types = ApiWrapper::getLawTypes();
+    $law_types = StatuteHelper::getLawTypes();
     $suppress_search = FALSE;
 
     // Initialize important paths.
-    $base_share_path = $this->request->getSchemeAndHttpHost() . ApiWrapper::PATH_PREFIX;
+    $base_share_path = $this->request->getSchemeAndHttpHost() . StatuteHelper::baseUrl();
     $share_path = $base_share_path . '/' .
       implode('/', array_filter([$book, $location]));
 
@@ -157,7 +156,7 @@ class MainController extends ControllerBase {
     elseif (array_key_exists($book, $law_types)) {
       // Minimal breadcrumb.  Also, title and a list of books.
       $law_type = $book;
-      $ret['#title'] = ApiWrapper::LAW_TYPE_NAMES[$book] ?? '';
+      $ret['#title'] = StatuteHelper::LAW_TYPE_NAMES[$book] ?? '';
       $ret['#title_parts'] = [$ret['#title']];
       $ret['#list_items'] = array_map(
         function ($v) use ($base_share_path) {
@@ -167,7 +166,7 @@ class MainController extends ControllerBase {
             'url' => $base_share_path . '/' . $v->lawId,
           ];
         },
-        ApiWrapper::getBooksByType($book)
+        StatuteHelper::getBooksByType($book)
       );
     }
     // CONDITION THREE: not either of the other two conditions.
@@ -231,7 +230,7 @@ class MainController extends ControllerBase {
       " | NY State Senate&body=Check out this law: " . $ret['#share_path'];
 
     // Get the breadcrumbs.
-    $ret['#breadcrumbs'] = ApiWrapper::breadcrumbs($law_type, $parents);
+    $ret['#breadcrumbs'] = StatuteHelper::breadcrumbs($law_type, $parents);
 
     // Only render the search box if it has not been suppressed.
     if (!$suppress_search) {
@@ -283,7 +282,7 @@ class MainController extends ControllerBase {
       // Location could be empty.
       if ($lawId && $docType && $docLevelId && $title) {
         // Create the data structure for the template.
-        $url = ApiWrapper::PATH_PREFIX . '/' .
+        $url = StatuteHelper::baseUrl() . '/' .
           implode('/', array_filter([$lawId, $locationId]));
         $results[] = [
           'name' => implode(' ', [$lawId, $docType, $docLevelId]),

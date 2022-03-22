@@ -27,7 +27,7 @@ abstract class Search {
    *
    * @var int
    */
-  protected int $shouldNotBeCamelCasePerPage;
+  protected int $perPage;
 
   /**
    * The starting point for paging the returns.
@@ -57,7 +57,7 @@ abstract class Search {
    *
    * @var string
    */
-  protected string $shouldNotBeCamelCaseSearchTerm;
+  protected string $searchTerm;
 
   /**
    * The endpoint to call for a search request.
@@ -76,7 +76,8 @@ abstract class Search {
    */
   public function __construct(string $search_term, array $params = []) {
     $this->setParams($params);
-    $this->execute($search_term);
+    $this->searchTerm = $search_term;
+    $this->execute();
   }
 
   /**
@@ -89,7 +90,7 @@ abstract class Search {
    */
   public function setParams(array $params = []) {
     $this->page = (int) ($params['page'] ?? 1);
-    $this->shouldNotBeCamelCasePerPage = (int) ($params['per_page'] ?? 10);
+    $this->perPage = (int) ($params['per_page'] ?? 10);
     $this->offset = (int) ($params['offset'] ?? 0);
   }
 
@@ -102,12 +103,12 @@ abstract class Search {
    *   The search term.  If not passed, the last search term set is used.
    */
   public function execute(string $search_term = '') {
-    $this->shouldNotBeCamelCaseSearchTerm = $search_term ?: $this->shouldNotBeCamelCaseSearchTerm;
-    $offset = $this->offset ?: ((($this->page - 1) * $this->shouldNotBeCamelCasePerPage) + 1);
+    $this->searchTerm = $search_term ?: $this->searchTerm;
+    $offset = $this->offset ?: ((($this->page - 1) * $this->perPage) + 1);
     $params = [
-      'term' => urlencode($this->shouldNotBeCamelCaseSearchTerm),
+      'term' => urlencode($this->searchTerm),
       'offset' => $offset,
-      'limit' => $this->shouldNotBeCamelCasePerPage,
+      'limit' => $this->perPage,
     ];
 
     $request = new ApiRequest($this->endpoint . '/search');

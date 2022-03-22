@@ -43,21 +43,15 @@ class ApiRequest {
    * An API key to be used by default with any future call.
    *
    * @var string
-   *
-   * This should absolutely not be in upperCamelCase.
-   * Class properties should be constructed using lower_underscore.
    */
-  protected static string $shouldNotBeCamelCaseDefaultApiKey = '';
+  protected static string $defaultApiKey = '';
 
   /**
    * API key currently in use.
    *
    * @var string
-   *
-   * This should absolutely not be in upperCamelCase.
-   * Class properties should be constructed using lower_underscore.
    */
-  protected string $shouldNotBeCamelCaseApikey;
+  protected string $apiKey;
 
 
   /**
@@ -78,11 +72,8 @@ class ApiRequest {
    * A string, or array of strings, indicating current prefix.
    *
    * @var string|string[]
-   *
-   * This should absolutely not be in upperCamelCase.
-   * Class properties should be constructed using lower_underscore.
    */
-  protected $shouldNotBeCamelCasePathprefix;
+  protected $pathPrefix;
 
   /**
    * A string, or array of strings, indicating endpoints.
@@ -133,7 +124,7 @@ class ApiRequest {
    * @return $this
    */
   public function setApiKey(string $api_key = ''): ApiRequest {
-    $this->shouldNotBeCamelCaseApikey = $api_key ?: static::$shouldNotBeCamelCaseDefaultApiKey;
+    $this->apiKey = $api_key ?: static::$defaultApiKey;
     return $this;
   }
 
@@ -181,7 +172,7 @@ class ApiRequest {
     $extra_path = $this->buildEndpoint() . $resource;
 
     // Build URL parameters.
-    $params += $this->shouldNotBeCamelCaseApikey ? ['key' => $this->shouldNotBeCamelCaseApikey] : [];
+    $params += $this->apiKey ? ['key' => $this->apiKey] : [];
 
     // Instantiate the client and make the call.
     $this->client = new Client($url, NULL, $this->getVersion(), [$extra_path]);
@@ -228,10 +219,10 @@ class ApiRequest {
    */
   public function getPathPrefix($as_array = FALSE) {
     if ($as_array) {
-      $ret = $this->shouldNotBeCamelCasePathprefix;
+      $ret = $this->pathPrefix;
     }
     else {
-      $ret = implode('/', $this->shouldNotBeCamelCasePathprefix);
+      $ret = implode('/', $this->pathPrefix);
     }
 
     return $ret;
@@ -241,7 +232,7 @@ class ApiRequest {
    * Sets the path prefix.
    */
   public function setPathPrefix($path_prefix): ApiRequest {
-    $this->shouldNotBeCamelCasePathprefix = $this->buildPathArray($path_prefix);
+    $this->pathPrefix = $this->buildPathArray($path_prefix);
     return $this;
   }
 
@@ -310,7 +301,7 @@ class ApiRequest {
    * Sets the default API key for all future calls.
    */
   public static function useKey(string $api_key) {
-    self::$shouldNotBeCamelCaseDefaultApiKey = $api_key;
+    self::$defaultApiKey = $api_key;
   }
 
   /**

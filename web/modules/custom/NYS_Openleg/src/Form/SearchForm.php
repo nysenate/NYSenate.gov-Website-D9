@@ -3,7 +3,7 @@
 namespace Drupal\NYS_Openleg\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\NYS_Openleg\ApiWrapper;
+use Drupal\NYS_Openleg\StatuteHelper;
 
 /**
  * Class SearchForm.
@@ -27,9 +27,8 @@ class SearchForm extends FormBase {
     // form post, and query string parameter.  First one wins.
     $search_term = $form_state->getBuildInfo()['args'][0] ?? '';
 
-    $onclick = "jQuery('.search-title').closest('form').toggleClass('open')";
     return [
-      'title' => ['#markup' => '<div class="search-title" onclick="' . $onclick . '">Search OpenLegislation Statutes</div>'],
+      'title' => ['#markup' => '<div class="search-title">Search OpenLegislation Statutes</div>'],
       'search_term' => [
         '#type' => 'textfield',
         '#title' => 'Search Term',
@@ -39,7 +38,7 @@ class SearchForm extends FormBase {
         '#type' => 'submit',
         '#value' => 'Search',
       ],
-      '#action' => ApiWrapper::PATH_PREFIX . '/search',
+      '#action' => StatuteHelper::PATH_PREFIX . '/search',
     ];
 
   }

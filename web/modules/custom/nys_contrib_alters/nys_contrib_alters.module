@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Provides alterations for Drupal contrib modules.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function nys_contrib_alters_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'node_event_form') {
+    $form['field_location']['widget'][0]['#after_build'][] = 'nys_contrib_alters_customize_address';
+  }
+}
+
+/**
+ * Renames labels in address contrib module.
+ */
+function nys_contrib_alters_customize_address($element, $form_state) {
+  $element['address']['organization']['#title'] = t('Location Name');
+  $element['address']['address_line1']['#title'] = t('Street');
+  $element['address']['address_line2']['#title'] = t('Additional');
+  $element['address']['address_line2']['#title_display'] = 'before';
+  return $element;
+}

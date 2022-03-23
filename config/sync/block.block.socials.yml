@@ -1,0 +1,25 @@
+uuid: 22137808-ebd2-43be-893d-7c16b6969fe7
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.socials
+  module:
+    - system
+  theme:
+    - nysenate_theme
+id: socials
+theme: nysenate_theme
+region: footer_right
+weight: 0
+provider: null
+plugin: 'system_menu_block:socials'
+settings:
+  id: 'system_menu_block:socials'
+  label: Socials
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

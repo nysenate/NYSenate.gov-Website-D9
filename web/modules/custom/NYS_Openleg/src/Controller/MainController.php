@@ -172,7 +172,7 @@ class MainController extends ControllerBase {
     // CONDITION THREE: not either of the other two conditions.
     else {
       // Get the statute.  Consider any historical milestone being requested.
-      $history = $GLOBALS['_POST']['history'] ?? '';
+      $history = $this->request->request->get('history') ?: '';
       $statute = new Statute($book, $location, $history);
 
       // If the entry is not found (or other OL error), render the error page.

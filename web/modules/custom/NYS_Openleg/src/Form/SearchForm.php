@@ -2,6 +2,7 @@
 
 namespace Drupal\NYS_Openleg\Form;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\NYS_Openleg\StatuteHelper;
 
@@ -25,20 +26,20 @@ class SearchForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     // In order of precedence, look for a search term in build_info,
     // form post, and query string parameter.  First one wins.
-    $search_term = $form_state->getBuildInfo()['args'][0] ?? '';
+    $search_term = (string) ($form_state->getBuildInfo()['args'][0] ?? '');
 
     return [
-      'title' => ['#markup' => '<div class="search-title">Search OpenLegislation Statutes</div>'],
+      'title' => ['#markup' => '<header class="search-title">Search OpenLegislation Statutes</header>'],
       'search_term' => [
         '#type' => 'textfield',
         '#title' => 'Search Term',
-        '#default_value' => (string) $search_term,
+        '#default_value' => Xss::escape($search_term),
       ],
       'go' => [
         '#type' => 'submit',
         '#value' => 'Search',
       ],
-      '#action' => StatuteHelper::PATH_PREFIX . '/search',
+      '#action' => StatuteHelper::baseUrl() . '/search',
     ];
 
   }

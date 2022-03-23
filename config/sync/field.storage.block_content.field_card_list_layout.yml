@@ -1,0 +1,29 @@
+uuid: bbeb1fab-3498-4bfd-b231-7475b3921a77
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+_core:
+  default_config_hash: HkkCoPkuA4yG6eYeD7nJy8RycdBjTM0Gjf1wdwyrlVU
+id: block_content.field_card_list_layout
+field_name: field_card_list_layout
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: columns
+      label: 'Columns (Default)'
+    -
+      value: carousel
+      label: Carousel
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,25 @@
+uuid: ef6257e9-3b3d-40ae-997d-d6f9762c6d10
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.map
+    - field.storage.block_content.field_link
+  module:
+    - link
+_core:
+  default_config_hash: hXiy-DDQXXX_AxZaHpCW5BGvPBbiGo0yD4kNxEcMY1A
+id: block_content.map.field_link
+field_name: field_link
+entity_type: block_content
+bundle: map
+label: Link
+description: 'Provide an optional call to action link.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

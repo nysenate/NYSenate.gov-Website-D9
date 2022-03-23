@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.landing.field_block
     - field.field.node.landing.field_meta_tags
+    - field.field.node.landing.field_senator_multiref
     - field.field.node.landing.field_short_title
     - field.field.node.landing.field_summary
     - field.field.node.landing.field_thumbnail
@@ -22,46 +23,46 @@ third_party_settings:
       children:
         - title
         - field_short_title
+      label: Basic
+      region: content
       parent_name: ''
       weight: 0
       format_type: details
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         open: true
-        required_fields: true
         description: ''
-      label: Basic
-      region: content
+        required_fields: true
     group_summary:
       children:
         - field_thumbnail
         - field_summary
+      label: Summary
+      region: content
       parent_name: ''
       weight: 1
       format_type: details
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         open: true
-        required_fields: true
         description: ''
-      label: Summary
-      region: content
+        required_fields: true
     group_content:
       children:
         - field_block
+      label: Content
+      region: content
       parent_name: ''
       weight: 2
       format_type: details
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         open: true
-        required_fields: true
         description: ''
-      label: Content
-      region: content
+        required_fields: true
 _core:
   default_config_hash: nDOJn-3TKtjTkeXP_tqGAo5AEP42lJYUTbEbqJtwRlE
 id: node.landing.default
@@ -72,26 +73,26 @@ content:
   created:
     type: datetime_timestamp
     weight: 6
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_block:
+    type: inline_entity_form_complex
     weight: 4
+    region: content
     settings:
       form_mode: default
-      revision: true
+      override_labels: false
       label_singular: ''
       label_plural: ''
       allow_new: true
+      allow_existing: false
       match_operator: CONTAINS
-      override_labels: false
+      allow_duplicate: false
       collapsible: false
       collapsed: false
-      allow_existing: false
-      allow_duplicate: false
+      revision: true
     third_party_settings: {  }
-    type: inline_entity_form_complex
-    region: content
   field_group_jumpnav:
     weight: 14
     region: content
@@ -103,55 +104,62 @@ content:
     region: content
     settings:
       sidebar: true
+      use_details: true
+    third_party_settings: {  }
+  field_senator_multiref:
+    type: options_select
+    weight: 26
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_short_title:
+    type: string_textfield
     weight: 2
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_summary:
+    type: string_textarea
     weight: 10
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: string_textarea
-    region: content
   field_thumbnail:
+    type: media_library_widget
     weight: 9
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    type: media_library_widget
-    region: content
   langcode:
     type: language_select
     weight: 3
+    region: content
     settings:
       include_locked: true
     third_party_settings: {  }
-    region: content
   moderation_state:
     type: moderation_state_default
     weight: 13
-    settings: {  }
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
     weight: 8
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   publish_on:
     type: datetime_timestamp_no_default
     weight: 9
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   scheduler_settings:
     weight: 7
     region: content
@@ -159,40 +167,40 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 13
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
     weight: 1
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
   translation:
     weight: 4
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   uid:
     type: entity_reference_autocomplete
     weight: 5
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
-    region: content
   unpublish_on:
     type: datetime_timestamp_no_default
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   url_redirects:
     weight: 12
     region: content

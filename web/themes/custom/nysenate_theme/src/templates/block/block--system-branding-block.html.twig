@@ -16,7 +16,8 @@
 
 {% block content %}
 
-  {{ attach_library('rain_theme/site-branding') }}
+  {{ attach_library('nysenate_theme/nysenate-footer') }}
+  {% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 
   {%
     set classes = [
@@ -24,24 +25,9 @@
     ]
   %}
 
-  <section {{ attributes.addClass(classes) }}>
-      {% if site_logo %}
-        <a href="{{ path('<front>') }}" rel="home" class="site-logo">
-          {% if site_logo_svg %}
-            {{ site_logo_svg|raw }}
-          {% else %}
-            <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" class="site-logo"/>
-          {% endif %}
-        </a>
-      {% endif %}
-      {% if site_name %}
-        <div class="site-name">
-          <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
-        </div>
-      {% endif %}
-      {% if site_slogan %}
-        <div class="site-slogan">{{ site_slogan }}</div>
-      {% endif %}
-  </section>
+  {% include "@rain_theme/nysenate-site-branding/nysenate-site-branding.twig" with {
+    site_branding: site_branding
+  } only %}
+
 
 {% endblock %}

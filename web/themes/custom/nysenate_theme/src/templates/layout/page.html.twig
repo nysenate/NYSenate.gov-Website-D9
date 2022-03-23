@@ -45,6 +45,7 @@
 #}
 {{ attach_library('rain_theme/page-layout') }}
 {{ attach_library('rain_theme/site-footer') }}
+{{ attach_library('nysenate_theme/nysenate-footer') }}
 
 {%
   set layout_classes = [
@@ -83,32 +84,37 @@
     </div>{# /.layout-content #}
   </main>
 
-  <footer role="contentinfo" class="site-footer">
-    <div class="site-footer__inner container">
-      <div class="site-footer__logo">
-        {% if page.footer_left %}
-          {{ page.footer_left }}
-        {% endif %}
-      </div>
-      <div class="site-footer__text">
-        {% if page.footer_middle %}
-          {{ page.footer_middle }}
-        {% endif %}
-      </div>
-      <div class="site-footer__menus">
-        {% if page.footer_right %}
-          {{ page.footer_right }}
-        {% endif %}
-      </div>
-    </div>
+  <footer class="l-footer" role="contentinfo">
+	  <div id="footer-first">
+      <div class="panel-pane pane-block pane-nys-blocks-sitewide-footer">
+        <div class="pane-content">
+          <section class="c-senator-footer">
+            <div class="l-row">
+              <div class="c-senator-footer-col c-senator-footer-col__home">
+                {{ page.footer_left }}
+              </div>
 
-    {% if page.addendum %}
-      <div class="site-footer__addendum">
-        <div class="site-footer__inner container">
+              <div class="c-senator-footer-col c-senator-footer-col__nav">
+                <nav>
+                  {{ page.footer_middle }}
+                </nav>
+              </div>
+
+              <div class="c-senator-footer-col c-senator-footer-col__social">
+                <p class="c-senator-footer-caption">Follow the New York Senate</p>
+                  {{ page.footer_right }}
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="panel-separator"></div>
+      <div class="panel-pane pane-block pane-menu-menu-global-footer c-site-footer">
+        <div class="pane-content">
           {{ page.addendum }}
         </div>
       </div>
-    {% endif %}
+    </div>
   </footer>
 
 </div>{# /.layout-container #}

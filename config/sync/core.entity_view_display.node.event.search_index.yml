@@ -1,0 +1,99 @@
+uuid: bdd1a774-9ffc-4521-8e8d-f8de1c314eb5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.event.body
+    - field.field.node.event.field_accessible_sitewide
+    - field.field.node.event.field_attachment
+    - field.field.node.event.field_committee
+    - field.field.node.event.field_committee_featured
+    - field.field.node.event.field_date_range
+    - field.field.node.event.field_event_online_link
+    - field.field.node.event.field_event_type
+    - field.field.node.event.field_feature_image
+    - field.field.node.event.field_featured
+    - field.field.node.event.field_general_location
+    - field.field.node.event.field_image_main
+    - field.field.node.event.field_issues
+    - field.field.node.event.field_location
+    - field.field.node.event.field_meeting_location
+    - field.field.node.event.field_senator
+    - field.field.node.event.field_social_image
+    - field.field.node.event.field_social_teaser
+    - field.field.node.event.field_teleconference_id_number
+    - field.field.node.event.field_teleconference_number
+    - field.field.node.event.field_ustream_url
+    - field.field.node.event.field_video_status
+    - field.field.node.event.field_yt
+    - node.type.event
+  module:
+    - address
+    - options
+    - user
+id: node.event.search_index
+targetEntityType: node
+bundle: event
+mode: search_index
+content:
+  field_committee:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_general_location:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_location:
+    type: address_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_senator:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  body: true
+  field_accessible_sitewide: true
+  field_attachment: true
+  field_committee_featured: true
+  field_date_range: true
+  field_event_online_link: true
+  field_event_type: true
+  field_feature_image: true
+  field_featured: true
+  field_image_main: true
+  field_meeting_location: true
+  field_social_image: true
+  field_social_teaser: true
+  field_teleconference_id_number: true
+  field_teleconference_number: true
+  field_ustream_url: true
+  field_video_status: true
+  field_yt: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

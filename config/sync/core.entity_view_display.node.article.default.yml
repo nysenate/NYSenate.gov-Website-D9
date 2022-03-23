@@ -22,7 +22,6 @@ dependencies:
     - field.field.node.article.field_publication_date
     - field.field.node.article.field_publication_source_link
     - field.field.node.article.field_publication_title
-    - field.field.node.article.field_senator
     - field.field.node.article.field_senator_multiref
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
@@ -199,14 +198,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 20
-    region: content
-  field_senator:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 12
     region: content
   field_social_image:
     type: entity_reference_entity_view

@@ -44,6 +44,7 @@ dependencies:
     - field.field.node.bill.field_ol_substituted_by
     - field.field.node.bill.field_ol_summary
     - field.field.node.bill.field_ol_votes
+    - field.field.node.bill.field_senator_multiref
     - node.type.bill
   module:
     - datetime
@@ -381,6 +382,12 @@ content:
       collapsible: false
       collapsed: false
       revision: false
+    third_party_settings: {  }
+  field_senator_multiref:
+    type: options_select
+    weight: 50
+    region: content
+    settings: {  }
     third_party_settings: {  }
   langcode:
     type: language_select

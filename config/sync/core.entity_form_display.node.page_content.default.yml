@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.page_content.field_image_main
     - field.field.node.page_content.field_metatags
     - field.field.node.page_content.field_paragraphs
+    - field.field.node.page_content.field_senator_multiref
     - field.field.node.page_content.field_show_sharing_options
     - node.type.page_content
   module:
@@ -128,6 +129,12 @@ content:
         add_above: '0'
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
+    third_party_settings: {  }
+  field_senator_multiref:
+    type: options_select
+    weight: 26
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_show_sharing_options:
     type: boolean_checkbox

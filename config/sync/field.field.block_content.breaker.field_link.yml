@@ -1,0 +1,25 @@
+uuid: e0ead98c-44e2-47b8-a367-d562ac97e482
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.breaker
+    - field.storage.block_content.field_link
+  module:
+    - link
+_core:
+  default_config_hash: MGiNeCYB6emlSimOuO9Bxvywgw4dAKwmoKAPAY5PJjM
+id: block_content.breaker.field_link
+field_name: field_link
+entity_type: block_content
+bundle: breaker
+label: Link
+description: 'Provide an internal or external link.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

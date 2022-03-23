@@ -19,7 +19,7 @@ dependencies:
     - field.field.node.event.field_issues
     - field.field.node.event.field_location
     - field.field.node.event.field_meeting_location
-    - field.field.node.event.field_senator
+    - field.field.node.event.field_senator_multiref
     - field.field.node.event.field_social_image
     - field.field.node.event.field_social_teaser
     - field.field.node.event.field_teleconference_id_number
@@ -67,14 +67,6 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  field_senator:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 1
-    region: content
 hidden:
   body: true
   field_accessible_sitewide: true
@@ -87,6 +79,7 @@ hidden:
   field_featured: true
   field_image_main: true
   field_meeting_location: true
+  field_senator_multiref: true
   field_social_image: true
   field_social_teaser: true
   field_teleconference_id_number: true

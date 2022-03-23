@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.page_content.field_image_main
     - field.field.node.page_content.field_metatags
     - field.field.node.page_content.field_paragraphs
+    - field.field.node.page_content.field_senator_multiref
     - field.field.node.page_content.field_show_sharing_options
     - node.type.page_content
   module:
@@ -98,4 +99,6 @@ content:
     weight: 0
     region: content
 hidden:
+  field_senator_multiref: true
   langcode: true
+  search_api_excerpt: true

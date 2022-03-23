@@ -1,0 +1,29 @@
+uuid: d9e2b801-4fb5-43eb-960d-f9c10f92e02b
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+_core:
+  default_config_hash: KqOKOH7JU8uS1RoE8scLnaLx12mIA8JJAVi5uDfWNHU
+id: paragraph.field_card_layout
+field_name: field_card_layout
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: wide
+      label: 'Wide (Media Left)'
+    -
+      value: wide_right
+      label: 'Wide (Media Right)'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

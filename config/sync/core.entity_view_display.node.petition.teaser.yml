@@ -1,0 +1,24 @@
+uuid: 6f6b6e63-b01e-4527-afc4-e39e3abb1986
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.petition.field_senator_multiref
+    - node.type.petition
+  module:
+    - user
+id: node.petition.teaser
+targetEntityType: node
+bundle: petition
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_senator_multiref: true
+  langcode: true
+  search_api_excerpt: true

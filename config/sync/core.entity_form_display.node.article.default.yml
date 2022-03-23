@@ -23,6 +23,7 @@ dependencies:
     - field.field.node.article.field_publication_source_link
     - field.field.node.article.field_publication_title
     - field.field.node.article.field_senator
+    - field.field.node.article.field_senator_multiref
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
     - field.field.node.article.field_subtitle
@@ -349,6 +350,12 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_senator_multiref:
+    type: options_select
+    weight: 29
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_social_image:
     type: media_library_widget

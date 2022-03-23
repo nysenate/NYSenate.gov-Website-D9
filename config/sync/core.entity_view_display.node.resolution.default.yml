@@ -1,0 +1,23 @@
+uuid: 1a79ca68-1dc9-4def-b80b-b6c56f080073
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.resolution.field_senator_multiref
+    - node.type.resolution
+  module:
+    - user
+id: node.resolution.default
+targetEntityType: node
+bundle: resolution
+mode: default
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_senator_multiref: true
+  langcode: true
+  search_api_excerpt: true

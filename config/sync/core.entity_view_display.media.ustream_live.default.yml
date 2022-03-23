@@ -1,0 +1,29 @@
+uuid: 8b9d1910-dde6-4cfc-ba0f-c110e431c664
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.ustream_live.field_media_oembed_ustream
+    - media.type.ustream_live
+  module:
+    - media
+id: media.ustream_live.default
+targetEntityType: media
+bundle: ustream_live
+mode: default
+content:
+  field_media_oembed_ustream:
+    type: oembed
+    label: visually_hidden
+    settings:
+      max_width: 0
+      max_height: 0
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

@@ -1,0 +1,28 @@
+uuid: dca38ee0-a3af-46c1-bbb9-e4bac3eaf164
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.media.media_library
+    - field.field.media.ustream_live.field_media_oembed_ustream
+    - media.type.ustream_live
+id: media.ustream_live.media_library
+targetEntityType: media
+bundle: ustream_live
+mode: media_library
+content:
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_oembed_ustream: true
+  langcode: true
+  path: true
+  status: true
+  uid: true

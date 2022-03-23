@@ -1,0 +1,23 @@
+uuid: f9f72cf4-0d98-41d9-9557-58471686f327
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_committee_featured
+    - node.type.event
+id: node.event.field_committee_featured
+field_name: field_committee_featured
+entity_type: node
+bundle: event
+label: 'Committee Featured'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Committee Featured'
+  off_label: 'Committee Not Featured'
+field_type: boolean

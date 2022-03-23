@@ -1,0 +1,36 @@
+uuid: 50ea95c6-1d80-4c01-9334-40cfbedc9e67
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_video_status
+field_name: field_video_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: will_stream_live
+      label: 'Will Stream Live'
+    -
+      value: streaming_live_now
+      label: 'Streaming Live Now'
+    -
+      value: archived_video
+      label: 'Archived Video'
+    -
+      value: streaming_redirect
+      label: 'Streaming (Redirect)'
+    -
+      value: cancelled
+      label: 'To resume at the call of the Temporary President'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

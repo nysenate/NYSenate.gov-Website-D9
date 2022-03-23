@@ -1,0 +1,29 @@
+uuid: ed0ae32c-ce00-4653-acc4-e87c51f1d870
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_yt
+    - media.type.remote_video
+    - node.type.event
+id: node.event.field_yt
+field_name: field_yt
+entity_type: node
+bundle: event
+label: 'Video Archive'
+description: 'If there is a video recording of this event available on Youtube, past the URL in the field below. Note that it must be a Youtube URL.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      remote_video: remote_video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

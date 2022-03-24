@@ -22,7 +22,7 @@ bundle: gallery_item
 mode: default
 content:
   field_link:
-    weight: 0
+    type: link
     label: hidden
     settings:
       trim_length: 80
@@ -31,60 +31,60 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 0
     region: content
   field_media:
-    weight: 1
+    type: entity_reference_entity_view
     label: hidden
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    weight: 1
     region: content
   field_short_title:
-    weight: 2
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 2
     region: content
   field_subhead:
-    weight: 3
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 3
     region: content
   field_summary:
-    weight: 4
+    type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 4
     region: content
   field_thumb:
-    weight: 5
+    type: image
     label: hidden
     settings:
+      image_link: ''
+      image_style: ''
       svg_attributes:
         width: null
         height: null
       svg_render_as_image: true
-      image_style: ''
-      image_link: ''
     third_party_settings: {  }
-    type: image
+    weight: 5
     region: content
   field_title:
-    weight: 6
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 6
     region: content
 hidden:
   search_api_excerpt: true

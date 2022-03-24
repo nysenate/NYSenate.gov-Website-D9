@@ -19,37 +19,37 @@ bundle: quote
 mode: default
 content:
   field_author:
-    weight: 1
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 1
     region: content
   field_job_title:
-    weight: 2
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 2
     region: content
   field_quote:
-    weight: 0
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 0
     region: content
   field_thumb:
-    weight: 3
+    type: responsive_image
     label: hidden
     settings:
       responsive_image_style: 4_3_images
       image_link: ''
     third_party_settings: {  }
-    type: responsive_image
+    weight: 3
     region: content
 hidden:
   search_api_excerpt: true

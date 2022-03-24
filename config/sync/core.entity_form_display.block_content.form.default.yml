@@ -16,21 +16,21 @@ bundle: form
 mode: default
 content:
   field_title:
+    type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_webform:
+    type: webform_entity_reference_select
     weight: 1
+    region: content
     settings:
       default_data: true
       webforms: {  }
     third_party_settings: {  }
-    type: webform_entity_reference_select
-    region: content
   langcode:
     type: language_select
     weight: 2

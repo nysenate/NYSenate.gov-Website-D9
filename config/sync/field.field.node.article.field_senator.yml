@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_senator
     - node.type.article
-    - node.type.page_content
 id: node.article.field_senator
 field_name: field_senator
 entity_type: node
@@ -17,13 +16,6 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
-  handler_settings:
-    target_bundles:
-      page_content: page_content
-    sort:
-      field: _none
-      direction: ASC
-    auto_create: false
-    auto_create_bundle: ''
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
 field_type: entity_reference

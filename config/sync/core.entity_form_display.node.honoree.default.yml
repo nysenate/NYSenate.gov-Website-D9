@@ -66,7 +66,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 11
+    weight: 12
     region: content
     settings:
       rows: 9
@@ -206,10 +206,14 @@ content:
       revision: false
     third_party_settings: {  }
   field_senator:
-    type: options_select
+    type: entity_reference_autocomplete
     weight: 2
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   title:
     type: string_textfield

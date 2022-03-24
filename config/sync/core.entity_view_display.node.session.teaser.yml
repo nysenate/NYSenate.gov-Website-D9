@@ -6,13 +6,18 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.session.body
     - field.field.node.session.field_calendar_number
+    - field.field.node.session.field_date
     - field.field.node.session.field_issues
     - field.field.node.session.field_live_message_override
     - field.field.node.session.field_live_message_status
+    - field.field.node.session.field_location
+    - field.field.node.session.field_meeting_location
     - field.field.node.session.field_session_calendars
     - field.field.node.session.field_transcript
+    - field.field.node.session.field_ustream_url
     - field.field.node.session.field_video_redirect
     - field.field.node.session.field_video_status
+    - field.field.node.session.field_yt
     - node.type.session
   module:
     - text
@@ -37,11 +42,17 @@ content:
     region: content
 hidden:
   field_calendar_number: true
+  field_date: true
   field_issues: true
   field_live_message_override: true
   field_live_message_status: true
+  field_location: true
+  field_meeting_location: true
   field_session_calendars: true
   field_transcript: true
+  field_ustream_url: true
   field_video_redirect: true
   field_video_status: true
+  field_yt: true
   langcode: true
+  search_api_excerpt: true

@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_ol_committee
     - node.type.agenda
-    - taxonomy.vocabulary.senator
+    - taxonomy.vocabulary.committees
 id: node.agenda.field_ol_committee
 field_name: field_ol_committee
 entity_type: node
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      senator: senator
+      committees: committees
     sort:
       field: name
       direction: asc

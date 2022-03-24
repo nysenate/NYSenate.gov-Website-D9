@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_issues
     - node.type.honoree
-    - taxonomy.vocabulary.senator
+    - taxonomy.vocabulary.issues
 id: node.honoree.field_issues
 field_name: field_issues
 entity_type: node
@@ -20,10 +20,10 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      senator: senator
+      issues: issues
     sort:
       field: name
       direction: asc
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: issues
 field_type: entity_reference

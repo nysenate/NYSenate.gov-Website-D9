@@ -1,0 +1,45 @@
+uuid: cbe1c83d-6f25-4329-8dfb-7e5c67ad0f01
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.committee_featured_legislation.field_featured_bill
+    - field.field.paragraph.committee_featured_legislation.field_featured_quote
+    - field.field.paragraph.committee_featured_legislation.field_featured_senator
+    - paragraphs.paragraphs_type.committee_featured_legislation
+id: paragraph.committee_featured_legislation.default
+targetEntityType: paragraph
+bundle: committee_featured_legislation
+mode: default
+content:
+  field_featured_bill:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_featured_quote:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_featured_senator:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

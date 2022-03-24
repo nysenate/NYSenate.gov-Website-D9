@@ -1,11 +1,11 @@
-uuid: 0f599c62-db8b-49ea-af3d-da2c0787be93
+uuid: 741db730-2776-48c7-b05c-754d0edf4213
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_senator
     - node.type.honoree
-    - node.type.page_content
+    - taxonomy.vocabulary.senator
 id: node.honoree.field_senator
 field_name: field_senator
 entity_type: node
@@ -17,13 +17,13 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      page_content: page_content
+      senator: senator
     sort:
-      field: _none
-      direction: ASC
+      field: name
+      direction: asc
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

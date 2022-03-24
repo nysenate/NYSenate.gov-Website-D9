@@ -1,0 +1,31 @@
+uuid: 1f0c91ee-6ce7-400b-9f0a-3d3611ea00ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_featured_legislation_commi
+    - paragraphs.paragraphs_type.committee_featured_legislation
+    - taxonomy.vocabulary.committees
+  module:
+    - entity_reference_revisions
+id: taxonomy_term.committees.field_featured_legislation_commi
+field_name: field_featured_legislation_commi
+entity_type: taxonomy_term
+bundle: committees
+label: 'Committee Featured Legislation'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      committee_featured_legislation: committee_featured_legislation
+    negate: 0
+    target_bundles_drag_drop:
+      committee_featured_legislation:
+        weight: 2
+        enabled: true
+field_type: entity_reference_revisions

@@ -1,0 +1,59 @@
+uuid: 7b3d54fd-bcfb-4733-bd87-b80a66e7285f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.members.field_assemblymen_name
+    - field.field.paragraph.members.field_assemblymen_url
+    - field.field.paragraph.members.field_committee_member_role
+    - field.field.paragraph.members.field_other_member_role
+    - field.field.paragraph.members.field_senator
+    - paragraphs.paragraphs_type.members
+id: paragraph.members.default
+targetEntityType: paragraph
+bundle: members
+mode: default
+content:
+  field_assemblymen_name:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_assemblymen_url:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_committee_member_role:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_other_member_role:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_senator:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

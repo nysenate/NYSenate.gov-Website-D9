@@ -5,25 +5,36 @@ dependencies:
   config:
     - field.field.node.session.body
     - field.field.node.session.field_calendar_number
+    - field.field.node.session.field_date
     - field.field.node.session.field_issues
     - field.field.node.session.field_live_message_override
     - field.field.node.session.field_live_message_status
+    - field.field.node.session.field_location
+    - field.field.node.session.field_meeting_location
     - field.field.node.session.field_session_calendars
     - field.field.node.session.field_transcript
+    - field.field.node.session.field_ustream_url
     - field.field.node.session.field_video_redirect
     - field.field.node.session.field_video_status
+    - field.field.node.session.field_yt
     - node.type.session
   module:
+    - address
+    - datetime
     - field_group
+    - media_library
+    - path
     - text
 third_party_settings:
   field_group:
     group_location:
-      children: {  }
+      children:
+        - field_meeting_location
+        - field_location
       label: Location
       region: content
       parent_name: ''
-      weight: 1
+      weight: 2
       format_type: fieldset
       format_settings:
         classes: 'group-location field-group-fieldset'
@@ -40,7 +51,7 @@ third_party_settings:
       label: Details
       region: content
       parent_name: ''
-      weight: 2
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: 'group-details field-group-fieldset'
@@ -52,13 +63,15 @@ third_party_settings:
       children:
         - field_video_status
         - field_video_redirect
+        - field_ustream_url
+        - field_yt
         - field_live_message_status
         - field_live_message_override
         - field_transcript
       label: Video
       region: content
       parent_name: ''
-      weight: 3
+      weight: 4
       format_type: fieldset
       format_settings:
         classes: 'group-video field-group-fieldset'
@@ -81,6 +94,12 @@ content:
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_calendar_number:
     type: number
     weight: 7
@@ -88,9 +107,15 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
+  field_date:
+    type: datetime_default
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
-    weight: 9
+    weight: 10
     region: content
     settings:
       match_operator: CONTAINS
@@ -100,7 +125,7 @@ content:
     third_party_settings: {  }
   field_live_message_override:
     type: string_textarea
-    weight: 29
+    weight: 38
     region: content
     settings:
       rows: 5
@@ -108,13 +133,27 @@ content:
     third_party_settings: {  }
   field_live_message_status:
     type: options_select
-    weight: 28
+    weight: 37
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_location:
+    type: address_default
+    weight: 33
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_meeting_location:
+    type: string_textfield
+    weight: 32
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_session_calendars:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -124,7 +163,7 @@ content:
     third_party_settings: {  }
   field_transcript:
     type: entity_reference_autocomplete_tags
-    weight: 30
+    weight: 39
     region: content
     settings:
       match_operator: CONTAINS
@@ -132,9 +171,16 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_ustream_url:
+    type: media_library_widget
+    weight: 34
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
   field_video_redirect:
     type: string_textfield
-    weight: 27
+    weight: 33
     region: content
     settings:
       size: 60
@@ -142,9 +188,36 @@ content:
     third_party_settings: {  }
   field_video_status:
     type: options_select
-    weight: 26
+    weight: 32
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_yt:
+    type: media_library_widget
+    weight: 36
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -154,12 +227,21 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
-  created: true
   langcode: true
-  path: true
-  promote: true
-  status: true
   sticky: true
-  uid: true
-  url_redirects: true

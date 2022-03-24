@@ -1,0 +1,23 @@
+uuid: 1455a02a-ffbb-40f0-bcb8-7cfceb632d7e
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - nysenate_theme
+id: sitebranding
+theme: nysenate_theme
+region: footer_left
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  label_display: '0'
+  provider: system
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: false
+visibility: {  }

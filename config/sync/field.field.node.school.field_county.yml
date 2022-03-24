@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_county
     - node.type.school
-    - taxonomy.vocabulary.senator
+    - taxonomy.vocabulary.nys_counties
 id: node.school.field_county
 field_name: field_county
 entity_type: node
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      senator: senator
+      nys_counties: nys_counties
     sort:
       field: name
       direction: asc

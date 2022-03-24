@@ -29,11 +29,11 @@ class SearchForm extends FormBase {
     $search_term = (string) ($form_state->getBuildInfo()['args'][0] ?? '');
 
     return [
-      'title' => ['#markup' => '<header class="search-title">Search OpenLegislation Statutes</header>'],
+      'title' => ['#markup' => '<h3 class="search-title">Search OpenLegislation Statutes</h3>'],
       'search_term' => [
         '#type' => 'textfield',
         '#title' => 'Search Term',
-        '#default_value' => Xss::escape($search_term),
+        '#default_value' => Xss::filter($search_term),
       ],
       'go' => [
         '#type' => 'submit',

@@ -44,6 +44,7 @@ dependencies:
     - field.field.node.bill.field_ol_substituted_by
     - field.field.node.bill.field_ol_summary
     - field.field.node.bill.field_ol_votes
+    - field.field.node.bill.field_senator_multiref
     - node.type.bill
   module:
     - datetime
@@ -382,6 +383,12 @@ content:
       collapsed: false
       revision: false
     third_party_settings: {  }
+  field_senator_multiref:
+    type: options_select
+    weight: 50
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   langcode:
     type: language_select
     weight: 42
@@ -401,6 +408,12 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
@@ -433,6 +446,12 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
     third_party_settings: {  }
   url_redirects:
     weight: 48

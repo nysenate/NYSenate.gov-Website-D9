@@ -1,0 +1,23 @@
+uuid: 0263f7f7-d609-4b50-836c-8332b47e9022
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.petition.field_senator_multiref
+    - node.type.petition
+  module:
+    - user
+id: node.petition.default
+targetEntityType: node
+bundle: petition
+mode: default
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_senator_multiref: true
+  langcode: true
+  search_api_excerpt: true

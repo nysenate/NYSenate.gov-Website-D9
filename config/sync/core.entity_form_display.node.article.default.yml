@@ -22,7 +22,7 @@ dependencies:
     - field.field.node.article.field_publication_date
     - field.field.node.article.field_publication_source_link
     - field.field.node.article.field_publication_title
-    - field.field.node.article.field_senator
+    - field.field.node.article.field_senator_multiref
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
     - field.field.node.article.field_subtitle
@@ -340,15 +340,11 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_senator:
-    type: entity_reference_autocomplete
-    weight: 6
+  field_senator_multiref:
+    type: options_select
+    weight: 29
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
   field_social_image:
     type: media_library_widget
@@ -393,6 +389,12 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 11
@@ -424,6 +426,12 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
     third_party_settings: {  }
   url_redirects:
     weight: 10

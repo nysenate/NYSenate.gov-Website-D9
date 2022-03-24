@@ -5,6 +5,9 @@
  * Contains custom code for Senators and their Microsite Content.
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
@@ -141,4 +144,48 @@ function nys_senators_node_access_records(NodeInterface $node) {
 
   // Return access records added.
   return $access;
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function nys_senators_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+
+  // Only fire when updating a Senator Term.
+  if ($entity->getEntityType()->id() === 'taxonomy_term' && $entity->bundle() === 'senator' && $operation === 'update') {
+
+    // Fetch the User's roles.
+    $user_roles = $account->getRoles();
+
+    // What administrative roles need checking.
+    $admin_roles = [
+      'content_admin',
+      'administrator',
+    ];
+
+    // Only check for MCPs.
+    if (in_array('microsite_content_producer', $user_roles, FALSE) && empty(array_intersect($admin_roles, $user_roles))) {
+
+      // The User falls within a Senator based producer.
+      // Find out all of the User's senators. To do so, load user entity.
+      $user = User::load($account->id());
+
+      // Make sure the user has the field and that there is a value.
+      if ($user->hasField('field_senator_multiref') && !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id'))) {
+
+        // Lastly check if term is in MCPs senator values.
+        if (in_array($entity->id(), $senators, FALSE)) {
+
+          // Matched value. You shall pass.
+          return AccessResultAllowed::allowed()->setCacheMaxAge(0);
+        }
+      }
+
+      // Either they don't have a senator or not the right Senator.
+      return AccessResult::forbidden()->setCacheMaxAge(0);
+    }
+  }
+
+  // No opinion.
+  return AccessResult::neutral();
 }

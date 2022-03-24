@@ -1811,17 +1811,17 @@
         },
         {
             "name": "drupal/allowed_formats",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/allowed_formats.git",
-                "reference": "8.x-1.4"
+                "reference": "8.x-1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/allowed_formats-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "6c73fd69781e8a7c3ebc394ce74f981b6da50eae"
+                "url": "https://ftp.drupal.org/files/projects/allowed_formats-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "dbf61bee7aec87beaa2cf307c1d0d9d5b896328c"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9"
@@ -1829,8 +1829,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1643490687",
+                    "version": "8.x-1.5",
+                    "datestamp": "1648060331",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5865,17 +5865,17 @@
         },
         {
             "name": "drupal/moderation_sidebar",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/moderation_sidebar.git",
-                "reference": "8.x-1.4"
+                "reference": "8.x-1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/moderation_sidebar-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "5e6b0b68d01cd93a31c326c9fd20524a0e12d36a"
+                "url": "https://ftp.drupal.org/files/projects/moderation_sidebar-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "d3391f5ca10a9d145d217ef2ce0b463d90a14510"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -5883,8 +5883,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1589812642",
+                    "version": "8.x-1.5",
+                    "datestamp": "1648129967",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -6095,6 +6095,57 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/node_revision_delete",
                 "issues": "https://www.drupal.org/project/issues/node_revision_delete"
+            }
+        },
+        {
+            "name": "drupal/oembed_providers",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/oembed_providers.git",
+                "reference": "2.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/oembed_providers-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "161640caddc289856190fdbc33b53e16f690c10f"
+            },
+            "require": {
+                "drupal/core": "^9.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.2",
+                    "datestamp": "1646068616",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Burge",
+                    "homepage": "https://www.drupal.org/u/chris-burge",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Allows site builders and developers to manage oEmbed providers.",
+            "homepage": "https://drupal.org/project/oembed_providers",
+            "keywords": [
+                "Drupal",
+                "Media",
+                "oEmbed"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/oembed_providers",
+                "issues": "https://www.drupal.org/project/issues/oembed_providers"
             }
         },
         {
@@ -7241,67 +7292,6 @@
             "homepage": "https://www.drupal.org/project/semanticviews",
             "support": {
                 "source": "https://git.drupalcode.org/project/semanticviews"
-            }
-        },
-        {
-            "name": "drupal/sendgrid_integration",
-            "version": "1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/sendgrid_integration.git",
-                "reference": "8.x-1.7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/sendgrid_integration-8.x-1.7.zip",
-                "reference": "8.x-1.7",
-                "shasum": "95ddb39998dd61c218d01f65e0817839a771623a"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9",
-                "drupal/mailsystem": "^4",
-                "fastglass/sendgrid": "~1.0.10",
-                "html2text/html2text": "^4.3.1"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.7",
-                    "datestamp": "1605743273",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL v2"
-            ],
-            "authors": [
-                {
-                    "name": "Brady Owens (perignon)",
-                    "homepage": "https://www.drupal.org/u/perignon",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "exlin",
-                    "homepage": "https://www.drupal.org/user/695136"
-                }
-            ],
-            "description": "Drupal module for integrating with the SendGrid API.",
-            "homepage": "https://www.drupal.org/project/sendgrid_integration",
-            "keywords": [
-                "SendGrid",
-                "email",
-                "grid",
-                "php",
-                "send",
-                "sendgrid"
-            ],
-            "support": {
-                "source": "https://git.drupalcode.org/project/sendgrid_integration",
-                "issues": "https://drupal.org/project/issues/sendgrid_integration"
             }
         },
         {
@@ -9428,64 +9418,6 @@
             "time": "2021-12-25T01:21:49+00:00"
         },
         {
-            "name": "fastglass/sendgrid",
-            "version": "1.0.12",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/taz77/sendgrid-php-ng.git",
-                "reference": "2f118ad67787899a84a95a870fb90a67949c3b82"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/taz77/sendgrid-php-ng/zipball/2f118ad67787899a84a95a870fb90a67949c3b82",
-                "reference": "2f118ad67787899a84a95a870fb90a67949c3b82",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": ">=6.2.1",
-                "php": ">=5.5.0",
-                "sendgrid/smtpapi": "~0.5"
-            },
-            "replace": {
-                "sendgrid/sendgrid-php": "*"
-            },
-            "require-dev": {
-                "mockery/mockery": "~0.9",
-                "phpunit/phpunit": "~7.3",
-                "vlucas/phpdotenv": "~1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SendGrid\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Brady Owens",
-                    "email": "brady@fastglass.net",
-                    "homepage": "https://github.com/taz77"
-                }
-            ],
-            "description": "This library allows you to send emails through SendGrid using PHP and Guzzle 6.x.",
-            "homepage": "https://github.com/taz77/sendgrid-php-ng",
-            "keywords": [
-                "email",
-                "grid",
-                "send",
-                "sendgrid"
-            ],
-            "support": {
-                "issues": "https://github.com/taz77/sendgrid-php-ng/issues",
-                "source": "https://github.com/taz77/sendgrid-php-ng/tree/1.0.12"
-            },
-            "time": "2020-11-18T14:59:05+00:00"
-        },
-        {
             "name": "fileeye/mimemap",
             "version": "1.2.1",
             "source": {
@@ -10090,45 +10022,69 @@
             "time": "2022-03-20T21:51:18+00:00"
         },
         {
-            "name": "html2text/html2text",
-            "version": "4.3.1",
+            "name": "kint-php/kint",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mtibben/html2text.git",
-                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c"
+                "url": "https://github.com/kint-php/kint.git",
+                "reference": "fa53c4333cda79dc9cb002cfa029abe994d0ae00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mtibben/html2text/zipball/61ad68e934066a6f8df29a3d23a6460536d0855c",
-                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c",
+                "url": "https://api.github.com/repos/kint-php/kint/zipball/fa53c4333cda79dc9cb002cfa029abe994d0ae00",
+                "reference": "fa53c4333cda79dc9cb002cfa029abe994d0ae00",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.6"
+            },
             "require-dev": {
-                "phpunit/phpunit": "~4"
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpspec/prophecy-phpunit": "^2",
+                "phpunit/phpunit": "^9.0",
+                "seld/phar-utils": "^1.0",
+                "symfony/finder": "^3.0 || ^4.0 || ^5.0",
+                "vimeo/psalm": "^4.0"
             },
             "suggest": {
-                "ext-mbstring": "For best performance",
-                "symfony/polyfill-mbstring": "If you can't install ext-mbstring"
+                "kint-php/kint-helpers": "Provides extra helper functions",
+                "kint-php/kint-twig": "Provides d() and s() functions in twig templates"
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "init.php"
+                ],
                 "psr-4": {
-                    "Html2Text\\": [
-                        "src/",
-                        "test/"
-                    ]
+                    "Kint\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-2.0-or-later"
+                "MIT"
             ],
-            "description": "Converts HTML to formatted plain text",
+            "authors": [
+                {
+                    "name": "Jonathan Vollebregt",
+                    "homepage": "https://github.com/jnvsor"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/kint-php/kint/graphs/contributors"
+                }
+            ],
+            "description": "Kint - debugging tool for PHP developers",
+            "homepage": "https://kint-php.github.io/kint/",
+            "keywords": [
+                "debug",
+                "kint",
+                "php"
+            ],
             "support": {
-                "issues": "https://github.com/mtibben/html2text/issues",
-                "source": "https://github.com/mtibben/html2text/tree/4.3.1"
+                "issues": "https://github.com/kint-php/kint/issues",
+                "source": "https://github.com/kint-php/kint/tree/4.1.2"
             },
-            "time": "2020-04-16T23:44:31+00:00"
+            "time": "2022-02-22T20:32:24+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -12539,63 +12495,6 @@
                 "source": "https://github.com/sendgrid/php-http-client/tree/3.14.4"
             },
             "time": "2022-03-09T20:21:55+00:00"
-        },
-        {
-            "name": "sendgrid/smtpapi",
-            "version": "0.6.11",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sendgrid/smtpapi-php.git",
-                "reference": "5a9fe64dc975f4042b143ba8d6cdac71e605f4ae"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sendgrid/smtpapi-php/zipball/5a9fe64dc975f4042b143ba8d6cdac71e605f4ae",
-                "reference": "5a9fe64dc975f4042b143ba8d6cdac71e605f4ae",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6"
-            },
-            "replace": {
-                "sendgrid/smtpapi-php": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "5.7.* || 6.5.*",
-                "squizlabs/php_codesniffer": "2.9.* || 3.3.*"
-            },
-            "suggest": {
-                "swiftmailer/swiftmailer": "^5.4 - Needed to run the example scripts"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Smtpapi": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Build SendGrid X-SMTPAPI headers in PHP.",
-            "homepage": "http://github.com/sendgrid/smtpapi-php",
-            "keywords": [
-                "X-SMTP",
-                "api",
-                "email",
-                "grid",
-                "send",
-                "sendgrid",
-                "smtp",
-                "smtpapi",
-                "twilio",
-                "xsmtp"
-            ],
-            "support": {
-                "issues": "https://github.com/sendgrid/smtpapi-php/issues",
-                "source": "https://github.com/sendgrid/smtpapi-php/tree/0.6.11"
-            },
-            "time": "2022-03-09T20:21:54+00:00"
         },
         {
             "name": "solarium/solarium",
@@ -16442,6 +16341,69 @@
             "time": "2021-10-11T11:58:47+00:00"
         },
         {
+            "name": "behat/mink-browserkit-driver",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/minkphp/MinkBrowserKitDriver.git",
+                "reference": "057926c9da452bac5bfcffb92eb4f3e1ce74dae9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minkphp/MinkBrowserKitDriver/zipball/057926c9da452bac5bfcffb92eb4f3e1ce74dae9",
+                "reference": "057926c9da452bac5bfcffb92eb4f3e1ce74dae9",
+                "shasum": ""
+            },
+            "require": {
+                "behat/mink": "^1.7.1@dev",
+                "php": ">=5.4",
+                "symfony/browser-kit": "~2.3|~3.0|~4.0",
+                "symfony/dom-crawler": "~2.3|~3.0|~4.0"
+            },
+            "require-dev": {
+                "mink/driver-testsuite": "dev-master",
+                "phpunit/phpunit": "^4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.18 || ^8.5 || ^9.5",
+                "symfony/debug": "^2.7|^3.0|^4.0",
+                "symfony/http-kernel": "~2.3|~3.0|~4.0",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "type": "mink-driver",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Behat\\Mink\\Driver\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Kudryashov",
+                    "email": "ever.zet@gmail.com",
+                    "homepage": "http://everzet.com"
+                }
+            ],
+            "description": "Symfony2 BrowserKit driver for Mink framework",
+            "homepage": "https://mink.behat.org/",
+            "keywords": [
+                "Mink",
+                "Symfony2",
+                "browser",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/minkphp/MinkBrowserKitDriver/issues",
+                "source": "https://github.com/minkphp/MinkBrowserKitDriver/tree/v1.4.1"
+            },
+            "time": "2021-12-10T14:17:06+00:00"
+        },
+        {
             "name": "behat/mink-extension",
             "version": "2.3.1",
             "source": {
@@ -17970,30 +17932,29 @@
         },
         {
             "name": "drupal/core-dev",
-            "version": "9.3.9",
+            "version": "9.1.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-dev.git",
-                "reference": "d093ec9dd1106069fd01535235dd5797662a61cb"
+                "reference": "559e6611014b0815c61b8004598854617d541d97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-dev/zipball/d093ec9dd1106069fd01535235dd5797662a61cb",
-                "reference": "d093ec9dd1106069fd01535235dd5797662a61cb",
+                "url": "https://api.github.com/repos/drupal/core-dev/zipball/559e6611014b0815c61b8004598854617d541d97",
+                "reference": "559e6611014b0815c61b8004598854617d541d97",
                 "shasum": ""
             },
             "require": {
                 "behat/mink": "^1.8",
+                "behat/mink-goutte-driver": "^1.2",
                 "behat/mink-selenium2-driver": "^1.4",
                 "composer/composer": "^2.0.2",
-                "drupal/coder": "^8.3.10",
+                "drupal/coder": "^8.3.7",
                 "easyrdf/easyrdf": "^0.9 || ^1.0",
-                "friends-of-behat/mink-browserkit-driver": "^1.4",
-                "instaclick/php-webdriver": "^1.4.1",
                 "justinrainbow/json-schema": "^5.2",
                 "mikey179/vfsstream": "^1.6.8",
-                "phpspec/prophecy": "^1.12",
-                "phpunit/phpunit": "^8.5.14 || ^9",
+                "phpspec/prophecy": "^1.7",
+                "phpunit/phpunit": "^8.4.1 || ^9",
                 "symfony/browser-kit": "^4.4",
                 "symfony/css-selector": "^4.4",
                 "symfony/dom-crawler": "^4.4 !=4.4.5",
@@ -18001,8 +17962,8 @@
                 "symfony/filesystem": "^4.4",
                 "symfony/finder": "^4.4",
                 "symfony/lock": "^4.4",
-                "symfony/phpunit-bridge": "^5.4",
-                "symfony/var-dumper": "^5.4"
+                "symfony/phpunit-bridge": "^5.1.4",
+                "symfony/var-dumper": "^5.1.2"
             },
             "conflict": {
                 "webflo/drupal-core-require-dev": "*"
@@ -18014,9 +17975,9 @@
             ],
             "description": "require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-dev/tree/9.3.9"
+                "source": "https://github.com/drupal/core-dev/tree/9.1.15"
             },
-            "time": "2021-11-30T05:41:29+00:00"
+            "time": "2020-10-28T08:13:15+00:00"
         },
         {
             "name": "drupal/devel",
@@ -18455,68 +18416,6 @@
                 "source": "https://github.com/FriendsOfPHP/Goutte/tree/v3.3.1"
             },
             "time": "2020-11-01T09:30:18+00:00"
-        },
-        {
-            "name": "friends-of-behat/mink-browserkit-driver",
-            "version": "v1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfBehat/MinkBrowserKitDriver.git",
-                "reference": "8110b99ed1ac2b50ad287280bfc20e08f58b6cc6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfBehat/MinkBrowserKitDriver/zipball/8110b99ed1ac2b50ad287280bfc20e08f58b6cc6",
-                "reference": "8110b99ed1ac2b50ad287280bfc20e08f58b6cc6",
-                "shasum": ""
-            },
-            "require": {
-                "behat/mink": "^1.7",
-                "php": "^7.2|^8.0",
-                "symfony/browser-kit": "^4.4|^5.0",
-                "symfony/dom-crawler": "^4.4|^5.0"
-            },
-            "replace": {
-                "behat/mink-browserkit-driver": "self.version"
-            },
-            "require-dev": {
-                "friends-of-behat/mink-driver-testsuite": "dev-master",
-                "symfony/http-kernel": "^4.4|^5.0"
-            },
-            "type": "mink-driver",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Behat\\Mink\\Driver\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                }
-            ],
-            "description": "Symfony2 BrowserKit driver for Mink framework",
-            "homepage": "http://mink.behat.org/",
-            "keywords": [
-                "Mink",
-                "Symfony2",
-                "browser",
-                "testing"
-            ],
-            "support": {
-                "source": "https://github.com/FriendsOfBehat/MinkBrowserKitDriver/tree/v1.5.0"
-            },
-            "time": "2021-02-04T14:39:46+00:00"
         },
         {
             "name": "gitonomy/gitlib",
@@ -20261,20 +20160,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.4.10",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "898c479c39caa727bedf4311dd294a8f4e250e72"
+                "reference": "2be8dd6dfa09ab1a21c49956ff591979cd5ab29e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/898c479c39caa727bedf4311dd294a8f4e250e72",
-                "reference": "898c479c39caa727bedf4311dd294a8f4e250e72",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2be8dd6dfa09ab1a21c49956ff591979cd5ab29e",
+                "reference": "2be8dd6dfa09ab1a21c49956ff591979cd5ab29e",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1|^8.0"
+                "php": "^7.2|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -20296,7 +20195,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.4.10"
+                "source": "https://github.com/phpstan/phpstan/tree/1.5.0"
             },
             "funding": [
                 {
@@ -20316,7 +20215,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-14T10:25:45+00:00"
+            "time": "2022-03-24T18:18:00+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",

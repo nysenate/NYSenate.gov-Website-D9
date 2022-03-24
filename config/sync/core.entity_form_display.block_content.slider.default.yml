@@ -19,6 +19,7 @@ content:
   field_slider_item:
     type: paragraphs
     weight: 1
+    region: content
     settings:
       title: 'Slider item'
       title_plural: 'Slider items'
@@ -35,19 +36,18 @@ content:
         duplicate: '0'
     third_party_settings:
       paragraphs_features:
-        show_drag_and_drop: true
-        delete_confirmation: false
         add_in_between: false
+        delete_confirmation: false
         split_text: false
-    region: content
+        show_drag_and_drop: true
   field_title:
+    type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   langcode:
     type: language_select
     weight: 2

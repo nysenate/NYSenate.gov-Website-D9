@@ -1,0 +1,144 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Senators and their Microsite Content.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_node_grants().
+ *
+ * This function assigns group flags (grants) to users for access to content.
+ */
+function nys_senators_node_grants(AccountInterface $account, $op) {
+
+  // Initialize empty grants array for return.
+  $grants = [];
+
+  // Group 1 will represent all users.
+  // Microsite Users wil be non senator specific.
+  $grants['microsite_users'][] = 1;
+
+  // Define role checks as arrays to expand upon in the future as needed.
+  // What editorial roles need any level edit access.
+  $granted_member_roles = [
+    'microsite_content_producer',
+    'administrator',
+    'content_admin',
+  ];
+
+  // What administrative roles need non-senator based edit access.
+  $admin_roles = [
+    'content_admin',
+    'administrator',
+  ];
+
+  // Fetch the User's roles.
+  $user_roles = $account->getRoles();
+
+  // First check if authenticated.
+  // Second check if they are a role we want to give Microsite edit access to.
+  if ($account->isAuthenticated() && !empty(array_intersect($granted_member_roles, $user_roles))) {
+
+    // If user is an admin we need to give full access to the content.
+    if (!empty(array_intersect($admin_roles, $user_roles))) {
+
+      // User is an Admin. Grant access to all microsite content.
+      // Group 2 will be a representation of our admins.
+      $grants['microsite_users'][] = 2;
+    }
+    else {
+
+      // The User falls within a Senator based producer.
+      // Find out all of the User's senators. To do so, load user entity.
+      $user = User::load($account->id());
+
+      // Make sure the user has the field and that there is a value.
+      if ($user->hasField('field_senator_multiref') && !empty($senators = $user->field_senator_multiref->getValue())) {
+
+        // There is a potential for multiple senators so run through each.
+        foreach ($senators as $senator) {
+
+          // Grant access to producers group based on Senator ID.
+          $grants['microsite_producers'][] = $senator['target_id'];
+        }
+      }
+    }
+  }
+
+  // Return any grants we have assigned.
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function nys_senators_node_access_records(NodeInterface $node) {
+
+  // Initialize empty access array for return.
+  $access = [];
+
+  // Build an array of microsite content types we care about.
+  $microsite_cts = [
+    'article',
+    'bill',
+    'event',
+    'landing',
+    'page_content',
+    'petition',
+  ];
+
+  // If the node is in a bundle that could be microsite content.
+  if (in_array($node->bundle(), $microsite_cts, TRUE)) {
+
+    // Add the appropriate gids to the proper realms for each level of access.
+    // Start with all and administrative users.
+    // All users access view if published.
+    if ($node->isPublished()) {
+
+      $access[] = [
+        'realm' => 'microsite_users',
+        'gid' => 1,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+        'priority' => 0,
+      ];
+    }
+
+    // Add in Crud operations for Admins.
+    $access[] = [
+      'realm' => 'microsite_users',
+      'gid' => 2,
+      'grant_view' => 1,
+      'grant_update' => 1,
+      'grant_delete' => 1,
+      'priority' => 1,
+    ];
+
+    // Now check for a filled out Senator field.
+    if ($node->hasField('field_senator_multiref') && !empty($senators = $node->field_senator_multiref->getValue())) {
+
+      // For all Senators on Node, grant producers access based on Senator.
+      foreach ($senators as $senator) {
+
+        // Add edit access to producers based on Senator ID.
+        $access[] = [
+          'realm' => 'microsite_producers',
+          'gid' => $senator['target_id'],
+          'grant_view' => 1,
+          'grant_update' => 1,
+          'grant_delete' => 0,
+          'priority' => 1,
+        ];
+      }
+    }
+  }
+
+  // Return access records added.
+  return $access;
+}

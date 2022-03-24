@@ -18,6 +18,7 @@ content:
   field_quotes:
     type: paragraphs
     weight: 26
+    region: content
     settings:
       title: Quote
       title_plural: Quotes
@@ -34,11 +35,10 @@ content:
         duplicate: '0'
     third_party_settings:
       paragraphs_features:
-        show_drag_and_drop: true
-        delete_confirmation: false
         add_in_between: false
+        delete_confirmation: false
         split_text: false
-    region: content
+        show_drag_and_drop: true
   info:
     type: string_textfield
     weight: -5

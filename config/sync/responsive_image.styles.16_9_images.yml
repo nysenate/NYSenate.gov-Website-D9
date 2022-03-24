@@ -14,8 +14,6 @@ id: 16_9_images
 label: '16:9 Images'
 image_style_mappings:
   -
-    breakpoint_id: responsive_image.viewport_sizing
-    multiplier: 1x
     image_mapping_type: sizes
     image_mapping:
       sizes: 100vw
@@ -25,5 +23,7 @@ image_style_mappings:
         - large
         - medium
         - thumbnail
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
 breakpoint_group: responsive_image
 fallback_image_style: 16_9_xlarge

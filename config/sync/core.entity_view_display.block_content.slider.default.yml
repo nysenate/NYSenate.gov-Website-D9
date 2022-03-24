@@ -17,20 +17,20 @@ mode: default
 content:
   field_slider_item:
     type: entity_reference_revisions_entity_view
-    weight: 0
     label: hidden
     settings:
       view_mode: hero_media
       link: ''
     third_party_settings: {  }
+    weight: 0
     region: content
   field_title:
-    weight: 1
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 1
     region: content
 hidden:
   langcode: true

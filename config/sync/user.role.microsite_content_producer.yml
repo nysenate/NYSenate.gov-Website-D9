@@ -1,9 +1,44 @@
 uuid: 1d98882b-f4ab-4eec-a8dd-6bb175777612
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.article
+    - node.type.bill
+    - node.type.event
+    - node.type.landing
+    - node.type.page_content
+    - node.type.petition
+    - node.type.resolution
+    - taxonomy.vocabulary.senator
+  module:
+    - node
+    - system
+    - taxonomy
+    - toolbar
 id: microsite_content_producer
 label: 'Microsite Content Producer'
 weight: 2
 is_admin: null
-permissions: {  }
+permissions:
+  - 'access content'
+  - 'access content overview'
+  - 'access taxonomy overview'
+  - 'access toolbar'
+  - 'create article content'
+  - 'create bill content'
+  - 'create event content'
+  - 'create landing content'
+  - 'create page_content content'
+  - 'create petition content'
+  - 'create resolution content'
+  - 'edit terms in senator'
+  - 'view article revisions'
+  - 'view bill revisions'
+  - 'view event revisions'
+  - 'view landing revisions'
+  - 'view own unpublished content'
+  - 'view page_content revisions'
+  - 'view petition revisions'
+  - 'view resolution revisions'
+  - 'view the administration theme'

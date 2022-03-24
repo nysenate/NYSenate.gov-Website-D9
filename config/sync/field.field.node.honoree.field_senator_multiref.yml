@@ -1,0 +1,29 @@
+uuid: ef73aa6f-c4be-4c3e-b910-d9aca43026f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_senator_multiref
+    - node.type.honoree
+    - taxonomy.vocabulary.senator
+id: node.honoree.field_senator_multiref
+field_name: field_senator_multiref
+entity_type: node
+bundle: honoree
+label: Senator
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

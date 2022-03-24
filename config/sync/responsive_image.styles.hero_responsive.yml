@@ -15,8 +15,6 @@ id: hero_responsive
 label: 'Hero Responsive'
 image_style_mappings:
   -
-    breakpoint_id: responsive_image.viewport_sizing
-    multiplier: 1x
     image_mapping_type: sizes
     image_mapping:
       sizes: 100vw
@@ -27,5 +25,7 @@ image_style_mappings:
         - hero_m_x2
         - hero_s
         - hero_s_x2
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
 breakpoint_group: responsive_image
 fallback_image_style: hero_l

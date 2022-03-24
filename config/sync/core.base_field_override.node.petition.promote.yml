@@ -1,0 +1,22 @@
+uuid: 1c98aab4-f3e1-4f87-9623-145078a84044
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.petition
+id: node.petition.promote
+field_name: promote
+entity_type: node
+bundle: petition
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

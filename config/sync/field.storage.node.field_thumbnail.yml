@@ -1,20 +1,18 @@
-uuid: 0b5f1e6f-fe01-44fc-90aa-85f539e1b233
+uuid: 195f3ab8-110e-488c-9a66-1f4277f8e1cb
 langcode: en
 status: true
 dependencies:
   module:
-    - field_permissions
+    - media
     - node
-    - taxonomy
-third_party_settings:
-  field_permissions:
-    permission_type: public
-id: node.field_senator
-field_name: field_senator
+_core:
+  default_config_hash: 4GtgAIqRbhVr7fRHEdxISiGq8QNSQhOnXCK-5fCtmG0
+id: node.field_thumbnail
+field_name: field_thumbnail
 entity_type: node
 type: entity_reference
 settings:
-  target_type: taxonomy_term
+  target_type: media
 module: core
 locked: false
 cardinality: 1

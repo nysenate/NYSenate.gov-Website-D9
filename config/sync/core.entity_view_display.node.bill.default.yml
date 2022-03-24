@@ -44,6 +44,7 @@ dependencies:
     - field.field.node.bill.field_ol_substituted_by
     - field.field.node.bill.field_ol_summary
     - field.field.node.bill.field_ol_votes
+    - field.field.node.bill.field_senator_multiref
     - node.type.bill
   module:
     - datetime
@@ -62,7 +63,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 142
+    weight: 41
     region: content
   field_bill_no_issue_tags:
     type: boolean
@@ -72,7 +73,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 102
+    weight: 2
     region: content
   field_issues:
     type: entity_reference_label
@@ -80,7 +81,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 101
+    weight: 1
     region: content
   field_majority_issue_tag:
     type: entity_reference_label
@@ -88,14 +89,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 103
+    weight: 3
     region: content
   field_metatags:
     type: metatag_empty_formatter
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 104
+    weight: 4
     region: content
   field_ol_active_version:
     type: string
@@ -103,14 +104,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 108
+    weight: 8
     region: content
   field_ol_add_sponsor_names:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 116
+    weight: 15
     region: content
   field_ol_add_sponsors:
     type: entity_reference_label
@@ -118,28 +119,28 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 117
+    weight: 16
     region: content
   field_ol_all_actions:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 119
+    weight: 18
     region: content
   field_ol_all_statuses:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 118
+    weight: 17
     region: content
   field_ol_amendments:
     type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    weight: 125
+    weight: 24
     region: content
   field_ol_base_print_no:
     type: string
@@ -147,21 +148,21 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 107
+    weight: 7
     region: content
   field_ol_chamber:
     type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 105
+    weight: 5
     region: content
   field_ol_co_sponsor_names:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 134
+    weight: 33
     region: content
   field_ol_co_sponsors:
     type: entity_reference_label
@@ -169,14 +170,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 133
+    weight: 32
     region: content
   field_ol_full_text:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 132
+    weight: 31
     region: content
   field_ol_has_same_as:
     type: boolean
@@ -186,7 +187,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 127
+    weight: 26
     region: content
   field_ol_is_active_version:
     type: boolean
@@ -196,7 +197,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 141
+    weight: 40
     region: content
   field_ol_is_amended:
     type: boolean
@@ -206,14 +207,14 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 110
+    weight: 10
     region: content
   field_ol_last_status:
     type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 121
+    weight: 20
     region: content
   field_ol_last_status_date:
     type: datetime_custom
@@ -222,7 +223,7 @@ content:
       timezone_override: ''
       date_format: 'Y-m-d H:i:s'
     third_party_settings: {  }
-    weight: 122
+    weight: 21
     region: content
   field_ol_latest_status:
     type: string
@@ -230,7 +231,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 120
+    weight: 19
     region: content
   field_ol_latest_status_committee:
     type: string
@@ -238,14 +239,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 123
+    weight: 22
     region: content
   field_ol_law_code:
     type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    weight: 130
+    weight: 29
     region: content
   field_ol_law_section:
     type: string
@@ -253,21 +254,21 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 129
+    weight: 28
     region: content
   field_ol_memo:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 131
+    weight: 30
     region: content
   field_ol_multi_sponsor_names:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 136
+    weight: 35
     region: content
   field_ol_multi_sponsors:
     type: entity_reference_label
@@ -275,21 +276,21 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 135
+    weight: 34
     region: content
   field_ol_name:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 111
+    weight: 11
     region: content
   field_ol_previous_versions:
     type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    weight: 126
+    weight: 25
     region: content
   field_ol_print_no:
     type: string
@@ -297,7 +298,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 109
+    weight: 9
     region: content
   field_ol_program_info:
     type: string
@@ -305,7 +306,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 139
+    weight: 38
     region: content
   field_ol_program_info_seq:
     type: number_integer
@@ -314,7 +315,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 140
+    weight: 39
     region: content
   field_ol_publish_date:
     type: datetime_custom
@@ -323,14 +324,14 @@ content:
       timezone_override: ''
       date_format: 'Y-m-d H:i:s'
     third_party_settings: {  }
-    weight: 112
+    weight: 12
     region: content
   field_ol_same_as:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 128
+    weight: 27
     region: content
   field_ol_session:
     type: number_integer
@@ -339,7 +340,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 106
+    weight: 6
     region: content
   field_ol_sponsor:
     type: entity_reference_label
@@ -347,7 +348,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 113
+    weight: 13
     region: content
   field_ol_sponsor_name:
     type: string
@@ -355,7 +356,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 114
+    weight: 14
     region: content
   field_ol_substituted_by:
     type: string
@@ -363,14 +364,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 138
+    weight: 37
     region: content
   field_ol_summary:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 124
+    weight: 23
     region: content
   field_ol_votes:
     type: entity_reference_revisions_entity_view
@@ -379,12 +380,14 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 137
+    weight: 36
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 0
     region: content
 hidden:
+  field_senator_multiref: true
   langcode: true
+  search_api_excerpt: true

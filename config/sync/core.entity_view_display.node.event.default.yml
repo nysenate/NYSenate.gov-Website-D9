@@ -18,6 +18,7 @@ dependencies:
     - field.field.node.event.field_issues
     - field.field.node.event.field_location
     - field.field.node.event.field_meeting_location
+    - field.field.node.event.field_senator_multiref
     - field.field.node.event.field_social_image
     - field.field.node.event.field_social_teaser
     - field.field.node.event.field_teleconference_id_number
@@ -53,7 +54,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 14
+    weight: 13
     region: content
   field_attachment:
     type: entity_reference_label
@@ -61,7 +62,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 15
+    weight: 14
     region: content
   field_committee:
     type: entity_reference_label
@@ -69,7 +70,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 9
+    weight: 8
     region: content
   field_committee_featured:
     type: boolean
@@ -79,7 +80,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 8
+    weight: 7
     region: content
   field_date_range:
     type: daterange_default
@@ -101,14 +102,14 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 16
+    weight: 15
     region: content
   field_event_type:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 23
+    weight: 22
     region: content
   field_feature_image:
     type: entity_reference_entity_view
@@ -127,14 +128,14 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 5
     region: content
   field_general_location:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 7
+    weight: 6
     region: content
   field_image_main:
     type: entity_reference_entity_view
@@ -143,7 +144,7 @@ content:
       view_mode: default
       link: true
     third_party_settings: {  }
-    weight: 5
+    weight: 4
     region: content
   field_issues:
     type: entity_reference_label
@@ -151,14 +152,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 10
+    weight: 9
     region: content
   field_location:
     type: address_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   field_meeting_location:
     type: string
@@ -166,7 +167,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 17
+    weight: 16
     region: content
   field_social_image:
     type: entity_reference_label
@@ -174,14 +175,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 12
+    weight: 11
     region: content
   field_social_teaser:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 13
+    weight: 12
     region: content
   field_teleconference_id_number:
     type: string
@@ -189,7 +190,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 18
+    weight: 17
     region: content
   field_teleconference_number:
     type: string
@@ -197,7 +198,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 19
+    weight: 18
     region: content
   field_ustream_url:
     type: entity_reference_entity_view
@@ -206,14 +207,14 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 22
+    weight: 21
     region: content
   field_video_status:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 20
+    weight: 19
     region: content
   field_yt:
     type: entity_reference_entity_view
@@ -222,13 +223,14 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 21
+    weight: 20
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 11
+    weight: 10
     region: content
 hidden:
+  field_senator_multiref: true
   langcode: true
   search_api_excerpt: true

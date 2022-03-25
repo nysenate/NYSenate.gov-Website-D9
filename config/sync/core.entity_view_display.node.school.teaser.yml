@@ -1,0 +1,57 @@
+uuid: cf46e05f-e725-4811-9d78-627077388b95
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.school.body
+    - field.field.node.school.field_county
+    - field.field.node.school.field_district
+    - field.field.node.school.field_school_address
+    - field.field.node.school.field_school_ceo_email
+    - field.field.node.school.field_school_ceo_first_name
+    - field.field.node.school.field_school_ceo_last_name
+    - field.field.node.school.field_school_ceo_phone
+    - field.field.node.school.field_school_ceo_salutation
+    - field.field.node.school.field_school_community_type
+    - field.field.node.school.field_school_grade_organization
+    - field.field.node.school.field_school_needs_description
+    - field.field.node.school.field_school_sub_type
+    - field.field.node.school.field_school_type
+    - node.type.school
+  module:
+    - text
+    - user
+id: node.school.teaser
+targetEntityType: node
+bundle: school
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_county: true
+  field_district: true
+  field_school_address: true
+  field_school_ceo_email: true
+  field_school_ceo_first_name: true
+  field_school_ceo_last_name: true
+  field_school_ceo_phone: true
+  field_school_ceo_salutation: true
+  field_school_community_type: true
+  field_school_grade_organization: true
+  field_school_needs_description: true
+  field_school_sub_type: true
+  field_school_type: true
+  langcode: true

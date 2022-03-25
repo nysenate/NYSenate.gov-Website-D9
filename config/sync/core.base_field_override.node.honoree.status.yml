@@ -1,0 +1,22 @@
+uuid: 43e06ff1-89dd-4779-aa83-b42b1edd7472
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.honoree
+id: node.honoree.status
+field_name: status
+entity_type: node
+bundle: honoree
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

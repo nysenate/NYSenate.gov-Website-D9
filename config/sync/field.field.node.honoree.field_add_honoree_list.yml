@@ -1,0 +1,23 @@
+uuid: cc59e3a5-4a2f-4ea6-8d6b-64a502779266
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_add_honoree_list
+    - node.type.honoree
+id: node.honoree.field_add_honoree_list
+field_name: field_add_honoree_list
+entity_type: node
+bundle: honoree
+label: 'Add to sitewide list of honorees'
+description: 'By checking this box, the Honoree (once published) will be visible on full Senate-wide list of honorees.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

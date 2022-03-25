@@ -1,0 +1,21 @@
+uuid: d485c6b9-5f72-4020-a377-91a701839f5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_honoree_type
+    - node.type.honoree
+  module:
+    - options
+id: node.honoree.field_honoree_type
+field_name: field_honoree_type
+entity_type: node
+bundle: honoree
+label: 'Type of Honoree'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

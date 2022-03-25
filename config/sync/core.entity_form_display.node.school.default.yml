@@ -1,0 +1,247 @@
+uuid: 5c115f5f-d1ae-4660-8c14-db97f2d3fb20
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.school.body
+    - field.field.node.school.field_county
+    - field.field.node.school.field_district
+    - field.field.node.school.field_school_address
+    - field.field.node.school.field_school_ceo_email
+    - field.field.node.school.field_school_ceo_first_name
+    - field.field.node.school.field_school_ceo_last_name
+    - field.field.node.school.field_school_ceo_phone
+    - field.field.node.school.field_school_ceo_salutation
+    - field.field.node.school.field_school_community_type
+    - field.field.node.school.field_school_grade_organization
+    - field.field.node.school.field_school_needs_description
+    - field.field.node.school.field_school_sub_type
+    - field.field.node.school.field_school_type
+    - node.type.school
+  module:
+    - address
+    - field_group
+    - path
+    - telephone
+    - text
+third_party_settings:
+  field_group:
+    group_location:
+      children:
+        - field_district
+        - field_county
+        - field_school_address
+      label: Location
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: fieldset
+      format_settings:
+        classes: 'group-location field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_school_details:
+      children:
+        - field_school_type
+        - field_school_community_type
+        - field_school_sub_type
+        - field_school_grade_organization
+        - field_school_needs_description
+        - body
+      label: 'School Details'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: fieldset
+      format_settings:
+        classes: 'group-school-details field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_contact_details:
+      children:
+        - field_school_ceo_salutation
+        - field_school_ceo_first_name
+        - field_school_ceo_last_name
+        - field_school_ceo_phone
+        - field_school_ceo_email
+      label: 'Contact Details'
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: fieldset
+      format_settings:
+        classes: 'group-contact-details field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+id: node.school.default
+targetEntityType: node
+bundle: school
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 13
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_county:
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_district:
+    type: entity_reference_autocomplete
+    weight: 8
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_address:
+    type: address_default
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_school_ceo_email:
+    type: email_default
+    weight: 30
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_school_ceo_first_name:
+    type: string_textfield
+    weight: 27
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_ceo_last_name:
+    type: string_textfield
+    weight: 28
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_ceo_phone:
+    type: telephone_default
+    weight: 29
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_ceo_salutation:
+    type: string_textfield
+    weight: 26
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_community_type:
+    type: string_textfield
+    weight: 9
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_grade_organization:
+    type: string_textfield
+    weight: 11
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_needs_description:
+    type: string_textfield
+    weight: 12
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_sub_type:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_school_type:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  promote: true
+  sticky: true

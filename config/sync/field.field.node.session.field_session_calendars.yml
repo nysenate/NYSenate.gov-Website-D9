@@ -1,0 +1,29 @@
+uuid: 3c35555b-ba47-4fd7-a57d-be82522a8f52
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_session_calendars
+    - node.type.calendar
+    - node.type.session
+id: node.session.field_session_calendars
+field_name: field_session_calendars
+entity_type: node
+bundle: session
+label: 'Session Calendar'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      calendar: calendar
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

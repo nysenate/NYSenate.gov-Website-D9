@@ -1,0 +1,34 @@
+uuid: 86ae78c2-ec5e-427b-ab3b-d462db60ff3d
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - node
+    - options
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: node.field_honoree_type
+field_name: field_honoree_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: veterans
+      label: Veteran
+    -
+      value: women
+      label: 'Women of Distinction'
+    -
+      value: other
+      label: Other
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

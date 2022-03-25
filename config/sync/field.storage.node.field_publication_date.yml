@@ -4,13 +4,17 @@ status: true
 dependencies:
   module:
     - datetime
+    - field_permissions
     - node
+third_party_settings:
+  field_permissions:
+    permission_type: public
 id: node.field_publication_date
 field_name: field_publication_date
 entity_type: node
 type: datetime
 settings:
-  datetime_type: datetime
+  datetime_type: date
 module: datetime
 locked: false
 cardinality: 1

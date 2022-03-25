@@ -1,0 +1,37 @@
+uuid: 44b05942-78c5-4420-b974-19c1974e422f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_agenda_bills
+    - node.type.agenda
+    - paragraphs.paragraphs_type.agenda_bills
+  module:
+    - entity_reference_revisions
+id: node.agenda.field_ol_agenda_bills
+field_name: field_ol_agenda_bills
+entity_type: node
+bundle: agenda
+label: 'Agenda Bills'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      agenda_bills: agenda_bills
+    negate: 0
+    target_bundles_drag_drop:
+      agenda_bills:
+        weight: 4
+        enabled: true
+      calendar:
+        weight: 3
+        enabled: false
+      votes:
+        weight: 4
+        enabled: false
+field_type: entity_reference_revisions

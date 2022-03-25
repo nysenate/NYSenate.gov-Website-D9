@@ -1,0 +1,29 @@
+uuid: 26bc05cc-33ae-4734-ba7e-8d4e10bcd6fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_committee
+    - node.type.transcript
+    - taxonomy.vocabulary.senator
+id: node.transcript.field_ol_committee
+field_name: field_ol_committee
+entity_type: node
+bundle: transcript
+label: Committee
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,29 @@
+uuid: 1932d732-2a16-42d9-a367-e185e14b1602
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transcript
+    - node.type.session
+    - node.type.transcript
+id: node.session.field_transcript
+field_name: field_transcript
+entity_type: node
+bundle: session
+label: Transcript
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      transcript: transcript
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

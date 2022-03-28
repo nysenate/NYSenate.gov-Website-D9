@@ -1,0 +1,29 @@
+uuid: 3a94f5d6-949f-4012-9303-c6b1a45a8f2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ustream_url
+    - media.type.ustream_live
+    - node.type.public_hearing
+id: node.public_hearing.field_ustream_url
+field_name: field_ustream_url
+entity_type: node
+bundle: public_hearing
+label: 'uStream URL'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      ustream_live: ustream_live
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

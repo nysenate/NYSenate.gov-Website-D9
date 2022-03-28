@@ -11,10 +11,10 @@ dependencies:
     - field.field.node.event.field_committee_featured
     - field.field.node.event.field_date_range
     - field.field.node.event.field_event_online_link
+    - field.field.node.event.field_event_place
     - field.field.node.event.field_event_type
     - field.field.node.event.field_feature_image
     - field.field.node.event.field_featured
-    - field.field.node.event.field_general_location
     - field.field.node.event.field_image_main
     - field.field.node.event.field_issues
     - field.field.node.event.field_location
@@ -30,7 +30,6 @@ dependencies:
     - node.type.event
   module:
     - address
-    - options
     - user
 id: node.event.search_index
 targetEntityType: node
@@ -44,13 +43,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 4
-    region: content
-  field_general_location:
-    type: list_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 3
     region: content
   field_issues:
     type: entity_reference_label
@@ -74,6 +66,7 @@ hidden:
   field_committee_featured: true
   field_date_range: true
   field_event_online_link: true
+  field_event_place: true
   field_event_type: true
   field_feature_image: true
   field_featured: true

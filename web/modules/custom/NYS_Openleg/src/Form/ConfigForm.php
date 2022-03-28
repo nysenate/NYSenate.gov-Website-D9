@@ -80,7 +80,7 @@ class ConfigForm extends ConfigFormBase {
 
     // Check for a modified base path.
     $current_path = $this->localConfig->get('base_path');
-    $new_path = $form_state->getValue('base_path') ?: StatuteHelper::PATH_PREFIX;
+    $new_path = $form_state->getValue('base_path') ?: StatuteHelper::DEFAULT_LANDING_URL;
     if ($current_path !== $new_path) {
       $this->localConfig->set('base_path', $form_state->getValue('base_path'));
       $rebuild = TRUE;

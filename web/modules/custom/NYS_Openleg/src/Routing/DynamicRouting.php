@@ -89,7 +89,7 @@ class DynamicRouting implements ContainerInjectionInterface {
    *   The path to the Openleg base page.
    */
   protected function resolvePath(): string {
-    $ret = $this->config->get('base_path') ?: StatuteHelper::PATH_PREFIX;
+    $ret = $this->config->get('base_path') ?: StatuteHelper::DEFAULT_LANDING_URL;
     $this->config->set('base_path', $ret)->save();
     return $ret;
   }

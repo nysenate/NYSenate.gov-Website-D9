@@ -1,0 +1,69 @@
+{#
+/**
+ * @file nys-openleg-result.tpl.php
+ *
+ * @var $title string[] Parameters for head_title theme
+ * @var $list_items array Collection of list items (see result-item)
+ * @var $breadcrumbs array Collection of breadcrumb items
+ * @var $nav array Collection of nav markers, items for 'next', 'previous', and 'up'
+ * @var $share_path string The URL for the current location
+ * @var $entry_text string The body of the entry
+ * @var $history array A Drupal Form for milestone selection
+ * @var $search array|string A Drupal Form (or the rendered form) for the search box
+ * @var $debug mixed
+ */
+#}
+<div class="nys-openleg-statute-container">
+  {{ search }}
+  {{ include('nys-openleg-result-head-breadcrumbs.html.twig') }}
+  {{ include('nys-openleg-result-head-nav.html.twig') }}
+  <div class="nys-openleg-result-tools">
+    {% if history %}
+      <div class="nys-openleg-history-container">
+        {{ history }}
+      </div>
+    {% endif %}
+    <div class="c-detail--social nys-openleg-result-share">
+      <h3 class="c-detail--subhead">Share</h3>
+      <ul>
+        <li>
+          <a target="_blank"
+             href="https://www.facebook.com/sharer/sharer.php?u={{ share_path }}"
+             class="c-detail--social-item facebook">
+            Facebook
+          </a>
+        </li>
+        <li>
+          <a target="_blank"
+             href="https://twitter.com/intent/tweet?text=From @nysenate: {{ share_path }}"
+             class="c-detail--social-item twitter">
+            Twitter
+          </a>
+        </li>
+        <li>
+          <a href="{{ mail_link }}" class="c-detail--social-item email">Email</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="nys-openleg-result-container">
+    <div class="nys-openleg-head-container">
+      {{ include('nys-openleg-result-head-title.html.twig') }}
+    </div>
+
+    <div class="nys-openleg-content-container">
+      {% for val in list_items %}
+        <div class="nys-openleg-items-container">
+          {{ include('nys-openleg-result-item.html.twig', val) }}
+        </div>
+      {% endfor %}
+      {% if entry_text %}
+      <div class="nys-openleg-result-text">{{ entry_text|raw }}</div>
+      {% endif %}
+    </div>
+    {% for key,item in debug %}
+    <h1>{{ key }}</h1>
+    <pre class="nys-openleg-debug-container">{{ dump(item) }}</pre>
+    {% endfor %}
+  </div>
+</div>

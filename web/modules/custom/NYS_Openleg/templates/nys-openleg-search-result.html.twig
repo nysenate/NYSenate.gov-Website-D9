@@ -1,0 +1,22 @@
+{#
+/**
+ * @file nys-openleg-search-result.tpl.php
+ *
+ * @var $name string,
+ * @var $title string,
+ * @var $url string,
+ * @var $snippets string[]
+ */
+#}
+{% if name and title and url %}
+  <a href="{{ url }}">
+    <div class="search-results-item-container">
+      <div class="item-location">{{ name }}</div>
+      <div class="item-title">{{ title|raw }}</div>
+      {% if snippets is iterable and snippets|length > 0 %}
+        {% set plural = (snippets|length > 1) ? 's' : '' %}
+        <div class="item-snippets">{{ snippets|length }} instance{{ plural }}</div>
+      {% endif %}
+    </div>
+  </a>
+{% endif %}

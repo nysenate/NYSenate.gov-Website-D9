@@ -1,0 +1,10 @@
+nys_openleg.config:
+  path: /admin/config/nys_openleg
+  defaults:
+    _form: '\Drupal\NYS_Openleg\Form\ConfigForm'
+    _title: "NYS Open Legislation Configuration"
+  requirements:
+    _permission: 'administer site configuration'
+
+route_callbacks:
+  - Drupal\NYS_Openleg\Routing\DynamicRouting::routes

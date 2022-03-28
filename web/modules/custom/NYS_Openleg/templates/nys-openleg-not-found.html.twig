@@ -1,0 +1,18 @@
+{#
+/**
+ * @file nys-openleg-not-found.tpl.php
+ *
+ * @var $browse_url string Points to the OpenLeg landing page
+ * @var $additional string Any additional text/HTML to render
+ */
+#}
+<div class="nys-openleg-statute-container nys-openleg-not-found">
+    <p>The requested entry could not be found.</p>
+    <ul>
+        <li><a href="{{ browse_url }}/search">Try searching OpenLegislation</a></li>
+        <li><a href="{{ browse_url }}">Browse all Laws of New York</a></li>
+    </ul>
+    {% if additional %}
+    <div class="nys-openleg-not-found-additional">{{ additional }}</div>
+    {% endif %}
+</div>

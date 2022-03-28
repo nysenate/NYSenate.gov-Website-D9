@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * NYS_Openleg.module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nys_openleg_theme(): array {
+  return [
+    'nys_openleg_testing' => [
+      'variables' => ['debug' => [], 'breadcrumbs' => []],
+    ],
+    'nys_openleg_result_head_breadcrumbs' => [
+      'variables' => ['breadcrumbs' => []],
+    ],
+    'nys_openleg_result_head_nav' => [
+      'variables' => ['nav' => []],
+    ],
+    'nys_openleg_result_head_title' => [
+      'variables' => ['title' => NULL],
+    ],
+    'nys_openleg_result_item' => [
+      'variables' => [
+        'url' => NULL,
+        'name' => NULL,
+        'description' => NULL,
+        'item_type' => 'item',
+      ],
+    ],
+    'nys_openleg_result' => [
+      'variables' => [
+        'title' => NULL,
+        'share_path' => NULL,
+        'list_items' => NULL,
+        'entry_text' => NULL,
+        'breadcrumbs' => NULL,
+        'nav' => NULL,
+        'history' => NULL,
+        'search' => NULL,
+        'deprecation_warning' => NULL,
+        'debug' => NULL,
+      ],
+    ],
+    'nys_openleg_search_results' => [
+      'variables' => [
+        'search_form' => NULL,
+        'term' => NULL,
+        'results' => [],
+        'pager' => NULL,
+      ],
+    ],
+    'nys_openleg_search_result' => [
+      'variables' => [
+        'name' => NULL,
+        'title' => NULL,
+        'url' => NULL,
+        'snippets' => [],
+      ],
+    ],
+    'nys_openleg_not_found' => [
+      'variables' => ['additional' => NULL],
+    ],
+  ];
+}

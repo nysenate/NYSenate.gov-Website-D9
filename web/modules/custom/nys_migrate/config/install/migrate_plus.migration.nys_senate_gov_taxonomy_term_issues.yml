@@ -1,0 +1,58 @@
+langcode: en
+status: true
+dependencies: {  }
+id: nys_senate_gov_taxonomy_term_issues
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Taxonomy terms (Issues)'
+source:
+  plugin: d7_taxonomy_term
+  bundle: issues
+process:
+  vid:
+    plugin: default_value
+    default_value: 4
+  tid:
+    -
+      plugin: get
+      source: tid
+  name:
+    -
+      plugin: get
+      source: name
+  description/value:
+    -
+      plugin: get
+      source: description
+  description/format:
+    -
+      plugin: default_value
+      default_value: full_html
+  weight:
+    -
+      plugin: get
+      source: weight
+  field_drupal_6_tid:
+    -
+      plugin: get
+      source: field_drupal_6_tid
+  field_keywords:
+    -
+      plugin: get
+      source: field_keywords
+  field_metatags:
+    -
+      plugin: get
+      source: metatags
+  langcode:
+    -
+      plugin: get
+      source: language
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: issues
+migration_dependencies:
+  required: { }
+  optional: { }

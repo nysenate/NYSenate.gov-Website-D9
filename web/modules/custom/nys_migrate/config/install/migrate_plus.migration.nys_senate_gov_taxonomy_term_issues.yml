@@ -11,9 +11,6 @@ source:
   plugin: d7_taxonomy_term
   bundle: issues
 process:
-  vid:
-    plugin: default_value
-    default_value: 4
   tid:
     -
       plugin: get
@@ -46,10 +43,6 @@ process:
     -
       plugin: get
       source: metatags
-  langcode:
-    -
-      plugin: get
-      source: language
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: issues

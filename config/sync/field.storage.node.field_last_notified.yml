@@ -1,22 +1,21 @@
-uuid: 8ba7f465-384e-4ef5-adc8-93c44438cb48
+uuid: 5ab327b6-9d23-4569-aa94-92a306fa04bd
 langcode: en
 status: true
 dependencies:
   module:
+    - datetime
     - field_permissions
     - node
 third_party_settings:
   field_permissions:
-    permission_type: public
-id: node.field_article_author
-field_name: field_article_author
+    permission_type: custom
+id: node.field_last_notified
+field_name: field_last_notified
 entity_type: node
-type: string
+type: datetime
 settings:
-  max_length: 255
-  case_sensitive: false
-  is_ascii: false
-module: core
+  datetime_type: datetime
+module: datetime
 locked: false
 cardinality: 1
 translatable: true

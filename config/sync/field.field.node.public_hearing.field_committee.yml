@@ -1,0 +1,29 @@
+uuid: d13ec517-5c56-4267-b7db-ffad4890cd8b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_committee
+    - node.type.public_hearing
+    - taxonomy.vocabulary.committees
+id: node.public_hearing.field_committee
+field_name: field_committee
+entity_type: node
+bundle: public_hearing
+label: Committee
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      committees: committees
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

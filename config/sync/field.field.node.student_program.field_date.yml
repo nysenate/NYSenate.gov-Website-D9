@@ -1,0 +1,24 @@
+uuid: 11a80bd1-bf0c-487e-89f9-3254c75868a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date
+    - node.type.student_program
+  module:
+    - datetime
+id: node.student_program.field_date
+field_name: field_date
+entity_type: node
+bundle: student_program
+label: 'Publish Date'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,29 @@
+uuid: 90b4a826-cff7-43d2-9a8a-1713b9f54f9d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_attachment
+    - media.type.file
+    - node.type.public_hearing
+id: node.public_hearing.field_attachment
+field_name: field_attachment
+entity_type: node
+bundle: public_hearing
+label: 'File Attachment'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      file: file
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,29 @@
+uuid: d974db67-97e8-4482-8e82-3bce635bf203
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_attachment
+    - media.type.file
+    - node.type.student_program
+id: node.student_program.field_attachment
+field_name: field_attachment
+entity_type: node
+bundle: student_program
+label: PDF
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      file: file
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

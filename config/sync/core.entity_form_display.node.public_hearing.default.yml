@@ -1,0 +1,294 @@
+uuid: 67ea488b-a538-457c-9425-026d1ad60eb7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.public_hearing.body
+    - field.field.node.public_hearing.field_attachment
+    - field.field.node.public_hearing.field_committee
+    - field.field.node.public_hearing.field_committee_featured
+    - field.field.node.public_hearing.field_date_range
+    - field.field.node.public_hearing.field_event_online_link
+    - field.field.node.public_hearing.field_event_place
+    - field.field.node.public_hearing.field_issues
+    - field.field.node.public_hearing.field_location
+    - field.field.node.public_hearing.field_meeting_location
+    - field.field.node.public_hearing.field_transcript
+    - field.field.node.public_hearing.field_ustream_url
+    - field.field.node.public_hearing.field_video_redirect
+    - field.field.node.public_hearing.field_video_status
+    - field.field.node.public_hearing.field_yt
+    - node.type.public_hearing
+  module:
+    - address
+    - datetime_range
+    - field_group
+    - link
+    - media_library
+    - path
+    - scheduler
+    - text
+third_party_settings:
+  field_group:
+    group_location:
+      children:
+        - field_event_place
+        - field_event_online_link
+        - field_meeting_location
+        - field_location
+      label: Location
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: fieldset
+      format_settings:
+        classes: 'group-location field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_content:
+      children:
+        - body
+        - field_attachment
+        - field_transcript
+      label: Content
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: fieldset
+      format_settings:
+        classes: 'group-content field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_discoverability:
+      children:
+        - field_committee_featured
+        - field_issues
+      label: Discoverability
+      region: content
+      parent_name: ''
+      weight: 6
+      format_type: fieldset
+      format_settings:
+        classes: 'group-discoverability field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_video:
+      children:
+        - field_video_redirect
+        - field_video_status
+        - field_ustream_url
+        - field_yt
+      label: Video
+      region: content
+      parent_name: ''
+      weight: 5
+      format_type: fieldset
+      format_settings:
+        classes: 'group-video field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+id: node.public_hearing.default
+targetEntityType: node
+bundle: public_hearing
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 13
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_attachment:
+    type: entity_reference_autocomplete
+    weight: 14
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_committee:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_committee_featured:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_date_range:
+    type: daterange_default
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_event_online_link:
+    type: link_default
+    weight: 7
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_event_place:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 13
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_location:
+    type: address_default
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_meeting_location:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_transcript:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ustream_url:
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_video_redirect:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_video_status:
+    type: options_select
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_yt:
+    type: media_library_widget
+    weight: 10
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 9
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 18
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 10
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  url_redirects:
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

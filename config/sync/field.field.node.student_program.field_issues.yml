@@ -1,0 +1,29 @@
+uuid: cabf76e7-6d02-4576-9e94-5849a43fc476
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_issues
+    - node.type.student_program
+    - taxonomy.vocabulary.issues
+id: node.student_program.field_issues
+field_name: field_issues
+entity_type: node
+bundle: student_program
+label: Issues
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      issues: issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

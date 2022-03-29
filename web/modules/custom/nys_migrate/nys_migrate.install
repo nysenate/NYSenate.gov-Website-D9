@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Various hook implementations for NYS Migrate.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_migrate_uninstall() {
+  // Note: make sure this list is kept current.
+  $configs = [
+    'migrate_drupal.settings',
+    'migrate_plus.migration_group.default',
+    'migrate_plus.migration_group.nys_general',
+    'migrate_plus.migration.nys_senate_gov_taxonomy_term_issues',
+  ];
+  $config_factory = \Drupal::configFactory();
+  foreach ($configs as $config) {
+    $config_factory->getEditable($config)->delete();
+  }
+}

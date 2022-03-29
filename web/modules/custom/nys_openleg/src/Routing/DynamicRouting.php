@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Routing;
+namespace Drupal\nys_openleg\Routing;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Drupal\NYS_Openleg\StatuteHelper;
+use Drupal\nys_openleg\StatuteHelper;
 
 /**
  * Provides for dynamic route generation for Openleg.
@@ -35,14 +35,14 @@ class DynamicRouting implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container): DynamicRouting {
     return new static($container->get('config.factory')
-      ->getEditable('NYS_Openleg.settings'));
+      ->getEditable('nys_openleg.settings'));
   }
 
   /**
    * Generates dynamic routes.
    */
   public function routes(): RouteCollection {
-    $controller = 'Drupal\\NYS_Openleg\\Controller\\MainController::';
+    $controller = 'Drupal\\nys_openleg\\Controller\\MainController::';
     $title = 'NYS Open Legislation';
     $path = $this->resolvePath();
     $permit = ['_permission' => 'access content'];

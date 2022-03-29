@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Api\Search;
+namespace Drupal\nys_openleg\Api\Search;
 
 /**
  * Class Statute.

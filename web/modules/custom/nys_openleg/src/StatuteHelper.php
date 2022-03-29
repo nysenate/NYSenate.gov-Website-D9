@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\NYS_Openleg;
+namespace Drupal\nys_openleg;
 
-use Drupal\NYS_Openleg\Api\ApiRequest;
+use Drupal\nys_openleg\Api\ApiRequest;
 
 /**
  * Class ApiWrapper.
@@ -146,7 +146,7 @@ class StatuteHelper {
    */
   public static function baseUrl(): string {
     if (!static::$landingUrl) {
-      static::$landingUrl = \Drupal::config('NYS_Openleg.settings')
+      static::$landingUrl = \Drupal::config('nys_openleg.settings')
         ->get('base_path') ?: static::DEFAULT_LANDING_URL;
     }
     return static::$landingUrl;

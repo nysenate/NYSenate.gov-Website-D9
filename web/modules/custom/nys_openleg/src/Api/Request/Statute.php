@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Api\Request;
+namespace Drupal\nys_openleg\Api\Request;
 
-use Drupal\NYS_Openleg\Api\ApiRequest;
+use Drupal\nys_openleg\Api\ApiRequest;
 
 /**
  * Class Statute.

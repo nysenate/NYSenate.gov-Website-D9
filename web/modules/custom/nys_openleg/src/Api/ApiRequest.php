@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Api;
+namespace Drupal\nys_openleg\Api;
 
 use SendGrid\Client;
 

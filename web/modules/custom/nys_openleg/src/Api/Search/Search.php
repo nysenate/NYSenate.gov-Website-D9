@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Api\Search;
+namespace Drupal\nys_openleg\Api\Search;
 
-use Drupal\NYS_Openleg\Api\ApiRequest;
+use Drupal\nys_openleg\Api\ApiRequest;
 
 /**
  * Class Search.

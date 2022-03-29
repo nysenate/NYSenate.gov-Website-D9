@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Form;
+namespace Drupal\nys_openleg\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ProxyClass\Routing\RouteBuilder;
-use Drupal\NYS_Openleg\StatuteHelper;
+use Drupal\nys_openleg\StatuteHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Configuration form for NYS_Openleg module.
+ * Configuration form for nys_openleg module.
  */
 class ConfigForm extends ConfigFormBase {
 
@@ -35,7 +35,7 @@ class ConfigForm extends ConfigFormBase {
     $this->builder = $builder;
     parent::__construct($config_factory);
 
-    $this->localConfig = $this->config('NYS_Openleg.settings');
+    $this->localConfig = $this->config('nys_openleg.settings');
   }
 
   /**
@@ -59,7 +59,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $config = $this->config('NYS_Openleg.settings');
+    $config = $this->config('nys_openleg.settings');
 
     $form['base_path'] = [
       '#type' => 'textfield',
@@ -99,7 +99,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames(): array {
-    return ['NYS_Openleg.settings'];
+    return ['nys_openleg.settings'];
   }
 
 }

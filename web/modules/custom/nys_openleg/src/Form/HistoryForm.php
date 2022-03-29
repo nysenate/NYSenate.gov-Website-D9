@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Form;
+namespace Drupal\nys_openleg\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\NYS_Openleg\Api\Request\Statute;
+use Drupal\nys_openleg\Api\Request\Statute;
 
 /**
  * Class HistoryForm.
@@ -22,7 +22,7 @@ class HistoryForm extends FormBase {
   /**
    * {@inheritdoc}
    *
-   * Requires an instance of Drupal\NYS_Openleg\Api\Request\Statute as the
+   * Requires an instance of Drupal\nys_openleg\Api\Request\Statute as the
    * first buildInfo argument.
    *
    * @throws \InvalidArgumentException

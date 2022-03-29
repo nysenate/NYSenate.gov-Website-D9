@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Form;
+namespace Drupal\nys_openleg\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ProxyClass\Routing\RouteBuilder;
-use Drupal\NYS_Openleg\StatuteHelper;
+use Drupal\nys_openleg\StatuteHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Configuration form for NYS_Openleg module.
+ * Configuration form for nys_openleg module.
  */
 class ConfigForm extends ConfigFormBase {
 
@@ -80,7 +80,7 @@ class ConfigForm extends ConfigFormBase {
 
     // Check for a modified base path.
     $current_path = $this->localConfig->get('base_path');
-    $new_path = $form_state->getValue('base_path') ?: StatuteHelper::PATH_PREFIX;
+    $new_path = $form_state->getValue('base_path') ?: StatuteHelper::DEFAULT_LANDING_URL;
     if ($current_path !== $new_path) {
       $this->localConfig->set('base_path', $form_state->getValue('base_path'));
       $rebuild = TRUE;

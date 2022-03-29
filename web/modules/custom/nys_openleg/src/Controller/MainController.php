@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Controller;
+namespace Drupal\nys_openleg\Controller;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\NYS_Openleg\Api\Request\Statute;
-use Drupal\NYS_Openleg\Api\Search\Statute as StatuteSearch;
-use Drupal\NYS_Openleg\StatuteHelper;
+use Drupal\nys_openleg\Api\Request\Statute;
+use Drupal\nys_openleg\Api\Search\Statute as StatuteSearch;
+use Drupal\nys_openleg\StatuteHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Config\ImmutableConfig;
@@ -17,7 +17,7 @@ use Drupal\Core\Controller\ControllerBase;
 /**
  * Class MainController.
  *
- * Handles routing for NYS_Openleg module.
+ * Handles routing for nys_openleg module.
  */
 class MainController extends ControllerBase {
 
@@ -137,7 +137,7 @@ class MainController extends ControllerBase {
     // Initialize the return.
     $ret = [
       '#theme' => 'nys_openleg_result',
-      '#attached' => ['library' => ['NYS_Openleg/openleg']],
+      '#attached' => ['library' => ['nys_openleg/openleg']],
       '#share_path' => $share_path,
     ];
 
@@ -179,7 +179,7 @@ class MainController extends ControllerBase {
       if (!$statute->tree->success) {
         return [
           '#theme' => 'nys_openleg_not_found',
-          '#attached' => ['library' => ['NYS_Openleg/openleg']],
+          '#attached' => ['library' => ['nys_openleg/openleg']],
           '#browse_url' => $share_path,
         ];
       }
@@ -207,7 +207,7 @@ class MainController extends ControllerBase {
 
       // Include the milestone selection form.
       $ret['#history'] = $this->formBuilder
-        ->getForm('Drupal\NYS_Openleg\Form\HistoryForm', $statute);
+        ->getForm('Drupal\nys_openleg\Form\HistoryForm', $statute);
 
       // Generate the list_items from the statute children.
       $ret['#list_items'] = array_map(
@@ -235,7 +235,7 @@ class MainController extends ControllerBase {
     // Only render the search box if it has not been suppressed.
     if (!$suppress_search) {
       $ret['#search'] = $this->formBuilder
-        ->getForm('Drupal\NYS_Openleg\Form\SearchForm');
+        ->getForm('Drupal\nys_openleg\Form\SearchForm');
     }
 
     return $ret;
@@ -256,7 +256,7 @@ class MainController extends ControllerBase {
 
     // Get the search form.
     $form = $this->formBuilder
-      ->getForm('Drupal\NYS_Openleg\Form\SearchForm', $search_term);
+      ->getForm('Drupal\nys_openleg\Form\SearchForm', $search_term);
 
     // Initialize the pager values.  Pager is zero-based, search is not.
     $page = $this->pager->findPage() + 1;
@@ -301,7 +301,7 @@ class MainController extends ControllerBase {
 
     return [
       '#theme' => 'nys_openleg_search_results',
-      '#attached' => ['library' => ['NYS_Openleg/openleg']],
+      '#attached' => ['library' => ['nys_openleg/openleg']],
       '#search_form' => $form,
       '#results' => $results,
       '#pager' => $use_pager ? ['#type' => 'pager'] : '',

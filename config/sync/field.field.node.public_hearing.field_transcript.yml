@@ -1,0 +1,29 @@
+uuid: 54ad0758-a829-4b7e-865b-90f9b2aa0c1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transcript
+    - node.type.public_hearing
+    - node.type.transcript
+id: node.public_hearing.field_transcript
+field_name: field_transcript
+entity_type: node
+bundle: public_hearing
+label: Transcript
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      transcript: transcript
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

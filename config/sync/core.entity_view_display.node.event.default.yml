@@ -10,10 +10,10 @@ dependencies:
     - field.field.node.event.field_committee_featured
     - field.field.node.event.field_date_range
     - field.field.node.event.field_event_online_link
+    - field.field.node.event.field_event_place
     - field.field.node.event.field_event_type
     - field.field.node.event.field_feature_image
     - field.field.node.event.field_featured
-    - field.field.node.event.field_general_location
     - field.field.node.event.field_image_main
     - field.field.node.event.field_issues
     - field.field.node.event.field_location
@@ -104,6 +104,13 @@ content:
     third_party_settings: {  }
     weight: 15
     region: content
+  field_event_place:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 23
+    region: content
   field_event_type:
     type: list_default
     label: above
@@ -129,13 +136,6 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 5
-    region: content
-  field_general_location:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 6
     region: content
   field_image_main:
     type: entity_reference_entity_view

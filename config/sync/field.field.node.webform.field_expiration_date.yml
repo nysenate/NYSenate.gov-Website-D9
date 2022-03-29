@@ -1,0 +1,24 @@
+uuid: 956612d6-37da-463f-99c8-0ebef9cd533f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_expiration_date
+    - node.type.webform
+  module:
+    - datetime
+id: node.webform.field_expiration_date
+field_name: field_expiration_date
+entity_type: node
+bundle: webform
+label: 'Expiration Date'
+description: 'The date this questionnaire should expire. Emails of expiration will be sent to the Senator''s contact address. Once expired this node will be unpublished.'
+required: false
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -35,7 +35,7 @@ class ConfigForm extends ConfigFormBase {
     $this->builder = $builder;
     parent::__construct($config_factory);
 
-    $this->localConfig = $this->config('nys_openleg.settings');
+    $this->localConfig = $this->config('NYS_Openleg.settings');
   }
 
   /**
@@ -59,7 +59,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $config = $this->config('nys_openleg.settings');
+    $config = $this->config('NYS_Openleg.settings');
 
     $form['base_path'] = [
       '#type' => 'textfield',
@@ -99,7 +99,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames(): array {
-    return ['nys_openleg.settings'];
+    return ['NYS_Openleg.settings'];
   }
 
 }

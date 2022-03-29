@@ -146,7 +146,7 @@ class StatuteHelper {
    */
   public static function baseUrl(): string {
     if (!static::$landingUrl) {
-      static::$landingUrl = \Drupal::config('nys_openleg.settings')
+      static::$landingUrl = \Drupal::config('NYS_Openleg.settings')
         ->get('base_path') ?: static::DEFAULT_LANDING_URL;
     }
     return static::$landingUrl;

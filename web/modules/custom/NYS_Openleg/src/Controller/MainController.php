@@ -67,7 +67,7 @@ class MainController extends ControllerBase {
     $this->setRequest($request->getCurrentRequest());
 
     // Set the app config as a local reference.
-    $this->config = $config->get('nys_openleg.settings');
+    $this->config = $config->get('NYS_Openleg.settings');
 
     // Set the form builder.
     $this->formBuilder = $formBuilder;

@@ -35,7 +35,7 @@ class DynamicRouting implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container): DynamicRouting {
     return new static($container->get('config.factory')
-      ->getEditable('nys_openleg.settings'));
+      ->getEditable('NYS_Openleg.settings'));
   }
 
   /**

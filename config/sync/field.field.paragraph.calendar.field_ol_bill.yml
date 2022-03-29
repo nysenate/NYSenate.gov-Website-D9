@@ -1,0 +1,29 @@
+uuid: 2d818dfd-f1e1-4227-a07d-8b600c0f38aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ol_bill
+    - node.type.bill
+    - paragraphs.paragraphs_type.calendar
+id: paragraph.calendar.field_ol_bill
+field_name: field_ol_bill
+entity_type: paragraph
+bundle: calendar
+label: Bill
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      bill: bill
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

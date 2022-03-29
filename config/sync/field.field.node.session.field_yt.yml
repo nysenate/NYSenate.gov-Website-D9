@@ -1,0 +1,29 @@
+uuid: ec696894-40cc-4a6d-b579-6d17f0b8cb34
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_yt
+    - media.type.remote_video
+    - node.type.session
+id: node.session.field_yt
+field_name: field_yt
+entity_type: node
+bundle: session
+label: 'Youtube Embed'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      remote_video: remote_video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

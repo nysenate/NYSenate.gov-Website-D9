@@ -1,0 +1,23 @@
+uuid: 79fbb56c-7d80-4131-866e-0880d419bbfb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video_status
+    - node.type.session
+  module:
+    - options
+id: node.session.field_video_status
+field_name: field_video_status
+entity_type: node
+bundle: session
+label: 'Video Status'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: will_stream_live
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,30 @@
+{# /**
+* @file nys-openleg-result-item.tpl.php
+*
+* @var $item_type string A marker embedded into the class names.
+* @var $url string An optional destination URL.  If populated, a link is created.
+* @var $name string The name/title of this item (required)
+* @var $description string An optional description.
+*/ #}
+{# /modules/custom/nys_openleg/templates/nys-openleg-result-item.html.twig #}
+{% if item_type is empty %}{% set item_type = 'item' %}{% endif %}
+<div class="nys-openleg-result-{{ item_type }}-container">
+    {% if name %}
+        {% if url %}
+            <a href="{{ url }}" class="nys-openleg-result-{{ item_type }}-link">
+        {% endif %}
+        <div class="nys-openleg-result-{{ item_type }}-name">
+            {{ name }}
+        </div>
+        {% if description %}
+            <div class="nys-openleg-result-{{ item_type }}-description">
+                {{ description }}
+            </div>
+        {% endif %}
+        {% if url %}
+            </a>
+        {% endif %}
+    {% else %}
+        <!-- empty item -->
+    {% endif %}
+</div>

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - system
     - twitter_block
   theme:
     - nysenate_theme
@@ -33,4 +34,8 @@ settings:
   tweet_limit: '4'
   related: ''
   polite: polite
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

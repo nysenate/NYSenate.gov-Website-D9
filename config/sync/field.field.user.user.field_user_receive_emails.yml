@@ -1,0 +1,24 @@
+uuid: ce92d50e-aa87-4a47-8cf4-f04565b1e6e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_user_receive_emails
+  module:
+    - user
+id: user.user.field_user_receive_emails
+field_name: field_user_receive_emails
+entity_type: user
+bundle: user
+label: 'Receive Emails'
+description: 'Would you like to receive email notifications when your Senator sends you a message?'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: '1'
+  off_label: '0'
+field_type: boolean

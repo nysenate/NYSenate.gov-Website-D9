@@ -1,0 +1,30 @@
+uuid: 1dbfde68-e066-40a4-a847-6a13d6c96174
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_senator_management
+    - taxonomy.vocabulary.senator
+  module:
+    - user
+id: user.user.field_senator_management
+field_name: field_senator_management
+entity_type: user
+bundle: user
+label: 'Senator Management'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

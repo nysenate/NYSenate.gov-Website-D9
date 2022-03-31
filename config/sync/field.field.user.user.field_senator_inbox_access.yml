@@ -1,0 +1,30 @@
+uuid: 54d7b1ad-e5f5-4ae2-ba6b-ab4480173130
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_senator_inbox_access
+    - taxonomy.vocabulary.senator
+  module:
+    - user
+id: user.user.field_senator_inbox_access
+field_name: field_senator_inbox_access
+entity_type: user
+bundle: user
+label: 'Senator Inbox Access'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Form;
+namespace Drupal\nys_openleg\Form;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\NYS_Openleg\StatuteHelper;
+use Drupal\nys_openleg\StatuteHelper;
 
 /**
  * Class SearchForm.

@@ -1,7 +1,7 @@
 (function ($, Drupal, once) {
-  Drupal.behaviors.NYS_Openleg = {
+  Drupal.behaviors.nys_openleg = {
     attach: function (context, settings) {
-      once('NYS_Openleg', '.search-title', context).forEach(
+      once('nys_openleg', '.search-title', context).forEach(
           function (element) {
             $(element).on(
                 'click', function (e) {

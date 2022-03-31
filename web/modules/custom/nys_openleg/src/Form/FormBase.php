@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\NYS_Openleg\Form;
+namespace Drupal\nys_openleg\Form;
 
 use Drupal\Core\Form\FormBase as DrupalFormBase;
 use Symfony\Component\HttpFoundation\Request;

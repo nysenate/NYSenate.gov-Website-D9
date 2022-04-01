@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '3d5e59404335c95329bcc35a789d71c914023027',
+        'reference' => '1b7eed51deee1e07dc067b69e5e53066607a6f00',
         'name' => 'mediacurrent/drupal-project',
         'dev' => false,
     ),
@@ -2201,7 +2201,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '3d5e59404335c95329bcc35a789d71c914023027',
+            'reference' => '1b7eed51deee1e07dc067b69e5e53066607a6f00',
             'dev_requirement' => false,
         ),
         'mediacurrent/mis_profile' => array(
@@ -2456,8 +2456,8 @@
         'psr/container-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '^1.0',
+                0 => '^1.0',
+                1 => '1.0',
             ),
         ),
         'psr/event-dispatcher' => array(

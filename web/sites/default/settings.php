@@ -765,10 +765,49 @@ include __DIR__ . "/settings.pantheon.php";
 
 $settings['config_sync_directory'] = '../config/sync';
 
+// Pantheon environment-specific config.
+if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
+
+  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'dev') {
+    // Place for settings for the dev environment.
+    $config['environment_indicator.indicator']['name'] = 'Dev';
+    $config['environment_indicator.indicator']['bg_color'] = '#935116';
+    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  }
+
+  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'develop') {
+    // Place for settings for the dev environment.
+    $config['environment_indicator.indicator']['name'] = 'Develop';
+    $config['environment_indicator.indicator']['bg_color'] = '#0e6655';
+    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  }
+
+  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'test') {
+    // Place for settings for the test environment.
+    $config['environment_indicator.indicator']['name'] = 'Test';
+    $config['environment_indicator.indicator']['bg_color'] = '#e91e63';
+    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  }
+
+  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'live') {
+    // Place for settings for the live environment.
+    $config['environment_indicator.indicator']['name'] = 'Live';
+    $config['environment_indicator.indicator']['bg_color'] = '#000000';
+    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  }
+
+}
+
 // Automatically generated include for settings managed by ddev.
 $ddev_settings = dirname(__FILE__) . '/settings.ddev.php';
 if (getenv('IS_DDEV_PROJECT') == 'true' && is_readable($ddev_settings)) {
   require $ddev_settings;
+
+  // Local Environment indicator.
+  $config['environment_indicator.indicator']['name'] = 'Local';
+  $config['environment_indicator.indicator']['bg_color'] = '#00294F';
+  $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  
 }
 
 // If a private settings file exists within the files directory, load it.

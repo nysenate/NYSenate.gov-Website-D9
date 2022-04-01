@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e9094c964d096b37245044f25e3c89ce",
+    "content-hash": "472f2860c2bb307896045b6e03ec0e46",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1726,6 +1726,55 @@
             "homepage": "http://drupal.org/project/address",
             "support": {
                 "source": "https://git.drupalcode.org/project/address"
+            }
+        },
+        {
+            "name": "drupal/address_autocomplete",
+            "version": "1.0.0-beta2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/address_autocomplete.git",
+                "reference": "1.0.0-beta2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/address_autocomplete-1.0.0-beta2.zip",
+                "reference": "1.0.0-beta2",
+                "shasum": "0c1449dad6efc2a952e6bd53a3867e7b66c4ad6e"
+            },
+            "require": {
+                "drupal/address": "*",
+                "drupal/core": "^8.8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta2",
+                    "datestamp": "1608327196",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "criz",
+                    "homepage": "https://www.drupal.org/user/71764"
+                },
+                {
+                    "name": "dejan0",
+                    "homepage": "https://www.drupal.org/user/3634531"
+                }
+            ],
+            "description": "Provides an autocomplete feature for address fields",
+            "homepage": "https://www.drupal.org/project/address_autocomplete",
+            "support": {
+                "source": "https://git.drupalcode.org/project/address_autocomplete"
             }
         },
         {
@@ -7043,7 +7092,7 @@
             "extra": {
                 "drupal": {
                     "version": "2.1.1",
-                    "datestamp": "1648562258",
+                    "datestamp": "1648587118",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -23177,6 +23226,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "drupal/address_autocomplete": 10,
         "drupal/auto_entitylabel": 10,
         "drupal/conditional_fields": 15,
         "drupal/core-recommended": 0,
@@ -23206,5 +23256,5 @@
     "platform-overrides": {
         "php": "7.3"
     },
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

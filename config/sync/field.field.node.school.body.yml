@@ -1,0 +1,23 @@
+uuid: a217603f-fa5d-4a60-88ba-21dc238aff63
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.school
+  module:
+    - text
+id: node.school.body
+field_name: body
+entity_type: node
+bundle: school
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

@@ -1,0 +1,48 @@
+uuid: 646a65cc-4876-4c01-aa2d-0a1f3df02949
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.page_content.body
+    - field.field.node.page_content.field_active
+    - field.field.node.page_content.field_chapters
+    - field.field.node.page_content.field_date
+    - field.field.node.page_content.field_image_main
+    - field.field.node.page_content.field_metatags
+    - field.field.node.page_content.field_paragraphs
+    - field.field.node.page_content.field_senator_multiref
+    - field.field.node.page_content.field_show_sharing_options
+    - node.type.page_content
+  module:
+    - text
+    - user
+id: node.page_content.teaser
+targetEntityType: node
+bundle: page_content
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_active: true
+  field_chapters: true
+  field_date: true
+  field_image_main: true
+  field_metatags: true
+  field_paragraphs: true
+  field_senator_multiref: true
+  field_show_sharing_options: true
+  langcode: true
+  search_api_excerpt: true

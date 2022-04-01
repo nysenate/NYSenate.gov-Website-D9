@@ -1,0 +1,29 @@
+uuid: f01e6df7-e808-4a36-8f80-05e9823825d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_attachment
+    - media.type.file
+    - node.type.event
+id: node.event.field_attachment
+field_name: field_attachment
+entity_type: node
+bundle: event
+label: Attachment
+description: 'If you''d like to share a PDF of a flyer, or additional information intended to be printed, attach it here.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      file: file
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

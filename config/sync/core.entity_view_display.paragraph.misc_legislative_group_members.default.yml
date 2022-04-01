@@ -1,0 +1,59 @@
+uuid: f275e5b2-5cfa-449d-b6ca-e88de1c4c2f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.misc_legislative_group_members.field_committee_member_name
+    - field.field.paragraph.misc_legislative_group_members.field_committee_member_role_type
+    - field.field.paragraph.misc_legislative_group_members.field_committee_member_url
+    - field.field.paragraph.misc_legislative_group_members.field_misc_committee_member_role
+    - field.field.paragraph.misc_legislative_group_members.field_senator
+    - paragraphs.paragraphs_type.misc_legislative_group_members
+  module:
+    - options
+id: paragraph.misc_legislative_group_members.default
+targetEntityType: paragraph
+bundle: misc_legislative_group_members
+mode: default
+content:
+  field_committee_member_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_committee_member_role_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_committee_member_url:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_misc_committee_member_role:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_senator:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

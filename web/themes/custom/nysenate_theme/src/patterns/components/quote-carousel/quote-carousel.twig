@@ -1,0 +1,20 @@
+{{ attach_library('rain_theme/quote-carousel') }}
+
+<section class="quote-carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}">
+  <ul class="quote-carousel quote-carousel__slick">
+    {% block carousel_items %}
+      {% for item in items %}
+        <li class="quote-carousel-item">
+          {%
+            include '@rain_theme/quote/quote.twig' with {
+              "quote": item.quote
+            } only
+          %}
+        </li>
+      {% endfor %}
+    {% endblock %}
+  </ul>
+  <div class="quote-carousel__navigation">
+    <div class="slick-pager"></div>
+  </div>
+</section>

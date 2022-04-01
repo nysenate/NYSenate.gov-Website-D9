@@ -1,0 +1,83 @@
+uuid: 6e15ece1-8f2a-45f1-b80f-db274cfdb4e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.gallery_item.field_link
+    - field.field.paragraph.gallery_item.field_media
+    - field.field.paragraph.gallery_item.field_short_title
+    - field.field.paragraph.gallery_item.field_subhead
+    - field.field.paragraph.gallery_item.field_summary
+    - field.field.paragraph.gallery_item.field_thumb
+    - field.field.paragraph.gallery_item.field_title
+    - image.style.thumbnail
+    - paragraphs.paragraphs_type.gallery_item
+  module:
+    - link
+    - media_library
+    - svg_image
+_core:
+  default_config_hash: YyJ3ofB_XwAhI1tgaSA2l_4pydHcP2tC4LWvnY_bdKc
+id: paragraph.gallery_item.default
+targetEntityType: paragraph
+bundle: gallery_item
+mode: default
+content:
+  field_link:
+    type: link_default
+    weight: 6
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 5
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_short_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_subhead:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_summary:
+    type: string_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_thumb:
+    type: image_image
+    weight: 4
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,23 @@
+uuid: 80e94ba2-816c-4d38-8ebf-253a034bf7ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_committee_featured
+    - node.type.public_hearing
+id: node.public_hearing.field_committee_featured
+field_name: field_committee_featured
+entity_type: node
+bundle: public_hearing
+label: 'Committee Featured'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Committee Featured'
+  off_label: 'Committee Not Featured'
+field_type: boolean

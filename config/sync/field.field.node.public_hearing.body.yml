@@ -1,0 +1,29 @@
+uuid: 66392e64-16f3-435b-a91b-1e7c013da3d4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.public_hearing
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - basic_html
+      - full_html
+id: node.public_hearing.body
+field_name: body
+entity_type: node
+bundle: public_hearing
+label: 'Meeting Description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

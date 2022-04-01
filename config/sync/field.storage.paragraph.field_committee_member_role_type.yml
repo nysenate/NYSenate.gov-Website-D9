@@ -1,0 +1,30 @@
+uuid: 65b9ce5b-6576-4029-b5ce-c0fdafbfbd0c
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_committee_member_role_type
+field_name: field_committee_member_role_type
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: officer
+      label: Officer
+    -
+      value: assembly
+      label: Assembly
+    -
+      value: senate
+      label: Senate
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

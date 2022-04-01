@@ -1,0 +1,19 @@
+uuid: 247126dd-8ee4-4c9a-9972-1c483b5d1252
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video_redirect
+    - node.type.public_hearing
+id: node.public_hearing.field_video_redirect
+field_name: field_video_redirect
+entity_type: node
+bundle: public_hearing
+label: 'Video Redirect'
+description: 'If the video has a Realplayer feed to redirect to, use this field.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

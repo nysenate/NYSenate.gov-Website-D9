@@ -1,0 +1,21 @@
+uuid: 4835d1d9-3953-4f7b-945a-56e4cb5ed3a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_place
+    - node.type.public_hearing
+  module:
+    - options
+id: node.public_hearing.field_event_place
+field_name: field_event_place
+entity_type: node
+bundle: public_hearing
+label: 'Meeting Place'
+description: 'For in person hearing use "In Albany" or "In District" otherwise use "Online" if hearing is streaming only.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,21 @@
+uuid: 27c7a592-379e-48e0-ab65-0793d35a7087
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ol_committee
+    - paragraphs.paragraphs_type.votes
+id: paragraph.votes.field_ol_committee
+field_name: field_ol_committee
+entity_type: paragraph
+bundle: votes
+label: Committee
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

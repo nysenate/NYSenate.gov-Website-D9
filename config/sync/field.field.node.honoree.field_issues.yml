@@ -1,0 +1,29 @@
+uuid: 8c65e135-947d-497b-bc40-193e8074d516
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_issues
+    - node.type.honoree
+    - taxonomy.vocabulary.issues
+id: node.honoree.field_issues
+field_name: field_issues
+entity_type: node
+bundle: honoree
+label: Issues
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      issues: issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: issues
+field_type: entity_reference

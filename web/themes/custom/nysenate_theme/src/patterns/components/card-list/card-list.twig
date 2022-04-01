@@ -1,0 +1,27 @@
+{{ attach_library('rain_theme/card-list') }}
+
+{% if section_title %}
+    {%
+      include '@rain_theme/heading/heading.twig' with {
+        "heading": {
+          "title": section_title,
+          "heading_level": 2,
+          "modifier": "heading--section card-list__title"
+        }
+      } only
+    %}
+{% endif %}
+
+<ul class="card-list">
+  {% block card_items %}
+      {% for item in items %}
+        <li class="card-list__item">
+          {%
+            include '@rain_theme/card/card.twig' with {
+              "card": item.card
+            } only
+          %}
+        </li>
+      {% endfor %}
+  {% endblock %}
+</ul>

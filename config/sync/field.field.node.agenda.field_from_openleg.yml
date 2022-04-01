@@ -1,0 +1,23 @@
+uuid: b0817267-68a7-4c3c-9d83-44ca6b73002f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_from_openleg
+    - node.type.agenda
+id: node.agenda.field_from_openleg
+field_name: field_from_openleg
+entity_type: node
+bundle: agenda
+label: 'From Openleg'
+description: 'If checked, this agenda was automatically pulled from OpenLeg. If not, it has been user created.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'From OpenLeg'
+  off_label: Custom
+field_type: boolean

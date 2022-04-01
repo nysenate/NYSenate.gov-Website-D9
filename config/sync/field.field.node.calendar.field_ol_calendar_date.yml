@@ -1,0 +1,24 @@
+uuid: 3c1036ac-52a0-48d3-ba54-efa07778cb4d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_calendar_date
+    - node.type.calendar
+  module:
+    - datetime
+id: node.calendar.field_ol_calendar_date
+field_name: field_ol_calendar_date
+entity_type: node
+bundle: calendar
+label: 'Calendar Date'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

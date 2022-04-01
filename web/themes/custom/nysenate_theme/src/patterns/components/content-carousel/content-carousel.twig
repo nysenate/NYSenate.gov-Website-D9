@@ -1,0 +1,39 @@
+{{ attach_library('rain_theme/content-carousel') }}
+<section class="content-carousel_container{{ attributes ? ' ' ~ attributes.class}}">
+  <div class="content-carousel__wrapper">
+    {% block carousel_title %}
+      {% if heading.title %}
+        {%
+          include '@rain_theme/heading/heading.twig' with {
+            "heading": heading
+          } only
+        %}
+      {% endif %}
+    {% endblock %}
+    <div class="content-carousel fade">
+      {% block carousel_items %}
+        <ul class="content-carousel__list content-carousel__slick">
+          {% for item in items %}
+            <li class="content-carousel-item">
+              {%
+                include '@rain_theme/content-card/content-card.twig' with {
+                  card: item.card,
+                } only
+              %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endblock %}
+      <div class="content-carousel__navigation">
+        <div class="slick-pager"></div>
+      </div>
+    </div>
+    {% block carousel_links %}
+      {% if links %}
+        <div class="content-carousel__links links">
+          {{ links }}
+        </div>
+      {% endif %}
+    {% endblock %}
+  </div>
+</section>

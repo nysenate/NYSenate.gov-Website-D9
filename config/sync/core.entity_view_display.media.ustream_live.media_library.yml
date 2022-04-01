@@ -1,0 +1,35 @@
+uuid: 82bbdf40-7eb4-4d37-afc2-f87a17fe7d34
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.media_library
+    - field.field.media.ustream_live.field_media_oembed_ustream
+    - image.style.medium
+    - media.type.ustream_live
+  module:
+    - svg_image
+id: media.ustream_live.media_library
+targetEntityType: media
+bundle: ustream_live
+mode: media_library
+content:
+  thumbnail:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: medium
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  field_media_oembed_ustream: true
+  langcode: true
+  name: true
+  uid: true

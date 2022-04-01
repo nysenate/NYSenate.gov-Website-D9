@@ -1,0 +1,61 @@
+uuid: 54bf4824-30ed-42be-b6be-8287ee61a882
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.issues.field_drupal_6_tid
+    - field.field.taxonomy_term.issues.field_geolocation
+    - field.field.taxonomy_term.issues.field_keywords
+    - field.field.taxonomy_term.issues.field_location
+    - field.field.taxonomy_term.issues.field_metatags
+    - taxonomy.vocabulary.issues
+  module:
+    - address
+    - geolocation
+    - metatag
+    - text
+id: taxonomy_term.issues.default
+targetEntityType: taxonomy_term
+bundle: issues
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_geolocation:
+    type: geolocation_latlng
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_keywords:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_location:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_metatags:
+    type: metatag_empty_formatter
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  field_drupal_6_tid: true
+  langcode: true
+  search_api_excerpt: true

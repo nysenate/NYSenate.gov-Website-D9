@@ -1,0 +1,22 @@
+uuid: 41893bd8-d6c8-4438-816c-0548ae25adf0
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.public_hearing
+id: node.public_hearing.status
+field_name: status
+entity_type: node
+bundle: public_hearing
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

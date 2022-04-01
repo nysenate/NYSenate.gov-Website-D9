@@ -1,0 +1,5 @@
+{% if body_text|render %}
+  <div class="body-text{{ modifier ? ' ' ~ modifier }}">
+    {{ body_text }}
+  </div>
+{% endif %}

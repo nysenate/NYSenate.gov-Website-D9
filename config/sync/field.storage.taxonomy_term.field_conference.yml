@@ -1,0 +1,33 @@
+uuid: 0b015a3a-4c7c-47ab-a794-4a6789d7dd53
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - taxonomy
+id: taxonomy_term.field_conference
+field_name: field_conference
+entity_type: taxonomy_term
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: idc
+      label: 'Independant Democratic Conference'
+    -
+      value: dc
+      label: 'Democratic Conference'
+    -
+      value: rc
+      label: 'Republican Conference'
+    -
+      value: mc
+      label: 'Majority Coalition'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

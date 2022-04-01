@@ -1,0 +1,60 @@
+uuid: d32df2a6-134e-4acc-9020-bc51b24313d4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.public_hearing.body
+    - field.field.node.public_hearing.field_attachment
+    - field.field.node.public_hearing.field_committee
+    - field.field.node.public_hearing.field_committee_featured
+    - field.field.node.public_hearing.field_date_range
+    - field.field.node.public_hearing.field_event_online_link
+    - field.field.node.public_hearing.field_event_place
+    - field.field.node.public_hearing.field_issues
+    - field.field.node.public_hearing.field_location
+    - field.field.node.public_hearing.field_meeting_location
+    - field.field.node.public_hearing.field_transcript
+    - field.field.node.public_hearing.field_ustream_url
+    - field.field.node.public_hearing.field_video_redirect
+    - field.field.node.public_hearing.field_video_status
+    - field.field.node.public_hearing.field_yt
+    - node.type.public_hearing
+  module:
+    - text
+    - user
+id: node.public_hearing.teaser
+targetEntityType: node
+bundle: public_hearing
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_attachment: true
+  field_committee: true
+  field_committee_featured: true
+  field_date_range: true
+  field_event_online_link: true
+  field_event_place: true
+  field_issues: true
+  field_location: true
+  field_meeting_location: true
+  field_transcript: true
+  field_ustream_url: true
+  field_video_redirect: true
+  field_video_status: true
+  field_yt: true
+  langcode: true
+  search_api_excerpt: true

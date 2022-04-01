@@ -1,0 +1,16 @@
+{{ attach_library('nysenate_theme/nysenate-accordion') }}
+
+<section class="nysenate-accordion__wrapper{{ attributes ? ' ' ~ attributes.class}}"
+{{- attributes ? attributes|without(class) -}}>
+  <div class="nysenate-accordion__wrapper-title">{{ accordion_set_title }}</div>
+
+  <div>
+    {% block accordion_items %}
+      {% for item in items %}
+        {%
+          include '@nysenate_theme/nysenate-accordion/_nysenate-accordion-item.twig' with {item: item} only
+        %}
+      {% endfor %}
+    {% endblock %}
+  </div>
+</section>

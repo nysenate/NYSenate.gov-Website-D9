@@ -1,0 +1,14 @@
+uuid: 73629d05-932d-45ca-a105-6555b44ac748
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.microsite_content_producer
+  module:
+    - user
+id: user_remove_role_action.microsite_content_producer
+label: 'Remove the Microsite Content Producer role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: microsite_content_producer

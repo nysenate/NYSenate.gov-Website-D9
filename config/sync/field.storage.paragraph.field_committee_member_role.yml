@@ -1,0 +1,33 @@
+uuid: 1bf5a8a3-063e-4a99-9228-3eedf27446fd
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_committee_member_role
+field_name: field_committee_member_role
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: '2'
+      label: Chair
+    -
+      value: '1'
+      label: Co-Chair
+    -
+      value: '0'
+      label: Member
+    -
+      value: '3'
+      label: Other
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

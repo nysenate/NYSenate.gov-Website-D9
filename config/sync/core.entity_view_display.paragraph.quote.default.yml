@@ -1,0 +1,55 @@
+uuid: 48643738-8df4-4dd9-999b-f91802e521b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.quote.field_author
+    - field.field.paragraph.quote.field_job_title
+    - field.field.paragraph.quote.field_quote
+    - field.field.paragraph.quote.field_thumb
+    - paragraphs.paragraphs_type.quote
+    - responsive_image.styles.4_3_images
+  module:
+    - responsive_image
+_core:
+  default_config_hash: PqQbAaQOw2Cw-0f1pw-NPFrmgd6ZF89GrVurIfMaQBE
+id: paragraph.quote.default
+targetEntityType: paragraph
+bundle: quote
+mode: default
+content:
+  field_author:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_job_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_quote:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_thumb:
+    type: responsive_image
+    label: hidden
+    settings:
+      responsive_image_style: 4_3_images
+      image_link: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  search_api_excerpt: true

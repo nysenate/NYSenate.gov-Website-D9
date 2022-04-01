@@ -1,0 +1,63 @@
+uuid: 7eba6904-fc20-45f2-a927-7d96b3738ba9
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_ol_last_status
+field_name: field_ol_last_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: INTRODUCED
+      label: Introduced
+    -
+      value: IN_ASSEMBLY_COMM
+      label: 'In Assembly Committee'
+    -
+      value: IN_SENATE_COMM
+      label: 'In Senate Committee'
+    -
+      value: ASSEMBLY_FLOOR
+      label: 'Assembly Floor Calendar'
+    -
+      value: SENATE_FLOOR
+      label: 'Senate Floor Calendar'
+    -
+      value: PASSED_ASSEMBLY
+      label: 'Passed Assembly'
+    -
+      value: PASSED_SENATE
+      label: 'Passed Senate'
+    -
+      value: DELIVERED_TO_GOV
+      label: 'Delivered to Governor'
+    -
+      value: SIGNED_BY_GOV
+      label: 'Signed by Governor'
+    -
+      value: VETOED
+      label: Vetoed
+    -
+      value: STRICKEN
+      label: Stricken
+    -
+      value: LOST
+      label: Lost
+    -
+      value: SUBSTITUTED
+      label: Substituted
+    -
+      value: ADOPTED
+      label: Adopted
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

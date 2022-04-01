@@ -1,0 +1,48 @@
+uuid: 63050b9f-92c0-4be0-8f3d-b5687e7a06f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_location
+    - node.type.session
+  module:
+    - address
+id: node.session.field_location
+field_name: field_location
+entity_type: node
+bundle: session
+label: Location
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    langcode: null
+    country_code: US
+    administrative_area: NY
+    locality: Albany
+    dependent_locality: null
+    postal_code: '12247'
+    sorting_code: null
+    address_line1: '172 State Street'
+    address_line2: ''
+    organization: 'New York State Capitol Building'
+    given_name: null
+    additional_name: null
+    family_name: null
+default_value_callback: ''
+settings:
+  available_countries:
+    US: US
+  langcode_override: ''
+  field_overrides:
+    givenName:
+      override: hidden
+    additionalName:
+      override: hidden
+    familyName:
+      override: hidden
+    sortingCode:
+      override: hidden
+  fields: {  }
+field_type: address

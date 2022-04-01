@@ -1,0 +1,21 @@
+uuid: 88b43c4d-36db-4e26-a862-b1c9ddb05e38
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_place
+    - node.type.event
+  module:
+    - options
+id: node.event.field_event_place
+field_name: field_event_place
+entity_type: node
+bundle: event
+label: 'General Location'
+description: 'For in person event use "In Albany" or "In District" otherwise use "Online" or "Teleconference"'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

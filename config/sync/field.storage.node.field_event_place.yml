@@ -1,0 +1,43 @@
+uuid: 0cc94ae8-f06f-45ed-96c2-a9725cd97c9c
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - node
+    - options
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: node.field_event_place
+field_name: field_event_place
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: cap
+      label: 'Capitol Building'
+    -
+      value: lob
+      label: LOB
+    -
+      value: in_albany
+      label: 'In Albany'
+    -
+      value: in_district
+      label: 'In The District'
+    -
+      value: online
+      label: Online
+    -
+      value: teleconference
+      label: Teleconference
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

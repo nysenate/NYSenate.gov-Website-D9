@@ -1,0 +1,43 @@
+uuid: 17029f26-8a02-4b73-8c02-f26a81e00a6d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.quote_carousel
+    - field.storage.block_content.field_quotes
+    - paragraphs.paragraphs_type.quote
+  module:
+    - entity_reference_revisions
+id: block_content.quote_carousel.field_quotes
+field_name: field_quotes
+entity_type: block_content
+bundle: quote_carousel
+label: Quotes
+description: 'Add a collection of quotes to render within a carousel component.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      quote: quote
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 6
+        enabled: false
+      card:
+        weight: 7
+        enabled: false
+      gallery_item:
+        weight: 8
+        enabled: false
+      quote:
+        enabled: true
+        weight: 9
+      slider_item:
+        weight: 10
+        enabled: false
+field_type: entity_reference_revisions

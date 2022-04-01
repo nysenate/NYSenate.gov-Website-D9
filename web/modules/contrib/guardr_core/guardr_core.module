@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains guardr_core.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function guardr_core_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the guardr_core module.
+    case 'help.page.guardr_core':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Custom configuration related to the Guardr distribution.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

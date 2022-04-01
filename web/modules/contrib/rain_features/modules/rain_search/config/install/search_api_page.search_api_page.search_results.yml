@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.default_site_search
+id: search_results
+label: 'Search Results'
+path: search
+clean_url: true
+show_all_when_no_keys: false
+index: default_site_search
+limit: 10
+searched_fields:
+  rendered_item: rendered_item
+style: view_modes
+view_mode_configuration:
+  'entity:node':
+    default: teaser
+    overrides:
+      article: ''
+      blog: ''
+      event: ''
+      homepage: ''
+      landing: ''
+      page: ''
+      press_release: ''
+      product: ''
+      profile: ''
+      resource: ''
+      webform: ''
+show_search_form: true
+parse_mode: direct

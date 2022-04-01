@@ -1,0 +1,341 @@
+file:
+  fid:
+    type: integer
+    bundles:
+      file: file
+  uuid:
+    type: uuid
+    bundles:
+      file: file
+  langcode:
+    type: language
+    bundles:
+      file: file
+  uid:
+    type: entity_reference
+    bundles:
+      file: file
+  filename:
+    type: string
+    bundles:
+      file: file
+  uri:
+    type: file_uri
+    bundles:
+      file: file
+  filemime:
+    type: string
+    bundles:
+      file: file
+  filesize:
+    type: integer
+    bundles:
+      file: file
+  status:
+    type: boolean
+    bundles:
+      file: file
+  created:
+    type: created
+    bundles:
+      file: file
+  changed:
+    type: changed
+    bundles:
+      file: file
+node:
+  nid:
+    type: integer
+    bundles:
+      article: article
+      page: page
+  uuid:
+    type: uuid
+    bundles:
+      article: article
+      page: page
+  vid:
+    type: integer
+    bundles:
+      article: article
+      page: page
+  langcode:
+    type: language
+    bundles:
+      article: article
+      page: page
+  type:
+    type: entity_reference
+    bundles:
+      article: article
+      page: page
+  revision_timestamp:
+    type: created
+    bundles:
+      article: article
+      page: page
+  revision_uid:
+    type: entity_reference
+    bundles:
+      article: article
+      page: page
+  revision_log:
+    type: string_long
+    bundles:
+      article: article
+      page: page
+  status:
+    type: boolean
+    bundles:
+      article: article
+      page: page
+  title:
+    type: string
+    bundles:
+      article: article
+      page: page
+  uid:
+    type: entity_reference
+    bundles:
+      article: article
+      page: page
+  created:
+    type: created
+    bundles:
+      article: article
+      page: page
+  changed:
+    type: changed
+    bundles:
+      article: article
+      page: page
+  promote:
+    type: boolean
+    bundles:
+      article: article
+      page: page
+  sticky:
+    type: boolean
+    bundles:
+      article: article
+      page: page
+  default_langcode:
+    type: boolean
+    bundles:
+      article: article
+      page: page
+  revision_default:
+    type: boolean
+    bundles:
+      article: article
+      page: page
+  revision_translation_affected:
+    type: boolean
+    bundles:
+      article: article
+      page: page
+  path:
+    type: path
+    bundles:
+      article: article
+      page: page
+  field_image:
+    type: image
+    bundles:
+      article: article
+  comment:
+    type: comment
+    bundles:
+      article: article
+  field_tags:
+    type: entity_reference
+    bundles:
+      article: article
+  body:
+    type: text_with_summary
+    bundles:
+      page: page
+      article: article
+taxonomy_term:
+  tid:
+    type: integer
+    bundles:
+      tags: tags
+  uuid:
+    type: uuid
+    bundles:
+      tags: tags
+  langcode:
+    type: language
+    bundles:
+      tags: tags
+  vid:
+    type: entity_reference
+    bundles:
+      tags: tags
+  name:
+    type: string
+    bundles:
+      tags: tags
+  description:
+    type: text_long
+    bundles:
+      tags: tags
+  weight:
+    type: integer
+    bundles:
+      tags: tags
+  parent:
+    type: entity_reference
+    bundles:
+      tags: tags
+  changed:
+    type: changed
+    bundles:
+      tags: tags
+  default_langcode:
+    type: boolean
+    bundles:
+      tags: tags
+  path:
+    type: path
+    bundles:
+      tags: tags
+user:
+  uid:
+    type: integer
+    bundles:
+      user: user
+  uuid:
+    type: uuid
+    bundles:
+      user: user
+  langcode:
+    type: language
+    bundles:
+      user: user
+  preferred_langcode:
+    type: language
+    bundles:
+      user: user
+  preferred_admin_langcode:
+    type: language
+    bundles:
+      user: user
+  name:
+    type: string
+    bundles:
+      user: user
+  pass:
+    type: password
+    bundles:
+      user: user
+  mail:
+    type: email
+    bundles:
+      user: user
+  timezone:
+    type: string
+    bundles:
+      user: user
+  status:
+    type: boolean
+    bundles:
+      user: user
+  created:
+    type: created
+    bundles:
+      user: user
+  changed:
+    type: changed
+    bundles:
+      user: user
+  access:
+    type: timestamp
+    bundles:
+      user: user
+  login:
+    type: timestamp
+    bundles:
+      user: user
+  init:
+    type: email
+    bundles:
+      user: user
+  roles:
+    type: entity_reference
+    bundles:
+      user: user
+  default_langcode:
+    type: boolean
+    bundles:
+      user: user
+  user_picture:
+    type: image
+    bundles:
+      user: user
+menu_link_content:
+  id:
+    type: integer
+    bundles:
+      menu_link_content: menu_link_content
+  uuid:
+    type: uuid
+    bundles:
+      menu_link_content: menu_link_content
+  langcode:
+    type: language
+    bundles:
+      menu_link_content: menu_link_content
+  bundle:
+    type: string
+    bundles:
+      menu_link_content: menu_link_content
+  title:
+    type: string
+    bundles:
+      menu_link_content: menu_link_content
+  description:
+    type: string
+    bundles:
+      menu_link_content: menu_link_content
+  menu_name:
+    type: string
+    bundles:
+      menu_link_content: menu_link_content
+  link:
+    type: link
+    bundles:
+      menu_link_content: menu_link_content
+  external:
+    type: boolean
+    bundles:
+      menu_link_content: menu_link_content
+  rediscover:
+    type: boolean
+    bundles:
+      menu_link_content: menu_link_content
+  weight:
+    type: integer
+    bundles:
+      menu_link_content: menu_link_content
+  expanded:
+    type: boolean
+    bundles:
+      menu_link_content: menu_link_content
+  enabled:
+    type: boolean
+    bundles:
+      menu_link_content: menu_link_content
+  parent:
+    type: string
+    bundles:
+      menu_link_content: menu_link_content
+  changed:
+    type: changed
+    bundles:
+      menu_link_content: menu_link_content
+  default_langcode:
+    type: boolean
+    bundles:
+      menu_link_content: menu_link_content

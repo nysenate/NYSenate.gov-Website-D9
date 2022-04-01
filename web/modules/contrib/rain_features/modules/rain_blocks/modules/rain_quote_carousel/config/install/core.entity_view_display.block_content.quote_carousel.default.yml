@@ -1,0 +1,26 @@
+uuid: 05a436fe-e5eb-4597-b1b8-e103fb15327e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.quote_carousel
+    - field.field.block_content.quote_carousel.field_quotes
+  module:
+    - entity_reference_revisions
+id: block_content.quote_carousel.default
+targetEntityType: block_content
+bundle: quote_carousel
+mode: default
+content:
+  field_quotes:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

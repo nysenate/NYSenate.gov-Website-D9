@@ -1,0 +1,185 @@
+/**
+ * @file
+ * Styles for content forms.
+ */
+@import 'mixins';
+@import 'variables';
+
+.content-form__advanced-toggle,
+.content-form__advanced {
+  background: $primary-color-darker;
+}
+
+.content-form__advanced-toggle {
+  border: 0;
+  color: white;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 1em;
+
+  &:focus,
+  &:active {
+    box-shadow: none;
+    outline: none;
+  }
+
+  &:hover {
+    background: $primary-color-darkest;
+
+    svg {
+      path {
+        fill: $primary-color-intense;
+      }
+    }
+  }
+}
+
+/**
+ * 1. Vertically align these elements due to different font sizes
+ *    breaking baseline alignment for .button. Same font size should
+ *    be used when items are to be vertically aligned.
+ * 2. Fix element height in firefox.
+ * 3. Fix spacing, see form.scss
+ * 4. Fix spacing: remove description toggle.
+ * 5. Fix spacing: different font-size.
+ *
+ */
+.content-form__actions {
+
+  .button--danger {
+    display: inline-block;
+    vertical-align: bottom; /* 1 */
+    padding: 7px 0;
+    text-transform: none;
+    color: $gray-light;
+    font-size: 0.875rem;
+    font-weight: bold;
+    margin-right: 0.75rem; /* 5 */
+
+    &:last-child {
+      margin-right: 0; /* 5 */
+    }
+
+    @media screen and (-moz-device-pixel-ratio) {
+      line-height: 1.14; /* 2 */
+    }
+  }
+
+  .field--widget-thunder-moderation-state-default {
+    display: inline-block;
+    vertical-align: bottom; /* 1 */
+    margin-right: 1em; /* 3 */
+
+    .form-item-moderation-state-0 {
+      margin: 0;
+
+      select {
+        min-height: 30px;
+      }
+
+      @media screen and (-moz-device-pixel-ratio) {
+        select {
+          padding-top: 3px;
+        }
+      }
+    }
+
+    .form-item__toggle-description-placeholder {
+      display: none; /* 4 */
+    }
+  }
+
+  .status {
+    float: right;
+    padding: 8px;
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: $gray-lightest;
+  }
+  .status.draft {
+    background-color: $primary-color-light;
+  }
+  .status.published {
+    background-color: $primary-color-dark;
+  }
+  .status.unpublished {
+    background-color: $gray-medium;
+  }
+}
+
+@include for-tablet-portrait-and-up {
+  /* Fixed action bar */
+  .content-form__actions {
+    background: $primary-color-darker;
+    @include disabled-buttons-on-dark-bg;
+  }
+}
+
+.content-form__form-section {
+  background: $primary-color-lightest;
+  border-radius: $base-border-radius;
+  padding-top: 2.5rem;
+
+  & > legend,
+  & > summary {
+    padding-left: 0.4em;
+    text-transform: none;
+    font-size: 1rem;
+    border-left: 5px solid $primary-color-intense;
+    top: 1rem;
+  }
+
+  table:not(.field-multiple-table) thead th {
+    background-color: $primary-color-lighter;
+    border-color: $gray-lighter;
+  }
+
+  .seven-details {
+    background-color: transparent;
+  }
+}
+
+.entity-meta--advanced {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  font-size: 0.75rem;
+  margin: $base-space 0 $base-space $base-space-2x;
+
+  .entity-meta__header,
+  .seven-details {
+    background: transparent;
+    border-top: 0;
+    border-bottom: 0;
+    box-shadow: none;
+  }
+
+  .entity-meta__title {
+    text-shadow: none;
+  }
+
+  .seven-details {
+    border-top: 2px solid $primary-color-dark;
+    border-bottom: 2px solid $primary-color-dark;
+
+    & + .seven-details {
+      border-top: 0;
+    }
+
+    &[open] {
+      background-image: none;
+      border-top-width: 2px;
+
+      & > .seven-details__summary {
+        color: $gray-lighter;
+      }
+    }
+
+    & > summary {
+      text-shadow: none;
+      font-size: 0.875rem;
+    }
+  }
+}

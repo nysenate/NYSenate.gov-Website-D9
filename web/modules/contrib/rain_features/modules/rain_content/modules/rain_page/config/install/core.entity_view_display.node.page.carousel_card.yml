@@ -1,0 +1,60 @@
+uuid: 872d14cc-e241-4dd5-8e20-c6f7c1ceb811
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.carousel_card
+    - field.field.node.page.body
+    - field.field.node.page.field_meta_tags
+    - field.field.node.page.field_short_title
+    - field.field.node.page.field_summary
+    - field.field.node.page.field_thumbnail
+    - node.type.page
+  module:
+    - user
+_core:
+  default_config_hash: ecwywjk_ccD9HOgAzgf9E2Nm-wkg-X7BTEynNvn1GXc
+id: node.page.carousel_card
+targetEntityType: node
+bundle: page
+mode: carousel_card
+content:
+  field_short_title:
+    type: string
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_subhead:
+    type: string
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_summary:
+    type: basic_string
+    weight: 3
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 4
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_exclude_title: true
+  field_meta_tags: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

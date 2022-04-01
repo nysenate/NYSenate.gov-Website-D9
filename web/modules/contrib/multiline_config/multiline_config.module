@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Code for the multiline config module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_config_filter_info_alter().
+ */
+function multiline_config_config_filter_info_alter(array &$info) {
+  foreach ($info as $filter_key => $filter) {
+    if (strpos($filter_key, 'config_split:') !== FALSE) {
+      $info[$filter_key]['class'] = '\Drupal\multiline_config\MultilineConfigSplitFilter';
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function multiline_config_form_config_single_export_form_alter(&$form, FormStateInterface $form_state) {
+  $form['config_name']['#ajax']['callback'] = 'multiline_config_form_config_single_export_form_update_export';
+}
+
+/**
+ * Handles switching the export textarea and transform the output.
+ */
+function multiline_config_form_config_single_export_form_update_export($form, FormStateInterface $form_state) {
+  // Determine the full config name for the selected config entity.
+  if ($form_state->getValue('config_type') !== 'system.simple') {
+    $definition = \Drupal::entityTypeManager()->getDefinition($form_state->getValue('config_type'));
+    $name = $definition->getConfigPrefix() . '.' . $form_state->getValue('config_name');
+  }
+  // The config name is used directly for simple configuration.
+  else {
+    $name = $form_state->getValue('config_name');
+  }
+
+  /** @var \Drupal\Core\Config\CachedStorage $storage */
+  $storage = \Drupal::service('config.storage');
+  /** @var \Drupal\multiline_config\MultilineConfigFileStorage $multi_storage */
+  $multi_storage = \Drupal::service('config.storage.sync');
+
+  // Read the raw data for this config name, encode it, and display it.
+  $data = $storage->read($name);
+  $form['export']['#value'] = $multi_storage->encode($data);
+
+  return $form['export'];
+}

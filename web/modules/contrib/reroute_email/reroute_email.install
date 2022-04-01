@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * Reroute Email installation and upgrade tasks.
+ */
+
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_requirements().
+ */
+function reroute_email_requirements($phase) {
+  $requirements = [];
+  $reroute_config = \Drupal::config('reroute_email.settings');
+
+  if ($phase === 'runtime' && $reroute_config->get(REROUTE_EMAIL_ENABLE)) {
+    $settings = [
+      '@link' => Link::createFromRoute(t('configure allow list'), 'reroute_email.settings')->toString(),
+      '%addresses' => $reroute_config->get(REROUTE_EMAIL_ADDRESS),
+    ];
+
+    if (empty($settings['%addresses'])) {
+      $message = t('All outgoing emails (@link) would be aborted and recorded in the recent log entries (if enabled).', $settings);
+    }
+    else {
+      $message = t('All outgoing emails (@link) would be rerouted to: %addresses', $settings);
+    }
+
+    $requirements['reroute_email'] = [
+      'title' => t('Reroute Email'),
+      'value' => $message,
+      'severity' => REQUIREMENT_WARNING,
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Now we have a separate fields for `Rerouting email addresses` and
+ * `Allowed email addresses`. Previously all emails was rerouted
+ * to the first email from `Rerouting email addresses`.
+ */
+function reroute_email_update_8001() {
+  // A map of changed config names.
+  $old = [
+    REROUTE_EMAIL_ENABLE => 'reroute_email_enable',
+    REROUTE_EMAIL_ADDRESS => 'reroute_email_address',
+    REROUTE_EMAIL_DESCRIPTION => 'reroute_email_enable_message',
+  ];
+
+  $config = \Drupal::configFactory()->getEditable('reroute_email.settings');
+
+  // Do not update values if the user sets them manually already.
+  // `Allowed list addresses` is a new variable, so it couldn't exist before.
+  if (NULL !== $config->get(REROUTE_EMAIL_ALLOWLIST)) {
+    return t('The setting form was updated manually already. This update is to be skipped.');
+  }
+
+  // Update the list of allowed email addresses.
+  $addresses = $config->get($old[REROUTE_EMAIL_ADDRESS]);
+  $config->set(REROUTE_EMAIL_ALLOWLIST, $addresses);
+
+  // Update rerouting email addresses value.
+  $addresses = reroute_email_split_string($addresses);
+  $config->set(REROUTE_EMAIL_ADDRESS, !empty($addresses[0]) ? $addresses[0] : '');
+
+  // Update other configs to new names.
+  $config->set(REROUTE_EMAIL_ENABLE, $config->get($old[REROUTE_EMAIL_ENABLE]));
+  $config->set(REROUTE_EMAIL_DESCRIPTION, $config->get($old[REROUTE_EMAIL_DESCRIPTION]));
+
+  // Remove old configs.
+  $config->clear($old[REROUTE_EMAIL_ENABLE]);
+  $config->clear($old[REROUTE_EMAIL_ADDRESS]);
+  $config->clear($old[REROUTE_EMAIL_DESCRIPTION]);
+
+  // Save configuration values.
+  $config->save();
+
+  // Return a message to the user.
+  return t('Reroute email module updates completed successfully. Please visit configuration page to check.');
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Updating module configs to use the new property names.
+ *
+ * @see https://www.drupal.org/project/reroute_email/issues/3177642
+ */
+function reroute_email_update_8201() {
+  // A map of changed config names.
+  $old = [REROUTE_EMAIL_ALLOWLIST => 'whitelist'];
+
+  // Do not update values if the user sets them manually already.
+  // `Allowed list addresses` is a new property, so it couldn't exist before.
+  $config = \Drupal::configFactory()->getEditable('reroute_email.settings');
+  if (NULL !== $config->get(REROUTE_EMAIL_ALLOWLIST)) {
+    return t('The setting form was updated manually already. This update is to be skipped.');
+  }
+
+  // Update the list of allowed email addresses.
+  $addresses = $config->get($old[REROUTE_EMAIL_ALLOWLIST]);
+  $config->set(REROUTE_EMAIL_ALLOWLIST, $addresses);
+  $config->save();
+
+  // Return a message to the user.
+  return t('Reroute email module updates completed successfully. Please visit configuration page to check.');
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Remove outdated "whitelist" config property.
+ *
+ * @see https://www.drupal.org/project/reroute_email/issues/3256244
+ */
+function reroute_email_update_8202() {
+  // Check to see if the property still exists.
+  $config = \Drupal::configFactory()->getEditable('reroute_email.settings');
+  if (NULL === $config->get('whitelist')) {
+    return t('The outdated property "whitelist" has already been removed. This update is to be skipped.');
+  }
+  // Remove the property.
+  $config->clear('whitelist');
+  $config->save();
+
+  // Return a message to the user.
+  return t('Reroute email module updates completed successfully. Please visit configuration page to check.');
+}

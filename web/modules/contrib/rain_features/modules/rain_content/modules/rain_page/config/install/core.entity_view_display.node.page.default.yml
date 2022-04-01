@@ -1,0 +1,36 @@
+uuid: 90239ac4-fcfa-49ec-ac0a-f6e4e94b100e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.page.body
+    - field.field.node.page.field_meta_tags
+    - field.field.node.page.field_short_title
+    - field.field.node.page.field_summary
+    - field.field.node.page.field_thumbnail
+    - node.type.page
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: S2_lAF7OecVI5yh8fvU-jHCjDztQ_74NJv9mpgKi5M0
+id: node.page.default
+targetEntityType: node
+bundle: page
+mode: default
+content:
+  body:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  field_meta_tags: true
+  field_short_title: true
+  field_summary: true
+  field_thumbnail: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

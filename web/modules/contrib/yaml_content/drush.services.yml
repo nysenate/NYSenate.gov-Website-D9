@@ -1,0 +1,7 @@
+services:
+  yaml_content.commands:
+    class: \Drupal\yaml_content\Commands\YamlContentCommands
+    arguments:
+      - '@yaml_content.load_helper'
+    tags:
+      - { name: drush.command }

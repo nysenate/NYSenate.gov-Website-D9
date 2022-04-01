@@ -1,0 +1,120 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+
+  .media-item {
+    grid-row-start: 1;
+    grid-column: 1 / span 1;
+
+    .media--type-image {
+      height: 100%;
+      position: relative;
+
+      &::before {
+        content: '';
+        height: 100%;
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+
+  &__content {
+    @include max-width;
+    grid-row-start: 1;
+    grid-column: 1 / span 1;
+    display: block;
+    left: auto;
+    position: relative;
+    top: auto;
+    background: none;
+    text-align: left;
+    transform: none;
+    padding: 0;
+
+    .button {
+      margin-left: 0;
+      margin-right: 0;
+
+      @extend %cta-button;
+      background-color: $color-white;
+      color: $color-text-black;
+      border: none;
+      padding: 1rem 2rem;
+      margin-bottom: 1.5rem;
+
+      @include breakpoint($bp-sm) {
+        margin-bottom: 3rem;
+      }
+
+      &:hover {
+        background-color: $color-white;
+        color: $color-blue;
+      }
+    }
+
+    .content {
+      max-width: $bp-sm;
+      padding: 8rem 1rem 6rem;
+
+      @include breakpoint($bp-xsm) {
+        padding: 12rem 3rem 10rem;
+      }
+    }
+  }
+
+  &__heading {
+    font-size: 40px; //5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: $color-white;
+
+    @include breakpoint($bp-sm) {
+      margin-bottom: 1.5rem;
+      font-size: 8rem;
+    }
+  }
+
+  &__eyebrow {
+    color: $color-white;
+    display: block;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    text-transform: none;
+    letter-spacing: normal;
+
+    @include breakpoint($bp-xsm) {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .body-text {
+    font-size: 21px;
+    line-height: 30px;
+    color: $color-white;
+    margin-bottom: 3em;
+
+    @include breakpoint($bp-sm) {
+      font-size: 1rem;
+      margin-bottom: 3em;
+    }
+  }
+}

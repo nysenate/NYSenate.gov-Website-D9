@@ -1,0 +1,215 @@
+/**
+ * @file
+ * Structural styles for buttons
+ *
+ * Apply these classes to any element (<link>, <button>, <input>, etc.) that
+ * should appear as a button.
+ *
+ * Import and override buttons.css provided by seven/global-styling.
+ */
+
+@import 'variables';
+
+/* stylelint-disable plugin/no-browser-hacks */
+$button-border-radius: $base-border-radius;
+/* stylelint-enable plugin/no-browser-hacks */
+
+/**
+ * Buttons.
+ *
+ * 1. Enable z-index on buttons.
+ * 2. Normalize 'line-height'; can’t be changed from 'normal' in Firefox 4+.
+ * 3. Allows full range of styling in Webkit and Gecko.
+ * 4. Use px units to ensure button text is centered vertically.
+ * 5. Use rems to avoid the font size cascade of ems, with a px fallback for
+ *    older browsers.
+ * 6. Prevent fat text in WebKit.
+ *
+ * @todo Consider moving box-sizing into base.css under a universal selector.
+ * See https://www.drupal.org/node/2124251
+ *
+ */
+// text-shadow removed
+// font-size fallback removed
+// @todo [Refactor] Move this before import?
+.button {
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;  /* 1 */
+  text-align: center;
+  line-height: normal;  /* 2 */
+  cursor: pointer;
+  -webkit-appearance: none;  /* 3 */
+  -moz-appearance: none;  /* 3 */
+  padding: 7px 18px;  /* 4 */
+  border: 1px solid $primary-color-intense;
+  border-radius: $button-border-radius;
+  background-color: $gray-lightest;
+  background-image: linear-gradient(0deg, $primary-color-lightest 0%, $gray-lightest 100%);
+  color: $primary-color;
+  text-decoration: none;
+  font-size: 0.75rem;  /* 5 */
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;  /* 6 */
+  text-transform: uppercase; // added
+  min-height: 30px; // added
+
+  // color removed
+  // outline removed
+  &:focus,
+  &:hover {
+    background-color: $gray-lighter;
+    background-image: linear-gradient(180deg, $primary-color-lightest 0%, $gray-lightest 100%);
+    text-decoration: none;
+  }
+
+  // box-shadow removed
+  &:hover {
+    outline: none; // added
+  }
+
+  &:disabled,
+  &:disabled:active,
+  &:disabled:hover,
+  &.is-disabled,
+  &.is-disabled:active,
+  &.is-disabled:hover {
+    background-color: transparent;
+    background-image: none;
+    cursor: not-allowed;
+    text-shadow: none;
+  }
+
+  // .button:focus removed
+  // .button:active removed
+}
+
+/* stylelint-disable string-no-newline, no-invalid-position-at-import-rule */
+@import '@theme-seven/css/components/buttons.css remove {
+  .button {}
+  .button:hover, .button:focus {}
+  .button:hover {}
+  .button:focus {}
+  .button:active {}
+  .button--primary { text-shadow }
+  .button--primary:focus {}
+  .button--primary:hover {}
+  .button--primary:active {}
+  .button-action:before { font-size }
+  .no-touchevents .button--small { font-size }
+}';
+/* stylelint-enable string-no-newline, no-invalid-position-at-import-rule */
+
+//text-shadow removed
+.button--primary {
+  border-color: $primary-color-intense;
+  background-color: $primary-color;
+  background-image: linear-gradient(180deg, $primary-color-intense 0%, $primary-color 100%);
+  color: #fff; // re-added color otherwise overridden by .button
+}
+
+.button--primary:hover,
+.button--primary:focus {
+  border-color: $primary-color;
+  background-color: $primary-color-intense;
+  background-image: linear-gradient(0deg, $primary-color-intense 0%, $primary-color 100%);
+  color: #fff;
+}
+
+// .button--primary:focus removed
+// .button--primary:hover removed
+// .button--primary:active removed
+
+// duplicate font-size removed
+// maybe was a fallback for when browser doesn't support rem?
+/**
+ * Overrides styling from system.theme.
+ */
+.button-action:before {
+  margin-left: -0.2em; /* LTR */
+  padding-right: 0.2em; /* LTR */
+  font-size: 0.875rem;
+  line-height: 16px;
+  -webkit-font-smoothing: auto;
+}
+
+// font-size changed (todo: no variable)
+// font-size fallack removed
+/**
+ * 1. Use px units to ensure button text is centered vertically.
+ */
+.no-touchevents .button--small {
+  font-size: 0.75rem;
+  min-height: 0; // added
+}
+
+// NEW
+.button__icon,
+.button__text {
+  display: inline-block;
+}
+
+// NEW
+.button__icon {
+  svg {
+    path {
+      fill: $primary-color;
+    }
+  }
+
+  .button--highlight &,
+  .button:focus &,
+  .button:hover & {
+    svg {
+      path {
+        fill: $primary-color-dark;
+      }
+    }
+  }
+
+  .button:disabled &,
+  .button:disabled:active & {
+    svg {
+      path {
+        fill: #ccc;
+      }
+    }
+  }
+}
+
+// NEW
+.button--icon-only {
+  background: transparent;
+  border: 0;
+  line-height: 1;
+
+  &:focus,
+  &:hover,
+  &:active,
+  &:disabled,
+  &:disabled:active {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  /* stylelint-disable no-descending-specificity */
+  .button__icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  /* stylelint-enable no-descending-specificity */
+
+  .button__text {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    text-indent: -999em;
+  }
+}
+
+/* Reset normalize.css line-height. */
+.link {
+  line-height: inherit;
+}

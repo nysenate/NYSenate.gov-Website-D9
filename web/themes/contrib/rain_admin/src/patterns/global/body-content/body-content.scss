@@ -1,0 +1,172 @@
+// Standard body content element styling.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+// stylelint-disable selector-no-qualifying-type
+body.cke_editable,
+.body-content {
+  font-size: 1rem;
+
+  // Headings.
+  h1 {
+    @include heading-1-style;
+  }
+
+  h2 {
+    @include heading-2-style;
+  }
+
+  h3 {
+    @include heading-3-style;
+  }
+
+  h4 {
+    @include heading-4-style;
+  }
+
+  h5 {
+    @include heading-5-style;
+  }
+
+  h6 {
+    @include heading-6-style;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  // Lists
+  ul,
+  ol,
+  dl {
+    margin: 0 0 24px;
+    padding: 0;
+  }
+
+  ul,
+  ol {
+    left: 36px;
+    max-width: calc(100% - 36px);
+    position: relative;
+  }
+
+  li {
+    margin: 0 0 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  p {
+    margin: 0 0 24px;
+    line-height: 1.625;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: $color-bright-blue;
+    text-decoration: underline;
+
+    &:focus,
+    &:hover {
+      color: $color-bright-blue;
+      text-decoration: none;
+    }
+  }
+
+  blockquote {
+    @include font-stack-primary;
+    margin: 0 0 24px;
+    padding: 12px 0 12px 48px;
+    position: relative;
+
+    &::before {
+      background-color: $color-gray;
+      content: '';
+      display: block;
+      height: 100%;
+      left: 22px;
+      position: absolute;
+      top: 0;
+      width: 4px;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  th,
+  td {
+    @include font-stack-secondary;
+    border: 1px solid $color-gray;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background-color: $color-faint-gray;
+  }
+
+  hr {
+    background: $color-gray;
+    border: 0;
+    box-sizing: content-box;
+    clear: both;
+    height: 1px;
+    margin: 26px 0;
+    overflow: visible;
+  }
+
+  // Lower border treaments.
+  .effectiveness {
+    margin-right: 25px;
+    padding: 2px 0;
+
+    &.good {
+      background-color: $color-effectiveness-good;
+    }
+
+    &.mixed {
+      background-color: $color-effectiveness-mixed;
+    }
+
+    &::after {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      content: '';
+      display: inline-block;
+      height: 16px;
+      margin: 0 -20px -2px 5px;
+      width: 16px;
+    }
+
+    &.good::after {
+      background-image: url($icon-star);
+    }
+
+    &.mixed::after {
+      background-image: url($icon-flag);
+    }
+
+    a {
+      color: darken($color-bright-blue, 15);
+    }
+  }
+}
+
+body.cke_editable {
+  margin: 0;
+  padding: 15px;
+}
+// stylelint-enable selector-no-qualifying-type

@@ -1,0 +1,99 @@
+.nysenate-accordion__title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2b6a90; }
+  @media screen and (min-width: 1024px) {
+    .nysenate-accordion__title {
+      font-size: 16px; } }
+
+.nysenate-accordion__wrapper {
+  max-width: none;
+  position: relative;
+  margin-top: 50px; }
+
+.nysenate-accordion__wrapper-title {
+  color: #444444;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #AAAAAA;
+  margin-bottom: 20px; }
+  @media screen and (min-width: 1024px) {
+    .nysenate-accordion__wrapper-title {
+      font-size: 16px; } }
+
+.nysenate-accordion {
+  transition: background 0.75s;
+  background-color: #eeeeee;
+  border: 0;
+  margin-bottom: 10px;
+  width: 112%;
+  margin-left: -6%; }
+  @media screen and (min-width: 544px) {
+    .nysenate-accordion {
+      width: 100%;
+      margin-left: 0; } }
+  .nysenate-accordion:first-of-type {
+    border: 0; }
+  .nysenate-accordion.open svg {
+    transform: rotate(-180deg); }
+  .nysenate-accordion .field--type-link {
+    margin-top: 20px; }
+    .nysenate-accordion .field--type-link a {
+      color: #2b6a90;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 26px;
+      position: relative;
+      text-decoration: none;
+      margin-top: 21px; }
+      .nysenate-accordion .field--type-link a::after {
+        content: ">";
+        margin-left: 10px; }
+
+.nysenate-accordion__toggle {
+  padding: 22px 16px 22px 30px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  outline: inherit;
+  position: relative;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; }
+  .nysenate-accordion__toggle::after {
+    display: none; }
+  .nysenate-accordion__toggle svg {
+    fill: #2b6a90; }
+
+.nysenate-accordion__heading {
+  color: #2b6a90;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  flex: 75%; }
+  @media screen and (min-width: 768px) {
+    .nysenate-accordion__heading {
+      font-size: 16px; } }
+
+.nysenate-accordion__content {
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  padding: 0 32px;
+  transition: max-height 0.15s, border-bottom 0.15s;
+  color: #666;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 26px;
+  background-color: #FFF; }
+  .open .nysenate-accordion__content {
+    max-height: 9999vh;
+    border-bottom: 1px solid #b0b0b0; }
+    .open .nysenate-accordion__content:last-child {
+      border-bottom: 0; }
+  .nysenate-accordion__content img {
+    position: relative;
+    border: 15px solid #003954; }

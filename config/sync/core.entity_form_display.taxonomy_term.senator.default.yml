@@ -1,0 +1,164 @@
+uuid: c247d35b-6338-480a-928e-aef3b5ad2e65
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.senator.field_active_senator
+    - field.field.taxonomy_term.senator.field_conference
+    - field.field.taxonomy_term.senator.field_current_duties
+    - field.field.taxonomy_term.senator.field_email
+    - field.field.taxonomy_term.senator.field_member_headshot
+    - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_party
+    - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_senator_name
+    - image.style.thumbnail
+    - taxonomy.vocabulary.senator
+  module:
+    - field_group
+    - name
+    - svg_image
+third_party_settings:
+  field_group:
+    group_senator_information:
+      children:
+        - field_senator_name
+        - field_member_headshot
+        - field_party
+        - field_current_duties
+        - field_conference
+        - field_email
+        - field_press_inquiries
+      label: 'Senator Information'
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: senator-info
+        open: true
+        description: ''
+        required_fields: true
+    group_microsite_settings:
+      children:
+        - field_microsite_theme
+      label: 'Microsite Settings'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: senator-microsite-settings
+        open: false
+        description: ''
+        required_fields: true
+id: taxonomy_term.senator.default
+targetEntityType: taxonomy_term
+bundle: senator
+mode: default
+content:
+  field_active_senator:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_conference:
+    type: options_select
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_current_duties:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_email:
+    type: email_default
+    weight: 10
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_member_headshot:
+    type: image_image
+    weight: 6
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_microsite_theme:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_party:
+    type: options_select
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_press_inquiries:
+    type: email_default
+    weight: 11
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_senator_name:
+    type: name_default
+    weight: 5
+    region: content
+    settings:
+      override_field_settings: false
+      labels:
+        title: Title
+        given: Given
+        middle: 'Middle name(s)'
+        family: Family
+        generational: Generational
+        credentials: Credentials
+      widget_layout: stacked
+      show_component_required_marker: false
+      credentials_inline: false
+      size:
+        title: 6
+        given: 20
+        middle: 20
+        family: 20
+        generational: 5
+        credentials: 35
+      title_display:
+        title: description
+        given: description
+        middle: description
+        family: description
+        generational: description
+        credentials: description
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  description: true
+  langcode: true
+  path: true
+  status: true

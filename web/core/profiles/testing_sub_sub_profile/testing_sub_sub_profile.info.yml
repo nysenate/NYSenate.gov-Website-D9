@@ -1,0 +1,11 @@
+name: Testing Sub_Sub_Profile
+type: profile
+description: 'Profile for testing deep profile inheritance.'
+version: VERSION
+hidden: true
+
+base profile: testing_inherited
+
+install:
+  - syslog
+  - grandchild_profile_module

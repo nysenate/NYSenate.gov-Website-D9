@@ -1,0 +1,43 @@
+// Button styling.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.rain-admin-theme {
+
+  .button,
+  .button--primary {
+    @include button;
+    margin-top: 10px;
+  }
+
+  .button--small {
+    padding: 4px 12px;
+  }
+
+  // Submit associated with a file upload form.
+  .form-managed-file .button {
+    margin: 10px;
+  }
+
+  // Overrides specific styling targeting submit
+  // buttons in form-wrappers.
+  .form-wrapper input[type='submit'] {
+    // Exception for X button on media widget.
+    :not(.media-library-item__remove) {
+      margin: 0;
+      padding-bottom: 15px;
+      width: auto;
+    }
+  }
+
+  .form-actions .button + .button {
+    margin-left: 10px;
+  }
+
+  .form-actions .button + .gatsby-preview,
+  .form-actions .button + .gatsby-preview:hover {
+    background-position: 13px 13px;
+    margin-left: 0;
+  }
+}

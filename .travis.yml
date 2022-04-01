@@ -1,0 +1,68 @@
+language: php
+php:
+  # - 5.5
+  - 5.6
+  - "7.0"
+
+sudo: false
+
+env:
+  global:
+    - SIMPLETEST_DB=sqlite://tmp/site.sqlite
+    - SIMPLETEST_BASE_URL="http://127.0.0.1:8080"
+  matrix:
+    # - RELEASE=stable
+    - RELEASE=dev
+
+before_install:
+  # - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - rm /root/.phpenv/versions/5.6/etc/conf.d/xdebug.ini
+  - rm /root/.phpenv/versions/7.0/etc/conf.d/xdebug.ini
+  - composer --verbose self-update
+  - composer --verbose self-update --stable
+  - composer --version
+
+install:
+  - apt-get update
+  - apt-get install phantomjs
+  - npm install -g pa11y
+  - npm install -g forever
+  # - npm install -g slack-cli
+  - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+  - . ~/.nvm/nvm.sh
+  - composer --verbose validate
+  - composer --verbose install
+
+script:
+  - ls -l ./bin
+  - ./bin/behat --version
+  - cd ./web
+  - ../bin/drupal --version
+  - cd ..
+  - ./bin/drush version
+  - ./bin/phpunit --version
+  - composer robo --version
+  - composer robo list
+  - node --version
+  - npm --version
+  - nvm help
+  - phantomjs --version
+  - pa11y --version
+  # - slackcli --help
+  - printf "127.0.0.1 example.mcdev" >> /etc/hosts
+  - composer robo project:init example.mcdev 127.0.0.1
+  - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
+  # Drupal coding standards test on custom modules
+  - ./tests/code-sniffer.sh ./web
+  # - echo "PHPUnit unit tests"
+  # - composer robo test:php-unit-tests
+  - cd ./web
+  - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install standard install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=sqlite://tmp/site.sqlite
+  - ./../bin/drush runserver http://127.0.0.1:8080 &
+  - sleep 3
+  - cd ..
+  # Drupal accessibiity tests
+  - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
+  # Drupal behat tests
+  # - ./../tests/behat/behat-run.sh http://127.0.0.1:8080
+  - cd ./tests/behat/ && ./../../bin/behat --format pretty --out=std -f junit -o ./../../shippable/testresults

@@ -1,0 +1,117 @@
+# Generated on 2020-08-04 using generator-mc-d8-theme 2.3.0
+
+# Drupal's .info.yml files allow themers to easily specify some of the static
+# properties of your theme. Properties such as its name, libraries of style
+# sheets and javascripts, and block regions.
+#
+# Drupal 8 stores a cache of the data in this .info.yml files. If you modify any
+# lines in this file, you MUST refresh Drupal 8's cache. You can do this with
+# the "drush cr" command or by simply visiting the Appearance page at
+# admin/appearance.
+
+name: Nimbus Theme
+type: theme
+description: Minimalist theme based on Rain parent theme.
+package: Other
+core: 8.x
+core_version_requirement: '^8 || ^9'
+base theme: rain_theme
+
+# This section controls the libraries for your theme. For full documentation,
+# see https://www.drupal.org/node/2216195
+
+# The "libraries-override:" section will allow you to:
+# - Replace an entire library.
+# - Remove an entire library.
+# - Replace an asset in a library with another asset.
+# - Remove an asset from a library.
+libraries-override:
+  system/base:
+    css:
+      component:
+        # Replace one file with another.
+        /core/themes/stable/css/system/components/hidden.module.css: dist/css/hidden.css
+
+# The "libraries-extend:" section will allow you to add your own JS or CSS to
+# existing libraries.
+# libraries-extend:
+libraries-extend:
+  rain_theme/accordion:
+    - nimbus_theme/accordion
+  rain_theme/card:
+    - nimbus_theme/card
+  rain_theme/card-list:
+    - nimbus_theme/card-list
+  rain_theme/gallery-carousel:
+    - nimbus_theme/gallery-carousel
+  rain_theme/heading:
+    - nimbus_theme/heading
+  rain_theme/hero:
+    - nimbus_theme/hero
+  rain_theme/l-flex:
+    - nimbus_theme/l-flex
+  rain_theme/main-menu:
+    - nimbus_theme/main-menu
+  rain_theme/map:
+    - nimbus_theme/map
+  rain_theme/messages:
+    - nimbus_theme/messages
+  rain_theme/news-teaser:
+    - nimbus_theme/news-teaser
+  rain_theme/page-title:
+    - nimbus_theme/page-title
+  rain_theme/pager:
+    - nimbus_theme/pager
+  rain_theme/quote:
+    - nimbus_theme/quote
+  rain_theme/search-api-results:
+    - nimbus_theme/search-api-results
+  rain_theme/search-box:
+    - nimbus_theme/search-box
+  rain_theme/site-branding:
+    - nimbus_theme/site-branding
+  rain_theme/site-footer:
+    - nimbus_theme/site-footer
+  rain_theme/site-header:
+    - nimbus_theme/site-header
+  rain_theme/tabs:
+    - nimbus_theme/tabs
+  rain_theme/user-account-nav:
+    - nimbus_theme/user-account-nav
+
+# The "libraries:" section will add a library to _all_ pages.
+libraries:
+  - nimbus_theme/global
+  # Example adding the webfonts library to every page.
+  # See nimbus_theme.libraries.yml for more info.
+  #- nimbus_theme/webfonts
+
+# This section is used by the contrib module, Component Libraries. It allows you
+# to reference .twig files in your sass/ directory by using the Twig namespace:
+# @nimbus_theme
+# See https://www.drupal.org/project/components for more information.
+components:
+  namespaces:
+    nimbus_theme:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates
+
+# This section lists the regions defined in the theme (our base theme) default
+# page.html.twig and maintenance-page.html.twig files. The name before
+# the semi-colon is the machine name of the region. The text after the
+# semi-colon is the region's description used on the admin/structure/block page.
+regions:
+  # The three header regions are stacked vertically.
+  header_top: Header Top
+  header_middle: Header Middle
+  header_bottom: Header Bottom
+  content: Content
+  sidebar_right: Sidebar Right
+  # The three footer regions are stacked horizontally, so that each region can
+  # have multiple blocks; the addendum is displayed afterwards.
+  footer_left: Footer Left
+  footer_middle: Footer Middle
+  footer_right: Footer Right
+  addendum: Addendum

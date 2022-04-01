@@ -1,0 +1,35 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.faq-container{
+  @include max-width;
+}
+
+.accordion__title {
+  color: $color-text-black;
+}
+
+.accordion {
+
+  .field--type-link{
+
+    a{
+      color: $color-text-black;
+    }
+  }
+}
+
+.accordion__toggle {
+
+  svg {
+    fill: $color-bg-black;
+  }
+}
+
+.accordion__heading {
+  color: $color-text-black;
+}
+
+.accordion__content {
+  color: $color-text-black;
+}

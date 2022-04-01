@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Twig template for extending in Drupal node field templates.
+ */
+#}
+{{ attach_library('rain_admin/content-field') }}
+{%
+  set wrapper_classes = [
+    'content-field',
+    'content-field--' ~ field_name|clean_class,
+    wrapper_modifier ? wrapper_modifier,
+  ]
+%}
+{%
+  set title_classes = [
+    label_display == 'visually_hidden' ? 'visually-hidden',
+    'content-field__label',
+    label_modifier ? label_modifier,
+  ]
+%}
+{% if wrapper_hidden is empty %}
+  <div{{ attributes.addClass(wrapper_classes) }}>
+{% endif %}
+  {% block label %}
+    {% if label_hidden is empty %}
+      <{{ label_element|default('h3') }}{{ title_attributes.addClass(title_classes) }}>
+        {{ label }}
+      </{{ label_element|default('h3')}}>
+    {% endif %}
+  {% endblock %}
+  {% block content %}
+    {% for item in items %}
+      {%
+        set field_class = [
+          'content-field__content',
+          field_modifier ? field_modifier,
+          field_type == 'string' or field_type == 'string_long' or field_type == 'text_long' or field_type == 'text_with_summary' ? 'body-content',
+        ]
+      %}
+      <{{ field_element|default('div')}}{{ item.attributes.addClass(field_class) }}>
+        {{ item.content }}
+      </{{ field_element|default('div') }}>
+    {% endfor %}
+  {% endblock %}
+{% if wrapper_hidden is empty %}
+  </div>
+{% endif %}

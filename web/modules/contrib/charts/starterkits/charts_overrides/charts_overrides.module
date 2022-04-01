@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Override the definitions to apply your own override classes.
+ *
+ * @param array $definitions
+ */
+function charts_overrides_charts_override_plugin_info_alter(array &$definitions){
+  $definitions['highcharts_overrides']['class'] = 'Drupal\charts_overrides\Plugin\override\ChartsOverridesHighcharts';
+  $definitions['c3_overrides']['class'] = 'Drupal\charts_overrides\Plugin\override\ChartsOverridesC3';
+  $definitions['google_overrides']['class'] = 'Drupal\charts_overrides\Plugin\override\ChartsOverridesGoogle';
+  $definitions['billboard_overrides']['class'] = 'Drupal\charts_overrides\Plugin\override\ChartsOverridesBillboard';
+  $definitions['chartjs_overrides']['class'] = 'Drupal\charts_overrides\Plugin\override\ChartsOverridesChartjs';
+}

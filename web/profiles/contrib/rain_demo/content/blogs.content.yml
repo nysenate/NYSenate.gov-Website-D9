@@ -1,0 +1,232 @@
+# Generates test content for Blogs.
+---
+# Taxonomy terms for this file.
+- entity: "taxonomy_term"
+  vid: "tags"
+  name: "Tag 1"
+- entity: "taxonomy_term"
+  vid: "tags"
+  name: "Tag 2"
+- entity: "taxonomy_term"
+  vid: "authors"
+  name: "John Smith"
+- entity: "taxonomy_term"
+  vid: "authors"
+  name: "Jane Doe"
+# Nodes for the Blog bundle.
+- entity: "node"
+  type: "blog"
+  title: "How To Connect Innovations to Support the New Retail Experience"
+  status: 1
+  uid: 1
+  nid: 6
+  field_subhead:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_summary:
+    - value: As customers walk into retail stores today some of the first things they notice are interactive kiosks and screens offering convenience and fast new ways to find and pay for items. These electronic displays serve a very useful, customer-specific purpose, but there’s much more to this story than what meets the eye.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Phasellus auctor, turpis at luctus finibus"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "dangle-bulb.jpg"
+          alt: "Blog 1"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Recent data from the U.S. Census Bureau still shows that less than ten percent of all retail transactions happen online. Retailers with traditional brick-and-mortar stores that are committed to connecting the dots between underlying IT infrastructure and customer-facing digital technology have the best opportunity to continue thriving in the digital age. But creating that underlying infrastructure is complicated, often involving dozens of vendors with distinct technologies like networking, security devices, point-of-sale, printers, employee systems, inventory management, and more. And all of this tech must work as one integrated unit to deliver a new and improved store experience. With most of this technology positioned behind the scenes, customers might never fully realize its impact on the trip they just made to buy diapers for their children, refill a prescription, or just grab a late-night snack. Nonetheless, an IT environment that is supported in a comprehensive way can have a positive impact on the future of an entire business. It can lead to more effective and concentrated IT support, more accurate data insights that IT professionals and business executives can use to outperform the competition, and a more loyal customer base.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"
+- entity: "node"
+  type: "blog"
+  title: "Why Your Network No Longer Works"
+  status: 1
+  uid: 1
+  nid: 7
+  field_subhead:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_summary:
+    - value: We're going to tell you why you no longer need VPN. In fact, the longer you stay with your network, the less competitive your business will be.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Erat lectus convallis velit, at sodales"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "macintosh.jpg"
+          alt: "Blog 2"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>By 2020, members of Generation C – connected, communicating, content-centric, computerized and always clicking – will comprise 40% of the population of the U.S., Europe, Brazil, Russia, India and China. They will be the largest single category of consumers in the world. This is what makes the digitization of your business so important. And what makes your current network – assuming you use VPN – so debilitating. VPN technology was created more than 20 years ago. To put that into perspective, it was introduced the same year as the 56k dial-up modem. VPN wasn't designed to handle the 21st century business challenges of big data, cloud computing, mobile workforces and the Internet of Things. A VPN can't deliver the secure, reliable and high-performance connectivity your employees need to collaborate and your customers need to transact business with you. But don't take our word for it. Ask around.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"
+- entity: "node"
+  type: "blog"
+  title: "Introducing a Simple, Fast Way to Import Data"
+  status: 1
+  uid: 1
+  nid: 8
+  field_subhead:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_summary:
+    - value: Want to monitor your data but limited by in-app options? Maybe your data “lives” in an application that doesn’t offer a dashboard view of the metrics, it’s a difficult format to monitor
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Curabitur imperdiet sapien libero"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "paper-pile.jpg"
+          alt: "Blog 3"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Designed for durability and ruggedness, Mass Data Migration portable storage devices have a useable capacity of 120 TB and feature industry-standard AES 256-bit encryption to ensure that data is well protected during transport and ingestion. Each device also uses RAID-6, a premiere standard in redundancy and protection to ensure data integrity. Using a simple process, customers copy their data to the device and ship it back to Global Tech, where the data is offloaded to Global Tech Cloud Object Storage for use across the IBM Cloud platform.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"
+- entity: "node"
+  type: "blog"
+  title: "Curabitur imperdiet sapien libero, fringilla"
+  status: 1
+  uid: 1
+  nid: 9
+  field_subhead:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_summary:
+    - value: Want to monitor your data but limited by in-app options? Maybe your data “lives” in an application that doesn’t offer a dashboard view of the metrics, it’s a difficult format to monitor
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Curabitur imperdiet sapien libero"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "rain-hand.jpg"
+          alt: "Blog 3"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Designed for durability and ruggedness, Mass Data Migration portable storage devices have a useable capacity of 120 TB and feature industry-standard AES 256-bit encryption to ensure that data is well protected during transport and ingestion. Each device also uses RAID-6, a premiere standard in redundancy and protection to ensure data integrity. Using a simple process, customers copy their data to the device and ship it back to Global Tech, where the data is offloaded to Global Tech Cloud Object Storage for use across the IBM Cloud platform.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"

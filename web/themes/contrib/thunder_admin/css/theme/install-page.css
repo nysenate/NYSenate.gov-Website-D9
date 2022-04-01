@@ -1,0 +1,54 @@
+.install-page{
+  min-height:100%;
+  background-color:#1275b2;
+  background-image:url(../../images/noise-low.png), radial-gradient(#1788cf, #106193);
+  background-repeat:repeat;
+  background-position:left top, 50% 50%;
+}
+
+[dir="rtl"] .install-page{
+  background-position:right top, 50% 50%;
+}
+.install-page .password-parent,
+.install-page .confirm-parent{
+  width:auto;
+}
+
+.install-page .form-item .password-suggestions{
+  float:none;
+  width:auto;
+}
+
+.install-page table td{
+  word-break:break-all;
+}
+
+.install-page .site-version{
+  vertical-align:super;
+  color:#595959;
+  font-size:0.5em;
+}
+
+@media all and (max-width: 1010px) and (min-width: 48em){
+  .install-page .password-strength,
+  .install-page .confirm-parent{
+    width:100%;
+  }
+  .install-configure-form .form-type-password{
+    width:100%;
+  }
+  .password-confirm,
+  .password-field{
+    float:none;
+  }
+  .password-confirm-match{
+    float:none;
+    width:auto;
+    max-width:100%;
+  }
+}
+
+.install-page{
+  background:url(../../images/thunder-city.jpg) no-repeat center center fixed;
+  background-size:cover;
+}

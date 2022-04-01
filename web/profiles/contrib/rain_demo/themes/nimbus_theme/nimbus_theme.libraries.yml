@@ -1,0 +1,213 @@
+# These lines define the nimbus_theme/global library.
+global:
+  css:
+    # The SMACSS category, "base", is loaded before other categories. Drupal 8
+    # loads stylesheets based on the SMACSS ordering of:
+    # base, layout, component, state, theme
+    base:
+      dist/css/global.css: {}
+
+# Example external library.
+# webfonts:
+#   version: 1.x
+#   js:
+#     https://fast.fonts.net/example.js: { type: external, attributes: { async: true }}
+
+# Attach each library by using attach_library() within the components twig template.
+# More info: https://www.drupal.org/node/2456753
+
+# Example component library.
+# site-logo:
+#   css:
+#     component:
+#       dist/css/site-logo.css: {}
+#   # If this library had JavaScript you could specify it like this:
+#   js:
+#     js/script.js: {}
+#   # If this library had dependencies on other libraries, you could specify it like this:
+#   dependencies:
+#     - nimbus_theme/clearfix
+#     - nimbus_theme/visually-hidden
+accordion:
+  css:
+    component:
+      dist/css/accordion.css: {}
+
+article-card:
+  css:
+    component:
+      dist/css/article-card.css: {}
+  js:
+    dist/js/article-card.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+author:
+  css:
+    component:
+      dist/css/author.css: {}
+
+blog-card:
+  css:
+    component:
+      dist/css/blog-card.css: {}
+  js:
+    dist/js/blog-card.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+button:
+  css:
+    component:
+      dist/css/button.css: {}
+
+card:
+  css:
+    component:
+      dist/css/card.css: {}
+
+card-list:
+  css:
+    component:
+      dist/css/card-list.css: {}
+  js:
+    dist/js/card-list.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+event-card:
+  css:
+    component:
+      dist/css/event-card.css: {}
+  js:
+    dist/js/event-card.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+eyebrow:
+  css:
+    component:
+      dist/css/eyebrow.css: {}
+
+gallery-carousel:
+  css:
+    component:
+      dist/css/gallery-carousel.css: {}
+  js:
+    dist/js/gallery-carousel.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+heading:
+  css:
+    component:
+      dist/css/heading.css: {}
+
+hero:
+  css:
+    component:
+      dist/css/hero.css: {}
+
+l-flex:
+  css:
+    component:
+      dist/css/l-flex.css: {}
+
+main-menu:
+  css:
+    component:
+      dist/css/main-menu.css: {}
+  js:
+    dist/js/main-menu.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+
+map:
+  css:
+    component:
+      dist/css/map.css: {}
+
+media:
+  css:
+    component:
+      dist/css/media.css: {}
+
+messages:
+  css:
+    component:
+      dist/css/messages.css: {}
+
+news-teaser:
+  css:
+    component:
+      dist/css/news-teaser.css: {}
+
+page-title:
+  css:
+    component:
+      dist/css/page-title.css: {}
+
+pager:
+  css:
+    component:
+      dist/css/pager.css: {}
+
+product-card:
+  css:
+    component:
+      dist/css/product-card.css: {}
+  js:
+    dist/js/product-card.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+quote:
+  css:
+    component:
+      dist/css/quote.css: {}
+
+related-products:
+  css:
+    component:
+      dist/css/related-products.css: {}
+
+search-api-results:
+  css:
+    component:
+      dist/css/search-api-results.css: {}
+
+search-box:
+  css:
+    component:
+      dist/css/search-box.css: {}
+
+site-branding:
+  css:
+    component:
+      dist/css/site-branding.css: {}
+
+site-footer:
+  css:
+    component:
+      dist/css/site-footer.css: {}
+
+site-header:
+  css:
+    component:
+      dist/css/site-header.css: {}
+
+tabs:
+  css:
+    theme:
+      dist/css/tabs.css: {}
+
+tags:
+  css:
+    theme:
+      dist/css/tags.css: {}
+
+user-account-nav:
+  css:
+    theme:
+      dist/css/user-account-nav.css: {}

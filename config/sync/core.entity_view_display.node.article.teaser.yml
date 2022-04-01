@@ -1,0 +1,74 @@
+uuid: 2a993eab-04fe-4b68-a0fc-2b621a31834a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.article.body
+    - field.field.node.article.field_accessible_sitewide
+    - field.field.node.article.field_article_author
+    - field.field.node.article.field_attachment
+    - field.field.node.article.field_bills
+    - field.field.node.article.field_category
+    - field.field.node.article.field_committee
+    - field.field.node.article.field_committee_featured
+    - field.field.node.article.field_date
+    - field.field.node.article.field_featured
+    - field.field.node.article.field_image_hero
+    - field.field.node.article.field_image_main
+    - field.field.node.article.field_issues
+    - field.field.node.article.field_majority_issue_tag
+    - field.field.node.article.field_paragraphs
+    - field.field.node.article.field_publication_date
+    - field.field.node.article.field_publication_source_link
+    - field.field.node.article.field_publication_title
+    - field.field.node.article.field_senator_multiref
+    - field.field.node.article.field_social_image
+    - field.field.node.article.field_social_teaser
+    - field.field.node.article.field_subtitle
+    - node.type.article
+  module:
+    - text
+    - user
+id: node.article.teaser
+targetEntityType: node
+bundle: article
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_accessible_sitewide: true
+  field_article_author: true
+  field_attachment: true
+  field_bills: true
+  field_category: true
+  field_committee: true
+  field_committee_featured: true
+  field_date: true
+  field_featured: true
+  field_image_hero: true
+  field_image_main: true
+  field_issues: true
+  field_majority_issue_tag: true
+  field_paragraphs: true
+  field_publication_date: true
+  field_publication_source_link: true
+  field_publication_title: true
+  field_senator_multiref: true
+  field_social_image: true
+  field_social_teaser: true
+  field_subtitle: true
+  langcode: true
+  search_api_excerpt: true

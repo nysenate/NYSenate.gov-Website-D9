@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * This is the module to make simple status messages.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function status_messages_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.status_messages':
+      $output = '';
+      $output .= '<h3>' . t('Status Messages') . '</h3>';
+      $output .= '<p>' . t('Status Messages which floats to the top right of the page as a pop-up message
+            and has a close button.It has configuration until how much time we want to display the message For eg 
+            [5 seconds, 10 seconds, etc].After selected time status message will be faded out and will hide from 
+            the display.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function status_messages_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'status_messages/status-messages';
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function status_messages_theme_registry_alter(&$theme_registry) {
+  $theme_registry['status_messages']['path'] = drupal_get_path('module', 'status_messages') . '/templates/misc';
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+function status_messages_preprocess(&$variables) {
+  $config = \Drupal::config('status_messages.status_messages');
+  $variables['time'] = $config->get('time');
+  $variables['#attached']['drupalSettings']['statusMessages'] = $variables['time'];
+}

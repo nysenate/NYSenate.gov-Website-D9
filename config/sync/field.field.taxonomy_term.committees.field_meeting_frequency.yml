@@ -1,0 +1,19 @@
+uuid: db83ca6d-141f-4d2e-a0e2-8bec5280e39a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_meeting_frequency
+    - taxonomy.vocabulary.committees
+id: taxonomy_term.committees.field_meeting_frequency
+field_name: field_meeting_frequency
+entity_type: taxonomy_term
+bundle: committees
+label: 'Meeting Frequency'
+description: '(e.g. "Bi-weekly during legislative session") '
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

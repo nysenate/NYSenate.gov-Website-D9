@@ -1,0 +1,35 @@
+// Styling specific to advanced sidebar tray
+// (right rail of node add/edit form).
+
+@import '../../global/utils/init';
+
+// stylelint-disable declaration-no-important, selector-no-qualifying-type
+.rain-admin-theme {
+
+  .js &.advanced-sidebar-tray {
+    margin-right: 0;
+
+    @include breakpoint($bp-lg) {
+      margin-right: 380px;
+    }
+  }
+
+  .js &.advanced-sidebar-tray-toggled {
+
+    @include breakpoint($bp-lg) {
+      margin-right: 0;
+    }
+  }
+
+  .js &.advanced-sidebar-tray .toolbar-tray-horizontal {
+    margin-right: 0;
+  }
+
+  .content-form__main {
+
+    // Hide this button in the form so it only displays in the sidebar.
+    .content-form__advanced-actions-cta {
+      display: none;
+    }
+  }
+}

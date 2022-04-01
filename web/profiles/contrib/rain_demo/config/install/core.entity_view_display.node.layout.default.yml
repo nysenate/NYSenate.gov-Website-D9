@@ -1,0 +1,94 @@
+uuid: 4b829b56-35d0-492a-be33-d84c4ff2e0d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.layout.field_meta_tags
+    - field.field.node.layout.field_short_title
+    - field.field.node.layout.field_summary
+    - field.field.node.layout.field_thumbnail
+    - field.field.node.layout.layout_builder__layout
+    - node.type.layout
+  content:
+    - 'block_content:hero:20adb562-cefc-40b2-80bc-75797db2dec0'
+  module:
+    - block_content
+    - layout_builder
+    - layout_builder_restrictions
+    - layout_discovery
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: true
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          340951ac-f63f-4c99-b7bc-ae1694d13759:
+            uuid: 340951ac-f63f-4c99-b7bc-ae1694d13759
+            region: content
+            configuration:
+              id: 'block_content:20adb562-cefc-40b2-80bc-75797db2dec0'
+              label: 'Hero: Rain'
+              provider: block_content
+              label_display: ''
+              status: true
+              info: ''
+              view_mode: full
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories:
+      - 'Chaos Tools'
+      - 'Content fields'
+      - 'Custom block types'
+      - 'Custom blocks'
+      - Forms
+      - Geolocation
+      - Help
+      - 'Inline blocks'
+      - 'Lists (Views)'
+      - Menus
+      - System
+      - User
+      - Webform
+      - core
+    entity_view_mode_restriction:
+      whitelisted_blocks:
+        'Chaos Tools': {  }
+        'Content fields': {  }
+        Forms: {  }
+        Geolocation: {  }
+        Help: {  }
+        'Lists (Views)': {  }
+        Menus: {  }
+        System: {  }
+        User: {  }
+        Webform: {  }
+        core: {  }
+      blacklisted_blocks: {  }
+      allowed_layouts:
+        - layout_onecol
+        - layout_twocol_section
+        - layout_threecol_section
+_core:
+  default_config_hash: Uk2tc6KLG_oS9d_g1J0D2SQSSvjecomyNVBiqz-6l-A
+id: node.layout.default
+targetEntityType: node
+bundle: layout
+mode: default
+content: {  }
+hidden:
+  field_meta_tags: true
+  field_short_title: true
+  field_summary: true
+  field_thumbnail: true
+  langcode: true
+  layout_builder__layout: true
+  links: true
+  search_api_excerpt: true

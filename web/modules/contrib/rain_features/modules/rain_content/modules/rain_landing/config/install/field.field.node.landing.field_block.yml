@@ -1,0 +1,60 @@
+uuid: 52ac7793-8809-443d-a9bf-64878e12ceaf
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.accordion
+    - block_content.type.breaker
+    - block_content.type.card
+    - block_content.type.card_list
+    - block_content.type.embed
+    - block_content.type.form
+    - block_content.type.gallery
+    - block_content.type.gallery_carousel
+    - block_content.type.hero
+    - block_content.type.map
+    - block_content.type.media
+    - block_content.type.quote
+    - block_content.type.slider
+    - block_content.type.text
+    - block_content.type.views
+    - field.storage.node.field_block
+    - node.type.landing
+  module:
+    - entity_reference_revisions
+id: node.landing.field_block
+field_name: field_block
+entity_type: node
+bundle: landing
+label: Blocks
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:block_content'
+  handler_settings:
+    target_bundles:
+      accordion: accordion
+      breaker: breaker
+      card: card
+      card_list: card_list
+      embed: embed
+      form: form
+      gallery: gallery
+      gallery_carousel: gallery_carousel
+      hero: hero
+      views: views
+      map: map
+      media: media
+      quote: quote
+      quote_carousel: quote_carousel
+      slider: slider
+      text: text
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: slider
+field_type: entity_reference_revisions

@@ -1,0 +1,60 @@
+<?php
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\WidgetInterface;
+
+/**
+ * Implements hook_field_widget_third_party_settings_form().
+ */
+function rain_admin_field_label_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, $form, FormStateInterface $form_state) {
+  $element['hide_field_input_label'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Hide field input label'),
+    '#default_value' => $plugin->getThirdPartySetting('rain_admin_field_label', 'hide_field_input_label'),
+  ];
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function rain_admin_field_label_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  $widget = $context['widget'];
+  if ($widget->getThirdPartySetting('rain_admin_field_label', 'hide_field_input_label')) {
+    // For most single value fields, it is enough to hide the title display
+    // of the top level element.
+    if (isset($element['#title_display'])) {
+      $element['#title_display'] = 'invisible';
+    }
+
+    foreach (Element::children($element) as $key) {
+      if (isset($element[$key]['#title_display'])) {
+        $element[$key]['#title_display'] = 'invisible';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_multivalue_form_alter().
+ */
+function rain_admin_field_label_field_widget_multivalue_form_alter(array &$elements, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
+  $widget = $context['widget'];
+  if ($widget->getThirdPartySetting('rain_admin_field_label', 'hide_field_input_label')) {
+    $elements['#hide_field_input_label'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_field_multiple_value_form().
+ */
+function rain_admin_field_label_preprocess_field_multiple_value_form(&$variables) {
+  if ($variables['multiple']) {
+    if (isset($variables['element']['#hide_field_input_label'])) {
+      $variables['label']['#attributes'] = ['class' => 'visually-hidden'];
+    }
+  }
+}

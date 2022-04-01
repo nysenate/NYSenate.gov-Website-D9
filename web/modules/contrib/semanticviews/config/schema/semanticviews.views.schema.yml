@@ -1,0 +1,69 @@
+# Schema for the views plugins of the Semantic Views module.
+
+views.style.semanticviews_style:
+  type: views_style
+  label: 'Semantic Views Style'
+  mapping:
+    group:
+      type: mapping
+      label: 'Group'
+      mapping:
+        element_type:
+          type: string
+          label: 'Element type'
+        attributes:
+          type: string
+          label: 'Attributes'
+    list:
+      type: mapping
+      label: 'List'
+      mapping:
+        element_type:
+          type: string
+          label: 'Element type'
+        attributes:
+          type: string
+          label: 'Attributes'
+    row:
+      type: mapping
+      label: 'Row'
+      mapping:
+        element_type:
+          type: string
+          label: 'Element type'
+        attributes:
+          type: string
+          label: 'Attributes'
+        last_every_nth:
+          type: string
+          label: 'Last every nth'
+        first_class:
+          type: string
+          label: 'First class'
+        last_class:
+          type: string
+          label: 'Last class'
+        striping_classes:
+          type: string
+          label: 'Striping classes'
+
+views.row.semanticviews_row:
+  type: views_row
+  label: 'Field options'
+  mapping:
+    skip_blank:
+      type: integer
+      label: 'Skip blank'
+    semantic_html:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: mapping
+        label: 'Field options'
+        mapping:
+          element_type:
+            type: string
+            label: 'Element type'
+          attributes:
+            type: string
+            label: 'Attributes'

@@ -1,0 +1,4 @@
+services:
+  charts.api_example:
+    class: Drupal\charts_api_example\Controller\ChartsApiExample
+    arguments: ['@charts.settings', '@messenger', '@uuid']

@@ -1,0 +1,17 @@
+// Styling for Page Title.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.page-title {
+  padding: 30px 1.5rem 0;
+  @include max-width;
+
+  .heading {
+    font-family: 'Muli-Black', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0;
+    color: $color-text-black;
+    font-size: 3rem;
+  }
+}

@@ -1,0 +1,20 @@
+{{ attach_library('rain_theme/quote') }}
+{% import '@nimbus_theme/icons/_icons-macro.twig' as icons %}
+
+<blockquote class="quote {{ quote.modifier_class }}">
+  <cite class="quote__cite{{ quote.image ? ' has-media' : ''}}">
+  {% if quote.image %}
+    <div class="quote__cite-media">
+      {{ quote.image }}
+    </div>
+  {% endif %}
+    <div class="quote__cite-text">
+      {{ icons.get('icon__left-quote') }}
+      <p class="quote__text">{{ quote.quote }}</p>
+      <p class="quote__cite-name">{{ quote.name }}</p>
+      {% if quote.job %}
+        <p class="quote__cite-job">{{ quote.job }}</p>
+      {% endif %}
+    </div>
+  </cite>
+</blockquote>

@@ -1,0 +1,71 @@
+moderation_sidebar.sidebar:
+  path: '/moderation-sidebar/{entity_type}/{entity}'
+  defaults:
+    _controller: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::sideBar'
+    _title_callback: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::title'
+  requirements:
+    _permission: 'use moderation sidebar'
+    _entity_access: 'entity.view'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+
+moderation_sidebar.sidebar_latest:
+  path: '/moderation-sidebar/{entity_type}/{entity}/latest'
+  defaults:
+    _controller: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::sidebar'
+    _title_callback: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::title'
+  requirements:
+    _permission: 'use moderation sidebar'
+    _entity_access: 'entity.view'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+        load_latest_revision: TRUE
+
+moderation_sidebar.node.version_history:
+  path: '/moderation_sidebar/node/{node}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _controller: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::revisionOverview'
+  requirements:
+    _permission: 'use moderation sidebar'
+    _access_node_revision: 'view'
+    node: \d+
+
+moderation_sidebar.translate:
+  path: '/moderation_sidebar/{entity_type}/{entity}/translate'
+  defaults:
+    _title: 'Translate'
+    _controller: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::translateOverview'
+  requirements:
+    _permission: 'use moderation sidebar'
+    _entity_access: 'entity.view'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+
+moderation_sidebar.translate_latest:
+  path: '/moderation_sidebar/{entity_type}/{entity}/translate/latest'
+  defaults:
+    _title: 'Translate'
+    _controller: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::translateOverview'
+  requirements:
+    _permission: 'use moderation sidebar'
+    _entity_access: 'entity.view'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+        load_latest_revision: TRUE
+
+moderation_sidebar.settings:
+  path: '/admin/config/user-interface/moderation-sidebar'
+  defaults:
+    _form: '\Drupal\moderation_sidebar\Form\ModerationSidebarSettingsForm'
+    _title: 'Moderation Sidebar'
+  requirements:
+    _permission: 'administer moderation sidebar'

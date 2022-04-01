@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Module that defines testable security checks for Security Review.
+ */
+
+use Drupal\security_review_test\Test;
+use Drupal\security_review_test\TestNoStore;
+
+/**
+ * Implements hook_security_review_checks().
+ */
+function security_review_test_security_review_checks() {
+  return [
+    new Test(),
+    new TestNoStore(),
+  ];
+}

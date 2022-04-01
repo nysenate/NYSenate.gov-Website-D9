@@ -1,0 +1,16 @@
+/**
+ * @file
+ * Import and override entity-meta.css provided by seven/global-styling.
+ */
+@import 'variables';
+
+/* stylelint-disable string-no-newline */
+@import '@theme-seven/css/components/entity-meta.css remove {
+  .seven-details__summary > .summary{ color }
+}';
+/* stylelint-enable string-no-newline */
+
+.entity-meta__title {
+  text-shadow: 0 1px 0 #fff;
+  margin: 0.25em 0;
+}

@@ -1,0 +1,97 @@
+.messages{
+  margin:9px 0 10px 8px;
+}
+
+[dir="rtl"] .messages{
+  margin:9px 8px 10px 0;
+}
+
+.messages pre{
+  margin:0;
+}
+
+.messages h1,
+.messages .heading-a,
+.messages h2,
+.messages .heading-b,
+.messages h3,
+.messages .heading-c,
+.messages h4,
+.messages .heading-d,
+.messages h5,
+.messages .heading-e,
+.messages h6,
+.messages .heading-f{
+  margin-top:0;
+}
+.messages{
+  background:no-repeat 10px 10px;
+  border:1px solid;
+  border-width:1px 1px 1px 0;
+  padding:8px 20px 8px 35px;
+  word-wrap:break-word;
+  overflow-wrap:break-word;
+}
+
+[dir="rtl"] .messages{
+  border-width:1px 0 1px 1px;
+  background-position:right 10px top 17px;
+  padding-left:20px;
+  padding-right:35px;
+  text-align:right;
+}
+
+.messages + .messages{
+  margin-top:1.538em;
+}
+
+.messages__list{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.messages__item + .messages__item{
+  margin-top:0.769em;
+}
+.messages--status{
+  color:#325e1c;
+  background-color:#f3faef;
+  border-color:#c9e1bd #c9e1bd #c9e1bd transparent;
+  background-image:url(../../images/stable/images/core/icons/73b355/check.svg);
+  box-shadow:-5px 0 0 #77b259;
+}
+
+[dir="rtl"] .messages--status{
+  border-color:#c9e1bd transparent #c9e1bd #c9e1bd;
+  box-shadow:5px 0 0 #77b259;
+  margin-left:0;
+}
+.messages--warning{
+  background-color:#fdf8ed;
+  background-image:url(../../images/stable/images/core/icons/e29700/warning.svg);
+  border-color:#f4daa6 #f4daa6 #f4daa6 transparent;
+  color:#734c00;
+  box-shadow:-5px 0 0 #e09600;
+}
+
+[dir="rtl"] .messages--warning{
+  border-color:#f4daa6 transparent #f4daa6 #f4daa6;
+  box-shadow:5px 0 0 #e09600;
+}
+.messages--error{
+  background-color:#fcf4f2;
+  color:#a51b00;
+  background-image:url(../../images/stable/images/core/icons/e32700/error.svg);
+  border-color:#f9c9bf #f9c9bf #f9c9bf transparent;
+  box-shadow:-5px 0 0 #e62600;
+}
+
+[dir="rtl"] .messages--error{
+  border-color:#f9c9bf transparent #f9c9bf #f9c9bf;
+  box-shadow:5px 0 0 #e62600;
+}
+
+.messages--error p.error{
+  color:#a51b00;
+}

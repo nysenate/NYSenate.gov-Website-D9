@@ -1,0 +1,51 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.search-api-page-block-form-search-results {
+  width: 100%;
+  display: none;
+  justify-content: center;
+
+  @include breakpoint($bp-sm) {
+    justify-content: flex-end;
+  }
+
+  &.active {
+    display: flex;
+  }
+
+  .container {
+    max-width: 100%;
+    margin: 0;
+    padding: 10px 0;
+    background-color: $color-bg-black;
+
+    form {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .form-type-search {
+      margin: 0;
+
+      label {
+        display: none;
+      }
+
+      input[type='search'] {
+        width: 100%;
+        max-width: 320px;
+        padding: 8px;
+        border: 0;
+      }
+    }
+  }
+
+  .search__submit {
+    border: 0;
+    height: 34px;
+    width: 34px;
+  }
+}

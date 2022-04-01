@@ -1,0 +1,33 @@
+{#
+  This file is intended to only provide an
+  example presentation of l-2x.
+  The l-2x__items may not be needed in basic implementations.
+#}
+<div class="l-2x">
+  <div class="l-container">
+    {% for item in items %}
+      <div class="l-2x__item">
+        {%
+          include '@rain_theme/event-teaser/event-teaser.twig' with {
+            title: item.title,
+            summary: item.summary,
+            link: item.url,
+            image: item.thumbnail,
+            start_date: {
+              day: item.start_date.day,
+              month: item.start_date.month,
+              year: item.start_date.year,
+              time: item.start_date.time,
+            },
+            end_date: {
+              day: item.end_date.day,
+              month: item.end_date.month,
+              year: item.end_date.year,
+              time: item.end_date.time,
+            }
+          } only
+        %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

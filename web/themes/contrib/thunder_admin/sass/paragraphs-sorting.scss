@@ -1,0 +1,84 @@
+/**
+ * @file
+ * Additional styles for  paragraphs/drupal.paragraphs.widget, added using libraries-extend.
+ */
+@import 'variables';
+
+.field-multiple-table {
+
+  > tbody > tr {
+    border-bottom: 0;
+  }
+
+  &.tabledrag-checkbox-active {
+    & > tbody > tr.draggable > .field-multiple-drag .tabledrag-handle {
+      display: none;
+    }
+  }
+  & > thead > tr.tabledrag-toggle-checkbox-wrapper {
+    padding-left: 0;
+    th {
+      padding-left: 0;
+    }
+  }
+
+  & > tbody > tr.tabledrag-sort-spacer {
+    background: transparent;
+    border-bottom: 0;
+    height: 30px;
+  }
+
+  & > tbody > tr.tabledrag-sort-target-wrapper {
+    background: transparent;
+    border-bottom: 0;
+    height: 22px;
+
+    & > td.tabledrag-sort-target-column {
+      text-align: center;
+      padding: 0;
+      line-height: 1;
+      a.tabledrag-sort-target {
+        display: flex;
+        align-items: center;
+
+        span {
+          height: 30px;
+        }
+
+        .tabledrag-sort-target-left,
+        .tabledrag-sort-target-right {
+          flex: 1;
+          height: 2px;
+          background-repeat-x: repeat;
+          background-repeat-y: no-repeat;
+          background-position-y: center;
+        }
+        .tabledrag-sort-target-left {
+          background: transparent url('../images/icons/line-dashed-right.svg');
+          background-position-x: right;
+        }
+        .tabledrag-sort-target-right {
+          background: transparent url('../images/icons/line-dashed-left.svg');
+          background-position-x: left;
+        }
+        .tabledrag-sort-target-middle {
+          width: 22px;
+          margin: 0 4px;
+          background: transparent url('../images/icons/paste.svg') center no-repeat;
+        }
+
+        &:hover {
+          .tabledrag-sort-target-left {
+            background-image: url('../images/icons/line-dashed-right-color.svg');
+          }
+          .tabledrag-sort-target-right {
+            background-image: url('../images/icons/line-dashed-left-color.svg');
+          }
+          .tabledrag-sort-target-middle {
+            background-image: url('../images/icons/paste-color.svg');
+          }
+        }
+      }
+    }
+  }
+}

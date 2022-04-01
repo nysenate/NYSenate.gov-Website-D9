@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Install methods for rain_demo profile.
+ */
+
+/**
+ * Implements hook_install_tasks().
+ */
+function rain_demo_install_tasks(&$install_state) {
+  $tasks = [
+    'rain_demo_install_content' => [
+      'display_name' => t('Install default content'),
+      'type' => 'normal',
+    ],
+  ];
+
+  return $tasks;
+}
+
+/**
+ * Callback function to install default profile content.
+ *
+ * @see rain_demo_install_tasks()
+ */
+function rain_demo_install_content() {
+  // Load all of the demo content.
+  $loader = \Drupal::service('yaml_content.load_helper');
+  $loader->importProfile('rain_demo');
+}

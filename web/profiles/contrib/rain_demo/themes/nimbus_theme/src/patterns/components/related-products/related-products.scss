@@ -1,0 +1,68 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.view-related-products {
+  padding: 0 1.5rem;
+
+  .news-teaser {
+    display: flex;
+    margin-bottom: 30px;
+  
+    @include breakpoint($bp-under-sm) {
+      flex-direction: column;
+    }
+  }
+
+  .news-teaser__title {
+    font-family: 'Muli-Black', sans-serif;
+    font-weight: 900;
+
+    a {
+      color: $color-text-black;
+    }
+  }
+  
+  .news-teaser__image {
+    flex-basis: 33%;
+  
+    img {
+      width: 100%;
+    }
+  }
+  
+  .news-teaser__content {
+    flex: 1;
+    margin-top: 30px;
+  
+    @include breakpoint($bp-sm) {
+      margin: 0 30px;
+    }
+  }
+  
+  .news-teaser__date {
+    margin-bottom: 15px;
+    display: none;
+  }
+  
+  .news-teaser__summary {
+    font-family: 'Muli-Regular', sans-serif;
+    color: $color-text-black;
+    margin-bottom: 15px;
+  }
+  
+  .news-teaser__link {
+    display: inline-block;
+    font-family: 'Muli-Black', sans-serif;
+    font-weight: 900;
+    color: $color-link-black;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border: solid $color-link-black 1px;
+    border-radius: 30px;
+  
+    svg {
+      margin-left: 5px;
+      fill: $color-link-black;
+    }
+  }
+}

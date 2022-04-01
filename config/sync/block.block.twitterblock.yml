@@ -1,0 +1,41 @@
+uuid: 7dc4e9e2-47f0-49af-869f-5994bf40897c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - twitter_block
+  theme:
+    - nysenate_theme
+id: twitterblock
+theme: nysenate_theme
+region: content
+weight: 0
+provider: null
+plugin: twitter_block
+settings:
+  id: twitter_block
+  label: 'Twitter block'
+  label_display: visible
+  provider: twitter_block
+  username: NYSenate
+  theme: ''
+  link_color: ''
+  width: ''
+  height: ''
+  chrome:
+    noheader: '0'
+    nofooter: '0'
+    noborders: '0'
+    noscrollbar: '0'
+    transparent: '0'
+  border_color: ''
+  language: ''
+  tweet_limit: '4'
+  related: ''
+  polite: polite
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

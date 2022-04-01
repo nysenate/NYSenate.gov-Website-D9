@@ -1,0 +1,46 @@
+.message {
+  background: no-repeat 10px 17px;
+  border: 3px solid;
+  margin: 20px 0;
+  padding: 15px 20px 15px 35px;
+  word-wrap: break-word;
+  overflow-wrap: break-word; }
+
+.message + .message {
+  margin-top: 0; }
+
+.message__heading {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px); }
+
+.messages__list {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+
+.message--error .messages__item {
+  font-weight: bold; }
+
+.messages__item + .messages__item {
+  margin-top: 12px; }
+
+.message--status {
+  color: #325e1c;
+  background-color: #f3faef;
+  border-color: #77b259;
+  background-image: url("../images/check.svg"); }
+
+.message--warning {
+  background-color: #fdf8ed;
+  background-image: url("../images/warning.svg");
+  border-color: #e09600;
+  color: #734c00; }
+
+.message--error {
+  background-color: #ffddde;
+  color: #a23433;
+  background-image: url("../images/error.svg");
+  border-color: #a23433; }

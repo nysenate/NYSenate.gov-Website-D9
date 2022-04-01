@@ -1,0 +1,23 @@
+uuid: 81c3b274-90b7-42dc-8f77-2c26f7147fc6
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - nimbus_theme
+id: sitebranding
+theme: nimbus_theme
+region: header_top
+weight: -6
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: false
+visibility: {  }

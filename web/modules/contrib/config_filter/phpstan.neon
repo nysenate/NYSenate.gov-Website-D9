@@ -1,0 +1,15 @@
+parameters:
+  level: 1
+  customRulesetUsed: true
+  reportUnmatchedIgnoredErrors: false
+  ignoreErrors:
+    # One day we might get rid of this drupal pattern
+    - '#Unsafe usage of new static\(\)\.#'
+  paths:
+    - src
+#    - tests
+  excludes_analyse:
+    - src/Tests/*
+includes:
+  - vendor/mglaman/phpstan-drupal/extension.neon
+  - vendor/phpstan/phpstan-deprecation-rules/rules.neon

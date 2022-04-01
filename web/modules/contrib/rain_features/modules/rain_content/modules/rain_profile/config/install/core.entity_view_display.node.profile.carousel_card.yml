@@ -1,0 +1,61 @@
+uuid: dfcc013a-9224-4db9-b13a-2588a7ab4017
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.carousel_card
+    - field.field.node.profile.body
+    - field.field.node.profile.field_meta_tags
+    - field.field.node.profile.field_profile_media
+    - field.field.node.profile.field_short_title
+    - field.field.node.profile.field_summary
+    - field.field.node.profile.field_thumbnail
+    - node.type.profile
+  module:
+    - user
+_core:
+  default_config_hash: LH1W71vGlejzbxIezK9Ck9FDPKv52wD8UObjyNH_hvM
+id: node.profile.carousel_card
+targetEntityType: node
+bundle: profile
+mode: carousel_card
+content:
+  field_profile_media:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_short_title:
+    type: string
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_summary:
+    type: basic_string
+    weight: 3
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 4
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_meta_tags: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

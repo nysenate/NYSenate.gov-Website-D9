@@ -1,0 +1,17 @@
+# Add a basic article page with simple values.
+- entity: "node"
+  type: "article"
+  title: "Basic Article"
+  status: 1
+  # Rich text fields contain multiple keys that must be provided.
+  body:
+    # The format may be the machine name of any configured text filter.
+    - format: "full_html"
+      # Using a pipe we can define content across multiple lines.
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vobis
+        voluptatum perceptarum recordatio vitam beatam facit, et quidem corpore
+        perceptarum. Tum Quintus: Est plane, Piso, ut dicis, inquit.</p>
+        <p>Primum cur ista res digna odio est, nisi quod est turpis? Duo Reges:
+        constructio interrete. Rhetorice igitur, inquam, nos mavis quam
+        dialectice disputare?</p>

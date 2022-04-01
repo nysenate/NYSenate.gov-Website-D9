@@ -1,0 +1,5 @@
+services:
+  twig_field_value.twig.extension:
+    class: Drupal\twig_field_value\Twig\Extension\FieldValueExtension
+    tags:
+      - { name: twig.extension }

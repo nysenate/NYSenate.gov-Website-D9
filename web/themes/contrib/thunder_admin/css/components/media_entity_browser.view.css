@@ -1,0 +1,181 @@
+.view-media-entity-browser{
+  margin-bottom:10px;
+}
+
+.view-media-entity-browser .view-filters .form--inline{
+  display:flex;
+}
+
+.view-media-entity-browser .view-filters .form--inline .form-item-status{
+  min-width:100px;
+}
+
+.view-media-entity-browser .view-filters .form--inline .form-item-name{
+  flex-grow:1;
+}
+
+.view-media-entity-browser .view-filters .form--inline .form-item-name #edit-name{
+  width:100%;
+}
+
+.view-media-entity-browser .view-filters .form--inline #edit-actions{
+  padding-top:16px;
+}
+
+.view-media-entity-browser .views-row{
+}
+
+.view-media-entity-browser .views-row .views-field-name{
+  display:none;
+}
+
+.view-media-entity-browser .views-row:hover .views-field-name{
+  display:block;
+}
+
+.view-media-entity-browser .views-row:after{
+  content:" ";
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  position:absolute;
+  background:transparent url("/core/misc/icons/73b355/check.svg") no-repeat center center;
+  background-size:0;
+  transition:all 0.2s;
+}
+
+.view-media-entity-browser .views-row.checked:after{
+  background-size:80px 80px;
+}
+
+.view-media-entity-browser .views-row.checked img{
+  border:2px solid #37802f;
+}
+
+.view-media-entity-browser .views-row img::-moz-selection{
+  background:transparent;
+}
+
+.view-media-entity-browser .views-row img::selection{
+  background:transparent;
+}
+
+.view-media-entity-browser .views-row .views-field-entity-browser-select{
+  position:absolute !important;
+  height:1px;
+  width:1px;
+  overflow:hidden;
+  clip:rect(1px, 1px, 1px, 1px);
+}
+
+.view-media-entity-browser:after,
+.entity-browser-form .entities-list:after{
+  content:"";
+  display:table;
+  clear:both;
+}
+.entity-browser-form .entities-list .item-container,
+.view-media-entity-browser .views-row{
+  position:relative;
+  width:99%;
+  display:block;
+  text-align:center;
+  margin:0.5%;
+  float:left;
+}
+
+@media screen and (min-width: 37.5em) and (max-width: 49.99em){
+  .entity-browser-form .entities-list .item-container,
+  .view-media-entity-browser .views-row{
+    width:32.66667%;
+  }
+  .entity-browser-form .entities-list .item-container:first-child, .entity-browser-form .entities-list .item-container:nth-child(3n+1),
+  .view-media-entity-browser .views-row:first-child,
+  .view-media-entity-browser .views-row:nth-child(3n+1){
+    margin-left:0;
+  }
+  .entity-browser-form .entities-list .item-container:nth-child(3n),
+  .view-media-entity-browser .views-row:nth-child(3n){
+    margin-right:0;
+  }
+}
+
+@media screen and (min-width: 50em){
+  .entity-browser-form .entities-list .item-container,
+  .view-media-entity-browser .views-row{
+    width:15.83333%;
+  }
+  .entity-browser-form .entities-list .item-container:first-child, .entity-browser-form .entities-list .item-container:nth-child(6n+1),
+  .view-media-entity-browser .views-row:first-child,
+  .view-media-entity-browser .views-row:nth-child(6n+1){
+    margin-left:0;
+  }
+  .entity-browser-form .entities-list .item-container:nth-child(6n),
+  .view-media-entity-browser .views-row:nth-child(6n){
+    margin-right:0;
+  }
+}
+@media screen and (max-width: 37.49em){
+  .entity-browser-form .entities-list .item-container{
+    width:49.5%;
+  }
+  .entity-browser-form .entities-list .item-container:first-child, .entity-browser-form .entities-list .item-container:nth-child(2n+1){
+    margin-left:0;
+  }
+  .entity-browser-form .entities-list .item-container:nth-child(2n){
+    margin-right:0;
+  }
+}
+.view-media-entity-browser .views-row img,
+.entity-browser-form .entities-list article.view-mode-thumbnail img{
+  border:2px solid #75caee;
+  width:100%;
+  height:auto;
+  box-sizing:border-box;
+}
+.entity-browser-form .entities-list{
+  margin-bottom:10px;
+  clear:left;
+  padding-top:10px;
+  border-top:2px solid #b8b8b8;
+}
+.media-info{
+  box-sizing:border-box;
+  display:block;
+  position:absolute;
+  z-index:1;
+  width:calc(100% - 4px);
+  bottom:5px;
+  background-color:rgba(0, 0, 0, 0.8);
+  padding:5px 10px;
+  color:white;
+  text-align:left;
+  margin-bottom:2px;
+  margin-left:2px;
+  word-wrap:break-word;
+}
+
+.media-info span{
+  text-indent:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  display:inline-block;
+  vertical-align:middle;
+  height:18px;
+  width:18px;
+  background-size:16px 16px;
+  margin-right:4px;
+}
+.media-info--video,
+.media-info--Video{
+  background:transparent url("../../images/video.svg") no-repeat;
+}
+.media-info--image,
+.media-info--Image{
+  background:transparent url("../../images/image.svg") no-repeat;
+}
+.media-info--twitter,
+.media-info--Twitter{
+  background:transparent url("../../images/twitter.svg") no-repeat;
+}

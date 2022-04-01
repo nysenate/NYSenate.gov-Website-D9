@@ -1,0 +1,60 @@
+fonticonpicker:
+  version: &fonticonpicker_version '3.1.1'
+  license: &fonticonpicker_license
+    name: MIT
+    url: https://github.com/fontIconPicker/fontIconPicker/blob/master/LICENSE
+    gpl-compatible: true
+  remote: https://github.com/fontIconPicker/fontIconPicker/releases/download/v3.1.1/fontIconPicker.zip
+  css:
+    base:
+      /libraries/fonticonpicker--fonticonpicker/dist/css/base/jquery.fonticonpicker.min.css: { minified: true }
+  js:
+    /libraries/fonticonpicker--fonticonpicker/dist/js/jquery.fonticonpicker.min.js: { minified: true, attributes: { defer: true } }
+  dependencies:
+    - core/jquery
+    - fontawesome_iconpicker_widget/fonticonpicker.theme.grey
+
+fonticonpicker.theme.grey:
+  version: *fonticonpicker_version
+  license: *fonticonpicker_license
+  css:
+    theme:
+       /libraries/fonticonpicker--fonticonpicker/dist/css/themes/grey-theme/jquery.fonticonpicker.grey.min.css: { minified: true }
+
+fonticonpicker.theme.bootstrap:
+  version: *fonticonpicker_version
+  license: *fonticonpicker_license
+  css:
+    theme:
+      /libraries/fonticonpicker--fonticonpicker/dist/css/themes/bootstrap-theme/jquery.fonticonpicker.bootstrap.min.css: { minified: true }
+  dependencies:
+    - fontawesome_iconpicker_widget/fonticonpicker
+
+fonticonpicker.theme.dark_grey:
+  version: *fonticonpicker_version
+  license: *fonticonpicker_license
+  css:
+    theme:
+      /libraries/fonticonpicker--fonticonpicker/dist/css/themes/dark-grey-theme/jquery.fonticonpicker.darkgrey.min.css: { minified: true }
+  dependencies:
+    - fontawesome_iconpicker_widget/fonticonpicker
+
+fonticonpicker.theme.inverted:
+  version: *fonticonpicker_version
+  license: *fonticonpicker_license
+  css:
+    theme:
+      /libraries/fonticonpicker--fonticonpicker/dist/css/themes/inverted-theme/jquery.fonticonpicker.inverted.min.css: { minified: true }
+  dependencies:
+    - fontawesome_iconpicker_widget/fonticonpicker
+
+fontawesome-iconpicker:
+  version: VERSION
+  js:
+    js/fontawesome-iconpicker.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - fontawesome_iconpicker_widget/fonticonpicker

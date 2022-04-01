@@ -1,0 +1,23 @@
+{
+    "name": "pantheon-systems/drupal-integrations",
+    "description": "Add this project to any Drupal distribution based on drupal/core-composer-scaffold to enable it for use on Pantheon.",
+    "type": "project",
+    "license": "MIT",
+    "conflict": {
+        "drupal/core": "<9"
+    },
+    "extra": {
+        "drupal-scaffold": {
+            "file-mapping": {
+                "[project-root]/.drush-lock-update": "assets/drush-lock-update",
+                "[web-root]/sites/default/default.services.pantheon.preproduction.yml": "assets/default.services.pantheon.preproduction.yml",
+                "[web-root]/sites/default/settings.pantheon.php": "assets/settings.pantheon.php",
+                "[web-root]/sites/default/settings.php": {
+                    "mode": "replace",
+                    "path": "assets/initial.settings.php",
+                    "overwrite": false
+                }
+            }
+        }
+    }
+}

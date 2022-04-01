@@ -1,0 +1,36 @@
+// Flex Layout
+
+@import '../../global/utils/init';
+
+.l-flex {
+
+  .l-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+
+      // On mobile, all items, except last child, get a margin-bottom.
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+
+        @include breakpoint($bp-sm) {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .l-container-header {
+    justify-content: space-between;
+    flex-direction: column;
+
+    @include breakpoint($bp-sm) {
+      flex-direction: row;
+    }
+
+    > * {
+      flex: none;
+    }
+  }
+}

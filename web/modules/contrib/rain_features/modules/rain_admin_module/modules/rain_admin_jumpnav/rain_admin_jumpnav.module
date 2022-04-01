@@ -1,0 +1,58 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function rain_admin_jumpnav_entity_extra_field_info() {
+  $extra = [];
+
+  if (\Drupal::service('module_handler')->moduleExists('node')) {
+    $node_types = \Drupal::entityTypeManager()
+      ->getStorage('node_type')
+      ->loadMultiple();
+
+    foreach ($node_types as $node_type) {
+      $extra['node'][$node_type->id()]['form']['field_group_jumpnav'] = [
+        'label' => t('Field Group Jumpnav'),
+        'description' => t('A jumpnav for jumping between field groups.'),
+        'weight' => 50,
+        'visible' => TRUE,
+      ];
+    }
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function rain_admin_jumpnav_theme() {
+  return [
+    'jumpnav' => [
+      'variables' => [
+        'items' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function rain_admin_jumpnav_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  $storage = $form_state->getStorage();
+  $display = $storage['form_display'];
+  $mode = $display->getOriginalMode();
+  $jumpnav_component = $display->getComponent('field_group_jumpnav');
+
+  if ($jumpnav_component) {
+    $form['jumpnav'] = [
+      '#type' => 'jumpnav',
+      '#form_display' => $display,
+      '#weight' => 999,
+    ];
+  }
+}

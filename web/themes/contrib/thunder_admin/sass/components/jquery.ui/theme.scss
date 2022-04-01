@@ -1,0 +1,45 @@
+/**
+ * @file
+ * Import and override jquery.ui/theme.css provided by seven/global-styling.
+ */
+@import 'variables';
+@import '@theme-seven/css/components/jquery.ui/theme.css';
+
+.ui-icon {
+  background-image: url(../../../images/ui-icons-222222-256x240.png);
+}
+
+.ui-widget-content .ui-icon,
+.ui-widget-header .ui-icon {
+  background-image: url(../../../images/ui-icons-222222-256x240.png);
+}
+
+.ui-state-default .ui-icon {
+  background-image: url(../../../images/ui-icons-888888-256x240.png);
+}
+
+.ui-state-hover .ui-icon,
+.ui-state-focus .ui-icon,
+.ui-state-highlight .ui-icon {
+  background-image: url(../../../images/ui-icons-454545-256x240.png);
+}
+
+.ui-state-active .ui-icon {
+  background-image: url(../../../images/ui-icons-800000-256x240.png);
+}
+
+.ui-state-error .ui-icon,
+.ui-state-error-text .ui-icon {
+  background-image: url(../../../images/ui-icons-ffffff-256x240.png);
+}
+
+.ui-progressbar .ui-progressbar-value {
+  // seven still uses this
+  background: #0072b9 url(../../../../../misc/progress.gif); /* @todo: this file does not exist in core (any more?), seven still references it, needs replacement */
+}
+
+// Styles for jquery.ui were removed in #2113911, add basic tooltip styles for compatibility #2937349.
+.ui-tooltip {
+  border: 1px solid $gray-light;
+  background: $gray-lightest;
+}

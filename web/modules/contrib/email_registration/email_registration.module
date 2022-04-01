@@ -1,0 +1,217 @@
+<?php
+
+/**
+ * @file
+ * Allows users to register with an email address as their username.
+ */
+
+use Drupal\user\UserInterface;
+use Drupal\Core\Render\Element\Email;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ *
+ * Alter the user name (after entity being stored).
+ */
+function email_registration_user_insert(UserInterface $account) {
+  // Don't create a new username if one is already set.
+  $name = $account->getAccountName();
+  if (!empty($name) && strpos($name, 'email_registration_') !== 0) {
+    return;
+  }
+
+  // Other modules may implement hook_email_registration_name($edit, $account)
+  // to generate a username (return a string to be used as the username, NULL
+  // to have email_registration generate it).
+  $names = Drupal::moduleHandler()->invokeAll('email_registration_name', [$account]);
+  // Remove any empty entries.
+  $names = array_filter($names);
+
+  if (empty($names)) {
+    // Strip off everything after the @ sign.
+    $new_name = preg_replace('/@.*$/', '', $account->getEmail());
+    // Clean up the username.
+    $new_name = email_registration_cleanup_username($new_name);
+  }
+  else {
+    // One would expect a single implementation of the hook, but if there
+    // are multiples out there use the last one.
+    $new_name = array_pop($names);
+  }
+
+  // Ensure whatever name we have is unique.
+  $new_name = email_registration_unique_username($new_name, (int) $account->id());
+
+  $account->setUsername($new_name);
+  if ($account->isValidationRequired() && !$account->validate()) {
+    \Drupal::logger('email_registration')->error('Email registration failed setting the new name on user @id.', ['@id' => $account->id()]);
+    return;
+  }
+  $account->save();
+}
+
+/**
+ * Makes the username unique.
+ *
+ * Given a starting point for a Drupal username (e.g. the name portion of an
+ * email address) return a legal, unique Drupal username. This function is
+ * designed to work on the results of the /user/register or /admin/people/create
+ * forms which have already called user_validate_name, valid_email_address
+ * or a similar function. If your custom code is creating users, you should
+ * ensure that the email/name is already validated using something like that.
+ *
+ * @param string $name
+ *   A name from which to base the final user name.
+ *   May contain illegal characters; these will be stripped.
+ * @param int $uid
+ *   (optional) Uid to ignore when searching for unique user
+ *   (e.g. if we update the username after the {users} row is inserted).
+ *
+ * @return string
+ *   A unique user name based on $name.
+ *
+ * @see user_validate_name()
+ */
+function email_registration_unique_username($name, $uid = 0) {
+  // Iterate until we find a unique name.
+  $i = 0;
+  $database = \Drupal::database();
+  do {
+    $new_name = empty($i) ? $name : $name . '_' . $i;
+    $found = $database->queryRange("SELECT uid from {users_field_data} WHERE uid <> :uid AND name = :name", 0, 1, [':uid' => $uid, ':name' => $new_name])->fetchAssoc();
+    $i++;
+  } while (!empty($found));
+
+  return $new_name;
+}
+
+/**
+ * Cleans up username.
+ *
+ * Run username sanitation, e.g.:
+ *     Replace two or more spaces with a single underscore
+ *     Strip illegal characters.
+ *
+ * @param string $name
+ *   The username to be cleaned up.
+ *
+ * @return string
+ *   Cleaned up username.
+ */
+function email_registration_cleanup_username($name) {
+  // Strip illegal characters.
+  $name = preg_replace('/[^\x{80}-\x{F7} a-zA-Z0-9@_.\'-]/', '', $name);
+
+  // Strip leading and trailing spaces.
+  $name = trim($name);
+
+  // Convert any other series of spaces to a single underscore.
+  $name = preg_replace('/\s+/', '_', $name);
+
+  // If there's nothing left use a default.
+  $name = ('' === $name) ? t('user') : $name;
+
+  // Truncate to a reasonable size.
+  $name = (mb_strlen($name) > (UserInterface::USERNAME_MAX_LENGTH - 10)) ? mb_substr($name, 0, UserInterface::USERNAME_MAX_LENGTH - 11) : $name;
+  return $name;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function email_registration_form_user_form_alter(&$form, FormStateInterface $form_state) {
+  $account = \Drupal::currentUser();
+  // Allow users to edit their own username or admins to do it if appropriate.
+  if (!$account->hasPermission('change own username') &&
+    !$account->hasPermission('administer users')) {
+    $form['account']['name']['#type'] = 'value';
+  }
+
+  // Provide a random user name only if we are creating a new user, i.e. this
+  // is a registration.
+  /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
+  $form_object = $form_state->getFormObject();
+  if ($form_object->getEntity()->isNew()) {
+    $form['account']['name']['#value'] = 'email_registration_' . user_password();
+  }
+  $form['account']['mail']['#title'] = t('Email');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function email_registration_form_user_pass_alter(&$form, FormStateInterface $form_state) {
+  $form['name']['#title'] = t('Email');
+  // Only convert textfields to email fields. This field is a hidden value when
+  // you are already logged in.
+  if ($form['name']['#type'] === 'textfield') {
+    // Allow client side validation of input format.
+    $form['name']['#type'] = 'email';
+    $form['name']['#maxlength'] = Email::EMAIL_MAX_LENGTH;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function email_registration_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('email_registration.settings');
+  $login_with_username = $config->get('login_with_username');
+  $form['name']['#title'] = $login_with_username ? t('Email or username') : t('Email');
+  $form['name']['#description'] = $login_with_username ? t('Enter your email address or username.') : t('Enter your email address.');
+  $form['name']['#element_validate'][] = 'email_registration_user_login_validate';
+  $form['pass']['#description'] = t('Enter the password that accompanies your email address.');
+  // Allow client side validation of input format.
+  $form['name']['#type'] = $login_with_username ? 'textfield' : 'email';
+  $form['name']['#maxlength'] = Email::EMAIL_MAX_LENGTH;
+  // Make sure the login form cache is invalidated when the setting changes.
+  $form['#cache']['tags'][] = 'config:email_registration.settings';
+}
+
+/**
+ * Form element validation handler for the user login form.
+ *
+ * Allows users to authenticate by email, which is our preferred method.
+ */
+function email_registration_user_login_validate($form, FormStateInterface $form_state) {
+  $mail = $form_state->getValue('name');
+  if (!empty($mail)) {
+    $config = \Drupal::config('email_registration.settings');
+    if ($user = user_load_by_mail($mail)) {
+      $form_state->setValue('name', $user->getAccountName());
+    }
+    elseif (!$config->get('login_with_username')) {
+      $user_input = $form_state->getUserInput();
+      $query = isset($user_input['name']) ? ['name' => $user_input['name']] : [];
+      $form_state->setErrorByName('name', t('Unrecognized email address or password. <a href=":password">Forgot your password?</a>', [
+        ':password' => Url::fromRoute('user.pass', [], ['query' => $query])->toString(),
+      ]));
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function email_registration_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('email_registration.settings');
+  $form['registration_cancellation']['login_with_username'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Allow log in with email address or username.'),
+    '#description' => t('Allow users to log in with either their email address or their username.'),
+    '#default_value' => $config->get('login_with_username'),
+  ];
+  $form['#submit'][] = 'email_registration_form_user_admin_settings_submit';
+}
+
+/**
+ * Submit function for user_admin_settings to save our variable.
+ *
+ * @see email_registration_form_user_admin_settings_alter()
+ */
+function email_registration_form_user_admin_settings_submit(array &$form, FormStateInterface $form_state) {
+  $config = \Drupal::configFactory()->getEditable('email_registration.settings');
+  $config->set('login_with_username', $form_state->getValue('login_with_username'))->save();
+}

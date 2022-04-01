@@ -1,0 +1,9 @@
+services:
+  fontawesome.commands:
+    class: \Drupal\fontawesome\Commands\FontawesomeCommands
+    arguments:
+      - '@library.discovery'
+      - '@file_system'
+      - '@plugin.manager.archiver'
+    tags:
+      - { name: drush.command }

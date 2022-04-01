@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * This module provides install, uninstall, and update functions.
+ */
+
+use Drupal\oembed_providers\Entity\ProviderBucket;
+
+/**
+ * Convert 1.x.x allowed providers into "video" bucket.
+ */
+function oembed_providers_update_8201() {
+  $config = \Drupal::service('config.factory')->getEditable('oembed_providers.settings');
+  $providers = $config->get('allowed_providers');
+  $config->clear('allowed_providers');
+  $config->save();
+
+  ProviderBucket::create([
+    'id' => 'video',
+    'label' => 'Remote Video',
+    'providers' => $providers,
+  ])->save();
+
+  return t('Global "Allowed Providers" were migrated to a newly created "Remote Video (video)" provider bucket.');
+}
+
+/**
+ * Install oEmbed provider bucket entity type.
+ */
+function oembed_providers_update_8202() {
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+
+  $entity_type = \Drupal::entityTypeManager()->getDefinition('oembed_provider_bucket');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}

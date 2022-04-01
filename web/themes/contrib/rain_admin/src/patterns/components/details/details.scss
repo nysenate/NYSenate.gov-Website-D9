@@ -1,0 +1,77 @@
+// Styling for details element 
+// and related child elements.
+
+@import '../../global/utils/init';
+
+// stylelint-disable declaration-no-important
+.rain-admin-theme {
+  
+  details {
+    background-color: transparent;
+    border: 1px solid $color-blue-gray;
+    border-radius: 4px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+
+    > summary {
+      align-items: center;
+      color: $color-black;
+      cursor: pointer;
+      display: flex;
+      font-size: 1rem;
+      line-height: 1;
+      list-style: none;
+      padding: 0;
+      position: relative;
+      text-transform: none;
+      top: 0;
+      width: 100%;
+    }
+
+    > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    > summary::before {
+      background-image: url('../images/icon-details-arrow.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      content: '';
+      display: inline-flex;
+      height: 7px;
+      margin-right: 10px;
+      position: relative;
+      transform: rotate(-90deg);
+      transition: transform $motion-fast;
+      width: 12px;
+    }
+
+    // Targeting the required form element asterisk.
+    > summary::after {
+      align-self: flex-start;
+    }
+  }
+
+  details > summary:focus,
+  details > summary:hover,
+  details[open] > summary {
+    color: $color-black;
+  }
+  
+  details[open] > summary::before {
+    transform: rotate(0);
+  }
+
+  details > .details-wrapper {
+    padding-top: 20px;
+  }
+  
+  .details-description {
+    color: $color-mid-gray;
+    font-size: 0.875rem;
+    margin: 10px 0;
+  }
+}
+// stylelint-enable declaration-no-important

@@ -1,0 +1,30 @@
+simple_sitemap_engines.simple_sitemap_engine.*:
+  type: config_entity
+  label: 'Search engine'
+  mapping:
+    id:
+      type: string
+      label: 'Search engine ID'
+    label:
+      type: label
+      label: 'Label'
+    url:
+      type: string
+      label: 'Submission URL'
+    sitemap_variants:
+      type: sequence
+      label: 'Sitemap variants'
+      sequence:
+        type: string
+        label: 'Sitemap variant'
+
+simple_sitemap_engines.settings:
+  type: config_object
+  label: 'Sitemap search engine submission settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Sitemap submission enabled'
+    submission_interval:
+      type: integer
+      label: 'Sitemap submission frequency'

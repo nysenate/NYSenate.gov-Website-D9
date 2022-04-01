@@ -1,0 +1,41 @@
+uuid: 537b4306-fa97-4935-a62f-c0c09116348f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.media
+    - field.field.block_content.media.field_media
+    - field.field.block_content.media.field_title
+  module:
+    - media_library
+_core:
+  default_config_hash: C3sn26pwUo0ndVT_8rNGTSZ9YAvGfShM0Y0pVImmvGg
+id: block_content.media.default
+targetEntityType: block_content
+bundle: media
+mode: default
+content:
+  field_media:
+    weight: 1
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    type: media_library_widget
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden:
+  info: true

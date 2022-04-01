@@ -1,0 +1,61 @@
+uuid: e596c227-122c-426c-bf8d-c41fdfd227e0
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.quote
+    - field.field.block_content.quote.field_author
+    - field.field.block_content.quote.field_job_title
+    - field.field.block_content.quote.field_quote
+    - field.field.block_content.quote.field_thumb
+    - image.style.thumbnail
+  module:
+    - svg_image
+_core:
+  default_config_hash: MdM9eqv8jY-wmVq2bbVQZx1dwy_4nAhdVqHYM2zqy0o
+id: block_content.quote.default
+targetEntityType: block_content
+bundle: quote
+mode: default
+content:
+  field_author:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_job_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_quote:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_thumb:
+    weight: 2
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  langcode:
+    type: language_select
+    weight: 4
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden:
+  info: true

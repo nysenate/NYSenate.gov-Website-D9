@@ -1,0 +1,93 @@
+// Styling taxonomy term form display.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.rain-admin-theme {
+
+  .taxonomy-term-form {
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+      width: 100%;
+    }
+  }
+
+  // Interventions vocabulary.
+  .taxonomy-term-interventions-form {
+
+    .field--type-entity-reference {
+      
+      @include breakpoint($bp-md) {
+        width: calc(50% - 20px);
+      }
+
+      .fieldgroup legend {
+        font-size: 1rem;
+      }
+      
+      .fieldgroup .fieldset-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+
+        > * {
+          order: 1;
+          width: 100%;
+        }
+
+        .description {
+          font-size: 0.875rem;
+          font-style: $font-italic;
+          margin: 6px 0;
+          order: 0;
+        }
+
+        .form-checkboxes {
+          background-color: $color-offwhite;
+          padding: 10px 10px 0;
+
+          @include breakpoint($bp-md) {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+          }
+        }
+
+        .form-checkboxes .form-type-checkbox {
+          @include custom-checkbox($color-dark-violet, $color-dark-magenta);
+
+          label {
+            padding: 10px;
+          }
+
+          input[type='checkbox']:checked + label {
+            background-color: rgba($color-status-mixed, 0.15);
+            color: $color-dark-magenta;
+          }
+
+          @include breakpoint($bp-md) {
+            width: calc(50% - 5px);
+          }
+        }
+
+        .form-type-checkbox {
+          background-color: $color-white;
+          margin: 0 0 10px;
+          padding: 5px;
+
+          label {
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    .field--type-entity-reference + .field--type-entity-reference {
+      
+      @include breakpoint($bp-md) {
+        margin-left: 20px;
+      }
+    }
+  }
+}

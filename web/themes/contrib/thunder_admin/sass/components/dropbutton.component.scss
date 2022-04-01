@@ -1,0 +1,199 @@
+/**
+ * @file
+ * Presentational styles for the dropbutton component.
+ *
+ * Import and override dropbutton.component.css provided by seven/global-styling.
+ */
+@import 'variables';
+
+@import '@theme-seven/css/components/dropbutton.component.css';
+
+@mixin rtl-sass-border-radius($top, $left, $bottom, $right) {
+  border-radius: $top $left $bottom $right;
+
+  [dir="rtl"] & {
+    border-radius: $left $top $right $bottom;
+  }
+}
+/* stylelint-disable no-descending-specificity */
+
+/**
+ * @todo: Try to normalize hover, focus, active background styles and use mixin.
+ */
+/**
+ * Reset styling for all elements.
+ */
+.js .dropbutton .dropbutton-action > input,
+.js .dropbutton .dropbutton-action > a,
+.js .dropbutton .dropbutton-action > button {
+  color: $primary-color;
+}
+
+.js .dropbutton-action.last {
+  @include rtl-sass-border-radius(0, 0, 0, $base-border-radius);
+}
+
+/**
+ * Copied styling for .button.
+ */
+.js .dropbutton-multiple .dropbutton-widget {
+  border: 1px solid $primary-color-intense;
+  border-radius: $base-border-radius;
+  background-color: $gray-lightest;
+  background-image: linear-gradient(0deg, $primary-color-lightest 0%, $gray-lightest 100%);
+  text-shadow: none;
+}
+
+.dropbutton-multiple.open .dropbutton-widget {
+  border-radius: $base-border-radius;
+}
+
+.js .dropbutton-widget .dropbutton-action a,
+.js .dropbutton-widget .dropbutton-action input,
+.js .dropbutton-widget .dropbutton-action button {
+  @include rtl-sass-border-radius($base-border-radius, 0, 0, $base-border-radius);
+}
+
+.js .dropbutton-multiple.open .dropbutton-action:first-child a,
+.js .dropbutton-multiple.open .dropbutton-action:first-child .button {
+  @include rtl-sass-border-radius($base-border-radius, 0, 0, 0); /* LTR */
+}
+
+.js .dropbutton-multiple.open .dropbutton-action:last-child a,
+.js .dropbutton-multiple.open .dropbutton-action:last-child .button {
+  @include rtl-sass-border-radius(0, 0, 0, $base-border-radius);
+}
+
+.js .dropbutton-wrapper .dropbutton-widget .dropbutton-action {
+  a,
+  button,
+  input {
+    &:hover,
+    &:focus {
+      background-image: linear-gradient(180deg, $primary-color-lightest 0%, $gray-lightest 100%);
+      color: $primary-color;
+      box-shadow: none;
+    }
+    &:active {
+      background-color: $gray-lighter;
+      background-image: linear-gradient(180deg, $primary-color-lightest 0%, $gray-lightest 100%);
+      box-shadow: none;
+    }
+  }
+}
+
+.dropbutton-single .dropbutton-action {
+  a {
+    border-radius: $base-border-radius !important;
+    background-color: $gray-lightest;
+    background-image: linear-gradient(0deg, $primary-color-lightest 0%, $gray-lightest 100%);
+    color: $primary-color;
+    text-shadow: none;
+
+    &:hover,
+    &:focus {
+      background-color: $gray-lighter;
+      background-image: linear-gradient(180deg, $primary-color-lightest 0%, $gray-lightest 100%);
+      color: $primary-color;
+    }
+    &:active {
+      background-color: $gray-lighter;
+      background-image: linear-gradient(180deg, $primary-color-lightest 0%, $gray-lightest 100%);
+      box-shadow: none;
+    }
+  }
+}
+
+/**
+ * The dropdown trigger.
+ */
+.js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button,
+.dropbutton-multiple.open .dropbutton-widget .dropbutton-toggle button {
+  @include rtl-sass-border-radius(0, $base-border-radius, $base-border-radius, 0);
+}
+
+.js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button {
+  &:hover,
+  &:focus {
+    background-color: $gray-lighter;
+    background-image: linear-gradient(180deg, $primary-color-lightest 0%, $gray-lightest 100%);
+    box-shadow: none;
+    color: $primary-color;
+  }
+
+  &:active {
+    background-color: $gray-lighter;
+    background-image: linear-gradient(180deg, $primary-color-lightest 0%, $gray-lightest 100%);
+    box-shadow: none;
+  }
+}
+
+.dropbutton-arrow {
+  border-top-color: $primary-color;
+}
+
+.dropbutton-multiple.open .dropbutton-arrow {
+  border-bottom: 0.3333em solid $primary-color;
+}
+
+/**
+ * Form edit action theming.
+ * Copied styling from .button--primary.
+ */
+.js .form-actions .dropbutton .dropbutton-action > * {
+  text-shadow: none;
+}
+
+.js .form-actions .dropbutton-widget {
+  border-color: $primary-color-intense;
+  background-color: $primary-color;
+  background-image: linear-gradient(180deg, $primary-color-intense 0%, $primary-color 100%);
+  text-shadow: none;
+}
+
+.form-actions .dropbutton-multiple.open .dropbutton-widget {
+  background-image: linear-gradient(180deg, $primary-color-intense 0%, $primary-color 100%);
+}
+
+.js .form-actions .dropbutton-wrapper .dropbutton-widget {
+  .dropbutton-action .button {
+
+    &:hover,
+    &:focus {
+      background-color: $primary-color-intense;
+      background-image: linear-gradient(0deg, $primary-color-intense 0%, $primary-color 100%);
+      box-shadow: none;
+    }
+
+    &:active {
+      background-image: linear-gradient(0deg, $primary-color-intense 0%, $primary-color 100%);
+      box-shadow: none;
+    }
+  }
+
+  .dropbutton-toggle button {
+    border-color: $primary-color-intense;
+    background-image: linear-gradient(180deg, $primary-color-intense 0%, $primary-color 100%);
+
+    &:hover,
+    &:focus {
+      background-color: $primary-color-intense;
+      background-image: linear-gradient(0deg, $primary-color-intense 0%, $primary-color 100%);
+    }
+
+    &:active {
+      background-image: linear-gradient(0deg, $primary-color-intense 0%, $primary-color 100%);
+      border-color: $primary-color;
+      box-shadow: none;
+    }
+  }
+}
+
+.form-actions .dropbutton .secondary-action {
+  border-color: $primary-color-intense;
+}
+
+// Fix spacing after removing spaces in container.html.twig.
+.form-actions .dropbutton-wrapper {
+  margin-right: 0.875rem;
+}

@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Requirements page for Font Awesome Iconpicker.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function fontawesome_iconpicker_widget_requirements($phase) {
+  $requirements = [];
+
+  // Report the status of Font Awesome Iconpicker.
+  if ($phase == 'runtime') {
+    $requirements['fontawesome_iconpicker'] = [
+      'title' => t('Font Awesome IconPicker'),
+    ];
+
+    if (fontawesome_iconpicker_widget_check_installed()) {
+      $requirements['fontawesome_iconpicker']['severity'] = REQUIREMENT_OK;
+      $requirements['fontawesome_iconpicker']['value'] = t('The fontIconPicker library is installed.');
+    }
+    else {
+      $requirements['fontawesome_iconpicker']['severity'] = REQUIREMENT_ERROR;
+      $requirements['fontawesome_iconpicker']['value'] = t('Not installed');
+      $requirements['fontawesome_iconpicker']['description'] = t('The fontIconPicker library could not be found. To use the Font Awesome Iconpicker, please verify that the fontIconPicker library is installed correctly. Please see the Font Awesome Iconpicker submodule README file for more details.');
+    }
+  }
+
+  return $requirements;
+}

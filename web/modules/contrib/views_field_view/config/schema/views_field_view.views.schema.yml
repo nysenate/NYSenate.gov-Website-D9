@@ -1,0 +1,15 @@
+# Schema for the views plugins of the views field view module.
+
+views.field.view:
+  type: views_field
+  label: 'View'
+  mapping:
+    view:
+      type: string
+      label: 'View to embed'
+    display:
+      type: string
+      label: 'Display of the view'
+    arguments:
+      type: string
+      label: 'Contextual filters of the view'

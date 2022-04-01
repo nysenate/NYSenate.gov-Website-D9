@@ -1,0 +1,36 @@
+.quote-carousel__navigation {
+  margin-left: auto;
+  width: 200px; }
+  .quote-carousel__navigation .slick-prev,
+  .quote-carousel__navigation .slick-next {
+    height: 50px;
+    width: 50px;
+    z-index: 1;
+    display: inline;
+    position: relative; }
+    .quote-carousel__navigation .slick-prev::before,
+    .quote-carousel__navigation .slick-next::before {
+      color: #003954;
+      font-size: 48px; }
+  .quote-carousel__navigation .slick-prev {
+    left: auto; }
+  .quote-carousel__navigation .slick-next {
+    right: auto; }
+  .quote-carousel__navigation .slick-track {
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+  .quote-carousel__navigation .slick-pager .slick-prev::before,
+  .quote-carousel__navigation .slick-pager .slick-next::before {
+    border-radius: 50%;
+    border: 5px solid #cccae3;
+    width: 70px;
+    height: 70px;
+    display: block;
+    font-family: 'Raleway', sans-serif; }
+  .quote-carousel__navigation .slick-pager .slick-prev {
+    left: -30px; }
+    .quote-carousel__navigation .slick-pager .slick-prev::before {
+      content: '\003C'; }
+  .quote-carousel__navigation .slick-pager .slick-next::before {
+    content: '\003E'; }

@@ -1,0 +1,427 @@
+// Styling specific to content-form wrapper,
+// which is the selector for node edit forms.
+
+@import '../../global/utils/init';
+
+// stylelint-disable declaration-no-important, selector-no-qualifying-type
+.rain-admin-theme {
+
+  .content-form__main {
+
+    > details[open] {
+      background-color: $color-faint-blue;
+      border-color: $color-bright-blue;
+      border-width: 2px;
+    }
+
+    details > summary {
+      color: $color-bright-blue;
+      font-size: 1rem;
+      font-weight: $font-weight-normal;
+      letter-spacing: normal;
+      padding: 0 20px;
+      text-transform: none;
+    }
+
+    details > summary:focus,
+    details > summary:hover,
+    details[open] > summary {
+      color: $color-bright-blue;
+    }
+
+    details > summary::before {
+      background-image: url('../images/icon-details-arrow--blue.svg');
+      left: -20px;
+      margin-right: 0;
+    }
+
+    .details-wrapper {
+      padding-left: 20px;
+      padding-right: 20px;
+
+      @include breakpoint($bp-md) {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      details > summary {
+        font-size: 1rem;
+      }
+
+      > fieldset {
+        background-color: $color-white;
+      }
+    }
+
+    label,
+    label[class*='label'] {
+      font-size: 1rem;
+    }
+
+    // .label class is typically applied
+    // to heading elements (h4, etc.)
+    .label {
+      font-size: 1.375rem;
+    }
+  }
+
+  // --
+  // Begin node add/edit form right rail styling
+  // (.content-form__advanced is main wrapper of right rail)
+  // --
+  // Applyling top positioning based on the inline styling
+  // applied to body tag via admin menu when its
+  // orientation changes.
+  &.advanced-sidebar-tray.toolbar-horizontal .content-form__advanced,
+  &.advanced-sidebar-tray.toolbar-vertical .content-form__advanced {
+    top: 45px !important;
+  }
+
+  &.advanced-sidebar-tray.toolbar-horizontal.toolbar-tray-open .content-form__advanced {
+    top: 90px !important;
+  }
+
+  .js &.advanced-sidebar-tray .content-form__advanced {
+    background-color: $color-faint-violet;
+    box-shadow: -1px 0 6px 1px $color-faint-gray;
+    border: 1px solid $color-pale-gray;
+    box-sizing: border-box;
+    padding: 0 20px 50px 10px;
+    z-index: $zi-low;
+
+    @include breakpoint($bp-md) {
+      transform: translateX(calc(-100% + 20px));
+    }
+  }
+
+  // Right rail in toggled state.
+  // It is pushed offscreen 20px to hide scroll.
+  .js &.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced {
+    transform: translateX(calc(-100% + 20px));
+
+    @include breakpoint($bp-md) {
+      padding: 0;
+      transform: translateX(calc(100% - 20px));
+    }
+  }
+
+  // Save/cancel/delete + 'add new' options in right rail.
+  // (included within .content-form__advanced-actions wrapper).
+  .content-form__advanced-actions {
+    padding: 0 20px;
+
+    .form-actions {
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    input[id='edit-submit'],
+    input[id='edit-preview'] {
+      margin: 0;
+      width: calc(50% - 10px);
+    }
+
+    input[id='edit-preview'] {
+      background-color: darken($color-faint-gray, 8);
+      border-color: darken($color-faint-gray, 8);
+      color: $color-mid-gray;
+    }
+
+    .button[id='edit-delete'],
+    .button[id='edit-delete']:focus,
+    .button[id='edit-delete']:hover {
+      background-image: url('../images/icon-delete--blue.svg');
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-size: 12px;
+      background-color: transparent;
+      border: 0;
+      color: $color-bright-blue;
+      line-height: 1;
+      margin-top: 10px;
+      padding: 10px 10px 10px 20px;
+    }
+
+    // Moderation state field.
+    .field--name-moderation-state .container-inline {
+
+      div {
+        display: block;
+
+        select {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  // 'Add New ... ' CTA above Save/Preview.
+  .content-form__advanced-actions-cta {
+    padding-top: 20px;
+
+    .button {
+      background-image: url('../images/icon-add-item--white.svg');
+      background-position-x: calc(100% - 20px);
+      background-position-y: center;
+      background-repeat: no-repeat;
+      background-size: 22px;
+      justify-content: flex-start;
+      padding-right: 55px;
+      width: 100%;
+    }
+  }
+
+  // Meta settings section in right rail.
+  // (included within .content-form__advanced-settings wrapper).
+  .content-form__advanced-settings {
+    border-bottom: 1px solid $color-faint-gray;
+    box-sizing: border-box;
+    margin: 0 -30px 0 -10px;
+    overflow: hidden;
+    padding: 0 40px 0 20px;
+
+    // Wrapper for jump nav.
+    .content-form__jump-nav {
+      background-color: $color-white;
+      margin: 0 -30px 36px -20px;
+    }
+
+    .content-form__document-settings-container {
+      border-top: 1px solid $color-faint-gray;
+      background-color: $color-white;
+      margin: 0 -30px 0 -20px;
+      padding: 0 40px 0 30px;
+    }
+
+    // Main 'Document Settings' details element
+    // hard coded in node-edit-form.html.twig template.
+    .content-form__document-settings {
+      border: 1px solid $color-white;
+      box-sizing: border-box;
+      font-size: 0.875rem;
+      margin: 0;
+      padding: 0;
+
+      * {
+        font-size: 0.875rem !important;
+      }
+
+      details {
+        background-color: $color-white;
+        border: 0;
+        border-color: $color-pale-gray;
+        margin-bottom: 10px;
+        padding: 10px 0;
+      }
+
+      > summary {
+        padding: 20px 0;
+      }
+
+      summary {
+        cursor: pointer;
+        font-weight: $font-weight-normal;
+        justify-content: space-between;
+
+        &::before {
+          order: 1;
+          transform: rotate(90deg);
+        }
+      }
+
+      &[open] > summary,
+      details[open] > summary {
+        color: $color-bright-blue;
+      }
+
+      &[open] > summary::before,
+      details[open] > summary::before {
+        background-image: url('../images/icon-details-arrow--blue.svg');
+        transform: rotate(0);
+      }
+
+      // Targeting summary element of child
+      // details elements.
+      details > summary {
+        font-weight: $font-weight-bold;
+
+        &::before {
+          background-image: url('../images/icon-details-arrow--gray.svg');
+        }
+      }
+
+      .details-wrapper {
+        box-sizing: border-box;
+        display: block !important;
+        max-width: 100%;
+        padding-right: 0 !important;
+        padding-top: 10px;
+        position: relative;
+      }
+
+      // Targeting the wrapper of the parent
+      // 'advanced-settings-container' details element.
+      > .details-wrapper {
+        padding-top: 20px;
+
+        &::before {
+          background-color: $color-faint-gray;
+          box-shadow: 0 2px 3px 1px $color-offwhite;
+          content: '';
+          display: block;
+          height: 1px;
+          left: -100%;
+          position: absolute;
+          top: 0;
+          width: 300%;
+        }
+      }
+    }
+  }
+
+  // Right rail open/close button.
+  .js &.advanced-sidebar-tray .content-form__advanced-toggle {
+    align-items: flex-start;
+    background-color: $color-faint-violet;
+    border-left: 1px solid $color-pale-gray;
+    border-top: 1px solid $color-pale-gray;
+    color: $color-black;
+    display: flex;
+    flex-direction: row;
+    font-size: 0.875rem;
+    font-weight: $font-weight-bold;
+    justify-content: space-between;
+    left: calc(100% - 21px);
+    line-height: 1;
+    padding: 20px 30px;
+    right: auto;
+    top: 45px !important;
+    width: 300px;
+    z-index: $zi-low;
+
+    @include breakpoint($bp-md) {
+      align-items: center;
+      justify-content: flex-start;
+      left: calc(100% - 380px);
+      top: auto !important;
+      width: 380px;
+    }
+
+    &:focus,
+    &:hover {
+      background-color: $color-faint-violet;
+      text-decoration: underline;
+    }
+
+    &::before {
+      background-image: url('../images/icon-details-arrow--white.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 12px;
+      background-color: $color-bright-blue;
+      border-radius: 30px;
+      content: '';
+      height: 30px;
+      left: -45px;
+      margin-right: 10px;
+      position: relative;
+      transform: rotate(90deg);
+      width: 30px;
+
+      @include breakpoint($bp-md) {
+        left: auto;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  .js &.advanced-sidebar-tray.toolbar-horizontal.toolbar-tray-open {
+
+    .content-form__advanced-toggle {
+      top: 90px !important;
+
+      @include breakpoint($bp-md) {
+        top: auto !important;
+      }
+    }
+  }
+
+  // Right rail open/close button in toggled state.
+  .js &.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced-toggle {
+    align-items: center;
+    justify-content: flex-start;
+    left: calc(100% - 300px);
+    top: auto !important;
+
+    @include breakpoint($bp-md) {
+      align-items: flex-start;
+      justify-content: space-between;
+      left: calc(100% - 30px);
+      right: auto;
+      top: 45px !important;
+    }
+
+    &::before {
+      align-items: center;
+      left: auto;
+      transform: rotate(-90deg);
+
+      @include breakpoint($bp-md) {
+        left: -45px;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .js &.advanced-sidebar-tray.advanced-sidebar-tray-toggled.toolbar-tray-open {
+
+    .content-form__advanced-toggle {
+      top: auto !important;
+
+      @include breakpoint($bp-md) {
+        top: 90px !important;
+      }
+    }
+  }
+
+  // Targeting specific details elements in node
+  // forms that require unique layout of
+  // child form elements.
+  details[data-details-name='case-information'] .details-wrapper,
+  details[data-details-name='primary-information'] .details-wrapper,
+  details[data-details-name='survey-information'] .details-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+      width: 100%;
+    }
+
+    > * > .form-item {
+      margin-bottom: 5px;
+    }
+
+    > .field--name-field-intervention-type,
+    > .field--name-field-date {
+
+      .form-item,
+      .form-item__field-wrapper,
+      input,
+      select {
+        width: 100%;
+      }
+
+      @include breakpoint($bp-md) {
+        width: calc(50% - 15px);
+      }
+    }
+
+    > .field--name-field-intervention-type {
+
+      @include breakpoint($bp-md) {
+        margin-right: 30px;
+      }
+    }
+  }
+}
+// stylelint-enable declaration-no-important

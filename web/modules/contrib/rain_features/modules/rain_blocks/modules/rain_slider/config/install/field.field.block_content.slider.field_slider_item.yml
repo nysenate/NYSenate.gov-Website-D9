@@ -1,0 +1,55 @@
+uuid: fd338748-4625-44fb-b48f-dc6e20b9d278
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.storage.block_content.field_slider_item
+    - paragraphs.paragraphs_type.slider_item
+  module:
+    - entity_reference_revisions
+id: block_content.slider.field_slider_item
+field_name: field_slider_item
+entity_type: block_content
+bundle: slider
+label: 'Slider item'
+description: 'Build a collection of items for the slider component.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      slider_item: slider_item
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 10
+        enabled: false
+      card:
+        weight: 11
+        enabled: false
+      gallery_item:
+        weight: 12
+        enabled: false
+      map:
+        weight: 13
+        enabled: false
+      media:
+        weight: 14
+        enabled: false
+      quote:
+        weight: 15
+        enabled: false
+      slider_item:
+        enabled: true
+        weight: 16
+      text:
+        weight: 17
+        enabled: false
+      view:
+        weight: 18
+        enabled: false
+field_type: entity_reference_revisions

@@ -1,0 +1,15 @@
+moderation_sidebar.settings:
+  type: config_object
+  label: 'Moderation Sidebar settings'
+  mapping:
+    workflows:
+      type: sequence
+      label: 'List of workflows on the site'
+      sequence:
+        - type: mapping
+          mapping:
+            disabled_transitions:
+              type: sequence
+              label: 'List of disabled transitions in a workflow'
+              sequence:
+                - type: string

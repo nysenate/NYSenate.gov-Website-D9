@@ -1,0 +1,9 @@
+services:
+  transliterate_filenames.sanitize_name:
+    class: Drupal\transliterate_filenames\SanitizeName
+    arguments: ['@transliteration']
+  transliterate_filenames.file_upload_subscriber:
+    class: Drupal\transliterate_filenames\EventSubscriber\FileUploadSubscriber
+    arguments: ['@transliterate_filenames.sanitize_name']
+    tags:
+      - { name: event_subscriber }

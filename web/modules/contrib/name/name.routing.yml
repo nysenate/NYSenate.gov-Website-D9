@@ -1,0 +1,78 @@
+name.settings:
+  path: '/admin/config/regional/name/settings'
+  defaults:
+    _title: 'Name format settings'
+    _form: 'Drupal\name\NameSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+name.name_format_list:
+  path: '/admin/config/regional/name'
+  defaults:
+    _title: 'Name formats'
+    _entity_list: 'name_format'
+  requirements:
+    _permission: 'administer site configuration'
+
+name.name_format_add:
+  path: '/admin/config/regional/name/add'
+  defaults:
+    _title: 'Add name format'
+    _entity_form: name_format.add
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.name_format.edit_form:
+  path: '/admin/config/regional/name/manage/{name_format}'
+  defaults:
+    _title: 'Edit name format'
+    _entity_form: name_format.edit
+  requirements:
+    _entity_access: 'name_format.update'
+
+entity.name_format.delete_form:
+  path: '/admin/config/regional/name/manage/{name_format}/delete'
+  defaults:
+    _title: 'Delete'
+    _entity_form: name_format.delete
+  requirements:
+    _entity_access: 'name_format.delete'
+
+name.name_list_format_list:
+  path: '/admin/config/regional/name/list'
+  defaults:
+    _title: 'Name list formats'
+    _entity_list: 'name_list_format'
+  requirements:
+    _permission: 'administer site configuration'
+
+name.name_list_format_add:
+  path: '/admin/config/regional/name/list/add'
+  defaults:
+    _title: 'Add name list format'
+    _entity_form: name_list_format.add
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.name_list_format.edit_form:
+  path: '/admin/config/regional/name/list/manage/{name_list_format}'
+  defaults:
+    _title: 'Edit name list format'
+    _entity_form: name_list_format.edit
+  requirements:
+    _entity_access: 'name_list_format.update'
+
+entity.name_list_format.delete_form:
+  path: '/admin/config/regional/name/list/manage/{name_list_format}/delete'
+  defaults:
+    _title: 'Delete'
+    _entity_form: name_list_format.delete
+  requirements:
+    _entity_access: 'name_list_format.delete'
+
+name.autocomplete:
+  path: '/name/autocomplete/{field_name}/{entity_type}/{bundle}/{component}'
+  defaults:
+    _controller: '\Drupal\name\Controller\NameAutocompleteController::autocomplete'
+  requirements:
+    _permission: 'access content'

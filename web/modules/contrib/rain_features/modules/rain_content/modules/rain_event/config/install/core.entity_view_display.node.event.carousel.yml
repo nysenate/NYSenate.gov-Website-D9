@@ -1,0 +1,51 @@
+uuid: db04bec7-7e12-4029-b9d2-1c00fc2af6b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.carousel
+    - field.field.node.event.body
+    - field.field.node.event.field_dates
+    - field.field.node.event.field_link
+    - field.field.node.event.field_meta_tags
+    - field.field.node.event.field_short_title
+    - field.field.node.event.field_summary
+    - field.field.node.event.field_thumbnail
+    - node.type.event
+  module:
+    - datetime_range
+    - user
+_core:
+  default_config_hash: ToobshnavodwkjBo0xLwCbEtPgybl47UcBmwKwKIGIo
+id: node.event.carousel
+targetEntityType: node
+bundle: event
+mode: carousel
+content:
+  field_dates:
+    weight: 0
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: ' - '
+    third_party_settings: {  }
+    type: daterange_default
+    region: content
+  field_summary:
+    type: basic_string
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  addtoany: true
+  body: true
+  field_link: true
+  field_meta_tags: true
+  field_short_title: true
+  field_thumbnail: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

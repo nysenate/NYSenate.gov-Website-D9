@@ -1,0 +1,21 @@
+uuid: fd664ae4-7c8d-4a42-80d1-0a5b00fb504f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_metatags
+    - node.type.bill
+  module:
+    - metatag
+id: node.bill.field_metatags
+field_name: field_metatags
+entity_type: node
+bundle: bill
+label: 'Meta tags'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag

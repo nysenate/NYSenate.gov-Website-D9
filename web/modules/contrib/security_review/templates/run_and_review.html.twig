@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Default template for the Run & Review page.
+ *
+ * Available variables:
+ * - checks: Array of check informations.
+ *   A check information consists of:
+ *   - result: The check's result (string).
+ *   - message: The result message.
+ *   - help_link: The link to the check's help page.
+ *   - toggle_link: The toggle link for the check.
+ *   - skipped: Whether the check is skipped.
+ */
+#}
+
+<h3>
+    {% trans %}
+    Review results from last run {{ date }}
+    {% endtrans %}
+</h3>
+<p>
+    {% trans %}
+    Here you can review the results from the last run of the checklist. Checks
+    are not always perfectly correct in their procedure and result. You can keep
+    a check from running by clicking the 'Skip' link beside it. You can run the
+    checklist again by expanding the fieldset above.
+    {% endtrans %}
+</p>
+<table class="security-review-run-and-review__table">
+    <tbody>
+    {% for check in checks %}
+        {% set style = '' %}
+        {% if check.result is defined %}
+            {% set style = style ~ ' ' ~ check.result %}
+        {% endif %}
+        {% if check.skipped %}
+            {% set style = style ~ ' skipped' %}
+        {% endif %}
+        <tr class="security-review-run-and-review__entry{{ style }}">
+            <td class="security-review-run-and-review__entry-icon">
+                {% if icons[check.result] is defined %}
+                    <img src="{{ icons[check.result] }}"/>
+                {% endif %}
+            </td>
+            <td>{{ check.message }}</td>
+            <td>{{ check.help_link }}</td>
+            <td class="security-review-toggle-link">{{ check.toggle_link }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

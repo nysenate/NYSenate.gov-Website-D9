@@ -1,0 +1,86 @@
+.tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative; }
+
+.tabs.primary,
+.tabs.secondary {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0; }
+  .tabs.primary .tabs__tab,
+  .tabs.secondary .tabs__tab {
+    align-items: center;
+    display: flex;
+    font-size: 1.125rem;
+    font-weight: normal;
+    line-height: 1;
+    margin: 0;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    width: auto;
+    z-index: 10; }
+  .tabs.primary a,
+  .tabs.secondary a {
+    background-color: transparent;
+    border-bottom: 3px solid transparent;
+    color: #012635;
+    display: inline-block;
+    padding: 14px 30px 8px; }
+  .tabs.primary a:focus,
+  .tabs.primary a:hover,
+  .tabs.secondary a:focus,
+  .tabs.secondary a:hover {
+    background-color: rgba(1, 156, 182, 0.25);
+    color: #012635; }
+  .tabs.primary .tabs__tab.is-active a,
+  .tabs.secondary .tabs__tab.is-active a {
+    border-color: #019cb6;
+    color: #012635;
+    font-weight: bold; }
+
+.tabs.secondary {
+  background-color: #fff;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 40px;
+  position: relative; }
+  @media screen and (min-width: 768px) {
+    .tabs.secondary {
+      margin-left: -40px;
+      margin-right: -40px;
+      padding-left: 40px;
+      padding-right: 40px; } }
+  @media screen and (min-width: 900px) {
+    .tabs.secondary {
+      margin-left: -60px;
+      margin-right: -60px;
+      padding-left: 60px;
+      padding-right: 60px; } }
+  .tabs.secondary::after {
+    background-color: #d8d8d8;
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 3px;
+    left: 20px;
+    position: absolute;
+    width: calc(100% - 40px);
+    z-index: 0; }
+    @media screen and (min-width: 768px) {
+      .tabs.secondary::after {
+        left: 40px;
+        width: calc(100% - 80px); } }
+    @media screen and (min-width: 900px) {
+      .tabs.secondary::after {
+        left: 60px;
+        width: calc(100% - 120px); } }
+  .tabs.secondary a:focus,
+  .tabs.secondary a:hover {
+    border-bottom-color: #bfccef; }

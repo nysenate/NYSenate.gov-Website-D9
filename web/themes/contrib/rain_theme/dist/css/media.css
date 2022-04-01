@@ -1,0 +1,28 @@
+.media-item__caption {
+  font-size: 0.9rem;
+  margin-top: 0.32rem;
+  max-width: 100%;
+  word-wrap: break-word; }
+  @media screen and (min-width: 544px) {
+    .media-item__caption {
+      font-size: 1rem;
+      margin-top: 0.8rem; } }
+
+/* Responsive styles for YouTube video embed. */
+.media-item__responsive-video {
+  margin: 0 0 1rem;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0; }
+  @media screen and (min-width: 544px) {
+    .media-item__responsive-video {
+      margin-bottom: 0.8rem; } }
+  .media-item__responsive-video iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute; }
+  .media-item__responsive-video video {
+    width: 100%; }

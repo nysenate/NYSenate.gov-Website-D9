@@ -1,0 +1,173 @@
+global-styling:
+  version: 1.x
+  css:
+    base:
+      css/base/elements.css: {}
+      css/base/typography.css: {}
+      css/base/print.css: {}
+    component:
+      css/classy/components/action-links.css: {}
+      css/classy/components/breadcrumb.css: {}
+      css/classy/components/button.css: {}
+      css/classy/components/collapse-processed.css: {}
+      css/classy/components/container-inline.css: {}
+      css/classy/components/exposed-filters.css: {}
+      css/classy/components/field.css: {}
+      css/classy/components/form.css: {}
+      css/classy/components/icons.css: {}
+      css/classy/components/inline-form.css: {}
+      css/classy/components/item-list.css: {}
+      css/classy/components/link.css: {}
+      css/classy/components/links.css: {}
+      css/classy/components/menu.css: {}
+      css/classy/components/more-link.css: {}
+      css/classy/components/pager.css: {}
+      css/classy/components/tabledrag.css: {}
+      css/classy/components/tableselect.css: {}
+      css/classy/components/tablesort.css: {}
+      css/classy/components/tabs.css: {}
+      css/classy/components/textarea.css: {}
+      css/classy/components/ui-dialog.css: {}
+      css/components/admin-list.css: {}
+      css/components/admin-search-api.css: {} # Added.
+      css/components/content-header.css: {}
+      css/components/container-inline.css: {}
+      css/components/container-inline.module.css: {}
+      css/components/breadcrumb.css: {}
+      css/components/buttons.css: {}
+      css/components/details.css: {}
+      css/components/messages.css: {}
+      css/components/dropbutton.component.css: {}
+      css/components/entity-meta.css: {}
+      css/components/field-ui.css: {}
+      css/components/form.css: {}
+      css/components/form-element.css: {} # Added.
+      css/components/help.css: {}
+      css/components/media-form.css: {} # Added.
+      css/components/menus-and-lists.css: {}
+      css/components/modules-page.css: {}
+      css/components/node.css: {}
+      css/components/page-title.css: {}
+      css/components/pager.css: {}
+      css/components/panel.css: {}
+      css/components/skip-link.css: {}
+      css/components/tables.css: {}
+      css/components/search-admin-settings.css: {}
+      css/components/tabledrag.css: {} # Added.
+      css/components/tablesort-indicator.css: {}
+      css/components/system-status-report-general-info.css: {}
+      css/components/system-status-report.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-counter.css: {}
+      css/components/tabs.css: {}
+      css/components/user.css: {} # Added.
+      css/components/views-ui.css: {}
+    theme:
+      css/theme/colors.css: {}
+      css/backend.css: {}
+      css/color-scheme-inverted.css: {}
+    layout:
+      css/layout/layout.css: {}
+  dependencies:
+    - system/admin
+
+# Seven has a node-form lib.
+# theming for node and taxonomy forms attached via the template
+content-form:
+  css:
+    theme:
+      css/content-form-theme.css: {}
+
+# Additional entity_browser themeing.
+entity_browser.tabs:
+  css:
+    component:
+      css/components/entity_browser.tabs.css: {}
+
+# Additional javascript handling for nav tabs, extends seven/drupal.nav-tabs.
+drupal.nav-tabs:
+  js:
+    js/navigation.js: {}
+
+# layout and functionality for content forms with advanced sidebar (replaces what is done in node.module.css)
+form-advanced-sidebar-tray:
+  js:
+    js/advanced-sidebar-tray.js: {}
+  css:
+    layout:
+      css/content-form-layout.css: {}
+
+# Add ckeditor sticky toolbar position.
+ckeditor.sticky-toolbar:
+  js:
+    js/ckeditor.sticky-toolbar.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+
+# Adds visibility toggling of form descriptions.
+form-toggle-description:
+  js:
+    js/form-toggle-description.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+
+# Adds ux functionality to paragraphs widgets.
+paragraphs.adjustments:
+  js:
+    js/paragraphs.js: {}
+
+paragraphs.bottom.add:
+  js:
+    js/paragraphs.bottom.add.js: {}
+
+# Additional styles for to paragraphs widget.
+paragraphs.widget:
+  css:
+    theme:
+      css/paragraphs-widget.css: {}
+      css/paragraphs-widget--deprecated.css: {}
+      css/paragraphs-sorting.css: {}
+  js:
+    js/tabledrag.checkbox.js: {}
+    js/paragraphs-sorting.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal.tabledrag
+    - core/once
+
+# Additional "click to edit" functionality for the Paragraph widget.
+tabledrag.tabindex:
+  js:
+    js/tabledrag.tabindex.js: {}
+
+# Adds flexbox.
+dropzonejs.widget:
+  css:
+    component:
+      css/components/dropzonejs.widget.css: {}
+
+# Select2 theme.
+select2.theme:
+  css:
+    component:
+      css/components/select2/layout.css: {}
+
+# Additional styles for the toolbar/toolbar library.
+toolbar:
+  css:
+    component:
+      css/components/toolbar.module.css: {}
+
+# Additional styles for the toolbar/toolbar library.
+toolbar.menu:
+  css:
+    state:
+      css/components/toolbar.menu.css: {}
+
+admin_toolbar_tools.toolbar.icon:
+  css:
+    component:
+      css/components/admin_toolbar_tools.toolbar.icon.css: {}

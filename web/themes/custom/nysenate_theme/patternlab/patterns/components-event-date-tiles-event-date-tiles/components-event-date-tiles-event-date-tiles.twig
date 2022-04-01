@@ -1,0 +1,28 @@
+{{ attach_library('archives_theme/event-date-tiles') }}
+
+{%
+  set classes = [
+    'event-date-tiles'
+  ]
+%}
+
+{% set attributes = attributes ? attributes.addClass(classes) : ' class="' ~ classes|join(' ') ~ '"' %}
+
+<div {{ attributes|raw }}>
+    {% if start_date %}
+      <div class="event-date-tiles__date event-date-tiles__date--start">
+        <span class="event-date-tiles__date-month">{{ start_date.month }}</span>
+        <span class="event-date-tiles__date-day">{{ start_date.day }}</span>
+        <span class="event-date-tiles__date-year">{{ start_date.year }}</span>
+      </div>
+    {% endif %}
+
+    {% if end_date.day != start_date.day %}
+      <span class="event-date-tiles__date-separator"> - </span>
+      <div class="event-date-tiles__date event-date-tiles__date--end">
+        <span class="event-date-tiles__date-month">{{ end_date.month }}</span>
+        <span class="event-date-tiles__date-day">{{ end_date.day }}</span>
+        <span class="event-date-tiles__date-year">{{ end_date.year }}</span>
+      </div>
+    {% endif %}
+</div>

@@ -1,0 +1,309 @@
+.rain-admin-theme .content-form__main > details[open] {
+  background-color: #fafbfe;
+  border-color: #019cb6;
+  border-width: 2px; }
+
+.rain-admin-theme .content-form__main details > summary {
+  color: #019cb6;
+  font-size: 1rem;
+  font-weight: normal;
+  letter-spacing: normal;
+  padding: 0 20px;
+  text-transform: none; }
+
+.rain-admin-theme .content-form__main details > summary:focus,
+.rain-admin-theme .content-form__main details > summary:hover,
+.rain-admin-theme .content-form__main details[open] > summary {
+  color: #019cb6; }
+
+.rain-admin-theme .content-form__main details > summary::before {
+  background-image: url("../images/icon-details-arrow--blue.svg");
+  left: -20px;
+  margin-right: 0; }
+
+.rain-admin-theme .content-form__main .details-wrapper {
+  padding-left: 20px;
+  padding-right: 20px; }
+  @media screen and (min-width: 900px) {
+    .rain-admin-theme .content-form__main .details-wrapper {
+      padding-left: 40px;
+      padding-right: 40px; } }
+  .rain-admin-theme .content-form__main .details-wrapper details > summary {
+    font-size: 1rem; }
+  .rain-admin-theme .content-form__main .details-wrapper > fieldset {
+    background-color: #fff; }
+
+.rain-admin-theme .content-form__main label,
+.rain-admin-theme .content-form__main label[class*='label'] {
+  font-size: 1rem; }
+
+.rain-admin-theme .content-form__main .label {
+  font-size: 1.375rem; }
+
+.rain-admin-theme.advanced-sidebar-tray.toolbar-horizontal .content-form__advanced,
+.rain-admin-theme.advanced-sidebar-tray.toolbar-vertical .content-form__advanced {
+  top: 45px !important; }
+
+.rain-admin-theme.advanced-sidebar-tray.toolbar-horizontal.toolbar-tray-open .content-form__advanced {
+  top: 90px !important; }
+
+.js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced {
+  background-color: #f4f6f9;
+  box-shadow: -1px 0 6px 1px #d8d8d8;
+  border: 1px solid #cbcbcb;
+  box-sizing: border-box;
+  padding: 0 20px 50px 10px;
+  z-index: 20; }
+  @media screen and (min-width: 900px) {
+    .js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced {
+      transform: translateX(calc(-100% + 20px)); } }
+
+.js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced {
+  transform: translateX(calc(-100% + 20px)); }
+  @media screen and (min-width: 900px) {
+    .js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced {
+      padding: 0;
+      transform: translateX(calc(100% - 20px)); } }
+
+.rain-admin-theme .content-form__advanced-actions {
+  padding: 0 20px; }
+  .rain-admin-theme .content-form__advanced-actions .form-actions {
+    align-items: center;
+    justify-content: space-between; }
+  .rain-admin-theme .content-form__advanced-actions input[id='edit-submit'],
+  .rain-admin-theme .content-form__advanced-actions input[id='edit-preview'] {
+    margin: 0;
+    width: calc(50% - 10px); }
+  .rain-admin-theme .content-form__advanced-actions input[id='edit-preview'] {
+    background-color: #c4c4c4;
+    border-color: #c4c4c4;
+    color: #717171; }
+  .rain-admin-theme .content-form__advanced-actions .button[id='edit-delete'],
+  .rain-admin-theme .content-form__advanced-actions .button[id='edit-delete']:focus,
+  .rain-admin-theme .content-form__advanced-actions .button[id='edit-delete']:hover {
+    background-image: url("../images/icon-delete--blue.svg");
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 12px;
+    background-color: transparent;
+    border: 0;
+    color: #019cb6;
+    line-height: 1;
+    margin-top: 10px;
+    padding: 10px 10px 10px 20px; }
+  .rain-admin-theme .content-form__advanced-actions .field--name-moderation-state .container-inline div {
+    display: block; }
+    .rain-admin-theme .content-form__advanced-actions .field--name-moderation-state .container-inline div select {
+      width: 100%; }
+
+.rain-admin-theme .content-form__advanced-actions-cta {
+  padding-top: 20px; }
+  .rain-admin-theme .content-form__advanced-actions-cta .button {
+    background-image: url("../images/icon-add-item--white.svg");
+    background-position-x: calc(100% - 20px);
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: 22px;
+    justify-content: flex-start;
+    padding-right: 55px;
+    width: 100%; }
+
+.rain-admin-theme .content-form__advanced-settings {
+  border-bottom: 1px solid #d8d8d8;
+  box-sizing: border-box;
+  margin: 0 -30px 0 -10px;
+  overflow: hidden;
+  padding: 0 40px 0 20px; }
+  .rain-admin-theme .content-form__advanced-settings .content-form__jump-nav {
+    background-color: #fff;
+    margin: 0 -30px 36px -20px; }
+  .rain-admin-theme .content-form__advanced-settings .content-form__document-settings-container {
+    border-top: 1px solid #d8d8d8;
+    background-color: #fff;
+    margin: 0 -30px 0 -20px;
+    padding: 0 40px 0 30px; }
+  .rain-admin-theme .content-form__advanced-settings .content-form__document-settings {
+    border: 1px solid #fff;
+    box-sizing: border-box;
+    font-size: 0.875rem;
+    margin: 0;
+    padding: 0; }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings * {
+      font-size: 0.875rem !important; }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings details {
+      background-color: #fff;
+      border: 0;
+      border-color: #cbcbcb;
+      margin-bottom: 10px;
+      padding: 10px 0; }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings > summary {
+      padding: 20px 0; }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings summary {
+      cursor: pointer;
+      font-weight: normal;
+      justify-content: space-between; }
+      .rain-admin-theme .content-form__advanced-settings .content-form__document-settings summary::before {
+        order: 1;
+        transform: rotate(90deg); }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings[open] > summary,
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings details[open] > summary {
+      color: #019cb6; }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings[open] > summary::before,
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings details[open] > summary::before {
+      background-image: url("../images/icon-details-arrow--blue.svg");
+      transform: rotate(0); }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings details > summary {
+      font-weight: bold; }
+      .rain-admin-theme .content-form__advanced-settings .content-form__document-settings details > summary::before {
+        background-image: url("../images/icon-details-arrow--gray.svg"); }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings .details-wrapper {
+      box-sizing: border-box;
+      display: block !important;
+      max-width: 100%;
+      padding-right: 0 !important;
+      padding-top: 10px;
+      position: relative; }
+    .rain-admin-theme .content-form__advanced-settings .content-form__document-settings > .details-wrapper {
+      padding-top: 20px; }
+      .rain-admin-theme .content-form__advanced-settings .content-form__document-settings > .details-wrapper::before {
+        background-color: #d8d8d8;
+        box-shadow: 0 2px 3px 1px #f7f7f7;
+        content: '';
+        display: block;
+        height: 1px;
+        left: -100%;
+        position: absolute;
+        top: 0;
+        width: 300%; }
+
+.js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced-toggle {
+  align-items: flex-start;
+  background-color: #f4f6f9;
+  border-left: 1px solid #cbcbcb;
+  border-top: 1px solid #cbcbcb;
+  color: #012635;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.875rem;
+  font-weight: bold;
+  justify-content: space-between;
+  left: calc(100% - 21px);
+  line-height: 1;
+  padding: 20px 30px;
+  right: auto;
+  top: 45px !important;
+  width: 300px;
+  z-index: 20; }
+  @media screen and (min-width: 900px) {
+    .js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced-toggle {
+      align-items: center;
+      justify-content: flex-start;
+      left: calc(100% - 380px);
+      top: auto !important;
+      width: 380px; } }
+  .js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced-toggle:focus, .js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced-toggle:hover {
+    background-color: #f4f6f9;
+    text-decoration: underline; }
+  .js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced-toggle::before {
+    background-image: url("../images/icon-details-arrow--white.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 12px;
+    background-color: #019cb6;
+    border-radius: 30px;
+    content: '';
+    height: 30px;
+    left: -45px;
+    margin-right: 10px;
+    position: relative;
+    transform: rotate(90deg);
+    width: 30px; }
+    @media screen and (min-width: 900px) {
+      .js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced-toggle::before {
+        left: auto;
+        transform: rotate(-90deg); } }
+
+.js .rain-admin-theme.advanced-sidebar-tray.toolbar-horizontal.toolbar-tray-open .content-form__advanced-toggle {
+  top: 90px !important; }
+  @media screen and (min-width: 900px) {
+    .js .rain-admin-theme.advanced-sidebar-tray.toolbar-horizontal.toolbar-tray-open .content-form__advanced-toggle {
+      top: auto !important; } }
+
+.js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced-toggle {
+  align-items: center;
+  justify-content: flex-start;
+  left: calc(100% - 300px);
+  top: auto !important; }
+  @media screen and (min-width: 900px) {
+    .js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced-toggle {
+      align-items: flex-start;
+      justify-content: space-between;
+      left: calc(100% - 30px);
+      right: auto;
+      top: 45px !important; } }
+  .js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced-toggle::before {
+    align-items: center;
+    left: auto;
+    transform: rotate(-90deg); }
+    @media screen and (min-width: 900px) {
+      .js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced-toggle::before {
+        left: -45px;
+        transform: rotate(90deg); } }
+
+.js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled.toolbar-tray-open .content-form__advanced-toggle {
+  top: auto !important; }
+  @media screen and (min-width: 900px) {
+    .js .rain-admin-theme.advanced-sidebar-tray.advanced-sidebar-tray-toggled.toolbar-tray-open .content-form__advanced-toggle {
+      top: 90px !important; } }
+
+.rain-admin-theme details[data-details-name='case-information'] .details-wrapper,
+.rain-admin-theme details[data-details-name='primary-information'] .details-wrapper,
+.rain-admin-theme details[data-details-name='survey-information'] .details-wrapper {
+  display: flex;
+  flex-wrap: wrap; }
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > *,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > *,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > * {
+    width: 100%; }
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > * > .form-item,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > * > .form-item,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > * > .form-item {
+    margin-bottom: 5px; }
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-intervention-type .form-item,
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-intervention-type .form-item__field-wrapper,
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-intervention-type input,
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-intervention-type select,
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-date .form-item,
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-date .form-item__field-wrapper,
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-date input,
+  .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-date select,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-intervention-type .form-item,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-intervention-type .form-item__field-wrapper,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-intervention-type input,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-intervention-type select,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-date .form-item,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-date .form-item__field-wrapper,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-date input,
+  .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-date select,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-intervention-type .form-item,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-intervention-type .form-item__field-wrapper,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-intervention-type input,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-intervention-type select,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-date .form-item,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-date .form-item__field-wrapper,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-date input,
+  .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-date select {
+    width: 100%; }
+  @media screen and (min-width: 900px) {
+    .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-intervention-type,
+    .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-date,
+    .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-intervention-type,
+    .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-date,
+    .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-intervention-type,
+    .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-date {
+      width: calc(50% - 15px); } }
+  @media screen and (min-width: 900px) {
+    .rain-admin-theme details[data-details-name='case-information'] .details-wrapper > .field--name-field-intervention-type,
+    .rain-admin-theme details[data-details-name='primary-information'] .details-wrapper > .field--name-field-intervention-type,
+    .rain-admin-theme details[data-details-name='survey-information'] .details-wrapper > .field--name-field-intervention-type {
+      margin-right: 30px; } }

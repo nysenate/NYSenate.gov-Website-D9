@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Import and override system-status-report.css provided by seven/global-styling.
+ */
+@import '@theme-seven/css/components/system-status-report.css';
+
+.system-status-report__status-icon--error .details-title:before,
+.details .system-status-report__status-icon--error:before {
+  background-image: url(../../images/stable/images/core/icons/e32700/error.svg);
+}
+.system-status-report__status-icon--warning .details-title:before,
+.details .system-status-report__status-icon--warning:before {
+  background-image: url(../../images/stable/images/core/icons/e29700/warning.svg);
+}
+
+.system-status-general-info__item-title {
+  border-bottom: none;
+}

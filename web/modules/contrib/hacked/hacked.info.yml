@@ -1,0 +1,14 @@
+name: "Hacked!"
+type: module
+description: "Shows if drupal or any of its modules have been changed"
+package: Development
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:update
+configure: hacked.settings
+
+# Information added by Drupal.org packaging script on 2021-07-15
+version: '8.x-2.0-beta3'
+project: 'hacked'
+datestamp: 1626356651

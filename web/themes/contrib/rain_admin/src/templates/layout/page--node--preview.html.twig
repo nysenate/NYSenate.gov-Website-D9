@@ -1,0 +1,13 @@
+{#
+/**
+ * @file
+ * Theme override to display a preview of
+ * a node page.
+ */
+#}
+{% extends 'page.html.twig' %}
+{% block content %}
+  <div class="node-preview-container-content">
+    {{ page.content }}
+  </div>
+{% endblock %}

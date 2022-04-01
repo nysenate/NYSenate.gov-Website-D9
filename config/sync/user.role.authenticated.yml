@@ -1,0 +1,18 @@
+uuid: 94530466-65b7-4917-ab0b-d2ffd02ee1f8
+langcode: en
+status: true
+dependencies:
+  module:
+    - google_analytics
+    - media
+    - system
+_core:
+  default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
+id: authenticated
+label: 'Authenticated user'
+weight: 1
+is_admin: false
+permissions:
+  - 'access content'
+  - 'opt-in or out of google analytics tracking'
+  - 'view media'

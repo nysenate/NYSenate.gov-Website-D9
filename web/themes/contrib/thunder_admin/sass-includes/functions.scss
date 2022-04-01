@@ -1,0 +1,68 @@
+
+/***************************
+ * String helper functions *
+ ***************************/
+
+/**
+ * String search and replace function.
+ */
+/* stylelint-disable plugin/no-browser-hacks */
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+/**
+ * Replace multiple values in the string where replacements are provided as a map.
+ *
+ * The map is set of key => value, where the key is a string that should be searched
+ * and the value is a replacement for it.
+ */
+@function str-replace-multiple($string, $replacements) {
+  $result: $string;
+
+  @each $original_value, $new_value in $replacements {
+    $result: str-replace($result, $original_value, $new_value);
+  }
+
+  @return $result;
+}
+
+/**
+ * Based on research done by Taylor Hunt:
+ * https://codepen.io/tigt/post/optimizing-svgs-in-data-uris
+ *
+ * Customized code provided: https://codepen.io/jakob-e/pen/GjgXmK.scss
+ */
+@function svg-url($svg) {
+  @if not str-index($svg,xmlns) {
+    $svg: str-replace($svg, '<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  $encoded: '';
+  $slice: 2000;
+  $index: 0;
+  $loops: ceil(str-length($svg)/$slice);
+
+  @for $i from 1 through $loops {
+    $chunk: str-slice($svg, $index, $index + $slice - 1);
+    $chunk: str-replace($chunk, '"', '\'');
+    $chunk: str-replace($chunk, '%', '%25');
+    $chunk: str-replace($chunk, " ", "%20");
+    $chunk: str-replace($chunk, '#', '%23');
+    $chunk: str-replace($chunk, '{', '%7B');
+    $chunk: str-replace($chunk, '}', '%7D');
+    $chunk: str-replace($chunk, '<', '%3C');
+    $chunk: str-replace($chunk, '>', '%3E');
+
+    $encoded: #{$encoded}#{$chunk};
+    $index: $index + $slice;
+  }
+
+  @return url("data:image/svg+xml;charset=utf8,#{$encoded}");
+}

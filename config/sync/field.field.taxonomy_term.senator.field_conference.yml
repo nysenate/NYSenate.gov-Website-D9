@@ -1,0 +1,21 @@
+uuid: 2ffb1591-65c8-49f7-bac2-571a01e4a73b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_conference
+    - taxonomy.vocabulary.senator
+  module:
+    - options
+id: taxonomy_term.senator.field_conference
+field_name: field_conference
+entity_type: taxonomy_term
+bundle: senator
+label: Conference
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

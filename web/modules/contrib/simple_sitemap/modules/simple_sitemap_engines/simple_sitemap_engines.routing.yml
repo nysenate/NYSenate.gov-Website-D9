@@ -1,0 +1,15 @@
+simple_sitemap.engines.status:
+  path: '/admin/config/search/simplesitemap/engines'
+  defaults:
+    _entity_list: 'simple_sitemap_engine'
+    _title: 'Simple XML Sitemap'
+  requirements:
+    _permission: 'administer sitemap settings'
+
+simple_sitemap.engines.settings:
+  path: '/admin/config/search/simplesitemap/engines/settings'
+  defaults:
+    _form: '\Drupal\simple_sitemap_engines\Form\SimplesitemapEnginesForm'
+    _title: 'Simple XML Sitemap'
+  requirements:
+    _permission: 'administer sitemap settings'

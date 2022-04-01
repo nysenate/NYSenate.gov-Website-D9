@@ -1,0 +1,25 @@
+uuid: 60a119ab-532b-4bb6-9737-40aaec51744f
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.social-media
+  module:
+    - system
+  theme:
+    - nimbus_theme
+id: socialmedia
+theme: nimbus_theme
+region: footer_right
+weight: -1
+provider: null
+plugin: 'system_menu_block:social-media'
+settings:
+  id: 'system_menu_block:social-media'
+  label: 'Social Media'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

@@ -1,0 +1,31 @@
+reroute_email.settings:
+  type: config_object
+  label: 'Reroute Email Settings.'
+  mapping:
+    enable:
+      type: boolean
+      label: 'Enable rerouting.'
+    address:
+      type: string
+      label: 'Rerouting email addresses.'
+    roles:
+      type: sequence
+      label: "An array of users' roles that need to be skipped from the rerouting."
+      sequence:
+        type: string
+        label: 'A role id.'
+    allowed:
+      type: string
+      label: 'A list of allowed email addresses.'
+    description:
+      type: boolean
+      label: 'Show rerouting description in mail body.'
+    message:
+      type: boolean
+      label: 'Display a Drupal status message after rerouting.'
+    mailkeys:
+      type: string
+      label: 'Filter emails FOR rerouting by their mail keys.'
+    mailkeys_skip:
+      type: string
+      label: 'Filter emails FROM rerouting by their mail keys.'

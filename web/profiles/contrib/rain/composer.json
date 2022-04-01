@@ -1,0 +1,47 @@
+{
+  "name": "mediacurrent/rain",
+  "description": "Rain install profile",
+  "type": "drupal-profile",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    },
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "require": {
+    "cweagans/composer-patches": "^1.6",
+    "drupal/admin_toolbar": "^3.0",
+    "drupal/components": "~1.0 || ~2.0",
+    "drupal/ctools": "~3.0",
+    "drupal/environment_indicator": "^4.0",
+    "drupal/google_analytics": "~2.0",
+    "drupal/inline_entity_form": "~1.0",
+    "drupal/linkit": "~5.0",
+    "drupal/metatag": "~1.0",
+    "drupal/moderation_sidebar": "~1.0",
+    "drupal/multiline_config": "~1.0",
+    "drupal/pathauto": "~1.0",
+    "drupal/redirect": "~1.0",
+    "drupal/simple_sitemap": "^3.0",
+    "drupal/taxonomy_access_fix": "~2.0 || ~3.0",
+    "drupal/token": "~1.0",
+    "drupal/twig_tweak": "~2.0",
+    "drupal/twig_field_value": "~1.0 || ~2.0",
+    "drupal/video_embed_field": "~2.0",
+    "drupal/yaml_content": "~1.0"
+  },
+  "extra": {
+    "installer-types": [
+      "library",
+      "bower-asset",
+      "npm-asset"
+    ]
+  }
+}

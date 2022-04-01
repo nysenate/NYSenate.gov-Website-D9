@@ -1,0 +1,42 @@
+header {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1; }
+  header .header-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 30px 30px 5px;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%; }
+    @media screen and (min-width: 768px) {
+      header .header-content {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        padding: 30px; } }
+
+.open-search,
+.open-menu {
+  background-color: #000001; }
+
+.site-header-middle {
+  padding: 0;
+  width: 100%;
+  order: 4; }
+  @media screen and (min-width: 768px) {
+    .site-header-middle {
+      order: 0; } }
+
+.user-logged-in {
+  top: 39px; }
+  @media screen and (min-width: 976px) {
+    .user-logged-in {
+      top: 78px; } }
+
+.not-landing {
+  position: relative;
+  background-color: #000001;
+  top: 0; }

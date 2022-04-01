@@ -1,0 +1,7 @@
+<div>{% trans %}The following characters are recognized in the format parameter string:{% endtrans %}</div>
+<dl>
+{% for token, label in tokens %}
+  <dt>{{ token }}</dt>
+  <dd>{{ label }}</dd>
+{% endfor %}
+</dl>

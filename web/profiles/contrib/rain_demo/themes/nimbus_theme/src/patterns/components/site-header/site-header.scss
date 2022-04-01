@@ -1,0 +1,53 @@
+@import '../../global/utils/init';
+
+header {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 30px 30px 5px;
+    @include max-width;
+
+    @include breakpoint($bp-sm) {
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      padding: 30px;
+    }
+  }
+}
+
+.open-search,
+.open-menu {
+  background-color: $color-bg-black;
+}
+
+.site-header-middle {
+  padding: 0;
+  width: 100%;
+  order: 4;
+
+  @include breakpoint($bp-sm) {
+    order: 0;
+  }
+}
+
+.user-logged-in{
+  top: 39px;
+
+  @include breakpoint(976px) {
+    top: 78px;
+  }
+}
+
+
+.not-landing {
+  position: relative;
+  background-color: $color-bg-black;
+  top: 0;
+}

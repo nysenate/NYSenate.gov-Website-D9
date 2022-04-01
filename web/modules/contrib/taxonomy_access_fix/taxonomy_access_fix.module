@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations by Taxonomy Access Fix module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\taxonomy\TermAccessControlHandler as OriginalTermAccessControlHandler;
+use Drupal\taxonomy\VocabularyAccessControlHandler as OriginalVocabularyAccessControlHandler;
+use Drupal\taxonomy_access_fix\TermAccessControlHandler;
+use Drupal\taxonomy_access_fix\VocabularyAccessControlHandler;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function taxonomy_access_fix_entity_type_alter(array &$entity_types) {
+  $entity_types['taxonomy_vocabulary']->setHandlerClass('list_builder', 'Drupal\taxonomy_access_fix\VocabularyListBuilder');
+  $access_handler_class = $entity_types['taxonomy_vocabulary']->getHandlerClass('access');
+  if ($access_handler_class !== OriginalVocabularyAccessControlHandler::class) {
+    // If an unexpected access control handler is in use, we can't guarantee
+    // that our replacement handler will return correct access results.
+    throw new LogicException('Unexpected access handler implementation in use for Taxonomy vocabulary entities. This might be due to an unexpected change in Drupal Core or due to a conflict with another contributed or custom module in use.');
+  }
+  $entity_types['taxonomy_vocabulary']->setHandlerClass('access', VocabularyAccessControlHandler::class);
+
+  $access_handler_class = $entity_types['taxonomy_term']->getHandlerClass('access');
+  if ($access_handler_class !== OriginalTermAccessControlHandler::class) {
+    // If an unexpected access control handler is in use, we can't guarantee
+    // that our replacement handler will return correct access results.
+    throw new LogicException('Unexpected access handler implementation in use for Taxonomy term entities. This might be due to an unexpected change in Drupal Core or due to a conflict with another contributed or custom module in use.');
+  }
+  $entity_types['taxonomy_term']->setHandlerClass('access', TermAccessControlHandler::class);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for taxonomy_overview_terms form.
+ *
+ * @see \Drupal\taxonomy\Form\OverviewTerms
+ */
+function taxonomy_access_fix_form_taxonomy_overview_terms_alter(&$form, FormStateInterface &$form_state) {
+  // Admin: Don't fix anything.
+  if (Drupal::currentUser()->hasPermission('administer taxonomy')) {
+    return;
+  }
+  $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
+  $can_reorder = $vocabulary->access('reorder_terms');
+  foreach (Element::children($form['terms']) as $name) {
+    if ($can_reorder) {
+      continue;
+    }
+    unset($form['terms'][$name]['weight']);
+  }
+  if (!$can_reorder) {
+    // Hide Save and Reset buttons.
+    $form['actions']['#access'] = FALSE;
+    // Remove tableDrag.
+    unset($form['terms']['#tabledrag']);
+    // Remove Weight column.
+    unset($form['terms']['#header'][1]);
+  }
+}

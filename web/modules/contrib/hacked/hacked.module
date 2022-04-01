@@ -1,0 +1,178 @@
+<?php
+
+/**
+ * @file
+ * The Hacked! module, shows which project have been changed since download.
+ *
+ * We download the original project file, and hash all the files contained
+ * within, then we hash our local copies and compare.
+ * This module should never be used on a production server.
+ */
+
+define('HACKED_CACHE_TABLE', 'hacked');
+
+define('HACKED_STATUS_UNCHECKED', 1);
+define('HACKED_STATUS_PERMISSION_DENIED', 2);
+define('HACKED_STATUS_HACKED', 3);
+define('HACKED_STATUS_DELETED', 4);
+define('HACKED_STATUS_UNHACKED', 5);
+
+define('HACKED_DEFAULT_FILE_HASHER', 'hacked_ignore_line_endings');
+
+/**
+ * Implementation of the hook_theme() registry.
+ */
+function hacked_theme() {
+  return [
+    'hacked_report'          => [
+      'variables' => ['data' => NULL],
+      'file'      => 'hacked.report.inc',
+    ],
+    'hacked_project_summary' => [
+      'variables' => ['project' => NULL],
+      'file'      => 'hacked.report.inc',
+    ],
+    'hacked_detailed_report' => [
+      'variables' => ['project' => NULL],
+      'file'      => 'hacked.details.inc',
+    ],
+    'hacked_file_status'     => [
+      'variables' => ['file' => NULL],
+      'file'      => 'hacked.details.inc',
+    ],
+  ];
+}
+
+/**
+ * Sort callback for sorting the projects in the report.
+ */
+function _hacked_project_report_sort_by_status($a, $b) {
+  if ($a['status'] == $b['status']) {
+    return strcmp($a['name'], $b['name']);
+  }
+  else {
+    return $a['status'] - $b['status'];
+  }
+}
+
+/**
+ * Determine if a file is a binary file.
+ *
+ * Taken from: http://www.ultrashock.com/forums/server-side/checking-if-a-file-is-binary-98391.html
+ * and then tweaked in: http://drupal.org/node/760362.
+ */
+function hacked_file_is_binary($file) {
+  if (file_exists($file)) {
+    if (!is_file($file)) {
+      return 0;
+    }
+    if (!is_readable($file)) {
+      return 1;
+    }
+
+    $fh = fopen($file, "r");
+    $blk = fread($fh, 512);
+    fclose($fh);
+    clearstatcache();
+
+    return (
+      0 or substr_count($blk, "^\r\n") / 512 > 0.3
+      or substr_count($blk, "^ -~") / 512 > 0.3
+      or substr_count($blk, "\x00") > 0
+    );
+  }
+  return 0;
+}
+
+/**
+ * Hacked! version of the core function, can return hidden files too.
+ *
+ * @param           $dir
+ * @param           $mask
+ * @param array     $nomask
+ * @param int       $callback
+ * @param bool|TRUE $recurse
+ * @param string    $key
+ * @param int       $min_depth
+ * @param int       $depth
+ * @return array
+ *
+ * @see file_scan_directory().
+ */
+function hacked_file_scan_directory($dir, $mask, $nomask = ['.', '..', 'CVS'], $callback = 0, $recurse = TRUE, $key = 'filename', $min_depth = 0, $depth = 0) {
+  $key = (in_array($key, ['filename', 'basename', 'name']) ? $key : 'filename');
+  $files = [];
+
+  if (is_dir($dir) && $handle = opendir($dir)) {
+    while (FALSE !== ($file = readdir($handle))) {
+      if (!in_array($file, $nomask)) {
+        if (is_dir("$dir/$file") && $recurse) {
+          // Give priority to files in this folder by merging them in after any subdirectory files.
+          $files = array_merge(hacked_file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key, $min_depth, $depth + 1), $files);
+        }
+        elseif ($depth >= $min_depth && preg_match($mask, $file)) {
+          // Always use this match over anything already set in $files with the same $$key.
+          $filename = "$dir/$file";
+          $basename = basename($file);
+          $name = substr($basename, 0, strrpos($basename, '.'));
+          $files[$$key] = new stdClass();
+          $files[$$key]->filename = $filename;
+          $files[$$key]->basename = $basename;
+          $files[$$key]->name = $name;
+          if (is_callable($callback)) {
+            $callback($filename);
+          }
+        }
+      }
+    }
+
+    closedir($handle);
+  }
+
+  return $files;
+}
+
+/**
+ * Return the file hasher that is currently selected by the user.
+ */
+function hacked_get_file_hasher($name = NULL) {
+  if (is_null($name)) {
+    $name = \Drupal::config('hacked.settings')->get('selected_file_hasher');
+  }
+  $hashers = hacked_get_file_hashers();
+  $class_name = $hashers[$name]['class'];
+  return new $class_name;
+}
+
+/**
+ * Gets all the file hashers defined.
+ */
+function hacked_get_file_hashers() {
+  $hashers = &drupal_static(__FUNCTION__);
+  if (is_null($hashers)) {
+    $hashers = \Drupal::moduleHandler()->invokeAll('hacked_file_hashers_info');
+    \Drupal::moduleHandler()->alter('hacked_file_hashers_info', $hashers);
+  }
+  return $hashers;
+}
+
+/**
+ * Implements hook_hacked_file_hashers_info().
+ */
+function hacked_hacked_file_hashers_info() {
+  $hashers = [];
+
+  $hashers['hacked_ignore_line_endings'] = [
+    'class'       => '\Drupal\hacked\hackedFileIgnoreEndingsHasher',
+    'name'        => t('Ignore line endings'),
+    'description' => t('When hashing files differences in line endings will be ignored. This might be useful if projects have been edited on a different platform than of the original author\'s. E.g. if a file has been opened and saved on Windows.'),
+  ];
+
+  $hashers['hacked_include_line_endings'] = [
+    'class'       => '\Drupal\hacked\hackedFileIncludeEndingsHasher',
+    'name'        => t('Include line endings'),
+    'description' => t('When hashing files differences in line endings will be included.'),
+  ];
+
+  return $hashers;
+}

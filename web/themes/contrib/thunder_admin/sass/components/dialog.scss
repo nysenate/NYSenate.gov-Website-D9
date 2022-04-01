@@ -1,0 +1,79 @@
+/**
+ * @file
+ * Presentational styles for Drupal dialogs.
+ *
+ * Import and override content-header.css provided by seven/global-styling.
+ */
+@import 'variables';
+
+@mixin browser-border($is-top: true) {
+  border: 4px solid $primary-color-lightest;
+  @if ($is-top) {
+    border-bottom: none;
+  }
+  @else {
+    border-top: none;
+  }
+}
+
+/* stylelint-disable string-no-newline, no-invalid-position-at-import-rule */
+@import '@theme-seven/css/components/dialog.css remove {
+  .ui-dialog .ui-dialog-titlebar-close {}
+  .ui-dialog .ui-dialog-titlebar-close:hover {}
+  .ui-dialog .ui-dialog-titlebar-close:focus {}
+}';
+/* stylelint-enable string-no-newline, no-invalid-position-at-import-rule */
+
+.ui-dialog {
+
+  .ui-dialog-titlebar {
+    background: $primary-color-darker;
+    @include browser-border; // Added.
+  }
+
+  // :before pseudo selector added
+  .ui-dialog-title {
+    &:before {
+      content: "";
+      height: 12px;
+      width: 5px;
+      background: $primary-color-intense;
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: baseline;
+    }
+  }
+
+  // Selector removed in import.
+  .ui-dialog-titlebar-close {
+    border: 0;
+    background: none;
+    right: 20px; /* LTR */
+    top: 24px;
+    margin: 0;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+  }
+
+  .ui-icon.ui-icon-closethick {
+    background: url(../../images/icons/ex.svg) 0 0 no-repeat;
+    margin-top: -12px;
+  }
+
+  // 1. Fix for scrolling dialog content on ios devices, can be
+  //  removed after https://drupal.org/i/2908476 has landed.
+  //
+  .ui-widget-content.ui-dialog-content {
+    background: $gray-lightest;
+    padding: 0.4em 1.2em 1.2em;
+    border-bottom-left-radius: 5px; // Added.
+    border-bottom-right-radius: 5px; // Added.
+    -webkit-overflow-scrolling: touch; /* 1 */
+    @include browser-border(false); // Added.
+  }
+
+  .ajax-progress-throbber {
+    background-image: url(../../images/loading-small.gif);
+  }
+}

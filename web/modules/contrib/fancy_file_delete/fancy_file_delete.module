@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Fancy File Delete module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_form_alter().
+ */
+function fancy_file_delete_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'fancy_file_delete_manual') {
+    $form['actions']['submit']['#value'] = 'Engage';
+  }
+  if ($form_id === 'views_form_fancy_file_list_unmanaged_unmanaged') {
+    $form['update'] = [
+      '#type' => 'button',
+      '#value' => t('Update View'),
+      '#attributes' => [
+        'class' => ['form-submit ffd-refresh'],
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function fancy_file_delete_views_pre_render(ViewExecutable $view) {
+  if (isset($view) && ($view->storage->id() === 'fancy_file_list_unmanaged')) {
+    $view->element['#attached']['library'][] = 'fancy_file_delete/fancy_file_delete';
+  }
+}
+
+/**
+ * Implements of hook_views_pre_view().
+ *
+ * Used when we click on the unmanaged tab / Update View to keep it updated.
+ */
+function fancy_file_delete_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+  if ($view->storage->id() === 'fancy_file_list_unmanaged') {
+    \Drupal::service('fancy_file_delete.unmanaged_files')->updateView();
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function fancy_file_delete_views_data_alter(array &$data) {
+  // Add Orphan File Filter.
+  $data['file_managed']['orphan_delete'] = [
+    'title' => t('Orphan File Delete'),
+    'help' => t('Filter by Orphan Files.'),
+    'filter' => [
+      'id' => 'ffd_orphan_filter',
+    ],
+  ];
+}

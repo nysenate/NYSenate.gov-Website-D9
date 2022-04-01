@@ -1,0 +1,706 @@
+<?php
+
+/**
+ * @file
+ * Simpletest tests for session_limit.
+ */
+
+/**
+ * Base test for session limits.
+ *
+ * This contains a collection of helper functions and session_limit
+ * assertions.
+ */
+class SessionLimitBaseTestCase extends DrupalWebTestCase {
+
+  /**
+   * A store references to different sessions.
+   */
+  protected $curlHandles = array();
+  protected $loggedInUsers = array();
+
+  /**
+   * Session limit helper function to create 3 roles.
+   *
+   * @param stdClass $user
+   *   (optional) If provided the user will be added to
+   *   the three roles.
+   *
+   * @return array
+   *   An array of the three roles.
+   */
+  public function sessionLimitMakeRoles($user = NULL) {
+    // Create roles.
+    $roles = array();
+
+    $roles[] = (object) array('name' => 'role1');
+    $roles[] = (object) array('name' => 'role2');
+    $roles[] = (object) array('name' => 'role3');
+    user_role_save($roles[0]);
+    user_role_save($roles[1]);
+    user_role_save($roles[2]);
+
+    if (!empty($user)) {
+      $user->roles[$roles[0]->rid] = $roles[0]->name;
+      $user->roles[$roles[1]->rid] = $roles[1]->name;
+      $user->roles[$roles[2]->rid] = $roles[2]->name;
+      $user->save();
+    }
+
+    return $roles;
+  }
+
+  /**
+   * Test that an individual user can have up to a specifed number of sessions.
+   *
+   * Once the maximum is reached, the oldest session is logged out.
+   *
+   * @param int $session_limit
+   *   The max number of sessions the specified user should be able to access.
+   * @param stdClass $user
+   *   (optional) The user to test this with. Leave blank to create a user.
+   */
+  public function assertSessionLogout($session_limit, stdClass $user = NULL) {
+    // Set the session limit behaviour to log out of old sessions.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_behaviour', 1)->save();
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_logged_out_message', 'Reached limit @number.')->save();
+
+    // Create the user to test with.
+    $user = empty($user) ? $this->drupalCreateUser(array('access content')) : $user;
+
+    $sessions = array();
+
+    for ($session_number = 1; $session_number <= $session_limit; $session_number++) {
+
+      // Log user into each session.
+      $this->drupalLogin($user);
+      $this->drupalGet('user');
+      $this->assertText(t('Log out'), t('User is logged in under session @no.', array('@no' => $session_number)));
+      $this->assertText($user->name, t('User is logged in under session @no.', array('@no' => $session_number)));
+
+      // Backup session.
+      $sessions[$session_number] = $this->stashSession();
+
+      // Wait briefly to prevent race conditions.
+      sleep(1);
+    }
+
+    // Check all allowed sessions are currently accessible.
+    foreach ($sessions as $session_number => $session_id) {
+      $this->restoreSession($session_id);
+      $this->drupalGet('user');
+      $this->assertText(t('Log out'), t('User is logged in under session @no.', array('@no' => $session_number)));
+      $this->assertText($user->name, t('User is logged in under session @no.', array('@no' => $session_number)));
+    }
+
+    // Create a further session.
+    $extra_session_number = $session_limit + 1;
+    $this->stashSession();
+    $this->drupalLogin($user);
+    $this->drupalGet('user');
+    $this->assertText(t('Log out'), t('User is logged in under session @no.', array('@no' => $extra_session_number)));
+    $this->assertText($user->name, t('User is logged in under session @no.', array('@no' => $extra_session_number)));
+
+    // Check user 1 is no longer logged in on session 1.
+    $sessions[$extra_session_number] = $this->stashSession();
+    $this->restoreSession($sessions[1]);
+    $this->drupalGet('node');
+    $this->assertNoText(t('Log out'), t('User 1 is not logged in under session 1.'));
+
+    $this->assertText(t('Reached limit @number.', array('@number' => $session_limit)), t('User was shown session limit message.'));
+
+    // Check user 1 is logged in on all other sessions.
+    foreach ($sessions as $session_number => $session_id) {
+      if ($session_number == 1) {
+        // We know they have been logged out of session 1.
+        continue;
+      }
+
+      $this->restoreSession($session_id);
+      $this->drupalGet('user');
+      $this->assertText(t('Log out'), t('User is logged in under session @no.', array('@no' => $session_number)));
+      $this->assertText($user->name, t('User is logged in under session @no.', array('@no' => $session_number)));
+    }
+  }
+
+  /**
+   * Test that new sessions cannot be created past a maximum.
+   *
+   * This tests the session_limit 'prevent new sessions' behaviour once
+   * the maximum is reached.
+   *
+   * @param int $session_limit
+   *   The maximum number of allowed sessions.
+   */
+  public function assertSessionPrevent($session_limit) {
+    // Set the session limit behaviour to prevent new sessions.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_behaviour', 2)->save();
+
+    // Set the default session limit to 1.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', $session_limit)->save();
+
+    // Create the user to test with.
+    $user = $this->drupalCreateUser(array('access content'));
+
+    $sessions = array();
+
+    for ($session_number = 1; $session_number <= $session_limit; $session_number++) {
+
+      // Log user into each session.
+      $this->drupalLogin($user);
+      $this->drupalGet('user');
+      $this->assertText(t('Log out'), t('User is logged in under session @no.', array('@no' => $session_number)));
+      $this->assertText($user->name, t('User is logged in under session @no.', array('@no' => $session_number)));
+
+      // Backup session.
+      $sessions[$session_number] = $this->stashSession();
+    }
+
+    // Check all allowed sessions are currently accessible.
+    foreach ($sessions as $session_number => $session_id) {
+      $this->restoreSession($session_id);
+      $this->drupalGet('user');
+      $this->assertText(t('Log out'), t('User is logged in under session @no.', array('@no' => $session_number)));
+      $this->assertText($user->name, t('User is logged in under session @no.', array('@no' => $session_number)));
+    }
+
+    // Try to login on a further session.
+    $this->stashSession();
+    $this->drupalLoginExpectFail($user);
+    $this->assertText(t('The maximum number of simultaneous sessions (@session_limit) for your account has been reached. You did not log off from a previous session or someone else is logged on to your account. This may indicate that your account has been compromised or that account sharing is limited on this site. Please contact the site administrator if you suspect your account has been compromised.', array('@session_limit' => $session_limit)), t('User sees the session limit login prevention message.'));
+
+    // Switch back to session 1 and logout.
+    $extra_session_number = $session_limit + 1;
+    $sessions[$extra_session_number] = $this->stashSession();
+    $this->restoreSession($sessions[1]);
+    $this->drupalLogout($user);
+    $this->drupalGet('node');
+    $this->assertNoText(t('Log out'), t('User has logged out of session 1.'));
+
+    // Switch back to extra session and check they can now login.
+    $this->restoreSession($sessions[$extra_session_number]);
+    $this->drupalLogin($user);
+    $this->drupalGet('node');
+    $this->assertText(t('Log out'), t('User has logged into the extra session now they have logged out of session 1.'));
+  }
+
+  /**
+   * Initialise a new unique session.
+   *
+   * @return string
+   *   Unique identifier for the session just stored.
+   *   It is the cookiefile name.
+   */
+  public function stashSession() {
+    if (empty($this->cookieFile)) {
+      // No session to stash.
+      return;
+    }
+
+    // The session_id is the current cookieFile.
+    $session_id = $this->cookieFile;
+
+    $this->curlHandles[$session_id] = $this->curlHandle;
+    $this->loggedInUsers[$session_id] = $this->loggedInUser;
+
+    // Reset Curl.
+    unset($this->curlHandle);
+    $this->loggedInUser = FALSE;
+
+    // Set a new unique cookie filename.
+    do {
+      $this->cookieFile = $this->public_files_directory . '/' . $this->randomName() . '.jar';
+    }
+    while (isset($this->curlHandles[$this->cookieFile]));
+
+    return $session_id;
+  }
+
+  /**
+   * Restore a previously stashed session.
+   *
+   * @param string $session_id
+   *   The session to restore as returned by stashSession();
+   *   This is also the path to the cookie file.
+   *
+   * @return string
+   *   The old session id that was replaced.
+   */
+  public function restoreSession($session_id) {
+    $old_session_id = NULL;
+
+    if (isset($this->curlHandle)) {
+      $old_session_id = $this->stashSession();
+    }
+
+    // Restore the specified session.
+    $this->curlHandle = $this->curlHandles[$session_id];
+    $this->cookieFile = $session_id;
+    $this->loggedInUser = $this->loggedInUsers[$session_id];
+
+    return $old_session_id;
+  }
+
+  /**
+   * Close all stashed sessions and the current session.
+   */
+  public function closeAllSessions() {
+    foreach ($this->curlHandles as $cookie_file => $curl_handle) {
+      if (isset($curl_handle)) {
+        curl_close($curl_handle);
+      }
+    }
+
+    // Make the server forget all sessions.
+    db_truncate('sessions')->execute();
+
+    $this->curlHandles = array();
+    $this->loggedInUsers = array();
+    $this->loggedInUser = FALSE;
+    $this->cookieFile = $this->public_files_directory . '/' . $this->randomName() . '.jar';
+    unset($this->curlHandle);
+  }
+
+  /**
+   * Log in a user with the internal browser but expect this to fail.
+   *
+   * This works as drupalLogin but instead of checking if the login succeeded,
+   * it instead checks for not being logged in and fails if it has managed
+   * to login successfully.
+   *
+   * @param $account
+   *   User object representing the user to log in.
+   *
+   * @see drupalCreateUser()
+   */
+  protected function drupalLoginExpectFail(stdClass $account) {
+    if ($this->loggedInUser) {
+      $this->drupalLogout();
+    }
+
+    $edit = array(
+      'name' => $account->name,
+      'pass' => $account->pass_raw
+    );
+    $this->drupalPost('user', $edit, t('Log in'));
+
+    // Check that login was unsuccessful by ensuring there is no log out link.
+    $pass = $this->assertNoLink(t('Log out'), 0, t('User %name did not log in.', array('%name' => $account->name)), t('User login'));
+
+    if (!$pass) {
+      $this->loggedInUser = $account;
+    }
+  }
+}
+
+/**
+ * Tests the multiple session test functionality.
+ */
+class SessionLimitSessionTestCase extends SessionLimitBaseTestCase {
+
+  /**
+   * getInfo() returns properties that are displayed in the test selection form.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Session Limit MutiSession Tests',
+      'description' => 'Ensure the multi session tests for SimpleTest work as expected',
+      'group' => 'Session Limit',
+    );
+  }
+
+  /**
+   * setUp() performs any pre-requisite tasks that need to happen.
+   */
+  public function setUp() {
+    // Enable any modules required for the test.
+    parent::setUp('session_limit');
+  }
+
+  /**
+   * Test session stash and restore.
+   *
+   * Drupal Simpletest has no native ability to test over multiple sessions.
+   * The session_limit tests add this functionality. This first test checks
+   * that multiple sessions are working in SimpleTest by logging in as two
+   * different users simultaneously via two cUrl sessions.
+   */
+  public function testSessionStashAndRestore() {
+
+    // Create and log in our privileged user.
+    $user1 = $this->drupalCreateUser(array('access content'));
+    $user2 = $this->drupalCreateUser(array('access content'));
+
+    // Make sure that session_limit does not interfere with
+    // this test of the tests.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_behaviour', 0)->save();
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 100)->save();
+
+    // Login under session 1.
+    $this->drupalLogin($user1);
+    $this->drupalGet('user');
+    $this->assertText(t('Log out'), t('User is logged in under session 1.'));
+    $this->assertText($user1->name, t('User1 is logged in under session 1.'));
+
+    // Backup session 1.
+    $session_1 = $this->stashSession();
+
+    // Check session 2 is logged out.
+    $this->drupalGet('node');
+    $this->assertNoText(t('Log out'), t('Session 1 is shelved.'));
+
+    // Login under session 2.
+    $this->drupalLogin($user2);
+    $this->drupalGet('user');
+    $this->assertText(t('Log out'), t('User is logged in under session 2.'));
+    $this->assertText($user2->name, t('User2 is logged in under session 2.'));
+
+    // Backup session 2.
+    $session_2 = $this->stashSession();
+
+    // Switch to session 1.
+    $this->restoreSession($session_1);
+
+    // Check still logged in as session 1.
+    $this->drupalGet('user');
+    $this->assertText(t('Log out'), t('User is logged in under session 1.'));
+    $this->assertText($user1->name, t('User1 is logged in under session 1.'));
+
+    // Switch to session 2.
+    $this->restoreSession($session_2);
+
+    // Check still logged in as session 2.
+    $this->drupalGet('user');
+    $this->assertText(t('Log out'), t('User is logged in under session 2.'));
+    $this->assertText($user2->name, t('User2 is logged in under session 2.'));
+  }
+}
+
+/**
+ * Session limit functions when expected behaviour is to logout oldest session.
+ */
+class SessionLimitLogoutTestCase extends SessionLimitBaseTestCase {
+
+  /**
+   * getInfo() returns properties that are displayed in the test selection form.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Session Limit Logout Tests',
+      'description' => 'Ensure that the session limit module functions as expected when behaviour is set to logout oldest session',
+      'group' => 'Session Limit',
+    );
+  }
+
+  /**
+   * setUp() performs any pre-requisite tasks that need to happen.
+   */
+  public function setUp() {
+    // Enable any modules required for the test.
+    parent::setUp('session_limit');
+  }
+
+  /**
+   * Test user can only have 1 session, logout oldest.
+   */
+  public function testSessionLogoutOnMax1() {
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 1)->save();
+
+    $this->assertSessionLogout(1);
+    $this->closeAllSessions();
+  }
+
+  /**
+   * Test user can only have 2 sessions, logout oldest.
+   */
+  public function testSessionLogoutOnMax2() {
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 2)->save();
+
+    $this->assertSessionLogout(2);
+    $this->closeAllSessions();
+  }
+
+  /**
+   * Checks that the session limit is returned correctly by a role.
+   */
+  public function testSessionLimitRoles() {
+    // Create a test user.
+    $user = $this->drupalCreateUser(array('access content'));
+    $roles = $this->sessionLimitMakeRoles($user);
+
+    // Set the session limits for the roles.
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[0]->rid, 2);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[1]->rid, 4);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[2]->rid, 3);
+
+
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 1)->save();
+
+    // Check if the user has access to 4 sessions.
+    $this->assertSessionLogout(4, $user);
+  }
+
+  /**
+   * Checks that the session limit is returned correctly by a user override.
+   */
+  public function testSessionLimitUser() {
+    // Create a test user.
+    $user = $this->drupalCreateUser();
+    $roles = $this->sessionLimitMakeRoles($user);
+
+    // Add a personal session limit.
+    // @FIXME
+// user_save() is now a method of the user entity.
+// user_save($user, array('data' => array('session_limit' => 5)));
+
+
+    // Set the session limits for the roles.
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[0]->rid, 2);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[1]->rid, 3);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[2]->rid, 4);
+
+
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 1)->save();
+
+    // Check if the user has access to 5 sessions.
+    $this->assertSessionLogout(5, $user);
+  }
+
+  /**
+   * Check that user override takes precedence over default and role regardless of max.
+   */
+  public function testSessionLimitUserMaxPrecedence() {
+    // Create a test user.
+    $user = $this->drupalCreateUser();
+    $roles = $this->sessionLimitMakeRoles($user);
+
+    // Add a personal session limit.
+    // @FIXME
+// user_save() is now a method of the user entity.
+// user_save($user, array('data' => array('session_limit' => 1)));
+
+
+    // Set the session limits for the roles.
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[0]->rid, 3);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[1]->rid, 4);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[2]->rid, 5);
+
+
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 2)->save();
+
+    // Check if the user has access to only 1 session.
+    $this->assertSessionLogout(1, $user);
+  }
+}
+
+/**
+ * Session limit functionality when behaviour is to prevent login at limit.
+ */
+class SessionLimitPreventTestCase extends SessionLimitBaseTestCase {
+
+  /**
+   * getInfo() returns properties that are displayed in the test selection form.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Session Limit Prevent Tests',
+      'description' => 'Ensure that the session limit module functions as expected when behaviour is set to prevent new sessions',
+      'group' => 'Session Limit',
+    );
+  }
+
+  /**
+   * setUp() performs any pre-requisite tasks that need to happen.
+   */
+  public function setUp() {
+    // Enable any modules required for the test.
+    parent::setUp('session_limit');
+  }
+
+  /**
+   * Test user can only have 1 session, prevent new sessions.
+   */
+  public function testSessionPreventOnMax1() {
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 1)->save();
+
+    $this->assertSessionPrevent(1);
+    $this->closeAllSessions();
+  }
+
+  /**
+   * Test user can only have 2 sessions, prevent new sessions.
+   */
+  public function testSessionPreventOnMax2() {
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 1)->save();
+
+    $this->assertSessionPrevent(2);
+    $this->closeAllSessions();
+  }
+
+  /**
+   * Checks that the session limit is returned correctly by a role.
+   */
+  public function testSessionLimitRoles() {
+    // Create a test user.
+    $user = $this->drupalCreateUser(array('access content'));
+    $roles = $this->sessionLimitMakeRoles($user);
+
+    // Set the session limits for the roles.
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[0]->rid, 2);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[1]->rid, 4);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[2]->rid, 3);
+
+
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 1)->save();
+
+    // Check if the user has access to 4 sessions.
+    $this->assertSessionPrevent(4, $user);
+  }
+
+  /**
+   * Checks that the session limit is returned correctly by a user override.
+   */
+  public function testSessionLimitUser() {
+    // Create a test user.
+    $user = $this->drupalCreateUser();
+    $roles = $this->sessionLimitMakeRoles($user);
+
+    // Add a personal session limit.
+    // @FIXME
+// user_save() is now a method of the user entity.
+// user_save($user, array('data' => array('session_limit' => 5)));
+
+
+    // Set the session limits for the roles.
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[0]->rid, 2);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[1]->rid, 3);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[2]->rid, 4);
+
+
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 1)->save();
+
+    // Check if the user has access to 5 sessions.
+    $this->assertSessionPrevent(5, $user);
+  }
+
+  /**
+   * Checks that a user session limit is always used in preference to all others.
+   */
+  public function testSessionLimitUserMaxPrecedence() {
+    // Create a test user.
+    $user = $this->drupalCreateUser();
+    $roles = $this->sessionLimitMakeRoles($user);
+
+    // Add a personal session limit.
+    // @FIXME
+// user_save() is now a method of the user entity.
+// user_save($user, array('data' => array('session_limit' => 1)));
+
+
+    // Set the session limits for the roles.
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[0]->rid, 3);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[1]->rid, 4);
+
+    // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// variable_set('session_limit_rid_' . $roles[2]->rid, 5);
+
+
+    // Set the default session limit.
+    \Drupal::configFactory()->getEditable('session_limit.settings')->set('session_limit_max', 2)->save();
+
+    // Check if the user has access to 1 session, the user specified max.
+    $this->assertSessionPrevent(1, $user);
+  }
+
+}

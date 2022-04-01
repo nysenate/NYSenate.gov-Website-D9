@@ -1,0 +1,236 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.block-content--type-card-list {
+  max-width: 100%;
+  padding: 70px 0;
+  background-color: $color-bg-black !important; /* stylelint-disable declaration-no-important */
+  color: #fff;
+
+  div > .button {
+    @extend %cta-button;
+    border-color: $color-white;
+    margin-top: 80px;
+    background-color: $color-bg-black;
+    border: 2px solid $color-white;
+    border-radius: 30px !important;
+    font-size: 1.25rem;
+    padding: 1rem 2.5rem;
+    color: $color-white;
+    transition: all 0.25s;
+
+    &:hover {
+      color: $color-blue;
+      border-color: $color-white;
+      background-color: $color-white;
+    }
+  }
+}
+
+.card-list__wrapper {
+  @include max-width;
+  padding: 0 1.5rem;
+}
+
+.card-list__title {
+  padding-bottom: 90px;
+  background-color: $color-bg-black;
+  color: #fff !important;
+  margin-bottom: 0 !important;
+  font-size: 3.25rem;
+}
+
+.card-list {
+  position: relative;
+
+  .card {
+    background-color: $color-bg-black;
+    color: #fff;
+
+    .card__media {
+      margin-bottom: 50px;
+
+      article > img {
+        height: 111px;
+
+        @include breakpoint($bp-sm) {
+          height: 90px;
+        }
+
+        @include breakpoint($bp-md) {
+          height: 111px;
+        }
+      }
+    }
+
+    .card__content {
+      padding-bottom: 20px;
+      display: grid;
+      justify-items: self-start;
+
+      .card__eyebrow {
+        font-size: 1rem;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+
+      .heading {
+        margin-top: 1.5rem;
+        font-weight: bold;
+        font-size: 2.8rem;
+
+        @include breakpoint($bp-sm) {
+          font-size: 1.4rem;
+        }
+
+        @include breakpoint($bp-md) {
+          font-size: 2.3rem;
+        }
+      }
+
+      .card__subhead {
+        font-size: 1.24rem;
+        margin-top: 0;
+        font-weight: 400;
+      }
+
+      .card__title {
+        
+        a {
+          margin-top: 1em;
+          margin-bottom: 1em;
+          text-decoration: none;
+          color: $color-white;
+        }
+      }
+
+      .card__link {
+        padding: 1em 2em;
+        color: $color-white;
+        border: 2px solid $color-white;
+        border-radius: 10em;
+        text-decoration: none;
+        margin-top: 2em;
+        text-transform: uppercase;
+        transition: all 0.25s;
+
+        &:hover {
+          color: $color-blue;
+          border-color: $color-white;
+          background-color: $color-white;
+        }
+      }
+
+      .body-text {
+        font-size: 1.2rem;
+        font-weight: normal;
+        line-height: 1.75rem;
+
+        @include breakpoint($bp-sm) {
+          font-size: 1rem;
+        }
+
+        @include breakpoint($bp-md) {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  &__carousel {
+    display: flex;
+    list-style-type: none;
+    background-color: $color-bg-black;
+    color: #fff;
+    padding: 0 20px;
+    border-left: 1px solid #fff;
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+
+    @include breakpoint($bp-sm) {
+      border: 0;
+    }
+  }
+
+  &__navigation {
+    position: absolute;
+    top: calc(50% - (100px / 2));
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 999;
+
+    @include breakpoint($bp-sm) {
+      display: none;
+    }
+  }
+
+  &__arrow {
+    font-size: 2.5rem;
+    background: $color-bg-black;
+    padding: 31px 0;
+
+    &.arrow-left {
+      margin-left: -15px;
+    }
+
+    &.arrow-right {
+      margin-right: -15px;
+    }
+  }
+
+  .slick-track {
+    display: flex;
+  }
+}
+
+.card-list__item {
+  padding: 3rem 0 0;
+  flex: 1;
+  background-color: $color-bg-black;
+  color: #fff;
+
+  &:first-of-type {
+    padding: 0;
+  }
+
+  @include breakpoint($bp-xsm) {
+    padding: 0 0 0 1rem;
+  }
+
+  @include breakpoint($bp-sm) {
+    padding: 0 0 0 1.2rem;
+  }
+
+  @include breakpoint($bp-md) {
+    padding: 0 0 0 2.5rem;
+  }
+}
+
+.card-list--wide {
+  max-width: 980px;
+  padding: 0 1.5rem;
+  flex-direction: column;
+
+  .card-list__item {
+    // border-bottom: 2px solid $color-alto;
+    padding: 0 0 2.5rem;
+
+    &:last-of-type {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .card__media {
+      flex: 1;
+    }
+
+    .card__content {
+      flex: 2;
+    }
+
+    .card__title {
+      padding: 0;
+    }
+  }
+}

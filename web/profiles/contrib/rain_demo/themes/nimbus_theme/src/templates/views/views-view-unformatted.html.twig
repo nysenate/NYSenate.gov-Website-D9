@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ * Theme override to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
+ * - view: The view object.
+ * - view_id: The view object id.
+ * - default_row_class: A flag indicating whether default classes should be
+ *   used on rows.
+ *
+ * @see template_preprocess_views_view_unformatted()
+ */
+#}
+{{ attach_library('rain_theme/l-2x') }}
+{{ attach_library('nimbus_theme/related-products') }}
+
+{% import '@nimbus_theme/icons/_icons-macro.twig' as icons %}
+
+{% set is_recent_content = view_id == 'recent_content_by_type' ? true : false %}
+
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+<div class="l-2x">
+  <div class="
+    l-container
+    {%if is_recent_content or recent_post_type == 'event' %}{{ recent_post_type }}-card__carousel{% endif %}
+  ">
+    {% for row in rows %}
+      {%
+        set row_classes = [
+          default_row_class ? 'views-row',
+        ]
+      %}
+      <div class="l-2x__item">
+        <div{{ row.attributes.addClass(row_classes) }}>
+          {{- row.content -}}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {%if is_recent_content or recent_post_type == 'event' %}
+    <div class="{{ recent_post_type }}-card__navigation">
+      <button type="button" class="{{ recent_post_type }}-card__arrow arrow-left">
+        {{ icons.get('arrow-left-black') }}
+      </button>
+      <button type="button" class="{{ recent_post_type }}-card__arrow arrow-right">
+        {{ icons.get('arrow-right-black') }}
+      </button>
+    </div>
+  {% endif %}
+</div>

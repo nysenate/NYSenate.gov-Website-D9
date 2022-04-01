@@ -1,0 +1,60 @@
+// Styling for node preview tools/links
+// ('back to content editing' link, etc.)
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.node-preview-container {
+  background-color: $color-dark-violet;
+  bottom: 0;
+  display: flex;
+  height: 60px;
+  top: auto;
+
+  > .node-preview-form-select {
+    align-items: center;
+    display: flex;
+
+    .node-preview-backlink {
+      align-items: center;
+      color: $color-white;
+      display: flex;
+      padding-left: 10px;
+      text-decoration: underline;
+
+      &:focus,
+      &:hover {
+        color: $color-white;
+        text-decoration: none;
+      }
+
+      &::before {
+        background-image: url('../images/icon-details-arrow--white.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 14px;
+        border-right: 0;
+        display: inline-block;
+        content: '';
+        height: 14px;
+        left: 0;
+        margin: 0 5px 0 0;
+        position: relative;
+        top: 1px;
+        transform: rotate(90deg);
+        width: 14px;
+      }
+    }
+
+    // Hide the view mode switcher 
+    // since it's not applicable.
+    [type='submit'].form-submit {
+      display: none;
+    }
+  }
+}
+
+// See page--node--preview.html.twig file.
+.node-preview-container-content {
+  padding-bottom: 60px;
+}

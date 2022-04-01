@@ -1,0 +1,4 @@
+services:
+  image_style_quality.mutable_quality_toolkit_manager:
+    class: Drupal\image_style_quality\MutableQualityToolkitManager
+    arguments: ['@module_handler', '@config.factory']

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the nimbus_theme theme.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK() for html.html.twig.
+ */
+function nimbus_theme_preprocess_html(array &$variables) {
+
+}
+
+/**
+ * Implements hook_preprocess_page() for page.html.twig.
+ */
+function nimbus_theme_preprocess_page(array &$variables) {
+	if (isset($variables['node'])) {
+		$path = \Drupal::request()->getpathInfo();
+		$arg = explode('/', $path);
+
+		// Make sure we are not on the layout tab.
+		if (!($arg[1] == 'node' && $arg[3] == 'layout')) {
+			if (in_array($variables['node']->bundle(), ['landing', 'layout'])) {
+				$variables['is_landing'] = TRUE;
+			}
+		}
+  }
+}
+
+/**
+ * Implements hook_preprocess_form().
+ */
+function nimbus_theme_preprocess_form(array &$variables) {
+
+}
+
+/**
+ * Implements hook_preprocess_views().
+ */
+function nimbus_theme_preprocess_views_view_unformatted(array &$variables) {
+  if (isset($variables['view'])) {
+  	$variables['id'] = $variables['view']->id();
+  	if ($variables['view']->id() == 'recent_content_by_type') {
+	    $variables['recent_post_type'] = isset($variables['view']->args) ? $variables['view']->args[0] : '';
+  	}
+  	if ($variables['view']->id() == 'events' && $variables['view']->current_display == 'block_1') {
+  	  $variables['recent_post_type'] = 'event';
+  	}
+  }
+}

@@ -1,0 +1,133 @@
+// Baseline form element styling/overrides.
+
+// stylelint-disable declaration-no-important, selector-no-qualifying-type
+
+.rain-admin-theme {
+
+  input[type='text'],
+  input[type='date'],
+  input[type='datetime-local'],
+  input[type='email'],
+  input[type='file'],
+  input[type='month'],
+  input[type='number'],
+  input[type='password'],
+  input[type='time'],
+  select,
+  textarea {
+    border-color: $color-blue-gray;
+    border-radius: 2px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    line-height: 1.1;
+    max-width: 100%;
+    min-height: auto;
+    padding: 8px;
+    width: auto;
+
+    &:focus {
+      outline-color: $color-bright-blue;
+      outline-offset: 0;
+      outline-style: solid;
+      outline-width: 1px;
+    }
+  }
+
+  select {
+    min-width: 250px;
+    padding-right: 20px !important;
+  }
+
+  label {
+    display: inline-block;
+    line-height: 1;
+    margin: 0;
+    text-transform: none;
+  }
+
+  // Checkbox/radio button styling.
+  .form-type-checkbox label,
+  .form-type-checkbox input,
+  .form-type-radio input,
+  .form-type-radio label {
+    line-height: 1;
+    vertical-align: unset;
+  }
+
+  // CKEditor-enabled textareas.
+  .form-type-textarea {
+
+    .cke_chrome {
+      border-color: $color-faint-gray;
+      border-radius: 2px;
+    }
+
+    .cke_chrome.cke_focus {
+      border-color: $color-bright-blue;
+    }
+  }
+
+  // Calculate width so the paragraph actions are not hidden
+  // behind offcanvas panel.
+  .field-multiple-table {
+
+    @media screen and (min-width: 544px) and (max-width: 1200px) {
+      width: calc(100% - 325px);
+    }
+  }
+
+  // Media widget.
+  // Hide weight widget.
+  .js-media-library-widget-toggle-weight {
+    display: none;
+  }
+
+  // Hide "Weight" label. This is hacky but there isn't a good class on the
+  // field.
+  .media-library-item {
+
+    .form-type-number {
+      display: none;
+    }
+  }
+
+  .media-library-item__attributes {
+    padding: 7px;
+    bottom: 10px;
+  }
+
+  // Without this there is a weird gap in the media item border.
+  .media-library-item__preview *::after,
+  *::before {
+    box-sizing: content-box;
+  }
+}
+// stylelint-enable declaration-no-important, selector-no-qualifying-type
+
+// Default commerce stuff.
+.field--widget-commerce-adjustment-default {
+
+  .form--inline {
+
+    .form-item {
+      float: none; /* LTR */
+    }
+  }
+
+  .chosen-single {
+    width: 50%;
+  }
+}
+
+// This class comes from the Rain Admin Field Label module in Rain Features.
+.hide-header-row {
+
+  thead {
+    display: none;
+  }
+}
+
+// This class comes from media-library-wrapper module.
+.media-library-wrapper >  .media-library-menu {
+  margin-top: 8px;
+}

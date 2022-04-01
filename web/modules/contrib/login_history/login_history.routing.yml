@@ -1,0 +1,11 @@
+login_history.report:
+  path: '/admin/reports/login-history'
+  defaults:
+    _title: 'Login history'
+  requirements:
+    _permission: 'view all login histories'
+
+login_history.user_report:
+  path: '/user/{user}/login-history'
+  requirements:
+    _permission: 'view own login history'

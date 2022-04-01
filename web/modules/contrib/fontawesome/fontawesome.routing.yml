@@ -1,0 +1,21 @@
+fontawesome.admin_settings:
+  path: '/admin/config/content/fontawesome'
+  defaults:
+    _form: '\Drupal\fontawesome\Form\SettingsForm'
+    _title: 'Font Awesome settings'
+  requirements:
+    _permission: 'administer site configuration'
+fontawesome.icon_dialog:
+  path: '/fontawesome/dialog/icon/{editor}'
+  defaults:
+    _form: '\Drupal\fontawesome\Form\EditorIconDialog'
+    _title: 'Add Font Awesome Icon'
+  requirements:
+    _entity_access: 'editor.use'
+fontawesome.autocomplete:
+  path: '/fontawesome-autocomplete'
+  defaults:
+    _controller: '\Drupal\fontawesome\Controller\AutocompleteController::handleAutocomplete'
+    _format: json
+  requirements:
+    _access: 'TRUE'

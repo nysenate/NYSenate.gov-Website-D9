@@ -1,0 +1,76 @@
+uuid: c0753ab5-f6e9-470a-818f-5c4035217c65
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.carousel_card
+    - field.field.node.blog.body
+    - field.field.node.blog.field_authors
+    - field.field.node.blog.field_meta_tags
+    - field.field.node.blog.field_short_title
+    - field.field.node.blog.field_subhead
+    - field.field.node.blog.field_summary
+    - field.field.node.blog.field_tags
+    - field.field.node.blog.field_thumbnail
+    - node.type.blog
+  module:
+    - user
+_core:
+  default_config_hash: vtBqUDGxDGDlkM9_doZtTeDT_AL_Tih1FBjpQ_TwvjE
+id: node.blog.carousel_card
+targetEntityType: node
+bundle: blog
+mode: carousel_card
+content:
+  addtoany:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_authors:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_short_title:
+    type: string
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_subhead:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_summary:
+    type: basic_string
+    weight: 4
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 5
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_meta_tags: true
+  field_tags: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

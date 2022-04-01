@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Install File for Fancy File Delete.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function fancy_file_delete_uninstall() {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('unmanaged_files')) {
+    $schema->dropTable('unmanaged_files');
+  }
+}
+
+/**
+ * Implements hook_install().
+ */
+function fancy_file_delete_install() {
+  // So the views and actions are happy after install.
+  drupal_flush_all_caches();
+}
+
+/**
+ * 8001 - Reimports Config.
+ */
+function fancy_file_delete_update_8001() {
+  \Drupal::service('config.installer')->installDefaultConfig('module', 'fancy_file_delete');
+  drupal_flush_all_caches();
+}

@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Additional styles for the admin_toolbar_tools/toolbar.icon library added using libraries-extend.
+ */
+.toolbar-icon-admin-toolbar-tools-help {
+  text-indent: -9999px;
+}
+
+.toolbar-icon-thunder {
+  .toolbar-icon-admin-toolbar-tools-help {
+    &:before,
+    :active:before,
+    .active:before {
+      width: 24px;
+      background-image: url(../../images/thunder-shortlogo-white.svg);
+    }
+  }
+}

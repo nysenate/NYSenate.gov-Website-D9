@@ -1,0 +1,29 @@
+{{ attach_library('rain_theme/columns') }}
+
+{#
+  This file is intended to only provide an
+  example presentation of columns.
+  The columns__items may not be needed in basic implementations.
+#}
+
+{% if section_title %}
+  {%
+    include '@rain_theme/heading/heading.twig' with {
+      "heading": {
+        "title": section_title,
+        "heading_level": 2,
+        "modifier": "heading--section columns__title"
+      }
+    } only
+  %}
+{% endif %}
+
+<div class="columns">
+  {% block column_items %}
+    {% for item in items %}
+      <div class="columns__item">
+        {{ item.content }}
+      </div>
+    {% endfor %}
+  {% endblock %}
+</div>

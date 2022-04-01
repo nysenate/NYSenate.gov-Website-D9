@@ -1,0 +1,62 @@
+uuid: b0f5a9a2-2087-40ce-9c79-50aed2f845b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.blog.body
+    - field.field.node.blog.field_authors
+    - field.field.node.blog.field_meta_tags
+    - field.field.node.blog.field_short_title
+    - field.field.node.blog.field_subhead
+    - field.field.node.blog.field_summary
+    - field.field.node.blog.field_tags
+    - field.field.node.blog.field_thumbnail
+    - node.type.blog
+  module:
+    - user
+_core:
+  default_config_hash: pNjANYGpGCbzVYaYljA4BLyFxqRaIH3EO5LtT99zmSw
+id: node.blog.card
+targetEntityType: node
+bundle: blog
+mode: card
+content:
+  addtoany:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_subhead:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_summary:
+    type: basic_string
+    weight: 2
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_authors: true
+  field_meta_tags: true
+  field_short_title: true
+  field_tags: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

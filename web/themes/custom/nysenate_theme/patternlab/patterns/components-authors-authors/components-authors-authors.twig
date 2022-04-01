@@ -1,0 +1,46 @@
+{{ attach_library('rain_theme/authors') }}
+
+{%
+  set classes = [
+    'authors'
+  ]
+%}
+
+{% set attributes = attributes ? attributes.addClass(classes) : ' class="' ~ classes|join(' ') ~ '"' %}
+
+<div {{ attributes|raw }}>
+  {%
+    include '@rain_theme/heading/heading.twig' with {
+      heading: {
+        title: title,
+        heading_level: heading_level|default('3'),
+        modifier: "heading--section",
+      }
+    }
+  %}
+  {% for author in authors %}
+    <article class="author">
+      {{ title_prefix }}
+      {{ title_suffix }}
+
+      {% if author.photo %}
+        <div class="author__image">
+          {{ author.photo }}
+        </div>
+      {% endif %}
+
+      <div class="author__details">
+        <div class="author__name">
+          {{ author.name }}
+        </div>
+
+        {% if author.title %}
+          <div class="author__title">
+            {{ author.title }}
+          </div>
+        {% endif %}
+
+      </div>
+    </article>
+  {% endfor %}
+</div>

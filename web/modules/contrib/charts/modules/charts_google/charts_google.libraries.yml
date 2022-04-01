@@ -1,0 +1,19 @@
+charts_google:
+  version: 1.x
+  js:
+    js/charts_google.js: {  }
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+google:
+  remote: 'https://www.gstatic.com/charts/loader.js'
+  version: VERSION
+  license:
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+    gpl-compatible: false
+  js:
+    /libraries/google_charts/loader.js: {  }
+  dependencies:
+    - charts_google/charts_google

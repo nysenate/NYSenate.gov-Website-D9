@@ -1,0 +1,43 @@
+.user-account-nav {
+  background: transparent;
+  display: none; }
+  @media screen and (min-width: 768px) {
+    .user-account-nav {
+      display: flex; } }
+  .user-account-nav .container {
+    display: flex;
+    max-width: 100%; }
+
+.user__login-btn,
+.search__toggle {
+  border: 0;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  background-color: transparent;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; }
+  @media screen and (min-width: 1024px) {
+    .user__login-btn,
+    .search__toggle {
+      margin-top: 14px;
+      height: 40px;
+      width: 40px; } }
+  .user__login-btn span,
+  .search__toggle span {
+    height: 100%; }
+  .user__login-btn svg,
+  .search__toggle svg {
+    fill: #ffffff;
+    width: 100%;
+    height: auto; }
+
+@media screen and (max-width: 767px) {
+  .user__login-btn {
+    margin-left: 0; } }
+
+.account-nav-active {
+  display: flex; }

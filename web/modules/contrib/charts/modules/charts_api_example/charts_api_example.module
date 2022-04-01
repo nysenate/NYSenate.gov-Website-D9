@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Charts Api Example - Module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+
+/**
+ * Implements hook_help().
+ */
+function charts_api_example_help($route_name, RouteMatchInterface $route_match) {
+  $output = '';
+  switch ($route_name) {
+    // Main module help for the charts_api_example module.
+    case 'help.page.charts_api_example':
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('A simple example on how to interact with the Charts API') . '</p>';
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function charts_api_example_theme() {
+  return [
+    'charts_api_example' => [
+      'template' => 'charts_api_example',
+      'variables' => [
+        'library' => '',
+        'categories' => [],
+        'seriesData' => [],
+        'options' => [],
+        'id' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_hook().
+ */
+function template_preprocess_charts_api_example(&$variables) {
+
+  // Charts override settings applied at this point.
+  $chartOverridePluginManager = \Drupal::service('plugin.manager.charts_override');
+  $plugin_definition = [];
+  $chartOverrideOptions = [];
+  try {
+    $plugin_definition = $chartOverridePluginManager->getDefinition($variables['library'] . '_overrides');
+    if (!empty($plugin_definition)) {
+      $chartOverridePlugin = $chartOverridePluginManager->createInstance($variables['library'] . '_overrides');
+      $chartOverrideOptions = $chartOverridePlugin->chartOverrides($variables['options']);
+    }
+  }
+  catch (PluginNotFoundException $e) {
+    \Drupal::service('messenger')
+      ->addMessage(t('Exception: @error', ['@error', $e->getMessage()]));
+  }
+
+  $plugin_manager = \Drupal::service('plugin.manager.charts');
+  $plugin = $plugin_manager->createInstance($variables['library']);
+  $plugin->buildVariables($variables['options'], $variables['id'], $variables, $variables['categories'], $variables['seriesData'], [], $chartOverrideOptions);
+}

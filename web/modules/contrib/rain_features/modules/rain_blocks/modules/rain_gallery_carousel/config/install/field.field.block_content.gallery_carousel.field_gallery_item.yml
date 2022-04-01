@@ -1,0 +1,58 @@
+uuid: cb1163df-c02f-4a03-9bc4-4ccd7bdb83a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.gallery_carousel
+    - field.storage.block_content.field_gallery_item
+    - paragraphs.paragraphs_type.gallery_item
+  module:
+    - entity_reference_revisions
+id: block_content.gallery_carousel.field_gallery_item
+field_name: field_gallery_item
+entity_type: block_content
+bundle: gallery_carousel
+label: 'Gallery items'
+description: 'Add gallery items to the carousel.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      gallery_item: gallery_item
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 11
+        enabled: false
+      card:
+        weight: 12
+        enabled: false
+      gallery_carousel:
+        weight: 13
+        enabled: false
+      gallery_item:
+        enabled: true
+        weight: 14
+      hero_media:
+        weight: 15
+        enabled: false
+      map:
+        weight: 16
+        enabled: false
+      media:
+        weight: 17
+        enabled: false
+      quote:
+        weight: 18
+        enabled: false
+      text:
+        weight: 19
+        enabled: false
+      view:
+        weight: 20
+        enabled: false
+field_type: entity_reference_revisions

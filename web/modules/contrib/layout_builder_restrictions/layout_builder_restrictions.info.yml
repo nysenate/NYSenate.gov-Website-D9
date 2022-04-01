@@ -1,0 +1,20 @@
+name: Layout Builder Restrictions
+core: 8.x
+core_version_requirement: ^8 || ^9
+description: 'Manage which fields & layouts are available in Layout Builder'
+type: module
+package: 'Layout Builder'
+php: 7.0
+configure: layout_builder_restrictions.restriction_plugin_config_form
+dependencies:
+  - drupal:system (>=8.5.0-rc1)
+  - drupal:layout_builder
+test_dependencies:
+  - layout_library:layout_library
+  - mini_layouts:mini_layouts
+  - dashboards:dashboards
+
+# Information added by Drupal.org packaging script on 2022-01-14
+version: '8.x-2.12'
+project: 'layout_builder_restrictions'
+datestamp: 1642181242

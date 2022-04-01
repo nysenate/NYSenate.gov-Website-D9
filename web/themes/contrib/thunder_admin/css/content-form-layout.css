@@ -1,0 +1,167 @@
+.content-form__layout{
+  box-sizing:border-box;
+}
+[data-toggle-advanced-sidebar-tray]{
+  display:none;
+}
+.content-form__actions{
+  position:relative;
+  background:white;
+  padding-right:36px;
+  z-index:101;
+}
+.content-form__advanced{
+}
+
+.content-form__advanced .form-autocomplete,
+.content-form__advanced .form-text,
+.content-form__advanced .form-tel,
+.content-form__advanced .form-email,
+.content-form__advanced .form-url,
+.content-form__advanced .form-search,
+.content-form__advanced .form-number,
+.content-form__advanced .form-color,
+.content-form__advanced textarea{
+  box-sizing:border-box;
+  width:100%;
+  max-width:100%;
+}
+.js body.advanced-sidebar-tray{
+  margin-right:40px;
+}
+
+.js body.advanced-sidebar-tray .toolbar-bar{
+  position:fixed;
+}
+
+.js body.advanced-sidebar-tray .content-form__advanced{
+  position:fixed;
+  top:0;
+  bottom:0;
+  width:320px;
+  left:100%;
+  overflow:auto;
+  transform:translate3d(0, 0, 0);
+}
+
+.js body.advanced-sidebar-tray .content-form__advanced .entity-meta--advanced{
+  padding-bottom:50px;
+}
+
+.js body.advanced-sidebar-tray .content-form__advanced .entity-meta__header{
+  padding-right:40px;
+}
+
+.js body.advanced-sidebar-tray .content-form__advanced details > .details-wrapper{
+  padding-right:40px;
+  display:inline-block;
+}
+
+.js body.advanced-sidebar-tray [data-toggle-advanced-sidebar-tray]{
+  display:flex;
+  cursor:pointer;
+}
+
+.js body.advanced-sidebar-tray .content-form__advanced-toggle{
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  width:40px;
+}
+
+.js body.advanced-sidebar-tray.toolbar-vertical{
+}
+
+.js body.advanced-sidebar-tray.toolbar-vertical .content-form__advanced-toggle,
+.js body.advanced-sidebar-tray.toolbar-vertical .content-form__advanced{
+  top:39px;
+}
+
+.js body.advanced-sidebar-tray.toolbar-vertical.toolbar-tray-open.toolbar-fixed{
+  margin-left:0;
+}
+
+.js body.advanced-sidebar-tray.toolbar-horizontal .content-form__advanced-toggle,
+.js body.advanced-sidebar-tray.toolbar-horizontal .content-form__advanced{
+  top:39px;
+}
+
+.js body.advanced-sidebar-tray .toolbar-tray-horizontal,
+.js body.advanced-sidebar-tray .content-form__actions{
+  margin-right:40px;
+}
+
+.js body.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__advanced{
+  transform:translate3d(-100%, 0, 0);
+}
+@media (max-width: 599px){
+  .content-form__advanced{
+    z-index:102;
+  }
+  .content-form__advanced-toggle{
+    z-index:103;
+  }
+}
+@media (min-width: 900px){
+  .js body.advanced-sidebar-tray .content-form__advanced{
+    width:400px;
+  }
+  .js body.advanced-sidebar-tray-toggled{
+    margin-right:400px;
+  }
+  .js body.advanced-sidebar-tray-toggled .toolbar-tray-horizontal{
+    margin-right:400px;
+  }
+}
+@media (min-width: 1200px){
+  .js body.advanced-sidebar-tray{
+    margin-right:400px;
+  }
+  .js body.advanced-sidebar-tray .content-form__advanced{
+    width:400px;
+    transform:translate3d(-100%, 0, 0);
+  }
+  .js body.advanced-sidebar-tray .toolbar-tray-horizontal{
+    margin-right:400px;
+  }
+  .js body.advanced-sidebar-tray-toggled{
+    margin-right:40px;
+  }
+  .js body.advanced-sidebar-tray-toggled .toolbar-tray-horizontal{
+    margin-right:40px;
+  }
+  .js body.advanced-sidebar-tray-toggled .content-form__advanced{
+    width:40px;
+  }
+}
+@media (min-width: 1600px){
+  .js body.advanced-sidebar-tray.toolbar-tray-open.toolbar-vertical.toolbar-fixed{
+    margin-left:320px;
+  }
+}
+@media (min-width: 600px){
+  .js body.advanced-sidebar-tray .content-form__actions{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    padding-left:36px;
+  }
+  .js body.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__actions{
+    margin-right:320px;
+  }
+}
+@media (min-width: 900px){
+  .js body.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__actions{
+    margin-right:400px;
+  }
+}
+@media (min-width: 1200px){
+  .toolbar-vertical.toolbar-tray-open .content-form__actions{
+    margin-left:320px;
+  }
+  .js body.advanced-sidebar-tray.advanced-sidebar-tray-toggled .content-form__actions{
+    margin-right:40px;
+  }
+}

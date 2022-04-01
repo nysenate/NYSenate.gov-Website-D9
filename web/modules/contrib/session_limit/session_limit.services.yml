@@ -1,0 +1,6 @@
+services:
+  session_limit:
+    class: Drupal\session_limit\Services\SessionLimit
+    arguments: ['@database', '@event_dispatcher', '@current_route_match', '@current_user', '@session_manager', '@module_handler', '@config.factory', '@messenger']
+    tags:
+      - {name: event_subscriber}

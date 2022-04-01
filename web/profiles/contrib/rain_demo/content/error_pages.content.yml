@@ -1,0 +1,33 @@
+# Generates test content for Error pages.
+---
+# Nodes for the error pages.
+- entity: "node"
+  type: "page"
+  title: "Page Not Found"
+  nid: 200
+  status: 1
+  moderation_state:
+    value: 'published'
+  uid: 1
+  field_summary:
+    - value: The requested page could not be found.
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>The requested page could not be found.</p>
+- entity: "node"
+  type: "page"
+  title: "Unauthorized"
+  nid: 201
+  status: 1
+  moderation_state:
+    value: 'published'
+  uid: 1
+  field_summary:
+    - value: You are not authorized to access this page.
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>You are not authorized to access this page.</p>

@@ -1,0 +1,24 @@
+uuid: 9a0c66fb-36bb-4fef-86d6-0400a13eef54
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: fBt1T265Sk-AcMccsHLKgiH1oKKdORuvcbOSPIL8msU
+id: landing
+label: 'Landing Page'
+type: 'canonical_entities:node'
+pattern: 'landing/[node:title]'
+selection_criteria:
+  8ee254b1-8f74-48db-88a6-d2679945ee13:
+    id: node_type
+    negate: false
+    uuid: 8ee254b1-8f74-48db-88a6-d2679945ee13
+    context_mapping:
+      node: node
+    bundles:
+      landing: landing
+selection_logic: and
+weight: -5
+relationships: {  }

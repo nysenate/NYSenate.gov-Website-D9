@@ -1,0 +1,50 @@
+hacked.report:
+  path: '/admin/reports/hacked'
+  defaults:
+    _controller: '\Drupal\hacked\Controller\HackedController::hackedStatus'
+    _title: 'Hacked'
+  requirements:
+    _permission: 'administer site configuration'
+
+hacked.settings:
+  path: '/admin/reports/hacked/settings'
+  defaults:
+    _form: 'Drupal\hacked\Form\HackedSettingsForm'
+    _title: 'Settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+hacked.manual_status:
+  path: '/admin/reports/hacked/check'
+  defaults:
+    _title: 'Manual hacked check'
+    _controller: '\Drupal\hacked\Controller\HackedController::hackedStatusManually'
+  requirements:
+    _permission: 'administer site configuration'
+
+hacked.project:
+  path: '/admin/reports/hacked/{project}'
+  defaults:
+    _title_callback: '\Drupal\hacked\Controller\HackedController::hackedProjectTitle'
+    _controller: '\Drupal\hacked\Controller\HackedController::hackedProject'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    parameters:
+      project:
+        type: hacked_project
+        loader: TRUE
+
+hacked.project_diff:
+  path: '/admin/reports/hacked/{project}/diff'
+  defaults:
+    _title_callback: '\Drupal\hacked\Controller\HackedDiffController::hackedProjectDiffTitle'
+    _controller: '\Drupal\hacked\Controller\HackedDiffController::hackedProjectDiff'
+  requirements:
+    _permission: 'administer site configuration'
+    _module_dependencies: 'diff'
+  options:
+    parameters:
+      project:
+        type: hacked_project
+        loader: TRUE

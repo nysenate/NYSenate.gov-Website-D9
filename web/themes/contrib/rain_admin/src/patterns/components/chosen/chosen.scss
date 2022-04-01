@@ -1,0 +1,48 @@
+// Styling overrides for chosen-enabled 
+// select lists.
+// @See: /admin/config/user-interface/chosen
+
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+// stylelint-disable declaration-no-important
+.rain-admin-theme {
+
+  .chosen-container {
+    font-size: 1rem;
+    // Override inline width styling.
+    width: 100% !important;
+  }
+
+  .chosen-choices,
+  .chosen-single {
+    background: none;
+    background-color: $color-white;
+    border-color: $color-blue-gray;
+    border-radius: 2px;
+    box-shadow: none;
+    height: auto;
+    padding: 6px;
+  }
+
+  .chosen-container-active,
+  .chosen-container-active.chosen-with-drop {
+    
+    .chosen-choices,
+    .chosen-single {
+      border-color: $color-bright-blue;
+      background-image: none;
+      box-shadow: none;
+    }
+  }
+
+  .chosen-single > div > b {
+    background-position: 3px 8px;
+  }
+
+  .chosen-container-active.chosen-with-drop .chosen-single > div > b {
+    background-position: -15px  7px;
+  }
+}
+// stylelint-enable declaration-no-important

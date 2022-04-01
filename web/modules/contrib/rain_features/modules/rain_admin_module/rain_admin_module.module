@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Rain Admin Editor Customization module file.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function rain_admin_module_form_node_preview_form_select_alter(&$form, FormStateInterface $form_state) {
+  // Hide the selection of the "View mode" on the Preview page.
+  unset($form['view_mode']);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function rain_admin_module_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  $storage = $form_state->getStorage();
+  $display = $storage['form_display'];
+  $mode = $display->getOriginalMode();
+
+  // Create the "Create New {node_type}" if we are editing a node.
+  if ($mode === 'edit') {
+    $types = array_keys(\Drupal::entityTypeManager()
+      ->getStorage('node_type')
+      ->loadMultiple());
+    // Take all node types and search for one in the form_display values.
+    // Whichever one it finds will be used to create the "Create New" action.
+    $display_parts = explode('.', $display->id());
+    $node_type_array = array_intersect($types, $display_parts);
+    $node_type = array_pop($node_type_array);
+    $form['new_content_button'] = [
+      '#type' => 'link',
+      '#title' => 'Create New ' . ucwords(str_replace('_', ' ', $node_type)),
+      '#url' => Url::fromRoute('node.add', ['node_type' => $node_type]),
+      '#attributes' => ['class' => ['button']],
+      '#prefix' => '<div class="content-form__advanced-actions-cta">',
+      '#suffix' => '</div>',
+    ];
+  }
+
+  $form['moderation_state']['widget'][0]['state']['#title'] = 'Current state';
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function rain_admin_module_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  $widget = $context['widget'];
+  $widget_name = $widget->getPluginId();
+
+  // Get rid of clutter descriptions.
+  if ($widget_name === 'path') {
+    unset($element['#group']);
+    $element['#type'] = 'fieldset';
+    unset($element['pathauto']['#description']);
+    unset($element['alias']['#description']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_field_multiple_value_form().
+ */
+function rain_admin_module_preprocess_field_multiple_value_form(&$variables) {
+  if ($variables['multiple']) {
+    $element = $variables['element'];
+
+    // Add a label to the template, and vary its visibility based on the field
+    // label setting. This is to support label-display config. See
+    // rain_admin_field_label_preprocess_field_multiple_value_form().
+    if (isset($variables['label'])) {
+      $variables['label'] += ['#theme' => 'form_element_label'];
+    }
+    else {
+      $variables['label'] = ['#theme' => 'form_element_label'];
+    }
+    $variables['label'] += array_intersect_key($element, array_flip(['#id', '#required', '#title', '#title_display']));
+    if (!empty($element['#label_for'])) {
+      $variables['label']['#for'] = $element['#label_for'];
+      if (!empty($element['#id'])) {
+        $variables['label']['#id'] = $element['#id'] . '--label';
+      }
+    }
+  }
+}

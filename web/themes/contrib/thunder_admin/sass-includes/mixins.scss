@@ -1,0 +1,44 @@
+/***********************
+ * Various sass mixins *
+ ***********************/
+
+/* Fix disabled buttons on dark bg,
+ * f.e. used with color-scheme-inverted, form actions.
+ */
+@mixin disabled-buttons-on-dark-bg {
+  .button {
+    &:disabled,
+    &:disabled:active,
+    &:disabled:hover,
+    &.is-disabled,
+    &.is-disabled:active,
+    &.is-disabled:hover {
+      background-color: transparent;
+      border-color: #d4d4d4;
+      color: #d4d4d4;
+    }
+  }
+}
+
+/* Some grid mixin.
+ *
+ * Usage:
+ * @include some-grid-item(number of columns, margin size percentage)
+ *
+ * 1. Calculate width:
+ *    Full width - margins (# columns * 2 - 2 (first/last of row)) / number of columns.
+ * 2. Remove left margin for first element in row.
+ * 3. Remove right margin for last element in row.
+ */
+@mixin its-a-grid-item($n-columns, $margin-size) {
+  width: (100% - ($n-columns * 2 - 2) * $margin-size) / $n-columns; /* 1 */
+
+  &:first-child,
+  &:nth-child(#{$n-columns}n+1) {
+    margin-left: 0; /* 2 */
+  }
+
+  &:nth-child(#{$n-columns}n) {
+    margin-right: 0; /* 3 */
+  }
+}

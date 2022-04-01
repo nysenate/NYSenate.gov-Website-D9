@@ -1,0 +1,130 @@
+/**
+ * @file
+ * Additional style updates for form element.
+ */
+@import 'variables';
+
+.field-suffix {
+  padding-left: 5px;
+}
+
+//input[type="checkbox"],
+//input[type="radio"] {
+//}
+
+.form-item__field-wrapper--has-description {
+  min-height: 22px;
+}
+/* Hide par default */
+.details__toggle-description,
+.form-item__toggle-description {
+  display: none;
+}
+
+.form-item__toggle-description-placeholder {
+  display: none;
+}
+
+/**
+ * Add ability to hide/show the description of form fields.
+ * Uses body class for toggling, see thunder_admin.theme.
+ *
+ * 1. Subtract description toggle width from input fields,
+ *     form-date, form-time & textarea keep 100% though.
+ */
+.entity-add-or-edit-form {
+  .form-item__field-wrapper--has-description {
+    display: flex;
+    align-items: center;
+
+    input.form-autocomplete,
+    input.form-text,
+    input.form-tel,
+    input.form-email,
+    input.form-url,
+    input.form-search,
+    input.form-number,
+    input.form-color,
+    input.form-file {
+      max-width: calc(100% - 22px); /* 1 */
+    }
+
+    .form-textarea-wrapper,
+    .image-style-preview {
+      flex: 1 1 auto;
+    }
+  }
+  .details__toggle-description,
+  .form-item__toggle-description {
+    display: inline-block;
+    padding: 0.5em;
+    flex: 0 0 auto;
+    align-self: flex-end;
+
+    .no-touchevents & {
+      position: relative;
+      top: -2px;
+      left: 2px;
+      margin: 0;
+      padding: 0 0.15em;
+      width: 22px;
+      height: 22px;
+      svg {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    .button__icon {
+      display: block;
+      height: 100%;
+      width: 100%;
+      svg {
+        path {
+          fill: $primary-color-light;
+        }
+      }
+    }
+  }
+
+  .details__toggle-description {
+    float: right;
+    display: inline-block;
+
+    [open] > summary > & {
+      display: block;
+    }
+  }
+}
+
+.js body.entity-add-or-edit-form {
+  .js-details-description,
+  .js-form-item__description {
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .is-description-visible .js-details-description,
+  .is-description-visible .js-form-item__description {
+    visibility: visible;
+    max-height: 5000px;
+    opacity: 1;
+    transition: all 0.3s;
+  }
+}
+
+/*
+ * Uniform widths for title, seo-title & tags.
+ */
+.field--name-title,
+.field--name-field-seo-title,
+.field--name-field-tags {
+  max-width: 722px; // Add toggle width
+
+  input:not(.form-checkbox),
+  .length-indicator {
+    width: calc(100% - 22px); // Subtract description toggle width.
+  }
+}

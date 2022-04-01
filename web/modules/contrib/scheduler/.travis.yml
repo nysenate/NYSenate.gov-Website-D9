@@ -1,0 +1,137 @@
+language: php
+os: linux
+dist: xenial
+
+services:
+  - mysql
+
+env:
+  global:
+    # Make the script re-usable for other modules.
+    - MODULE=scheduler
+    # Initialise the real SYMFONY_DEPRECATIONS_HELPER variable.
+    - SYMFONY_DEPRECATIONS_HELPER=0
+    # Create a default for the allowed deprecations per branch.
+    - DEPRECATIONS=0
+
+jobs:
+  fast_finish: true
+  include:
+    - php: 7.2
+      env: DRUPAL_CORE=8.9.x
+    - php: 7.3
+      env:
+        - DRUPAL_CORE=9.0.x
+        # --- Remaining self deprecation notices (0)
+        # --- Remaining direct deprecation notices (0)
+    - php: 7.4
+      env:
+        - DRUPAL_CORE=9.1.x
+        # --- Remaining self deprecation notices (180)
+        # 141 EventDispatcher (in Rules module)
+        #  27 Drupal\Core\Plugin\ContextAwarePluginBase (in Rules module)
+        #  12 StatementWrapper::fetchColumn
+        # --- Remaining direct deprecation notices (0)
+        - DEPRECATIONS=180
+    - php: 7.4
+      env:
+        # Have a second 9.1 run which excludes the Rules tests.
+        - DRUPAL_CORE=9.1.x
+        # --- Remaining self deprecation notices (0)
+        # --- Remaining direct deprecation notices (0)
+        - RULES=NO
+
+# Be sure to cache composer downloads.
+cache:
+  directories:
+    - $HOME/.composer
+
+before_script:
+  # At job start-up Composer is installed at 1.8.4 then self-update is run. From
+  # 24 October 2020 this bumped the version to Composer 2. Drupal Core 8.8 has
+  # plugins that only run with composer-plugin-api ^1.0 so revert to Composer 1.
+  - if [ "$DRUPAL_CORE" == "8.8.x" ]; then
+      travis_retry composer self-update --1;
+    fi
+  - composer --version
+
+  - echo $MODULE
+
+  # Remove Xdebug as we don't need it and it causes
+  # PHP Fatal error:  Maximum function nesting level of '256' reached.
+  # We also don't care if that file exists or not on PHP 7.
+  - phpenv config-rm xdebug.ini || true
+
+  # Navigate out of module directory to prevent blown stack by recursive module
+  # lookup.
+  - cd ..
+
+  # Create database.
+  - mysql -e "create database $MODULE"
+  # Export database variable for kernel tests.
+  - export SIMPLETEST_DB=mysql://root:@127.0.0.1/$MODULE
+
+  # Download Drupal core from the Github mirror because it is faster.
+  - travis_retry git clone --branch $DRUPAL_CORE --depth 1 https://github.com/drupal/drupal.git
+  - cd drupal
+  # Store the path to Drupal root.
+  - DRUPAL_ROOT=$(pwd)
+  - echo $DRUPAL_ROOT
+
+  # Make a directory for our module and copy the built source into it.
+  - mkdir $DRUPAL_ROOT/modules/$MODULE
+  - cp -R $TRAVIS_BUILD_DIR/* $DRUPAL_ROOT/modules/$MODULE/
+
+  # Get the latest dev versions of the test dependency modules.
+  - travis_retry git clone --branch 4.x     --depth 1 https://git.drupalcode.org/project/devel.git modules/devel
+  - |
+    if [ "$RULES" != "NO" ]; then
+      echo "Installing Rules and Typed Data ..."
+      travis_retry git clone --branch 8.x-3.x --depth 1 https://git.drupalcode.org/project/rules.git modules/rules
+      travis_retry git clone --branch 8.x-1.x --depth 1 https://git.drupalcode.org/project/typed_data.git modules/typed_data
+    fi
+
+  # Install the site dependencies via Composer.
+  - travis_retry composer install
+
+  # Install drush. COMPOSER_MEMORY_LIMIT=-1 fixes the 'Allowed memory exhausted'
+  # problem when running at core 8.8.
+  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer require drush/drush:"^9.0 || ^10.0"
+
+  # Coder is already installed as part of composer install. We just need to set
+  # the installed_paths to pick up the Drupal standards.
+  - $DRUPAL_ROOT/vendor/bin/phpcs --config-set installed_paths $DRUPAL_ROOT/vendor/drupal/coder/coder_sniffer
+
+  # Start a web server on port 8888, run in the background.
+  - php -S localhost:8888 &
+
+  # Export web server URL for browser tests.
+  - export SIMPLETEST_BASE_URL=http://localhost:8888
+
+  # Get the allowed number of deprecation warnings.
+  - SYMFONY_DEPRECATIONS_HELPER=$DEPRECATIONS || $SYMFONY_DEPRECATIONS_HELPER
+  - echo $SYMFONY_DEPRECATIONS_HELPER
+
+script:
+  # Run the PHPUnit tests.
+  - cd $DRUPAL_ROOT
+  - if [ "$RULES" == "NO" ]; then
+      ./vendor/bin/phpunit -c ./core/phpunit.xml.dist --debug ./modules/$MODULE/tests/ --filter '/^((?!rules).)*$/i';
+    else
+      ./vendor/bin/phpunit -c ./core/phpunit.xml.dist --debug ./modules/$MODULE/tests/;
+    fi
+
+  # Check for coding standards. First show the versions.
+  - composer show drupal/coder | egrep 'name |vers'
+  - composer show squizlabs/php_codesniffer | egrep 'name |vers'
+  - $DRUPAL_ROOT/vendor/bin/phpcs --version
+
+  # Change into $MODULE directory to avoid having to add --standard=$DRUPAL_ROOT/modules/$MODULE/phpcs.xml.dist
+  - cd $DRUPAL_ROOT/modules/$MODULE
+
+  # List the standards and the sniffs that are used.
+  - $DRUPAL_ROOT/vendor/bin/phpcs -i
+  - $DRUPAL_ROOT/vendor/bin/phpcs -e
+
+  # Show the violations in detail, plus summary and source report.
+  - $DRUPAL_ROOT/vendor/bin/phpcs . --report-full --report-summary --report-source -s

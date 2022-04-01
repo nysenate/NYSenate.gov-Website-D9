@@ -1,0 +1,40 @@
+// Utilities
+//
+// Import variables and mixins
+// Should contain NO css output.
+// Only variables / mixins / settings.
+@import 'utils/init';
+
+// Import font-face fonts.
+//
+// This should only be imported and loaded once.
+@import 'fonts/fonts';
+
+@import 'forms/forms';
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  @include font-stack-primary;
+  background-color: $color-white;
+  box-sizing: inherit;
+  color: $color-black;
+  font-size: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @include font-stack-secondary;
+}
+
+a,
+.link {
+  text-decoration: none;
+  color: $color-bright-blue;
+}

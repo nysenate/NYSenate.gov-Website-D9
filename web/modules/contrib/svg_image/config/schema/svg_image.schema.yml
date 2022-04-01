@@ -1,0 +1,22 @@
+field.formatter.settings.image:
+  type: mapping
+  mapping:
+    image_link:
+      type: string
+      label: 'Link image to'
+    image_style:
+      type: string
+      label: 'Image style'
+    svg_attributes:
+      type: mapping
+      label: 'SVG attributes'
+      mapping:
+        width:
+          type: integer
+          label: Width
+        height:
+          type: integer
+          label: Height
+    svg_render_as_image:
+      type: boolean
+      label: 'Render SVG image as &lt;img&gt;'

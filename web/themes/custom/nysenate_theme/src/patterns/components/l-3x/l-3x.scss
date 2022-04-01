@@ -1,0 +1,36 @@
+// Flex 3x Layout
+
+@import '../../global/utils/init';
+
+.l-3x {
+
+  > .l-container {
+
+    @include breakpoint($bp-sm) {
+      display: flex;
+      // Catch-all for items beyond 3x.
+      flex-wrap: wrap;
+      // Outdent container to account for padding on
+      // left & right of items.
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+
+    > * {
+
+      @include breakpoint($bp-sm) {
+        flex: 0 1 33.33%;
+        padding: 15px;
+      }
+
+      // On mobile, all items, except last child, get a margin-bottom.
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+
+        @include breakpoint($bp-sm) {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

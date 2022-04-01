@@ -1,0 +1,131 @@
+# Generates test content for Events.
+---
+# Nodes for the Event bundle.
+- entity: "node"
+  type: "event"
+  title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+  status: 1
+  uid: 1
+  nid: 11
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: Aenean et mi risus. Nullam sed mattis nulla. Praesent massa ipsum, bibendum ut pretium eget, gravida vel velit. Integer sed imperdiet ligula.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Test Event Image 1"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "upcoming-events.jpg"
+          alt: "Test Event Image 1"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et ante eu nisl finibus molestie. Maecenas vehicula arcu eget tristique congue. Sed et metus sit amet eros pellentesque dignissim. Aenean et mi risus. Nullam sed mattis nulla. Praesent massa ipsum, bibendum ut pretium eget, gravida vel velit. Integer sed imperdiet ligula. Proin libero nulla, sodales in bibendum quis, ultricies vitae massa. Ut turpis ex, dictum non feugiat eget, sollicitudin at neque. In a lacus maximus, faucibus nulla quis, tristique arcu.</p>
+  field_dates:
+    - value: "2022-01-21T04:11:12"
+      end_value: "2022-01-23T04:11:12"
+  field_link:
+    - uri: "http://www.google.com/"
+- entity: "node"
+  type: "event"
+  title: "Mauris pretium nibh sapien, quis commodo augue blandit e"
+  status: 1
+  uid: 1
+  nid: 12
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: "Maecenas vehicula arcu eget tristique congue."
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Test Event Image 2"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "upcoming-events.jpg"
+          alt: "Test Event Image 2"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        "<p>Sed condimentum, elit nec iaculis luctus, velit neque vestibulum lorem, at ullamcorper nunc sem sit amet lorem. Curabitur sit amet dolor vestibulum, fringilla eros efficitur, lobortis ex. Sed commodo erat et vestibulum porta. Nullam blandit, sem ut tristique fringilla, lacus risus sagittis felis, eget vulputate neque augue eleifend metus. Nullam facilisis lorem vel risus finibus, eu ultrices sapien imperdiet. Curabitur convallis, mi a sodales lacinia, enim magna consectetur elit, in lacinia quam tortor a lectus. Nam porta ex ante, eget placerat ipsum aliquam ac.</p>"
+  field_dates:
+    - value: "2022-01-21T04:11:12"
+      end_value: "2022-01-23T04:11:12"
+  field_link:
+    - uri: "http://www.google.com/"
+- entity: "node"
+  type: "event"
+  title: "Maecenas eu leo a sem consectetur consectetur"
+  status: 1
+  uid: 1
+  nid: 13
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: Fusce egestas iaculis mauris sed dignissim. Integer consequat felis quis eros vehicula pulvinar. 
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Test Event Image 3"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "upcoming-events.jpg"
+          alt: "Test Event Image 3"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Fusce egestas iaculis mauris sed dignissim. Integer consequat felis quis eros vehicula pulvinar. Nullam lobortis porta nulla ut commodo. Nam volutpat dignissim ultrices. Integer sit amet enim diam. Suspendisse aliquam pharetra eleifend. Nam imperdiet efficitur vestibulum. Proin nec lacinia leo. Cras facilisis maximus nulla vel pharetra. Donec mi quam, elementum et feugiat ut, lacinia sit amet ligula.</p>
+  field_dates:
+    - value: "2022-01-21T04:11:12"
+      end_value: "2022-01-23T04:11:12"
+  field_link:
+    - uri: "http://www.google.com/"
+- entity: "node"
+  type: "event"
+  title: "Ut consectetur nulla in lorem finibus"
+  status: 1
+  uid: 1
+  nid: 14
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: Fusce egestas iaculis mauris sed dignissim. Integer consequat felis quis eros vehicula pulvinar. Nullam lobortis porta nulla ut commodo. Nam volutpat dignissim ultrices.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Test Event Image 4"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "upcoming-events.jpg"
+          alt: "Test Event Image 4"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Sed condimentum, elit nec iaculis luctus, velit neque vestibulum lorem, at ullamcorper nunc sem sit amet lorem. Curabitur sit amet dolor vestibulum, fringilla eros efficitur, lobortis ex. Sed commodo erat et vestibulum porta. Nullam blandit, sem ut tristique fringilla, lacus risus sagittis felis, eget vulputate neque augue eleifend metus. Nullam facilisis lorem vel risus finibus, eu ultrices sapien imperdiet. Curabitur convallis, mi a sodales lacinia, enim magna consectetur elit, in lacinia quam tortor a lectus. Nam porta ex ante, eget placerat ipsum aliquam ac.</p>
+  field_dates:
+    - value: "2022-01-21T04:11:12"
+      end_value: "2022-01-23T04:11:12"
+  field_link:
+    - uri: "http://www.google.com/"

@@ -1,0 +1,42 @@
+.view-related-products {
+  padding: 0 1.5rem; }
+  .view-related-products .news-teaser {
+    display: flex;
+    margin-bottom: 30px; }
+    @media screen and (max-width: 767px) {
+      .view-related-products .news-teaser {
+        flex-direction: column; } }
+  .view-related-products .news-teaser__title {
+    font-family: 'Muli-Black', sans-serif;
+    font-weight: 900; }
+    .view-related-products .news-teaser__title a {
+      color: #000000; }
+  .view-related-products .news-teaser__image {
+    flex-basis: 33%; }
+    .view-related-products .news-teaser__image img {
+      width: 100%; }
+  .view-related-products .news-teaser__content {
+    flex: 1;
+    margin-top: 30px; }
+    @media screen and (min-width: 768px) {
+      .view-related-products .news-teaser__content {
+        margin: 0 30px; } }
+  .view-related-products .news-teaser__date {
+    margin-bottom: 15px;
+    display: none; }
+  .view-related-products .news-teaser__summary {
+    font-family: 'Muli-Regular', sans-serif;
+    color: #000000;
+    margin-bottom: 15px; }
+  .view-related-products .news-teaser__link {
+    display: inline-block;
+    font-family: 'Muli-Black', sans-serif;
+    font-weight: 900;
+    color: #000002;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border: solid #000002 1px;
+    border-radius: 30px; }
+    .view-related-products .news-teaser__link svg {
+      margin-left: 5px;
+      fill: #000002; }

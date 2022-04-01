@@ -1,0 +1,221 @@
+# Generates test content for Products.
+---
+# Nodes for the Product bundle.
+- entity: "node"
+  type: "product"
+  title: "Donec laoreet luctus"
+  status: 1
+  uid: 1
+  nid: 23
+  field_summary:
+    - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus auctor, turpis at luctus finibus, erat lectus convallis velit, at sodales purus lacus quis magna. Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae. Proin sed luctus augue.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: 'Product 1'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product1'
+  field_product_media:
+    - entity: media
+      bundle: image
+      name: 'Product 1'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product1'
+    - entity: media
+      bundle: image
+      name: 'Product 1b'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product1b'
+    - entity: media
+      bundle: image
+      name: 'Product 1c'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product1c'
+  field_product_desc:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>In vel pellentesque eros, sit amet feugiat massa. Donec quis erat ultricies, porta risus at, volutpat nulla. Ut mi elit, elementum non tellus quis, euismod fermentum augue. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed lobortis dui ut massa fermentum elementum. Donec quis lobortis orci. In semper, turpis eget tempor ultrices, urna est consectetur ligula, sed dignissim lectus enim ac odio. Mauris viverra, lorem eget faucibus blandit, justo erat eleifend nunc, non consectetur orci massa quis felis. Cras accumsan lacus sit amet accumsan tincidunt.</p>
+  field_link:
+    - uri: 'http://google.com/'
+      title: 'Request quote'
+  body:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>Cras rutrum, enim sit amet aliquet eleifend, risus dolor ultrices dui, a tincidunt est leo ac ex. Aliquam et est pellentesque, auctor velit eget, scelerisque arcu. Nunc dapibus tempor odio, non sagittis lectus. Nam in ultricies velit, sit amet rhoncus nunc. Vivamus nec tortor iaculis, ultricies magna luctus, semper nulla. Nunc rutrum nunc sed dolor finibus rhoncus. Nulla faucibus dolor sed leo lacinia, dictum ultrices lacus feugiat. Integer mollis lacus ut dui posuere condimentum sed at purus. Nam eget velit aliquam, varius nisi sed, tristique felis. Nunc aliquet pretium elit a eleifend. Aenean tempus vitae felis in gravida. Mauris pulvinar, sapien ut ornare sollicitudin, eros erat rutrum justo, eu elementum lectus lorem eget lorem.</p>
+        <p>Aliquam blandit tempor neque sit amet dignissim. Ut aliquam sem a porttitor pulvinar. Nunc euismod, tortor vitae auctor molestie, enim dolor semper velit, nec rhoncus nibh nisl vel elit. Vivamus elementum vestibulum scelerisque. In rutrum sapien at auctor consequat. In fringilla posuere nunc et eleifend. Sed in tempus ex, commodo maximus turpis. Nullam consequat lacus at nisl gravida efficitur non quis lorem. Integer fringilla urna nec nisl suscipit, eget facilisis tellus tincidunt. Duis sodales blandit suscipit. Donec elit orci, vestibulum quis sollicitudin eu, placerat non ipsum. Phasellus in urna vitae dolor malesuada vehicula. Nulla tortor turpis, laoreet ut nunc quis, dignissim hendrerit sem. Nunc dignissim dolor eu neque porta fringilla. Pellentesque consectetur felis non est consequat, id suscipit sem scelerisque.</p>
+- entity: "node"
+  type: "product"
+  title: "Lorem ipsum dolor sit amet"
+  status: 1
+  uid: 1
+  nid: 24
+  field_summary:
+    - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus auctor, turpis at luctus finibus, erat lectus convallis velit, at sodales purus lacus quis magna. Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae. Proin sed luctus augue.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: 'Product 2'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product2'
+  field_product_media:
+    - entity: media
+      bundle: image
+      name: 'Product 2'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product2'
+    - entity: media
+      bundle: image
+      name: 'Product 2b'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product2b'
+    - entity: media
+      bundle: image
+      name: 'Product 2c'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product2c'
+  field_product_desc:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>Aliquam blandit tempor neque sit amet dignissim. Ut aliquam sem a porttitor pulvinar. Nunc euismod, tortor vitae auctor molestie, enim dolor semper velit, nec rhoncus nibh nisl vel elit. Vivamus elementum vestibulum scelerisque. In rutrum sapien at auctor consequat. In fringilla posuere nunc et eleifend. Sed in tempus ex, commodo maximus turpis. Nullam consequat lacus at nisl gravida efficitur non quis lorem. Integer fringilla urna nec nisl suscipit, eget facilisis tellus tincidunt. Duis sodales blandit suscipit. Donec elit orci, vestibulum quis sollicitudin eu, placerat non ipsum. Phasellus in urna vitae dolor malesuada vehicula. Nulla tortor turpis, laoreet ut nunc quis, dignissim hendrerit sem. Nunc dignissim dolor eu neque porta fringilla. Pellentesque consectetur felis non est consequat, id suscipit sem scelerisque.</p>
+        <p>Vivamus ultricies condimentum rutrum. Vivamus mi neque, lobortis at finibus eu, mattis in neque. Duis id congue augue, nec porta turpis. Nam sit amet imperdiet est. In ut enim porta, aliquam elit sit amet, ullamcorper augue. Curabitur eget velit mi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras id malesuada nulla. Nulla facilisi. Aenean mollis, ipsum eu dignissim rutrum, ante sapien luctus enim, quis ultrices odio erat sit amet nisi. Proin ut turpis et mi semper volutpat. Proin vitae tortor porttitor, aliquam mauris eu, auctor sapien. Nunc non magna consequat, faucibus lacus ut, consectetur est.</p>
+  field_link:
+    - uri: 'http://google.com/'
+      title: 'Contact us'
+  body:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus auctor, turpis at luctus finibus, erat lectus convallis velit, at sodales purus lacus quis magna. Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae. Proin sed luctus augue. Nam fringilla enim leo, non sodales ante gravida ac.</p>
+        <p>Maecenas rhoncus, mi varius interdum euismod, odio velit bibendum libero, et cursus lectus sem quis sem. Quisque eget mauris accumsan, sollicitudin turpis at, mollis tellus. Vivamus scelerisque mauris eget enim dapibus fringilla. Aliquam erat volutpat. Aenean tincidunt scelerisque tortor vitae pellentesque. Suspendisse imperdiet suscipit arcu, vel posuere mauris fermentum at. Suspendisse potenti. Sed at fermentum odio. Aliquam condimentum consectetur eleifend. Nullam mollis ac tellus sit amet convallis. Donec consectetur pretium sapien a dictum. Aliquam ut erat ac nibh tempor interdum ac ut nisi.</p>
+- entity: "node"
+  type: "product"
+  title: "Phasellus auctor, turpis"
+  status: 1
+  uid: 1
+  nid: 25
+  field_summary:
+    - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus auctor, turpis at luctus finibus, erat lectus convallis velit, at sodales purus lacus quis magna. Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae. Proin sed luctus augue.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: 'Product 3'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product3'
+  field_product_media:
+    - entity: media
+      bundle: image
+      name: 'Product 3'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product3'
+    - entity: media
+      bundle: image
+      name: 'Product 3b'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product3b'
+    - entity: media
+      bundle: image
+      name: 'Product 3c'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'products-thumb.jpg'
+          alt: 'product3c'
+  field_product_desc:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>Point of sale (likewise called POS or checkout) is the spot where a retail exchange is finished. It is the point at which a client makes an installment to the shipper in return for merchandise or administrations. At the point of sale the retailer would ascertain the sum owed by the client and give alternatives to the client to make installment. The trader will likewise typically issue a receipt for the exchange. Point of Sales outsourcing is the best way to generate benefits.</p>
+        <p>The POS software in different retail businesses uses altered equipment and software according to their necessities. Retailers may use measuring scales, scanners, electronic and manual money registers, EFTPOS terminals, touch screens and some other wide assortment of equipment and software accessible for utilization with POS. Case in point, a basic supply or confection store utilizes a scale at the point of sale, while bars and restaurants use POS system to alter the thing or administration sold when a client has an unique dinner or beverage demand.</p>
+  field_link:
+    - uri: 'http://google.com/'
+      title: 'Contact us'
+  body:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus auctor, turpis at luctus finibus, erat lectus convallis velit, at sodales purus lacus quis magna. Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae. Proin sed luctus augue. Nam fringilla enim leo, non sodales ante gravida ac.</p>
+        <p>Maecenas rhoncus, mi varius interdum euismod, odio velit bibendum libero, et cursus lectus sem quis sem. Quisque eget mauris accumsan, sollicitudin turpis at, mollis tellus. Vivamus scelerisque mauris eget enim dapibus fringilla. Aliquam erat volutpat. Aenean tincidunt scelerisque tortor vitae pellentesque. Suspendisse imperdiet suscipit arcu, vel posuere mauris fermentum at. Suspendisse potenti. Sed at fermentum odio. Aliquam condimentum consectetur eleifend. Nullam mollis ac tellus sit amet convallis. Donec consectetur pretium sapien a dictum. Aliquam ut erat ac nibh tempor interdum ac ut nisi.</p>

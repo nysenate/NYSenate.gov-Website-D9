@@ -1,0 +1,50 @@
+{
+  "name": "rain_theme",
+  "version": "2.0.0",
+  "scripts": {
+    "build": "gulp",
+    "compile": "gulp compile",
+    "watch": "gulp watch",
+    "styleguide": "gulp styleguide",
+    "compress": "gulp compress",
+    "lint": "gulp lint",
+    "clean": "gulp clean",
+    "gulp": "gulp"
+  },
+  "babel": {
+    "sourceType": "unambiguous",
+    "presets": [
+      [
+        "@babel/preset-env"
+      ]
+    ]
+  },
+  "browserslist": [
+    "last 2 versions",
+    "not dead"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@pattern-lab/core": "^5.7.0",
+    "@pattern-lab/engine-twig-php": "^5.7.1",
+    "@pattern-lab/uikit-workshop": "^5.7.1",
+    "browser-sync": "^2.26.7",
+    "del": "^4.1.1",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^5.0.0",
+    "gulp-imagemin": "^6.0.0",
+    "gulp-order": "^1.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-lint": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.5"
+  },
+  "dependencies": {
+    "browserslist": "^4.16.3",
+    "caniuse-lite": "^1.0.30001197"
+  }
+}

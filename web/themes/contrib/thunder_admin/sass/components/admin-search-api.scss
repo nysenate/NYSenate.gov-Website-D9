@@ -1,0 +1,74 @@
+/**
+ * @file
+ * Styles for admin content and media search api view.
+ */
+
+/*
+ * 1. Inline layout for search_api content view form.
+ * 2. Fix initial display before select2.js is loaded.
+ */
+.block-facets {
+  display: inline-block; /* 1 */
+
+  .form-item:first-of-type {
+    padding-right: 0.5em; /* 1 */
+  }
+
+  select.select2-widget {
+    height: 35px; /* 2 */
+    min-width: 10em; /* 2 */
+    vertical-align: bottom; /* 2 */
+  }
+
+  .select2-container {
+    min-width: 10em;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
+}
+
+/*
+ * 1. Inline layout for search_api content view form.
+ * 2. Reset form inline layout.
+ * 3. Same spacing as form-items.
+ * 4. Fix button height
+ * 5. Button full width and below.
+ */
+.block-views-exposed-filter-blockcontent-search-api-page-1 {
+  display: inline-block; /* 1 */
+  padding-right: 0.5em; /* 1 */
+  vertical-align: bottom; /* 1 */
+
+  .form--inline {
+
+    .form-item,
+    .form-actions {
+      display: inline-block; /* 1 */
+      float: none; /* 2 */
+      clear: none; /* 2 */
+    }
+
+    .form-actions {
+      margin-top: 0.75em; /* 3 */
+      margin-bottom: 0.75em; /* 3 */
+
+      input {
+        min-height: 35px; /* 4 */
+      }
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+
+    .form--inline {
+      .form-item,
+      .form-actions {
+        display: block; /* 5 */
+        margin-right: 0; /* 5 */
+      }
+    }
+  }
+}

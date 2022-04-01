@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.card_list
+    - field.storage.block_content.field_card_list_layout
+  module:
+    - options
+id: block_content.card_list.field_card_list_layout
+field_name: field_card_list_layout
+entity_type: block_content
+bundle: card_list
+label: 'Card List Layout'
+description: 'Select the desired display for this component.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

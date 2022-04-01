@@ -1,0 +1,41 @@
+<?php
+
+use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_field_widget_complete_form_alter().
+ */
+function inline_entity_form_test_field_widget_complete_form_alter(array &$element, FormStateInterface $form_state, array $context): void {
+  /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+  $field_definition = $context['items']->getFieldDefinition();
+
+  if ($field_definition->getName() === 'positive_int') {
+    /** @var \Drupal\Core\Field\FieldItemListInterface $items */
+    $items = $context['items'];
+    $element['button'] = [
+      '#type' => 'button',
+      '#value' => 'Call ajax',
+      '#item_values' => $items->getValue(),
+      '#limit_validation_errors' => [],
+      '#ajax' => [
+        'callback' => 'inline_entity_form_test_ajax_handler',
+      ],
+    ];
+    $element['value'] = [
+      '#type' => 'textfield',
+    ];
+  }
+}
+
+function inline_entity_form_test_ajax_handler(array $form, FormStateInterface $form_state): AjaxResponse {
+  $button = $form_state->getTriggeringElement();
+  $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+  $value_field = $element['value'];
+
+  $response = new AjaxResponse();
+  $response->addCommand(new InvokeCommand("[name='${value_field['#name']}']", 'val', [$button['#item_values'][0]['value']]));
+  return $response;
+}

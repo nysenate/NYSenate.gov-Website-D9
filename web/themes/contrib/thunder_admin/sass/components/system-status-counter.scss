@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Import and override system-status-counter.css from seven originally provided by system/base.
+ */
+@import '@theme-seven/css/components/system-status-counter.css';
+
+.system-status-counter__status-icon--error:before {
+  background-image: url(../../images/stable/images/core/icons/e32700/error.svg);
+}
+.system-status-counter__status-icon--warning:before {
+  background-image: url(../../images/stable/images/core/icons/e29700/warning.svg);
+}
+.system-status-counter__status-icon--checked:before {
+  background-image: url(../../images/stable/images/core/icons/73b355/check.svg);
+}

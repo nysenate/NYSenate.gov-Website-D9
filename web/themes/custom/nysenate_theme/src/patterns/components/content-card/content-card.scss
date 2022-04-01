@@ -1,0 +1,139 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.content-card__content {
+  padding: 40px 35px;
+}
+
+.content-card__month {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 3rem;
+  opacity: 0.4;
+  line-height: 1;
+}
+
+.content-card__date-display {
+  font-size: 1.5rem;
+}
+
+.content-card__day {
+  position: absolute;
+  right: -6px;
+  bottom: -18px;
+  font-size: 8rem;
+  opacity: 0.4;
+  line-height: 1;
+}
+
+.content-card__link {
+  display: inline-block;
+  margin-top: 1.5rem;
+}
+
+.content-card {
+  max-width: 335px;
+  position: relative;
+  background-color: $color-white;
+  margin: 10px auto;
+  width: auto;
+  height: 486px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  @include breakpoint($bp-sm) {
+    height: 540px;
+  }
+
+  @include breakpoint($bp-md) {
+    margin-right: 15px;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: solid 5px #cccae3;
+  }
+
+  .content-card__content {
+    line-height: 1.5rem;
+  }
+
+  .content-card__content h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+    color: #444444;
+    line-height: 1;
+
+    @include breakpoint($bp-sm) {
+      font-size: 32px;
+    }
+  }
+
+  .content-card__content .content-card__subhead {
+    color: #414751;
+    font-size: 18px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+
+    @include breakpoint($bp-sm) {
+      font-size: 20px;
+    }
+  }
+
+  .content-card__content .body-text {
+    color: #414751;
+    font-size: 18px;
+    font-weight: normal;
+
+    .field__label {
+      font-size: 18px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+
+      @include breakpoint($bp-sm) {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .content-card__month,
+  .content-card__day {
+    color: $color-primary;
+    opacity: 0.15;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .content-card__date-display {
+    font-weight: 600;
+  }
+
+  .content-card__day {
+    font-size: 12rem;
+    bottom: -31px;
+    letter-spacing: -1.5rem;
+    right: 0.6rem;
+  }
+
+  .content-card__month {
+    font-size: 4rem;
+    top: -8px;
+  }
+
+  .content-card__link {
+    color: #f75c06;
+    text-decoration: none;
+    font-weight: bold;
+  }
+}

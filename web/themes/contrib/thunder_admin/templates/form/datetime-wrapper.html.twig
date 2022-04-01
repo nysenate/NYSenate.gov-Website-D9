@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Theme override of a datetime form wrapper.
+ *
+ * Available variables:
+ * - content: The form element to be output, usually a datelist, or datetime.
+ * - title: The title of the form element.
+ * - title_attributes: HTML attributes for the title wrapper.
+ * - description: Description text for the form element.
+ * - required: An indicator for whether the associated form element is required.
+ *
+ * @see template_preprocess_datetime_wrapper()
+ */
+#}
+{%
+  set title_classes = [
+    'label',
+    required ? 'js-form-required',
+    required ? 'form-required',
+  ]
+%}
+<div class="form-item datetime-wrapper{% if errors %} form-item--error{% endif %}" data-form-description-container>
+  {% if title %}
+    <label{{ title_attributes.addClass(title_classes) }}>{{ title }}</label>
+  {% endif %}
+  <div class="form-item__field-wrapper{% if description %} form-item__field-wrapper--has-description{% endif %}">
+    {{ content }}
+    {% if description %}
+      {% include '@thunder_admin/button-description-toggle.html.twig' with {'class': 'form-item__toggle-description'} %}
+    {% endif %}
+  </div>
+  {% if errors %}
+    <div class="form-item--error-message">
+      <strong>{{ errors }}</strong>
+    </div>
+  {% endif %}
+  {% if description %}
+    <div class="description js-form-item__description">{{ description }}</div>
+  {% endif %}
+</div>
+

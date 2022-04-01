@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.gallery
+    - field.field.media.video.field_caption
+    - field.field.media.video.field_copyright
+    - field.field.media.video.field_description
+    - field.field.media.video.field_media_video_embed_field
+    - field.field.media.video.field_source
+    - media.type.video
+id: media.video.gallery
+targetEntityType: media
+bundle: video
+mode: gallery
+content:
+  field_media_video_embed_field:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: medium
+      link_image_to: provider
+      autoplay: true
+      responsive: true
+      width: 854
+      height: 480
+      modal_max_width: 854
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  field_caption: true
+  field_copyright: true
+  field_description: true
+  field_source: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

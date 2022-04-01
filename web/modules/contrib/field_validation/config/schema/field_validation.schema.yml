@@ -1,0 +1,162 @@
+field_validation.rule_set.*:
+  type: config_entity
+  label: 'Field validation rule set'
+  mapping:
+    name:
+      type: string
+      label: 'Name'
+    label:
+      type: string
+      label: 'Label'
+    entity_type:
+      type: string
+      label: 'Entity type'
+    bundle:
+      type: string
+      label: 'Entity bundle'
+    field_validation_rules:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+            label: 'ID'
+          title:
+            type: label
+            label: 'Rule name'
+          data:
+            type: field_validation.rule.[%parent.id]
+            label: 'Data'
+          weight:
+            type: integer
+            label: 'Weight'
+          uuid:
+            type: string
+            label: 'UUID'
+          field_name:
+            type: string
+            label: 'Field name'
+          column:
+            type: string
+            label: 'Field column'
+          error_message:
+            type: label
+            label: 'Error message'
+
+field_validation.rule.*:
+  type: mapping
+  label: 'Field validation rule'
+
+field_validation.rule.blacklist_field_validation_rule:
+  type: mapping
+  label: 'Words blacklist validation rule'
+  mapping:
+    setting:
+      type: string
+      label: 'Blacklisted words'
+
+field_validation.rule.date_range_field_validation_rule:
+  type: mapping
+  label: 'Date range validation rule'
+  mapping:
+    min:
+      type: string
+      label: 'Minimum date'
+    max:
+      type: string
+      label: 'Maximum date'
+    cycle:
+      type: string
+      label: 'Cycle of date'
+
+field_validation.rule.email_field_validation_rule:
+  type: mapping
+  label: 'Email validation rule'
+
+field_validation.rule.integer_field_validation_rule:
+  type: mapping
+  label: 'Integer field validation rule'
+  mapping:
+    min:
+      type: string
+      label: 'Minimum value'
+    max:
+      type: string
+      label: 'Maximum value'
+
+field_validation.rule.ip_field_validation_rule:
+  type: mapping
+  label: 'IP address validation rule'
+  mapping:
+    version:
+      type: string
+      label: 'IP Version'
+
+field_validation.rule.length_field_validation_rule:
+  type: mapping
+  label: 'Length field validation rule'
+  mapping:
+    min:
+      type: string
+      label: 'Minimum value'
+    max:
+      type: string
+      label: 'Maximum value'
+
+field_validation.rule.must_be_empty_field_validation_rule:
+  type: mapping
+  label: 'Must be empty field validation rule'
+
+field_validation.rule.numeric_field_validation_rule:
+  type: mapping
+  label: 'Numeric field validation rule'
+  mapping:
+    min:
+      type: string
+      label: 'Minimum value'
+    max:
+      type: string
+      label: 'Maximum value'
+    step:
+      type: string
+      label: 'Step'
+
+field_validation.rule.phone_field_validation_rule:
+  type: mapping
+  label: 'Phone field validation rule'
+  mapping:
+    country:
+      type: string
+      label: 'Country'
+
+field_validation.rule.plain_text_field_validation_rule:
+  type: mapping
+  label: 'Plain text field validation rule'
+
+field_validation.rule.regex_field_validation_rule:
+  type: mapping
+  label: 'Regular expression field validation rule'
+  mapping:
+    setting:
+      type: string
+      label: 'Pattern'
+
+field_validation.rule.unique_field_validation_rule:
+  type: mapping
+  label: 'Unique field validation rule'
+  mapping:
+    scope:
+      type: string
+      label: 'Scope of unique'
+
+field_validation.rule.words_field_validation_rule:
+  type: mapping
+  label: 'Number of words field validation rule'
+  mapping:
+    min:
+      type: string
+      label: 'Minimum number of words'
+    max:
+      type: string
+      label: 'Maximum number of words'

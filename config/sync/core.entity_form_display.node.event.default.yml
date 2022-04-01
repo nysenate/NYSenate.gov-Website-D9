@@ -1,0 +1,507 @@
+uuid: b0cacdaa-d454-4e5b-9ec4-f78c0749af35
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.event.body
+    - field.field.node.event.field_accessible_sitewide
+    - field.field.node.event.field_attachment
+    - field.field.node.event.field_committee
+    - field.field.node.event.field_committee_featured
+    - field.field.node.event.field_date_range
+    - field.field.node.event.field_event_online_link
+    - field.field.node.event.field_event_place
+    - field.field.node.event.field_event_type
+    - field.field.node.event.field_feature_image
+    - field.field.node.event.field_featured
+    - field.field.node.event.field_image_main
+    - field.field.node.event.field_issues
+    - field.field.node.event.field_location
+    - field.field.node.event.field_meeting_location
+    - field.field.node.event.field_senator_multiref
+    - field.field.node.event.field_social_image
+    - field.field.node.event.field_social_teaser
+    - field.field.node.event.field_teleconference_id_number
+    - field.field.node.event.field_teleconference_number
+    - field.field.node.event.field_ustream_url
+    - field.field.node.event.field_video_status
+    - field.field.node.event.field_yt
+    - node.type.event
+  module:
+    - address
+    - conditional_fields
+    - datetime_range
+    - field_group
+    - link
+    - media_library
+    - path
+    - scheduler
+    - text
+third_party_settings:
+  field_group:
+    group_event_content:
+      children:
+        - field_event_place
+        - field_event_online_link
+        - field_meeting_location
+        - field_location
+        - field_teleconference_number
+        - field_teleconference_id_number
+        - field_image_main
+        - field_feature_image
+        - body
+        - field_attachment
+      label: Content
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: fieldset
+      format_settings:
+        classes: 'group-event-content field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_social_sharing:
+      children:
+        - field_social_image
+        - field_social_teaser
+      label: 'Social Sharing'
+      region: content
+      parent_name: ''
+      weight: 6
+      format_type: fieldset
+      format_settings:
+        classes: 'group-social-sharing field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: 'These fields can be used for alternative Facebook and Twitter images and teasers, instead of the Main Image and beginning text of Description field.'
+        required_fields: true
+    group_discoverability:
+      children:
+        - field_issues
+        - group_promotion
+      label: Discoverability
+      region: content
+      parent_name: ''
+      weight: 7
+      format_type: fieldset
+      format_settings:
+        classes: 'group-discoverability field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_promotion:
+      children:
+        - group_microsite_settings
+        - group__committee_settings
+        - group_sitewide_settings
+      label: 'Promotion and Visibility'
+      region: content
+      parent_name: group_discoverability
+      weight: 12
+      format_type: tabs
+      format_settings:
+        classes: 'group-promotion field-group-htabs'
+        show_empty_fields: false
+        id: ''
+        direction: horizontal
+        width_breakpoint: 640
+    group_microsite_settings:
+      children:
+        - field_senator_multiref
+        - field_featured
+      label: 'Senator Microsite Settings'
+      region: content
+      parent_name: group_promotion
+      weight: 8
+      format_type: tab
+      format_settings:
+        classes: 'group-microsite-settings field-group-htab'
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group__committee_settings:
+      children:
+        - field_committee
+        - field_committee_featured
+      label: '  Committee Settings'
+      region: content
+      parent_name: group_promotion
+      weight: 10
+      format_type: tab
+      format_settings:
+        classes: 'group-committee-settings field-group-htab'
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_video_settings:
+      children:
+        - field_yt
+        - field_ustream_url
+        - field_video_status
+      label: 'Event Video Settings'
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: fieldset
+      format_settings:
+        classes: 'group-video-settings field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_sitewide_settings:
+      children:
+        - field_accessible_sitewide
+      label: 'Sitewide Settings'
+      region: hidden
+      parent_name: group_promotion
+      weight: 6
+      format_type: tab
+      format_settings:
+        classes: 'group-sitewide-settings field-group-htab'
+        show_empty_fields: false
+        id: ''
+        formatter: open
+        description: ''
+        required_fields: true
+id: node.event.default
+targetEntityType: node
+bundle: event
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 14
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_accessible_sitewide:
+    type: boolean_checkbox
+    weight: 7
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_attachment:
+    type: media_library_widget
+    weight: 15
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_committee:
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_committee_featured:
+    type: boolean_checkbox
+    weight: 11
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_date_range:
+    type: daterange_default
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_event_online_link:
+    type: link_default
+    weight: 7
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings:
+      conditional_fields:
+        7243deff-fe71-443b-80ba-0c782655b0c0:
+          entity_type: node
+          bundle: event
+          dependee: field_general_location
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: online
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_event_place:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_event_type:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_feature_image:
+    type: media_library_widget
+    weight: 13
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_featured:
+    type: boolean_checkbox
+    weight: 32
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_image_main:
+    type: media_library_widget
+    weight: 12
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 10
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_location:
+    type: address_default
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings:
+      conditional_fields:
+        674b96ce-c004-4870-a0a3-7693d2435f40:
+          entity_type: node
+          bundle: event
+          dependee: field_general_location
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 4
+            value: ''
+            values: "in_albany\r\nin_district"
+            value_form:
+              -
+                value: in_albany
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_meeting_location:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        f3811871-73ff-4966-948b-08b81ac4e8dd:
+          entity_type: node
+          bundle: event
+          dependee: field_general_location
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 4
+            value: ''
+            values: "in_albany\r\nin_district\r\nonline"
+            value_form:
+              -
+                value: in_albany
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_senator_multiref:
+    type: options_select
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_social_image:
+    type: media_library_widget
+    weight: 6
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_social_teaser:
+    type: string_textarea
+    weight: 8
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_teleconference_id_number:
+    type: string_textfield
+    weight: 11
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        dfbb9ce3-85e3-4baf-98bb-b91afac3d66c:
+          entity_type: node
+          bundle: event
+          dependee: field_general_location
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: teleconference
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_teleconference_number:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        525c8af8-aae5-49cd-a933-74f2ab051f49:
+          entity_type: node
+          bundle: event
+          dependee: field_general_location
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: teleconference
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_ustream_url:
+    type: media_library_widget
+    weight: 28
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_video_status:
+    type: options_select
+    weight: 29
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_yt:
+    type: media_library_widget
+    weight: 26
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 11
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  url_redirects:
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

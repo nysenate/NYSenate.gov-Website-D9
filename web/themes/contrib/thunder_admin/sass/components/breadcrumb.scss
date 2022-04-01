@@ -1,0 +1,29 @@
+/**
+ * @file
+ * Override breadcrumb.css provided by seven/global-styling.
+ */
+@import 'variables';
+
+// No need for import, since only style is overridden here.
+
+.breadcrumb {
+  line-height: 1em; // copied from seven
+  padding: 0.6em 0 1em;
+
+  li { //added
+    color: $gray-light;
+
+    &:before {
+      margin-right: 0.316em; // Emulate whitespace, blocks.html.twig is now spaceless.
+    }
+  }
+
+  a { // added
+    color: inherit;
+    font-size: 10px;
+    line-height: 12px;
+    /* Position breadcrumb links above tabs nav #2922529 */
+    position: relative;
+    z-index: 1;
+  }
+}

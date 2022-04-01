@@ -1,0 +1,56 @@
+block.settings.twitter_block:
+  type: block_settings
+  label: 'Twitter block settings'
+  mapping:
+    username:
+      type: string
+      label: 'Username'
+    theme:
+      type: string
+      label: 'Theme'
+    link_color:
+      type: string
+      label: 'Link Color'
+    width:
+      type: string
+      label: 'Width'
+    height:
+      type: string
+      label: 'Height'
+    chrome:
+      type: mapping
+      label: 'Chrome'
+      mapping:
+        noheader:
+          type: string
+          label: 'Chrome Option'
+        nofooter:
+          type: string
+          label: 'Chrome Option'
+        noborders:
+          type: string
+          label: 'Chrome Option'
+        noscrollbar:
+          type: string
+          label: 'Chrome Option'
+        transparent:
+          type: string
+          label: 'Chrome Option'
+    border_color:
+      type: string
+      label: 'Border Color'
+    language:
+      type: string
+      label: 'Language'
+    tweet_limit:
+      type: string
+      label: 'Tweet Limit'
+    related:
+      type: string
+      label: 'Related'
+    polite:
+      type: string
+      label: 'Polite'
+    weight:
+      type: integer
+      label: 'Weight'

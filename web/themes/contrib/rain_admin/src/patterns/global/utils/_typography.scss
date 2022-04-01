@@ -1,0 +1,52 @@
+// Typography
+//
+// Typography variables.
+
+$font-primary: 'Neue Haas Grotesk', 'Arial', sans-serif;
+$font-secondary: 'Neue Haas Grotesk Display', sans-serif;
+
+@mixin font-stack-primary {
+  font-family: $font-primary;
+}
+
+@mixin font-stack-secondary {
+  font-family: $font-secondary;
+}
+
+// Font-Weights.
+$font-weight-normal: normal;
+$font-weight-bold: bold;
+$font-italic: italic;
+
+// Heading mixins.
+@mixin heading-style($base-size: 1.125) {
+  @include font-stack-primary;
+  font-size: #{$base-size}rem;
+  font-weight: $font-weight-bold;
+  line-height: 1.15;
+  margin: 0 0 24px;
+}
+
+@mixin heading-1-style {
+  @include heading-style(2.375);
+}
+
+@mixin heading-2-style {
+  @include heading-style(2.125);
+}
+
+@mixin heading-3-style {
+  @include heading-style(1.875);
+}
+
+@mixin heading-4-style {
+  @include heading-style(1.625);
+}
+
+@mixin heading-5-style {
+  @include heading-style(1.375);
+}
+
+@mixin heading-6-style {
+  @include heading-style(1.125);
+}

@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ */
+#}
+<div class="layout-container">
+  {% block header %}
+    {% if page.header %}
+      <header role="banner">
+        {{ page.header }}
+      </header>
+    {% endif %}
+  {% endblock %}
+
+  {% block pre_content %}
+    {{ page.pre_content }}
+  {% endblock %}
+
+  {% block highlighted %}
+    {{ page.highlighted }}
+  {% endblock %}
+
+  {% block top %}
+    {{ page.page_top }}
+  {% endblock %}
+
+  <main role="main">
+    <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+    {% block content %}
+      {{ page.content }}
+    {% endblock %}
+  </main>
+
+  {% block bottom %}
+    {{ page.page_bottom }}
+  {% endblock %}
+</div>

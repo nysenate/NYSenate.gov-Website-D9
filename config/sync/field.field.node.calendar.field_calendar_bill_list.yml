@@ -1,0 +1,29 @@
+uuid: 2d2d6973-8e87-493e-8f49-9f16a2a04ce5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_calendar_bill_list
+    - node.type.calendar
+    - taxonomy.vocabulary.senator
+id: node.calendar.field_calendar_bill_list
+field_name: field_calendar_bill_list
+entity_type: node
+bundle: calendar
+label: 'Calendar Bill List'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

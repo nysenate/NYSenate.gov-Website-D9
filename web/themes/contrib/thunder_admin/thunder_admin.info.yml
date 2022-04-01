@@ -1,0 +1,128 @@
+name: Thunder Admin
+type: theme
+core_version_requirement: ^9.2
+base theme: seven
+description: 'Administration theme for the Thunder Distribution that extends and modifies Sevens styles for authoring UX and integrated look and feel of the contributed modules used in the distribution.'
+
+libraries-override:
+### START Override and/or snipe seven. ###
+  # Switch to specific overrides when https://drupal.org/i/2642122 has landed, see sass/README.md
+  seven/global-styling: thunder_admin/global-styling
+  seven/install-page:
+    css:
+      theme:
+        css/theme/install-page.css: css/theme/install-page.css
+  seven/maintenance-page:
+    css:
+      theme:
+        css/theme/maintenance-page.css: css/theme/maintenance-page.css
+  seven/media-form:
+    css:
+      layout:
+        css/components/media.css: css/components/media.css
+  seven/seven.drupal.dialog:
+    css:
+      theme:
+        css/components/dialog.css: css/components/dialog.css
+### END ###
+### START Override seven library extends ###
+  seven/ckeditor-dialog:
+    css:
+      theme:
+        css/theme/ckeditor-dialog.css: css/theme/ckeditor-dialog.css
+  seven/seven.jquery.ui:
+    css:
+      component:
+        css/components/jquery.ui/theme.css: css/components/jquery.ui/theme.css
+  seven/tour-styling:
+    css:
+      theme:
+        css/components/tour.theme.css: css/components/tour.theme.css
+  seven/vertical-tabs:
+    css:
+      component:
+        css/components/vertical-tabs.css: css/components/vertical-tabs.css
+### END ###
+### START Former stable theme overrides for libraries. ###
+  system/base:
+    css:
+      component:
+        css/components/system-status-counter.css: css/components/system-status-counter.css
+        css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
+        css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        misc/vertical-tabs.css: false
+  node/drupal.node:
+    css:
+      layout:
+        css/node.module.css: false
+  node/form:
+    css:
+      layout:
+        css/node.module.css: false
+  toolbar/toolbar:
+    css:
+      theme:
+        css/toolbar.theme.css: css/components/toolbar.theme.css
+        css/toolbar.icons.theme.css: css/components/toolbar.icons.theme.css
+### END ###
+  # contrib module overrides
+  admin_toolbar/toolbar.tree:
+    css:
+      theme:
+        css/admin.toolbar.css: css/components/admin.toolbar.css
+  paragraphs/drupal.paragraphs.widget:
+    css:
+      theme:
+        css/paragraphs.widget.css: false
+  thunder_media/entity_browser_view:
+    css:
+      theme:
+        css/media_entity_browser.view.css: css/components/media_entity_browser.view.css
+
+libraries-extend:
+  core/ckeditor:
+    - thunder_admin/ckeditor.sticky-toolbar
+  core/drupal.tabledrag:
+    - thunder_admin/tabledrag.tabindex
+  # DEPRECATED: support for classic paragraphs widget with add in between buttons.
+  paragraphs/drupal.paragraphs.admin:
+    - thunder_admin/paragraphs.widget
+  # Experimental paragraphs widget styles.
+  paragraphs/drupal.paragraphs.widget:
+    - thunder_admin/paragraphs.widget
+  dropzonejs/widget:
+    - thunder_admin/dropzonejs.widget
+  entity_browser/tabs:
+    - thunder_admin/entity_browser.tabs
+  seven/drupal.nav-tabs:
+    - thunder_admin/drupal.nav-tabs
+  toolbar/toolbar:
+    - thunder_admin/toolbar
+  toolbar/toolbar.menu:
+    - thunder_admin/toolbar.menu
+  admin_toolbar_tools/toolbar.icon:
+    - thunder_admin/admin_toolbar_tools.toolbar.icon
+
+# seven also overrides this.
+quickedit_stylesheets:
+  - css/components/quickedit.css
+
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first
+
+# Information added by Drupal.org packaging script on 2022-01-17
+version: '4.0.2'
+project: 'thunder_admin'
+datestamp: 1642419552

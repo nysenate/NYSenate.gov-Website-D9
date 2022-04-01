@@ -1,0 +1,43 @@
+.quote {
+  text-align: center;
+  margin-bottom: 1.875rem; }
+
+.quote__text {
+  font-size: 1.375rem;
+  line-height: 1.25;
+  margin-bottom: 1.875rem;
+  font-style: italic; }
+  @media screen and (min-width: 544px) {
+    .quote__text {
+      font-size: 1.75rem; } }
+
+.quote__cite {
+  font-size: 0.875rem;
+  line-height: 1.375; }
+  @media screen and (min-width: 544px) {
+    .quote__cite {
+      font-size: 1rem; } }
+
+.quote__cite-media img {
+  border-radius: 50%;
+  margin: auto; }
+
+.quote--left {
+  text-align: left; }
+  .quote--left .quote__text {
+    text-align: center; }
+    @media screen and (min-width: 768px) {
+      .quote--left .quote__text {
+        text-align: left; } }
+  .quote--left .quote__cite {
+    display: flex;
+    align-items: center;
+    flex-direction: column; }
+    @media screen and (min-width: 768px) {
+      .quote--left .quote__cite {
+        flex-direction: row; } }
+  .quote--left .quote__cite-media {
+    margin: 0 0 1rem; }
+    @media screen and (min-width: 768px) {
+      .quote--left .quote__cite-media {
+        margin: 0 1.375rem 0 0; } }

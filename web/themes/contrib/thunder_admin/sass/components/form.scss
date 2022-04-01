@@ -1,0 +1,269 @@
+/**
+ * @file
+ * Styling form elements.
+ *
+ * Import and override form.css provided by classy/base and seven/global-styling.
+ *
+ * @todo: This needs to be divided into clear partials or sections, atm this is
+ *        a mess copied together from Classy and Seven
+ */
+@import 'variables';
+
+/**
+ * Removed form.css from base theme (classy) library and import using css-sniper.
+ *
+ * Removed font-size inherit from label (classy) [Refactor]
+ */
+/* stylelint-disable string-no-newline */
+@import '@theme-seven/css/classy/components/form.css remove {
+  .form-composite>legend, .label { font-size }
+}';
+/* stylelint-enable string-no-newline */
+
+// Fixed relative urls in classy by copying images here.
+.form-required:after {
+  background-image: url(../../images/icons/required.svg);
+}
+.form-item--error-message:before {
+  height: 15px;
+  width: 15px;
+  vertical-align: text-top;
+  margin-right: 0.333em;
+  background: url(../../images/icons/error.svg) no-repeat;
+}
+
+/* ------------------------ copied from Seven form.css ---------------------- */
+/* stylelint-disable string-no-newline, no-invalid-position-at-import-rule */
+@import '@theme-seven/css/components/form.css remove {
+  fieldset:not(.fieldgroup) {}
+  @media (min--moz-device-pixel-ratio: 0){ fieldset:not(.fieldgroup) {} }
+  fieldset:not(.fieldgroup)>legend {}
+  input.form-autocomplete, input.form-text, input.form-tel, input.form-email, input.form-url, input.form-search, input.form-number, input.form-color, input.form-file, input.form-date, input.form-time, textarea.form-textarea { box-sizing }
+  #edit-cancel {}
+  @media screen and (max-width: 600px){ #edit-cancel {} }
+  button:not(.button), input:not([type="file"],.form-text, .form-textarea) { line-height }
+  select{ font-size; line-height }
+  details select { line-height }
+}';
+/* stylelint-enable string-no-newline, no-invalid-position-at-import-rule */
+
+// This was added
+fieldset {
+  border: 1px solid $gray-lighter;
+}
+
+// Removed fieldset in @import since .content-form__main > details was added to this for #2899606
+// @todo Should be more generic [Refactor]
+// background-color removed
+.content-form__main > details,
+fieldset:not(.fieldgroup) {
+  background-color: $primary-color-lightest;
+  border-radius: 2px;
+  margin: 1em 0;
+  padding: 30px 18px 18px;
+  min-width: 0;
+  position: relative;
+}
+
+// Removed fieldset > legend in @import since .content-form__main > details was added to this for #2899606
+.content-form__main > details > summary,
+fieldset:not(.fieldgroup) > legend {
+  font-size: 1em;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  position: absolute;
+  text-transform: uppercase;
+  top: 10px;
+}
+// Different margin & text-transform added
+label {
+  margin: 0 0 0 0.3em;
+  text-transform: uppercase;
+}
+
+/* @todo [Refactor] Remove the whole block and fix /admin/modules */
+/* START styles for descriptions */
+// Copied from seven: selector was ul.tips, div.description, .form-item .description
+.tips,
+.description,
+.form-item .description {
+  margin: 0.2em 0 0 0;
+  color: #595959;
+  font-size: 0.95em;
+}
+
+// selector was ul.tips li
+.tips li {
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
+}
+
+// Copied from seven: selector was [dir="rtl"] ul.tips li
+[dir="rtl"] .tips li {
+  margin: 0.25em 1.5em 0.25em 0;
+}
+// Copied from seven, above would override.
+.form-type-radio .description,
+.form-type-checkbox .description {
+  margin-left: 1.5em; /* LTR */
+}
+
+// Copied from seven, above would override.
+[dir="rtl"] .form-type-radio .description,
+[dir="rtl"] .form-type-checkbox .description {
+  margin-left: 0;
+  margin-right: 1.5em;
+}
+
+/**
+ * Fix labels for checkbox and radio.
+ * @see .form-item__field-wrapper--has-description
+ */
+.form-type-checkbox,
+.form-type-radio {
+  min-height: 22px; // Same height as description toggle.
+
+  input,
+  label {
+    vertical-align: middle;
+  }
+
+  label {
+    margin-left: 0.5em;
+  }
+
+  .form-item__description {
+    margin-top: 0;
+  }
+
+  &.is-description-visible .form-item__description {
+    margin-top: 0.2em;
+  }
+}
+
+/* END styles for descriptions */
+
+// Border radius & font-size removed (todo) / overriden with next style (only when combined with input)
+.form-text,
+.form-textarea {
+  line-height: normal;
+}
+
+// Removed box-sizing, see import
+input.form-autocomplete,
+input.form-text,
+input.form-tel,
+input.form-email,
+input.form-url,
+input.form-search,
+input.form-number,
+input.form-color,
+input.form-file,
+input.form-date,
+input.form-time,
+textarea.form-textarea {
+  min-height: 35px; // added
+  background: #fff;
+  border-color: $gray-lighter;
+  color: $text-color;
+  border-radius: $base-border-radius;
+  box-shadow: none; // reset box-shadow (seven)
+}
+
+.form-text:focus,
+.form-tel:focus,
+.form-email:focus,
+.form-url:focus,
+.form-search:focus,
+.form-number:focus,
+.form-color:focus,
+.form-file:focus,
+.form-textarea:focus,
+.form-date:focus,
+.form-time:focus {
+  border-color: $primary-color-intense;
+  box-shadow: none; // reset box-shadow (seven)
+}
+
+// @todo [Refactor] Remove from @import, find more robust solution to target firefox browsers.
+// #2899359 Select styles for ff: -moz-images-in-menus: 0 is broken, use -moz-device-pixel-ratio
+@media screen and (-webkit-min-device-pixel-ratio: 0), screen and (-moz-device-pixel-ratio) {
+  // min-height added
+  // border color changed
+  // border-radius changed
+  // background url and color changed
+  // cursor removed (todo)
+  // -webkit-appearenace: none removed (todo)
+  // color added
+  select {
+    min-height: 35px;
+    padding: 1px 1.571em 1px 0.5em;
+    border: 1px solid $gray-lighter;
+    border-radius: $base-border-radius;
+    background: url(../../images/icons/caret-down.svg) no-repeat 99% 50% #fff; /* LTR */
+    color: $text-color;
+    font-size: 0.875rem;
+  }
+  // background-position changed
+  [dir="rtl"] select {
+    padding: 1px 0.714em 1px 1.571em;
+    background-position: 1% 50%, 0 0;
+  }
+  // background-image changed and removed -webkit-linear-gradient
+  // color removed (todo)
+  select:focus,
+  select:hover {
+    background-image: url(../../images/icons/caret-down.svg);
+  }
+}
+
+// Added mozilla hack
+@media screen and (-moz-device-pixel-ratio) {
+  select {
+    -moz-appearance: none;
+    padding-top: 6px;
+  }
+}
+
+// selector was:
+// #diff-inline-form select,
+// div.filter-options select
+/* Exceptions */
+.filter-options select,
+#diff-inline-form select {
+  padding: 0;
+}
+
+/**
+ * Added: Fix form-actions button spacing, see also #2160621.
+ * Remove edit-cancel in import.
+ * Needs spaceless in container.html.twig
+ *
+ * @todo [dir="rtl"]
+*/
+.form-actions {
+  .button {
+    margin-left: 0;
+    margin-right: 1em; /* 1 */
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.form-item .file-size,
+.container-inline .form-item + .form-item,
+.filter-wrapper .form-item label + * {
+  margin-left: 0.316em; // Emulate whitespace
+}
+
+/* Override line-height settings in normalize lib. */
+button:not(.button),
+input:not([type="file"]) {
+  line-height: normal;
+}
+
+select,
+details select {
+  line-height: $line-height-base;
+}

@@ -1,0 +1,163 @@
+/**
+ * @file
+ * Replaces toolbar.theme.scss using libraries-override.
+ *
+ * @todo: [Refactor] Copied from toolbar core module.
+*/
+/* stylelint-disable no-duplicate-selectors */
+/* stylelint-disable no-descending-specificity */
+@import 'variables';
+
+.toolbar {
+  /* Set base font size to 13px based on root ems. */
+  font-size: 0.8125rem;
+  tap-highlight-color: rgba(0, 0, 0, 0);
+  touch-callout: none;
+}
+.toolbar .toolbar-item {
+  cursor: pointer;
+  padding: 1em 1.3333em;
+  line-height: 1em;
+  text-decoration: none;
+}
+.toolbar .toolbar-item:hover,
+.toolbar .toolbar-item:focus {
+  text-decoration: none;
+}
+
+/**
+ * Toolbar bar.
+ */
+.toolbar .toolbar-bar {
+  background-color: $primary-color-darker;
+  color: #ddd;
+}
+
+.toolbar .toolbar-bar .toolbar-item {
+  color: #fff;
+}
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item {
+  font-weight: bold;
+}
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover,
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
+  background: $primary-color-darkest;
+}
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
+  background: $primary-color-dark;
+}
+
+/**
+ * Toolbar tray.
+ */
+.toolbar .toolbar-tray {
+  background-color: $primary-color-dark;
+}
+.toolbar .toolbar-tray-horizontal > .toolbar-lining {
+  padding-right: 5em; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal > .toolbar-lining {
+  padding-right: 0;
+  padding-left: 5em;
+}
+
+.toolbar-tray a {
+  color: white;
+  cursor: pointer;
+  padding: 1em 1.3333em;
+  text-decoration: none;
+}
+
+.toolbar {
+  .toolbar-tray-horizontal {
+    .menu-item {
+      background: $primary-color-dark;
+
+      &.level-1 {
+        border: 0;
+      }
+    }
+  }
+  .toolbar-tray-vertical {
+    .menu-item {
+      background: $primary-color-dark;
+
+      &.level-1 {
+        border-bottom: 1px solid #fff;
+      }
+    }
+  }
+  .toolbar-tray a:hover,
+  .toolbar-tray a:active,
+  .toolbar-tray a:focus,
+  .toolbar-tray a.is-active {
+    color: $primary-color-intense;
+    text-decoration: none;
+  }
+}
+
+.toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
+  margin-left: 0.25em; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
+  margin-left: 0;
+  margin-right: 0.25em;
+}
+
+/**
+ * Orientation toggle.
+ */
+.toolbar .toolbar-toggle-orientation {
+  padding: 0;
+  height: 100%;
+}
+
+.toolbar .toolbar-toggle-orientation > .toolbar-lining {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-toggle-orientation > .toolbar-lining {
+  float: left;
+}
+.toolbar .toolbar-toggle-orientation button {
+  cursor: pointer;
+  display: inline-block;
+}
+
+/**
+ * Items.
+ */
+.toolbar .level-2 > ul {
+  background-color: $primary-color-dark;
+  border-bottom-color: #ccc;
+  border-top-color: #e5e5e5;
+}
+.toolbar .level-3 > ul {
+  background-color: $primary-color-dark;
+  border-bottom-color: #c5c5c5;
+  border-top-color: #ddd;
+}
+.toolbar .level-4 > ul {
+  background-color: $primary-color-dark;
+  border-bottom-color: #bbb;
+  border-top-color: #d5d5d5;
+}
+.toolbar .level-5 > ul {
+  background-color: $primary-color-dark;
+  border-bottom-color: #b5b5b5;
+  border-top-color: #ccc;
+}
+.toolbar .level-6 > ul {
+  background-color: $primary-color-dark;
+  border-bottom-color: #aaa;
+  border-top-color: #c5c5c5;
+}
+.toolbar .level-7 > ul {
+  background-color: $primary-color-dark;
+  border-bottom-color: #b5b5b5;
+  border-top-color: #ccc;
+}
+.toolbar .level-8 > ul {
+  background-color: $primary-color-dark;
+  border-bottom-color: #ccc;
+  border-top-color: #ddd;
+}

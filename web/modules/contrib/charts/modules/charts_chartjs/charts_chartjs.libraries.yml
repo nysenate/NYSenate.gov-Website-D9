@@ -1,0 +1,24 @@
+charts_chartjs:
+  remote: 'https://www.chartjs.org/dist/2.7.2/Chart.bundle.js'
+  version: VERSION
+  license:
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+    gpl-compatible: false
+  js:
+    /libraries/chartjs/Chart.bundle.js: {  }
+#  @todo: incorporate additional plugins, such as
+#    /libraries/chartjs/chart.scale.lineargauge.js: {  }
+#    /libraries/chartjs/chart.element.gaugerect.js: {  }
+#    /libraries/chartjs/chart.lineargauge.js: {  }
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+
+chartjs:
+  version: 1.x
+  js:
+    js/charts_chartjs.js: {  }
+  dependencies:
+    - charts_chartjs/charts_chartjs

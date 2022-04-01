@@ -1,0 +1,123 @@
+.quote {
+  text-align: center;
+  margin-bottom: 1.875rem;
+  padding: 0 3rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%; }
+
+.quote__text {
+  font-size: 1.375rem;
+  line-height: 1.25;
+  margin-bottom: 3.75rem;
+  font-style: normal;
+  color: #000000;
+  font-weight: bold;
+  position: relative; }
+  .quote__text::after {
+    content: '';
+    width: 40px;
+    height: 2px;
+    background-color: #000000;
+    position: absolute;
+    bottom: -1.875rem;
+    transform: translateX(-50%);
+    left: 50%;
+    display: block; }
+    @media screen and (min-width: 1024px) {
+      .quote__text::after {
+        left: 0;
+        transform: none; } }
+  @media screen and (min-width: 544px) {
+    .quote__text {
+      font-size: 1.75rem; } }
+  @media screen and (min-width: 1024px) {
+    .quote__text {
+      margin-top: 0;
+      font-size: 2rem; } }
+
+.quote__cite {
+  font-size: 0.875rem;
+  line-height: 1.375; }
+  @media screen and (min-width: 544px) {
+    .quote__cite {
+      font-size: 1rem; } }
+  @media screen and (min-width: 1024px) {
+    .quote__cite {
+      display: grid;
+      grid-template-columns: 1fr 1fr 400px;
+      grid-gap: 2rem; } }
+  .quote__cite-media img {
+    border-radius: 50%;
+    width: 175px;
+    height: 175px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center;
+    object-position: center; }
+    @media screen and (min-width: 1024px) {
+      .quote__cite-media img {
+        height: 400px;
+        width: 400px; } }
+  @media screen and (min-width: 1024px) {
+    .quote__cite-media {
+      grid-column: 3 / span 1;
+      grid-row-start: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center; } }
+  .quote__cite-name {
+    font-style: normal;
+    font-size: 1.3rem;
+    font-weight: normal;
+    color: #000000; }
+    @media screen and (min-width: 1024px) {
+      .quote__cite-name {
+        margin-bottom: 1rem; } }
+  .quote__cite-text svg {
+    width: 50px;
+    height: auto;
+    margin-top: 1.5rem;
+    fill: #000000; }
+    @media screen and (min-width: 1024px) {
+      .quote__cite-text svg {
+        margin-left: -6rem;
+        width: 70px; } }
+  @media screen and (min-width: 1024px) {
+    .quote__cite-text {
+      grid-column: 1 / span 2;
+      grid-row-start: 1;
+      text-align: left;
+      padding-left: 6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center; } }
+  .quote__cite-job {
+    font-style: normal;
+    font-size: 1rem;
+    font-weight: normal;
+    color: #000000; }
+    @media screen and (min-width: 1024px) {
+      .quote__cite-job {
+        margin-top: 0; } }
+
+.quote--left {
+  text-align: left; }
+  .quote--left .quote__text {
+    text-align: center; }
+    @media screen and (min-width: 1024px) {
+      .quote--left .quote__text {
+        text-align: left; } }
+  .quote--left .quote__cite {
+    display: flex;
+    align-items: center;
+    flex-direction: column; }
+    @media screen and (min-width: 1024px) {
+      .quote--left .quote__cite {
+        flex-direction: row; } }
+  .quote--left .quote__cite-media {
+    margin: 0 0 1rem; }
+    @media screen and (min-width: 1024px) {
+      .quote--left .quote__cite-media {
+        flex: 0 0 49%; } }

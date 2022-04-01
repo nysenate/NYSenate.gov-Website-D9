@@ -1,0 +1,332 @@
+# Generates test content for Homepage.
+---
+# Homepage node (alternate).
+- entity: "node"
+  type: "landing"
+  title: "Homepage (alternate)"
+  status: 1
+  uid: 1
+  nid: 100
+  field_summary:
+    - value: With the power of Drupal 8 and 15+ integrated components, RAIN keeps site builders and content creators on pace to get work done faster.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Introducing RAIN"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "blue-umbrella.jpg"
+          alt: "Introducing RAIN"
+  field_block:
+    - entity: block_content
+      id: 17
+      uuid: 20adb562-cefc-40b2-80bc-75797db2dec0
+      type: hero
+      field_subhead:
+        - value: An open source installation to put your best content forward
+      field_summary:
+        - value: With the power of Drupal 8 and 15+ integrated components, RAIN keeps site builders and content creators on pace to get work done faster.
+      field_link:
+        - uri: "internal:/"
+          title: "Rain On Drupal.org"
+      field_title:
+        - value: "Rain"
+      field_media:
+        - entity: media
+          bundle: image
+          name: "Introducing RAIN"
+          status: 1
+          field_image:
+            - "#process":
+                callback: "file"
+                args:
+                  - "image"
+                  - type: "module"
+                    filename: "blue-umbrella.jpg"
+              alt: "Introducing RAIN"
+    - entity: block_content
+      id: 18
+      uuid: e6f7d20b-d137-4005-b1a3-18f57188bc78
+      type: card
+      field_card_layout:
+        - value: "wide"
+      field_title:
+        - value: "Innovating for the Greater Good"
+      field_media:
+        - entity: media
+          bundle: image
+          name: "Breaker"
+          status: 1
+          field_image:
+            - "#process":
+                callback: "file"
+                args:
+                  - "image"
+                  - type: "module"
+                    filename: "rainbowx.jpg"
+              alt: "Breaker"
+      field_summary:
+        - value: Our Drupal expertise, accompanied by our dedication to open source contribution, drives us to create time-saving tools that simplify processes and boost efficiency.
+      field_link:
+        - uri: "internal:/page/partner-us"
+          title: "Partner With us"
+    - entity: block_content
+      id: 19
+      uuid: dd12f627-2814-44c7-b131-81d5bc6b504e
+      type: card_list
+      field_link:
+        - uri: "internal:/page/about-rain"
+          title: "More About Rain"
+      field_title:
+        - value: "RAIN = Better Websites"
+      field_card:
+        - entity: paragraph
+          type: card
+          field_short_title:
+            - value: "User-Friendly"
+          field_media:
+            - entity: media
+              bundle: image
+              name: "Promo 1"
+              status: 1
+              field_image:
+                - "#process":
+                    callback: "file"
+                    args:
+                      - "image"
+                      - type: "module"
+                        filename: "icon-edit.gif"
+                  alt: "Promo 1"
+          field_title:
+            - value: "UX Experience"
+          field_summary:
+            value: |
+              Includes 15+ content components, media library, drafts, scheduling and more
+        - entity: paragraph
+          type: card
+          field_short_title:
+            - value: "Launch 2-3X Faster"
+          field_media:
+            - entity: media
+              bundle: image
+              name: "Promo 2"
+              status: 1
+              field_image:
+                - "#process":
+                    callback: "file"
+                    args:
+                      - "image"
+                      - type: "module"
+                        filename: "icon-performance.gif"
+                  alt: "Promo 2"
+          field_title:
+            - value: "Need for Speed"
+          field_summary:
+            value: |
+              Dramatically improved time to market with tools that speed development
+        - entity: paragraph
+          type: card
+          field_short_title:
+            - value: "Cost Savings"
+          field_media:
+            - entity: media
+              bundle: image
+              name: "Promo 3"
+              status: 1
+              field_image:
+                - "#process":
+                    callback: "file"
+                    args:
+                      - "image"
+                      - type: "module"
+                        filename: "icon-cost.gif"
+                  alt: "Promo 3"
+          field_title:
+            - value: "Save Budget"
+          field_summary:
+            value: |
+              Don't reinvent the wheel! Leverage RAIN's built-in features and components to build sites fast.
+        - entity: paragraph
+          type: card
+          field_short_title:
+            - value: "Rain + Guardr"
+          field_media:
+            - entity: media
+              bundle: image
+              name: "Promo 4"
+              status: 1
+              field_image:
+                - "#process":
+                    callback: "file"
+                    args:
+                      - "image"
+                      - type: "module"
+                        filename: "icon-security.gif"
+                  alt: "Promo 4"
+          field_title:
+            - value: "Security"
+          field_summary:
+            value: |
+              Mediacurrent pairs RAIN with Guardr, the leading security distribution for Drupal.
+    - entity: block_content
+      id: 20
+      uuid: bb1c9d8f-1a2f-410f-b7c0-975627142e4e
+      type: quote
+      field_author:
+        - value: "Peggy Maher"
+      field_quote:
+        - value: "Mediacurrent provided a range of high caliber services including design, UX, development, and digital strategy that are helping us pivot and transform the insurance purchasing experience."
+      field_job_title:
+        - value: "SVP, Direct to Consumer at Guardian Life Insurance"
+      field_thumb:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "image-quote.png"
+          alt: "Quote Thumb"
+    - entity: block_content
+      id: 21
+      uuid: 21afcdfb-888f-491e-9d82-a27ff6c54a32
+      type: card
+      field_title:
+        - value: "RAIN Can Help"
+      field_short_title:
+        - value: "Open Source Solutions"
+      field_subhead:
+        - value: "Budget vs. Time vs. Quality vs. Quantity"
+      field_card_layout:
+        - value: "wide_right"
+      field_link:
+        - uri: "http://google.com/"
+          title: "Optional Link"
+      field_media:
+        - entity: media
+          bundle: image
+          name: "Card 1"
+          status: 1
+          field_image:
+            - "#process":
+                callback: "file"
+                args:
+                  - "image"
+                  - type: "module"
+                    filename: "red-umbrella.jpg"
+              alt: "Card 1"
+      field_summary:
+        value: |
+          We get it. There's a constant pressure to streamline processes. We also understand the challenges of juggling several websites and delivering a consistent user experience across multiple domains.
+    - entity: block_content
+      id: 22
+      uuid: 82bbe861-4443-48b7-a1f4-3a0112c32a71
+      type: views
+      field_title:
+        - value: "From the blog"
+      field_views_ref:
+        - target_id: "recent_content_by_type"
+          display_id: "block_1"
+          data: a:5:{s:5:"pager";N;s:8:"argument";s:4:"blog";s:5:"limit";N;s:6:"offset";N;s:5:"title";N;}
+          argument: "blog"
+
+# Homepage (layout builder).
+- entity: "node"
+  type: "layout"
+  title: "Introducing Rain"
+  status: 1
+  uid: 1
+  nid: 101
+  layout_builder__layout:
+    - '#process':
+        callback: 'section'
+        args:
+          layout_id: layout_onecol
+          layout_settings: {  }
+          components:
+            - region: content
+              configuration:
+                id: "block_content:20adb562-cefc-40b2-80bc-75797db2dec0"
+                label: "Rain"
+                provider: block_content
+                label_display: '0'
+                status: 1
+                view_mode: "full"
+                context_mapping: {  }
+              additional: {  }
+              weight: 0
+            - region: content
+              configuration:
+                id: "block_content:e6f7d20b-d137-4005-b1a3-18f57188bc78"
+                label: "Innovating for the Greater Good"
+                provider: block_content
+                label_display: '0'
+                status: 1
+                view_mode: "full"
+                context_mapping: {  }
+              additional: {  }
+              weight: 1
+            - region: content
+              configuration:
+                id: "block_content:dd12f627-2814-44c7-b131-81d5bc6b504e"
+                label: "RAIN = Better Websites"
+                provider: block_content
+                label_display: '0'
+                status: 1
+                view_mode: "full"
+                context_mapping: {  }
+              additional: {  }
+              weight: 2
+            - region: content
+              configuration:
+                id: "block_content:bb1c9d8f-1a2f-410f-b7c0-975627142e4e"
+                label: "Peggy Maher"
+                provider: block_content
+                label_display: '0'
+                status: 1
+                view_mode: "full"
+                context_mapping: {  }
+              additional: {  }
+              weight: 3
+            - region: content
+              configuration:
+                id: "block_content:21afcdfb-888f-491e-9d82-a27ff6c54a32"
+                label: "RAIN Can Help"
+                provider: block_content
+                label_display: '0'
+                status: 1
+                view_mode: "full"
+                context_mapping: {  }
+              additional: {  }
+              weight: 4
+            - region: content
+              configuration:
+                id: "block_content:82bbe861-4443-48b7-a1f4-3a0112c32a71"
+                label: "From the blog"
+                provider: block_content
+                label_display: '0'
+                status: 1
+                view_mode: "full"
+                context_mapping: {  }
+              additional: {  }
+              weight: 5
+          third_party_settings: {  }
+  field_summary:
+    - value: With the power of Drupal 8 and 15+ integrated components, RAIN keeps site builders and content creators on pace to get work done faster.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Introducing RAIN"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "blue-umbrella.jpg"
+          alt: "Introducing RAIN"

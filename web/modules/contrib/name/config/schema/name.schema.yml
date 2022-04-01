@@ -1,0 +1,668 @@
+name.name_format.*:
+  type: config_entity
+  label: 'Name format'
+  mapping:
+    id:
+      type: string
+      label: 'Format identifier'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    locked:
+      type: boolean
+      label: 'Locked'
+    status:
+      type: boolean
+      label: 'Status'
+    pattern:
+      type: string
+      label: 'Pattern'
+name.name_list_format.*:
+  type: config_entity
+  label: 'Name list format'
+  mapping:
+    id:
+      type: string
+      label: 'Format identifier'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    locked:
+      type: boolean
+      label: 'Locked'
+    status:
+      type: boolean
+      label: 'Status'
+    delimiter:
+      type: string
+      label: 'Delimiter'
+    and:
+      type: string
+      label: 'Last delimiter type'
+    delimiter_precedes_last:
+      type: string
+      label: 'Standard delimiter precedes last delimiter'
+    el_al_min:
+      type: integer
+      label: 'Reduce list and append el al'
+    el_al_first:
+      type: integer
+      label: 'Number of names to display when using el al'
+
+name.settings:
+  type: config_object
+  label: 'Name sttings'
+  mapping:
+    component_required_marker:
+      type: string
+      label: 'Component required marker'
+    sep1:
+      type: string
+      label: 'Separator 1'
+    sep2:
+      type: string
+      label: 'Separator 2'
+    sep3:
+      type: string
+      label: 'Separator 3'
+    user_preferred:
+      type: string
+      label: 'User preferred'
+name.generate.examples:
+  type: config_object
+  label: 'Examples'
+  mapping:
+    examples:
+      type: sequence
+      label: 'Examples'
+      sequence:
+        - type: mapping
+          label: 'Name'
+          mapping:
+            title:
+              type: string
+              label: 'Title'
+            given:
+              type: string
+              label: 'Given'
+            middle:
+              type: string
+              label: 'Middle'
+            family:
+              type: string
+              label: 'Family'
+            generational:
+              type: string
+              label: 'Generational'
+            credentials:
+              type: string
+              label: 'Credentials'
+            preferred:
+              type: string
+              label: 'Preferred'
+            alternative:
+              type: string
+              label: 'Alternative'
+name.generate.components:
+  type: config_object
+  label: 'Components'
+  mapping:
+    components:
+      type: mapping
+      label: 'Components'
+      mapping:
+        title:
+          type: sequence
+          label: 'Titles'
+          sequence:
+            type: string
+        given:
+          type: sequence
+          label: 'Given names'
+          sequence:
+            - type: string
+        middle:
+          type: sequence
+          label: 'Middle names'
+          sequence:
+            type: string
+        family:
+          type: sequence
+          label: 'Family names'
+          sequence:
+            type: string
+        generational:
+          type: sequence
+          label: 'Generational suffixes'
+          sequence:
+            type: string
+        credentials:
+          type: sequence
+          label: 'Credentials'
+          sequence:
+            type: string
+        preferred:
+          type: sequence
+          label: 'Preferred names'
+          sequence:
+            type: string
+        alternative:
+          type: sequence
+          label: 'Alternative values'
+          sequence:
+            type: string
+    gender:
+      type: mapping
+      label: 'Gender based components'
+      mapping:
+        female:
+          type: mapping
+          label: 'Female components'
+          mapping:
+            title:
+              type: sequence
+              label: 'Titles'
+              sequence:
+                type: string
+            given:
+              type: sequence
+              label: 'Given names'
+              sequence:
+                type: string
+            middle:
+              type: sequence
+              label: 'Middle names'
+              sequence:
+                type: string
+                label: 'Middle name'
+            family:
+              type: sequence
+              label: 'Family names'
+              sequence:
+                type: string
+                label: 'Family name'
+            generational:
+              type: sequence
+              label: 'Generational suffixes'
+              sequence:
+                type: string
+                label: 'Generational suffix'
+            credentials:
+              type: sequence
+              label: 'Credentials'
+              sequence:
+                type: string
+                label: 'Credential'
+            preferred:
+              type: sequence
+              label: 'Preferred names'
+              sequence:
+                type: string
+                label: 'Preferred name'
+            alternative:
+              type: sequence
+              label: 'Alternative values'
+              sequence:
+                type: string
+                label: 'Alternative value'
+        male:
+          type: mapping
+          label: 'Male components'
+          mapping:
+            title:
+              type: sequence
+              label: 'Titles'
+              sequence:
+                type: string
+                label: 'Title'
+            given:
+              type: sequence
+              label: 'Given names'
+              sequence:
+                type: string
+                label: 'Given name'
+            middle:
+              type: sequence
+              label: 'Middle names'
+              sequence:
+                type: string
+                label: 'Middle name'
+            family:
+              type: sequence
+              label: 'Family names'
+              sequence:
+                type: string
+                label: 'Family name'
+            generational:
+              type: sequence
+              label: 'Generational suffixes'
+              sequence:
+                type: string
+                label: 'Generational suffix'
+            credentials:
+              type: sequence
+              label: 'Credentials'
+              sequence:
+                type: string
+                label: 'Credential'
+            preferred:
+              type: sequence
+              label: 'Preferred names'
+              sequence:
+                type: string
+                label: 'Preferred name'
+            alternative:
+              type: sequence
+              label: 'Alternative values'
+              sequence:
+                type: string
+                label: 'Alternative value'
+name.generate.preferred:
+  type: config_object
+  label: 'Preferred names'
+  mapping:
+    preferred:
+      type: sequence
+      label: 'Preferred names'
+      sequence:
+        type: string
+field.field_settings.name:
+  type: mapping
+  label: 'Name field settings'
+  mapping:
+    components:
+      type: mapping
+      label: 'Enabled components'
+      mapping:
+        title:
+          type: boolean
+          label: 'Title'
+        given:
+          type: boolean
+          label: 'Given'
+        middle:
+          type: boolean
+          label: 'Middle'
+        family:
+          type: boolean
+          label: 'Family'
+        generational:
+          type: boolean
+          label: 'Generational'
+        credentials:
+          type: boolean
+          label: 'Credentials'
+    minimum_components:
+      type: mapping
+      label: 'Minimum components'
+      mapping:
+        title:
+          type: boolean
+          label: 'Title'
+        given:
+          type: boolean
+          label: 'Given'
+        middle:
+          type: boolean
+          label: 'Middle'
+        family:
+          type: boolean
+          label: 'Family'
+        generational:
+          type: boolean
+          label: 'Generational'
+        credentials:
+          type: boolean
+          label: 'Credentials'
+    max_length:
+      type: mapping
+      label: 'Maximum length'
+      mapping:
+        title:
+          type: integer
+          label: 'Title'
+        given:
+          type: integer
+          label: 'Given'
+        middle:
+          type: integer
+          label: 'Middle'
+        family:
+          type: integer
+          label: 'Family'
+        generational:
+          type: integer
+          label: 'Generational'
+        credentials:
+          type: integer
+          label: 'Credentials'
+    labels:
+      type: mapping
+      label: 'Labels'
+      mapping:
+        title:
+          type: label
+          label: 'Title'
+        given:
+          type: label
+          label: 'Given'
+        middle:
+          type: label
+          label: 'Middle'
+        family:
+          type: label
+          label: 'Family'
+        generational:
+          type: label
+          label: 'Generational'
+        credentials:
+          type: label
+          label: 'Credentials'
+    allow_family_or_given:
+      label: 'Allow family or given'
+      type: boolean
+    autocomplete_source:
+      type: mapping
+      label: 'Sources'
+      mapping:
+        title:
+          type: sequence
+          label: 'Title'
+          sequence:
+            - type: string
+        given:
+          type: sequence
+          label: 'Given'
+          sequence:
+            - type: string
+        middle:
+          type: sequence
+          label: 'Middle'
+          sequence:
+            - type: string
+        family:
+          type: sequence
+          label: 'Family'
+          sequence:
+            - type: string
+        generational:
+          type: sequence
+          label: 'Generational'
+          sequence:
+            - type: string
+        credentials:
+          type: sequence
+          label: 'Credentials'
+          sequence:
+            - type: string
+    autocomplete_separator:
+      type: mapping
+      label: 'Maximum length'
+      mapping:
+        title:
+          type: string
+          label: 'Title'
+        given:
+          type: string
+          label: 'Given'
+        middle:
+          type: string
+          label: 'Middle'
+        family:
+          type: string
+          label: 'Family'
+        generational:
+          type: string
+          label: 'Generational'
+        credentials:
+          type: string
+          label: 'Credentials'
+    title_options:
+      type: sequence
+      label: 'Title options'
+      sequence:
+        - type: string
+    generational_options:
+      type: sequence
+      label: 'Generational options'
+      sequence:
+        - type: string
+    sort_options:
+      type: sequence
+      label: 'Sort options'
+      sequence:
+        - type: boolean
+    widget_layout:
+      type: string
+      label: 'Widget layout'
+    component_layout:
+      type: string
+      label: 'Component layout'
+    show_component_required_marker:
+      type: boolean
+      label: 'Show component required marker'
+    credentials_inline:
+      type: boolean
+      lable: 'Credentials inline'
+    override_format:
+      type: string
+      label: 'Override format'
+    field_type:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: string
+        given:
+          label: 'Given'
+          type: string
+        middle:
+          label: 'Middle'
+          type: string
+        family:
+          label: 'Family'
+          type: string
+        generational:
+          label: 'Generational'
+          type: string
+        credentials:
+          label: 'Credentials'
+          type: string
+    size:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: integer
+        given:
+          label: 'Given'
+          type: integer
+        middle:
+          label: 'Middle'
+          type: integer
+        family:
+          label: 'Family'
+          type: integer
+        generational:
+          label: 'Generational'
+          type: integer
+        credentials:
+          label: 'Credentials'
+          type: integer
+    title_display:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: string
+        given:
+          label: 'Given'
+          type: string
+        middle:
+          label: 'Middle'
+          type: string
+        family:
+          label: 'Family'
+          type: string
+        generational:
+          label: 'Generational'
+          type: string
+        credentials:
+          label: 'Credentials'
+          type: string
+    preferred_field_reference:
+      type: string
+      label: 'Preferred field reference'
+    preferred_field_reference_separator:
+      type: string
+      label: 'Preferred field reference multivalue separator'
+    alternative_field_reference:
+      type: string
+      label: 'Alternative field reference'
+    alternative_field_reference_separator:
+      type: string
+      label: 'Alternative field reference multivalue separator'
+
+field.value.name:
+    type: mapping
+    label: 'Default value'
+    mapping:
+      title:
+        label: 'Title'
+        type: string
+      given:
+        label: 'Given'
+        type: string
+      middle:
+        label: 'Middle'
+        type: string
+      family:
+        label: 'Family'
+        type: string
+      generational:
+        label: 'Generational'
+        type: string
+      credentials:
+        label: 'Credentials'
+        type: string
+
+field.widget.settings.name_default:
+  type: mapping
+  label: 'Name field display format settings'
+  mapping:
+    override_field_settings:
+      type: boolean
+      label: 'Override field settings'
+    labels:
+      type: mapping
+      label: 'Labels'
+      mapping:
+        title:
+          type: label
+          label: 'Title'
+        given:
+          type: label
+          label: 'Given'
+        middle:
+          type: label
+          label: 'Middle'
+        family:
+          type: label
+          label: 'Family'
+        generational:
+          type: label
+          label: 'Generational'
+        credentials:
+          type: label
+          label: 'Credentials'
+    widget_layout:
+      type: string
+      label: 'Widget layout'
+    show_component_required_marker:
+      type: boolean
+      label: 'Show component required marker'
+    credentials_inline:
+      type: boolean
+      lable: 'Credentials inline'
+    size:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: integer
+        given:
+          label: 'Given'
+          type: integer
+        middle:
+          label: 'Middle'
+          type: integer
+        family:
+          label: 'Family'
+          type: integer
+        generational:
+          label: 'Generational'
+          type: integer
+        credentials:
+          label: 'Credentials'
+          type: integer
+    title_display:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: string
+        given:
+          label: 'Given'
+          type: string
+        middle:
+          label: 'Middle'
+          type: string
+        family:
+          label: 'Family'
+          type: string
+        generational:
+          label: 'Generational'
+          type: string
+        credentials:
+          label: 'Credentials'
+          type: string
+
+field.formatter.settings.name_default:
+  type: mapping
+  label: 'Name format settings'
+  mapping:
+    format:
+      type: string
+      label: 'Name format'
+    markup:
+      type: string
+      label: 'Markup'
+    list_format:
+      type: string
+      label: 'List format'
+    link_target:
+      type: string
+      label: 'Link Target'
+    preferred_field_reference:
+      type: string
+      label: 'Preferred field reference'
+    preferred_field_reference_separator:
+      type: string
+      label: 'Preferred field reference multivalue separator'
+    alternative_field_reference:
+      type: string
+      label: 'Alternative field reference'
+    alternative_field_reference_separator:
+      type: string
+      label: 'Alternative field reference multivalue separator'

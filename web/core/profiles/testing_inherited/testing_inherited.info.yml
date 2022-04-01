@@ -1,0 +1,17 @@
+name: Testing Inherited
+type: profile
+description: 'Profile for testing base profile inheritance.'
+version: VERSION
+hidden: true
+
+base profile: testing
+
+install:
+  - block
+  - config
+  - child_profile_module
+  - contrib_child_profile_module
+  - custom_child_profile_module
+
+themes:
+  - stable

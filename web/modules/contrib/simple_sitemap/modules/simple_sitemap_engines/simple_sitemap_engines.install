@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Module install and update procedures.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function simple_sitemap_engines_uninstall() {
+  $state = \Drupal::service('state');
+  $state->delete('simple_sitemap_engines_last_submitted');
+
+  $engines = \Drupal::entityTypeManager()
+    ->getStorage('simple_sitemap_engine')
+    ->loadMultiple();
+  foreach ($engines as $engine_id => $engine) {
+    $state->delete("simple_sitemap_engines.simple_sitemap_engine.{$engine_id}.last_submitted");
+  }
+}
+
+/**
+ * Moving last_submitted data from configuration to state.
+ */
+function simple_sitemap_engines_update_8301() {
+  $engines = \Drupal::entityTypeManager()
+    ->getStorage('simple_sitemap_engine')
+    ->loadMultiple();
+  foreach ($engines as $engine_id => $engine) {
+    $config = \Drupal::configFactory()
+      ->getEditable("simple_sitemap_engines.simple_sitemap_engine.$engine_id");
+    $last_submitted = $config->get('last_submitted');
+    $config->clear('last_submitted')->save();
+    if ($last_submitted !== NULL) {
+      \Drupal::state()->set("simple_sitemap_engines.simple_sitemap_engine.{$engine_id}.last_submitted",
+        $last_submitted);
+    }
+  }
+}
+
+/**
+ * Fixing erroneous default submission interval if not yet overwritten.
+ */
+function simple_sitemap_engines_update_8302() {
+  $config = \Drupal::configFactory()->getEditable('simple_sitemap_engines.settings');
+  if ($config->get('submission_interval') === 86400) {
+    $config->set('submission_interval', 24)->save();
+  }
+}

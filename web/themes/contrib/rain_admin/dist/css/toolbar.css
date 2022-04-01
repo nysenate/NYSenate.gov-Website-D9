@@ -1,0 +1,244 @@
+.toolbar .toolbar-tray-horizontal .menu-item {
+  background-color: inherit; }
+
+.toolbar[id='toolbar-administration'] {
+  font-family: "Neue Haas Grotesk", "Arial", sans-serif;
+  font-size: 0.875rem !important; }
+  .toolbar[id='toolbar-administration'] .toolbar-bar {
+    background-color: #012635;
+    color: #ccd7dd; }
+  .toolbar[id='toolbar-administration'] .toolbar-bar .toolbar-tab .toolbar-item {
+    color: #ccd7dd; }
+  .toolbar[id='toolbar-administration'] .toolbar-bar .toolbar-tab > .toolbar-item:hover,
+  .toolbar[id='toolbar-administration'] .toolbar-bar .toolbar-tab > .toolbar-item:focus,
+  .toolbar[id='toolbar-administration'] .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
+    background-color: #003954;
+    background-image: none;
+    color: #fff; }
+    .toolbar[id='toolbar-administration'] .toolbar-bar .toolbar-tab > .toolbar-item:hover::before,
+    .toolbar[id='toolbar-administration'] .toolbar-bar .toolbar-tab > .toolbar-item:focus::before,
+    .toolbar[id='toolbar-administration'] .toolbar-bar .toolbar-tab > .toolbar-item.is-active::before {
+      opacity: 1; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray,
+  .toolbar[id='toolbar-administration'] .toolbar-menu {
+    background-color: #003954; }
+  .toolbar[id='toolbar-administration'] .toolbar-menu .toolbar-menu {
+    background-color: #012635;
+    border-color: #012635 !important; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray a {
+    color: #ccd7dd !important;
+    padding: 15px; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray .toolbar-icon {
+    padding-left: 50px; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray a:focus,
+  .toolbar[id='toolbar-administration'] .toolbar-tray a:hover,
+  .toolbar[id='toolbar-administration'] .toolbar-tray a.is-active {
+    color: #fff !important; }
+    .toolbar[id='toolbar-administration'] .toolbar-tray a:focus::before,
+    .toolbar[id='toolbar-administration'] .toolbar-tray a:hover::before,
+    .toolbar[id='toolbar-administration'] .toolbar-tray a.is-active::before {
+      opacity: 1; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray .menu-item,
+  .toolbar[id='toolbar-administration'] .toolbar-tray-vertical.toolbar-tray .menu-item {
+    border-color: #587585 !important; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray .menu-item + .menu-item,
+  .toolbar[id='toolbar-administration'] .toolbar-tray-vertical.toolbar-tray .menu-item + .menu-item {
+    border-color: #587585 !important; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray a:focus,
+  .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray .hover-intent a,
+  .toolbar[id='toolbar-administration'] .toolbar-tray-vertical.toolbar-tray a:focus,
+  .toolbar[id='toolbar-administration'] .toolbar-tray-vertical.toolbar-tray .hover-intent a {
+    background-color: #012635; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray .menu-item .toolbar-menu .toolbar-icon {
+    padding-left: 15px; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray .menu-item--expanded .menu-item--expanded {
+    background-image: none !important;
+    position: relative; }
+    .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray .menu-item--expanded .menu-item--expanded::after {
+      background-image: url("../images/icon-details-arrow--white.svg") !important;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 10px;
+      content: '';
+      height: 100%;
+      right: 3px;
+      position: absolute;
+      transform: rotate(-90deg);
+      width: 20px; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-vertical.toolbar-tray .toolbar-menu a {
+    padding: 15px 55px; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-vertical.toolbar-tray .toolbar-menu .toolbar-menu .toolbar-menu a {
+    padding-left: 65px; }
+  .toolbar[id='toolbar-administration'] .toolbar-icon::before {
+    opacity: 0.75; }
+  .toolbar[id='toolbar-administration'] .toolbar-icon:not(.toolbar-item)::before {
+    background-size: 20px;
+    height: 30px;
+    left: 10px;
+    top: calc(50% - 15px);
+    width: 30px; }
+  .toolbar[id='toolbar-administration'] .toolbar-icon.toolbar-handle:focus,
+  .toolbar[id='toolbar-administration'] .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle:focus {
+    background-color: transparent; }
+  .toolbar[id='toolbar-administration'] .toolbar-icon.toolbar-handle::before, .toolbar[id='toolbar-administration'] .toolbar-icon.toolbar-handle.open::before,
+  .toolbar[id='toolbar-administration'] .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle::before,
+  .toolbar[id='toolbar-administration'] .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open::before {
+    background-color: transparent;
+    background-image: url("../images/icon-details-arrow--white.svg");
+    background-size: 40%;
+    opacity: 0.75;
+    transform: rotate(90deg); }
+  .toolbar[id='toolbar-administration'] .toolbar-icon.toolbar-handle.open::before,
+  .toolbar[id='toolbar-administration'] .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open::before {
+    background-image: url("../images/icon-details-arrow--white.svg");
+    transform: none; }
+  .toolbar[id='toolbar-administration'] .toolbar-toggle-orientation {
+    border: 0;
+    background-color: transparent; }
+    .toolbar[id='toolbar-administration'] .toolbar-toggle-orientation .toolbar-icon {
+      padding: 0; }
+      .toolbar[id='toolbar-administration'] .toolbar-toggle-orientation .toolbar-icon::before {
+        background-size: 25px;
+        left: 0; }
+  .toolbar[id='toolbar-administration'] .toolbar-tray-horizontal.toolbar-tray .toolbar-toggle-orientation {
+    background-color: #012635; }
+
+/**
+ * Top level icons.
+ */
+.toolbar-bar .toolbar-icon-menu::before {
+  background-image: url("../images/hamburger.svg"); }
+
+.toolbar-bar .toolbar-icon-menu:active::before,
+.toolbar-bar .toolbar-icon-menu.is-active::before {
+  background-image: url("../images/hamburger.svg"); }
+
+.toolbar-bar .toolbar-icon-help::before {
+  background-image: url("../images/questionmark-disc.svg"); }
+
+.toolbar-bar .toolbar-icon-help:active::before,
+.toolbar-bar .toolbar-icon-help.is-active::before {
+  background-image: url("../images/questionmark-disc.svg"); }
+
+.toolbar-bar .toolbar-icon-user::before,
+.toolbar-bar .toolbar-icon-user:active::before,
+.toolbar-bar .toolbar-icon-user.is-active::before {
+  background-image: url("../images/person.svg"); }
+
+/**
+ * Main menu icons.
+ */
+.toolbar-icon-9 .toolbar-icon-admin-toolbar-tools-help::before,
+.toolbar-icon-8 .toolbar-icon-admin-toolbar-tools-help::before,
+.toolbar-icon-admin-toolbar-tools-help::before {
+  background-image: url("../images/drupal-logo.svg"); }
+
+.toolbar-icon-system-admin-content::before {
+  background-image: url("../images/file.svg"); }
+
+.toolbar-icon-system-admin-content:active::before,
+.toolbar-icon-system-admin-content.is-active::before {
+  background-image: url("../images/file.svg"); }
+
+.toolbar-icon-system-admin-structure::before {
+  background-image: url("../images/orgchart.svg"); }
+
+.toolbar-icon-system-admin-structure:active::before,
+.toolbar-icon-system-admin-structure.is-active::before {
+  background-image: url("../images/orgchart.svg"); }
+
+.toolbar-icon-system-themes-page::before {
+  background-image: url("../images/paintbrush.svg"); }
+
+.toolbar-icon-system-themes-page:active::before,
+.toolbar-icon-system-themes-page.is-active::before {
+  background-image: url("../images/paintbrush.svg"); }
+
+.toolbar-icon-entity-user-collection::before {
+  background-image: url("../images/people.svg"); }
+
+.toolbar-icon-entity-user-collection:active::before,
+.toolbar-icon-entity-user-collection.is-active::before {
+  background-image: url("../images/people.svg"); }
+
+.toolbar-icon-system-modules-list::before {
+  background-image: url("../images/puzzlepiece.svg"); }
+
+.toolbar-icon-system-modules-list:active::before,
+.toolbar-icon-system-modules-list.is-active::before {
+  background-image: url("../images/puzzlepiece.svg"); }
+
+.toolbar-icon-system-admin-config::before {
+  background-image: url("../images/wrench.svg"); }
+
+.toolbar-icon-system-admin-config:active::before,
+.toolbar-icon-system-admin-config.is-active::before {
+  background-image: url("../images/wrench.svg"); }
+
+.toolbar-icon-system-admin-reports::before {
+  background-image: url("../images/barchart.svg"); }
+
+.toolbar-icon-system-admin-reports:active::before,
+.toolbar-icon-system-admin-reports.is-active::before {
+  background-image: url("../images/barchart.svg"); }
+
+.toolbar-icon-help-main::before {
+  background-image: url("../images/questionmark-disc.svg"); }
+
+.toolbar-icon-help-main:active::before,
+.toolbar-icon-help-main.is-active::before {
+  background-image: url("../images/questionmark-disc.svg"); }
+
+/**
+ * Handle.
+ */
+.toolbar .toolbar-icon.toolbar-handle::before {
+  background-image: url("../images/chevron-disc-down.svg"); }
+
+.toolbar .toolbar-icon.toolbar-handle.open::before {
+  background-image: url("../images/chevron-disc-up.svg"); }
+
+.toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle::before {
+  background-image: url("../images/twistie-down.svg");
+  background-size: 75%; }
+
+.toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open::before {
+  background-image: url("../images/twistie-up.svg");
+  background-size: 75%; }
+
+.toolbar .toolbar-icon-escape-admin::before {
+  background-image: url("../images/chevron-disc-left.svg"); }
+
+[dir='rtl'] .toolbar .toolbar-icon-escape-admin::before {
+  background-image: url("../images/chevron-disc-right.svg"); }
+
+/**
+ * Orientation toggle.
+ */
+/**
+ * In order to support a hover effect on the SVG images, while also supporting
+ * RTL text direction and no SVG support, this little icon requires some very
+ * specific targeting, setting and unsetting.
+ */
+.toolbar .toolbar-toggle-orientation [value='vertical']::before {
+  background-image: url("../images/push-left.svg");
+  /* LTR */ }
+
+.toolbar .toolbar-toggle-orientation [value='vertical']:hover::before,
+.toolbar .toolbar-toggle-orientation [value='vertical']:focus::before {
+  background-image: url("../images/push-left.svg");
+  /* LTR */ }
+
+[dir='rtl'] .toolbar .toolbar-toggle-orientation [value='vertical']::before {
+  background-image: url("../images/push-right.svg"); }
+
+[dir='rtl'] .toolbar .toolbar-toggle-orientation [value='vertical']:hover::before,
+[dir='rtl'] .toolbar .toolbar-toggle-orientation [value='vertical']:focus::before {
+  background-image: url("../images/push-right.svg"); }
+
+.toolbar .toolbar-toggle-orientation [value='horizontal']::before {
+  background-image: url("../images/push-up.svg"); }
+
+.toolbar .toolbar-toggle-orientation [value='horizontal']:hover::before,
+.toolbar .toolbar-toggle-orientation [value='horizontal']:focus::before {
+  background-image: url("../images/push-up.svg"); }

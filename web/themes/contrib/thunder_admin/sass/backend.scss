@@ -1,0 +1,61 @@
+/**
+ * @file
+ * Styles for the thunder_admin backend.
+ */
+@import 'variables';
+
+.article-teaser {
+
+  .field--name-field-teaser-media {
+    summary {
+      display: none;
+    }
+
+    .media-form__item-widget {
+      background: $primary-color-lighter;
+    }
+  }
+
+  .field--name-field-teaser-text {
+    padding: 0 10px;
+
+    textarea {
+      height: 122px;
+    }
+  }
+
+  @include for-tablet-landscape-and-up {
+    div.field--widget-entity-browser-entity-reference div.entities-list > div {
+      margin: 10px 0;
+    }
+    > .details-wrapper,
+    > .fieldset-wrapper {
+      display: flex;
+
+      .field--name-field-teaser-media {
+        width: 225px;
+        min-width: 225px;
+      }
+
+      .field--name-field-teaser-media details.form-wrapper {
+        border: 0;
+      }
+
+      .field--name-field-teaser-text {
+        margin: 0 14px;
+      }
+
+      .field--name-field-teaser-text .form-item-field-teaser-text-0-value {
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+.ckeditor-buttons {
+  // Reset box-sizing for ckeditor.admin.css styles.
+  box-sizing: content-box;
+  li a {
+    line-height: 1.384; // 18px/13px
+  }
+}

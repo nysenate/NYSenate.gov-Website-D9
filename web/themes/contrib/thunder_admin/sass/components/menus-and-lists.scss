@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Import and override menus-and-lists.css provided by seven/global-styling.
+ */
+@import '@theme-seven/css/components/menus-and-lists.css';
+
+// Relative urls in seven fixed by copying images here.
+.item-list ul li.collapsed,
+.menu-item--collapsed {
+  list-style-image: url(../../images/menu-collapsed.png);
+}
+.item-list ul li.expanded,
+.menu-item--expanded {
+  list-style-image: url(../../images/menu-expanded.png);
+}

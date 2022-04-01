@@ -1,0 +1,51 @@
+/**
+ * @file
+ * Import and override admin.toolbar.css provided by admin_toolbar/toolbar.tree library.
+ */
+@import 'variables';
+
+/* stylelint-disable string-no-newline */
+@import '@module-admin_toolbar/css/admin.toolbar.css remove {
+  .toolbar-tray-horizontal .menu-item:hover{ background }
+  .toolbar-tray-horizontal .menu-item a:focus{ background }
+  .toolbar-tray-horizontal .menu-item--expanded .menu{ background }
+  .toolbar-tray-horizontal .menu-item--expanded { background-color }
+  .toolbar .toolbar-tray-horizontal .menu-item:last-child { border-left; border-right }
+  [dir="rtl"] .toolbar-tray-horizontal .menu-item:hover { background }
+  [dir="rtl"] .toolbar-tray-horizontal .menu-item a:focus { background }
+  [dir="rtl"] .toolbar-tray-horizontal .menu-item--expanded .menu { background }
+  [dir="rtl"] .toolbar-tray-horizontal .menu-item--expanded { background-color }
+  [dir="rtl"] .toolbar .toolbar-tray-horizontal .menu-item:last-child { border-left; border-right }
+}';
+/* stylelint-enable string-no-newline */
+
+.toolbar-tray-horizontal ul ul li.menu-item,
+[dir="rtl"] .toolbar-tray-horizontal ul li li.menu-item {
+  border-right: 1px solid $gray-light;
+  border-left: 1px solid $gray-light;
+  border-bottom: 1px solid $gray-light;
+}
+
+.toolbar .toolbar-tray-horizontal ul ul li.menu-item:first-child,
+[dir="rtl"] .toolbar .toolbar-tray-horizontal ul ul li.menu-item:first-child {
+  border-top: 1px solid $gray-light;
+}
+
+.toolbar-tray-horizontal,
+[dir="rtl"] .toolbar-tray-horizontal {
+  ul li.menu-item--expanded ul li.menu-item--expanded,
+  .toolbar-menu:not(:first-child) li.menu-item--expanded > a:focus {
+    background-position: right 5px center;
+    background-image: url('../../images/icons/chevron-disc-right--white.svg');
+    background-repeat: no-repeat;
+  }
+}
+
+/**
+ * 1. Set box-sizing explicitly to what we had before, see https://drupal.org/i/3026302.
+ * 2. Remove margin introdurced by admin toolbar tools in 2.3.
+*/
+.toolbar-icon-admin-toolbar-tools-help:before {
+  box-sizing: border-box; /* 1 */
+  margin-left: inherit; /* 2 */
+}

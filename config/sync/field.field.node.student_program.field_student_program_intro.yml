@@ -1,0 +1,23 @@
+uuid: 33f4d9a0-7531-4bb7-b7c0-b3d74e0b15ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_student_program_intro
+    - node.type.student_program
+id: node.student_program.field_student_program_intro
+field_name: field_student_program_intro
+entity_type: node
+bundle: student_program
+label: 'Student Program Intro'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Is Student Program Intro'
+  off_label: 'Is Not Student Program Intro'
+field_type: boolean

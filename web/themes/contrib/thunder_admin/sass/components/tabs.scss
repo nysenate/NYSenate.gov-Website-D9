@@ -1,0 +1,177 @@
+/**
+ * @file
+ * Import and override tabs.css provided by seven/global-styling.
+ *
+ * @todo Fix descending specificity.
+ */
+/* stylelint-disable no-descending-specificity */
+
+@import 'variables';
+
+/* stylelint-disable string-no-newline */
+@import '@theme-seven/css/components/tabs.css remove {
+  .is-collapse-enabled .tabs:before, .is-horizontal .tabs:before {}
+}';
+/* stylelint-enable string-no-newline */
+
+// Added
+.is-collapse-enabled {
+  .primary {
+    position: relative;
+  }
+
+  .tabs {
+    padding-top: 39px;
+  }
+
+  .tabs__trigger {
+    font-size: 1rem;
+    line-height: 20px; // Line height hack to display bottom border.
+  }
+
+  .tabs.primary .tabs__tab.is-active {
+    border-bottom: 1px solid $gray-lightest;
+  }
+  .tabs.primary.is-open .tabs__tab.is-active {
+    border-bottom-color: $primary-color-intense;
+  }
+}
+
+.tabs__tab {
+  border: 1px solid $primary-color-intense;
+  background-color: $primary-color-lighter;
+
+  // Removed :focus since this hover is same as active.
+  &:focus {
+    background-color: $primary-color-lighter;
+  }
+
+  &:hover {
+    color: $primary-color-intense;
+    background-color: $gray-lightest;
+  }
+}
+
+// Primary tabs
+.tabs.primary {
+
+  .tabs__tab.is-active {
+    border-color: $primary-color-intense;
+    background-color: $gray-lightest;
+  }
+
+  a {
+    text-transform: uppercase;
+  }
+}
+
+@media screen and (min-width: 18.75em) { // 300px
+
+  .tabs.primary a {
+    background: url(../../images/icons/chevron-right.svg) 99% center no-repeat;
+  }
+
+  [dir="rtl"] .tabs.primary a {
+    background: url(../../images/icons/chevron-left.svg) 1% center no-repeat;
+  }
+}
+
+.is-horizontal .tabs__tab {
+  margin: 0 1px -1px;
+  border-bottom: 1px solid $primary-color-intense;
+}
+
+.is-horizontal .tabs__tab + .tabs__tab {
+  margin: 0 1px -1px;
+  border-radius: 4px 4px 0 0;
+}
+
+.is-horizontal .tabs.primary .tabs__tab:first-child,
+[dir="rtl"] .is-horizontal .tabs.primary .tabs__tab:first-child,
+.is-horizontal .tabs.primary .tabs__tab:last-child,
+[dir="rtl"] .is-horizontal .tabs.primary .tabs__tab:last-child {
+  border-radius: 4px 4px 0 0;
+}
+
+[dir="rtl"] .is-horizontal .tabs.primary .tabs__tab:last-child {
+  border-bottom-color: $primary-color-intense; // added
+}
+
+.is-horizontal .tabs__tab.is-active,
+.is-horizontal .tabs.primary .tabs__tab.is-active,
+[dir="rtl"] .is-horizontal .tabs.primary .tabs__tab.is-active {
+  margin: 0 1px -1px;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid transparent; //added
+}
+
+.is-horizontal .tabs.primary a {
+  padding: 5px 1em 5px 1em;
+  font-size: 12px; // added
+}
+
+// Secondary tabs
+.tabs.secondary .tabs__tab.is-active {
+  color: $primary-color-intense;
+  border-left: 2px solid $primary-color-intense; // LTR
+}
+
+.tabs.secondary .tabs__tab + .tabs__tab {
+  border-top: 1px solid $primary-color-light;
+}
+
+.tabs.secondary a {
+  padding: 2px 0;
+  font-size: 12px; // added
+  color: $primary-color-darker; // added
+  text-transform: uppercase; // added
+}
+
+.tabs.secondary .is-active a {
+  color: $primary-color-intense;
+}
+
+.is-horizontal .tabs.secondary .tabs__tab + .tabs__tab {
+  border-top: 0; // added
+}
+
+.is-horizontal .tabs.secondary .tabs__tab.is-active {
+  border-left-color: transparent;
+}
+
+.is-horizontal {
+  text-align: right;
+
+  &.position-container {
+    border-bottom: 1px solid $primary-color-intense;
+  }
+
+  .tabs {
+    &.primary,
+    &.secondary {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+.block-local-tasks-block {
+  .tabs {
+    &.secondary {
+      margin-top: 0;
+      margin-bottom: 1.5em;
+    }
+  }
+
+  &.is-combined-with-breadcrumb {
+    margin-top: -35px;
+
+    .tabs {
+      &.primary {
+        margin-top: 0;
+      }
+    }
+  }
+}
+// */

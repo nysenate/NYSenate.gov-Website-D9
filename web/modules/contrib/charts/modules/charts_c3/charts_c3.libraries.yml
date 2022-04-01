@@ -1,0 +1,32 @@
+charts_c3:
+  version: 1.x
+  js:
+    js/charts_c3.js: {  }
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+d3:
+  remote: 'https://d3js.org/d3.v3.min.js'
+  version: 3
+  license:
+    name: BSD
+    url: 'https://en.wikipedia.org/wiki/BSD_licenses'
+    gpl-compatible: false
+  js:
+    /libraries/d3/d3.min.js: {  }
+c3:
+  remote: 'https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.18/c3.min.js'
+  version: 0.4.18
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+    gpl-compatible: true
+  css:
+    theme:
+      /libraries/c3/c3.min.css: {  }
+  js:
+    /libraries/c3/c3.min.js: {  }
+  dependencies:
+    - charts_c3/charts_c3
+    - charts_c3/d3

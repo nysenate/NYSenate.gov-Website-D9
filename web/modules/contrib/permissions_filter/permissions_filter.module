@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Contains permissions_filter.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function permissions_filter_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the permissions_filter module.
+    case 'help.page.permissions_filter':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The module provide a search functionality in the people/permission page. It will help site admin to get the desired result without scrolling down.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_alter() on behalf of permissions_filter.module.
+ */
+function permissions_filter_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'user_admin_permissions') {
+    $form['permissions']['#weight'] = 2;
+    $form['permissions_filter'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['table-filter', 'js-show'],
+      ],
+      '#weight' => 1,
+    ];
+    $form['permissions_filter']['search_permission'] = [
+      '#type' => 'search',
+      '#title' => t('Enter a part of the Permission name'),
+      '#title_display' => 'invisible',
+      '#size' => 30,
+      '#placeholder' => t('Filter by name'),
+      '#description' => t('Enter a part of the permission'),
+      '#attributes' => [
+        'class' => ['table-filter-text'],
+        'data-table' => '#user-admin-permissions',
+        'autocomplete' => 'off',
+      ],
+    ];
+    $form['#attached']['library'][] = 'permissions_filter/permissions_js';
+  }
+}

@@ -1,0 +1,18 @@
+tour:
+  version: VERSION
+  js:
+    js/tour.js: {}
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/jquery.once.bc
+    - core/drupal
+    - core/backbone
+    - core/shepherd
+    - tour/tour-styling
+
+tour-styling:
+  version: VERSION
+  css:
+    component:
+      css/tour.module.css: { media: screen }

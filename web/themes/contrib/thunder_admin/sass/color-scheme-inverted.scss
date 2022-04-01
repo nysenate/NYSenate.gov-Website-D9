@@ -1,0 +1,98 @@
+/**
+ * @file
+ * Inverted color scheme.
+ */
+@import 'mixins';
+@import 'variables';
+
+.paragraph-form-item--has-subform.color-scheme-inverted {
+  padding: 20px;
+  color: $gray-lighter;
+}
+.color-scheme-inverted {
+  color: $gray-lighter;
+  background-color: $primary-color-darkest;
+  @include disabled-buttons-on-dark-bg;
+
+  .tips,
+  .description,
+  .form-item .description {
+    color: white;
+  }
+
+  details,
+  fieldset:not(.fieldgroup) {
+    background-color: transparent;
+    border-color: $primary-color-darker;
+  }
+
+  .seven-details > summary {
+    color: $gray-lighter;
+
+    &:hover {
+      text-decoration: none; // Added.
+    }
+
+    .details-title {
+      color: $gray-lighter; // Added.
+
+      &:hover {
+        text-decoration: none; // Added.
+      }
+    }
+  }
+
+  label {
+    color: $gray-lighter;
+  }
+
+  input.form-autocomplete,
+  input.form-text,
+  input.form-tel,
+  input.form-email,
+  input.form-url,
+  input.form-search,
+  input.form-number,
+  input.form-color,
+  input.form-file,
+  input.form-date,
+  input.form-time,
+  textarea.form-textarea {
+    background-color: $gray-lightest;
+  }
+
+  .field--name-field-text .form-type-textarea,
+  .field--name-field-url .form-type-url {
+    label {
+      color: $gray-lightest;
+    }
+  }
+
+  .details__toggle-description,
+  .form-item__toggle-description {
+    .button__icon svg path {
+      fill: white;
+    }
+  }
+  /* Tables */
+  thead th {
+    color: $gray-lighter;
+    background-color: transparent;
+  }
+
+  tbody tr:hover,
+  tbody tr:focus {
+    background-color: transparent;
+  }
+
+  .form-disabled {
+    input,
+    select,
+    textarea,
+    .select2-selection--single,
+    .select2-selection--multiple {
+      color: #d4d4d4;
+      background-color: inherit;
+    }
+  }
+}

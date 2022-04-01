@@ -1,0 +1,833 @@
+/**
+ * @file
+ * Additional styles for paragraphs/drupal.paragraphs.widget, added using libraries-extend.
+ */
+@import 'variables';
+
+/* stylelint-disable plugin/no-browser-hacks */
+$paragraph-preview-height: 90px;
+$paragraph-preview-thumbnail-height: 90px;
+$paragraph-preview-thumbnail-width: 150px;
+
+$paragraph-preview-mobile-height: 150px;
+$paragraph-preview-thumbnail-mobile-height: 75px;
+$paragraph-preview-thumbnail-mobile-width: 125px;
+/* stylelint-enable plugin/no-browser-hacks */
+
+/* stylelint-disable-next-line string-no-newline */
+@import '@module-paragraphs/css/paragraphs.widget.css remove {
+  @media (max-width: 768px) { .button.paragraphs-icon-button {} }
+  .js .field--widget-paragraphs td { padding }
+  .js .field--widget-paragraphs .draggable .tabledrag-handle{ min-width }
+}';
+
+/**
+ * Media screen size defined by paragraphs module to adjust style for tablets and phones.
+ */
+@mixin for-paragraphs-tablet-and-phone {
+  @media (max-width: 768px) { @content; }
+}
+
+/**
+ * Paragraph multi reference field item's draggable row:
+ * 1. separate paragraph "items" visually and make room for [add] buttons
+ */
+.field-multiple-table {
+  & > thead {
+    tr {
+      border-bottom: 0;
+    }
+    th {
+      border: 0;
+      background: transparent;
+    }
+    .field-label {
+      padding-left: 0;
+    }
+  }
+  & > tbody > tr {
+    background: $primary-color-lighter;
+    border-bottom: 1px solid $primary-color;
+
+    &.draggable {
+
+      > .field-multiple-drag {
+        position: relative;
+        width: 58px;
+        vertical-align: middle;
+        text-align: center;
+        box-sizing: border-box;
+
+        .js & {
+          .tabledrag-changed {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            font-size: 0;
+            background: #e09600;
+          }
+
+          .tabledrag-handle {
+            display: inline-block;
+            float: none;
+            padding-right: 0; // Reset form.scss
+
+            /* 1. Reset tabledrag.module.css */
+            .handle {
+              background: url(../images/icons/move.svg) no-repeat center center;
+              margin: 0; /* 1 */
+              height: auto; /* 1 */
+              width: 22px;
+            }
+          }
+        }
+      }
+
+      &.drag {
+        background: $primary-color-lighter-2;
+
+        .field-multiple-drag {
+          .tabledrag-handle {
+            .handle {
+              background-image: url(../images/icons/move--primary-blue.svg);
+            }
+          }
+        }
+      }
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+    }
+  }
+
+  /**
+   * Adjust style for add-in-between button for paragraphs.
+   */
+  .add-in-between-row,
+  .paragraphs-features__add-in-between__row {
+    background: transparent;
+
+    td {
+      padding: 0;
+    }
+  }
+
+  /**
+   * ".js" is prepended, because selector with bigger specificity is required, mainly to override
+   * add in between button style provided by paragraphs.
+   */
+  /*  .js &.field-multiple-table--paragraphs-experimental--add-in-between {
+    & > thead,
+    & > tbody {
+      & > tr {
+        border-bottom-width: 0;
+      }
+    }
+
+    margin-bottom: 0;
+  } */
+}
+
+.paragraph-form-item {
+  position: relative;
+}
+
+/**
+ * Paragraphs actions style.
+ */
+.paragraphs-actions {
+
+  /**
+   * 1. make some space between information text and collapse and drop-down buttons.
+   */
+  margin-left: $base-space; /* 1 */
+
+  /**
+   * Paragraphs dropdown toggle button style.
+   */
+  .paragraphs-dropdown-toggle {
+    /**
+     * Override icon styles provided by paragraphs module.
+     */
+    @include inline-svg-button('<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path fill="#787878" d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>', ('#787878': $primary-color), ('#787878': $primary-color-dark), ('#787878': $gray-medium));
+
+    background-color: $gray-lightest;
+    border: 1px solid $primary-color-intense;
+    padding-left: 4px;
+    padding-top: 4px;
+    height: 31px;
+    width: 31px;
+
+    &:hover {
+      background-color: $gray-lightest;
+    }
+  }
+
+  .paragraphs-dropdown-actions {
+    top: 31px;
+  }
+  /**
+   * Reset button small class added by paragraphs
+   * in https://drupal.org/i/3111075.
+   *
+   * 1. Use button padding, see buttons.scss.
+   */
+  > .button--small {
+    padding: 7px 18px;  /* 1 */
+  }
+}
+
+.paragraph-form-item__actions {
+  /**
+   * Icon only buttons.
+   */
+  .button--icon-only {
+    width: 56px;
+    height: 40px;
+    text-indent: -9999px;
+
+    &,
+    &:active,
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /**
+     * Override and add icon styles provided by paragraphs module (with defined colors for default, hover and disabled).
+     */
+    &.paragraph-form-item__action--edit {
+      @include inline-svg-button('<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#787878" d="M2 17.2V21h3.8l11-11.1L13 6.1 2 17.2zM19.7 7c.4-.4.4-1 0-1.4l-2.3-2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8L18 8.9 19.7 7zM11 19l-2 2h13v-2H11z"/></svg>', ('#787878': $primary-color), ('#787878': $primary-color-dark), ('#787878': $gray-medium));
+    }
+
+    &.paragraph-form-item__action--remove {
+      @include inline-svg-button('<svg width="15" height="18" viewBox="0 0 15 18" xmlns="http://www.w3.org/2000/svg"><path fill="#787878" d="M1 16c0 1.1.975 2 2.167 2h8.666C13.025 18 14 17.1 14 16V4H1v12zM15 1v2H0V1h3.75l1.07-1h5.36l1.07 1H15zm-5 5.51c0-.282.232-.51.5-.51.276 0 .5.228.5.51v8.98c0 .282-.232.51-.5.51-.276 0-.5-.228-.5-.51V6.51zm-3 0c0-.282.232-.51.5-.51.276 0 .5.228.5.51v8.98c0 .282-.232.51-.5.51-.276 0-.5-.228-.5-.51V6.51zm-3 0c0-.282.232-.51.5-.51.276 0 .5.228.5.51v8.98c0 .282-.232.51-.5.51-.276 0-.5-.228-.5-.51V6.51z" fill-rule="evenodd"/></svg>', ('#787878': $primary-color), ('#787878': $primary-color-dark), ('#787878': $gray-medium));
+    }
+  }
+
+  @include for-drupal-tablet-and-phone {
+    .paragraph-type-label {
+      display: none;
+    }
+  }
+}
+
+.paragraph-form-item--has-preview {
+  display: flex;
+  flex-wrap: wrap;
+
+  .messages {
+    flex: 1 1 100%;
+  }
+
+  /**
+   * Max height is defined for wrapping paragraphs element in preview,
+   * because it breaks layout on smaller screen sizes.
+   */
+  .paragraph--view-mode--preview {
+    max-height: $paragraph-preview-height;
+    height: $paragraph-preview-height;
+    flex: 1;
+  }
+
+  .paragraph-form-item__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    float: right;
+    margin-left: 1em;
+    max-height: $paragraph-preview-height;
+    height: $paragraph-preview-height;
+
+    @include for-tablet-portrait-and-up {
+      width: 160px;
+    }
+
+    /**
+     * 1. Max width blocks div element with paragraphs type + icon and also information icon (fe. warning icon),
+     *    to take too much space, because then not enough space for summary will break paragraphs in two lines.
+     */
+    .paragraph-type-title {
+      display: none;
+
+      @include for-tablet-portrait-and-up {
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        max-width: 100px;
+      }
+    }
+
+    .paragraph-form-item__links {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      border-left: 1px solid #ccc;
+
+      li {
+        button {
+          max-height: 40px;
+        }
+
+        + li {
+          margin-top: 5px;
+
+          &:before {
+            display: block;
+            content: '';
+            margin: 0 1.3rem 0.3rem;
+            border-top: 1px solid #ccc;
+          }
+        }
+      }
+    }
+
+    /**
+     * Paragraphs actions buttons (edit and toggle drop-down).
+     */
+    .paragraphs-actions {
+      border-left: 1px solid #ccc;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-evenly;
+      /**
+       * Separator between buttons in paragraphs actions.
+       */
+      > .button + .paragraphs-dropdown {
+        margin-left: 0;
+
+        &:before {
+          content: '';
+          display: block;
+          width: 25px;
+          margin-bottom: 15px;
+          border-top: 1px solid #ccc;
+        }
+      }
+
+      /**
+       * Override :hover background color defined by paragraphs module for action icons (fe. edit).
+       */
+      .paragraphs-icon-button {
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+
+    /**
+     * Tweak for drop-down toggle button provided by paragraphs.
+     */
+    .paragraphs-dropdown-toggle {
+      padding: 0;
+      border-width: 0;
+      background-color: transparent;
+
+      &:hover {
+        box-shadow: none;
+        background-color: transparent;
+      }
+    }
+
+    /**
+     * Tweak for position of drop-down menu for drop-down toggle button provided by paragraphs.
+     */
+    .paragraphs-dropdown-actions {
+      top: 38px;
+    }
+  }
+
+  /**
+   * 1. align information icon (fe. warning icon after editing) to left from paragraph type icon + text.
+   *    The element with icon is a 2nd element in flex and to position it as the first negative order is used.
+   */
+  .paragraph-type {
+    order: -1; /* 1 */
+  }
+}
+
+/**
+ * Editing mode for a paragraph item:
+ * 1. bleed the background into the padding on the table row.
+ */
+.paragraph-form-item--has-subform {
+  display: flex;
+  flex-direction: column;
+  margin-top: -10px;  /* 1 */
+  margin-bottom: -10px;  /* 1 */
+  margin-left: 0;
+  padding: 20px 20px 20px 0;
+  color: $gray-medium;
+  // Remove additional spacing inside paragraph subforms.
+  tr.odd & .form-item,
+  tr.even & .form-item {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  // Different colors, for better contrast
+  a,
+  .link {
+    color: $primary-color;
+  }
+
+  .paragraph-form-item__actions {
+    margin-top: 1em;
+    display: flex;
+    justify-content: flex-end;
+    align-self: flex-end;
+    order: 10;
+    margin-right: 24px;
+
+    /**
+     * 1. When paragraph type has long label, then UI get broken and
+     *    it's not possible to access action buttons. Also Layout is broken.
+     * @todo Needs to be discussed, hide for now.
+     */
+    .paragraph-type {
+      display: none;
+      max-width: 150px; /* 1 */
+    }
+
+    .paragraph-type-title {
+      display: none;
+    }
+
+    .paragraph-form-item__links {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+
+      /* fix height for trashcan on edit form */
+      .button--icon-only {
+        height: 30px;
+      }
+
+      // @TODO: Remove rule when remove icon has been removed from form.
+      /* Hide remove button in CLASSIC widget */
+      .remove {
+        display: none;
+      }
+    }
+  }
+
+  .form-item__field-wrapper {
+    display: flex;
+    align-items: center;
+
+    .field-suffix {
+      padding-left: 5px;
+    }
+
+    .form-textarea-wrapper,
+    .image-style-preview {
+      flex: 1 1 auto;
+    }
+  }
+
+  .form-item__toggle-description-placeholder {
+    display: inherit;
+    width: 24px;
+    height: 24px;
+  }
+
+  > .form-wrapper:first-child {
+    margin-top: $base-space-80pct;
+  }
+
+  .filter-wrapper {
+    border: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 24px;
+  }
+
+  .form-text,
+  .form-url {
+    width: 100%;
+  }
+
+  .column-container {
+    @include for-big-tablet-landscape-and-up {
+      display: flex;
+      justify-content: space-between;
+
+      > .left,
+      > .right {
+        width: 48%;
+      }
+    }
+  }
+
+  .entities-list {
+    .item-container {
+      margin: $base-space-80pct $base-space-80pct $base-space-80pct * 1.5;
+    }
+  }
+
+  .bottom {
+    margin-top: 2em;
+  }
+
+  .form-managed-file .file {
+    margin-top: 1.5em;
+  }
+
+  .field--name-field-text .form-type-textarea,
+  .field--name-field-url .form-type-url {
+    label {
+      margin-bottom: 0.8em;
+      color: $gray-medium;
+      font-size: 14px;
+      line-height: 17px;
+    }
+  }
+  .field--name-field-video,
+  .field--name-field-image,
+  .field--name-field-media-images {
+    > details[open] > summary {
+      display: none;
+    }
+  }
+
+  .field--name-field-video,
+  .field--name-field-image {
+    > details {
+      margin: 0;
+      border: 0;
+
+      .details-wrapper {
+        padding: 0;
+      }
+    }
+
+    .entities-list {
+      .item-container {
+        display: block;
+        margin: 0;
+
+        &:hover {
+          cursor: default;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .field--widget-inline-entity-form-simple {
+    fieldset {
+      padding: 0;
+      border: 0;
+    }
+  }
+
+  .field--name-field-media {
+    legend {
+      display: none;
+    }
+  }
+
+  .field-multiple-table {
+    tbody {
+      tr {
+        border-bottom-color: $primary-color-dark;
+
+        &.draggable,
+        &.drag-previous {
+          background: transparent;
+        }
+      }
+    }
+
+    thead {
+      tr {
+        border: 0;
+
+        &:hover {
+          background: transparent;
+        }
+
+        th {
+          background: transparent;
+          color: $gray-medium;
+          border: 0;
+        }
+      }
+    }
+  }
+
+  fieldset:not(.fieldgroup) {
+    background-color: transparent;
+    padding: 30px 0 0;
+    border: 0;
+    legend {
+      margin: 0.3em;
+    }
+  }
+  .seven-details__summary:hover,
+  .seven-details__summary:focus,
+  .seven-details[open] > .seven-details__summary {
+    color: inherit; // $gray-medium
+  }
+
+  /**
+   * 1. align information text to left from collapse and drop-down buttons.
+   */
+  .paragraph-type-info {
+    margin-right: auto; /* 1 */
+  }
+}
+/**
+* iterate background colours for nested paragraphs
+*/
+.field-multiple-table {
+  /* stylelint-disable plugin/no-browser-hacks */
+  $listofcolors: $primary-color-lightest, #dff2fd, $primary-color-lighter;
+  $sel: 'tr.draggable';
+  /* stylelint-enable plugin/no-browser-hacks */
+  @for $color from 1 to 10 {
+    #{$sel} {
+      background-color: nth($listofcolors, $color % 3 + 1);
+    }
+    /* stylelint-disable-next-line plugin/no-browser-hacks */
+    $sel: selector-nest($sel, 'tr.draggable');
+  }
+}
+
+/* ----------------------- Paragraph preview -------------------------------- */
+
+.paragraph-form-item__preview {
+  max-height: $paragraph-preview-mobile-height;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.3em;
+
+  .text-formatted {
+    & * {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.3em;
+    }
+
+    ul {
+      padding-left: 1.4em;
+    }
+  }
+
+  .field__label {
+    display: none;
+
+    @include for-tablet-portrait-and-up {
+      display: block;
+    }
+  }
+
+  @include for-big-tablet-landscape-and-up {
+    height: $paragraph-preview-height;
+    max-height: $paragraph-preview-height;
+  }
+
+  &.clickable {
+    cursor: pointer;
+  }
+}
+
+.paragraph-preview {
+  @include for-tablet-portrait-and-up {
+    display: flex;
+  }
+}
+
+.paragraph-preview__thumbnail {
+  margin-right: 1em;
+  width: $paragraph-preview-thumbnail-mobile-width;
+  height: $paragraph-preview-thumbnail-mobile-height;
+  border: 1px solid white;
+  overflow: hidden;
+
+  @include for-tablet-portrait-and-up {
+    width: $paragraph-preview-thumbnail-width;
+    height: $paragraph-preview-thumbnail-height;
+  }
+
+  img {
+    height: $paragraph-preview-thumbnail-mobile-height;
+    width: auto;
+
+    @include for-tablet-portrait-and-up {
+      height: $paragraph-preview-thumbnail-height;
+    }
+  }
+
+  .thumbnail-quadruple {
+    display: flex;
+    flex-wrap: wrap;
+    background: $gray-lightest;
+    justify-content: space-between;
+    max-height: 100%;
+
+    .thumbnail-quadruple__item {
+      flex: 0 0 74px;
+      max-width: 74px;
+      height: 44px;
+      max-height: 44px;
+      border: 1px solid white;
+      overflow: hidden;
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
+.paragraph-preview__data {
+  flex: 1 1 auto;
+}
+
+/* -------------------------- Interaction ----------------------------------- */
+
+.paragraph-form-item .ajax-progress {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  background: transparent;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * Support for classic and experimental paragraphs widget.
+ */
+.js {
+
+  /**
+   * Positioning for bottom custom add paragraph button.
+   */
+  .paragraphs-bottom-add-button {
+    display: block;
+    text-align: center;
+    margin-top: -5px;
+    padding-top: 0;
+  }
+
+  .field--widget-entity-reference-paragraphs,
+  .field--widget-paragraphs {
+    .paragraphs-bottom-add-button,
+    .first-button.paragraph-type-add-modal,
+    .add-in-between-row .paragraph-type-add-modal,
+    .paragraphs-features__add-in-between__row .paragraphs-features__add-in-between__wrapper {
+      padding: 5px 0;
+      height: 30px;
+      margin: 0;
+
+      @include for-drupal-tablet-and-phone {
+        height: 39px;
+      }
+
+      .paragraph-type-add-modal-button {
+        top: 0;
+
+        @include for-drupal-tablet-and-phone {
+          width: auto;
+          padding-top: 6px;
+          padding-bottom: 6px;
+        }
+      }
+    }
+  }
+
+  /**
+   * Fix for paragraphs type icon. Right margin is used for spacing, since padding reduces width of icon.
+   * In that case icon has not proportional width and height.
+   */
+  .paragraph-type-icon {
+    margin-right: 5px;
+    padding-right: 0;
+    vertical-align: middle;
+  }
+
+  .paragraph-type-label {
+    color: $primary-color-darker;
+    vertical-align: middle;
+  }
+  /**
+  * hide gradient field
+  */
+  .paragraphs-collapsed-description::after {
+    background: transparent;
+  }
+}
+
+.draggable:hover .paragraphs-collapsed-description::after {
+  background-image: none;
+  background-color: transparent;
+}
+
+/**
+ * 1. Copy icon svg because sniping results in incorrect relative path.
+ * @todo add the other icons from paragraphs module
+ */
+
+.paragraphs-icon-changed {
+  margin-left: 5px;
+  background-image: svg-url('<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path class="bg" d="M0 0h24v24H0z" fill="none"/><path class="icon" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" fill="#e29700"/></svg>');
+}
+
+/* Placement of confirmation dialog */
+.paragraphs-features__delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0 1rem;
+}
+
+/**
+ * Experimental paragraphs widget wrapper has "is-horizontal" class in markup. Since that class is used for navigation
+ * tabs and we are ordering them to right, text get also ordered to right what makes text and buttons alignment wrong.
+ * We have to reset text alignment to left for text and buttons inside paragraphs wrapper.
+ */
+.paragraphs-tabs-wrapper {
+  &.is-horizontal {
+    text-align: left;
+  }
+}
+/**
+* Hide show weights buttons
+*/
+.paragraph-form-item--has-subform .tabledrag-toggle-weight-wrapper {
+  display: none;
+}
+
+/**
+ * Add aragraph type icons.
+ */
+ul.paragraphs-add-dialog-list {
+  // Fix button background for add dialog first
+  input.field-add-more-submit {
+    background-image: none;
+  }
+  /* stylelint-disable-next-line plugin/no-browser-hacks */
+  $paragraph-type-icons: gallery, image, instagram, link, pinterest, riddle, quote, text, twitter, video;
+  @each $icon in $paragraph-type-icons {
+    input[name=field_paragraphs_#{$icon}_add_more] {
+      background-image: url('../images/paragraphs_type_icon/#{$icon}-default-icon.png');
+    }
+  }
+}

@@ -1,0 +1,40 @@
+- entity_type: 'node'
+  content:
+    entity: 'node'
+    type: 'article'
+    title: 'Test Article'
+    status: 1
+    path: '/test-article'
+    body:
+      - value: |
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Atque ab
+          his initiis profecti omnium virtutum et originem et progressionem
+          persecuti sunt. Quas enim kakaw Graeci appellant, vitia malo quam
+          malitias nominare. Qui enim voluptatem ipsam contemnunt, iis licet
+          dicere se acupenserem maenae non anteponere. Duo Reges: constructio
+          interrete. Sunt autem, qui dicant foedus esse quoddam sapientium, ut
+          ne minus amicos quam se ipsos diligant.</p>
+    field_tags:
+      - value: 123
+      - value: 234
+  expected:
+    property:
+      type: 'article'
+      status: 1
+      title: 'Test Article'
+      path: '/test-article'
+    field:
+      body:
+        - value: |
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Atque ab
+            his initiis profecti omnium virtutum et originem et progressionem
+            persecuti sunt. Quas enim kakaw Graeci appellant, vitia malo quam
+            malitias nominare. Qui enim voluptatem ipsam contemnunt, iis licet
+            dicere se acupenserem maenae non anteponere. Duo Reges: constructio
+            interrete. Sunt autem, qui dicant foedus esse quoddam sapientium, ut
+            ne minus amicos quam se ipsos diligant.</p>
+      field_tags:
+        - value: 123
+        - value: 234
+    other:
+      entity: 'node'

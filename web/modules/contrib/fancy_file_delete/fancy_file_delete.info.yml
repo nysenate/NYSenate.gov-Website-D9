@@ -1,0 +1,16 @@
+name: 'Fancy File Delete'
+type: module
+description: 'Delete Multiple Files Based off FID or orphaned / un-managed files.'
+core_version_requirement: ^8.7.7 || ^9
+package: Administration
+dependencies:
+  - drupal:block
+  - drupal:views
+  - views_bulk_operations:views_bulk_operations
+
+configure: fancy_file_delete.info
+
+# Information added by Drupal.org packaging script on 2022-02-08
+version: '2.0.7'
+project: 'fancy_file_delete'
+datestamp: 1644333598

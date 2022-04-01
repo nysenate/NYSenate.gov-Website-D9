@@ -1,0 +1,112 @@
+services:
+  simple_sitemap.generator:
+    class: Drupal\simple_sitemap\Simplesitemap
+    public: true
+    arguments:
+      - '@simple_sitemap.entity_helper'
+      - '@simple_sitemap.settings'
+      - '@simple_sitemap.manager'
+      - '@config.factory'
+      - '@database'
+      - '@entity_type.manager'
+      - '@path.validator'
+      - '@date.formatter'
+      - '@datetime.time'
+      - '@simple_sitemap.queue_worker'
+      - '@lock'
+      - '@simple_sitemap.logger'
+
+  simple_sitemap.manager:
+    class: Drupal\simple_sitemap\SimplesitemapManager
+    public: true
+    arguments:
+    - '@config.factory'
+    - '@database'
+    - '@plugin.manager.simple_sitemap.sitemap_type'
+    - '@plugin.manager.simple_sitemap.url_generator'
+    - '@plugin.manager.simple_sitemap.sitemap_generator'
+    - '@simple_sitemap.settings'
+
+  simple_sitemap.settings:
+    class: Drupal\simple_sitemap\SimplesitemapSettings
+    public: false
+    arguments:
+    - '@config.factory'
+
+  simple_sitemap.queue_worker:
+    class: Drupal\simple_sitemap\Queue\QueueWorker
+    public: true
+    arguments:
+    - '@simple_sitemap.settings'
+    - '@simple_sitemap.manager'
+    - '@state'
+    - '@simple_sitemap.queue'
+    - '@simple_sitemap.logger'
+    - '@module_handler'
+    - '@lock'
+
+  simple_sitemap.queue:
+    class: Drupal\simple_sitemap\Queue\SimplesitemapQueue
+    public: false
+    arguments:
+    - 'simple_sitemap_elements'
+    - '@database'
+    - '@datetime.time'
+
+  simple_sitemap.sitemap_writer:
+    class: Drupal\simple_sitemap\Plugin\simple_sitemap\SitemapGenerator\SitemapWriter
+    public: true
+    arguments:
+      - '@router.route_provider'
+
+  simple_sitemap.entity_helper:
+    class: Drupal\simple_sitemap\EntityHelper
+    public: true
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_type.bundle.info'
+      - '@config.factory'
+
+  simple_sitemap.form_helper:
+    class: Drupal\simple_sitemap\Form\FormHelper
+    public: true
+    arguments:
+      - '@simple_sitemap.generator'
+      - '@simple_sitemap.entity_helper'
+      - '@current_user'
+
+  simple_sitemap.logger:
+    class: Drupal\simple_sitemap\Logger
+    public: true
+    arguments:
+      - '@logger.channel.simple_sitemap'
+      - '@messenger'
+      - '@current_user'
+
+  simple_sitemap.path_processor.variant.in:
+    class: Drupal\simple_sitemap\PathProcessor\PathProcessorSitemapVariantIn
+    tags:
+      - { name: path_processor_inbound, priority: 300 }
+
+  simple_sitemap.path_processor.variant.out:
+    class: Drupal\simple_sitemap\PathProcessor\PathProcessorSitemapVariantOut
+    tags:
+      - { name: path_processor_outbound, priority: 300 }
+
+  logger.channel.simple_sitemap:
+    parent: logger.channel_base
+    public: false
+    arguments:
+      - simple_sitemap
+
+  plugin.manager.simple_sitemap.url_generator:
+    class: Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator\UrlGeneratorManager
+    parent: default_plugin_manager
+
+  plugin.manager.simple_sitemap.sitemap_generator:
+    class: Drupal\simple_sitemap\Plugin\simple_sitemap\SitemapGenerator\SitemapGeneratorManager
+    parent: default_plugin_manager
+
+  plugin.manager.simple_sitemap.sitemap_type:
+    class: Drupal\simple_sitemap\Plugin\simple_sitemap\SitemapType\SitemapTypeManager
+    parent: default_plugin_manager

@@ -1,0 +1,108 @@
+// Styling for Drupal tabs.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.tabs.primary,
+.tabs.secondary {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+
+  .tabs__tab {
+    align-items: center;
+    display: flex;
+    font-size: 1.125rem;
+    font-weight: $font-weight-normal;
+    line-height: 1;
+    margin: 0;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    width: auto;
+    z-index: $zi-lowest;
+  }
+
+  a {
+    background-color: transparent;
+    border-bottom: 3px solid transparent;
+    color: $color-black;
+    display: inline-block;
+    padding: 14px 30px 8px;
+  }
+
+  a:focus,
+  a:hover {
+    background-color: rgba($color-bright-blue, 0.25);
+    color: $color-black;
+  }
+
+  .tabs__tab.is-active {
+    
+    a {
+      border-color: $color-bright-blue;
+      color: $color-black;
+      font-weight: $font-weight-bold;
+    }
+  }
+}
+
+.tabs.secondary {
+  background-color: $color-white;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 40px;
+  position: relative;
+
+  @include breakpoint($bp-sm) {
+    margin-left: -40px;
+    margin-right: -40px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  @include breakpoint($bp-md) {
+    margin-left: -60px;
+    margin-right: -60px;
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  &::after {
+    background-color: $color-faint-gray;
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 3px;
+    left: 20px;
+    position: absolute;
+    width: calc(100% - 40px);
+    z-index: $zi-ground;
+
+    @include breakpoint($bp-sm) {
+      left: 40px;
+      width: calc(100% - 80px);
+    }
+  
+    @include breakpoint($bp-md) {
+      left: 60px;
+      width: calc(100% - 120px);
+    }
+  }
+
+  a:focus,
+  a:hover {
+    border-bottom-color: $color-bright-blue-50;
+  }
+}

@@ -1,0 +1,20 @@
+uuid: ee4be257-06b0-411d-84f2-b449814c02ac
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_bill_multi_session_root
+field_name: field_bill_multi_session_root
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

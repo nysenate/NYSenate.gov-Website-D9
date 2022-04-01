@@ -1,0 +1,19 @@
+/**
+ * @file
+ * Import and override tablesort-indicator.css provided by seven/global-styling.
+ */
+@import '@theme-seven/css/components/tablesort-indicator.css';
+
+// Custom coloured icons for tablesort.
+.tablesort--asc {
+  background-image: url(../../images/icons/twistie-down--primary-blue-darker.svg);
+}
+a:hover .tablesort--asc {
+  background-image: url(../../images/icons/twistie-down--primary-blue-intense.svg);
+}
+.tablesort--desc {
+  background-image: url(../../images/icons/twistie-up--primary-blue-darker.svg);
+}
+a:hover .tablesort--desc {
+  background-image: url(../../images/icons/twistie-up--primary-blue-intense.svg);
+}

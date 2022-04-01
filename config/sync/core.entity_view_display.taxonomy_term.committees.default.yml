@@ -1,0 +1,131 @@
+uuid: 13ab3790-f556-4dbf-bd45-b6604a7c7eaa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.committees.field_archive_date
+    - field.field.taxonomy_term.committees.field_assemblymen_chair
+    - field.field.taxonomy_term.committees.field_chair
+    - field.field.taxonomy_term.committees.field_committee_types
+    - field.field.taxonomy_term.committees.field_featured_legislation_commi
+    - field.field.taxonomy_term.committees.field_frontend_display_type
+    - field.field.taxonomy_term.committees.field_group_members
+    - field.field.taxonomy_term.committees.field_image_hero
+    - field.field.taxonomy_term.committees.field_learn_more_page
+    - field.field.taxonomy_term.committees.field_meeting_frequency
+    - field.field.taxonomy_term.committees.field_members
+    - taxonomy.vocabulary.committees
+  module:
+    - datetime
+    - entity_reference_revisions
+    - options
+    - text
+id: taxonomy_term.committees.default
+targetEntityType: taxonomy_term
+bundle: committees
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_archive_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_assemblymen_chair:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_chair:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_committee_types:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_featured_legislation_commi:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_frontend_display_type:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_group_members:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_image_hero:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_learn_more_page:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_meeting_frequency:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_members:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 9
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

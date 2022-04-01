@@ -1,0 +1,110 @@
+charts.settings:
+  type: config_object
+  label: 'Charts settings'
+  mapping:
+    charts_default_settings:
+      type: mapping
+      label: 'Charts default settings'
+      mapping:
+        library:
+          type: string
+          label: 'Charting library'
+        type:
+          type: string
+          label: 'Chart type'
+        title:
+          type: string
+          label: 'Chart title'
+        colors:
+          type: seguence
+          label: 'Chart colors'
+          sequence:
+            type: string
+            label: 'Hexadecimal color'
+        title_position:
+          type: string
+          label: 'Title position'
+        tooltips:
+          type: string
+          label: 'Tooltips'
+        data_labels:
+          type: string
+          label: 'Data labels'
+        data_markers:
+          type: string
+          label: 'Data markers'
+        legend_position:
+          type: string
+          label: 'Legend position'
+        background:
+          type: string
+          label: 'Background'
+        three_dimensional:
+          type: integer
+          label: 'Make chart three-dimensional (3D)'
+        polar:
+          type: integer
+          label: 'Transform cartesian charts into the polar coordinate system'
+        width:
+          type: string
+          label: 'Width'
+        width_units:
+          type: string
+          label: 'Width units'
+        height:
+          type: string
+          label: 'Height'
+        height_units:
+          type: string
+          label: 'Height units'
+        max:
+          type: string
+          label: 'Gauge maximum value'
+        min:
+          type: string
+          label: 'Gauge minimum value'
+        green_from:
+          type: string
+          label: 'Green minimum value'
+        green_to:
+          type: string
+          label: 'Green maximum value'
+        yellow_from:
+          type: string
+          label: 'Yellow minimum value'
+        yellow_to:
+          type: string
+          label: 'Yellow maximum value'
+        red_from:
+          type: string
+          label: 'Red minimum value'
+        red_to:
+          type: string
+          label: 'Red maximum value'
+        xaxis_title:
+          type: string
+          label: 'X axis title'
+        xaxis_labels_rotation:
+          type: string
+          label: 'X axis labels rotation'
+        yaxis_title:
+          type: string
+          label: 'Y axis title'
+        yaxis_min:
+          type: string
+          label: 'Y axis min value'
+        yaxis_max:
+          type: string
+          label: 'Y axis max value'
+        yaxis_prefix:
+          type: string
+          label: 'Y axis prefix'
+        yaxis_suffix:
+          type: string
+          label: 'Y axis suffix'
+        yaxis_decimal_count:
+          type: string
+          label: 'Y axis decimal count'
+        yaxis_labels_rotation:
+          type: string
+          label: 'Y axis labels rotation'

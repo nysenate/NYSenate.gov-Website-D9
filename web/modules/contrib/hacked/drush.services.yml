@@ -1,0 +1,10 @@
+services:
+  hacked.commands:
+    class: \Drupal\hacked\Commands\HackedCommands
+    arguments:
+      - '@config.factory'
+      - '@module_handler'
+      - '@cache.hacked'
+      - '@string_translation'
+    tags:
+      - { name: drush.command }

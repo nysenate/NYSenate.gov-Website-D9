@@ -1,0 +1,13 @@
+/**
+ * @file
+ * Import and override ckeditor-dialog.css provided by seven/ckeditor-dialog.
+ */
+@import '@theme-seven/css/theme/ckeditor-dialog.css';
+
+// To see these styles in action: Change input format to 'Full HTML' and use table button on ckeditor.
+.cke_reset_all .cke_dialog .cke_dialog_close_button {
+  background-image: url(../../images/icons/ex.svg);
+}
+.cke_reset_all select.cke_dialog_ui_input_select {
+  background-image: url(../../images/icons/caret-down.svg);
+}

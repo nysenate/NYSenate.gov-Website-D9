@@ -1,0 +1,24 @@
+uuid: acc95417-6577-454d-b4b9-2cab1d6f424a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_voting_auto_subscribe
+  module:
+    - user
+id: user.user.field_voting_auto_subscribe
+field_name: field_voting_auto_subscribe
+entity_type: user
+bundle: user
+label: 'Auto-Subscribe to email alerts for bills I support or oppose in the future'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: '1'
+  off_label: '0'
+field_type: boolean

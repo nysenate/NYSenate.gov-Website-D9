@@ -1,0 +1,16 @@
+<div{{ status.attributes.addClass('project-update__status') }}>
+  {%- if status.label -%}
+    <span>{{ status.label }}</span>
+  {%- endif %}
+  <span class="project-update__status-icon">
+    {{ status.icon }}
+  </span>
+</div>
+
+<div class="project-update__title">
+  {%- if file.url -%}
+    <a href="{{ file.url }}">{{ file.name }}</a>
+  {%- else -%}
+    {{ file.name }}
+  {%- endif %}
+</div>

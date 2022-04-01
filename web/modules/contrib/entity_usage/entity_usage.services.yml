@@ -1,0 +1,21 @@
+services:
+  plugin.manager.entity_usage.track:
+    class: Drupal\entity_usage\EntityUsageTrackManager
+    parent: default_plugin_manager
+  entity_usage.usage:
+    class: Drupal\entity_usage\EntityUsage
+    arguments: ['@database', '@event_dispatcher', '@config.factory', '@module_handler']
+  entity_usage.entity_update_manager:
+    class: Drupal\entity_usage\EntityUpdateManager
+    arguments: ['@entity_usage.usage', '@plugin.manager.entity_usage.track', '@config.factory']
+  entity_usage.batch_manager:
+    class: Drupal\entity_usage\EntityUsageBatchManager
+    arguments: ['@entity_type.manager', '@string_translation', '@config.factory']
+  entity_usage.queue_batch_manager:
+    class: Drupal\entity_usage\EntityUsageQueueBatchManager
+    arguments: [ '@entity_type.manager', '@string_translation', '@config.factory' ]
+  entity_usage.route_subscriber:
+    class: Drupal\entity_usage\Routing\RouteSubscriber
+    arguments: ['@entity_type.manager', '@config.factory']
+    tags:
+      - { name: event_subscriber }

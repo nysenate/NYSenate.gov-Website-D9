@@ -1,0 +1,21 @@
+address_autocomplete.settings:
+  path: '/admin/config/address-autocomplete'
+  defaults:
+    _form: 'Drupal\address_autocomplete\Form\SettingsForm'
+    _title: 'Address Autocomplete settings'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+
+address_autocomplete.addresses:
+  path: '/admin/address_autocomplete/addresses'
+  defaults:
+    _controller: '\Drupal\address_autocomplete\Controller\AddressAutocomplete::handleAutocomplete'
+    _format: json
+  requirements:
+    _access: 'TRUE'
+#    _csrf_token: 'TRUE'
+
+route_callbacks:
+  - '\Drupal\address_autocomplete\Routing\AddressProviderRoutes::routes'

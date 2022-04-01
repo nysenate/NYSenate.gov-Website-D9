@@ -1,0 +1,198 @@
+<?php
+
+/**
+ * @file
+ * Semantic Views module file.
+ *
+ * Not so much here, only declare which Views API.
+ */
+
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Extract the attributes from string to an array.
+ *
+ * @param string $string
+ *   String containing the attributes key and values.
+ *
+ * @return array
+ *   Array with attribute as key and the value.
+ */
+function semanticviews_extract_attributes($string) {
+  $values = [];
+
+  $list = explode("\n", $string);
+  $list = array_map('trim', $list);
+  $list = array_filter($list, 'strlen');
+
+  foreach ($list as $text) {
+    // Check for an explicit key.
+    $matches = [];
+    if (preg_match('/(.*)\|(.*)/', $text, $matches)) {
+      // Trim key and value to avoid unwanted spaces issues.
+      $key = trim($matches[1]);
+      $value = trim($matches[2]);
+    }
+    // Otherwise see if we can use the value as the key.
+    else {
+      $key = $value = $text;
+    }
+
+    $values[$key] = $value;
+  }
+
+  return $values;
+}
+
+/**
+ * Display the simple view of rows one after another.
+ */
+function template_preprocess_semanticviews_style(&$vars) {
+  $view = $vars['view'];
+  $options = $view->style_plugin->options;
+  $last_every_nth = $options['row']['last_every_nth'];
+
+  $vars['group']['element'] = $options['group']['element_type'];
+  $vars['group']['attributes'] = new Attribute();
+
+  foreach (semanticviews_extract_attributes($options['group']['attributes']) as $key => $value) {
+    $vars['group']['attributes']->setAttribute($key, $value);
+  }
+
+  $vars['list']['element'] = $options['list']['element_type'];
+  $vars['list']['attributes'] = new Attribute();
+
+  foreach (semanticviews_extract_attributes($options['list']['attributes']) as $key => $value) {
+    $vars['list']['attributes']->setAttribute($key, $value);
+  }
+
+  // Set up striping class array.
+  $stripes = [];
+  if (trim($options['row']['striping_classes'])) {
+    $stripes = explode(' ', trim($options['row']['striping_classes']));
+  }
+  $striping = count($stripes);
+
+  // When grouping fields row index doesn't reset in each group,
+  // so we have to do it manually.
+  // Otherwise "last_every_nth" may work incorrect.
+  $index_in_group = 0;
+
+  foreach ($vars['rows'] as $id => $row) {
+
+    $vars['rows'][$id] = [];
+    $vars['rows'][$id]['content'] = $row;
+    $vars['rows'][$id]['element'] = $options['row']['element_type'];
+    $vars['rows'][$id]['attributes'] = new Attribute();
+
+    foreach (semanticviews_extract_attributes($options['row']['attributes']) as $key => $value) {
+      $value = $view->style_plugin->tokenizeValue($value, $id);
+      $vars['rows'][$id]['attributes']->setAttribute($key, $value);
+    }
+
+    if ($options['row']['first_class']) {
+      // The FIRST class attribute can be used in two ways. When the "last every
+      // nth" option is specified, the FIRST attribute is added to the class in
+      // those intervals. This could be useful for grid designs where the first
+      // unit in a row needs a zero width margin.
+      if (($last_every_nth && $index_in_group % $last_every_nth == 0) ||
+        // Otherwise when last every nth is not set, the FIRST class is added
+        // to the first row in the pager set.
+        (!$last_every_nth && $index_in_group == 0)) {
+        if ($class = $view->style_plugin->tokenizeValue($options['row']['first_class'], $id)) {
+          $vars['rows'][$id]['attributes']->addClass($class);
+        }
+      }
+    }
+
+    if ($options['row']['last_class']) {
+      // The LAST class attribute can be used in two ways. When the "last every
+      // nth" option is specified, the LAST attribute is added to the class in
+      // those intervals. This could be useful for grid designs where the last
+      // unit in a row needs a zero width margin.
+      if (($last_every_nth && ($index_in_group + 1) % $last_every_nth == 0) ||
+        // Otherwise when last every nth is not set, the LAST class is added
+        // to the last row in the pager set.
+        (!$last_every_nth && ($index_in_group + 1) == count($vars['rows']))) {
+        if ($class = $view->style_plugin->tokenizeValue($options['row']['last_class'], $id)) {
+          $vars['rows'][$id]['attributes']->addClass($class);
+        }
+      }
+    }
+
+    if ($striping) {
+      if ($class = $view->style_plugin->tokenizeValue($stripes[$id % $striping], $id)) {
+        $vars['rows'][$id]['attributes']->addClass($class);
+      }
+    }
+
+    $index_in_group++;
+  }
+}
+
+/**
+ * Todo.
+ */
+function template_preprocess_semanticviews_row(&$vars) {
+  $view = $vars['view'];
+
+  // Loop through the fields for this view.
+  $vars['fields'] = [];
+
+  foreach ($view->field as $id => $field) {
+    // Render this even if set to exclude so it can be used elsewhere.
+    $field_output = $view->style_plugin->getField($vars['row']->index, $id);
+    $empty = $field->isValueEmpty($field_output, $field->options['empty_zero']);
+
+    if (empty($field->options['exclude']) && (!$empty || (empty($field->options['hide_empty']) && empty($vars['options']['skip_blank'])))) {
+      $vars['fields'][$id] = [];
+      $vars['fields'][$id]['content'] = $field_output;
+
+      if (isset($view->field[$id]->field_alias) && isset($vars['row']->{$view->field[$id]->field_alias})) {
+        $vars['fields'][$id]['raw'] = $vars['row']->{$view->field[$id]->field_alias};
+      }
+      else {
+        // Make sure it exists to reduce NOTICE.
+        $vars['fields'][$id]['raw'] = NULL;
+      }
+
+      $vars['fields'][$id]['handler'] = &$view->field[$id];
+
+      // If Semantic Views: Fields settings havn't been saved with new fields
+      // this is not set and then add empty array with no values.
+      if (isset($vars['options']['semantic_html'][$id])) {
+        $semantic_html = $vars['options']['semantic_html'][$id];
+      }
+      else {
+        // Default empty values.
+        $semantic_html = [
+          'element_type' => 'div',
+          'attributes' => '',
+          'label_element_type' => 'label',
+          'label_attributes' => '',
+        ];
+      }
+
+      // Field content.
+      $vars['fields'][$id]['element_type'] = $semantic_html['element_type'];
+      $vars['fields'][$id]['attributes'] = new Attribute();
+
+      foreach (semanticviews_extract_attributes($semantic_html['attributes']) as $key => $value) {
+        $vars['fields'][$id]['attributes']->setAttribute($key, $value);
+      }
+
+      // Field label.
+      $vars['fields'][$id]['label'] = $view->field[$id]->label();
+      $vars['fields'][$id]['label_colon'] = $view->field[$id]->options['element_label_colon'] ? ':' : '';
+
+      if (!empty($vars['fields'][$id]['label'])) {
+        $vars['fields'][$id]['label_element_type'] = $semantic_html['label_element_type'];
+        $vars['fields'][$id]['label_attributes'] = new Attribute();
+
+        foreach (semanticviews_extract_attributes($semantic_html['label_attributes']) as $key => $value) {
+          $vars['fields'][$id]['label_attributes']->setAttribute($key, $value);
+        }
+      }
+    }
+  }
+}

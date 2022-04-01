@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Additional styles for paragraphs/drupal.paragraphs.widget, added using libraries-extend.
+ *
+ * Support for DEPRECATED classic paragraphs add in between buttons patch.
+ *
+ * @todo fix descending specificity
+ */
+@import 'variables';
+
+/* stylelint-disable no-descending-specificity */
+.field-multiple-table--paragraphs--deprecated {
+  & > thead,
+  & > tbody {
+    & > tr {
+      border-bottom-width: 0;
+    }
+  }
+
+  .paragraph-type-add-modal {
+    display: block;
+  }
+
+  & + .description {
+    top: 35px;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-height: 18px;
+  }
+
+  & + .description + .clearfix > .paragraph-type-add-modal.first-button {
+    top: -20px;
+  }
+
+  .paragraph-form-item__links li.restore {
+    margin-left: 4px;
+  }
+}
+
+.paragraph-type-add-modal.first-button .paragraph-type-add-modal-button {
+  margin-right: 0.5em;
+}

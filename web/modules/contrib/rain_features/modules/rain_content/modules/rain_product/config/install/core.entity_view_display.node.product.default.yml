@@ -1,0 +1,61 @@
+uuid: f5cad151-ad75-439b-934e-8dff38c2c3bc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.product.body
+    - field.field.node.product.field_link
+    - field.field.node.product.field_meta_tags
+    - field.field.node.product.field_product_desc
+    - field.field.node.product.field_product_media
+    - field.field.node.product.field_short_title
+    - field.field.node.product.field_summary
+    - field.field.node.product.field_thumbnail
+    - node.type.product
+  module:
+    - link
+    - text
+    - user
+_core:
+  default_config_hash: O39-TdRFDHs3veqaCRCKsPaKhKz_vBRcOVG-Rhax3zY
+id: node.product.default
+targetEntityType: node
+bundle: product
+mode: default
+content:
+  body:
+    weight: 5
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_link:
+    weight: 3
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_product_desc:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  addtoany: true
+  field_meta_tags: true
+  field_product_media: true
+  field_short_title: true
+  field_summary: true
+  field_thumbnail: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

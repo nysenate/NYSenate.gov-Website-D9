@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.hero_l
+    - image.style.hero_l_x2
+    - image.style.hero_m
+    - image.style.hero_m_x2
+    - image.style.hero_s
+    - image.style.hero_s_x2
+id: hero_responsive
+label: 'Hero Responsive'
+image_style_mappings:
+  -
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: 100vw
+      sizes_image_styles:
+        - hero_l
+        - hero_l_x2
+        - hero_m
+        - hero_m_x2
+        - hero_s
+        - hero_s_x2
+breakpoint_group: responsive_image
+fallback_image_style: hero_l

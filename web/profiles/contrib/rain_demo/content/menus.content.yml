@@ -1,0 +1,109 @@
+# Generates main menu links.
+---
+- entity: "menu_link_content"
+  title: "News"
+  menu_name: "main"
+  weight: 0
+  enabled: 1
+  link:
+    uri: "internal:/layout/news"
+- entity: "menu_link_content"
+  title: "Events"
+  menu_name: "main"
+  weight: 1
+  enabled: 1
+  link:
+    uri: "internal:/layout/events"
+- entity: "menu_link_content"
+  title: "Products"
+  menu_name: "main"
+  weight: 2
+  enabled: 1
+  link:
+    uri: "internal:/layout/products"
+- entity: "menu_link_content"
+  title: "Blog"
+  menu_name: "main"
+  weight: 3
+  enabled: 1
+  link:
+    uri: "internal:/layout/blog"
+- entity: "menu_link_content"
+  title: "About"
+  menu_name: "main"
+  weight: 4
+  enabled: 1
+  link:
+    uri: "internal:/layout/about"
+- entity: "menu_link_content"
+  title: "Contact"
+  menu_name: "main"
+  weight: 6
+  enabled: 1
+  link:
+    uri: "internal:/layout/contact"
+
+# Footer Links
+- entity: "menu_link_content"
+  title: "Privacy Policy"
+  menu_name: "footer"
+  weight: 0
+  enabled: 1
+  link:
+    uri: "internal:/page/privacy-policy"
+- entity: "menu_link_content"
+  title: "Terms of Use"
+  menu_name: "footer"
+  weight: 1
+  enabled: 1
+  link:
+    uri: "internal:/page/terms-use"
+- entity: "menu_link_content"
+  title: "Contact Us"
+  menu_name: "footer"
+  weight: 2
+  enabled: 1
+  link:
+    uri: "internal:/form/contact-us"
+
+# Social Media, shown in the footer.
+- entity: "menu_link_content"
+  title: "Facebook"
+  menu_name: "social-media"
+  weight: 0
+  enabled: 1
+  link:
+    - uri: "https://www.facebook.com"
+      options:
+        attributes:
+          class: 'facebook'
+- entity: "menu_link_content"
+  title: "Twitter"
+  menu_name: "social-media"
+  weight: 1
+  enabled: 1
+  link:
+    - uri: "https://www.twitter.com"
+      options:
+        attributes:
+          class: 'twitter'
+- entity: "menu_link_content"
+  title: "YouTube"
+  menu_name: "social-media"
+  weight: 2
+  enabled: 1
+  link:
+    - uri: "https://www.youtube.com"
+      options:
+        attributes:
+          class: 'youtube'
+- entity: "menu_link_content"
+  title: "Instagram"
+  menu_name: "social-media"
+  weight: 4
+  enabled: 1
+  link:
+    - uri: "https://www.instagram.com"
+      options:
+        attributes:
+          class: 'instagram'

@@ -1,0 +1,153 @@
+// Styling specific to dragable multiple field tables.
+
+@import '../../global/utils/init';
+
+// stylelint-disable selector-no-qualifying-type
+.rain-admin-theme {
+
+  // Hide spacer rows.
+  .field-multiple-table > tbody > .tabledrag-sort-spacer {
+    display: none;
+  }
+
+  // Typical dragable table display for 
+  // multi-field form elements. 
+  .js & .field-multiple-table,
+  .field-multiple-table {
+    
+    // Adjust placement of Edit all, Sort buttons.
+    thead {
+      position: relative;
+      height: 60px;
+
+      th {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      .tabledrag-toggle-checkbox-wrapper {
+
+        button {
+          position: absolute;
+          top: 0;
+        }
+      }
+
+      .field-label .label {
+        display: none;
+      }
+    }
+
+    tr.draggable,
+    tr.draggable:hover {
+      background-color: transparent;
+    }
+
+    tr.draggable {
+      padding: 0;
+      transition: box-shadow $motion-fast, transform $motion-fast;
+
+      > td {
+        padding: 0;
+      }
+
+      > .field-multiple-drag + td > .table__cell-wrapper {
+        background-color: $color-white;
+        border: 1px solid $color-faint-gray;
+        border-radius: 2px;
+        margin: 20px 0;
+        padding: 20px 30px;
+      }
+
+      // Table cell that holds drag handle icon.
+      > .field-multiple-drag {
+        width: 50px;
+      }
+
+      > .tabledrag-hide {
+        padding: 10px;
+        width: 50px;
+
+        select {
+          min-width: 0;
+          width: 100%;
+        }
+      }
+
+      // Anchor that holds drag handle icon.
+      > .field-multiple-drag > .tabledrag-handle {
+        align-items: center;
+        background-color: $color-bright-blue;
+        border-radius: 2px 0 0 2px;
+        display: flex;
+        height: 60px;
+        justify-content: center;
+        margin: 0;
+        width: 50px;
+      }
+
+      > .field-multiple-drag > .tabledrag-handle:focus,
+      > .field-multiple-drag > .tabledrag-handle:hover {
+        background-color: $color-gray-violet;
+      }
+
+      > .field-multiple-drag > .tabledrag-handle > .handle {
+        background-image: url('../images/icon-table-row-drag--white.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 10px;
+        display: flex;
+        height: 100%;
+        width: 100%;
+      }
+
+      // Indicator of table drag change.
+      > .field-multiple-drag > .tabledrag-changed {
+        height: calc(100% - 40px);
+        left: auto;
+        right: -3px;
+        top: 20px;
+        width: 3px;
+      }
+    }
+
+    // Updates when row is dragged.
+    tr.draggable.drag {
+      transform: scale(1.005);
+      
+      > .field-multiple-drag > .tabledrag-handle,
+      > .field-multiple-drag > .tabledrag-handle:focus,
+      > .field-multiple-drag > .tabledrag-handle:hover {
+        background-color: $color-dark-violet;
+      }
+      
+      .table__cell-wrapper {
+        box-shadow: 2px 2px 6px 0 $color-faint-gray;
+      }
+    }
+  }
+
+  // Visually hiding 'Show row weigths' button
+  // (it's revealed on focus).
+  .tabledrag-toggle-weight-wrapper {
+    
+    button {
+      @include element-focusable;
+      color: $color-bright-blue;
+      text-decoration: none;
+
+      &:hover {
+        color: $color-bright-blue;
+        text-decoration: underline;
+      }
+
+      &:focus {
+        outline-color: $color-bright-blue;
+        outline-offset: 2px;
+        outline-style: dashed;
+        outline-width: 2px;
+      }
+    }
+  }
+}
+// stylelint-enable selector-no-qualifying-type

@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @file
+ * Standard installation functions for name.
+ */
+
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function name_update_last_removed() {
+  return 7002;
+}
+
+/**
+ * Upgrade from Drupal 7 to Drupal 8.
+ */
+function name_update_8001() {
+  $database = \Drupal::database();
+  $query = $database->query("SELECT * FROM {name_custom_format} ORDER BY name ASC");
+  $result = $query->fetchAll();
+
+  foreach ($result as $row) {
+    \Drupal::config('name_format.' . $row->machine_name)
+      ->set('id', $row->machine_name)
+      ->set('label', $row->name)
+      ->set('pattern', $row->format)
+      ->save();
+  }
+
+  $settings = update_variable_get('name_settings', [
+    'default_format' => '((((t+ig)+im)+if)+is)+jc',
+    'sep1' => ' ',
+    'sep2' => ', ',
+    'sep3' => '',
+  ]);
+
+  \Drupal::config('name_format.default')
+    ->set('id', 'default')
+    ->set('label', 'default')
+    ->set('pattern', $settings['default_format'])
+    ->set('locked', 1)
+    ->save();
+
+  \Drupal::config('name.settings')
+    ->set('sep1', $settings['sep1'])
+    ->set('sep2', $settings['sep2'])
+    ->set('sep3', $settings['sep3'])
+    ->save();
+
+  // @todo: migrate these.
+  variable_del('name_settings');
+  variable_del('name_user_preferred');
+  // There is no UI for this setting.
+  variable_del('name_example_names');
+  variable_del('name_inline_styles');
+  variable_del('name_inline_styles_rtl');
+  variable_del('name_element_wrapper');
+  variable_del('name_component_required_marker');
+  $database->schema()->dropTable('name_custom_format');
+}
+
+/**
+ * Register the new name list format plugin.
+ */
+function name_update_8202() {
+  // Create the entity type.
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+  $name_list_format = \Drupal::entityTypeManager()->getDefinition('name_list_format');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($name_list_format);
+}
+
+/**
+ * Loads the name generator services files into the active configuration.
+ */
+function name_update_8203() {
+  $config_factory = \Drupal::configFactory();
+
+  $config_path = drupal_get_path('module', 'name') . '/config/install/name.generate.components.yml';
+  $data = Yaml::parse(file_get_contents($config_path));
+  $config = $config_factory->getEditable('name.generate.components');
+  $config->set('components', $data['components']);
+  $config->set('gender', $data['gender']);
+  $config->save(TRUE);
+
+  $config_path = drupal_get_path('module', 'name') . '/config/install/name.generate.preferred.yml';
+  $data = Yaml::parse(file_get_contents($config_path));
+  $config = $config_factory->getEditable('name.generate.preferred');
+  $config->set('preferred', $data['preferred']);
+  $config->save(TRUE);
+
+  if ($examples = $config_factory->get('name.examples.default')->get('examples')) {
+    $config = $config_factory->getEditable('name.generate.examples');
+    if (!empty($examples[0]['title'])) {
+      $examples[0] += [
+        'preferred' => 'Joe',
+        'alternative' => 'Lorem ipsum dolor',
+      ];
+    }
+    $config->set('examples', $examples);
+    $config->save(TRUE);
+    $old_config = $config_factory->getEditable('name.examples.default');
+    $old_config->delete();
+  }
+  else {
+    $config_path = drupal_get_path('module', 'name') . '/config/install/name.generate.examples.yml';
+    $data = Yaml::parse(file_get_contents($config_path));
+    $config = $config_factory->getEditable('name.generate.examples');
+    $config->set('examples', $data['examples']);
+    $config->save(TRUE);
+  }
+}

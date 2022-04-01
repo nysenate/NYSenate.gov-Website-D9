@@ -1,0 +1,40 @@
+// Styling for the breadcrumb.
+
+@import '../../global/utils/init';
+
+.breadcrumb {
+  line-height: 1;
+  padding: 0 0 25px;
+
+  ol {
+    display: flex;
+  }
+
+  li {
+    align-items: center;
+    color: $color-black;
+    display: flex;
+
+    &::before {
+      background-image: url('../images/icon-details-arrow--blue.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 8px;
+      color: $color-bright-blue;
+      content: '';
+      height: 10px;
+      transform: rotate(-90deg);
+      width: 30px;
+    }
+  }
+
+  li a {
+    color: $color-bright-blue;
+    font-size: 0.75rem;
+  }
+
+  li:last-child a {
+    color: $color-dark-violet;
+    font-weight: $font-weight-bold;
+  }
+}

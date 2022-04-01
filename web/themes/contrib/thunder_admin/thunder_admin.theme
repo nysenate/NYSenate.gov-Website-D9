@@ -1,0 +1,424 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Thunder Admin theme.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function thunder_admin_preprocess_html(&$variables) {
+  // If on a node or term add or edit page, add a class for enabling advanced
+  // tray functionality.
+  if (_thunder_admin_enable_sidebar_tray()) {
+    $variables['attributes']['class'][] = 'advanced-sidebar-tray';
+    $variables['attributes']['class'][] = 'entity-add-or-edit-form';
+  }
+}
+
+/**
+ * Implements hook_preprocess_block() for block content.
+ *
+ * Disables contextual links for all blocks.
+ */
+function thunder_admin_preprocess_block(&$variables) {
+  _thunder_admin_remove_contextual_links($variables);
+}
+
+/**
+ * Implements theme_preprocess_field_multiple_value_form().
+ *
+ * Add themable classes to multiple value field table for paragraphs field.
+ *
+ * This me
+ */
+function thunder_admin_preprocess_field_multiple_value_form(&$variables) {
+  $supportedParagraphsWidgetLibs = ['paragraphs/drupal.paragraphs.widget', 'paragraphs/drupal.paragraphs.admin'];
+
+  if (!empty($variables['element']['#attached']['library']) && !empty(array_intersect($supportedParagraphsWidgetLibs, $variables['element']['#attached']['library']))) {
+    $variables['table']['#attributes']['class'][] = 'field-multiple-table--paragraphs';
+
+    // DEPRECATED: When old patch with classing paragraph widget is used, then
+    // custom style is applied + library: paragraphs/drupal.paragraphs.admin.
+    $hasDeprecatedAddInBetween = !empty($variables['element']['add_more']['paragraphs_add_in_between_button_template']);
+    $hasExperimentalAddInBetween = in_array('paragraphs/drupal.paragraphs.widget', $variables['element']['#attached']['library']) && !empty($variables['element']['add_more']['add_modal_form_area']['add_more_delta']);
+
+    // Add custom style for deprecated paragraph type (relevant only for table).
+    if ($hasDeprecatedAddInBetween && !$hasExperimentalAddInBetween) {
+      $variables['table']['#attributes']['class'][] = 'field-multiple-table--paragraphs--deprecated';
+    }
+    elseif ($hasExperimentalAddInBetween) {
+      $variables['table']['#attributes']['class'][] = 'field-multiple-table--paragraphs-experimental--add-in-between';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for media templates.
+ */
+function thunder_admin_preprocess_media(&$variables) {
+  // Disables contextual links for all media entities.
+  _thunder_admin_remove_contextual_links($variables);
+
+  // Normalize paragraph_preview output.
+  if ($variables['elements']['#view_mode'] === 'paragraph_preview') {
+    // For media entitites of type gallery and image use source field as
+    // thumbnail. Instagram, pinterest, twitter and video already provide a
+    // thumbnail field.
+    // Could remove after #2923971 has landed and compatibility with older
+    // thunder versions can be dropped.
+    // @see https://www.drupal.org/node/2923971
+    // @see media--paragraph-preview.html.twig
+    $thumbnail_field = '';
+    /** @var \Drupal\media\MediaTypeInterface $media_type */
+    $media_type = $variables['elements']['#media']->bundle->entity;
+    if ($media_type->getEntityType()->getProvider() == 'media_entity' && isset($media_type->getTypeConfiguration()['source_field'])) {
+      $thumbnail_field = $media_type->getTypeConfiguration()['source_field'];
+    }
+    elseif ($media_type->getEntityType()->getProvider() == 'media' && isset($media_type->get('source_configuration')['source_field'])) {
+      $thumbnail_field = $media_type->get('source_configuration')['source_field'];
+    }
+    if (isset($variables['content'][$thumbnail_field]) && !isset($variables['content']['thumbnail'])) {
+      $variables['content']['thumbnail'] = $variables['content'][$thumbnail_field];
+      unset($variables['content'][$thumbnail_field]);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for paragraph templates.
+ */
+function thunder_admin_preprocess_paragraph(&$variables) {
+  if ($variables['view_mode'] == 'preview') {
+    $variables['attributes']['class'][] = 'paragraph-form-item__preview';
+  }
+}
+
+/**
+ * Implements template_preprocess_status_report().
+ */
+function thunder_admin_preprocess_status_report_general_info(&$variables) {
+  if (\Drupal::moduleHandler()->moduleExists('thunder') && !empty($thunder_version = \Drupal::service('extension.list.module')->get('thunder')->info['version'])) {
+    $variables['thunder']['title'] = new TranslatableMarkup('Thunder Version');
+    $variables['thunder']['value'] = $thunder_version;
+    $variables['thunder']['icon_class'] = 'thunder';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for CKEditor settings toolbar templates.
+ */
+function thunder_admin_preprocess_ckeditor_settings_toolbar(&$variables) {
+  // Sort disabled buttons for visual regression testing on
+  // admin/config/content/formats/manage/basic_html.
+  usort($variables['disabled_buttons'], function ($a, $b) {
+    return strcmp($a['attributes']->offsetGet('data-drupal-ckeditor-button-name')->value(),
+      $b['attributes']->offsetGet('data-drupal-ckeditor-button-name')->value());
+  });
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ *
+ * Provide additional suggestions for form inputs and buttons.
+ */
+function thunder_admin_theme_suggestions_field_alter(&$suggestions, $variables) {
+  $view_mode = $variables['element']['#view_mode'];
+  $field_name = $variables['element']['#field_name'];
+  $suggestions[] = 'field__' . $field_name . '__' . $view_mode;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ *
+ * Provide additional suggestions for form inputs and buttons.
+ */
+function thunder_admin_theme_suggestions_input_alter(&$suggestions, $variables) {
+  // Add suggestions for buttons.
+  if (isset($variables['element']['#type']) && $variables['element']['#type'] == 'submit') {
+    // Paragraph widget buttons:
+    if (isset($variables['element']['#paragraphs_mode'])) {
+      $suggestions[] = 'input__submit__paragraphs_' . $variables['element']['#paragraphs_mode'];
+    }
+    // Our own defined key "button action type" determined in form alter hooks.
+    if (isset($variables['element']['#button_action_type'])) {
+      $suggestions[] = 'input__submit__' . $variables['element']['#button_action_type'];
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ *
+ * Provide additional suggestions for form element.
+ */
+function thunder_admin_theme_suggestions_form_element_alter(&$suggestions, $variables) {
+  if (!empty($variables['element']['#type'])) {
+    $suggestions[] = 'form_element__' . $variables['element']['#type'];
+  }
+}
+
+/**
+ * Implements hook_form_alter() for thunder_admin theme.
+ */
+function thunder_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!empty($form['advanced']) && (_thunder_admin_enable_sidebar_tray())) {
+    /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
+    $form_object = $form_state->getFormObject();
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $form_object->getEntity();
+
+    // Support for guttenberg module, until better solution is found.
+    $gutenberg_enabled = \Drupal::configFactory()->get('gutenberg.settings')->get($entity->bundle() . '_enable_full');
+    if ($gutenberg_enabled) {
+      return;
+    }
+
+    _thunder_admin_attach_advanced_vertical_tabs($form, $form_state);
+    $form['#theme'] = ['node_edit_form'];
+
+    if (\Drupal::hasService('content_moderation.moderation_information')) {
+
+      /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
+      $moderation_info = \Drupal::service('content_moderation.moderation_information');
+      if ($moderation_info->isModeratedEntity($entity) && !isset($form['moderation_state']['widget'][0]['current'])) {
+
+        /** @var \Drupal\content_moderation\StateTransitionValidationInterface $validator */
+        $validator = \Drupal::service('content_moderation.state_transition_validation');
+
+        /** @var \Drupal\workflows\Transition[] $transitions */
+        $transitions = $validator->getValidTransitions($entity, \Drupal::currentUser());
+
+        if (count($transitions) > 1) {
+          $form['actions']['submit']['#value'] = t('Save as');
+        }
+        elseif (count($transitions) == 1) {
+          $form['moderation_state']['#attributes']['style'] = 'display: none';
+          /** @var \Drupal\workflows\TransitionInterface $transition */
+          $transition = reset($transitions);
+          $form['actions']['submit']['#value'] = t('Save as @state', ['@state' => $transition->to()->label()]);
+        }
+
+        unset($form['moderation_state']['#group']);
+        $form['moderation_state']['#weight'] = 10;
+
+        $form['actions']['moderation_state'] = $form['moderation_state'];
+        unset($form['moderation_state']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
+ *
+ * Changes vertical tabs to container and adds meta information.
+ */
+function thunder_admin_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  _thunder_admin_content_form_alter_helper($form, $form_state);
+}
+
+/**
+ * Implements hook_form_taxonomy_term_form_alter().
+ */
+function thunder_admin_form_taxonomy_term_form_alter(array &$form, FormStateInterface $form_state) {
+  _thunder_admin_content_form_alter_helper($form, $form_state);
+}
+
+/**
+ * Helper function for content form alter hooks.
+ *
+ * @param array $form
+ *   The article form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state object.
+ */
+function _thunder_admin_content_form_alter_helper(array &$form, FormStateInterface $form_state) {
+  if ($form_state->getFormObject() instanceof EntityFormInterface) {
+    $entity = $form_state->getFormObject()->getEntity();
+    if ($entity instanceof FieldableEntityInterface) {
+      foreach ($entity->getFieldDefinitions() as $definition) {
+        $field_name = $definition->getName();
+        $component = $form_state->getStorage()['form_display']->getComponent($field_name);
+
+        // In order to support old patch and paragraphs widget, adjustments have
+        // to applied also for "entity_reference_paragraphs" type. It's also
+        // part of DEPRECATED functionality.
+        if (!empty($component['type']) && in_array($component['type'], ['paragraphs', 'entity_reference_paragraphs'])) {
+          // Set classes to the paragraphs items to be able to style them.
+          $form[$field_name]['#attached']['library'][] = 'thunder_admin/paragraphs.adjustments';
+
+          if (isset($form[$field_name]['widget']) && is_array(($form[$field_name]['widget']))) {
+            foreach (Element::children($form[$field_name]['widget']) as $i) {
+              if (is_numeric($i)) {
+                _thunder_admin_prepare_single_paragraph($form[$field_name]['widget'][$i]);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add classes to paragraph element.
+ *
+ * @param array $paragraph
+ *   Single paragraph form element.
+ */
+function _thunder_admin_prepare_single_paragraph(array &$paragraph) {
+  // Add a base class to the paragraph reference field item.
+  $paragraph['#attributes']['class'][] = 'paragraph-form-item';
+
+  // Add modifier classes based upon the display mode.
+  if (isset($paragraph['preview'])) {
+    $paragraph['#attributes']['class'][] = 'paragraph-form-item--has-preview';
+  }
+  elseif (isset($paragraph['subform'])) {
+    $paragraph['#attributes']['class'][] = 'paragraph-form-item--has-subform';
+  }
+
+  // Add a class to the container holding the actions.
+  if (isset($paragraph['top'])) {
+    $paragraph['top']['#attributes']['class'][] = 'paragraph-form-item__actions';
+    $paragraph['top']['#weight'] = 10;
+  }
+
+  // Remove dropbutton appearance for paragraph op links.
+  if (isset($paragraph['top']['links'])) {
+    unset($paragraph['top']['links']['#theme_wrappers']);
+    unset($paragraph['top']['links']['prefix']);
+    unset($paragraph['top']['links']['suffix']);
+
+    $paragraph['top']['links']['#prefix'] = '<ul class="paragraph-form-item__links">';
+    $paragraph['top']['links']['#suffix'] = '</ul>';
+  }
+
+  // Render unordered list for new widget when dropdown_actions are disabled.
+  if (isset($paragraph['top']['actions'])
+    && !isset($paragraph['top']['actions']['dropdown_actions'])
+    && count($paragraph['top']['actions']['actions']) > 1) {
+
+    foreach (Element::children($paragraph['top']['actions']['actions']) as $key) {
+      $paragraph['top']['actions']['actions'][$key]['#prefix'] = '<li class="paragraph-form-item__link">';
+      $paragraph['top']['actions']['actions'][$key]['#suffix'] = '</li>';
+    }
+    $paragraph['top']['actions']['actions']['#prefix'] = '<ul class="paragraph-form-item__links">';
+    $paragraph['top']['actions']['actions']['#suffix'] = '</ul>';
+  }
+
+  // On click on restore, restore to collapsed instead of edit mode.
+  if (isset($paragraph['top']['links']['restore_button'])) {
+    $paragraph['top']['links']['restore_button']['#paragraphs_mode'] = 'collapsed';
+  }
+
+  // Add classes to paragraphs buttons.
+  $buttons = ['edit' => 'edit_button', 'remove' => 'remove_button'];
+  foreach ($buttons as $name => $form_key) {
+    // Handle EXPERIMENTAL widget.
+    if (isset($paragraph['top']['actions']['actions'][$form_key])) {
+      _thunder_admin_attach_paragraphs_button_classes($paragraph['top']['actions']['actions'][$form_key], $name);
+    }
+    // Handle CLASSIC widget.
+    if (isset($paragraph['top']['links'][$form_key])) {
+      _thunder_admin_attach_paragraphs_button_classes($paragraph['top']['links'][$form_key], $name);
+    }
+  }
+}
+
+/**
+ * Helper function for attaching entity meta appearance.
+ *
+ * @param array $element
+ *   Form element.
+ * @param string $name
+ *   Element name.
+ */
+function _thunder_admin_attach_paragraphs_button_classes(array &$element, $name) {
+  $element['#attributes']['class'][] = 'paragraphs-icon-button';
+  $element['#attributes']['class'][] = 'button__icon';
+  $element['#attributes']['class'][] = 'button--icon-only';
+
+  if (isset($name)) {
+    $element['#attributes']['class'][] = "paragraph-form-item__action--${name}";
+  }
+}
+
+/**
+ * Helper function for attaching entity meta appearance.
+ *
+ * @param array $form
+ *   The article form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state object.
+ */
+function _thunder_admin_attach_advanced_vertical_tabs(array &$form, FormStateInterface $form_state) {
+  $form['advanced']['#type'] = 'container';
+  $form['advanced']['#attributes']['class'][] = 'entity-meta--advanced';
+  $form['advanced']['#attributes']['class'][] = 'color-scheme-inverted';
+}
+
+/**
+ * Checks if advanced vertical tabs should apply on this route.
+ *
+ * @return bool
+ *   Should apply or not.
+ */
+function _thunder_admin_enable_sidebar_tray() {
+  $result = FALSE;
+
+  /* @var $route \Drupal\Core\Routing\CurrentRouteMatch */
+  $route = Drupal::service('current_route_match');
+  switch ($route->getRouteName()) {
+    case 'entity.taxonomy_term.add_form':
+    case 'entity.taxonomy_term.content_translation_add':
+    case 'node.add':
+    case 'entity.node.content_translation_add':
+      $result = TRUE;
+  }
+
+  // There is an entity form and object is a content entity.
+  if ($route->getRouteObject()->getDefault("_entity_form")) {
+    $params = $route->getParameters();
+    foreach ($params->keys() as $key) {
+      if ($params->get($key) instanceof ContentEntityBase) {
+        $result = TRUE;
+        break;
+      }
+    }
+  }
+
+  /*
+   *  Give modules a way to enable/disable the sidebar tray.
+   *
+   * function hook_thunder_admin_enable_sidebar_tray_alter(&$result, $route) {
+   *   $result = ($route->getRouteName() === '<some route>');
+   * }
+   */
+  \Drupal::moduleHandler()->alter('thunder_admin_enable_sidebar_tray', $result, $route);
+
+  return $result;
+}
+
+/**
+ * Removes contextual links from given variables, except for layout builder blocks.
+ *
+ * @param array $variables
+ *   An associative array.
+ */
+function _thunder_admin_remove_contextual_links(array &$variables) {
+  if (isset($variables['title_suffix']['contextual_links']) && !isset($variables['elements']['#contextual_links']['layout_builder_block'])) {
+    unset($variables['title_suffix']['contextual_links']);
+    unset($variables['elements']['#contextual_links']);
+    $variables['attributes']['class'] = array_diff($variables['attributes']['class'], ['contextual-region']);
+  }
+}

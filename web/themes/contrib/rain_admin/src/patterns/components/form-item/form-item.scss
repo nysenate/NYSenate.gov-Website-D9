@@ -1,0 +1,99 @@
+// Styling for form item wrapper markup.
+// @See src/templates/form/form-element.html.twig
+// @See src/templates/form/form-element--checkbox.html.twig
+// @See src/templates/form/form-element--radio.html.twig
+
+@import '../../global/utils/init';
+
+// stylelint-disable declaration-no-important, selector-no-qualifying-type
+.form-item {
+  color: $color-black;
+
+  tr.odd &,
+  tr.even & {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+  }
+
+  .description {
+    color: $color-gray;
+    font-size: 0.875rem;
+    margin: 15px 0;
+  }
+}
+
+// Multi-value form item
+// (links with text/url fields, paragraphs, etc.)
+.form-item--multi-value {
+
+  // Wrapper for "add another" button.
+  .form-item--multi-value__actions-wrapper {
+    padding-top: 20px;
+
+    input[type='submit'] {
+      background-image: url('../images/icon-add-item--white.svg');
+      background-repeat: no-repeat;
+      background-size: 22px;
+      background-position-x: calc(100% - 10px);
+      background-position-y: center;
+      margin: 0;
+      margin-right: 7px;
+      padding-right: 60px;
+    }
+  }
+
+  // Remove upper padding if description exists.
+  .form-item--multi-value__description + .form-item--multi-value__actions-wrapper {
+    padding-top: 0;
+  }
+}
+
+// Child form items nested an inline
+// layout container. 
+.form-item__field-wrapper .container-inline {
+
+  > .form-item {
+    margin: 0;
+  }
+
+  > .form-item + .form-item {
+    margin-left: 10px;
+  }
+}
+
+// Targeting node title field.
+.form-item__field-wrapper input[type='text'][name='title[0][value]'] {
+  width: 100%;
+}
+
+.form-item__label-container {
+  margin-bottom: 0;
+}
+
+// Label before field element in an inline layout.
+.container-inline > .form-item__label-container--before {
+  padding-right: 5px;
+  margin: 0;
+}
+
+// Label after field element in an inline layout.
+.container-inline > .form-item__label-container--after {
+  padding-left: 5px;
+  margin: 0;
+}
+// stylelint-enable declaration-no-important, selector-no-qualifying-type
+
+// Override spacing in image widget.
+tr {
+
+  .image-widget-data {
+
+    .form-item {
+      margin-top: 0;
+    }
+  }
+}
+
+.filter-wrapper {
+  margin-top: -0.75em;
+}

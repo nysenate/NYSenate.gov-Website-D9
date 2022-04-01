@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Theme override to display a login icon.
+ */
+#}
+
+{% import '@nimbus_theme/icons/_icons-macro.twig' as icons %}
+
+<a href="/user" class="user__login-btn">
+  <span class="user__icon">
+    {{ icons.get('icon-user') }}
+  </span>
+</a>
+<button type="button" class="search__toggle">
+  <span class="search__icon">
+    {{ icons.get('icon-search') }}
+  </span>
+</button>

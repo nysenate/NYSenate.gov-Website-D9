@@ -1,0 +1,185 @@
+uuid: bd663990-ff91-46fc-8aff-40f2d3452ad2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.votes.field_ol_absent_count
+    - field.field.paragraph.votes.field_ol_absent_members
+    - field.field.paragraph.votes.field_ol_absent_names
+    - field.field.paragraph.votes.field_ol_abstained_count
+    - field.field.paragraph.votes.field_ol_abstained_members
+    - field.field.paragraph.votes.field_ol_abstained_names
+    - field.field.paragraph.votes.field_ol_aye_count
+    - field.field.paragraph.votes.field_ol_aye_members
+    - field.field.paragraph.votes.field_ol_aye_names
+    - field.field.paragraph.votes.field_ol_aye_wr_count
+    - field.field.paragraph.votes.field_ol_aye_wr_members
+    - field.field.paragraph.votes.field_ol_aye_wr_names
+    - field.field.paragraph.votes.field_ol_committee
+    - field.field.paragraph.votes.field_ol_excused_count
+    - field.field.paragraph.votes.field_ol_excused_member_names
+    - field.field.paragraph.votes.field_ol_excused_members
+    - field.field.paragraph.votes.field_ol_nay_count
+    - field.field.paragraph.votes.field_ol_nay_members
+    - field.field.paragraph.votes.field_ol_nay_names
+    - field.field.paragraph.votes.field_ol_vote_type
+    - field.field.paragraph.votes.field_publication_date
+    - paragraphs.paragraphs_type.votes
+  module:
+    - datetime
+id: paragraph.votes.default
+targetEntityType: paragraph
+bundle: votes
+mode: default
+content:
+  field_ol_absent_count:
+    type: number
+    weight: 18
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_absent_members:
+    type: options_select
+    weight: 19
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_absent_names:
+    type: string_textarea
+    weight: 20
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_abstained_count:
+    type: number
+    weight: 15
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_abstained_members:
+    type: options_select
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_abstained_names:
+    type: string_textarea
+    weight: 17
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_aye_count:
+    type: number
+    weight: 12
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_aye_members:
+    type: options_select
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_aye_names:
+    type: string_textarea
+    weight: 14
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_aye_wr_count:
+    type: number
+    weight: 6
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_aye_wr_members:
+    type: options_select
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_aye_wr_names:
+    type: string_textarea
+    weight: 8
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_committee:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_excused_count:
+    type: number
+    weight: 3
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_excused_member_names:
+    type: string_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_excused_members:
+    type: options_select
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_nay_count:
+    type: number
+    weight: 9
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_nay_members:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ol_nay_names:
+    type: string_textarea
+    weight: 11
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_vote_type:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_publication_date:
+    type: datetime_default
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

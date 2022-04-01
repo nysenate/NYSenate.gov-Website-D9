@@ -1,0 +1,40 @@
+uuid: 9d1ec42c-52db-40ea-83a6-3948e8c62e8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_thumb
+    - paragraphs.paragraphs_type.quote
+  module:
+    - image
+_core:
+  default_config_hash: ttsLO5lLQN9Acl87yCeXMFSdW6ODZ3yAq-Ztb9AzIV4
+id: paragraph.quote.field_thumb
+field_name: field_thumb
+entity_type: paragraph
+bundle: quote
+label: Thumb
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+field_type: image

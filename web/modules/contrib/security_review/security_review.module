@@ -1,0 +1,231 @@
+<?php
+
+/**
+ * @file
+ * Site security review and reporting Drupal module.
+ */
+
+use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Url;
+use Drupal\security_review\Check;
+use Drupal\security_review\CheckResult;
+use Drupal\security_review\Checks\AdminPermissions;
+use Drupal\security_review\Checks\ErrorReporting;
+use Drupal\security_review\Checks\ExecutablePhp;
+use Drupal\security_review\Checks\FailedLogins;
+use Drupal\security_review\Checks\Field;
+use Drupal\security_review\Checks\FilePermissions;
+use Drupal\security_review\Checks\InputFormats;
+use Drupal\security_review\Checks\PrivateFiles;
+use Drupal\security_review\Checks\QueryErrors;
+use Drupal\security_review\Checks\TemporaryFiles;
+use Drupal\security_review\Checks\TrustedHosts;
+use Drupal\security_review\Checks\UploadExtensions;
+use Drupal\security_review\Checks\ViewsAccess;
+
+/**
+ * Implements hook_security_review_checks().
+ */
+function security_review_security_review_checks() {
+  return [
+    new AdminPermissions(),
+    new ErrorReporting(),
+    new ExecutablePhp(),
+    new FailedLogins(),
+    new Field(),
+    new FilePermissions(),
+    new InputFormats(),
+    new PrivateFiles(),
+    new QueryErrors(),
+    new TemporaryFiles(),
+    new TrustedHosts(),
+    new UploadExtensions(),
+    new ViewsAccess(),
+  ];
+}
+
+/**
+ * Implements hook_security_review_log().
+ */
+function security_review_security_review_log(Check $check, $message, array $context, $level) {
+  Drupal::logger('security_review')->log($level, $message, $context);
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function security_review_modules_uninstalled($modules) {
+  /** @var \Drupal\security_review\SecurityReview $security_review */
+  $security_review = Drupal::service('security_review');
+
+  // Clean orphaned checks.
+  $security_review->cleanStorage();
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function security_review_modules_installed($modules) {
+  // Post-install hook.
+  if (in_array('security_review', $modules)) {
+
+    /** @var \Drupal\security_review\SecurityReview $security_review */
+    $security_review = Drupal::service('security_review');
+
+    // Clean orphaned checks.
+    $security_review->cleanStorage();
+
+    // Store the web server's user.
+    $security_review->setServerData();
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function security_review_theme($existing, $type, $theme, $path) {
+  return [
+    'check_evaluation' => [
+      'template' => 'check_evaluation',
+      'variables' => [
+        'paragraphs' => [],
+        'items' => [],
+      ],
+    ],
+    'check_help' => [
+      'template' => 'check_help',
+      'variables' => [
+        'title' => [],
+        'paragraphs' => [],
+      ],
+    ],
+    'general_help' => [
+      'template' => 'general_help',
+      'variables' => [
+        'paragraphs' => [],
+        'checks' => [],
+      ],
+    ],
+    'run_and_review' => [
+      'template' => 'run_and_review',
+      'variables' => [
+        'date' => [],
+        'checks' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Preprocesses variables for template 'run_and_review'.
+ */
+function template_preprocess_run_and_review(&$variables) {
+  // Get icon list.
+  $icons_root = '/core/misc/icons/';
+  $variables['icons'] = [
+    'success' => $icons_root . '73b355/check.svg',
+    'warning' => $icons_root . 'e29700/warning.svg',
+    'fail' => $icons_root . 'e32700/error.svg',
+  ];
+
+  // Generate full URLs.
+  foreach ($variables['icons'] as $icon => $path) {
+    $variables['icons'][$icon] = Url::fromUserInput($path)->setAbsolute()
+      ->toString();
+  }
+
+  // Format date.
+  $variables['date'] = \Drupal::service('date.formatter')->format($variables['date']);
+
+  // Convert check result integers to strings.
+  foreach ($variables['checks'] as &$check) {
+    if (isset($check['result'])) {
+      switch ($check['result']) {
+        case CheckResult::SUCCESS:
+          $check['result'] = 'success';
+          break;
+
+        case CheckResult::FAIL:
+          $check['result'] = 'fail';
+          break;
+
+        case CheckResult::WARN:
+          $check['result'] = 'warning';
+          break;
+
+        case CheckResult::INFO:
+          $check['result'] = 'info';
+          break;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function security_review_cron() {
+  // Store the web server's user.
+  Drupal::service('security_review')->setServerData();
+}
+
+/**
+ * Batch operation: runs a single check.
+ *
+ * @param \Drupal\security_review\Check $check
+ *   The check to run.
+ * @param array $context
+ *   The Batch context.
+ */
+function _security_review_batch_run_op(Check $check, array &$context) {
+  // Inform the user about the progress.
+  $context['message'] = $check->getTitle();
+
+  // Run the check.
+  $results = Drupal::service('security_review.checklist')
+    ->runChecks([$check]);
+
+  // Store the results.
+  $context['results'] = array_merge($context['results'], $results);
+}
+
+/**
+ * Callback for finishing the batch job of running the checklist.
+ *
+ * @param bool $success
+ *   Whether the batch job was successful.
+ * @param \Drupal\security_review\CheckResult[] $results
+ *   The results of the batch job.
+ * @param array $operations
+ *   The array of batch operations.
+ */
+function _security_review_batch_run_finished($success, array $results, array $operations) {
+  /** @var \Drupal\security_review\SecurityReview $security_review */
+  $security_review = Drupal::service('security_review');
+
+  /** @var \Drupal\security_review\Checklist $checklist */
+  $checklist = Drupal::service('security_review.checklist');
+
+  $security_review->setLastRun(time());
+  if ($success) {
+    if (!empty($results)) {
+      $checklist->storeResults($results);
+    }
+    \Drupal::messenger()->addMessage(t('Review complete'));
+  }
+  else {
+    // Show error information.
+    $error_operation = reset($operations);
+    $message = t(
+      'An error occurred while processing %error_operation with arguments: @arguments',
+      [
+        '%error_operation' => $error_operation[0],
+        '@arguments' => print_r($error_operation[1], TRUE),
+      ]
+    );
+    $security_review->log(NULL, $message, [], RfcLogLevel::ERROR);
+    \Drupal::messenger()->addMessage(
+      t('The review did not store all results, please run again or check the logs for details.')
+    );
+  }
+}

@@ -1,0 +1,19 @@
+/**
+ * @file
+ * Import and override admin-list.css provided by seven/global-styling library.
+ */
+@import '@theme-seven/css/components/admin-list.css';
+
+// background: other icon used
+.admin-list li a {
+  background: url(../../images/icons/chevron-disc-right--gray-light.svg) no-repeat 1px 16px; /* LTR */
+  display: block;
+  padding: 14px 15px 14px 25px; /* LTR */
+  min-height: 0;
+}
+// background: other icon used
+[dir="rtl"] .admin-list li a {
+  background: url(../../images/icons/chevron-disc-left--gray-light.svg) no-repeat right 16px;
+  padding-right: 25px;
+  padding-left: 15px;
+}

@@ -1,0 +1,29 @@
+uuid: 59eea7b4-f196-47d5-9954-07be66a030dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_featured_senator
+    - node.type.page_content
+    - paragraphs.paragraphs_type.committee_featured_legislation
+id: paragraph.committee_featured_legislation.field_featured_senator
+field_name: field_featured_senator
+entity_type: paragraph
+bundle: committee_featured_legislation
+label: Senator
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

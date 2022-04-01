@@ -1,0 +1,53 @@
+.rain-admin-theme details {
+  background-color: transparent;
+  border: 1px solid #d2d8db;
+  border-radius: 4px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px; }
+  .rain-admin-theme details > summary {
+    align-items: center;
+    color: #012635;
+    cursor: pointer;
+    display: flex;
+    font-size: 1rem;
+    line-height: 1;
+    list-style: none;
+    padding: 0;
+    position: relative;
+    text-transform: none;
+    top: 0;
+    width: 100%; }
+  .rain-admin-theme details > summary::-webkit-details-marker {
+    display: none; }
+  .rain-admin-theme details > summary::before {
+    background-image: url("../images/icon-details-arrow.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: inline-flex;
+    height: 7px;
+    margin-right: 10px;
+    position: relative;
+    transform: rotate(-90deg);
+    transition: transform 200ms ease-in-out;
+    width: 12px; }
+  .rain-admin-theme details > summary::after {
+    align-self: flex-start; }
+
+.rain-admin-theme details > summary:focus,
+.rain-admin-theme details > summary:hover,
+.rain-admin-theme details[open] > summary {
+  color: #012635; }
+
+.rain-admin-theme details[open] > summary::before {
+  transform: rotate(0); }
+
+.rain-admin-theme details > .details-wrapper {
+  padding-top: 20px; }
+
+.rain-admin-theme .details-description {
+  color: #717171;
+  font-size: 0.875rem;
+  margin: 10px 0; }

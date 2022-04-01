@@ -1,0 +1,68 @@
+uuid: a5a8c929-ee41-4f65-91a0-82f3997ff417
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.gallery_carousel
+    - field.field.block_content.gallery_carousel.field_gallery_item
+    - field.field.block_content.gallery_carousel.field_subhead
+    - field.field.block_content.gallery_carousel.field_title
+  module:
+    - paragraphs
+    - paragraphs_features
+_core:
+  default_config_hash: TnIFK7NoLtO9R_k5-O7Qc7FUSavzkKfTS8tJFxRXEXI
+id: block_content.gallery_carousel.default
+targetEntityType: block_content
+bundle: gallery_carousel
+mode: default
+content:
+  field_gallery_item:
+    type: paragraphs
+    weight: 2
+    settings:
+      title: 'Gallery item'
+      title_plural: 'Gallery items'
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: '0'
+        duplicate: '0'
+    third_party_settings:
+      paragraphs_features:
+        show_drag_and_drop: true
+        delete_confirmation: false
+        add_in_between: false
+        split_text: false
+    region: content
+  field_subhead:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  langcode:
+    type: language_select
+    weight: 3
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden:
+  info: true

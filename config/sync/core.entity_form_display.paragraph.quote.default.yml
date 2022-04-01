@@ -1,0 +1,56 @@
+uuid: e2d85d24-70c5-4242-a579-2b980ee6c6b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.quote.field_author
+    - field.field.paragraph.quote.field_job_title
+    - field.field.paragraph.quote.field_quote
+    - field.field.paragraph.quote.field_thumb
+    - image.style.thumbnail
+    - paragraphs.paragraphs_type.quote
+  module:
+    - svg_image
+_core:
+  default_config_hash: 7t9GT8xxIGsMt-sLTjL00HMK-i69InNz6cgJ2lu888I
+id: paragraph.quote.default
+targetEntityType: paragraph
+bundle: quote
+mode: default
+content:
+  field_author:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_job_title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_quote:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_thumb:
+    type: image_image
+    weight: 3
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

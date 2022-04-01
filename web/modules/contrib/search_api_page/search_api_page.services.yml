@@ -1,0 +1,12 @@
+services:
+  path_processor.search_api_page:
+    class: Drupal\search_api_page\PathProcessor\PathProcessorSearchApiPage
+    arguments: ['@entity_type.manager', '@language_manager', '@config.factory']
+    tags:
+      - { name: path_processor_inbound, priority: 300 }
+      - { name: path_processor_outbound, priority: 200 }
+
+  block_form.search_api_page:
+    class: Drupal\search_api_page\Form\SearchApiPageBlockForm
+    factory: [Drupal\search_api_page\Form\SearchApiPageBlockForm, create]
+    arguments: ['@service_container']

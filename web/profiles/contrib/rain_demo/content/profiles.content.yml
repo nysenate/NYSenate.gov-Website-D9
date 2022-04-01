@@ -1,0 +1,217 @@
+# Generates test content for Profiles.
+---
+# Nodes for the Profile bundle.
+- entity: "node"
+  type: "profile"
+  title: "Laura Martin"
+  status: 1
+  uid: 1
+  nid: 26
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: Laura Martin is the CEO and a founder of Global Tech, where she provides the vision and direction for the company as it pioneers innovative ways to bring the power of software to any organization. Laura is a frequent speaker at technology conferences, and she has played a major role in helping establish and promote openness and transparency in the technology and software community.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: 'Laura Martin'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Laura Martin'
+  field_profile_media:
+    - entity: media
+      bundle: image
+      name: 'Laura Martin'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Laura Martin'
+  body:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac quam ut ex molestie facilisis non in mauris. Etiam eget bibendum odio. Maecenas fringilla rhoncus bibendum. Vivamus sollicitudin tincidunt orci, id venenatis urna semper non. Etiam sollicitudin dignissim enim vitae pretium. Mauris convallis felis nec tempus tincidunt. Etiam egestas felis eu facilisis pharetra. Morbi imperdiet velit augue, facilisis eleifend nisl scelerisque in. Cras malesuada at dolor eget gravida. Vivamus viverra arcu ut quam tempus, et interdum metus gravida.
+        </p>
+        <p>
+        Duis egestas, nibh at accumsan pretium, nibh quam pharetra metus, vel lacinia lacus ante a tellus. Fusce tincidunt ornare dapibus. Ut rutrum sit amet dolor vel congue. Curabitur vel laoreet leo, iaculis cursus risus. Suspendisse odio sem, auctor id cursus aliquet, tincidunt ut nisi. Vivamus placerat et dolor at laoreet. Maecenas at magna lacus. Fusce rutrum ut magna vitae tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque sit amet blandit sem, at gravida purus. Phasellus faucibus ante in laoreet rhoncus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris purus eros, facilisis non nibh et, condimentum vestibulum sapien. Mauris convallis porttitor pulvinar.
+        </p>
+        <p>
+        Pellentesque ornare convallis molestie. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas in suscipit nisi. Nullam blandit purus nunc, ut hendrerit orci convallis eleifend. In porttitor enim id ante ornare, vitae mattis erat finibus. Nam ultrices magna tellus, sit amet tincidunt metus efficitur in. Curabitur sed metus vel turpis aliquam iaculis bibendum eu lectus. Maecenas fringilla ante at nunc auctor, sit amet tristique purus pharetra. Sed non hendrerit velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+        </p>
+        <p>
+        Maecenas id turpis vitae neque fringilla auctor et vel neque. Ut fermentum, mauris id efficitur tempus, massa massa efficitur sapien, eu maximus ipsum tortor in nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus congue tortor nec tristique feugiat. Morbi nec quam dui. Donec in odio quis enim suscipit molestie. Integer vel est posuere, facilisis orci vitae, laoreet augue. Sed elementum magna sed ornare fringilla. Cras commodo urna eget sem rhoncus, nec placerat arcu molestie.
+        </p>
+        <p>
+        Nam tempor justo non convallis iaculis. Fusce nec ligula sodales, mollis sapien eget, dignissim magna. Vestibulum commodo nec neque sed maximus. Maecenas tristique, metus sed dictum iaculis, purus orci congue risus, ut mollis dolor sem nec tellus. Vestibulum sed tincidunt nisi. Nunc mattis lorem non leo aliquam aliquam. Praesent dictum consectetur pellentesque. Duis eleifend dapibus facilisis. Mauris lacinia ante ut nisi ultrices interdum. Etiam euismod est ut odio facilisis vehicula. Nullam commodo arcu nec orci congue dapibus. Quisque condimentum consequat efficitur. Nunc massa neque, tristique eget ultrices et, vehicula at ex. Aenean mauris neque, iaculis nec nulla quis, eleifend mattis nulla. Cras blandit sit amet lectus in ultrices. Fusce dignissim eros a dictum aliquet.
+        </p>
+- entity: "node"
+  type: "profile"
+  title: "Jeff Johnson"
+  status: 1
+  uid: 1
+  nid: 27
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: Jeff Johnson is the chief technology officer (CTO) and a founder of Globa Tech and is responsible for the overall technology direction of the Global Tech suite of solutions. Previously, Johnson was chief architect at Titus (acquired by SunyCo), where he directed the architecture of the company's online services.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: 'Jeff Johnson'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Jeff Johnson'
+  field_profile_media:
+    - entity: media
+      bundle: image
+      name: 'Jeff Johnson'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Jeff Johnson'
+  body:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac quam ut ex molestie facilisis non in mauris. Etiam eget bibendum odio. Maecenas fringilla rhoncus bibendum. Vivamus sollicitudin tincidunt orci, id venenatis urna semper non. Etiam sollicitudin dignissim enim vitae pretium. Mauris convallis felis nec tempus tincidunt. Etiam egestas felis eu facilisis pharetra. Morbi imperdiet velit augue, facilisis eleifend nisl scelerisque in. Cras malesuada at dolor eget gravida. Vivamus viverra arcu ut quam tempus, et interdum metus gravida.
+        </p>
+        <p>
+        Duis egestas, nibh at accumsan pretium, nibh quam pharetra metus, vel lacinia lacus ante a tellus. Fusce tincidunt ornare dapibus. Ut rutrum sit amet dolor vel congue. Curabitur vel laoreet leo, iaculis cursus risus. Suspendisse odio sem, auctor id cursus aliquet, tincidunt ut nisi. Vivamus placerat et dolor at laoreet. Maecenas at magna lacus. Fusce rutrum ut magna vitae tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque sit amet blandit sem, at gravida purus. Phasellus faucibus ante in laoreet rhoncus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris purus eros, facilisis non nibh et, condimentum vestibulum sapien. Mauris convallis porttitor pulvinar.
+        </p>
+        <p>
+        Pellentesque ornare convallis molestie. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas in suscipit nisi. Nullam blandit purus nunc, ut hendrerit orci convallis eleifend. In porttitor enim id ante ornare, vitae mattis erat finibus. Nam ultrices magna tellus, sit amet tincidunt metus efficitur in. Curabitur sed metus vel turpis aliquam iaculis bibendum eu lectus. Maecenas fringilla ante at nunc auctor, sit amet tristique purus pharetra. Sed non hendrerit velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+        </p>
+        <p>
+        Maecenas id turpis vitae neque fringilla auctor et vel neque. Ut fermentum, mauris id efficitur tempus, massa massa efficitur sapien, eu maximus ipsum tortor in nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus congue tortor nec tristique feugiat. Morbi nec quam dui. Donec in odio quis enim suscipit molestie. Integer vel est posuere, facilisis orci vitae, laoreet augue. Sed elementum magna sed ornare fringilla. Cras commodo urna eget sem rhoncus, nec placerat arcu molestie.
+        </p>
+        <p>
+        Nam tempor justo non convallis iaculis. Fusce nec ligula sodales, mollis sapien eget, dignissim magna. Vestibulum commodo nec neque sed maximus. Maecenas tristique, metus sed dictum iaculis, purus orci congue risus, ut mollis dolor sem nec tellus. Vestibulum sed tincidunt nisi. Nunc mattis lorem non leo aliquam aliquam. Praesent dictum consectetur pellentesque. Duis eleifend dapibus facilisis. Mauris lacinia ante ut nisi ultrices interdum. Etiam euismod est ut odio facilisis vehicula. Nullam commodo arcu nec orci congue dapibus. Quisque condimentum consequat efficitur. Nunc massa neque, tristique eget ultrices et, vehicula at ex. Aenean mauris neque, iaculis nec nulla quis, eleifend mattis nulla. Cras blandit sit amet lectus in ultrices. Fusce dignissim eros a dictum aliquet.
+        </p>
+- entity: "node"
+  type: "profile"
+  title: "Angela Wood"
+  status: 1
+  uid: 1
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: Angela Wood is the vice president of marketing for GlobalTech, where she helps build awareness of GlobalTecg and demand for its diverse Software and Data Storing suite of solutions. She has also consulted as interim CMO at a variety of high-growth startups and she blogs frequently on lean marketing topics.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: 'Test Profile Image 3'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Test Profile Image 3'
+  field_profile_media:
+    - entity: media
+      bundle: image
+      name: 'Angela Wood'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Angela Wood'
+  body:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac quam ut ex molestie facilisis non in mauris. Etiam eget bibendum odio. Maecenas fringilla rhoncus bibendum. Vivamus sollicitudin tincidunt orci, id venenatis urna semper non. Etiam sollicitudin dignissim enim vitae pretium. Mauris convallis felis nec tempus tincidunt. Etiam egestas felis eu facilisis pharetra. Morbi imperdiet velit augue, facilisis eleifend nisl scelerisque in. Cras malesuada at dolor eget gravida. Vivamus viverra arcu ut quam tempus, et interdum metus gravida.
+        </p>
+        <p>
+        Duis egestas, nibh at accumsan pretium, nibh quam pharetra metus, vel lacinia lacus ante a tellus. Fusce tincidunt ornare dapibus. Ut rutrum sit amet dolor vel congue. Curabitur vel laoreet leo, iaculis cursus risus. Suspendisse odio sem, auctor id cursus aliquet, tincidunt ut nisi. Vivamus placerat et dolor at laoreet. Maecenas at magna lacus. Fusce rutrum ut magna vitae tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque sit amet blandit sem, at gravida purus. Phasellus faucibus ante in laoreet rhoncus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris purus eros, facilisis non nibh et, condimentum vestibulum sapien. Mauris convallis porttitor pulvinar.
+        </p>
+        <p>
+        Pellentesque ornare convallis molestie. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas in suscipit nisi. Nullam blandit purus nunc, ut hendrerit orci convallis eleifend. In porttitor enim id ante ornare, vitae mattis erat finibus. Nam ultrices magna tellus, sit amet tincidunt metus efficitur in. Curabitur sed metus vel turpis aliquam iaculis bibendum eu lectus. Maecenas fringilla ante at nunc auctor, sit amet tristique purus pharetra. Sed non hendrerit velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+        </p>
+        <p>
+        Maecenas id turpis vitae neque fringilla auctor et vel neque. Ut fermentum, mauris id efficitur tempus, massa massa efficitur sapien, eu maximus ipsum tortor in nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus congue tortor nec tristique feugiat. Morbi nec quam dui. Donec in odio quis enim suscipit molestie. Integer vel est posuere, facilisis orci vitae, laoreet augue. Sed elementum magna sed ornare fringilla. Cras commodo urna eget sem rhoncus, nec placerat arcu molestie.
+        </p>
+        <p>
+        Nam tempor justo non convallis iaculis. Fusce nec ligula sodales, mollis sapien eget, dignissim magna. Vestibulum commodo nec neque sed maximus. Maecenas tristique, metus sed dictum iaculis, purus orci congue risus, ut mollis dolor sem nec tellus. Vestibulum sed tincidunt nisi. Nunc mattis lorem non leo aliquam aliquam. Praesent dictum consectetur pellentesque. Duis eleifend dapibus facilisis. Mauris lacinia ante ut nisi ultrices interdum. Etiam euismod est ut odio facilisis vehicula. Nullam commodo arcu nec orci congue dapibus. Quisque condimentum consequat efficitur. Nunc massa neque, tristique eget ultrices et, vehicula at ex. Aenean mauris neque, iaculis nec nulla quis, eleifend mattis nulla. Cras blandit sit amet lectus in ultrices. Fusce dignissim eros a dictum aliquet.
+        </p>
+- entity: "node"
+  type: "profile"
+  title: "John Smith"
+  status: 1
+  uid: 1
+  # Rich text fields contain multiple keys that must be provided.
+  field_summary:
+    - value: John Smith is the vice president of customer success at GlobalTech, where he focuses on helping our customers build, scale, manage, and operate enterprise-class solutions on the GlobalTech Software Platform. Prior to GlobalTech, he held executive management positions at public and private companies, including vice president of operations and business development at IBM.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: 'Test Profile Image 3'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Test Profile Image 3'
+  field_profile_media:
+    - entity: media
+      bundle: image
+      name: 'Angela Wood'
+      status: 1
+      field_image:
+        - '#process':
+            callback: 'file'
+            args:
+              - 'image'
+              - type: 'module'
+                filename: 'blue.png'
+          alt: 'Angela Wood'
+  body:
+    - format: "full_html"
+      summary: ''
+      value: |
+        <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac quam ut ex molestie facilisis non in mauris. Etiam eget bibendum odio. Maecenas fringilla rhoncus bibendum. Vivamus sollicitudin tincidunt orci, id venenatis urna semper non. Etiam sollicitudin dignissim enim vitae pretium. Mauris convallis felis nec tempus tincidunt. Etiam egestas felis eu facilisis pharetra. Morbi imperdiet velit augue, facilisis eleifend nisl scelerisque in. Cras malesuada at dolor eget gravida. Vivamus viverra arcu ut quam tempus, et interdum metus gravida.
+        </p>
+        <p>
+        Duis egestas, nibh at accumsan pretium, nibh quam pharetra metus, vel lacinia lacus ante a tellus. Fusce tincidunt ornare dapibus. Ut rutrum sit amet dolor vel congue. Curabitur vel laoreet leo, iaculis cursus risus. Suspendisse odio sem, auctor id cursus aliquet, tincidunt ut nisi. Vivamus placerat et dolor at laoreet. Maecenas at magna lacus. Fusce rutrum ut magna vitae tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque sit amet blandit sem, at gravida purus. Phasellus faucibus ante in laoreet rhoncus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris purus eros, facilisis non nibh et, condimentum vestibulum sapien. Mauris convallis porttitor pulvinar.
+        </p>
+        <p>
+        Pellentesque ornare convallis molestie. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas in suscipit nisi. Nullam blandit purus nunc, ut hendrerit orci convallis eleifend. In porttitor enim id ante ornare, vitae mattis erat finibus. Nam ultrices magna tellus, sit amet tincidunt metus efficitur in. Curabitur sed metus vel turpis aliquam iaculis bibendum eu lectus. Maecenas fringilla ante at nunc auctor, sit amet tristique purus pharetra. Sed non hendrerit velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+        </p>
+        <p>
+        Maecenas id turpis vitae neque fringilla auctor et vel neque. Ut fermentum, mauris id efficitur tempus, massa massa efficitur sapien, eu maximus ipsum tortor in nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus congue tortor nec tristique feugiat. Morbi nec quam dui. Donec in odio quis enim suscipit molestie. Integer vel est posuere, facilisis orci vitae, laoreet augue. Sed elementum magna sed ornare fringilla. Cras commodo urna eget sem rhoncus, nec placerat arcu molestie.
+        </p>
+        <p>
+        Nam tempor justo non convallis iaculis. Fusce nec ligula sodales, mollis sapien eget, dignissim magna. Vestibulum commodo nec neque sed maximus. Maecenas tristique, metus sed dictum iaculis, purus orci congue risus, ut mollis dolor sem nec tellus. Vestibulum sed tincidunt nisi. Nunc mattis lorem non leo aliquam aliquam. Praesent dictum consectetur pellentesque. Duis eleifend dapibus facilisis. Mauris lacinia ante ut nisi ultrices interdum. Etiam euismod est ut odio facilisis vehicula. Nullam commodo arcu nec orci congue dapibus. Quisque condimentum consequat efficitur. Nunc massa neque, tristique eget ultrices et, vehicula at ex. Aenean mauris neque, iaculis nec nulla quis, eleifend mattis nulla. Cras blandit sit amet lectus in ultrices. Fusce dignissim eros a dictum aliquet.
+        </p>

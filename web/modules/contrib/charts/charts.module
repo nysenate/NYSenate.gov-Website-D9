@@ -1,0 +1,218 @@
+<?php
+
+/**
+ * @file
+ * Charts - Module.
+ */
+
+use Drupal\charts\Util\Util;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_data().
+ */
+function charts_views_data() {
+  $data['charts_fields']['table']['group'] = t('Charts');
+  $data['charts_fields']['table']['join'] = [
+    // Exist in all views.
+    '#global' => [],
+  ];
+  $data['charts_fields']['field_charts_fields_scatter'] = [
+    'title' => t('Scatter Field'),
+    'help' => t('Use this field for your data field in a scatter plot.'),
+    'field' => [
+      'id' => 'field_charts_fields_scatter',
+    ],
+  ];
+  $data['charts_fields']['field_exposed_chart_type'] = [
+    'title' => t('Exposed Chart Type'),
+    'help' => t('Use this field for exposing chart type.'),
+    'field' => [
+      'id' => 'field_exposed_chart_type',
+    ],
+  ];
+
+  return $data;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function charts_theme($existing, $type, $theme, $path) {
+
+  return [
+    'views_view_charts' => [
+      'variables' => [
+        'view' => NULL,
+        'row' => NULL,
+        'options' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function charts_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+  $hasFields = array_key_exists('fields', $view->display_handler->options);
+  if ($hasFields) {
+    $fields = $view->display_handler->options['fields'];
+    $hasViewsFieldsOnOffHandler = FALSE;
+    foreach ($fields as $field) {
+      if (array_key_exists('plugin_id', $field)) {
+        if ($field['plugin_id'] == 'field_exposed_chart_type') {
+          $hasViewsFieldsOnOffHandler = TRUE;
+        }
+      }
+    }
+    if ($hasViewsFieldsOnOffHandler) {
+      // Grab the type that has been submitted.
+      $params = \Drupal::request()->query->all();
+      // This is for a GET request.
+      // If the view is submitted through AJAX, like in view preview, it will be
+      // a POST request. Merge the parameter arrays and we will get our values.
+      $postParams = \Drupal::request()->request->all();
+      $params = array_merge($params, $postParams);
+      foreach ($params as $key => $value) {
+        if (strpos($key, 'ct') === 0) {
+          $view->storage->set('exposed_chart_type', $value);
+        }
+      }
+      $view->element['#cache']['contexts'][] = 'url';
+    }
+  }
+
+}
+
+/**
+ * Implements template_preprocess_hook().
+ */
+function template_preprocess_views_view_charts(&$variables) {
+
+  // Define the View.
+  $view = $variables['view'];
+
+  // Information on Chart Attachment displays that might be used.
+  $attachmentService = \Drupal::service('charts.charts_attachment');
+
+  // An array of the Chart Attachment displays.
+  $chartAttachments = $attachmentService->getAttachmentViews();
+  $attachmentCount = count($chartAttachments);
+
+  /**
+   * To build a chart from this View, the following are needed (in this order):
+   * $options, $categories, $seriesData, $attachmentDisplayOptions, $variables,
+   * and $chartId. The $variables are pulled directly from the parameter.
+   */
+
+  // Bring in the options from the View's style plugin.
+  $options = $view->style_plugin->options;
+  if ($view->storage->get('exposed_chart_type')) {
+    $options['type'] = $view->storage->get('exposed_chart_type');
+  }
+
+  $variables['options'] = $options;
+
+  // Get the data from the Chart Attachment displays.
+  $attachmentCategories = [];
+  $attachmentSeriesData = [];
+  for ($i = 0; $i < $attachmentCount; $i++) {
+
+    // Define the Chart Attachment.
+    $chartAttachment = $chartAttachments[$i];
+    $attachmentId = $chartAttachment->display_handler->display['id'];
+    $attachmentDisplay = $view->storage->getDisplay($attachmentId);
+
+    // Bring in the Value Field from the Chart Attachment.
+    $attachedValueField = $attachmentDisplay['display_options']['style']['options']['data_fields'];
+    $attachedValueField = Util::removeUnselectedFields($attachedValueField);
+    $attachedValueField = Util::removeHiddenFields($view, $attachedValueField);
+
+    // Bring in the Label Field from the Chart Attachment.
+    $attachmentLabelField = $chartAttachment->style_plugin->options['label_field'];
+
+    // Bring in the Colors from the Chart Attachment.
+    $attachmentColor = $chartAttachment->style_plugin->options['field_colors'];
+
+    // Bring in the Chart Type from the Chart Attachment.
+    $attachmentChartType = $attachmentDisplay['display_options']['style']['options']['type'];
+
+    // Create an array of categories and seriesData from the Chart Attachment.
+    $attachmentData = Util::viewsData($chartAttachment, $attachedValueField, $attachmentLabelField, $attachmentColor, $attachmentChartType);
+    $attachmentData = Util::createChartableData($attachmentData);
+
+    // Combine the $categories from each Chart Attachment into one array.
+    for ($j = 0; $j < count($attachmentData[0]); $j++) {
+      array_push($attachmentCategories, $attachmentData[0][$j]);
+    }
+
+    // Combine the $seriesData from each Chart Attachment into one array.
+    for ($j = 0; $j < count($attachmentData[1]); $j++) {
+      if ($i == 0 &&
+        isset($attachmentDisplay['display_options']['inherit_yaxis']) &&
+        $attachmentDisplay['display_options']['inherit_yaxis'] == 0) {
+        $attachmentData[1][$j]['yAxis'] = 1;
+      }
+      array_push($attachmentSeriesData, $attachmentData[1][$j]);
+    }
+
+  }
+
+  // Bring in the Value Field from the View.
+  $valueField = $view->style_plugin->options['data_fields'];
+  $valueField = Util::removeUnselectedFields($valueField);
+  $valueField = Util::removeHiddenFields($view, $valueField);
+  // Bring in the Label Field from the View.
+  $labelField = $view->style_plugin->options['label_field'];
+
+  // Bring in the colors from the View.
+  $color = $view->style_plugin->options['field_colors'];
+
+  // Create an array of categories and seriesData from the View.
+  $data = Util::viewsData($view, $valueField, $labelField, $color, $options['type']);
+  $data = Util::createChartableData($data);
+  $categories = $data[0];
+  $seriesData = $data[1];
+
+  // Produce the final array of categories.
+  $categories = array_merge($categories, $attachmentCategories);
+  $categories = array_unique($categories);
+
+  // Produce the final seriesData object.
+  $seriesData = array_merge($seriesData, $attachmentSeriesData);
+
+  // Bring in the Chart Attachment display options.
+  $attachmentDisplayOptions = [];
+  for ($i = 0; $i < $attachmentCount; $i++) {
+    $attachmentId = $chartAttachments[$i]->display_handler->display['id'];
+    $attachmentDisplay = $view->storage->getDisplay($attachmentId);
+    array_push($attachmentDisplayOptions, $attachmentDisplay['display_options']);
+  }
+
+  // Charts override settings applied at this point.
+  $chartOverridePluginManager = \Drupal::service('plugin.manager.charts_override');
+  $plugin_definition = [];
+  $chartOverrideOptions = [];
+  try {
+    $plugin_definition = $chartOverridePluginManager->getDefinition($options['library'] . '_overrides');
+    if (!empty($plugin_definition)) {
+      $chartOverridePlugin = $chartOverridePluginManager->createInstance($plugin_definition['id']);
+      $chartOverrideOptions = $chartOverridePlugin->chartOverrides($variables['options']);
+    }
+  }
+  catch (PluginNotFoundException $e) {
+    \Drupal::service('messenger')
+      ->addMessage(t('Exception: @error', ['@error', $e->getMessage()]));
+  }
+
+  // Generate a unique chart ID by combining the View and display IDs.
+  $viewId = $view->id();
+  $displayId = $view->display_handler->display['id'];
+  $chartId = $view->dom_id ? 'c' . $view->dom_id : 'c' . $viewId . '__' . $displayId;
+
+  $plugin_manager = \Drupal::service('plugin.manager.charts');
+  $plugin = $plugin_manager->createInstance($options['library']);
+  $plugin->buildVariables($variables['options'], $chartId, $variables, $categories, $seriesData, $attachmentDisplayOptions, $chartOverrideOptions);
+}

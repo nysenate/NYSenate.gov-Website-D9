@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the site_verify module.
+ */
+
+/**
+ * Implements hook_scheam().
+ */
+function site_verify_schema() {
+  $schema['site_verify'] = [
+    'description' => '',
+    'fields' => [
+      'svid' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique site verification ID.',
+      ],
+      'engine' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => '',
+      ],
+      'file' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'description' => '',
+      ],
+      'file_contents' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => '',
+      ],
+      'meta' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => '',
+      ],
+    ],
+    'primary key' => ['svid'],
+    'indexes' => [
+      'engine' => ['engine'],
+    ],
+  ];
+
+  return $schema;
+}

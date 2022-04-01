@@ -1,0 +1,16 @@
+services:
+  charts.charts_service:
+    class: Drupal\charts\Services\ChartService
+  charts.charts_attachment:
+    class: Drupal\charts\Services\ChartAttachmentService
+  charts.views_variable:
+    class: Drupal\charts\Services\ViewsDataService
+  charts.settings:
+    class: Drupal\charts\Services\ChartsSettingsService
+    arguments: ['@config.factory']
+  plugin.manager.charts:
+    class: Drupal\charts\Plugin\chart\ChartManager
+    parent: default_plugin_manager
+  plugin.manager.charts_override:
+    class: Drupal\charts\Plugin\override\ChartOverrideManager
+    parent: default_plugin_manager

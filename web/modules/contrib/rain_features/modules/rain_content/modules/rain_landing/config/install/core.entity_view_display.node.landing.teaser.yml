@@ -1,0 +1,44 @@
+uuid: 26c2bac8-49a9-4b4b-936c-dbcf3ba93ac9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.landing.field_block
+    - field.field.node.landing.field_meta_tags
+    - field.field.node.landing.field_short_title
+    - field.field.node.landing.field_summary
+    - field.field.node.landing.field_thumbnail
+    - node.type.landing
+  module:
+    - user
+_core:
+  default_config_hash: XDZR7i8JdHtftkucBWVxdCWuf2ShOg9UbX5DblsS7Xs
+id: node.landing.teaser
+targetEntityType: node
+bundle: landing
+mode: teaser
+content:
+  field_summary:
+    type: basic_string
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  field_block: true
+  field_meta_tags: true
+  field_short_title: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Contains entity_usage_test.module.
+ */
+
+/**
+ * Implements hook_entity_usage_block_tracking().
+ */
+function entity_usage_test_entity_usage_block_tracking($target_id, $target_type, $source_id, $source_type, $source_langcode, $source_vid, $method, $field_name, $count) {
+  if ($count == 31) {
+    return TRUE;
+  }
+  return FALSE;
+}

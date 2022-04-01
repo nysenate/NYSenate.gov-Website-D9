@@ -1,0 +1,27 @@
+name: Guardr Core
+type: module
+description: Custom configuration related to the Guardr distribution.
+core_version_requirement: ^8 || ^9
+package: Guardr
+dependencies:
+#
+# Contributed modules to install.
+#
+  - drupal:update
+# PCI v3.0 requires 15 minute session timeout.
+  - autologout:autologout
+  - diff:diff
+  - login_history:login_history
+  - login_security:login_security
+# PCI v3.0 requires 90 day password expiration
+# and 7 character minimum containing alphabetic and numeric.
+  - password_policy:password_policy
+  - seckit:seckit
+# Shared accounts are not permitted by PCI v3.0.
+  - session_limit:session_limit
+  - username_enumeration_prevention:username_enumeration_prevention
+
+# Information added by Drupal.org packaging script on 2021-09-29
+version: '2.0.1'
+project: 'guardr_core'
+datestamp: 1632879256

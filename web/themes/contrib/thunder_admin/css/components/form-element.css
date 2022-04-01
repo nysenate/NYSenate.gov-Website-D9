@@ -1,0 +1,113 @@
+.field-suffix{
+  padding-left:5px;
+}
+
+.form-item__field-wrapper--has-description{
+  min-height:22px;
+}
+.details__toggle-description,
+.form-item__toggle-description{
+  display:none;
+}
+
+.form-item__toggle-description-placeholder{
+  display:none;
+}
+.entity-add-or-edit-form .form-item__field-wrapper--has-description{
+  display:flex;
+  align-items:center;
+}
+
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-autocomplete,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-text,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-tel,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-email,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-url,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-search,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-number,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-color,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description input.form-file{
+  max-width:calc(100% - 22px);
+}
+
+.entity-add-or-edit-form .form-item__field-wrapper--has-description .form-textarea-wrapper,
+.entity-add-or-edit-form .form-item__field-wrapper--has-description .image-style-preview{
+  flex:1 1 auto;
+}
+
+.entity-add-or-edit-form .details__toggle-description,
+.entity-add-or-edit-form .form-item__toggle-description{
+  display:inline-block;
+  padding:0.5em;
+  flex:0 0 auto;
+  align-self:flex-end;
+}
+
+.no-touchevents .entity-add-or-edit-form .details__toggle-description, .no-touchevents
+.entity-add-or-edit-form .form-item__toggle-description{
+  position:relative;
+  top:-2px;
+  left:2px;
+  margin:0;
+  padding:0 0.15em;
+  width:22px;
+  height:22px;
+}
+
+.no-touchevents .entity-add-or-edit-form .details__toggle-description svg, .no-touchevents
+.entity-add-or-edit-form .form-item__toggle-description svg{
+  max-width:100%;
+  max-height:100%;
+}
+
+.entity-add-or-edit-form .details__toggle-description .button__icon,
+.entity-add-or-edit-form .form-item__toggle-description .button__icon{
+  display:block;
+  height:100%;
+  width:100%;
+}
+
+.entity-add-or-edit-form .details__toggle-description .button__icon svg path,
+.entity-add-or-edit-form .form-item__toggle-description .button__icon svg path{
+  fill:#75caee;
+}
+
+.entity-add-or-edit-form .details__toggle-description{
+  float:right;
+  display:inline-block;
+}
+
+[open] > summary > .entity-add-or-edit-form .details__toggle-description{
+  display:block;
+}
+
+.js body.entity-add-or-edit-form .js-details-description,
+.js body.entity-add-or-edit-form .js-form-item__description{
+  visibility:hidden;
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:all 0.3s;
+}
+
+.js body.entity-add-or-edit-form .is-description-visible .js-details-description,
+.js body.entity-add-or-edit-form .is-description-visible .js-form-item__description{
+  visibility:visible;
+  max-height:5000px;
+  opacity:1;
+  transition:all 0.3s;
+}
+.field--name-title,
+.field--name-field-seo-title,
+.field--name-field-tags{
+  max-width:722px;
+}
+
+.field--name-title input:not(.form-checkbox),
+.field--name-title .length-indicator,
+.field--name-field-seo-title input:not(.form-checkbox),
+.field--name-field-seo-title .length-indicator,
+.field--name-field-tags input:not(.form-checkbox),
+.field--name-field-tags .length-indicator{
+  width:calc(100% - 22px);
+}

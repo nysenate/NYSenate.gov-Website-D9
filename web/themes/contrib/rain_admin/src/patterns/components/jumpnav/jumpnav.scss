@@ -1,0 +1,58 @@
+// Jumpnav used on node add/edit form to navigate
+// to different sections.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.jumpnav {
+  border-top: 1px solid $color-blue-gray;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.jumpnav__item {
+  border-bottom: 1px solid $color-blue-gray;
+  font-size: 0.875rem;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.jumpnav__link {
+  background-color: $color-white;
+  color: $color-dark-violet;
+  display: block;
+  padding: 20px 30px;
+  position: relative;
+  text-decoration: none;
+  transition: background-color $motion-fast;
+
+  &:focus,
+  &:hover {
+    background-color: $color-faint-gray;
+  }
+
+  &.active {
+    background-color: $color-bright-blue;
+    color: $color-white;
+    font-weight: $font-weight-bold;
+
+    &::before {
+      background-image: url('../images/icon-details-arrow--white.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 14px;
+      border-right: 0;
+      display: inline-block;
+      content: '';
+      height: 14px;
+      left: 0;
+      margin: 0 5px 0 -20px;
+      position: relative;
+      top: 1px;
+      transform: rotate(90deg);
+      width: 14px;
+    }
+  }
+}

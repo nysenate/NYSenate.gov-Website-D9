@@ -1,0 +1,46 @@
+// Flex 2x Layout
+
+@import '../../global/utils/init';
+
+.l-2x {
+
+  .l-container {
+
+    @include breakpoint($bp-sm) {
+      display: flex;
+      // Catch-all for items beyond 2x.
+      flex-wrap: wrap;
+      // Outdent container to account for padding on
+      // left & right of items.
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+
+    > * {
+
+      @include breakpoint($bp-sm) {
+        flex: 0 1 50%;
+        padding: 15px;
+      }
+
+      // On mobile, all items, except last child, get a margin-bottom.
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+
+        @include breakpoint($bp-sm) {
+          margin-bottom: 0;
+        }
+      }
+
+      // As a catch-all, on desktop,
+      // all items after the standard 2 get a margin-top.
+      &:nth-child(1n + 3) {
+
+        @include breakpoint($bp-sm) {
+          margin-top: 1rem;
+        }
+      }
+    }
+  }
+}
+

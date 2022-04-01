@@ -1,0 +1,84 @@
+# Generated on 2020-04-01 using generator-mc-d8-theme 2.2.1
+
+# Drupal's .info.yml files allow themers to easily specify some of the static
+# properties of your theme. Properties such as its name, libraries of style
+# sheets and javascripts, and block regions.
+#
+# Drupal 8 stores a cache of the data in this .info.yml files. If you modify any
+# lines in this file, you MUST refresh Drupal 8's cache. You can do this with
+# the "drush cr" command or by simply visiting the Appearance page at
+# admin/appearance.
+
+name: Rain Admin Theme
+type: theme
+description: Admin theme for Rain distribution.
+package: Other
+core: 8.x
+core_version_requirement: '^8 || ^9'
+base theme: thunder_admin
+
+# This section controls the libraries for your theme. For full documentation,
+# see https://www.drupal.org/node/2216195
+
+# The "libraries-override:" section will allow you to:
+# - Replace an entire library.
+# - Remove an entire library.
+# - Replace an asset in a library with another asset.
+# - Remove an asset from a library.
+libraries-override:
+  system/base:
+    css:
+      component:
+        # Replace one file with another.
+        /core/themes/stable/css/system/components/hidden.module.css: dist/css/hidden.css
+  thunder_admin/global-styling:
+    css:
+      component:
+        # Remove Drupal tabs styling.
+        css/components/field-ui.css: {}
+        css/components/form-element.css: {}
+        css/components/tabs.css: {}
+      theme:
+        # Remove inverted color scheme styling.
+        css/color-scheme-inverted.css: {}
+# The "libraries-extend:" section will allow you to add your own JS or CSS to
+# existing libraries.
+# libraries-extend:
+
+# The "libraries:" section will add a library to _all_ pages.
+libraries:
+  - rain_admin/global
+  # Example adding the webfonts library to every page.
+  # See rain_admin.libraries.yml for more info.
+  #- rain_admin/webfonts
+
+# This section is used by the contrib module, Component Libraries. It allows you
+# to reference .twig files in your sass/ directory by using the Twig namespace:
+# @rain_admin
+# See https://www.drupal.org/project/components for more information.
+components:
+  namespaces:
+    rain_admin:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates
+
+ckeditor_stylesheets:
+  - dist/css/body-content.css
+  - dist/css/footnote.css
+
+# This section lists the regions defined in the theme (our base theme) default
+# page.html.twig and maintenance-page.html.twig files. The name before
+# the semi-colon is the machine name of the region. The text after the
+# semi-colon is the region's description used on the admin/structure/block page.
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  highlighted: Highlighted
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first

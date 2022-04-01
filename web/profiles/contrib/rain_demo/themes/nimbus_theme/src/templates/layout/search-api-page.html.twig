@@ -1,0 +1,15 @@
+{{ attach_library('nimbus_theme/search-api-results') }}
+<div class="search-api-results container">
+
+  {% if no_of_results %}
+    <p>{{ no_of_results }}</p>
+  {% endif %}
+
+  {{ no_results_found }}
+
+  {{ search_help }}
+
+  {{ results }}
+
+  {{ pager }}
+</dif>

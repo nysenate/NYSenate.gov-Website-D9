@@ -1,0 +1,15 @@
+name: 'Search API Pages'
+description: 'Create search pages using Search API indexes.'
+dependencies:
+  - search_api:search_api
+test_dependencies:
+  - facets:facets
+core_version_requirement: ^8.8 || ^9
+package: Search
+type: module
+configure: entity.search_api_page.collection
+
+# Information added by Drupal.org packaging script on 2020-09-01
+version: '8.x-1.0-beta3'
+project: 'search_api_page'
+datestamp: 1598944374

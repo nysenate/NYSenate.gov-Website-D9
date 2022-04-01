@@ -1,0 +1,232 @@
+# Generates test content for Articles.
+---
+# Taxonomy terms for this file.
+- entity: "taxonomy_term"
+  vid: "tags"
+  name: "Tag 1"
+- entity: "taxonomy_term"
+  vid: "tags"
+  name: "Tag 2"
+- entity: "taxonomy_term"
+  vid: "authors"
+  name: "John Smith"
+- entity: "taxonomy_term"
+  vid: "authors"
+  name: "Jane Doe"
+# Nodes for the Article bundle.
+- entity: "node"
+  type: "article"
+  title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+  status: 1
+  uid: 1
+  nid: 2
+  field_subhead:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_summary:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Phasellus auctor, turpis at luctus finibus"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "latest-news.jpg"
+          alt: "Article 1"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et ante eu nisl finibus molestie. Maecenas vehicula arcu eget tristique congue. Sed et metus sit amet eros pellentesque dignissim.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"
+- entity: "node"
+  type: "article"
+  title: "Sed condimentum, elit nec iaculis luctus, velit neque"
+  status: 1
+  uid: 1
+  nid: 3
+  field_subhead:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_summary:
+    - value: "Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae."
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Erat lectus convallis velit, at sodales"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "latest-news.jpg"
+          alt: "Article 2"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Mauris pretium nibh sapien, quis commodo augue blandit et. Morbi vel rhoncus lacus. Vestibulum lectus velit, scelerisque quis placerat ut, euismod euismod nulla. Fusce pellentesque condimentum suscipit. Nam viverra velit nec tellus rutrum congue. Sed ut erat tempor orci sollicitudin dignissim nec vitae felis.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"
+- entity: "node"
+  type: "article"
+  title: "Maecenas eu leo a sem consectetur consectetur vitae non nis"
+  status: 1
+  uid: 1
+  nid: 4
+  field_subhead:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_summary:
+    - value: Curabitur imperdiet sapien libero, fringilla ullamcorper nibh ullamcorper vitae.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Curabitur imperdiet sapien libero"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "latest-news.jpg"
+          alt: "Article 3"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Mauris eleifend egestas metus, vitae finibus elit pellentesque et. Cras sodales, nulla eget euismod ornare, nibh lorem ullamcorper risus, cursus vestibulum enim risus ac nunc. Nunc sollicitudin, lorem at pretium porttitor, nibh lacus facilisis ligula, vitae scelerisque elit sem eget erat. Phasellus consectetur tempor nunc, eu varius nunc lobortis nec. Ut consectetur nulla in lorem finibus, et pharetra metus pulvinar.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"
+- entity: "node"
+  type: "article"
+  title: "Nunc suscipit, tortor at accumsan viverra"
+  status: 1
+  uid: 1
+  nid: 5
+  field_subhead:
+    - value: Nullam nisi orci, pharetra tristique neque nec, venenatis iaculis ipsum.
+  field_summary:
+    - value: Nullam nisi orci, pharetra tristique neque nec, venenatis iaculis ipsum.
+  field_thumbnail:
+    - entity: media
+      bundle: image
+      name: "Curabitur imperdiet sapien libero"
+      status: 1
+      field_image:
+        - "#process":
+            callback: "file"
+            args:
+              - "image"
+              - type: "module"
+                filename: "latest-news.jpg"
+          alt: "Article 4"
+  body:
+    - format: "full_html"
+      summary: ""
+      value: |
+        <p>Mauris eleifend egestas metus, vitae finibus elit pellentesque et. Cras sodales, nulla eget euismod ornare, nibh lorem ullamcorper risus, cursus vestibulum enim risus ac nunc. Nunc sollicitudin, lorem at pretium porttitor, nibh lacus facilisis ligula, vitae scelerisque elit sem eget erat. Phasellus consectetur tempor nunc, eu varius nunc lobortis nec. Ut consectetur nulla in lorem finibus, et pharetra metus pulvinar.</p>
+  field_tags:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 1"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "tags"
+            name: "Tag 2"
+  field_authors:
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "John Smith"
+    - "#process":
+        callback: "reference"
+        args:
+          - "taxonomy_term"
+          - vid: "authors"
+            name: "Jane Doe"

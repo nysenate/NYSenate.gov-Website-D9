@@ -1,0 +1,9 @@
+services:
+  fontawesome.commands:
+    class: \Drupal\fontawesome_iconpicker_widget\Commands\FontawesomeIconPickerCommands
+    arguments:
+      - '@library.discovery'
+      - '@file_system'
+      - '@plugin.manager.archiver'
+    tags:
+      - { name: drush.command }

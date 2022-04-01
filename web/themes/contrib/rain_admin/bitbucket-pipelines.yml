@@ -1,0 +1,67 @@
+image: mediacurrent/mc-bb-pipelines:latest
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - composer
+          # - composer-project-vendor
+        script:
+          - uname -a
+          - mkdir -p /root/.ssh
+          - echo "bitbucket.org,104.192.143.2 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==" >> /root/.ssh/known_hosts
+          - echo -e "$SSH_ID_RSA" >> ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - echo -e "$SSH_ID_RSA_PUB" >> ~/.ssh/id_rsa.pub
+          - chmod 600 ~/.ssh/id_rsa.pub
+          - chmod 700 ~/.ssh
+          - php --version
+          - service mysql start
+          - mysql -uroot -ppassword -e "CREATE DATABASE drupal"
+          - source /root/.bashrc
+          - pwd
+          - git clone git@bitbucket.org:mediacurrent/mis_rain_ddev.git
+          # Check against the 9.x-lb branch
+          - cd mis_rain_ddev
+          - git checkout 9.x-lb
+          - composer selfupdate
+          - composer validate --no-check-all --no-check-publish
+          - composer --verbose install
+          - BRANCH_ALIAS="${BITBUCKET_BRANCH}-dev"
+          - if ! [[ "${BITBUCKET_BRANCH}" =~ ^[0-9]*.x$ ]]; then BRANCH_ALIAS="dev-${BITBUCKET_BRANCH}"; fi
+          - composer require mediacurrent/rain_admin:${BRANCH_ALIAS} --update-with-all-dependencies
+          - composer robo list
+          - composer robo project:init example.mcdev 127.0.0.1
+          # - nvm install v7.4.0
+          # - nvm use v7.4.0
+          # Drupal coding standards test on custom modules
+          - echo "Coding Standards"
+          - ./tests/code-sniffer.sh ./web
+          # - CMD=$(./tests/code-sniffer.sh ./web 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+          # - echo "PHPUnit unit tests"
+          # - composer robo test:php-unit-tests
+          # - CMD=$(composer robo test:php-unit-tests 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+          - printf "127.0.0.1 example.mcdev" >> /etc/hosts
+          - cp ./tests/behat/behat.local.yml.shippable ./tests/behat/behat.local.yml
+          - cd ./web
+          # Install site using options to disable email notification.
+          # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install standard install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal
+          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../bin/drush site-install rain_demo install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://root:password@127.0.0.1:3306/drupal
+          - ./../bin/drush status
+          # Start an http server to test site pages.
+          - ./../bin/drush --verbose runserver 8080 &
+          - sleep 3
+          - cd ..
+          # Drupal accessibiity tests
+          # - echo "Accessibility tests"
+          # - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080
+          # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+          # Drupal behat tests
+          # - echo "Behat tests"
+          # - ./tests/behat/behat-run.sh http://127.0.0.1:8080
+          # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && echo ${CMD}|| ( slackcli -g private-chatops -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && echo ${CMD} && exit 1 )
+
+
+definitions:
+  caches:
+    composer-project-vendor: mis_rain_vagrant/vendor/

@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Contains chart_block_example.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+
+/**
+ * Implements hook_help().
+ */
+function charts_blocks_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the charts_blocks module.
+    case 'help.page.charts_blocks':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Create Charts blocks without the need for Views.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function charts_blocks_theme() {
+  return [
+    'charts_blocks' => [
+      'template' => 'charts-block',
+      'variables' => [
+        'library' => '',
+        'categories' => '',
+        'seriesData' => '',
+        'secondaryOptions' => '',
+        'options' => '',
+        'id' => '',
+        'override' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_hook().
+ */
+function template_preprocess_charts_blocks(&$variables) {
+
+  // Charts override settings applied at this point.
+  $chartOverridePluginManager = \Drupal::service('plugin.manager.charts_override');
+  $plugin_definition = [];
+  $chartOverrideOptions = [];
+  try {
+    $plugin_definition = $chartOverridePluginManager->getDefinition($variables['library'] . '_overrides');
+    if (!empty($plugin_definition)) {
+      $chartOverridePlugin = $chartOverridePluginManager->createInstance($variables['library'] . '_overrides');
+      $chartOverrideOptions = $chartOverridePlugin->chartOverrides($variables['options']);
+    }
+  }
+  catch (PluginNotFoundException $e) {
+    \Drupal::service('messenger')
+      ->addMessage(t('Exception: @error', ['@error', $e->getMessage()]));
+  }
+
+  $plugin_manager = \Drupal::service('plugin.manager.charts');
+  $plugin = $plugin_manager->createInstance($variables['library']);
+  $plugin->buildVariables($variables['options'], $variables['id'], $variables, $variables['categories'], $variables['seriesData'], $variables['secondaryOptions'], $chartOverrideOptions);
+}

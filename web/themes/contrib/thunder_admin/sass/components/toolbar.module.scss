@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Additional styles for the toolbar/toolbar library added using libraries-extend.
+ */
+@import 'variables';
+
+/* When the configured narrow breakpoint is active, the toolbar is sized to wrap
+ * around the trays in order to provide a context for scrolling tray content
+ * that is taller than the viewport. */
+body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
+  width: $toolbar-vertical-width;
+}
+
+.toolbar-oriented .toolbar-tray-vertical {
+  width: $toolbar-vertical-width;
+}
+
+.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
+  width: $toolbar-vertical-width;
+}
+
+/* When the configured standard breakpoint is active, the tray appears to push
+ * the page content away from the edge of the viewport. */
+body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  margin-left: $toolbar-vertical-width; /* LTR */
+}
+[dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  margin-right: $toolbar-vertical-width;
+}
+
+.toolbar-horizontal .toolbar-tray {
+  width: auto;
+}

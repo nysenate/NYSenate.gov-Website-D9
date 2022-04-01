@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Default evaluation page template for checks.
+ *
+ * Available variables:
+ * - paragraphs: Array of paragraphs (strings) to show before the list.
+ * - items: Array of items (strings) to show in an unordered list after the paragraphs.
+ */
+#}
+
+{% for paragraph in paragraphs %}
+    <p>
+        {{ paragraph }}
+    </p>
+{% endfor %}
+{% if items is not empty %}
+    <ul>
+        {% for item in items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}

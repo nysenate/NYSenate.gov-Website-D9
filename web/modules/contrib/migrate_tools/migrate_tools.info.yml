@@ -1,0 +1,16 @@
+type: module
+name: Migrate Tools
+description: 'Tools to assist in developing and running migrations.'
+package: Migration
+core_version_requirement: ^9.1
+configure: entity.migration_group.list
+dependencies:
+  - drupal:migrate
+  - migrate_plus:migrate_plus
+test_dependencies:
+  - migrate_source_csv:migrate_source_csv (>=8.x-2.2)
+
+# Information added by Drupal.org packaging script on 2021-12-24
+version: '8.x-5.1'
+project: 'migrate_tools'
+datestamp: 1640378502

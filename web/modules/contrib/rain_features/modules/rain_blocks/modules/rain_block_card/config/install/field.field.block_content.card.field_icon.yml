@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.card
+    - field.storage.block_content.field_icon
+  module:
+    - fontawesome
+id: block_content.card.field_icon
+field_name: field_icon
+entity_type: block_content
+bundle: card
+label: Icon
+description: 'Render a Font Awesome icon.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: fontawesome_icon

@@ -1,0 +1,33 @@
+{{ attach_library('nimbus_theme/card-list') }}
+
+{% if section_title %}
+    {%
+      include '@nimbus_theme/heading/heading.twig' with {
+        "heading": {
+          "title": section_title,
+          "heading_level": 2,
+          "modifier": "card-list__title heading--section"
+        }
+      } only
+    %}
+{% endif %}
+
+<div class="card-list fade">
+  <ul class="card-list__carousel card-list__slick">
+      {% block card_items %}
+        {% for item in items %}
+          <li class="card-list__item">
+            {%
+              include '@nimbus_theme/card/card.twig' with {
+                "card": item.card
+              } only
+            %}
+          </li>
+        {% endfor %}
+      {% endblock %}
+  </ul>
+  <div class="card-list__navigation">
+    <span class="card-list__arrow arrow-left">&lt;</span>
+    <span class="card-list__arrow arrow-right">&gt;</span>
+  </div>
+</div>

@@ -1,0 +1,185 @@
+/**
+ * @file
+ * Replaces media_entity_browser.view.css from thunder_media/entity_browser_view.
+ */
+
+/**
+ * @media-entity media_entity_browser.view.css
+ */
+@import 'mixins';
+@import 'variables';
+
+.view-media-entity-browser {
+  margin-bottom: 10px;
+
+  .view-filters .form--inline {
+    display: flex;
+
+    .form-item-status {
+      min-width: 100px;
+    }
+    .form-item-name {
+      flex-grow: 1;
+      #edit-name {
+        width: 100%;
+      }
+    }
+    #edit-actions {
+      padding-top: 16px;
+    }
+  }
+
+  .views-row {
+    .views-field-name {
+      display: none;
+    }
+
+    /* Show filename */
+    &:hover .views-field-name {
+      display: block;
+    }
+
+    /* Checker */
+    &:after {
+      content: " ";
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      position: absolute;
+      background: transparent url("/core/misc/icons/73b355/check.svg") no-repeat center center;
+      background-size: 0;
+      -webkit-transition: all 0.2s;
+      transition: all 0.2s;
+    }
+
+    &.checked:after {
+      background-size: 80px 80px;
+    }
+
+    &.checked img {
+      border: 2px solid #37802f;
+    }
+
+    img::selection {
+      background: transparent;
+    }
+
+    .views-field-entity-browser-select {
+      position: absolute !important;
+      height: 1px;
+      width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+    }
+  }
+}
+
+.view-media-entity-browser:after,
+.entity-browser-form .entities-list:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/**
+ * Build grid for media items.
+ *
+ * 1. Full width without margins (small devices)
+ * 2. Margins for all sizes.
+ */
+.entity-browser-form .entities-list .item-container,
+.view-media-entity-browser .views-row {
+  position: relative;
+  width: 99%; /* 1 */
+  display: block;
+  text-align: center;
+  margin: 0.5%; /* 2 */
+  float: left;
+
+  @media screen and (min-width: 37.5em) and (max-width: 49.99em) { /* 600px */
+    @include its-a-grid-item(3, 0.5);
+  }
+
+  @media screen and (min-width: 50em) { /* 800px */
+    @include its-a-grid-item(6, 0.5);
+  }
+}
+
+/**
+ * Selection in media browser should display 2 items per row
+ * for being better distinguishable from selection.
+ */
+.entity-browser-form .entities-list .item-container {
+  @media screen and (max-width: 37.49em) {
+    @include its-a-grid-item(2, 0.5);
+  }
+}
+
+/* stylelint-disable no-descending-specificity */
+.view-media-entity-browser .views-row img,
+.entity-browser-form .entities-list article.view-mode-thumbnail img {
+  border: 2px solid $primary-color-light;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+}
+/* stylelint-enable no-descending-specificity */
+
+.entity-browser-form .entities-list {
+  margin-bottom: 10px;
+  clear: left;
+  padding-top: 10px;
+  border-top: 2px solid #b8b8b8;
+}
+
+/**
+ * Media info
+ *
+ * 1. Prevent overflowing grid tile.
+ */
+.media-info {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  z-index: 1;
+  width: calc(100% - 4px);
+  bottom: 5px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 5px 10px;
+  color: white;
+  text-align: left;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  word-wrap: break-word; /* 1 */
+
+  span {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    height: 18px;
+    width: 18px;
+    background-size: 16px 16px;
+    margin-right: 4px;
+  }
+}
+
+/* @deprecated Thunder 8.2.35 Class name with uppercase bundle name. */
+.media-info--video,
+.media-info--Video {
+  background: transparent url("../../images/video.svg") no-repeat;
+}
+
+/* @deprecated Thunder 8.2.35 Class name with uppercase bundle name. */
+.media-info--image,
+.media-info--Image {
+  background: transparent url("../../images/image.svg") no-repeat;
+}
+
+/* @deprecated Thunder 8.2.35 Class name with uppercase bundle name. */
+.media-info--twitter,
+.media-info--Twitter {
+  background: transparent url("../../images/twitter.svg") no-repeat;
+}

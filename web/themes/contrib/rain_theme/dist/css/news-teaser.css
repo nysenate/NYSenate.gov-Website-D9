@@ -1,0 +1,24 @@
+.news-teaser {
+  display: flex;
+  margin-bottom: 30px; }
+  @media screen and (max-width: 767px) {
+    .news-teaser {
+      flex-direction: column; } }
+
+.news-teaser__image {
+  flex-basis: 33%; }
+  .news-teaser__image img {
+    width: 100%; }
+
+.news-teaser__content {
+  flex: 1;
+  margin-top: 30px; }
+  @media screen and (min-width: 768px) {
+    .news-teaser__content {
+      margin: 0 30px; } }
+
+.news-teaser__date {
+  margin-bottom: 15px; }
+
+.news-teaser__summary {
+  margin-bottom: 15px; }

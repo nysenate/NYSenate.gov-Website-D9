@@ -1,0 +1,26 @@
+services:
+  plugin.manager.yaml_content.process:
+    class: Drupal\yaml_content\Plugin\YamlContentProcessManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  yaml_content.content_loader:
+    class: Drupal\yaml_content\ContentLoader\ContentLoader
+    arguments:
+      - '@service_container'
+  yaml_content.load_helper:
+    class: Drupal\yaml_content\Service\LoadHelper
+    arguments:
+      - '@yaml_content.content_loader'
+      - '@logger.channel.yaml_content'
+      - '@string_translation'
+  yaml_content.entity_load_helper:
+    class: Drupal\yaml_content\Service\EntityLoadHelper
+    arguments:
+      - '@service_container'
+  logger.channel.yaml_content:
+    parent: logger.channel_base
+    arguments:
+      - 'yaml_content'
+  yaml_content.event_subscriber.yaml_content_menu_hierarchy:
+    class: Drupal\yaml_content\EventSubscriber\MenuHierarchySubscriber
+    tags:
+      - {name: event_subscriber}

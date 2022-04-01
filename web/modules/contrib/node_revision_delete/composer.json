@@ -1,0 +1,42 @@
+{
+  "name": "drupal/node_revision_delete",
+  "description": "Track and prune node revisions.",
+  "type": "drupal-module",
+  "keywords": ["Drupal", "Nodes", "Revisions"],
+  "homepage": "https://www.drupal.org/project/node_revision_delete",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Adrian Cid Almaguer (adriancid)",
+      "email": "adriancid@gmail.com",
+      "homepage": "https://www.drupal.org/u/adriancid",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Diosbel Mezquía (diosbelmezquia)",
+      "email": "dmezquiam@gmail.com",
+      "homepage": "https://www.drupal.org/u/diosbelmezquia",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Robert Ngo (Robert Ngo)",
+      "email": "robertngo.18@gmail.com",
+      "homepage": "https://www.drupal.org/u/robert-ngo",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/node_revision_delete",
+    "source": "http://cgit.drupalcode.org/node_revision_delete"
+  },
+  "require": {
+    "drupal/core": "^8.7.7 || ^9.0"
+  },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9"
+      }
+    }
+  }
+}

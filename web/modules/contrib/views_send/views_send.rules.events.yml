@@ -1,0 +1,26 @@
+views_send_email_sent:
+  label: 'After sending an individual email'
+  category: 'Views Send'
+  context_definitions:
+    message:
+      type: 'map'
+      label: 'E-mail message'
+      description: 'All information about the message.'
+
+views_send_all_email_added_to_spool:
+  label: 'After adding all e-mails to the spool'
+  category: 'Views Send'
+  context_definitions:
+    count:
+      type: 'integer'
+      label: 'Message count'
+      description: 'The number of messages added to the spool.'
+
+views_send_email_added_to_spool:
+  label: 'After adding an individual e-mail to the spool'
+  category: 'Views Send'
+  context_definitions:
+    message:
+      type: 'map'
+      label: 'E-mail message'
+      description: 'All information about the message.'

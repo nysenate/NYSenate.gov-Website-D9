@@ -1,0 +1,11 @@
+table tbody tr:hover {
+  background-color: #f7f7f7; }
+
+table.ief-entity-table tr td:not([class]) > div.table__cell-wrapper > div.ief-entity-operations {
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  display: grid;
+  grid-gap: 8px; }
+  table.ief-entity-table tr td:not([class]) > div.table__cell-wrapper > div.ief-entity-operations input[type='submit'] {
+    margin: 0px; }
+  table.ief-entity-table tr td:not([class]) > div.table__cell-wrapper > div.ief-entity-operations input[type='submit'] + div.ajax-progress {
+    grid-column: 1 / -1; }

@@ -1,0 +1,66 @@
+node_revision_delete.admin_settings:
+  path: '/admin/config/content/node_revision_delete'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\AdminSettingsForm'
+    _title: 'Node Revision Delete'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE
+
+node_revision_delete.content_type_configuration_delete_confirm:
+  path: '/admin/config/content/node_revision_delete/delete_config/{node_type}'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\ContentTypeConfigurationDeleteForm'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE
+
+node_revision_delete.content_type_revisions_delete_confirm:
+  path: '/admin/config/content/node_revision_delete/delete_revisions/{node_type}'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\ContentTypeRevisionsDeleteForm'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE
+
+node_revision_delete.candidate_nodes:
+  path: '/admin/config/content/node_revision_delete/candidate_nodes/{node_type}'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\CandidateNodesForm'
+    _title: 'Candidate Nodes'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE
+
+node_revision_delete.candidate_nodes_revisions_delete_confirm:
+  path: '/admin/config/content/node_revision_delete/candidate_nodes/{node_type}/delete_revisions/{node}'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\CandidateNodesRevisionsDeleteForm'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE
+
+node_revision_delete.candidate_revisions_node:
+  path: '/admin/config/content/node_revision_delete/candidate_nodes/{node_type}/candidate_revisions/{node}'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\CandidateRevisionsNodeForm'
+    _title: 'Candidate Revisions'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE
+
+node_revision_delete.candidate_revisions_content_type:
+  path: '/admin/config/content/node_revision_delete/candidate_revisions/{node_type}'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\CandidateRevisionsContentTypeForm'
+    _title: 'Candidate Revisions'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE

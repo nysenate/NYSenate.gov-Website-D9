@@ -1,0 +1,55 @@
+/**
+ * @file
+ * Generic html elements.
+ *
+ * Import and override elements.css provided by seven/global-styling.
+ */
+@import 'variables';
+
+// Added up until the seven import.
+* {
+  box-sizing: inherit;
+
+  &:after,
+  &:before {
+    box-sizing: inherit;
+  }
+}
+html {
+  box-sizing: border-box;
+  font-size: $font-size-root;
+}
+
+/* stylelint-disable string-no-newline, no-invalid-position-at-import-rule */
+@import '@theme-seven/css/base/elements.css remove {
+  body {}
+  details { line-height }
+}';
+/* stylelint-enable string-no-newline, no-invalid-position-at-import-rule */
+
+/* Generic elements. */
+body {
+  color: $text-color;
+  background: $gray-lightest;
+  font-size: $font-size-base;
+  font-weight: normal;
+  font-family: $font-family;
+  line-height: $line-height-base; // added
+  -webkit-font-smoothing: antialiased; // added
+}
+
+// video selector added
+img,
+video {
+  display: inline-block; // added
+  height: auto; // same as seven,
+  max-width: 100%; // same as seven
+  -ms-interpolation-mode: bicubic; // added
+}
+
+// New
+figure {
+  > img {
+    display: block;
+  }
+}

@@ -1,0 +1,71 @@
+field.widget.third_party.conditional_fields:
+  type: sequence
+  label: 'Conditions'
+  sequence:
+    type: mapping
+    label: 'Conditional field data'
+    mapping:
+      uuid:
+        type: string
+      entity_type:
+        type: string
+        label: 'Entity type id'
+      bundle:
+        type: string
+        label: 'Bundle id'
+      dependee:
+        type: string
+        label: 'Dependee field name'
+      settings:
+        type: conditional_fields.settings
+        label: 'Condition settings'
+
+conditional_fields.settings:
+  type: mapping
+  label: 'Condition settings'
+  mapping:
+    state:
+      type: string
+    condition:
+      type: string
+    grouping:
+      type: string
+      label: 'Interaction with other dependencies'
+    values_set:
+      type: integer
+      label: 'Values input mode'
+    value:
+      type: string
+      label: 'Value for boolean or string condition'
+    values:
+      type: sequence
+      label: 'Value from set of values OR,AND,NOT,XOR'
+      sequence:
+        type: string
+    value_form:
+      type: sequence
+      label: 'Values from widget'
+      sequence:
+        # Since it sub-config of field.widget.third_party, get there.
+        type: field.value.[%parent.%parent.%parent.%parent.%parent.%parent.type]
+        label: 'Value from widget'
+    effect:
+      type: string
+    effect_options:
+      type: sequence
+    selector:
+      type: string
+      label: 'Custom jQuery selector'
+    inheritance:
+      type: mapping
+      label: 'Inheritance'
+      mapping:
+        propagate:
+          type: string
+          label: 'Propagate settings to fields contained within this one.'
+        apply_to_parent:
+          type: string
+          label: 'Apply these settings to the this (parent) field also.'
+        recurse:
+          type: string
+          label: 'Apply these settings to group fields contained within this one.'

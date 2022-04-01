@@ -1,0 +1,103 @@
+simple_sitemap.settings:
+  type: config_object
+  mapping:
+    max_links:
+      label: 'Max links'
+      type: integer
+    cron_generate:
+      label: 'Cron generation'
+      type: boolean
+    cron_generate_interval:
+      label: 'Cron generation interval'
+      type: integer
+    generate_duration:
+      label: 'Generation duration'
+      type: integer
+    remove_duplicates:
+      label: 'Remove duplicates'
+      type: boolean
+    skip_untranslated:
+      label: 'Skip untranslated'
+      type: boolean
+    disable_language_hreflang:
+      label: 'Disable language hreflang'
+      type: boolean
+    xsl:
+      label: 'Include a stylesheet in the sitemaps for humans'
+      type: boolean
+    base_url:
+      label: 'Base URL'
+      type: string
+    default_variant:
+      label: 'Default variant'
+      type: string
+    custom_links_include_images:
+      label: 'Include images of custom links'
+      type: boolean
+    excluded_languages:
+      label: 'Excluded languages'
+      type: sequence
+      sequence:
+        type: string
+    enabled_entity_types:
+      label: 'Enabled entity types'
+      type: sequence
+      sequence:
+        type: string
+    entities_per_queue_item:
+      label: 'Entities per queue item'
+      type: integer
+
+simple_sitemap.bundle_settings.*.*.*:
+  label: 'Entity bundle settings'
+  type: config_object
+  mapping:
+    index:
+      label: 'Index'
+      type: boolean
+    priority:
+      label: 'Priority'
+      type: string
+    changefreq:
+      label: 'Change frequency'
+      type: string
+    include_images:
+      label: 'Include images'
+      type: boolean
+
+simple_sitemap.custom_links.*:
+  label: 'Custom links'
+  type: config_object
+  mapping:
+    links:
+      label: 'Custom links'
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          path:
+            label: 'Path'
+            type: string
+          priority:
+            label: 'Priority'
+            type: string
+          changefreq:
+            label: 'Change frequency'
+            type: string
+
+simple_sitemap.variants.*:
+  label: 'Sitemap variants'
+  type: config_object
+  mapping:
+    variants:
+      label: 'Sitemap variants'
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          label:
+            label: 'Variant label'
+            type: string
+          weight:
+            label: 'Weight'
+            type: integer

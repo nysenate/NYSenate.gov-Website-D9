@@ -1,0 +1,18 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall hooks for the Rain Tags feature module.
+ */
+
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_install().
+ */
+function rain_tags_install() {
+  // Add view terms permission.
+  $role_object = Role::load('anonymous');
+  $role_object->grantPermission('view terms in tags');
+  $role_object->save();
+}

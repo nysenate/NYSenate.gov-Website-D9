@@ -1,0 +1,29 @@
+uuid: 832017f5-bdc2-46dd-8fbf-f050393b7ff2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_sponsor
+    - node.type.bill
+    - node.type.page_content
+id: node.bill.field_ol_sponsor
+field_name: field_ol_sponsor
+entity_type: node
+bundle: bill
+label: Sponsor
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page_content: page_content
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

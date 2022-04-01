@@ -1,0 +1,37 @@
+uuid: 34ae6642-c7f1-4b4b-8f1c-5729f5b3043f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.accordion
+    - field.field.block_content.accordion.field_accordion_item
+    - field.field.block_content.accordion.field_title
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: 2z2QAUS_ruCSyK7xq8k5rAJ5uqsob9JLemD3V2FYM9o
+id: block_content.accordion.default
+targetEntityType: block_content
+bundle: accordion
+mode: default
+content:
+  field_accordion_item:
+    type: entity_reference_revisions_entity_view
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

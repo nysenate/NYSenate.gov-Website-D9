@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ *   Contains hooks for the svg_image_responsive module.
+ */
+
+use Drupal\svg_image\Plugin\Field\FieldFormatter\SvgImageFormatter;
+use Drupal\svg_image_responsive\Plugin\Field\FieldFormatter\SvgResponsiveImageFormatter;
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function svg_image_responsive_field_formatter_info_alter(array &$info) {
+  $info['image']['class'] = SvgImageFormatter::class;
+  $info['responsive_image']['class'] = SvgResponsiveImageFormatter::class;
+}

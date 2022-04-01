@@ -1,0 +1,22 @@
+# This is a simple docker-relay configuration.
+# See: https://github.com/bircher/docker-relay
+docker-relay:
+  version: 0.1.0
+
+drush:
+  container: drupal
+  cmd: 'vendor/bin/drush'
+  user: 1000
+
+composer:
+  container: drupal
+  cmd: composer
+  user: 1000
+  # This is a hack and will be done differently in future versions of docker-relay.
+  exec: ['docker-compose', 'run', '--rm', '-u', '1000', 'drupal', 'composer']
+
+php:
+  container: drupal
+  path: '.'
+  cmd: php
+  user: 1000

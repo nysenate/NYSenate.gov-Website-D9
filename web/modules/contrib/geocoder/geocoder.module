@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Geocoder Module.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function geocoder_theme($existing, $type, $theme, $path) {
+  return [
+    'geocoder_help' => [
+      'template' => 'help',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_help().
+ */
+function geocoder_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the geocoder module.
+    case 'help.page.geocoder':
+      $element = [
+        '#theme' => 'geocoder_help',
+      ];
+
+      return \Drupal::service('renderer')->render($element);
+
+    default:
+      return '';
+  }
+}
+
+/**
+ * Implements hook_geocoder_provider_info_alter().
+ *
+ * @param array $plugins
+ *   The list of plugin definitions to alter, passed by reference.
+ */
+function geocoder_geocoder_provider_info_alter(array &$plugins): void {
+  // If composer is caching plugin locations remove them.
+  // @see https://www.drupal.org/project/drupal/issues/3230708
+  $class_loader = \Drupal::service('class_loader');
+  if (method_exists($class_loader, 'setApcuPrefix') &&
+    (($apcu_prefix = $class_loader->getApcuPrefix()) !== NULL)
+  ) {
+    $apcu_cache_keys = [];
+    foreach ($plugins as $plugin) {
+      if (!empty($plugin['handler'])) {
+        $apcu_cache_keys[] = $apcu_prefix . $plugin['handler'];
+      }
+    }
+    apcu_delete($apcu_cache_keys);
+  }
+
+  // Remove plugins for which the providers are not installed.
+  $plugins = array_filter($plugins, function (array $plugin): bool {
+    return empty($plugin['handler']) || class_exists($plugin['handler']);
+  });
+}

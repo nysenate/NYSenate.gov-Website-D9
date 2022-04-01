@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * @file
+ * Contains entity_usage.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function entity_usage_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the entity_usage module.
+    case 'help.page.entity_usage':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Track usage of entities referenced by other entities.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function entity_usage_entity_insert(EntityInterface $entity) {
+  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnCreation($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function entity_usage_entity_update(EntityInterface $entity) {
+  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnEdition($entity);
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function entity_usage_entity_predelete(EntityInterface $entity) {
+  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnDeletion($entity);
+}
+
+/**
+ * Implements hook_entity_translation_delete().
+ */
+function entity_usage_entity_translation_delete(EntityInterface $translation) {
+  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnDeletion($translation, 'translation');
+}
+
+/**
+ * Implements hook_entity_revision_delete().
+ */
+function entity_usage_entity_revision_delete(EntityInterface $entity) {
+  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnDeletion($entity, 'revision');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function entity_usage_field_storage_config_delete(FieldStorageConfigInterface $field) {
+  // Delete all usages tracked through this field.
+  \Drupal::service('entity_usage.usage')->deleteByField($field->getTargetEntityTypeId(), $field->getName());
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function entity_usage_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if (!method_exists($form_object, 'getEntity')) {
+    return;
+  }
+  /** @var \Drupal\Core\Entity\EntityInterface $entity */
+  $entity = $form_object->getEntity();
+  if (empty($entity)) {
+    return;
+  }
+  $config = \Drupal::config('entity_usage.settings');
+  $edit_entity_types = $config->get('edit_warning_message_entity_types') ?: [];
+  $delete_entity_types = $config->get('delete_warning_message_entity_types') ?: [];
+  // Abort early if this entity is not configured to show any message.
+  if (!in_array($entity->getEntityTypeId(), $edit_entity_types) && !in_array($entity->getEntityTypeId(), $delete_entity_types)) {
+    return;
+  }
+  $usage_data = \Drupal::service('entity_usage.usage')->listSources($entity);
+  if (empty($usage_data)) {
+    return;
+  }
+  // Check for the edit warning.
+  if (method_exists($form_object, 'getOperation')
+    && $form_object->getOperation() === 'edit'
+    && in_array($entity->getEntityTypeId(), $edit_entity_types)) {
+    $form['entity_usage_edit_warning'] = [
+      '#theme' => 'status_messages',
+      '#message_list' => [
+        'warning' => [t('Modifications on this form will affect all <a href="@usage_url" target="_blank">existing usages</a> of this entity.', [
+          '@usage_url' => Url::fromRoute('entity_usage.usage_list', [
+            'entity_type' => $entity->getEntityTypeId(),
+            'entity_id' => $entity->id(),
+          ])->toString(),
+        ])],
+      ],
+      '#status_headings' => ['warning' => t('Warning message')],
+      '#weight' => -201,
+    ];
+  }
+  // Check for the delete warning.
+  elseif (in_array($entity->getEntityTypeId(), $delete_entity_types)) {
+    // Even if this is not on the UI, sites can define additional form classes
+    // where the delete message can be shown.
+    $form_classes = $config->get('delete_warning_form_classes') ?: ['Drupal\Core\Entity\ContentEntityDeleteForm'];
+    $is_delete_form = FALSE;
+    foreach ($form_classes as $class) {
+      if ($form_object instanceof $class) {
+        $is_delete_form = TRUE;
+        break;
+      }
+    }
+    if ($is_delete_form) {
+      $form['entity_usage_delete_warning'] = [
+        '#theme' => 'status_messages',
+        '#message_list' => [
+          'warning' => [
+            t('There are <a href="@usage_url" target="_blank">recorded usages</a> of this entity.', [
+              '@usage_url' => Url::fromRoute('entity_usage.usage_list', [
+                'entity_type' => $entity->getEntityTypeId(),
+                'entity_id' => $entity->id(),
+              ])->toString(),
+            ])
+          ],
+        ],
+        '#status_headings' => ['warning' => t('Warning message')],
+        '#weight' => -201,
+      ];
+    }
+  }
+}

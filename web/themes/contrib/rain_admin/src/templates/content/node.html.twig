@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ */
+#}
+{{ attach_library('rain_admin/node') }}
+{{ attach_library('rain_admin/footnote-list') }}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+
+  {{ title_prefix }}
+  {% if not page %}
+    <h2{{ title_attributes.addClass('node__title') }}>
+      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+    </h2>
+  {% else %}
+    <h2{{ title_attributes.addClass('node__title') }}>{{ label }}</a></h2>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div{{ content_attributes.addClass('node__content') }}>
+    {{ content }}
+  </div>
+  <div class="node__footnote-container"></div>
+
+</article>

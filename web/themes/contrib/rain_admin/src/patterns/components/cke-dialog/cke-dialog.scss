@@ -1,0 +1,50 @@
+// Styling for CKEditor dialog modals.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.rain-admin-theme {
+
+  .cke_reset_all .cke_dialog_body {
+    border: 1px solid $color-white;
+
+    * {
+      @include font-stack-primary;
+      font-size: 1rem;
+    }
+  }
+
+  .cke_reset_all .cke_dialog_title {
+    background-color: $color-bright-blue;
+    border-radius: 0;
+  }
+
+  .cke_reset_all .cke_dialog .cke_dialog_footer {
+    background-color: $color-white;
+    border-radius: 0;
+  }
+
+  .cke_reset_all .cke_dialog_footer_buttons {
+    
+    a.cke_dialog_ui_button { // stylelint-disable-line selector-no-qualifying-type
+      @include button;
+      text-shadow: none;
+
+      &:focus,
+      &:hover {
+        border: 0;
+        box-shadow: none;
+        padding: 15px 25px;
+      }
+
+      > span {
+        text-shadow: none;
+      }
+    }
+
+    a.cke_dialog_ui_button_cancel { // stylelint-disable-line selector-no-qualifying-type
+      @include button($color: darken($color-faint-gray, 8), $text: $color-mid-gray);
+    }
+  }
+}
+

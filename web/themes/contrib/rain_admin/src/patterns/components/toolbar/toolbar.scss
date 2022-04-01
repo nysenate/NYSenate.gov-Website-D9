@@ -1,0 +1,181 @@
+// Styling for admin toolbar.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+// Override from Thunder Admin
+.toolbar .toolbar-tray-horizontal .menu-item {
+  background-color: inherit;
+}
+
+// stylelint-disable declaration-no-important, selector-no-qualifying-type
+.toolbar[id='toolbar-administration'] {
+  @include font-stack-primary;
+  font-size: 0.875rem !important;
+
+  .toolbar-bar {
+    background-color: $color-dark-violet;
+    color: $color-gray-violet;
+  }
+
+  .toolbar-bar .toolbar-tab {
+
+    .toolbar-item {
+      color: $color-gray-violet;
+    }
+
+    > .toolbar-item:hover,
+    > .toolbar-item:focus,
+    > .toolbar-item.is-active  {
+      background-color: $color-dark-violet-lt;
+      background-image: none;
+      color: $color-white;
+
+      &::before {
+        opacity: 1;
+      }
+    }
+  }
+
+  .toolbar-tray,
+  .toolbar-menu {
+    background-color: $color-dark-violet-lt;
+  }
+
+  .toolbar-menu .toolbar-menu {
+    background-color: $color-dark-violet;
+    border-color: $color-dark-violet !important;
+  }
+
+  .toolbar-tray {
+
+    a {
+      color: $color-gray-violet !important;
+      padding: 15px;
+    }
+
+    .toolbar-icon {
+      padding-left: 50px;
+    }
+
+    a:focus,
+    a:hover,
+    a.is-active {
+      color: $color-white !important;
+
+      &::before {
+        opacity: 1;
+      }
+    }
+  }
+
+  .toolbar-tray-horizontal.toolbar-tray,
+  .toolbar-tray-vertical.toolbar-tray {
+
+    .menu-item {
+      border-color: darken($color-gray-violet, 40) !important;
+    }
+
+    .menu-item + .menu-item {
+      border-color: darken($color-gray-violet, 40) !important;
+    }
+
+    a:focus,
+    .hover-intent a {
+      background-color: $color-dark-violet;
+    }
+  }
+
+  .toolbar-tray-horizontal.toolbar-tray {
+
+    .menu-item .toolbar-menu .toolbar-icon {
+      padding-left: 15px;
+    }
+
+    .menu-item--expanded .menu-item--expanded {
+      background-image: none !important;
+      position: relative;
+
+      &::after {
+        background-image: url('../images/icon-details-arrow--white.svg') !important;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 10px;
+        content: '';
+        height: 100%;
+        right: 3px;
+        position: absolute;
+        transform: rotate(-90deg);
+        width: 20px;
+      }
+    }
+  }
+
+  .toolbar-tray-vertical.toolbar-tray {
+    
+    .toolbar-menu a {
+      padding: 15px 55px;
+    }
+
+    .toolbar-menu .toolbar-menu .toolbar-menu a {
+      padding-left: 65px;
+    }
+  }
+
+  // Icon updates.
+  .toolbar-icon::before {
+    opacity: 0.75;
+  }
+
+  .toolbar-icon:not(.toolbar-item)::before {
+    background-size: 20px;
+    height: 30px;
+    left: 10px;
+    top: calc(50% - 15px);
+    width: 30px;
+  }
+
+  .toolbar-icon,
+  .toolbar-menu .toolbar-menu .toolbar-icon {
+
+    &.toolbar-handle:focus {
+      background-color: transparent;
+    }
+
+    &.toolbar-handle::before,
+    &.toolbar-handle.open::before {
+      background-color: transparent;
+      background-image: url('../images/icon-details-arrow--white.svg');
+      background-size: 40%;
+      opacity: 0.75;
+      transform: rotate(90deg);
+    }
+
+    &.toolbar-handle.open::before {
+      background-image: url('../images/icon-details-arrow--white.svg');
+      transform: none;
+    }
+  }
+
+  .toolbar-toggle-orientation {
+    border: 0;
+    background-color: transparent;
+    
+    .toolbar-icon {
+      padding: 0;
+  
+      &::before {
+        background-size: 25px;
+        left: 0;
+      }
+    }
+  }
+
+  .toolbar-tray-horizontal.toolbar-tray .toolbar-toggle-orientation {
+    background-color: $color-dark-violet;
+  }
+}
+
+@import 'toolbar.icons.theme';
+
+// stylelint-enable declaration-no-important, selector-no-qualifying-type

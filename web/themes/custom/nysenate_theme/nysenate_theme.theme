@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the rain_theme theme.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_preprocesS_menu_ID().
+ */
+function nysenate_theme_preprocess_menu__socials(&$variables) {
+  $socials = [];
+  foreach ($variables['items'] as $link) {
+    $socials[] = [
+      'icon' => $link['title'],
+      'url' => $link['url']->toString(),
+    ];
+  }
+  $variables['socials'] = $socials;
+}
+
+/**
+ * Implements hook_preprocess_block_ID().
+ */
+function nysenate_theme_preprocess_block__system_branding_block(&$variables) {
+  $variables['site_branding'] = [
+    'text' => $variables['site_name'],
+    'img' => [
+      'url' => 'https://www.nysenate.gov/sites/all/themes/nysenate/images/nys_logo224x224.png',
+      'alt' => 'New York State Senate Seal',
+    ],
+    'link' => Url::fromRoute('<front>'),
+  ];
+}

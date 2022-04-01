@@ -1,0 +1,45 @@
+# The module's main settings.
+security_review.settings:
+  type: config_entity
+  mapping:
+    configured:
+      type: boolean
+      label: 'Has been configured'
+    untrusted_roles:
+      type: sequence
+      label: 'Untrusted roles'
+      sequence:
+        type: string
+        label: 'Role ID'
+    log:
+      type: boolean
+      label: 'Logging enabled'
+
+# Defines a security check's skip informations and settings.
+security_review.check.*:
+  type: config_entity
+  mapping:
+    id:
+      type: string
+      label: 'Check ID'
+    skipped:
+      type: boolean
+      label: 'Is skipped'
+    skipped_by:
+      type: integer
+      label: 'Skipped by'
+    skipped_on:
+      type: integer
+      label: 'Skipped on'
+    settings:
+      # Checks that need storage for settings are advised to define their settings schema.
+      # This way type-strict per-check settings storage can be created.
+      type: security_review.check_settings.[%parent.id]
+
+# Setting storage for Base URL check.
+security_review.check_settings.security_review-base_url_set:
+  type: mapping
+  mapping:
+    method:
+      type: string
+      label: 'Base URL identification method'

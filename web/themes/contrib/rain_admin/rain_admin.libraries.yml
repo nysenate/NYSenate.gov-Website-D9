@@ -1,0 +1,196 @@
+# These lines define the rain_admin/global library.
+global:
+  css:
+    # The SMACSS category, "base", is loaded before other categories. Drupal 8
+    # loads stylesheets based on the SMACSS ordering of:
+    # base, layout, component, state, theme.
+    #
+    # We have found even if you set a dependency here on Thunder Admin global
+    # styling, it does not ensure that Rain Admin styles will load after -
+    # specifically when there is a subtheme involved.
+    #
+    # The temporary solution is to use the SMACSS order to force our styles to
+    # go after Thunder Admin's, which trigger on base and component stage.
+    # Another possible idea is to attach these libraries at the template level.
+    layout:
+      dist/css/global.css: {}
+    theme:
+      dist/css/body-content.css: {}
+      dist/css/button.css: {}
+      dist/css/breadcrumb.css: {}
+      dist/css/chosen.css: {}
+      dist/css/content-form.css: {}
+      dist/css/cke.css: {}
+      dist/css/cke-dialog.css: {}
+      dist/css/details.css: {}
+      dist/css/entity-meta.css: {}
+      dist/css/field-group.css: {}
+      dist/css/field-multiple-table.css: {}
+      dist/css/form-item.css: {}
+      dist/css/fieldset.css: {}
+      dist/css/layout-container.css: {}
+      dist/css/message.css: {}
+      dist/css/node.css: {}
+      dist/css/node-preview-container.css: {}
+      dist/css/page-title.css: {}
+      dist/css/paragraphs.css: {}
+      dist/css/system-modules.css: {}
+      dist/css/table.css: {}
+      dist/css/taxonomy-term-form.css: {}
+      dist/css/toolbar.css: {}
+      dist/css/ui-dialog.css: {}
+      dist/css/dropbutton.css: {}
+
+advanced-sidebar-tray:
+  css:
+    component:
+      dist/css/advanced-sidebar-tray.css: {}
+
+body-content:
+  css:
+    component:
+      dist/css/body-content.css: {}
+
+breadcrumb:
+  css:
+    component:
+      dist/css/breadcrumb.css: {}
+
+button:
+  css:
+    component:
+      dist/css/button.css: {}
+
+chosen:
+  css:
+    component:
+      dist/css/chosen.css: {}
+
+cke:
+  css:
+    theme:
+      dist/css/cke.css: {}
+
+cke-dialog:
+  css:
+    theme:
+      dist/css/cke-dialog.css: {}
+
+content-field:
+  css:
+    component:
+      dist/css/content-field.css: {}
+
+content-form:
+  css:
+    component:
+      dist/css/content-form.css: {}
+
+details:
+  css:
+    component:
+      dist/css/details.css: {}
+
+dropbutton:
+  css:
+    component:
+      dist/css/dropbutton.css: {}
+
+entity-meta:
+  css:
+    component:
+      dist/css/entity-meta.css: {}
+
+field-group:
+  css:
+    component:
+      dist/css/field-group.css: {}
+
+field-multiple-table:
+  css:
+    theme:
+      dist/css/field-multiple-table.css: {}
+
+fieldset:
+  css:
+    component:
+      dist/css/fieldset.css: {}
+
+form-item:
+  css:
+    component:
+      dist/css/form-item.css: {}
+
+heading:
+  css:
+    component:
+      dist/css/heading.css: {}
+
+jumpnav:
+  css:
+    layout:
+      dist/css/jumpnav.css: {}
+  js:
+    dist/js/jumpnav.js: {}
+  dependencies:
+    - core/drupal
+
+layout:
+  css:
+    layout:
+      dist/css/layout-container.css: {}
+
+message:
+  css:
+    component:
+      dist/css/message.css: {}
+
+node:
+  css:
+    component:
+      dist/css/node.css: {}
+
+node-preview-container:
+  css:
+    component:
+      dist/css/node-preview-container.css: {}
+
+page-title:
+  css:
+    component:
+      dist/css/page-title.css: {}
+
+paragraphs:
+  css:
+    component:
+      dist/css/paragraphs.css: {}
+
+system-modules:
+  css:
+    component:
+      dist/css/system-modules.css: {}
+
+table:
+  css:
+    component:
+      dist/css/table.css: {}
+
+tabs:
+  css:
+    component:
+      dist/css/tabs.css: {}
+
+taxonomy-term-form:
+  css:
+    component:
+      dist/css/taxonomy-term-form.css: {}
+
+toolbar:
+  css:
+    theme:
+      dist/css/toolbar.css: {}
+
+ui-dialog:
+  css:
+    component:
+      dist/css/ui-dialog.css: {}

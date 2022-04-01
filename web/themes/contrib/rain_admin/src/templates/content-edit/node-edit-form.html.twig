@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Theme override for a node edit form.
+ */
+#}
+{{ attach_library('thunder_admin/form-advanced-sidebar-tray') }}
+{{ attach_library('thunder_admin/content-form') }}
+{{ attach_library('rain_admin/advanced-sidebar-tray') }}
+
+<div class="content-form__layout">
+  <div class="content-form__layout-region content-form__main">
+    {{ form|without('advanced', 'actions', 'jumpnav', 'path', 'footer') }}
+  </div>
+  <div class="content-form__layout-region content-form__advanced">
+    <div class="content-form__advanced-actions">
+      {{ form.new_content_button }}
+      {{ form.footer }}
+      {{ form.actions }}
+    </div>
+    <div class="content-form__advanced-settings">
+      {{ form.path }}
+      {% if form.jumpnav %}
+        <div class="content-form__jump-nav">
+          {{ form.jumpnav }}
+        </div>
+      {% endif %}
+      <div class="content-form__document-settings-container">
+        <details class="content-form__document-settings">
+          <summary>{{ 'Metadata'|t }}</summary>
+          <div class="details-wrapper">
+            {{ form.advanced }}
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</div>
+<button class="content-form__advanced-toggle" arial-label="{{ 'Show/hide form sidebar options'|t }}" data-toggle-advanced-sidebar-tray>
+  <span class="content-form__advanced-toggle-text" aria-hidden="true">{{ 'Collapse Panel'|t }}</span>
+</button>

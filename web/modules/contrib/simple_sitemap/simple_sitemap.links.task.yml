@@ -1,0 +1,41 @@
+simple_sitemap.sitemaps:
+  route_name: simple_sitemap.sitemaps
+  title: 'Sitemaps'
+  base_route: simple_sitemap.sitemaps
+  weight: -1
+
+simple_sitemap.status:
+  route_name: simple_sitemap.sitemaps
+  title: 'Status'
+  parent_id: simple_sitemap.sitemaps
+  weight: -1
+
+simple_sitemap.variants:
+  route_name: simple_sitemap.variants
+  title: 'Variants'
+  parent_id: simple_sitemap.sitemaps
+  weight: 0
+
+simple_sitemap.settings:
+  route_name: simple_sitemap.settings
+  title: 'Settings'
+  base_route: simple_sitemap.sitemaps
+  weight: 0
+
+simple_sitemap.inclusion:
+  route_name: simple_sitemap.entities
+  title: 'Inclusion'
+  base_route: simple_sitemap.sitemaps
+  weight: 1
+
+simple_sitemap.entities:
+  route_name: simple_sitemap.entities
+  title: 'Entities'
+  parent_id: simple_sitemap.inclusion
+  weight: 0
+
+simple_sitemap.custom:
+  route_name: simple_sitemap.custom
+  title: 'Custom links'
+  parent_id: simple_sitemap.inclusion
+  weight: 1

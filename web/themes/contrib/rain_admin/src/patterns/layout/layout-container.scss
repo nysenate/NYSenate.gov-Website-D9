@@ -1,0 +1,33 @@
+// Main layout container styling.
+
+// Import site utilities.
+@import '../global/utils/init';
+
+.layout-container {
+  margin: 0;
+  padding: 0;
+}
+
+.layout-container__region {
+  padding: 10px 20px;
+
+  + .layout-container__region {
+    padding-top: 0;
+  }
+
+  &.layout-container__region--header {
+    background-color: $color-light-violet;
+    padding-bottom: 0;
+    padding-top: 40px;
+  }
+
+  @include breakpoint($bp-sm) {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  @include breakpoint($bp-md) {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}

@@ -1,0 +1,118 @@
+.rain-admin-theme .field-multiple-table > tbody > .tabledrag-sort-spacer {
+  display: none; }
+
+.js .rain-admin-theme .field-multiple-table thead,
+.rain-admin-theme .field-multiple-table thead {
+  position: relative;
+  height: 60px; }
+  .js .rain-admin-theme .field-multiple-table thead th,
+  .rain-admin-theme .field-multiple-table thead th {
+    padding-top: 0;
+    padding-bottom: 0; }
+  .js .rain-admin-theme .field-multiple-table thead .tabledrag-toggle-checkbox-wrapper button,
+  .rain-admin-theme .field-multiple-table thead .tabledrag-toggle-checkbox-wrapper button {
+    position: absolute;
+    top: 0; }
+  .js .rain-admin-theme .field-multiple-table thead .field-label .label,
+  .rain-admin-theme .field-multiple-table thead .field-label .label {
+    display: none; }
+
+.js .rain-admin-theme .field-multiple-table tr.draggable,
+.js .rain-admin-theme .field-multiple-table tr.draggable:hover,
+.rain-admin-theme .field-multiple-table tr.draggable,
+.rain-admin-theme .field-multiple-table tr.draggable:hover {
+  background-color: transparent; }
+
+.js .rain-admin-theme .field-multiple-table tr.draggable,
+.rain-admin-theme .field-multiple-table tr.draggable {
+  padding: 0;
+  transition: box-shadow 200ms ease-in-out, transform 200ms ease-in-out; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > td,
+  .rain-admin-theme .field-multiple-table tr.draggable > td {
+    padding: 0; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag + td > .table__cell-wrapper,
+  .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag + td > .table__cell-wrapper {
+    background-color: #fff;
+    border: 1px solid #d8d8d8;
+    border-radius: 2px;
+    margin: 20px 0;
+    padding: 20px 30px; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag,
+  .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag {
+    width: 50px; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .tabledrag-hide,
+  .rain-admin-theme .field-multiple-table tr.draggable > .tabledrag-hide {
+    padding: 10px;
+    width: 50px; }
+    .js .rain-admin-theme .field-multiple-table tr.draggable > .tabledrag-hide select,
+    .rain-admin-theme .field-multiple-table tr.draggable > .tabledrag-hide select {
+      min-width: 0;
+      width: 100%; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle,
+  .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle {
+    align-items: center;
+    background-color: #019cb6;
+    border-radius: 2px 0 0 2px;
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    margin: 0;
+    width: 50px; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle:focus,
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle:hover,
+  .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle:focus,
+  .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle:hover {
+    background-color: #ccd7dd; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle > .handle,
+  .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-handle > .handle {
+    background-image: url("../images/icon-table-row-drag--white.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 10px;
+    display: flex;
+    height: 100%;
+    width: 100%; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-changed,
+  .rain-admin-theme .field-multiple-table tr.draggable > .field-multiple-drag > .tabledrag-changed {
+    height: calc(100% - 40px);
+    left: auto;
+    right: -3px;
+    top: 20px;
+    width: 3px; }
+
+.js .rain-admin-theme .field-multiple-table tr.draggable.drag,
+.rain-admin-theme .field-multiple-table tr.draggable.drag {
+  transform: scale(1.005); }
+  .js .rain-admin-theme .field-multiple-table tr.draggable.drag > .field-multiple-drag > .tabledrag-handle,
+  .js .rain-admin-theme .field-multiple-table tr.draggable.drag > .field-multiple-drag > .tabledrag-handle:focus,
+  .js .rain-admin-theme .field-multiple-table tr.draggable.drag > .field-multiple-drag > .tabledrag-handle:hover,
+  .rain-admin-theme .field-multiple-table tr.draggable.drag > .field-multiple-drag > .tabledrag-handle,
+  .rain-admin-theme .field-multiple-table tr.draggable.drag > .field-multiple-drag > .tabledrag-handle:focus,
+  .rain-admin-theme .field-multiple-table tr.draggable.drag > .field-multiple-drag > .tabledrag-handle:hover {
+    background-color: #012635; }
+  .js .rain-admin-theme .field-multiple-table tr.draggable.drag .table__cell-wrapper,
+  .rain-admin-theme .field-multiple-table tr.draggable.drag .table__cell-wrapper {
+    box-shadow: 2px 2px 6px 0 #d8d8d8; }
+
+.rain-admin-theme .tabledrag-toggle-weight-wrapper button {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  color: #019cb6;
+  text-decoration: none; }
+  .rain-admin-theme .tabledrag-toggle-weight-wrapper button:active, .rain-admin-theme .tabledrag-toggle-weight-wrapper button:focus {
+    position: static !important;
+    clip: auto;
+    height: auto;
+    width: auto;
+    overflow: auto; }
+  .rain-admin-theme .tabledrag-toggle-weight-wrapper button:hover {
+    color: #019cb6;
+    text-decoration: underline; }
+  .rain-admin-theme .tabledrag-toggle-weight-wrapper button:focus {
+    outline-color: #019cb6;
+    outline-offset: 2px;
+    outline-style: dashed;
+    outline-width: 2px; }

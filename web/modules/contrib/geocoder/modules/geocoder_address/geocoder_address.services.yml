@@ -1,0 +1,5 @@
+services:
+
+  geocoder_address.address:
+    class: Drupal\geocoder_address\AddressService
+    arguments: ['@address.address_format_repository', '@address.country_repository', '@address.subdivision_repository']

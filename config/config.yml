@@ -1,0 +1,27 @@
+# This configuration file only contains variables for usage with DDEV-local.
+
+vagrant_hostname: nysenate.ddev.site
+
+drupal_composer_install_dir: "/var/www/html"
+drupal_db_user: db
+drupal_db_password: db
+drupal_db_name: db
+drupal_db_host: db
+drupal_mysql_user: db
+drupal_mysql_password: db
+drupal_site_name: "Drupal"
+drupal_install_profile: nysenate
+drupal_account_name: admin
+drupal_account_pass: admin
+
+command:
+  site:
+    options:
+      env: true
+      multisite: false
+      settings_file: settings.local.php
+
+# Deployment configuration
+project_repo: git@bitbucket.org:mediacurrent/nys_nysenate_gov.git
+release_repo: ssh://codeserver.dev.4e00abcf-f286-4544-bb74-91208820d76f@codeserver.dev.4e00abcf-f286-4544-bb74-91208820d76f.drush.in:2222/~/repository.git
+deploy_host: Pantheon

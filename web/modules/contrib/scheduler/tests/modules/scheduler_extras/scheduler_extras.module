@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for the Scheduler Extras test module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter() for node_form().
+ */
+function scheduler_extras_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  // This is used in SchedulerDefaultTimeTest to check that the default time is
+  // set correctly even when the time elememt of the datetime input is hidden.
+  $type = $form_state->getFormObject()->getEntity()->type->entity->get('type');
+  if ($type == 'hidden_time') {
+    if (isset($form['publish_on'])) {
+      $form['publish_on']['widget'][0]['value']['#date_time_element'] = 'none';
+    }
+    if (isset($form['unpublish_on'])) {
+      $form['unpublish_on']['widget'][0]['value']['#date_time_element'] = 'none';
+    }
+  }
+}

@@ -1,0 +1,92 @@
+conditional_fields:
+  path: '/admin/structure/conditional_fields'
+  defaults:
+    _controller: 'conditional_fields.controller:entityTypeList'
+    _title: 'Conditional fields'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.bundle_list:
+  path: '/admin/structure/conditional_fields/{entity_type}'
+  defaults:
+    _title_callback: 'conditional_fields.controller:bundleListTitle'
+    _controller: 'conditional_fields.controller:bundleList'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.conditions_list:
+  path: '/admin/structure/conditional_fields/{entity_type}/{bundle}'
+  defaults:
+    _title_callback: 'conditional_fields.controller:formTitle'
+    _form: '\Drupal\conditional_fields\Form\ConditionalFieldForm'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.edit_form:
+  path: '/admin/structure/conditional_fields/{entity_type}/{bundle}/{field_name}/{uuid}/edit'
+  defaults:
+    _title_callback: 'conditional_fields.controller:editFormTitle'
+    _form: '\Drupal\conditional_fields\Form\ConditionalFieldEditForm'
+  requirements:
+    _permission: 'edit conditional fields'
+
+conditional_fields.delete_form:
+  path: '/admin/structure/conditional_fields/{entity_type}/{bundle}/{field_name}/{uuid}/delete'
+  defaults:
+    _form: '\Drupal\conditional_fields\Form\ConditionalFieldDeleteForm'
+  requirements:
+    _permission: 'delete conditional fields'
+
+conditional_fields.tab.node:
+  path: '/admin/structure/types/manage/{node_type}/conditionals'
+  defaults:
+    _title: 'Manage Dependencies'
+    _controller: 'conditional_fields.controller:provideArguments'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.tab.media:
+  path: '/admin/structure/media/manage/{media_type}/conditionals'
+  defaults:
+    _title: 'Manage Dependencies'
+    _controller: 'conditional_fields.controller:getMediaEditFormTab'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.tab.block:
+  path: '/admin/structure/block/manage/block-content/{block_content_type}/conditionals'
+  defaults:
+    _title: 'Manage Dependencies'
+    _controller: 'conditional_fields.controller:getBlockEditFormTab'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.tab.comment:
+  path: '/admin/structure/comment/manage/{comment_type}/conditionals'
+  defaults:
+    _title: 'Manage Dependencies'
+    _controller: 'conditional_fields.controller:getCommentEditFormTab'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.tab.user:
+  path: '/admin/config/people/accounts/conditionals'
+  defaults:
+    _title: 'Manage Dependencies'
+    _controller: 'conditional_fields.controller:getUserEditFormTab'
+  requirements:
+    _permission: 'view conditional fields'
+
+conditional_fields.edit_form.tab:
+  path: '/admin/structure/conditional_fields/{entity_type}/{bundle}/{field_name}/{uuid}/tab/edit'
+  defaults:
+    _form: '\Drupal\conditional_fields\Form\ConditionalFieldEditFormTab'
+  requirements:
+    _permission: 'edit conditional fields'
+
+conditional_fields.delete_form.tab:
+  path: '/admin/structure/conditional_fields/{entity_type}/{bundle}/{field_name}/{uuid}/tab/delete'
+  defaults:
+    _form: '\Drupal\conditional_fields\Form\ConditionalFieldDeleteFormTab'
+  requirements:
+    _permission: 'delete conditional fields'

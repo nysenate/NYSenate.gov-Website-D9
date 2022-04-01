@@ -1,0 +1,76 @@
+version: "3.1"
+
+services:
+  # More info at https://github.com/wodby/php
+  drupal:
+    image: wodby/php:${PHP_TAG-7.3-dev}
+    command: composer webserver
+    environment:
+      # We set the composer variable so that composer uses the dev file. The drupal CI can not deal with having drupal as a dev-dependency.
+      COMPOSER: composer.dev.json
+      PHP_SENDMAIL_PATH: /dev/null
+      COLUMNS: ${COLUMNS-80} # Set 80 columns for docker exec -it.
+      ## Read instructions at https://wodby.com/docs/stacks/drupal/local/#debugging-cli-requests
+      # The line below is commented out because the mere presence of that env variable loads XDebug regardless of the value.
+      # Enable XDebug when you `up` your container: PHP_XDEBUG=1 docker-compose up -d
+      # PHP_XDEBUG:
+      PHP_XDEBUG_DEFAULT_ENABLE:
+      PHP_IDE_CONFIG:
+      PHP_XDEBUG_REMOTE_HOST:
+      PHP_XDEBUG_REMOTE_CONNECT_BACK:
+      # Specify 'drupal' instead of 127.0.0.1 so that chrome service can reach it.
+      SIMPLETEST_BASE_URL: http://drupal:8888
+      SIMPLETEST_DB:
+    volumes:
+      - ./:/var/www/html:cached
+      - ./.docker/zz-php.ini:/usr/local/etc/php/conf.d/zz-php.ini
+#    ports:
+#      - '${WEB_PORT-8889}:8888'
+
+  # More info at https://github.com/wodby/mariadb
+  mariadb:
+    image: wodby/mariadb:${MARIADB_TAG-10.3}
+    stop_grace_period: 30s
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+#    volumes:
+#      - mariadb-datavolume:/var/lib/mysql
+#    ports:
+#      - '3005:3306'
+
+  # More info at https://github.com/wodby/postgres
+#  postgres:
+#    image: wodby/postgres:${POSTGRES_TAG-10.5}
+#    stop_grace_period: 30s
+#    environment:
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: db
+#      POSTGRES_USER: root
+#    volumes:
+#      - postgres-datavolume:/var/lib/postgresql/data
+#    ports:
+#      - '5532:5432'
+
+  # https://gorannikolovski.com/blog/docker4drupal-and-functional-javascript-tests
+#  chrome:
+#    image: drupalci/webdriver-chromedriver:production
+#    ulimits:
+#      core:
+#        soft: -1
+#        hard: -1
+#    cap_add:
+#      - SYS_ADMIN
+#    volumes:
+#      - /dev/shm:/dev/shm
+#    entrypoint:
+#      - chromedriver
+#      - "--no-sandbox"
+#      - "--log-path=/tmp/chromedriver.log"
+#      - "--verbose"
+#      - "--whitelisted-ips="
+
+
+  #data volumes https://docs.docker.com/storage/volumes/
+#volumes:
+#  mariadb-datavolume:
+#  postgres-datavolume:

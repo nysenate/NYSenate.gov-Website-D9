@@ -1,0 +1,46 @@
+uuid: d49e2bc4-26ae-4760-be2b-2d15a62f31c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.profile.body
+    - field.field.node.profile.field_meta_tags
+    - field.field.node.profile.field_profile_media
+    - field.field.node.profile.field_short_title
+    - field.field.node.profile.field_summary
+    - field.field.node.profile.field_thumbnail
+    - node.type.profile
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: nLlqDpr6y9OhAiKxnHTbBm_sNkfx0sW2g_tMzpCdUI4
+id: node.profile.default
+targetEntityType: node
+bundle: profile
+mode: default
+content:
+  body:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_profile_media:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+hidden:
+  field_meta_tags: true
+  field_short_title: true
+  field_summary: true
+  field_thumbnail: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

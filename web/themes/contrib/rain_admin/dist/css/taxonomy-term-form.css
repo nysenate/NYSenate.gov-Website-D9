@@ -1,0 +1,78 @@
+.rain-admin-theme .taxonomy-term-form {
+  display: flex;
+  flex-wrap: wrap; }
+  .rain-admin-theme .taxonomy-term-form > * {
+    width: 100%; }
+
+@media screen and (min-width: 900px) {
+  .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference {
+    width: calc(50% - 20px); } }
+
+.rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup legend {
+  font-size: 1rem; }
+
+.rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper {
+  display: flex;
+  flex-wrap: wrap; }
+  .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper > * {
+    order: 1;
+    width: 100%; }
+  .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .description {
+    font-size: 0.875rem;
+    font-style: italic;
+    margin: 6px 0;
+    order: 0; }
+  .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes {
+    background-color: #f7f7f7;
+    padding: 10px 10px 0; }
+    @media screen and (min-width: 900px) {
+      .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; } }
+  .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox {
+    position: relative; }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox input[type='checkbox'] {
+      position: absolute !important;
+      height: 1px;
+      width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px); }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox label {
+      display: flex;
+      font-size: 1rem;
+      line-height: 1.2;
+      width: 100%; }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox label::before {
+      border: 2px solid #012635;
+      border-radius: 2px;
+      content: '';
+      display: block;
+      flex: 0 0 auto;
+      height: calc(1rem - 2px);
+      margin: 1px 5px 1px 0;
+      width: calc(1rem - 2px); }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox input:checked + label::before {
+      background-color: #762062;
+      box-shadow: inset 0px 0px 0px 2px #fff; }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox input:focus + label {
+      outline: 1px dotted #012635;
+      outline-offset: 1px; }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox label {
+      padding: 10px; }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox input[type='checkbox']:checked + label {
+      background-color: rgba(249, 217, 37, 0.15);
+      color: #762062; }
+    @media screen and (min-width: 900px) {
+      .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-checkboxes .form-type-checkbox {
+        width: calc(50% - 5px); } }
+  .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-type-checkbox {
+    background-color: #fff;
+    margin: 0 0 10px;
+    padding: 5px; }
+    .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference .fieldgroup .fieldset-wrapper .form-type-checkbox label {
+      margin: 0; }
+
+@media screen and (min-width: 900px) {
+  .rain-admin-theme .taxonomy-term-interventions-form .field--type-entity-reference + .field--type-entity-reference {
+    margin-left: 20px; } }

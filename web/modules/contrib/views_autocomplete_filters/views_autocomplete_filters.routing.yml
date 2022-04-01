@@ -1,0 +1,6 @@
+viewsfilters.autocomplete:
+  path: '/views-autocomplete-filters/{view_name}/{view_display}/{filter_name}/{view_args}'
+  defaults:
+    _controller: '\Drupal\views_autocomplete_filters\Controller\ViewsAutocompleteFiltersController::autocomplete'
+  requirements:
+    _custom_access:  '\Drupal\views_autocomplete_filters\Controller\ViewsAutocompleteFiltersController::access'

@@ -1,0 +1,74 @@
+.carousel-item {
+  position: relative; }
+
+.carousel-item__content {
+  display: block;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.8);
+  min-width: 300px;
+  padding: 1rem 0.5rem;
+  top: 35%;
+  text-align: center; }
+  @media screen and (min-width: 544px) {
+    .carousel-item__content {
+      padding: 1rem 1.5rem; } }
+
+.carousel-item__title {
+  font-size: 1.5rem;
+  font-weight: normal; }
+  @media screen and (min-width: 544px) {
+    .carousel-item__title {
+      font-size: 2rem; } }
+  @media screen and (min-width: 768px) {
+    .carousel-item__title {
+      font-size: 3rem; } }
+  @media screen and (max-width: 543px) {
+    .carousel-item__title {
+      font-size: 1.25rem; } }
+
+.carousel__slick.slick-slider .slick-prev,
+.carousel__slick.slick-slider .slick-next {
+  top: 80%;
+  z-index: 1;
+  height: 50px;
+  width: 50px; }
+  @media screen and (min-width: 544px) {
+    .carousel__slick.slick-slider .slick-prev,
+    .carousel__slick.slick-slider .slick-next {
+      top: 90%; } }
+  .carousel__slick.slick-slider .slick-prev::before,
+  .carousel__slick.slick-slider .slick-next::before {
+    font-size: 48px; }
+    @media screen and (max-width: 543px) {
+      .carousel__slick.slick-slider .slick-prev::before,
+      .carousel__slick.slick-slider .slick-next::before {
+        font-size: 38px; } }
+
+.carousel__slick.slick-slider .slick-prev {
+  left: 20%; }
+  @media screen and (min-width: 544px) {
+    .carousel__slick.slick-slider .slick-prev {
+      left: 40%; } }
+
+.carousel__slick.slick-slider .slick-next {
+  right: 20%; }
+  @media screen and (min-width: 544px) {
+    .carousel__slick.slick-slider .slick-next {
+      right: 40%; } }
+
+.carousel__slick.slick-slider .slick-dots {
+  bottom: -50px; }
+  .carousel__slick.slick-slider .slick-dots li {
+    height: 35px;
+    width: 35px; }
+    .carousel__slick.slick-slider .slick-dots li button {
+      height: 35px;
+      width: 35px; }
+      .carousel__slick.slick-slider .slick-dots li button::before {
+        font-size: 20px;
+        height: 35px;
+        position: initial;
+        width: 35px; }

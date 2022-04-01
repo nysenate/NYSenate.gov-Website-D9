@@ -1,0 +1,40 @@
+// Styling overriding Drupal ui-dialog.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+// stylelint-disable
+.rain-admin-theme {
+
+  .ui-dialog {
+    border: 1px solid $color-white;
+  }
+
+  .ui-dialog .ui-dialog-buttonpane,
+  .ui-dialog .ui-dialog-content,
+  .ui-dialog .ui-dialog-titlebar {
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .ui-dialog .ui-dialog-titlebar {
+    background-color: $color-bright-blue;
+  }
+
+  .ui-dialog .ui-dialog-buttonpane,
+  .ui-dialog .ui-widget-content.ui-dialog-buttonpane,
+  .ui-dialog .ui-widget-content.ui-dialog-content {
+    background-color: $color-white;
+  }
+
+  .ui-dialog .ui-dialog-title::before {
+    display: none;
+  }
+
+  // Ensuring link dialog displays above
+  // footnote dialog.
+  .cke_dialog_container ~ .ui-dialog.editor-link-dialog {
+    z-index: 20000 !important;
+  }
+}
+// stylelint-enable

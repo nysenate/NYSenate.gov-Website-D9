@@ -1,0 +1,52 @@
+uuid: 93beafc7-2ce7-4e91-a582-64e4bb78bdea
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.carousel_card
+    - field.field.node.landing.field_block
+    - field.field.node.landing.field_meta_tags
+    - field.field.node.landing.field_short_title
+    - field.field.node.landing.field_summary
+    - field.field.node.landing.field_thumbnail
+    - node.type.landing
+  module:
+    - user
+_core:
+  default_config_hash: YiDuTBsLpJMpgWrWABQItauxzxeJAnb8cG0i2HPXJLo
+id: node.landing.carousel_card
+targetEntityType: node
+bundle: landing
+mode: carousel_card
+content:
+  field_short_title:
+    type: string
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_summary:
+    type: basic_string
+    weight: 2
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  field_block: true
+  field_exclude_title: true
+  field_meta_tags: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

@@ -1,0 +1,11 @@
+// Styling overrides for CKEditor.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+// Toolbar wrapper can add an inline style
+// based on the inline style applied to body
+// tag via the admin toolbar.
+.cke_inner > .cke_top {
+  top: 0 !important; // stylelint-disable-line declaration-no-important
+}

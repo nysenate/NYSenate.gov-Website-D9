@@ -1,0 +1,32 @@
+uuid: 0a2bc0ed-2a61-43c6-b62c-a96227527cc9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.nys_counties.field_metatags
+    - taxonomy.vocabulary.nys_counties
+  module:
+    - metatag
+    - text
+id: taxonomy_term.nys_counties.default
+targetEntityType: taxonomy_term
+bundle: nys_counties
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_metatags:
+    type: metatag_empty_formatter
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

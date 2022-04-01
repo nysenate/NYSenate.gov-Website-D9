@@ -1,0 +1,43 @@
+// Drupal drop button styling.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+// stylelint-disable
+.js .rain-admin-theme,
+.rain-admin-theme {
+
+  .dropbutton-multiple .dropbutton-widget,
+  .dropbutton-widget {
+    background-color: $color-white;
+    background-image: none;
+    border-color: $color-bright-blue;
+    border-radius: 0;
+  }
+
+  .dropbutton-action a,
+  .dropbutton-action a:focus,
+  .dropbutton-action a:hover {
+    background-color: $color-white !important;
+    background-image: none !important;
+    color: $color-bright-blue !important;
+  }
+
+  .dropbutton-toggle button,
+  .dropbutton-toggle button:focus,
+  .dropbutton-toggle button:hover {
+    background-color: $color-white !important;
+    background-image: none !important;
+    color: $color-bright-blue !important;
+  }
+
+  .dropbutton-arrow {
+    border-top-color: $color-bright-blue;
+  }
+
+  .open .dropbutton-arrow {
+    border-bottom-color: $color-bright-blue;
+    border-top-color: transparent;
+  }
+}
+// stylelint-enable

@@ -1,0 +1,12 @@
+services:
+  cache.hacked:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [hacked]
+
+  paramconverter.hacked_project:
+    class: Drupal\hacked\ParamConverter\HackedProjectConverter
+    tags:
+      - { name: paramconverter }

@@ -1,0 +1,25 @@
+uuid: 813de30d-f2a8-4816-88ee-879fc1de0a4d
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
+  theme:
+    - nimbus_theme
+id: useraccountmenu
+theme: nimbus_theme
+region: header_middle
+weight: -6
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'User account menu'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

@@ -1,0 +1,19 @@
+/**
+ * @file
+ * Override content-header.css provided by seven/global-styling.
+ */
+@import 'variables';
+
+// No need for import, since only style is overridden here.
+
+.content-header {
+  overflow: hidden; // Can be removed with import.
+  background-color: $gray-lightest;
+  margin-bottom: 20px; // Added.
+  padding: 24px 0 0; // Can be removed with import.
+
+  .page-title {
+    font-size: 16px; // Added.
+    line-height: 18px; // Added.
+  }
+}

@@ -1,0 +1,113 @@
+views.filter.views_autocomplete_filters_combine:
+  type: views.filter.combine
+  label: 'Autocomplete for Combine fields filter'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        autocomplete_filter:
+          type: integer
+          label: 'Use Autocomplete'
+        autocomplete_min_chars:
+          type: string
+          label: 'Minimum number of characters to start filter'
+        autocomplete_items:
+          type: string
+          label: 'Maximum number of items in Autocomplete'
+        autocomplete_raw_suggestion:
+          type: integer
+          label: 'Unformatted suggestion'
+        autocomplete_raw_dropdown:
+          type: integer
+          label: 'Unformatted dropdown'
+        autocomplete_dependent:
+          type: integer
+          label: 'Suggestions depend on other filter fields'
+
+views.filter.views_autocomplete_filters_search_api_fulltext:
+  type: views.filter.search_api_fulltext
+  label: 'Autocomplete for Search API fulltext search filter'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        autocomplete_filter:
+          type: integer
+          label: 'Use Autocomplete'
+        autocomplete_min_chars:
+          type: string
+          label: 'Minimum number of characters to start filter'
+        autocomplete_items:
+          type: string
+          label: 'Maximum number of items in Autocomplete'
+        autocomplete_raw_suggestion:
+          type: integer
+          label: 'Unformatted suggestion'
+        autocomplete_raw_dropdown:
+          type: integer
+          label: 'Unformatted dropdown'
+        autocomplete_dependent:
+          type: integer
+          label: 'Suggestions depend on other filter fields'
+
+views.filter.views_autocomplete_filters_search_api_text:
+  type: views.filter.search_api_text
+  label: 'Autocomplete for Search API text field filter'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        autocomplete_filter:
+          type: integer
+          label: 'Use Autocomplete'
+        autocomplete_min_chars:
+          type: string
+          label: 'Minimum number of characters to start filter'
+        autocomplete_items:
+          type: string
+          label: 'Maximum number of items in Autocomplete'
+        autocomplete_field:
+          type: string
+          label: 'Field with autocomplete results'
+        autocomplete_raw_suggestion:
+          type: integer
+          label: 'Unformatted suggestion'
+        autocomplete_raw_dropdown:
+          type: integer
+          label: 'Unformatted dropdown'
+        autocomplete_dependent:
+          type: integer
+          label: 'Suggestions depend on other filter fields'
+
+views.filter.views_autocomplete_filters_string:
+  type: views.filter.string
+  label: 'Autocomplete for basic textfield filter'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        autocomplete_filter:
+          type: integer
+          label: 'Use Autocomplete'
+        autocomplete_min_chars:
+          type: string
+          label: 'Minimum number of characters to start filter'
+        autocomplete_items:
+          type: string
+          label: 'Maximum number of items in Autocomplete'
+        autocomplete_field:
+          type: string
+          label: 'Field with autocomplete results'
+        autocomplete_raw_suggestion:
+          type: integer
+          label: 'Unformatted suggestion'
+        autocomplete_raw_dropdown:
+          type: integer
+          label: 'Unformatted dropdown'
+        autocomplete_dependent:
+          type: integer
+          label: 'Suggestions depend on other filter fields'

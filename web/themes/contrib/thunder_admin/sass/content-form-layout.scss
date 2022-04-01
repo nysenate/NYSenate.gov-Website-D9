@@ -1,0 +1,284 @@
+/**
+ * @file
+ * Layout styles for content forms.
+ */
+@import 'variables';
+
+/* stylelint-disable plugin/no-browser-hacks */
+$advanced-sidebar-fixed-width-small: 320px;
+$advanced-sidebar-fixed-width: 400px;
+$advanced-sidebar-fluid-width: 35%;
+$advanced-sidebar-toggle-width: 40px;
+
+/* @todo: a fixed height is only working if we refactor the dropbutton */
+$action-bar-height: 50px;
+/* stylelint-enable plugin/no-browser-hacks */
+
+/**
+ * Node add/edit form layout
+ */
+
+.content-form__layout {
+  box-sizing: border-box;
+}
+
+/* Default for the case that no JS is available */
+[data-toggle-advanced-sidebar-tray] {
+  display: none;
+}
+
+/* Action bar styling */
+.content-form__actions {
+  position: relative;
+  background: white;
+  padding-right: 36px;
+  z-index: 101;
+}
+
+/* Form styles for the advanced sidebar */
+.content-form__advanced {
+
+  /* @todo File an issue to add a standard class to all text-like inputs */
+  .form-autocomplete,
+  .form-text,
+  .form-tel,
+  .form-email,
+  .form-url,
+  .form-search,
+  .form-number,
+  .form-color,
+  textarea {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/**
+ * Advanced sidebar tray basics for small screens and JS:
+ *
+ */
+.js body.advanced-sidebar-tray {
+
+  /* Make room for the advanced sidebar tray toggle button */
+  margin-right: $advanced-sidebar-toggle-width;
+
+  /* Override the toolbar css and always position it fixed to the top */
+  .toolbar-bar {
+    position: fixed;
+  }
+
+  .content-form__advanced {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: $advanced-sidebar-fixed-width-small;
+    left: 100%;
+    overflow: auto;
+    transform: translate3d(0, 0, 0);
+
+    .entity-meta--advanced {
+      padding-bottom: $action-bar-height;
+    }
+
+    /**
+     * 1. Add space for content-form__advanced-toggle.
+     */
+    .entity-meta__header {
+      padding-right: $advanced-sidebar-toggle-width; // - 1. -
+    }
+
+    // #2910785 content is too big.
+    details > .details-wrapper {
+      padding-right: $advanced-sidebar-toggle-width; // - 1. -
+      display: inline-block;
+    }
+  }
+
+  /* Show the toggle button for the advanced sidebar tray. */
+  [data-toggle-advanced-sidebar-tray] {
+    display: flex;
+    cursor: pointer;
+  }
+
+  .content-form__advanced-toggle {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: $advanced-sidebar-toggle-width;
+  }
+
+  /* A vertical toolbar layout */
+  &.toolbar-vertical {
+    .content-form__advanced-toggle,
+    .content-form__advanced {
+      top: 39px;
+    }
+
+    /* Override the toolbar css and overlay the body with the toolbar tab by
+     * default.
+     */
+    &.toolbar-tray-open.toolbar-fixed {
+      margin-left: 0;
+    }
+  }
+
+  /* React to a horizontal toolbar layout */
+  &.toolbar-horizontal {
+    .content-form__advanced-toggle,
+    .content-form__advanced {
+      top: 39px;
+    }
+  }
+  /* make room for the toggle button next to horizontal toolbar tray and action bar */
+  .toolbar-tray-horizontal,
+  .content-form__actions {
+    margin-right: $advanced-sidebar-toggle-width;
+  }
+
+  /* Advanced sidebar tray is explicitly set to open */
+  &.advanced-sidebar-tray-toggled {
+    .content-form__advanced {
+      transform: translate3d(-100%, 0, 0);
+    }
+  }
+}
+
+/**
+ * Set z-index for advanced sidebar above actions.
+ */
+@include for-phone-only {
+  .content-form__advanced {
+    z-index: 102;
+  }
+  .content-form__advanced-toggle {
+    z-index: 103;
+  }
+}
+
+/**
+ * On a tablet in landscape and bigger screens:
+ * - the advanced sidebar has a bigger size
+ */
+@include for-tablet-landscape-and-up {
+  .js body.advanced-sidebar-tray {
+    .content-form__advanced {
+      width: $advanced-sidebar-fixed-width;
+    }
+
+    &-toggled {
+      margin-right: $advanced-sidebar-fixed-width;
+
+      .toolbar-tray-horizontal {
+        margin-right: $advanced-sidebar-fixed-width;
+      }
+    }
+  }
+}
+
+/**
+ * On a  desktop screen:
+ * - the body will make room for the advanced sidebar with a fluid width
+ * - the advanced sidebar will always be shown with a fluid width
+ * - the toggle buttons will be hidden
+ * - the horizontal toolbar tray will make room for the sidebar
+ */
+@include for-desktop-and-up {
+  .js body.advanced-sidebar-tray {
+    margin-right: $advanced-sidebar-fixed-width;
+
+    .content-form__advanced {
+      width: $advanced-sidebar-fixed-width;
+      transform: translate3d(-100%, 0, 0);
+    }
+
+    .toolbar-tray-horizontal {
+      margin-right: $advanced-sidebar-fixed-width;
+    }
+
+    &-toggled {
+      margin-right: $advanced-sidebar-toggle-width;
+
+      .toolbar-tray-horizontal {
+        margin-right: $advanced-sidebar-toggle-width;
+      }
+
+      .content-form__advanced {
+        width: $advanced-sidebar-toggle-width;
+      }
+    }
+  }
+}
+
+/**
+ * On a bigger desktop screen:
+ * - the body will have room on the left side for the toolbar in vertical
+ *   orientation
+ */
+@include for-big-desktop-and-up {
+  .js body.advanced-sidebar-tray {
+    &.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+      margin-left: $toolbar-vertical-width;
+    }
+  }
+}
+
+/**
+ * On a tablet portrait screen:
+ * - the action bar is fixed to the bottom of the screen
+ * - the action bar will make room for the advanced sidebar
+ */
+@include for-tablet-portrait-and-up {
+  /* Fixed action bar */
+  .js body.advanced-sidebar-tray {
+    .content-form__actions {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding-left: 36px;
+    }
+    &.advanced-sidebar-tray-toggled {
+      .content-form__actions {
+        margin-right: $advanced-sidebar-fixed-width-small;
+      }
+    }
+  }
+}
+
+/**
+ * On a tablet in landscape and bigger screens:
+ * - the action bar will make room for the advanced sidebar with a bigger size,
+ *   if it is toggled open
+ */
+@include for-tablet-landscape-and-up {
+  .js body.advanced-sidebar-tray {
+    &.advanced-sidebar-tray-toggled {
+      .content-form__actions {
+        margin-right: $advanced-sidebar-fixed-width;
+      }
+    }
+  }
+}
+
+/**
+ * On a desktop screen:
+ * - the action bar will make room on the left side for the toolbar in vertical
+ *   layout
+ */
+@include for-desktop-and-up {
+  /* Make room for an vertically oriented open toolbar tab */
+  .toolbar-vertical.toolbar-tray-open {
+    .content-form__actions {
+      margin-left: $toolbar-vertical-width;
+    }
+  }
+  .js body.advanced-sidebar-tray {
+    &.advanced-sidebar-tray-toggled {
+      .content-form__actions {
+        margin-right: $advanced-sidebar-toggle-width;
+      }
+    }
+  }
+}

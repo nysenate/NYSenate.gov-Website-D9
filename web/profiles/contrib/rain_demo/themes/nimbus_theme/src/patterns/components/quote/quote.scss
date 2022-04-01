@@ -1,0 +1,162 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.quote {
+  text-align: center;
+  margin-bottom: 1.875rem;
+  padding: 0 3rem;
+  @include max-width;
+}
+
+.quote__text {
+  font-size: 1.375rem;
+  line-height: 1.25;
+  margin-bottom: 3.75rem;
+  font-style: normal;
+  color: $color-text-black;
+  font-weight: bold;
+  position: relative;
+
+  &::after {
+    content: '';
+    width: 40px;
+    height: 2px;
+    background-color: $color-text-black;
+    position: absolute;
+    bottom: -1.875rem;
+    transform: translateX(-50%);
+    left: 50%;
+    display: block;
+
+    @include breakpoint($bp-md){
+      left: 0;
+      transform: none;
+    }
+  }
+
+  @include breakpoint($bp-xsm) {
+    font-size: 1.75rem;
+  }
+
+  @include breakpoint($bp-md) {
+    margin-top: 0;
+    font-size: 2rem;
+  }
+}
+
+.quote__cite {
+  font-size: 0.875rem;
+  line-height: 1.375;
+
+  @include breakpoint($bp-xsm) {
+    font-size: 1rem;
+  }
+
+  @include breakpoint($bp-md) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 400px;
+    grid-gap: 2rem;
+  }
+
+  &-media {
+    
+    img {
+      border-radius: 50%;
+      width: 175px;
+      height: 175px;
+      object-fit: cover;
+      object-position: center;
+
+      @include breakpoint($bp-md) {
+        height: 400px;
+        width: 400px;
+      }
+    }
+
+    @include breakpoint($bp-md) {
+      grid-column: 3 / span 1;
+      grid-row-start: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &-name{
+    font-style: normal;
+    font-size: 1.3rem;
+    font-weight: normal;
+    color: $color-text-black;
+
+    @include breakpoint($bp-md) {
+      margin-bottom: 1rem;
+    }
+  }
+
+  &-text {
+
+    svg {
+      width: 50px;
+      height: auto;
+      margin-top: 1.5rem;
+      fill: $color-text-black;
+
+      @include breakpoint($bp-md) {
+        margin-left: -6rem;
+        width: 70px;
+      }
+    }
+
+    @include breakpoint($bp-md) {
+      grid-column: 1 / span 2;
+      grid-row-start: 1;
+      text-align: left;
+      padding-left: 6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+  }
+
+  &-job{
+    font-style: normal;
+    font-size: 1rem;
+    font-weight: normal;
+    color: $color-text-black;
+
+    @include breakpoint($bp-md) {
+      margin-top: 0;
+    }
+  }
+}
+
+.quote--left {
+  text-align: left;
+
+  .quote__text {
+    text-align: center;
+
+    @include breakpoint($bp-md) {
+      text-align: left;
+    }
+  }
+
+  .quote__cite {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    @include breakpoint($bp-md) {
+      flex-direction: row;
+    }
+  }
+
+  .quote__cite-media {
+    margin: 0 0 1rem;
+
+    @include breakpoint($bp-md) {
+      flex: 0 0 49%;
+    }
+  }
+}

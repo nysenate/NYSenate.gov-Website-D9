@@ -1,0 +1,79 @@
+.field-multiple-table > tbody > tr{
+  border-bottom:0;
+}
+
+.field-multiple-table.tabledrag-checkbox-active > tbody > tr.draggable > .field-multiple-drag .tabledrag-handle{
+  display:none;
+}
+
+.field-multiple-table > thead > tr.tabledrag-toggle-checkbox-wrapper{
+  padding-left:0;
+}
+
+.field-multiple-table > thead > tr.tabledrag-toggle-checkbox-wrapper th{
+  padding-left:0;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-spacer{
+  background:transparent;
+  border-bottom:0;
+  height:30px;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper{
+  background:transparent;
+  border-bottom:0;
+  height:22px;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column{
+  text-align:center;
+  padding:0;
+  line-height:1;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target{
+  display:flex;
+  align-items:center;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target span{
+  height:30px;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target .tabledrag-sort-target-left,
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target .tabledrag-sort-target-right{
+  flex:1;
+  height:2px;
+  background-repeat-x:repeat;
+  background-repeat-y:no-repeat;
+  background-position-y:center;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target .tabledrag-sort-target-left{
+  background:transparent url("../images/icons/line-dashed-right.svg");
+  background-position-x:right;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target .tabledrag-sort-target-right{
+  background:transparent url("../images/icons/line-dashed-left.svg");
+  background-position-x:left;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target .tabledrag-sort-target-middle{
+  width:22px;
+  margin:0 4px;
+  background:transparent url("../images/icons/paste.svg") center no-repeat;
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target:hover .tabledrag-sort-target-left{
+  background-image:url("../images/icons/line-dashed-right-color.svg");
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target:hover .tabledrag-sort-target-right{
+  background-image:url("../images/icons/line-dashed-left-color.svg");
+}
+
+.field-multiple-table > tbody > tr.tabledrag-sort-target-wrapper > td.tabledrag-sort-target-column a.tabledrag-sort-target:hover .tabledrag-sort-target-middle{
+  background-image:url("../images/icons/paste-color.svg");
+}

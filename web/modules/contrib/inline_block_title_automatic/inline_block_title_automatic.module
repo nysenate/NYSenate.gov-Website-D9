@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Module file for inline_block_title_automatic.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\inline_block_title_automatic\FormAlter;
+
+/**
+ * Implements hook_form_FORM_ID_alter() for layout_builder_update_block.
+ */
+function inline_block_title_automatic_form_layout_builder_update_block_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver()->getInstanceFromDefinition(FormAlter::class)
+    ->blockAddConfigureAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for layout_builder_add_block.
+ */
+function inline_block_title_automatic_form_layout_builder_add_block_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver()->getInstanceFromDefinition(FormAlter::class)
+    ->blockAddConfigureAlter($form, $form_state, $form_id);
+}

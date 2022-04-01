@@ -1,0 +1,25 @@
+uuid: a939cfff-c330-4052-a5cc-7f823f3b26b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.policies
+  module:
+    - system
+  theme:
+    - nysenate_theme
+id: policies
+theme: nysenate_theme
+region: addendum
+weight: 0
+provider: null
+plugin: 'system_menu_block:policies'
+settings:
+  id: 'system_menu_block:policies'
+  label: Policies
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

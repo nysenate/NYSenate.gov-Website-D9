@@ -1,0 +1,27 @@
+uuid: 3ead29b6-13d0-4ecb-b1b7-f4f9d90227d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - nimbus_theme
+_core:
+  default_config_hash: Cy_SCPZ7emMghJuHLGD_u-tEXUNpehhfEWbBqIkpAII
+id: nimbus_theme_main_menu
+theme: nimbus_theme
+region: header_middle
+weight: -7
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 2
+  expand_all_items: true
+visibility: {  }

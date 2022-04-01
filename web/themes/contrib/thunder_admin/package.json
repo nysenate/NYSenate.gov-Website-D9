@@ -1,0 +1,55 @@
+{
+  "name": "thunder_admin",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "browserslist": [
+    "> 1%",
+    "Firefox ESR",
+    "last 2 versions",
+    "not dead"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "styles-lint": "stylelint sass-includes/*.scss sass/*.scss sass/**/*.scss",
+    "styles": "css-sniper --output-style expanded --include-path sass-includes -o css sass",
+    "styles:uncompressed": "css-sniper --output-style uncompressed --include-path sass-includes -o css sass",
+    "poststyles": "postcss --no-map --remove-all -u autoprefixer postcss-discard-comments -r css",
+    "js": "eslint js",
+    "images": "imagemin images-originals/*.* --out-dir=\"images\" && imagemin images-originals/icons/*.* --out-dir=\"images/icons\" && imagemin images-originals/paragraphs_type_icon/*.* --out-dir=\"images/paragraphs_type_icon\" ",
+    "serve": "browser-sync start --proxy \"thunder.dev\" --files \"css/**/*.css, js/*.js\"",
+    "build": "npm run styles-lint && npm run styles && npm run js",
+    "watch:styles": "onchange \"sass\" \"sass-includes\" -- npm run styles",
+    "watch:js": "onchange \"js\" -- npm run js",
+    "watch:all": "npm-run-all -p serve watch:styles watch:js watch:images",
+    "dev": "npm run build && npm run watch:all",
+    "postinstall": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BurdaMagazinOrg/theme-thunder-admin.git"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.3.6",
+    "browser-sync": "^2.27.5",
+    "css-sniper": "^0.7.0",
+    "eslint": "^7.32.0",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
+    "postcss": "^8.3.8",
+    "postcss-cli": "^9.0.0",
+    "postcss-discard-comments": "^5.0.1",
+    "sharpeye": "^5.3.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-scss": "^3.21.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BurdaMagazinOrg/theme-thunder-admin/issues"
+  },
+  "homepage": "https://github.com/BurdaMagazinOrg/theme-thunder-admin#readme",
+  "dependencies": {}
+}

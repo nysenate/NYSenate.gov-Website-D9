@@ -1,0 +1,48 @@
+// General content field styling.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.content-field {
+  border-top: 1px solid $color-pale-gray;
+  margin: 0;
+  padding: 10px 0 40px;
+
+  &.sub-field {
+    border: 0;
+    padding: 10px 0;
+  }
+}
+
+.content-field__label {
+  color: $color-bright-blue;
+  font-size: 1.5rem;
+  font-weight: $font-weight-normal;
+  line-height: 1.2;
+  margin: 0 0 26px;
+
+  .sub-field & {
+    color: $color-black;
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    margin-bottom: 5px;
+  }
+}
+
+.content-field__content {
+  font-size: 1rem;
+
+  + .content-field__content {
+    margin-top: 20px;
+  }
+
+  a {
+    color: $color-bright-blue;
+    text-decoration: underline;
+
+    &:hover,
+    &:active {
+      text-decoration: none;
+    }
+  }
+}

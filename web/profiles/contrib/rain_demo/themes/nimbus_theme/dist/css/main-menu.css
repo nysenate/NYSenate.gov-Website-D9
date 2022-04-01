@@ -1,0 +1,182 @@
+.main-menu {
+  background-color: transparent;
+  position: relative;
+  display: none;
+  z-index: 1;
+  margin-top: 30px; }
+  @media screen and (min-width: 768px) {
+    .main-menu {
+      margin-top: 74px; } }
+  @media screen and (min-width: 768px) {
+    .main-menu {
+      display: block;
+      margin-top: 0; } }
+  .main-menu.active {
+    display: block; }
+  .main-menu .menu {
+    display: flex;
+    flex-direction: column;
+    list-style: none outside;
+    margin-left: 0; }
+    @media screen and (min-width: 768px) {
+      .main-menu .menu {
+        flex-direction: row; } }
+    .main-menu .menu a {
+      text-decoration: none;
+      color: #ffffff;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 900;
+      font-family: 'Muli Black', sans-serif; }
+      @media screen and (min-width: 1024px) {
+        .main-menu .menu a {
+          font-size: 16px; } }
+    .main-menu .menu .menu-item {
+      background: transparent;
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0 16px 0 0;
+      position: relative;
+      transition: background 300ms ease-in-out; }
+      @media screen and (min-width: 768px) {
+        .main-menu .menu .menu-item {
+          padding: 0; } }
+      .main-menu .menu .menu-item a {
+        display: block;
+        padding: 15px;
+        flex: 1; }
+        @media screen and (min-width: 1024px) {
+          .main-menu .menu .menu-item a {
+            padding: 20px; } }
+        .main-menu .menu .menu-item a:hover {
+          text-decoration: underline; }
+      .main-menu .menu .menu-item.js-open {
+        background: #000001; }
+      .main-menu .menu .menu-item.menu-item--has-submenu a {
+        padding: 15px 35px 15px 15px; }
+        @media screen and (min-width: 1024px) {
+          .main-menu .menu .menu-item.menu-item--has-submenu a {
+            padding: 25px 45px 25px 25px; } }
+      .main-menu .menu .menu-item.menu-item--has-submenu.js-open > .menu__submenu {
+        max-height: 1000px; }
+      .main-menu .menu .menu-item.menu-item--has-submenu.js-open > .menu-item-toggle {
+        transform: none; }
+      @media screen and (min-width: 768px) {
+        .main-menu .menu .menu-item.menu-item--has-submenu > .menu__submenu {
+          display: none; }
+        .main-menu .menu .menu-item.menu-item--has-submenu:hover > .menu__submenu, .main-menu .menu .menu-item.menu-item--has-submenu:focus > .menu__submenu, .main-menu .menu .menu-item.menu-item--has-submenu.js-open > .menu__submenu {
+          display: block;
+          max-height: 1000px; }
+        .main-menu .menu .menu-item.menu-item--has-submenu:hover > .menu-item-toggle, .main-menu .menu .menu-item.menu-item--has-submenu:focus > .menu-item-toggle, .main-menu .menu .menu-item.menu-item--has-submenu.js-open > .menu-item-toggle {
+          transform: none; } }
+    .main-menu .menu .menu__submenu {
+      background: transparent;
+      left: 0;
+      list-style: none;
+      overflow: hidden;
+      max-height: 0;
+      position: initial;
+      top: 100%;
+      white-space: nowrap;
+      width: 100%;
+      transition: max-height 300ms ease-in-out; }
+      @media screen and (min-width: 768px) {
+        .main-menu .menu .menu__submenu {
+          background: #000001;
+          position: absolute;
+          width: auto; } }
+      .main-menu .menu .menu__submenu .menu__submenu-item {
+        min-width: 150px; }
+        @media screen and (min-width: 768px) {
+          .main-menu .menu .menu__submenu .menu__submenu-item:hover {
+            background: #1b2b34; } }
+        .main-menu .menu .menu__submenu .menu__submenu-item a {
+          padding: 15px 60px; }
+          @media screen and (min-width: 768px) {
+            .main-menu .menu .menu__submenu .menu__submenu-item a {
+              padding: 15px 25px; } }
+        .main-menu .menu .menu__submenu .menu__submenu-item:first-child a {
+          padding: 0 15px 15px 60px; }
+          @media screen and (min-width: 768px) {
+            .main-menu .menu .menu__submenu .menu__submenu-item:first-child a {
+              padding: 25px 15px 15px 25px; } }
+        .main-menu .menu .menu__submenu .menu__submenu-item:last-child a {
+          padding: 15px 15px 15px 60px; }
+          @media screen and (min-width: 768px) {
+            .main-menu .menu .menu__submenu .menu__submenu-item:last-child a {
+              padding: 15px 25px 25px; } }
+  .main-menu .menu-item.menu-item--active-trail {
+    background-color: #000001; }
+    .main-menu .menu-item.menu-item--active-trail a {
+      /* stylelint-disable selector-no-qualifying-type */ }
+      .main-menu .menu-item.menu-item--active-trail a.is-active {
+        color: #ffffff; }
+
+.main-menu__navicon {
+  background-color: transparent;
+  display: flex;
+  align-items: flex-start;
+  color: #ffffff; }
+  @media screen and (min-width: 768px) {
+    .main-menu__navicon {
+      display: none; } }
+
+.navicon {
+  background-color: transparent;
+  cursor: pointer;
+  display: block;
+  height: auto;
+  padding: 5px;
+  border: 0; }
+  @media screen and (min-width: 768px) {
+    .navicon {
+      display: block; } }
+  .active .navicon .navicon__bar {
+    width: 30px; }
+    .active .navicon .navicon__bar:nth-child(1) {
+      transform: rotate(45deg) translate(0.29rem, 0.215rem); }
+    .active .navicon .navicon__bar:nth-child(2) {
+      opacity: 0; }
+    .active .navicon .navicon__bar:nth-child(3) {
+      transform: rotate(-45deg) translate(0.125rem, -0.0625rem); }
+
+.navicon__bar {
+  background-color: #ffffff;
+  border-radius: 0;
+  display: block;
+  height: 4px;
+  transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+  width: 27px; }
+  .navicon__bar:nth-child(1) {
+    transform: translate(0, -0.375rem); }
+  .navicon__bar:nth-child(3) {
+    transform: translate(0, 0.375rem); }
+
+.menu-item-toggle {
+  background: transparent;
+  border: 2px solid #ffffff;
+  border-radius: 50px;
+  height: 30px;
+  padding: 5px;
+  width: 30px;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  @media screen and (min-width: 768px) {
+    .menu-item-toggle {
+      background: transparent;
+      border: 0;
+      height: 100%;
+      position: absolute;
+      right: 12px;
+      width: auto; } }
+  .menu-item-toggle .menu-item-toggle__icon {
+    width: 12px; }
+  .menu-item-toggle .menu-item-toggle__text {
+    height: 0;
+    left: -1000em;
+    overflow: hidden;
+    position: absolute;
+    width: 0; }

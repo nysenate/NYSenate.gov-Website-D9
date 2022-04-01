@@ -1,0 +1,25 @@
+.breadcrumb {
+  line-height: 1;
+  padding: 0 0 25px; }
+  .breadcrumb ol {
+    display: flex; }
+  .breadcrumb li {
+    align-items: center;
+    color: #012635;
+    display: flex; }
+    .breadcrumb li::before {
+      background-image: url("../images/icon-details-arrow--blue.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 8px;
+      color: #019cb6;
+      content: '';
+      height: 10px;
+      transform: rotate(-90deg);
+      width: 30px; }
+  .breadcrumb li a {
+    color: #019cb6;
+    font-size: 0.75rem; }
+  .breadcrumb li:last-child a {
+    color: #012635;
+    font-weight: bold; }

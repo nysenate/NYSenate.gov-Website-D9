@@ -1,0 +1,32 @@
+- entity: "taxonomy_term"
+  vid: "tags"
+  name: "Generated content"
+
+- entity: "node"
+  type: "article"
+  title: "Basic Article"
+  status: 1
+  body:
+  - format: "full_html"
+    value: |
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vobis
+      voluptatum perceptarum recordatio vitam beatam facit, et quidem corpore
+      perceptarum. Tum Quintus: Est plane, Piso, ut dicis, inquit.</p>
+      <p>Primum cur ista res digna odio est, nisi quod est turpis? Duo Reges:
+      constructio interrete. Rhetorice igitur, inquam, nos mavis quam
+      dialectice disputare?</p>
+  field_tags:
+  # Attach existing term.
+  - '#process':
+      callback: 'reference'
+      args:
+      - 'taxonomy_term'
+      - vid: 'tags'
+        name: 'Generated content'
+  # Missing tag that will not be attached.
+  - '#process':
+      callback: 'reference'
+      args:
+      - 'taxonomy_term'
+      - vid: 'tags'
+        name: 'Imported demo content'

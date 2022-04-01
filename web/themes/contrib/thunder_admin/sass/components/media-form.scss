@@ -1,0 +1,91 @@
+/**
+ * @file
+ * Additional styles for media forms.
+ */
+@import 'variables';
+
+.media-form__items-widget {
+  border: 0;
+
+  .details-wrapper {
+    padding: 0;
+  }
+
+  .entities-list {
+    overflow: auto;
+  }
+}
+
+.media-form__item-widget {
+  float: left;
+  position: relative;
+  padding: 10px 45px 10px 10px;
+  background: rgba(0, 0, 0, 0.1);
+  min-height: 70px;
+
+  .entities-list.ui-sortable &:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .entities-list--single-item &:hover {
+    cursor: default;
+  }
+  .color-scheme-inverted .entities-list & {
+    background: rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  .image-style-media-thumbnail {
+    width: 100%;
+  }
+}
+
+/**
+ * Actions on media items.
+ */
+.media-form__item-widget__action {
+  position: absolute;
+  display: block;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  text-indent: -9999px;
+
+  &,
+  &:active,
+  &:hover,
+  &:focus,
+  &:disabled,
+  &:disabled:active,
+  &:disabled:hover,
+  &.is-disabled:active,
+  &.is-disabled:hover {
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+.media-form__item-widget__action--edit {
+  bottom: 0;
+  @include inline-svg-button('<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#787878" d="M2 17.2V21h3.8l11-11.1L13 6.1 2 17.2zM19.7 7c.4-.4.4-1 0-1.4l-2.3-2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8L18 8.9 19.7 7zM11 19l-2 2h13v-2H11z"/></svg>', ('#787878': $primary-color), ('#787878': $primary-color-dark), ('#787878': $gray-medium));
+}
+
+.media-form__item-widget__action--remove {
+  top: 0;
+  @include inline-svg-button('<svg width="15" height="18" viewBox="0 0 15 18" xmlns="http://www.w3.org/2000/svg"><path fill="#787878" d="M1 16c0 1.1.975 2 2.167 2h8.666C13.025 18 14 17.1 14 16V4H1v12zM15 1v2H0V1h3.75l1.07-1h5.36l1.07 1H15zm-5 5.51c0-.282.232-.51.5-.51.276 0 .5.228.5.51v8.98c0 .282-.232.51-.5.51-.276 0-.5-.228-.5-.51V6.51zm-3 0c0-.282.232-.51.5-.51.276 0 .5.228.5.51v8.98c0 .282-.232.51-.5.51-.276 0-.5-.228-.5-.51V6.51zm-3 0c0-.282.232-.51.5-.51.276 0 .5.228.5.51v8.98c0 .282-.232.51-.5.51-.276 0-.5-.228-.5-.51V6.51z" fill-rule="evenodd"/></svg>', ('#787878': $primary-color), ('#787878': $primary-color-dark), ('#787878': $gray-medium));
+}
+
+/**
+ * 1. We really want that margin despite seven/form.css and entity_browser.entity_list.css.
+ * 2. Override full width form-actions input for narrow devices (form.css in seven).
+ */
+.entities-list .item-container > input.media-form__item-widget__action {
+  margin: 0.5em; /* 1 */
+  width: 24px; /* 2 */
+}

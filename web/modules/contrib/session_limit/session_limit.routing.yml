@@ -1,0 +1,14 @@
+session_limit.config_form:
+  path: /admin/config/people/session-limit
+  defaults:
+    _form: '\Drupal\session_limit\Form\SettingsForm'
+    _title: 'Session limit settings'
+  requirements:
+    _permission: 'administer site configuration'
+session_limit.limit_form:
+  path: /session-limit
+  defaults:
+    _form: '\Drupal\session_limit\Form\SessionLimitForm'
+    _title: 'Session limit form'
+  requirements:
+    _user_is_logged_in: 'TRUE'

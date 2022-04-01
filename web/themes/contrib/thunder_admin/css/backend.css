@@ -1,0 +1,50 @@
+.article-teaser .field--name-field-teaser-media summary{
+  display:none;
+}
+
+.article-teaser .field--name-field-teaser-media .media-form__item-widget{
+  background:#d4edfc;
+}
+
+.article-teaser .field--name-field-teaser-text{
+  padding:0 10px;
+}
+
+.article-teaser .field--name-field-teaser-text textarea{
+  height:122px;
+}
+
+@media (min-width: 900px){
+  .article-teaser div.field--widget-entity-browser-entity-reference div.entities-list > div{
+    margin:10px 0;
+  }
+  .article-teaser > .details-wrapper,
+  .article-teaser > .fieldset-wrapper{
+    display:flex;
+  }
+  .article-teaser > .details-wrapper .field--name-field-teaser-media,
+  .article-teaser > .fieldset-wrapper .field--name-field-teaser-media{
+    width:225px;
+    min-width:225px;
+  }
+  .article-teaser > .details-wrapper .field--name-field-teaser-media details.form-wrapper,
+  .article-teaser > .fieldset-wrapper .field--name-field-teaser-media details.form-wrapper{
+    border:0;
+  }
+  .article-teaser > .details-wrapper .field--name-field-teaser-text,
+  .article-teaser > .fieldset-wrapper .field--name-field-teaser-text{
+    margin:0 14px;
+  }
+  .article-teaser > .details-wrapper .field--name-field-teaser-text .form-item-field-teaser-text-0-value,
+  .article-teaser > .fieldset-wrapper .field--name-field-teaser-text .form-item-field-teaser-text-0-value{
+    margin-top:4px;
+  }
+}
+
+.ckeditor-buttons{
+  box-sizing:content-box;
+}
+
+.ckeditor-buttons li a{
+  line-height:1.384;
+}

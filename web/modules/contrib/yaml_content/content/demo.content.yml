@@ -1,0 +1,104 @@
+# Demonstration content for interrelated imports.
+---
+# Add taxonomy terms to be referenced from later content.
+# All top-level array items must be separate entities for import.
+- entity: "taxonomy_term"
+  vid: "tags"
+  name: "Generated content"
+- entity: "taxonomy_term"
+  vid: "tags"
+  name: "Imported demo content"
+
+# Add a basic article page with simple values.
+- entity: "node"
+  type: "article"
+  title: "Basic Article"
+  status: 1
+  # Assumes Pathauto is installed.
+  path:
+    - pathauto: 0
+      alias: '/articles/a-basic-article'
+  # Rich text fields contain multiple keys that must be provided.
+  body:
+    # The format may be the machine name of any configured text filter.
+    - format: "full_html"
+      # Using a pipe we can define content across multiple lines.
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vobis
+        voluptatum perceptarum recordatio vitam beatam facit, et quidem corpore
+        perceptarum. Tum Quintus: Est plane, Piso, ut dicis, inquit.</p>
+        <p>Primum cur ista res digna odio est, nisi quod est turpis? Duo Reges:
+        constructio interrete. Rhetorice igitur, inquam, nos mavis quam
+        dialectice disputare?</p>
+
+# Articles may also be more complex and include referenced content like tags.
+- entity: "node"
+  type: "article"
+  title: "Tagged Article"
+  status: 1
+  body:
+    # The format may be the machine name of any configured text filter.
+    - format: "full_html"
+      # Using a pipe we can define content across multiple lines.
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vobis
+        voluptatum perceptarum recordatio vitam beatam facit, et quidem corpore
+        perceptarum. Tum Quintus: Est plane, Piso, ut dicis, inquit.Primum cur
+        ista res digna odio est, nisi quod est turpis? Duo Reges: constructio
+        interrete. Rhetorice igitur, inquam, nos mavis quam dialectice disputare?</p>
+  # Since the tags to be used were created above, we don't know their IDs and have to look them up dynamically.
+  field_tags:
+    # This is done via a preprocessor.
+    - '#process':
+        # First we designate the processor callback to be used.
+        callback: 'reference'
+        # Each callback may require a set of arguments to configure its behavior.
+        args:
+          # Indicate the machine name of the entity type to be referenced.
+          - 'taxonomy_term'
+          # Provide a list of conditions to filter the content matches.
+          # Each property filter maps directly to an EntityQuery condition.
+          - vid: 'tags'
+            name: 'Generated content'
+    # Processors may be called multiple times to fill in any content requirements.
+    - '#process':
+        callback: 'reference'
+        args:
+          - 'taxonomy_term'
+          - vid: 'tags'
+            name: 'Imported demo content'
+
+# Files like images can even be referenced and added within content.
+- entity: "node"
+  type: "article"
+  title: "Article with an Image"
+  status: 1
+  body:
+    # The format may be the machine name of any configured text filter.
+    - format: "full_html"
+      # Using a pipe we can define content across multiple lines.
+      value: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vobis
+        voluptatum perceptarum recordatio vitam beatam facit, et quidem corpore
+        perceptarum. Tum Quintus: Est plane, Piso, ut dicis, inquit.Primum cur
+        ista res digna odio est, nisi quod est turpis? Duo Reges: constructio
+        interrete. Rhetorice igitur, inquam, nos mavis quam dialectice disputare?</p>
+  field_tags:
+    - '#process':
+        callback: 'reference'
+        args:
+          - 'taxonomy_term'
+          - vid: 'tags'
+            name: 'Generated content'
+  field_image:
+    # To lookup and add files we'll need to use a different callback function.
+    - '#process':
+        # In this case we're looking up a file, so we'll use the `file` callback.
+        callback: 'file'
+        args:
+          # Our first argument is, again, the bundle of the entity type.
+          - 'image'
+          # For this callback our additional arguments are telling what file we want.
+          # By default, images are searched for within an `images` directory beside the
+          # `content` directory containing our content files.
+          - filename: 'demo-image.jpg'

@@ -1,0 +1,17 @@
+simple_sitemap.sitemaps:
+  title: 'Simple XML Sitemap'
+  description: 'Configure, add content to and generate XML sitemaps.'
+  parent: system.admin_config_search
+  route_name: simple_sitemap.sitemaps
+
+simple_sitemap.settings:
+  title: 'Settings'
+  parent: simple_sitemap.sitemaps
+  route_name: simple_sitemap.settings
+  weight: 0
+
+simple_sitemap.inclusion:
+  title: 'Inclusion'
+  parent: simple_sitemap.sitemaps
+  route_name: simple_sitemap.entities
+  weight: 1

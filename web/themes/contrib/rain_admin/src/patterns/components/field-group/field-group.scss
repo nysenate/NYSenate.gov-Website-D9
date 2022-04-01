@@ -1,0 +1,170 @@
+// Styling for field group orientations.
+
+@import '../../global/utils/init';
+
+// stylelint-disable selector-no-qualifying-type, declaration-no-important
+.rain-admin-theme {
+
+  .field-group-tabs-wrapper {
+    margin: 16px 0;
+  }
+
+  .horizontal-tabs,
+  .vertical-tabs,
+  .horizontal-tabs-list,
+  .vertical-tabs-list {
+    background-color: transparent;
+    border: 0;
+    position: relative;
+    
+    // Re-enabling description text included 
+    // in field group tabs.
+    .details-description {
+      font-size: 0.875rem;
+      max-height: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+  }
+
+  .vertical-tabs {
+    display: flex;
+  }
+
+  .horizontal-tabs-list,
+  .vertical-tabs__menu {
+
+    a {
+      border-bottom: 3px solid transparent;
+      color: $color-black;
+      font-size: 1rem;
+      padding: 10px;
+    }
+  }
+
+  .horizontal-tabs-pane,
+  .vertical-tabs__pane {
+    border: 0;
+    padding: 0;
+
+    > summary {
+      display: none;
+    }
+
+    > .details-wrapper {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  .horizontal-tabs-list::after {
+    background-color: $color-faint-gray;
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 3px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: $zi-ground;
+  }
+
+  ul.horizontal-tabs-list li,
+  .horizontal-tab-button {
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    position: relative;
+    z-index: $zi-lowest;
+
+    > a {
+      padding: 14px 20px 10px;
+    }
+
+    > a strong {
+      font-weight: $font-weight-normal;
+    }
+
+    &.selected a,
+    &.selected a:focus,
+    &.selected a:hover {
+      border-bottom-color: $color-bright-blue;
+      padding: 14px 20px 10px;
+    }
+
+    &.selected > a strong {
+      font-weight: $font-weight-bold;
+    }
+
+    a:hover,
+    a:focus {
+      background: rgba($color-bright-blue, 0.25);
+      border-bottom-color: $color-bright-blue-50;
+    }
+  }
+
+  .vertical-tabs__menu {
+    border: 1px solid $color-pale-gray;
+    margin: 0;
+  }
+
+  .vertical-tabs__menu-item,
+  .vertical-tabs__menu-item.first,
+  .vertical-tabs__menu-item.last {
+    background: none;
+    border: 0;
+    border-radius: 0;
+
+    a,
+    a:focus,
+    a:hover {
+      background: none;
+      border-radius: 0;
+      text-shadow: none;
+    }
+  }
+
+  .vertical-tabs__menu-item.is-selected {
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
+
+    &::after {
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 15px solid $color-bright-blue;
+      bottom: calc(50% - 10px);
+      content: '';
+      display: block;
+      height: 0;
+      position: absolute;
+      right: -15px;
+      width: 0;
+      z-index: $zi-high;
+    }
+
+    * {
+      color: $color-white;
+    }
+
+    a,
+    a:focus,
+    a:hover {
+      background-color: $color-bright-blue;
+      color: $color-white;
+    }
+  }
+
+  .vertical-tabs__panes {
+    background-color: transparent;
+    border: 1px solid $color-pale-gray;
+    border-left-width: 3px;
+    border-radius: 0;
+    margin: 0;
+    padding: 0 0 0 30px;
+    position: relative;
+    width: 100%;
+    z-index: $zi-ground;
+  }
+}
+// stylelint-enable selector-no-qualifying-type, declaration-no-important

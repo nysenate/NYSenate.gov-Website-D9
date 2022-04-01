@@ -1,0 +1,105 @@
+
+@import 'functions';
+
+/* Colors */
+
+/* stylelint-disable plugin/no-browser-hacks */
+$primary-color: rgb(18, 147, 201); /* #1293C9 */
+$primary-color-intense: rgb(0, 159, 227); /* #009FE3 */
+$primary-color-dark: rgb(12, 92, 127); /* #0C5C7F */
+$primary-color-darker: rgb(7, 54, 74); /* #07364A */
+$primary-color-darkest: rgb(0, 35, 55); /* #002337 */
+$primary-color-light: #75caee; /* #75caee */
+$primary-color-lighter-2: #b1d0ee;
+$primary-color-lighter: rgb(212, 237, 252); /* #D4EDFC */
+$primary-color-lightest: rgb(234, 246, 254); /* #EAF6FE */
+
+$gray-medium: rgb(151, 151, 151); /* #979797 */
+$gray-light: rgb(191, 191, 191); /* #BFBFBF */
+$gray-lighter: rgb(218, 224, 227); /* #DAE0E3 */
+$gray-lightest: rgb(250, 250, 250); /* #FAFAFA */
+
+$text-color: $primary-color-darker;
+
+/* Fonts */
+$font-size-root: 16px;
+$font-size-base: 0.8125rem; /* 13px */
+
+$font-size-small: 0.6875rem; /* 13px */
+$font-size-tiny: 0.5625rem; /* 9px */
+
+$font-family: "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
+
+/* Rounded up, since chrome treats 19.9998 as 19. Only three digits for firefox */
+$line-height-base: 1.539; /* 20px/13px */
+
+/* Spacing */
+$base-space: 0.625rem; /* 10px/16px */
+$base-space-2x: 1.25rem; /* 20px/16px */
+
+$base-space-80pct: 0.5rem; /* 8px/16px */
+
+$base-border-radius: 4px;
+
+/* Device breakpoints */
+
+@mixin for-phone-only {
+  @media (max-width: 599px) { @content; }
+}
+@mixin for-tablet-portrait-and-up {
+  @media (min-width: 600px) { @content; }
+}
+@mixin for-tablet-portrait-only {
+  @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) { @content; }
+}
+@mixin for-tablet-landscape-and-up {
+  @media (min-width: 900px) { @content; }
+}
+@mixin for-tablet-landscape-up-to-desktop {
+  @media (min-width: 900px) and (max-width: 1199px) { @content; }
+}
+@mixin for-big-tablet-landscape-and-up {
+  @media (min-width: 1024px) { @content; }
+}
+@mixin for-desktop-and-up {
+  @media (min-width: 1200px) { @content; }
+}
+@mixin for-big-desktop-and-up {
+  @media (min-width: 1600px) { @content; }
+}
+
+/**
+ * Media screen size defined by base drupal themes to adjust style for tablets and phones.
+ */
+@mixin for-drupal-tablet-and-phone {
+  @media screen and (max-width: 600px) { @content; }
+}
+
+/**
+ * Mixin for inline SVG button icon.
+ *
+ * $svg is SVG string, replacement variables are maps with key=>value, where keys will be replaced with value
+ * for 3 possible states (default color, hover + active + focus color and disabled color).
+ */
+@mixin inline-svg-button($svg, $replace_colors, $replace_hover_colors, $replace_disabled_colors) {
+  background-image: svg-url(str-replace-multiple($svg, $replace_colors));
+
+  &.button--highlight, // Used for paragraphs.js edit button hover.
+  &:hover,
+  &:active,
+  &:focus {
+    background-image: svg-url(str-replace-multiple($svg, $replace_hover_colors));
+  }
+
+  &:disabled,
+  &:disabled:active,
+  &:disabled:hover,
+  &.is-disabled,
+  &.is-disabled:active,
+  &.is-disabled:hover {
+    background-image: svg-url(str-replace-multiple($svg, $replace_disabled_colors));
+  }
+}
+
+/* toolbar */
+$toolbar-vertical-width: 320px;

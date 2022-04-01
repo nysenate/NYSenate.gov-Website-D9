@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+
+before_install:
+  - composer --verbose self-update
+  - composer --version
+
+install:
+  - git clone https://github.com/drupal-composer/drupal-project.git /tmp/workspace
+  - cp .travis.composer.json /tmp/workspace/composer.json
+  - cd /tmp/workspace
+  - composer require drupal/name dev-8.x-1.x#$TRAVIS_COMMIT
+  - composer --verbose install
+
+script:
+  - cd /tmp/workspace
+  - ./../vendor/bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite

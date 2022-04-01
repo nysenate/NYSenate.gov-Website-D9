@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Conditional fields module's updates.
+ */
+
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Removes unused configuration.
+ */
+function conditional_fields_update_8001() {
+  $cf_service = \Drupal::service('conditional_fields.controller');
+  $bundle_info = \Drupal::service('entity_type.bundle.info');
+  $entity_types = $cf_service->getEntityTypes();
+  foreach ($entity_types as $entity_type) {
+    $etid = $entity_type->id();
+    $bundles = $bundle_info->getBundleInfo($etid);
+    foreach ($bundles as $bundle_name => $bundle) {
+      /** @var \Drupal\Core\Entity\Entity\EntityFormDisplay  $entity */
+      $entity = \Drupal::entityTypeManager()
+        ->getStorage('entity_form_display')
+        ->load("$etid.$bundle_name.default");
+      // Replace keys.
+      if ($entity instanceof EntityInterface) {
+        _conditional_fields_update_conditional_fields_settings($entity);
+      }
+      if (is_null($entity)) {
+        continue;
+      }
+    }
+  }
+}
+
+/**
+ * Updates conditional fields entity's settings.
+ *
+ * @param \Drupal\Core\Entity\Entity\EntityFormDisplayInterface $entity
+ *   Config entity to update.
+ */
+function _conditional_fields_update_conditional_fields_settings(EntityFormDisplayInterface &$entity) {
+  $needs_save = FALSE;
+
+  foreach ($entity->getComponents() as $key => $content) {
+
+    if (empty($content['third_party_settings']['conditional_fields'])) {
+      continue;
+    }
+
+    foreach ($content['third_party_settings']['conditional_fields'] as $cid => $condition) {
+      foreach ($condition['settings'] as $settings_key => $value) {
+        if (strpos($settings_key, 'element_') !== FALSE) {
+          $needs_save = TRUE;
+          unset($content['third_party_settings']['conditional_fields'][$cid]['settings'][$settings_key]);
+        }
+      }
+    }
+
+    $entity->setComponent($key, $content);
+  }
+
+  if ($needs_save) {
+    $entity->save();
+  }
+}

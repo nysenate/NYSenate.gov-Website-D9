@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Default theme implementation for name_item_list.
+ *
+ * Available variables:
+ *   - items: Keyed array of name components.
+ *   - settings: Additional settings to control the parser.
+ *   - original_count: Number of items before other preprocessing occur.
+ *   - etal: Preprocessed Et-al abbreviation.
+ *   - delimiter: Preprocessed delimiter.
+ *   - items_count (optional): Number of items after other preprocessing have occured.
+ *   - item (optional): Single item when only one name component is present.
+ *   - name (optional): Available when there is only one items_count.
+ *   - names (optional): Available when there is more than one items_count.
+ *   - and_ (optional): Preprocessed "And" separator.
+ *
+ * @see template_preprocess_name_item_list()
+ * @ingroup themeable
+ */
+#}
+{% if items %}
+  {% if original_count == 1 %}
+    {{ item }}
+  {% else %}
+    {% if original_count > settings.multiple_el_al_min %}
+      {% if items_count == 1 %}
+        {{ '@name @etal'|t({'@name': name, '@etal': etal}) }}
+      {% else %}
+        {{ '@names@delimiter @etal'|t({'@names': names, '@delimiter': delimiter, '@etal': etal}) }}
+      {% endif %}
+    {% else %}
+      {# Strange rule from http://citationstyles.org/downloads/specification.html. #}
+      {% if (settings.multiple_delimiter_precedes_last == 'contextual' and original_count > 2) or settings.multiple_delimiter_precedes_last == 'always' %}
+        {{ '@names@delimiter @and @lastname'|t({'@names': names, '@delimiter': delimiter, '@and': and_, '@lastname': lastname}) }}
+      {% else %}
+        {{ '@names @and @lastname'|t({'@names': names, '@and': and_, '@lastname': lastname}) }}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endif %}

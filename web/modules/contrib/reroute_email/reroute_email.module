@@ -1,0 +1,370 @@
+<?php
+
+/**
+ * @file
+ * Intercepts all outgoing emails to be rerouted to a configurable destination.
+ */
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+define('REROUTE_EMAIL_ENABLE', 'enable');
+define('REROUTE_EMAIL_ADDRESS', 'address');
+define('REROUTE_EMAIL_ALLOWLIST', 'allowed');
+define('REROUTE_EMAIL_ROLES', 'roles');
+define('REROUTE_EMAIL_DESCRIPTION', 'description');
+define('REROUTE_EMAIL_MESSAGE', 'message');
+define('REROUTE_EMAIL_MAILKEYS', 'mailkeys');
+define('REROUTE_EMAIL_MAILKEYS_SKIP', 'mailkeys_skip');
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Ensure reroute_email runs last when hook_mail_alter is invoked.
+ */
+function reroute_email_module_implements_alter(&$implementations, $hook) {
+  // Testing with isset is only necessary if module doesn't implement the hook.
+  if ($hook == 'mail_alter') {
+
+    // Move our hook implementation to the bottom.
+    $group = $implementations['reroute_email'];
+    unset($implementations['reroute_email']);
+    $implementations['reroute_email'] = $group;
+
+    // If the queue_mail module is installed, ensure that comes after ours so
+    // queued emails are still rerouted.
+    if (isset($implementations['queue_mail'])) {
+      $group = $implementations['queue_mail'];
+      unset($implementations['queue_mail']);
+      $implementations['queue_mail'] = $group;
+    }
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Alter destination of outgoing emails if reroute_email is enabled.
+ */
+function reroute_email_mail_alter(&$message) {
+  global $base_url;
+  $config = \Drupal::config('reroute_email.settings');
+
+  if (empty($message) || !is_array($message)) {
+    return;
+  }
+
+  // Allow other modules to decide whether the email should be rerouted by
+  // specify a special header 'X-Rerouted-Force' to TRUE or FALSE. Any module
+  // can add this header to any own emails in hook_mail or any other emails in
+  // hook_mail_alter() implementations.
+  if (!empty($message['headers']) && isset($message['headers']['X-Rerouted-Force'])) {
+    if (FALSE === (bool) $message['headers']['X-Rerouted-Force']) {
+      return;
+    }
+
+    // We ignore all module settings if X-Rerouted-Force header was set to TRUE.
+  }
+
+  // There is no value for X-Rerouted-Force header in the message. Let's
+  // determine if the message should be rerouted according to the module
+  // settings values.
+  elseif (reroute_email_check($message) === FALSE) {
+    return;
+  }
+
+  $mailkey = $message['id'] ?? t('[mail id] is missing');
+  $to = $message['to'] ?? t('[to] is missing');
+
+  $message['headers']['X-Rerouted-Mail-Key'] = $mailkey;
+  $message['headers']['X-Rerouted-Website'] = $base_url;
+
+  // Unset Bcc and Cc fields to prevent emails from going to those addresses.
+  if (isset($message['headers']) && is_array($message['headers'])) {
+
+    // Ensure we catch all Cc and Bcc headers, regardless of case,
+    // and protecting against multiple instances of the "same" header.
+    $header_keys = [];
+    foreach (array_keys($message['headers']) as $key) {
+      $header_keys[strtolower($key)][] = $key;
+    }
+
+    if (!empty($header_keys['cc'])) {
+      foreach ($header_keys['cc'] as $header) {
+        $message['headers']['X-Rerouted-Original-cc'] = $message['headers'][$header];
+        unset($message['headers'][$header]);
+      }
+    }
+    if (!empty($header_keys['bcc'])) {
+      foreach ($header_keys['bcc'] as $header) {
+        $message['headers']['X-Rerouted-Original-bcc'] = $message['headers'][$header];
+        unset($message['headers'][$header]);
+      }
+    }
+  }
+
+  // Get reroute_email_address, or use system.site.mail if not set.
+  $rerouting_addresses = $config->get(REROUTE_EMAIL_ADDRESS);
+  if (NULL === $rerouting_addresses) {
+    $rerouting_addresses = \Drupal::config('system.site')->get('mail');
+  }
+  $message['headers']['X-Rerouted-Original-to'] = $to;
+  $message['to'] = $rerouting_addresses;
+
+  // Format a message to show at the top.
+  if ($config->get(REROUTE_EMAIL_DESCRIPTION)) {
+    $message_lines = [
+      t('This email was rerouted.'),
+      t('Web site: @site', ['@site' => $base_url]),
+      t('Mail key: @key', ['@key' => $mailkey]),
+      t('Originally to: @to', ['@to' => $to]),
+    ];
+
+    // Add Cc/Bcc values to the message only if they are set.
+    if (!empty($message['headers']['X-Rerouted-Original-cc'])) {
+      $message_lines[] = t('Originally cc: @cc', ['@cc' => $message['headers']['X-Rerouted-Original-cc']]);
+    }
+    if (!empty($message['headers']['X-Rerouted-Original-bcc'])) {
+      $message_lines[] = t('Originally bcc: @bcc', ['@bcc' => $message['headers']['X-Rerouted-Original-bcc']]);
+    }
+
+    // Simple separator between reroute and original messages.
+    $message_lines[] = '-----------------------';
+    $message_lines[] = '';
+
+    $msg = implode(PHP_EOL, $message_lines);
+
+    // Prepend explanation message to the body of the email. This must be
+    // handled differently depending on whether the body came in as a
+    // string or an array. If it came in as a string (despite the fact it
+    // should be an array) we'll respect that and leave it as a string.
+    if (is_string($message['body'])) {
+      $message['body'] = $msg . $message['body'];
+    }
+    else {
+      array_unshift($message['body'], $msg);
+    }
+  }
+
+  // Abort sending of the email if the no rerouting addresses provided.
+  if ($rerouting_addresses === '') {
+    $message['send'] = FALSE;
+  }
+
+  // If configured, display a message to users to let them know.
+  if ($config->get(REROUTE_EMAIL_MESSAGE)) {
+    \Drupal::messenger()->addMessage(t('An email (ID: %message_id) either aborted or rerouted to the configured address. Site administrators can check the recent log entries for complete details on the rerouted email. For more details please refer to Reroute Email settings.', ['%message_id' => $message['id']]));
+  }
+
+  // Extensive params keys cause OOM error in var_export().
+  unset($message['params']);
+
+  // Simplify subject to avoid OOM error in var_export().
+  if ($message['subject'] instanceof TranslatableMarkup) {
+    $message['subject'] = $message['subject']->render();
+  }
+
+  // Record a variable dump of the email in the recent log entries.
+  \Drupal::logger('reroute_email')
+    ->notice('An email (ID: %message_id) was either rerouted or aborted.<br/>Detailed email data: Array $message <pre>@message</pre>', [
+      '%message_id' => $message['id'],
+      '@message' => var_export($message, TRUE),
+    ]);
+}
+
+/**
+ * Implements hook_mail().
+ */
+function reroute_email_mail($key, &$message, $params) {
+  if ($message['id'] !== 'reroute_email_test_email_form') {
+    return;
+  }
+
+  if (!empty($params['cc'])) {
+    $message['headers']['cc'] = $params['cc'];
+  }
+  if (!empty($params['bcc'])) {
+    $message['headers']['bcc'] = $params['bcc'];
+  }
+  $message['subject'] = $params['subject'];
+  $message['body'][] = $params['body'];
+}
+
+/**
+ * Helper function to determine a need to reroute.
+ *
+ * @param array &$message
+ *   A message array, as described in hook_mail_alter().
+ *
+ * @return bool
+ *   Return TRUE if should be rerouted, FALSE otherwise.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function reroute_email_check(array &$message): bool {
+  // Disable rerouting according to admin settings.
+  $config = \Drupal::config('reroute_email.settings');
+  if (empty($config->get(REROUTE_EMAIL_ENABLE))) {
+    return FALSE;
+  }
+
+  // Check configured mail keys filters.
+  $keys = reroute_email_split_string($config->get(REROUTE_EMAIL_MAILKEYS, ''));
+  if (!empty($keys) && !(in_array($message['id'], $keys, TRUE) || in_array($message['module'], $keys, TRUE))) {
+    $message['headers']['X-Rerouted-Reason'] = 'MAILKEY-ALLOWED';
+    $message['headers']['X-Rerouted-Status'] = 'NOT-REROUTED';
+    return FALSE;
+  }
+
+  // Check configured mail keys to skip.
+  $keys_skip = reroute_email_split_string($config->get(REROUTE_EMAIL_MAILKEYS_SKIP, ''));
+  if (!empty($keys_skip) && (in_array($message['id'], $keys_skip, TRUE) || in_array($message['module'], $keys_skip, TRUE))) {
+    $message['headers']['X-Rerouted-Reason'] = 'MAILKEY-SKIPPED';
+    $message['headers']['X-Rerouted-Status'] = 'NOT-REROUTED';
+    return FALSE;
+  }
+
+  // Split addresses into arrays.
+  $original_addresses = reroute_email_extract_addresses($message['to']);
+  foreach ($message['headers'] as $header => $value) {
+    if (in_array(mb_strtolower($header), ['cc', 'bcc'], TRUE)) {
+      $original_addresses = array_unique(array_merge($original_addresses, reroute_email_extract_addresses($message['headers'][$header])));
+    }
+  }
+  $allowlisted_addresses = reroute_email_split_string($config->get(REROUTE_EMAIL_ALLOWLIST));
+  $allowlisted_patterns = [];
+
+  // Split allowed domains and partial addresses patterns from the allowlist.
+  foreach ($allowlisted_addresses as $key => $email) {
+    if (substr_count($email, '*') > 0) {
+      $email = '/^' . preg_quote($email, '/') . '$/';
+      $allowlisted_patterns[$email] = str_replace('\*', '[^@]+', $email);
+      unset($allowlisted_addresses[$key]);
+    }
+  }
+
+  // Compare original addresses with the allow list.
+  $invalid = 0;
+  foreach ($original_addresses as $email) {
+
+    // Just ignore all invalid email addresses.
+    if (\Drupal::service('email.validator')->isValid($email) === FALSE) {
+      $invalid++;
+      continue;
+    }
+
+    // Check email in the allowlist.
+    if (in_array($email, $allowlisted_addresses, TRUE)) {
+      $message['headers']['X-Rerouted-Reason'] = 'ALLOWLISTED';
+      continue;
+    }
+    // Check allowed domains and partial addresses patterns from the allowlist.
+    foreach ($allowlisted_patterns as $pattern) {
+      if (preg_match($pattern, $email)) {
+        $message['headers']['X-Rerouted-Reason'] = 'PATTERN';
+        continue 2;
+      }
+    }
+
+    // Check users by roles.
+    if (reroute_email_check_email_by_permission($email)) {
+      $message['headers']['X-Rerouted-Reason'] = 'ROLE';
+      continue;
+    }
+
+    // No need to continue if at least one address should be rerouted.
+    $message['headers']['X-Rerouted-Status'] = 'REROUTED';
+    return TRUE;
+  }
+
+  // Reroute if all addresses are invalid.
+  if (count($original_addresses) === $invalid) {
+    $message['headers']['X-Rerouted-Reason'] = 'INVALID-ADDRESSES';
+    $message['headers']['X-Rerouted-Status'] = 'REROUTED';
+    return TRUE;
+  }
+
+  // All email addresses are in the allowed list.
+  $message['headers']['X-Rerouted-Status'] = 'NOT-REROUTED';
+  return FALSE;
+}
+
+/**
+ * Check email association to a user with the skipped role.
+ *
+ * @param string $email
+ *   Email to be checked.
+ *
+ * @return bool
+ *   TRUE for emails that should be allowlisted and not rerouted.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function reroute_email_check_email_by_permission(string $email): bool {
+  $users = \Drupal::entityTypeManager()
+    ->getStorage('user')
+    ->loadByProperties(['mail' => $email]);
+  if (empty($users)) {
+    return FALSE;
+  }
+
+  /** @var \Drupal\user\UserInterface $account */
+  $account = reset($users);
+
+  $roles = (array) \Drupal::config('reroute_email.settings')->get(REROUTE_EMAIL_ROLES);
+  foreach ($roles as $role) {
+    if ($account->hasRole($role)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Split a string into an array by pre defined allowed delimiters.
+ *
+ * Items may be separated by any number and combination of:
+ * spaces, commas, semicolons, or newlines.
+ *
+ * @param string|null $string
+ *   A string to be split into an array.
+ *
+ * @return array
+ *   An array of unique values from a string.
+ */
+function reroute_email_split_string(?string $string): array {
+
+  // Split string into array of emails.
+  $addresses = preg_split('/[\s,;\n]+/', $string, -1, PREG_SPLIT_NO_EMPTY);
+
+  // Remove duplications.
+  $addresses = array_unique($addresses);
+
+  // Make everything lowercased.
+  return array_map('mb_strtolower', $addresses);
+}
+
+/**
+ * Extract email addresses from a string which may include display names.
+ *
+ * Items may be separated by any number and combination of:
+ * spaces, commas, semicolons, or newlines.
+ *
+ * @param string|null $string
+ *   A string to be split into an array.
+ *
+ * @return array
+ *   An array of unique addresses from a string.
+ */
+function reroute_email_extract_addresses(?string $string): array {
+
+  // Split string (with display names) into array of emails.
+  preg_match_all('/[^\s,;\n<]+@[^\s,;\n>]+/', $string, $addresses, PREG_PATTERN_ORDER);
+
+  // Remove duplications.
+  $addresses = array_unique($addresses);
+
+  // Make everything lowercased.
+  return array_map('mb_strtolower', $addresses[0]);
+}

@@ -1,0 +1,69 @@
+uuid: 9a3c8e12-5201-4b4d-91eb-d2e91fa87229
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.carousel
+    - field.field.node.press_release.body
+    - field.field.node.press_release.field_authors
+    - field.field.node.press_release.field_meta_tags
+    - field.field.node.press_release.field_short_title
+    - field.field.node.press_release.field_summary
+    - field.field.node.press_release.field_tags
+    - field.field.node.press_release.field_thumbnail
+    - node.type.press_release
+  module:
+    - user
+_core:
+  default_config_hash: rZ_emzSAJxQjygbM91vvZ98NkBTJXs6JhEcrm7NgflE
+id: node.press_release.carousel
+targetEntityType: node
+bundle: press_release
+mode: carousel
+content:
+  field_authors:
+    weight: 0
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_short_title:
+    type: string
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_summary:
+    type: basic_string
+    weight: 5
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_tags:
+    weight: 2
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 4
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_meta_tags: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

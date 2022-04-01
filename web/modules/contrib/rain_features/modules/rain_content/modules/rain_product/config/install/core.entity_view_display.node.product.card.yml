@@ -1,0 +1,78 @@
+uuid: 5db470d8-428c-4d6b-9411-c33cb8931382
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.product.body
+    - field.field.node.product.field_link
+    - field.field.node.product.field_meta_tags
+    - field.field.node.product.field_product_desc
+    - field.field.node.product.field_product_media
+    - field.field.node.product.field_short_title
+    - field.field.node.product.field_summary
+    - field.field.node.product.field_thumbnail
+    - node.type.product
+  module:
+    - link
+    - text
+    - user
+_core:
+  default_config_hash: EqPUSd3MHoNYXLy7DVjyhRd7mcv93aoJVEQLuui-XXM
+id: node.product.card
+targetEntityType: node
+bundle: product
+mode: card
+content:
+  field_link:
+    weight: 4
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_product_desc:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_product_media:
+    type: entity_reference_entity_view
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+  field_summary:
+    type: basic_string
+    weight: 3
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      view_mode: thumbnail
+      link: false
+    third_party_settings: {  }
+hidden:
+  addtoany: true
+  body: true
+  field_meta_tags: true
+  field_short_title: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

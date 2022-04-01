@@ -1,0 +1,184 @@
+@import '../../global/utils/init';
+
+.site-footer {
+  color: $color-white;
+  background-color: $color-bg-black;
+  margin-top: 80px;
+
+  .site-logo {
+    width: auto;
+    margin: 0;
+
+    @include breakpoint($bp-sm) {
+      margin-right: 30px;
+    }
+
+    g {
+      fill: $color-white;
+    }
+  }
+
+  .site-branding{
+    justify-content: center;
+
+    @include breakpoint($bp-sm) {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.site-footer__inner {
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  @include max-width;
+
+  @include breakpoint($bp-sm) {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    flex-direction: row;
+  }
+
+  .menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    flex-direction: column;
+    text-align: center;
+
+    @include breakpoint($bp-sm) {
+      flex-direction: row;
+      text-align: left;
+    }
+
+    .menu-item {
+
+      &:not(:last-of-type) {
+        margin-bottom: 15px;
+
+        @include breakpoint($bp-sm) {
+          margin-bottom: 0;
+          margin-right: 20px;
+        }
+      }
+
+      a {
+        color: $color-white;
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.site-footer__text {
+  margin: 15px;
+  flex-shrink: 3;
+}
+
+.site-footer__menus {
+  flex-shrink: 0;
+}
+
+.site-footer__social {
+  display: flex;
+  justify-content: center;
+  color: $color-white;
+  padding: 15px;
+  flex-direction: row;
+  margin-top: 50px;
+
+  @include breakpoint($bp-sm) {
+    margin: 15px 0;
+    padding: 0;
+  }
+
+  .menu {
+    flex-direction: row;
+    justify-content: space-between;
+
+    .menu-item{
+      @include breakpoint($bp-under-sm) {
+        margin: 0 20px;
+      }
+
+      &:not(:last-of-type) {
+        @include breakpoint($bp-sm) {
+          margin: 0;
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+}
+
+.site-footer__social-icon {
+  fill: $color-white;
+
+  .icon {
+    width: 30px;
+    height: 30px;
+    max-width: 100%;
+
+    @include breakpoint($bp-lg) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}
+
+.site-footer__logo {
+  padding: 15px;
+  flex-shrink: 0;
+
+  @include breakpoint($bp-sm) {
+    margin: 15px;
+    padding: 0;
+  }
+
+  .site-name {
+    display: none;
+  }
+}
+
+.site-footer__addendum {
+  color: $color-white;
+  background-color: $color-bg-black;
+
+  .region-addendum {
+    align-items: center;
+    flex-direction: column;
+
+    @include breakpoint($bp-sm) {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      flex: 1;
+      justify-content: flex-start;
+      flex-direction: row;
+      margin-left: 3rem;
+    }
+
+    #block-copyright-message{
+      text-align: center;
+
+      @include breakpoint($bp-sm) {
+        margin-right: 20px;
+        text-align: left;
+      }
+
+      p{
+        margin: 40px 0;
+
+        @include breakpoint($bp-sm) {
+          margin: 1em 0;
+        }
+      }
+    }
+  }
+}

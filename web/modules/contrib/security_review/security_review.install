@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the security_review module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\security_review\CheckResult;
+
+/**
+ * Implements hook_install().
+ */
+function security_review_install() {
+  // Remind the user to set the permissions.
+  \Drupal::messenger()->addMessage(
+    t('Security Review module enabled. You should first set the module access permissions at <a href=":url">admin/people/permissions</a>. Be sure to grant permissions to trusted users only as this module can show sensitive site information.',
+      [':url' => Url::fromRoute('user.admin_permissions')->toString()]
+    )
+  );
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function security_review_requirements($phase) {
+  $requirements = [];
+
+  // Provides a Status Report entry.
+  if ($phase == 'runtime') {
+    /** @var \Drupal\security_review\Checklist $checklist */
+    $checklist = Drupal::service('security_review.checklist');
+
+    $failed_checks = FALSE;
+    $no_results = TRUE;
+
+    // Looks for failed checks.
+    foreach ($checklist->getEnabledChecks() as $check) {
+      $result = $check->lastResult();
+      if ($result instanceof CheckResult) {
+        $no_results = FALSE;
+        if ($result->result() === CheckResult::FAIL) {
+          $failed_checks = TRUE;
+          break;
+        }
+      }
+    }
+
+    $module_url = Url::fromRoute('security_review')->toString();
+    if ($no_results) {
+      $severity = REQUIREMENT_WARNING;
+      $value = t(
+        'The Security Review checklist has not been run. <a href=":url">Run the checklist</a>',
+        [':url' => $module_url]
+      );
+    }
+    elseif ($failed_checks) {
+      $severity = REQUIREMENT_WARNING;
+      $value = t(
+        'There are failed Security Review checks. <a href=":url">Review the checklist</a>',
+        [':url' => $module_url]
+      );
+    }
+    else {
+      $severity = REQUIREMENT_OK;
+      $value = t(
+        'Passing all non-ignored Security Review checks. <a href=":url">Review the checklist</a>',
+        [':url' => $module_url]
+      );
+    }
+    $requirements['security_review'] = [
+      'title' => t('Security Review'),
+      'severity' => $severity,
+      'value' => $value,
+    ];
+  }
+
+  return $requirements;
+}

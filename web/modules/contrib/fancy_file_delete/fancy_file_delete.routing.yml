@@ -1,0 +1,14 @@
+fancy_file_delete.info:
+  path: /admin/config/content/fancy_file_delete
+  defaults:
+    _title: 'Fancy File Delete'
+    _controller: '\Drupal\fancy_file_delete\Controller\DefaultController::info'
+  requirements:
+    _permission: 'administer fancy file delete'
+fancy_file_delete.manual:
+  path: /admin/config/content/fancy_file_delete/manual
+  defaults:
+    _title: Manual
+    _form: \Drupal\fancy_file_delete\Form\FancyFileDeleteManual
+  requirements:
+    _permission: 'administer fancy file delete'

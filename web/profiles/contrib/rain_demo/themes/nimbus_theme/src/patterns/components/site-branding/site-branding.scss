@@ -1,0 +1,38 @@
+@import '../../global/utils/init';
+
+.site-branding {
+  display: flex;
+  align-items: center;
+}
+
+.site-logo {
+  margin-right: 30px;
+  width: auto;
+
+  @include breakpoint($bp-md) {
+    margin-right: 45px;
+  }
+
+  svg {
+    fill: $color-white;
+    height: 4rem;
+    width: auto;
+
+    @include breakpoint($bp-sm) {
+      height: 74px;
+    }
+  }
+}
+
+.site-name {
+
+  a {
+    color: $color-tundora;
+    font-size: 1.75rem;
+    text-decoration: none;
+
+    @include breakpoint($bp-md) {
+      font-size: 2.5rem;
+    }
+  }
+}

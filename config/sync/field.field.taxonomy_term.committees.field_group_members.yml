@@ -1,0 +1,37 @@
+uuid: a3a93c78-8873-4e03-bf50-9b7bca06aa87
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_group_members
+    - paragraphs.paragraphs_type.misc_legislative_group_members
+    - taxonomy.vocabulary.committees
+  module:
+    - entity_reference_revisions
+id: taxonomy_term.committees.field_group_members
+field_name: field_group_members
+entity_type: taxonomy_term
+bundle: committees
+label: 'Misc Legislative Group Members'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      misc_legislative_group_members: misc_legislative_group_members
+    negate: 0
+    target_bundles_drag_drop:
+      committee_featured_legislation:
+        weight: 4
+        enabled: false
+      members:
+        weight: 5
+        enabled: false
+      misc_legislative_group_members:
+        weight: 6
+        enabled: true
+field_type: entity_reference_revisions

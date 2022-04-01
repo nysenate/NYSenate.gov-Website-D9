@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Template for the right rail jumpnav.
+ *
+ * Variables:
+ * - items: An array that defines the jumpnav, containing:
+ *   - label: The fieldgroup label.
+ *   - name: The machine name of the fieldgroup.
+ *   - target: The target ID of the fieldgroup.
+ */
+#}
+<ul class="jumpnav">
+  {% for item in items %}
+    <li class="jumpnav__item">
+      <a class="jumpnav__link" href="#{{ item.target }}">{{ item.label }}</a>
+    </li>
+  {% endfor %}
+</ul>

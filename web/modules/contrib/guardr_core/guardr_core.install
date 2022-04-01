@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the guardr_core module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function guardr_core_install() {
+  $module_handler = \Drupal::service('module_handler');
+
+  // Account settings.
+  // Disable the personal contact form by default for new users for improved
+  // default privacy.
+  if ($module_handler->moduleExists('contact')) {
+    $config = \Drupal::configFactory()->getEditable('contact.settings');
+    $config->set('user_default_enabled', FALSE)->save();
+  }
+  // Ensure that only Administrators can register accounts.
+  if ($module_handler->moduleExists('user')) {
+    $config = \Drupal::configFactory()->getEditable('user.settings');
+    $config->set('register', 'admin_only')->save();
+  }
+
+  // Logging and errors.
+  // Change dblog to save 1,000,000 log entries for improved system monitoring.
+  if ($module_handler->moduleExists('dblog')) {
+    $config = \Drupal::configFactory()->getEditable('dblog.settings');
+    $config->set('row_limit', 1000000)->save();
+  }
+
+  // Update manager settings.
+  // Enable check for updates of uninstalled modules and themes.
+  // Set email notification threshhold to security updates.
+  if ($module_handler->moduleExists('update')) {
+    $config = \Drupal::configFactory()->getEditable('update.settings');
+    $config
+      ->set('check.disabled_extensions', TRUE)
+      ->set('notification.threshold', 'security')
+      ->save();
+  }
+}

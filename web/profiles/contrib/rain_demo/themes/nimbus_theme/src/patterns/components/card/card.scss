@@ -1,0 +1,320 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+
+.block-content--type-card,
+.paragraph--type--card {
+  max-width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.media {
+  height: 100%;
+  width: 100%;
+}
+
+.card {
+  background-color: $color-white;
+
+  @include breakpoint($bp-sm) {
+
+    &.horizontal {
+      display: flex;
+
+      .card__media,
+      .card__content {
+        flex: 50%;
+        flex-basis: 0;
+        flex-grow: 1;
+      }
+    }
+  }
+
+  .card__media {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+
+// Styles for Wide variation of Card
+.card--wide {
+  // @include max-width;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem;
+
+  @include breakpoint($bp-sm) {
+    flex-direction: row;
+    padding: 0;
+  }
+
+  .card__media {
+    flex: 1;
+    margin-bottom: 0;
+
+    @include breakpoint($bp-sm) {
+      flex: none;
+      width: 50%;
+      max-height: 537px;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .card__content {
+    flex: 1;
+    margin: 0 22px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    color: $color-text-black;
+
+    @include breakpoint($bp-sm) {
+      margin: 0;
+      flex: none;
+      width: 50%;
+      max-width: none;
+      padding-left: 1.5rem;
+      padding-right: calc(1.5rem + ((100vw - 1440px) / 2));
+    }
+  }
+
+  .card__eyebrow {
+    margin-top: 0;
+    text-transform: uppercase;
+    color: $color-text-black;
+
+    @include breakpoint($bp-sm) {
+      margin-right: 1.5rem;
+    }
+
+    @include breakpoint($bp-lg) {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+  }
+
+  .card__title {
+    font-size: 2.4rem;
+    line-height: 1;
+    font-weight: bold;
+    letter-spacing: 1.2px;
+    color: $color-text-black;
+
+    @include breakpoint($bp-sm) {
+      font-size: 2.8rem;
+      max-width: 470px;
+      margin-right: 1.5rem;
+    }
+
+    @include breakpoint($bp-lg) {
+      font-size: 4rem;
+      margin-bottom: 26px;
+      max-width: 585px;
+    }
+  }
+
+  .body-text {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: $color-text-black;
+
+    @include breakpoint($bp-sm) {
+      font-size: 1.2rem;
+      max-width: 470px;
+      margin-right: 1.5rem;
+    }
+
+    @include breakpoint($bp-lg) {
+      max-width: 585px;
+      font-size: 1.5rem;
+    }
+  }
+
+  a {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 1rem;
+
+    @extend %cta-button;
+    border-color: $color-link-black;
+    color: $color-link-black;
+    transition: all 0.25s;
+
+    @include breakpoint($bp-sm) {
+      margin-top: 40px;
+      margin-right: 1.5rem;
+      font-size: 1.2rem;
+    }
+
+    @include breakpoint($bp-lg) {
+      font-size: 1.5rem;
+    }
+
+    &:hover {
+      border-color: $color-blue;
+      color: $color-blue;
+    }
+  }
+}
+
+.card--media-right {
+  background-color: $color-bg-black;
+
+  &::before {
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: $color-text-black;
+    z-index: -1;
+  }
+
+  @include breakpoint($bp-sm) {
+    flex-direction: row-reverse;
+    padding: 0;
+    padding-left: 0;
+  }
+
+  .card__eyebrow,
+  .card__title,
+  .card__subhead,
+  .body-text {
+    color: $color-white;
+
+    @include breakpoint($bp-sm) {
+      margin-left: 1.5rem;
+    }
+  }
+
+  .card__media {
+    @include breakpoint($bp-sm) {
+      margin-left: 0;
+      flex: none;
+      width: 50%;
+    }
+  }
+
+  .card__content {
+    padding-top: 30px;
+    padding-bottom: 40px;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: none;
+    flex: none;
+
+    @include breakpoint($bp-sm) {
+      padding-left: calc(1.5rem + ((100vw - 1440px) / 2));
+      padding-right: 1.5rem;
+      width: 50%;
+    }
+  }
+
+  a {
+    color: $color-white;
+    border-color: $color-white;
+    transition: all 0.25s;
+
+    @include breakpoint($bp-sm) {
+      margin-left: 1.5rem;
+    }
+    
+    &:hover {
+      color: $color-blue;
+      border-color: $color-white;
+      background-color: $color-white;
+    }
+  }
+}
+
+.block-content--type-breaker {
+
+  .card {
+
+    &__content {
+      @include max-width;
+      padding: 0 1.5rem;
+    }
+
+    &__eyebrow {
+      color: $color-text-black;
+      font-family: 'Muli-Black', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 58px;
+      text-transform: uppercase;
+      margin: 0;
+
+      @include breakpoint($bp-sm) {
+        margin-bottom: 5px;
+      }
+    }
+
+    &__title {
+      color: $color-text-black;
+      font-family: 'Muli-Black', sans-serif;
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: 0;
+      line-height: 58px;
+      margin: 0;
+      margin-bottom: 5px;
+
+      @include breakpoint($bp-sm) {
+        font-size: 64px;
+        line-height: 70px;
+        margin-bottom: 12px;
+      }
+    }
+
+    .body-text {
+      color: $color-text-black;
+      font-family: 'Muli-Regular', sans-serif;
+      font-size: 21px;
+      font-weight: normal;
+      line-height: 30px;
+      margin-bottom: 30px;
+
+      @include breakpoint($bp-sm) {
+        font-size: 24px;
+        line-height: 36px;
+        margin-bottom: 50px;
+      }
+    }
+
+    &__link {
+      color: $color-link-black;
+      text-decoration: none;
+      font-family: 'Muli-Bold', sans-serif;
+      font-size: 21px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      padding: 1rem 2rem;
+      border: solid $color-link-black 1px;
+      display: inline-block;
+      border-radius: 30px;
+      transition: all 0.25s;
+
+      @include breakpoint($bp-sm) {
+        font-size: 24px;
+      }
+
+      &:hover {
+        color: $color-blue;
+        border-color: $color-white;
+        background-color: $color-white;
+      }
+    }
+  }
+}

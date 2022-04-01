@@ -1,0 +1,38 @@
+uuid: 02070aee-acdd-465c-bf35-8ce7b9bd5d21
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.landing.field_block
+    - field.field.node.landing.field_meta_tags
+    - field.field.node.landing.field_short_title
+    - field.field.node.landing.field_summary
+    - field.field.node.landing.field_thumbnail
+    - node.type.landing
+  module:
+    - entity_reference_revisions
+    - user
+_core:
+  default_config_hash: gvrR8Nj96hWoHWfseT73V4HH0ilyhmBMbP198hoSWf4
+id: node.landing.default
+targetEntityType: node
+bundle: landing
+mode: default
+content:
+  field_block:
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+hidden:
+  field_meta_tags: true
+  field_short_title: true
+  field_summary: true
+  field_thumbnail: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

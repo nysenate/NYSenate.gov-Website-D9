@@ -1,0 +1,37 @@
+uuid: 175e867a-8cb6-4edd-9bf4-d9eea7eba726
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.field.block_content.slider.field_slider_item
+    - field.field.block_content.slider.field_title
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: 3ozG_D0gfmziKcg9BGcZoxBoLEQmFTUZD_psw6yeeU4
+id: block_content.slider.default
+targetEntityType: block_content
+bundle: slider
+mode: default
+content:
+  field_slider_item:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: hero_media
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

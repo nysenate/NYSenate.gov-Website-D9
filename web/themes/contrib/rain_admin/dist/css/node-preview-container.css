@@ -1,0 +1,38 @@
+.node-preview-container {
+  background-color: #012635;
+  bottom: 0;
+  display: flex;
+  height: 60px;
+  top: auto; }
+  .node-preview-container > .node-preview-form-select {
+    align-items: center;
+    display: flex; }
+    .node-preview-container > .node-preview-form-select .node-preview-backlink {
+      align-items: center;
+      color: #fff;
+      display: flex;
+      padding-left: 10px;
+      text-decoration: underline; }
+      .node-preview-container > .node-preview-form-select .node-preview-backlink:focus, .node-preview-container > .node-preview-form-select .node-preview-backlink:hover {
+        color: #fff;
+        text-decoration: none; }
+      .node-preview-container > .node-preview-form-select .node-preview-backlink::before {
+        background-image: url("../images/icon-details-arrow--white.svg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 14px;
+        border-right: 0;
+        display: inline-block;
+        content: '';
+        height: 14px;
+        left: 0;
+        margin: 0 5px 0 0;
+        position: relative;
+        top: 1px;
+        transform: rotate(90deg);
+        width: 14px; }
+    .node-preview-container > .node-preview-form-select [type='submit'].form-submit {
+      display: none; }
+
+.node-preview-container-content {
+  padding-bottom: 60px; }

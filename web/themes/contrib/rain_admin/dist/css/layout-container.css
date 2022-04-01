@@ -1,0 +1,20 @@
+.layout-container {
+  margin: 0;
+  padding: 0; }
+
+.layout-container__region {
+  padding: 10px 20px; }
+  .layout-container__region + .layout-container__region {
+    padding-top: 0; }
+  .layout-container__region.layout-container__region--header {
+    background-color: #edf2f4;
+    padding-bottom: 0;
+    padding-top: 40px; }
+  @media screen and (min-width: 768px) {
+    .layout-container__region {
+      padding-left: 40px;
+      padding-right: 40px; } }
+  @media screen and (min-width: 900px) {
+    .layout-container__region {
+      padding-left: 60px;
+      padding-right: 60px; } }

@@ -8,12 +8,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Configuration form for nys_openleg module.
+ * Configuration form for nys_slack module.
  */
 class ConfigForm extends ConfigFormBase {
 
   /**
-   * A shortcut to the nys_openleg.settings config collection.
+   * A shortcut to the nys_slack.settings config collection.
    *
    * @var \Drupal\Core\Config\Config
    */

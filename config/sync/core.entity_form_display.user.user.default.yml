@@ -31,32 +31,32 @@ bundle: user
 mode: default
 content:
   account:
-    weight: 15
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   field_address:
     type: address_autocomplete
-    weight: 2
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   field_agree_to_terms:
     type: boolean_checkbox
-    weight: 4
+    weight: 5
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_dateofbirth:
     type: datetime_default
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_district:
     type: options_select
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -70,7 +70,7 @@ content:
     third_party_settings: {  }
   field_gender_user:
     type: options_select
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -90,7 +90,7 @@ content:
     third_party_settings: {  }
   field_ldap_username:
     type: string_textfield
-    weight: 13
+    weight: 14
     region: content
     settings:
       size: 60
@@ -105,25 +105,25 @@ content:
     third_party_settings: {  }
   field_senator_inbox_access:
     type: options_select
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   field_senator_management:
     type: options_select
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_senator_multiref:
     type: options_select
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   field_top_issue:
     type: entity_reference_autocomplete
-    weight: 7
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -133,20 +133,20 @@ content:
     third_party_settings: {  }
   field_user_receive_emails:
     type: boolean_checkbox
-    weight: 12
+    weight: 13
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_voting_auto_subscribe:
     type: boolean_checkbox
-    weight: 14
+    weight: 15
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   google_analytics:
-    weight: 3
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }

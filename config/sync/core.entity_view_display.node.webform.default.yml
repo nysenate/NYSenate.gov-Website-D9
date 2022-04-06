@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.webform.field_article_author
     - field.field.node.webform.field_byline
     - field.field.node.webform.field_committee
+    - field.field.node.webform.field_date
     - field.field.node.webform.field_expiration_date
     - field.field.node.webform.field_image_main
     - field.field.node.webform.field_issues
@@ -58,6 +59,15 @@ content:
       link: true
     third_party_settings: {  }
     weight: 8
+    region: content
+  field_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 12
     region: content
   field_expiration_date:
     type: datetime_default

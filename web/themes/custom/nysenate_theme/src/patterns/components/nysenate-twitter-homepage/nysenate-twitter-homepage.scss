@@ -1,0 +1,201 @@
+@import '../../global/utils/init';
+
+.nyesenate-twitter-homepage {
+  position: relative;
+  margin: 40px 0;
+  padding-bottom: 40px;
+
+  &__title {
+    color: $grey02;
+    font-size: 20px;
+    line-height: 1em;
+    padding-bottom: 20px;
+  }
+
+  &__header {
+    .upcoming-events-link {
+      position: absolute;
+      display: block;
+      top: auto;
+      right: 0;
+      bottom: 0;
+      font-size: 15px;
+      line-height: 18px;
+      color: $orange01;
+      text-transform: uppercase;
+      text-decoration: none;
+
+      &::after {
+        content: '\72';
+        font-family: 'senate_icons';
+        display: inline-block;
+        vertical-align: middle;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px;
+        margin-top: -2px;
+        font-size: 17px;
+        line-height: 12px;
+      }
+    }
+  }
+
+  &__items {
+    background-color: $grey06;
+    padding: 25px;
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid $grey05;
+      padding: 20px 0;
+
+      &:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+
+    .item-header {
+      display: block;
+      float: left;
+
+      .date-display {
+        text-transform: uppercase;
+        color: $grey02;
+        font-size: 16px;
+        line-height: 18px;
+
+        &.month {
+          clear: none;
+          border-top: 0;
+          padding: 0;
+          font-size: 12px;
+          color: $grey02;
+          text-transform: uppercase;
+          line-height: 18px;
+
+          &::before {
+            content: '/';
+            margin: 0 3px 0 5px;
+          }
+        }
+      }
+    }
+
+    .item-content {
+      .event {
+        clear: left;
+        border-top: 1px solid #d2d2d2;
+        padding: 12px 0;
+
+        &:first-child {
+          border-top: 0;
+        }
+
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+    }
+
+    .event-title {
+      margin: 0;
+
+      a {
+        font-size: 18px;
+        line-height: 26px;
+        color: $grey02;
+        display: block;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+@media #{$tablet} {
+  .nyesenate-twitter-homepage {
+    position: relative;
+    margin: 40px 0;
+    padding: 40px;
+    background-color: $grey06;
+
+    &__title {
+      font-size: 26px;
+      line-height: 1em;
+      padding-bottom: 15px;
+    }
+
+    &__header {
+      .upcoming-events-link {
+        top: 40px;
+        right: 40px;
+        bottom: auto;
+        line-height: 26px;
+
+        &::after {
+          margin-top: -4px;
+          font-size: 23px;
+          line-height: 16px;
+        }
+      }
+    }
+
+    &__items {
+      padding: 0;
+
+      .item {
+        @include clearfix;
+        border-top: 1px solid $grey05;
+        padding: 40px 0;
+        flex-direction: row;
+
+        &:first-child {
+          border-top: 1px solid $grey05;
+          padding-top: 40px;
+        }
+      }
+
+      .item-header {
+        width: 20%;
+
+        .date-display {
+          display: block;
+          font-size: 40px;
+          line-height: 26px;
+
+          &.month {
+            padding: 0;
+
+            font-size: 16px;
+            line-height: 1em;
+            letter-spacing: 0.1em;
+
+            &::before {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .item-content {
+        float: left;
+        width: 80%;
+
+        .event {
+          padding: 20px 0;
+
+          &:first-child {
+            padding-top: 0;
+          }
+        }
+      }
+    }
+  }
+}

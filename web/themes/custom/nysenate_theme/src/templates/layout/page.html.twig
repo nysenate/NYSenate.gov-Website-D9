@@ -43,8 +43,7 @@
  * @see html.html.twig
  */
 #}
-{{ attach_library('rain_theme/page-layout') }}
-{{ attach_library('rain_theme/site-footer') }}
+{{ attach_library('nysenate_theme/page-layout') }}
 {{ attach_library('nysenate_theme/nysenate-footer') }}
 {{ attach_library('nysenate_theme/nysenate-header') }}
 
@@ -68,7 +67,7 @@
 
   {{ page.help }}
 
-  <main role="main">
+  <main role="main" class="container">
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
     <div {{ attributes.addClass(layout_classes) }}>
       {{ page.content }}

@@ -40,6 +40,7 @@ libraries-override:
 # The "libraries:" section will add a library to _all_ pages.
 libraries:
   - rain_theme/global
+  - nysenate_theme/global
   # Example adding the webfonts library to every page.
   # See rain_theme.libraries.yml for more info.
   #- rain_theme/webfonts
@@ -55,6 +56,11 @@ components:
       - src/patterns/components
       - src/patterns/pages
       - src/templates
+    nysenate_theme:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates  
 
 # This section lists the regions defined in the theme (our base theme) default
 # page.html.twig and maintenance-page.html.twig files. The name before

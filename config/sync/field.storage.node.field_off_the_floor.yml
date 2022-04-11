@@ -1,24 +1,21 @@
-uuid: eda693d4-0185-4317-83c5-a751b05010e8
+uuid: 0081c606-c36d-4f9f-bc6f-669a094195c2
 langcode: en
 status: true
 dependencies:
   module:
-    - entity_reference_revisions
     - field_permissions
     - node
-    - paragraphs
 third_party_settings:
   field_permissions:
     permission_type: public
-id: node.field_paragraphs
-field_name: field_paragraphs
+id: node.field_off_the_floor
+field_name: field_off_the_floor
 entity_type: node
-type: entity_reference_revisions
-settings:
-  target_type: paragraph
-module: entity_reference_revisions
+type: boolean
+settings: {  }
+module: core
 locked: false
-cardinality: -1
+cardinality: 1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

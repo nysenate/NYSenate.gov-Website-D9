@@ -1,0 +1,23 @@
+uuid: 9ff7e5d8-0382-4518-b6f6-70aa95642eff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_place
+    - node.type.meeting
+  module:
+    - options
+id: node.meeting.field_event_place
+field_name: field_event_place
+entity_type: node
+bundle: meeting
+label: 'Meeting Place'
+description: 'For in person hearing use "CAP" or "LOB" otherwise use "Online" if meeting is streaming only.'
+required: false
+translatable: true
+default_value:
+  -
+    value: cap
+default_value_callback: ''
+settings: {  }
+field_type: list_string

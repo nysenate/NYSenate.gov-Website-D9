@@ -11,9 +11,14 @@
       const headerBar = nav.find('.c-header-bar', context);
       const actionBar = $('.c-actionbar', context);
       const mobileNavToggle = nav.find('.js-mobile-nav--btn');
+      const searchToggle = $('.js-search--toggle', context);
 
       mobileNavToggle.on('click', function() {
         self.toggleMobileNav(nav);
+      });
+
+      searchToggle.on('click', function() {
+        self.toggleSearchBar(menu);
       });
 
       $(window).scroll(function () {
@@ -125,6 +130,23 @@
 
       // toggle classes
       body.toggleClass('nav-open');
-    }
+    },
+    toggleSearchBar: function(menu) {
+      if(menu.hasClass('search-open')) {
+        menu.removeClass('search-open');
+        menu.find('.c-site-search--box').blur();
+      }
+      else {
+        menu.addClass('search-open');
+        menu.find('.c-site-search--box').focus();
+      }
+    },
+    closeSearch: function() {
+
+      if($('.c-nav--wrap').hasClass('search-open')) {
+        $('.c-nav--wrap').removeClass('search-open');
+        $('.c-nav--wrap').find('.c-site-search--box').blur();
+      }
+    },
   };
 })(document, Drupal, jQuery);

@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies: {  }
+id: nys_senate_gov_media_image
+migration_tags:
+  - 'Drupal 7'
+  - NYS Media
+migration_group: nys_general
+label: 'Media: Image'
+source:
+  plugin: file_entity
+  type: image
+  constants:
+    bundle: 'image'
+process:
+  name: filename
+  bundle: 'constants/bundle'
+  mid: fid
+  uid: uid
+  status: status
+  field_image/target_id: fid
+destination:
+  plugin: entity:media
+  default_bundle: image
+migration_dependencies:
+  required:
+    - cbg_managed_files

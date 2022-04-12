@@ -1,6 +1,6 @@
 uuid: b897cbb4-b716-4dc5-bf77-7158ced9547a
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: live_prod
 label: Live/Prod
@@ -10,7 +10,8 @@ folder: profiles/custom/nysenate/config/prod
 module:
   dblog: 0
 theme: {  }
-blacklist: {  }
+blacklist:
+  - dblog.settings
 graylist:
   - system.logging
 graylist_dependents: true

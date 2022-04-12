@@ -54,9 +54,6 @@
   z-index: 10;
   overflow: hidden;
   position: relative;
-  // // @include transition(height, 0.3s, ease);
-
-  // &.collapsed { height: 0; }
 }
 .c-topbar {
   position: relative;
@@ -99,7 +96,6 @@
       background: transparent url("http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg")
         center center no-repeat;
       background-size: cover;
-      // // @include transition(all, 0.15s, ease);
     }
   }
 }
@@ -189,6 +185,24 @@
 
   &.closed {
     height: 0;
+  }
+
+  .u-mobile-only {
+    display: block;
+  }
+
+  .u-tablet-plus {
+    display: none;
+  }
+
+  @media #{$tablet} {
+    .u-mobile-only {
+      display: none;
+    }
+
+    .u-tablet-plus {
+      display: block;
+    }
   }
 
   .c-nav {
@@ -323,6 +337,30 @@
 / SENATOR NAV
 /-------------------------------*/
 .c-senator-nav--wrap {
+  .c-site-search {
+    top: 100px;
+  }
+
+  .c-site-search--btn {
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
+
+  .c-site-search {
+    .c-site-search--btn {
+      top: -45px;
+    }
+  }
+
+  &.closed {
+    height: 0;
+  }
+
+  &.search-open {
+    height: 325px; //100px (nav height) + 225px (search area height)
+  }
+
   li {
     border-top: 1px solid #fff;
     text-transform: uppercase;
@@ -346,7 +384,6 @@
     position: relative;
     width: 100%;
     background: #fff;
-    // @include transition(top, .5s, ease);
 
     .c-senator-nav {
       nav {
@@ -357,7 +394,6 @@
         overflow: hidden;
         background: #fff;
         z-index: 1;
-        // @include transition(none, 1s, ease);
       }
 
       ul {
@@ -402,7 +438,6 @@
 .l-header__collapsed {
   top: 0;
   width: 100%;
-  // @include transition(top, 0.25s, ease-in);
 
   // Senator variant
   .node-type-senator &.messages-open {
@@ -414,8 +449,6 @@
     height: 100px;
     padding-left: 20px;
     margin-top: 0;
-    // @include transition(margin, 0.25s, ease-in);
-    // padding-bottom: 50px;
 
     &:before {
       content: "";
@@ -435,7 +468,6 @@
     vertical-align: middle;
     height: 35px;
     width: 35px;
-    // @include border-radius(50%);
 
     img {
       position: relative;
@@ -582,10 +614,11 @@ nav ul.c-nav--list {
 }
 
 .c-site-search--btn {
+  cursor: pointer;
   position: absolute;
   height: 45px;
   width: 30px;
-  top: 10px;
+  top: 5px;
   right: 15px;
   color: #444;
   font-size: 22px;
@@ -612,7 +645,6 @@ nav ul.c-nav--list {
 }
 
 .c-header--connect .c-nav--social {
-
   &.u-mobile-only {
     display: block;
   }
@@ -636,8 +668,6 @@ nav ul.c-nav--list {
 }
 
 .c-mobile-login--list {
-
-
   &.u-mobile-only {
     display: block;
   }
@@ -693,6 +723,7 @@ nav ul.c-nav--list {
 
 .c-header--btn.c-header--btn__taking_action,
 .c-header--btn.c-header--btn__primary {
+  cursor: pointer;
   position: relative;
   height: 100%;
   margin-left: -1px;
@@ -770,7 +801,7 @@ nav ul.c-nav--list {
   height: 72px;
   padding: 0 0 0 30px;
   color: #fff;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: "Proxima Nova SemiBold";
   font-size: 12px;
   line-height: 72px;
   text-transform: uppercase;
@@ -782,30 +813,30 @@ nav ul.c-nav--list {
 }
 
 .c-mobile-login--list {
-	position: relative;
-	width: 100%;
-	height: 72px;
-	margin-top: 20px;
-	bottom: 0;
-	left: 0;
+  position: relative;
+  width: 100%;
+  height: 72px;
+  margin-top: 20px;
+  bottom: 0;
+  left: 0;
 
-	.c-header--btn-logout:last-child,
-	.c-header--btn-login:last-child {
-		padding-bottom: 60px;
-		height: 132px;
+  .c-header--btn-logout:last-child,
+  .c-header--btn-login:last-child {
+    padding-bottom: 60px;
+    height: 132px;
 
-		> a {
-			display: block;
-			position: absolute;
-			height: 100%;
-			width: 100%;
-			top: 0;
-			left: 0;
-			padding-left: 65px;
+    > a {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      padding-left: 65px;
       text-decoration: none;
-			color: #fff;
-		}
-	}
+      color: #fff;
+    }
+  }
 }
 
 a.c-header--btn.c-header--btn__primary,
@@ -878,7 +909,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   height: 60px;
   padding: 0 60px 0 18px;
   background-color: $gen_blue_lgt;
-  // overflow: hidden;
+  max-width: unset;
   transition: margin 0.25s ease;
 
   &:before {
@@ -946,6 +977,96 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 }
 
+.c-site-search {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  padding: 30px 20px 20px 20px;
+  margin: 0;
+
+  .c-site-search--box {
+    display: block;
+    background: none;
+    border: none;
+    height: 45px;
+    margin: 0 45px 0 0;
+    padding: 0 0 0 20px;
+    box-shadow: none;
+    color: $gen_blue_med;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 5px;
+    background-clip: padding-box;
+    float: left;
+    width: 100%;
+
+    &::-ms-clear {
+      display: none;
+    }
+  }
+    
+  .c-site-search--title {
+    display: none;
+  }
+
+  .c-block-advanced-search-link {
+    margin-bottom: 30px;
+  
+    .c-advanced-search--link {
+      color: $orange01;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+  }
+
+  .c-site-search--btn:focus,
+  .c-site-search--btn {
+    cursor: pointer;
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    padding: 0;
+    height: 45px;
+    width: 45px;
+    font-size: 22px;
+    background: transparent;
+    color: $gen_blue_med;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+  
+    &:after {
+      content: "\6d";
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: "senate_icons";
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+    }
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  
+    &:after {
+      width: 100%;
+      padding: 0;
+      line-height: 45px;
+    }
+  
+    &:hover {
+      background: transparent;
+      color: $gen_blue_drk;
+    }
+  }
+  
+}
+
 @media #{$tablet} {
   .c-actionbar,
   .c-senate-status {
@@ -995,6 +1116,138 @@ a:hover.c-header--btn.c-header--btn__taking_action {
           font-size: 32px;
           line-height: 100px;
         }
+      }
+    }
+  }
+  
+  .search-open .c-site-search .c-site-search--btn,
+  .search-open .c-site-search .c-site-search--btn:focus,
+  .c-site-search--btn:focus,
+  .c-site-search--btn {
+    position: absolute;
+    height: 45px;
+    width: 30px;
+    top: 15px;
+    right: 15px;
+    color: #444;
+    font-size: 22px;
+  }
+  
+  .c-site-search--title {
+    display: block;
+    margin-bottom: 20px;
+    font-family: "Adelle Semibold";
+    font-size: 26px;
+    line-height: 1;
+  }
+  
+  .c-site-search--link {
+    position: absolute;
+    right: 9%;
+    bottom: 35px;
+    color: $orange01;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+  }
+  
+  .c-site-search {
+    position: relative;
+    z-index: 1;
+    top: 0;
+    width: 100%;
+    height: 225px;
+    margin: 0 auto;
+    max-width: 1500px;
+    padding: 25px 9%;
+    background: $greyLight;
+    transition: margin 0.3s ease;
+  
+    .c-site-search--box {
+      border: 1px solid $grey05;
+      border-radius: 0;
+      overflow: hidden;
+      background-clip: padding-box;
+    }
+  
+    .c-site-search--btn {
+      position: relative;
+      top: -45px;
+      right: auto;
+      float: right;
+    }
+  }
+
+  .c-site-search {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: 225px;
+
+    &:before,
+    &:after {
+      display: none;
+    }
+  }
+  // class added to .c-nav--wrap through js
+  .search-open {
+    height: 285px;
+
+    .c-site-search--btn {
+      cursor: pointer;
+      position: absolute;
+      display: block;
+      overflow: hidden;
+      text-indent: -99999px;
+
+      &:after {
+        content: "\78";
+        text-indent: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: "senate_icons";
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px;
+      }
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .c-site-search {
+      .c-site-search--btn {
+        cursor: pointer;
+        position: relative;
+        top: -45px;
+        position: relative;
+        display: block;
+        overflow: hidden;
+        padding-top: 1em;
+        text-indent: -99999px;
+
+        &:after {
+          content: "\6d";
+          text-indent: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          font-family: "senate_icons";
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          padding-left: 3px;
+        }
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
     }
   }

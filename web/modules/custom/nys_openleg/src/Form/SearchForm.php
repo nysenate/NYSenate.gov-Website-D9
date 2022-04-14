@@ -3,6 +3,7 @@
 namespace Drupal\nys_openleg\Form;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\nys_openleg\StatuteHelper;
 

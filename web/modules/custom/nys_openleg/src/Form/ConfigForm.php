@@ -90,6 +90,7 @@ class ConfigForm extends ConfigFormBase {
 
     if ($rebuild) {
       $this->builder->rebuild();
+      StatuteHelper::clearCache('law-types');
     }
 
     parent::submitForm($form, $form_state);

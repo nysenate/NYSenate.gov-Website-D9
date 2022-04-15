@@ -7,7 +7,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class GeocoderBase.
+ * Class Geocoder Base.
  *
  * @package Drupal\geolocation
  */

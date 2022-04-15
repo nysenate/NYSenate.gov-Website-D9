@@ -16,7 +16,7 @@ function facets_range_widget_requirements() {
   // If library is not found, look in the current profile libraries path.
   if (!$library_exists) {
     $profile = \Drupal::installProfile();
-    $profile_path = drupal_get_path('profile', $profile);
+    $profile_path = Drupal::service('extension.list.profile')->getPath($profile);
     $profile_path .= $library_path;
     $library_exists = file_exists($profile_path);
   }

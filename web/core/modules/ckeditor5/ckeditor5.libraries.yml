@@ -29,7 +29,17 @@ drupal.ckeditor5:
     - core/ckeditor5.editorDecoupled
     - core/ckeditor5
     - editor/drupal.editor
-    - ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around
+    - ckeditor5/ie11.user.warnings
+    - ckeditor5/drupal.ckeditor5.stylesheets
+    - core/drupalSettings
+    - core/drupal.message
+
+# Library used for dynamically loading CKEditor 5 stylesheets from the default
+# front end theme.
+# @see ckeditor5_library_info_alter()
+drupal.ckeditor5.stylesheets:
+  version: VERSION
+  css: []
 
 drupal.ckeditor5.quickedit-temporary-work-around:
   deprecated: "Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands."
@@ -37,10 +47,19 @@ drupal.ckeditor5.quickedit-temporary-work-around:
     theme:
       css/quickedit-override.css: {}
 
+drupal.ckeditor5.codeBlock:
+  dependencies:
+    - core/ckeditor5.codeBlock
+    - core/ckeditor5.htmlSupport
+
 drupal.ckeditor5.image:
   js:
     js/build/drupalImage.js: { minified: true }
+  css:
+    theme:
+      css/image.css: { }
   dependencies:
+    - core/drupal
     - core/ckeditor5
     - core/ckeditor5.image
 
@@ -80,7 +99,6 @@ ie11.user.warnings:
     - core/drupal
     - core/drupal.message
     - editor/drupal.editor
-    - core/modernizr
 
 ie11.filter.warnings:
   js:
@@ -89,7 +107,6 @@ ie11.filter.warnings:
     - core/drupal
     - core/drupal.message
     - core/once
-    - core/modernizr
 
 drupal.ckeditor5.filter.admin:
   js:
@@ -102,6 +119,8 @@ drupal.ckeditor5.filter.admin:
     - core/drupal.message
     - core/once
     - core/drupal.ajax
+    - core/drupalSettings
+    - core/drupal.message
 
 admin:
   js:
@@ -196,3 +215,8 @@ admin.table:
   css:
     theme:
       css/table.admin.css: { }
+
+admin.codeBlock:
+  css:
+    theme:
+      css/code-block.admin.css: { }

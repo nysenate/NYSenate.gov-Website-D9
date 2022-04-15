@@ -93,6 +93,20 @@ plugin.plugin_configuration.facets_processor.boolean_item:
       type: label
       label: 'Off value'
 
+plugin.plugin_configuration.facets_processor.combine_processor:
+  type: sequence
+  label: 'Combine facets processor'
+  sequence:
+    type: mapping
+    label: Mapping for a processor
+    mapping:
+      combine:
+        type: boolean
+        label: 'Combine this facet'
+      mode:
+        type: string
+        label: 'Combination mode'
+
 plugin.plugin_configuration.facets_processor.dependent_processor:
   type: sequence
   label: 'Dependent facet processor'
@@ -113,6 +127,14 @@ plugin.plugin_configuration.facets_processor.dependent_processor:
         type: boolean
         label: 'Should the condition be negated'
 
+plugin.plugin_configuration.facets_processor.show_siblings_processor:
+  type: mapping
+  label: 'Show siblings processor'
+  mapping:
+    show_parent_siblings:
+      type: boolean
+      label: 'Show parents'
+
 plugin.plugin_configuration.facets_processor.date_item:
   type: mapping
   label: 'Date item processor'
@@ -126,6 +148,9 @@ plugin.plugin_configuration.facets_processor.date_item:
     date_format:
       type: string
       label: 'Date format'
+    hierarchy:
+      type: boolean
+      label: 'Hierarchy'
 
 plugin.plugin_configuration.facets_processor.granularity_item:
   type: mapping

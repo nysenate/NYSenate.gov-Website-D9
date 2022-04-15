@@ -16,8 +16,11 @@
    * @implements {GeolocationMapInterface}
    * @inheritDoc
    *
-   * @prop {Object} settings.yandex_settings - Yandex Maps specific settings.
    * @prop {ymaps} yandexMap
+   * @prop {Object} settings.yandex_settings - Yandex Maps specific settings.
+   * @prop {Number} settings.yandex_settings.zoom - Zoom.
+   * @prop {Number} settings.yandex_settings.min_zoom - Zoom.
+   * @prop {Number} settings.yandex_settings.max_zoom - Zoom.
    */
   function GeolocationYandexMap(mapSettings) {
     if (typeof ymaps === 'undefined') {
@@ -47,10 +50,15 @@
     ymaps.ready(function () {
       // Instantiate (and display) a map object:
       that.yandexMap = new ymaps.Map(
-        that.container.get(0), {
+        that.container.get(0),
+        {
           center: [that.lng, that.lat],
           zoom: that.settings.yandex_settings.zoom,
           controls: []
+        },
+        {
+          maxZoom: that.settings.yandex_settings.max_zoom ?? 20,
+          minZoom: that.settings.yandex_settings.min_zoom ?? 0
         }
       );
 

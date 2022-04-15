@@ -20,12 +20,12 @@ class GeolocationItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['geolocation'];
+  protected static $modules = ['geolocation'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a geolocation field storage and field for validation.

@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class MapCenterBase.
+ * Class MapCenter Base.
  *
  * @package Drupal\geolocation
  */

@@ -60,16 +60,21 @@ class GeolocationGeometryDataManager extends DefaultPluginManager {
    * @param array $batch_settings
    *   Batch settings.
    *
-   * @return mixed
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|null
    *   Batch process.
    */
   public function executeGemeotryDataBatch(array $batch_settings) {
     batch_set($batch_settings);
-    $batch =& batch_get();
-    $batch['progressive'] = FALSE;
 
     if (PHP_SAPI === 'cli' && function_exists('drush_backend_batch_process')) {
-      return drush_backend_batch_process();
+      $result = drush_backend_batch_process();
+
+      if ($result['drush_batch_process_finished'] === TRUE) {
+        $batch =& batch_get();
+        $batch = NULL;
+      }
+
+      return $result;
     }
     else {
       return batch_process();

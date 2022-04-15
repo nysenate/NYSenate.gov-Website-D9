@@ -140,7 +140,7 @@ class Location extends LocationInputBase implements LocationInputInterface {
   /**
    * {@inheritdoc}
    */
-  public function getForm($center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL) {
+  public function getForm(string $center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL) {
     return [];
   }
 

@@ -8,7 +8,7 @@ namespace Drupal\Tests\r4032login\Unit {
   use Drupal\Tests\UnitTestCase;
   use Symfony\Component\EventDispatcher\EventDispatcher;
   use Symfony\Component\HttpFoundation\Request;
-  use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+  use Symfony\Component\HttpKernel\Event\ExceptionEvent;
   use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
   use Symfony\Component\HttpKernel\HttpKernelInterface;
   use Symfony\Component\HttpKernel\KernelEvents;
@@ -76,9 +76,16 @@ namespace Drupal\Tests\r4032login\Unit {
     protected $router;
 
     /**
+     * The mocked redirect destination service.
+     *
+     * @var \Drupal\Core\Routing\RedirectDestinationInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $redirectDestination;
+
+    /**
      * {@inheritdoc}
      */
-    protected function setUp() {
+    protected function setUp(): void {
       $this->kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
       $this->configFactory = $this->getConfigFactoryStub([
         'r4032login.settings' => [
@@ -96,6 +103,7 @@ namespace Drupal\Tests\r4032login\Unit {
       $this->pathMatcher = $this->createMock('\Drupal\Core\Path\PathMatcherInterface');
       $this->eventDispatcher = $this->createMock('\Symfony\Component\EventDispatcher\EventDispatcherInterface');
       $this->messenger = $this->createMock('\Drupal\Core\Messenger\MessengerInterface');
+      $this->redirectDestination = $this->createMock('\Drupal\Core\Routing\RedirectDestinationInterface');
 
       $this->urlAssembler = $this->createMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
       $this->urlAssembler->expects($this->any())
@@ -116,7 +124,7 @@ namespace Drupal\Tests\r4032login\Unit {
      * @covers ::__construct
      */
     public function testConstruct() {
-      $r4032login = new R4032LoginSubscriber($this->configFactory, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger);
+      $r4032login = new R4032LoginSubscriber($this->configFactory, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger, $this->redirectDestination);
       $this->assertInstanceOf('\Drupal\r4032login\EventSubscriber\R4032LoginSubscriber', $r4032login);
     }
 
@@ -151,14 +159,14 @@ namespace Drupal\Tests\r4032login\Unit {
         ->method('isAnonymous')
         ->willReturn(TRUE);
 
-      $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger);
-      $event = new GetResponseForExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
+      $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger, $this->redirectDestination);
+      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
       $dispatcher = new EventDispatcher();
       $dispatcher->addListener(KernelEvents::EXCEPTION, [
         $r4032login,
         'on403',
       ]);
-      $dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+      $dispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
       $response = $event->getResponse();
       $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
@@ -198,19 +206,67 @@ namespace Drupal\Tests\r4032login\Unit {
         ->method('isAuthenticated')
         ->willReturn(TRUE);
 
-      $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger);
-      $event = new GetResponseForExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
+      $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger, $this->redirectDestination);
+      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
       $dispatcher = new EventDispatcher();
       $dispatcher->addListener(KernelEvents::EXCEPTION, [
         $r4032login,
         'on403',
       ]);
-      $dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+      $dispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
       $response = $event->getResponse();
       $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
       $this->assertEquals($config_values['default_redirect_code'], $response->getStatusCode());
       $this->assertEquals($expected_url, $response->getTargetUrl());
+    }
+
+    /**
+     * Tests RedirectResponse for authenticated users with 404 redirection.
+     *
+     * @covers ::on403
+     */
+    public function testAuthenticatedRedirect404() {
+      $expected_url = 'base:admin/content';
+      $request = new Request(['destination' => $expected_url]);
+      $config_values = [
+        'display_denied_message' => TRUE,
+        'access_denied_message' => 'Access denied. You must log in to view this page.',
+        'access_denied_message_type' => 'error',
+        'redirect_authenticated_users_to' => '',
+        'throw_authenticated_404' => TRUE,
+        'user_login_path' => '/user/login',
+        'default_redirect_code' => 302,
+        'match_noredirect_pages' => '',
+      ];
+      $config = $this->getConfigFactoryStub([
+        'r4032login.settings' => $config_values,
+      ]);
+      $config->get('r4032login.settings')
+        ->expects($this->any())
+        ->method('getCacheContexts')
+        ->willReturn([]);
+      $config->get('r4032login.settings')
+        ->expects($this->any())
+        ->method('getCacheTags')
+        ->willReturn([]);
+
+      $this->currentUser->expects($this->any())
+        ->method('isAuthenticated')
+        ->willReturn(TRUE);
+
+      $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger, $this->redirectDestination);
+      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
+      $dispatcher = new EventDispatcher();
+      $dispatcher->addListener(KernelEvents::EXCEPTION, [
+        $r4032login,
+        'on403',
+      ]);
+      $dispatcher->dispatch($event, KernelEvents::EXCEPTION);
+
+      $response = $event->getResponse();
+      $this->assertNull($response);
+      $this->assertInstanceOf('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException', $event->getThrowable());
     }
 
     /**

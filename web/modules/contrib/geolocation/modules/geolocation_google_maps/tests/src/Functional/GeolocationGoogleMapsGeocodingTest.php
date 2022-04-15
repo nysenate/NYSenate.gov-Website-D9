@@ -16,7 +16,7 @@ class GeolocationGoogleMapsGeocodingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'geolocation',
     'geolocation_google_maps',
     'geolocation_google_maps_test',

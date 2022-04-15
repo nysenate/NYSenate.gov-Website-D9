@@ -2,6 +2,7 @@
 
 namespace Drupal\facets_summary\Plugin\Block;
 
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Plugin\PluginBase;
@@ -63,6 +64,9 @@ class FacetsSummaryBlockDeriver implements ContainerDeriverInterface {
           'label' => $this->t('Facet Summary: :facet_summary', [':facet_summary' => $facets_summary->getName()]),
           'admin_label' => $facets_summary->getName(),
           'description' => $this->t('Facets Summary'),
+          'context_definitions' => [
+            'in_preview' => new ContextDefinition('string', $this->t('In preview'), FALSE),
+          ],
         ] + $base_plugin_definition;
       }
       $this->derivatives[$base_plugin_id] = $plugin_derivatives;

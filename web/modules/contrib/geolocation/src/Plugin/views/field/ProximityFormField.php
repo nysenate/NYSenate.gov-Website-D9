@@ -75,7 +75,10 @@ class ProximityFormField extends ProximityField implements ContainerFactoryPlugi
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $proximity_center_options = NestedArray::getValue($form_state->getUserInput(), ['options', 'center']);
+    $proximity_center_options = NestedArray::getValue(
+      $form_state->getUserInput(),
+      ['options', 'center'],
+    );
     if (empty($proximity_center_options)) {
       $proximity_center_options = $this->options['center'];
     }

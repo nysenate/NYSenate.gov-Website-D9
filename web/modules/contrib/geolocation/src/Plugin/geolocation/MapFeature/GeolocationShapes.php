@@ -165,7 +165,7 @@ class GeolocationShapes extends MapFeatureBase {
     $render_array = parent::alterMap($render_array, $feature_settings, $context);
 
     if (empty($render_array['#children']['locations'])) {
-      return TRUE;
+      return $render_array;
     }
 
     $coordinates = [];

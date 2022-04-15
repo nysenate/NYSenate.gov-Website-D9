@@ -71,12 +71,12 @@ class DefaultFacetManagerTest extends KernelTestBase {
     $planetFacets = $dfm->getFacetsByFacetSourceId('planets');
     $this->assertNotEmpty($planetFacets);
     $this->assertCount(1, $planetFacets);
-    $this->assertSame('Jupiter', $planetFacets[0]->id());
+    $this->assertSame('Jupiter', $planetFacets['Jupiter']->id());
 
     $formerPlanetFacets = $dfm->getFacetsByFacetSourceId('former_planets');
     $this->assertNotEmpty($formerPlanetFacets);
     $this->assertCount(1, $formerPlanetFacets);
-    $this->assertSame('Pluto', $formerPlanetFacets[0]->id());
+    $this->assertSame('Pluto', $formerPlanetFacets['Pluto']->id());
 
     // Make pluto a planet again.
     $entity->setFacetSourceId('planets');
@@ -98,8 +98,8 @@ class DefaultFacetManagerTest extends KernelTestBase {
     $planetFacets = $dfm->getFacetsByFacetSourceId('planets');
     $this->assertNotEmpty($planetFacets);
     $this->assertCount(2, $planetFacets);
-    $this->assertSame('Jupiter', $planetFacets[0]->id());
-    $this->assertSame('Pluto', $planetFacets[1]->id());
+    $this->assertSame('Jupiter', $planetFacets['Jupiter']->id());
+    $this->assertSame('Pluto', $planetFacets['Pluto']->id());
   }
 
   /**

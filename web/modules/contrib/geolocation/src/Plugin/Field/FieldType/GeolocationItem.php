@@ -235,7 +235,7 @@ class GeolocationItem extends FieldItemBase {
    * @param float|string $decimal
    *   Either float or float-castable location.
    *
-   * @return string|false
+   * @return string
    *   The sexagesimal notation or FALSE on error.
    */
   public static function decimalToSexagesimal($decimal = '') {

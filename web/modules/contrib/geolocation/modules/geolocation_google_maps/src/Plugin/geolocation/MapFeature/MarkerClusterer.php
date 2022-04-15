@@ -55,7 +55,7 @@ class MarkerClusterer extends MapFeatureBase {
       '#default_value' => $settings['styles'],
       '#description' => $this->t(
         'Set custom Cluster styles in JSON Format. Custom Styles have to be set for all 5 Cluster Images. See the <a href=":reference">reference</a> for details.',
-        [':reference' => 'https://googlemaps.github.io/js-marker-clusterer/docs/reference.html']
+        [':reference' => 'https://googlemaps.github.io/v3-utility-library/interfaces/_google_markerclustererplus.clustericonstyle.html']
       ),
     ];
     $form['zoom_on_click'] = [

@@ -27,6 +27,8 @@ class Location extends LocationAddress {
   const GEOLOCATION_FIELD_NAME_SUFFIX = '_geoloc';
 
   /**
+   * Get geolocation field name.
+   *
    * @param string $field_name
    *   The location field's name in the source.
    *

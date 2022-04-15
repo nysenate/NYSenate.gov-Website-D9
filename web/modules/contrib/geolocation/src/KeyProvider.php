@@ -3,7 +3,7 @@
 namespace Drupal\geolocation;
 
 /**
- * Class KeyProvider.
+ * Class KeyProvider plugin.
  *
  * @package Drupal\geolocation
  */

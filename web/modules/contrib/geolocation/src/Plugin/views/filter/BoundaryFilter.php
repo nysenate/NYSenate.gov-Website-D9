@@ -149,7 +149,9 @@ class BoundaryFilter extends FilterPluginBase implements ContainerFactoryPluginI
         '#title' => $this->t('Geocoder plugin'),
         '#default_value' => $geocoder_settings['plugin_id'],
         '#ajax' => [
-          'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
+          'callback' => [
+            get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax',
+          ],
           'wrapper' => 'boundary-geocoder-plugin-settings',
           'effect' => 'fade',
         ],
@@ -196,51 +198,71 @@ class BoundaryFilter extends FilterPluginBase implements ContainerFactoryPluginI
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state) {
     parent::buildExposedForm($form, $form_state);
-    $identifier = $this->options['expose']['identifier'];
 
     if (
-      $this->options['expose']['input_by_geocoding_widget']
-      && !empty($form[$identifier])
-      && !empty($this->options['expose']['geocoder_plugin_settings'])
+      !$this->options['expose']['input_by_geocoding_widget']
+      || empty($this->options['expose']['geocoder_plugin_settings'])
     ) {
-      $geocoder_configuration = $this->options['expose']['geocoder_plugin_settings']['settings'];
+      return;
+    }
 
-      /** @var \Drupal\geolocation\GeocoderInterface $geocoder_plugin */
-      $geocoder_plugin = $this->geocoderManager->getGeocoder(
-        $this->options['expose']['geocoder_plugin_settings']['plugin_id'],
-        $geocoder_configuration
-      );
+    $identifier = $this->options['expose']['identifier'];
+    if (
+      empty($form[$identifier])
+      && empty($form[$identifier . '_wrapper'])
+    ) {
+      return;
+    }
 
-      if (empty($geocoder_plugin)) {
-        return;
-      }
+    $geocoder_configuration = $this->options['expose']['geocoder_plugin_settings']['settings'];
 
+    /** @var \Drupal\geolocation\GeocoderInterface $geocoder_plugin */
+    $geocoder_plugin = $this->geocoderManager->getGeocoder(
+      $this->options['expose']['geocoder_plugin_settings']['plugin_id'],
+      $geocoder_configuration
+    );
+
+    if (empty($geocoder_plugin)) {
+      return;
+    }
+
+    // Drupal 9.
+    if (!empty($form[$identifier . '_wrapper'])) {
+      $form[$identifier . '_wrapper'][$identifier]['lat_north_east']['#type'] = 'hidden';
+      $form[$identifier . '_wrapper'][$identifier]['lng_north_east']['#type'] = 'hidden';
+      $form[$identifier . '_wrapper'][$identifier]['lat_south_west']['#type'] = 'hidden';
+      $form[$identifier . '_wrapper'][$identifier]['lng_south_west']['#type'] = 'hidden';
+      $geocoder_plugin->formAttachGeocoder($form[$identifier . '_wrapper'][$identifier], $identifier);
+    }
+    // Drupal 8.
+    // @todo Remove.
+    else {
       $form[$identifier]['lat_north_east']['#type'] = 'hidden';
       $form[$identifier]['lng_north_east']['#type'] = 'hidden';
       $form[$identifier]['lat_south_west']['#type'] = 'hidden';
       $form[$identifier]['lng_south_west']['#type'] = 'hidden';
+      $geocoder_plugin->formAttachGeocoder($form[$identifier], $identifier);
+    }
 
-      $geocoder_plugin->formAttachGeocoder($form[$this->options['expose']['identifier']], $identifier);
-
-      $form = BubbleableMetadata::mergeAttachments($form, [
-        '#attached' => [
-          'library' => [
-            'geolocation/geolocation.views.filter.geocoder',
-          ],
-          'drupalSettings' => [
-            'geolocation' => [
-              'geocoder' => [
-                'viewsFilterGeocoder' => [
-                  $identifier => [
-                    'type' => 'boundary',
-                  ],
+    $form = BubbleableMetadata::mergeAttachments($form, [
+      '#attached' => [
+        'library' => [
+          'geolocation/geolocation.views.filter.geocoder',
+        ],
+        'drupalSettings' => [
+          'geolocation' => [
+            'geocoder' => [
+              'viewsFilterGeocoder' => [
+                $identifier => [
+                  'type' => 'boundary',
                 ],
               ],
             ],
           ],
         ],
-      ]);
-    }
+      ],
+    ]);
+
   }
 
   /**

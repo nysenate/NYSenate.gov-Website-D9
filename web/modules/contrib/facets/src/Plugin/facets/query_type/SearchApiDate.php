@@ -64,6 +64,7 @@ class SearchApiDate extends QueryTypeRangeBase {
 
     $configuration = $this->getConfiguration();
     $configuration['granularity'] = $dateProcessorConfig['granularity'];
+    $configuration['hierarchy'] = $dateProcessorConfig['hierarchy'];
     $configuration['date_display'] = $dateProcessorConfig['date_display'];
     $configuration['date_format'] = $dateProcessorConfig['date_format'];
     $this->setConfiguration($configuration);
@@ -73,12 +74,41 @@ class SearchApiDate extends QueryTypeRangeBase {
    * {@inheritdoc}
    */
   public function calculateRange($value) {
+    $counts = count_chars($value, 1);
+    $granularity = self::FACETAPI_DATE_YEAR - ($counts[ord('-')] ?? 0) - ($counts[ord('T')] ?? 0) - ($counts[ord(':')] ?? 0);
+
     if ($this->getDateDisplay() === 'relative_date') {
-      return $this->calculateRangeRelative($value);
+      return $this->calculateRangeRelative($value, $granularity);
     }
-    else {
-      return $this->calculateRangeAbsolute($value);
+
+    return $this->calculateRangeAbsolute($value, $granularity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build() {
+    $granularity = $this->getGranularity();
+
+    if (!$this->getHierarchy() || $granularity === self::FACETAPI_DATE_YEAR) {
+      return parent::build();
     }
+
+    $configuration = $this->getConfiguration();
+    $facet_results = [];
+
+    while ($this->getGranularity() <= self::FACETAPI_DATE_YEAR) {
+      parent::build();
+      $facet_results += $this->facet->getResults();
+      $configuration['granularity'] = $this->getGranularity() + 1;
+      $this->setConfiguration($configuration);
+    }
+
+    $configuration['granularity'] = $granularity;
+    $this->setConfiguration($configuration);
+
+    $this->facet->setResults($facet_results);
+    return $this->facet;
   }
 
   /**
@@ -89,6 +119,8 @@ class SearchApiDate extends QueryTypeRangeBase {
    *
    * @param int $value
    *   Unix timestamp.
+   * @param int $granularity
+   *   The grnaularity.
    *
    * @return array
    *   An array with a start and end date as unix timestamps.
@@ -96,10 +128,10 @@ class SearchApiDate extends QueryTypeRangeBase {
    * @throws \Exception
    *   Thrown when creating a date fails.
    */
-  protected function calculateRangeAbsolute($value) {
+  protected function calculateRangeAbsolute($value, $granularity) {
     $dateTime = new DrupalDateTime();
 
-    switch ($this->getGranularity()) {
+    switch ($granularity) {
       case static::FACETAPI_DATE_YEAR:
         $startDate = $dateTime::createFromFormat('Y-m-d\TH:i:s', $value . '-01-01T00:00:00');
         $stopDate = $dateTime::createFromFormat('Y-m-d\TH:i:s', $value . '-12-31T23:59:59');
@@ -145,6 +177,8 @@ class SearchApiDate extends QueryTypeRangeBase {
    *
    * @param int $value
    *   Unix timestamp.
+   * @param int $granularity
+   *   The granularity.
    *
    * @return array
    *   An array with a start and end date as unix timestamps.
@@ -152,10 +186,10 @@ class SearchApiDate extends QueryTypeRangeBase {
    * @throws \Exception
    *   Thrown when creating a date fails.
    */
-  protected function calculateRangeRelative($value) {
+  protected function calculateRangeRelative($value, int $granularity) {
     $dateTime = new DrupalDateTime();
 
-    switch ($this->getGranularity()) {
+    switch ($granularity) {
       case static::FACETAPI_DATE_YEAR:
         $startDate = $dateTime::createFromFormat('Y-m-d\TH:i:s', $value . '-01T00:00:00');
         $stopDate = clone $startDate;
@@ -416,6 +450,16 @@ class SearchApiDate extends QueryTypeRangeBase {
    */
   protected function getGranularity() {
     return $this->getConfiguration()['granularity'];
+  }
+
+  /**
+   * Retrieve configuration: Hierarchy.
+   *
+   * @return bool
+   *   The hierarchy for this config.
+   */
+  protected function getHierarchy() {
+    return $this->getConfiguration()['hierarchy'];
   }
 
   /**

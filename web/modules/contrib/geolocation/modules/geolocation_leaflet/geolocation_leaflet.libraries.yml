@@ -50,6 +50,31 @@ widget.leaflet:
     - geolocation/geolocation.widget
     - geolocation_leaflet/widget.api.leaflet
 
+leaflet.draw:
+  header: true
+  remote: https://github.com/Leaflet/Leaflet.draw
+  version: '1.0.4'
+  license:
+    name: MIT-LICENSE
+    gpl-compatible: true
+  css:
+    component:
+      'https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css': { type: external, minified: true }
+  js:
+    'https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js': { type: external, minified: true }
+  dependencies:
+    - geolocation_leaflet/leaflet
+
+widget.leaflet.geojson:
+  version: 8.x-3.x
+  js:
+    js/geolocation-geometry-widget-leaflet.js: {}
+  dependencies:
+    - core/jquery.once
+    - geolocation/geolocation.map
+    - geolocation_leaflet/geolocation.leaflet
+    - geolocation_leaflet/leaflet.draw
+
 # Photon geocoder function.
 geocoder.photon:
   version: 8.x-3.x
@@ -311,3 +336,22 @@ mapfeature.leaflet_control_layer:
   dependencies:
   - geolocation_leaflet/geolocation.leaflet
   - geolocation_leaflet/leaflet-providers
+
+leaflet.rotate:
+  header: true
+  remote: https://github.com/Raruto/leaflet-rotate
+  version: '0.1.1'
+  license:
+    name: GPL-3.0
+    gpl-compatible: true
+  js:
+    'https://unpkg.com/leaflet-rotate@0.1.2/dist/leaflet-rotate-src.js': { type: external }
+  dependencies:
+    - geolocation_leaflet/leaflet
+
+mapfeature.leaflet_rotate:
+  js:
+    js/MapFeature/geolocation-leaflet-rotate.js: {}
+  dependencies:
+    - geolocation_leaflet/geolocation.leaflet
+    - geolocation_leaflet/leaflet.rotate

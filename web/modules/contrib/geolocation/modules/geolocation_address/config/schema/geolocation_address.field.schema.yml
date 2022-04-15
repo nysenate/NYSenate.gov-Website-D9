@@ -16,53 +16,7 @@ field.widget.third_party.geolocation_address:
     geocoder:
       type: string
     settings:
-      type: mapping
-      mapping:
-        label:
-          type: string
-        description:
-          type: string
-        autocomplete_min_length:
-          type: integer
-          label: 'Autocomplete MinLength'
-        component_restrictions:
-          type: mapping
-          label: 'Components'
-          mapping:
-            route:
-              type: string
-              label: 'Route'
-            country:
-              type: string
-              label: 'Country'
-            administrative_area:
-              type: string
-              label: 'Administrative Area'
-            locality:
-              type: string
-              label: 'Locality'
-            postal_code:
-              type: string
-              label: 'Postal Code'
-        boundary_restriction:
-          type: mapping
-          label: 'Boundaries'
-          mapping:
-            south:
-              type: string
-              label: 'South'
-            west:
-              type: string
-              label: 'West'
-            north:
-              type: string
-              label: 'North'
-            east:
-              type: string
-              label: 'East'
-        region:
-          type: string
-          label: 'Region ccTLD'
+      type: geolocation.geocoder.[%parent.geocoder]
     sync_mode:
       type: string
     button_position:

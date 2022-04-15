@@ -4,6 +4,7 @@ namespace Drupal\Tests\facets_summary\Functional;
 
 use Drupal\Tests\facets\Functional\FacetsTestBase;
 use Drupal\facets_summary\Entity\FacetsSummary;
+use Drupal\facets_summary\Plugin\facets_summary\processor\ResetFacetsProcessor;
 use Drupal\views\Views;
 
 /**
@@ -395,9 +396,14 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextContains($this->t('Facets Summary Owl has been updated.'));
 
     $this->assertSession()->fieldExists('facets_summary_settings[reset_facets][settings][link_text]');
-    $this->submitForm(['facets_summary_settings[reset_facets][settings][link_text]' => 'Reset facets'], 'Save');
+    $this->assertSession()->fieldExists('facets_summary_settings[reset_facets][settings][position]');
+    $this->submitForm([
+      'facets_summary_settings[reset_facets][settings][link_text]' => 'Reset facets',
+      'facets_summary_settings[reset_facets][settings][position]' => ResetFacetsProcessor::POSITION_BEFORE,
+    ], 'Save');
     $this->assertSession()->pageTextContains($this->t('Facets Summary Owl has been updated.'));
     $this->assertSession()->fieldValueEquals('facets_summary_settings[reset_facets][settings][link_text]', 'Reset facets');
+    $this->assertSession()->fieldValueEquals('facets_summary_settings[reset_facets][settings][position]', ResetFacetsProcessor::POSITION_BEFORE);
   }
 
   /**
@@ -483,7 +489,10 @@ class IntegrationTest extends FacetsTestBase {
         'reset_facets' => [
           'processor_id' => 'reset_facets',
           'weights' => ['build' => -10],
-          'settings' => ['link_text' => 'Reset facets'],
+          'settings' => [
+            'link_text' => 'Reset facets',
+            'position' => ResetFacetsProcessor::POSITION_BEFORE,
+          ],
         ],
       ],
     ])->save();
@@ -564,6 +573,7 @@ class IntegrationTest extends FacetsTestBase {
       'facets[keywords][weight]' => 1,
       'facets_summary_settings[reset_facets][status]' => 1,
       'facets_summary_settings[reset_facets][settings][link_text]' => 'Reset',
+      'facets_summary_settings[reset_facets][settings][position]' => ResetFacetsProcessor::POSITION_BEFORE,
     ];
     $this->drupalGet('admin/config/search/facets/facet-summary/kepler/edit');
     $this->submitForm($summaries, 'Save');
@@ -612,6 +622,7 @@ class IntegrationTest extends FacetsTestBase {
       'facets[orval][weight]' => 0,
       'facets_summary_settings[reset_facets][status]' => 1,
       'facets_summary_settings[reset_facets][settings][link_text]' => 'Reset',
+      'facets_summary_settings[reset_facets][settings][position]' => ResetFacetsProcessor::POSITION_BEFORE,
     ];
     $this->drupalGet('admin/config/search/facets/facet-summary/trappist/edit');
     $this->submitForm($summaries, 'Save');

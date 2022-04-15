@@ -232,6 +232,11 @@ nysenate-accordion:
     - core/drupal
     - core/drupalSettings
 
+nysenate-upcoming-events:
+  css:
+    component:
+      dist/css/nysenate-upcoming-events.css: {}
+
 nysenate-footer:
   css:
     component:
@@ -246,6 +251,21 @@ nysenate-site-branding:
   css:
     component:
       dist/css/nysenate-site-branding.css: {}
+
+nysenate-header:
+  css:
+    component:
+      dist/css/nysenate-header.css: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
+nysenate-women-of-distinction:
+  css:
+    component:
+      dist/css/nysenate-women-of-distinction.css: {}
 
 page-layout:
   css:

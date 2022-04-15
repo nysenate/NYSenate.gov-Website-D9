@@ -134,6 +134,8 @@ class ControlDirections extends ControlGoogleElementBase {
    *
    * @param array $settings
    *   Settings.
+   * @param array $context
+   *   Context.
    *
    * @return array
    *   Directions form.

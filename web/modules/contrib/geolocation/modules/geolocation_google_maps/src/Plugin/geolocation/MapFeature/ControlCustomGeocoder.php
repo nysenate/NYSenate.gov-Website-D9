@@ -94,7 +94,9 @@ class ControlCustomGeocoder extends ControlCustomElementBase {
         '#title' => $this->t('Geocoder plugin'),
         '#default_value' => $settings['geocoder'],
         '#ajax' => [
-          'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
+          'callback' => [
+            get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax',
+          ],
           'wrapper' => 'google-control-geocoder-plugin-settings',
           'effect' => 'fade',
         ],

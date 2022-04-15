@@ -38,7 +38,7 @@ class GeolocationGeometryMapFormatter extends GeolocationMapFormatterBase {
     $element = parent::settingsForm($form, $form_state);
 
     unset($element['set_marker']);
-    // @TODO: re-enable?
+    // @todo re-enable?
     unset($element['title']);
     unset($element['info_text']);
     unset($element['replacement_patterns']);

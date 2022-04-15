@@ -36,7 +36,7 @@ class GeocoderCountryFormattingManager extends DefaultPluginManager {
    * @param string $geocoder_id
    *   Geocoder ID.
    *
-   * @return \Drupal\geolocation\GeocoderCountryFormattingInterface|false
+   * @return \Drupal\geolocation\GeocoderCountryFormattingInterface
    *   Geocoder instance.
    */
   public function getCountry($country_code, $geocoder_id) {

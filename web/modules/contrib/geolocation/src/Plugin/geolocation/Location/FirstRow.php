@@ -47,10 +47,10 @@ class FirstRow extends LocationBase implements LocationInterface {
       return parent::getCoordinates($location_option_id, $location_option_settings, $context);
     }
 
-    /** @var \Drupal\geolocation\Plugin\views\field\GeolocationField $geolocation_field */
-    $geolocation_field = $views_style->view->field[$views_style->options['geolocation_field']];
+    /** @var \Drupal\geolocation\Plugin\views\field\GeolocationField $source_field */
+    $source_field = $views_style->view->field[$views_style->options['geolocation_field']];
 
-    if (empty($geolocation_field)) {
+    if (empty($source_field)) {
       return parent::getCoordinates($location_option_id, $location_option_settings, $context);
     }
 
@@ -58,25 +58,13 @@ class FirstRow extends LocationBase implements LocationInterface {
       return parent::getCoordinates($location_option_id, $location_option_settings, $context);
     }
 
-    $entity = $geolocation_field->getEntity($views_style->view->result[0]);
+    /** @var \Drupal\geolocation\DataProviderInterface $data_provider */
+    $data_provider = \Drupal::service('plugin.manager.geolocation.dataprovider')->getDataProviderByViewsField($source_field);
 
-    if (empty($entity)) {
-      return parent::getCoordinates($location_option_id, $location_option_settings, $context);
-    }
+    $positions = $data_provider->getPositionsFromViewsRow($views_style->view->result[0]);
 
-    if (isset($entity->{$geolocation_field->definition['field_name']})) {
-
-      /** @var \Drupal\geolocation\Plugin\Field\FieldType\GeolocationItem $item */
-      $item = $entity->{$geolocation_field->definition['field_name']}->first();
-
-      if (empty($item)) {
-        return parent::getCoordinates($location_option_id, $location_option_settings, $context);
-      }
-
-      return [
-        'lat' => $item->get('lat')->getValue(),
-        'lng' => $item->get('lng')->getValue(),
-      ];
+    if (!empty($positions[0])) {
+      return $positions[0];
     }
 
     return parent::getCoordinates($location_option_id, $location_option_settings, $context);

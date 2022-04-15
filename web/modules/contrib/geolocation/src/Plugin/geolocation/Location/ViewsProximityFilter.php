@@ -52,7 +52,7 @@ class ViewsProximityFilter extends LocationBase implements LocationInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAvailableLocationOptions($context) {
+  public function getAvailableLocationOptions($context): array {
     $options = [];
 
     if ($displayHandler = self::getViewsDisplayHandler($context)) {
@@ -73,7 +73,7 @@ class ViewsProximityFilter extends LocationBase implements LocationInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCoordinates($location_option_id, array $location_option_settings, $context = NULL) {
+  public function getCoordinates($location_option_id, array $location_option_settings, $context = NULL): array {
     if (!($displayHandler = self::getViewsDisplayHandler($context))) {
       return parent::getCoordinates($location_option_id, $location_option_settings, $context);
     }

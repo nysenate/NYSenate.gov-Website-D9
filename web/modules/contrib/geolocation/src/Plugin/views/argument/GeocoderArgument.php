@@ -88,7 +88,9 @@ class GeocoderArgument extends ProximityArgument implements ContainerFactoryPlug
         '#title' => $this->t('Geocoder plugin'),
         '#default_value' => $this->options['geocoder'],
         '#ajax' => [
-          'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
+          'callback' => [
+            get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax',
+          ],
           'wrapper' => 'argument-geocoder-plugin-settings',
           'effect' => 'fade',
         ],

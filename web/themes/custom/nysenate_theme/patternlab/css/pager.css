@@ -1,3 +1,381 @@
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+/*-----------------------------
+/	CUSTOM NEW YORK SENATE (nysenate_theme) PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+.contrast_text {
+  color: #000; }
+
+.lgt-text {
+  color: #2B6A90; }
+
+.lgt-bg {
+  background-color: #2B6A90; }
+
+.med-text {
+  color: #175B81; }
+
+.med-bg {
+  background-color: #175B81; }
+
+.drk-text {
+  color: #004D71; }
+
+.drk-bg {
+  background-color: #004D71; }
+
+.link-text {
+  color: #CB8D37; }
+
+.accent-bg {
+  background-color: #1B5187; }
+
+.accent-text {
+  color: #1B5187; }
+
+@media screen and (min-width: 760px) {
+  .nav-text {
+    color: #444; }
+    .nav-text:hover {
+      color: #2B6A90; }
+    .nav-text.active {
+      color: #2B6A90; } }
+
+.trad_blue .contrast_text {
+  color: #fff; }
+
+.trad_blue .lgt-text {
+  color: #1B5187; }
+
+.trad_blue .lgt-bg {
+  background-color: #1B5187; }
+
+.trad_blue .med-text {
+  color: #1D446B; }
+
+.trad_blue .med-bg {
+  background-color: #1D446B; }
+
+.trad_blue .drk-text {
+  color: #1C364E; }
+
+.trad_blue .drk-bg {
+  background-color: #1C364E; }
+
+.trad_blue .link-text {
+  color: #1B5187; }
+
+@media screen and (min-width: 760px) {
+  .trad_blue .nav-text {
+    color: #444; }
+    .trad_blue .nav-text:hover {
+      color: #1B5187; }
+    .trad_blue .nav-text.active {
+      color: #1B5187; } }
+
+.cont_blue .contrast_text {
+  color: #000; }
+
+.cont_blue .lgt-text {
+  color: #04A9C5; }
+
+.cont_blue .lgt-bg {
+  background-color: #04A9C5; }
+
+.cont_blue .med-text {
+  color: #008CA6; }
+
+.cont_blue .med-bg {
+  background-color: #008CA6; }
+
+.cont_blue .drk-text {
+  color: #1F798F; }
+
+.cont_blue .drk-bg {
+  background-color: #1F798F; }
+
+.cont_blue .link-text {
+  color: #04A9C5; }
+
+@media screen and (min-width: 760px) {
+  .cont_blue .nav-text {
+    color: #444; }
+    .cont_blue .nav-text:hover {
+      color: #04A9C5; }
+    .cont_blue .nav-text.active {
+      color: #04A9C5; } }
+
+.purple .contrast_text {
+  color: #000; }
+
+.purple .lgt-text {
+  color: #90668F; }
+
+.purple .lgt-bg {
+  background-color: #90668F; }
+
+.purple .med-text {
+  color: #754775; }
+
+.purple .med-bg {
+  background-color: #754775; }
+
+.purple .drk-text {
+  color: #543457; }
+
+.purple .drk-bg {
+  background-color: #543457; }
+
+.purple .link-text {
+  color: #90668F; }
+
+.purple .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .purple .nav-text {
+    color: #444; }
+    .purple .nav-text:hover {
+      color: #90668F; }
+    .purple .nav-text.active {
+      color: #90668F; } }
+
+.trad_red .contrast_text {
+  color: #fff; }
+
+.trad_red .lgt-text {
+  color: #87002F; }
+
+.trad_red .lgt-bg {
+  background-color: #87002F; }
+
+.trad_red .med-text {
+  color: #6E0026; }
+
+.trad_red .med-bg {
+  background-color: #6E0026; }
+
+.trad_red .drk-text {
+  color: #500019; }
+
+.trad_red .drk-bg {
+  background-color: #500019; }
+
+.trad_red .link-text {
+  color: #87002F; }
+
+.trad_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_red .nav-text {
+    color: #444; }
+    .trad_red .nav-text:hover {
+      color: #87002F; }
+    .trad_red .nav-text.active {
+      color: #87002F; } }
+
+.cont_red .contrast_text {
+  color: #fff; }
+
+.cont_red .lgt-text {
+  color: #C62526; }
+
+.cont_red .lgt-bg {
+  background-color: #C62526; }
+
+.cont_red .med-text {
+  color: #BB0623; }
+
+.cont_red .med-bg {
+  background-color: #BB0623; }
+
+.cont_red .drk-text {
+  color: #A00101; }
+
+.cont_red .drk-bg {
+  background-color: #A00101; }
+
+.cont_red .link-text {
+  color: #C62526; }
+
+.cont_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_red .nav-text {
+    color: #444; }
+    .cont_red .nav-text:hover {
+      color: #C62526; }
+    .cont_red .nav-text.active {
+      color: #C62526; } }
+
+.orange .contrast_text {
+  color: #000; }
+
+.orange .lgt-text {
+  color: #F0673D; }
+
+.orange .lgt-bg {
+  background-color: #F0673D; }
+
+.orange .med-text {
+  color: #ED4B1C; }
+
+.orange .med-bg {
+  background-color: #ED4B1C; }
+
+.orange .drk-text {
+  color: #C84123; }
+
+.orange .drk-bg {
+  background-color: #C84123; }
+
+.orange .link-text {
+  color: #F0673D; }
+
+.orange .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .orange .nav-text {
+    color: #444; }
+    .orange .nav-text:hover {
+      color: #F0673D; }
+    .orange .nav-text.active {
+      color: #F0673D; } }
+
+.trad_green .contrast_text {
+  color: #000; }
+
+.trad_green .lgt-text {
+  color: #60A35F; }
+
+.trad_green .lgt-bg {
+  background-color: #60A35F; }
+
+.trad_green .med-text {
+  color: #4D894F; }
+
+.trad_green .med-bg {
+  background-color: #4D894F; }
+
+.trad_green .drk-text {
+  color: #416837; }
+
+.trad_green .drk-bg {
+  background-color: #416837; }
+
+.trad_green .link-text {
+  color: #60A35F; }
+
+.trad_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_green .nav-text {
+    color: #444; }
+    .trad_green .nav-text:hover {
+      color: #60A35F; }
+    .trad_green .nav-text.active {
+      color: #60A35F; } }
+
+.cont_green .contrast_text {
+  color: #000; }
+
+.cont_green .lgt-text {
+  color: #65C5B6; }
+
+.cont_green .lgt-bg {
+  background-color: #65C5B6; }
+
+.cont_green .med-text {
+  color: #479E93; }
+
+.cont_green .med-bg {
+  background-color: #479E93; }
+
+.cont_green .drk-text {
+  color: #378479; }
+
+.cont_green .drk-bg {
+  background-color: #378479; }
+
+.cont_green .link-text {
+  color: #65C5B6; }
+
+.cont_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_green .nav-text {
+    color: #444; }
+    .cont_green .nav-text:hover {
+      color: #65C5B6; }
+    .cont_green .nav-text.active {
+      color: #65C5B6; } }
+
+.inactive-pallette .contrast_text {
+  color: #000; }
+
+.inactive-pallette .lgt-text {
+  color: #1B5187; }
+
+.inactive-pallette .lgt-bg {
+  background-color: #B2B2B2; }
+
+.inactive-pallette .med-text {
+  color: #999999; }
+
+.inactive-pallette .med-bg {
+  background-color: #999999; }
+
+.inactive-pallette .drk-text {
+  color: #808080; }
+
+.inactive-pallette .drk-bg {
+  background-color: #808080; }
+
+.inactive-pallette .link-text {
+  color: #1B5187; }
+
+.inactive-pallette .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .inactive-pallette .nav-text {
+    color: #444; }
+    .inactive-pallette .nav-text:hover {
+      color: #1B5187; }
+    .inactive-pallette .nav-text.active {
+      color: #1B5187; } }
+
+/*---------------------------
+/ WIDTHS for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
 .pager {
   text-align: center;
   margin-bottom: 3rem;

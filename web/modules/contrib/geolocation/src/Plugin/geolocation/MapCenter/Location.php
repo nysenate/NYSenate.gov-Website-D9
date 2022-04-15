@@ -75,7 +75,6 @@ class Location extends MapCenterBase implements MapCenterInterface {
     $option_id = NULL;
 
     if (!empty($settings['location_option_id'])) {
-      $settings['location_option_id'];
       $option_id = $settings['location_option_id'];
     }
 

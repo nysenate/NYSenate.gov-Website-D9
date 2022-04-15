@@ -17,6 +17,10 @@
     return false;
   }
 
+  if (typeof drupalSettings.geolocation === 'undefined') {
+    return false;
+  }
+
   drupalSettings.geolocation.geocoder.google_geocoding_api = drupalSettings.geolocation.geocoder.google_geocoding_api || {};
 
   Drupal.geolocation.geocoder.googleGeocodingAPI = {};

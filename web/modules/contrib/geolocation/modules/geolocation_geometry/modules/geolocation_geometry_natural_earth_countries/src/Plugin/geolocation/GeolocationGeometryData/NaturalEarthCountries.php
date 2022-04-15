@@ -19,12 +19,13 @@ class NaturalEarthCountries extends GeolocationGeometryDataBase {
   /**
    * {@inheritdoc}
    */
-  public $sourceUri = 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip';
+  public $sourceUri = 'https://naturalearth.s3.amazonaws.com/110m_cultural/110m_cultural.zip';
+
 
   /**
    * {@inheritdoc}
    */
-  public $sourceFilename = 'ne_110m_admin_0_countries.zip';
+  public $sourceFilename = '110m_cultural.zip';
 
   /**
    * {@inheritdoc}

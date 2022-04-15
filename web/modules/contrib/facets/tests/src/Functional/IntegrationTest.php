@@ -301,6 +301,30 @@ class IntegrationTest extends FacetsTestBase {
     $this->clickLink('item');
     $this->assertSession()->linkNotExists('grape');
     $this->assertSession()->linkNotExists('orange');
+
+    // Disable negation again.
+    $this->drupalGet('admin/config/search/facets/' . $depending_facet_id . '/edit');
+    $edit = [
+      'facet_settings[dependent_processor][status]' => TRUE,
+      'facet_settings[dependent_processor][settings][' . $facet_id . '][enable]' => TRUE,
+      'facet_settings[dependent_processor][settings][' . $facet_id . '][condition]' => 'values',
+      'facet_settings[dependent_processor][settings][' . $facet_id . '][values]' => 'item',
+      'facet_settings[dependent_processor][settings][' . $facet_id . '][negate]' => FALSE,
+    ];
+    $this->submitForm($edit, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertSession()->pageTextContains('Displaying 5 search results');
+    $this->assertSession()->linkNotExists('grape');
+    $this->clickLink('item');
+    $this->assertSession()->pageTextContains('Displaying 3 search results');
+    $this->assertSession()->linkExists('grape');
+    $this->clickLink('grape');
+    $this->assertSession()->pageTextContains('Displaying 1 search results');
+    // Disable item again, and the grape should not be reflected in the search
+    // result anymore.
+    $this->clickLink('item');
+    $this->assertSession()->pageTextContains('Displaying 5 search results');
   }
 
   /**

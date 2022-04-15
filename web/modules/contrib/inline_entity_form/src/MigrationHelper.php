@@ -50,7 +50,9 @@ class MigrationHelper {
             'inline_entity_form_single' => 'inline_entity_form_simple',
             'inline_entity_form' => 'inline_entity_form_complex',
           ];
-          $migration['process']['options/type']['type']['map'] = array_merge($migration['process']['options/type']['type']['map'], $addition);
+          if (isset($migration['process']['options/type']['type']['map']) && is_array($migration['process']['options/type']['type']['map'])) {
+            $migration['process']['options/type']['type']['map'] = array_merge($migration['process']['options/type']['type']['map'], $addition);
+          }
         }
       }
     }

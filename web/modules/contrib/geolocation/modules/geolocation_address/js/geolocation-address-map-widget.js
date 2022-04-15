@@ -50,11 +50,15 @@
         }
 
         $.each(Drupal.geolocation.widgets, function (index, widget) {
-          if (settings.extraData._triggering_element_name.substr(-14) !== '[country_code]') {
+          if (typeof widget.settings.address_field === 'undefined') {
+            return;
+          }
+
+          if (settings.extraData._triggering_element_name.slice(-14) !== '[country_code]') {
             widget.addressTriggerCalled = false;
           }
 
-          if (settings.extraData._triggering_element_name.substr((widget.settings.address_field.length + 9) * -1) !== widget.settings.address_field + '_add_more') {
+          if (settings.extraData._triggering_element_name.slice((widget.settings.address_field.length + 9) * -1) !== widget.settings.address_field + '_add_more') {
             widget.addressAddMoreCalled = false;
           }
 
@@ -107,7 +111,7 @@
           return;
         }
 
-        var geolocationWidgetWrapper = $('.field--name-' + sourceFieldName.replace(/_/g, '-'), context);
+        var geolocationWidgetWrapper = $('.field--name-' + sourceFieldName.replace(/_/g, '-'), context).once('geolocation-address-integration-enabled');
         if (geolocationWidgetWrapper.length === 0) {
           return;
         }
@@ -354,6 +358,10 @@
                   widget.removeInput(delta);
                   var address = widget.addressInputToString(addressInput);
                   widget.addressToCoordinates(address).then(function (location) {
+                    if (Object.keys(location).length === 0) {
+                      widget.removeMarker(delta);
+                      return;
+                    }
                     widget.locationAlteredCallback('address-changed', location, delta);
                   });
                 });
@@ -403,6 +411,9 @@
                 var address = widget.getAddressByDelta(delta);
                 var addressString = widget.addressInputToString(address);
                 if (!addressString) {
+                  widget.removeAddress(delta);
+                  widget.removeInput(delta);
+                  widget.removeMarker(delta);
                   return;
                 }
                 widget.addressToCoordinates(addressString).then(function (location) {

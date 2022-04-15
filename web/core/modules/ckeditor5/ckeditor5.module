@@ -7,7 +7,9 @@
 
 declare(strict_types = 1);
 
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\MessageCommand;
@@ -211,7 +213,7 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
       }
 
       foreach ($plugins_config_form as $key => &$value) {
-        if (is_array($value) && strpos($key, '#') === FALSE) {
+        if (is_array($value) && strpos((string) $key, '#') === FALSE) {
           _add_ajax_listeners_to_plugin_inputs($value);
         }
       }
@@ -228,13 +230,44 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
   $form['filter_settings']['#wrapper_attributes']['id'] = 'filter-settings-wrapper';
 
   // Add an ID to the editor settings vertical tabs wrapper so it can be easily
-  // targeted by JavaScript.
+  // targeted by JavaScript. If there are no configurable plugins, render an
+  // empty container with the same ID instead.
   // @todo consider moving this to editor.module when this module is moved to
   //   Drupal core https://www.drupal.org/project/ckeditor5/issues/3231322.
-  $form['editor']['settings']['subform']['plugin_settings']['#wrapper_attributes']['id'] = 'plugin-settings-wrapper';
+  if (!empty($form['editor']['settings']['subform']['plugins'])) {
+    $form['editor']['settings']['subform']['plugin_settings']['#wrapper_attributes']['id'] = 'plugin-settings-wrapper';
+  }
+  else {
+    $form['editor']['settings']['subform']['plugin_settings'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'plugin-settings-wrapper'],
+    ];
+  }
 
   $form['#after_build'][] = [CKEditor5::class, 'assessActiveTextEditorAfterBuild'];
   $form['#validate'][] = [CKEditor5::class, 'validateSwitchingToCKEditor5'];
+  array_unshift($form['actions']['submit']['#submit'], 'ckeditor5_filter_format_edit_form_submit');
+}
+
+/**
+ * Form submission handler for filter format forms.
+ */
+function ckeditor5_filter_format_edit_form_submit(array $form, FormStateInterface $form_state) {
+  $limit_allowed_html_tags = isset($form['filters']['settings']['filter_html']['allowed_html']);
+  $manually_editable_tags = $form_state->getValue(['editor', 'settings', 'plugins', 'ckeditor5_sourceEditing', 'allowed_tags']);
+  if ($limit_allowed_html_tags && is_array($manually_editable_tags)) {
+    // When "Manually editable tags" and "limit allowed HTML tags" are both
+    // configured, the former informs the value of the latter. This dependent
+    // value is typically updated via AJAX, but it's possible for "Manually
+    // editable tags" to update without triggering the AJAX rebuild. That value
+    // is recalculated here on save to ensure it happens even if the AJAX
+    // rebuild doesn't happen.
+    $manually_editable_tags_restrictions = HTMLRestrictions::fromString(implode($manually_editable_tags));
+    $format = $form_state->get('ckeditor5_validated_pair')->getFilterFormat();
+    $allowed_html = HTMLRestrictions::fromTextFormat($format);
+    $combined_tags_string = $manually_editable_tags_restrictions->merge($allowed_html)->toFilterHtmlAllowedTagsString();
+    $form_state->setValue(['filters', 'filter_html', 'settings', 'allowed_html'], $combined_tags_string);
+  }
 }
 
 /**
@@ -391,18 +424,23 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
     $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.filter.admin';
   }
 
-  // If the 'ckeditor5/ie11.user.warnings' library is added as a dependency of
-  // other Ckeditor 5 libraries, it won't reliably work as the CKEditor 5 assets
-  // are loaded via AJAX, and the IE11-incompatible syntax in CKEditor 5 can
-  // prevent the AJAX call from successfully loading the functionality in
-  // 'ckeditor5/ie11.user.warnings'. Adding this as a dependency of
-  // 'system/base', as excessive as it may seem, is the most reliable way to
-  // assure it is loaded as part of the page request.
-  if ($extension === 'system') {
-    $libraries['base']['dependencies'][] = 'ckeditor5/ie11.user.warnings';
+  $moduleHandler = \Drupal::moduleHandler();
+
+  if ($extension === 'ckeditor5') {
+    // Add paths to stylesheets specified by a theme's ckeditor5-stylesheets
+    // config property.
+    $css = _ckeditor5_theme_css();
+    $libraries['drupal.ckeditor5.stylesheets'] = [
+      'css' => [
+        'theme' => array_fill_keys(array_values($css), []),
+      ],
+    ];
+
+    if ($moduleHandler->moduleExists('quickedit')) {
+      $libraries['drupal.ckeditor5']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around';
+    }
   }
 
-  $moduleHandler = \Drupal::moduleHandler();
   // Only add translation processing if the locale module is enabled.
   if (!$moduleHandler->moduleExists('locale')) {
     return;
@@ -568,4 +606,45 @@ function ckeditor5_config_schema_info_alter(&$definitions) {
   $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['filters'] = $definitions['filter.format.*']['mapping']['filters'];
   // @see @see editor.editor.*.image_upload
   $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['image_upload'] = $definitions['editor.editor.*']['mapping']['image_upload'];
+}
+
+/**
+ * Retrieves the default theme's CKEditor 5 stylesheets.
+ *
+ * Themes may specify CSS files for use within CKEditor 5 by including a
+ * "ckeditor5-stylesheets" key in their .info.yml file.
+ *
+ * @code
+ * ckeditor5-stylesheets:
+ *   - css/ckeditor.css
+ * @endcode
+ *
+ * @return string[]
+ *   A list of paths to CSS files.
+ */
+function _ckeditor5_theme_css($theme = NULL): array {
+  $css = [];
+  if (!isset($theme)) {
+    $theme = \Drupal::config('system.theme')->get('default');
+  }
+  if (isset($theme) && $theme_path = \Drupal::service('extension.list.theme')->getPath($theme)) {
+    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    if (isset($info['ckeditor5-stylesheets'])) {
+      $css = $info['ckeditor5-stylesheets'];
+      foreach ($css as $key => $url) {
+        // CSS url is external or relative to Drupal root.
+        if (UrlHelper::isExternal($url) || $url[0] === '/') {
+          $css[$key] = $url;
+        }
+        // CSS url is relative to theme.
+        else {
+          $css[$key] = '/' . $theme_path . '/' . $url;
+        }
+      }
+    }
+    if (isset($info['base theme'])) {
+      $css = array_merge(_ckeditor5_theme_css($info['base theme']), $css);
+    }
+  }
+  return $css;
 }

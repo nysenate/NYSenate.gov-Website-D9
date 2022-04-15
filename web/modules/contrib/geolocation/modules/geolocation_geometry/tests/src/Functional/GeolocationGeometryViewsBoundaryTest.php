@@ -15,7 +15,7 @@ class GeolocationGeometryViewsBoundaryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'field',
     'views',
@@ -47,7 +47,7 @@ class GeolocationGeometryViewsBoundaryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     ViewTestData::createTestViews(get_class($this), ['geolocation_geometry_test_views']);

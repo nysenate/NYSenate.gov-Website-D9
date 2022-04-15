@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\r4032login\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -24,7 +25,7 @@ class DestinationParameterOverrideTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $config = $this->config('r4032login.settings');
@@ -34,35 +35,14 @@ class DestinationParameterOverrideTest extends BrowserTestBase {
 
   /**
    * Test destination parameter override.
-   *
-   * @param string $path
-   *   Request path.
-   * @param string $destination
-   *   Resulting URL.
-   *
-   * @dataProvider destinationParameterOverrideDataProvider
    */
-  public function testDestinationParameterOverride($path, $destination) {
-    $this->drupalGet($path);
+  public function testDestinationParameterOverride() {
+    $this->drupalGet('admin/config');
 
-    $currentUrl = str_replace($this->baseUrl . '/', '', $this->getUrl());
-    $this->assertEquals($currentUrl, $destination);
-  }
+    $currentUrl = $this->getSession()->getCurrentUrl();
+    $expectedUrl = $this->getAbsoluteUrl('user/login?customDestination=' . Url::fromUserInput('/admin/config')->toString());
 
-  /**
-   * Data provider for testDestinationParameterOverride.
-   */
-  public function destinationParameterOverrideDataProvider() {
-    return [
-      [
-        'admin/config',
-        'user/login?customDestination=admin/config',
-      ],
-      [
-        'admin/modules',
-        'user/login?customDestination=admin/modules',
-      ],
-    ];
+    $this->assertEquals($expectedUrl, $currentUrl);
   }
 
 }

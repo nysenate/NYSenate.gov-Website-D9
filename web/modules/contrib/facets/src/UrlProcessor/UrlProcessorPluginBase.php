@@ -152,4 +152,11 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getRequest(): Request {
+    return $this->request;
+  }
+
 }

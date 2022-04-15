@@ -20,14 +20,27 @@ import { Command } from 'ckeditor5/src/core';
 function getClosestElementWithElementStyleAttribute(selection, schema) {
   const selectedElement = selection.getSelectedElement();
 
-  return selectedElement &&
+  if (
+    selectedElement &&
     schema.checkAttribute(selectedElement, 'drupalElementStyle')
-    ? selectedElement
-    : selection
-        .getFirstPosition()
-        .findAncestor((element) =>
-          schema.checkAttribute(element, 'drupalElementStyle'),
-        );
+  ) {
+    return selectedElement;
+  }
+
+  let parent = selection.getFirstPosition().parent;
+
+  while (parent) {
+    if (
+      parent.is('element') &&
+      schema.checkAttribute(parent, 'drupalElementStyle')
+    ) {
+      return parent;
+    }
+
+    parent = parent.parent;
+  }
+
+  return null;
 }
 
 /**
@@ -69,10 +82,25 @@ export default class DrupalElementStyleCommand extends Command {
 
     this.isEnabled = !!element;
 
-    if (!this.isEnabled) {
-      this.value = false;
-    } else if (element.hasAttribute('drupalElementStyle')) {
+    if (this.isEnabled) {
       this.value = element.getAttribute('drupalElementStyle');
+
+      // If value is falsy, check if there is a default style to apply to the
+      // element.
+      if (!this.value) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [name, style] of this._styles.entries()) {
+          if (style.isDefault) {
+            const appliesToCurrentElement = style.modelElements.find(
+              (modelElement) => element.is('element', modelElement),
+            );
+            if (appliesToCurrentElement) {
+              this.value = name;
+              break;
+            }
+          }
+        }
+      }
     } else {
       this.value = false;
     }

@@ -230,33 +230,19 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 14
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    weight: 9
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 18
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    weight: 10
+    weight: 13
     region: content
     settings:
       display_label: true
@@ -281,14 +267,16 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 17
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   langcode: true
+  promote: true
+  sticky: true

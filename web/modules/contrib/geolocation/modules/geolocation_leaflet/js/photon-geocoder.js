@@ -11,6 +11,7 @@
  * @property {String} properties.state
  * @property {String} properties.postcode
  * @property {String} properties.country
+ * @property {String} properties.housenumber
  */
 
 /**
@@ -102,7 +103,11 @@
                   $.each(data.features, function (index, result) {
                     var formatted_address = [];
                     if (typeof result.properties.street !== 'undefined') {
-                      formatted_address.push(result.properties.street);
+                      var street = result.properties.street;
+                      if (typeof result.properties.housenumber !== 'undefined') {
+                        street = result.properties.housenumber + ' ' + street;
+                      }
+                      formatted_address.push(street);
                     }
                     if (typeof result.properties.city !== 'undefined') {
                       formatted_address.push(result.properties.city);
@@ -117,7 +122,11 @@
                       formatted_address.push(result.properties.country);
                     }
 
-                    var formatted_value = result.properties.name + ' - ' + formatted_address.join(', ');
+                    var formatted_value = '';
+                    if (typeof result.properties.name !== 'undefined') {
+                      formatted_value = result.properties.name + ' - ';
+                    }
+                    formatted_value += formatted_address.join(', ');
 
                     if (drupalSettings.geolocation.geocoder.photon.removeDuplicates) {
                       var existingResults = $.grep(autocompleteResults, function (resultItem) {

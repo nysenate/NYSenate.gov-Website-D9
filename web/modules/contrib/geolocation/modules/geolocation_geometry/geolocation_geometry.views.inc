@@ -216,7 +216,7 @@ function geolocation_geometry_field_views_data(FieldStorageConfigInterface $fiel
 /**
  * Implements hook_field_views_data_views_data_alter().
  */
-function geolocation_geometry_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field_storage) {
+function geolocation_geometry_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
   $entity_type = $field_storage->getTargetEntityTypeId();
   /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $entity_storage */
   $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type);

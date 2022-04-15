@@ -6,7 +6,7 @@ use Drupal\geolocation\MapFeatureBase;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Provides Spiderfying.
+ * Provides Spiderfying function.
  *
  * @MapFeature(
  *   id = "spiderfying",

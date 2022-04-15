@@ -65,10 +65,6 @@ class LinksWidget extends WidgetPluginBase {
       $url_processor = $urlProcessorManager->createInstance($facet->getFacetSourceConfig()->getUrlProcessorName(), ['facet' => $facet]);
       $active_filters = $url_processor->getActiveFilters();
 
-      if (isset($active_filters[''])) {
-        unset($active_filters['']);
-      }
-
       unset($active_filters[$facet->id()]);
 
       // Only if there are still active filters, use url generator.

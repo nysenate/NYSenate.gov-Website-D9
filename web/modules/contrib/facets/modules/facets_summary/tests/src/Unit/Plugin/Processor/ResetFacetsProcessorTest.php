@@ -34,7 +34,12 @@ class ResetFacetsProcessorTest extends UnitTestCase {
     $container->set('string_translation', $string_translation->reveal());
     \Drupal::setContainer($container);
 
-    $this->processor = new ResetFacetsProcessor(['settings' => ['link_text' => 'Text']], 'reset_facets', []);
+    $this->processor = new ResetFacetsProcessor([
+      'settings' => [
+        'link_text' => 'Text',
+        'position' => ResetFacetsProcessor::POSITION_BEFORE,
+      ],
+    ], 'reset_facets', []);
   }
 
   /**
@@ -66,7 +71,10 @@ class ResetFacetsProcessorTest extends UnitTestCase {
     $config = [
       'processor_id' => 'reset_facets',
       'weights' => [],
-      'settings' => ['link_text' => 'Text'],
+      'settings' => [
+        'link_text' => 'Text',
+        'position' => ResetFacetsProcessor::POSITION_BEFORE,
+      ],
     ];
     $summary->addProcessor($config);
 

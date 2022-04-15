@@ -167,38 +167,55 @@ class DependentFacetProcessor extends ProcessorPluginBase implements BuildProces
       return $results;
     }
 
-    $return = TRUE;
-
     foreach ($enabled_conditions as $facet_id => $condition_settings) {
 
       /** @var \Drupal\facets\Entity\Facet $current_facet */
       $current_facet = $this->facetStorage->load($facet_id);
-      $current_facet = $this->facetsManager->returnProcessedFacet($current_facet);
+      $current_facet = $this->facetsManager->returnBuiltFacet($current_facet);
 
-      if ($condition_settings['condition'] == 'not_empty') {
-        $return = !empty($current_facet->getActiveItems());
-      }
-
-      if ($condition_settings['condition'] == 'values') {
-        $return = FALSE;
-
-        $values = explode(',', $condition_settings['values']);
-        foreach ($current_facet->getResults() as $result) {
-          $isActive = $result->isActive();
-          $raw_value_in_expected = in_array($result->getRawValue(), $values);
-          $display_value_in_expected = in_array($result->getDisplayValue(), $values);
-          if ($isActive && ($raw_value_in_expected || $display_value_in_expected)) {
-            $return = TRUE;
-          }
-        }
-      }
-
-      if (!empty($condition_settings['negate'])) {
-        $return = !$return;
+      if (!$this->isConditionMet($condition_settings, $current_facet)) {
+        return [];
       }
     }
 
-    return $return ? $results : [];
+    return $results;
+  }
+
+  /**
+   * Check if the condition for a given facet is met.
+   *
+   * @param array $condition_settings
+   *   The condition settings for the facet to check.
+   * @param \Drupal\facets\FacetInterface $facet
+   *   The facet to check.
+   *
+   * @return bool
+   *   TRUE if the condition is met.
+   */
+  public function isConditionMet(array $condition_settings, FacetInterface $facet) {
+    $return = TRUE;
+
+    if ($condition_settings['condition'] === 'not_empty') {
+      $return = !empty($facet->getActiveItems());
+    }
+
+    if ($condition_settings['condition'] === 'values') {
+      $return = FALSE;
+
+      $values = explode(',', $condition_settings['values']);
+      foreach ($facet->getActiveItems() as $value) {
+        if (in_array($value, $values)) {
+          $return = TRUE;
+          break;
+        }
+      }
+    }
+
+    if (!empty($condition_settings['negate'])) {
+      $return = !$return;
+    }
+
+    return $return;
   }
 
 }

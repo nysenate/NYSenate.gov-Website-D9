@@ -9,7 +9,7 @@ geolocation_yandex.settings:
       type: sequence
       label: 'Yandex Maps API Packages'
       sequence:
-        type: label
+        type: string
         label: 'Package'
 
 geolocation.map_provider.yandex:
@@ -19,6 +19,12 @@ geolocation.map_provider.yandex:
     zoom:
       type: string
       label: 'Zoom level'
+    max_zoom:
+      type: string
+      label: 'Max Zoom level'
+    min_zoom:
+      type: string
+      label: 'Min Zoom level'
     height:
       type: string
       label: 'Height value'

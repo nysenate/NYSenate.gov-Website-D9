@@ -5,7 +5,7 @@ namespace Drupal\geolocation;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Class MapFeatureFrontendBase.
+ * Class MapFeatureFrontend Base.
  *
  * @package Drupal\geolocation
  */

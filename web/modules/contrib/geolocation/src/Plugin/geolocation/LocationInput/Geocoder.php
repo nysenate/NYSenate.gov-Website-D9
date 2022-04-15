@@ -94,7 +94,9 @@ class Geocoder extends LocationInputBase implements LocationInputInterface, Cont
         '#title' => $this->t('Geocoder plugin'),
         '#default_value' => $settings['plugin_id'],
         '#ajax' => [
-          'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
+          'callback' => [
+            get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax',
+          ],
           'wrapper' => 'location-input-geocoder-plugin-settings',
           'effect' => 'fade',
         ],
@@ -177,16 +179,16 @@ class Geocoder extends LocationInputBase implements LocationInputInterface, Cont
   /**
    * {@inheritdoc}
    */
-  public function getForm($option_id, array $option_settings, $context = NULL, array $default_value = NULL) {
-    $form = parent::getForm($option_id, $option_settings, $context, $default_value);
+  public function getForm(string $center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL) {
+    $form = parent::getForm($center_option_id, $center_option_settings, $context, $default_value);
 
     if (empty($form['coordinates'])) {
       return $form;
     }
 
-    $option_settings = $this->getSettings($option_settings);
+    $center_option_settings = $this->getSettings($center_option_settings);
 
-    $identifier = uniqid($option_id);
+    $identifier = uniqid($center_option_id);
 
     $form['coordinates']['#attributes'] = [
       'class' => [
@@ -207,8 +209,8 @@ class Geocoder extends LocationInputBase implements LocationInputInterface, Cont
               'geocoder' => [
                 [
                   'identifier' => $identifier,
-                  'autoSubmit' => $option_settings['auto_submit'],
-                  'hideForm' => $option_settings['hide_form'],
+                  'autoSubmit' => $center_option_settings['auto_submit'],
+                  'hideForm' => $center_option_settings['hide_form'],
                 ],
               ],
             ],
@@ -219,8 +221,8 @@ class Geocoder extends LocationInputBase implements LocationInputInterface, Cont
 
     /** @var \Drupal\geolocation\GeocoderInterface $geocoder_plugin */
     $geocoder_plugin = $this->geocoderManager->getGeocoder(
-      $option_settings['plugin_id'],
-      $option_settings['settings']
+      $center_option_settings['plugin_id'],
+      $center_option_settings['settings']
     );
 
     $geocoder_plugin->formAttachGeocoder($form['geocoder'], $identifier);

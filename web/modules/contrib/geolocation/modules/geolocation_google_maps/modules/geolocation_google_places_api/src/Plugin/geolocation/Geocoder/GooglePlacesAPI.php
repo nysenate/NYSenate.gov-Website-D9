@@ -127,7 +127,7 @@ class GooglePlacesAPI extends GoogleGeocoderBase {
         'lat' => $details['result']['geometry']['location']['lat'],
         'lng' => $details['result']['geometry']['location']['lng'],
       ],
-      // TODO: Add viewport or build it if missing.
+      // @todo Add viewport or build it if missing.
       'boundary' => [
         'lat_north_east' => empty($details['result']['geometry']['viewport']) ? $details['result']['geometry']['location']['lat'] + 0.005 : $details['result']['geometry']['viewport']['northeast']['lat'],
         'lng_north_east' => empty($details['result']['geometry']['viewport']) ? $details['result']['geometry']['location']['lng'] + 0.005 : $details['result']['geometry']['viewport']['northeast']['lng'],

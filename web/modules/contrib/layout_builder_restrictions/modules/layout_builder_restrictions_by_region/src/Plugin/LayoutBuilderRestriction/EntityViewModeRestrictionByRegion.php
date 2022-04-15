@@ -343,6 +343,8 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
       // Pre-load all reusable blocks by UUID to retrieve block type.
       $query = $this->database->select('block_content', 'b')
         ->fields('b', ['uuid', 'type']);
+      $query->join('block_content_field_data', 'bc', 'b.id = bc.id');
+      $query->condition('bc.reusable', 1);
       $results = $query->execute();
       return $results->fetchAllKeyed(0, 1);
     }

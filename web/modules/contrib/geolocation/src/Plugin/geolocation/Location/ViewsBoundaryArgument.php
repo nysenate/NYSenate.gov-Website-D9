@@ -22,7 +22,7 @@ class ViewsBoundaryArgument extends LocationBase implements LocationInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAvailableLocationOptions($context) {
+  public function getAvailableLocationOptions($context): array {
     $options = [];
 
     if ($displayHandler = self::getViewsDisplayHandler($context)) {

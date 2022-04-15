@@ -27,7 +27,7 @@ class Geofield extends DataProviderBase implements DataProviderInterface {
   public function isViewsGeoOption(FieldPluginBase $views_field) {
     if (
       $views_field instanceof EntityField
-      && $views_field->getPluginId() == 'field'
+      && in_array($views_field->getPluginId(), ['field', 'search_api_field'])
     ) {
       $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($views_field->getEntityType());
       if (!empty($field_storage_definitions[$views_field->field])) {

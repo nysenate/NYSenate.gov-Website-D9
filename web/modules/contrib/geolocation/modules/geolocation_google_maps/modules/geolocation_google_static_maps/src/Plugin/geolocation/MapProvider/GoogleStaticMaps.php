@@ -25,7 +25,7 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
   /**
    * {@inheritdoc}
    */
-  public static function getDefaultSettings() {
+  public static function getDefaultSettings(): array {
     return array_replace_recursive(
       parent::getDefaultSettings(),
       [
@@ -40,7 +40,7 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function getSettingsForm(array $settings, array $parents = []) {
+  public function getSettingsForm(array $settings, array $parents = []): array {
     $form = parent::getSettingsForm($settings, $parents);
     $parents_string = '';
     if ($parents) {
@@ -114,9 +114,43 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
   }
 
   /**
+   * Sign a URL with a given crypto key.
+   *
+   * Note that this URL must be properly URL-encoded.
+   *
+   * @param string $url
+   *   URL to sign.
+   *
+   * @return string
+   *   Signed URL.
+   */
+  public function signUrl(string $url): string {
+    $config = \Drupal::config('geolocation_google_static_maps.settings');
+    $secret = $config->get('google_static_maps_url_secret');
+    if (empty($secret)) {
+      return $url;
+    }
+
+    $url_parts = parse_url($url);
+
+    $urlPartToSign = $url_parts['path'] . "?" . $url_parts['query'];
+
+    // Decode the private key into its binary format.
+    $decodedKey = base64_decode(str_replace(['-', '_'], ['+', '/'], $secret));
+
+    // Create a signature using the private key and the URL-encoded
+    // string using HMAC SHA1. This signature will be binary.
+    $signature = hash_hmac("sha1", $urlPartToSign, $decodedKey, TRUE);
+
+    $encodedSignature = str_replace(['+', '/'], ['-', '_'], base64_encode($signature));
+
+    return $url . '&signature=' . $encodedSignature;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function alterRenderArray(array $render_array, array $map_settings, array $context = []) {
+  public function alterRenderArray(array $render_array, array $map_settings, array $context = []): array {
     $additional_parameters = [
       'type' => strtolower($map_settings['type']),
       'size' => filter_var($map_settings['width'], FILTER_SANITIZE_NUMBER_INT) . 'x' . filter_var($map_settings['height'], FILTER_SANITIZE_NUMBER_INT),
@@ -143,7 +177,14 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
       $static_map_url .= $marker_string;
     }
 
-    return ['#markup' => '<img src="' . $static_map_url . '">'];
+    return [
+      '#theme' => 'image',
+      '#uri' => $this->signUrl($static_map_url),
+      '#google_static_map' => [
+        'map_settings' => $map_settings,
+        'context' => $context,
+      ],
+    ];
   }
 
 }

@@ -3,12 +3,10 @@
 namespace Drupal\geolocation_geocodio\Plugin\geolocation\Geocoder;
 
 use GuzzleHttp\Exception\RequestException;
-use Drupal\Core\Url;
-use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Component\Serialization\Json;
 use Drupal\geolocation\GeocoderBase;
 use Drupal\geolocation\GeocoderInterface;
 use Geocodio\Geocodio as GeocodioApi;
+use Drupal\geolocation\KeyProvider;
 
 /**
  * Provides a Geocodio integration.
@@ -40,7 +38,8 @@ class Geocodio extends GeocoderBase implements GeocoderInterface {
 
     // Set up connection to geocod.io.
     $geocoder = new GeocodioAPI();
-    $geocoder->setApiKey($config->get('api_key'));
+    $key = KeyProvider::getKeyValue($config->get('api_key'));
+    $geocoder->setApiKey($key);
 
     // Attempt to geolocate address.
     try {

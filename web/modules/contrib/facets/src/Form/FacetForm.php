@@ -20,6 +20,7 @@ use Drupal\facets\Widget\WidgetPluginManager;
 use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provides a form for configuring the processors of a facet.
@@ -144,6 +145,15 @@ class FacetForm extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    // Redirect to facets settings page if Field Identifier is not set.
+    if ($facets = \Drupal::routeMatch()->getParameter('facets_facet')) {
+      if ($facets->getFieldIdentifier() === NULL) {
+        $facet_settings_path = $facets->toUrl('settings-form')->toString();
+        $response = new RedirectResponse($facet_settings_path);
+        $response->send();
+        return [];
+      }
+    }
     $form['#attached']['library'][] = 'facets/drupal.facets.admin_css';
 
     /** @var \Drupal\facets\FacetInterface $facet */
@@ -463,7 +473,7 @@ class FacetForm extends EntityForm {
       $processor_url = Url::fromRoute('entity.search_api_index.processors', [
         'search_api_index' => $facet->getFacetSource()->getIndex()->id(),
       ]);
-      $description = $this->t('Renders the items using hierarchy. Make sure to enable the hierarchy processor on the <a href=":processor-url">Search api index processor configuration</a> for this to work as expected. If disabled all items will be flatten.', [
+      $description = $this->t('Renders the items using hierarchy. Make sure to enable the hierarchy processor on the <a href=":processor-url">Search api index processor configuration</a> for this to work as expected. If disabled all items will be flattened.', [
         ':processor-url' => $processor_url->toString(),
       ]);
       $form['facet_settings']['use_hierarchy']['#description'] = $description;

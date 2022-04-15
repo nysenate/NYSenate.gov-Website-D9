@@ -3,7 +3,7 @@
 namespace Drupal\geolocation_geometry;
 
 /**
- * Trait GeometryProximityTrait.
+ * Trait GeometryProximity.
  */
 trait GeometryProximityTrait {
 

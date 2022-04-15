@@ -191,10 +191,7 @@ function facets_update_8006() {
  * Resave facets for consistent configuration export.
  */
 function facets_update_8007() {
-  $facets = Facet::loadMultiple();
-  foreach ($facets as $facet) {
-    $facet->save();
-  }
+  // Moved to facets_update_8009().
 }
 
 /**
@@ -207,5 +204,15 @@ function facets_update_8008() {
     $facet = $config_factory->getEditable($facet_config_name);
     $facet->set('hierarchy', ['type' => 'taxonomy', 'config' => []]);
     $facet->save(TRUE);
+  }
+}
+
+/**
+ * Resave facets for consistent configuration export.
+ */
+function facets_update_8009() {
+  $facets = Facet::loadMultiple();
+  foreach ($facets as $facet) {
+    $facet->save();
   }
 }

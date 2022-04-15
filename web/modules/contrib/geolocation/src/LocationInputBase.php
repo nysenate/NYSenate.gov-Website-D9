@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class LocationInputBase.
+ * Class LocationInput Base.
  *
  * @package Drupal\geolocation
  */
@@ -87,7 +87,7 @@ abstract class LocationInputBase extends PluginBase implements LocationInputInte
   /**
    * {@inheritdoc}
    */
-  public function getForm($center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL) {
+  public function getForm(string $center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL) {
     $form['coordinates'] = [
       '#type' => 'geolocation_input',
       '#title' => $this->t('Coordinates'),

@@ -198,9 +198,6 @@ trait LeafletTileLayerProviders {
       'NLS' => [
         'NLS' => 'NLS',
       ],
-      'Wikimedia' => [
-        'Wikimedia' => 'Wikimedia',
-      ],
       'GeoportailFrance' => [
         'GeoportailFrance parcels' => 'GeoportailFrance parcels',
         'GeoportailFrance ignMaps' => 'GeoportailFrance ignMaps',

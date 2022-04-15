@@ -74,18 +74,18 @@ interface LocationInputInterface extends PluginInspectionInterface {
   /**
    * Get center form.
    *
-   * @param int $center_option_id
+   * @param string $center_option_id
    *   LocationInput option ID.
    * @param array $center_option_settings
    *   The current feature settings.
    * @param mixed $context
    *   Context like field formatter, field widget or view.
-   * @param array $default_value
+   * @param array|null $default_value
    *   Optional form values.
    *
    * @return array
    *   Form.
    */
-  public function getForm($center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL);
+  public function getForm(string $center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL);
 
 }

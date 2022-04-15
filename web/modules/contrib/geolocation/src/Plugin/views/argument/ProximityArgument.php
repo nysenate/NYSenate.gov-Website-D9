@@ -104,21 +104,43 @@ class ProximityArgument extends Formula {
     static $values;
 
     if (!isset($values)) {
+      // Get the value.
+      $value = $this->getValue();
+
+      // Set static values to empty array and return early if no argument.
+      if (empty($value)) {
+        $values = [];
+        return FALSE;
+      }
       // Process argument values into an array.
       preg_match('/^([0-9\-.]+),+([0-9\-.]+)([<>=]+)([0-9.]+)(.*$)/', $this->getValue(), $values);
-      // Validate and return the passed argument.
+
+      // Validate latitude is set and in range.
+      if (!(isset($values[1]) && $values[1] >= -90 && $values[1] <= 90)) {
+        return FALSE;
+      }
+
+      // Validate longitude is set and in range.
+      if (!(isset($values[2]) && $values[2] >= -180 && $values[2] <= 180)) {
+        return FALSE;
+      }
+
+      // Validate operator is in a list of permitted values.
+      if (!(isset($values[3])
+        && in_array($values[3], ['<>', '=', '>=', '<=', '>', '<']))) {
+        return FALSE;
+      }
+
+      // Validate distance is positive and non-zero.
+      if (!(isset($values[4]) && $values[4] > 0)) {
+        return FALSE;
+      }
+
       $values = is_array($values) ? [
-        'lat' => (isset($values[1]) && is_numeric($values[1]) && $values[1] >= -90 && $values[1] <= 90) ? floatval($values[1]) : FALSE,
-        'lng' => (isset($values[2]) && is_numeric($values[2]) && $values[2] >= -180 && $values[2] <= 180) ? floatval($values[2]) : FALSE,
-        'operator' => (isset($values[3]) && in_array($values[3], [
-          '<>',
-          '=',
-          '>=',
-          '<=',
-          '>',
-          '<',
-        ])) ? $values[3] : '<=',
-        'distance' => (isset($values[4])) ? floatval($values[4]) : FALSE,
+        'lat' => floatval($values[1]),
+        'lng' => floatval($values[2]),
+        'operator' => $values[3],
+        'distance' => floatval($values[4]),
         'unit' => isset($values[5]) ? $values[5] : 'km',
       ] : FALSE;
     }

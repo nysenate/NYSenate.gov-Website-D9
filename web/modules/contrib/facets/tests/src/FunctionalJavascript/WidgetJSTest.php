@@ -357,13 +357,13 @@ class WidgetJSTest extends JsBase {
       // that points to the updated search result as the value, and is not
       // selected.
       [
-        ' item (3)',
+        'item (3)',
         base_path() . 'search-api-test-fulltext?f%5B0%5D=llama%3Aitem',
         FALSE,
       ],
       // The third option is similar.
       [
-        ' article (2)',
+        'article (2)',
         base_path() . 'search-api-test-fulltext?f%5B0%5D=llama%3Aarticle',
         FALSE,
       ],
@@ -395,13 +395,13 @@ class WidgetJSTest extends JsBase {
       // would negate it, it should also link to the search page without any
       // chosen facets.
       [
-        ' item (3)',
+        'item (3)',
         base_path() . 'search-api-test-fulltext',
         TRUE,
       ],
       // The third option remains unchanged.
       [
-        ' article (2)',
+        'article (2)',
         base_path() . 'search-api-test-fulltext?f%5B0%5D=llama%3Aarticle',
         FALSE,
       ],
@@ -426,7 +426,7 @@ class WidgetJSTest extends JsBase {
       $option = $options[$key];
       // There can be multiple spaces or newlines between the value text and the
       // number of results. Reduce them to a single space before asserting.
-      $this->assertEquals($text, preg_replace('/\s+/', ' ', $option->getText()));
+      $this->assertEquals($text, trim(preg_replace('/\s+/', ' ', $option->getText())));
       $this->assertEquals($value, $option->getValue());
       $this->assertEquals($selected, $option->isSelected());
     }

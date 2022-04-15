@@ -25,7 +25,7 @@ class LeafletMarkerPopup extends MapFeatureBase {
       'info_auto_display' => FALSE,
       'max_width' => 300,
       'min_width' => 50,
-      'max_height' => FALSE,
+      'max_height' => 0,
       'auto_pan' => TRUE,
       'keep_in_view' => FALSE,
       'close_button' => TRUE,

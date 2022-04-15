@@ -18,7 +18,7 @@ class GeolocationGeometryGeometryTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'geolocation',
     'geolocation_geometry',
   ];
@@ -26,7 +26,7 @@ class GeolocationGeometryGeometryTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a geolocation field storage and field for validation.

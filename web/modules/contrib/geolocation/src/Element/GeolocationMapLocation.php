@@ -83,8 +83,10 @@ class GeolocationMapLocation extends RenderElement {
       $render_array['#attributes']->setAttribute('id', $render_array['#id']);
     }
 
-    $render_array['#attributes']->setAttribute('data-lat', $render_array['#coordinates']['lat']);
-    $render_array['#attributes']->setAttribute('data-lng', $render_array['#coordinates']['lng']);
+    if (!empty($render_array['#coordinates'])) {
+      $render_array['#attributes']->setAttribute('data-lat', $render_array['#coordinates']['lat']);
+      $render_array['#attributes']->setAttribute('data-lng', $render_array['#coordinates']['lng']);
+    }
 
     if (empty($render_array['#hidden'])) {
       $render_array['#attributes']->setAttribute('data-set-marker', 'true');

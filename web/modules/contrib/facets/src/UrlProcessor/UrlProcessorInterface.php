@@ -3,6 +3,7 @@
 namespace Drupal\facets\UrlProcessor;
 
 use Drupal\facets\FacetInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Interface UrlProcessorInterface.
@@ -78,5 +79,13 @@ interface UrlProcessorInterface {
    *   value being an array of raw values.
    */
   public function setActiveFilters(array $active_filters);
+
+  /**
+   * Returns the request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request
+   *   The request.
+   */
+  public function getRequest(): Request;
 
 }

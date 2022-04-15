@@ -367,7 +367,7 @@ class ValidatorsTest extends KernelTestBase {
   public function providerPair(): array {
     // cspell:ignore donk
     $data = [];
-    $data['INVALID: non-HTML format: filter_autop'] = [
+    $data['VALID: legacy format: filter_autop'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -388,11 +388,9 @@ class ValidatorsTest extends KernelTestBase {
           'settings' => [],
         ],
       ],
-      'violations' => [
-        '' => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-      ],
+      'violations' => [],
     ];
-    $data['INVALID: non-HTML format: filter_autop + filter_url'] = [
+    $data['VALID: legacy HTML format: filter_autop + filter_url'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -422,14 +420,9 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'violations' => [
-        '' => [
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-        ],
-      ],
+      'violations' => [],
     ];
-    $data['INVALID: non-HTML format: filter_autop + filter_url (different order)'] = [
+    $data['VALID: legacy HTML format: filter_autop + filter_url (different order)'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -459,12 +452,7 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'violations' => [
-        '' => [
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-        ],
-      ],
+      'violations' => [],
     ];
     $data['INVALID: forbidden tags'] = [
       'settings' => [
@@ -506,10 +494,7 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'filters' => $restricted_html_format_filters,
       'violations' => [
-        '' => [
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-        ],
+        '' => 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are not allowed by the "<em class="placeholder">Limit allowed HTML tags and correct faulty HTML</em>" (<em class="placeholder">filter_html</em>) filter.',
       ],
     ];
     $data['INVALID: the modified restricted_html text format (with filter_autop and filter_url removed)'] = [
@@ -647,6 +632,7 @@ class ValidatorsTest extends KernelTestBase {
             'heading',
             'bold',
             'italic',
+            'link',
             'sourceEditing',
             'textPartLanguage',
           ],
@@ -666,8 +652,25 @@ class ValidatorsTest extends KernelTestBase {
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
+              // Tag-only; supported by enabled plugin.
               '<strong>',
+              // Tag-only; supported by disabled plugin.
               '<table>',
+              // Tag-only; supported by no plugin.
+              '<exotic>',
+              // Tag + attributes; all supported by enabled plugin.
+              '<span lang>',
+              // Tag + attributes; all supported by an ineligible disabled
+              // plugin (has no toolbar item, has conditions).
+              '<img src>',
+              // Tag + attributes; all supported by disabled plugin.
+              '<code class="language-*">',
+              // Tag + attributes; tag already supported by enabled plugin,
+              // attributes supported by disabled plugin
+              '<h2 class="text-align-center">',
+              // Tag + attributes; tag already supported by enabled plugin,
+              // attribute not supported by no plugin.
+              '<a hreflang>',
             ],
           ],
         ],
@@ -679,6 +682,9 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Bold (&lt;strong&gt;)</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these tags: <em class="placeholder">Table (&lt;table&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.3' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Language (&lt;span lang&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following tag(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these tags: <em class="placeholder">Code Block (&lt;code class=&quot;language-*&quot;&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Alignment (&lt;h2 class=&quot;text-align-center&quot;&gt;), Align center (&lt;h2 class=&quot;text-align-center&quot;&gt;)</em>.',
       ],
     ];
     $data['INVALID some invalid Source Editable tags provided by plugin and another available in a not enabled plugin'] = [
@@ -812,6 +818,38 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [
         'settings.toolbar.items.0' => 'The <em class="placeholder">Drupal media</em> toolbar item requires the <em class="placeholder">Embed media</em> filter to be enabled.',
       ],
+    ];
+    $data['VALID: HTML format: very minimal toolbar + wildcard in source editing HTML'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'bold',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => ['<$text-container data-llama>'],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p data-llama> <br> <strong>',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [],
     ];
 
     return $data;

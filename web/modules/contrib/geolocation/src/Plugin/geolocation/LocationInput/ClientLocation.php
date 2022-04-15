@@ -57,7 +57,7 @@ class ClientLocation extends LocationInputBase implements LocationInputInterface
   /**
    * {@inheritdoc}
    */
-  public function getForm($center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL) {
+  public function getForm(string $center_option_id, array $center_option_settings, $context = NULL, array $default_value = NULL) {
     $form = parent::getForm($center_option_id, $center_option_settings, $context, $default_value);
 
     $identifier = uniqid($center_option_id);

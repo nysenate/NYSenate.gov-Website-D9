@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\r4032login\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -24,59 +25,19 @@ class PreserveQueryStringTest extends BrowserTestBase {
   /**
    * Tests query string preservation.
    *
-   * @param string $path
-   *   Request path.
-   * @param array $options
-   *   Request options.
-   * @param int $code
-   *   Response status code.
-   * @param string $destination
-   *   Resulting URL.
-   *
-   * @dataProvider preserveQueryStringDataProvider
-   *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  public function testPreserveQueryString($path, array $options, $code, $destination) {
-    $this->drupalGet($path, $options);
-    $this->assertSession()->statusCodeEquals($code);
+  public function testPreserveQueryString() {
+    $this->drupalGet('admin/modules', [
+      'query' => [
+        'foo' => 'bar',
+      ],
+    ]);
 
-    $currentUrl = str_replace($this->baseUrl . '/', '', $this->getUrl());
-    $this->assertEquals($currentUrl, $destination);
-  }
+    $currentUrl = $this->getSession()->getCurrentUrl();
+    $expectedUrl = $this->getAbsoluteUrl('user/login?destination=' . Url::fromUserInput('/admin/modules')->toString() . '%3Ffoo%3Dbar');
 
-  /**
-   * Data provider for testPreserveQueryString.
-   */
-  public function preserveQueryStringDataProvider() {
-    return [
-      [
-        'admin/modules',
-        [],
-        200,
-        'user/login?destination=admin/modules',
-      ],
-      [
-        'admin/modules',
-        [
-          'query' => [
-            'foo' => 'bar',
-          ],
-        ],
-        200,
-        'user/login?destination=admin/modules%3Ffoo%3Dbar',
-      ],
-      [
-        'admin',
-        [
-          'query' => [
-            'destination' => 'admin/modules',
-          ],
-        ],
-        200,
-        'user/login?destination=admin%3Fdestination%3Dadmin%252Fmodules',
-      ],
-    ];
+    $this->assertEquals($expectedUrl, $currentUrl);
   }
 
 }

@@ -19,14 +19,15 @@
   Drupal.behaviors.locationInputGeocoder = {
     attach: function (context, drupalSettings) {
       $.each(drupalSettings.geolocation.locationInput.geocoder, function (index, settings) {
-        var input = $('.location-input-geocoder.' + settings.identifier, context).once('location-input-geocoder-processed').first();
-        if (input.length) {
+        var inputWrapper = $('.location-input-geocoder.' + settings.identifier, context).once('location-input-geocoder-processed').first();
+        if (inputWrapper.length) {
           if (settings.hideForm) {
-            input.hide();
+            inputWrapper.hide();
           }
 
-          var latitudeInput = input.find('input.geolocation-input-latitude').first();
-          var longitudeInput = input.find('input.geolocation-input-longitude').first();
+          var latitudeInput = inputWrapper.find('input.geolocation-input-latitude').first();
+          var longitudeInput = inputWrapper.find('input.geolocation-input-longitude').first();
+          var geocoderAddressInput = inputWrapper.parent().find('input.geolocation-geocoder-address').first();
 
           Drupal.geolocation.geocoder.addResultCallback(function (address) {
             if (typeof address.geometry.location === 'undefined') {
@@ -36,7 +37,10 @@
             longitudeInput.val(address.geometry.location.lng());
 
             if (settings.autoSubmit) {
-              input.closest('form').find('input.js-form-submit').first().click();
+              if (geocoderAddressInput.length) {
+                geocoderAddressInput.val(address.formatted_address);
+              }
+              inputWrapper.closest('form').find('input.js-form-submit').first().click();
             }
           }, settings.identifier);
 

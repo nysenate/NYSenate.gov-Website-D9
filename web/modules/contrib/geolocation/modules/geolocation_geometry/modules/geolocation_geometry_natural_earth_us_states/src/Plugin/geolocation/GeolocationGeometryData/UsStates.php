@@ -19,7 +19,7 @@ class UsStates extends GeolocationGeometryDataBase {
   /**
    * {@inheritdoc}
    */
-  public $sourceUri = 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_1_states_provinces.zip';
+  public $sourceUri = 'https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_1_states_provinces.zip?version=4.0.0';
 
   /**
    * {@inheritdoc}
@@ -60,12 +60,12 @@ class UsStates extends GeolocationGeometryDataBase {
           'geojson' => $record->getGeoJSON(),
         ]);
         $term->save();
+
+        $context['results'][] = $term->getName();
       }
-      return t('Done importing US States.');
     }
     catch (ShapefileException $e) {
       $logger->warning($e->getMessage());
-      return t('ERROR importing US States.');
     }
   }
 

@@ -183,7 +183,7 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     $this->assertSession()->linkNotExists('Child 3');
     $this->assertSession()->linkNotExists('Child 4');
 
-    // Click the the parent and make sure its children are not active, too.
+    // Click the parent and make sure its children are not active, too.
     $this->clickLink('Parent 1');
     $this->checkFacetIsNotActive('Parent 1');
     $this->assertSession()->linkNotExists('Child 1');

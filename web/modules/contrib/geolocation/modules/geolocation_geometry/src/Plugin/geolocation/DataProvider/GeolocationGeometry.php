@@ -247,7 +247,7 @@ class GeolocationGeometry extends DataProviderBase implements DataProviderInterf
 
         case 'LineString':
           $coordinates = '';
-          foreach ($shape->coordinates[0] as $coordinate) {
+          foreach ($shape->coordinates as $coordinate) {
             $coordinates .= $coordinate[1] . ',' . $coordinate[0] . ' ';
           }
 
@@ -272,7 +272,7 @@ class GeolocationGeometry extends DataProviderBase implements DataProviderInterf
           ];
           foreach ($shape->coordinates as $key => $polyline) {
             $coordinates = '';
-            foreach ($polyline[0] as $coordinate) {
+            foreach ($polyline as $coordinate) {
               $coordinates .= $coordinate[1] . ',' . $coordinate[0] . ' ';
             }
 

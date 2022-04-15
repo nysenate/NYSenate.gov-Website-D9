@@ -26,11 +26,13 @@ class Yandex extends MapProviderBase {
   /**
    * {@inheritdoc}
    */
-  public static function getDefaultSettings() {
+  public static function getDefaultSettings(): array {
     return array_replace_recursive(
       parent::getDefaultSettings(),
       [
         'zoom' => 10,
+        'min_zoom' => 0,
+        'max_zoom' => 20,
         'height' => '400px',
         'width' => '100%',
       ]
@@ -40,7 +42,7 @@ class Yandex extends MapProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function getSettings(array $settings) {
+  public function getSettings(array $settings): array {
     $settings = parent::getSettings($settings);
 
     $settings['zoom'] = (int) $settings['zoom'];
@@ -51,7 +53,7 @@ class Yandex extends MapProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function getSettingsSummary(array $settings) {
+  public function getSettingsSummary(array $settings): array {
     $settings = array_replace_recursive(
       self::getDefaultSettings(),
       $settings
@@ -66,7 +68,7 @@ class Yandex extends MapProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function getSettingsForm(array $settings, array $parents = []) {
+  public function getSettingsForm(array $settings, array $parents = []): array {
     $settings += self::getDefaultSettings();
     if ($parents) {
       $parents_string = implode('][', $parents);
@@ -109,13 +111,45 @@ class Yandex extends MapProviderBase {
       ],
     ];
 
+    $form['min_zoom'] = [
+      '#group' => $parents_string,
+      '#type' => 'select',
+      '#title' => $this->t('Minimum zoom'),
+      '#options' => range(0, 20),
+      '#description' => $this->t('Minimum map zoom level.'),
+      '#default_value' => $settings['min_zoom'],
+      '#process' => [
+        ['\Drupal\Core\Render\Element\RenderElement', 'processGroup'],
+        ['\Drupal\Core\Render\Element\Select', 'processSelect'],
+      ],
+      '#pre_render' => [
+        ['\Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'],
+      ],
+    ];
+
+    $form['max_zoom'] = [
+      '#group' => $parents_string,
+      '#type' => 'select',
+      '#title' => $this->t('Maximum zoom'),
+      '#options' => range(0, 20),
+      '#description' => $this->t('Maximum map zoom level.'),
+      '#default_value' => $settings['max_zoom'],
+      '#process' => [
+        ['\Drupal\Core\Render\Element\RenderElement', 'processGroup'],
+        ['\Drupal\Core\Render\Element\Select', 'processSelect'],
+      ],
+      '#pre_render' => [
+        ['\Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'],
+      ],
+    ];
+
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function alterRenderArray(array $render_array, array $map_settings, array $context = []) {
+  public function alterRenderArray(array $render_array, array $map_settings, array $context = []): array {
     $yandex_url_parts = parse_url(self::$apiBaseUrl);
 
     $render_array['#attached'] = BubbleableMetadata::mergeAttachments(
@@ -171,7 +205,7 @@ class Yandex extends MapProviderBase {
    *
    * @see https://tech.yandex.ru/maps/archive/doc/jsapi/2.0/ref/reference/packages-docpage/
    */
-  public static function getPackages() {
+  public static function getPackages(): array {
     return [
       'full' => t('Full'),
       'standard' => t('Standard'),
@@ -191,7 +225,7 @@ class Yandex extends MapProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function alterCommonMap(array $render_array, array $map_settings, array $context) {
+  public function alterCommonMap(array $render_array, array $map_settings, array $context): array {
     $render_array['#attached'] = BubbleableMetadata::mergeAttachments(
       empty($render_array['#attached']) ? [] : $render_array['#attached'],
       [
@@ -210,7 +244,7 @@ class Yandex extends MapProviderBase {
    * @return string
    *   Base Url.
    */
-  public function getApiUrl() {
+  public function getApiUrl(): string {
     $config = \Drupal::config('geolocation_yandex.settings');
     $api_key = $config->get('api_key');
 
@@ -228,13 +262,13 @@ class Yandex extends MapProviderBase {
   /**
    * Get allowed langcode by language ID.
    *
-   * @param string $langId
+   * @param string|null $langId
    *   Two-letter language code.
    *
    * @return string
    *   Yandex API allowed language code.
    */
-  public static function getApiUrlLangcode($langId = NULL) {
+  public static function getApiUrlLangcode(string $langId = NULL): string {
     if (empty($langId)) {
       $langId = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }

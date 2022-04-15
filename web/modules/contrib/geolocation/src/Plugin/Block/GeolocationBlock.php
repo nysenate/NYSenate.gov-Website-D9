@@ -179,7 +179,9 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
       '#title' => $this->t('Map Provider'),
       '#default_value' => $this->configuration['map_provider_id'],
       '#ajax' => [
-        'callback' => [get_class($this->mapProviderManager), 'addSettingsFormAjax'],
+        'callback' => [
+          get_class($this->mapProviderManager), 'addSettingsFormAjax',
+        ],
         'wrapper' => 'map-provider-settings',
         'effect' => 'fade',
       ],

@@ -1,0 +1,6 @@
+services:
+  slack_messaging:
+    class: Drupal\nys_slack\Service\Slack
+    arguments:
+      - '@config.factory'
+      - '@http_client'

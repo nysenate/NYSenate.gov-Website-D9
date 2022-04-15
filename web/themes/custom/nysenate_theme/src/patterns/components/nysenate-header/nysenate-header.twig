@@ -1,0 +1,138 @@
+{{ attach_library('nysenate_theme/nysenate-header') }}
+{% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
+
+<!-- Skiplink -->
+<div class="skip-link">
+  <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+</div>
+
+<header
+  id="js-sticky" role="banner" class="l-header" style="z-index: 100;">
+  <!-- Begin Header -->
+  <div class="panel-pane pane-block pane-nys-blocks-sitewide-header-bar-block">
+
+
+    <div class="pane-content">
+
+      <section class="l-header-region l-row l-row--nav c-header-bar">
+        <div class="c-topbar">
+
+          <div class="c-page-title">
+            <a href="/" rel="home" title="NY State Senate Home" class="active GoogleAnalyticsET-processed">The New York State Senate</a>
+          </div>
+
+          <div
+            class="c-header--connect">
+            <!-- if we're on the main site there are social buttons -->
+            <ul class="c-nav--social u-tablet-plus">
+              {% for social in socials %}
+                <li class="{% if loop.first %}first {% endif %}leaf">
+                  <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+
+            <a class="c-header--btn c-header--btn__taking_action u-tablet-plus" href="/citizen-guide">get involved</a>
+            <a class="c-header--btn c-header--btn__primary u-tablet-plus GoogleAnalyticsET-processed" href="/user/login">login</a>
+          </div>
+
+        </div>
+      </section>
+      <!--.c-header-bar -->
+      <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace"></button>
+
+      <div class="c-nav--wrap">
+        <div class="c-nav l-row l-row--nav">
+
+          <nav>
+            <ul class="c-nav--list">
+              <li class="first leaf">
+                <a href="/news-and-issues" title="">News &amp; Issues</a>
+              </li>
+              <li class="leaf">
+                <a href="/senators-committees" title="">Senators &amp; Committees</a>
+              </li>
+              <li class="leaf">
+                <a href="/legislation" title="">Bills &amp; Laws</a>
+              </li>
+              <li class="leaf">
+                <a href="/events" title="">Events</a>
+              </li>
+              <li class="last leaf">
+                <a href="/about">About the Senate</a>
+              </li>
+            </ul>
+
+            <div class="u-mobile-only">
+              <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
+                <div>
+                  <h2 class="c-site-search--title">{{ search.title }}</h2>
+                  <div class="container-inline form-wrapper" id="edit-basic">
+                    <div class="form-item form-type-textfield form-item-keys">
+                      <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys" name="keys" value="" size="50" maxlength="255">
+                    </div>
+                    <button class="c-site-search--btn" id="edit-submit--5" name="op" value="Search" type="submit">{{ search.title }}</button>
+                    <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
+                  </div><input type="hidden" name="form_build_id" value="form-FC0wF3CvJ0qqbg-Og-28NKW67zlrErO_gu76VIeD9S8">
+                  <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
+                </div>
+              </form>
+            </div>
+
+            <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">search</button>
+
+
+            <ul class="c-nav--social u-mobile-only">
+              {% for social in socials %}
+                <li class="{% if loop.first %}first {% endif %}leaf">
+                  <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+
+            <div class="c-mobile-login--list u-mobile-only">
+              <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
+                <a href="/user/login">login</a>
+              </span>
+            </div>
+
+
+          </nav>
+        </div>
+
+        <div class="u-tablet-plus">
+          <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
+            <div>
+              <h2 class="c-site-search--title">{{ search.title }}</h2>
+              <div class="container-inline form-wrapper" id="edit-basic--2">
+                <div class="form-item form-type-textfield form-item-keys">
+                  <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys--2" name="keys" value="" size="50" maxlength="255">
+                </div>
+                <button class="c-site-search--btn" id="edit-submit--6" name="op" value="Search" type="submit">{{ search.title }}</button>
+                <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
+              </div><input type="hidden" name="form_build_id" value="form-gkuK188nles5x0ywuUfhqAHj75yMu5J5FTGzpm7vDdU">
+              <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="container c-actionbar hidden">
+    <div class="c-actionbar--info">
+      <p class="c-actionbar--cta">Find your Senator and share your views on important issues.</p>
+    </div>
+    <span class="c-block--btn">
+      <a class="icon-before__find-senator" href="/registration/nojs/form/start/find-my-senator">find your senator</a>
+    </span>
+    <!-- <a href="/user/login?destination=" class="c-block-btn ctools-use-modal ctools-use-modal-processed" title="Start">find your senator</a> -->
+  </div>
+
+</header>
+
+
+{# 
+<div style="height: 1000px; background-color: gray;"></div>
+#} 

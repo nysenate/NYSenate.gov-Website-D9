@@ -7,7 +7,7 @@ use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
 
 /**
- * Class GeolocationMapShapeBase.
+ * Class GeolocationMapShape Base.
  *
  * @package Drupal\geolocation\Element
  */

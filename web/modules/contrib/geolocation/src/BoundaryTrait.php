@@ -3,7 +3,7 @@
 namespace Drupal\geolocation;
 
 /**
- * Trait BoundaryTrait.
+ * Trait Boundary.
  */
 trait BoundaryTrait {
 

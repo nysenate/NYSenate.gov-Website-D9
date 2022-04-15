@@ -26,6 +26,16 @@ geolocation.field.formatter.map.base:
     info_text:
       type: text_format
       label: 'Info Text'
+    replacement_patterns:
+      type: mapping
+      label: 'Replacement patterns'
+      mapping:
+        token_geolocation:
+          type: mapping
+          mapping:
+            token_items:
+              type: string
+              label: 'Token items'
     centre:
       type: sequence
       label: 'Center option settings'

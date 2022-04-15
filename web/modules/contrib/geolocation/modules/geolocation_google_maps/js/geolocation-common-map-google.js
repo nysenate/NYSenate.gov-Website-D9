@@ -19,6 +19,10 @@
      * @param {GeolocationSettings} drupalSettings.geolocation
      */
     attach: function (context, drupalSettings) {
+      if (typeof drupalSettings.geolocation === 'undefined') {
+        return false;
+      }
+
       $.each(
         drupalSettings.geolocation.commonMap,
 

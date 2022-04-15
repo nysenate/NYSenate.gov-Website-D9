@@ -45,7 +45,14 @@ class GeolocationSearchApiFilterBoundary extends BoundaryFilter {
       return;
     }
 
-    $query->addCondition($this->realField, [$lat_south_west . ',' . $lng_south_west, $lat_north_east . ',' . $lng_north_east], 'BETWEEN', $this->options['group']);
+    $query->addCondition(
+      $this->realField,
+      [
+        $lat_south_west . ',' . $lng_south_west, $lat_north_east . ',' . $lng_north_east,
+      ],
+      'BETWEEN',
+      $this->options['group']
+    );
   }
 
 }

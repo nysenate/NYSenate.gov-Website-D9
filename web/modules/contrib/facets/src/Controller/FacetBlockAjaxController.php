@@ -137,8 +137,9 @@ class FacetBlockAjaxController extends ControllerBase {
       $request_stack = new SymfonyRequestStack();
     }
     $processed = $this->pathProcessor->processInbound($path, $new_request);
+    $processed_request = Request::create($processed);
 
-    $this->currentPath->setPath($processed);
+    $this->currentPath->setPath($processed_request->getPathInfo());
     $request->attributes->add($this->router->matchRequest($new_request));
     $this->currentRouteMatch->resetRouteMatch();
     $request_stack->push($new_request);

@@ -157,7 +157,9 @@ abstract class MapProviderBase extends PluginBase implements MapProviderInterfac
         ],
       ],
     ];
-    $form['map_features']['#element_validate'][] = [$this, 'validateMapFeatureForms'];
+    $form['map_features']['#element_validate'][] = [
+      $this, 'validateMapFeatureForms',
+    ];
 
     foreach ($map_features as $feature_id => $feature_definition) {
       $feature = $this->mapFeatureManager->getMapFeature($feature_id, []);

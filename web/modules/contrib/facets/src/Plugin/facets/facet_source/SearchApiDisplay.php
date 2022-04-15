@@ -393,7 +393,7 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
       $js_settings = [
         'view_id' => $view->id(),
         'current_display_id' => $view->current_display,
-        'view_base_path' => ltrim($view->getPath(), '/'),
+        'view_base_path' => ltrim($view->getPath() ?? '', '/'),
         'ajax_path' => Url::fromRoute('views.ajax')->toString(),
       ];
       $build['#attached']['library'][] = 'facets/drupal.facets.views-ajax';

@@ -6,7 +6,7 @@ use Drupal\geolocation\MapFeatureBase;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Provides Drawing.
+ * Provides Drawing function.
  *
  * @MapFeature(
  *   id = "drawing",

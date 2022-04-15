@@ -21,6 +21,7 @@
 
         var mapWrapper = $('.geolocation-geometry-widget-google-maps-geojson-map', item);
         var inputWrapper = $('.geolocation-geometry-widget-google-maps-geojson-input', item);
+        var geometryType = $(item).data('geometryType');
 
         var mapObject = Drupal.geolocation.getMapById(mapWrapper.attr('id').toString());
 
@@ -28,7 +29,27 @@
           /**  @type {google.maps.Map} */
           var map = mapContainer.googleMap;
 
-          var availableControls = ['Point', 'LineString', 'Polygon'];
+          var availableControls = [];
+          switch (geometryType) {
+            case 'polygon':
+            case 'multi_polygon':
+              availableControls = ['Polygon'];
+              break;
+
+            case 'polyline':
+            case 'multi_polyline':
+              availableControls = ['LineString'];
+              break;
+
+            case 'point':
+            case 'multi_point':
+              availableControls = ['Point'];
+              break;
+
+            default:
+              availableControls = ['Point', 'LineString', 'Polygon'];
+              break;
+          }
 
           map.data.setControls(availableControls);
           map.data.setControlPosition(google.maps.ControlPosition.TOP_CENTER);
@@ -66,16 +87,39 @@
           }
 
           function refreshGeoJsonFromData() {
-            var geometry = [];
-
             map.data.toGeoJson(function (geoJson) {
               if (typeof geoJson.features === 'undefined') {
                 inputWrapper.val('');
               }
-              geoJson.features.forEach(function (feature) {
-                geometry.push(feature.geometry);
-              });
-              inputWrapper.val(JSON.stringify(geometry));
+
+              switch (geoJson.features.length) {
+                case 0:
+                  inputWrapper.val('');
+                  break;
+
+                case 1:
+                  inputWrapper.val(JSON.stringify(geoJson.features[0].geometry));
+                  break;
+
+                default:
+                  var types = {
+                    multi_polygon: 'MultiPolygon',
+                    multi_polyline: 'MultiPolyline',
+                    multi_point: 'MultiPoint',
+                    default: 'GeometryCollection'
+                  }
+
+                  var geometry = {
+                    type: types[geometryType] || types['default'],
+                    geometries: []
+                  };
+
+                  geoJson.features.forEach(function (feature) {
+                    geometry.geometries.push(feature.geometry);
+                  });
+                  inputWrapper.val(JSON.stringify(geometry));
+                  break;
+              }
             });
           }
 

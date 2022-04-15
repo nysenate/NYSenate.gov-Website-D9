@@ -354,3 +354,17 @@ plugin.plugin_configuration.geolocation.map_feature.leaflet_wms:
         identify:
           type: boolean
           label: 'Identify'
+plugin.plugin_configuration.geolocation.map_feature.leaflet_rotate:
+  type: geolocation.map_feature_settings
+  label: 'Leaflet Rotate'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Rotation Settings'
+      mapping:
+        display_control:
+          type: boolean
+          label: 'Display Rotation Control'
+        bearing:
+          type: float
+          label: 'Bearing'

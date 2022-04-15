@@ -24,7 +24,7 @@ class SkipRedirectTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $config = $this->config('r4032login.settings');
@@ -41,12 +41,16 @@ class SkipRedirectTest extends BrowserTestBase {
    *   Response status code.
    * @param string $destination
    *   Resulting URL.
+   * @param int $negate
+   *   Negate the skip redirection condition.
    *
    * @dataProvider skipRedirectDataProvider
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  public function testSkipRedirect($path, $code, $destination) {
+  public function testSkipRedirect($path, $code, $destination, $negate) {
+    $this->config('r4032login.settings')->set('match_noredirect_negate', $negate)->save();
+
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals($code);
     $this->assertSession()->addressEquals($destination);
@@ -61,21 +65,49 @@ class SkipRedirectTest extends BrowserTestBase {
         'admin/config/development',
         403,
         'admin/config/development',
+        0,
+      ],
+      [
+        'admin/config/development',
+        200,
+        'user/login',
+        1,
       ],
       [
         'admin/config',
         200,
         'user/login',
+        0,
+      ],
+      [
+        'admin/config',
+        403,
+        'admin/config',
+        1,
       ],
       [
         'admin/modules',
         403,
         'admin/modules',
+        0,
+      ],
+      [
+        'admin/modules',
+        200,
+        'user/login',
+        1,
       ],
       [
         'admin/modules/uninstall',
         200,
         'user/login',
+        0,
+      ],
+      [
+        'admin/modules/uninstall',
+        403,
+        'admin/modules/uninstall',
+        1,
       ],
     ];
   }

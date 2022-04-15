@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\r4032login\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -24,24 +25,31 @@ class RedirectToDestinationTest extends BrowserTestBase {
   /**
    * Tests the behavior of the redirect_to_destination option.
    *
+   * @param string $loginPath
+   *   The login path.
    * @param bool $optionValue
    *   The option value for "redirect_to_destination".
-   * @param string $path
-   *   Request path.
-   * @param string $destination
-   *   Resulting URL.
    *
    * @dataProvider redirectToDestinationDataProvider
    */
-  public function testRedirectToDestination($optionValue, $path, $destination) {
+  public function testRedirectToDestination($loginPath, $optionValue) {
     $config = $this->config('r4032login.settings');
+    $config->set('user_login_path', $loginPath);
     $config->set('redirect_to_destination', $optionValue);
     $config->save();
 
-    $this->drupalGet($path);
+    $this->drupalGet('admin/config');
 
-    $currentUrl = str_replace($this->baseUrl . '/', '', $this->getUrl());
-    $this->assertEquals($currentUrl, $destination);
+    $currentUrl = $this->getSession()->getCurrentUrl();
+    $expectedUrl = $loginPath == '<front>'
+      ? Url::fromRoute($loginPath)->toString()
+      : Url::fromUserInput($loginPath)->toString();
+    if ($optionValue) {
+      $expectedUrl .= '?destination=' . Url::fromUserInput('/admin/config')->toString();
+    }
+    $expectedUrl = $this->getAbsoluteUrl($expectedUrl);
+
+    $this->assertEquals($expectedUrl, $currentUrl);
   }
 
   /**
@@ -50,24 +58,20 @@ class RedirectToDestinationTest extends BrowserTestBase {
   public function redirectToDestinationDataProvider() {
     return [
       [
-        TRUE,
-        'admin/config',
-        'user/login?destination=admin/config',
+        'user_login_path' => '/user/login',
+        'redirect_to_destination' => TRUE,
       ],
       [
-        FALSE,
-        'admin/config',
-        'user/login',
+        'user_login_path' => '/user/login',
+        'redirect_to_destination' => FALSE,
       ],
       [
-        TRUE,
-        'admin/modules',
-        'user/login?destination=admin/modules',
+        'user_login_path' => '<front>',
+        'redirect_to_destination' => TRUE,
       ],
       [
-        FALSE,
-        'admin/modules',
-        'user/login',
+        'user_login_path' => '<front>',
+        'redirect_to_destination' => FALSE,
       ],
     ];
   }

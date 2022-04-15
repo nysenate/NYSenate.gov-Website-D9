@@ -16,7 +16,7 @@ class GeolocationViewsSettingsTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'field',
     'views',

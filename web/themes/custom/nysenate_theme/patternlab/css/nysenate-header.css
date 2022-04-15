@@ -1,0 +1,1368 @@
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+/*-----------------------------
+/	CUSTOM NEW YORK SENATE (nysenate_theme) PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+.contrast_text {
+  color: #000; }
+
+.lgt-text {
+  color: #2B6A90; }
+
+.lgt-bg {
+  background-color: #2B6A90; }
+
+.med-text {
+  color: #175B81; }
+
+.med-bg {
+  background-color: #175B81; }
+
+.drk-text {
+  color: #004D71; }
+
+.drk-bg {
+  background-color: #004D71; }
+
+.link-text {
+  color: #CB8D37; }
+
+.accent-bg {
+  background-color: #1B5187; }
+
+.accent-text {
+  color: #1B5187; }
+
+@media screen and (min-width: 760px) {
+  .nav-text {
+    color: #444; }
+    .nav-text:hover {
+      color: #2B6A90; }
+    .nav-text.active {
+      color: #2B6A90; } }
+
+.trad_blue .contrast_text {
+  color: #fff; }
+
+.trad_blue .lgt-text {
+  color: #1B5187; }
+
+.trad_blue .lgt-bg {
+  background-color: #1B5187; }
+
+.trad_blue .med-text {
+  color: #1D446B; }
+
+.trad_blue .med-bg {
+  background-color: #1D446B; }
+
+.trad_blue .drk-text {
+  color: #1C364E; }
+
+.trad_blue .drk-bg {
+  background-color: #1C364E; }
+
+.trad_blue .link-text {
+  color: #1B5187; }
+
+@media screen and (min-width: 760px) {
+  .trad_blue .nav-text {
+    color: #444; }
+    .trad_blue .nav-text:hover {
+      color: #1B5187; }
+    .trad_blue .nav-text.active {
+      color: #1B5187; } }
+
+.cont_blue .contrast_text {
+  color: #000; }
+
+.cont_blue .lgt-text {
+  color: #04A9C5; }
+
+.cont_blue .lgt-bg {
+  background-color: #04A9C5; }
+
+.cont_blue .med-text {
+  color: #008CA6; }
+
+.cont_blue .med-bg {
+  background-color: #008CA6; }
+
+.cont_blue .drk-text {
+  color: #1F798F; }
+
+.cont_blue .drk-bg {
+  background-color: #1F798F; }
+
+.cont_blue .link-text {
+  color: #04A9C5; }
+
+@media screen and (min-width: 760px) {
+  .cont_blue .nav-text {
+    color: #444; }
+    .cont_blue .nav-text:hover {
+      color: #04A9C5; }
+    .cont_blue .nav-text.active {
+      color: #04A9C5; } }
+
+.purple .contrast_text {
+  color: #000; }
+
+.purple .lgt-text {
+  color: #90668F; }
+
+.purple .lgt-bg {
+  background-color: #90668F; }
+
+.purple .med-text {
+  color: #754775; }
+
+.purple .med-bg {
+  background-color: #754775; }
+
+.purple .drk-text {
+  color: #543457; }
+
+.purple .drk-bg {
+  background-color: #543457; }
+
+.purple .link-text {
+  color: #90668F; }
+
+.purple .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .purple .nav-text {
+    color: #444; }
+    .purple .nav-text:hover {
+      color: #90668F; }
+    .purple .nav-text.active {
+      color: #90668F; } }
+
+.trad_red .contrast_text {
+  color: #fff; }
+
+.trad_red .lgt-text {
+  color: #87002F; }
+
+.trad_red .lgt-bg {
+  background-color: #87002F; }
+
+.trad_red .med-text {
+  color: #6E0026; }
+
+.trad_red .med-bg {
+  background-color: #6E0026; }
+
+.trad_red .drk-text {
+  color: #500019; }
+
+.trad_red .drk-bg {
+  background-color: #500019; }
+
+.trad_red .link-text {
+  color: #87002F; }
+
+.trad_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_red .nav-text {
+    color: #444; }
+    .trad_red .nav-text:hover {
+      color: #87002F; }
+    .trad_red .nav-text.active {
+      color: #87002F; } }
+
+.cont_red .contrast_text {
+  color: #fff; }
+
+.cont_red .lgt-text {
+  color: #C62526; }
+
+.cont_red .lgt-bg {
+  background-color: #C62526; }
+
+.cont_red .med-text {
+  color: #BB0623; }
+
+.cont_red .med-bg {
+  background-color: #BB0623; }
+
+.cont_red .drk-text {
+  color: #A00101; }
+
+.cont_red .drk-bg {
+  background-color: #A00101; }
+
+.cont_red .link-text {
+  color: #C62526; }
+
+.cont_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_red .nav-text {
+    color: #444; }
+    .cont_red .nav-text:hover {
+      color: #C62526; }
+    .cont_red .nav-text.active {
+      color: #C62526; } }
+
+.orange .contrast_text {
+  color: #000; }
+
+.orange .lgt-text {
+  color: #F0673D; }
+
+.orange .lgt-bg {
+  background-color: #F0673D; }
+
+.orange .med-text {
+  color: #ED4B1C; }
+
+.orange .med-bg {
+  background-color: #ED4B1C; }
+
+.orange .drk-text {
+  color: #C84123; }
+
+.orange .drk-bg {
+  background-color: #C84123; }
+
+.orange .link-text {
+  color: #F0673D; }
+
+.orange .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .orange .nav-text {
+    color: #444; }
+    .orange .nav-text:hover {
+      color: #F0673D; }
+    .orange .nav-text.active {
+      color: #F0673D; } }
+
+.trad_green .contrast_text {
+  color: #000; }
+
+.trad_green .lgt-text {
+  color: #60A35F; }
+
+.trad_green .lgt-bg {
+  background-color: #60A35F; }
+
+.trad_green .med-text {
+  color: #4D894F; }
+
+.trad_green .med-bg {
+  background-color: #4D894F; }
+
+.trad_green .drk-text {
+  color: #416837; }
+
+.trad_green .drk-bg {
+  background-color: #416837; }
+
+.trad_green .link-text {
+  color: #60A35F; }
+
+.trad_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_green .nav-text {
+    color: #444; }
+    .trad_green .nav-text:hover {
+      color: #60A35F; }
+    .trad_green .nav-text.active {
+      color: #60A35F; } }
+
+.cont_green .contrast_text {
+  color: #000; }
+
+.cont_green .lgt-text {
+  color: #65C5B6; }
+
+.cont_green .lgt-bg {
+  background-color: #65C5B6; }
+
+.cont_green .med-text {
+  color: #479E93; }
+
+.cont_green .med-bg {
+  background-color: #479E93; }
+
+.cont_green .drk-text {
+  color: #378479; }
+
+.cont_green .drk-bg {
+  background-color: #378479; }
+
+.cont_green .link-text {
+  color: #65C5B6; }
+
+.cont_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_green .nav-text {
+    color: #444; }
+    .cont_green .nav-text:hover {
+      color: #65C5B6; }
+    .cont_green .nav-text.active {
+      color: #65C5B6; } }
+
+.inactive-pallette .contrast_text {
+  color: #000; }
+
+.inactive-pallette .lgt-text {
+  color: #1B5187; }
+
+.inactive-pallette .lgt-bg {
+  background-color: #B2B2B2; }
+
+.inactive-pallette .med-text {
+  color: #999999; }
+
+.inactive-pallette .med-bg {
+  background-color: #999999; }
+
+.inactive-pallette .drk-text {
+  color: #808080; }
+
+.inactive-pallette .drk-bg {
+  background-color: #808080; }
+
+.inactive-pallette .link-text {
+  color: #1B5187; }
+
+.inactive-pallette .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .inactive-pallette .nav-text {
+    color: #444; }
+    .inactive-pallette .nav-text:hover {
+      color: #1B5187; }
+    .inactive-pallette .nav-text.active {
+      color: #1B5187; } }
+
+/*---------------------------
+/ WIDTHS for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+.element-invisible {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px); }
+
+.element-focusable {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px); }
+  .element-focusable:active, .element-focusable:focus {
+    position: static !important;
+    clip: auto;
+    height: auto;
+    width: auto;
+    overflow: auto; }
+
+.l-header {
+  width: 100%;
+  z-index: 5;
+  top: 0;
+  position: relative; }
+  .l-header + .l-header .c-senator-nav--wrap {
+    display: none; }
+  .l-header.fixed {
+    position: fixed; }
+  .l-header .contextual-links-region {
+    position: static; }
+
+@media screen and (min-width: 760px) {
+  .l-header + .l-header .c-senator-nav--wrap {
+    display: block; }
+  .l-header .contextual-links-region {
+    position: relative; } }
+
+/*------------------------------
+/ SITE WIDE TOP BAR
+/-------------------------------*/
+.c-header-bar {
+  height: 60px;
+  background: #fff;
+  z-index: 10;
+  overflow: hidden;
+  position: relative; }
+
+.c-topbar {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%; }
+  .c-topbar:before {
+    content: "";
+    height: 100%;
+    width: 1px;
+    margin-left: -1px;
+    display: inline-block;
+    vertical-align: middle; }
+
+.c-page-title {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  font-family: "FreightText Book";
+  font-size: 12px; }
+  .c-page-title a {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    min-width: 250px;
+    color: #444444;
+    white-space: nowrap;
+    text-decoration: none; }
+    .c-page-title a:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      background: transparent url("http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg") center center no-repeat;
+      background-size: cover; }
+
+@media screen and (min-width: 760px) {
+  .c-header-bar {
+    overflow: visible;
+    height: 100px; }
+    .c-header-bar.collapsed {
+      height: 40px; }
+      .c-header-bar.collapsed .c-page-title {
+        font-size: 13px; }
+        .c-header-bar.collapsed .c-page-title a:before {
+          width: 28px;
+          height: 28px;
+          margin-right: 5px;
+          background-size: cover; }
+  .c-page-title {
+    font-size: 22px; }
+    .c-page-title a:before {
+      height: 60px;
+      width: 60px;
+      margin-right: 20px; } }
+
+.c-header--connect {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  height: 55px; }
+
+.l-row:after {
+  content: "";
+  display: table;
+  clear: both; }
+
+.l-row--nav,
+.l-row--hero,
+.c-nav--wrap {
+  margin: 0 auto;
+  padding: 0 20px;
+  max-width: 100%; }
+  @media screen and (min-width: 760px) {
+    .l-row--nav,
+    .l-row--hero,
+    .c-nav--wrap {
+      padding: 0 9%;
+      max-width: 1500px; } }
+
+/* Navigation */
+.c-nav--wrap {
+  position: absolute;
+  top: -110vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 6;
+  transition: top 0.3s ease-out 0s; }
+  @media screen and (min-width: 768px) {
+    .c-nav--wrap {
+      position: relative;
+      width: 100%;
+      height: 60px;
+      overflow: hidden;
+      top: auto; } }
+  .c-nav--wrap.closed {
+    height: 0; }
+  .c-nav--wrap .u-mobile-only {
+    display: block; }
+  .c-nav--wrap .u-tablet-plus {
+    display: none; }
+  @media screen and (min-width: 760px) {
+    .c-nav--wrap .u-mobile-only {
+      display: none; }
+    .c-nav--wrap .u-tablet-plus {
+      display: block; } }
+  .c-nav--wrap .c-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0; }
+    @media screen and (min-width: 768px) {
+      .c-nav--wrap .c-nav {
+        display: block;
+        position: relative;
+        right: 0;
+        margin: 0 auto;
+        z-index: 2;
+        height: 60px;
+        background: #fff; } }
+    .c-nav--wrap .c-nav > nav {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+      width: 100%;
+      height: 100%;
+      padding: 125px 0 0 0;
+      overflow: scroll;
+      background: #2B6A90; }
+      @media screen and (min-width: 768px) {
+        .c-nav--wrap .c-nav > nav {
+          position: relative;
+          padding: 0;
+          background: #fff;
+          overflow: visible;
+          border-top: 1px solid #aaaaaa;
+          transition: none 0 ease 0s; } }
+
+.nav-open .c-nav--wrap {
+  top: 0; }
+
+.pane-content {
+  position: relative; }
+
+.c-nav--toggle {
+  cursor: pointer;
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  right: 0;
+  left: auto;
+  height: 40px;
+  width: 40px;
+  background: #fff;
+  border: 0;
+  padding: 0;
+  transform: translateY(-50%); }
+  @media screen and (min-width: 768px) {
+    .c-nav--toggle {
+      display: none; } }
+  .c-nav--toggle::after {
+    content: "\68";
+    width: 100%;
+    margin-left: 1px;
+    font-size: 24px;
+    line-height: 40px;
+    text-align: center;
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: "senate_icons";
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px;
+    color: #175B81; }
+
+/* From old site */
+.l-header {
+  width: 100%;
+  z-index: 5;
+  top: 0; }
+  .l-header + .l-header .c-senator-nav--wrap {
+    display: none; }
+  .l-header.fixed {
+    position: fixed; }
+  .l-header .contextual-links-region {
+    position: static; }
+
+@media screen and (min-width: 760px) {
+  .l-header + .l-header .c-senator-nav--wrap {
+    display: block; }
+  .l-header .contextual-links-region {
+    position: relative; } }
+
+/*------------------------------
+/ SENATOR NAV
+/-------------------------------*/
+.c-senator-nav--wrap .c-site-search {
+  top: 100px; }
+
+.c-senator-nav--wrap .c-site-search--btn {
+  top: 0;
+  bottom: 0;
+  margin: auto; }
+
+.c-senator-nav--wrap .c-site-search .c-site-search--btn {
+  top: -45px; }
+
+.c-senator-nav--wrap.closed {
+  height: 0; }
+
+.c-senator-nav--wrap.search-open {
+  height: 325px; }
+
+.c-senator-nav--wrap li {
+  border-top: 1px solid #fff;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  line-height: 1em;
+  display: inline-block; }
+  .c-senator-nav--wrap li a {
+    display: block;
+    height: 100%;
+    width: 100%;
+    padding: 20px 0 20px 10px; }
+
+@media screen and (min-width: 760px) {
+  .c-senator-nav--wrap {
+    position: relative;
+    width: 100%;
+    background: #fff; }
+    .c-senator-nav--wrap .c-senator-nav nav {
+      position: relative;
+      top: 0;
+      height: 100%;
+      padding: 0;
+      overflow: hidden;
+      background: #fff;
+      z-index: 1; }
+    .c-senator-nav--wrap .c-senator-nav ul {
+      width: 100%;
+      height: 100%;
+      margin: 0; }
+    .c-senator-nav--wrap .c-senator-nav li {
+      display: inline-block;
+      vertical-align: middle;
+      height: 100%;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 14px; }
+      .c-senator-nav--wrap .c-senator-nav li a {
+        line-height: 14px; }
+    .c-senator-nav--wrap.closed {
+      height: 0; } }
+
+@media screen and (min-width: 960px) {
+  .c-senator-nav--wrap .c-senator-nav li {
+    font-size: 14px; } }
+
+/*------------------------------
+/ HEADER COLLAPSED
+/-------------------------------*/
+.l-header__collapsed {
+  top: 0;
+  width: 100%; }
+  .node-type-senator .l-header__collapsed.messages-open {
+    top: 87px; }
+  .l-header__collapsed .c-senator-hero {
+    height: 100px;
+    padding-left: 20px;
+    margin-top: 0; }
+    .l-header__collapsed .c-senator-hero:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      height: 50px;
+      width: 1px;
+      margin-left: -1px; }
+    .l-header__collapsed .c-senator-hero.hidden {
+      margin-top: -100px; }
+  .l-header__collapsed .c-senator-hero--img {
+    display: inline-block;
+    vertical-align: middle;
+    height: 35px;
+    width: 35px; }
+    .l-header__collapsed .c-senator-hero--img img {
+      position: relative;
+      top: 0;
+      width: auto;
+      max-width: 140%;
+      height: 100%; }
+  .l-header__collapsed .c-senator-hero--info {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 0 0 10px; }
+  .l-header__collapsed .c-senator-hero--name {
+    font-size: 15px;
+    margin: 0; }
+  .l-header__collapsed .c-senator-hero--info-secondary {
+    display: none; }
+  .l-header__collapsed .c-senator-hero--contact-btn {
+    width: 100%;
+    height: 50px;
+    padding-left: 24px; }
+    .l-header__collapsed .c-senator-hero--contact-btn:before {
+      line-height: 50px;
+      padding-left: 0px; }
+
+@media screen and (min-width: 760px) {
+  .l-header__collapsed .c-senator-hero {
+    padding: 0 0 0 9%; }
+    .l-header__collapsed .c-senator-hero:before {
+      height: 100%; }
+  .l-header__collapsed .c-senator-hero--info {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle; }
+    .l-header__collapsed .c-senator-hero--info > div {
+      margin-left: 0; }
+    .l-header__collapsed .c-senator-hero--info:before {
+      margin-left: 0; }
+  .l-header__collapsed .c-senator-hero--title {
+    display: block; }
+  .l-header__collapsed .c-senator-hero--name {
+    font-size: 22px; }
+  .l-header__collapsed .c-senator-hero--img {
+    height: 72px;
+    width: 72px; }
+    .l-header__collapsed .c-senator-hero--img > img {
+      position: absolute; }
+    .l-header__collapsed .c-senator-hero--img picture > img {
+      position: absolute; }
+  .l-header__collapsed .c-senator-hero--contact-btn {
+    height: 100%;
+    max-width: 300px;
+    right: 0;
+    left: auto; }
+    .l-header__collapsed .c-senator-hero--contact-btn:before {
+      line-height: 100px; } }
+
+.messages-number {
+  display: block;
+  font-size: 15px;
+  color: #fff;
+  position: absolute;
+  right: 22px;
+  top: 8px;
+  z-index: 999999;
+  width: 20px;
+  height: 20px;
+  background: #175B81;
+  border-radius: 50px;
+  text-align: center; }
+  @media screen and (min-width: 760px) {
+    .messages-number {
+      display: none; } }
+
+/* Styles from the NY Senate site */
+nav ul.c-nav--list li a {
+  display: block;
+  height: auto;
+  width: 100%;
+  padding: 20px 0 20px 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #fff; }
+  @media screen and (min-width: 768px) {
+    nav ul.c-nav--list li a {
+      height: auto;
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0;
+      text-align: center;
+      line-height: 14px;
+      color: #444;
+      width: 100%; } }
+
+nav ul.c-nav--list {
+  list-style: none;
+  padding: 0 20px; }
+  @media screen and (min-width: 768px) {
+    nav ul.c-nav--list {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 10% 0 0; } }
+
+.nav-text:hover,
+.c-nav--list li a:hover {
+  color: #175B81; }
+
+.c-site-search--btn {
+  cursor: pointer;
+  position: absolute;
+  height: 45px;
+  width: 30px;
+  top: 5px;
+  right: 15px;
+  color: #444;
+  font-size: 22px;
+  border: 0;
+  background-color: #fff; }
+
+.c-header--connect {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  height: 55px; }
+
+.c-nav--social {
+  border-top: 1px solid #fff;
+  margin: 0 20px;
+  padding: 20px 0 0 5px;
+  line-height: 1em; }
+
+.c-header--connect .c-nav--social {
+  display: none; }
+  .c-header--connect .c-nav--social.u-mobile-only {
+    display: block; }
+  @media screen and (min-width: 760px) {
+    .c-header--connect .c-nav--social.u-mobile-only {
+      display: none; } }
+  @media screen and (min-width: 900px) {
+    .c-header--connect .c-nav--social {
+      position: relative;
+      display: block;
+      float: left;
+      margin: 12px 0;
+      padding: 0 20px 0 0;
+      border-right: 1px solid #aaaaaa; } }
+
+.c-mobile-login--list.u-mobile-only {
+  display: block; }
+
+.c-mobile-login--list.u-tablet-plus {
+  display: none; }
+
+@media screen and (min-width: 760px) {
+  .c-mobile-login--list.u-mobile-only {
+    display: none; }
+  .c-mobile-login--list.u-tablet-plus {
+    display: block; } }
+
+.c-nav--social li {
+  display: inline-block;
+  border: none;
+  margin-right: 10px; }
+  .c-nav--social li svg path {
+    fill: #fff; }
+    @media screen and (min-width: 768px) {
+      .c-nav--social li svg path {
+        fill: #444444; } }
+  .c-nav--social li a {
+    width: 28px;
+    height: 0;
+    padding: 28px 0 0 0;
+    font-size: 28px;
+    color: #fff; }
+    .c-nav--social li a::after {
+      color: #fff;
+      padding: 0;
+      font-size: 26px;
+      line-height: 28px;
+      text-align: center;
+      height: 28px;
+      width: 28px; }
+      @media screen and (min-width: 768px) {
+        .c-nav--social li a::after {
+          color: #444444; } }
+
+.c-header--btn.c-header--btn__taking_action,
+.c-header--btn.c-header--btn__primary {
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+  margin-left: -1px;
+  padding: 0 15px 0 20px;
+  background-color: transparent;
+  line-height: 55px;
+  transition: background 0.2s ease 0s; }
+  .c-header--btn.c-header--btn__taking_action::after,
+  .c-header--btn.c-header--btn__primary::after {
+    display: inline-block;
+    vertical-align: middle;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px;
+    -webkit-font-smoothing: antialiased;
+    font-family: "senate_icons";
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 20px;
+    margin-left: 8px;
+    padding-left: 3px;
+    color: #fff;
+    background-color: #2B6A90;
+    overflow: hidden;
+    border-radius: 50%;
+    background-clip: padding-box; }
+
+.c-header--btn.c-header--btn__taking_action::after {
+  content: "\69"; }
+
+.c-header--btn.c-header--btn__primary::after {
+  content: "\66"; }
+
+.c-header--btn {
+  display: block;
+  float: left;
+  color: #666;
+  font-size: 12px;
+  line-height: 28px;
+  text-transform: capitalize;
+  letter-spacing: 0.25em; }
+  .c-header--btn.u-mobile-only {
+    display: block; }
+  .c-header--btn.u-tablet-plus {
+    display: none; }
+  @media screen and (min-width: 760px) {
+    .c-header--btn.u-mobile-only {
+      display: none; }
+    .c-header--btn.u-tablet-plus {
+      display: block; } }
+
+.c-nav .c-header--btn {
+  position: relative;
+  display: block;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  padding: 0 0 0 30px;
+  color: #fff;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 12px;
+  line-height: 72px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em; }
+
+.c-header--btn-login {
+  background-color: #175B81; }
+
+.c-mobile-login--list {
+  position: relative;
+  width: 100%;
+  height: 72px;
+  margin-top: 20px;
+  bottom: 0;
+  left: 0; }
+  .c-mobile-login--list .c-header--btn-logout:last-child,
+  .c-mobile-login--list .c-header--btn-login:last-child {
+    padding-bottom: 60px;
+    height: 132px; }
+    .c-mobile-login--list .c-header--btn-logout:last-child > a,
+    .c-mobile-login--list .c-header--btn-login:last-child > a {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      padding-left: 65px;
+      text-decoration: none;
+      color: #fff; }
+
+a.c-header--btn.c-header--btn__primary,
+a.c-header--btn.c-header--btn__taking_action {
+  color: #2B6A90;
+  text-decoration: none; }
+
+a:hover.c-header--btn.c-header--btn__primary,
+a:hover.c-header--btn.c-header--btn__taking_action {
+  background-color: #175B81;
+  color: #fff; }
+  a:hover.c-header--btn.c-header--btn__primary::after,
+  a:hover.c-header--btn.c-header--btn__taking_action::after {
+    background-color: #175B81; }
+
+.c-nav--list li {
+  margin-top: 0;
+  border-top: 1px solid #fff;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  line-height: 1em; }
+  @media screen and (min-width: 768px) {
+    .c-nav--list li {
+      padding: 20px 0;
+      position: relative;
+      width: 100px;
+      height: 100%;
+      display: inline-block;
+      vertical-align: middle;
+      border: none;
+      text-align: left;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 14px; } }
+  @media screen and (min-width: 1024px) {
+    .c-nav--list li {
+      width: auto; } }
+  .c-nav--list li.active-trail:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -15px;
+    margin: auto;
+    height: 20px;
+    width: 20px;
+    background: #fff;
+    border: 1px solid #aaaaaa;
+    transform: rotate(45deg); }
+
+.c-actionbar,
+.c-senate-status {
+  position: relative;
+  display: block;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  padding: 0 60px 0 18px;
+  background-color: #2B6A90;
+  max-width: unset;
+  transition: margin 0.25s ease; }
+  .c-actionbar:before,
+  .c-senate-status:before {
+    content: "";
+    position: relative;
+    display: inline-block;
+    width: 1px;
+    vertical-align: middle;
+    margin-left: -4px; }
+  .c-actionbar .c-actionbar--cta,
+  .c-senate-status .c-actionbar--cta {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    max-width: 320px; }
+  .c-actionbar .c-actionbar--info,
+  .c-senate-status .c-actionbar--info {
+    display: none; }
+  .c-actionbar .nys-senator,
+  .c-senate-status .nys-senator {
+    margin-bottom: 0; }
+  .c-actionbar .c-block--btn,
+  .c-senate-status .c-block--btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em; }
+    .c-actionbar .c-block--btn a,
+    .c-senate-status .c-block--btn a {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0 18px;
+      line-height: 60px;
+      color: #fff;
+      text-decoration: none;
+      background-color: #175B81; }
+      .c-actionbar .c-block--btn a:before,
+      .c-senate-status .c-block--btn a:before {
+        line-height: 60px;
+        font-size: 32px;
+        margin-right: 18px; }
+    .c-actionbar .c-block--btn:before, .c-actionbar .c-block--btn:after,
+    .c-senate-status .c-block--btn:before,
+    .c-senate-status .c-block--btn:after {
+      line-height: 60px;
+      font-size: 32px;
+      margin-right: 18px; }
+
+.c-site-search {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  padding: 30px 20px 20px 20px;
+  margin: 0; }
+  .c-site-search .c-site-search--box {
+    display: block;
+    background: none;
+    border: none;
+    height: 45px;
+    margin: 0 45px 0 0;
+    padding: 0 0 0 20px;
+    box-shadow: none;
+    color: #175B81;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 5px;
+    background-clip: padding-box;
+    float: left;
+    width: 100%; }
+    .c-site-search .c-site-search--box::-ms-clear {
+      display: none; }
+  .c-site-search .c-site-search--title {
+    display: none; }
+  .c-site-search .c-block-advanced-search-link {
+    margin-bottom: 30px; }
+    .c-site-search .c-block-advanced-search-link .c-advanced-search--link {
+      color: #CB8D37;
+      text-transform: uppercase;
+      font-size: 13px; }
+  .c-site-search .c-site-search--btn:focus,
+  .c-site-search .c-site-search--btn {
+    cursor: pointer;
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    padding: 0;
+    height: 45px;
+    width: 45px;
+    font-size: 22px;
+    background: transparent;
+    color: #175B81;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; }
+    .c-site-search .c-site-search--btn:focus:after,
+    .c-site-search .c-site-search--btn:after {
+      content: "\6d";
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: "senate_icons";
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px; }
+    .c-site-search .c-site-search--btn:focus:after,
+    .c-site-search .c-site-search--btn:after {
+      width: 100%;
+      padding: 0;
+      line-height: 45px; }
+    .c-site-search .c-site-search--btn:focus:hover,
+    .c-site-search .c-site-search--btn:hover {
+      background: transparent;
+      color: #004D71; }
+
+@media screen and (min-width: 760px) {
+  .c-actionbar,
+  .c-senate-status {
+    height: 100px;
+    padding: 0 410px 0 9%; }
+    .c-actionbar .c-actionbar--info,
+    .c-senate-status .c-actionbar--info {
+      display: inline-block;
+      vertical-align: middle; }
+    .c-actionbar .c-actionbar--info .c-actionbar--cta,
+    .c-actionbar .c-actionbar--cta,
+    .c-senate-status .c-actionbar--info .c-actionbar--cta,
+    .c-senate-status .c-actionbar--cta {
+      width: 100%;
+      max-width: 400px;
+      font-size: 14px;
+      font-size: 1.7vw;
+      line-height: 1.75em; }
+    .c-actionbar a.c-block--btn,
+    .c-senate-status a.c-block--btn {
+      padding: 0 40px;
+      font-size: 16px;
+      line-height: 100px;
+      background-color: #175B81; }
+      .c-actionbar a.c-block--btn:before,
+      .c-senate-status a.c-block--btn:before {
+        height: 100%;
+        margin-right: 0.1em;
+        font-size: 32px;
+        line-height: 100px; }
+    .c-actionbar .c-block--btn,
+    .c-senate-status .c-block--btn {
+      width: auto;
+      right: 0; }
+      .c-actionbar .c-block--btn a,
+      .c-senate-status .c-block--btn a {
+        padding: 0 40px;
+        font-size: 16px;
+        line-height: 100px; }
+        .c-actionbar .c-block--btn a:before,
+        .c-senate-status .c-block--btn a:before {
+          height: 100%;
+          margin-right: 0.1em;
+          font-size: 32px;
+          line-height: 100px; }
+  .search-open .c-site-search .c-site-search--btn,
+  .search-open .c-site-search .c-site-search--btn:focus,
+  .c-site-search--btn:focus,
+  .c-site-search--btn {
+    position: absolute;
+    height: 45px;
+    width: 30px;
+    top: 15px;
+    right: 15px;
+    color: #444;
+    font-size: 22px; }
+  .c-site-search--title {
+    display: block;
+    margin-bottom: 20px;
+    font-family: "Adelle Semibold";
+    font-size: 26px;
+    line-height: 1; }
+  .c-site-search--link {
+    position: absolute;
+    right: 9%;
+    bottom: 35px;
+    color: #CB8D37;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.1em; }
+  .c-site-search {
+    position: relative;
+    z-index: 1;
+    top: 0;
+    width: 100%;
+    height: 225px;
+    margin: 0 auto;
+    max-width: 1500px;
+    padding: 25px 9%;
+    background: #F4F4F7;
+    transition: margin 0.3s ease; }
+    .c-site-search .c-site-search--box {
+      border: 1px solid #AAAAAA;
+      border-radius: 0;
+      overflow: hidden;
+      background-clip: padding-box; }
+    .c-site-search .c-site-search--btn {
+      position: relative;
+      top: -45px;
+      right: auto;
+      float: right; }
+  .c-site-search {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: 225px; }
+    .c-site-search:before, .c-site-search:after {
+      display: none; }
+  .search-open {
+    height: 285px; }
+    .search-open .c-site-search--btn {
+      cursor: pointer;
+      position: absolute;
+      display: block;
+      overflow: hidden;
+      text-indent: -99999px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale; }
+      .search-open .c-site-search--btn:after {
+        content: "\78";
+        text-indent: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: "senate_icons";
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px; }
+    .search-open .c-site-search .c-site-search--btn {
+      cursor: pointer;
+      position: relative;
+      top: -45px;
+      position: relative;
+      display: block;
+      overflow: hidden;
+      padding-top: 1em;
+      text-indent: -99999px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale; }
+      .search-open .c-site-search .c-site-search--btn:after {
+        content: "\6d";
+        text-indent: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: "senate_icons";
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px; } }
+
+@media screen and (min-width: 960px) {
+  .c-actionbar::before {
+    height: 100%; }
+  .c-actionbar .c-actionbar--info .c-actionbar--cta,
+  .c-actionbar .c-actionbar--cta {
+    font-size: 18px;
+    width: 100%;
+    max-width: 380px; }
+  .c-actionbar.c-actionbar--committee .c-actionbar--info .c-actionbar--cta,
+  .c-actionbar.c-actionbar--committee .c-actionbar--cta {
+    font-size: 18px;
+    width: 100%;
+    max-width: 465px; } }

@@ -1,0 +1,27 @@
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+$tabletWidth: 760;
+$desktopWidth: 960;
+$largeWidth: 1280;
+// only for TOP NAV -- makes it so 'find senator link disappears'
+$navBreakWidth: 1100; 
+// for hiding social
+$smallNavBreakWidth: 900;
+
+
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+$tablet: "screen and (min-width: #{$tabletWidth}px)";
+$desktop: "screen and (min-width: #{$desktopWidth}px)";
+$large: "screen and (min-width: #{$largeWidth}px)";
+$mobile: "screen and (max-width: #{($tabletWidth - 1)}px)";
+
+$senatorBtnHidden: "screen and (max-width: #{$navBreakWidth}px)";
+$senatorBtnVisible: "screen and (min-width: #{$navBreakWidth}px)";
+
+$socialBtnsHidden: "screen and (max-width: #{$smallNavBreakWidth}px)";
+
+// mobile landscape -- used to make tiny nav
+$mobileLandscape: "screen and (max-width: #{$tabletWidth}px) and (orientation: landscape)";

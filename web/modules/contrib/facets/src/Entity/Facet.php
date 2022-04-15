@@ -792,6 +792,26 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
+  public function getResultsKeyedByRawValue($results = NULL) {
+    if ($results === NULL) {
+      $results = $this->results;
+    }
+
+    $keyed_results = [];
+
+    foreach ($results as $result) {
+      $keyed_results[$result->getRawValue()] = $result;
+      if ($children = $result->getChildren()) {
+        $keyed_results = $keyed_results + $this->getResultsKeyedByRawValue($children);
+      }
+    }
+
+    return $keyed_results;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setResults(array $results) {
     $this->results = $results;
     // If there are active values,

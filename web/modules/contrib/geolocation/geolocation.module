@@ -22,8 +22,8 @@ function geolocation_help($route_name, RouteMatchInterface $route_match) {
           See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a>
           pages for general information on fields and how to create and manage them.',
           [
-            ':field' => Url::fromRoute('help.page', ['name' => 'field']),
-            ':field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui']),
+            ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
+            ':field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui'])->toString(),
           ]
         )
         . '</p>';

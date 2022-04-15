@@ -2,7 +2,6 @@
 
 namespace Drupal\geolocation_leaflet\Plugin\geolocation\MapFeature;
 
-use Drupal;
 use Drupal\geolocation\MapFeatureBase;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Template\Attribute;
@@ -56,7 +55,7 @@ class LeafletMarkerZoomAndAnimate extends MapFeatureBase {
     }
 
     foreach ($render_array['#children']['locations'] as &$location) {
-      $anchor_id = Drupal::token()->replace($feature_settings['marker_zoom_anchor_id'], $context);
+      $anchor_id = \Drupal::token()->replace($feature_settings['marker_zoom_anchor_id'], $context);
 
       if (empty($view)) {
         continue;

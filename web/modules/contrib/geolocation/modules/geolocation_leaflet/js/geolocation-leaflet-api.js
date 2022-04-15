@@ -105,7 +105,6 @@
       that.populatedCallback();
     })
     .catch(function (error) {
-      console.error('Leaflet library not loaded. Bailing out. Error:'); // eslint-disable-line no-console.
       console.error(error);
     });
   }

@@ -14,7 +14,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Component\Utility\Html;
 
 /**
- * Class DataProviderBase.
+ * Class DataProvider Base.
  *
  * @package Drupal\geolocation
  */
@@ -84,7 +84,7 @@ abstract class DataProviderBase extends PluginBase implements DataProviderInterf
   /**
    * Add default settings.
    *
-   * @param array $settings
+   * @param array|null $settings
    *   Unaltered settings.
    *
    * @return array

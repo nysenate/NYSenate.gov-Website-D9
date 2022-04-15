@@ -7,7 +7,7 @@ use Drupal\geolocation\MapProviderBase;
 use Drupal\geolocation\KeyProvider;
 
 /**
- * Class GoogleMapsProviderBase.
+ * Class GoogleMapsProvider Base.
  *
  * @package Drupal\geolocation_google_maps
  */

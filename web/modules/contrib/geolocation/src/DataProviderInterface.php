@@ -40,7 +40,7 @@ interface DataProviderInterface extends PluginInspectionInterface {
    *
    * @param \Drupal\views\ResultRow $row
    *   Row.
-   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
+   * @param \Drupal\views\Plugin\views\field\FieldPluginBase|null $views_field
    *   Views field definition.
    *
    * @return array
@@ -53,7 +53,7 @@ interface DataProviderInterface extends PluginInspectionInterface {
    *
    * @param \Drupal\views\ResultRow $row
    *   Row.
-   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
+   * @param \Drupal\views\Plugin\views\field\FieldPluginBase|null $views_field
    *   Views field definition.
    *
    * @return array
@@ -66,7 +66,7 @@ interface DataProviderInterface extends PluginInspectionInterface {
    *
    * @param \Drupal\views\ResultRow $row
    *   Row.
-   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
+   * @param \Drupal\views\Plugin\views\field\FieldPluginBase|null $views_field
    *   Views field definition.
    *
    * @return array
@@ -123,7 +123,7 @@ interface DataProviderInterface extends PluginInspectionInterface {
   /**
    * Return field item tokens.
    *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinitionInterface
+   * @param \Drupal\Core\Field\FieldDefinitionInterface|null $fieldDefinitionInterface
    *   Field definition interface.
    *
    * @return array

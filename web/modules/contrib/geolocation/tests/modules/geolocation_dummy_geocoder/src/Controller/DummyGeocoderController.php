@@ -7,7 +7,7 @@ use Drupal\geolocation_dummy_geocoder\Plugin\geolocation\Geocoder\Dummy;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Class DummyGeocoderController.
+ * Class DummyGeocoderController dummy.
  */
 class DummyGeocoderController extends ControllerBase {
 

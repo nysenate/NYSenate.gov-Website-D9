@@ -60,7 +60,7 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  protected function defineOptions() {
+  protected function defineOptions(): array {
     // Add source, lat, lng and filter.
     $options = parent::defineOptions();
 
@@ -156,7 +156,29 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function acceptExposedInput($input) {
+  public function storeExposedInput($input, $status) {
+    parent::storeExposedInput($input, $status);
+
+    if (empty($input['center'])) {
+      return;
+    }
+
+    $session = $this->view->getRequest()->getSession();
+    $views_session = $session->get('views', []);
+    $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
+
+    if (empty($views_session[$this->view->storage->id()][$display_id])) {
+      return;
+    }
+
+    $views_session[$this->view->storage->id()][$display_id]['center'] = $input['center'];
+    $session->set('views', $views_session);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function acceptExposedInput($input): bool {
     parent::acceptExposedInput($input);
 
     if (

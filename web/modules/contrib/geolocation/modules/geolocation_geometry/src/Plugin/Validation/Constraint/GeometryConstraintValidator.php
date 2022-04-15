@@ -16,10 +16,12 @@ class GeometryConstraintValidator extends ConstraintValidator {
    */
   public function validate($value, Constraint $constraint) {
 
+    if (!is_a($constraint, GeometryConstraint::class)) {
+      return;
+    }
+
     if (isset($value)) {
-
       try {
-
         $query = NULL;
         /* maybe: this could be configurable with field options */
         $allowed_types_for_geometry = [
@@ -43,14 +45,23 @@ class GeometryConstraintValidator extends ConstraintValidator {
         $result = str_replace("st_", "", strtolower($result_[0]->type));
 
         if ($constraint->geometryType != 'geometry' && $result != $constraint->geometryType) {
-          $this->context->addViolation($constraint->messageGeom, ['@value' => $value, '@geom_type' => $constraint->geometryType]);
+          $this->context->addViolation($constraint->messageGeom, [
+            '@value' => $value,
+            '@geom_type' => $constraint->geometryType,
+          ]);
         }
         elseif ($constraint->geometryType === 'geometry' && !in_array($result, $allowed_types_for_geometry)) {
-          $this->context->addViolation($constraint->messageGeom, ['@value' => $value, '@geom_type' => $constraint->geometryType]);
+          $this->context->addViolation($constraint->messageGeom, [
+            '@value' => $value,
+            '@geom_type' => $constraint->geometryType,
+          ]);
         }
       }
       catch (DatabaseExceptionWrapper $e) {
-        $this->context->addViolation($constraint->messageType, ['@value' => $value, '@type' => $constraint->type]);
+        $this->context->addViolation($constraint->messageType, [
+          '@value' => $value,
+          '@type' => $constraint->type,
+        ]);
       }
     }
   }

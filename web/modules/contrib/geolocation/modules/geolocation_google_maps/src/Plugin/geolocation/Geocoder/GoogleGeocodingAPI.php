@@ -82,6 +82,10 @@ class GoogleGeocodingAPI extends GoogleGeocoderBase {
    * {@inheritdoc}
    */
   public function geocode($address) {
+    if (empty($address)) {
+      return FALSE;
+    }
+
     $config = \Drupal::config('geolocation_google_maps.settings');
     $query_params = [
       'address' => $address,

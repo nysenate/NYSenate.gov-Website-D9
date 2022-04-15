@@ -69,7 +69,7 @@ third_party_settings:
       label: 'Social Sharing'
       region: content
       parent_name: ''
-      weight: 6
+      weight: 5
       format_type: fieldset
       format_settings:
         classes: 'group-social-sharing field-group-fieldset'
@@ -84,7 +84,7 @@ third_party_settings:
       label: Discoverability
       region: content
       parent_name: ''
-      weight: 7
+      weight: 6
       format_type: fieldset
       format_settings:
         classes: 'group-discoverability field-group-fieldset'
@@ -115,7 +115,7 @@ third_party_settings:
       label: 'Senator Microsite Settings'
       region: content
       parent_name: group_promotion
-      weight: 8
+      weight: 32
       format_type: tab
       format_settings:
         classes: 'group-microsite-settings field-group-htab'
@@ -131,7 +131,7 @@ third_party_settings:
       label: '  Committee Settings'
       region: content
       parent_name: group_promotion
-      weight: 10
+      weight: 33
       format_type: tab
       format_settings:
         classes: 'group-committee-settings field-group-htab'
@@ -162,7 +162,7 @@ third_party_settings:
       label: 'Sitewide Settings'
       region: hidden
       parent_name: group_promotion
-      weight: 6
+      weight: 31
       format_type: tab
       format_settings:
         classes: 'group-sitewide-settings field-group-htab'
@@ -194,7 +194,7 @@ content:
     third_party_settings: {  }
   field_accessible_sitewide:
     type: boolean_checkbox
-    weight: 7
+    weight: 32
     region: content
     settings:
       display_label: true
@@ -276,7 +276,7 @@ content:
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox
-    weight: 32
+    weight: 34
     region: content
     settings:
       display_label: true
@@ -350,7 +350,7 @@ content:
             selector: ''
   field_senator_multiref:
     type: options_select
-    weight: 30
+    weight: 33
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -443,33 +443,19 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 13
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    weight: 11
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 8
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    weight: 12
+    weight: 7
     region: content
     settings:
       display_label: true
@@ -494,14 +480,16 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 14
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   langcode: true
+  promote: true
+  sticky: true

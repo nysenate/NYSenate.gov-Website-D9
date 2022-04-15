@@ -297,7 +297,7 @@ class EntityInlineForm implements InlineFormInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function buildEntity(array $entity_form, ContentEntityInterface $entity, FormStateInterface $form_state) {
+  protected function buildEntity(array $entity_form, ContentEntityInterface $entity, FormStateInterface $form_state) {
     $form_display = $this->getFormDisplay($entity, $entity_form['#form_mode']);
     $form_display->extractFormValues($entity, $entity_form, $form_state);
     // Invoke all specified builders for copying form values to entity fields.

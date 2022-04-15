@@ -17,7 +17,7 @@ class GeolocationTokenFormatterTest extends GeolocationJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'field',
     'filter',
@@ -27,7 +27,7 @@ class GeolocationTokenFormatterTest extends GeolocationJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);

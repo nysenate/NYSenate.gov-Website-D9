@@ -1,0 +1,23 @@
+uuid: 05574e8a-eaa1-4051-8bf4-12b88c587744
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_off_the_floor
+    - node.type.meeting
+id: node.meeting.field_off_the_floor
+field_name: field_off_the_floor
+entity_type: node
+bundle: meeting
+label: 'If checked, will display "OFF THE FLOOR"'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: '1'
+  off_label: '0'
+field_type: boolean

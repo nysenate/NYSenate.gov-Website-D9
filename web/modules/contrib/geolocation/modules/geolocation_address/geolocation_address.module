@@ -13,8 +13,6 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\geolocation_address\Plugin\migrate\field\Location;
 
 /**
- * {@inheritdoc}
- *
  * Implements hook_geolocation_field_map_widget_alter().
  */
 function geolocation_address_geolocation_field_map_widget_alter(&$element, $context) {
@@ -120,8 +118,6 @@ function geolocation_address_geolocation_field_map_widget_alter(&$element, $cont
 }
 
 /**
- * {@inheritdoc}
- *
  * Implements hook_field_widget_third_party_settings_form().
  */
 function geolocation_address_field_widget_third_party_settings_form(WidgetInterface $widget, FieldDefinitionInterface $field_definition, $form_mode, $form, FormStateInterface $form_state) {
@@ -208,13 +204,17 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
     '#title' => t('Geocoder plugin'),
     '#default_value' => $settings['geocoder'],
     '#ajax' => [
-      'callback' => [get_class($geocoder_manager), 'addGeocoderSettingsFormAjax'],
+      'callback' => [
+        get_class($geocoder_manager), 'addGeocoderSettingsFormAjax',
+      ],
       'wrapper' => 'geolocation-address-geocoder-plugin-settings',
       'effect' => 'fade',
     ],
     '#states' => [
       'visible' => [
-        ':input[name="' . $form_parent_name . '[enable]"]' => ['checked' => TRUE],
+        ':input[name="' . $form_parent_name . '[enable]"]' => [
+          'checked' => TRUE,
+        ],
       ],
     ],
   ];
@@ -325,8 +325,6 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
 }
 
 /**
- * {@inheritdoc}
- *
  * Implements hook_field_widget_settings_summary_alter().
  */
 function geolocation_address_field_widget_settings_summary_alter(&$summary, $context) {
@@ -361,7 +359,7 @@ function geolocation_address_get_widget_settings(WidgetInterface $widget) {
   if (isset($settings['geocoder_settings']) && !isset($settings['settings'])) {
     $settings['settings'] = $settings['geocoder_settings'];
     unset($settings['geocoder_settings']);
-  };
+  }
 
   return $settings + [
     'enable' => FALSE,

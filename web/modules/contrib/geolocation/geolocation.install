@@ -81,52 +81,54 @@ function geolocation_update_8202(&$sandbox) {
     }
   }
 
-  foreach (\Drupal::entityTypeManager()->getStorage('view')->loadMultiple() as $views_id => $view) {
-    $resave_view = FALSE;
+  if (\Drupal::entityTypeManager()->hasDefinition('view')) {
+    foreach (\Drupal::entityTypeManager()->getStorage('view')->loadMultiple() as $views_id => $view) {
+      $resave_view = FALSE;
 
-    /* @var \Drupal\views\Entity\View $view */
-    $displays = $view->get('display');
-    foreach ($displays as $display_id => $display) {
-      if (empty($display['display_options']['style']['type'])) {
-        continue;
+      /** @var \Drupal\views\Entity\View $view */
+      $displays = $view->get('display');
+      foreach ($displays as $display_id => $display) {
+        if (empty($display['display_options']['style']['type'])) {
+          continue;
+        }
+        switch ($display['display_options']['style']['type']) {
+          case 'maps_common':
+            if (empty($display['display_options']['style']['options']['google_map_settings'])) {
+              continue 2;
+            }
+            $displays[$display_id]['display_options']['style']['options']['map_provider_id'] = 'google_maps';
+            $displays[$display_id]['display_options']['style']['options']['map_provider_settings'] = $display['display_options']['style']['options']['google_map_settings'];
+            unset($displays[$display_id]['display_options']['style']['options']['google_map_settings']);
+            $resave_view = TRUE;
+            break;
+
+          case 'google_static_common_map':
+            if (empty($display['display_options']['style']['options']['google_static_maps_settings'])) {
+              continue 2;
+            }
+            $displays[$display_id]['display_options']['style']['options']['map_provider_id'] = 'google_static_maps';
+            $displays[$display_id]['display_options']['style']['options']['map_provider_settings'] = $display['display_options']['style']['options']['google_static_maps_settings'];
+            $displays[$display_id]['display_options']['style']['type'] = 'maps_common';
+            unset($displays[$display_id]['display_options']['style']['options']['google_static_maps_settings']);
+            $resave_view = TRUE;
+            break;
+
+          case 'geolocation_leaflet':
+            if (empty($display['display_options']['style']['options']['leaflet_settings'])) {
+              continue 2;
+            }
+            $displays[$display_id]['display_options']['style']['options']['map_provider_id'] = 'leaflet';
+            $displays[$display_id]['display_options']['style']['options']['map_provider_settings'] = $display['display_options']['style']['options']['leaflet_settings'];
+            $displays[$display_id]['display_options']['style']['type'] = 'maps_common';
+            unset($displays[$display_id]['display_options']['style']['options']['leaflet_settings']);
+            $resave_view = TRUE;
+            break;
+        }
       }
-      switch ($display['display_options']['style']['type']) {
-        case 'maps_common':
-          if (empty($display['display_options']['style']['options']['google_map_settings'])) {
-            continue 2;
-          }
-          $displays[$display_id]['display_options']['style']['options']['map_provider_id'] = 'google_maps';
-          $displays[$display_id]['display_options']['style']['options']['map_provider_settings'] = $display['display_options']['style']['options']['google_map_settings'];
-          unset($displays[$display_id]['display_options']['style']['options']['google_map_settings']);
-          $resave_view = TRUE;
-          break;
-
-        case 'google_static_common_map':
-          if (empty($display['display_options']['style']['options']['google_static_maps_settings'])) {
-            continue 2;
-          }
-          $displays[$display_id]['display_options']['style']['options']['map_provider_id'] = 'google_static_maps';
-          $displays[$display_id]['display_options']['style']['options']['map_provider_settings'] = $display['display_options']['style']['options']['google_static_maps_settings'];
-          $displays[$display_id]['display_options']['style']['type'] = 'maps_common';
-          unset($displays[$display_id]['display_options']['style']['options']['google_static_maps_settings']);
-          $resave_view = TRUE;
-          break;
-
-        case 'geolocation_leaflet':
-          if (empty($display['display_options']['style']['options']['leaflet_settings'])) {
-            continue 2;
-          }
-          $displays[$display_id]['display_options']['style']['options']['map_provider_id'] = 'leaflet';
-          $displays[$display_id]['display_options']['style']['options']['map_provider_settings'] = $display['display_options']['style']['options']['leaflet_settings'];
-          $displays[$display_id]['display_options']['style']['type'] = 'maps_common';
-          unset($displays[$display_id]['display_options']['style']['options']['leaflet_settings']);
-          $resave_view = TRUE;
-          break;
+      if ($resave_view) {
+        $view->set('display', $displays);
+        $view->save();
       }
-    }
-    if ($resave_view) {
-      $view->set('display', $displays);
-      $view->save();
     }
   }
 
@@ -144,12 +146,16 @@ function geolocation_update_8202(&$sandbox) {
  * Move centre behavior to new format in views.
  */
 function geolocation_update_8203(&$sandbox) {
+  if (!\Drupal::entityTypeManager()->hasDefinition('view')) {
+    return;
+  }
+
   \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
 
   foreach (\Drupal::entityTypeManager()->getStorage('view')->loadMultiple() as $views_id => $view) {
     $resave_view = FALSE;
 
-    /* @var \Drupal\views\Entity\View $view */
+    /** @var \Drupal\views\Entity\View $view */
     $displays = $view->get('display');
     foreach ($displays as $display_id => $display) {
       if (

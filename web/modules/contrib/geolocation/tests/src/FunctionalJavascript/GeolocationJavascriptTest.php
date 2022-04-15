@@ -18,7 +18,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'user',
     'field',
@@ -41,7 +41,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
@@ -219,7 +219,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
     // If Google works, either gm-style or gm-err-container will be present.
     $this->assertSession()->elementExists('css', '.geolocation-map-container [class^="gm-"]');
 
-    // TODO: Create node with custom settings and test it.
+    // @todo Create node with custom settings and test it.
     $admin_user = $this->drupalCreateUser([
       'bypass node access',
       'administer nodes',

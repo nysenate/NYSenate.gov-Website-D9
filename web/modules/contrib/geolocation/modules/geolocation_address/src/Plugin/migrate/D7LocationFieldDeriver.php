@@ -47,7 +47,7 @@ class D7LocationFieldDeriver extends DeriverBase {
           'entity_type' => $entity_type,
           'bundle' => $bundle,
         ];
-        $derivative_id =  $bundle !== NULL
+        $derivative_id = $bundle !== NULL
           ? $entity_type . PluginBase::DERIVATIVE_SEPARATOR . $bundle
           : $entity_type;
         $derivatives[$derivative_id] = $values;

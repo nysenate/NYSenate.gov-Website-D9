@@ -1,5 +1,13 @@
 # Change Log
 
+### 4.5.4 - 5 April 2022
+
+- Allow psr/log ^3
+
+### 4.5.3 - 1 April 2022
+
+- Check the type of the reflection object before attempting to call isBuiltin(). (#265)
+
 ### 4.5.2 - 20 February 2022
 
 - Do not pass null to Symfony Command methods (#262)

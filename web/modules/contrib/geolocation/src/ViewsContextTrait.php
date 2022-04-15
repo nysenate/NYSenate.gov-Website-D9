@@ -3,7 +3,7 @@
 namespace Drupal\geolocation;
 
 /**
- * Trait ViewsContextTrait.
+ * Trait ViewsContext.
  */
 trait ViewsContextTrait {
 

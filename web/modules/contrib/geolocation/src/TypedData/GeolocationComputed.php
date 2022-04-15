@@ -6,7 +6,7 @@ use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
- * Class GeolocationComputed.
+ * Class GeolocationComputed typed data.
  *
  * @package Drupal\geolocation
  */

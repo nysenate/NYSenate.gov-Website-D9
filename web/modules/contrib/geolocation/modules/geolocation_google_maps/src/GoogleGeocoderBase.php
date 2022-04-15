@@ -219,7 +219,8 @@ abstract class GoogleGeocoderBase extends GeocoderBase implements GeocoderInterf
           '#type' => 'textfield',
           '#default_value' => $settings['component_restrictions']['country'],
           '#title' => $this->t('Country'),
-          '#size' => 5,
+          '#description' => $this->t('Enter a comma-separated list to support multiple countries'),
+          '#size' => 15,
         ],
       ],
       'boundary_restriction' => [

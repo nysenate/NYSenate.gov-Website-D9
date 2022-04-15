@@ -1,0 +1,19 @@
+{{ attach_library('nysenate_theme/nysenate-women-of-distinction') }}
+
+<article class="nysenate-women-of-distinction {% if image %} nysenate-women-of-distinction__has-img {% endif %}">
+  {% if image %}
+  <a class="image-link" href="{{ cta.url }}">
+    {{ image }}
+  </a>
+  {% endif %}
+  <div class="nysenate-women-of-distinction__container">
+    <div class="nysenate-women-of-distinction__text-content">
+      <a href="{{ cta.url }}">
+        <h3 class="title">{{ cta.title }}</h3>
+      </a>
+    </div>
+    <a href="{{ cta.url }}" class="btn icon-before__read_more med-bg">
+      <span>{{ cta.read_more }}</span>
+    </a>
+  </div>
+</article>

@@ -1,0 +1,27 @@
+{{ attach_library('nysenate_theme/nysenate-upcoming-events') }}
+
+<div class="nyesenate-upcoming-events">
+  <div class="nyesenate-upcoming-events__header">
+    <h2 class="nyesenate-upcoming-events__title">{{ title }}</h2>
+    <a href="{{ cta.link }}" class="upcoming-events-link">{{ cta.text }}</a>
+  </div>
+  <div class="nyesenate-upcoming-events__items">
+    {% for item in items %}
+      <div class="item">
+        <div class="item-header">
+          <span class="date date-display">{{ item.date }}</span>
+          <span class="month date-display">{{ item.month }}</span>
+        </div>
+        <div class="item-content">
+          {% for session in item.sessions %}
+            <div class="event">
+              <h3 class="event-title">
+                <a href="{{ session.url }}">{{ session.text }}</a>
+              </h3>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

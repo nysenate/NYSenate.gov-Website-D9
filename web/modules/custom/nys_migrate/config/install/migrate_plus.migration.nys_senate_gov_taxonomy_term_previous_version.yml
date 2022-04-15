@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies: {  }
+id: nys_senate_gov_taxonomy_term_previous_version
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Taxonomy terms (NYS Counties)'
+source:
+  plugin: d7_taxonomy_term
+  bundle: prev_ver
+process:
+  tid:
+    -
+      plugin: get
+      source: tid
+  name:
+    -
+      plugin: get
+      source: name
+  description/value:
+    -
+      plugin: get
+      source: description
+  description/format:
+    -
+      plugin: default_value
+      default_value: full_html
+  weight:
+    -
+      plugin: get
+      source: weight
+  field_metatags:
+    -
+      plugin: get
+      source: metatags
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: prev_ver
+migration_dependencies:
+  required: { }
+  optional: { }

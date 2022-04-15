@@ -1,0 +1,29 @@
+uuid: 632a877b-a10c-4f03-bb0f-66ed136a9235
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_agenda_bills
+    - node.type.bill
+    - node.type.meeting
+id: node.meeting.field_agenda_bills
+field_name: field_agenda_bills
+entity_type: node
+bundle: meeting
+label: 'Agenda Bills'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      bill: bill
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

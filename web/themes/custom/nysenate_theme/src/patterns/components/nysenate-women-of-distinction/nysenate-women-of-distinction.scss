@@ -1,0 +1,106 @@
+@import "../../global/utils/init";
+
+.nysenate-women-of-distinction {
+  position: relative;
+  padding: 0;
+  max-width: 760px;
+  @extend .lgt-bg;
+
+  .btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Proxima Nova SemiBold";
+    text-align: left;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 0.2em;
+    font-size: 12px;
+    line-height: 60px;
+    height: 60px;
+    padding-left: 20px;
+
+    &::before {
+      font-size: 32px;
+    }
+  }
+
+  img {
+    display: none;
+  }
+
+  &__text-content {
+    padding: 30px 20px 90px;
+
+    a {
+      text-decoration: none;
+    }
+
+    .title {
+      color: #fff;
+      font-size: 22px;
+      line-height: 1.175em;
+      margin-bottom: 0;
+      font-family: "Adelle Light";
+    }
+  }
+
+  @media #{$tablet} {
+    clear: both;
+    padding: 0;
+
+    .btn {
+      padding-left: 25px;
+      font-size: 15px;
+    }
+
+    &__container {
+      display: flex;
+      align-items: center;
+    }
+
+    &__text-content {
+      padding: 35px 35px 120px;
+
+      .title {
+        font-size: 36px;
+  
+        a {
+          color: #fff;
+        }
+      }
+    }
+
+    // has img modifications
+    &.nysenate-women-of-distinction__has-img {
+      overflow: hidden;
+      display: flex;
+
+      .image-link {
+        width: 100%;
+        max-width: 280px;
+      }
+
+      img {
+        display: block;
+        height: 280px;
+        width: 280px;
+        object-fit: cover;
+      }
+
+      .nysenate-women-of-distinction__text-content {
+        max-width: 475px;
+        padding-top: 0;
+        padding-bottom: 80px;
+      }
+
+      .btn {
+        left: 280px;
+      }
+    }
+  }
+}

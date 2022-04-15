@@ -59,7 +59,6 @@ third_party_settings:
         - field_subtitle
         - body
         - field_paragraphs
-        - field_chapters
         - field_bills
       label: 'Article Content'
       region: content
@@ -122,7 +121,6 @@ third_party_settings:
         required_fields: true
     group_microsite_settings:
       children:
-        - field_senator
         - field_featured
       label: 'Senator Microsite Settings'
       region: content
@@ -184,7 +182,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 6
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -222,7 +220,7 @@ content:
     third_party_settings: {  }
   field_category:
     type: options_select
-    weight: 17
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -306,13 +304,13 @@ content:
     third_party_settings: {  }
   field_publication_date:
     type: datetime_default
-    weight: 14
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   field_publication_source_link:
     type: string_textfield
-    weight: 16
+    weight: 11
     region: content
     settings:
       size: 60
@@ -320,7 +318,7 @@ content:
     third_party_settings: {  }
   field_publication_title:
     type: string_textfield
-    weight: 15
+    weight: 10
     region: content
     settings:
       size: 60
@@ -328,7 +326,7 @@ content:
     third_party_settings: {  }
   field_senator_multiref:
     type: options_select
-    weight: 29
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -355,40 +353,19 @@ content:
       rows: 2
       placeholder: ''
     third_party_settings: {  }
-  langcode:
-    type: language_select
-    weight: 4
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   path:
     type: path
-    weight: 9
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    weight: 7
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
-    type: boolean_checkbox
-    weight: 11
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  sticky:
     type: boolean_checkbox
     weight: 8
     region: content
@@ -405,7 +382,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS
@@ -415,13 +392,16 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 10
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  langcode: true
+  promote: true
+  sticky: true

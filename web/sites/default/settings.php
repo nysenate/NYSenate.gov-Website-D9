@@ -819,18 +819,19 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
   }
 }
+else {
+  // Automatically generated include for settings managed by ddev.
+  if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
+    include $app_root . '/' . $site_path . '/settings.ddev.php';
 
-// Automatically generated include for settings managed by ddev.
-if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
-  include $app_root . '/' . $site_path . '/settings.ddev.php';
+    // Config split configuration overrides.
+    $config['config_split.config_split.local']['status'] = TRUE;
 
-  // Config split configuration overrides.
-  $config['config_split.config_split.local']['status'] = TRUE;
-
-  // Local Environment indicator.
-  $config['environment_indicator.indicator']['name'] = 'Local';
-  $config['environment_indicator.indicator']['bg_color'] = '#00294F';
-  $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+    // Local Environment indicator.
+    $config['environment_indicator.indicator']['name'] = 'Local';
+    $config['environment_indicator.indicator']['bg_color'] = '#00294F';
+    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  }
 }
 
 // If a private settings file exists within the files directory, load it.

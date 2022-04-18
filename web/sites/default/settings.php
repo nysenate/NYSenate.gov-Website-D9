@@ -773,7 +773,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
     $config['environment_indicator.indicator']['name'] = 'Dev';
     $config['environment_indicator.indicator']['bg_color'] = '#935116';
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-    $config['config_split.config_split.multidev']['status'] = FALSE;
+    $config['config_split.config_split.multidev']['status'] = TRUE;
   }
 
   if ($_ENV['PANTHEON_ENVIRONMENT'] == 'develop') {
@@ -781,7 +781,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
     $config['environment_indicator.indicator']['name'] = 'Develop';
     $config['environment_indicator.indicator']['bg_color'] = '#0e6655';
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-    $config['config_split.config_split.develop']['status'] = FALSE;
+    $config['config_split.config_split.develop']['status'] = TRUE;
   }
 
   if ($_ENV['PANTHEON_ENVIRONMENT'] == 'test') {
@@ -789,7 +789,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
     $config['environment_indicator.indicator']['name'] = 'Test';
     $config['environment_indicator.indicator']['bg_color'] = '#e91e63';
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-    $config['config_split.config_split.test']['status'] = FALSE;
+    $config['config_split.config_split.test']['status'] = TRUE;
   }
 
   if ($_ENV['PANTHEON_ENVIRONMENT'] == 'live') {
@@ -797,7 +797,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
     $config['environment_indicator.indicator']['name'] = 'Live';
     $config['environment_indicator.indicator']['bg_color'] = '#000000';
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-    $config['config_split.config_split.live_prod']['status'] = FALSE;
+    $config['config_split.config_split.live_prod']['status'] = TRUE;
   }
 
 }

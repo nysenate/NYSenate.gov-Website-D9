@@ -768,46 +768,70 @@ $settings['config_sync_directory'] = '../config/sync';
 // Pantheon environment-specific config.
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
-  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'dev') {
-    // Place for settings for the dev environment.
-    $config['environment_indicator.indicator']['name'] = 'Dev';
-    $config['environment_indicator.indicator']['bg_color'] = '#935116';
-    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-  }
+  switch($_ENV['PANTHEON_ENVIRONMENT']) {
+     case 'develop':
+      // Enable the Develop environment's config split.
+      $config['config_split.config_split.develop']['status'] = TRUE;
 
-  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'develop') {
-    // Place for settings for the dev environment.
-    $config['environment_indicator.indicator']['name'] = 'Develop';
-    $config['environment_indicator.indicator']['bg_color'] = '#0e6655';
-    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-  }
+      // Configure the Develop environment indicator bar.
+      $config['environment_indicator.indicator']['name'] = 'Develop';
+      $config['environment_indicator.indicator']['bg_color'] = '#0e6655';
+      $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+      break;
 
-  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'test') {
-    // Place for settings for the test environment.
-    $config['environment_indicator.indicator']['name'] = 'Test';
-    $config['environment_indicator.indicator']['bg_color'] = '#e91e63';
-    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-  }
+    case 'dev':
+      // Enable the Dev environment's config split.
+      $config['config_split.config_split.develop']['status'] = TRUE;
 
-  if ($_ENV['PANTHEON_ENVIRONMENT'] == 'live') {
-    // Place for settings for the live environment.
-    $config['environment_indicator.indicator']['name'] = 'Live';
-    $config['environment_indicator.indicator']['bg_color'] = '#000000';
-    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-  }
+      // Configure the Dev environment indicator bar.
+      $config['environment_indicator.indicator']['name'] = 'Dev';
+      $config['environment_indicator.indicator']['bg_color'] = '#935116';
+      $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+      break;
 
+    case 'test':
+      // Enable the Test environment's config split.
+      $config['config_split.config_split.test']['status'] = TRUE;
+
+      // Configure the Test environment indicator bar.
+      $config['environment_indicator.indicator']['name'] = 'Test';
+      $config['environment_indicator.indicator']['bg_color'] = '#e91e63';
+      $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+      break;
+
+    case 'live':
+      // Enable the Live/prod environment's config split.
+      $config['config_split.config_split.live_prod']['status'] = TRUE;
+
+      // Configure the Live/prod environment indicator bar.
+      $config['environment_indicator.indicator']['name'] = 'Live';
+      $config['environment_indicator.indicator']['bg_color'] = '#000000';
+      $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+      break;
+
+    default:
+      // Enable a mutlidev environment's config split.
+      $config['config_split.config_split.multidev']['status'] = TRUE;
+
+      // Configure a multidev environment's indicator bar.
+      $config['environment_indicator.indicator']['name'] = 'Multidev';
+      $config['environment_indicator.indicator']['bg_color'] = '#3D004B';
+      $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  }
 }
+else {
+  // Automatically generated include for settings managed by ddev.
+  if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
+    include $app_root . '/' . $site_path . '/settings.ddev.php';
 
-// Automatically generated include for settings managed by ddev.
-$ddev_settings = dirname(__FILE__) . '/settings.ddev.php';
-if (getenv('IS_DDEV_PROJECT') == 'true' && is_readable($ddev_settings)) {
-  require $ddev_settings;
+    // Config split configuration overrides.
+    $config['config_split.config_split.local']['status'] = TRUE;
 
-  // Local Environment indicator.
-  $config['environment_indicator.indicator']['name'] = 'Local';
-  $config['environment_indicator.indicator']['bg_color'] = '#00294F';
-  $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-  
+    // Local Environment indicator.
+    $config['environment_indicator.indicator']['name'] = 'Local';
+    $config['environment_indicator.indicator']['bg_color'] = '#00294F';
+    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+  }
 }
 
 // If a private settings file exists within the files directory, load it.

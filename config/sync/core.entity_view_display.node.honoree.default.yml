@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.honoree.field_honoree_type
     - field.field.node.honoree.field_image_main
     - field.field.node.honoree.field_issues
+    - field.field.node.honoree.field_profile_status
     - field.field.node.honoree.field_senator_multiref
     - node.type.honoree
   module:
@@ -118,6 +119,13 @@ content:
       link: true
     third_party_settings: {  }
     weight: 9
+    region: content
+  field_profile_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 116
     region: content
   field_senator:
     type: entity_reference_label

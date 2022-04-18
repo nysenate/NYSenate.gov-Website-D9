@@ -10,6 +10,7 @@
     font-size: 20px;
     line-height: 1em;
     padding-bottom: 20px;
+    font-family: "Adelle SemiBold";
   }
 
   &__header {
@@ -80,11 +81,16 @@
           color: $grey02;
           text-transform: uppercase;
           line-height: 18px;
+          font-family: "Proxima Nova Regular";
 
           &::before {
             content: '/';
             margin: 0 3px 0 5px;
           }
+        }
+
+        &.date {
+          font-family: "Adelle SemiBold";
         }
       }
     }
@@ -114,6 +120,7 @@
         color: $grey02;
         display: block;
         text-decoration: none;
+        font-family: "Adelle Light";
       }
     }
   }
@@ -138,6 +145,7 @@
         right: 40px;
         bottom: auto;
         line-height: 26px;
+        font-family: "Proxima Nova Regular";
 
         &::after {
           margin-top: -4px;
@@ -172,7 +180,6 @@
 
           &.month {
             padding: 0;
-
             font-size: 16px;
             line-height: 1em;
             letter-spacing: 0.1em;
@@ -180,6 +187,10 @@
             &::before {
               display: none;
             }
+          }
+
+          &.date {
+            margin-bottom: 6px;
           }
         }
       }

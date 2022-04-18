@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.honoree.field_honoree_type
     - field.field.node.honoree.field_image_main
     - field.field.node.honoree.field_issues
+    - field.field.node.honoree.field_profile_status
     - field.field.node.honoree.field_senator_multiref
     - node.type.honoree
   module:
@@ -23,6 +24,7 @@ dependencies:
     - field_group
     - inline_entity_form
     - media_library
+    - path
     - scheduler
     - text
 third_party_settings:
@@ -49,6 +51,7 @@ third_party_settings:
     group_admin:
       children:
         - field_add_honoree_list
+        - field_profile_status
       label: 'Administrative Fields'
       region: content
       parent_name: ''
@@ -74,6 +77,12 @@ content:
       summary_rows: 3
       placeholder: ''
       show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 13
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_add_honoree_list:
     type: boolean_checkbox
@@ -206,6 +215,12 @@ content:
       collapsed: true
       revision: false
     third_party_settings: {  }
+  field_profile_status:
+    type: options_buttons
+    weight: 27
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_senator:
     type: entity_reference_autocomplete
     weight: 2
@@ -226,11 +241,24 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  path:
+    type: path
+    weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -240,18 +268,28 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 14
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
     weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
-  created: true
   langcode: true
-  path: true
   promote: true
-  status: true
   sticky: true
-  uid: true
-  url_redirects: true

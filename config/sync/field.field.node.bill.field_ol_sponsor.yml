@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_ol_sponsor
     - node.type.bill
-    - node.type.page_content
 id: node.bill.field_ol_sponsor
 field_name: field_ol_sponsor
 entity_type: node
@@ -19,8 +18,7 @@ default_value_callback: ''
 settings:
   handler: 'default:node'
   handler_settings:
-    target_bundles:
-      page_content: page_content
+    target_bundles: {  }
     sort:
       field: _none
       direction: ASC

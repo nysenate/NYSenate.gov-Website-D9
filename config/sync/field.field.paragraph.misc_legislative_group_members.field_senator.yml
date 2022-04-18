@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_senator
-    - node.type.page_content
     - paragraphs.paragraphs_type.misc_legislative_group_members
 id: paragraph.misc_legislative_group_members.field_senator
 field_name: field_senator
@@ -19,8 +18,7 @@ default_value_callback: ''
 settings:
   handler: 'default:node'
   handler_settings:
-    target_bundles:
-      page_content: page_content
+    target_bundles: {  }
     sort:
       field: _none
       direction: ASC

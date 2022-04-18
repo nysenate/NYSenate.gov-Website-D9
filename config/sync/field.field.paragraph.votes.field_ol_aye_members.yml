@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_ol_aye_members
-    - node.type.page_content
     - paragraphs.paragraphs_type.votes
 id: paragraph.votes.field_ol_aye_members
 field_name: field_ol_aye_members
@@ -19,8 +18,7 @@ default_value_callback: ''
 settings:
   handler: 'default:node'
   handler_settings:
-    target_bundles:
-      page_content: page_content
+    target_bundles: {  }
     sort:
       field: _none
       direction: ASC

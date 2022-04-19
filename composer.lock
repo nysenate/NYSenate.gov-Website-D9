@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86799c499f0f34a18c0b4f946f26bd3f",
+    "content-hash": "510d04ae113bfa72b7cc83af5d599a93",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -16447,6 +16447,113 @@
             "time": "2021-10-25T18:29:10+00:00"
         },
         {
+            "name": "behat-chrome/behat-chrome-extension",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/xurizaemon/behat-chrome-extension.git",
+                "reference": "eb5975889cf9b4b2f68eedb6980ec71d9e5dcfd6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/xurizaemon%2Fbehat-chrome-extension/repository/archive.zip?sha=eb5975889cf9b4b2f68eedb6980ec71d9e5dcfd6",
+                "reference": "eb5975889cf9b4b2f68eedb6980ec71d9e5dcfd6",
+                "shasum": ""
+            },
+            "require": {
+                "behat-chrome/chrome-mink-driver": "^2.4.1",
+                "behat/behat": "^3.0.4",
+                "behat/mink-extension": "^2.0",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DMore\\ChromeExtension\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dorian More",
+                    "email": "doriancmore@gmail.com"
+                }
+            ],
+            "description": "Behat extension for controlling chrome without selenium",
+            "keywords": [
+                "Behat",
+                "chrome",
+                "driver",
+                "headless"
+            ],
+            "support": {
+                "issues": "https://gitlab.com/xurizaemon/behat-chrome-extension/-/issues",
+                "source": "https://gitlab.com/xurizaemon/behat-chrome-extension/-/tree/1.3.0"
+            },
+            "time": "2022-03-21T09:28:53+00:00"
+        },
+        {
+            "name": "behat-chrome/chrome-mink-driver",
+            "version": "2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/xurizaemon/chrome-mink-driver.git",
+                "reference": "afd9b8910ea38797c0e39ecc6474efd35a686f5c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/xurizaemon%2Fchrome-mink-driver/repository/archive.zip?sha=afd9b8910ea38797c0e39ecc6474efd35a686f5c",
+                "reference": "afd9b8910ea38797c0e39ecc6474efd35a686f5c",
+                "shasum": ""
+            },
+            "require": {
+                "behat/mink": "^1.7",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "textalk/websocket": "^1.2.0"
+            },
+            "require-dev": {
+                "mink/driver-testsuite": "dev-master",
+                "phpunit/phpunit": "^5.0.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DMore\\ChromeDriver\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dorian More",
+                    "email": "doriancmore@gmail.com"
+                }
+            ],
+            "description": "Mink driver for controlling chrome without selenium",
+            "homepage": "https://gitlab.com/behat-chrome/chrome-mink-driver",
+            "support": {
+                "issues": "https://gitlab.com/DMore/chrome-mink-driver/-/issues",
+                "source": "https://gitlab.com/xurizaemon/chrome-mink-driver/-/tree/2.8.0"
+            },
+            "time": "2022-03-21T15:49:20+00:00"
+        },
+        {
             "name": "behat/behat",
             "version": "v3.10.0",
             "source": {
@@ -17550,12 +17657,12 @@
             "version": "1.3.0",
             "source": {
                 "type": "git",
-                "url": "https://gitlab.com/DMore/behat-chrome-extension.git",
+                "url": "https://gitlab.com/behat-chrome/behat-chrome-extension.git",
                 "reference": "6279986ef85ac179f055460502e9b11c3784146c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/DMore%2Fbehat-chrome-extension/repository/archive.zip?sha=6279986ef85ac179f055460502e9b11c3784146c",
+                "url": "https://gitlab.com/api/v4/projects/behat-chrome%2Fbehat-chrome-extension/repository/archive.zip?sha=6279986ef85ac179f055460502e9b11c3784146c",
                 "reference": "6279986ef85ac179f055460502e9b11c3784146c",
                 "shasum": ""
             },
@@ -17591,6 +17698,10 @@
                 "driver",
                 "headless"
             ],
+            "support": {
+                "issues": "https://gitlab.com/behat-chrome/behat-chrome-extension/-/issues",
+                "source": "https://gitlab.com/behat-chrome/behat-chrome-extension/-/tree/1.3.0"
+            },
             "time": "2019-03-30T08:57:34+00:00"
         },
         {
@@ -17598,12 +17709,12 @@
             "version": "2.8.0",
             "source": {
                 "type": "git",
-                "url": "https://gitlab.com/DMore/chrome-mink-driver.git",
+                "url": "https://gitlab.com/behat-chrome/chrome-mink-driver.git",
                 "reference": "f85c8f86ca2e9000119c310577a6942683f7e280"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/DMore%2Fchrome-mink-driver/repository/archive.zip?sha=f85c8f86ca2e9000119c310577a6942683f7e280",
+                "url": "https://gitlab.com/api/v4/projects/behat-chrome%2Fchrome-mink-driver/repository/archive.zip?sha=f85c8f86ca2e9000119c310577a6942683f7e280",
                 "reference": "f85c8f86ca2e9000119c310577a6942683f7e280",
                 "shasum": ""
             },
@@ -17642,7 +17753,8 @@
             ],
             "description": "Mink driver for controlling chrome without selenium",
             "support": {
-                "issues": "https://gitlab.com/api/v4/projects/3255077/issues"
+                "issues": "https://gitlab.com/behat-chrome/chrome-mink-driver/-/issues",
+                "source": "https://gitlab.com/behat-chrome/chrome-mink-driver/-/tree/2.8.0"
             },
             "time": "2021-04-25T06:49:32+00:00"
         },
@@ -19150,12 +19262,12 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/e717aecf7ffbbeb04638a78fe4ae70ad5a3b4f97.zip",
+                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/3356133d66bc64dbb8cd9f2a3053ee2027c7cf52.zip",
                 "reference": "e717aecf7ffbbeb04638a78fe4ae70ad5a3b4f97",
                 "shasum": ""
             },
             "require": {
-                "dmore/behat-chrome-extension": "^1.3",
+                "behat-chrome/behat-chrome-extension": "^1.3",
                 "weitzman/drupal-test-traits": "^1.5",
                 "weitzman/logintrait": "^1.1"
             },
@@ -19172,7 +19284,7 @@
             "homepage": "https://bitbucket.org/mediacurrent/ci-tests",
             "support": {
                 "issues": "https://bitbucket.org/mediacurrent/ci-tests/issues",
-                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/e717aecf7ffbbeb04638a78fe4ae70ad5a3b4f97/?at=master"
+                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/3356133d66bc64dbb8cd9f2a3053ee2027c7cf52/?at=master"
             },
             "time": "2022-01-04T13:22:29+00:00"
         },
@@ -23263,5 +23375,5 @@
     "platform-overrides": {
         "php": "7.3"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }

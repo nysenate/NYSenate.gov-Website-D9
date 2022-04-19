@@ -1,0 +1,97 @@
+@import '../../global/utils/init';
+
+.nysenate-happening-now {
+  border-top: 2px solid #D6D6D6;
+  border-bottom: 2px solid #D6D6D6;
+  padding: 25px 0;
+
+  &__title {
+    font-family: "Proxima Nova Regular";
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0 0 25px;
+  }
+  
+  &__container {
+    display: flex;
+    flex-direction: column;
+
+    .item-logo {
+      height: 350px;
+      width: 350px;
+      margin-bottom: 20px;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .item-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .event-name {
+      font-family: "Adelle Light";
+      font-size: 40px;
+      line-height: 1.175em;
+      color: #4E4E4E;
+      font-weight: 100;
+      margin-bottom: 15px;
+    }
+
+    .stream-link {
+      display: flex;
+      align-items: center;
+      font-family: "Proxima Nova Regular";
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #000;
+      margin-bottom: 15px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      span {
+        line-height: 1;
+      }
+
+      svg {
+        margin-right: 10px;
+
+        path {
+          fill: #CB8D37;
+        }
+      }
+    }
+
+    .stream-title {
+      font-family: "Proxima Nova SemiBold";
+      text-transform: uppercase;
+      color: #CB8D37;
+      margin: 0;
+    }
+  }
+}
+
+@media #{$desktop} {
+  .nysenate-happening-now {
+    padding: 25px 0 50px;
+
+    &__container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      width: 80%;
+      margin: 0 auto;
+      gap: 25px;
+
+      .item-logo {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

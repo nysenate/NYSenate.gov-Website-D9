@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.event.body
     - field.field.node.event.field_accessible_sitewide
     - field.field.node.event.field_attachment
@@ -32,6 +33,7 @@ dependencies:
     - conditional_fields
     - datetime_range
     - field_group
+    - inline_entity_form
     - link
     - media_library
     - path
@@ -200,21 +202,23 @@ content:
       display_label: true
     third_party_settings: {  }
   field_attachment:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 15
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: true
+      label_singular: file
+      label_plural: files
+      collapsible: true
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_committee:
-    type: entity_reference_autocomplete
+    type: options_select
     weight: 9
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
   field_committee_featured:
     type: boolean_checkbox
@@ -238,10 +242,10 @@ content:
       placeholder_title: ''
     third_party_settings:
       conditional_fields:
-        7243deff-fe71-443b-80ba-0c782655b0c0:
+        ce2f3d7c-28ce-4408-84b9-69c0261f62c0:
           entity_type: node
           bundle: event
-          dependee: field_general_location
+          dependee: field_event_place
           settings:
             state: visible
             condition: value
@@ -305,15 +309,15 @@ content:
     settings: {  }
     third_party_settings:
       conditional_fields:
-        674b96ce-c004-4870-a0a3-7693d2435f40:
+        d4176998-7290-465d-85a5-83155a18f290:
           entity_type: node
           bundle: event
-          dependee: field_general_location
+          dependee: field_event_place
           settings:
             state: visible
             condition: value
             grouping: AND
-            values_set: 4
+            values_set: 3
             value: ''
             values: "in_albany\r\nin_district"
             value_form:
@@ -331,20 +335,20 @@ content:
       placeholder: ''
     third_party_settings:
       conditional_fields:
-        f3811871-73ff-4966-948b-08b81ac4e8dd:
+        aec06e20-28ce-4189-ba11-c7ac8f54333b:
           entity_type: node
           bundle: event
-          dependee: field_general_location
+          dependee: field_event_place
           settings:
             state: visible
             condition: value
             grouping: AND
-            values_set: 4
+            values_set: 3
             value: ''
             values: "in_albany\r\nin_district\r\nonline"
             value_form:
               -
-                value: in_albany
+                value: online
             effect: show
             effect_options: {  }
             selector: ''
@@ -378,10 +382,10 @@ content:
       placeholder: ''
     third_party_settings:
       conditional_fields:
-        dfbb9ce3-85e3-4baf-98bb-b91afac3d66c:
+        ea3cc8f2-5e27-4aec-bec8-039aeb89d043:
           entity_type: node
           bundle: event
-          dependee: field_general_location
+          dependee: field_event_place
           settings:
             state: visible
             condition: value
@@ -404,10 +408,10 @@ content:
       placeholder: ''
     third_party_settings:
       conditional_fields:
-        525c8af8-aae5-49cd-a933-74f2ab051f49:
+        bd4b7fd9-0cac-482f-9b09-0a6224fb3f6b:
           entity_type: node
           bundle: event
-          dependee: field_general_location
+          dependee: field_event_place
           settings:
             state: visible
             condition: value

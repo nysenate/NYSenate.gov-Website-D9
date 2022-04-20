@@ -13,13 +13,13 @@ entity_type: node
 bundle: event
 label: Location
 description: 'Add a location for the event (required).'
-required: true
+required: false
 translatable: false
 default_value:
   -
     langcode: null
     country_code: US
-    administrative_area: ''
+    administrative_area: NY
     locality: ''
     dependent_locality: null
     postal_code: ''
@@ -27,9 +27,9 @@ default_value:
     address_line1: ''
     address_line2: ''
     organization: ''
-    given_name: ''
+    given_name: null
     additional_name: null
-    family_name: ''
+    family_name: null
 default_value_callback: ''
 settings:
   available_countries:
@@ -42,7 +42,15 @@ settings:
       override: hidden
     familyName:
       override: hidden
+    organization:
+      override: optional
+    addressLine1:
+      override: optional
+    addressLine2:
+      override: optional
     sortingCode:
       override: hidden
+    locality:
+      override: optional
   fields: {  }
 field_type: address

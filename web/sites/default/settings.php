@@ -765,6 +765,10 @@ include __DIR__ . "/settings.pantheon.php";
 
 $settings['config_sync_directory'] = '../config/sync';
 
+$_ENV['default_site_host'] = 'www.nysenate.gov';
+$_ENV['site_host'] = $_ENV['DRUSH_OPTIONS_URI'] ?? $_ENV['default_site_host'];
+$_ENV['site_url'] = 'https://' . $_ENV['site_host'];
+
 // Pantheon environment-specific config.
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 

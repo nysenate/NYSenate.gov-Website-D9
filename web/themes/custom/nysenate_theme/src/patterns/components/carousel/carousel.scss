@@ -5,90 +5,99 @@
   position: relative;
 }
 
-.carousel-item__content {
-  @include center-align(absolute);
-  background: $color-transparent-white;
-  min-width: 300px;
-  padding: 1rem 0.5rem;
-  top: 35%;
-  text-align: center;
-
-  @include breakpoint($bp-xsm) {
-    padding: 1rem 1.5rem;
-  }
-}
-
-.carousel-item__title {
-  @include wire-large-heading;
-
-  @include breakpoint($bp-under-xsm) {
-    font-size: 1.25rem;
-  }
-}
-
 // Overriding Slick styles for style guide
 // to match wireframes.
 
 // Repositions prev & next button,
 // also makes them larger
-.carousel__slick.slick-slider {
+.carousel__list.slick-slider {
+
+  .slick-slide {
+    height: 200px;
+
+    @media #{$tablet} {
+      height: 377px;
+    }
+
+    .carousel-item__media {
+      height: 100%;
+      width: 100%;
+    
+      .media-item {
+        height: 100%;
+        width: 100%;
+    
+        img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
 
   .slick-prev,
   .slick-next {
-    top: 80%;
+    top: 50%;
     z-index: 1;
-    height: 50px;
-    width: 50px;
+    height: 45px;
+    width: 45px;
+    transform: translateY(-50%);
+    background: $blue01;
+    color: #eeeeee;
 
-    @include breakpoint($bp-xsm) {
-      top: 90%;
+    @media #{$tablet} {
+      height: 55px;
+      width: 55px;
+    }
+
+    &:hover {
+      color: #eeeeee;
     }
 
     &::before {
-      font-size: 48px;
+      opacity: 1;
+      top: 9px;
+      color: #eeeeee;
+      font-size: 28px;
+      height: 100%;
+      width: 100%;
+      text-indent: 0;
+      position: absolute;
+      left: 0;
+      font-family: "senate_icons";
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
 
-      @include breakpoint($bp-under-xsm) {
-        font-size: 38px;
+      @media #{$tablet} {
+        top: 12px;
+        font-size: 32px;
       }
     }
   }
 
   .slick-prev {
-    left: 20%;
+    left: -20px;
 
-    @include breakpoint($bp-xsm) {
-      left: 40%;
+    &::before {
+      content: "\3c";
     }
   }
 
   .slick-next {
-    right: 20%;
+    right: -20px;
 
-    @include breakpoint($bp-xsm) {
-      right: 40%;
+    &::before {
+      content: "\3e";
     }
   }
 
-  // Make dots below carousel larger.
-  // Improves navigation UX, especially mobile.
-  .slick-dots {
-    bottom: -50px;
-
-    li {
-      height: 35px;
-      width: 35px;
-
-      button {
-        height: 35px;
-        width: 35px;
-
-        &::before {
-          font-size: 20px;
-          height: 35px;
-          position: initial;
-          width: 35px;
-        }
-      }
-    }
+  .slick-disabled {
+    opacity: 0;
+    pointer-events: none;
   }
 }

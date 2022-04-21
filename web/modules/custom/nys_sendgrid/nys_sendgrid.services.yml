@@ -1,0 +1,13 @@
+services:
+  nys_sendgrid_client:
+    class: \Sendgrid
+    factory: ['Drupal\nys_sendgrid\Service\SendgridClient', 'getClient']
+    arguments:
+      - '@config.factory'
+      - '@logger.factory'
+
+  nys_sendgrid_after_format_subscriber:
+    class: Drupal\nys_sendgrid\EventSubscriber\AfterFormatSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - { name: event_subscriber }

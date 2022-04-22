@@ -4,10 +4,13 @@ migration_group: nys_general
 source:
   plugin: d7_file
 process:
+  fid: fid
   uid: uid
   filename: filename
   uri: uri
+  filemime: filemime
   filesize: filesize
   status: status
+  origname: origname
 destination:
   plugin: entity:file

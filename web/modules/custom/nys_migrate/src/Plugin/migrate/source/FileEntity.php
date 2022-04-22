@@ -22,6 +22,7 @@ class FileEntity extends FieldableEntity {
   public function query() {
     $query = $this->select('file_managed', 'f')
       ->fields('f')
+      ->condition('f.uri', 'temporary://%', 'NOT LIKE')
       ->orderBy('f.fid');
     if (isset($this->configuration['type'])) {
       $query->condition('f.filemime', $query->escapeLike($this->configuration['type']) . "%", 'LIKE');

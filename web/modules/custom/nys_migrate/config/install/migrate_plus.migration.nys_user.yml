@@ -5,9 +5,6 @@ dependencies:
     module:
       - nys_migrate
 id: nys_user
-class: Drupal\user\Plugin\migrate\User
-field_plugin_method: null
-cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Users
@@ -59,6 +56,10 @@ process:
       plugin: user_langcode
       source: entity_language
       fallback_to_site_default: false
+  metatags:
+    -
+      plugin: get
+      source: metatags
   roles:
     plugin: static_map
     source: roles
@@ -86,8 +87,67 @@ process:
     -
       plugin: get
       source: field_last_name
+  field_agree_to_terms:
+    -
+      plugin: get
+      source: field_agree_to_terms
+
+  field_dateofbirth/value:
+    -
+      plugin: format_date
+      from_format: 'U'
+      to_format: 'Y-m-d'
+      source: field_dateofbirth/0/value
+
+  field_gender_user:
+    -
+      plugin: get
+      source: field_gender_user
+  field_user_receive_emails:
+    -
+      plugin: get
+      source: field_user_receive_emails
+  field_ldap_username:
+    -
+      plugin: get
+      source: field_ldap_username
+  field_voting_auto_subscribe:
+    -
+      plugin: get
+      source: field_voting_auto_subscribe
+  field_address:
+    -
+      plugin: location_to_address
+      source: field_address
+  field_address_geoloc:
+    -
+      plugin: location_to_geolocation
+      source: field_address
+  # Entity reference fields, has content migration dependencies.
+  field_top_issue:
+    -
+      plugin: sub_process
+      source: field_top_issue
+      process:
+        target_id: target_id
+  field_district:
+    -
+      plugin: sub_process
+      source: field_district
+      process:
+        target_id: target_id
+  field_senator_inbox_access:
+    -
+      plugin: get
+      source: field_senator_inbox_access
+  field_senator_management:
+    -
+      plugin: get
+      source: field_senator_management
 destination:
   plugin: 'entity:user'
 migration_dependencies:
-  required: {  }
+  required:
+    - nys_user_roles
+    - nys_senate_gov_taxonomy_term_issues
   optional: {  }

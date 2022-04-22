@@ -1,0 +1,8 @@
+name: 'NYS Sendgrid'
+description: "Provides a Mailsystem plugin leveraging Sendgrid's API.  Does not provide any SMTP facilities."
+package: NYSenate
+core_version_requirement: ^9
+type: module
+configure: nys_sendgrid.config
+dependencies:
+  - nys_slack:nys_slack

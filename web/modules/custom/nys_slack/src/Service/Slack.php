@@ -139,6 +139,8 @@ class Slack {
       ]);
     }
 
+    $this->init();
+
   }
 
   /**

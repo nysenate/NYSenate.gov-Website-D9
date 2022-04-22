@@ -18,6 +18,7 @@ dependencies:
     - field.field.user.user.field_senator_management
     - field.field.user.user.field_senator_multiref
     - field.field.user.user.field_top_issue
+    - field.field.user.user.field_user_phone_no
     - field.field.user.user.field_user_receive_emails
     - field.field.user.user.field_voting_auto_subscribe
   module:
@@ -126,6 +127,13 @@ content:
       link: true
     third_party_settings: {  }
     weight: 11
+    region: content
+  field_user_phone_no:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 20
     region: content
   field_user_receive_emails:
     type: boolean

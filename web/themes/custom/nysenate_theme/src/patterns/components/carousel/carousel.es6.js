@@ -17,7 +17,8 @@
       $('.carousel__slick')
         .not('.slick-initialized')
         .slick({
-          dots: true
+          infinite: false,
+          adaptiveHeight: true
         });
     }
   };

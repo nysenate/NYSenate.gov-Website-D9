@@ -18,12 +18,14 @@ dependencies:
     - field.field.user.user.field_senator_management
     - field.field.user.user.field_senator_multiref
     - field.field.user.user.field_top_issue
+    - field.field.user.user.field_user_phone_no
     - field.field.user.user.field_user_receive_emails
     - field.field.user.user.field_voting_auto_subscribe
   module:
     - address_autocomplete
     - datetime
     - path
+    - telephone
     - user
 id: user.user.default
 targetEntityType: user
@@ -43,20 +45,20 @@ content:
     third_party_settings: {  }
   field_agree_to_terms:
     type: boolean_checkbox
-    weight: 5
+    weight: 6
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_dateofbirth:
     type: datetime_default
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
   field_district:
     type: options_select
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -70,7 +72,7 @@ content:
     third_party_settings: {  }
   field_gender_user:
     type: options_select
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -84,13 +86,13 @@ content:
     third_party_settings: {  }
   field_last_password_reset:
     type: datetime_default
-    weight: 18
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ldap_username:
     type: string_textfield
-    weight: 14
+    weight: 15
     region: content
     settings:
       size: 60
@@ -98,32 +100,32 @@ content:
     third_party_settings: {  }
   field_password_expiration:
     type: boolean_checkbox
-    weight: 17
+    weight: 18
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_senator_inbox_access:
     type: options_select
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_senator_management:
     type: options_select
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   field_senator_multiref:
     type: options_select
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   field_top_issue:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -131,38 +133,45 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_user_phone_no:
+    type: telephone_default
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_user_receive_emails:
     type: boolean_checkbox
-    weight: 13
+    weight: 14
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_voting_auto_subscribe:
     type: boolean_checkbox
-    weight: 15
+    weight: 16
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   google_analytics:
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   language:
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 20
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 19
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }

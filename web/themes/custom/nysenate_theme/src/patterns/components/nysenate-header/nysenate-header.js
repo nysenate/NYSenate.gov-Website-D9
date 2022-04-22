@@ -135,10 +135,14 @@
       if(menu.hasClass('search-open')) {
         menu.removeClass('search-open');
         menu.find('.c-site-search--box').blur();
+        $('.c-site-search').removeClass('open');
+        $('.c-site-search').blur();
       }
       else {
         menu.addClass('search-open');
         menu.find('.c-site-search--box').focus();
+        $('.c-site-search').addClass('open');
+        $('.c-site-search').find('.c-site-search--box').focus();
       }
     },
     closeSearch: function() {

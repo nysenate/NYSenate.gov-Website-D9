@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "256d6f891ddbdc29f278f94efdd70ed3",
+    "content-hash": "4a9dd7092e7f68cb188a9ca7d121b40e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5727,6 +5727,55 @@
             }
         },
         {
+            "name": "drupal/location_migration",
+            "version": "1.0.0-beta4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/location_migration.git",
+                "reference": "1.0.0-beta4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/location_migration-1.0.0-beta4.zip",
+                "reference": "1.0.0-beta4",
+                "shasum": "7204acc226c4581157a2235cd5ec761404e5dd3f"
+            },
+            "require": {
+                "drupal/address": "^1.8",
+                "drupal/core": "^8.8 || ^9",
+                "drupal/geolocation": "^3.2",
+                "php": ">=7.1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta4",
+                    "datestamp": "1622637089",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Zoltán Horváth",
+                    "homepage": "https://www.drupal.org/u/huzooka",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Migration plugins for migrating Drupal 7 location data from Drupal 7 to Drupal 9",
+            "homepage": "https://www.drupal.org/project/location_migration",
+            "support": {
+                "source": "https://git.drupalcode.org/project/location_migration",
+                "issues": "https://www.drupal.org/project/issues/location_migration"
+            }
+        },
+        {
             "name": "drupal/login_history",
             "version": "1.1.0",
             "source": {
@@ -6119,6 +6168,67 @@
                 "source": "https://git.drupalcode.org/project/metatag",
                 "issues": "https://www.drupal.org/project/issues/metatag",
                 "docs": "https://www.drupal.org/docs/8/modules/metatag"
+            }
+        },
+        {
+            "name": "drupal/migrate_devel",
+            "version": "2.0.0-alpha2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/migrate_devel.git",
+                "reference": "8.x-2.0-alpha2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/migrate_devel-8.x-2.0-alpha2.zip",
+                "reference": "8.x-2.0-alpha2",
+                "shasum": "8ea8a10d8238c0a52abc7b12d688414e024999c8"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "conflict": {
+                "drush/drush": "<9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.0-alpha2",
+                    "datestamp": "1593367363",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Derimagia",
+                    "homepage": "https://www.drupal.org/user/819640"
+                },
+                {
+                    "name": "aczietlow",
+                    "homepage": "https://www.drupal.org/user/1616656"
+                },
+                {
+                    "name": "andrewmacpherson",
+                    "homepage": "https://www.drupal.org/user/265648"
+                }
+            ],
+            "description": "Migrate Development Tools",
+            "homepage": "https://www.drupal.org/project/migrate_devel",
+            "support": {
+                "source": "https://git.drupalcode.org/project/migrate_devel",
+                "issues": "https://www.drupal.org/project/issues/migrate_devel"
             }
         },
         {
@@ -23434,6 +23544,8 @@
         "drupal/flag": 10,
         "drupal/htmlpurifier": 5,
         "drupal/inline_entity_form": 5,
+        "drupal/location_migration": 10,
+        "drupal/migrate_devel": 15,
         "drupal/name": 5,
         "drupal/site_verify": 20,
         "drupal/twitter_block": 15,

@@ -3,14 +3,32 @@ label: Managed Files
 migration_group: nys_general
 source:
   plugin: d7_file
+  constants:
+    source_base_path: 'https://www.nysenate.gov/'
 process:
   fid: fid
   uid: uid
   filename: filename
-  uri: uri
+  source_full_path:
+    -
+      plugin: concat
+      delimiter: /
+      source:
+        - constants/source_base_path
+        - filepath
+    -
+      plugin: urlencode
+  uri:
+    -
+      plugin: file_copy
+      file_exists: 'use existing'
+      source:
+        - '@source_full_path'
+        - uri
   filemime: filemime
   filesize: filesize
   status: status
   origname: origname
 destination:
   plugin: entity:file
+  source_base_path: 'https://www.nysenate.gov/'

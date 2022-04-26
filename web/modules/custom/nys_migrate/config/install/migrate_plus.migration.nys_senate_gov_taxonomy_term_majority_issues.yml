@@ -42,7 +42,7 @@ process:
   field_image_main/target_id:
     plugin: migration_lookup
     migration: nys_senate_gov_media_image
-    source: field_image/0/fid
+    source: field_image_main/0/fid
   field_metatags:
     -
       plugin: get
@@ -51,5 +51,6 @@ destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: majority_issues
 migration_dependencies:
-  required: { }
+  required:
+    - nys_senate_gov_media_image
   optional: { }

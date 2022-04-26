@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.public_hearing.body
     - field.field.node.public_hearing.field_attachment
     - field.field.node.public_hearing.field_committee
@@ -24,8 +25,8 @@ dependencies:
     - conditional_fields
     - datetime_range
     - field_group
+    - inline_entity_form
     - link
-    - media_library
     - path
     - scheduler
     - text
@@ -118,14 +119,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_attachment:
-    type: entity_reference_autocomplete
+    type: inline_entity_form_simple
     weight: 14
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_committee:
     type: entity_reference_autocomplete
@@ -259,11 +263,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_yt:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 10
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   path:
     type: path

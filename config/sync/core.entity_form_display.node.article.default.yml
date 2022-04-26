@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_article_author
@@ -29,6 +30,7 @@ dependencies:
   module:
     - datetime
     - field_group
+    - inline_entity_form
     - media_library
     - paragraphs
     - path
@@ -202,11 +204,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_attachment:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 4
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_bills:
     type: entity_reference_autocomplete

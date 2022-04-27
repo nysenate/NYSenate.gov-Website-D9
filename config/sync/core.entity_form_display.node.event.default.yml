@@ -210,7 +210,7 @@ content:
       override_labels: true
       label_singular: file
       label_plural: files
-      collapsible: true
+      collapsible: false
       collapsed: false
       revision: false
     third_party_settings: {  }
@@ -439,11 +439,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_yt:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 26
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   path:
     type: path

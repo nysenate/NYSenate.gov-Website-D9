@@ -8,9 +8,11 @@ description: 'Live Pantheonsite'
 weight: 0
 folder: profiles/custom/nysenate/config/prod
 module:
+  clamav: 0
   dblog: 0
 theme: {  }
 blacklist:
+  - clamav.settings
   - dblog.settings
 graylist:
   - system.logging

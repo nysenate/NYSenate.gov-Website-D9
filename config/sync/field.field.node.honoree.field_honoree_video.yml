@@ -1,17 +1,17 @@
-uuid: ed0ae32c-ce00-4653-acc4-e87c51f1d870
+uuid: 3569b00e-c991-4048-bf84-b8689d9b02b1
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_yt
+    - field.storage.node.field_honoree_video
     - media.type.remote_video
-    - node.type.event
-id: node.event.field_yt
-field_name: field_yt
+    - node.type.honoree
+id: node.honoree.field_honoree_video
+field_name: field_honoree_video
 entity_type: node
-bundle: event
-label: 'Video Archive'
-description: 'If there is a video recording of this event available on Youtube, paste the URL in the field below.  Note that it must be a Youtube URL.'
+bundle: honoree
+label: 'Video from Ceremony'
+description: ''
 required: false
 translatable: false
 default_value: {  }

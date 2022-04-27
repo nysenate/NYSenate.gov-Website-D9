@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.honoree.field_honoree_name
     - field.field.node.honoree.field_honoree_rank
     - field.field.node.honoree.field_honoree_type
+    - field.field.node.honoree.field_honoree_video
     - field.field.node.honoree.field_image_main
     - field.field.node.honoree.field_issues
     - field.field.node.honoree.field_profile_status
@@ -102,6 +103,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_honoree_video:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 117
     region: content
   field_image_main:
     type: entity_reference_entity_view

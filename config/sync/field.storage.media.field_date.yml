@@ -1,24 +1,21 @@
-uuid: c691e2c5-23a0-49c6-bc51-d5d76d8b69c2
+uuid: e465ac0e-d607-4ac0-ae76-6f11498c907f
 langcode: en
 status: true
 dependencies:
   module:
+    - datetime
     - field_permissions
-    - file
     - media
 third_party_settings:
   field_permissions:
     permission_type: public
-id: media.field_media_file
-field_name: field_media_file
+id: media.field_date
+field_name: field_date
 entity_type: media
-type: file
+type: datetime
 settings:
-  target_type: file
-  display_field: false
-  display_default: false
-  uri_scheme: public
-module: file
+  datetime_type: datetime
+module: datetime
 locked: false
 cardinality: 1
 translatable: true

@@ -4,7 +4,6 @@ migration_group: nys_general
 source:
   plugin: d7_file
   constants:
-    source_base_path: 'https://www.nysenate.gov/'
 process:
   fid: fid
   uid: uid
@@ -16,4 +15,3 @@ process:
   origname: origname
 destination:
   plugin: entity:file
-  source_base_path: 'https://www.nysenate.gov/'

@@ -23,6 +23,7 @@ class RequiredSenatorValidator extends ConstraintValidator {
     if (in_array('microsite_content_producer', $roles, FALSE) && $value->isEmpty()) {
 
       // Add the required to be filled constraint text defined in this module.
+      // @phpstan-ignore-next-line
       $this->context->addViolation($constraint->notFilled);
 
     }

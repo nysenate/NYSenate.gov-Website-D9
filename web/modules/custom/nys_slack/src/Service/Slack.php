@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -88,7 +89,7 @@ class Slack {
     }
     else {
       $title = $this->getTitle();
-      $message = $message ?: $this->message;
+      $message = $message ?: $this->getMessage();
       $payload = [
         'text' => "$title\n$message",
         'blocks' => [
@@ -123,8 +124,14 @@ class Slack {
     }
 
     if (!$sent) {
-      $code = $response->getStatusCode() ?? '200';
-      $phrase = $response->getReasonPhrase() ?? 'no reason found';
+      if ($response instanceof ResponseInterface) {
+        $code = $response->getStatusCode();
+        $phrase = $response->getReasonPhrase();
+      }
+      else {
+        $code = 'n/a';
+        $phrase = 'no response found';
+      }
       $this->logger->error('Failed to send Slack message, status=%status, phrase=%phrase, message=%message', [
         '%status' => $code,
         '%phrase' => $phrase,
@@ -132,13 +139,15 @@ class Slack {
       ]);
     }
 
+    $this->init();
+
   }
 
   /**
    * Builds the message title.
    */
   public function getTitle(): string {
-    return $this->title ?: $this->getDefaultTitle();
+    return $this->title ?? $this->getDefaultTitle();
   }
 
   /**
@@ -176,7 +185,7 @@ class Slack {
    * Gets the message body.
    */
   public function getMessage(): string {
-    return $this->message;
+    return $this->message ?? '';
   }
 
   /**

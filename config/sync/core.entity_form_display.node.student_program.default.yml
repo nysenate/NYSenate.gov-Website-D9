@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.student_program.body
     - field.field.node.student_program.field_article_author
     - field.field.node.student_program.field_attachment
@@ -15,6 +16,7 @@ dependencies:
     - node.type.student_program
   module:
     - datetime
+    - inline_entity_form
     - media_library
     - path
     - scheduler
@@ -49,11 +51,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_attachment:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 6
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_date:
     type: datetime_default
@@ -102,33 +110,19 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 15
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    weight: 12
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 18
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    weight: 13
+    weight: 16
     region: content
     settings:
       display_label: true
@@ -153,14 +147,16 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 17
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   langcode: true
+  promote: true
+  sticky: true

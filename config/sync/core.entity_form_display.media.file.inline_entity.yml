@@ -1,0 +1,29 @@
+uuid: b0c6b81f-771f-44ab-9a04-e3c14730c1a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.media.inline_entity
+    - field.field.media.file.field_media_file
+    - media.type.file
+  module:
+    - file
+id: media.file.inline_entity
+targetEntityType: media
+bundle: file
+mode: inline_entity
+content:
+  field_media_file:
+    type: file_generic
+    weight: 0
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+hidden:
+  created: true
+  langcode: true
+  name: true
+  path: true
+  status: true
+  uid: true

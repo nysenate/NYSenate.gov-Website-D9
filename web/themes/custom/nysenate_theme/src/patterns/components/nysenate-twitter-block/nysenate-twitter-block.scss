@@ -1,0 +1,389 @@
+@import "../../global/utils/init";
+
+// TWITTER WIDGET STYLING OVERRIDE
+.timeline-Widget {
+  margin: 0 auto;
+}
+
+.timeline-InformationCircle {
+  right: 20px !important;
+  top: 50% !important;
+}
+
+.TweetAuthor-name,
+.TweetAuthor-screenName,
+.timeline-Tweet-timestamp,
+.timeline-Tweet-metadata {
+  font-family: "Proxima Nova Regular" !important;
+}
+
+.timeline-Header {
+  padding: 20px 20px 0 !important;
+  letter-spacing: 0.05em !important;
+
+  .timeline-Header-title {
+    font-family: "Proxima Nova Regular" !important;
+    font-size: 19px !important;
+    color: $grey03 !important;
+  }
+
+  .timeline-Header-byline {
+    font-family: "Proxima Nova SemiBold" !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    color: $orange01 !important;
+  }
+}
+
+.timeline-Body {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 15px 20px 20px !important;
+  background-color: $grey06 !important;
+  border: 0 !important;
+}
+
+.timeline-Header {
+  background-color: $grey06 !important;
+}
+
+.timeline-TweetList-tweet {
+  border: 0 !important;
+}
+
+.timeline-Tweet {
+  overflow: hidden !important;
+  padding: 20px 0 20px !important;
+  border-top: 1px solid $grey05 !important;
+
+  .timeline-Tweet-text {
+    font-family: "Adelle Light" !important;
+    font-size: 18px !important;
+    color: $grey04 !important;
+    line-height: 1.625 !important;
+    white-space: inherit !important;
+
+    a {
+      color: $grey02 !important;
+    }
+  }
+
+  &:hover {
+    background-color: $grey06 !important;
+  }
+}
+
+@media #{$tablet} {
+  .timeline-Body {
+    padding: 15px 40px 5px !important;
+  }
+
+  .timeline-Header {
+    padding: 20px 40px 0 !important;
+  }
+
+  .timeline-InformationCircle {
+    right: 40px !important;
+  }
+
+  .timeline-Tweet {
+    padding: 40px 0 !important;
+
+    .timeline-Tweet-text {
+      font-size: 22px !important;
+    }
+  }
+
+  .timeline-TweetList-tweet {
+    width: 50% !important;
+
+    &:nth-child(odd) {
+      float: left !important;
+      clear: left !important;
+
+      .timeline-Tweet {
+        padding-right: 5% !important;
+      }
+    }
+
+    &:nth-child(even) {
+      float: right !important;
+
+      .timeline-Tweet {
+        padding-left: 5% !important;
+      }
+    }
+  }
+}
+
+// PATTERNLAB SAMPLE STYLING
+.nyesenate-twitter-block {
+  margin-bottom: 40px;
+
+  .c-container--title {
+    padding: 20px 0 30px;
+    border-top: 1px solid $grey05;
+    letter-spacing: 0.05em;
+  }
+
+  .l-tweets {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    background-color: $grey06;
+  }
+
+  // header area
+  .l-twitter-user {
+    padding-bottom: 20px;
+  }
+
+  .c-twitter--logo {
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
+    height: 60px;
+    > img {
+      background-color: transparent;
+    }
+  }
+
+  .c-twitter-user--info {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 20px;
+
+    p {
+      font-size: 12px;
+      line-height: 1;
+    }
+  }
+
+  .c-twitter-user--name {
+    font-family: "Proxima Nova Regular";
+    font-size: 19px;
+    color: $grey03;
+  }
+
+  .c-twitter-user--link {
+    font-family: "Proxima Nova SemiBold";
+    font-size: 12px;
+    text-transform: uppercase;
+    color: $orange01;
+  }
+
+  .c-twitter-user--follow {
+    display: block;
+    margin: 20px 0 0 0;
+    padding: 7px 0;
+    border: 1px solid $grey05;
+    width: 75px;
+    background-color: #fff;
+
+    text-align: center;
+    color: $orange01;
+    font-size: 12px;
+    line-height: 1;
+    font-family: "Proxima Nova SemiBold";
+    text-transform: uppercase;
+  }
+
+  // individual block styling
+  .c-twitter-block {
+    overflow: hidden;
+    padding: 20px 0 20px;
+    border-top: 1px solid $grey05;
+
+    .c-tweet {
+      font-family: "Adelle Light";
+      font-size: 18px;
+      color: $grey04;
+      margin-bottom: 30px;
+
+      a {
+        color: $grey02;
+      }
+    }
+
+    .c-timestamp {
+      display: block;
+      float: left;
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+      color: $grey04;
+
+      em {
+        font-style: normal;
+      }
+    }
+
+    .c-web_intents {
+      position: relative;
+      display: block;
+      float: right;
+      margin-top: -6px;
+
+      span {
+        display: inline-block;
+      }
+
+      a {
+        display: block;
+        position: relative;
+        padding: 0;
+        height: 28px;
+        width: 35px;
+        color: $grey04;
+
+        &:after {
+          padding: 0;
+          font-size: 28px;
+        }
+
+        &[href*="intent/tweet"] {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          padding-top: 1em;
+          text-indent: -99999px;
+
+          &:after {
+            content: "\38";
+            text-indent: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: "senate_icons";
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            padding-left: 3px;
+          }
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        &[href*="intent/retweet"] {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          padding-top: 1em;
+          text-indent: -99999px;
+
+          &:after {
+            content: "\39";
+            text-indent: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: "senate_icons";
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            padding-left: 3px;
+          }
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        &[href*="intent/favorite"] {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          padding-top: 1em;
+          text-indent: -99999px;
+
+          &:after {
+            content: "\37";
+            text-indent: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: "senate_icons";
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            padding-left: 3px;
+          }
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        &[href*="intent/favorite"],
+        &[href*="intent/retweet"],
+        &[href*="intent/tweet"] {
+          padding: 0 5px;
+
+          &:after {
+            top: -6px;
+            left: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .last .c-twitter-block {
+    padding-bottom: 0;
+  }
+
+  @media #{$tablet} {
+    .c-container--title {
+      border: none;
+      padding: 0 0 15px 0;
+    }
+
+    .l-tweets {
+      padding: 35px 40px 5px;
+    }
+
+    // header area
+    .l-twitter-user {
+      position: relative;
+      margin-bottom: -1px;
+      border-bottom: 1px solid $grey05;
+    }
+
+    .c-twitter-user--follow {
+      position: absolute;
+      top: -25px;
+      left: auto;
+      right: 0;
+      bottom: 0;
+      height: 28px;
+      margin: auto;
+    }
+
+    .c-twitter-block,
+    .last .c-twitter-block {
+      padding: 40px 0;
+      border-top: 1px solid $grey05;
+
+      .c-tweet {
+        font-size: 22px;
+      }
+    }
+
+    .u-odd,
+    .u-even {
+      width: 50%;
+    }
+
+    .u-odd {
+      float: left;
+      clear: left;
+      padding-right: 5%;
+    }
+
+    .u-even {
+      float: right;
+      padding-left: 5%;
+    }
+  }
+}

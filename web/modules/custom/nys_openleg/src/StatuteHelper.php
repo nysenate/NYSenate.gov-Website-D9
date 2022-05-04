@@ -86,8 +86,15 @@ class StatuteHelper {
   /**
    * Fetches a cache value.
    */
-  protected static function getCache(string $name) {
+  public static function getCache(string $name) {
     return \Drupal::cache()->get('openleg:' . $name);
+  }
+
+  /**
+   * Clears a cache value.
+   */
+  public static function clearCache(string $name) {
+    \Drupal::cache()->delete('openleg:' . $name);
   }
 
   /**
@@ -137,7 +144,7 @@ class StatuteHelper {
    * @param int $retain
    *   (Optional) Retention time in seconds, defaults to 1 day.
    */
-  protected static function setCache(string $name, $data, int $retain = 86400) {
+  public static function setCache(string $name, $data, int $retain = 86400) {
     \Drupal::cache()->set('openleg:' . $name, $data, time() + $retain);
   }
 
@@ -146,8 +153,7 @@ class StatuteHelper {
    */
   public static function baseUrl(): string {
     if (!static::$landingUrl) {
-      static::$landingUrl = \Drupal::config('nys_openleg.settings')
-        ->get('base_path') ?: static::DEFAULT_LANDING_URL;
+      static::$landingUrl = \Drupal::config('nys_openleg.settings')->get('base_path') ?: static::DEFAULT_LANDING_URL;
     }
     return static::$landingUrl;
   }

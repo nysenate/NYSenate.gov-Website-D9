@@ -8,6 +8,24 @@
   @include element-focusable;
 }
 
+.u-mobile-only {
+  display: block;
+}
+
+.u-tablet-plus {
+  display: none;
+}
+
+@media #{$tablet} {
+  .u-mobile-only {
+    display: none;
+  }
+
+  .u-tablet-plus {
+    display: block;
+  }
+}
+
 // Non-modular or client styles for .l-header region.
 .l-header {
   width: 100%;
@@ -185,24 +203,6 @@
 
   &.closed {
     height: 0;
-  }
-
-  .u-mobile-only {
-    display: block;
-  }
-
-  .u-tablet-plus {
-    display: none;
-  }
-
-  @media #{$tablet} {
-    .u-mobile-only {
-      display: none;
-    }
-
-    .u-tablet-plus {
-      display: block;
-    }
   }
 
   .c-nav {
@@ -1179,22 +1179,24 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 
   .c-site-search {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    width: 100%;
-    height: 225px;
+    position: relative;
+    transition: all 0.3s ease-out;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
 
     &:before,
     &:after {
       display: none;
     }
+
+    &.open {
+      height: 225px;
+      padding: 25px 9%;
+    }
   }
   // class added to .c-nav--wrap through js
   .search-open {
-    height: 285px;
 
     .c-site-search--btn {
       cursor: pointer;

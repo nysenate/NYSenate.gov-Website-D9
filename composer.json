@@ -35,6 +35,7 @@
         "drupal/clamav": "^2.0",
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/config_ignore": "^2.3",
+        "drupal/config_split": "^1.7",
         "drupal/core-composer-scaffold": "^9.0",
         "drupal/core-recommended": "^9.0@stable",
         "drupal/diff": "^1.0",
@@ -57,8 +58,10 @@
         "drupal/imagemagick": "^3.3",
         "drupal/inline_entity_form": "^1.0@RC",
         "drupal/job_scheduler": "^3.1",
+        "drupal/location_migration": "^1.0@beta",
         "drupal/login_history": "^1.1",
         "drupal/mailsystem": "^4.3",
+        "drupal/migrate_devel": "^2.0@alpha",
         "drupal/migrate_plus": "^5.2",
         "drupal/migrate_tools": "^5.1",
         "drupal/name": "^1.0@RC",
@@ -98,6 +101,7 @@
         "pantheon-systems/drupal-integrations": "^9.0",
         "politsin/jquery-ui-touch-punch": "^1.0",
         "sendgrid/php-http-client": "^3.10.6",
+        "sendgrid/sendgrid": "^7.11",
         "webflo/drupal-finder": "^1.0.0"
     },
     "require-dev": {
@@ -187,7 +191,15 @@
                 "2949017 - There is no way to delete or update file entities of other users": "https://www.drupal.org/files/issues/2021-12-01/2949017-85.patch"
             },
             "drupal/inline_entity_form": {
-                "3208818 - Migration Error: Cannot use string offset as an array in MigrationHelper.php on line 53": "https://www.drupal.org/files/issues/2021-12-23/3208818-7.patch"
+                "3208818 - Migration Error: Cannot use string offset as an array in MigrationHelper.php on line 53": "https://www.drupal.org/files/issues/2021-12-23/3208818-7.patch",
+                "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2021-07-19/inline_entity_form-required_fields_optional_ief-3099844-24.patch"
+            },
+            "drupal/htmlpurifier": {
+                "2989756 - HTMLPurifier Serializer caches into vendor directory by default": "https://www.drupal.org/files/issues/2021-09-24/serializer-caches-into-vendor-d9-2989756-14.patch"
+            },
+            "drupal/location_migration": {
+                "#3192657-13: Data fix": "https://www.drupal.org/files/issues/2021-08-09/location_migration-source_count-3192657-13.patch",
+                "#3214749-18: Map all formatters": "https://www.drupal.org/files/issues/2021-06-08/3214749-18.patch"
             }
         }
     }

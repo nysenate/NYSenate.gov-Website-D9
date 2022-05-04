@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.honoree.body
     - field.field.node.honoree.field_add_honoree_list
     - field.field.node.honoree.field_attachment
@@ -14,8 +15,10 @@ dependencies:
     - field.field.node.honoree.field_honoree_name
     - field.field.node.honoree.field_honoree_rank
     - field.field.node.honoree.field_honoree_type
+    - field.field.node.honoree.field_honoree_video
     - field.field.node.honoree.field_image_main
     - field.field.node.honoree.field_issues
+    - field.field.node.honoree.field_profile_status
     - field.field.node.honoree.field_senator_multiref
     - node.type.honoree
   module:
@@ -23,6 +26,7 @@ dependencies:
     - field_group
     - inline_entity_form
     - media_library
+    - path
     - scheduler
     - text
 third_party_settings:
@@ -35,6 +39,7 @@ third_party_settings:
         - field_image_main
         - field_attachment
         - body
+        - field_honoree_video
       label: 'Final Honoree Information for Publication'
       region: content
       parent_name: ''
@@ -49,6 +54,7 @@ third_party_settings:
     group_admin:
       children:
         - field_add_honoree_list
+        - field_profile_status
       label: 'Administrative Fields'
       region: content
       parent_name: ''
@@ -75,19 +81,31 @@ content:
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_add_honoree_list:
     type: boolean_checkbox
-    weight: 26
+    weight: 13
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_attachment:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 11
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_date:
     type: datetime_default
@@ -182,6 +200,23 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_honoree_video:
+    type: inline_entity_form_complex
+    weight: 13
+    region: content
+    settings:
+      form_mode: default
+      override_labels: true
+      label_singular: video
+      label_plural: videos
+      allow_new: true
+      allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: false
+      collapsed: false
+      revision: false
+    third_party_settings: {  }
   field_image_main:
     type: media_library_widget
     weight: 10
@@ -206,6 +241,12 @@ content:
       collapsed: true
       revision: false
     third_party_settings: {  }
+  field_profile_status:
+    type: options_buttons
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_senator:
     type: entity_reference_autocomplete
     weight: 2
@@ -226,11 +267,24 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  path:
+    type: path
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 13
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -240,18 +294,28 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
     weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
-  created: true
   langcode: true
-  path: true
   promote: true
-  status: true
   sticky: true
-  uid: true
-  url_redirects: true

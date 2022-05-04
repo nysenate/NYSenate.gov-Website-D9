@@ -1,0 +1,63 @@
+langcode: en
+status: true
+dependencies: {  }
+id: nys_senate_gov_taxonomy_term_districts
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Taxonomy terms (Districts)'
+source:
+  plugin: d7_taxonomy_term
+  bundle: districts
+process:
+  tid:
+    -
+      plugin: get
+      source: tid
+  name:
+    -
+      plugin: get
+      source: name
+  description/value:
+    -
+      plugin: get
+      source: description
+  description/format:
+    -
+      plugin: default_value
+      default_value: full_html
+  weight:
+    -
+      plugin: get
+      source: weight
+  field_senator:
+    -
+      plugin: get
+      source: field_senator
+  field_chapters:
+    -
+      plugin: get
+      source: field_chapters
+  field_subheading:
+    -
+      plugin: get
+      source: field_subheading
+  field_district_number:
+    -
+      plugin: get
+      source: field_district_number
+  field_map_url:
+    -
+      plugin: get
+      source: field_map_url
+  field_metatags:
+    -
+      plugin: get
+      source: metatags
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: districts
+migration_dependencies:
+  required: { }
+  optional: { }

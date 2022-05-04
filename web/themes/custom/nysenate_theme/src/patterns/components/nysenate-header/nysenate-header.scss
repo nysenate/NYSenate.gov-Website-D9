@@ -26,6 +26,17 @@
   }
 }
 
+.l-header {
+  .c-actionbar,
+  .c-senate-status {
+    max-width: none;
+
+    &.hidden {
+      margin-top: -60px;
+    }
+  }
+}
+
 // Non-modular or client styles for .l-header region.
 .l-header {
   width: 100%;
@@ -118,6 +129,27 @@
   }
 }
 @media #{$tablet} {
+  .l-header {
+    .c-actionbar,
+    .c-senate-status {
+      max-width: 1500px;
+      padding: 0 9%;
+
+      &.hidden {
+        margin-top: -100px;
+      }
+
+      .c-actionbar--cta {
+        max-width: 400px;
+        font-size: 18px;
+        line-height: 1.3em;
+      }
+      .c-block--btn {
+        font-size: 16px;
+      }
+    }
+  }
+
   .c-header-bar {
     overflow: visible;
     height: 100px;
@@ -184,6 +216,7 @@
 /* Navigation */
 .c-nav--wrap {
   position: absolute;
+  background: #fff;
   top: -110vh;
   left: 0;
   right: 0;
@@ -478,7 +511,7 @@
     }
   }
   .c-senator-hero--info {
-    display: inline-block;
+    display: flex;
     vertical-align: middle;
     padding: 0 0 0 10px;
   }
@@ -512,7 +545,7 @@
     }
     .c-senator-hero--info {
       position: relative;
-      display: inline-block;
+      display: flex;
       vertical-align: middle;
 
       > div {
@@ -912,14 +945,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   max-width: unset;
   transition: margin 0.25s ease;
 
-  &:before {
-    content: "";
-    position: relative;
-    display: inline-block;
-    width: 1px;
-    vertical-align: middle;
-    margin-left: -4px;
-  }
   // used when actionbar only contains
   // a simple message - usually not logged-in
   .c-actionbar--cta {
@@ -1074,8 +1099,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     padding: 0 410px 0 9%;
 
     .c-actionbar--info {
-      display: inline-block;
+      display: flex;
       vertical-align: middle;
+      height: 100%;
+      align-items: center;
     }
 
     .c-actionbar--info .c-actionbar--cta,
@@ -1133,12 +1160,15 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     font-size: 22px;
   }
   
-  .c-site-search--title {
-    display: block;
-    margin-bottom: 20px;
-    font-family: "Adelle Semibold";
-    font-size: 26px;
-    line-height: 1;
+  .c-site-search {
+
+    .c-site-search--title {
+      display: block;
+      margin-bottom: 20px;
+      font-family: "Adelle Semibold";
+      font-size: 26px;
+      line-height: 1;
+    }
   }
   
   .c-site-search--link {

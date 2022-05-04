@@ -4,24 +4,51 @@
     attach: function (context) {
       let self = this;
       let userScroll = 0;
-      let currentTop = $(document).scrollTop();
+      let currentTop = $(window).scrollTop();
       let previousTop = 0;
-      const nav = $('#js-sticky', context);
+      let nav;
+      const origNav = $('#js-sticky', context);
+
+      nav = origNav.clone().attr('id', 'js-sticky--clone').addClass('fixed');
+
       const menu = nav.find('.c-nav--wrap', context);
       const headerBar = nav.find('.c-header-bar', context);
-      const actionBar = $('.c-actionbar', context);
+      const actionBar = nav.find('.c-actionbar', context);
       const mobileNavToggle = nav.find('.js-mobile-nav--btn');
-      const searchToggle = $('.js-search--toggle', context);
+      const searchToggle = nav.find('.js-search--toggle', context);
 
-      mobileNavToggle.on('click', function() {
+      origNav.css('visibility', 'hidden');
+
+      // for patternlab only, can be removed once for integration
+      if ($('.pl-js-pattern-example').length > 0) {
+        const forTesting = '<div></div>';
+        $('.pl-js-pattern-example').css('position', 'relative');
+        nav.css('position', 'absolute');
+        nav.prependTo('.pl-js-pattern-example').css({
+          'z-index': '100'
+        });
+        $(forTesting).appendTo('.pl-js-pattern-example').css({
+          'background': 'gray',
+          'height': '400px'
+        });
+      }
+      else if ($('.layout-container').length > 0) {
+        nav.prependTo('.layout-container').css({
+          'z-index': '100'
+        });
+      }
+
+      mobileNavToggle.on('click touch', function() {
         self.toggleMobileNav(nav);
       });
 
-      searchToggle.on('click', function() {
+      searchToggle.on('click touch', function() {
         self.toggleSearchBar(menu);
       });
 
       $(window).scroll(function () {
+        currentTop = $(this).scrollTop();
+
         // Close the nav after scrolling 1/3rd of page.
         if (
           Math.abs(userScroll - $(window).scrollTop()) >
@@ -32,12 +59,6 @@
             $('.c-nav--wrap').find('.c-site-search--box').blur();
           }
         }
-
-        var heroHeight =
-          nav.outerHeight() -
-          menu.outerHeight() -
-          headerBar.outerHeight() -
-          nav.outerHeight();
 
         if ($(window).width() < 760) {
           if (
@@ -56,25 +77,22 @@
           }
         }
         else {
-          self.checkTopBarState(currentTop, previousTop, headerBar, nav);
-
           if (
-            self.isMovingUp(currentTop, previousTop) &&
-            currentTop <= nav.outerHeight() - 100 - 100
+            self.isMovingDown(currentTop, previousTop) &&
+            currentTop >= nav.outerHeight()
           ) {
             menu.addClass('closed');
-            headerBar.addClass('collapsed');
-
-            if (
-              self.isMovingUp(currentTop, previousTop) &&
-              currentTop <= nav.outerHeight() - 100 - 100 - 40 - 100
-            ) {
-              actionBar.addClass('hidden');
-            }
-          }
-          else if (currentTop >= heroHeight) {
             actionBar.removeClass('hidden');
-            self.checkMenuState(menu);
+            headerBar.addClass('collapsed');
+            self.checkTopBarState(currentTop, previousTop, headerBar, nav);
+          }
+          else if (
+            self.isMovingUp(currentTop, previousTop) &&
+            currentTop < nav.outerHeight()
+          ) {
+            menu.removeClass('closed');
+            actionBar.addClass('hidden');
+            headerBar.removeClass('collapsed');
           }
         }
 
@@ -151,6 +169,12 @@
         $('.c-nav--wrap').removeClass('search-open');
         $('.c-nav--wrap').find('.c-site-search--box').blur();
       }
+    },
+    isHomepage: function() {
+      return $('.view-homepage-hero').length > 0;
+    },
+    isInSession: function() {
+      return this.isHomepage() && $('.c-hero-livestream-video').length > 0;
     },
   };
 })(document, Drupal, jQuery);

@@ -27,10 +27,12 @@
         nav.prependTo('.pl-js-pattern-example').css({
           'z-index': '100'
         });
-        $(forTesting).appendTo('.pl-js-pattern-example').css({
-          'background': 'gray',
-          'height': '400px'
-        });
+        if (nav.length > 0) {
+          $(forTesting).appendTo('.pl-js-pattern-example').css({
+            'background': 'gray',
+            'height': '400px'
+          });
+        }
       }
       else if ($('.layout-container').length > 0) {
         nav.prependTo('.layout-container').css({

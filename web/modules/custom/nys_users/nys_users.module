@@ -13,6 +13,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
  */
 function nys_users_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
+  $account = \Drupal::currentUser();
+  // Fetch the User's roles.
+  $user_roles = $account->getRoles();
+
   // On User create/edit forms make Senator field visible on the MCP Role.
   if ($form_id === 'user_form' || $form_id === 'user_register_form') {
 
@@ -21,11 +25,14 @@ function nys_users_form_alter(&$form, FormStateInterface $form_state, $form_id) 
       'visible' => [
         'input[name="roles[microsite_content_producer]"]' => ['checked' => TRUE],
       ],
-      'required' => [
+      /*'required' => [
         'input[name="roles[microsite_content_producer]"]' => ['checked' => TRUE],
-      ],
+      ],*/
     ];
-
+    //Disable the field if the user has a role microsite content producer so they can't edit it
+    if (in_array('microsite_content_producer', $user_roles, FALSE) and !in_array('administrator', $user_roles, FALSE)) {
+      $form['field_senator_multiref']['#disabled'] = TRUE;
+    }
   }
 }
 

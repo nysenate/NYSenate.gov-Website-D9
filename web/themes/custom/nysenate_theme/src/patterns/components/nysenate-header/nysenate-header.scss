@@ -1,4 +1,4 @@
-@import "../../global/utils/init";
+@import '../../global/utils/init';
 
 // Skip to main content
 .element-invisible {
@@ -66,6 +66,7 @@
       display: block;
     }
   }
+
   .l-header {
     // this is to fix mobile button positioning when logged in as admin
     .contextual-links-region {
@@ -90,8 +91,8 @@
   height: 100%;
   width: 100%;
 
-  &:before {
-    content: "";
+  &::before {
+    content: '';
     height: 100%;
     width: 1px;
     margin-left: -1px;
@@ -103,7 +104,7 @@
   display: inline-block;
   vertical-align: middle;
   margin: 0;
-  font-family: "FreightText Book";
+  font-family: 'FreightText Book';
   font-size: 12px;
 
   a {
@@ -115,14 +116,14 @@
     white-space: nowrap;
     text-decoration: none;
 
-    &:before {
-      content: "";
+    &::before {
+      content: '';
       display: inline-block;
       vertical-align: middle;
       width: 20px;
       height: 20px;
       margin-right: 10px;
-      background: transparent url("http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg")
+      background: transparent url('http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg')
         center center no-repeat;
       background-size: cover;
     }
@@ -162,7 +163,7 @@
         font-size: 13px;
 
         a {
-          &:before {
+          &::before {
             width: 28px;
             height: 28px;
             margin-right: 5px;
@@ -176,7 +177,7 @@
     font-size: 22px;
 
     a {
-      &:before {
+      &::before {
         height: 60px;
         width: 60px;
         margin-right: 20px;
@@ -195,7 +196,7 @@
 }
 
 .l-row:after {
-  content: "";
+  content: '';
   display: table;
   clear: both;
 }
@@ -308,7 +309,7 @@
   }
 
   &::after {
-    content: "\68";
+    content: '\68';
     width: 100%;
     margin-left: 1px;
     font-size: 24px;
@@ -318,7 +319,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    font-family: "senate_icons";
+    font-family: 'senate_icons';
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -395,9 +396,9 @@
   }
 
   li {
+    @include font-stack-secondary;
     border-top: 1px solid #fff;
     text-transform: uppercase;
-    font-family: "Proxima Nova Regular";
     font-size: 13px;
     letter-spacing: 0.1em;
     line-height: 1em;
@@ -440,7 +441,7 @@
         vertical-align: middle;
         height: 100%;
 
-        font-family: "Proxima Nova SemiBold";
+        font-family: 'Proxima Nova SemiBold';
         font-size: 14px;
 
         a {
@@ -483,8 +484,8 @@
     padding-left: 20px;
     margin-top: 0;
 
-    &:before {
-      content: "";
+    &::before {
+      content: '';
       display: inline-block;
       vertical-align: middle;
       height: 50px;
@@ -527,7 +528,7 @@
     height: 50px;
     padding-left: 24px;
 
-    &:before {
+    &::before {
       line-height: 50px;
       padding-left: 0px;
     }
@@ -539,7 +540,7 @@
     .c-senator-hero {
       padding: 0 0 0 9%;
 
-      &:before {
+      &::before {
         height: 100%;
       }
     }
@@ -552,7 +553,7 @@
         margin-left: 0;
       }
 
-      &:before {
+      &::before {
         margin-left: 0;
       }
     }
@@ -581,7 +582,7 @@
       right: 0;
       left: auto;
 
-      &:before {
+      &::before {
         line-height: 100px;
       }
     }
@@ -678,6 +679,8 @@ nav ul.c-nav--list {
 }
 
 .c-header--connect .c-nav--social {
+  display: none;
+
   &.u-mobile-only {
     display: block;
   }
@@ -687,8 +690,6 @@ nav ul.c-nav--list {
       display: none;
     }
   }
-
-  display: none;
 
   @media screen and (min-width: 900px) {
     position: relative;
@@ -720,7 +721,7 @@ nav ul.c-nav--list {
 
 .c-nav--social li {
   display: inline-block;
-  border: none;
+  border: 0;
   margin-right: 10px;
 
   svg path {
@@ -756,6 +757,7 @@ nav ul.c-nav--list {
 
 .c-header--btn.c-header--btn__taking_action,
 .c-header--btn.c-header--btn__primary {
+  @include font-stack-secondary;
   cursor: pointer;
   position: relative;
   height: 100%;
@@ -775,7 +777,7 @@ nav ul.c-nav--list {
     text-transform: none;
     padding-left: 3px;
     -webkit-font-smoothing: antialiased;
-    font-family: "senate_icons";
+    font-family: 'senate_icons';
     height: 30px;
     width: 30px;
     line-height: 30px;
@@ -792,11 +794,11 @@ nav ul.c-nav--list {
 }
 
 .c-header--btn.c-header--btn__taking_action::after {
-  content: "\69";
+  content: '\69';
 }
 
 .c-header--btn.c-header--btn__primary::after {
-  content: "\66";
+  content: '\66';
 }
 
 .c-header--btn {
@@ -834,7 +836,7 @@ nav ul.c-nav--list {
   height: 72px;
   padding: 0 0 0 30px;
   color: #fff;
-  font-family: "Proxima Nova SemiBold";
+  font-family: 'Proxima Nova SemiBold';
   font-size: 12px;
   line-height: 72px;
   text-transform: uppercase;
@@ -889,10 +891,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 }
 
 .c-nav--list li {
+  @include font-stack-secondary;
   margin-top: 0;
   border-top: 1px solid #fff;
   text-transform: uppercase;
-  font-family: "Proxima Nova Regular";
   font-size: 13px;
   letter-spacing: 0.1em;
   line-height: 1em;
@@ -904,9 +906,9 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     height: 100%;
     display: inline-block;
     vertical-align: middle;
-    border: none;
+    border: 0;
     text-align: left;
-    font-family: "Proxima Nova SemiBold";
+    font-family: 'Proxima Nova SemiBold';
     font-size: 14px;
   }
 
@@ -915,7 +917,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 
   &.active-trail:after {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     left: 0;
@@ -1012,7 +1014,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .c-site-search--box {
     display: block;
     background: none;
-    border: none;
+    border: 0;
     height: 45px;
     margin: 0 45px 0 0;
     padding: 0 0 0 20px;
@@ -1029,14 +1031,14 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: none;
     }
   }
-    
+
   .c-site-search--title {
     display: none;
   }
 
   .c-block-advanced-search-link {
     margin-bottom: 30px;
-  
+
     .c-advanced-search--link {
       color: $orange01;
       text-transform: uppercase;
@@ -1060,14 +1062,14 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     overflow: hidden;
     padding-top: 1em;
     text-indent: -99999px;
-  
+
     &:after {
-      content: "\6d";
+      content: '\6d';
       text-indent: 0;
       position: absolute;
       top: 0;
       left: 0;
-      font-family: "senate_icons";
+      font-family: 'senate_icons';
       speak: none;
       font-style: normal;
       font-weight: normal;
@@ -1077,19 +1079,19 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     }
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  
+
     &:after {
       width: 100%;
       padding: 0;
       line-height: 45px;
     }
-  
+
     &:hover {
       background: transparent;
       color: $gen_blue_drk;
     }
   }
-  
+
 }
 
 @media #{$tablet} {
@@ -1121,7 +1123,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
       background-color: $gen_blue_med;
 
-      &:before {
+      &::before {
         height: 100%;
         margin-right: 0.1em;
         font-size: 32px;
@@ -1137,7 +1139,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         font-size: 16px;
         line-height: 100px;
 
-        &:before {
+        &::before {
           height: 100%;
           margin-right: 0.1em;
           font-size: 32px;
@@ -1146,7 +1148,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       }
     }
   }
-  
+
   .search-open .c-site-search .c-site-search--btn,
   .search-open .c-site-search .c-site-search--btn:focus,
   .c-site-search--btn:focus,
@@ -1159,7 +1161,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     color: #444;
     font-size: 22px;
   }
-  
+
   .c-site-search {
 
     .c-site-search--title {
@@ -1170,7 +1172,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       line-height: 1;
     }
   }
-  
+
   .c-site-search--link {
     position: absolute;
     right: 9%;
@@ -1180,7 +1182,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     font-size: 14px;
     letter-spacing: 0.1em;
   }
-  
+
   .c-site-search {
     position: relative;
     z-index: 1;
@@ -1192,14 +1194,14 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     padding: 25px 9%;
     background: $greyLight;
     transition: margin 0.3s ease;
-  
+
     .c-site-search--box {
       border: 1px solid $grey05;
       border-radius: 0;
       overflow: hidden;
       background-clip: padding-box;
     }
-  
+
     .c-site-search--btn {
       position: relative;
       top: -45px;
@@ -1215,7 +1217,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     padding: 0;
     overflow: hidden;
 
-    &:before,
+    &::before,
     &:after {
       display: none;
     }
@@ -1236,12 +1238,12 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       text-indent: -99999px;
 
       &:after {
-        content: "\78";
+        content: '\78';
         text-indent: 0;
         position: absolute;
         top: 0;
         left: 0;
-        font-family: "senate_icons";
+        font-family: 'senate_icons';
         speak: none;
         font-style: normal;
         font-weight: normal;
@@ -1265,12 +1267,12 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         text-indent: -99999px;
 
         &:after {
-          content: "\6d";
+          content: '\6d';
           text-indent: 0;
           position: absolute;
           top: 0;
           left: 0;
-          font-family: "senate_icons";
+          font-family: 'senate_icons';
           speak: none;
           font-style: normal;
           font-weight: normal;

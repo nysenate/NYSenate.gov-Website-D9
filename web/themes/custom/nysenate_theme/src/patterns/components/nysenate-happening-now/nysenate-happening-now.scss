@@ -10,6 +10,7 @@
     text-transform: uppercase;
     line-height: 1;
     margin: 0 0 25px;
+    font-size: 18px;
   }
   
   &__container {
@@ -81,6 +82,10 @@
 @media #{$desktop} {
   .nysenate-happening-now {
     padding: 25px 0 50px;
+
+    &__title {
+      font-size: 20px;
+    }
 
     &__container {
       display: grid;

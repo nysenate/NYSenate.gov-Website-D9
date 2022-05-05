@@ -145,7 +145,7 @@ class ApiRequest {
    * @return object
    *   JSON-decoded response (could be NULL)
    */
-  public static function fetch(string $endpoint = '', array $options = []): object {
+  public static function fetch($endpoint = '', array $options = []): object {
     $request = new static($endpoint, $options);
     return $request->get($options['resource'] ?? NULL, $options['params'] ?? []);
   }

@@ -25,11 +25,12 @@ function nys_users_form_alter(&$form, FormStateInterface $form_state, $form_id) 
       'visible' => [
         'input[name="roles[microsite_content_producer]"]' => ['checked' => TRUE],
       ],
-      /*'required' => [
+      'required' => [
         'input[name="roles[microsite_content_producer]"]' => ['checked' => TRUE],
-      ],*/
+      ],
     ];
-    //Disable the field if the user has a role microsite content producer so they can't edit it
+    // Disable the field if the user has a role microsite
+    // content producer so they can't edit it!
     if (in_array('microsite_content_producer', $user_roles, FALSE) and !in_array('administrator', $user_roles, FALSE)) {
       $form['field_senator_multiref']['#disabled'] = TRUE;
     }

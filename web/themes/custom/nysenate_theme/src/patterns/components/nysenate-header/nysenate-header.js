@@ -17,6 +17,13 @@
       const mobileNavToggle = nav.find('.js-mobile-nav--btn');
       const searchToggle = nav.find('.js-search--toggle', context);
 
+      const $adminToolbar = $('#toolbar-bar');
+
+      let adminHeight = $adminToolbar.length > 0 ? $adminToolbar.outerHeight() : 0;
+      let headerHeight = nav.length > 0 ? nav.outerHeight() : 0; // Create empty variables to use later for calculating heights.
+
+      let $combinedHeights = 0;
+
       origNav.css('visibility', 'hidden');
 
       // for patternlab only, can be removed once for integration
@@ -35,8 +42,14 @@
         }
       }
       else if ($('.layout-container').length > 0) {
+        adminHeight = $adminToolbar.length > 0 ? $adminToolbar.outerHeight() : 0;
+        headerHeight = nav.length > 0 ? nav.outerHeight() : 0;
+
+        $combinedHeights = headerHeight + adminHeight;
+
         nav.prependTo('.layout-container').css({
-          'z-index': '100'
+          'z-index': '100',
+          'margin-top': ''.concat($combinedHeights, 'px')
         });
       }
 

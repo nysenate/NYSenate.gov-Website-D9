@@ -126,10 +126,16 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * Constructor.
    *
-   * @var \SendGrid $sendgrid
+   * @param \SendGrid $sendgrid
    *   A Sendgrid client object used to send the mail.
+   * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
+   *   A ModuleHandler service object.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   A ConfigFactory service object.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   *   An EventDispatcher service object.
    */
-  public function __construct(\SendGrid $sendgrid, ModuleHandler $moduleHandler, ConfigFactory $config, EventDispatcherInterface $dispatcher, array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(\SendGrid $sendgrid, ModuleHandler $moduleHandler, ConfigFactory $config, EventDispatcherInterface $dispatcher) {
     $this->client = $sendgrid;
     $this->moduleHandler = $moduleHandler;
     $this->dispatcher = $dispatcher;
@@ -147,10 +153,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       $container->get('nys_sendgrid_client'),
       $container->get('module_handler'),
       $container->get('config.factory'),
-      $container->get('event_dispatcher'),
-      $configuration,
-      $plugin_id,
-      $plugin_definition
+      $container->get('event_dispatcher')
     );
   }
 
@@ -456,7 +459,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     if (Helper::detectMailRerouting()) {
       // Get the new destination.  If reroute headers have been set, this
       // *should* be in $message['to'].  Otherwise, get from the system.
-      if ($message['headers']['X-Rerouted-Mail-Key'] ?? NULL) {
+      if ($this->message['headers']['X-Rerouted-Mail-Key'] ?? NULL) {
         $dest = $this->message['to'] ?? '';
       }
       else {
@@ -522,7 +525,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     // If no recipients were found, try to create one from message params
     // or metadata.  Note that this info *may* already have been rerouted.
     if (!$found_to) {
-      $to_addr = Helper::parseAddress($this->message->params['to'] ?? $this->message['to']);
+      $to_addr = Helper::parseAddress($this->message['params']['to'] ?? $this->message['to']);
       try {
         $this->mailObj->addTo(new To($to_addr[0], $to_addr[1]));
       }

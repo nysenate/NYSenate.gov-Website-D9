@@ -1,0 +1,23 @@
+uuid: bad0b068-13f7-4efb-9168-cba203926e76
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_has_same_as
+    - node.type.resolution
+id: node.resolution.field_ol_has_same_as
+field_name: field_ol_has_same_as
+entity_type: node
+bundle: resolution
+label: 'Has Same As'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

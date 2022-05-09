@@ -216,6 +216,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     $this->message['params']['sendgrid_mail'] = $this->mailObj;
 
     // Dispatch the "after format" event.
+    // @phpstan-ignore-next-line
     $this->dispatcher->dispatch(new AfterFormatEvent($this->message), Events::AFTER_FORMAT);
 
     return $this->message;
@@ -605,6 +606,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     $success = in_array($response_code, ['200', '202']);
     // If successful, dispatch the after.send event.
     if ($success) {
+      // @phpstan-ignore-next-line
       $this->dispatcher->dispatch(new AfterSendEvent($message), Events::AFTER_SEND);
     }
     // If not successful, but not an exception, log the reason.

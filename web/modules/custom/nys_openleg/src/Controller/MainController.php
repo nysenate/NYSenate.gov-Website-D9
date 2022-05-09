@@ -206,6 +206,7 @@ class MainController extends ControllerBase {
       );
 
       // Include the milestone selection form.
+      // @phpstan-ignore-next-line
       $ret['#history'] = $this->formBuilder
         ->getForm('Drupal\nys_openleg\Form\HistoryForm', $statute);
 
@@ -255,6 +256,7 @@ class MainController extends ControllerBase {
       );
 
     // Get the search form.
+    // @phpstan-ignore-next-line
     $form = $this->formBuilder
       ->getForm('Drupal\nys_openleg\Form\SearchForm', $search_term);
 

@@ -70,7 +70,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * A Sendgrid Mail object to represent the message being sent.
    *
-   * @var \Sendgrid\Mail\Mail
+   * @var \SendGrid\Mail\Mail
    */
   protected Mail $mailObj;
 
@@ -112,7 +112,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * Event Dispatcher service.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected EventDispatcherInterface $dispatcher;
 
@@ -132,7 +132,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    *   A ModuleHandler service object.
    * @param \Drupal\Core\Config\ConfigFactory $config
    *   A ConfigFactory service object.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
    *   An EventDispatcher service object.
    */
   public function __construct(\SendGrid $sendgrid, ModuleHandler $moduleHandler, ConfigFactory $config, EventDispatcherInterface $dispatcher) {

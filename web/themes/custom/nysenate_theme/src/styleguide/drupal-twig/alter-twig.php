@@ -16,7 +16,7 @@ use Twig\Extension\DebugExtension;
  * @param object $config
  *   - Config of `@basalt/twig-renderer`.
  */
-function twig_extensions(Environment &$env, $config) {
+function twigExtensions(Environment &$env, $config) {
 
   // Load the BasicTwigExtensions class so the extension can be added correctly.
   spl_autoload_register(function ($class_name) {

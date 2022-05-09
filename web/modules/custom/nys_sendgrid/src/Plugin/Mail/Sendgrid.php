@@ -9,7 +9,7 @@ use Drupal\nys_sendgrid\Helper;
 use Drupal\nys_sendgrid\TemplatesManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Logger\LoggerChannelTrait;
@@ -112,7 +112,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * Event Dispatcher service.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected EventDispatcherInterface $dispatcher;
 
@@ -132,7 +132,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    *   A ModuleHandler service object.
    * @param \Drupal\Core\Config\ConfigFactory $config
    *   A ConfigFactory service object.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
    *   An EventDispatcher service object.
    */
   public function __construct(\SendGrid $sendgrid, ModuleHandler $moduleHandler, ConfigFactory $config, EventDispatcherInterface $dispatcher) {

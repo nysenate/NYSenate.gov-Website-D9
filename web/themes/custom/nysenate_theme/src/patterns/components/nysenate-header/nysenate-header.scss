@@ -26,6 +26,17 @@
   }
 }
 
+.l-header {
+  .c-actionbar,
+  .c-senate-status {
+    max-width: none;
+
+    &.hidden {
+      margin-top: -60px;
+    }
+  }
+}
+
 // Non-modular or client styles for .l-header region.
 .l-header {
   width: 100%;
@@ -119,6 +130,27 @@
   }
 }
 @media #{$tablet} {
+  .l-header {
+    .c-actionbar,
+    .c-senate-status {
+      max-width: 1500px;
+      padding: 0 9%;
+
+      &.hidden {
+        margin-top: -100px;
+      }
+
+      .c-actionbar--cta {
+        max-width: 400px;
+        font-size: 18px;
+        line-height: 1.3em;
+      }
+      .c-block--btn {
+        font-size: 16px;
+      }
+    }
+  }
+
   .c-header-bar {
     overflow: visible;
     height: 100px;
@@ -185,6 +217,7 @@
 /* Navigation */
 .c-nav--wrap {
   position: absolute;
+  background: #fff;
   top: -110vh;
   left: 0;
   right: 0;
@@ -479,7 +512,7 @@
     }
   }
   .c-senator-hero--info {
-    display: inline-block;
+    display: flex;
     vertical-align: middle;
     padding: 0 0 0 10px;
   }
@@ -513,7 +546,7 @@
     }
     .c-senator-hero--info {
       position: relative;
-      display: inline-block;
+      display: flex;
       vertical-align: middle;
 
       > div {
@@ -902,6 +935,75 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 }
 
+.c-actionbar,
+.c-senate-status {
+  position: relative;
+  display: block;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  padding: 0 60px 0 18px;
+  background-color: $gen_blue_lgt;
+  max-width: unset;
+  transition: margin 0.25s ease;
+
+  // used when actionbar only contains
+  // a simple message - usually not logged-in
+  .c-actionbar--cta {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    max-width: 320px;
+  }
+
+  .c-actionbar--info {
+    display: none;
+  }
+
+  .nys-senator {
+    margin-bottom: 0;
+  }
+
+  .c-block--btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+
+    a {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0 18px;
+      line-height: 60px;
+      color: #fff;
+      text-decoration: none;
+      background-color: $gen_blue_med;
+
+      &:before {
+        line-height: 60px;
+        font-size: 32px;
+        margin-right: 18px;
+      }
+    }
+
+    &:before,
+    &:after {
+      line-height: 60px;
+      font-size: 32px;
+      margin-right: 18px;
+    }
+  }
+}
+
 .c-site-search {
   position: absolute;
   top: 40px;
@@ -929,14 +1031,14 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: none;
     }
   }
-    
+
   .c-site-search--title {
     display: none;
   }
 
   .c-block-advanced-search-link {
     margin-bottom: 30px;
-  
+
     .c-advanced-search--link {
       color: $orange01;
       text-transform: uppercase;
@@ -999,8 +1101,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     padding: 0 410px 0 9%;
 
     .c-actionbar--info {
-      display: inline-block;
+      display: flex;
       vertical-align: middle;
+      height: 100%;
+      align-items: center;
     }
 
     .c-actionbar--info .c-actionbar--cta,
@@ -1058,12 +1162,15 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     font-size: 22px;
   }
 
-  .c-site-search--title {
-    display: block;
-    margin-bottom: 20px;
-    font-family: 'Adelle Semibold';
-    font-size: 26px;
-    line-height: 1;
+  .c-site-search {
+
+    .c-site-search--title {
+      display: block;
+      margin-bottom: 20px;
+      font-family: "Adelle Semibold";
+      font-size: 26px;
+      line-height: 1;
+    }
   }
 
   .c-site-search--link {

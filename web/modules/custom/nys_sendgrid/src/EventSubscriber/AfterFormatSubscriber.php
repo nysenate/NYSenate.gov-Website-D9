@@ -17,7 +17,7 @@ use SendGrid\Mail\Mail;
 use SendGrid\Mail\TemplateId;
 use SendGrid\Mail\ClickTracking;
 use SendGrid\Mail\Ganalytics;
-use Sendgrid\Mail\MimeType;
+use SendGrid\Mail\MimeType;
 use SendGrid\Mail\OpenTracking;
 use SendGrid\Mail\Subject;
 use SendGrid\Mail\TrackingSettings;

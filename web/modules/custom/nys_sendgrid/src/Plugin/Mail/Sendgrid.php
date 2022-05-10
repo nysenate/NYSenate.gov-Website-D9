@@ -9,7 +9,7 @@ use Drupal\nys_sendgrid\Helper;
 use Drupal\nys_sendgrid\TemplatesManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Logger\LoggerChannelTrait;
@@ -70,7 +70,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * A Sendgrid Mail object to represent the message being sent.
    *
-   * @var \Sendgrid\Mail\Mail
+   * @var \SendGrid\Mail\Mail
    */
   protected Mail $mailObj;
 
@@ -112,7 +112,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * Event Dispatcher service.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected EventDispatcherInterface $dispatcher;
 
@@ -132,7 +132,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    *   A ModuleHandler service object.
    * @param \Drupal\Core\Config\ConfigFactory $config
    *   A ConfigFactory service object.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
    *   An EventDispatcher service object.
    */
   public function __construct(\SendGrid $sendgrid, ModuleHandler $moduleHandler, ConfigFactory $config, EventDispatcherInterface $dispatcher) {
@@ -216,6 +216,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     $this->message['params']['sendgrid_mail'] = $this->mailObj;
 
     // Dispatch the "after format" event.
+    // @phpstan-ignore-next-line
     $this->dispatcher->dispatch(new AfterFormatEvent($this->message), Events::AFTER_FORMAT);
 
     return $this->message;
@@ -605,6 +606,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     $success = in_array($response_code, ['200', '202']);
     // If successful, dispatch the after.send event.
     if ($success) {
+      // @phpstan-ignore-next-line
       $this->dispatcher->dispatch(new AfterSendEvent($message), Events::AFTER_SEND);
     }
     // If not successful, but not an exception, log the reason.

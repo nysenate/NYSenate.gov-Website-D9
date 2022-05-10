@@ -1,19 +1,19 @@
-uuid: 4e93d493-c903-478e-b3ff-ef5d0173d33f
+uuid: 8db7b144-b24d-4124-badd-5508e79ae86e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_senator_multiref
+    - field.storage.node.field_ol_multi_sponsors
     - node.type.resolution
     - taxonomy.vocabulary.senator
-id: node.resolution.field_senator_multiref
-field_name: field_senator_multiref
+id: node.resolution.field_ol_multi_sponsors
+field_name: field_ol_multi_sponsors
 entity_type: node
 bundle: resolution
-label: Senator
+label: 'Multi Sponsors'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

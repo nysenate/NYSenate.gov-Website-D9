@@ -189,3 +189,17 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
   // No opinion.
   return AccessResult::neutral();
 }
+
+/**
+ * Implements hook_entity_update().
+ */
+function nys_senators_user_presave(AccountInterface $account) {
+  // Fetch the User's roles.
+  $user_roles = $account->getRoles();
+  // Only check for MCPs.
+  if (!in_array('microsite_content_producer', $user_roles, FALSE)) {
+    if ($account->hasField('field_senator_multiref')) {
+      $account->set('field_senator_multiref', 0);
+    }
+  }
+}

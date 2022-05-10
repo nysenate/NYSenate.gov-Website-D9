@@ -1,0 +1,24 @@
+uuid: 87ce28e9-6b90-45e0-a385-ded20310672b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_last_notified
+    - node.type.petition
+  module:
+    - datetime
+id: node.petition.field_last_notified
+field_name: field_last_notified
+entity_type: node
+bundle: petition
+label: 'Last Notified'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

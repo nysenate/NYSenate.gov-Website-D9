@@ -1,0 +1,24 @@
+uuid: ece05a20-22c0-4ee1-93db-724eef54d6ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_publish_date
+    - node.type.resolution
+  module:
+    - datetime
+id: node.resolution.field_ol_publish_date
+field_name: field_ol_publish_date
+entity_type: node
+bundle: resolution
+label: 'Publish Date'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -3,8 +3,12 @@ langcode: en
 status: true
 dependencies:
   module:
+    - field_permissions
     - node
     - taxonomy
+third_party_settings:
+  field_permissions:
+    permission_type: public
 id: node.field_bill_multi_session_root
 field_name: field_bill_multi_session_root
 entity_type: node

@@ -1,16 +1,16 @@
-uuid: f86efccd-1bd6-4cb5-92ac-0eaaf58af1ab
+uuid: 55e6c451-1cda-4bd8-bcb7-10a9cc3b4778
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_senator_multiref
-    - node.type.bill
-    - taxonomy.vocabulary.senator
-id: node.bill.field_senator_multiref
-field_name: field_senator_multiref
+    - field.storage.node.field_issues
+    - node.type.petition
+    - taxonomy.vocabulary.issues
+id: node.petition.field_issues
+field_name: field_issues
 entity_type: node
-bundle: bill
-label: Senator
+bundle: petition
+label: Issues
 description: ''
 required: false
 translatable: true
@@ -20,10 +20,10 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      senator: senator
+      issues: issues
     sort:
       field: name
       direction: asc
-    auto_create: false
+    auto_create: true
     auto_create_bundle: ''
 field_type: entity_reference

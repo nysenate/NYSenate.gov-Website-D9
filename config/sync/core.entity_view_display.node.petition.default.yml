@@ -3,15 +3,111 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.petition.body
+    - field.field.node.petition.field_article_author
+    - field.field.node.petition.field_date
+    - field.field.node.petition.field_expiration_date
+    - field.field.node.petition.field_featured
+    - field.field.node.petition.field_image_main
+    - field.field.node.petition.field_issues
+    - field.field.node.petition.field_last_notified
     - field.field.node.petition.field_senator_multiref
+    - field.field.node.petition.field_subhead
+    - field.field.node.petition.field_title_stub
     - node.type.petition
   module:
+    - datetime
+    - text
     - user
 id: node.petition.default
 targetEntityType: node
 bundle: petition
 mode: default
 content:
+  body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_article_author:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_expiration_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_featured:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_image_main:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_last_notified:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_subhead:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_title_stub:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }

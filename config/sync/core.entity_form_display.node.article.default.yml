@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_article_author
@@ -29,6 +30,7 @@ dependencies:
   module:
     - datetime
     - field_group
+    - inline_entity_form
     - media_library
     - paragraphs
     - path
@@ -40,8 +42,9 @@ third_party_settings:
       children:
         - title
         - field_article_author
-        - field_date
+        - field_category
         - field_attachment
+        - field_date
       label: 'Article Heading Information'
       region: content
       parent_name: ''
@@ -63,7 +66,7 @@ third_party_settings:
       label: 'Article Content'
       region: content
       parent_name: ''
-      weight: 1
+      weight: 2
       format_type: fieldset
       format_settings:
         classes: ''
@@ -78,7 +81,7 @@ third_party_settings:
       label: Discoverability
       region: content
       parent_name: ''
-      weight: 2
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: ''
@@ -110,7 +113,7 @@ third_party_settings:
       label: 'Sitewide Settings'
       region: content
       parent_name: group_site_promotion
-      weight: 26
+      weight: 4
       format_type: tab
       format_settings:
         classes: ''
@@ -125,7 +128,7 @@ third_party_settings:
       label: 'Senator Microsite Settings'
       region: content
       parent_name: group_site_promotion
-      weight: 27
+      weight: 5
       format_type: tab
       format_settings:
         classes: ''
@@ -141,7 +144,7 @@ third_party_settings:
       label: 'Committee Settings'
       region: content
       parent_name: group_site_promotion
-      weight: 28
+      weight: 6
       format_type: tab
       format_settings:
         classes: ''
@@ -157,7 +160,7 @@ third_party_settings:
       label: 'Social Sharing'
       region: content
       parent_name: ''
-      weight: 3
+      weight: 4
       format_type: fieldset
       format_settings:
         classes: ''
@@ -172,7 +175,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 13
+    weight: 14
     region: content
     settings:
       rows: 9
@@ -182,7 +185,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -202,11 +205,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_attachment:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 4
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: true
+      label_singular: file
+      label_plural: files
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_bills:
     type: entity_reference_autocomplete
@@ -220,7 +229,7 @@ content:
     third_party_settings: {  }
   field_category:
     type: options_select
-    weight: 12
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -243,7 +252,7 @@ content:
     third_party_settings: {  }
   field_date:
     type: datetime_default
-    weight: 3
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -286,7 +295,7 @@ content:
     third_party_settings: {  }
   field_paragraphs:
     type: paragraphs
-    weight: 14
+    weight: 15
     region: content
     settings:
       title: Paragraph
@@ -304,13 +313,13 @@ content:
     third_party_settings: {  }
   field_publication_date:
     type: datetime_default
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   field_publication_source_link:
     type: string_textfield
-    weight: 11
+    weight: 12
     region: content
     settings:
       size: 60
@@ -318,7 +327,7 @@ content:
     third_party_settings: {  }
   field_publication_title:
     type: string_textfield
-    weight: 10
+    weight: 11
     region: content
     settings:
       size: 60
@@ -355,7 +364,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -367,7 +376,7 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 8
+    weight: 9
     region: content
     settings:
       display_label: true
@@ -382,7 +391,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 4
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -397,7 +406,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }

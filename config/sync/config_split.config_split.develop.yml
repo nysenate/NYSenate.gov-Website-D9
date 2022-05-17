@@ -9,12 +9,9 @@ weight: 0
 folder: profiles/custom/nysenate/config/develop
 module:
   clamav: 0
-  dblog: 0
 theme: {  }
 blacklist:
-  - dblog.settings
   - system.logging
-graylist:
-  - clamav.settings
+graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true

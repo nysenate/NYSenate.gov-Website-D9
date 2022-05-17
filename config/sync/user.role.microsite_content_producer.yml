@@ -7,11 +7,11 @@ dependencies:
     - node.type.bill
     - node.type.event
     - node.type.landing
-    - node.type.page_content
     - node.type.petition
     - node.type.resolution
     - taxonomy.vocabulary.senator
   module:
+    - field_permissions
     - node
     - system
     - taxonomy
@@ -28,17 +28,18 @@ permissions:
   - 'create article content'
   - 'create bill content'
   - 'create event content'
+  - 'create field_featured'
   - 'create landing content'
-  - 'create page_content content'
   - 'create petition content'
   - 'create resolution content'
+  - 'edit own field_featured'
   - 'edit terms in senator'
   - 'view article revisions'
   - 'view bill revisions'
   - 'view event revisions'
   - 'view landing revisions'
+  - 'view own field_featured'
   - 'view own unpublished content'
-  - 'view page_content revisions'
   - 'view petition revisions'
   - 'view resolution revisions'
   - 'view the administration theme'

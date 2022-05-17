@@ -1,0 +1,20 @@
+uuid: 6374c6b4-0c8d-4323-8f39-0b9cfd507656
+langcode: en
+status: false
+dependencies: {  }
+id: develop
+label: Develop
+description: 'Develop pantheonsite'
+weight: 0
+folder: profiles/custom/nysenate/config/develop
+module:
+  clamav: 0
+  dblog: 0
+theme: {  }
+blacklist:
+  - dblog.settings
+  - system.logging
+graylist:
+  - clamav.settings
+graylist_dependents: true
+graylist_skip_equal: true

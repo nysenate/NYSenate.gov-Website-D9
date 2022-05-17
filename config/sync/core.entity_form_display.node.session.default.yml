@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.session.body
     - field.field.node.session.field_calendar_number
     - field.field.node.session.field_date
@@ -22,6 +23,7 @@ dependencies:
     - address
     - datetime
     - field_group
+    - inline_entity_form
     - media_library
     - path
     - scheduler
@@ -194,11 +196,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_yt:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 36
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   path:
     type: path

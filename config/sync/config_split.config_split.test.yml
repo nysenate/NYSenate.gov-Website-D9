@@ -1,0 +1,20 @@
+uuid: 0fbef663-429b-42e7-9e33-9f8f368a4cdc
+langcode: en
+status: false
+dependencies: {  }
+id: test
+label: Test
+description: 'Test Pantheonsite'
+weight: 0
+folder: profiles/custom/nysenate/config/test
+module:
+  clamav: 0
+  dblog: 0
+theme: {  }
+blacklist:
+  - clamav.settings
+  - dblog.settings
+  - system.logging
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true

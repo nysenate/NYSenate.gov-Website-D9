@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_learn_more_page
-    - node.type.page_content
     - taxonomy.vocabulary.committees
 id: taxonomy_term.committees.field_learn_more_page
 field_name: field_learn_more_page
@@ -19,8 +18,7 @@ default_value_callback: ''
 settings:
   handler: 'default:node'
   handler_settings:
-    target_bundles:
-      page_content: page_content
+    target_bundles: {  }
     sort:
       field: _none
       direction: ASC

@@ -1,0 +1,20 @@
+uuid: b897cbb4-b716-4dc5-bf77-7158ced9547a
+langcode: en
+status: false
+dependencies: {  }
+id: live_prod
+label: Live/Prod
+description: 'Live Pantheonsite'
+weight: 0
+folder: profiles/custom/nysenate/config/prod
+module:
+  clamav: 0
+  dblog: 0
+theme: {  }
+blacklist:
+  - clamav.settings
+  - dblog.settings
+graylist:
+  - system.logging
+graylist_dependents: true
+graylist_skip_equal: true

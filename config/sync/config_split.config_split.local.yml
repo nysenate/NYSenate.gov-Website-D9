@@ -1,0 +1,23 @@
+uuid: b2227fbe-c0c8-4321-a966-c8c8bcee6d81
+langcode: en
+status: false
+dependencies: {  }
+id: local
+label: Local
+description: 'Local development settings'
+weight: 0
+folder: profiles/custom/nysenate/config/local
+module:
+  dblog: 0
+  devel: 0
+  stage_file_proxy: 0
+theme: {  }
+blacklist:
+  - clamav.settings
+  - dblog.settings
+  - stage_file_proxy.settings
+  - system.logging
+  - system.mail
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true

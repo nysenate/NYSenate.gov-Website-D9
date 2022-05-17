@@ -327,7 +327,7 @@ function migrate_example_beer_data_node() {
       'Blab Blah Blah Green',
       'Green',
       'Netherlands|Belgium',
-      0,
+      1,
       'heineken.jpg',
       'Heinekin alt',
       'Heinekin title',
@@ -339,7 +339,7 @@ function migrate_example_beer_data_node() {
       'We love Miller Brewing',
       'Tasteless',
       'USA|Canada',
-      1,
+      2,
       NULL,
       NULL,
       NULL,
@@ -351,7 +351,7 @@ function migrate_example_beer_data_node() {
       'English occasionally get something right',
       'A treat',
       'United Kingdom',
-      1,
+      2,
       NULL,
       NULL,
       NULL,
@@ -441,10 +441,10 @@ function migrate_example_beer_data_comment() {
   $query = \Drupal::database()->insert('migrate_example_beer_comment')
     ->fields($fields);
   $data = [
-    [99999998, NULL, 'im first', 'full body', 'alice', 'alice@example.com', 0],
-    [99999998, NULL, 'im second', 'aromatic', 'alice', 'alice@example.com', 0],
-    [99999999, NULL, 'im parent', 'malty', 'alice', 'alice@example.com', 0],
-    [99999999, 1, 'im child', 'cold body', 'bob', NULL, 1],
+    [99999998, NULL, 'im first', 'full body', 'alice', 'alice@example.com', 1],
+    [99999998, NULL, 'im second', 'aromatic', 'alice', 'alice@example.com', 1],
+    [99999999, NULL, 'im parent', 'malty', 'alice', 'alice@example.com', 1],
+    [99999999, 1, 'im child', 'cold body', 'bob', NULL, 2],
     [
       99999999,
       4,

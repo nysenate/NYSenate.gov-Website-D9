@@ -1,0 +1,12 @@
+services:
+  config_split.config_split_export:
+    class: Drupal\config_split\Command\ExportCommand
+    arguments: ['@config_split.cli']
+    tags:
+      - { name: drupal.command }
+
+  config_split.config_split_import:
+    class: Drupal\config_split\Command\ImportCommand
+    arguments: ['@config_split.cli']
+    tags:
+      - { name: drupal.command }

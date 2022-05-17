@@ -596,4 +596,20 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
     return !empty($create_bundles);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    // Remove any entities considered to be empty. We only do this for non-
+    // required inline entity forms. Doing this for required inline entity forms
+    // results in the NotNull constraint being triggered.
+    if (!$this->fieldDefinition->isRequired()) {
+      $values = array_filter($values, function ($value) use ($form) {
+        return empty($value['entity']) || !$this->inlineFormHandler->isEmptyEntity($value['entity'], $this->getSetting('form_mode'));
+      });
+    }
+
+    return $values;
+  }
+
 }

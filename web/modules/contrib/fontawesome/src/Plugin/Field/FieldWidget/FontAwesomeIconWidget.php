@@ -121,6 +121,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       'far' => $this->t('Regular'),
       'fal' => $this->t('Light'),
       'fad' => $this->t('Duotone'),
+      'fat' => $this->t('Thin'),
       'fak' => $this->t('Kit Uploads'),
     ];
     if (is_bool($configuration_settings->get('use_solid_file')) && !$configuration_settings->get('use_solid_file')) {
@@ -134,6 +135,9 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
     }
     if (is_bool($configuration_settings->get('use_duotone_file')) && !$configuration_settings->get('use_duotone_file')) {
       unset($style_options['fad']);
+    }
+    if (is_bool($configuration_settings->get('use_thin_file')) && !$configuration_settings->get('use_thin_file')) {
+      unset($style_options['fat']);
     }
     $element['settings']['style'] = [
       '#type' => 'select',

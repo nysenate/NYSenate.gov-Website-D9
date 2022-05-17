@@ -11,25 +11,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * This plugin generates entities within the process plugin.
  *
- * @MigrateProcessPlugin(
- *   id = "entity_generate"
- * )
- *
- * @see EntityLookup
- *
  * All the configuration from the lookup plugin applies here. In its most
  * simple form, this plugin needs no configuration. If there are fields on the
  * generated entity that are required or need some value, their values can be
  * provided via values and/or default_values configuration options.
  *
- * Example usage with values and default_values configuration:
+ * Available configuration keys:
+ * - default_values: (optional) A keyed array of default static values to be
+ *   used for the generated entity.
+ * - values: (optional) A keyed array of values to be used for the generated
+ *   entity. It supports source and destination fields as you would normally use
+ *   in a process pipeline.
+ *
+ * Example:
  * @code
  * destination:
  *   plugin: 'entity:node'
  * process:
- *   type:
- *     plugin: default_value
- *     default_value: page
  *   foo: bar
  *   field_tags:
  *     plugin: entity_generate
@@ -40,6 +38,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       field_long_description: some_source_field
  *       field_foo: '@foo'
  * @endcode
+ *
+ * @see \Drupal\migrate_plus\Plugin\migrate\process\EntityLookup
+ *
+ * @MigrateProcessPlugin(
+ *   id = "entity_generate"
+ * )
  */
 class EntityGenerate extends EntityLookup {
 

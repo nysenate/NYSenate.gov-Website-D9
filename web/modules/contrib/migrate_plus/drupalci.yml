@@ -8,7 +8,7 @@ build:
       phpcs:
         # phpcs will use core's specified version of Coder.
         sniff-all-files: true
-        halt-on-fail: true
+        halt-on-fail: false
     testing:
       # run_tests task is executed several times in order of performance speeds.
       # halt-on-fail can be set on the run_tests tasks in order to fail fast.

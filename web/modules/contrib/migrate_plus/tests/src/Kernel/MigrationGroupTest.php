@@ -30,6 +30,7 @@ class MigrationGroupTest extends KernelTestBase {
       'shared_configuration' => [
         // In migration, so will be overridden.
         'migration_tags' => ['Drupal 6'],
+        'audit' => TRUE,
         'source' => [
           'constants' => [
             // Not in migration, so will be added.
@@ -52,7 +53,7 @@ class MigrationGroupTest extends KernelTestBase {
         'load' => [],
         'migration_group' => $group_id,
         'label' => 'Unaffected by the group',
-          // Overrides group.
+        // Overrides group.
         'migration_tags' => ['Drupal 7'],
         'destination' => [],
         'source' => [],
@@ -74,6 +75,7 @@ class MigrationGroupTest extends KernelTestBase {
     $expected_config = [
       'label' => 'Unaffected by the group',
       'getMigrationTags' => ['Drupal 7'],
+      'isAuditable' => TRUE,
       'getSourceConfiguration' => [
         'plugin' => 'empty',
         'constants' => [

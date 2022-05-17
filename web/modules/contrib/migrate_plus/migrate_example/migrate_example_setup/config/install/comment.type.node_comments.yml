@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - migrate_example_setup
 id: node_comments
 label: 'Node comments'
 target_entity_type_id: node

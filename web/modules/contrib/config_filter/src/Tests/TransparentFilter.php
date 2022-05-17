@@ -6,7 +6,7 @@ use Drupal\config_filter\Config\StorageFilterInterface;
 use Drupal\config_filter\Plugin\ConfigFilterBase;
 
 /**
- * Class TransparentFilter.
+ * A transparent filter making the storages public for tests.
  */
 class TransparentFilter extends ConfigFilterBase implements StorageFilterInterface {
 

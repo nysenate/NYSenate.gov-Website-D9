@@ -1,0 +1,29 @@
+uuid: 3569b00e-c991-4048-bf84-b8689d9b02b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_honoree_video
+    - media.type.remote_video
+    - node.type.honoree
+id: node.honoree.field_honoree_video
+field_name: field_honoree_video
+entity_type: node
+bundle: honoree
+label: 'Video from Ceremony'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      remote_video: remote_video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

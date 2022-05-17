@@ -12,10 +12,10 @@ This module provides the API to do so but does not influence a sites operation.
 
 ## How it works
 
-Unlike Config Filter 1.x which swaps the `config.storage.sync` service from Drupal 8 core,
-Config Filter 2.x applies the filters when the new Drupal core config storage transformation api is used.
-This means that modules that previously used Config Filter now work with the new api.
-Modules depending on Config Filter can depend on both 1.x or 2.x as the Config Filter API is the same.
+Configuration Filter swaps the config.storage.sync service from Drupal 8 core.
+The new service wraps the file storage and applies filters to it.
+This allows other modules to change the configuration as it gets imported or
+exported both in the Drupal UI and with drush.
 
 ## What is a ConfigFilter
 

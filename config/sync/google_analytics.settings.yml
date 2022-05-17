@@ -1,21 +1,17 @@
 _core:
   default_config_hash: goermvpa21m8H97TedFfQQmZmQz62WjX_SCiT4JhsXg
-account: ''
+account: UA-8171983-1
 premium: false
-domain_mode: 0
+domain_mode: 1
 cross_domains: ''
 visibility:
   request_path_mode: 0
-  request_path_pages: |-
-    /admin
-    /admin/*
-    /batch
-    /node/add*
-    /node/*/*
-    /user/*/*
+  request_path_pages: "/admin\r\n/admin/*\r\n/batch\r\n/node/add*\r\n/node/*/*\r\n/user/*/*"
   user_role_mode: 0
-  user_role_roles: {  }
-  user_account_mode: 1
+  user_role_roles:
+    anonymous: anonymous
+    constituent: constituent
+  user_account_mode: 0
 track:
   outbound: true
   mailto: true

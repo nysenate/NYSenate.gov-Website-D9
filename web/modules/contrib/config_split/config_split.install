@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the config_split module.
+ */
+
+/**
+ * Enable the config_filter module.
+ */
+function config_split_update_8001() {
+  \Drupal::getContainer()->get('module_installer')->install(['config_filter']);
+}

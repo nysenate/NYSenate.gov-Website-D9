@@ -18,9 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - The binary blob data.
  *
  * Available configuration keys:
- * - reuse: true
- *
- * @codingStandardsIgnoreStart
+ * - reuse: (optional) Indicates whether to overwrite existing files. If TRUE,
+ *   then existing files won't be replaced, and previously copied files will be
+ *   reused. Defaults to FALSE.
  *
  * Examples:
  * @code
@@ -57,7 +57,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *       - @destination_path
  *       - @destination_blob
  * @endcode
-   In the example above, it is necessary to manipulate  the values before they
+ *
+ * In the example above, it is necessary to manipulate the values before they
  * are processed by this plugin. This is because this plugin takes a binary blob
  * and saves it as a file. In many cases, as in this example, the data is base64
  * encoded and should be decoded first. In destination_blob, the incoming data
@@ -65,8 +66,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * concatenating the base filename with the destination directory set in the
  * constants to create the final path. The resulting values are then referenced
  * as the source of the file_blob plugin.
- *
- * @codingStandardsIgnoreEnd
  *
  * @MigrateProcessPlugin(
  *   id = "file_blob"
@@ -124,7 +123,7 @@ class FileBlob extends ProcessPluginBase implements ContainerFactoryPluginInterf
     }
     [$destination, $blob] = $value;
 
-    // Determine if we going to overwrite existing files or not touch them.
+    // Determine if we're going to overwrite existing files or not touch them.
     $replace = $this->getOverwriteMode();
 
     // Attempt to save the file to avoid calling file_prepare_directory() any

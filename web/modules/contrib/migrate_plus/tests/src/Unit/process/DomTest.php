@@ -40,11 +40,46 @@ class DomTest extends MigrateProcessTestCase {
   }
 
   /**
+   * @covers ::__construct
+   */
+  public function testInvalidImportMethod(): void {
+    $configuration['method'] = 'import';
+    $configuration['import_method'] = 'invalid';
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The "import_method" must be "html", "html5", or "xml".');
+    (new Dom($configuration, 'dom', []));
+  }
+
+  /**
    * @covers ::import
    */
   public function testImportNonRoot(): void {
     $configuration['method'] = 'import';
     $value = '<p>A simple paragraph.</p>';
+    $document = (new Dom($configuration, 'dom', []))
+      ->transform($value, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->assertTrue($document instanceof \DOMDocument);
+  }
+
+  /**
+   * @covers ::import
+   */
+  public function testImportMethodHtml5(): void {
+    $configuration['method'] = 'import';
+    $configuration['import_method'] = 'html5';
+    $value = '<p>A simple paragraph.</p>';
+    $document = (new Dom($configuration, 'dom', []))
+      ->transform($value, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->assertTrue($document instanceof \DOMDocument);
+  }
+
+  /**
+   * @covers ::import
+   */
+  public function testImportMethodXml(): void {
+    $configuration['method'] = 'import';
+    $configuration['import_method'] = 'xml';
+    $value = '<item><value>A simple paragraph.</value></item>';
     $document = (new Dom($configuration, 'dom', []))
       ->transform($value, $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertTrue($document instanceof \DOMDocument);

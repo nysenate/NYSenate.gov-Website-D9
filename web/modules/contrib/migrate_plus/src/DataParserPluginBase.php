@@ -63,7 +63,7 @@ abstract class DataParserPluginBase extends PluginBase implements DataParserPlug
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->urls = $configuration['urls'];
-    $this->itemSelector = $configuration['item_selector'];
+    $this->itemSelector = $configuration['item_selector'] ?? '';
   }
 
   /**
@@ -89,6 +89,7 @@ abstract class DataParserPluginBase extends PluginBase implements DataParserPlug
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function rewind() {
     $this->activeUrl = NULL;
     $this->next();
@@ -97,6 +98,7 @@ abstract class DataParserPluginBase extends PluginBase implements DataParserPlug
   /**
    * Implementation of Iterator::next().
    */
+  #[\ReturnTypeWillChange]
   public function next() {
     $this->currentItem = $this->currentId = NULL;
     if (is_null($this->activeUrl)) {
@@ -177,6 +179,7 @@ abstract class DataParserPluginBase extends PluginBase implements DataParserPlug
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function current() {
     return $this->currentItem;
   }
@@ -193,6 +196,7 @@ abstract class DataParserPluginBase extends PluginBase implements DataParserPlug
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function key() {
     return $this->currentId;
   }
@@ -200,6 +204,7 @@ abstract class DataParserPluginBase extends PluginBase implements DataParserPlug
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function valid() {
     return !empty($this->currentItem);
   }
@@ -207,6 +212,7 @@ abstract class DataParserPluginBase extends PluginBase implements DataParserPlug
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function count() {
     $count = 0;
     foreach ($this as $item) {

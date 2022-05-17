@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\oembed_providers\Functional;
 
+use Drupal\oembed_providers\Entity\ProviderBucket;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
@@ -159,6 +160,29 @@ class ProviderBucketTest extends BrowserTestBase {
     $providers = $media_sources['oembed:my_test_bucket']['providers'];
     $this->AssertTrue(in_array('Vimeo', $providers));
     $this->AssertFalse(in_array('YouTube', $providers));
+  }
+
+  /**
+   * Tests dependency calculation for ProviderBucket entities.
+   */
+  public function testProviderBucketDependencyCalculation() {
+    // Create a test provider bucket with a custom provider.
+    $provider_bucket = ProviderBucket::create([
+      'id' => 'my_test_bucket',
+      'label' => 'My Test Bucket',
+      'descriptions' => 'A Description of My Test Bucket',
+      'providers' => [
+        'Example Provider',
+      ],
+    ]);
+    $provider_bucket->save();
+
+    $expected = [
+      'config' => [
+        'oembed_providers.provider.example_provider',
+      ],
+    ];
+    $this->AssertSame($expected, $provider_bucket->getDependencies());
   }
 
 }

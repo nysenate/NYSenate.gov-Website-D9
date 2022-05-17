@@ -107,6 +107,23 @@ class SkipOnValueTest extends MigrateProcessTestCase {
   }
 
   /**
+   * Tests that a skip row exception with a message is raised.
+   *
+   * @covers ::row
+   */
+  public function testRowSkipWithMessage() {
+    $configuration = [
+      'method' => 'row',
+      'value' => 86,
+      'message' => 'The value is 86',
+    ];
+    $process = new SkipOnValue($configuration, 'skip_on_value', []);
+    $this->expectException(MigrateSkipRowException::class);
+    $this->expectExceptionMessage('The value is 86');
+    $process->transform(86, $this->migrateExecutable, $this->row, 'destination_property');
+  }
+
+  /**
    * @covers ::row
    */
   public function testRowBypassesOnNonValue(): void {
@@ -123,23 +140,14 @@ class SkipOnValueTest extends MigrateProcessTestCase {
   }
 
   /**
-   * @covers ::row
+   * @covers ::__construct
    */
-  public function testRequiredRowConfiguration(): void {
+  public function testRequiredConfiguration() {
+    // It doesn't meter which method we will put here, because it should throw
+    // error on contraction of Plugin.
     $configuration['method'] = 'row';
-    $this->expectException(MigrateException::class);
-    (new SkipOnValue($configuration, 'skip_on_value', []))
-      ->transform('sourcevalue', $this->migrateExecutable, $this->row, 'destinationproperty');
-  }
-
-  /**
-   * @covers ::process
-   */
-  public function testRequiredProcessConfiguration(): void {
-    $configuration['method'] = 'process';
-    $this->expectException(MigrateException::class);
-    (new SkipOnValue($configuration, 'skip_on_value', []))
-      ->transform('sourcevalue', $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->expectException(\InvalidArgumentException::class);
+    (new SkipOnValue($configuration, 'skip_on_value', []));
   }
 
 }

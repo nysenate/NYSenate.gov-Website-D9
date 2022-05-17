@@ -41,3 +41,31 @@ function oembed_providers_post_update_add_provider_to_media_source() {
   // in provider bucket-generated definitions.
   \Drupal::service('plugin.manager.media.source')->clearCachedDefinitions();
 }
+
+/**
+ * Update Provider Buckets' dependencies on Custom Providers.
+ */
+function oembed_providers_post_update_update_provider_bucket_dependencies() {
+  $entities = \Drupal::service('entity_type.manager')->getStorage('oembed_provider_bucket')->loadMultiple();
+  // Resave all existing ProviderBucket config entities to add any missing
+  // custom provider dependencies.
+  foreach ($entities as $entity) {
+    $entity->save();
+  }
+}
+
+/**
+ * Update Media Type dependencies on Provider Buckets.
+ */
+function oembed_providers_post_update_update_media_type_dependencies() {
+  // Register new oembed_providers_config_events_subscriber service.
+  \Drupal::service('kernel')->invalidateContainer();
+
+  $media_types = \Drupal::service('entity_type.manager')->getStorage('media_type')->loadMultiple();
+  foreach ($media_types as $media_type) {
+    $plugin_id = $media_type->getSource()->getPluginId();
+    if (substr($plugin_id, 0, 7) === "oembed:") {
+      $media_type->save();
+    }
+  }
+}

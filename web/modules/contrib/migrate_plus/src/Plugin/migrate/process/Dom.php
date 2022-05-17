@@ -8,6 +8,7 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
+use Masterminds\HTML5;
 
 /**
  * Handles string to DOM and back conversions.
@@ -28,6 +29,10 @@ use Drupal\migrate\Row;
  *   declaration. Defaults to '1.0'.
  * - encoding: (optional) The encoding of the document as part of the XML
  *   declaration. Defaults to 'UTF-8'.
+ * - import_method: (optional) What parser to use. Possible values:
+ *   - 'html': (default) use dom extension parsing.
+ *   - 'html5': use html5 parsing.
+ *   - 'xml': use XML parsing.
  *
  * @codingStandardsIgnoreStart
  *
@@ -97,6 +102,10 @@ class Dom extends ProcessPluginBase {
     if (!in_array($configuration['method'], ['import', 'export'])) {
       throw new \InvalidArgumentException('The "method" must be "import" or "export".');
     }
+    $configuration['import_method'] = $configuration['import_method'] ?? 'html';
+    if (!in_array($configuration['import_method'], ['html', 'html5', 'xml'])) {
+      throw new \InvalidArgumentException('The "import_method" must be "html", "html5", or "xml".');
+    }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configuration += $this->defaultValues();
     $this->logMessages = (bool) $this->configuration['log_messages'];
@@ -163,7 +172,23 @@ class Dom extends ProcessPluginBase {
     }
 
     $document = new \DOMDocument($this->configuration['version'], $this->configuration['encoding']);
-    $document->loadHTML($html);
+    switch ($this->configuration['import_method']) {
+      case 'html5':
+        $html5 = new HTML5([
+          'target_document' => $document,
+          'disable_html_ns' => TRUE,
+        ]);
+        $html5->loadHTML($html);
+        break;
+
+      case 'xml':
+        $document->loadXML($html);
+        break;
+
+      case 'html':
+      default:
+        $document->loadHTML($html);
+    }
 
     if ($this->logMessages) {
       restore_error_handler();

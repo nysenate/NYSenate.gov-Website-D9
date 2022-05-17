@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_node_grants().
@@ -188,4 +189,18 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
 
   // No opinion.
   return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function nys_senators_user_presave(UserInterface $user) {
+  // Fetch the User's roles.
+  $user_roles = $user->getRoles();
+  // Only check for MCPs.
+  if (!in_array('microsite_content_producer', $user_roles, FALSE)) {
+    if ($user->hasField('field_senator_multiref')) {
+      $user->set('field_senator_multiref', 0);
+    }
+  }
 }

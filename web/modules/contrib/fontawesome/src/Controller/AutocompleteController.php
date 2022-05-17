@@ -157,6 +157,11 @@ class AutocompleteController extends ControllerBase {
             'value' => $thisIcon['name'],
             'label' => implode('', $iconRenders) . $thisIcon['name'],
           ];
+
+          // Cap the results if this is a single character.
+          if (strlen($typed_string) == 1 && count($results) >= 25) {
+            break;
+          }
         }
       }
     }

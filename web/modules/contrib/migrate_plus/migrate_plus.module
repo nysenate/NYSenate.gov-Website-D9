@@ -61,7 +61,7 @@ function migrate_plus_migration_plugins_alter(array &$migrations) {
       continue;
     }
     foreach ($shared_configuration as $key => $group_value) {
-      $migration_value = $migrations[$id][$key];
+      $migration_value = $migrations[$id][$key] ?? NULL;
       // Where both the migration and the group provide arrays, replace
       // recursively (so each key collision is resolved in favor of the
       // migration).

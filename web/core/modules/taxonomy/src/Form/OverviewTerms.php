@@ -159,7 +159,7 @@ class OverviewTerms extends FormBase {
 
     $delta = 0;
     $term_deltas = [];
-    $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
+    $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, FALSE);
     $tree_index = 0;
     do {
       // In case this tree is completely empty.
@@ -208,12 +208,12 @@ class OverviewTerms extends FormBase {
       // Finally, if we've gotten down this far, we're rendering a term on this
       // page.
       $page_entries++;
-      $term_deltas[$term->id()] = isset($term_deltas[$term->id()]) ? $term_deltas[$term->id()] + 1 : 0;
-      $key = 'tid:' . $term->id() . ':' . $term_deltas[$term->id()];
+      $term_deltas[$term->tid] = isset($term_deltas[$term->tid]) ? $term_deltas[$term->tid] + 1 : 0;
+      $key = 'tid:' . $term->tid . ':' . $term_deltas[$term->tid];
 
       // Keep track of the first term displayed on this page.
       if ($page_entries == 1) {
-        $form['#first_tid'] = $term->id();
+        $form['#first_tid'] = $term->tid;
       }
       // Keep a variable to make sure at least 2 root elements are displayed.
       if ($term->parents[0] == 0) {
@@ -285,7 +285,7 @@ class OverviewTerms extends FormBase {
     // Get the IDs of the terms edited on the current page which have pending
     // revisions.
     $edited_term_ids = array_map(function ($item) {
-      return $item->id();
+      return $item->tid;
     }, $current_page);
     $pending_term_ids = array_intersect($this->storageController->getTermIdsWithPendingRevisions(), $edited_term_ids);
     if ($pending_term_ids) {
@@ -334,7 +334,7 @@ class OverviewTerms extends FormBase {
     ];
     $this->renderer->addCacheableDependency($form['terms'], $create_access);
 
-    foreach ($current_page as $key => $term) {
+    foreach ($this->loadTermsByStubs($current_page) as $key => $term) {
       $form['terms'][$key] = [
         'term' => [],
         'operations' => [],
@@ -487,6 +487,48 @@ class OverviewTerms extends FormBase {
 
     $form['pager_pager'] = ['#type' => 'pager'];
     return $form;
+  }
+
+  /**
+   * Converts stubs info fully loaded Term entities.
+   *
+   * @param \stdClass[] $stubs
+   *   The stubs used to determine which full entities to load.
+   *   @see TermStorageInterface::loadTree()
+   *
+   * @return \Drupal\taxonomy\TermInterface[]
+   *   The loaded terms.
+   */
+  private function loadTermsByStubs(array $stubs) {
+    // Load the actual terms for this page so we can display them.
+    $termKeyMap = [];
+    foreach ($stubs as $itemKey => $stub) {
+      $termKeyMap[$stub->tid][] = $itemKey;
+    }
+
+    $terms = $this->storageController->loadMultiple(array_keys($termKeyMap));
+    foreach ($terms as $tid => $term) {
+
+      foreach ($termKeyMap[$tid] as $term_index => $term_key) {
+        $stub = $stubs[$termKeyMap[$tid][$term_index]];
+
+        // Clone the term so that the depth attribute remains correct
+        // in the event of multiple parents.
+        if (count($term->parent) > 1) {
+          $term = clone $term;
+        }
+
+        // Normally these properties are set by TermStorageInterface::loadTree,
+        // but since we're manually loading these terms we have to pass them on.
+        $term->depth = $stub->depth;
+        $term->parents = $stub->parents;
+        $term->setWeight($stub->weight);
+
+        $stubs[$term_key] = $term;
+      }
+    }
+
+    return $stubs;
   }
 
   /**

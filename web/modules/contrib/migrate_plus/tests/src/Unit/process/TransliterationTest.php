@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
  * Tests the transliteration process plugin.
  *
  * @group migrate_plus
+ * @group legacy
  */
 class TransliterationTest extends MigrateProcessTestCase {
 
@@ -46,6 +47,16 @@ class TransliterationTest extends MigrateProcessTestCase {
     $plugin = new Transliteration([], 'transliteration', [], $this->transliteration);
     $value = $plugin->transform($actual, $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertEquals($expected_result, $value);
+  }
+
+  /**
+   * Tests deprecation notice of Transliteration process plugin.
+   *
+   * @group legacy
+   */
+  public function testDeprecationMessage() {
+    $this->expectDeprecation("Drupal\migrate_plus\Plugin\migrate\process\Transliteration is deprecated in migrate_plus:8.x-5.3 and is removed from migrate_plus:6.0.0. Use Drupal\migrate_plus\Plugin\migrate\process\Service process plugin instead. See https://www.drupal.org/node/3255994");
+    new Transliteration([], 'transliteration', [], $this->transliteration);
   }
 
 }

@@ -1,0 +1,13 @@
+entity.config_split.enable:
+  path: '/admin/config/development/configuration/config-split/{config_split}/enable'
+  defaults:
+    _controller: '\Drupal\config_split\Controller\ConfigSplitController::enableEntity'
+  requirements:
+    _permission: 'administer configuration split'
+
+entity.config_split.disable:
+  path: '/admin/config/development/configuration/config-split/{config_split}/disable'
+  defaults:
+    _controller: '\Drupal\config_split\Controller\ConfigSplitController::disableEntity'
+  requirements:
+    _permission: 'administer configuration split'

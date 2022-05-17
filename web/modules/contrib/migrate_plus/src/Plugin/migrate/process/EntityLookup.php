@@ -14,13 +14,34 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * This plugin looks for existing entities.
  *
- * In its most simple form, this plugin needs no configuration. However, if the
- * lookup properties cannot be determined through introspection, define them via
- * configuration.
+ * In its most simple form, this plugin needs no configuration, and determines
+ * the configuration automatically. This requires the migration's process to
+ * define a default value for the destination entity's bundle key, and the
+ * destination field this plugin is on to be a supported type.
  *
  * Available configuration keys:
+ * - entity_type: (optional) The ID of the entity type to query for.
+ * - value_key: (optional) The name of the entity field on which the source
+ *   value will be queried. If omitted, defaults to one of the following
+ *   depending on the destination field type:
+ *    - entity_reference: The entity label key.
+ *    - file: The uri field.
+ *    - image: The uri field.
+ * - operator: (optional) The comparison operator supported by entity query:
+ *   See \Drupal\Core\Entity\Query\QueryInterface::condition() for available
+ *   values. Defaults to '=' for scalar values and 'IN' for arrays.
+ * - bundle_key: (optional) The name of the bundle field on the entity type
+ *   being queried.
+ * - bundle: (optional) The value to query for the bundle - can be a string or
+ *   an array.
  * - access_check: (optional) Indicates if access to the entity for this user
  *   will be checked. Default is true.
+ * - ignore_case: (optional) Whether to ignore case in the query. Defaults to
+ *   false, meaning the query is case-sensitive by default. Works only with
+ *   strict operators: '=' and 'IN'.
+ * - destination_field: (optional) If specified, and if the plugin's source
+ *   value is an array, the result array's items will be themselves arrays of
+ *   the form [destination_field => ENTITY_ID].
  *
  * @codingStandardsIgnoreStart
  *
@@ -49,9 +70,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     bundle: tags
  *     entity_type: taxonomy_term
  *     ignore_case: true
+ *     operator: STARTS_WITH
  * @endcode
  *
  * @codingStandardsIgnoreEnd
+ *
+ * @see \Drupal\Core\Entity\Query\QueryInterface::condition()
  *
  * @MigrateProcessPlugin(
  *   id = "entity_lookup",
@@ -270,17 +294,22 @@ class EntityLookup extends ProcessPluginBase implements ContainerFactoryPluginIn
    */
   protected function query($value) {
     // Entity queries typically are case-insensitive. Therefore, we need to
-    // handle case sensitive filtering as a post-query step. By default, it
-    // filters case insensitive. Change to true if that is not the desired
+    // handle case-sensitive filtering as a post-query step. By default, it
+    // filters case-insensitive. Change to true if that is not the desired
     // outcome.
     $ignoreCase = !empty($this->configuration['ignore_case']) ?: FALSE;
-
+    $operator = !empty($this->configuration['operator']) ? $this->configuration['operator'] : '=';
     $multiple = is_array($value);
+
+    // Apply correct operator for multiple values.
+    if ($multiple && $operator === '=') {
+      $operator = 'IN';
+    }
 
     $query = $this->entityTypeManager->getStorage($this->lookupEntityType)
       ->getQuery()
       ->accessCheck($this->accessCheck)
-      ->condition($this->lookupValueKey, $value, $multiple ? 'IN' : NULL);
+      ->condition($this->lookupValueKey, $value, $operator);
     // Sqlite and possibly others returns data in a non-deterministic order.
     // Make it deterministic.
     if ($multiple) {
@@ -288,7 +317,7 @@ class EntityLookup extends ProcessPluginBase implements ContainerFactoryPluginIn
     }
 
     if ($this->lookupBundleKey) {
-      $query->condition($this->lookupBundleKey, $this->lookupBundle);
+      $query->condition($this->lookupBundleKey, (array) $this->lookupBundle, 'IN');
     }
     $results = $query->execute();
 
@@ -296,8 +325,8 @@ class EntityLookup extends ProcessPluginBase implements ContainerFactoryPluginIn
       return NULL;
     }
 
-    // By default do a case-sensitive comparison.
-    if (!$ignoreCase) {
+    // Do a case-sensitive comparison only for strict operators.
+    if (!$ignoreCase && in_array($operator, ['=', 'IN'], TRUE)) {
       // Returns the entity's identifier.
       foreach ($results as $k => $identifier) {
         $entity = $this->entityTypeManager->getStorage($this->lookupEntityType)->load($identifier);

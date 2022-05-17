@@ -34,6 +34,10 @@ class HtmlPurifierFilter extends FilterBase {
     else {
       $purifier_config = \HTMLPurifier_Config::createDefault();
     }
+
+    // Set Serializer path to the temporary directory so it can be written.
+    $purifier_config->set('Cache.SerializerPath', \Drupal::service('file_system')->getTempDirectory());
+
     $purifier = new \HTMLPurifier($purifier_config);
     $purified_text = $purifier->purify($text);
     return new FilterProcessResult($purified_text);
@@ -52,13 +56,18 @@ class HtmlPurifierFilter extends FilterBase {
 
     $settings = Yaml::decode($configuration);
     foreach ($settings as $namespace => $directives) {
-      if (is_array($directives)) {
-        foreach ($directives as $key => $value) {
-          $purifier_config->set("$namespace.$key", $value);
+
+      // Keep Cache managing out of the text formats scope.
+      if ($namespace !== 'Cache') {
+
+        if (is_array($directives)) {
+          foreach ($directives as $key => $value) {
+            $purifier_config->set("$namespace.$key", $value);
+          }
         }
-      }
-      else {
-        $this->configErrors[] = 'Invalid value for namespace $namespace, must be an array of directives.';
+        else {
+          $this->configErrors[] = 'Invalid value for namespace $namespace, must be an array of directives.';
+        }
       }
     }
 
@@ -72,7 +81,12 @@ class HtmlPurifierFilter extends FilterBase {
     if (empty($this->settings['htmlpurifier_configuration'])) {
       /* @var $purifier_config \HTMLPurifier_Config */
       $purifier_config = \HTMLPurifier_Config::createDefault();
-      $default_value = Yaml::encode($purifier_config->getAll());
+      $config_array = $purifier_config->getAll();
+
+      // Keep Cache managing out of the text formats scope.
+      unset($config_array['Cache']);
+
+      $default_value = Yaml::encode($config_array);
     }
     else {
       $default_value = $this->settings['htmlpurifier_configuration'];

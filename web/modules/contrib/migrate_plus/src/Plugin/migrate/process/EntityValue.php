@@ -20,7 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * specified. Optionally, the field property should be specified if it is not
  * the default of 'value'.
  *
- * For content entities, if a langcode is given, that translation is loaded.
+ * Available configuration keys:
+ * - entity_type: The entity type ID to query for.
+ * - field_name: The machine name of the field to be extracted from the loaded
+ *   entity.
+ * - langcode: (optional) The language code of entity translation. If given, the
+ *   entity translation is loaded. It can only be used with content entities.
  *
  * Example:
  * @code
@@ -29,9 +34,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     plugin: entity_value
  *     source: field_noderef/0/target_id
  *     entity_type: node
- *     langcode: en
+ *     langcode: es
  *     field_name: field_foo
  * @endcode
+ *
+ * In this example field_foo field value will be retrieved from Spanish
+ * translation of the loaded node.
  *
  * @MigrateProcessPlugin(
  *   id = "entity_value",
@@ -151,7 +159,7 @@ class EntityValue extends ProcessPluginBase implements ContainerFactoryPluginInt
       }
       else {
         if ($langcode) {
-          throw new \InvalidArgumentException('Langcode can only be used with content entities currently.');
+          throw new MigrateException('Langcode can only be used with content entities currently.');
         }
       }
       try {

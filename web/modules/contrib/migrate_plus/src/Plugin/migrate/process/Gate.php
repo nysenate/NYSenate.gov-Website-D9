@@ -84,21 +84,28 @@ class Gate extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (empty($this->configuration['valid_keys']) && !array_key_exists('valid_keys', $this->configuration)) {
-      throw new MigrateException('Gate plugin is missing valid_keys configuration.');
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    if (!array_key_exists('valid_keys', $configuration)) {
+      throw new \InvalidArgumentException('Gate plugin is missing valid_keys configuration.');
     }
-    if (empty($this->configuration['use_as_key']) && !array_key_exists('use_as_key', $this->configuration)) {
-      throw new MigrateException('Gate plugin is missing use_as_key configuration.');
+    if (!array_key_exists('use_as_key', $configuration)) {
+      throw new \InvalidArgumentException('Gate plugin is missing use_as_key configuration.');
     }
-    if (empty($this->configuration['key_direction']) && !array_key_exists('key_direction', $this->configuration)) {
-      throw new MigrateException('Gate plugin is missing key_direction configuration.');
+    if (!array_key_exists('key_direction', $configuration)) {
+      throw new \InvalidArgumentException('Gate plugin is missing key_direction configuration.');
     }
-    if (!in_array($this->configuration['key_direction'], ['lock', 'unlock'], TRUE)) {
-      throw new MigrateException('Gate plugin only accepts the following values for key_direction: lock and unlock.');
+    if (!in_array($configuration['key_direction'], ['lock', 'unlock'], TRUE)) {
+      throw new \InvalidArgumentException('Gate plugin only accepts the following values for key_direction: lock and unlock.');
     }
 
-    $valid_keys = is_array($this->configuration['valid_keys']) ? $this->configuration['valid_keys'] : [$this->configuration['valid_keys']];
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    $valid_keys = (array) $this->configuration['valid_keys'];
     $key = $row->get($this->configuration['use_as_key']);
     $key_is_valid = in_array($key, $valid_keys, TRUE);
     $key_direction = $this->configuration['key_direction'];

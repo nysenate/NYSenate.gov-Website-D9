@@ -48,7 +48,7 @@ Access to all functionality provided by this module is controlled with the
 
 On the *oEmbed Providers* configuration page
 (/admin/config/media/oembed-providers), global configuration is managed.
- 
+
 ## External Fetch
 
 By default, *Media* retrieves a JSON file with a listing of oEmbed providers
@@ -84,6 +84,14 @@ name of 'video'.
 A media source can be used for a given Media Type.
 
 Provider buckets are stored in configuration as config entities.
+
+## PROVIDER BUCKET MACHINE NAME CHARACTER LIMIT
+
+The machine name of provider buckets should be no longer than 14 characters.
+
+See https://www.drupal.org/project/oembed_providers/issues/3267697, which
+references the following core bug:
+https://www.drupal.org/project/drupal/issues/3276845.
 
 # CUSTOM PROVIDERS
 

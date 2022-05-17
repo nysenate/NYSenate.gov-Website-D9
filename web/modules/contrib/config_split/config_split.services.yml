@@ -1,0 +1,17 @@
+services:
+  config_split.cli:
+    class: Drupal\config_split\ConfigSplitCliService
+    arguments:
+      - "@plugin.manager.config_filter"
+      - "@config_filter.storage_factory"
+      - "@config.manager"
+      - "@config.storage"
+      - "@config.storage.sync"
+      - "@event_dispatcher"
+      - "@lock"
+      - "@config.typed"
+      - "@module_handler"
+      - "@module_installer"
+      - "@theme_handler"
+      - "@string_translation"
+      - "@extension.list.module"

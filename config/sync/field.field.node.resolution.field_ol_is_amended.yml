@@ -1,0 +1,23 @@
+uuid: 4149ad94-aebf-4587-8e3b-0301cb8aece8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ol_is_amended
+    - node.type.resolution
+id: node.resolution.field_ol_is_amended
+field_name: field_ol_is_amended
+entity_type: node
+bundle: resolution
+label: 'Is Amended'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

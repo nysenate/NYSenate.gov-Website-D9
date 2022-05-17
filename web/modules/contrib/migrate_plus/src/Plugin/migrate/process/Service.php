@@ -9,7 +9,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a plugin to use a callable from a service class.
  *
- * Example:
+ * Available configuration keys:
+ * - service: The ID of the service (e.g. file.mime_type.guesser).
+ * - method: The name of the service public method.
+ * All options for the callback plugin can be used, except for 'callable',
+ * which will be ignored.
+ *
+ * Since Drupal 9.2.0, it is possible to supply multiple arguments using
+ * unpack_source property. See: https://www.drupal.org/node/3205079
+ *
+ * Examples:
  *
  * @code
  * process:
@@ -20,8 +29,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     source: filename
  * @endcode
  *
- * All options for the callback plugin can be used, except for 'callable',
- * which will be ignored.
+ * @code
+ * source:
+ *   # plugin ...
+ *   constants:
+ *     langcode: en
+ *     slash: /
+ * process:
+ *   transliterated_value:
+ *     plugin: service
+ *     service: transliteration
+ *     method: transliterate
+ *     unpack_source: true
+ *     source:
+ *       - original_value
+ *       - constants/langcode
+ *       - constants/slash
+ * @endcode
  *
  * @see \Drupal\migrate\Plugin\migrate\process\Callback
  *

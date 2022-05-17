@@ -1,4 +1,5 @@
 {{ attach_library('nysenate_theme/nysenate-header') }}
+{{ attach_library('nysenate_theme/nysenate-actionbar') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
 <!-- Skiplink -->
@@ -99,40 +100,28 @@
 
           </nav>
         </div>
+      </div>
 
-        <div class="u-tablet-plus">
-          <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
-            <div>
-              <h2 class="c-site-search--title">{{ search.title }}</h2>
-              <div class="container-inline form-wrapper" id="edit-basic--2">
-                <div class="form-item form-type-textfield form-item-keys">
-                  <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys--2" name="keys" value="" size="50" maxlength="255">
-                </div>
-                <button class="c-site-search--btn" id="edit-submit--6" name="op" value="Search" type="submit">{{ search.title }}</button>
-                <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
-              </div><input type="hidden" name="form_build_id" value="form-gkuK188nles5x0ywuUfhqAHj75yMu5J5FTGzpm7vDdU">
-              <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
-            </div>
-          </form>
-        </div>
+      <div class="u-tablet-plus">
+        <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
+          <div>
+            <h2 class="c-site-search--title">{{ search.title }}</h2>
+            <div class="container-inline form-wrapper" id="edit-basic--2">
+              <div class="form-item form-type-textfield form-item-keys">
+                <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys--2" name="keys" value="" size="50" maxlength="255">
+              </div>
+              <button class="c-site-search--btn" id="edit-submit--6" name="op" value="Search" type="submit">{{ search.title }}</button>
+              <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
+            </div><input type="hidden" name="form_build_id" value="form-gkuK188nles5x0ywuUfhqAHj75yMu5J5FTGzpm7vDdU">
+            <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
+          </div>
+        </form>
       </div>
     </div>
 
-
-  </div>
-  <div class="container c-actionbar hidden">
-    <div class="c-actionbar--info">
-      <p class="c-actionbar--cta">Find your Senator and share your views on important issues.</p>
+    <div class="container">
+      {% include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' %}
     </div>
-    <span class="c-block--btn">
-      <a class="icon-before__find-senator" href="/registration/nojs/form/start/find-my-senator">find your senator</a>
-    </span>
-    <!-- <a href="/user/login?destination=" class="c-block-btn ctools-use-modal ctools-use-modal-processed" title="Start">find your senator</a> -->
+
   </div>
-
 </header>
-
-
-{# 
-<div style="height: 1000px; background-color: gray;"></div>
-#} 

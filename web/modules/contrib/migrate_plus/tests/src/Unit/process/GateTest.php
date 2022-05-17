@@ -155,11 +155,10 @@ class GateTest extends MigrateProcessTestCase {
    *
    * @dataProvider badConfigurationProvider
    */
-  public function testGateBadConfigration($configuration, $message): void {
-    $this->expectException(MigrateException::class);
+  public function testGateBadConfiguration($configuration, $message): void {
+    $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($message);
-    $plugin = new Gate($configuration, 'gate', []);
-    $plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destinationproperty');
+    new Gate($configuration, 'gate', []);
   }
 
   /**

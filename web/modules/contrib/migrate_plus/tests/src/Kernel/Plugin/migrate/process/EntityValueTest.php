@@ -3,10 +3,12 @@
 namespace Drupal\Tests\migrate_plus\Kernel\Plugin\migrate\process;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\node\Entity\Node;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests the entity_value plugin.
@@ -151,6 +153,31 @@ class EntityValueTest extends KernelTestBase {
   }
 
   /**
+   * Test the EntityLoad plugin failure.
+   *
+   * @covers ::transform
+   */
+  public function testEntityValueLangException() {
+    $config_entity = NodeType::create(['type' => 'page', 'name' => 'page']);
+    $config_entity->save();
+    $this->plugin = \Drupal::service('plugin.manager.migrate.process')
+      ->createInstance('entity_value', [
+        'entity_type' => 'node_type',
+        'langcode' => 'es',
+        'field_name' => 'type',
+      ]);
+
+    $executable = $this->prophesize(MigrateExecutableInterface::class)
+      ->reveal();
+    $row = new Row();
+
+    // Ensure that the entity is returned if it really exists.
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('Langcode can only be used with content entities currently.');
+    $this->plugin->transform([$config_entity->id()], $executable, $row, 'dummmy');
+  }
+
+  /**
    * Test the EntityLoad plugin throwing.
    *
    * @param mixed $config
@@ -161,7 +188,7 @@ class EntityValueTest extends KernelTestBase {
    */
   public function testEntityValueConfig($config) {
     $this->expectException(\InvalidArgumentException::class);
-    $plugin = \Drupal::service('plugin.manager.migrate.process')
+    \Drupal::service('plugin.manager.migrate.process')
       ->createInstance('entity_value', $config);
   }
 

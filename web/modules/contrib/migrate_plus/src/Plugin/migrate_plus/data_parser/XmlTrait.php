@@ -54,7 +54,7 @@ trait XmlTrait {
         '@libxmlerrormessage' => trim($error->message),
         '@libxmlerrorline' => $error->line,
         '@libxmlerrorcolumn' => $error->column,
-        '@libxmlerrorfile' => (($error->file)) ? $error->file : NULL,
+        '@libxmlerrorfile' => $error->file,
       ]
     );
   }

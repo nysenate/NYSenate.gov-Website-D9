@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.inline_entity
     - field.field.node.public_hearing.body
     - field.field.node.public_hearing.field_attachment
     - field.field.node.public_hearing.field_committee
@@ -21,10 +22,11 @@ dependencies:
     - node.type.public_hearing
   module:
     - address
+    - conditional_fields
     - datetime_range
     - field_group
+    - inline_entity_form
     - link
-    - media_library
     - path
     - scheduler
     - text
@@ -117,14 +119,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_attachment:
-    type: entity_reference_autocomplete
+    type: inline_entity_form_simple
     weight: 14
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_committee:
     type: entity_reference_autocomplete
@@ -156,7 +161,25 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        4a58fdad-46e2-4549-97ed-5e57b48e2166:
+          entity_type: node
+          bundle: public_hearing
+          dependee: field_event_place
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: online
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_event_place:
     type: options_select
     weight: 6
@@ -178,7 +201,25 @@ content:
     weight: 9
     region: content
     settings: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        82c9febc-7d78-448a-8a7c-7aaeb657a4fb:
+          entity_type: node
+          bundle: public_hearing
+          dependee: field_event_place
+          settings:
+            state: '!visible'
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: online
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_meeting_location:
     type: string_textfield
     weight: 8
@@ -222,11 +263,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_yt:
-    type: media_library_widget
+    type: inline_entity_form_simple
     weight: 10
     region: content
     settings:
-      media_types: {  }
+      form_mode: inline_entity
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   path:
     type: path

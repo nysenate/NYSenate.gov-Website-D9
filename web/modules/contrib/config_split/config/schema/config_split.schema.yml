@@ -1,0 +1,50 @@
+config_split.config_split.*:
+  type: config_entity
+  label: 'Configuration Split setting'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: label
+      label: 'Description'
+    weight:
+      type: integer
+      label: 'Weight'
+    status:
+      type: boolean
+      label: 'Active'
+    folder:
+      type: string
+      label: 'Folder'
+    module:
+      type: sequence
+      label: 'Filtered modules'
+      sequence:
+        type: integer
+        label: 'Weight'
+    theme:
+      type: sequence
+      label: 'Filtered themes'
+      sequence:
+        type: integer
+        label: 'Weight'
+    blacklist:
+      type: sequence
+      label: 'Filtered configuration'
+      sequence:
+        type: string
+    graylist:
+      type: sequence
+      label: 'Ignored configuration'
+      sequence:
+        type: string
+    graylist_dependents:
+      type: boolean
+      label: 'Include dependent configuration'
+    graylist_skip_equal:
+      type: boolean
+      label: 'Skip graylisted config without a change.'

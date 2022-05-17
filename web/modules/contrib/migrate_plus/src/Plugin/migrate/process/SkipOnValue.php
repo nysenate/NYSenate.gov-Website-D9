@@ -24,6 +24,9 @@ use Drupal\migrate\Row;
  *   configuration key value. Possible values:
  *   - row: Skips the entire row.
  *   - process: Prevents further processing of the input property
+ * - message: (optional) A message to be logged in the {migrate_message_*} table
+ *   for this row. Messages are only logged for the 'row' method. If not set,
+ *   nothing is logged in the message table.
  *
  * @codingStandardsIgnoreStart
  *
@@ -50,9 +53,11 @@ use Drupal\migrate\Row;
  *     value:
  *       - article
  *       - testimonial
+ *     message: 'Not an article nor a testimonial content type'
  * @endcode
  * The above example will skip processing any row for which the source row's
- * content type field is not "article" or "testimonial".
+ * content type field is not "article" or "testimonial", and log the message 'Not
+ * an article nor a testimonial content type' to the message table.
  *
  * @codingStandardsIgnoreEnd
  */
@@ -61,10 +66,35 @@ class SkipOnValue extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (empty($this->configuration['value']) && !array_key_exists('value', $this->configuration)) {
-      throw new MigrateException('Skip on value plugin is missing value configuration.');
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    if (empty($configuration['value']) && !array_key_exists('value', $configuration)) {
+      throw new \InvalidArgumentException('Skip on value plugin is missing value configuration.');
     }
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * Skips the current row when input value evaluates to a configured value.
+   *
+   * @param mixed $value
+   *   The input value.
+   * @param \Drupal\migrate\MigrateExecutableInterface $migrate_executable
+   *   The migration in which this process is being executed.
+   * @param \Drupal\migrate\Row $row
+   *   The row from the source to process.
+   * @param string $destination_property
+   *   The destination property currently worked on. This is only used together
+   *   with the $row above.
+   *
+   * @return mixed
+   *   The input value, $value, if it doesn't evaluate to a configured value.
+   *
+   * @throws \Drupal\migrate\MigrateSkipRowException
+   *   Thrown if the source property evaluates to a configured value and the
+   *   row should be skipped, records with STATUS_IGNORED status in the map.
+   */
+  public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    $message = !empty($this->configuration['message']) ? $this->configuration['message'] : '';
 
     if (is_array($this->configuration['value'])) {
       $value_in_array = FALSE;
@@ -75,24 +105,38 @@ class SkipOnValue extends ProcessPluginBase {
       }
 
       if (($not_equals && !$value_in_array) || (!$not_equals && $value_in_array)) {
-        throw new MigrateSkipRowException();
+        throw new MigrateSkipRowException($message);
       }
     }
     elseif ($this->compareValue($value, $this->configuration['value'], !isset($this->configuration['not_equals']))) {
-      throw new MigrateSkipRowException();
+      throw new MigrateSkipRowException($message);
     }
 
     return $value;
   }
 
   /**
-   * {@inheritdoc}
+   * Stops processing the current property when input value evaluates to a
+   * configured value.
+   *
+   * @param mixed $value
+   *   The input value.
+   * @param \Drupal\migrate\MigrateExecutableInterface $migrate_executable
+   *   The migration in which this process is being executed.
+   * @param \Drupal\migrate\Row $row
+   *   The row from the source to process.
+   * @param string $destination_property
+   *   The destination property currently worked on. This is only used together
+   *   with the $row above.
+   *
+   * @return mixed
+   *   The input value, $value, if it doesn't evaluate to a configured value.
+   *
+   * @throws \Drupal\migrate\MigrateSkipProcessException
+   *   Thrown if the source property evaluates to a configured value and rest
+   *   of the process should be skipped.
    */
   public function process($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (empty($this->configuration['value']) && !array_key_exists('value', $this->configuration)) {
-      throw new MigrateException('Skip on value plugin is missing value configuration.');
-    }
-
     if (is_array($this->configuration['value'])) {
       $value_in_array = FALSE;
       $not_equals = isset($this->configuration['not_equals']);

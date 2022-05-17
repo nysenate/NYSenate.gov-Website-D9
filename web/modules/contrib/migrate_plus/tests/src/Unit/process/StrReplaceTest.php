@@ -55,27 +55,23 @@ class StrReplaceTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test for MigrateException for "search" configuration.
+   * Test for InvalidArgumentException for "search" configuration.
    */
-  public function testSearchMigrateException(): void {
-    $value = 'vero eos et accusam et justo vero';
+  public function testSearchInvalidArgumentException(): void {
     $configuration['replace'] = 'that';
-    $plugin = new StrReplace($configuration, 'str_replace', []);
-    $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('"search" must be configured.');
-    $plugin->transform($value, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The "search" must be set.');
+    new StrReplace($configuration, 'str_replace', []);
   }
 
   /**
-   * Test for MigrateException for "replace" configuration.
+   * Test for InvalidArgumentException for "replace" configuration.
    */
-  public function testReplaceMigrateException(): void {
-    $value = 'vero eos et accusam et justo vero';
+  public function testReplaceInvalidArgumentException(): void {
     $configuration['search'] = 'et';
-    $plugin = new StrReplace($configuration, 'str_replace', []);
-    $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('"replace" must be configured.');
-    $plugin->transform($value, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The "replace" must be set.');
+    new StrReplace($configuration, 'str_replace', []);
   }
 
   /**

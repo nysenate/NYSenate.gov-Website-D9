@@ -4,13 +4,9 @@ services:
     parent: default_plugin_manager
     tags:
       - { name: config.filter }
-  config_filter.event_subscriber:
-    class: Drupal\config_filter\ConfigFilterEventSubscriber
-    arguments: ['@config_filter.storage_factory', '@config.storage.sync']
-    tags:
-      - { name: event_subscriber }
   config_filter.storage_factory:
     class: Drupal\config_filter\ConfigFilterStorageFactory
-    arguments: ['@config.storage.sync']
+    # The service config_filter.storage.original is set in the service provider depending on the drupal version.
+    arguments: ['@config_filter.storage.original']
     tags:
       - { name: service_collector, tag: 'config.filter', call: addConfigFilterManager }

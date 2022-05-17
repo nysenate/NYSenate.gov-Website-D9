@@ -1,0 +1,655 @@
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+/*-----------------------------
+/	CUSTOM NEW YORK SENATE (nysenate_theme) PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+.contrast_text {
+  color: #000; }
+
+.lgt-text {
+  color: #2b6a90; }
+
+.lgt-bg {
+  background-color: #2b6a90; }
+
+.med-text {
+  color: #175b81; }
+
+.med-bg {
+  background-color: #175b81; }
+
+.drk-text {
+  color: #004d71; }
+
+.drk-bg {
+  background-color: #004d71; }
+
+.link-text {
+  color: #cb8d37; }
+
+.accent-bg {
+  background-color: #1b5187; }
+
+.accent-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .nav-text {
+    color: #444; }
+    .nav-text:hover {
+      color: #2b6a90; }
+    .nav-text.active {
+      color: #2b6a90; } }
+
+.trad_blue .contrast_text {
+  color: #fff; }
+
+.trad_blue .lgt-text {
+  color: #1b5187; }
+
+.trad_blue .lgt-bg {
+  background-color: #1b5187; }
+
+.trad_blue .med-text {
+  color: #1d446b; }
+
+.trad_blue .med-bg {
+  background-color: #1d446b; }
+
+.trad_blue .drk-text {
+  color: #1c364e; }
+
+.trad_blue .drk-bg {
+  background-color: #1c364e; }
+
+.trad_blue .link-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .trad_blue .nav-text {
+    color: #444; }
+    .trad_blue .nav-text:hover {
+      color: #1b5187; }
+    .trad_blue .nav-text.active {
+      color: #1b5187; } }
+
+.cont_blue .contrast_text {
+  color: #000; }
+
+.cont_blue .lgt-text {
+  color: #04a9c5; }
+
+.cont_blue .lgt-bg {
+  background-color: #04a9c5; }
+
+.cont_blue .med-text {
+  color: #008ca6; }
+
+.cont_blue .med-bg {
+  background-color: #008ca6; }
+
+.cont_blue .drk-text {
+  color: #1f798f; }
+
+.cont_blue .drk-bg {
+  background-color: #1f798f; }
+
+.cont_blue .link-text {
+  color: #04a9c5; }
+
+@media screen and (min-width: 760px) {
+  .cont_blue .nav-text {
+    color: #444; }
+    .cont_blue .nav-text:hover {
+      color: #04a9c5; }
+    .cont_blue .nav-text.active {
+      color: #04a9c5; } }
+
+.purple .contrast_text {
+  color: #000; }
+
+.purple .lgt-text {
+  color: #90668f; }
+
+.purple .lgt-bg {
+  background-color: #90668f; }
+
+.purple .med-text {
+  color: #754775; }
+
+.purple .med-bg {
+  background-color: #754775; }
+
+.purple .drk-text {
+  color: #543457; }
+
+.purple .drk-bg {
+  background-color: #543457; }
+
+.purple .link-text {
+  color: #90668f; }
+
+.purple .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .purple .nav-text {
+    color: #444; }
+    .purple .nav-text:hover {
+      color: #90668f; }
+    .purple .nav-text.active {
+      color: #90668f; } }
+
+.trad_red .contrast_text {
+  color: #fff; }
+
+.trad_red .lgt-text {
+  color: #87002f; }
+
+.trad_red .lgt-bg {
+  background-color: #87002f; }
+
+.trad_red .med-text {
+  color: #6e0026; }
+
+.trad_red .med-bg {
+  background-color: #6e0026; }
+
+.trad_red .drk-text {
+  color: #500019; }
+
+.trad_red .drk-bg {
+  background-color: #500019; }
+
+.trad_red .link-text {
+  color: #87002f; }
+
+.trad_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_red .nav-text {
+    color: #444; }
+    .trad_red .nav-text:hover {
+      color: #87002f; }
+    .trad_red .nav-text.active {
+      color: #87002f; } }
+
+.cont_red .contrast_text {
+  color: #fff; }
+
+.cont_red .lgt-text {
+  color: #c62526; }
+
+.cont_red .lgt-bg {
+  background-color: #c62526; }
+
+.cont_red .med-text {
+  color: #bb0623; }
+
+.cont_red .med-bg {
+  background-color: #bb0623; }
+
+.cont_red .drk-text {
+  color: #a00101; }
+
+.cont_red .drk-bg {
+  background-color: #a00101; }
+
+.cont_red .link-text {
+  color: #c62526; }
+
+.cont_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_red .nav-text {
+    color: #444; }
+    .cont_red .nav-text:hover {
+      color: #c62526; }
+    .cont_red .nav-text.active {
+      color: #c62526; } }
+
+.orange .contrast_text {
+  color: #000; }
+
+.orange .lgt-text {
+  color: #f0673d; }
+
+.orange .lgt-bg {
+  background-color: #f0673d; }
+
+.orange .med-text {
+  color: #ed4b1c; }
+
+.orange .med-bg {
+  background-color: #ed4b1c; }
+
+.orange .drk-text {
+  color: #c84123; }
+
+.orange .drk-bg {
+  background-color: #c84123; }
+
+.orange .link-text {
+  color: #f0673d; }
+
+.orange .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .orange .nav-text {
+    color: #444; }
+    .orange .nav-text:hover {
+      color: #f0673d; }
+    .orange .nav-text.active {
+      color: #f0673d; } }
+
+.trad_green .contrast_text {
+  color: #000; }
+
+.trad_green .lgt-text {
+  color: #60a35f; }
+
+.trad_green .lgt-bg {
+  background-color: #60a35f; }
+
+.trad_green .med-text {
+  color: #4d894f; }
+
+.trad_green .med-bg {
+  background-color: #4d894f; }
+
+.trad_green .drk-text {
+  color: #416837; }
+
+.trad_green .drk-bg {
+  background-color: #416837; }
+
+.trad_green .link-text {
+  color: #60a35f; }
+
+.trad_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_green .nav-text {
+    color: #444; }
+    .trad_green .nav-text:hover {
+      color: #60a35f; }
+    .trad_green .nav-text.active {
+      color: #60a35f; } }
+
+.cont_green .contrast_text {
+  color: #000; }
+
+.cont_green .lgt-text {
+  color: #65c5b6; }
+
+.cont_green .lgt-bg {
+  background-color: #65c5b6; }
+
+.cont_green .med-text {
+  color: #479e93; }
+
+.cont_green .med-bg {
+  background-color: #479e93; }
+
+.cont_green .drk-text {
+  color: #378479; }
+
+.cont_green .drk-bg {
+  background-color: #378479; }
+
+.cont_green .link-text {
+  color: #65c5b6; }
+
+.cont_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_green .nav-text {
+    color: #444; }
+    .cont_green .nav-text:hover {
+      color: #65c5b6; }
+    .cont_green .nav-text.active {
+      color: #65c5b6; } }
+
+.inactive-pallette .contrast_text {
+  color: #000; }
+
+.inactive-pallette .lgt-text {
+  color: #1b5187; }
+
+.inactive-pallette .lgt-bg {
+  background-color: #b2b2b2; }
+
+.inactive-pallette .med-text {
+  color: #999999; }
+
+.inactive-pallette .med-bg {
+  background-color: #999999; }
+
+.inactive-pallette .drk-text {
+  color: #808080; }
+
+.inactive-pallette .drk-bg {
+  background-color: #808080; }
+
+.inactive-pallette .link-text {
+  color: #1b5187; }
+
+.inactive-pallette .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .inactive-pallette .nav-text {
+    color: #444; }
+    .inactive-pallette .nav-text:hover {
+      color: #1b5187; }
+    .inactive-pallette .nav-text.active {
+      color: #1b5187; } }
+
+/*---------------------------
+/ WIDTHS for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+strong {
+  font-family: "Adelle Bold", serif; }
+
+.font-secondary {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif; }
+  .font-secondary strong {
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+
+.timeline-Widget {
+  margin: 0 auto; }
+
+.timeline-InformationCircle {
+  right: 20px !important;
+  top: 50% !important; }
+
+.TweetAuthor-name,
+.TweetAuthor-screenName,
+.timeline-Tweet-timestamp,
+.timeline-Tweet-metadata {
+  font-family: "Proxima Nova Regular" !important; }
+
+.timeline-Header {
+  padding: 20px 20px 0 !important;
+  letter-spacing: 0.05em !important; }
+  .timeline-Header .timeline-Header-title {
+    font-family: "Proxima Nova Regular" !important;
+    font-size: 19px !important;
+    color: #666666 !important; }
+  .timeline-Header .timeline-Header-byline {
+    font-family: "Proxima Nova SemiBold" !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    color: #cb8d37 !important; }
+
+.timeline-Body {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 15px 20px 20px !important;
+  background-color: #eeeeee !important;
+  border: 0 !important; }
+  .timeline-Body img {
+    display: inline; }
+
+.timeline-Header {
+  background-color: #eeeeee !important; }
+
+.timeline-TweetList-tweet {
+  border: 0 !important; }
+
+.timeline-Tweet {
+  overflow: hidden !important;
+  padding: 20px 0 20px !important;
+  border-top: 1px solid #aaaaaa !important; }
+  .timeline-Tweet .timeline-Tweet-text {
+    font-family: "Adelle Light" !important;
+    font-size: 18px !important;
+    color: #888888 !important;
+    line-height: 1.625 !important;
+    white-space: inherit !important; }
+    .timeline-Tweet .timeline-Tweet-text a {
+      color: #444444 !important; }
+  .timeline-Tweet:hover {
+    background-color: #eeeeee !important; }
+
+@media screen and (min-width: 760px) {
+  .timeline-Body {
+    padding: 15px 40px 5px !important; }
+  .timeline-Header {
+    padding: 20px 40px 0 !important; }
+  .timeline-InformationCircle {
+    right: 40px !important; }
+  .timeline-Tweet {
+    padding: 40px 0 !important; }
+    .timeline-Tweet .timeline-Tweet-text {
+      font-size: 22px !important; }
+  .timeline-TweetList-tweet {
+    width: 50% !important; }
+    .timeline-TweetList-tweet:nth-child(odd) {
+      float: left !important;
+      clear: left !important; }
+      .timeline-TweetList-tweet:nth-child(odd) .timeline-Tweet {
+        padding-right: 5% !important; }
+    .timeline-TweetList-tweet:nth-child(even) {
+      float: right !important; }
+      .timeline-TweetList-tweet:nth-child(even) .timeline-Tweet {
+        padding-left: 5% !important; } }
+
+.nyesenate-twitter-block {
+  margin-bottom: 40px; }
+  .nyesenate-twitter-block .c-container--title {
+    padding: 20px 0 30px;
+    border-top: 1px solid #aaaaaa;
+    letter-spacing: 0.05em; }
+  .nyesenate-twitter-block .l-tweets {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    background-color: #eeeeee; }
+  .nyesenate-twitter-block .l-twitter-user {
+    padding-bottom: 20px; }
+  .nyesenate-twitter-block .c-twitter--logo {
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
+    height: 60px; }
+    .nyesenate-twitter-block .c-twitter--logo > img {
+      background-color: transparent; }
+  .nyesenate-twitter-block .c-twitter-user--info {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 20px; }
+    .nyesenate-twitter-block .c-twitter-user--info p {
+      font-size: 12px;
+      line-height: 1; }
+  .nyesenate-twitter-block .c-twitter-user--name {
+    font-family: "Proxima Nova Regular";
+    font-size: 19px;
+    color: #666666; }
+  .nyesenate-twitter-block .c-twitter-user--link {
+    font-family: "Proxima Nova SemiBold";
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #cb8d37; }
+  .nyesenate-twitter-block .c-twitter-user--follow {
+    display: block;
+    margin: 20px 0 0 0;
+    padding: 7px 0;
+    border: 1px solid #aaaaaa;
+    width: 75px;
+    background-color: #fff;
+    text-align: center;
+    color: #cb8d37;
+    font-size: 12px;
+    line-height: 1;
+    font-family: "Proxima Nova SemiBold";
+    text-transform: uppercase; }
+  .nyesenate-twitter-block .c-twitter-block {
+    overflow: hidden;
+    padding: 20px 0 20px;
+    border-top: 1px solid #aaaaaa; }
+    .nyesenate-twitter-block .c-twitter-block .c-tweet {
+      font-family: "Adelle Light";
+      font-size: 18px;
+      color: #888888;
+      margin-bottom: 30px; }
+      .nyesenate-twitter-block .c-twitter-block .c-tweet a {
+        color: #444444; }
+    .nyesenate-twitter-block .c-twitter-block .c-timestamp {
+      display: block;
+      float: left;
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+      color: #888888; }
+      .nyesenate-twitter-block .c-twitter-block .c-timestamp em {
+        font-style: normal; }
+    .nyesenate-twitter-block .c-twitter-block .c-web_intents {
+      position: relative;
+      display: block;
+      float: right;
+      margin-top: -6px; }
+      .nyesenate-twitter-block .c-twitter-block .c-web_intents span {
+        display: inline-block; }
+      .nyesenate-twitter-block .c-twitter-block .c-web_intents a {
+        display: block;
+        position: relative;
+        padding: 0;
+        height: 28px;
+        width: 35px;
+        color: #888888; }
+        .nyesenate-twitter-block .c-twitter-block .c-web_intents a:after {
+          padding: 0;
+          font-size: 28px; }
+        .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/tweet"] {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          padding-top: 1em;
+          text-indent: -99999px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale; }
+          .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/tweet"]:after {
+            content: "\38";
+            text-indent: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: "senate_icons";
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            padding-left: 3px; }
+        .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/retweet"] {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          padding-top: 1em;
+          text-indent: -99999px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale; }
+          .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/retweet"]:after {
+            content: "\39";
+            text-indent: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: "senate_icons";
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            padding-left: 3px; }
+        .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/favorite"] {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          padding-top: 1em;
+          text-indent: -99999px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale; }
+          .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/favorite"]:after {
+            content: "\37";
+            text-indent: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: "senate_icons";
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            padding-left: 3px; }
+        .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/favorite"], .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/retweet"], .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/tweet"] {
+          padding: 0 5px; }
+          .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/favorite"]:after, .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/retweet"]:after, .nyesenate-twitter-block .c-twitter-block .c-web_intents a[href*="intent/tweet"]:after {
+            top: -6px;
+            left: 5px; }
+  .nyesenate-twitter-block .last .c-twitter-block {
+    padding-bottom: 0; }
+  @media screen and (min-width: 760px) {
+    .nyesenate-twitter-block .c-container--title {
+      border: none;
+      padding: 0 0 15px 0; }
+    .nyesenate-twitter-block .l-tweets {
+      padding: 35px 40px 5px; }
+    .nyesenate-twitter-block .l-twitter-user {
+      position: relative;
+      margin-bottom: -1px;
+      border-bottom: 1px solid #aaaaaa; }
+    .nyesenate-twitter-block .c-twitter-user--follow {
+      position: absolute;
+      top: -25px;
+      left: auto;
+      right: 0;
+      bottom: 0;
+      height: 28px;
+      margin: auto; }
+    .nyesenate-twitter-block .c-twitter-block,
+    .nyesenate-twitter-block .last .c-twitter-block {
+      padding: 40px 0;
+      border-top: 1px solid #aaaaaa; }
+      .nyesenate-twitter-block .c-twitter-block .c-tweet,
+      .nyesenate-twitter-block .last .c-twitter-block .c-tweet {
+        font-size: 22px; }
+    .nyesenate-twitter-block .u-odd,
+    .nyesenate-twitter-block .u-even {
+      width: 50%; }
+    .nyesenate-twitter-block .u-odd {
+      float: left;
+      clear: left;
+      padding-right: 5%; }
+    .nyesenate-twitter-block .u-even {
+      float: right;
+      padding-left: 5%; } }

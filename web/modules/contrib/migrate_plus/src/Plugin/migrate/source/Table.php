@@ -3,7 +3,7 @@
 namespace Drupal\migrate_plus\Plugin\migrate\source;
 
 use Drupal\Core\State\StateInterface;
-use Drupal\migrate\MigrateException;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 
@@ -12,10 +12,10 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *
  * Available configuration keys:
  * - table_name: The base table name.
- * - id_fields: Fields used by migrate to identify table rows uniquely.
- * At least one field is required.
- * - fields: (optional) An indexed array of columns present in the specified table.
- * Documents the field names of data provided by the source table.
+ * - id_fields: Fields used by migrate to identify table rows uniquely. At least
+ *   one field is required.
+ * - fields: (optional) An indexed array of columns present in the source table.
+ *   Leave empty to retrieve all columns.
  *
  * Examples:
  *
@@ -33,8 +33,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *       hex: hex
  * @endcode
  *
- * In this example color data is retrieved from the source
- * table.
+ * In this example color data is retrieved from the source table.
  *
  * @code
  *   source:
@@ -62,8 +61,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *       referer: referer
  * @endcode
  *
- * In this example shows how to retrieve data from autoban source
- * table.
+ * In this example shows how to retrieve data from autoban source table.
  *
  * For additional configuration keys, refer to the parent classes.
  *
@@ -107,6 +105,18 @@ class Table extends SqlBase {
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state) {
+    if (empty($configuration['table_name'])) {
+      throw new \InvalidArgumentException('Table plugin is missing table_name property configuration.');
+    }
+    if (!array_key_exists('id_fields', $configuration)) {
+      throw new \InvalidArgumentException('Table plugin is missing id_fields property configuration.');
+    }
+    if (!is_array($configuration['id_fields'])) {
+      throw new \InvalidArgumentException('Table plugin configuration property id_fields must be an array.');
+    }
+    if (array_key_exists('fields', $configuration) and !is_array($configuration['fields'])) {
+      throw new \InvalidArgumentException('Table plugin configuration property fields must be an array.');
+    }
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state);
     $this->tableName = $configuration['table_name'];
     // Insert alias in id_fields.
@@ -135,10 +145,17 @@ class Table extends SqlBase {
    * {@inheritdoc}
    */
   public function getIds() {
-    if (empty($this->idFields)) {
-      throw new MigrateException('Id fields are required for a table source');
-    }
     return $this->idFields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkRequirements() {
+    if (!$this->getDatabase()->schema()->tableExists($this->tableName)) {
+      throw new RequirementsException("Source database table '{$this->tableName}' does not exist", ['source_table' => $this->tableName]);
+    }
+    parent::checkRequirements();
   }
 
 }

@@ -16,6 +16,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Render\Element;
 use Drupal\inline_entity_form\InlineFormInterface;
+use Drupal\inline_entity_form\Plugin\Field\FieldWidget\InlineEntityFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -242,13 +243,32 @@ class EntityInlineForm implements InlineFormInterface {
    * {@inheritdoc}
    */
   public function entityFormValidate(array &$entity_form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $entity_form['#entity'];
+    $this->buildEntity($entity_form, $entity, $form_state);
+
+    // Skip validation if the entity is empty.
+    if ($this->isEmptyEntity($entity, $entity_form['#form_mode'])) {
+      // Make sure any previously set errors related to this entity are
+      // removed (such as errors caused by the '#required' property on the
+      // form element).
+      // @see \Drupal\Core\Form\FormValidator::doValidateForm()
+      $errors = $form_state->getErrors();
+      $form_state->clearErrors();
+      $key_prefix = implode('][', $entity_form['#parents']);
+      foreach ($errors as $key => $message) {
+        if (strpos($key, $key_prefix) !== 0) {
+          $form_state->setErrorByName($key, $message);
+        }
+      }
+
+      return;
+    }
+
     // Perform entity validation only if the inline form was submitted,
     // skipping other requests such as file uploads.
     $triggering_element = $form_state->getTriggeringElement();
     if (!empty($triggering_element['#ief_submit_trigger'])) {
-      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-      $entity = $entity_form['#entity'];
-      $this->buildEntity($entity_form, $entity, $form_state);
       $form_display = $this->getFormDisplay($entity, $entity_form['#form_mode']);
       $form_display->validateFormValues($entity, $entity_form, $form_state);
       $entity->setValidationRequired(FALSE);
@@ -353,6 +373,37 @@ class EntityInlineForm implements InlineFormInterface {
    */
   protected function getFormDisplay(ContentEntityInterface $entity, $form_mode) {
     return EntityFormDisplay::collectRenderDisplay($entity, $form_mode);
+  }
+
+  /**
+   * Checks if an entity is empty.
+   *
+   * With empty we mean if the entity, created via a specific form mode, has a
+   * value for at least 1 of the fields provided by that form mode.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param string $form_mode
+   *   The form mode.
+   *
+   * @return bool
+   *   TRUE if the entity is empty, FALSE otherwise.
+   */
+  public function isEmptyEntity(EntityInterface $entity, $form_mode) {
+    $form_display = $this->getFormDisplay($entity, $form_mode);
+
+    foreach ($entity as $name => $items) {
+      if ($widget = $form_display->getRenderer($name)) {
+        if (!$entity->get($name)->isEmpty()) {
+          // Take nested inline entity forms into account.
+          return $widget instanceof InlineEntityFormBase
+            ? $this->isEmptyEntity($entity->get($name)->first()->entity, $widget->getSetting('form_mode'))
+            : FALSE;
+        }
+      }
+    }
+
+    return TRUE;
   }
 
 }

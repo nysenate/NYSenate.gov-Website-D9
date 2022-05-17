@@ -4,7 +4,17 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.petition.body
+    - field.field.node.petition.field_article_author
+    - field.field.node.petition.field_date
+    - field.field.node.petition.field_expiration_date
+    - field.field.node.petition.field_featured
+    - field.field.node.petition.field_image_main
+    - field.field.node.petition.field_issues
+    - field.field.node.petition.field_last_notified
     - field.field.node.petition.field_senator_multiref
+    - field.field.node.petition.field_subhead
+    - field.field.node.petition.field_title_stub
     - node.type.petition
   module:
     - user
@@ -19,6 +29,16 @@ content:
     weight: 100
     region: content
 hidden:
+  body: true
+  field_article_author: true
+  field_date: true
+  field_expiration_date: true
+  field_featured: true
+  field_image_main: true
+  field_issues: true
+  field_last_notified: true
   field_senator_multiref: true
+  field_subhead: true
+  field_title_stub: true
   langcode: true
   search_api_excerpt: true

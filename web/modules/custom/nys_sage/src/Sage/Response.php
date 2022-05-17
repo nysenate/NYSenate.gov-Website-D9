@@ -37,14 +37,14 @@ abstract class Response {
    * Getter for the response.
    */
   public function getResponse(): object {
-    return $this->response;
+    return $this->response ?? ((object) ['status' => 'JSON_ENCODING_ERROR']);
   }
 
   /**
    * Setter for the response.
    */
-  public function setResponse(object $response = NULL): void {
-    $this->response = $response;
+  public function setResponse($response = NULL): void {
+    $this->response = $response ?? ((object) ['status' => 'JSON_ENCODING_ERROR']);
     $this->init();
   }
 

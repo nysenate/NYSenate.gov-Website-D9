@@ -103,7 +103,7 @@ class SageLogger {
           ->execute();
       }
       else {
-        $this->db->truncate('nys_sage_log');
+        $this->db->truncate('nys_sage_log')->execute();
       }
     }
     catch (\Throwable $e) {
@@ -161,6 +161,13 @@ class SageLogger {
         return !is_null($v);
       }
     );
+  }
+
+  /**
+   * Truncates the SAGE logging table.
+   */
+  public static function truncate() {
+    \Drupal::getContainer()->get('sage_logger')->expireEntries();
   }
 
 }

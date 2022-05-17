@@ -7,6 +7,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\nys_sage\Logger\SageLogger;
 
 /**
  * Admin config form for nys_sage.
@@ -101,7 +102,7 @@ class ConfigForm extends ConfigFormBase {
     $form['actions']['submit_truncate'] = [
       '#type' => 'submit',
       '#value' => 'Save and Truncate',
-      '#submit' => ['truncate_table', 'system_settings_form_submit'],
+      '#submit' => ['::truncateLog', '::submitForm'],
       '#weight' => 10,
     ];
 
@@ -125,6 +126,13 @@ class ConfigForm extends ConfigFormBase {
       ->save();
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Submit handler for truncating the SAGE logging table.
+   */
+  public function truncateLog() {
+    SageLogger::truncate();
   }
 
   /**

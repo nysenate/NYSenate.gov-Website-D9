@@ -17,22 +17,9 @@
   font-family: "Proxima Nova Regular" !important;
 }
 
-.timeline-Header {
-  padding: 20px 20px 0 !important;
-  letter-spacing: 0.05em !important;
-
-  .timeline-Header-title {
-    font-family: "Proxima Nova Regular" !important;
-    font-size: 19px !important;
-    color: $grey03 !important;
-  }
-
-  .timeline-Header-byline {
-    font-family: "Proxima Nova SemiBold" !important;
-    font-size: 12px !important;
-    text-transform: uppercase !important;
-    color: $orange01 !important;
-  }
+.timeline-Header,
+.timeline-Footer {
+  display: none !important;
 }
 
 .timeline-Body {
@@ -44,10 +31,6 @@
   img {
     display: inline;
   }
-}
-
-.timeline-Header {
-  background-color: $grey06 !important;
 }
 
 .timeline-TweetList-tweet {
@@ -79,10 +62,6 @@
 @media #{$tablet} {
   .timeline-Body {
     padding: 15px 40px 5px !important;
-  }
-
-  .timeline-Header {
-    padding: 20px 40px 0 !important;
   }
 
   .timeline-InformationCircle {
@@ -138,7 +117,11 @@
 
   // header area
   .l-twitter-user {
-    padding-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $grey06;
+    padding: 35px 40px 0;
   }
 
   .c-twitter--logo {
@@ -146,6 +129,7 @@
     vertical-align: middle;
     width: 60px;
     height: 60px;
+
     > img {
       background-color: transparent;
     }
@@ -166,29 +150,37 @@
     font-family: "Proxima Nova Regular";
     font-size: 19px;
     color: $grey03;
+    margin: 0;
   }
 
   .c-twitter-user--link {
-    font-family: "Proxima Nova SemiBold";
-    font-size: 12px;
-    text-transform: uppercase;
-    color: $orange01;
+    margin: 0;
+
+    a {
+      color: $orange01;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
   }
 
   .c-twitter-user--follow {
     display: block;
     margin: 20px 0 0 0;
-    padding: 7px 0;
     border: 1px solid $grey05;
     width: 75px;
     background-color: #fff;
-
     text-align: center;
-    color: $orange01;
-    font-size: 12px;
-    line-height: 1;
-    font-family: "Proxima Nova SemiBold";
-    text-transform: uppercase;
+
+    a {
+      color: $orange01;
+      font-size: 12px;
+      line-height: 1;
+      font-family: "Proxima Nova SemiBold";
+      text-transform: uppercase;
+      text-decoration: none;
+    }
   }
 
   // individual block styling
@@ -346,21 +338,8 @@
       padding: 35px 40px 5px;
     }
 
-    // header area
-    .l-twitter-user {
-      position: relative;
-      margin-bottom: -1px;
-      border-bottom: 1px solid $grey05;
-    }
-
     .c-twitter-user--follow {
-      position: absolute;
-      top: -25px;
-      left: auto;
-      right: 0;
-      bottom: 0;
-      height: 28px;
-      margin: auto;
+      margin: 0;
     }
 
     .c-twitter-block,

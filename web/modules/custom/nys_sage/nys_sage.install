@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Install file for nys_sage module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_sage_schema(): array {
+  return [
+    'nys_sage_log' => [
+      'description' => 'Store for raw returns from calls to SAGE API.',
+      'fields' => [
+        'sage_id' => [
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'description' => 'Primary key.',
+        ],
+        'uid' => [
+          'description' => 'User ID, if authenticated.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'status' => [
+          'type' => 'varchar',
+          'length' => 35,
+          'description' => 'The "status" field from the SAGE response.',
+          'not null' => TRUE,
+          'default' => 'NO_STATUS',
+        ],
+        'timestamp' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'description' => "Timestamp of the call.",
+        ],
+        'method' => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+          'description' => 'The group and method called.',
+        ],
+        'params_rcvd' => [
+          'type' => 'text',
+          'description' => 'JSON-encoded params received from the caller.',
+        ],
+        'environ' => [
+          'type' => 'text',
+          'description' => 'JSON-encoded array of environment variables.',
+        ],
+        'args' => [
+          'type' => 'text',
+          'description' => 'Query string parameters actually sent.',
+        ],
+        'response' => [
+          'type' => 'text',
+          'size' => 'big',
+          'description' => 'Full response from API call.',
+        ],
+        'short_response' => [
+          'type' => 'text',
+          'description' => 'Selected data points from the response, JSON encoded.',
+        ],
+      ],
+      'primary key' => ['sage_id'],
+    ],
+  ];
+}

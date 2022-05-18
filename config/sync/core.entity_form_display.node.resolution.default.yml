@@ -20,6 +20,7 @@ dependencies:
     - field.field.node.resolution.field_ol_is_amended
     - field.field.node.resolution.field_ol_law_section
     - field.field.node.resolution.field_ol_memo
+    - field.field.node.resolution.field_ol_multi_sponsor_names
     - field.field.node.resolution.field_ol_multi_sponsors
     - field.field.node.resolution.field_ol_name
     - field.field.node.resolution.field_ol_previous_versions
@@ -43,7 +44,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 29
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -152,7 +153,7 @@ content:
     third_party_settings: {  }
   field_ol_has_same_as:
     type: boolean_checkbox
-    weight: 26
+    weight: 27
     region: content
     settings:
       display_label: true
@@ -175,6 +176,14 @@ content:
   field_ol_memo:
     type: string_textarea
     weight: 21
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_multi_sponsor_names:
+    type: string_textarea
+    weight: 26
     region: content
     settings:
       rows: 5
@@ -218,7 +227,7 @@ content:
     third_party_settings: {  }
   field_ol_same_as:
     type: string_textarea
-    weight: 27
+    weight: 28
     region: content
     settings:
       rows: 5
@@ -259,19 +268,19 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 30
+    weight: 31
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 31
+    weight: 32
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 34
+    weight: 35
     region: content
     settings:
       display_label: true
@@ -286,7 +295,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 28
+    weight: 29
     region: content
     settings:
       match_operator: CONTAINS
@@ -296,12 +305,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 32
+    weight: 33
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 33
+    weight: 34
     region: content
     settings: {  }
     third_party_settings: {  }

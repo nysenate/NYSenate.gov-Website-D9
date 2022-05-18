@@ -40,7 +40,10 @@
     {{ title_prefix }}
     {{ title_suffix }}
     {% block content %}
-        {{ content }}
+        {{ content.follow_link }}
+        {{ content.profile_image }}
+        {{ content.account_link }}
+        {{ content.block }}
     {% endblock %}
   </div>
 {% endif %}

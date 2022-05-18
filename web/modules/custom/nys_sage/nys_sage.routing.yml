@@ -1,0 +1,15 @@
+nys_sage.config:
+  path: /admin/config/nys_sage
+  defaults:
+    _form: '\Drupal\nys_sage\Form\ConfigForm'
+    _title: "NYS SAGE API Configuration"
+  requirements:
+    _permission: 'administer site configuration'
+
+nys_sage.test_api:
+  path: /admin/config/nys_sage/call
+  defaults:
+    _form: '\Drupal\nys_sage\Form\TestForm'
+    _title: "NYS SAGE API Test Call"
+  requirements:
+    _permission: 'administer site configuration'

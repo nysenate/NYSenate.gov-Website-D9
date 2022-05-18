@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Module file for nys_sage.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function nys_sage_cron() {
+  Drupal::service('sage_logger')->cron();
+}

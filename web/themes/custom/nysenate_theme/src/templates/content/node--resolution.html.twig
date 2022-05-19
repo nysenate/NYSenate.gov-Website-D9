@@ -1,0 +1,161 @@
+{{ attach_library('nysenate_theme/resolution-page') }}
+
+<!-- RESOLUTION TEMPLATE -->
+  <div class="{{ classes }} clearfix" {{ attributes }}> <div class="c-block c-detail--header c-detail--header__bill">
+    <h2 class="nys-title">{{ title }}</h2>
+    <div class="c-bill--flags">
+      <span class="c-bill--flag">{{ last_status }}</span>
+    </div>
+  </div>
+
+  <div class="c-detail--header-meta">
+    <p class="c-detail--descript">
+      {{ field_ol_name }}
+    </p>
+    <div class="c-detail--related">
+      {{ content.field_issues }}
+    </div>
+    <a href="#" class="c-detail--download" target="_blank">download pdf</a>
+  </div>
+
+  <div class="c-detail--social">
+    <h3 class="c-detail--subhead">share this resolution</h3>
+    <ul>
+      <li><a target="_blank" href="https://www.facebook.com" class="c-detail--social-item facebook">facebook</a></li>
+      <li><a target="_blank" href="https://twitter.com" class="c-detail--social-item twitter">twitter</a></li>
+      <li><a href="mailto:?&subject=From NYSenate.gov:" class="c-detail--social-item email">email</a></li>
+    </ul>
+  </div>
+
+  <div class="c-block">
+    {% if content.field_image_main %}
+      <div class="c-block c-block--img">
+        {{ content.field_image_main }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="c-block c-detail--sponsors">
+    {% if sponsored_by %}
+      {{ sponsored_by }}
+    {% elseif sponsor_block %}
+      {{ sponsor_block }}
+    {% endif %}
+  </div>
+  <!-- .c-block -->
+
+  <div class="c-block c-sponsor-quote">
+    <h3 class="c-sponsor-quote--title">sponsor's position</h3>
+    <p class="c-sponsor-quote--text">{{ content.field_featured_quote }}</p>
+
+    <div class="c-sponsor">
+      {{ content.field_ol_sponsor['#children'] }}
+    </div>
+    <button class="js-quote-toggle c-block--btn c-block--btn-toggle">close</button>
+    <div class="c-social">
+      <ul class="c-social--list">
+        <li>
+          <a target="_blank" href="https://www.facebook.com/" class="icon-replace__facebook">facebook</a>
+        </li>
+        <li>
+          <a target="_blank" href="http://twitter.com/" class="icon-replace__twitter">twitter</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- sponsor quote -->
+
+  <!-- resolution details -->
+  <div class="c-block c-detail--writeup-wrapper">
+    <h3 class="c-detail--subhead">text</h3>
+    <div class="c-detail--writeup">
+      <h3 class="">{{ title }}</h3>
+      {{ field_ol_full_text }}
+    </div>
+  </div>
+
+
+  <div class="c-block c-detail--actions">
+    <div class="c-detail--section-title">
+      <h3 class="c-detail--subhead">actions</h3>
+    </div>
+    <ul class="c-action--items">
+      {% for status in statuses %}
+        <li>
+          <span class="c-action--date">Status Date</span>
+          <ul>
+            <li class="c-action--item">Status Text</li>
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <!-- actions -->
+
+  <div class="c-block c-bill--details">
+    <h3 class="c-detail--subhead c-detail--section-title">Resolution Details</h3>
+    <dl>
+      {% if same_as %}
+        <dt>See Assembly Version of this Bill:</dt>
+        {% for key, item in same_as %}
+          <dd>
+            <a href="/legislation/resolutions/">{{ same_as[key].printNo }}
+              {% if not loop.first %},
+              {% endif %}
+            </a>
+          </dd>
+        {% endfor %}
+      {% endif %}
+
+      {% if amended_versions %}
+        <dt>Versions:</dt>
+        {{ amended_versions}}
+      {% endif %}
+
+      {% if field_ol_latest_status_committee %}
+        <dt>Committee:</dt>
+        <dd>
+          <a href="#">
+            {{ field_ol_latest_status_committee[0]['value'] }}
+          </a>
+        </dd>
+      {% endif %}
+
+      {% if field_ol_law_section %}
+        <dt>Law Section:</dt>
+        <dd>
+          {{ field_ol_law_section[0]['value'] }}
+        </dd>
+      {% endif %}
+
+      {% if field_ol_law_code %}
+        <dt>Laws Affected:</dt>
+        <dd>{{ field_ol_law_code[0]['value']}}</dd>
+      {% endif %}
+    </dl>
+
+  </div>
+
+  {% if result %}
+    <div class="c-block c-container">
+      <div class="c-container--header">
+        <h2 class="c-container--title">Find and Follow Issues</h2>
+        <a href="/explore-issues" class="c-container--link">Explore Issues</a>
+      </div>
+      <div class="c-block">
+        {{ result }}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Related Content -->
+  {% if disqus %}
+    <div class="c-block c-detail--summary">
+      <h3 class="c-detail--subhead c-detail--section-title">Comments</h3>
+      <p>Open Legislation comments facilitate discussion of New York State legislation. All comments are subject to moderation. Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity or hate speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Comment moderation is generally performed Monday through Friday.</p>
+      <p>By contributing or voting you agree to the Terms of Participation and verify you are over 13.</p>
+      <p>&nbsp;</p>
+      {{ dicus }}
+    </div>
+  {% endif %}
+</div>

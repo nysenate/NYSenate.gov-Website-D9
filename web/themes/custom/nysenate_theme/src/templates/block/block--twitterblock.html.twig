@@ -33,6 +33,7 @@
     'block',
     'block-' ~ configuration.provider|clean_class,
     'block-' ~ plugin_id|clean_class,
+    'nyesenate-twitter-block'
   ]
 %}
 {% if content %}
@@ -40,7 +41,25 @@
     {{ title_prefix }}
     {{ title_suffix }}
     {% block content %}
-        {{ content }}
+      <div class="view-header">
+        <div class="l-twitter-user">
+          <div>
+            <div class="c-twitter--logo">
+              {{ content.profile_image }}
+            </div>
+            <div class="c-twitter-user--info">
+              <h3 class="c-twitter-user--name">New York State Senate</h3>
+              <p class="c-twitter-user--link">
+              {{ content.account_link }}
+              </p>
+            </div>
+          </div>
+          <div class="c-twitter-user--follow">
+            {{ content.follow_link }}
+          </div>
+        </div>
+      </div>
+      {{ content.block }}
     {% endblock %}
   </div>
 {% endif %}

@@ -44,25 +44,8 @@
 
       <div class="c-nav--wrap">
         <div class="c-nav l-row l-row--nav">
-
           <nav>
-            <ul class="c-nav--list">
-              <li class="first leaf">
-                <a href="/news-and-issues" title="">News &amp; Issues</a>
-              </li>
-              <li class="leaf">
-                <a href="/senators-committees" title="">Senators &amp; Committees</a>
-              </li>
-              <li class="leaf">
-                <a href="/legislation" title="">Bills &amp; Laws</a>
-              </li>
-              <li class="leaf">
-                <a href="/events" title="">Events</a>
-              </li>
-              <li class="last leaf">
-                <a href="/about">About the Senate</a>
-              </li>
-            </ul>
+          {{ drupal_menu('main') }}
 
             <div class="u-mobile-only">
               <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">

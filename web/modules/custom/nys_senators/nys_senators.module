@@ -192,7 +192,7 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
 }
 
 /**
- * Implements hook_entity_update().
+ * Implements hook_entity_presave().
  */
 function nys_senators_user_presave(UserInterface $user) {
   // Fetch the User's roles.
@@ -202,5 +202,33 @@ function nys_senators_user_presave(UserInterface $user) {
     if ($user->hasField('field_senator_multiref')) {
       $user->set('field_senator_multiref', 0);
     }
+  }
+}
+
+/**
+ * Implements hook_form_node_form_alter().
+ */
+function nys_senators_form_node_form_alter(&$form, $form_state) {
+  $user = \Drupal::currentUser();
+  $user = User::load($user->id());
+  // Fetch the User's roles.
+  $user_roles = $user->getRoles();
+  // Disable the senator in case the MCP user has one senator and allows select
+  // the senator in case MCP has more than one assigned
+  // Also enable Admin user to select any senator even when it is not assigned.
+  if (in_array('microsite_content_producer', $user_roles, FALSE) && !in_array('administrator', $user_roles, FALSE)) {
+    if ($user->hasField('field_senator_multiref') && count($user->field_senator_multiref->getValue()) == 1) {
+      $form['field_senator_multiref']['#disabled'] = TRUE;
+      $form['field_senator_multiref']['widget']['#default_value'] = array_column($user->field_senator_multiref->getValue(), 'target_id');
+    }
+    $targets = array_column($user->field_senator_multiref->getValue(), 'target_id');
+    $options = $form['field_senator_multiref']['widget']['#options'];
+    $result = [];
+    foreach ($options as $key => $option) {
+      if ($key == '_none' || in_array($key, $targets)) {
+        $result[$key] = $option;
+      }
+    }
+    $form['field_senator_multiref']['widget']['#options'] = $result;
   }
 }

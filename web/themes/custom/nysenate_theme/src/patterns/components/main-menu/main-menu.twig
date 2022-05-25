@@ -20,17 +20,6 @@
 #}
 {{ attach_library('rain_theme/main-menu') }}
 
-<section class="main-menu__container">
-  <div class="main-menu__navicon">
-    <button class="navicon">
-      <span class="navicon__bar"></span>
-      <span class="navicon__bar"></span>
-      <span class="navicon__bar"></span>
-      <span class="visually-hidden">{{ 'Show/Hide Main Menu'|t }}</span>
-    </button>
-    <span class="navicon__text">{{ 'Menu'|t }}</span>
-  </div>
-
   {% import _self as menus %}
 
   {#
@@ -45,12 +34,12 @@
   #}
 
   {% macro menu_links(items, attributes) %}
-    <nav class="main-menu" id="a11y-menu" aria-label="Main menu">
       {% import _self as menus %}
       {% if items %}
-        <ul{{ attributes|without('class') }} role="menu" class="nav menu list-reset">
+        <ul{{ attributes|without('class') }} class="c-nav--list">
           {% for item in items %}
-            <li class="menu-item{{ item.below ? ' menu-item--has-submenu' }}{{ item.in_active_trail ? ' menu-item--active-trail' }}" {{ item.attributes|without('class') }} role="menuitem">
+            <!--li class="leaf" {#{ item.attributes|without('class') }#}-->
+            <li class="leaf{{ item.below ? ' leaf--has-submenu' }}{{ item.in_active_trail ? ' leaf--active-trail' }}" {{ item.attributes|without('class') }} role="menuitem">
               <a href="{{ item.url|render ? item.url : '#' }}"{{ item.in_active_trail ? ' class="is-active"' }} {{ item.below ? 'aria-expanded="false" aria-haspopup="true"'}}>{% if item.title %}{{ item.title }}{% else %}{{ item.text }}{% endif %}</a>
 
                 {% if item.below %}
@@ -71,6 +60,4 @@
           {% endfor %}
         </ul>
       {% endif %}
-    </nav>
   {% endmacro %}
-</section>

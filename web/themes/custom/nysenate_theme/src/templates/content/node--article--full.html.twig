@@ -7,46 +7,46 @@
     <header class="c-news--head">
       <h1 class="nys-article-title">{{ title }}</h1>
       <div class="c-news--head-meta">
-        {% if content.field_senator %}
+        {% if field_senator %}
           <p class="c-news--author">
-            {{ content.field_senator }}
+            {{ field_senator }}
           </p>
-        {% elseif content.field_article_author %}
+        {% elseif field_article_author %}
           <p class="c-news--author">
-            {{ content.field_article_author }}
+            {{ field_article_author }}
           </p>
         {% endif %}
-        {% if content.field_date %}
+        {% if field_date %}
           <p class="c-news--pub-date">
-            {{ content.field_date }}
+            <span class="date-display-single">{{ field_date }}</span>
           </p>
         {% endif %}
-        {% if content.field_issues or content.field_majority_issue_tag %}
+        {% if field_issues or field_majority_issue_tag %}
           <ul class="nys-associated-topics">
             ISSUE:
-            {% if content.field_majority_issue_tag %}
-              <li>{{ content.field_majority_issue_tag }}</li>
+            {% if field_majority_issue_tag %}
+              <li>{{ field_majority_issue_tag }}</li>
             {% endif %}
-            {% if content.field_issues %}
-              {% for issue in content.field_issues %}
+            {% if field_issues %}
+              {% for issue in field_issues %}
                 <li>{{ issue }}</li>
               {% endfor %}
             {% endif %}
           </ul>
         {% endif %}
 
-        {% if content.field_committee %}
+        {% if field_committee %}
           <ul class="nys-associated-topics">
             COMMITTEE:
-            {% for committee in content.field_committee %}
+            {% for committee in field_committee %}
               <li>{{ committee }}</li>
             {% endfor %}
           </ul>
         {% endif %}
 
-        {% if content.field_attachment %}
+        {% if field_attachment %}
           <div class="c-news--download">
-            {{ content.field_attachment }}
+            {{ field_attachment }}
           </div>
         {% endif %}
       </div>
@@ -56,49 +56,49 @@
   {{ title_suffix }}
 
   <div class="c-news--body">
-    {% if content.field_image_main %}
+    {% if field_image_main %}
       <div class="c-block c-block--img">
-        {{ content.field_image_main }}
-        {% if content.field_image_main[LANGUAGE_NONE][0]['title'] %}
-          <p class="c-img--caption">{{ content.field_image_main[LANGUAGE_NONE][0]['title'] }}
+        {{ field_image_main }}
+        {% if field_image_main[LANGUAGE_NONE][0]['title'] %}
+          <p class="c-img--caption">{{ field_image_main[LANGUAGE_NONE][0]['title'] }}
           {% endif %}
       </div>
       {% endif %}
 
-      {% if content.field_subtitle %}
+      {% if field_subtitle %}
         <div class="c-news--subtitle">
-          {{ content.field_subtitle }}
+          {{ field_subtitle }}
         </div>
       {% endif %}
 
       <div class="c-block">
-        {{ body }}
+        {{ content.body }}
       </div>
 
-      {% if content.field_paragraphs %}
+      {% if field_paragraphs %}
         <div class="c-block-paragraph">
-          {{ content.field_paragraphs }}
+          {{ field_paragraphs }}
         </div>
       {% endif %}
 
-      {% if content.field_chapters %}
+      {% if field_chapters %}
         <section class="c-block">
-          {{ content.field_chapters }}
+          {{ field_chapters }}
         </section>
       {% endif %}
 
 
-      {% if content.field_bills %}
+      {% if field_bills %}
         <aside>
           <div class="c-container--header__top-border">
-            <h2 class="c-container--title">related legislation</h2>
+            <h2 class="c-container--title">Related Legislation</h2>
           </div>
-          {{ content.field_bills }}
+          {{ field_bills }}
         </aside>
       {% endif %}
 
       <!-- Featured Legislations -->
-      {{ content.field_featured_legislation_commi }}
+      {{ field_featured_legislation_commi }}
 
 
       {% if social_buttons %}

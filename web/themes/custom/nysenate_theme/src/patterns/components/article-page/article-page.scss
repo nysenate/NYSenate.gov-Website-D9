@@ -1,6 +1,20 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.article-node {
+	max-width: 840px;
+	padding: 40px 20px 0;
+	margin: 0 auto;
+}
+
+.nys-article-title {
+  margin: 0 0 20px 0;
+  color: $grey02;
+  font-family: "Adelle Light";
+  font-size: 22px;
+  line-height: 1.2em;
+}
+
 /*------------------------------------
 /	NEWS:
 /-------------------------------------*/
@@ -89,6 +103,56 @@
 .c-news--head .c-news--download {
 	margin-bottom: 0;
 }
+
+.c-block {
+	p {
+		font-family: "Adelle Light";
+    line-height: 1.5em;
+    color: $grey03;
+    font-size: 16px;
+	}
+}
+
+.nys-associated-topics {
+  display: inline;
+  list-style: none;
+  font-size: 15px;
+  line-height: 1.2em;
+  //padding-left: 0;
+  border-left: 1px solid $grey04;
+  padding-left: 14px;
+  ul {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: inline;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: "Proxima Nova SemiBold";
+    white-space: normal;
+  }
+
+  a {
+    @extend .lgt-text;
+    color: $orange01;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.nys-associated-topics--label {
+  display: inline;
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 1.2em;
+  font-family: "Proxima Nova SemiBold";
+}
+
 @media #{$tablet} {
 	.c-news-download {
 		margin-bottom: 30px;
@@ -96,6 +160,20 @@
 	.c-news--head .c-news--download {
 		margin-bottom: 0;
 	}
+	.c-block {
+		p {
+			font-size: 20px;
+			line-height: 32px;
+		}
+	}
+	.nys-associated-topics {
+    display: inline;
+    margin-top: 0;
+
+    li {
+      margin-top: 0;
+    }
+  }
 }
 .c-news--subtitle {
 	margin-bottom: 20px;
@@ -104,7 +182,6 @@
 	font-size: 18px;
 	line-height: 1.4em;
 }
-
 
 
 .c-block-quoted-body {
@@ -133,6 +210,15 @@
 }
 
 @media #{$tablet} {
+	.article-node {
+		padding: 80px 40px 0;
+	}
+
+	.nys-article-title {
+    margin: 0 0 30px;
+    font-size: 48px;
+  }
+
 	.c-news--head {
 		margin-bottom: 30px;
 

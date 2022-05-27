@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block content.
+ *
+ * @see template_preprocess_block_content_template()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% include "@nysenate_theme/nysenate-women-of-distinction/nysenate-women-of-distinction.twig" with {
+  image: content.field_media.0,
+  title: title,
+  cta: cta
+} only %}

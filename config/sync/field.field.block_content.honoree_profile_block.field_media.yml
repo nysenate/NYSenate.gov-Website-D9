@@ -1,0 +1,29 @@
+uuid: f973be7e-e213-477a-8c16-51988b4dcdb2
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.honoree_profile_block
+    - field.storage.block_content.field_media
+    - media.type.image
+id: block_content.honoree_profile_block.field_media
+field_name: field_media
+entity_type: block_content
+bundle: honoree_profile_block
+label: Media
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

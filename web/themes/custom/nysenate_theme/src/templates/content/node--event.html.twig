@@ -1,0 +1,117 @@
+{{ attach_library('nysenate_theme/event') }}
+
+<article id="node-{{ id }}" class="event_detail_page {{ classes }}" {{ attributes }}>
+
+  <h1 class="nys-event-title">{{ title }}</h1>
+  <div class="c-event-block c-event-block--featured{% if field_image_main %}-image{% endif %}">
+    {% if field_image_main %}
+      <div class="c-event-image">
+        {{ field_image_main }}
+      </div>
+    {% endif %}
+    {{ nysenate_event_date }}
+
+    {% if field_event_place == "online" %}
+      <div class="c-event-location">
+        <span class="icon-before__circle-pin"></span>
+        <a href="{{ field_event_online_link }}">Online Event</a>
+
+        {% if field_meeting_location %}
+          <br>{{ field_meeting_location }}
+        {% endif %}
+      </div>
+    {% elseif field_event_place == "teleconference" %}
+      <div class="c-event-location">
+        <span class="icon-before__circle-pin"></span>Teleconference Event</div>
+      <div class="c-event-location">
+        <strong>TEL:
+        </strong>
+        {{ field_teleconference_number }}
+        {% if field_teleconference_id_number %}
+          <br><strong>ID:
+          </strong>
+          {{ field_teleconference_id_number }}
+        {% endif %}
+        {% if field_meeting_location %}
+          <br>{{ field_meeting_location }}
+        {% endif %}
+      </div>
+    {% elseif field_location.name %}
+      <a href="http://maps.google.com/?q={{ field_location.street }}+{{ field_location.city }}%2C+{{ field_location.province }}%2C+{{ field_location.postal_code }}" class="c-event-location" target="_blank">
+        <span class="icon-before__circle-pin"></span>
+        {{ field_location.name }}
+      </a>
+      <div class="c-event-address">
+        {% if field_meeting_location %}
+          <br>{{ field_meeting_location }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+
+    {% if field_location.street %}
+      <p class="c-event-address">
+        {{ field_location.street }}<br/>{{ field_location.city }},
+        {{ field_location.province }}
+        {{ field_location.postal_code }}</p>
+    {% endif %}
+
+    <div class="c-event-time">
+      {{ field_date_start }}
+      {% if field_date_end %}
+        -
+        {{ field_date_end }}
+      {% endif %}
+    </div>
+
+    <div title="Add to Calendar" class="addthisevent">
+      Add to Calendar
+      <span class="start">{{ field_date_start }}</span>
+      <span class="end">{{ field_date_end }}</span>
+      <span class="timezone">America/New_York</span>
+      <span class="title">{{ title }}</span>
+      <span class="location">{{ field_location }}</span>
+      <span class="date_format">MM/DD/YYYY</span>
+      <span class="organizer">NY STATE SENATE</span>
+      <span class="organizer_email">content@senate.state.ny.us</span>
+    </div>
+
+  </div>
+
+  {% if field_issues or field_majority_issue_tag %}
+    <ul class="nys-associated-topics">
+      <div class="nys-associated-topics--label">related issues:</div>
+      {% if field_majority_issue_tag %}
+        <li>{{ field_majority_issue_tag  }}</li>
+      {% endif %}
+      {% for issue in field_issues %}
+        <li>{{ issue }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if field_attachment %}
+    <div class="c-news--download">
+      {{ field_attachment }}
+    </div>
+  {% endif %}
+
+  {% if field_yt %}
+    <div class="c-block">
+      {{ field_yt }}
+    </div>
+  {% elseif field_video_status == "streaming_live_now" and field_ustream_url %}
+    <div class="c-block">
+      {{ field_ustream_url }}
+    </div>
+  {% endif %}
+
+  <div class="c-block">
+    {{ body }}
+  </div>
+
+  {% if social_buttons %}
+    {{ social_buttons }}
+  {% endif %}
+
+</article>

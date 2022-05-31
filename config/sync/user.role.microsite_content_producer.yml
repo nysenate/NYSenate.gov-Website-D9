@@ -4,11 +4,8 @@ status: true
 dependencies:
   config:
     - node.type.article
-    - node.type.bill
     - node.type.event
-    - node.type.landing
     - node.type.petition
-    - node.type.resolution
     - taxonomy.vocabulary.senator
   module:
     - field_permissions
@@ -26,20 +23,14 @@ permissions:
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'create article content'
-  - 'create bill content'
   - 'create event content'
   - 'create field_featured'
-  - 'create landing content'
   - 'create petition content'
-  - 'create resolution content'
   - 'edit own field_featured'
   - 'edit terms in senator'
   - 'view article revisions'
-  - 'view bill revisions'
   - 'view event revisions'
-  - 'view landing revisions'
   - 'view own field_featured'
   - 'view own unpublished content'
   - 'view petition revisions'
-  - 'view resolution revisions'
   - 'view the administration theme'

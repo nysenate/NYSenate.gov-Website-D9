@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies: {  }
+id: nys_senate_gov_taxonomy_term_senator
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Taxonomy terms (Senator)'
+source:
+  plugin: d7_node
+  node_type: senator
+process:
+  name:
+    -
+      plugin: get
+      source: title
+  field_senator_name/given:
+    -
+      plugin: senator_name
+      field: field_first_name
+      source: nid
+  field_senator_name/family:
+    -
+      plugin: senator_name
+      field: field_last_name
+      source: nid
+  field_conference:
+    -
+      plugin: get
+      source: field_conference
+  field_email:
+    -
+      plugin: get
+      source: field_email
+  field_press_inquiries:
+    -
+      plugin: get
+      source: field_press_inquiries
+  field_map_url:
+    -
+      plugin: get
+      source: field_map_url
+  field_current_duties:
+    -
+      plugin: get
+      source: field_current_duties
+  field_microsite_theme:
+    -
+      plugin: get
+      source: field_pallette_selector
+  field_member_headshot/target_id:
+    plugin: migration_lookup
+    migration: nys_senate_gov_media_image
+    source: field_image_headshot/0/fid
+  field_metatags:
+    -
+      plugin: get
+      source: metatags
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: senator
+migration_dependencies:
+  required: { }
+  optional: { }

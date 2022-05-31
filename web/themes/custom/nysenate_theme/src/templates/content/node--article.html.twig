@@ -1,0 +1,110 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+<article id="node-{{ node_id }}" class="{{ classes }}" {{ attributes }}>
+  {{ title_prefix }}
+
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">{{ title }}</h1>
+      <div class="c-news--head-meta">
+        {% if field_senator %}
+          <p class="c-news--author">
+            {{ field_senator }}
+          </p>
+        {% elseif field_article_author %}
+          <p class="c-news--author">
+            {{ field_article_author }}
+          </p>
+        {% endif %}
+        {% if field_date %}
+          <p class="c-news--pub-date">
+            {{ field_date }}
+          </p>
+        {% endif %}
+        {% if field_issues || field_majority_issue_tag %}
+          <ul class="nys-associated-topics">
+            ISSUE:
+            {% if field_majority_issue_tag %}
+              <li>{{ field_majority_issue_tag }}</li>
+            {% endif %}
+            {% if field_issues %}
+              {% for issue in field_issues %}
+                <li>{{ field_issues }}</li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+        {% endif %}
+
+        {% if field_committee %}
+          <ul class="nys-associated-topics">
+            COMMITTEE:
+            {% for committee in field_committee %}
+              <li>{{ field_committee }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if field_attachment %}
+          <div class="c-news--download">
+            {{ field_attachment }}
+          </div>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+
+  {{ title_suffix }}
+
+  <div class="c-news--body">
+    {% if field_image_main %}
+      <div class="c-block c-block--img">
+        {{ field_image_main }}
+        {% if field_image_main[LANGUAGE_NONE][0]['title'] %}
+          <p class="c-img--caption">{{ field_image_main[LANGUAGE_NONE][0]['title'] }}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if field_subtitle %}
+        <div class="c-news--subtitle">
+          {{ field_subtitle }}
+        </div>
+      {% endif %}
+
+      <div class="c-block">
+        {{ body }}
+      </div>
+
+      {% if field_paragraphs %}
+        <div class="c-block-paragraph">
+          {{ field_paragraphs }}
+        </div>
+      {% endif %}
+
+      {% if field_chapters %}
+        <section class="c-block">
+          {{ field_chapters }}
+        </section>
+      {% endif %}
+
+
+      {% if field_bills %}
+        <aside>
+          <div class="c-container--header__top-border">
+            <h2 class="c-container--title">related legislation</h2>
+          </div>
+          {{ field_bills}}
+        </aside>
+      {% endif %}
+
+
+      <!-- Featured Legislations -->
+      {{ field_featured_legislation_commi }}
+
+
+      {% if social_buttons %}
+        {{ social_buttons }}
+      {% endif %}
+
+    </div>
+  </article>

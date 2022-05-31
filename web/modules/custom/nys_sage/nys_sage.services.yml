@@ -1,0 +1,12 @@
+services:
+  sage_logger:
+    class: Drupal\nys_sage\Logger\SageLogger
+    arguments:
+      - '@database'
+      - '@config.factory'
+      - '@current_user'
+  sage_api:
+    class: Drupal\nys_sage\Service\SageApi
+    arguments:
+      - '@config.factory'
+      - '@sage_logger'

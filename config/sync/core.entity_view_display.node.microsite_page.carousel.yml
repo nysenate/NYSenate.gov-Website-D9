@@ -1,23 +1,27 @@
-uuid: 93beafc7-2ce7-4e91-a582-64e4bb78bdea
+uuid: 40677780-9042-472d-ab19-29599c84cd29
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.carousel_card
-    - field.field.node.landing.field_block
-    - field.field.node.landing.field_meta_tags
-    - field.field.node.landing.field_short_title
-    - field.field.node.landing.field_summary
-    - field.field.node.landing.field_thumbnail
-    - node.type.landing
+    - core.entity_view_mode.node.carousel
+    - field.field.node.microsite_page.field_block
+    - field.field.node.microsite_page.field_meta_tags
+    - field.field.node.microsite_page.field_senator_multiref
+    - field.field.node.microsite_page.field_short_title
+    - field.field.node.microsite_page.field_summary
+    - field.field.node.microsite_page.field_thumbnail
+    - node.type.microsite_page
   module:
+    - layout_builder
     - user
-_core:
-  default_config_hash: Id9Hvx2GWzsns-l-NogYUI1HwavT3Mqco-IRVxn75o0
-id: node.landing.carousel_card
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.microsite_page.carousel
 targetEntityType: node
-bundle: landing
-mode: carousel_card
+bundle: microsite_page
+mode: carousel
 content:
   field_short_title:
     type: string
@@ -41,12 +45,12 @@ content:
       view_mode: thumbnail
       link: false
     third_party_settings: {  }
-    weight: 3
+    weight: 0
     region: content
 hidden:
   field_block: true
-  field_exclude_title: true
   field_meta_tags: true
+  field_senator_multiref: true
   langcode: true
   links: true
   search_api_excerpt: true

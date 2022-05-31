@@ -1,0 +1,21 @@
+uuid: 31c79d33-5575-4022-9a93-07c5f2aff74e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_meta_tags
+    - node.type.microsite_page
+  module:
+    - metatag
+id: node.microsite_page.field_meta_tags
+field_name: field_meta_tags
+entity_type: node
+bundle: microsite_page
+label: 'Meta tags'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag

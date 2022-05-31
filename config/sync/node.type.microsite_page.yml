@@ -1,0 +1,37 @@
+uuid: ece18a0f-ed1c-4aa4-8ac6-8f4e4833aee5
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - node_revision_delete
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+  node_revision_delete:
+    minimum_revisions_to_keep: 3
+    minimum_age_to_delete: 0
+    when_to_delete: 0
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: true
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+name: 'Microsite Page'
+type: microsite_page
+description: ''
+help: ''
+new_revision: true
+preview_mode: 0
+display_submitted: false

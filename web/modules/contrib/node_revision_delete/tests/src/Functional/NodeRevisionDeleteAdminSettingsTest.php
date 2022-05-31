@@ -107,7 +107,7 @@ class NodeRevisionDeleteAdminSettingsTest extends BrowserTestBase {
 
     foreach ($form_values as $edit) {
       // Sending the form.
-      $this->drupalPostForm(NULL, $edit, 'op');
+      $this->submitForm($edit, 'op');
       // Verifying the save message.
       $this->assertSession()->pageTextContains('The configuration options have been saved.');
       // Getting the configuration file.

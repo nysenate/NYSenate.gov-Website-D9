@@ -397,18 +397,9 @@ strong {
 .timeline-Tweet-metadata {
   font-family: "Proxima Nova Regular" !important; }
 
-.timeline-Header {
-  padding: 20px 20px 0 !important;
-  letter-spacing: 0.05em !important; }
-  .timeline-Header .timeline-Header-title {
-    font-family: "Proxima Nova Regular" !important;
-    font-size: 19px !important;
-    color: #666666 !important; }
-  .timeline-Header .timeline-Header-byline {
-    font-family: "Proxima Nova SemiBold" !important;
-    font-size: 12px !important;
-    text-transform: uppercase !important;
-    color: #cb8d37 !important; }
+.timeline-Header,
+.timeline-Footer {
+  display: none !important; }
 
 .timeline-Body {
   position: relative !important;
@@ -418,9 +409,6 @@ strong {
   border: 0 !important; }
   .timeline-Body img {
     display: inline; }
-
-.timeline-Header {
-  background-color: #eeeeee !important; }
 
 .timeline-TweetList-tweet {
   border: 0 !important; }
@@ -443,8 +431,6 @@ strong {
 @media screen and (min-width: 760px) {
   .timeline-Body {
     padding: 15px 40px 5px !important; }
-  .timeline-Header {
-    padding: 20px 40px 0 !important; }
   .timeline-InformationCircle {
     right: 40px !important; }
   .timeline-Tweet {
@@ -457,65 +443,91 @@ strong {
       float: left !important;
       clear: left !important; }
       .timeline-TweetList-tweet:nth-child(odd) .timeline-Tweet {
-        padding-right: 5% !important; }
+        margin-right: 5% !important; }
     .timeline-TweetList-tweet:nth-child(even) {
       float: right !important; }
       .timeline-TweetList-tweet:nth-child(even) .timeline-Tweet {
-        padding-left: 5% !important; } }
+        margin-left: 5% !important; }
+    .timeline-TweetList-tweet:first-child .timeline-Tweet {
+      padding-right: 5% !important;
+      margin-right: 0 !important; }
+    .timeline-TweetList-tweet:nth-child(2) .timeline-Tweet {
+      padding-left: 5% !important;
+      margin-left: 0 !important; } }
 
 .nyesenate-twitter-block {
   margin-bottom: 40px; }
   .nyesenate-twitter-block .c-container--title {
     padding: 20px 0 30px;
-    border-top: 1px solid #aaaaaa;
     letter-spacing: 0.05em; }
+  .nyesenate-twitter-block .tweets-container {
+    padding-top: 15px; }
+    .nyesenate-twitter-block .tweets-container .u-even:nth-child(-n + 2),
+    .nyesenate-twitter-block .tweets-container .u-odd:nth-child(-n + 2) {
+      border-top: 1px solid #aaaaaa; }
+      .nyesenate-twitter-block .tweets-container .u-even:nth-child(-n + 2) .c-twitter-block,
+      .nyesenate-twitter-block .tweets-container .u-odd:nth-child(-n + 2) .c-twitter-block {
+        border-top: 0; }
+    .nyesenate-twitter-block .tweets-container .u-even .c-twitter-block,
+    .nyesenate-twitter-block .tweets-container .u-odd .c-twitter-block {
+      border-top: 1px solid #aaaaaa; }
   .nyesenate-twitter-block .l-tweets {
     position: relative;
     overflow: hidden;
     padding: 20px;
     background-color: #eeeeee; }
   .nyesenate-twitter-block .l-twitter-user {
-    padding-bottom: 20px; }
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    padding: 35px 40px 0;
+    -moz-column-gap: 15px;
+    column-gap: 15px; }
   .nyesenate-twitter-block .c-twitter--logo {
-    display: inline-block;
-    vertical-align: middle;
+    display: block;
     width: 60px;
     height: 60px; }
     .nyesenate-twitter-block .c-twitter--logo > img {
       background-color: transparent; }
   .nyesenate-twitter-block .c-twitter-user--info {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 20px; }
+    display: block;
+    margin-top: 15px; }
     .nyesenate-twitter-block .c-twitter-user--info p {
       font-size: 12px;
       line-height: 1; }
   .nyesenate-twitter-block .c-twitter-user--name {
     font-family: "Proxima Nova Regular";
     font-size: 19px;
-    color: #666666; }
+    color: #666666;
+    margin: 0; }
   .nyesenate-twitter-block .c-twitter-user--link {
-    font-family: "Proxima Nova SemiBold";
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #cb8d37; }
+    margin: 0; }
+    .nyesenate-twitter-block .c-twitter-user--link a {
+      color: #cb8d37;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none; }
   .nyesenate-twitter-block .c-twitter-user--follow {
     display: block;
     margin: 20px 0 0 0;
-    padding: 7px 0;
     border: 1px solid #aaaaaa;
-    width: 75px;
+    padding: 10px 15px;
     background-color: #fff;
-    text-align: center;
-    color: #cb8d37;
-    font-size: 12px;
-    line-height: 1;
-    font-family: "Proxima Nova SemiBold";
-    text-transform: uppercase; }
+    text-align: center; }
+    .nyesenate-twitter-block .c-twitter-user--follow a {
+      color: #cb8d37;
+      font-size: 12px;
+      line-height: 1;
+      font-family: "Proxima Nova SemiBold";
+      text-transform: uppercase;
+      text-decoration: none; }
   .nyesenate-twitter-block .c-twitter-block {
     overflow: hidden;
-    padding: 20px 0 20px;
-    border-top: 1px solid #aaaaaa; }
+    padding: 20px 0 20px; }
     .nyesenate-twitter-block .c-twitter-block .c-tweet {
       font-family: "Adelle Light";
       font-size: 18px;
@@ -623,23 +635,20 @@ strong {
       border: none;
       padding: 0 0 15px 0; }
     .nyesenate-twitter-block .l-tweets {
-      padding: 35px 40px 5px; }
-    .nyesenate-twitter-block .l-twitter-user {
-      position: relative;
-      margin-bottom: -1px;
-      border-bottom: 1px solid #aaaaaa; }
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px 5px; }
+    .nyesenate-twitter-block .l-twitter-user > div {
+      display: flex;
+      align-items: center; }
     .nyesenate-twitter-block .c-twitter-user--follow {
-      position: absolute;
-      top: -25px;
-      left: auto;
-      right: 0;
-      bottom: 0;
-      height: 28px;
-      margin: auto; }
+      margin: 0; }
+    .nyesenate-twitter-block .c-twitter-user--info {
+      margin-left: 20px;
+      margin-top: 0; }
     .nyesenate-twitter-block .c-twitter-block,
     .nyesenate-twitter-block .last .c-twitter-block {
-      padding: 40px 0;
-      border-top: 1px solid #aaaaaa; }
+      padding: 40px 0; }
       .nyesenate-twitter-block .c-twitter-block .c-tweet,
       .nyesenate-twitter-block .last .c-twitter-block .c-tweet {
         font-size: 22px; }

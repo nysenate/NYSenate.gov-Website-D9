@@ -188,9 +188,10 @@ function node_revision_delete_form_node_type_form_builder($entity_type, NodeType
  */
 function node_revision_delete_form_node_revision_delete_confirm_alter(&$form, FormStateInterface &$form_state, $form_id) {
   // Get the node id from URL.
-  $nid = \Drupal::routeMatch()->getParameter('node');
+  $nid = \Drupal::routeMatch()->getRawParameter('node');
   // Get the revision id from URL.
-  $revision_id = \Drupal::routeMatch()->getParameter('node_revision');
+  $revision_id = \Drupal::routeMatch()->getRawParameter('node_revision');
+
   // Get list of revisions older than current revision.
   $revisions_before = \Drupal::service('node_revision_delete')->getPreviousRevisions($nid, $revision_id);
   // Count sum of old revisions.
@@ -276,9 +277,9 @@ function node_revision_delete_form_node_revision_delete_confirm_alter(&$form, Fo
 function _node_revision_bulk_delete_submit(array &$form, FormStateInterface $form_state) {
   if ($form_state->getValue('delete_prior_revisions') == 1) {
     // Get the node id from URL.
-    $nid = \Drupal::routeMatch()->getParameter('node');
+    $nid = \Drupal::routeMatch()->getRawParameter('node');
     // Get the revision id from URL.
-    $revision_id = \Drupal::routeMatch()->getParameter('node_revision');
+    $revision_id = \Drupal::routeMatch()->getRawParameter('node_revision');
     // Get list of revisions older than current revision.
     $revisions_before = \Drupal::service('node_revision_delete')->getPreviousRevisions($nid, $revision_id);
 
@@ -320,4 +321,16 @@ function node_revision_delete_cron() {
     }
   }
 
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function node_revision_delete_library_info_alter(&$libraries, $extension) {
+  // Deleting the library because we have our own version.
+  // Maybe this cannot be longer needed once https://www.drupal.org/node/2871619
+  // will be fixed.
+  if ($extension == 'node' && isset($libraries['drupal.content_types'])) {
+    unset($libraries['drupal.content_types']);
+  }
 }

@@ -199,7 +199,7 @@ class NodeRevisionGenerateTest extends BrowserTestBase {
       ];
 
       // Sending the form.
-      $this->drupalPostForm(NULL, $form_values, 'op');
+      $this->submitForm($form_values, 'op');
 
       // Getting the revision list for article.
       $vids_article = $node_storage->revisionIds($node_article);
@@ -244,7 +244,7 @@ class NodeRevisionGenerateTest extends BrowserTestBase {
       ];
 
       // Sending the form.
-      $this->drupalPostForm(NULL, $form_values, 'op');
+      $this->submitForm($form_values, 'op');
 
       ++$number_of_revisions;
 
@@ -287,7 +287,7 @@ class NodeRevisionGenerateTest extends BrowserTestBase {
       $number_of_revisions += $revisions_number;
 
       // Sending the form.
-      $this->drupalPostForm(NULL, $form_values, 'op');
+      $this->submitForm($form_values, 'op');
 
       // Getting the revision list for article.
       $vids_article = $node_storage->revisionIds($node_article);
@@ -340,7 +340,7 @@ class NodeRevisionGenerateTest extends BrowserTestBase {
       ];
 
       // Sending the form.
-      $this->drupalPostForm(NULL, $form_values, 'op');
+      $this->submitForm($form_values, 'op');
 
       $number_of_revisions += $revisions_number[$i];
       // Getting the revision list for article.

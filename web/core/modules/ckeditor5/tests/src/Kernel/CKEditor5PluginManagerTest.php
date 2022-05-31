@@ -982,7 +982,8 @@ PHP,
 
     // Configure the sneaky superset plugin to have a random tag as the subset.
     $sneaky_plugin_id = 'ckeditor5_plugin_elements_subset_sneakySuperset';
-    $random_tag = "<{$this->randomMachineName()}>";
+    $random_tag_name = strtolower($this->randomMachineName());
+    $random_tag = "<$random_tag_name>";
     $text_editor = Editor::create([
       'format' => 'dummy',
       'editor' => 'ckeditor5',
@@ -1020,6 +1021,8 @@ PHP,
       'ckeditor5_bold',
       'ckeditor5_emphasis',
       'ckeditor5_essentials',
+      'ckeditor5_globalAttributeDir',
+      'ckeditor5_globalAttributeLang',
       'ckeditor5_heading',
       'ckeditor5_paragraph',
       'ckeditor5_pasteFromOffice',
@@ -1030,6 +1033,7 @@ PHP,
       'ckeditor5/drupal.ckeditor5.emphasis',
       'ckeditor5/drupal.ckeditor5.internal',
       'core/ckeditor5.basic',
+      'core/ckeditor5.htmlSupport',
       'core/ckeditor5.internal',
       'core/ckeditor5.pasteFromOffice',
     ];
@@ -1126,7 +1130,6 @@ PHP,
     $this->assertSame(array_values($expected_plugins), $plugin_ids);
     $expected_libraries = array_merge($expected_libraries, [
       'core/ckeditor5.alignment',
-      'core/ckeditor5.htmlSupport',
     ]);
     sort($expected_libraries);
     $this->assertSame($expected_libraries, $this->manager->getEnabledLibraries($editor));

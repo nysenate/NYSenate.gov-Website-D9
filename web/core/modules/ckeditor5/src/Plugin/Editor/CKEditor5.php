@@ -18,6 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\ckeditor5\SmartDefaultSettings;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
@@ -263,8 +264,15 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       assert($editor->getSettings() === $this->getDefaultSettings());
       if (!$format->isNew()) {
         [$editor, $messages] = $this->smartDefaultSettings->computeSmartDefaultSettings($editor, $format);
-        foreach ($messages as $message) {
-          $this->messenger()->addMessage($message);
+        foreach ($messages as $type => $messages_per_type) {
+          foreach ($messages_per_type as $message) {
+            $this->messenger()->addMessage($message, $type);
+          }
+        }
+        if (isset($messages[MessengerInterface::TYPE_WARNING]) || isset($messages[MessengerInterface::TYPE_ERROR])) {
+          $this->messenger()->addMessage($this->t('Check <a href=":handbook">this handbook page</a> for details about compatibility issues of contrib modules.', [
+            ':handbook' => 'https://www.drupal.org/node/3273985',
+          ]), MessengerInterface::TYPE_WARNING);
         }
       }
       $eventual_editor_and_format = $this->getEventualEditorWithPrimedFilterFormat($form_state, $editor);
@@ -413,20 +421,28 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // due to isEnabled() returning false, that should still have its config
     // form provided:
     // 1 - A conditionally enabled plugin that does not depend on a toolbar item
-    // to be active AND the plugins it depends on are enabled.
+    // to be active AND the plugins it depends on are enabled (if any) AND the
+    // filter it depends on is enabled (if any).
     // 2 - A conditionally enabled plugin that does depend on a toolbar item,
     // and that toolbar item is active.
     if ($definition->hasConditions()) {
       $conditions = $definition->getConditions();
       if (!array_key_exists('toolbarItem', $conditions)) {
+        $conclusion = TRUE;
+        // The filter this plugin depends on must be enabled.
+        if (array_key_exists('filter', $conditions)) {
+          $required_filter = $conditions['filter'];
+          $format_filters = $editor->getFilterFormat()->filters();
+          $conclusion = $conclusion && $format_filters->has($required_filter) && $format_filters->get($required_filter)->status;
+        }
         // The CKEditor 5 plugins this plugin depends on must be enabled.
         if (array_key_exists('plugins', $conditions)) {
           $all_plugins = $this->ckeditor5PluginManager->getDefinitions();
           $dependencies = array_intersect_key($all_plugins, array_flip($conditions['plugins']));
           $unmet_dependencies = array_diff_key($dependencies, $enabled_plugins);
-          return empty($unmet_dependencies);
+          $conclusion = $conclusion && empty($unmet_dependencies);
         }
-        return TRUE;
+        return $conclusion;
       }
       elseif (in_array($conditions['toolbarItem'], $editor->getSettings()['toolbar']['items'], TRUE)) {
         return TRUE;
@@ -516,7 +532,16 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       ]);
       $submitted_filter_format = CKEditor5::getSubmittedFilterFormat($form_state);
       $fundamental_incompatibilities = CKEditor5::validatePair($minimal_ckeditor5_editor, $submitted_filter_format, FALSE);
+
       foreach ($fundamental_incompatibilities as $violation) {
+        // If the violation uses the nonAllowedElementsMessage template, it can
+        // be skipped because this is a violation that automatically fixed
+        // within SmartDefaultSettings, but SmartDefaultSettings does not
+        // execute until this validator passes.
+        if ($violation->getMessageTemplate() === $violation->getConstraint()->nonAllowedElementsMessage) {
+          continue;
+        }
+
         // @codingStandardsIgnoreLine
         $form_state->setErrorByName('editor][editor', t($violation->getMessageTemplate(), $violation->getParameters()));
       }

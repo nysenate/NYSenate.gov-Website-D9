@@ -17,22 +17,9 @@
   font-family: "Proxima Nova Regular" !important;
 }
 
-.timeline-Header {
-  padding: 20px 20px 0 !important;
-  letter-spacing: 0.05em !important;
-
-  .timeline-Header-title {
-    font-family: "Proxima Nova Regular" !important;
-    font-size: 19px !important;
-    color: $grey03 !important;
-  }
-
-  .timeline-Header-byline {
-    font-family: "Proxima Nova SemiBold" !important;
-    font-size: 12px !important;
-    text-transform: uppercase !important;
-    color: $orange01 !important;
-  }
+.timeline-Header,
+.timeline-Footer {
+  display: none !important;
 }
 
 .timeline-Body {
@@ -41,13 +28,10 @@
   padding: 15px 20px 20px !important;
   background-color: $grey06 !important;
   border: 0 !important;
+
   img {
     display: inline;
   }
-}
-
-.timeline-Header {
-  background-color: $grey06 !important;
 }
 
 .timeline-TweetList-tweet {
@@ -81,10 +65,6 @@
     padding: 15px 40px 5px !important;
   }
 
-  .timeline-Header {
-    padding: 20px 40px 0 !important;
-  }
-
   .timeline-InformationCircle {
     right: 40px !important;
   }
@@ -105,7 +85,7 @@
       clear: left !important;
 
       .timeline-Tweet {
-        padding-right: 5% !important;
+        margin-right: 5% !important;
       }
     }
 
@@ -113,7 +93,21 @@
       float: right !important;
 
       .timeline-Tweet {
+        margin-left: 5% !important;
+      }
+    }
+
+    &:first-child {
+      .timeline-Tweet {
+        padding-right: 5% !important;
+        margin-right: 0 !important;
+      }
+    }
+
+    &:nth-child(2) {
+      .timeline-Tweet {
         padding-left: 5% !important;
+        margin-left: 0 !important;
       }
     }
   }
@@ -125,8 +119,27 @@
 
   .c-container--title {
     padding: 20px 0 30px;
-    border-top: 1px solid $grey05;
     letter-spacing: 0.05em;
+  }
+
+  .tweets-container {
+    padding-top: 15px;
+
+    .u-even,
+    .u-odd {
+
+      &:nth-child(-n + 2) {
+        border-top: 1px solid $grey05;
+
+        .c-twitter-block {
+          border-top: 0;
+        }
+      }
+
+      .c-twitter-block {
+        border-top: 1px solid $grey05;
+      }
+    }
   }
 
   .l-tweets {
@@ -138,23 +151,29 @@
 
   // header area
   .l-twitter-user {
-    padding-bottom: 20px;
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $grey06;
+    padding: 35px 40px 0;
+    column-gap: 15px;
   }
 
   .c-twitter--logo {
-    display: inline-block;
-    vertical-align: middle;
+    display: block;
     width: 60px;
     height: 60px;
+
     > img {
       background-color: transparent;
     }
   }
 
   .c-twitter-user--info {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 20px;
+    display: block;
+    margin-top: 15px;
 
     p {
       font-size: 12px;
@@ -166,36 +185,43 @@
     font-family: "Proxima Nova Regular";
     font-size: 19px;
     color: $grey03;
+    margin: 0;
   }
 
   .c-twitter-user--link {
-    font-family: "Proxima Nova SemiBold";
-    font-size: 12px;
-    text-transform: uppercase;
-    color: $orange01;
+    margin: 0;
+
+    a {
+      color: $orange01;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
   }
 
   .c-twitter-user--follow {
     display: block;
     margin: 20px 0 0 0;
-    padding: 7px 0;
     border: 1px solid $grey05;
-    width: 75px;
+    padding: 10px 15px;
     background-color: #fff;
-
     text-align: center;
-    color: $orange01;
-    font-size: 12px;
-    line-height: 1;
-    font-family: "Proxima Nova SemiBold";
-    text-transform: uppercase;
+
+    a {
+      color: $orange01;
+      font-size: 12px;
+      line-height: 1;
+      font-family: "Proxima Nova SemiBold";
+      text-transform: uppercase;
+      text-decoration: none;
+    }
   }
 
   // individual block styling
   .c-twitter-block {
     overflow: hidden;
     padding: 20px 0 20px;
-    border-top: 1px solid $grey05;
 
     .c-tweet {
       font-family: "Adelle Light";
@@ -343,30 +369,28 @@
     }
 
     .l-tweets {
-      padding: 35px 40px 5px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px 5px;
     }
 
-    // header area
-    .l-twitter-user {
-      position: relative;
-      margin-bottom: -1px;
-      border-bottom: 1px solid $grey05;
+    .l-twitter-user > div {
+      display: flex;
+      align-items: center;
     }
 
     .c-twitter-user--follow {
-      position: absolute;
-      top: -25px;
-      left: auto;
-      right: 0;
-      bottom: 0;
-      height: 28px;
-      margin: auto;
+      margin: 0;
+    }
+
+    .c-twitter-user--info {
+      margin-left: 20px;
+      margin-top: 0;
     }
 
     .c-twitter-block,
     .last .c-twitter-block {
       padding: 40px 0;
-      border-top: 1px solid $grey05;
 
       .c-tweet {
         font-size: 22px;

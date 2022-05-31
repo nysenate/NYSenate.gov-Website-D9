@@ -348,6 +348,10 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
         // vid. We excluded the default revision in the where call.
         $sub_query->range($content_type_config['minimum_revisions_to_keep'] - 1, $number);
 
+        // Allow other modules to alter candidates query.
+        $sub_query->addTag('node_revision_delete_candidate_revisions');
+        $sub_query->addTag('node_revision_delete_candidate_revisions_' . $content_type);
+
         $query = $this->connection->select($sub_query, 't');
         $query->fields('t', ['vid']);
         $query->condition('revision_timestamp', $content_type_config['minimum_age_to_delete'], '<');
@@ -374,8 +378,10 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entityTypeManager->getStorage('node')->load(current($nids));
 
+    $content_type = $node->getType();
+
     // Getting the content type config.
-    $content_type_config = $this->getContentTypeConfigWithRelativeTime($node->getType());
+    $content_type_config = $this->getContentTypeConfigWithRelativeTime($content_type);
 
     if (!empty($content_type_config)) {
       $sub_query = $this->connection->select('node_field_data', 'n');
@@ -398,6 +404,10 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
       // We need to reduce in 1 because we don't want to count the default vid.
       // We excluded the default revision in the where call.
       $sub_query->range($content_type_config['minimum_revisions_to_keep'] - 1, PHP_INT_MAX);
+
+      // Allow other modules to alter candidates query.
+      $sub_query->addTag('node_revision_delete_candidate_revisions');
+      $sub_query->addTag('node_revision_delete_candidate_revisions_' . $content_type);
 
       $query = $this->connection->select($sub_query, 't');
       $query->fields('t', ['vid']);

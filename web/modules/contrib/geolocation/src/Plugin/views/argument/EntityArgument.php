@@ -117,7 +117,7 @@ class EntityArgument extends ProximityArgument implements ContainerFactoryPlugin
    * @return array|false
    *   Coordinates.
    */
-  protected function getCoordinatesFromEntityId($entity_id) {
+  protected function getCoordinatesFromEntityId(int $entity_id) {
     if (empty($this->options['geolocation_entity_argument_source'])) {
       return FALSE;
     }
@@ -168,34 +168,33 @@ class EntityArgument extends ProximityArgument implements ContainerFactoryPlugin
     static $values;
 
     if (!isset($values)) {
+      if (empty($this->getValue())) {
+        return [];
+      }
+
       preg_match('/^([0-9]+)([<>=]+)([0-9.]+)(.*$)/', $this->getValue(), $values);
 
       if (
         empty($values)
-        && !empty($this->getValue())
         && is_numeric($this->getValue())
       ) {
         $values = $this->getCoordinatesFromEntityId($this->getValue());
         return $values;
       }
-      elseif (empty($values)) {
-        return [];
-      }
-      else {
-        $values = is_array($values) ? [
-          'id' => (isset($values[1]) && is_numeric($values[1])) ? intval($values[1]) : FALSE,
-          'operator' => (isset($values[2]) && in_array($values[2], [
-            '<>',
-            '=',
-            '>=',
-            '<=',
-            '>',
-            '<',
-          ])) ? $values[2] : '<=',
-          'distance' => (isset($values[3])) ? floatval($values[3]) : FALSE,
-          'unit' => !empty($values[4]) ? $values[4] : 'km',
-        ] : FALSE;
-      }
+
+      $values = is_array($values) ? [
+        'id' => (isset($values[1]) && is_numeric($values[1])) ? intval($values[1]) : FALSE,
+        'operator' => (isset($values[2]) && in_array($values[2], [
+          '<>',
+          '=',
+          '>=',
+          '<=',
+          '>',
+          '<',
+        ])) ? $values[2] : '<=',
+        'distance' => (isset($values[3])) ? floatval($values[3]) : FALSE,
+        'unit' => !empty($values[4]) ? $values[4] : 'km',
+      ] : FALSE;
 
       $coordinates = $this->getCoordinatesFromEntityId($values['id']);
       if (empty($coordinates)) {

@@ -2889,17 +2889,17 @@
         },
         {
             "name": "drupal/core",
-            "version": "9.3.12",
-            "version_normalized": "9.3.12.0",
+            "version": "9.3.14",
+            "version_normalized": "9.3.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "ed6af33093f66a9c5048d02f9f2c326ad0e7e90c"
+                "reference": "ea4c4780324c6ee6679823927e95601938d7f6a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/ed6af33093f66a9c5048d02f9f2c326ad0e7e90c",
-                "reference": "ed6af33093f66a9c5048d02f9f2c326ad0e7e90c",
+                "url": "https://api.github.com/repos/drupal/core/zipball/ea4c4780324c6ee6679823927e95601938d7f6a3",
+                "reference": "ea4c4780324c6ee6679823927e95601938d7f6a3",
                 "shasum": ""
             },
             "require": {
@@ -2921,7 +2921,7 @@
                 "ext-spl": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "guzzlehttp/guzzle": "^6.5.2",
+                "guzzlehttp/guzzle": "^6.5.6",
                 "laminas/laminas-diactoros": "^2.1",
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
@@ -3066,7 +3066,7 @@
                 "drupal/workflows": "self.version",
                 "drupal/workspaces": "self.version"
             },
-            "time": "2022-04-20T14:25:27+00:00",
+            "time": "2022-05-25T18:43:19+00:00",
             "type": "drupal-core",
             "extra": {
                 "drupal-scaffold": {
@@ -3098,6 +3098,7 @@
                 },
                 "patches_applied": {
                     "1356276 - Allow profiles to provide a base/parent profile and load them in the correct order": "https://www.drupal.org/files/issues/2021-11-18/1356276-675.patch",
+                    "2827921 - Exception thrown by responsive srcset images when the image is not yet in the file system (such as with Stage File Proxy)": "https://www.drupal.org/files/issues/2021-09-03/responsive_image-remove_missing_response_image_width_exception-2827921-22.patch",
                     "2949017 - There is no way to delete or update file entities of other users": "https://www.drupal.org/files/issues/2021-12-01/2949017-85.patch",
                     "763380 - Do not use \\Drupal\\taxonomy\\TermStorageInterface::loadTree() in \\Drupal\\taxonomy\\Form\\OverviewTerms::buildForm()": "https://www.drupal.org/files/issues/2021-05-26/763380-73.patch"
                 }
@@ -3148,14 +3149,14 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/9.3.12"
+                "source": "https://github.com/drupal/core/tree/9.3.14"
             },
             "install-path": "../../web/core"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "9.3.12",
-            "version_normalized": "9.3.12.0",
+            "version": "9.3.14",
+            "version_normalized": "9.3.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -3201,23 +3202,23 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.3.12"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.3.14"
             },
             "install-path": "../drupal/core-composer-scaffold"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "9.3.12",
-            "version_normalized": "9.3.12.0",
+            "version": "9.3.14",
+            "version_normalized": "9.3.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "a8fa50016c1aa1eb7f4e54f590e6343d286c418f"
+                "reference": "31f23ce0ae7cf3925f6fb6a3953762b259a0494e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/a8fa50016c1aa1eb7f4e54f590e6343d286c418f",
-                "reference": "a8fa50016c1aa1eb7f4e54f590e6343d286c418f",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/31f23ce0ae7cf3925f6fb6a3953762b259a0494e",
+                "reference": "31f23ce0ae7cf3925f6fb6a3953762b259a0494e",
                 "shasum": ""
             },
             "require": {
@@ -3226,9 +3227,9 @@
                 "doctrine/annotations": "1.13.2",
                 "doctrine/lexer": "1.2.1",
                 "doctrine/reflection": "1.2.2",
-                "drupal/core": "9.3.12",
+                "drupal/core": "9.3.14",
                 "egulias/email-validator": "3.1.2",
-                "guzzlehttp/guzzle": "6.5.5",
+                "guzzlehttp/guzzle": "6.5.6",
                 "guzzlehttp/promises": "1.5.1",
                 "guzzlehttp/psr7": "1.8.5",
                 "laminas/laminas-diactoros": "2.8.0",
@@ -3281,7 +3282,7 @@
             "conflict": {
                 "webflo/drupal-core-strict": "*"
             },
-            "time": "2022-04-20T14:25:27+00:00",
+            "time": "2022-05-25T18:43:19+00:00",
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3289,7 +3290,7 @@
             ],
             "description": "Locked core dependencies; require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/9.3.12"
+                "source": "https://github.com/drupal/core-recommended/tree/9.3.14"
             },
             "install-path": null
         },
@@ -3737,18 +3738,18 @@
         },
         {
             "name": "drupal/environment_indicator",
-            "version": "4.0.5",
-            "version_normalized": "4.0.5.0",
+            "version": "4.0.6",
+            "version_normalized": "4.0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/environment_indicator.git",
-                "reference": "4.0.5"
+                "reference": "4.0.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/environment_indicator-4.0.5.zip",
-                "reference": "4.0.5",
-                "shasum": "1900f65220783c8eef13c710befff8d12633f36e"
+                "url": "https://ftp.drupal.org/files/projects/environment_indicator-4.0.6.zip",
+                "reference": "4.0.6",
+                "shasum": "63dc715096dd71cfed7085f30eae78005d08433c"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9"
@@ -3756,8 +3757,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "4.0.5",
-                    "datestamp": "1646688932",
+                    "version": "4.0.6",
+                    "datestamp": "1652781055",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3824,7 +3825,7 @@
             "extra": {
                 "drupal": {
                     "version": "2.0.2",
-                    "datestamp": "1649070269",
+                    "datestamp": "1649151557",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4604,18 +4605,18 @@
         },
         {
             "name": "drupal/geolocation",
-            "version": "3.9.0",
-            "version_normalized": "3.9.0.0",
+            "version": "3.10.0",
+            "version_normalized": "3.10.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/geolocation.git",
-                "reference": "8.x-3.9"
+                "reference": "8.x-3.10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/geolocation-8.x-3.9.zip",
-                "reference": "8.x-3.9",
-                "shasum": "7f07bc53dfbb8d5e3404e369cff7caae814ea2e3"
+                "url": "https://ftp.drupal.org/files/projects/geolocation-8.x-3.10.zip",
+                "reference": "8.x-3.10",
+                "shasum": "686868c7a1bbccc24662e71a69efc9b6c90b18cf"
             },
             "require": {
                 "drupal/core": "^9.2",
@@ -4638,8 +4639,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.9",
-                    "datestamp": "1649862414",
+                    "version": "8.x-3.10",
+                    "datestamp": "1652946354",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4948,27 +4949,30 @@
         },
         {
             "name": "drupal/honeypot",
-            "version": "2.0.2",
-            "version_normalized": "2.0.2.0",
+            "version": "2.1.0",
+            "version_normalized": "2.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/honeypot.git",
-                "reference": "2.0.2"
+                "reference": "2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/honeypot-2.0.2.zip",
-                "reference": "2.0.2",
-                "shasum": "8a3e15509f649c39e88c4f22105f12fb6445fc62"
+                "url": "https://ftp.drupal.org/files/projects/honeypot-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "7ddb2d0bfeaa65d55823d82bdf01c9c330a1e12f"
             },
             "require": {
-                "drupal/core": "^8.8.2 || ^9"
+                "drupal/core": "^9.2 || ^10"
+            },
+            "require-dev": {
+                "drupal/rules": "^3.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.2",
-                    "datestamp": "1651895165",
+                    "version": "2.1.0",
+                    "datestamp": "1651894953",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -6817,18 +6821,18 @@
         },
         {
             "name": "drupal/node_revision_delete",
-            "version": "1.0.0-rc3",
-            "version_normalized": "1.0.0.0-RC3",
+            "version": "1.0.0-rc4",
+            "version_normalized": "1.0.0.0-RC4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/node_revision_delete.git",
-                "reference": "8.x-1.0-rc3"
+                "reference": "8.x-1.0-rc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/node_revision_delete-8.x-1.0-rc3.zip",
-                "reference": "8.x-1.0-rc3",
-                "shasum": "5c539e9ac8e4af276cc558a33f1da2a5ad57ac79"
+                "url": "https://ftp.drupal.org/files/projects/node_revision_delete-8.x-1.0-rc4.zip",
+                "reference": "8.x-1.0-rc4",
+                "shasum": "b7245a70f13373f80cf4f110f488232bb96e968d"
             },
             "require": {
                 "drupal/core": "^8.7.7 || ^9.0"
@@ -6836,8 +6840,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-rc3",
-                    "datestamp": "1600878567",
+                    "version": "8.x-1.0-rc4",
+                    "datestamp": "1651723334",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -9577,22 +9581,22 @@
         },
         {
             "name": "drupal/viewsreference",
-            "version": "1.7.0",
-            "version_normalized": "1.7.0.0",
+            "version": "1.8.0",
+            "version_normalized": "1.8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/viewsreference.git",
-                "reference": "8.x-1.7"
+                "reference": "8.x-1.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/viewsreference-8.x-1.7.zip",
-                "reference": "8.x-1.7",
-                "shasum": "6656c717cd78bee180fcc075d28db016fa7775d9"
+                "url": "https://ftp.drupal.org/files/projects/viewsreference-8.x-1.8.zip",
+                "reference": "8.x-1.8",
+                "shasum": "8dd6b3828d40f4da413f73f956da528941e2ef52"
             },
             "require": {
                 "drupal/core": "^8.6|^9.0",
-                "php": "^5.5|^7.0",
+                "php": "^7.0|^8.0",
                 "squizlabs/php_codesniffer": "*"
             },
             "conflict": {
@@ -9600,15 +9604,15 @@
             },
             "require-dev": {
                 "composer/installers": "^1.2",
-                "drupal-composer/drupal-scaffold": "^2.5",
                 "drupal/coder": "^8.2",
+                "drupal/core-composer-scaffold": "*",
                 "webflo/drupal-core-require-dev": "~8.5"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.7",
-                    "datestamp": "1610571201",
+                    "version": "8.x-1.8",
+                    "datestamp": "1652694596",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -10735,17 +10739,17 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.5.5",
-            "version_normalized": "6.5.5.0",
+            "version": "6.5.6",
+            "version_normalized": "6.5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "9d4290de1cfd701f38099ef7e183b64b4b7b0c5e"
+                "reference": "f092dd734083473658de3ee4bef093ed77d2689c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
-                "reference": "9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f092dd734083473658de3ee4bef093ed77d2689c",
+                "reference": "f092dd734083473658de3ee4bef093ed77d2689c",
                 "shasum": ""
             },
             "require": {
@@ -10763,7 +10767,7 @@
             "suggest": {
                 "psr/log": "Required for using the Log middleware"
             },
-            "time": "2020-06-16T21:01:06+00:00",
+            "time": "2022-05-25T13:19:12+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -10785,9 +10789,39 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Jeremy Lindblom",
+                    "email": "jeremeamia@gmail.com",
+                    "homepage": "https://github.com/jeremeamia"
+                },
+                {
+                    "name": "George Mponos",
+                    "email": "gmponos@gmail.com",
+                    "homepage": "https://github.com/gmponos"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://github.com/sagikazarmark"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
+                    "homepage": "https://github.com/Tobion"
                 }
             ],
             "description": "Guzzle is a PHP HTTP client library",
@@ -10803,8 +10837,22 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/6.5"
+                "source": "https://github.com/guzzle/guzzle/tree/6.5.6"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/guzzle",
+                    "type": "tidelift"
+                }
+            ],
             "install-path": "../guzzlehttp/guzzle"
         },
         {
@@ -12259,23 +12307,23 @@
         },
         {
             "name": "pantheon-systems/drupal-integrations",
-            "version": "9.0.2",
-            "version_normalized": "9.0.2.0",
+            "version": "9.0.3",
+            "version_normalized": "9.0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pantheon-systems/drupal-integrations.git",
-                "reference": "7b31b32a0cc4311dde90ab445d4c147c7478bbb9"
+                "reference": "19d15d23208396ae1257162a7b46ad007ce90cd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pantheon-systems/drupal-integrations/zipball/7b31b32a0cc4311dde90ab445d4c147c7478bbb9",
-                "reference": "7b31b32a0cc4311dde90ab445d4c147c7478bbb9",
+                "url": "https://api.github.com/repos/pantheon-systems/drupal-integrations/zipball/19d15d23208396ae1257162a7b46ad007ce90cd1",
+                "reference": "19d15d23208396ae1257162a7b46ad007ce90cd1",
                 "shasum": ""
             },
             "conflict": {
                 "drupal/core": "<9"
             },
-            "time": "2021-05-18T19:28:30+00:00",
+            "time": "2022-05-09T15:47:21+00:00",
             "type": "project",
             "extra": {
                 "drupal-scaffold": {
@@ -12299,7 +12347,7 @@
             "description": "Add this project to any Drupal distribution based on drupal/core-composer-scaffold to enable it for use on Pantheon.",
             "support": {
                 "issues": "https://github.com/pantheon-systems/drupal-integrations/issues",
-                "source": "https://github.com/pantheon-systems/drupal-integrations/tree/9.0.2"
+                "source": "https://github.com/pantheon-systems/drupal-integrations/tree/9.0.3"
             },
             "install-path": "../pantheon-systems/drupal-integrations"
         },
@@ -12602,17 +12650,17 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.14.1",
-            "version_normalized": "1.14.1.0",
+            "version": "1.14.2",
+            "version_normalized": "1.14.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "de90ab2b41d7d61609f504e031339776bc8c7223"
+                "reference": "c8d48852fbc052454af42f6de27635ddd916b959"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/de90ab2b41d7d61609f504e031339776bc8c7223",
-                "reference": "de90ab2b41d7d61609f504e031339776bc8c7223",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/c8d48852fbc052454af42f6de27635ddd916b959",
+                "reference": "c8d48852fbc052454af42f6de27635ddd916b959",
                 "shasum": ""
             },
             "require": {
@@ -12625,13 +12673,12 @@
                 "graham-campbell/phpspec-skip-example-extension": "^5.0",
                 "php-http/httplug": "^1.0 || ^2.0",
                 "php-http/message-factory": "^1.0",
-                "phpspec/phpspec": "^5.1 || ^6.1",
-                "puli/composer-plugin": "1.0.0-beta10"
+                "phpspec/phpspec": "^5.1 || ^6.1"
             },
             "suggest": {
                 "php-http/message": "Allow to use Guzzle, Diactoros or Slim Framework factories"
             },
-            "time": "2021-09-18T07:57:46+00:00",
+            "time": "2022-05-25T07:26:05+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -12667,7 +12714,7 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.14.1"
+                "source": "https://github.com/php-http/discovery/tree/1.14.2"
             },
             "install-path": "../php-http/discovery"
         },

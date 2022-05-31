@@ -34,3 +34,31 @@ function nysenate_theme_preprocess_block__system_branding_block(&$variables) {
     'link' => Url::fromRoute('<front>'),
   ];
 }
+
+/**
+ * Implements hook_preprocess_block_ID().
+ */
+function nysenate_theme_preprocess_block__twitterblock(&$variables) {
+  $args = [
+    '@username' => $variables['configuration']['username'],
+  ];
+
+  // Follow link.
+  $variables['content']['follow_link'] = [
+    '#type' => 'link',
+    '#title' => t('Follow'),
+    '#url' => Url::fromUri(strtr('https://twitter.com/intent/follow?screen_name=@username', $args)),
+  ];
+
+  // Account link.
+  $variables['content']['account_link'] = [
+    '#type' => 'link',
+    '#title' => strtr('@@username', $args),
+    '#url' => Url::fromUri(strtr('https://twitter.com/@username', $args)),
+  ];
+
+  // Profile image.
+  $variables['content']['profile_image'] = [
+    '#markup' => strtr('<img src="https://unavatar.io/twitter/@username" width="100" height"100" />', $args),
+  ];
+}

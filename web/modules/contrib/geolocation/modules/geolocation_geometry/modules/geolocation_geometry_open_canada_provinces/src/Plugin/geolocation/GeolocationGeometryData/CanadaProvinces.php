@@ -2,6 +2,7 @@
 
 namespace Drupal\geolocation_geometry_open_canada_provinces\Plugin\geolocation\GeolocationGeometryData;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Shapefile\ShapefileException;
 use Drupal\geolocation_geometry_data\GeolocationGeometryDataBase;
 
@@ -39,7 +40,7 @@ class CanadaProvinces extends GeolocationGeometryDataBase {
   /**
    * {@inheritdoc}
    */
-  public function import(&$context) {
+  public function import(&$context): TranslatableMarkup {
     parent::import($context);
     $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $logger = \Drupal::logger('geolocation_provinces_of_canada');
@@ -66,7 +67,7 @@ class CanadaProvinces extends GeolocationGeometryDataBase {
         ]);
         $term->save();
       }
-      return ('Done importing Provinces of Canada.');
+      return t('Done importing Provinces of Canada.');
     }
     catch (ShapefileException $e) {
       $logger->warning($e->getMessage());

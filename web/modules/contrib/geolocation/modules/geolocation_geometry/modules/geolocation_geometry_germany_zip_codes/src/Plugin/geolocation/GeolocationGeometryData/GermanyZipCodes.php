@@ -2,6 +2,7 @@
 
 namespace Drupal\geolocation_geometry_germany_zip_codes\Plugin\geolocation\GeolocationGeometryData;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Shapefile\ShapefileException;
 use Drupal\geolocation_geometry_data\GeolocationGeometryDataBase;
 
@@ -39,7 +40,7 @@ class GermanyZipCodes extends GeolocationGeometryDataBase {
   /**
    * {@inheritdoc}
    */
-  public function import(&$context) {
+  public function import(&$context): TranslatableMarkup {
     parent::import($context);
     $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $logger = \Drupal::logger('geolocation_geometry_germany_zip_codes');

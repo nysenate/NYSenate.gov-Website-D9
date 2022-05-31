@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Provides test hook implementations for node_revision_delete tests.
+ *
+ * Mostly borrowed from the taxonomy_test module.
+ */
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function node_revision_delete_test_query_node_revision_delete_candidates_alter() {
+  $value = \Drupal::state()->get(__FUNCTION__);
+  if (isset($value)) {
+    \Drupal::state()->set(__FUNCTION__, ++$value);
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function node_revision_delete_test_query_node_revision_delete_candidates_article_alter() {
+  $value = \Drupal::state()->get(__FUNCTION__);
+  if (isset($value)) {
+    \Drupal::state()->set(__FUNCTION__, ++$value);
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function node_revision_delete_test_query_node_revision_delete_candidate_revisions_alter() {
+  $value = \Drupal::state()->get(__FUNCTION__);
+  if (isset($value)) {
+    \Drupal::state()->set(__FUNCTION__, ++$value);
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function node_revision_delete_test_query_node_revision_delete_candidate_revisions_article_alter() {
+  $value = \Drupal::state()->get(__FUNCTION__);
+  if (isset($value)) {
+    \Drupal::state()->set(__FUNCTION__, ++$value);
+  }
+}

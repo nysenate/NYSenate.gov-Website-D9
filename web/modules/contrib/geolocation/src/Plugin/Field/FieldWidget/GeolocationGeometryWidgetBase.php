@@ -9,7 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\geolocation\MapProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -88,6 +87,15 @@ abstract class GeolocationGeometryWidgetBase extends WidgetBase implements Conta
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings(): array {
+    return [
+      static::$mapProviderSettingsFormId => [],
+    ] + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSettings(): array {
     $settings = parent::getSettings();
     $map_settings = [];
@@ -108,7 +116,7 @@ abstract class GeolocationGeometryWidgetBase extends WidgetBase implements Conta
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $settings = $this->getSettings();
-    $element = [];
+    $element = parent::settingsForm($form, $form_state);
 
     $element[static::$mapProviderSettingsFormId] = $this->mapProvider->getSettingsForm(
       $settings[static::$mapProviderSettingsFormId],

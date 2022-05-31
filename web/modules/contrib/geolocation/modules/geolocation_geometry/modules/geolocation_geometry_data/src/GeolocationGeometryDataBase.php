@@ -2,7 +2,8 @@
 
 namespace Drupal\geolocation_geometry_data;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Shapefile\Shapefile;
 use Shapefile\ShapefileReader;
 use Shapefile\ShapefileException;
 
@@ -11,7 +12,7 @@ use Shapefile\ShapefileException;
  *
  * @package Drupal\geolocation_geometry_data
  */
-abstract class GeolocationGeometryDataBase extends PluginBase {
+abstract class GeolocationGeometryDataBase {
 
   /**
    * URI to archive.
@@ -54,7 +55,7 @@ abstract class GeolocationGeometryDataBase extends PluginBase {
    * @return array
    *   Batch return.
    */
-  public function getBatch() {
+  public function getBatch(): array {
     $operations = [
       [[$this, 'download'], []],
       [[$this, 'import'], []],
@@ -63,9 +64,7 @@ abstract class GeolocationGeometryDataBase extends PluginBase {
     return [
       'title' => t('Import Shapefile'),
       'operations' => $operations,
-      'progressive' => TRUE,
       'progress_message' => t('Finished step @current / @total.'),
-      'finished' => [$this, 'finished'],
       'init_message' => t('Import is starting.'),
       'error_message' => t('Something went horribly wrong.'),
     ];
@@ -77,42 +76,25 @@ abstract class GeolocationGeometryDataBase extends PluginBase {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   Batch return.
    */
-  public function download() {
-    $definition = $this->getPluginDefinition();
+  public function download(): TranslatableMarkup {
     $destination = \Drupal::service('file_system')->getTempDirectory() . '/' . $this->sourceFilename;
 
     if (!is_file($destination)) {
       $client = \Drupal::httpClient();
-      try {
-        $client->get($this->sourceUri, ['save_to' => $destination]);
-
-        \Drupal::messenger()->addMessage(t('File for %name downloaded.', [
-          '%name' => $definition['name'],
-        ]));
-      }
-      catch (\Exception $e) {
-        return t('ERROR downloading @url. Reason: @reason', [
-          '@url' => $this->sourceUri,
-          '@reason' => $e->getMessage(),
-        ]);
-      }
-    }
-    else {
-      \Drupal::messenger()->addMessage(t('File for @name already exists, skipping download.', [
-        '@name' => $definition['name'],
-      ]));
+      $client->get($this->sourceUri, ['save_to' => $destination]);
     }
 
     if (!empty($this->localDirectory) && substr(strtolower($this->sourceFilename), -3) === 'zip') {
+
+      \Drupal::service('file_system')->deleteRecursive(\Drupal::service('file_system')->getTempDirectory() . '/' . $this->localDirectory);
+
       $zip = new \ZipArchive();
       $res = $zip->open($destination);
       if ($res === TRUE) {
         $zip->extractTo(\Drupal::service('file_system')->getTempDirectory() . '/' . $this->localDirectory);
         $zip->close();
 
-        \Drupal::messenger()->addMessage(t('File for @name unzipped.', [
-          '@name' => $definition['name'],
-        ]));
+        \Drupal::service('file_system')->delete($destination);
       }
       else {
         return t('ERROR downloading @url', ['@url' => $this->sourceUri]);
@@ -128,52 +110,28 @@ abstract class GeolocationGeometryDataBase extends PluginBase {
    * @param mixed $context
    *   Batch context.
    *
-   * @return bool
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   Batch return.
    */
-  public function import(&$context) {
-    $logger = \Drupal::logger('geolocation_geometry_data');
-
+  public function import(&$context): ?TranslatableMarkup {
     if (empty($this->shapeFilename)) {
-      return FALSE;
+      return t('Shapefilename is empty');
     }
 
     try {
-      $this->shapeFile = new ShapefileReader(\Drupal::service('file_system')->getTempDirectory() . '/' . $this->localDirectory . '/' . $this->shapeFilename);
+      $this->shapeFile = new ShapefileReader(\Drupal::service('file_system')->getTempDirectory() . '/' . $this->localDirectory . '/' . $this->shapeFilename, [
+        Shapefile::OPTION_DBF_IGNORED_FIELDS => ['BRK_GROUP'],
+      ]);
     }
     catch (ShapefileException $e) {
-      $logger->warning($e->getMessage());
-      return FALSE;
+      return t('Failed %message', ['%message' => $e->getMessage()]);
     }
-    return TRUE;
-  }
 
-  /**
-   * Finished batch.
-   *
-   * @param bool $success
-   *   A boolean indicating whether the batch has completed successfully.
-   * @param array $results
-   *   The value set in $context['results'] by callback_batch_operation().
-   * @param array $operations
-   *   Missed operations.
-   * @param string $elapsed
-   *   A string representing the elapsed time for the batch process.
-   */
-  public function finished($success, $results, $operations, $elapsed) {
-    $definition = $this->getPluginDefinition();
-    if ($success) {
-      \Drupal::messenger()->addMessage(t('Success: Imported @results @type elements.', [
-        '@results' => count($results),
-        '@type' => $definition['name'],
-      ]));
+    if (empty($this->shapeFile)) {
+      throw new \Exception(t("Shapefile %file is empty.", ['%file' => \Drupal::service('file_system')->getTempDirectory() . '/' . $this->localDirectory . '/' . $this->shapeFilename]));
     }
-    else {
-      \Drupal::messenger()->addError(t('ERROR: Imported @results @type elements.', [
-        '@results' => count($results),
-        '@type' => $definition['name'],
-      ]));
-    }
+
+    return NULL;
   }
 
 }

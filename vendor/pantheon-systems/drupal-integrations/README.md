@@ -1,5 +1,7 @@
 # pantheon-systems/drupal-integrations
 
+[![Actively Maintained](https://img.shields.io/badge/Pantheon-Actively_Maintained-yellow?logo=pantheon&color=FFDC28)](https://pantheon.io/docs/oss-support-levels#actively-maintained)
+
 Add this project to any Drupal distribution based on drupal/core-composer-scaffold to enable it for use on Pantheon.
 
 This project enables the following Pantheon/Drupal integrations:
@@ -26,7 +28,7 @@ This project must be enabled in the top-level composer.json file, or it will be 
 {
     ...
     "require": {
-        "pantheon-systems/drupal-integrations"
+        "pantheon-systems/drupal-integrations": "^9"
     },
     ...
     "extra": {
@@ -38,3 +40,7 @@ This project must be enabled in the top-level composer.json file, or it will be 
     }
 }
 ```
+
+## Versions
+
+Use version "^8" for Drupal 8, and version "^9" for Drupal 9.

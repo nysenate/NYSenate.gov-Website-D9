@@ -2292,6 +2292,539 @@ strong {
   .font-secondary strong {
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
 
+/*------------------------------------
+/	NEWS:
+/-------------------------------------*/
+.c-news--head,
+.c-questionnaire--head {
+  margin-bottom: 20px; }
+  .c-news--head ul.links,
+  .c-questionnaire--head ul.links {
+    display: block;
+    list-style: none;
+    line-height: 25px; }
+    .c-news--head ul.links li,
+    .c-questionnaire--head ul.links li {
+      display: inline-block;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-family: "Proxima Nova SemiBold";
+      white-space: nowrap; }
+    .c-news--head ul.links a,
+    .c-questionnaire--head ul.links a {
+      font-size: 12px;
+      line-height: 1em;
+      color: #2b6a90; }
+  .c-news--head .field-name-field-issues,
+  .c-questionnaire--head .field-name-field-issues {
+    padding: 0; }
+
+.c-news--title {
+  margin-bottom: 15px;
+  font-family: "Adelle Regular";
+  font-size: 22px;
+  line-height: 1.3em; }
+
+.c-news--author,
+.c-news--pub-date {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  text-transform: capitalize;
+  font-family: "Proxima Nova Regular";
+  font-size: 12px; }
+
+.c-news--author {
+  text-transform: uppercase; }
+
+.c-news--pub-date {
+  color: #888888; }
+
+.c-news--download {
+  display: block;
+  margin-bottom: 20px; }
+  .c-news--download img {
+    display: none; }
+  .c-news--download .file > a {
+    display: block;
+    margin-top: 15px;
+    font-size: 12px;
+    font-family: "Proxima Nova SemiBold";
+    color: #2b6a90; }
+    .c-news--download .file > a:before {
+      content: '\6b';
+      font-size: 21px;
+      line-height: 12px;
+      font-family: 'senate_icons';
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-right: 3px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale; }
+
+.c-news--head .c-news--download {
+  margin-bottom: 0; }
+
+@media screen and (min-width: 760px) {
+  .c-news-download {
+    margin-bottom: 30px; }
+  .c-news--head .c-news--download {
+    margin-bottom: 0; } }
+
+.c-news--subtitle {
+  margin-bottom: 20px;
+  color: #444444;
+  font-family: "Adelle SemiBold";
+  font-size: 18px;
+  line-height: 1.4em; }
+
+.c-block-quoted-body {
+  padding-left: 40px;
+  border-left: 5px solid #eee; }
+
+/*------------------------------------
+/ 'IN THE NEWS' elements
+/------------------------------------*/
+.c-news--body-title {
+  border-top: 1px solid #aaaaaa;
+  padding: 10px 0 20px;
+  font-family: "Adelle Light";
+  font-size: 18px; }
+  .c-news--body-title a {
+    color: #2b6a90; }
+
+.c-in-the-news--body .body {
+  border-left: 5px solid #eeeeee;
+  padding-left: 10px; }
+
+@media screen and (min-width: 760px) {
+  .c-news--head {
+    margin-bottom: 30px; }
+    .c-news--head ul.links {
+      display: inline; }
+    .c-news--head .field-name-field-issues {
+      display: inline-block; }
+  .c-news--title {
+    font-size: 48px;
+    margin-bottom: 30px; }
+  .c-news--author,
+  .c-news--pub-date,
+  .c-news--committees {
+    font-size: 15px;
+    line-height: 1.2em; }
+  .c-news--pub-date {
+    /*border-right: 1px solid $grey04;
+		padding-right: 14px;*/ }
+  .c-news--subtitle {
+    font-size: 26px; }
+  .c-news--body-title {
+    padding: 20px 0 30px;
+    font-family: "Adelle Light";
+    font-size: 24px; }
+  .c-in-the-news--body .body {
+    border-left: 10px solid #eeeeee;
+    padding-left: 30px; } }
+
+.node-type-webform .form-item {
+  margin-right: 1em; }
+  .node-type-webform .form-item input[type="text"],
+  .node-type-webform .form-item input[type="email"] {
+    height: 55px; }
+
+.node-type-webform button[type="submit"] {
+  background-color: #2b6990;
+  margin: 15px 0 40px 0; }
+
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+/*-----------------------------
+/	CUSTOM NEW YORK SENATE (nysenate_theme) PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+.contrast_text {
+  color: #000; }
+
+.lgt-text {
+  color: #2b6a90; }
+
+.lgt-bg {
+  background-color: #2b6a90; }
+
+.med-text {
+  color: #175b81; }
+
+.med-bg {
+  background-color: #175b81; }
+
+.drk-text {
+  color: #004d71; }
+
+.drk-bg {
+  background-color: #004d71; }
+
+.link-text {
+  color: #cb8d37; }
+
+.accent-bg {
+  background-color: #1b5187; }
+
+.accent-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .nav-text {
+    color: #444; }
+    .nav-text:hover {
+      color: #2b6a90; }
+    .nav-text.active {
+      color: #2b6a90; } }
+
+.trad_blue .contrast_text {
+  color: #fff; }
+
+.trad_blue .lgt-text {
+  color: #1b5187; }
+
+.trad_blue .lgt-bg {
+  background-color: #1b5187; }
+
+.trad_blue .med-text {
+  color: #1d446b; }
+
+.trad_blue .med-bg {
+  background-color: #1d446b; }
+
+.trad_blue .drk-text {
+  color: #1c364e; }
+
+.trad_blue .drk-bg {
+  background-color: #1c364e; }
+
+.trad_blue .link-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .trad_blue .nav-text {
+    color: #444; }
+    .trad_blue .nav-text:hover {
+      color: #1b5187; }
+    .trad_blue .nav-text.active {
+      color: #1b5187; } }
+
+.cont_blue .contrast_text {
+  color: #000; }
+
+.cont_blue .lgt-text {
+  color: #04a9c5; }
+
+.cont_blue .lgt-bg {
+  background-color: #04a9c5; }
+
+.cont_blue .med-text {
+  color: #008ca6; }
+
+.cont_blue .med-bg {
+  background-color: #008ca6; }
+
+.cont_blue .drk-text {
+  color: #1f798f; }
+
+.cont_blue .drk-bg {
+  background-color: #1f798f; }
+
+.cont_blue .link-text {
+  color: #04a9c5; }
+
+@media screen and (min-width: 760px) {
+  .cont_blue .nav-text {
+    color: #444; }
+    .cont_blue .nav-text:hover {
+      color: #04a9c5; }
+    .cont_blue .nav-text.active {
+      color: #04a9c5; } }
+
+.purple .contrast_text {
+  color: #000; }
+
+.purple .lgt-text {
+  color: #90668f; }
+
+.purple .lgt-bg {
+  background-color: #90668f; }
+
+.purple .med-text {
+  color: #754775; }
+
+.purple .med-bg {
+  background-color: #754775; }
+
+.purple .drk-text {
+  color: #543457; }
+
+.purple .drk-bg {
+  background-color: #543457; }
+
+.purple .link-text {
+  color: #90668f; }
+
+.purple .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .purple .nav-text {
+    color: #444; }
+    .purple .nav-text:hover {
+      color: #90668f; }
+    .purple .nav-text.active {
+      color: #90668f; } }
+
+.trad_red .contrast_text {
+  color: #fff; }
+
+.trad_red .lgt-text {
+  color: #87002f; }
+
+.trad_red .lgt-bg {
+  background-color: #87002f; }
+
+.trad_red .med-text {
+  color: #6e0026; }
+
+.trad_red .med-bg {
+  background-color: #6e0026; }
+
+.trad_red .drk-text {
+  color: #500019; }
+
+.trad_red .drk-bg {
+  background-color: #500019; }
+
+.trad_red .link-text {
+  color: #87002f; }
+
+.trad_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_red .nav-text {
+    color: #444; }
+    .trad_red .nav-text:hover {
+      color: #87002f; }
+    .trad_red .nav-text.active {
+      color: #87002f; } }
+
+.cont_red .contrast_text {
+  color: #fff; }
+
+.cont_red .lgt-text {
+  color: #c62526; }
+
+.cont_red .lgt-bg {
+  background-color: #c62526; }
+
+.cont_red .med-text {
+  color: #bb0623; }
+
+.cont_red .med-bg {
+  background-color: #bb0623; }
+
+.cont_red .drk-text {
+  color: #a00101; }
+
+.cont_red .drk-bg {
+  background-color: #a00101; }
+
+.cont_red .link-text {
+  color: #c62526; }
+
+.cont_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_red .nav-text {
+    color: #444; }
+    .cont_red .nav-text:hover {
+      color: #c62526; }
+    .cont_red .nav-text.active {
+      color: #c62526; } }
+
+.orange .contrast_text {
+  color: #000; }
+
+.orange .lgt-text {
+  color: #f0673d; }
+
+.orange .lgt-bg {
+  background-color: #f0673d; }
+
+.orange .med-text {
+  color: #ed4b1c; }
+
+.orange .med-bg {
+  background-color: #ed4b1c; }
+
+.orange .drk-text {
+  color: #c84123; }
+
+.orange .drk-bg {
+  background-color: #c84123; }
+
+.orange .link-text {
+  color: #f0673d; }
+
+.orange .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .orange .nav-text {
+    color: #444; }
+    .orange .nav-text:hover {
+      color: #f0673d; }
+    .orange .nav-text.active {
+      color: #f0673d; } }
+
+.trad_green .contrast_text {
+  color: #000; }
+
+.trad_green .lgt-text {
+  color: #60a35f; }
+
+.trad_green .lgt-bg {
+  background-color: #60a35f; }
+
+.trad_green .med-text {
+  color: #4d894f; }
+
+.trad_green .med-bg {
+  background-color: #4d894f; }
+
+.trad_green .drk-text {
+  color: #416837; }
+
+.trad_green .drk-bg {
+  background-color: #416837; }
+
+.trad_green .link-text {
+  color: #60a35f; }
+
+.trad_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_green .nav-text {
+    color: #444; }
+    .trad_green .nav-text:hover {
+      color: #60a35f; }
+    .trad_green .nav-text.active {
+      color: #60a35f; } }
+
+.cont_green .contrast_text {
+  color: #000; }
+
+.cont_green .lgt-text {
+  color: #65c5b6; }
+
+.cont_green .lgt-bg {
+  background-color: #65c5b6; }
+
+.cont_green .med-text {
+  color: #479e93; }
+
+.cont_green .med-bg {
+  background-color: #479e93; }
+
+.cont_green .drk-text {
+  color: #378479; }
+
+.cont_green .drk-bg {
+  background-color: #378479; }
+
+.cont_green .link-text {
+  color: #65c5b6; }
+
+.cont_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_green .nav-text {
+    color: #444; }
+    .cont_green .nav-text:hover {
+      color: #65c5b6; }
+    .cont_green .nav-text.active {
+      color: #65c5b6; } }
+
+.inactive-pallette .contrast_text {
+  color: #000; }
+
+.inactive-pallette .lgt-text {
+  color: #1b5187; }
+
+.inactive-pallette .lgt-bg {
+  background-color: #b2b2b2; }
+
+.inactive-pallette .med-text {
+  color: #999999; }
+
+.inactive-pallette .med-bg {
+  background-color: #999999; }
+
+.inactive-pallette .drk-text {
+  color: #808080; }
+
+.inactive-pallette .drk-bg {
+  background-color: #808080; }
+
+.inactive-pallette .link-text {
+  color: #1b5187; }
+
+.inactive-pallette .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .inactive-pallette .nav-text {
+    color: #444; }
+    .inactive-pallette .nav-text:hover {
+      color: #1b5187; }
+    .inactive-pallette .nav-text.active {
+      color: #1b5187; } }
+
+/*---------------------------
+/ WIDTHS for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+strong {
+  font-family: "Adelle Bold", serif; }
+
+.font-secondary {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif; }
+  .font-secondary strong {
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+
 .authors {
   margin-bottom: 15px; }
 
@@ -19715,18 +20248,9 @@ strong {
 .timeline-Tweet-metadata {
   font-family: "Proxima Nova Regular" !important; }
 
-.timeline-Header {
-  padding: 20px 20px 0 !important;
-  letter-spacing: 0.05em !important; }
-  .timeline-Header .timeline-Header-title {
-    font-family: "Proxima Nova Regular" !important;
-    font-size: 19px !important;
-    color: #666666 !important; }
-  .timeline-Header .timeline-Header-byline {
-    font-family: "Proxima Nova SemiBold" !important;
-    font-size: 12px !important;
-    text-transform: uppercase !important;
-    color: #cb8d37 !important; }
+.timeline-Header,
+.timeline-Footer {
+  display: none !important; }
 
 .timeline-Body {
   position: relative !important;
@@ -19736,9 +20260,6 @@ strong {
   border: 0 !important; }
   .timeline-Body img {
     display: inline; }
-
-.timeline-Header {
-  background-color: #eeeeee !important; }
 
 .timeline-TweetList-tweet {
   border: 0 !important; }
@@ -19761,8 +20282,6 @@ strong {
 @media screen and (min-width: 760px) {
   .timeline-Body {
     padding: 15px 40px 5px !important; }
-  .timeline-Header {
-    padding: 20px 40px 0 !important; }
   .timeline-InformationCircle {
     right: 40px !important; }
   .timeline-Tweet {
@@ -19775,65 +20294,91 @@ strong {
       float: left !important;
       clear: left !important; }
       .timeline-TweetList-tweet:nth-child(odd) .timeline-Tweet {
-        padding-right: 5% !important; }
+        margin-right: 5% !important; }
     .timeline-TweetList-tweet:nth-child(even) {
       float: right !important; }
       .timeline-TweetList-tweet:nth-child(even) .timeline-Tweet {
-        padding-left: 5% !important; } }
+        margin-left: 5% !important; }
+    .timeline-TweetList-tweet:first-child .timeline-Tweet {
+      padding-right: 5% !important;
+      margin-right: 0 !important; }
+    .timeline-TweetList-tweet:nth-child(2) .timeline-Tweet {
+      padding-left: 5% !important;
+      margin-left: 0 !important; } }
 
 .nyesenate-twitter-block {
   margin-bottom: 40px; }
   .nyesenate-twitter-block .c-container--title {
     padding: 20px 0 30px;
-    border-top: 1px solid #aaaaaa;
     letter-spacing: 0.05em; }
+  .nyesenate-twitter-block .tweets-container {
+    padding-top: 15px; }
+    .nyesenate-twitter-block .tweets-container .u-even:nth-child(-n + 2),
+    .nyesenate-twitter-block .tweets-container .u-odd:nth-child(-n + 2) {
+      border-top: 1px solid #aaaaaa; }
+      .nyesenate-twitter-block .tweets-container .u-even:nth-child(-n + 2) .c-twitter-block,
+      .nyesenate-twitter-block .tweets-container .u-odd:nth-child(-n + 2) .c-twitter-block {
+        border-top: 0; }
+    .nyesenate-twitter-block .tweets-container .u-even .c-twitter-block,
+    .nyesenate-twitter-block .tweets-container .u-odd .c-twitter-block {
+      border-top: 1px solid #aaaaaa; }
   .nyesenate-twitter-block .l-tweets {
     position: relative;
     overflow: hidden;
     padding: 20px;
     background-color: #eeeeee; }
   .nyesenate-twitter-block .l-twitter-user {
-    padding-bottom: 20px; }
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    padding: 35px 40px 0;
+    -moz-column-gap: 15px;
+    column-gap: 15px; }
   .nyesenate-twitter-block .c-twitter--logo {
-    display: inline-block;
-    vertical-align: middle;
+    display: block;
     width: 60px;
     height: 60px; }
     .nyesenate-twitter-block .c-twitter--logo > img {
       background-color: transparent; }
   .nyesenate-twitter-block .c-twitter-user--info {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 20px; }
+    display: block;
+    margin-top: 15px; }
     .nyesenate-twitter-block .c-twitter-user--info p {
       font-size: 12px;
       line-height: 1; }
   .nyesenate-twitter-block .c-twitter-user--name {
     font-family: "Proxima Nova Regular";
     font-size: 19px;
-    color: #666666; }
+    color: #666666;
+    margin: 0; }
   .nyesenate-twitter-block .c-twitter-user--link {
-    font-family: "Proxima Nova SemiBold";
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #cb8d37; }
+    margin: 0; }
+    .nyesenate-twitter-block .c-twitter-user--link a {
+      color: #cb8d37;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none; }
   .nyesenate-twitter-block .c-twitter-user--follow {
     display: block;
     margin: 20px 0 0 0;
-    padding: 7px 0;
     border: 1px solid #aaaaaa;
-    width: 75px;
+    padding: 10px 15px;
     background-color: #fff;
-    text-align: center;
-    color: #cb8d37;
-    font-size: 12px;
-    line-height: 1;
-    font-family: "Proxima Nova SemiBold";
-    text-transform: uppercase; }
+    text-align: center; }
+    .nyesenate-twitter-block .c-twitter-user--follow a {
+      color: #cb8d37;
+      font-size: 12px;
+      line-height: 1;
+      font-family: "Proxima Nova SemiBold";
+      text-transform: uppercase;
+      text-decoration: none; }
   .nyesenate-twitter-block .c-twitter-block {
     overflow: hidden;
-    padding: 20px 0 20px;
-    border-top: 1px solid #aaaaaa; }
+    padding: 20px 0 20px; }
     .nyesenate-twitter-block .c-twitter-block .c-tweet {
       font-family: "Adelle Light";
       font-size: 18px;
@@ -19941,23 +20486,20 @@ strong {
       border: none;
       padding: 0 0 15px 0; }
     .nyesenate-twitter-block .l-tweets {
-      padding: 35px 40px 5px; }
-    .nyesenate-twitter-block .l-twitter-user {
-      position: relative;
-      margin-bottom: -1px;
-      border-bottom: 1px solid #aaaaaa; }
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px 5px; }
+    .nyesenate-twitter-block .l-twitter-user > div {
+      display: flex;
+      align-items: center; }
     .nyesenate-twitter-block .c-twitter-user--follow {
-      position: absolute;
-      top: -25px;
-      left: auto;
-      right: 0;
-      bottom: 0;
-      height: 28px;
-      margin: auto; }
+      margin: 0; }
+    .nyesenate-twitter-block .c-twitter-user--info {
+      margin-left: 20px;
+      margin-top: 0; }
     .nyesenate-twitter-block .c-twitter-block,
     .nyesenate-twitter-block .last .c-twitter-block {
-      padding: 40px 0;
-      border-top: 1px solid #aaaaaa; }
+      padding: 40px 0; }
       .nyesenate-twitter-block .c-twitter-block .c-tweet,
       .nyesenate-twitter-block .last .c-twitter-block .c-tweet {
         font-size: 22px; }
@@ -23060,6 +23602,1511 @@ strong {
     @media screen and (min-width: 768px) {
       .quote--left .quote__cite-media {
         margin: 0 1.375rem 0 0; } }
+
+/*--------------------------------
+/	DETAIL PAGES
+/ 	Bills
+/	Resolutions
+/	Issues
+/----------------------------------------------*/
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+/*-----------------------------
+/	CUSTOM NEW YORK SENATE (nysenate_theme) PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+.contrast_text {
+  color: #000; }
+
+.lgt-text {
+  color: #2b6a90; }
+
+.lgt-bg {
+  background-color: #2b6a90; }
+
+.med-text {
+  color: #175b81; }
+
+.med-bg {
+  background-color: #175b81; }
+
+.drk-text {
+  color: #004d71; }
+
+.drk-bg {
+  background-color: #004d71; }
+
+.link-text {
+  color: #cb8d37; }
+
+.accent-bg {
+  background-color: #1b5187; }
+
+.accent-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .nav-text {
+    color: #444; }
+    .nav-text:hover {
+      color: #2b6a90; }
+    .nav-text.active {
+      color: #2b6a90; } }
+
+.trad_blue .contrast_text {
+  color: #fff; }
+
+.trad_blue .lgt-text {
+  color: #1b5187; }
+
+.trad_blue .lgt-bg {
+  background-color: #1b5187; }
+
+.trad_blue .med-text {
+  color: #1d446b; }
+
+.trad_blue .med-bg {
+  background-color: #1d446b; }
+
+.trad_blue .drk-text {
+  color: #1c364e; }
+
+.trad_blue .drk-bg {
+  background-color: #1c364e; }
+
+.trad_blue .link-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .trad_blue .nav-text {
+    color: #444; }
+    .trad_blue .nav-text:hover {
+      color: #1b5187; }
+    .trad_blue .nav-text.active {
+      color: #1b5187; } }
+
+.cont_blue .contrast_text {
+  color: #000; }
+
+.cont_blue .lgt-text {
+  color: #04a9c5; }
+
+.cont_blue .lgt-bg {
+  background-color: #04a9c5; }
+
+.cont_blue .med-text {
+  color: #008ca6; }
+
+.cont_blue .med-bg {
+  background-color: #008ca6; }
+
+.cont_blue .drk-text {
+  color: #1f798f; }
+
+.cont_blue .drk-bg {
+  background-color: #1f798f; }
+
+.cont_blue .link-text {
+  color: #04a9c5; }
+
+@media screen and (min-width: 760px) {
+  .cont_blue .nav-text {
+    color: #444; }
+    .cont_blue .nav-text:hover {
+      color: #04a9c5; }
+    .cont_blue .nav-text.active {
+      color: #04a9c5; } }
+
+.purple .contrast_text {
+  color: #000; }
+
+.purple .lgt-text {
+  color: #90668f; }
+
+.purple .lgt-bg {
+  background-color: #90668f; }
+
+.purple .med-text {
+  color: #754775; }
+
+.purple .med-bg {
+  background-color: #754775; }
+
+.purple .drk-text {
+  color: #543457; }
+
+.purple .drk-bg {
+  background-color: #543457; }
+
+.purple .link-text {
+  color: #90668f; }
+
+.purple .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .purple .nav-text {
+    color: #444; }
+    .purple .nav-text:hover {
+      color: #90668f; }
+    .purple .nav-text.active {
+      color: #90668f; } }
+
+.trad_red .contrast_text {
+  color: #fff; }
+
+.trad_red .lgt-text {
+  color: #87002f; }
+
+.trad_red .lgt-bg {
+  background-color: #87002f; }
+
+.trad_red .med-text {
+  color: #6e0026; }
+
+.trad_red .med-bg {
+  background-color: #6e0026; }
+
+.trad_red .drk-text {
+  color: #500019; }
+
+.trad_red .drk-bg {
+  background-color: #500019; }
+
+.trad_red .link-text {
+  color: #87002f; }
+
+.trad_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_red .nav-text {
+    color: #444; }
+    .trad_red .nav-text:hover {
+      color: #87002f; }
+    .trad_red .nav-text.active {
+      color: #87002f; } }
+
+.cont_red .contrast_text {
+  color: #fff; }
+
+.cont_red .lgt-text {
+  color: #c62526; }
+
+.cont_red .lgt-bg {
+  background-color: #c62526; }
+
+.cont_red .med-text {
+  color: #bb0623; }
+
+.cont_red .med-bg {
+  background-color: #bb0623; }
+
+.cont_red .drk-text {
+  color: #a00101; }
+
+.cont_red .drk-bg {
+  background-color: #a00101; }
+
+.cont_red .link-text {
+  color: #c62526; }
+
+.cont_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_red .nav-text {
+    color: #444; }
+    .cont_red .nav-text:hover {
+      color: #c62526; }
+    .cont_red .nav-text.active {
+      color: #c62526; } }
+
+.orange .contrast_text {
+  color: #000; }
+
+.orange .lgt-text {
+  color: #f0673d; }
+
+.orange .lgt-bg {
+  background-color: #f0673d; }
+
+.orange .med-text {
+  color: #ed4b1c; }
+
+.orange .med-bg {
+  background-color: #ed4b1c; }
+
+.orange .drk-text {
+  color: #c84123; }
+
+.orange .drk-bg {
+  background-color: #c84123; }
+
+.orange .link-text {
+  color: #f0673d; }
+
+.orange .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .orange .nav-text {
+    color: #444; }
+    .orange .nav-text:hover {
+      color: #f0673d; }
+    .orange .nav-text.active {
+      color: #f0673d; } }
+
+.trad_green .contrast_text {
+  color: #000; }
+
+.trad_green .lgt-text {
+  color: #60a35f; }
+
+.trad_green .lgt-bg {
+  background-color: #60a35f; }
+
+.trad_green .med-text {
+  color: #4d894f; }
+
+.trad_green .med-bg {
+  background-color: #4d894f; }
+
+.trad_green .drk-text {
+  color: #416837; }
+
+.trad_green .drk-bg {
+  background-color: #416837; }
+
+.trad_green .link-text {
+  color: #60a35f; }
+
+.trad_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_green .nav-text {
+    color: #444; }
+    .trad_green .nav-text:hover {
+      color: #60a35f; }
+    .trad_green .nav-text.active {
+      color: #60a35f; } }
+
+.cont_green .contrast_text {
+  color: #000; }
+
+.cont_green .lgt-text {
+  color: #65c5b6; }
+
+.cont_green .lgt-bg {
+  background-color: #65c5b6; }
+
+.cont_green .med-text {
+  color: #479e93; }
+
+.cont_green .med-bg {
+  background-color: #479e93; }
+
+.cont_green .drk-text {
+  color: #378479; }
+
+.cont_green .drk-bg {
+  background-color: #378479; }
+
+.cont_green .link-text {
+  color: #65c5b6; }
+
+.cont_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_green .nav-text {
+    color: #444; }
+    .cont_green .nav-text:hover {
+      color: #65c5b6; }
+    .cont_green .nav-text.active {
+      color: #65c5b6; } }
+
+.inactive-pallette .contrast_text {
+  color: #000; }
+
+.inactive-pallette .lgt-text {
+  color: #1b5187; }
+
+.inactive-pallette .lgt-bg {
+  background-color: #b2b2b2; }
+
+.inactive-pallette .med-text {
+  color: #999999; }
+
+.inactive-pallette .med-bg {
+  background-color: #999999; }
+
+.inactive-pallette .drk-text {
+  color: #808080; }
+
+.inactive-pallette .drk-bg {
+  background-color: #808080; }
+
+.inactive-pallette .link-text {
+  color: #1b5187; }
+
+.inactive-pallette .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .inactive-pallette .nav-text {
+    color: #444; }
+    .inactive-pallette .nav-text:hover {
+      color: #1b5187; }
+    .inactive-pallette .nav-text.active {
+      color: #1b5187; } }
+
+/*---------------------------
+/ WIDTHS for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+strong {
+  font-family: "Adelle Bold", serif; }
+
+.font-secondary {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif; }
+  .font-secondary strong {
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+
+.c-detail--header {
+  margin-bottom: 20px; }
+  .c-detail--header > .nys-title {
+    margin-bottom: 0; }
+
+.c-detail--subhead {
+  margin: 0 0 10px;
+  color: #444444;
+  font-family: 'Proxima Nova Regular';
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase; }
+  .c-detail--subhead span {
+    text-transform: capitalize;
+    clear: both;
+    line-height: 1.4em;
+    letter-spacing: 0.01em;
+    display: block; }
+
+.c-detail--descript {
+  margin-bottom: 10px; }
+
+.c-bill--amended .c-bill--flag {
+  display: none; }
+  .c-bill--amended .c-bill--flag:last-child {
+    display: inline-block; }
+  .c-bill--amended .c-bill--flag a {
+    color: white; }
+
+.c-detail--section-title {
+  overflow: hidden;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #aaaaaa;
+  margin-bottom: 20px;
+  line-height: 1; }
+  .c-detail--section-title .c-detail--subhead {
+    display: inline-block;
+    margin-bottom: 0; }
+
+.c-detail--related {
+  list-style: none;
+  line-height: 1.3em; }
+  .c-detail--related .field-name-field-issues {
+    padding-bottom: 10px; }
+
+.c-detail--related-item {
+  display: inline-block;
+  margin-right: 5px; }
+  .c-detail--related-item a {
+    color: #cb8d37;
+    text-transform: uppercase;
+    font-size: 12px; }
+
+.c-detail--download {
+  display: block;
+  margin-bottom: 20px;
+  color: #2b6990;
+  font-family: 'Proxima Nova Regular';
+  text-transform: uppercase;
+  font-size: 12px; }
+  .c-detail--download::before {
+    content: "\30";
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-right: 3px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 1.5em;
+    line-height: 1em; }
+
+.c-detail--social {
+  margin-bottom: 40px; }
+  .c-detail--social > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden; }
+  .c-detail--social li {
+    display: block;
+    float: left; }
+    .c-detail--social li + li {
+      margin: 0 0 0 20px; }
+
+.c-detail--social-item {
+  position: relative;
+  display: block;
+  width: 60px;
+  height: 40px;
+  background: #2b6990; }
+  .c-detail--social-item::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    line-height: 40px;
+    color: #fff; }
+  .c-detail--social-item.facebook {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; }
+    .c-detail--social-item.facebook::after {
+      content: "\21";
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px; }
+  .c-detail--social-item.twitter {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; }
+    .c-detail--social-item.twitter::after {
+      content: "\23";
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px; }
+  .c-detail--social-item.email {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; }
+    .c-detail--social-item.email::after {
+      content: "\4e";
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px; }
+
+.c-co-sponsors {
+  margin-top: 40px; }
+  .c-co-sponsors .c-sponsor + .c-sponsor {
+    margin-top: 20px; }
+
+.c-sponsor-quote {
+  padding: 30px 20px;
+  background: #eeeeee; }
+  .c-sponsor-quote .nys-senator--thumb {
+    height: 65px;
+    width: 65px;
+    margin-right: 20px; }
+  .c-sponsor-quote .c-block--btn-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 11;
+    background: transparent; }
+    .c-sponsor-quote .c-block--btn-toggle::after {
+      content: "\73";
+      font-size: 26px;
+      line-height: 42px;
+      color: #aaaaaa; }
+  .c-sponsor-quote .c-social {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    height: 50px;
+    width: 50%;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 10;
+    transition: visibility 0s 0.3s, opacity 0.3s; }
+    .c-sponsor-quote .c-social .c-social--list {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 50px;
+      padding: 0;
+      text-align: left;
+      width: 83%; }
+      .c-sponsor-quote .c-social .c-social--list li {
+        display: inline-block;
+        height: 100%;
+        width: 28%;
+        margin: 0 10px;
+        margin-top: 0;
+        line-height: 50px; }
+      .c-sponsor-quote .c-social .c-social--list a {
+        display: block;
+        width: 100%;
+        height: 100%; }
+        .c-sponsor-quote .c-social .c-social--list a::after {
+          width: 100%;
+          height: 100%;
+          color: #175b81;
+          font-size: 36px; }
+  .c-sponsor-quote.c-social-visible .c-social {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease; }
+
+.c-sponsor-quote--title {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 15px;
+  color: #323232;
+  text-transform: uppercase;
+  font-family: 'Proxima Nova Regular';
+  font-size: 12px;
+  letter-spacing: 0.05em; }
+  .c-sponsor-quote--title::before {
+    content: "\71";
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-right: 3px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    z-index: -1;
+    top: -0.65em;
+    left: -0.2em;
+    color: #fff;
+    font-size: 5em; }
+
+.c-sponsor-quote--text {
+  margin-bottom: 30px;
+  color: #666666;
+  font-family: 'Adelle Light';
+  font-size: 18px;
+  line-height: 1.4em; }
+
+/*---------------------------
+/	BILL & RESOLUTION
+/---------------------------*/
+.c-action--items {
+  list-style: none;
+  width: 100%;
+  margin: 0 0 15px;
+  overflow: hidden; }
+  .c-action--items > li {
+    clear: left;
+    overflow: hidden; }
+    .c-action--items > li + li {
+      margin-top: 15px;
+      border-top: 1px solid #aaaaaa; }
+  .c-action--items ul {
+    list-style: none;
+    margin: 0;
+    float: left;
+    clear: none; }
+
+.c-actions--key {
+  list-style: none;
+  margin-top: 10px; }
+  .c-actions--key .c-action--item + .c-action--item {
+    margin: 0; }
+
+.c-action--date,
+.c-action--item {
+  font-family: 'Proxima Nova Regular';
+  font-size: 14px; }
+
+.c-action--item__senate {
+  text-transform: uppercase; }
+
+.c-action--date {
+  display: block;
+  margin: 0;
+  padding: 15px 0 10px;
+  color: #888888; }
+
+.c-action--item {
+  margin: 0;
+  color: #666666;
+  line-height: 1.4em; }
+  .c-action--item + .c-action--item {
+    margin-top: 7px; }
+
+.c-detail--writeup {
+  padding: 30px 20px 20px;
+  background: #eeeeee;
+  font-size: 12px; }
+  .c-detail--writeup h4 {
+    margin-bottom: 30px;
+    font-family: 'Adelle Bold';
+    font-size: 18px; }
+  .c-detail--writeup .c-detail--subhead {
+    margin-bottom: 0px;
+    font-size: 12px; }
+  .c-detail--writeup p {
+    margin-bottom: 20px;
+    font-family: 'Proxima Nova Regular';
+    font-size: 12px; }
+
+@media screen and (min-width: 760px) {
+  .c-actions--key {
+    float: right;
+    margin-top: 0; }
+  .c-detail--writeup {
+    font-size: 16px; } }
+
+/*---------------------------
+/	BILL SPECIFIC
+/---------------------------*/
+.c-bill--flags {
+  overflow: hidden;
+  margin-top: 20px; }
+
+.c-bill--flag {
+  display: block;
+  float: left;
+  padding: 7px 13px 5px;
+  background: #f1af58;
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-right: 20px; }
+
+.c-bill--amended .c-bill--flag {
+  background: #aaaaaa; }
+
+.c-bill-widget--cta {
+  max-width: 230px;
+  margin: 20px auto 15px;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Proxima Nova Regular';
+  font-size: 14px; }
+
+.c-bill--details dt,
+.c-bill--details dd {
+  margin: 0;
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 14px; }
+
+.c-bill--details dt {
+  color: #444444;
+  line-height: 1.5em; }
+
+.c-bill--details dd + dt {
+  margin-top: 10px; }
+
+.c-bill--details dd {
+  color: #666666;
+  line-height: 1.4em;
+  display: inline-block; }
+  @media screen and (min-width: 760px) {
+    .c-bill--details dd {
+      float: left; } }
+  .c-bill--details dd a {
+    color: #cb8d37;
+    text-transform: capitalize; }
+  .c-bill--details dd.comma {
+    margin-right: 3px; }
+
+.c-bill--calendars ul {
+  list-style: none;
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 14px; }
+
+.c-bill--calendars li a {
+  display: block;
+  padding: 5px 0;
+  color: #cb8d37; }
+
+.c-bill--votes {
+  overflow: hidden; }
+
+.c-bill-vote--graph,
+.c-bill-vote--stats {
+  display: inline-block;
+  vertical-align: middle; }
+
+.c-bill-vote--graph {
+  width: 43%;
+  max-width: 180px;
+  margin-right: 7%; }
+  .c-bill-vote--graph > img {
+    border-radius: 50%; }
+
+.c-bill--vote--stats {
+  width: 50%; }
+
+.c-bill-vote--cnt {
+  display: inline-block;
+  padding: 5px 17px;
+  background: #eeeeee;
+  text-align: center; }
+  .c-bill-vote--cnt + .c-bill-vote--cnt {
+    margin-left: 20px; }
+
+.c-bill-vote-cnt--value {
+  display: block;
+  color: #2b6990;
+  font-family: 'Adelle Bold';
+  font-size: 24px;
+  line-height: 1em; }
+
+.c-bill-vote-cnt--type {
+  display: block;
+  color: #888888;
+  text-transform: uppercase;
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 15px;
+  line-height: 1em; }
+
+.c-bill-vote--cnt-secondary {
+  list-style: none;
+  clear: both;
+  margin-top: 20px; }
+  .c-bill-vote--cnt-secondary li {
+    color: #888888;
+    text-transform: uppercase;
+    font-family: 'Proxima Nova Regular';
+    font-size: 12px;
+    letter-spacing: 0.01em; }
+  .c-bill-vote--cnt-secondary .c-bill-vote-cnt--value {
+    display: inline-block;
+    margin-right: 10px;
+    color: #666666;
+    font-family: 'Proxima Nova SemiBold';
+    font-size: 12px; }
+
+.nys-senator.sponsor-list {
+  margin-top: 30px; }
+  .nys-senator.sponsor-list .nys-senator--info {
+    max-width: 80%; }
+  .nys-senator.sponsor-list .nys-senator--party span {
+    text-transform: uppercase;
+    color: #666666;
+    font-family: 'Proxima Nova Regular'; }
+
+.initial_co-sponsors::after {
+  content: '';
+  display: table;
+  clear: both; }
+
+.other_co-sponsors {
+  margin-top: 20px;
+  clear: both; }
+
+.c-quote--content.bill-sponsor-quote {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 20px 0;
+  background: #eeeeee; }
+  .c-quote--content.bill-sponsor-quote .c-quote--title {
+    position: relative;
+    z-index: 3; }
+  .c-quote--content.bill-sponsor-quote .c-pullquote {
+    display: block;
+    position: relative;
+    margin-top: 25px;
+    padding: 0;
+    z-index: 2; }
+    .c-quote--content.bill-sponsor-quote .c-pullquote::before {
+      top: -40px; }
+  .c-quote--content.bill-sponsor-quote .nys-senator.sponsor-list {
+    float: none; }
+  .c-quote--content.bill-sponsor-quote .nys-senator.sponsor-list .nys-senator--party span {
+    color: #888888; }
+  .c-quote--content.bill-sponsor-quote .c-block--btn-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 11;
+    background: transparent; }
+    .c-quote--content.bill-sponsor-quote .c-block--btn-toggle::after {
+      content: "\73";
+      font-size: 26px;
+      line-height: 42px;
+      color: #aaaaaa; }
+  .c-quote--content.bill-sponsor-quote .c-social {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    height: 50px;
+    width: 50%;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 10;
+    transition: visibility 0s 0.3s, opacity 0.3s; }
+    .c-quote--content.bill-sponsor-quote .c-social .c-social--list {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 50px;
+      padding: 0;
+      text-align: left;
+      width: 83%; }
+      .c-quote--content.bill-sponsor-quote .c-social .c-social--list li {
+        display: inline-block;
+        height: 100%;
+        width: 28%;
+        margin: 0 10px;
+        margin-top: 0;
+        line-height: 50px; }
+      .c-quote--content.bill-sponsor-quote .c-social .c-social--list a {
+        display: block;
+        width: 100%;
+        height: 100%; }
+        .c-quote--content.bill-sponsor-quote .c-social .c-social--list a::after {
+          width: 100%;
+          height: 100%;
+          color: #175b81;
+          font-size: 36px; }
+  .c-quote--content.bill-sponsor-quote.c-social-visible .c-social {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease; }
+
+@media screen and (min-width: 760px) {
+  .c-quote--content.bill-sponsor-quote {
+    margin: 40px 0; }
+    .c-quote--content.bill-sponsor-quote .c-pullquote {
+      padding: 60px 0 0 40px; }
+      .c-quote--content.bill-sponsor-quote .c-pullquote::before {
+        top: 10px; }
+    .c-quote--content.bill-sponsor-quote .nys-senator {
+      margin: 40px 0 0; }
+    .c-quote--content.bill-sponsor-quote .c-social {
+      position: absolute;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+      height: 100%;
+      width: 40px;
+      top: 0;
+      left: auto;
+      right: 0;
+      background: transparent;
+      z-index: -1;
+      transition: right 0.3s ease; }
+      .c-quote--content.bill-sponsor-quote .c-social .c-social--list {
+        top: 0;
+        left: auto;
+        right: auto;
+        height: auto; }
+        .c-quote--content.bill-sponsor-quote .c-social .c-social--list li {
+          display: block;
+          width: 40px;
+          height: 40px;
+          margin: 0 0 5px; }
+        .c-quote--content.bill-sponsor-quote .c-social .c-social--list a::after {
+          width: 40px;
+          text-align: center;
+          font-size: 26px;
+          color: #2b6990; }
+    .c-quote--content.bill-sponsor-quote.c-social-visible .c-social {
+      right: -40px;
+      transition: right 0.3s ease; } }
+
+.c-bill-vote--accordion {
+  display: block;
+  clear: both; }
+
+.pieContainer {
+  width: 180px;
+  margin: 0 auto; }
+
+.c-bill--vote-details {
+  width: 180px;
+  margin: 0 auto 40px; }
+  .c-bill--vote-details h3,
+  .c-bill--vote-details h4 {
+    color: #444444;
+    font-family: 'Adelle Regular'; }
+  .c-bill--vote-details h3 {
+    margin: 10px 0 20px;
+    font-size: 16px; }
+  .c-bill--vote-details h4 {
+    clear: both;
+    text-transform: uppercase;
+    font-size: 14px; }
+  .c-bill--vote-details ul {
+    list-style: none;
+    overflow: hidden; }
+  .c-bill--vote-details li {
+    display: block;
+    float: left;
+    width: 50%; }
+  .c-bill--vote-details .vote-container {
+    margin-bottom: 18px; }
+    .c-bill--vote-details .vote-container .aye,
+    .c-bill--vote-details .vote-container .nay {
+      width: auto;
+      float: left;
+      margin-bottom: 20px;
+      padding: 6px 10px;
+      background-color: #eeeeee;
+      text-align: center; }
+      .c-bill--vote-details .vote-container .aye:nth-child(1),
+      .c-bill--vote-details .vote-container .nay:nth-child(1) {
+        margin-right: 15px; }
+      .c-bill--vote-details .vote-container .aye .vote-count,
+      .c-bill--vote-details .vote-container .nay .vote-count {
+        display: inline-block;
+        font: 18px/18px "Adelle Bold";
+        color: #666666; }
+      .c-bill--vote-details .vote-container .aye .vote-label,
+      .c-bill--vote-details .vote-container .nay .vote-label {
+        display: inline-block;
+        font: 13px/16px "Proxima Nova SemiBold";
+        color: #888888;
+        text-transform: uppercase; }
+    .c-bill--vote-details .vote-container .aye {
+      float: left;
+      border-bottom: 4px solid #04a9c5; }
+      .c-bill--vote-details .vote-container .aye.committee_vote {
+        border-bottom: 4px solid #f1af58; }
+    .c-bill--vote-details .vote-container .nay {
+      float: right;
+      border-bottom: 4px solid #1f798f; }
+      .c-bill--vote-details .vote-container .nay.committee_vote {
+        border-bottom: 4px solid #cb8d37; }
+  .c-bill--vote-details .vote-meta {
+    clear: both; }
+    .c-bill--vote-details .vote-meta .meta-row {
+      position: relative;
+      font: 10px/16px "Proxima Nova Regular";
+      color: #888888;
+      text-transform: uppercase; }
+      .c-bill--vote-details .vote-meta .meta-row div {
+        display: inline-block; }
+        .c-bill--vote-details .vote-meta .meta-row div:nth-child(1) {
+          color: #666666; }
+        .c-bill--vote-details .vote-meta .meta-row div:nth-child(2) {
+          position: absolute;
+          left: 25%; }
+      .c-bill--vote-details .vote-meta .meta-row .meta-count {
+        font-family: 'Proxima Nova SemiBold'; }
+    .c-bill--vote-details .vote-meta .meta-comm-referral {
+      margin-top: 20px; }
+      .c-bill--vote-details .vote-meta .meta-comm-referral label {
+        margin: 0;
+        font: 11px/14px "Proxima Nova Regular";
+        color: #aaaaaa; }
+      .c-bill--vote-details .vote-meta .meta-comm-referral .committee-link {
+        font: 12px/14px "Proxima Nova SemiBold";
+        color: #cb8d37;
+        text-transform: uppercase; }
+
+.c-vote-detail--date {
+  margin: 20px 0;
+  color: #444444;
+  font-family: 'Adelle Regular';
+  font-size: 16px;
+  line-height: 1; }
+
+.c-detail--vote-grp + .c-detail--vote-grp {
+  margin-top: 15px; }
+
+.c-detail--vote-grp .c-detail--section-title {
+  margin-bottom: 15px;
+  color: #444444;
+  font-family: "Adelle SemiBold";
+  text-transform: uppercase;
+  font-size: 14px; }
+
+.c-detail--vote-grp .c-votes--items {
+  list-style: none;
+  overflow: hidden; }
+  .c-detail--vote-grp .c-votes--items li {
+    display: block;
+    float: left;
+    width: 50%;
+    margin: 4px 0;
+    text-transform: capitalize;
+    font-size: 14px; }
+
+@media screen and (min-width: 760px) {
+  .c-detail--header {
+    margin-bottom: 30px; }
+  .nys-senator.sponsor-list {
+    width: 50%;
+    float: left;
+    padding-right: 2%; }
+    .nys-senator.sponsor-list:nth-child(odd) {
+      clear: left; }
+  .other_co-sponsors {
+    margin-top: 30px; }
+  .pieContainer {
+    float: left; }
+  .c-bill--vote-details {
+    width: auto;
+    float: left;
+    margin: 0 0 40px; }
+  .c-vote-detail--date {
+    font-size: 20px;
+    margin: 40px 0 0; }
+    .c-vote-detail--date .vote-container {
+      margin-bottom: 20px; }
+      .c-vote-detail--date .vote-container .aye,
+      .c-vote-detail--date .vote-container .nay {
+        width: 100px;
+        background-color: #eeeeee;
+        text-align: center;
+        float: left;
+        margin-bottom: 20px;
+        padding: 0; }
+        .c-vote-detail--date .vote-container .aye:nth-child(1),
+        .c-vote-detail--date .vote-container .nay:nth-child(1) {
+          margin-right: 20px; }
+        .c-vote-detail--date .vote-container .aye .vote-count,
+        .c-vote-detail--date .vote-container .nay .vote-count {
+          display: block;
+          font: 24px/30px "Adelle Bold";
+          color: #666666; }
+        .c-vote-detail--date .vote-container .aye .vote-label,
+        .c-vote-detail--date .vote-container .nay .vote-label {
+          display: block;
+          font: 15px/16px "Proxima Nova SemiBold";
+          padding-bottom: 5px;
+          color: #888888;
+          text-transform: uppercase; }
+  .c-detail--vote-grp + .c-detail--vote-grp {
+    margin-top: 40px; }
+  .c-detail--vote-grp {
+    width: 50%;
+    float: left;
+    margin-top: 40px; }
+    .c-detail--vote-grp.odd {
+      padding-right: 5%;
+      clear: left; }
+    .c-detail--vote-grp.even {
+      padding-left: 5%; }
+    .c-detail--vote-grp .c-detail--section-title {
+      font-size: 16px; }
+    .c-detail--vote-grp .c-votes--items li {
+      font-size: 16px; } }
+
+/*---------------------------
+/	RESOLUTION SPECIFIC
+/---------------------------*/
+.bill-resolution .c-detail--sponsors {
+  margin-bottom: 60px; }
+  .bill-resolution .c-detail--sponsors > .c-sponsor {
+    width: 100%;
+    margin-bottom: 60px; }
+
+@media screen and (min-width: 760px) {
+  .bill-resolution .c-detail--sponsors {
+    margin-bottom: 80px; }
+    .bill-resolution .c-detail--sponsors > .c-sponsor {
+      margin-bottom: 80px; } }
+
+/*---------------------------
+/	ISSUES SPECIFIC
+/---------------------------*/
+.c-issue--followers {
+  color: #888888;
+  text-transform: uppercase;
+  font-family: 'Proxima Nova Regular';
+  font-size: 14px; }
+  .c-issue--followers > span {
+    color: #444444;
+    margin-right: 5px; }
+
+.c-issue--contact-btn {
+  position: relative;
+  display: inline-block;
+  height: 55px;
+  width: 100%;
+  padding: 0;
+  margin: 15px 0 30px;
+  background: #2b6990;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 14px;
+  letter-spacing: 0.1em; }
+  .c-issue--contact-btn::before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%; }
+  .c-issue--contact-btn:hover, .c-issue--contact-btn:focus {
+    color: #fff; }
+  .c-issue--contact-btn .nys-senator--thumb {
+    display: none; }
+  .c-issue--contact-btn a {
+    color: #fff; }
+  .c-issue--contact-btn.no-senator::before {
+    content: "\24";
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-right: 3px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 1.8em;
+    margin-top: -5px; }
+
+.c-issue--mentions {
+  padding-bottom: 20px; }
+  .c-issue--mentions .nys-btn-more {
+    margin-top: 30px; }
+  .c-issue--mentions .nys-senator {
+    margin: 0;
+    width: 100%; }
+    .c-issue--mentions .nys-senator + .nys-senator {
+      margin-top: 20px; }
+  .c-issue--mentions .nys-senator--info > span {
+    display: none; }
+  .c-issue--mentions .nys-senator--party {
+    color: #888888; }
+
+/*---------------------------
+/	ISSUES SPECIFIC -
+/	tablet and above
+/---------------------------*/
+@media screen and (min-width: 760px) {
+  .c-issue--contact-btn {
+    height: 80px;
+    width: auto;
+    padding: 0 80px 0 30px;
+    margin: 20px 0 0;
+    text-align: left; }
+    .c-issue--contact-btn .nys-senator--thumb {
+      display: inline-block; }
+    .c-issue--contact-btn.no-senator {
+      padding-right: 40px; }
+      .c-issue--contact-btn.no-senator::before {
+        margin-top: 0; }
+  .c-issue--mentions {
+    padding-bottom: 0;
+    margin-bottom: 30px; }
+    .c-issue--mentions .c-detail--subhead {
+      margin-bottom: 30px; }
+    .c-issue--mentions .nys-senator {
+      float: left;
+      width: 33.3%;
+      margin-bottom: 30px; }
+      .c-issue--mentions .nys-senator + .nys-senator {
+        margin-top: 0; } }
+
+@media screen and (min-width: 760px) {
+  .c-detail--subhead {
+    font-size: 16px; }
+  .c-detail--header__bill .nys-title {
+    float: left; }
+  .c-bill--flags {
+    display: block;
+    float: left;
+    margin-top: 0;
+    padding: 5px 0 0 20px; }
+  .c-bill--flag {
+    padding: 10px 13px; }
+  .c-detail--descript {
+    clear: left;
+    font-size: 20px; }
+  .c-detail--header-meta {
+    position: relative;
+    width: 71%;
+    float: left;
+    margin-bottom: 60px;
+    padding-right: 40px; }
+  .c-detail--related .field-name-field-issues {
+    padding-bottom: 15px; }
+  .c-detail--related-item {
+    margin-right: 10px; }
+  .c-detail--download {
+    margin-bottom: 0; }
+  .c-detail--social {
+    width: 28%;
+    float: left;
+    margin-bottom: 0;
+    padding-bottom: 40px;
+    border-left: 1px solid #aaaaaa; }
+    .c-detail--social .c-detail--subhead {
+      float: right;
+      text-align: right; }
+    .c-detail--social ul {
+      display: block;
+      float: right;
+      clear: both; }
+      .c-detail--social ul li + li {
+        margin-left: 0; }
+  .c-detail--social-item {
+    background: #fff; }
+    .c-detail--social-item::after {
+      color: #2b6990;
+      text-align: right; }
+    .c-detail--social-item.twitter::after {
+      left: auto;
+      right: 0.2em; }
+  .c-detail--sponsors {
+    overflow: visible; }
+    .c-detail--sponsors > .c-sponsor,
+    .c-detail--sponsors > .c-co-sponsors {
+      width: 100%;
+      overflow: hidden;
+      float: none;
+      margin-top: 0; }
+    .c-detail--sponsors > .c-sponsor {
+      margin-right: 0; }
+      .c-detail--sponsors > .c-sponsor::after {
+        content: '';
+        display: table;
+        clear: both; }
+    .c-detail--sponsors > .c-sponsors-detail {
+      margin-top: 40px; }
+  .c-sponsor-quote {
+    padding: 30px 40px; }
+    .c-sponsor-quote .c-social {
+      position: absolute;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+      height: 100%;
+      width: 40px;
+      top: 0;
+      left: auto;
+      right: 0;
+      background: transparent;
+      z-index: -1;
+      transition: right 0.3s ease; }
+      .c-sponsor-quote .c-social .c-social--list {
+        top: 0;
+        left: auto;
+        right: auto;
+        height: auto; }
+        .c-sponsor-quote .c-social .c-social--list li {
+          display: block;
+          width: 40px;
+          height: 40px;
+          margin: 0 0 5px; }
+        .c-sponsor-quote .c-social .c-social--list a::after {
+          width: 40px;
+          text-align: center;
+          font-size: 26px;
+          color: #2b6990; }
+    .c-sponsor-quote.c-social-visible .c-social {
+      right: -40px;
+      transition: right 0.3 ease; }
+  .c-sponsor-quote--title {
+    margin-bottom: 60px;
+    font-size: 14px; }
+    .c-sponsor-quote--title::before {
+      top: -0.25em;
+      font-size: 7em; }
+  .c-sponsor-quote--text {
+    padding: 0 30px;
+    font-size: 26px; }
+  .c-action--items > li + li {
+    padding-top: 20px; }
+  .c-action--date {
+    padding-top: 0;
+    float: left;
+    width: 200px; }
+  .c-action--item + .c-action--item {
+    margin-top: 15px; }
+  .c-bill-widget--cta {
+    max-width: 100%; }
+  .c-bill--details,
+  .c-bill--calendars {
+    float: left;
+    clear: none;
+    width: 48%; }
+  .c-bill--details {
+    width: 100%;
+    margin-right: 4%; }
+    .c-bill--details dt,
+    .c-bill--details dd {
+      margin-bottom: 12px;
+      line-height: 1.5em; }
+    .c-bill--details dt {
+      float: left;
+      clear: left;
+      margin-right: 0.3em; }
+    .c-bill--details dd + dt {
+      margin-top: 0; }
+  .c-bill--calendars ul {
+    line-height: 1.5em; }
+  .c-bill--calendars li {
+    margin-bottom: 12px; }
+    .c-bill--calendars li a {
+      padding: 0; }
+  .c-bill-vote--graph {
+    margin-right: 60px; }
+  .c-bill--vote-details .c-bill--vote-details-wrapper {
+    margin: 0 0 20px 40px; }
+    .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container {
+      margin: 38px 0 0; }
+      .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .aye,
+      .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .nay {
+        width: 100px;
+        float: left;
+        background-color: #eeeeee;
+        text-align: center;
+        padding: 0; }
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .aye:nth-child(1),
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .nay:nth-child(1) {
+          margin-right: 20px; }
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .aye .vote-count,
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .nay .vote-count {
+          display: block;
+          font: 24px/30px "Adelle Bold";
+          color: #666666; }
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .aye .vote-label,
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container .nay .vote-label {
+          display: block;
+          font: 15px/16px "Proxima Nova SemiBold";
+          padding-bottom: 5px;
+          color: #888888;
+          text-transform: uppercase; }
+    .c-bill--vote-details .c-bill--vote-details-wrapper .vote-meta .meta-row {
+      position: relative;
+      font: 10px/16px "Proxima Nova Regular";
+      color: #888888;
+      text-transform: uppercase; }
+      .c-bill--vote-details .c-bill--vote-details-wrapper .vote-meta .meta-row div {
+        display: inline-block; }
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-meta .meta-row div:nth-child(1) {
+          color: #666666; }
+        .c-bill--vote-details .c-bill--vote-details-wrapper .vote-meta .meta-row div:nth-child(2) {
+          position: absolute;
+          left: 25%; }
+    .c-bill--vote-details .c-bill--vote-details-wrapper .vote-meta .meta-comm-referral {
+      margin-top: 20px; }
+      .c-bill--vote-details .c-bill--vote-details-wrapper .vote-meta .meta-comm-referral label {
+        margin: 0;
+        font: 11px/14px "Proxima Nova Regular";
+        color: #aaaaaa; }
+      .c-bill--vote-details .c-bill--vote-details-wrapper .vote-meta .meta-comm-referral .committee-link {
+        font: 12px/14px "Proxima Nova SemiBold";
+        color: #cb8d37;
+        text-transform: uppercase; }
+    .c-bill--vote-details .c-bill--vote-details-wrapper h3 {
+      margin-bottom: 30px;
+      font-size: 20px; }
+    .c-bill--vote-details .c-bill--vote-details-wrapper h4 {
+      padding-bottom: 20px;
+      font-size: 16px; }
+    .c-bill--vote-details .c-bill--vote-details-wrapper .c-detail--vote-grp {
+      display: block;
+      float: left;
+      width: 47%;
+      margin: 0 6% 30px 0; }
+      .c-bill--vote-details .c-bill--vote-details-wrapper .c-detail--vote-grp + .c-detail--vote-grp {
+        margin-top: 0;
+        margin-right: 0; } }
+
+/*---------------------------
+/	SENATOR DETAIL
+/---------------------------*/
+.nys-title--events {
+  border-bottom: 1px solid #aaaaaa;
+  margin-bottom: 0;
+  padding-bottom: 20px; }
+
+.c-news-container .c-container--header.link {
+  position: relative;
+  clear: both;
+  float: right;
+  width: 100%; }
 
 /*---------------------------
 / WIDTHS

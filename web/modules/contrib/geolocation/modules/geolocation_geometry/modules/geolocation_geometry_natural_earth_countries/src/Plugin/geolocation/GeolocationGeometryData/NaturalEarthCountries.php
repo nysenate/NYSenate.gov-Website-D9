@@ -2,6 +2,7 @@
 
 namespace Drupal\geolocation_geometry_natural_earth_countries\Plugin\geolocation\GeolocationGeometryData;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Shapefile\ShapefileException;
 use Drupal\geolocation_geometry_data\GeolocationGeometryDataBase;
 
@@ -19,13 +20,12 @@ class NaturalEarthCountries extends GeolocationGeometryDataBase {
   /**
    * {@inheritdoc}
    */
-  public $sourceUri = 'https://naturalearth.s3.amazonaws.com/110m_cultural/110m_cultural.zip';
-
+  public $sourceUri = 'https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip';
 
   /**
    * {@inheritdoc}
    */
-  public $sourceFilename = '110m_cultural.zip';
+  public $sourceFilename = 'ne_110m_admin_0_countries.zip';
 
   /**
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class NaturalEarthCountries extends GeolocationGeometryDataBase {
   /**
    * {@inheritdoc}
    */
-  public function import(&$context) {
+  public function import(&$context): TranslatableMarkup {
     parent::import($context);
     $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $logger = \Drupal::logger('geolocation_geometry_natural_earth_countries');
@@ -60,7 +60,15 @@ class NaturalEarthCountries extends GeolocationGeometryDataBase {
         $term->set('field_geometry_data_geometry', [
           'geojson' => $record->getGeoJSON(),
         ]);
-        $term->save();
+        try {
+          $term->save();
+        }
+        catch (\Exception $e) {
+          $logger->warning(t('ERROR importing Country %country. Message: %message', [
+            '%country' => $record->getData('NAME'),
+            '%message' => $e->getMessage(),
+          ]));
+        }
       }
       return t('Done importing Countries.');
     }

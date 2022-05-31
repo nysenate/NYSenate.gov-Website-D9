@@ -40,7 +40,7 @@ class HomepageHeroController extends ControllerBase {
     \Drupal::state()->set('homepage_hero_add_polling_js', 0);
     \Drupal::state()->set('homepage_hero_session_in_progress', 0);
     \Drupal::service('cache_tags.invalidator')->invalidateTags([
-      'views:homepage_hero'
+      'views:homepage_hero',
     ]);
   }
 

@@ -55,8 +55,17 @@
 %}
 
 <div class="layout-container">
-  
-  {% include '@nysenate_theme/nysenate-header/nysenate-header.twig' %}
+
+  {% include "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
+    "search": {
+      "title": "Search",
+      "link": {
+        "href": "/search/legislation",
+        "text": "Advanced Legislation Search"
+      },
+      "value": "{'tab':''}"
+    },
+  } only %}
 
   {{ page.primary_menu }}
   {{ page.secondary_menu }}

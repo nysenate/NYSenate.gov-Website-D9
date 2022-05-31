@@ -1,0 +1,45 @@
+uuid: 48d9dfca-b62d-4a01-a27d-56c3572e7f70
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.microsite_page.field_block
+    - field.field.node.microsite_page.field_meta_tags
+    - field.field.node.microsite_page.field_senator_multiref
+    - field.field.node.microsite_page.field_short_title
+    - field.field.node.microsite_page.field_summary
+    - field.field.node.microsite_page.field_thumbnail
+    - node.type.microsite_page
+  module:
+    - entity_reference_revisions
+    - user
+id: node.microsite_page.default
+targetEntityType: node
+bundle: microsite_page
+mode: default
+content:
+  field_block:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_meta_tags: true
+  field_short_title: true
+  field_summary: true
+  field_thumbnail: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

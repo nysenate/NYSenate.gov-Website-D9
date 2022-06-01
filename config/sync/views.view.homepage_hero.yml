@@ -12,7 +12,6 @@ dependencies:
     - datetime
     - entityqueue
     - node
-    - semanticviews
     - taxonomy
     - user
 id: homepage_hero
@@ -643,15 +642,18 @@ display:
             operator_limit_selection: false
             operator_list: {  }
       style:
-        type: semanticviews_style
-      row:
-        type: semanticviews_row
+        type: default
         options:
-          skip_blank: 0
-          semantic_html:
-            title:
-              element_type: div
-              attributes: ''
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
       query:
         type: views_query
         options:

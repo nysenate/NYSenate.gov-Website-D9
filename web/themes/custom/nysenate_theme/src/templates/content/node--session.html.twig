@@ -9,7 +9,7 @@
       </div>
     </div>
   </section>
-{% elseif %}
+{% else %}
   <section class="l-messages">
     <div data-alert="" class="alert-box success">
       <div class="alert-box-message">
@@ -44,7 +44,7 @@
       <div class="c-meeting-detail--descript">
           <p>Session will resume at the call of the Temporary President.</p>
       </div>
-  {% elseif %}
+  {% else %}
     <div class="c-meeting-detail--meta">
       {% if field_event_status == "live_now" %}
         <p class="c-meeting-detail--live-flag">
@@ -136,7 +136,7 @@
       </div>
     {% endif %}
 
-    {% elseif field_video_status == "streaming_live_now" and field_video_redirect %}
+    {% if field_video_status == "streaming_live_now" and field_video_redirect %}
       <div class="c-meeting-detail--descript">
         {{ field_ustream }}
       </div>

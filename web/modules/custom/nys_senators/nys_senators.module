@@ -89,11 +89,9 @@ function nys_senators_node_access_records(NodeInterface $node) {
   // Build an array of microsite content types we care about.
   $microsite_cts = [
     'article',
-    'bill',
     'event',
-    'landing',
-    'page_content',
     'petition',
+    'microsite_page',
   ];
 
   // If the node is in a bundle that could be microsite content.

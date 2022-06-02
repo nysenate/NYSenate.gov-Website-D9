@@ -1,14 +1,15 @@
-uuid: cd02ba6e-ff22-47ad-bdc4-22bb7a63f98d
+uuid: fc464cf5-603e-4bfb-bab2-56e5a87073a5
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.landing.field_block
-    - field.field.node.landing.field_meta_tags
-    - field.field.node.landing.field_short_title
-    - field.field.node.landing.field_summary
-    - field.field.node.landing.field_thumbnail
-    - node.type.landing
+    - field.field.node.microsite_page.field_block
+    - field.field.node.microsite_page.field_meta_tags
+    - field.field.node.microsite_page.field_senator_multiref
+    - field.field.node.microsite_page.field_short_title
+    - field.field.node.microsite_page.field_summary
+    - field.field.node.microsite_page.field_thumbnail
+    - node.type.microsite_page
   module:
     - field_group
     - inline_entity_form
@@ -29,6 +30,7 @@ third_party_settings:
       format_type: details
       format_settings:
         classes: ''
+        show_empty_fields: false
         id: ''
         open: true
         description: ''
@@ -44,6 +46,7 @@ third_party_settings:
       format_type: details
       format_settings:
         classes: ''
+        show_empty_fields: false
         id: ''
         open: true
         description: ''
@@ -51,6 +54,7 @@ third_party_settings:
     group_content:
       children:
         - field_block
+        - field_senator_multiref
       label: Content
       region: content
       parent_name: ''
@@ -58,26 +62,25 @@ third_party_settings:
       format_type: details
       format_settings:
         classes: ''
+        show_empty_fields: false
         id: ''
         open: true
         description: ''
         required_fields: true
-_core:
-  default_config_hash: nDOJn-3TKtjTkeXP_tqGAo5AEP42lJYUTbEbqJtwRlE
-id: node.landing.default
+id: node.microsite_page.default
 targetEntityType: node
-bundle: landing
+bundle: microsite_page
 mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   field_block:
     type: inline_entity_form_complex
-    weight: 4
+    weight: 14
     region: content
     settings:
       form_mode: default
@@ -92,18 +95,23 @@ content:
       collapsed: false
       revision: true
     third_party_settings: {  }
-  field_group_jumpnav:
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_meta_tags:
     type: metatag_firehose
-    weight: 9
+    weight: 14
     region: content
     settings:
       sidebar: true
       use_details: true
+    third_party_settings: {  }
+  field_senator_multiref:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_short_title:
     type: string_textfield
@@ -115,7 +123,7 @@ content:
     third_party_settings: {  }
   field_summary:
     type: string_textarea
-    weight: 10
+    weight: 17
     region: content
     settings:
       rows: 5
@@ -123,37 +131,52 @@ content:
     third_party_settings: {  }
   field_thumbnail:
     type: media_library_widget
-    weight: 9
+    weight: 16
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-  moderation_state:
-    type: moderation_state_default
-    weight: 13
+  langcode:
+    type: language_select
+    weight: 3
     region: content
-    settings: {  }
+    settings:
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path
-    weight: 6
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 6
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 7
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 5
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 11
+    weight: 15
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 7
     region: content
     settings:
       display_label: true
@@ -166,14 +189,9 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  translation:
-    weight: 4
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS
@@ -183,16 +201,13 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 8
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 10
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden:
-  langcode: true
-  promote: true
-  sticky: true
+hidden: {  }

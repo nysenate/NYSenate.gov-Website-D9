@@ -58,6 +58,11 @@ breadcrumb:
     component:
       dist/css/breadcrumb.css: {}
 
+bill-vote-widget:
+  css:
+    component:
+      dist/css/bill-vote-widget.css: {}
+
 card:
   css:
     component:
@@ -158,6 +163,13 @@ event-teaser:
   css:
     component:
       dist/css/event-teaser.css: {}
+
+featured-bills:
+  css:
+    component:
+      dist/css/featured-bills.css: {}
+  dependencies:
+    - nysenate_theme/bill-vote-widget
 
 gallery-carousel:
   css:

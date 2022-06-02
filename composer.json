@@ -25,6 +25,7 @@
         }
     ],
     "require": {
+        "ext-curl": "*",
         "ext-json": "*",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
@@ -102,8 +103,7 @@
         "politsin/jquery-ui-touch-punch": "^1.0",
         "sendgrid/php-http-client": "^3.10.6",
         "sendgrid/sendgrid": "^7.11",
-        "webflo/drupal-finder": "^1.0.0",
-      "ext-curl": "*"
+        "webflo/drupal-finder": "^1.0.0"
     },
     "require-dev": {
         "drupal/core-dev": "^9.0",
@@ -193,12 +193,15 @@
                 "2949017 - There is no way to delete or update file entities of other users": "https://www.drupal.org/files/issues/2021-12-01/2949017-85.patch",
                 "763380 - Do not use \\Drupal\\taxonomy\\TermStorageInterface::loadTree() in \\Drupal\\taxonomy\\Form\\OverviewTerms::buildForm()": "https://www.drupal.org/files/issues/2021-05-26/763380-73.patch"
             },
-            "drupal/inline_entity_form": {
-                "3208818 - Migration Error: Cannot use string offset as an array in MigrationHelper.php on line 53": "https://www.drupal.org/files/issues/2021-12-23/3208818-7.patch",
-                "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2021-07-19/inline_entity_form-required_fields_optional_ief-3099844-24.patch"
+            "drupal/email_registration": {
+                "2843505 - Add support for Behat tests": "https://www.drupal.org/files/issues/2020-10-21/2843505-39.patch"
             },
             "drupal/htmlpurifier": {
                 "2989756 - HTMLPurifier Serializer caches into vendor directory by default": "https://www.drupal.org/files/issues/2021-09-24/serializer-caches-into-vendor-d9-2989756-14.patch"
+            },
+            "drupal/inline_entity_form": {
+                "3208818 - Migration Error: Cannot use string offset as an array in MigrationHelper.php on line 53": "https://www.drupal.org/files/issues/2021-12-23/3208818-7.patch",
+                "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2021-07-19/inline_entity_form-required_fields_optional_ief-3099844-24.patch"
             },
             "drupal/location_migration": {
                 "#3192657-13: Data fix": "https://www.drupal.org/files/issues/2021-08-09/location_migration-source_count-3192657-13.patch",

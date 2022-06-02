@@ -62,3 +62,16 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
     '#markup' => strtr('<img src="https://unavatar.io/twitter/@username" width="100" height"100" />', $args),
   ];
 }
+
+/**
+ * Implements hook_preproces_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__honoree_profile_block(&$variables) {
+  $variables['title'] = $variables['elements']['#block_content']->label();
+  if (!empty($variables['content']['field_link'][0])) {
+    $variables['cta'] = [
+      'text' => $variables['content']['field_link'][0]['#title'],
+      'url' => $variables['content']['field_link'][0]['#url']->toString(),
+    ];
+  }
+}

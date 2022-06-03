@@ -267,3 +267,11 @@ h6 {
 p {
   @include font-stack-primary;
 }
+
+.u-mobile-only { display: block; }
+.u-tablet-plus { display: none; }
+
+@media #{$tablet} {
+	.u-mobile-only { display: none; }
+	.u-tablet-plus { display: block; }
+}

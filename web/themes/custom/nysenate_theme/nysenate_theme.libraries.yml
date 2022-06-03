@@ -185,6 +185,16 @@ gallery-carousel:
   dependencies:
     - rain_theme/slick
 
+hammer:
+  js:
+    dist/js/hammer.min.js: {}
+    dist/js/jquery.hammer.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
 hero:
   css:
     component:
@@ -332,6 +342,15 @@ pager:
   css:
     component:
       dist/css/pager.css: {}
+
+quick-facts:
+  css:
+    component:
+      dist/css/quick-facts.css: {}
+  js:
+    dist/js/quick-facts.es6.js: {}
+  dependencies:
+    - nysenate_theme/hammer
 
 quote:
   css:

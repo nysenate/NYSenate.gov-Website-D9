@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.microsite_page.field_block
     - field.field.node.microsite_page.field_meta_tags
+    - field.field.node.microsite_page.field_microsite_page_type
     - field.field.node.microsite_page.field_senator_multiref
     - field.field.node.microsite_page.field_short_title
     - field.field.node.microsite_page.field_summary
@@ -26,6 +27,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 0
+    region: content
+  field_microsite_page_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_senator_multiref:
     type: entity_reference_label

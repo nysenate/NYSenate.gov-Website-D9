@@ -21,14 +21,12 @@ class SenatorMicrositeMenu extends BlockBase {
   public function build() {
     /** @var Node $node */
     $node = $this->getContextValue('node');
-    // Or we are on a District taxonomy term page.
-    if (!empty($node) && $node->getType() == 'microsite_page'
-     ) {
+    if (!empty($node) && $node->getType() == 'microsite_page') {
       // Query to get all the "Microsite Pages" with the same Senator reference
       // Get the Senator taxonomy reference from there populate links.
       foreach ($nodes as $node) {
-        // Get the url alias for each and populate links for menu block
-        // $links[].
+        // Get the url alias for each and populate links for menu block.
+        $links[] = $node->toUrl()->toString();
       }
       // Extract the Senator term from the node or taxonomy page to set the
       // district populate the district link from the taxonomy term's url alias.

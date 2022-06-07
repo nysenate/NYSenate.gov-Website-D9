@@ -8,24 +8,6 @@
   @include element-focusable;
 }
 
-.u-mobile-only {
-  display: block;
-}
-
-.u-tablet-plus {
-  display: none;
-}
-
-@media #{$tablet} {
-  .u-mobile-only {
-    display: none;
-  }
-
-  .u-tablet-plus {
-    display: block;
-  }
-}
-
 .l-header {
   .c-actionbar,
   .c-senate-status {
@@ -681,16 +663,6 @@ nav ul.c-nav--list {
 .c-header--connect .c-nav--social {
   display: none;
 
-  &.u-mobile-only {
-    display: block;
-  }
-
-  @media #{$tablet} {
-    &.u-mobile-only {
-      display: none;
-    }
-  }
-
   @media screen and (min-width: 900px) {
     position: relative;
     display: block;
@@ -698,24 +670,6 @@ nav ul.c-nav--list {
     margin: 12px 0;
     padding: 0 20px 0 0;
     border-right: 1px solid #aaaaaa;
-  }
-}
-
-.c-mobile-login--list {
-  &.u-mobile-only {
-    display: block;
-  }
-  &.u-tablet-plus {
-    display: none;
-  }
-
-  @media #{$tablet} {
-    &.u-mobile-only {
-      display: none;
-    }
-    &.u-tablet-plus {
-      display: block;
-    }
   }
 }
 
@@ -809,22 +763,6 @@ nav ul.c-nav--list {
   line-height: 28px;
   text-transform: capitalize;
   letter-spacing: 0.25em;
-
-  &.u-mobile-only {
-    display: block;
-  }
-  &.u-tablet-plus {
-    display: none;
-  }
-
-  @media #{$tablet} {
-    &.u-mobile-only {
-      display: none;
-    }
-    &.u-tablet-plus {
-      display: block;
-    }
-  }
 }
 
 .c-nav .c-header--btn {

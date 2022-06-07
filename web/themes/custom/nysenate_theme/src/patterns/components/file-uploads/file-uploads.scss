@@ -16,12 +16,23 @@
 		//text-transform: uppercase;
 		font-size: 12px;
 		font-family: 'Proxima Nova SemiBold';
-		@extend .lgt-text;
-		@extend .icon-before__presskit;
+		color: $gen_blue_lgt;
 
 		&:before {
+			content: '\6b';
 			font-size: 21px;
 			line-height: 12px;
+			font-family: 'senate_icons';
+			display:inline-block;
+			vertical-align: middle;
+			speak: none;
+			font-style: normal;
+			font-weight: normal;
+			font-variant: normal;
+			text-transform: none;
+			padding-right: 3px;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
 		}
 	}
 }

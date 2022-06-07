@@ -206,14 +206,14 @@ h4.c-bill-topic {
   }
 }
 
-.c-bill-update--date {
+p.c-bill-update--date {
   display: inline-block;
   margin: 0 0.25em 0 0;
   font-family: 'Proxima Nova Regular';
   font-size: 12px;
 }
 
-.c-bill-update--location {
+p.c-bill-update--location {
   display: inline-block;
   margin: 0;
   font-family: 'Proxima Nova Regular';
@@ -229,7 +229,7 @@ h4.c-bill-topic {
 }
 
 .c-block-legislation-featured {
-  .c-bill-update--location {
+  p.c-bill-update--location {
     a {
       color: #fff;
       border-bottom: solid 0.05em #fff;
@@ -449,8 +449,8 @@ h4.c-bill-topic {
       }
     }
 
-    .c-bill-update--date,
-    .c-bill-update--location {
+    p.c-bill-update--date,
+    p.c-bill-update--location {
       color: white;
     }
 
@@ -569,7 +569,7 @@ h4.c-bill-topic {
   height: 0;
 }
 
-.c-bill-polling--cta {
+p.c-bill-polling--cta {
   padding-left: 20px;
   text-transform: uppercase;
   color: #fff;
@@ -581,7 +581,9 @@ h4.c-bill-topic {
   span {
     padding: 4px;
   }
+
   p {
+
     strong {
       font-family: 'Proxima Nova SemiBold';
     }
@@ -971,7 +973,7 @@ TABLE.c-bill--actions-table TBODY TR TD {
 .trad_green,
 .cont_green {
   .c-block-legislation-featured {
-    .c-bill-update--location {
+    p.c-bill-update--location {
       display: inline;
       line-height: 1.3;
       a {
@@ -982,7 +984,7 @@ TABLE.c-bill--actions-table TBODY TR TD {
         }
       }
     }
-    .c-bill-update--date {
+    p.c-bill-update--date {
       display: inline;
       line-height: 1.3;
     }
@@ -1122,8 +1124,8 @@ TABLE.c-bill--actions-table TBODY TR TD {
     margin-bottom: 12px;
   }
 
-  .c-bill-update--date,
-  .c-bill-update--location,
+  p.c-bill-update--date,
+  p.c-bill-update--location,
   .c-bill-update--sponsor {
     font-size: 14px;
   }
@@ -1225,8 +1227,9 @@ TABLE.c-bill--actions-table TBODY TR TD {
     }
   }
 
-  .c-bill-polling--cta {
+  p.c-bill-polling--cta {
     padding-left: 40px;
+
     p {
       strong {
         font-family: 'Proxima Nova SemiBold';

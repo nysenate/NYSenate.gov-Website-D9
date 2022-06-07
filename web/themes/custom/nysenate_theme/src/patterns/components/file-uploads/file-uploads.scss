@@ -1,0 +1,41 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-news--download {
+	display: block;
+	margin-bottom: 20px;
+
+	img {
+		display: none;
+	}
+
+	// download styles
+	.file > a {
+		display: block;
+		margin-top: 15px;
+		//text-transform: uppercase;
+		font-size: 12px;
+		font-family: 'Proxima Nova SemiBold';
+		@extend .lgt-text;
+		@extend .icon-before__presskit;
+
+		&:before {
+			font-size: 21px;
+			line-height: 12px;
+		}
+	}
+}
+
+.c-news--head .c-news--download {
+	margin-bottom: 0;
+}
+
+@media #{$tablet} {
+	.c-news-download {
+		margin-bottom: 30px;
+	}
+	
+	.c-news--head .c-news--download {
+		margin-bottom: 0;
+	}
+}

@@ -86,10 +86,13 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       foreach ($senator_terms as $tid) {
         $tids[] = (int) $tid['target_id'];
       }
-      // Get all 'Microsite Pages' with the same senator reference.
-      $nids = $this->entityTypeManager->getStorage('node')->getQuery()
-        ->condition('field_senator_multiref', $tids)
-        ->execute();
+      $nids = &drupal_static(__FUNCTION__);
+      if (!isset($nids)) {
+        // Get all 'Microsite Pages' with the same senator reference.
+        $nids = $this->entityTypeManager->getStorage('node')->getQuery()
+          ->condition('field_senator_multiref', $tids)
+          ->execute();
+      }
       $nodes = Node::loadMultiple($nids);
       $menu_links = [];
       foreach ($nodes as $node) {

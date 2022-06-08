@@ -1,0 +1,31 @@
+uuid: 9c9181cf-a3c5-4720-b976-894e8c281366
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_carousel_media
+    - media.type.image
+    - media.type.video
+    - paragraphs.paragraphs_type.carousel
+id: paragraph.carousel.field_carousel_media
+field_name: field_carousel_media
+entity_type: paragraph
+bundle: carousel
+label: 'Carousel media'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      video: video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: image
+field_type: entity_reference

@@ -27,14 +27,14 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   /**
    * The CacheBackend Interface.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterfacecache
+   * @var Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 
   /**
    * The Entity TypeManager Interfacee.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterfaceentityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -42,7 +42,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   /**
    * Current Route Match.
    *
-   * @var Drupal|Core|Routing|CurrentRouteMatch
+   * @var Drupal\Core\Routing\CurrentRouteMatch
    */
   protected $routeMatch;
 

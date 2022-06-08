@@ -27,7 +27,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   /**
    * The CacheBackend Interface.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 
@@ -42,7 +42,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   /**
    * Current Route Match.
    *
-   * @var Drupal\Core\Routing\CurrentRouteMatch
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
   protected $routeMatch;
 
@@ -73,11 +73,14 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The menu links array for the 'Senator Microsite Menu' template.
    */
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
-    if (!empty($node) && $node->getType() == 'microsite_page') {
+    if ($node && $node->getType() == 'microsite_page') {
       $senator_terms = $node->get('field_senator_multiref')->getValue();
       $tids = [];
       foreach ($senator_terms as $tid) {
@@ -90,9 +93,12 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       $nodes = Node::loadMultiple($nids);
       $menu_links = [];
       foreach ($nodes as $node) {
-        $term = $node->get('field_microsite_page_type')->entity;
-        $menu_title = $term->getName();
-        $menu_weight = $term->get('field_microsite_menu_weight')->value;
+        /** @var \Drupal\name\Plugin\Field\FieldType\NameItem $entity */
+        $entity = $node->get('field_microsite_page_type')->entity;
+        /** @var \Drupal\Core\Field\FieldDefinitionInterface $menu_title */
+        $menu_title = $entity->getName();
+        /** @var \Drupal\name\Plugin\Field\FieldType\NameItem $menu_weight */
+        $menu_weight = $entity->get('field_microsite_menu_weight')->getValue()[0]['value'];
         // Get the url alias for each 'Microsite Page' and populate
         // links for menu block.
         $menu_links[$menu_weight]['menu_url'] = $node->toUrl()->toString();
@@ -103,6 +109,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         '#menu_links' => $menu_links,
       ];
     }
+    return [];
   }
 
   /**

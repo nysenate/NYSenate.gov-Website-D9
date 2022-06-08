@@ -1,0 +1,13 @@
+<div class="c-block c-block--pg-feature-image {% if full_width_bleed %} c-block--full-bleed{% endif %}">
+  {% if title %}
+    {% include '@rain_theme/heading/heading.twig' with {
+      heading: {
+        title: title,
+        heading_level: '2',
+        modifier: 'pg-subtitle'
+      }
+    } only %}
+  {% endif %}
+  
+  {{ featured_image }}
+</div>

@@ -1,0 +1,29 @@
+uuid: 7ebd5a60-4c5a-411f-938a-31b0454e59e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.homepage_hero
+  module:
+    - system
+    - views
+  theme:
+    - nysenate_theme
+id: views_block__homepage_hero_homepage_hero
+theme: nysenate_theme
+region: content
+weight: -3
+provider: null
+plugin: 'views_block:homepage_hero-homepage_hero'
+settings:
+  id: 'views_block:homepage_hero-homepage_hero'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

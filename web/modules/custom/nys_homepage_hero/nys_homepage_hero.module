@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Homepage hero component.
+ */
+
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function nys_homepage_hero_page_attachments_alter(&$attachments) {
+  if (\Drupal::service('path.matcher')->isFrontPage() && \Drupal::state()->get('homepage_hero_add_polling_js')) {
+    $active = \Drupal::state()->get('homepage_hero_session_in_progress');
+    $poll_int = $active ? \Drupal::state()->get('homepage_hero_active_session_poll_interval') : \Drupal::state()->get('homepage_hero_pre_session_poll_interval');
+    $attachments['#attached']['library'][] = 'nys_homepage_hero/homepage_hero';
+    $attachments['#attached']['drupalSettings']['nys_homepage_hero']['session_active'] = $active;
+    $attachments['#attached']['drupalSettings']['nys_homepage_hero']['poll_int'] = $poll_int;
+  }
+}
+
+/**
+ * Implements  hook_form_FORM_ID_alter().
+ */
+function nys_homepage_hero_form_entity_subqueue_homepage_hero_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (is_array($form['items']['widget']) && array_key_exists('add_more', $form['items']['widget'])) {
+    $form['items']['widget']['add_more']['submit']['#submit'][] =
+      '\Drupal\nys_homepage_hero\Controller\HomepageHeroController::homepageHeroAddItem';
+  }
+  if (is_array($form['items']['widget']) && array_key_exists(0, $form['items']['widget'])) {
+    $form['items']['widget'][0]['_remove']['#submit'][] =
+      '\Drupal\nys_homepage_hero\Controller\HomepageHeroController::homepageHeroRemoveItem';
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function nys_homepage_hero_cron() {
+  // Only add the polling JS if a session is scheduled to begin within a
+  // specified time period.
+  if (!\Drupal::state()->get('homepage_hero_add_polling_js')) {
+    $current_time = time();
+    $interval_time = $current_time + \Drupal::state()->get('homepage_hero_scheduled_interval');
+    $now = new DrupalDateTime('now', 'UTC');
+    $interval = DrupalDateTime::createFromTimestamp($interval_time, 'UTC');
+    $query = \Drupal::entityQuery('node');
+    $query->condition('field_date', $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '>');
+    $query->condition('field_date', $interval->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '<=');
+    $results = $query->execute();
+
+    if (!empty($results)) {
+      // Turn on the flag to start adding the polling JS to the front page.
+      \Drupal::state()->set('homepage_hero_add_polling_js', 1);
+      \Drupal::state()->set('homepage_hero_session_in_progress', 0);
+      \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
+    }
+  }
+}

@@ -38,6 +38,15 @@ accordion:
   js:
     dist/js/accordion.es6.js: {}
 
+addthisevent:
+  js:
+    dist/js/ate.min.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
 article-page:
   css:
     component:
@@ -57,6 +66,11 @@ breadcrumb:
   css:
     component:
       dist/css/breadcrumb.css: {}
+
+bill-vote-widget:
+  css:
+    component:
+      dist/css/bill-vote-widget.css: {}
 
 card:
   css:
@@ -135,6 +149,13 @@ resolution-page:
     component:
       dist/css/resolution-page.css: {}
 
+event:
+  css:
+    component:
+      dist/css/event.css: {}
+  dependencies:
+    - nysenate_theme/addthisevent
+
 event-card:
   css:
     component:
@@ -159,6 +180,18 @@ event-teaser:
     component:
       dist/css/event-teaser.css: {}
 
+featured-bills:
+  css:
+    component:
+      dist/css/featured-bills.css: {}
+  dependencies:
+    - nysenate_theme/bill-vote-widget
+
+file-uploads:
+  css:
+    component:
+      dist/css/file-uploads.css: {}
+
 gallery-carousel:
   css:
     component:
@@ -167,6 +200,16 @@ gallery-carousel:
     dist/js/gallery-carousel.es6.js: {}
   dependencies:
     - rain_theme/slick
+
+hammer:
+  js:
+    dist/js/hammer.min.js: {}
+    dist/js/jquery.hammer.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
 
 hero:
   css:
@@ -316,6 +359,15 @@ pager:
     component:
       dist/css/pager.css: {}
 
+quick-facts:
+  css:
+    component:
+      dist/css/quick-facts.css: {}
+  js:
+    dist/js/quick-facts.es6.js: {}
+  dependencies:
+    - nysenate_theme/hammer
+
 quote:
   css:
     component:
@@ -339,6 +391,11 @@ search-box:
   css:
     component:
       dist/css/search-box.css: {}
+
+session:
+  css:
+    component:
+      dist/css/session.css: {}
 
 site-branding:
   css:

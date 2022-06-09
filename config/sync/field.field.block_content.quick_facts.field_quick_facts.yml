@@ -1,0 +1,64 @@
+uuid: 0b91e3a9-5437-4912-9ffb-d275a8aa4977
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.quick_facts
+    - field.storage.block_content.field_quick_facts
+    - paragraphs.paragraphs_type.quick_facts
+  module:
+    - entity_reference_revisions
+id: block_content.quick_facts.field_quick_facts
+field_name: field_quick_facts
+entity_type: block_content
+bundle: quick_facts
+label: 'Quick Facts'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      quick_facts: quick_facts
+    negate: 0
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 13
+        enabled: false
+      agenda_bills:
+        weight: 14
+        enabled: false
+      calendar:
+        weight: 15
+        enabled: false
+      card:
+        weight: 16
+        enabled: false
+      committee_featured_legislation:
+        weight: 17
+        enabled: false
+      gallery_item:
+        weight: 18
+        enabled: false
+      members:
+        weight: 19
+        enabled: false
+      misc_legislative_group_members:
+        weight: 20
+        enabled: false
+      quick_facts:
+        weight: 21
+        enabled: true
+      quote:
+        weight: 22
+        enabled: false
+      slider_item:
+        weight: 23
+        enabled: false
+      votes:
+        weight: 24
+        enabled: false
+field_type: entity_reference_revisions

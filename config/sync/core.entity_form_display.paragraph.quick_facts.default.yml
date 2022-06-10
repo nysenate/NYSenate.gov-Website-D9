@@ -1,0 +1,31 @@
+uuid: 4d574a3d-019d-4a13-9751-5ad242d03ee1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.quick_facts.field_pg_quick_facts_label
+    - field.field.paragraph.quick_facts.field_pg_quick_facts_no
+    - paragraphs.paragraphs_type.quick_facts
+id: paragraph.quick_facts.default
+targetEntityType: paragraph
+bundle: quick_facts
+mode: default
+content:
+  field_pg_quick_facts_label:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_pg_quick_facts_no:
+    type: number
+    weight: 0
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

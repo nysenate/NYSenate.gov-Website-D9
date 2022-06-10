@@ -54,6 +54,7 @@ third_party_settings:
         required_fields: true
     group_content:
       children:
+        - field_microsite_page_type
         - field_block
         - field_senator_multiref
       label: Content
@@ -81,7 +82,7 @@ content:
     third_party_settings: {  }
   field_block:
     type: inline_entity_form_complex
-    weight: 14
+    weight: 28
     region: content
     settings:
       form_mode: default
@@ -105,18 +106,14 @@ content:
       use_details: true
     third_party_settings: {  }
   field_microsite_page_type:
-    type: entity_reference_autocomplete
+    type: options_select
     weight: 27
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
   field_senator_multiref:
     type: entity_reference_autocomplete
-    weight: 15
+    weight: 29
     region: content
     settings:
       match_operator: CONTAINS

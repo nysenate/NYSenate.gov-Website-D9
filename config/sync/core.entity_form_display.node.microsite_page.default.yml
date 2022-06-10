@@ -56,6 +56,7 @@ third_party_settings:
         required_fields: true
     group_content:
       children:
+        - field_microsite_page_type
         - field_block
         - field_senator_multiref
       label: Content
@@ -108,7 +109,7 @@ content:
     third_party_settings: {  }
   field_microsite_page_type:
     type: options_select
-    weight: 2
+    weight: 27
     region: content
     settings: {  }
     third_party_settings: {  }

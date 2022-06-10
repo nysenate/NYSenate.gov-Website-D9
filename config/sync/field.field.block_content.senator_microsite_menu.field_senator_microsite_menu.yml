@@ -1,0 +1,28 @@
+uuid: 92de159d-bbd2-4978-b1e9-0799b10f11b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.senator_microsite_menu
+    - field.storage.block_content.field_senator_microsite_menu
+  module:
+    - block_field
+id: block_content.senator_microsite_menu.field_senator_microsite_menu
+field_name: field_senator_microsite_menu
+entity_type: block_content
+bundle: senator_microsite_menu
+label: 'Senator Microsite Menu'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    plugin_id: nys_senators_microsite_menu
+    settings: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      nys_senators_microsite_menu: nys_senators_microsite_menu
+field_type: block_field

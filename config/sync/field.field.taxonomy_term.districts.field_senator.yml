@@ -1,10 +1,11 @@
-uuid: 948217a1-593d-4125-844d-5746249e9245
+uuid: 675504bb-0913-466b-ab29-15a3cf6f2872
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_senator
     - taxonomy.vocabulary.districts
+    - taxonomy.vocabulary.senator
 id: taxonomy_term.districts.field_senator
 field_name: field_senator
 entity_type: taxonomy_term
@@ -16,12 +17,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: 'default:taxonomy_term'
   handler_settings:
-    target_bundles: {  }
+    target_bundles:
+      senator: senator
     sort:
-      field: _none
-      direction: ASC
+      field: name
+      direction: asc
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

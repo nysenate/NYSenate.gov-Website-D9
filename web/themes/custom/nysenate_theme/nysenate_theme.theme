@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -109,14 +110,14 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
         $url_calendar = $node->_entity->field_session_calendars->entity->toUrl()->toString();
       }
 
-      if (!$node->_entity->field_ustream_url->isEmpty() && !empty($node->_entity->field_ustream_url->entity)) {
-        $media = $node->_entity->field_ustream_url->entity->field_media_oembed_ustream;
+      if (!$node->_entity->field_ustream_url->isEmpty() && $node->_entity->field_ustream_url->entity instanceof MediaInterface) {
+        $media = $node->_entity->field_ustream_url->entity->field_media_oembed_ustream ?? [];
       }
 
       $variables['homepage_hero'] = [
         'date' => $date->format('F d, Y'),
         'url_calendar' => $url_calendar ?? '#',
-        'media' => $media ?? [],
+        'media' => $media,
       ];
     }
   }

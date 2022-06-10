@@ -1,0 +1,40 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.node-paragraph-page .c-block {
+  margin-bottom: 60px;
+  
+  &.c-block--full-bleed ~ .c-block--full-bleed {
+    margin-top: -60px;
+  }
+}
+
+.c-block .c-block--full-bleed {
+  margin-bottom: 0px;
+}
+
+.c-block--pg-feature-image {
+  h2,
+  h3,
+  h4 {
+    font-family: 'Proxima Nova SemiBold';
+    color: $grey02;
+  }
+
+  h2 {
+    font-size: 30px;
+    margin: 36px 0 24px;
+  }
+
+  h3 {
+    font-size: 22px;
+    margin: 24px 0 0;
+  }
+
+  h4 {
+    font-size: 21px;
+    font-style: italic;
+    margin: 24px 0 0;
+    color: $grey03;
+  }
+}

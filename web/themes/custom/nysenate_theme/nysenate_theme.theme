@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocesS_menu_ID().
@@ -101,13 +102,21 @@ function nysenate_theme_preprocess_block_content__honoree_profile_block(&$variab
 function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_hero(&$variables) {
   $result = $variables["content"]["#view"]->result;
   foreach ($result as $node) {
-    if ($node->_entity->bundle() == 'session') {
+    if ($node->_entity->bundle() == 'session' && $node->_entity instanceof NodeInterface) {
       $date = new DateTime($node->_entity->field_date->value);
+
+      if (!$node->_entity->field_session_calendars->isEmpty() && $node->_entity->field_session_calendars->_entity instanceof NodeInterface) {
+        $url_calendar = $node->_entity->field_session_calendars->entity->toUrl()->toString();
+      }
+
+      if (!$node->_entity->field_ustream_url->isEmpty() && !empty($node->_entity->field_ustream_url->_entity)) {
+        $media = $node->_entity->field_ustream_url->entity->field_media_oembed_ustream;
+      }
 
       $variables['homepage_hero'] = [
         'date' => $date->format('F d, Y'),
-        'url_calendar' => $node->_entity->field_session_calendars->entity->toUrl()->toString(),
-        'media' => $node->_entity->field_ustream_url->entity->field_media_oembed_ustream,
+        'url_calendar' => $url_calendar ?? '#',
+        'media' => $media ?? [],
       ];
     }
   }

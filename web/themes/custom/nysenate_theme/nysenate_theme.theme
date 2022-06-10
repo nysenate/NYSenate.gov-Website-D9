@@ -117,6 +117,9 @@ function nysenate_theme_preprocess_block_content__quick_facts(&$variables) {
       continue;
     }
 
+    $description = '';
+    $statistic = '';
+
     if ($items['#paragraph']->field_pg_quick_facts_label->getValue()) {
       $description = $items['#paragraph']->field_pg_quick_facts_label->getValue();
       $description = reset($description)['value'];
@@ -138,6 +141,7 @@ function nysenate_theme_preprocess_block_content__quick_facts(&$variables) {
   $facts[1]['status'] = 'waiting';
   $facts[2]['status'] = 'vetoed';
 
+  $bill_status = '';
   foreach ($facts as $key => $fact) {
     switch ($fact['status']) {
       case 'signed':

@@ -117,7 +117,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       $variables['homepage_hero'] = [
         'date' => $date->format('F d, Y'),
         'url_calendar' => $url_calendar ?? '#',
-        'media' => $media,
+        'media' => $media ?? [],
       ];
     }
   }

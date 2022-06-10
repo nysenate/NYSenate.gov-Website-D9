@@ -1,0 +1,57 @@
+{{ attach_library('nysenate_theme/nysenate-senators-events') }}
+
+<div class="tabs-content">
+  {% if today %}
+    <h3 class="nys-title">{{ "Today, "|t }}{{ now }}</h3>
+    {% for item in items_today %}
+      <div class="c-event-block c-event-block--today">
+        <div class="c-event-time"><span class="date-display-single">"{{ item.time }}"</span></div>
+        <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
+        <a class="c-event-location" href=""> <span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
+        <div class="c-event-address">{{ item.street_1 }}</div>
+        <div class="c-event-address">{{ item.street_2 }}</div>
+      </div>
+    {% endfor %}
+  {% else %}
+    {% for item in items %}
+      <article class="c-event-block c-event-block--list">
+        <div class="c-event-date"><span>{{ item.day }}</span>{{ item.month }}</div>
+        <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
+        <a class="c-event-location" href=""> <span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
+        <div class="c-event-address">{{ item.street_1 }}</div>
+        <div class="c-event-address">{{ item.street_2 }}</div>
+        <div class="c-event-time"><span class="date-display-single">"{{ item.time }}"</span></div>
+      </article>
+    {% endfor %}
+  {% endif %}
+</div>
+
+{#<div class="c-event-block c-event-block--featured-image">#}
+{#  <div class="c-title">{{ "Featured Event"|t }}</div>#}
+{#  <div class="c-event-image"><a href="/calendar/events/joseph-p-addabbo-jr/june-14-2022/albertson-mobile-office-hours-senator-anna-m-kaplan"><picture>#}
+{#        <!--[if IE 9]><video style="display: none;"><![endif]-->#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone_webp_retina/public/mobile_office_hours_nysenate1.jpg?itok=MSc1W-yK&amp;timestamp=1570833001 1x" media="(min-width: 321px) and (min-resolution: 140dpi)" type="image/webp" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone_webp_retina/public/mobile_office_hours_nysenate1.jpg?itok=MSc1W-yK&amp;timestamp=1570833001 1x">#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone_webp/public/mobile_office_hours_nysenate1.jpg?itok=ERixK60O&amp;timestamp=1570833001 1x" media="(min-width: 321px)" type="image/webp" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone_webp/public/mobile_office_hours_nysenate1.jpg?itok=ERixK60O&amp;timestamp=1570833001 1x">#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone_retina/public/mobile_office_hours_nysenate1.jpg?itok=Xq8U64Zr&amp;timestamp=1570833001 1x" media="(min-width: 321px) and (min-resolution: 140dpi)" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone_retina/public/mobile_office_hours_nysenate1.jpg?itok=Xq8U64Zr&amp;timestamp=1570833001 1x">#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone/public/mobile_office_hours_nysenate1.jpg?itok=7FbWlleX&amp;timestamp=1570833001 1x" media="(min-width: 321px)" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_smartphone/public/mobile_office_hours_nysenate1.jpg?itok=7FbWlleX&amp;timestamp=1570833001 1x">#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone_webp_retina/public/mobile_office_hours_nysenate1.jpg?itok=bkYHZ1u9&amp;timestamp=1570833001 1x" media="(min-width: 1px) and (max-width: 320px) and (min-resolution: 140dpi)" type="image/webp" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone_webp_retina/public/mobile_office_hours_nysenate1.jpg?itok=bkYHZ1u9&amp;timestamp=1570833001 1x">#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone_webp/public/mobile_office_hours_nysenate1.jpg?itok=OGoAy-oX&amp;timestamp=1570833001 1x" media="(min-width: 1px) and (max-width: 320px)" type="image/webp" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone_webp/public/mobile_office_hours_nysenate1.jpg?itok=OGoAy-oX&amp;timestamp=1570833001 1x">#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone_retina/public/mobile_office_hours_nysenate1.jpg?itok=PxpiCE5W&amp;timestamp=1570833001 1x" media="(min-width: 1px) and (max-width: 320px) and (min-resolution: 140dpi)" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone_retina/public/mobile_office_hours_nysenate1.jpg?itok=PxpiCE5W&amp;timestamp=1570833001 1x">#}
+{#        <source data-srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone/public/mobile_office_hours_nysenate1.jpg?itok=L6QC2Txg&amp;timestamp=1570833001 1x" media="(min-width: 1px) and (max-width: 320px)" srcset="https://ny-senate.ddev.site/sites/default/files/styles/main_380x215_phone/public/mobile_office_hours_nysenate1.jpg?itok=L6QC2Txg&amp;timestamp=1570833001 1x">#}
+{#        <!--[if IE 9]></video><![endif]-->#}
+{#        <img class="  lazyloaded" src="https://ny-senate.ddev.site/sites/default/files/styles/380x215/public/mobile_office_hours_nysenate1.jpg?itok=Pv66I5VH&amp;timestamp=1570833001" alt="" title="">#}
+{#      </picture></a></div>#}
+{#  <div class="c-event-date">#}
+{#    <span class="c-event-date-day">14</span>#}
+{#    <span class="c-event-date-month">Jun</span>#}
+{#    <span class="c-event-date-year"><span class="date-display-single">2022</span></span>#}
+{#  </div>#}
+{#  <a href="/calendar/events/joseph-p-addabbo-jr/june-14-2022/albertson-mobile-office-hours-senator-anna-m-kaplan">#}
+{#    <h3 class="c-event-name">Albertson Mobile Office Hours - Senator Anna M. Kaplan</h3>#}
+{#  </a>#}
+{#  <a class="c-event-location" href="http://maps.google.com/?q=165 Searingtown Road S.+Albertson%2C+New York%2C+11507" target="_blank">#}
+{#    <span class="icon-before__circle-pin"></span>Shelter Rock Public Library    </a>#}
+{#  <div class="c-event-address">165 Searingtown Road S.<br>Albertson, New York 11507</div>#}
+
+{#</div>#}
+

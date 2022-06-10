@@ -36,4 +36,21 @@ input[type='submit'] {
     font-size: 0.875rem;
     padding: 0.5rem 1rem;
   }
+
+  &.load--more {
+    width: 100%;
+    background-color: $grey06;
+    color: $blue01;
+    font-weight: bold;
+    border: none;
+    font-size: 1rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+
+    & svg {
+      transform: scale(0.7);
+      font-size: 24px;
+      fill: $blue01;
+    }
+  }
 }

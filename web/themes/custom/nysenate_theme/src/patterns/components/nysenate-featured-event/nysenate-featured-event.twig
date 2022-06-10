@@ -1,0 +1,20 @@
+{{ attach_library('nysenate_theme/nysenate-featured-event') }}
+
+<div class="c-event-block c-event-block--featured-image">
+  <div class="c-title">{{ "Featured Event"|t }}</div>
+  <div class="c-event-image">
+      {{ image }}
+  </div>
+  <div class="c-event-date">
+    <span class="c-event-date-day">{{ day }}</span>
+    <span class="c-event-date-month">{{ month }}</span>
+    <span class="c-event-date-year"><span class="date-display-single">{{ year }}</span></span>
+  </div>
+  <a href="{{ url }}">
+    <h3 class="c-event-name">{{ title }}</h3>
+  </a>
+  <a class="c-event-location" href="{{ url_location }}" target="_blank">
+    <span class="icon-before__circle-pin"></span>{{ location }}    </a>
+  <div class="c-event-address">{{ street_1 }}<br>{{ street_2 }}</div>
+
+</div>

@@ -65,5 +65,4 @@
       }
     }
   };
-
 })(jQuery, Drupal, drupalSettings);

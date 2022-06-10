@@ -84,7 +84,7 @@ function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $
                         <a class="c-upcoming--nav-item ajax-processed" id="previous-month" data-first-day="' . $form['first_day_of_previous_month']['#default_value'] . '" data-last-day="' . $form['last_day_of_previous_month']['#default_value'] . '">' . $previous_month->format('F') . '</a>
                         <a class="c-upcoming--nav-item ajax-processed" id="next-month" data-first-day="' . $form['first_day_of_next_month']['#default_value'] . '" data-last-day="' . $form['last_day_of_next_month']['#default_value'] . '">' . $next_month->format('F') . '</a>
                       </div>
-                    </div>'
+                    </div>',
     ];
 
     $form['events_place'] = [
@@ -93,7 +93,7 @@ function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $
                         <dd class="c-tab active"><a class="c-tab-link first" id="panel1" data-value="All">All Events</a></dd>
                         <dd class="c-tab"><a class="c-tab-link" id="panel2" data-value="in_albany">In Albany</a></dd>
                         <dd class="c-tab"><a class="c-tab-link" id="panel3" data-value="in_district">In the District</a></dd>
-                    </dl>'
+                    </dl>',
     ];
   }
 }

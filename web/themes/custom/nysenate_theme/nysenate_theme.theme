@@ -7,6 +7,8 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\media\MediaInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocesS_menu_ID().
@@ -96,18 +98,110 @@ function nysenate_theme_preprocess_block_content__honoree_profile_block(&$variab
 }
 
 /**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__quick_facts(&$variables) {
+  $facts = [];
+  $current_year = date('Y');
+  if ($current_year % 2 == 0) {
+    $session_year = $current_year - 1;
+    $first_year   = $session_year;
+    $second_year  = substr($current_year, -2);
+  }
+  else {
+    $session_year = $current_year;
+    $first_year   = $current_year;
+    $second_year  = substr($current_year + 1, -2);
+  }
+
+  foreach ($variables['content']['field_quick_facts'] as $key => $items) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $description = '';
+    $statistic = '';
+
+    if ($items['#paragraph']->field_pg_quick_facts_label->getValue()) {
+      $description = $items['#paragraph']->field_pg_quick_facts_label->getValue();
+      $description = reset($description)['value'];
+    }
+
+    if ($items['#paragraph']->field_pg_quick_facts_no->getValue()) {
+      $statistic = $items['#paragraph']->field_pg_quick_facts_no->getValue();
+      $statistic = reset($statistic)['value'];
+    }
+
+    $facts[] = [
+      'description' => $description,
+      'statistic' => $statistic,
+    ];
+  }
+
+  // Set static status for the facts.
+  $facts[0]['status'] = 'signed';
+  $facts[1]['status'] = 'waiting';
+  $facts[2]['status'] = 'vetoed';
+
+  $bill_status = '';
+  foreach ($facts as $key => $fact) {
+    switch ($fact['status']) {
+      case 'signed':
+        $bill_status = 'SIGNED_BY_GOV';
+        break;
+
+      case 'waiting':
+        $bill_status = 'DELIVERED_TO_GOV';
+        break;
+
+      case 'vetoed':
+        $bill_status = 'VETOED';
+        break;
+
+      default:
+        break;
+    }
+
+    // Arrange array for url params.
+    $params = [
+      'searched' => 'true',
+      'type' => 'f_bill',
+      'bill_session_year' => $session_year,
+      'bill_status' => $bill_status,
+      'page' => 1,
+    ];
+    $link = Url::fromUserInput('/search/legislation', ['query' => $params])->toString();
+    $facts[$key]['link'] = $link;
+  }
+
+  $variables['facts'] = $facts;
+
+  $year = $first_year . '-' . $second_year;
+  $title = $year . ', ' . $variables['elements']['#block_content']->info->getValue()[0]['value'];
+  $variables['title'] = $title;
+}
+
+/**
  * Implements hook_preprocess_block_ID().
  */
 function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_hero(&$variables) {
   $result = $variables["content"]["#view"]->result;
   foreach ($result as $node) {
-    if ($node->_entity->bundle() == 'session') {
+    if ($node->_entity->bundle() == 'session' && $node->_entity instanceof NodeInterface) {
       $date = new DateTime($node->_entity->field_date->value);
+
+      if (!$node->_entity->field_session_calendars->isEmpty() && $node->_entity->field_session_calendars->entity instanceof NodeInterface) {
+        $url_calendar = $node->_entity->field_session_calendars->entity->toUrl()->toString();
+      }
+
+      if (!$node->_entity->field_ustream_url->isEmpty() && $node->_entity->field_ustream_url->entity instanceof MediaInterface) {
+        $media = $node->_entity->field_ustream_url->entity->field_media_oembed_ustream ?? [];
+      }
 
       $variables['homepage_hero'] = [
         'date' => $date->format('F d, Y'),
-        'url_calendar' => $node->_entity->field_session_calendars->entity->toUrl()->toString(),
-        'media' => $node->_entity->field_ustream_url->entity->field_media_oembed_ustream,
+        'url_calendar' => $url_calendar ?? '#',
+        'media' => $media ?? [],
       ];
     }
   }

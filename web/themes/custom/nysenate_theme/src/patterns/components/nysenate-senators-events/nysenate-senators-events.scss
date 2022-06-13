@@ -126,6 +126,20 @@
   }
 }
 
+.c-event-name {
+  color: $grey02;
+
+  a {
+    color: $grey02;
+  }
+}
+
+.view-empty {
+  background: $grey06;
+  padding: 20px;
+  margin: 20px 0 40px 0;
+}
+
 .tabs-content {
   width: 100%;
 
@@ -985,4 +999,472 @@
       border-top: 2px solid $grey05;
     }
   }
+}
+
+/*------------------------------------
+/	CALENDAR - SENATOR
+/-------------------------------------*/
+
+.c-upcoming--header {
+  position: relative;
+  height: 42px;
+  margin-bottom: 30px;
+}
+
+.c-month-title {
+  margin: 0;
+  text-align: center;
+  font-family: 'Adelle SemiBold';
+  font-size: 30px;
+  line-height: 42px;
+  color: $grey02;
+}
+
+.c-upcoming--nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}
+.c-upcoming--nav-item {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  font-family: "Proxima Nova SemiBold";
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 42px;
+  background: $grey06;
+  font-size: 16px;
+  //@extend .icon-replace__left;
+  @extend .lgt-text;
+
+  &:after {
+    width: 42px;
+    height: 42px;
+    font-size: 30px;
+    @extend .lgt-text;
+  }
+
+  // right arrow
+  & + .c-upcoming--nav-item {
+    position: absolute;
+    left: auto;
+    right: 0;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    //@extend .icon-replace__right;
+
+    &:after {
+      font-size: 30px;
+    }
+  }
+}
+
+.view-senator-events.view-display-id-upcoming_events, .view-senator-events.view-display-id-senator_upcoming_albany, .view-senator-events.view-display-id-senator_upcoming_district {
+  > .item-list {
+    ul.pager {
+      display: none;
+    }
+  }
+  > .view-content {
+    > div {
+      &.first {
+        .c-event-block--list {
+          border-top: 2px solid $grey05;
+        }
+      }
+    }
+  }
+}
+
+
+
+@media #{$tablet} {
+  .c-upcoming--header {
+    height: auto;
+  }
+  .c-month-title {
+    font-size: 30px;
+  }
+  .c-upcoming--nav-item {
+    text-indent: 0;
+    width: auto;
+    background: transparent;
+    //@extend .icon-before__left;
+
+    &:before {
+      margin-top: -0.15em;
+      padding: 0 10px 0 0;
+      font-size: 16px;
+      line-height: 47px;
+    }
+    &:after {
+      content: "";
+      font-size: 30px;
+      height: auto;
+      width: auto;
+    }
+    // right arrow
+    & + .c-upcoming--nav-item {
+      text-indent: 0;
+      width: auto;
+     //@extend .icon-after__right;
+
+      &:before {
+        content: "";
+        padding: 0;
+      }
+      &:after {
+        position: relative;
+        margin-top: -0.15em;
+        padding: 0 0 0 10px;
+        font-size: 16px;
+        line-height: 47px;
+      }
+    }
+  }
+}
+
+/*-------------------------------------------------------
+/
+/   Tabs
+/
+/-------------------------------------------------------*/
+.c-tab-block--title {
+  font-family: "Adelle SemiBold";
+  font-size: 18px;
+  line-height: 21px;
+  color: $grey02;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+.l-tab-bar {
+  position: relative;
+  width: 100%;
+  height: 45px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding-top: 45px;
+  border: 1px solid #C0C0C0;
+  margin-bottom: -1px;
+
+  .arrow {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    pointer-events: none;
+    font-size: 24px;
+    width: 45px;
+    height: 45px;
+    @extend .lgt-text;
+  }
+
+  .c-tab {
+    margin: 0;
+    width: 100%;
+    height: 45px;
+    box-sizing: border-box;
+    cursor: pointer;
+    text-transform: uppercase;
+
+    .c-tab-link {
+      width: 100%;
+      height: 100%;
+      padding: 0px 0px 0px 20px;
+      display: block;
+      @extend .lgt-text;
+      font-family: 'Proxima Nova SemiBold';
+      font-size: 14px;
+      line-height: 45px;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  .c-tab.active {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.c-tab--arrow {
+  position: absolute;
+  right: 16px;
+  top: 4px;
+  height: 45px;
+  width: 25px;
+  @extend .lgt-text;
+  //@extend .icon-replace__see-more;
+  z-index: 1;
+  pointer-events: none;
+
+  &:after {
+    font-size: 26px;
+  }
+}
+.c-tabs--related-issues {
+  a {
+    text-transform: uppercase;
+    font-family: "Proxima Nova Semibold";
+    font-size: 12px;
+    line-height: 1em;
+    @extend .link-text;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.c-tab--link-more {
+  display: block;
+  text-align: right;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  //@extend .icon-after__arrow;
+  @extend .link-text;
+
+  &:after {
+    margin-top: -0.15em;
+    font-size: 1.5em;
+    line-height: 14px;
+  }
+}
+
+.l-tab-bar.open {
+  height: auto;
+
+  .c-tab--arrow {
+    position: absolute;
+    right: 16px;
+    top: 4px;
+    height: 45px;
+    width: 25px;
+  //  @extend .icon-replace__see-less;
+  }
+}
+
+.tabs-content>.content {
+  padding: 0;
+}
+
+.block-menu-menu-issue-explorer ul {
+  width: 100%;
+  height: 45px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding-top: 45px;
+  position: relative;
+  border: 1px solid #C0C0C0;
+  margin-bottom: 0;
+
+  .arrow {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    pointer-events: none;
+    font-size: 24px;
+    @extend .lgt-text;
+  }
+
+  li.leaf {
+    width: 100%;
+    height: 45px;
+    box-sizing: border-box;
+
+    text-transform: uppercase;
+
+    a {
+      width: 100%;
+      height: 100%;
+      padding: 12px 0px 0px 20px;
+      display: block;
+      @extend .lgt-text;
+      font-family: 'Proxima Nova SemiBold';
+      font-size: 14px;
+    }
+  }
+
+  .c-tab.active {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+
+@media #{$tablet} {
+  .c-tab-block--title {
+    font-family: "Adelle Bold";
+    font-size: 32px;
+    line-height: 41px;
+    color: $grey02;
+  }
+  .l-tab-bar{
+    overflow: hidden;
+    margin: 30px 0 -1px 0;
+    border: none;
+    border-bottom: 1px solid $grey05;
+    padding-top: 0;
+    height: auto;
+
+    .arrow {
+      display: none;
+    }
+
+    .c-tab {
+      list-style: none;
+      float: left;
+      height: 50px;
+      border: 1px solid transparent;
+      margin-right: -2px;
+      margin-bottom: -2px;
+      text-transform: uppercase;
+      width: auto;
+
+      .section-committees &{
+        width:33.5%
+      }
+
+      .c-tab-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 0 50px;
+        text-align: center;
+        white-space: nowrap;
+        background: none;
+        line-height: 50px;
+      }
+      .c-tab-link:hover, a:hover{
+        background: none;
+      }
+    }
+
+    .c-tab-link.first{
+      border-left: none;
+    }
+
+    .c-tab.active{
+      border: 1px solid #aaa;
+      position: relative;
+      z-index: 2;
+      .c-tab-link,  li.leaf a{
+        border-left: none;
+      }
+    }
+  }
+  .l-tab-bar.open .c-tab--arrow { display: none; }
+  .tabs dd>a {
+    padding: 0;
+  }
+  .tabs-content > .content {
+    padding: 0;
+  }
+
+  .tabs-content {
+    // column layouts
+    .l-col-1-of-3 {}
+    .l-col-2-of-3 {}
+    .l-col-3-of-3 {
+
+      a {
+        display: block;
+        float: right;
+        max-width: 200px;
+      }
+    }
+    .pager-load-more{
+      background-color: $grey06;
+      padding: 0;
+      margin: 1.75em 0 0 0;
+
+      a {
+        font-family: 'Proxima Nova SemiBold';
+        font-size: 14px;
+        color: $blue03;
+        padding: 5px 0;
+        display: block;
+      }
+      &.pager-load-more-empty {
+        display: none;
+      }
+    }
+  }
+  .c-tab--link-more {
+    font-size: 14px;
+  }
+
+  .block-menu-menu-issue-explorer ul {
+    overflow: hidden;
+    margin: 30px 0 30px 0;
+    border: none;
+    border-bottom: 1px solid $grey05;
+    padding-top: 0;
+    height: auto;
+
+    .arrow {
+      display: none;
+    }
+
+    li.leaf{
+      list-style: none;
+      float: left;
+      height: 50px;
+      padding-top: 12px;
+      border: 1px solid transparent;
+      margin-right: -2px;
+      margin-bottom: -2px;
+      text-transform: uppercase;
+      width: auto;
+
+      a{
+        display: block;
+        width: 100%;
+        height: 20px;
+        border-left: 1px solid $grey05;
+        padding-left: 35px;
+        padding-right: 36px;
+        background: none;
+        padding-top: 0;
+      }
+      a:hover{
+        background: none;
+      }
+    }
+
+    li.leaf.first a{
+      border-left: none;
+    }
+    li.leaf.active-trail a{
+      border-left: none;
+      border-right: none;
+    }
+    li.leaf.active-trail{
+      border: 1px solid #aaa;
+      position: relative;
+      z-index: 2;
+      .c-tab-link,  li.leaf a{
+        border-left: none;
+      }
+    }
+    li.leaf.active-trail + .leaf a {
+      border-left: none;
+    }
+  }
+}
+
+.pointer {
+  cursor: pointer;
 }

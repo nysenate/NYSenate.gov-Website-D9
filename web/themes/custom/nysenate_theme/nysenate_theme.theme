@@ -70,18 +70,30 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
-  $issues = [];
-
   $variables['title'] = $variables['label'][0]['#context']['value'];
   $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
-  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-    if (!is_numeric($key)) {
-      continue;
+
+  if (isset($variables['content']['field_issues'])) {
+    $issues = [];
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
     }
-    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
-    $issues[] = $url;
+    $variables['issues'] = $issues;
   }
-  $variables['field_issues'] = $issues;
+
+  if (isset($variables['content']['field_majority_issue_tag'])) {
+    foreach ($variables['content']['field_majority_issue_tag'] as $key => $field_majority_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $variables['majority_issue'] = Link::fromTextAndUrl($field_majority_issues['#title'], $field_majority_issues['#url']);
+    }
+  }
+
 }
 
 /**

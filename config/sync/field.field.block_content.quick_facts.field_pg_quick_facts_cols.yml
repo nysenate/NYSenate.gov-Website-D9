@@ -1,0 +1,23 @@
+uuid: 0dec86e4-acd8-4da4-ab68-a6bbd410c89a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.quick_facts
+    - field.storage.block_content.field_pg_quick_facts_cols
+  module:
+    - options
+id: block_content.quick_facts.field_pg_quick_facts_cols
+field_name: field_pg_quick_facts_cols
+entity_type: block_content
+bundle: quick_facts
+label: 'Number of Columns'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: three
+default_value_callback: ''
+settings: {  }
+field_type: list_string

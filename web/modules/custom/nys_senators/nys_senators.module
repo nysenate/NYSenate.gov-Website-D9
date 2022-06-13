@@ -14,6 +14,17 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
+ * Implements hook_theme().
+ */
+function nys_senators_theme($existing, $type, $theme, $path) {
+  return [
+    'senator_microsite_menu_block' => [
+      'variables' => ['menu_links' => NULL],
+    ],
+  ];
+}
+
+/**
  * Implements hook_node_grants().
  *
  * This function assigns group flags (grants) to users for access to content.

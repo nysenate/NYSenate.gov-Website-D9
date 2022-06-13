@@ -14,7 +14,9 @@
   <div {{ attributes.addClass(classes) }}> <div class="c-block c-detail--header c-detail--header__bill">
     <h2 class="nys-title">{{ label }}</h2>
     <div class="c-bill--flags">
-      <span class="c-bill--flag">{{ last_status }}</span>
+      {% if last_status %}
+        <span class="c-bill--flag">{{ last_status }}</span>
+      {% endif %}
     </div>
   </div>
 

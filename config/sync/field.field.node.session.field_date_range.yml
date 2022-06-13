@@ -1,14 +1,14 @@
-uuid: a5c8b81e-d6af-48ae-bf4f-d5fd95dc2484
+uuid: bfe32b71-7e02-41e4-82a3-5a0e19f775ac
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_date
+    - field.storage.node.field_date_range
     - node.type.session
   module:
-    - datetime
-id: node.session.field_date
-field_name: field_date
+    - datetime_range
+id: node.session.field_date_range
+field_name: field_date_range
 entity_type: node
 bundle: session
 label: 'Session Date'
@@ -19,6 +19,8 @@ default_value:
   -
     default_date_type: now
     default_date: now
+    default_end_date_type: ''
+    default_end_date: ''
 default_value_callback: ''
 settings: {  }
-field_type: datetime
+field_type: daterange

@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * The views infinite scroll pager template.
+ */
+#}
+
+{% if items.next %}
+<ul{{ attributes }}>
+  <li class="pager__item">
+    {% include '@nysenate_theme/button/button.twig' with {
+      url: items.next.href,
+      icon: true,
+      modifier: "load--more",
+      text: options.button_text
+    }only
+    %}
+  </li>
+</ul>
+{% endif %}

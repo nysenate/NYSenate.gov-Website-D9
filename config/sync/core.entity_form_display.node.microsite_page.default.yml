@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.microsite_page.field_meta_tags
     - field.field.node.microsite_page.field_microsite_page_type
     - field.field.node.microsite_page.field_senator_multiref
+    - field.field.node.microsite_page.field_senator_tab
     - field.field.node.microsite_page.field_short_title
     - field.field.node.microsite_page.field_summary
     - field.field.node.microsite_page.field_thumbnail
@@ -120,6 +121,12 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_senator_tab:
+    type: options_select
+    weight: 26
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_short_title:
     type: string_textfield

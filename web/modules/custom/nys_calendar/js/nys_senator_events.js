@@ -9,10 +9,11 @@
       let $next_month = $('input[name="next_month"]');
       let $previous_month = $('input[name="previous_month"]');
 
-      console.log($current_month_year)
       $submit.closest('.form-actions').hide();
       $('#views-exposed-form-senator-events-upcoming-events fieldset', context).hide();
       $('#views-exposed-form-senator-events-upcoming-events .form-item-field-event-place-value', context).hide();
+      var $eventPlace = $('select[name="field_event_place_value"]').val();
+      $('.c-tab-link[data-value="' + $eventPlace + '"]').parent().addClass('active');
 
       function submitDateValues() {
         var $real_min = $('input[name="field_date_range_value[min]"]', context);
@@ -64,4 +65,5 @@
       }
     }
   };
+
 })(jQuery, Drupal, drupalSettings);

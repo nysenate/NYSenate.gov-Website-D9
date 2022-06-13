@@ -939,7 +939,17 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          plugin_id: text
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
       sorts:
         created:
           id: created
@@ -2090,6 +2100,7 @@ display:
                   collapsible: false
                   is_secondary: false
                 select_all_none: false
+      empty: {  }
       filters:
         status:
           id: status
@@ -2255,12 +2266,14 @@ display:
         groups:
           1: AND
       defaults:
+        empty: false
         pager: false
         exposed_form: false
         fields: false
         filters: false
         filter_groups: false
       display_description: ''
+      display_comment: ''
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -4227,6 +4240,18 @@ display:
                     filter_rewrite_values: '- Any -|All Events'
                   collapsible: false
                   is_secondary: false
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: 'No events are currently scheduled during the month'
+          tokenize: false
       filters:
         status:
           id: status
@@ -4362,6 +4387,7 @@ display:
           relationship: none
           view_mode: upcoming_event
       defaults:
+        empty: false
         exposed_form: false
         style: false
         row: false

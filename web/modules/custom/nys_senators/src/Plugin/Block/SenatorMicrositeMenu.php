@@ -90,6 +90,8 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       if (!isset($nids)) {
         // Get all 'Microsite Pages' with the same senator reference.
         $nids = $this->entityTypeManager->getStorage('node')->getQuery()
+          ->condition('status', 1)
+          ->condition('type', 'microsite_page')
           ->condition('field_senator_multiref', $tids)
           ->execute();
       }
@@ -100,12 +102,14 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         $entity = $node->get('field_microsite_page_type')->entity;
         /** @var \Drupal\Core\Field\FieldDefinitionInterface $menu_title */
         $menu_title = $entity->getName();
-        /** @var \Drupal\name\Plugin\Field\FieldType\NameItem $menu_weight */
-        $menu_weight = $entity->get('field_microsite_menu_weight')->getValue()[0]['value'];
-        // Get the url alias for each 'Microsite Page' and populate
-        // links for menu block.
-        $menu_links[$menu_weight]['menu_url'] = $node->toUrl()->toString();
-        $menu_links[$menu_weight]['menu_title'] = $menu_title;
+        if ($entity->get('field_microsite_menu_weight')->getValue()) {
+          /** @var \Drupal\name\Plugin\Field\FieldType\NameItem $menu_weight */
+          $menu_weight = $entity->get('field_microsite_menu_weight')->getValue()[0]['value'];
+          // Get the url alias for each 'Microsite Page' and populate
+          // links for menu block.
+          $menu_links[$menu_weight]['menu_url'] = $node->toUrl()->toString();
+          $menu_links[$menu_weight]['menu_title'] = $menu_title;
+        }
       }
       return [
         '#theme' => 'senator_microsite_menu_block',

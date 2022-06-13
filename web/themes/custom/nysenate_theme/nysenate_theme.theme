@@ -280,58 +280,60 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_node__NODE_TYPE().
- */
-function nysenate_theme_preprocess_node__event(&$variables) {
-  $start_date = strtotime($variables['content']['field_date_range'][0]['start_date']['#text']);
-  $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
-  $issues = [];
-
-  // Set up reference variables indicating if this event spans multiple days.
-  $is_multiday = !(date('Ymd', $start_date) == date('Ymd', $end_date));
-
-  $variables['is_multiday'] = $is_multiday;
-  $variables['start_date'] = $start_date;
-  $variables['end_date'] = $end_date;
-
-  $street = $variables['content']['field_location'][0]['address_line1']['#value'];
-  $city = $variables['content']['field_location'][0]['locality']['#value'];
-  $administrative_area = $variables['content']['field_location'][0]['administrative_area']['#value'];
-  $postal_code = $variables['content']['field_location'][0]['postal_code']['#value'];
-
-  $variables['location_url'] = urlencode($street . ' ' . $city . ', ' . $administrative_area . ', ' . $postal_code);
-
-  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-    if (!is_numeric($key)) {
-      continue;
-    }
-    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
-    $issues[] = $url;
-  }
-  $variables['field_issues'] = $issues;
-}
-
-/**
  * Implements hook_preprocess_HOOK().
  */
-function nysenate_theme_preprocess_node(&$variables) {
-  $variables['view_mode'] = $variables['elements']['#view_mode'];
+function nysenate_theme_preprocess_node__session(&$variables) {
+  $date_value = [];
+  if (isset($variables['content']['field_date_range'][0])) {
+    // If date range has same values.
+    if (isset($variables['content']['field_date_range'][0]['#text'])) {
+      $start_date = new DateTime($variables['content']['field_date_range'][0]['#text']);
+      $end_date = new DateTime($variables['content']['field_date_range'][0]['#text']);
+    }
+    // If date range have different start and end dates.
+    elseif (isset($variables['content']['field_date_range'][0]['start_date']['#text'])) {
+      $start_date = new DateTime($variables['content']['field_date_range'][0]['start_date']['#text']);
+      $end_date = new DateTime($variables['content']['field_date_range'][0]['end_date']['#text']);
+    }
 
-  if ($variables['view_mode'] == 'upcoming_event') {
-    $node = $variables['elements']['#node'];
-    if ($node->bundle() === 'event') {
-      $date = new \Datetime($node->field_date_range->value);
-      $date_end = new \Datetime($node->field_date_range->end_value);
-      $variables['item'] = [
-        'title' => $node->label(),
-        'url' => $node->toUrl()->toString(),
-        'day' => $date->format('d'),
-        'month' => $date->format('M'),
-        'location' => $node->field_location[0]->locality,
-        'street_1' => $node->field_location[0]->address_line1,
-        'street_2' => $node->field_location[0]->address_line2,
-        'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
-      ];
+    if (isset($start_date) && isset($end_date)) {
+      $date_value['day'] = date_format($start_date, "d");
+      $date_value['month'] = date_format($start_date, "M");
+      $date_value['year'] = date_format($start_date, "Y");
+      $date_value['from_time'] = date_format($start_date, "h:i A");
+      $date_value['to_time'] = date_format($end_date, "h:i A");
+      $date_value['start_date'] = date_format($start_date, "m/d/Y h:i A");
+      $date_value['end_date'] = date_format($end_date, "m/d/Y h:i A");
+    }
+
+  }
+
+  $video_status = [];
+  if (isset($variables['content']['field_video_status'][0])) {
+    $video_status['key'] = $variables['content']['field_video_status']['#items']->value;
+    $video_status['value'] = $variables['content']['field_video_status'][0]['#markup'];
+  }
+
+  $address = '';
+  if (isset($variables['content']['field_location'][0])) {
+    if (!empty($variables['content']['field_location'][0]['address_line1']['#value'])) {
+      $address = $variables['content']['field_location'][0]['address_line1']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['address_line2']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['address_line2']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['locality']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['locality']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['postal_code']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['postal_code']['#value'] . ' ';
+    }
+    if (!empty($variables['content']['field_location'][0]['administrative_area']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['administrative_area']['#value'];
     }
   }
+
+  $variables['date_value'] = $date_value;
+  $variables['video_status'] = $video_status;
+  $variables['location'] = $address;
 }

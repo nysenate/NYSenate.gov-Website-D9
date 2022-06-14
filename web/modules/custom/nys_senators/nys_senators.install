@@ -47,3 +47,14 @@ function nys_senators_update_9001() {
   $events->set('field_microsite_menu_weight', 4);
   $events->save();
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function nys_senators_update_9002() {
+  $events = Term::create([
+    'name' => 'Landing',
+    'vid' => 'microsite_page_type',
+  ]);
+  $events->save();
+}

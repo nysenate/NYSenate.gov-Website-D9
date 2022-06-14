@@ -6,7 +6,7 @@ dependencies:
     - core.entity_form_mode.media.inline_entity
     - field.field.node.session.body
     - field.field.node.session.field_calendar_number
-    - field.field.node.session.field_date
+    - field.field.node.session.field_date_range
     - field.field.node.session.field_issues
     - field.field.node.session.field_live_message_override
     - field.field.node.session.field_live_message_status
@@ -21,7 +21,7 @@ dependencies:
     - node.type.session
   module:
     - address
-    - datetime
+    - datetime_range
     - field_group
     - inline_entity_form
     - media_library
@@ -37,7 +37,7 @@ third_party_settings:
       label: Location
       region: content
       parent_name: ''
-      weight: 2
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: 'group-location field-group-fieldset'
@@ -54,7 +54,7 @@ third_party_settings:
       label: Details
       region: content
       parent_name: ''
-      weight: 3
+      weight: 4
       format_type: fieldset
       format_settings:
         classes: 'group-details field-group-fieldset'
@@ -74,7 +74,7 @@ third_party_settings:
       label: Video
       region: content
       parent_name: ''
-      weight: 4
+      weight: 5
       format_type: fieldset
       format_settings:
         classes: 'group-video field-group-fieldset'
@@ -99,7 +99,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -110,9 +110,9 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_date:
-    type: datetime_default
-    weight: 1
+  field_date_range:
+    type: daterange_default
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -210,19 +210,19 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 5
+    weight: 6
     region: content
     settings:
       display_label: true
@@ -237,7 +237,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 6
+    weight: 7
     region: content
     settings:
       match_operator: CONTAINS
@@ -247,12 +247,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

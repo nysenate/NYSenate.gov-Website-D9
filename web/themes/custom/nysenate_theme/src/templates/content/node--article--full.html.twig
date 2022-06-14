@@ -1,109 +1,115 @@
 {{ attach_library('nysenate_theme/article-page') }}
 
 <article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
-    {{ title_prefix }}
+  {{ title_prefix }}
 
-    {% if page %}
-        <header class="c-news--head">
-            <h1 class="nys-article-title">{{ title }}</h1>
-            <div class="c-news--head-meta">
-                {% if content.field_senator %}
-                    <p class="c-news--author">
-                        {{ content.field_senator }}
-                    </p>
-                {% elseif content.field_article_author %}
-                    <p class="c-news--author">
-                        {{ content.field_article_author }}
-                    </p>
-                {% endif %}
-                {% if content.field_date %}
-                    <p class="c-news--pub-date">
-                        <span class="date-display-single">{{ content.field_date }}</span>
-                    </p>
-                {% endif %}
-                {% if content.field_issues or content.field_majority_issue_tag %}
-                    <ul class="nys-associated-topics">
-                        ISSUE:
-                        {% if content.field_majority_issue_tag %}
-                            <li>{{ content.field_majority_issue_tag }}</li>
-                        {% endif %}
-                        {% if content.field_issues %}
-                            {% for issue in content.field_issues %}
-                                <li>{{ issue }}</li>
-                            {% endfor %}
-                        {% endif %}
-                    </ul>
-                {% endif %}
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">{{ title }}</h1>
+      <div class="c-news--head-meta">
+        {% if content.field_senator %}
+          <p class="c-news--author">
+            {{ content.field_senator }}
+          </p>
+        {% elseif content.field_article_author %}
+          <p class="c-news--author">
+            {{ content.field_article_author }}
+          </p>
+        {% endif %}
+        {% if content.field_date %}
+          <p class="c-news--pub-date">
+            <span class="date-display-single">{{ content.field_date }}</span>
+          </p>
+        {% endif %}
+        {% if issues or majority_issue %}
+          <ul class="nys-associated-topics">
+            ISSUE:
+            {% if majority_issue %}
+              <li>{{ majority_issue }}</li>
+            {% endif %}
+            {% if issues %}
+              {% for issue in issues %}
+                <li>{{ issue }}</li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+        {% endif %}
 
-                {% if content.field_committee %}
-                    <ul class="nys-associated-topics">
-                        COMMITTEE:
-                        {% for committee in content.field_committee %}
-                            <li>{{ committee }}</li>
-                        {% endfor %}
-                    </ul>
+        {% if content.field_committee[0] is not empty %}
+          <ul class="nys-associated-topics">
+            COMMITTEE:
+            {% for key, committee in content.field_certifications %}
+                {##
+                # Only keep items with a numerical key, which points to field values rather
+                # than meta data.
+                #}
+                {% if key matches '/^\\d+$/' %}
+                  <li>{{ committee }}</li>
                 {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
 
-                {% if content.field_attachment %}
-                    <div class="c-news--download">
-                        {{ content.field_attachment }}
-                    </div>
-                {% endif %}
-            </div>
-        </header>
+        {% if content.field_attachment %}
+          <div class="c-news--download">
+            {{ content.field_attachment }}
+          </div>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+
+  {{ title_suffix }}
+
+  <div class="c-news--body">
+    {% if content.field_image_main %}
+      <div class="c-block c-block--img">
+        {{ content.field_image_main }}
+        {% if content.field_image_main[LANGUAGE_NONE][0]['title'] %}
+          <p class="c-img--caption">{{ content.field_image_main[LANGUAGE_NONE][0]['title'] }}
+        {% endif %}
+      </div>
     {% endif %}
 
-    {{ title_suffix }}
+    {% if content.field_subtitle %}
+      <div class="c-news--subtitle">
+        {{ content.field_subtitle }}
+      </div>
+    {% endif %}
 
-    <div class="c-news--body">
-        {% if content.field_image_main %}
-            <div class="c-block c-block--img">
-                {{ content.field_image_main }}
-                {% if content.field_image_main[LANGUAGE_NONE][0]['title'] %}
-                <p class="c-img--caption">{{ content.field_image_main[LANGUAGE_NONE][0]['title'] }}
-                    {% endif %}
-            </div>
-        {% endif %}
-
-        {% if content.field_subtitle %}
-            <div class="c-news--subtitle">
-                {{ content.field_subtitle }}
-            </div>
-        {% endif %}
-
-        <div class="c-block">
-            {{ content.body }}
-        </div>
-
-        <!-- Field Paragraphs -->
-        {% if content.field_paragraphs %}
-            <div class="c-block-paragraph">
-                {{ content.field_paragraphs }}
-            </div>
-        {% endif %}
-
-        {% if content.field_chapters %}
-            <section class="c-block">
-                {{ content.field_chapters }}
-            </section>
-        {% endif %}
-
-
-        {% if content.field_bills %}
-            <aside>
-                <div class="c-container--header__top-border">
-                    <h2 class="c-container--title">Related Legislation</h2>
-                </div>
-                {{ content.field_bills }}
-            </aside>
-        {% endif %}
-
-        <!-- Featured Legislations -->
-        {{ content.field_featured_legislation_commi }}
-
-
-        {% if content.social_buttons %}
-            {{ content.social_buttons }}
-        {% endif %}
+    <div class="c-block">
+      {{ content.body }}
     </div>
+
+    <!-- Field Paragraphs -->
+    {% if content.field_paragraphs %}
+      <div class="c-block-paragraph">
+        {{ content.field_paragraphs }}
+      </div>
+    {% endif %}
+
+    {% if content.field_chapters %}
+      <section class="c-block">
+        {{ content.field_chapters }}
+      </section>
+    {% endif %}
+
+
+    {% if content.field_bills %}
+      <aside>
+        <div class="c-container--header__top-border">
+          <h2 class="c-container--title">Related Legislation</h2>
+        </div>
+        {{ content.field_bills }}
+      </aside>
+    {% endif %}
+
+    <!-- Featured Legislations -->
+    {{ content.field_featured_legislation_commi }}
+
+
+    {% if content.social_buttons %}
+      {{ content.social_buttons }}
+    {% endif %}
+  </div>
 </article>

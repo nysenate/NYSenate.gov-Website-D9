@@ -202,7 +202,7 @@ content:
       display_label: true
     third_party_settings: {  }
   field_attachment:
-    type: inline_entity_form_simple
+    type: inline_entity_form_complex
     weight: 15
     region: content
     settings:
@@ -210,6 +210,10 @@ content:
       override_labels: true
       label_singular: file
       label_plural: files
+      allow_new: true
+      allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
       collapsible: false
       collapsed: false
       revision: false

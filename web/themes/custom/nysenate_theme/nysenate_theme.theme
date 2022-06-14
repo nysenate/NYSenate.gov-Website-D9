@@ -192,6 +192,118 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
         continue;
       }
 
+      // Set default values.
+      $comm_sen = FALSE;
+      $floor_sen = FALSE;
+      $passed_sen = FALSE;
+      $comm_assembly = FALSE;
+      $floor_assembly = FALSE;
+      $passed_assembly = FALSE;
+      $delivered_to_gov = FALSE;
+      $signed_by_gov = FALSE;
+
+      // Published date.
+      $date = \Drupal::service('date.formatter')->format(strtotime($bill['#node']->field_ol_publish_date->value), '', 'F d, Y');
+
+      // Last status.
+      $last_status_values = $bill['#node']->field_ol_last_status->getSetting('allowed_values');
+      $last_status = $last_status_values[$bill['#node']->field_ol_last_status->value];
+
+      // All status.
+      $all_statuses = $bill['#node']->field_ol_all_statuses->value;
+      $all_statuses = json_decode($all_statuses);
+      foreach ($all_statuses->items as $key => $value) {
+        switch ($value->statusType) {
+          case 'IN_SENATE_COMM':
+            $comm_sen = TRUE;
+            break;
+
+          case 'SENATE_FLOOR':
+            $floor_sen = TRUE;
+            break;
+
+          case 'PASSED_SENATE':
+            $passed_sen = TRUE;
+            break;
+
+          case 'IN_ASSEMBLY_COMM':
+            $comm_assembly = TRUE;
+            break;
+
+          case 'ASSEMBLY_FLOOR':
+            $floor_assembly = TRUE;
+            break;
+
+          case 'PASSED_ASSEMBLY':
+            $passed_assembly = TRUE;
+            break;
+
+          case 'DELIVERED_TO_GOV':
+            $delivered_to_gov = TRUE;
+            break;
+
+          case 'SIGNED_BY_GOV':
+            $signed_by_gov = TRUE;
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      // Arrange the positions value.
+      $positions = [
+        [
+          'text' => t('Introduced'),
+          'is_passed' => TRUE,
+        ],
+        [
+          'text' => t('In Committee'),
+          'is_passed' => ($comm_sen && $comm_assembly),
+        ],
+        [
+          'text' => t('On Floor Calendar'),
+          'is_passed' => ($floor_sen && $floor_assembly),
+        ],
+        [
+          'is_grouped' => TRUE,
+          'items' => [
+            [
+              'text' => t('Passed Senate'),
+              'is_passed' => $passed_sen,
+            ],
+            [
+              'text' => t('Passed Assembly'),
+              'is_passed' => $passed_assembly,
+            ],
+          ],
+        ],
+        [
+          'text' => t('Delivered to Governor'),
+          'is_passed' => $delivered_to_gov,
+        ],
+        [
+          'text' => t('Signed by Governor'),
+          'is_passed' => $signed_by_gov,
+        ],
+      ];
+
+      $sponsor = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->load($bill['#node']->field_ol_sponsor->target_id);
+
+      $sponsor_name = $sponsor->field_senator_name->given . ' ' . $sponsor->field_senator_name->family;
+
+      $bills[] = [
+        'number' => $bill['#node']->label(),
+        'description' => $bill['#node']->field_ol_name->value,
+        'date' => $date,
+        'update_location' => $last_status,
+        'sponsor' => $sponsor_name,
+        'positions' => $positions,
+      ];
+
+      $variables['bills'] = $bills;
     }
   }
 }

@@ -88,6 +88,10 @@
   {% endif %}
   {{ title_suffix }}
 
+  <div{{ content_attributes.addClass('node__body', 'container') }}>
+    {{ content }}
+  </div>
+
   {% if display_submitted %}
     <footer class="node__meta">
       {{ author_picture }}

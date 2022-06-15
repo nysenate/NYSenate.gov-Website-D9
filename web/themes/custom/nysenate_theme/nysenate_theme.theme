@@ -304,14 +304,18 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
         ->getStorage('taxonomy_term')
         ->load($bill['#node']->field_ol_sponsor->target_id);
 
-      $sponsor_name = $sponsor->field_senator_name->given . ' ' . $sponsor->field_senator_name->family;
+      if (!empty($sponsor)) {
+        $given = $sponsor->field_senator_name->given ?? '';
+        $family = $sponsor->field_senator_name->family ?? '';
+        $sponsor_name = $given . ' ' . $family;
+      }
 
       $bills[] = [
         'number' => $bill['#node']->label(),
         'description' => $bill['#node']->field_ol_name->value,
         'date' => $date,
         'update_location' => $last_status,
-        'sponsor' => $sponsor_name,
+        'sponsor' => $sponsor_name ?? '',
         'positions' => $positions,
       ];
 

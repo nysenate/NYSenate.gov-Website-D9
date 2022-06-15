@@ -272,56 +272,6 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
 /**
  * Implements hook_preprocess_HOOK().
  */
-function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
-  if ($variables['view']->current_display == 'senator_today_events') {
-    foreach ($variables['view']->result as $node) {
-      if ($node->_entity->bundle() === 'event') {
-        $date = new \Datetime($node->_entity->field_date_range->value);
-        $now = new \Datetime();
-        if ($date->format('d:M:Y') === $now->format('d:M:Y')) {
-          $variables['items_today'][] = [
-            'title' => $node->_entity->label(),
-            'url' => $node->_entity->toUrl()->toString(),
-            'location' => $node->_entity->field_location[0]->locality,
-            'street_1' => $node->_entity->field_location[0]->address_line1,
-            'street_2' => $node->_entity->field_location[0]->address_line2,
-            'time' => $date->format('h:i A'),
-          ];
-          $variables['now'] = $date->format('M jS');
-        }
-      }
-    }
-  }
-
-  if ($variables['view']->current_display == 'featured_event') {
-    foreach ($variables['view']->result as $node) {
-      if ($node->_entity->bundle() === 'event') {
-        $date = new \Datetime($node->_entity->field_date_range->value);
-        $date_end = new \Datetime($node->_entity->field_date_range->end_value);
-        $variables['item_featured'] = [
-          'title' => $node->_entity->label(),
-          'url' => $node->_entity->toUrl()->toString(),
-          'day' => $date->format('d'),
-          'month' => $date->format('M'),
-          'year' => $date->format('Y'),
-          'url_location' => 'http://maps.google.com/?q=' . $node->_entity->field_location[0]->address_line1 . '+'
-          . $node->_entity->field_location[0]->administrative_area . '%2C+'
-          . $node->_entity->field_location[0]->locality . '%2C+'
-          . $node->_entity->field_location[0]->postal_code,
-          'image' => $node->_entity->field_image_main[0]->entity->field_image,
-          'location' => $node->_entity->field_location[0]->locality,
-          'street_1' => $node->_entity->field_location[0]->address_line1,
-          'street_2' => $node->_entity->field_location[0]->address_line2,
-          'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
-        ];
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
 function nysenate_theme_preprocess_node__resolution(&$variables) {
   $variables['label'] = $variables['label'][0]['#context']['value'] ?? '';
   $variables['ol_name'] = isset($variables['elements']['field_ol_name'][0]) ? $variables['elements']['field_ol_name'][0]['#context']['value'] : '';

@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block content.
+ *
+ * @see template_preprocess_block_content_template()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'block-content',
+    'block-content--type-' ~ bundle|clean_class,
+    'block-content--' ~ id,
+    'block-content--view-mode-' ~ view_mode|clean_class
+  ]
+%}
+
+{% include "@nysenate_theme/featured-image/featured-image.twig" with {
+  title: title,
+  featured_image: content.field_pg_feature_image,
+  full_width_bleed: full_width_bleed|default(false)
+} only %}

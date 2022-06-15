@@ -1,72 +1,20 @@
 @import '../../global/utils/init';
 
-.l-messages {
-  margin: 0 auto 0;
-  max-width: 1500px;
-  background-color: $grey06;
-  padding: 0 20px;
-
-  .large-12 {
-    padding: 0;
-  }
-
-  .close {
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    height: 30px;
-    width: 30px;
-    margin: auto;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\78';
-      line-height: 30px;
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-  }
-}
-
-.alert-box {
-  padding: 20px 0;
-}
-
-.alert-box-message {
-  width: 80%;
-  display: inline-block;
-  vertical-align: middle;
-  padding: 0 2%;
-
-  ul,
-  ol {
-    margin: 0;
-    padding: 0;
-  }
-  * + ul,
-  * + ol {
-    margin: 0;
-  }
-}
-
 /*-------------------------------
 /
 /	MEETING DETAIL PAGE
 /
 /-------------------------------*/
+
+.node--session-full {
+  padding-top: 40px;
+  max-width: 840px;
+  margin: 0 auto;
+
+  @include breakpoint($bp-sm) {
+    padding-top: 80px;
+  }
+}
 
 // HEADER
 
@@ -232,6 +180,10 @@
 }
 
 .c-meeting-detail--descript {
+  .video-embed {
+		margin-top: 24px;
+	}
+
   p {
     margin-bottom: 15px;
     font-size: 18px;
@@ -263,6 +215,7 @@
       }
     }
   }
+
   p,
   a {
     text-transform: uppercase;
@@ -270,11 +223,13 @@
     font-size: 10px;
     line-height: 2.5em;
   }
+
   p {
     display: block;
     float: left;
-    margin-right: 5px;
+    margin: 0 5px 0;
   }
+
   a {
     display: inline-block;
     color: $gen_link;
@@ -301,10 +256,12 @@
       }
     }
   }
+
   .view-nodequeue-2 {
     margin-top: 40px;
   }
 }
+
 // VIDEO
 // aspect ration is current 730 x 410
 .c-meeting-detail--embed {
@@ -313,7 +270,7 @@
   height: 0;
   padding-top: 56.16%;
 
-  .embedded-video,
+  .video-embed,
   .player,
   iframe {
     position: absolute;
@@ -336,6 +293,7 @@
       text-transform: uppercase;
       color: $grey02;
     }
+
     .bill-title,
     .bill-actions {
       display: none;
@@ -343,6 +301,7 @@
   }
 
   .view-content {
+
     .c-update-block {
       border-top: 1px solid $grey05;
     }

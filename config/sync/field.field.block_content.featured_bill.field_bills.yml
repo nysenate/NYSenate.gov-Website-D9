@@ -1,0 +1,29 @@
+uuid: e3fad44b-d7ae-43da-9b19-5d2b6217c18d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_bill
+    - field.storage.block_content.field_bills
+    - node.type.bill
+id: block_content.featured_bill.field_bills
+field_name: field_bills
+entity_type: block_content
+bundle: featured_bill
+label: 'Featured Bills'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      bill: bill
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

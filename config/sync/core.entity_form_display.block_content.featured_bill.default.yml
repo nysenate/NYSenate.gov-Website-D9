@@ -1,0 +1,49 @@
+uuid: 33364a70-9c6a-4285-b4ba-997f86775f1d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_bill
+    - field.field.block_content.featured_bill.field_bills
+    - field.field.block_content.featured_bill.field_text
+  module:
+    - text
+id: block_content.featured_bill.default
+targetEntityType: block_content
+bundle: featured_bill
+mode: default
+content:
+  field_bills:
+    type: entity_reference_autocomplete
+    weight: 26
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_text:
+    type: text_textarea
+    weight: 27
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

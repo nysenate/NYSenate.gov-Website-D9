@@ -425,13 +425,21 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   $variables['start_date'] = $start_date;
   $variables['end_date'] = $end_date;
 
-  if (isset($variables['content']['field_location'][0]) && !empty($variables['content']['field_location'][0])) {
-    $street = $variables['content']['field_location'][0]['address_line1']['#value'];
-    $city = $variables['content']['field_location'][0]['locality']['#value'];
-    $administrative_area = $variables['content']['field_location'][0]['administrative_area']['#value'];
-    $postal_code = $variables['content']['field_location'][0]['postal_code']['#value'];
-
-    $variables['location_url'] = urlencode($street . ' ' . $city . ', ' . $administrative_area . ', ' . $postal_code);
+  $address = '';
+  if (isset($variables['content']['field_location'][0])) {
+    if (!empty($variables['content']['field_location'][0]['address_line1']['#value'])) {
+      $address = $variables['content']['field_location'][0]['address_line1']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['locality']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['locality']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['administrative_area']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['administrative_area']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['postal_code']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['postal_code']['#value'];
+    }
+    $variables['location_url'] = urlencode($address);
   }
 
   foreach ($variables['content']['field_issues'] as $key => $field_issues) {

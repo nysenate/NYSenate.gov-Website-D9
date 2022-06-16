@@ -1,0 +1,50 @@
+@import '../../global/utils/init';
+
+.text-layout {
+  max-width: 440px;
+  margin: 0 auto;
+
+  p {
+    color: $grey03;
+  }
+
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  @include breakpoint($bp-sm) {
+    max-width: 840px;
+  }
+
+  &--2-col .text-layout__container {
+
+    @include breakpoint($bp-sm) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10%;
+    }
+  }
+
+  &--with-bg {
+    background: $grey06;
+  }
+
+  &--full-bleed {
+    max-width: unset;
+  }
+
+  &__container {
+    padding: 0 20px;
+    padding-top: 40px;
+    max-width: 440px;
+    margin: 0 auto;
+  
+    @include breakpoint($bp-sm) {
+      padding: 0 40px;
+      padding-top: 60px;
+      max-width: 840px;
+    }
+  }
+}

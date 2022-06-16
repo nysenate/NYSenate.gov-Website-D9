@@ -411,6 +411,40 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__event(&$variables) {
+  $start_date = strtotime($variables['content']['field_date_range'][0]['start_date']['#text']);
+  $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
+  $issues = [];
+
+  // Set up reference variables indicating if this event spans multiple days.
+  $is_multiday = !(date('Ymd', $start_date) == date('Ymd', $end_date));
+
+  $variables['is_multiday'] = $is_multiday;
+  $variables['start_date'] = $start_date;
+  $variables['end_date'] = $end_date;
+
+  if (isset($variables['content']['field_location'][0]) && !empty($variables['content']['field_location'][0])) {
+    $street = $variables['content']['field_location'][0]['address_line1']['#value'];
+    $city = $variables['content']['field_location'][0]['locality']['#value'];
+    $administrative_area = $variables['content']['field_location'][0]['administrative_area']['#value'];
+    $postal_code = $variables['content']['field_location'][0]['postal_code']['#value'];
+
+    $variables['location_url'] = urlencode($street . ' ' . $city . ', ' . $administrative_area . ', ' . $postal_code);
+  }
+
+  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+    $issues[] = $url;
+  }
+  $variables['field_issues'] = $issues;
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function nysenate_theme_preprocess_node__session(&$variables) {

@@ -83,6 +83,7 @@
 %}
 {{ attach_library('classy/node') }}
 {{ attach_library('nysenate_theme/event') }}
+{{ attach_library('nysenate_theme/nysenate-senators-events') }}
 
 <article{{ attributes.addClass(classes) }}>
 
@@ -188,7 +189,10 @@
 
   {% if content.field_yt[0] %}
     <div class="c-block">
-      {{ content.field_yt }}
+      {% include '@nysenate_theme/video-embed/video-embed.twig' with {
+          video: content.field_yt
+        } only
+      %}
     </div>
   {% elseif content.field_video_status[0]['#value'] == "streaming_live_now" and content.field_ustream_url[0] %}
     <div class="c-block">

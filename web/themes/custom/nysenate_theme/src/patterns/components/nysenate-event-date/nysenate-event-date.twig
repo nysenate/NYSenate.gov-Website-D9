@@ -2,7 +2,7 @@
 
 {% set prefix = prefix ? prefix : 'c-event-date' %}
 
-<div class="{{ is_multiday ? prefix ~ '-multiday' : prefix }}">
+<div class="{{ prefix }} {{ is_multiday ? prefix ~ '-multiday' }}">
   <div class="{{ prefix ~ '-start' }}">
     <span class="{{ prefix ~ '-day' }}">{{ start_date|date("d") }}</span>
     <span class="{{ prefix ~ '-month' }}">{{ start_date|date("M") }}</span>

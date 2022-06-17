@@ -65,14 +65,14 @@
       <div class="c-meeting-detail--info">
         <h1 class="c-meeting-detail--title">Session</h1>
         <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >NYS Capitol Building</a>
-        <p class="c-meeting-detail--location">
+        <div class="c-meeting-detail--location">
           {% if content.field_meeting_location %}
             {{ content.field_meeting_location }}
           {% endif %}
           {% if location %}
             {{ location }}
           {% endif %}
-        </p>
+        </div>
         <p class="c-meeting-detail--time">
           {{ date_value.from_time }}
           {% if date_value.from_time != date_value.to_time %}
@@ -122,12 +122,10 @@
 
       {% if content.field_yt %}
         <div class="c-meeting-detail--descript">
-          <div class="c-meeting-detail--embed">
           {% include '@nysenate_theme/video-embed/video-embed.twig' with {
               video: content.field_yt
             } only
           %}
-          </div>
         </div>
       {% endif %}
 

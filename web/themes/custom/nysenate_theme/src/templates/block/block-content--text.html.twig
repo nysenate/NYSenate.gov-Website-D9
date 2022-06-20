@@ -18,23 +18,10 @@
   ]
 %}
 
-<div{{ attributes.addClass(classes) }}>
-  {{ title_prefix }}
-  {{ title_suffix }}
-  {% block content %}
-    {% if content.field_title %}
-      <div class="container">
-        {%
-          include '@rain_theme/heading/heading.twig' with {
-            "heading": {
-              "title": content.field_title,
-              "heading_level": "2",
-              "modifier": "heading--section",
-            },
-          } only
-        %}
-      </div>  
-    {% endif %}
-    {{ content|without('field_title') }}
-  {% endblock %}
-</div>
+{% include "@nysenate_theme/text-layout/text-layout.twig" with {
+  is_full_bleed: is_full_bleed,
+  with_bg: with_bg,
+  is_two_column: false,
+  contents: contents,
+  title: content.field_title[0]['#context']['value'],
+} only %}

@@ -1,0 +1,23 @@
+uuid: ab791091-0188-47b4-b431-93837b912768
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.text
+    - field.storage.block_content.field_is_full_bleed
+id: block_content.text.field_is_full_bleed
+field_name: field_is_full_bleed
+entity_type: block_content
+bundle: text
+label: 'Is full bleed?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

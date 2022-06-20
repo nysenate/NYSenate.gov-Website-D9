@@ -1,6 +1,36 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.node--event-full {
+  padding-top: 40px;
+  max-width: 840px;
+  margin: 0 auto;
+
+  @include breakpoint($bp-sm) {
+    padding-top: 80px;
+  }
+}
+
+.c-block {
+  display: block;
+  position: relative;
+  margin-bottom: 20px;
+  zoom: 1;
+  clear: both;
+
+  p {
+		font-family: "Adelle Light";
+    line-height: 1.5em;
+    color: $grey03;
+    font-size: 16px;
+	}
+}
+
+.c-block--social{
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+
 .nys-event-title {
   margin-bottom: 20px;
   color: $grey02;
@@ -341,8 +371,8 @@
 
 .c-event-block--featured-image {
   margin: 0;
-  padding-top: 16px;
-  padding-bottom: 40px;
+  padding-top: 0;
+  padding-bottom: 20px;
   font-family: 'Proxima Nova Regular';
   @include clearfix;
 
@@ -615,6 +645,46 @@
   }
 }
 
+.nys-associated-topics {
+  display: inline;
+  list-style: none;
+  font-size: 15px;
+  line-height: 1.2em;
+  //padding-left: 0;
+  border-left: 1px solid $grey04;
+  padding-left: 14px;
+  ul {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: inline;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: "Proxima Nova SemiBold";
+    white-space: normal;
+  }
+
+  a {
+    color: $trad_blue_lgt;
+		text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.nys-associated-topics--label {
+  display: inline;
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 1.2em;
+  font-family: "Proxima Nova SemiBold";
+}
+
 //HOME PAGE LIVE EVENT
 
 .c-event-video--home {
@@ -674,6 +744,22 @@
   .nys-event-title {
     margin-bottom: 30px;
     font-size: 48px;
+  }
+
+  .c-block {
+		p {
+			font-size: 20px;
+			line-height: 32px;
+		}
+	}
+
+  .nys-associated-topics {
+    display: inline;
+    margin-top: 0;
+
+    li {
+      margin-top: 0;
+    }
   }
 
   .event_detail_page {

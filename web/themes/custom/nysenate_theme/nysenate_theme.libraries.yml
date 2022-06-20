@@ -47,6 +47,13 @@ addthisevent:
     - core/jquery.once
     - core/jquery
 
+alert-box:
+  css:
+    component:
+      dist/css/alert-box.css: {}
+  js:
+    dist/js/alert-box.es6.js: {}
+
 article-page:
   css:
     component:
@@ -416,6 +423,8 @@ session:
   css:
     component:
       dist/css/session.css: {}
+  dependencies:
+    - nysenate_theme/addthisevent
 
 site-branding:
   css:
@@ -452,10 +461,25 @@ tabs:
     component:
       dist/css/tabs.css: {}
 
+text-layout:
+  css:
+    component:
+      dist/css/text-layout.css: {}
+
+transcript:
+  css:
+    component:
+      dist/css/transcript.css: {}
+
 user-account-nav:
   css:
     component:
       dist/css/user-account-nav.css: {}
+
+video-embed:
+  css:
+    component:
+      dist/css/video-embed.css: {}
 
 media-library:
   css:

@@ -1,72 +1,20 @@
 @import '../../global/utils/init';
 
-.l-messages {
-  margin: 0 auto 0;
-  max-width: 1500px;
-  background-color: $grey06;
-  padding: 0 20px;
-
-  .large-12 {
-    padding: 0;
-  }
-
-  .close {
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    height: 30px;
-    width: 30px;
-    margin: auto;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\78';
-      line-height: 30px;
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-  }
-}
-
-.alert-box {
-  padding: 20px 0;
-}
-
-.alert-box-message {
-  width: 80%;
-  display: inline-block;
-  vertical-align: middle;
-  padding: 0 2%;
-
-  ul,
-  ol {
-    margin: 0;
-    padding: 0;
-  }
-  * + ul,
-  * + ol {
-    margin: 0;
-  }
-}
-
 /*-------------------------------
 /
 /	MEETING DETAIL PAGE
 /
 /-------------------------------*/
+
+.node--session-full {
+  padding-top: 40px;
+  max-width: 840px;
+  margin: 0 auto;
+
+  @include breakpoint($bp-sm) {
+    padding-top: 80px;
+  }
+}
 
 // HEADER
 
@@ -80,7 +28,7 @@
 
   p {
     display: inline-block;
-    color: $grey02;
+    color: $grey08;
     text-transform: uppercase;
     font-family: 'Proxima Nova Regular';
     font-size: 12px;
@@ -97,7 +45,7 @@
     font-size: 26px;
     line-height: 43px;
     margin-bottom: 10px;
-    color: $grey02;
+    color: $grey08;
   }
   .c-committee-type {
     font-family: 'Proxima Nova SemiBold';
@@ -147,14 +95,14 @@
 
 .c-meeting-date--num,
 .c-meeting-news--type {
-  color: $grey02;
+  color: $grey08;
   font-family: 'Adelle Bold';
   font-size: 20px;
 }
 
 .c-meeting-date--month,
 .c-meeting-date--year {
-  color: $grey02;
+  color: $grey08;
   text-transform: uppercase;
   font-family: 'Proxima Nova Regular';
   font-size: 16px;
@@ -177,13 +125,13 @@
 .c-meeting-detail--title {
   margin-bottom: 20px;
 
-  color: $grey02;
+  color: $grey08;
   font-family: 'Adelle Light';
   font-size: 26px;
   line-height: 1.2em;
 
   a {
-    color: $grey02;
+    color: $grey08;
   }
 }
 
@@ -226,12 +174,16 @@
 
 .c-meeting-detail--time {
   margin: 0;
-  color: $grey02;
+  color: $grey08;
   font-family: 'Proxima Nova SemiBold';
   font-size: 18px;
 }
 
 .c-meeting-detail--descript {
+  .video-embed {
+		margin-top: 24px;
+	}
+
   p {
     margin-bottom: 15px;
     font-size: 18px;
@@ -263,6 +215,7 @@
       }
     }
   }
+
   p,
   a {
     text-transform: uppercase;
@@ -270,11 +223,13 @@
     font-size: 10px;
     line-height: 2.5em;
   }
+
   p {
     display: block;
     float: left;
-    margin-right: 5px;
+    margin: 0 5px 0;
   }
+
   a {
     display: inline-block;
     color: $gen_link;
@@ -301,25 +256,9 @@
       }
     }
   }
+
   .view-nodequeue-2 {
     margin-top: 40px;
-  }
-}
-// VIDEO
-// aspect ration is current 730 x 410
-.c-meeting-detail--embed {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-top: 56.16%;
-
-  .embedded-video,
-  .player,
-  iframe {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
   }
 }
 
@@ -334,8 +273,9 @@
       font-size: 12px;
       line-height: 1;
       text-transform: uppercase;
-      color: $grey02;
+      color: $grey08;
     }
+
     .bill-title,
     .bill-actions {
       display: none;
@@ -343,6 +283,7 @@
   }
 
   .view-content {
+
     .c-update-block {
       border-top: 1px solid $grey05;
     }
@@ -369,7 +310,7 @@
     padding: 0 0 10px 0;
 
     .l-panel-col {
-      color: $grey02;
+      color: $grey08;
       text-transform: uppercase;
       font-family: 'Proxima Nova Regular';
       font-size: 12px;
@@ -403,7 +344,7 @@
 // CONTENT - agendas
 .c-meeting-section--title {
   margin: 20px 0 30px;
-  color: $grey02;
+  color: $grey08;
   font-family: 'Adelle Semibold';
   font-size: 18px;
   line-height: 1;
@@ -412,7 +353,7 @@
 .c-meeting-list--bill {
   margin-bottom: 5px;
 
-  color: $grey02;
+  color: $grey08;
   font-family: 'Adelle Bold';
   font-size: 24px;
   line-height: 1;
@@ -433,7 +374,7 @@
   font-size: 18px;
 
   a {
-    color: $grey02;
+    color: $grey08;
   }
 }
 
@@ -478,14 +419,14 @@
     font-size: 18px;
 
     a {
-      color: $grey02;
+      color: $grey08;
     }
   }
   .c-meeting-detail--related {
     margin-bottom: 10px;
   }
   .c-meeting-detail--location-link {
-    color: $grey02;
+    color: $grey08;
 
     &:before {
       color: $gen_blue_lgt;
@@ -541,7 +482,7 @@
           font-family: 'Proxima Nova Regular';
           font-size: 16px;
           line-height: 20px;
-          color: $grey02;
+          color: $grey08;
           text-transform: uppercase;
           padding-top: 20px;
           border-top: 1px solid $grey05;
@@ -551,7 +492,7 @@
           font-family: 'Adelle Light';
           font-size: 42px;
           line-height: 46px;
-          color: $grey02;
+          color: $grey08;
           margin-top: -65px;
         }
         .meeting-location {
@@ -570,14 +511,14 @@
           line-height: 30px;
           margin-bottom: 6px;
           font-family: 'Adelle Bold';
-          color: $grey02;
+          color: $grey08;
         }
         .meeting-month {
           line-height: 20px;
           margin-top: 3px;
           font-size: 20px;
           line-height: 28px;
-          color: $grey02;
+          color: $grey08;
           text-transform: uppercase;
         }
         .meeting-day,
@@ -624,7 +565,7 @@
     border-bottom: 1px solid $grey05;
     border-top: none;
     text-transform: uppercase;
-    color: $grey02;
+    color: $grey08;
   }
   .pane-meeting-agenda .pane-title,
   .nys-title {
@@ -632,7 +573,7 @@
     font-size: 26px;
     line-height: 38px;
     margin-bottom: 0px;
-    color: $grey02;
+    color: $grey08;
   }
   .pane-embedded-youtube-video {
     .view-embedded-youtube-video {
@@ -654,7 +595,7 @@
             .c-listing--bill-num {
               font-size: 30px;
               a {
-                color: $grey02;
+                color: $grey08;
               }
             }
           }
@@ -726,6 +667,7 @@
           top: 20px;
           left: 0;
           text-align: left;
+
           span {
             font-family: 'Proxima Nova Regular';
             font-size: 16px;
@@ -746,7 +688,7 @@
             font-family: 'Adelle Light';
             font-size: 24px;
             line-height: 24px;
-            color: $grey02;
+            color: $grey08;
           }
         }
         .c-category {

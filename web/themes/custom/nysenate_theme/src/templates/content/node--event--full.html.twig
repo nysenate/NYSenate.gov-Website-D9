@@ -73,6 +73,7 @@
 {%
   set classes = [
     'node',
+    'node--event-full',
     'node--type-' ~ node.bundle|clean_class,
     node.isPromoted() ? 'node--promoted',
     node.isSticky() ? 'node--sticky',
@@ -82,28 +83,34 @@
 %}
 {{ attach_library('classy/node') }}
 {{ attach_library('nysenate_theme/event') }}
+{{ attach_library('nysenate_theme/nysenate-senators-events') }}
 
 <article{{ attributes.addClass(classes) }}>
 
-  <h1 class="nys-event-title">{{ title }}</h1>
-  <div class="c-event-block c-event-block--featured{% if field_image_main %}-image{% endif %}">
-    {% if field_image_main %}
+  <h1 class="nys-event-title">{{ label }}</h1>
+  <div class="c-event-block c-event-block--featured{% if content.field_image_main %}-image{% endif %}">
+    {% if content.field_image_main %}
       <div class="c-event-image">
-        {{ field_image_main }}
+        {{ content.field_image_main }}
       </div>
     {% endif %}
-    {{ nysenate_event_date }}
 
-    {% if field_event_place == "online" %}
+  {% include "@nysenate_theme/nysenate-event-date/nysenate-event-date.twig" with {
+    is_multiday: is_multiday,
+    start_date: start_date,
+    end_date: end_date,
+  } only %}
+
+    {% if content.field_event_place[0]['#markup'] == "online" %}
       <div class="c-event-location">
         <span class="icon-before__circle-pin"></span>
         <a href="{{ field_event_online_link }}">Online Event</a>
 
-        {% if field_meeting_location %}
-          <br>{{ field_meeting_location }}
+        {% if content.field_meeting_location[0]['#context']['value'] %}
+          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
         {% endif %}
       </div>
-    {% elseif field_event_place == "teleconference" %}
+    {% elseif content.field_event_place[0]['#markup'] == "teleconference" %}
       <div class="c-event-location">
         <span class="icon-before__circle-pin"></span>Teleconference Event</div>
       <div class="c-event-location">
@@ -115,44 +122,44 @@
           </strong>
           {{ field_teleconference_id_number }}
         {% endif %}
-        {% if field_meeting_location %}
-          <br>{{ field_meeting_location }}
+        {% if content.field_meeting_location[0]['#context']['value'] %}
+          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
         {% endif %}
       </div>
-    {% elseif field_location.name %}
-      <a href="http://maps.google.com/?q={{ field_location.street }}+{{ field_location.city }}%2C+{{ field_location.province }}%2C+{{ field_location.postal_code }}" class="c-event-location" target="_blank">
+    {% elseif content.field_location[0]['organization']['#value'] %}
+      <a href="http://maps.google.com/?q={{ location_url }}" class="c-event-location" target="_blank">
         <span class="icon-before__circle-pin"></span>
-        {{ field_location.name }}
+        {{ content.field_location[0]['organization']['#value'] }}
       </a>
       <div class="c-event-address">
-        {% if field_meeting_location %}
-          <br>{{ field_meeting_location }}
+        {% if content.field_meeting_location[0]['#context']['value'] %}
+          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
         {% endif %}
       </div>
     {% endif %}
 
 
-    {% if field_location.street %}
+    {% if content.field_location[0]['address_line1']['#value'] %}
       <p class="c-event-address">
-        {{ field_location.street }}<br/>{{ field_location.city }},
-        {{ field_location.province }}
-        {{ field_location.postal_code }}</p>
+        {{ content.field_location[0]['address_line1']['#value'] }}<br/>{{ content.field_location[0]['locality']['#value'] }},
+        {{ content.field_location[0]['administrative_area']['#value'] }}
+        {{ content.field_location[0]['postal_code']['#value'] }}</p>
     {% endif %}
 
     <div class="c-event-time">
-      {{ field_date_start }}
-      {% if field_date_end %}
+      {{ start_date|date("g:i A") }}
+      {% if end_date %}
         -
-        {{ field_date_end }}
+        {{ end_date|date("g:i A") }}
       {% endif %}
     </div>
 
     <div title="Add to Calendar" class="addthisevent">
       Add to Calendar
-      <span class="start">{{ field_date_start }}</span>
-      <span class="end">{{ field_date_end }}</span>
+      <span class="start">{{ start_date|date("m/d/Y g:i A") }}</span>
+      <span class="end">{{ end_date|date("m/d/Y g:i A") }}</span>
       <span class="timezone">America/New_York</span>
-      <span class="title">{{ title }}</span>
+      <span class="title">{{ label }}</span>
       <span class="location">{{ field_location }}</span>
       <span class="date_format">MM/DD/YYYY</span>
       <span class="organizer">NY STATE SENATE</span>
@@ -173,24 +180,28 @@
     </ul>
   {% endif %}
 
-  {% if field_attachment %}
-    <div class="c-news--download">
-      {{ field_attachment }}
-    </div>
+  {% if content.field_attachment[0] %}
+    {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+      title: title,
+      attachment: content.field_attachment,
+    } only %}
   {% endif %}
 
-  {% if field_yt %}
+  {% if content.field_yt[0] %}
     <div class="c-block">
-      {{ field_yt }}
+      {% include '@nysenate_theme/video-embed/video-embed.twig' with {
+          video: content.field_yt
+        } only
+      %}
     </div>
-  {% elseif field_video_status == "streaming_live_now" and field_ustream_url %}
+  {% elseif content.field_video_status[0]['#value'] == "streaming_live_now" and content.field_ustream_url[0] %}
     <div class="c-block">
       {{ field_ustream_url }}
     </div>
   {% endif %}
 
   <div class="c-block">
-    {{ body }}
+    {{ content.body }}
   </div>
 
   {% if social_buttons %}

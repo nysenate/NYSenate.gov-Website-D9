@@ -21,7 +21,7 @@
 {% include "@nysenate_theme/text-layout/text-layout.twig" with {
   is_full_bleed: is_full_bleed,
   with_bg: with_bg,
-  is_two_column: false,
-  contents: contents,
+  is_two_column: is_two_column,
+  contents: text,
   title: content.field_title[0]['#context']['value'],
 } only %}

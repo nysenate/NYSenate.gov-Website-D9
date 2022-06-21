@@ -336,6 +336,26 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__text(&$variables) {
+  $text = [];
+  foreach ($variables['content']['body'] as $key => $value) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $text[] = [
+      'text' => $value['#text'],
+    ];
+  }
+  $variables['text'] = $text;
+  $variables['is_two_column'] = count($text) == 2 ? TRUE : FALSE;
+  $variables['is_full_bleed'] = strtolower($variables['content']['field_is_full_bleed'][0]['#markup']) == 'on' ? TRUE : FALSE;
+  $variables['with_bg'] = strtolower($variables['content']['field_with_background'][0]['#markup']) == 'on' ? TRUE : FALSE;
+}
+
+/**
  * Implements hook_preprocess_block_ID().
  */
 function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_hero(&$variables) {

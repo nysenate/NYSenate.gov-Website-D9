@@ -1,0 +1,23 @@
+uuid: a974646a-7a03-4a9c-917f-398ffb22c50f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.text
+    - field.storage.block_content.field_with_background
+id: block_content.text.field_with_background
+field_name: field_with_background
+entity_type: block_content
+bundle: text
+label: 'With Background'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

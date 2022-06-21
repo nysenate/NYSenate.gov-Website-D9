@@ -5,7 +5,9 @@ dependencies:
   config:
     - block_content.type.text
     - field.field.block_content.text.body
+    - field.field.block_content.text.field_is_full_bleed
     - field.field.block_content.text.field_title
+    - field.field.block_content.text.field_with_background
   module:
     - text
 _core:
@@ -17,13 +19,20 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 1
+    weight: 3
     region: content
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
       show_summary: false
+    third_party_settings: {  }
+  field_is_full_bleed:
+    type: boolean_checkbox
+    weight: 1
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_title:
     type: string_textfield
@@ -33,9 +42,16 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_with_background:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 4
     region: content
     settings:
       include_locked: true

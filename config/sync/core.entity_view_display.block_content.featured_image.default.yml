@@ -1,0 +1,35 @@
+uuid: 689198e6-a80b-4280-8066-4eb384352c0d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_image
+    - field.field.block_content.featured_image.field_pg_feature_image
+    - field.field.block_content.featured_image.field_pg_full_width_bleed
+id: block_content.featured_image.default
+targetEntityType: block_content
+bundle: featured_image
+mode: default
+content:
+  field_pg_feature_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_pg_full_width_bleed:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

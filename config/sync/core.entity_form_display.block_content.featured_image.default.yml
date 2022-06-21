@@ -1,0 +1,45 @@
+uuid: 461d9b66-f7b2-4c46-92ab-c0dbc20fa26c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_image
+    - field.field.block_content.featured_image.field_pg_feature_image
+    - field.field.block_content.featured_image.field_pg_full_width_bleed
+  module:
+    - media_library
+id: block_content.featured_image.default
+targetEntityType: block_content
+bundle: featured_image
+mode: default
+content:
+  field_pg_feature_image:
+    type: media_library_widget
+    weight: 2
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_pg_full_width_bleed:
+    type: boolean_checkbox
+    weight: 1
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 3
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

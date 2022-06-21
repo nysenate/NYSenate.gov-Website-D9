@@ -1,0 +1,29 @@
+uuid: 7f1fe967-3d2a-4aa4-86bc-8f288c5d873a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_image
+    - field.storage.block_content.field_pg_feature_image
+    - media.type.image
+id: block_content.featured_image.field_pg_feature_image
+field_name: field_pg_feature_image
+entity_type: block_content
+bundle: featured_image
+label: 'Feature Image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

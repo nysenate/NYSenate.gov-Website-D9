@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg\Api\ResponsePluginBase;
+
 /**
  * Represents an individual item returned from Openleg.
  *
@@ -11,6 +13,6 @@ namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class ResponseItem extends ResponseGeneric {
+class ResponseItem extends ResponsePluginBase {
 
 }

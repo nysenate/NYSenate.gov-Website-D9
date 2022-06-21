@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg\Api\ResponsePluginBase;
+
 /**
  * Represents a search return from Openleg.
  *
@@ -11,13 +13,13 @@ namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class ResponseSearch extends ResponseGeneric {
+class ResponseSearch extends ResponsePluginBase {
 
   /**
    * Gets the response's "total" data point.
    */
   public function total(): int {
-    return $this->response->total ?? 0;
+    return $this->result()->total ?? 0;
   }
 
   /**
@@ -25,8 +27,8 @@ class ResponseSearch extends ResponseGeneric {
    */
   public function offset(): array {
     return [
-      'start' => $this->response->offsetStart ?? 1,
-      'end' => $this->response->offsetEnd ?? 1,
+      'start' => $this->result()->offsetStart ?? 1,
+      'end' => $this->result()->offsetEnd ?? 1,
       'total' => $this->total(),
     ];
   }
@@ -35,7 +37,7 @@ class ResponseSearch extends ResponseGeneric {
    * Gets the limit parameter used in the response.
    */
   public function limit(): int {
-    return $this->response->limit ?? 0;
+    return $this->result()->limit ?? 0;
   }
 
   /**
@@ -49,7 +51,7 @@ class ResponseSearch extends ResponseGeneric {
    * Returns an array of the search result items.
    */
   public function items(): array {
-    return $this->response->result->items ?? [];
+    return $this->result()->result->items ?? [];
   }
 
 }

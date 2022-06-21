@@ -17,10 +17,10 @@ interface RequestPluginInterface extends ContainerFactoryPluginInterface {
    * @param array $params
    *   Query string parameters to be added.
    *
-   * @return \Drupal\nys_openleg\Api\ResponsePluginInterface
+   * @return \Drupal\nys_openleg\Api\ResponsePluginBase
    *   The response object.
    */
-  public function retrieve(string $name, array $params = []): ResponsePluginInterface;
+  public function retrieve(string $name, array $params = []): ResponsePluginBase;
 
   /**
    * Hook for implementers to massage parameters before the request.
@@ -65,6 +65,6 @@ interface RequestPluginInterface extends ContainerFactoryPluginInterface {
   /**
    * Sets default parameters for all calls from this requester.
    */
-  public function setParams(array $params): self;
+  public function setParams(array $params): RequestPluginInterface;
 
 }

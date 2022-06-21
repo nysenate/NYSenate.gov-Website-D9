@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg\Api\ResponsePluginBase;
+
 /**
  * Represents a list of update blocks from Openleg.
  *
@@ -11,6 +13,13 @@ namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class ResponseUpdate extends ResponseGeneric {
+class ResponseUpdate extends ResponsePluginBase {
+
+  /**
+   * Accessor for the array of update blocks.
+   */
+  public function items(): array {
+    return $this->result()->items ?? [];
+  }
 
 }

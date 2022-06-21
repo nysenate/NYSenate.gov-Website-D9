@@ -3,10 +3,9 @@
 namespace Drupal\nys_openleg\Api;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\nys_openleg\Service\ApiResponseManager;
-use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseGeneric;
-use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem;
 use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch;
 use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate;
 
@@ -25,13 +24,6 @@ abstract class RequestPluginBase implements RequestPluginInterface {
    * @var string
    */
   protected string $endpoint;
-
-  /**
-   * The API response, decoded from JSON.
-   *
-   * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseGeneric|null
-   */
-  public ?ResponseGeneric $response;
 
   /**
    * Default parameters for all requests.
@@ -105,55 +97,35 @@ abstract class RequestPluginBase implements RequestPluginInterface {
 
   /**
    * {@inheritDoc}
-   *
-   * Best efforts are made to return a search response object, but downstream
-   * failures may force a ResponseGeneric object instead.
-   *
-   *   A response object.
    */
-  public function retrieve(string $name, $params = []): ResponseItem {
+  public function retrieve(string $name, $params = []): ResponsePluginBase {
     $params = $this->prepParams($params);
-
-    // @todo generate mock error class instead of blank object?
-    $this->response = $this->generateResponse($this->request->get($name, $params));
-
-    if (!($this->response instanceof ResponseItem)) {
-      $this->logger->warning('Fell back to untyped response: @type', ['@type' => $this->definition['id']]);
-    }
-    $this->processResponse();
-
-    return $this->response;
+    return $this->generateResponse($this->request->get($name, $params));
   }
 
   /**
    * {@inheritDoc}
    *
-   * This implementation defaults to retrieving all updates ever if no times
-   * are passed.  Best efforts are made to return an update response object,
-   * but downstream failures may force a ResponseGeneric object instead.
+   * This implementation defaults to retrieving the past 24 hours if no times
+   * are passed.
    *
-   * @return \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseGeneric
+   * @return \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate
    *   A response object.
    */
-  public function retrieveUpdates($time_from = 0, $time_to = 0, array $params = []): ResponseGeneric {
+  public function retrieveUpdates($time_from = 0, $time_to = 0, array $params = []): ResponseUpdate {
     // Limit parameters to 'offset' and 'limit'.  The limit defaults to '0'.
     $params = array_intersect_key(
       $this->prepParams($params) + ['limit' => '0'],
       ['offset' => '', 'limit' => '']
     );
-    $time_to = $this->formatTimestamp($time_to ?: time());
-    $time_from = $this->formatTimestamp($time_from ?: ($time_to - 86400));
-    $resource = "updates/$time_from/$time_to";
+    $f_time_to = $this->formatTimestamp($time_to ?: time());
+    $f_time_from = $this->formatTimestamp($time_from ?: ($time_to - 86400));
+    $resource = "updates/$f_time_from/$f_time_to";
 
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate $ret */
-    $ret = $this->generateResponse(
+    return $this->generateResponse(
       $this->request->get($resource, $params),
       ApiResponseManager::OPENLEG_RESPONSE_TYPE_UPDATE
     );
-    if (!($ret instanceof ResponseUpdate)) {
-      $this->logger->warning('Fell back to generic response for updates: @type', ['@type' => $this->definition['id']]);
-    }
-    return $ret;
   }
 
   /**
@@ -162,10 +134,10 @@ abstract class RequestPluginBase implements RequestPluginInterface {
    * Best efforts are made to return a search response object, but downstream
    * failures may force a ResponseGeneric object instead.
    *
-   * @return \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseGeneric|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch
+   * @return \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch
    *   A response object.
    */
-  public function retrieveSearch(string $search_term, array $params = []): ResponseGeneric {
+  public function retrieveSearch(string $search_term, array $params = []): ResponseSearch {
     $params = $this->prepParams($params);
 
     $page = $params['page'] ?? 1;
@@ -181,20 +153,10 @@ abstract class RequestPluginBase implements RequestPluginInterface {
       'page' => $page,
     ];
 
-    $ret = $this->generateResponse(
-      $this->request
-        ->get("search", $params), ApiResponseManager::OPENLEG_RESPONSE_TYPE_SEARCH
+    return $this->generateResponse(
+      $this->request->get("search", $params),
+      ApiResponseManager::OPENLEG_RESPONSE_TYPE_SEARCH
     );
-    if (!($ret instanceof ResponseSearch)) {
-      $this->logger->warning('Fell back to generic response for search: @type', ['@type' => $this->definition['id']]);
-    }
-    return $ret;
-  }
-
-  /**
-   * Executes after the request has been made.
-   */
-  protected function processResponse() {
   }
 
   /**
@@ -218,51 +180,81 @@ abstract class RequestPluginBase implements RequestPluginInterface {
   }
 
   /**
-   * Find the type-specific response to create, or creates a generic response.
+   * Finds a type-specific response plugin which matches the API response.
    *
-   * This method first tries to find a response plugin matching the request
-   * plugin's id.  If one is not found, the general class for the type is
-   * tried.  If that also fails, a ResponseGeneric is returned.
+   * Generally, every Openleg response is unique respective to resource type
+   * and request type.  The resource type is usually indicated by the request
+   * plugin's endpoint annotation (e.g., statute, transcript, etc).  The
+   * request type is one of (item | update | search), depending on other
+   * parameters of the request.  Each response has a responseType property,
+   * which is unique to that resource/request_type combination. (Exception: all
+   * search requests return a responseType of 'search-results list', regardless
+   * of resource type)
+   *
+   * To find an appropriate response plugin, the explicit responseType property
+   * of the API response is tried first.  If that definition does not exist, a
+   * string comprised of the request's plugin ID and $type is tried.  If no
+   * definition is found, the fallback of "response_$type" will be used.
+   *
+   * This means that if a plugin ID exactly matches the Openleg responseType
+   * property, it will be the preferred plugin.
    *
    * @param object $response
    *   The full JSON-decoded response from Openleg.
    * @param string $type
    *   The type of response (e.g., 'item', 'search', 'update')
    *
-   * @return \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseGeneric
-   *   A response object.
+   * @return \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch
+   *   A response object appropriate to the Openleg responseType or $type.
    *
    * @see \Drupal\nys_openleg\Service\ApiResponseManager
    */
-  protected function generateResponse(object $response, string $type = ApiResponseManager::OPENLEG_RESPONSE_TYPE_ITEM): ResponseGeneric {
+  protected function generateResponse(
+    object $response,
+    string $type = ApiResponseManager::OPENLEG_RESPONSE_TYPE_ITEM
+  ): ResponsePluginBase {
 
-    // If the plugin does not have a corresponding response, fallback
-    // to the generic typed response.  If instantiation is throws,
-    // fallback further to the generic untyped response.
+    // Check if a response-specific plugin exists.  Look for definitions named
+    // after the responseType value (preferred), or the alternate comprised of
+    // this plugin's ID and $type.  If neither definition exists, fallback to
+    // the generic "response_$type" plugin.
+    $names = [
+      'by_type' => $response->responseType ?? '',
+      'by_name' => $this->definition['id'] . '_' . $type,
+      'fallback' => "response_$type",
+    ];
+
+    $ret = NULL;
     try {
-      $name = $response->responseType ?? '';
-      if (!$name) {
-        $name = $this->responseManager->hasDefinition($this->definition['id'])
-          ? $this->definition['id']
-          : "response_$type";
+      foreach ($names as $name) {
+        if ((!$ret) && $this->responseManager->hasDefinition($name)) {
+          $ret = $this->responseManager->createInstance($name);
+          break;
+        }
       }
-
-      /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseGeneric $ret */
-      $ret = $this->responseManager->createInstance($name);
-
       $ret->init($response);
     }
-    catch (\Throwable $e) {
-      $ret = new ResponseGeneric($response);
+    catch (PluginException $e) {
+      $this->logger->error(
+        "Failed to instantiate response object",
+        [
+          '@by_type' => $names['by_type'],
+          '@by_name' => $names['by_name'],
+          '@fallback' => $names['fallback'],
+          '@last_try' => $name,
+          '@message' => $e->getMessage(),
+        ]
+      );
+      $ret = NULL;
     }
-
+    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $ret */
     return $ret;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setParams(array $params): self {
+  public function setParams(array $params): RequestPluginBase {
     $this->params = $params;
     return $this;
   }

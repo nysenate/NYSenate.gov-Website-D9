@@ -11,7 +11,7 @@ use Drupal\nys_openleg\Api\RequestPluginBase;
  * @see https://legislation.nysenate.gov/static/docs/html/laws.html#get-a-law-sub-document
  *
  * @OpenlegApiRequest(
- *   id = "statute_item",
+ *   id = "statute",
  *   label = @Translation("Statute"),
  *   description = @Translation("Openleg API Request plugin"),
  *   endpoint = "laws"
@@ -37,6 +37,8 @@ class Statute extends RequestPluginBase {
    * {@inheritDoc}
    */
   public function prepParams(array $params = []): array {
+    // This for statute tree request, but has no effect on detail requests.
+    // It is easier just to include it all the time.
     $params = parent::prepParams($params) +
       [
         'depth' => 1,

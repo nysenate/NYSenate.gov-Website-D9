@@ -3,8 +3,7 @@
 namespace Drupal\nys_openleg\Service;
 
 use Drupal\Core\Logger\LoggerChannel;
-use Drupal\nys_openleg\Api\RequestPluginInterface;
-use Drupal\nys_openleg\Api\ResponsePluginInterface;
+use Drupal\nys_openleg\Api\ResponsePluginBase;
 use Drupal\nys_openleg\Api\Statute;
 
 /**
@@ -55,10 +54,10 @@ class ApiManager {
    * @param string $item_type
    *   The plugin name.
    *
-   * @return \Drupal\nys_openleg\Api\RequestPluginInterface|null
+   * @return \Drupal\nys_openleg\Api\RequestPluginBase|null
    *   The instantiated requester.
    */
-  public function getRequest(string $item_type): ?RequestPluginInterface {
+  public function getRequest(string $item_type): ?ResponsePluginBase {
     if (!array_key_exists($item_type, $this->allRequesters)) {
       try {
         $ret = $this->requester->createInstance($item_type);
@@ -84,10 +83,10 @@ class ApiManager {
    * @param array $params
    *   Query string parameters to add to the API request.
    *
-   * @return \Drupal\nys_openleg\Api\ResponsePluginInterface
+   * @return \Drupal\nys_openleg\Api\ResponsePluginBase
    *   The Response object from Openleg.
    */
-  public function get(string $type, string $name, array $params = []): ResponsePluginInterface {
+  public function get(string $type, string $name, array $params = []): ResponsePluginBase {
     return $this->getRequest($type)->setParams($params)->retrieve($name);
   }
 
@@ -103,10 +102,10 @@ class ApiManager {
    * @param array $params
    *   Query string parameters to add to the API request.
    *
-   * @return \Drupal\nys_openleg\Api\ResponsePluginInterface
+   * @return \Drupal\nys_openleg\Api\ResponsePluginBase
    *   The Response object from Openleg.
    */
-  public function listUpdates(string $type, $time_from, $time_to, array $params = []): ResponsePluginInterface {
+  public function listUpdates(string $type, $time_from, $time_to, array $params = []): ResponsePluginBase {
     return $this->getRequest($type)
       ->setParams($params)
       ->retrieveUpdates($time_from, $time_to);
@@ -122,11 +121,11 @@ class ApiManager {
    * @param array $params
    *   Query string parameters to add to the API request.
    *
-   * @return \Drupal\nys_openleg\Api\ResponsePluginInterface
+   * @return \Drupal\nys_openleg\Api\ResponsePluginBase
    *   Plugin-dependent, but should be either a ResponseSearch or
    *   ResponseGeneric object.
    */
-  public function getSearch(string $type, string $term, array $params = []): ResponsePluginInterface {
+  public function getSearch(string $type, string $term, array $params = []): ResponsePluginBase {
     return $this->getRequest($type)
       ->setParams($params)
       ->retrieveSearch($term);
@@ -142,20 +141,55 @@ class ApiManager {
    * @param string $history
    *   An optional history marker to retrieve the law as it was in the past.
    *
-   * @return object
+   * @return \Drupal\nys_openleg\Api\Statute
    *   An object with two properties, 'detail' and 'tree', with each being
    *   a response plugin object.
    */
-  public function getStatuteFull(string $book, string $location, string $history = ''): object {
+  public function getStatuteFull(string $book, string $location, string $history = ''): Statute {
     $param = ['history' => $history];
 
     /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail */
-    $detail = $this->get('statute_item', $book . '/' . $location, $param);
+    $detail = $this->get('statute', $book . '/' . $location, $param);
 
     /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree */
-    $tree = $this->get('statute_item', $book, $param + ['location' => $location]);
+    $tree = $this->get('statute', $book, $param + ['location' => $location]);
 
     return new Statute($detail, $tree);
+  }
+
+  /**
+   * Gets a session transcript.
+   */
+  public function getTranscript(string $name): ResponsePluginBase {
+    return $this->get('floor_transcript', $name);
+  }
+
+  /**
+   * Gets a calendar document, identified by session year and number.
+   */
+  public function getCalendar(string $year, string $number): ResponsePluginBase {
+    return $this->get('calendar', "$year/$number", ['full' => TRUE]);
+  }
+
+  /**
+   * Gets a Public Hearing Transcript.  Name is the filename or hearing number.
+   */
+  public function getHearing(string $name): ResponsePluginBase {
+    return $this->get('hearing', $name);
+  }
+
+  /**
+   * Gets an agenda, identified by session year and number.
+   */
+  public function getAgenda(string $year, string $number): ResponsePluginBase {
+    return $this->get('agenda', "$year/$number");
+  }
+
+  /**
+   * Gets a bill or resolution, identified by session and print number.
+   */
+  public function getBill(string $session, string $number): ResponsePluginBase {
+    return $this->get('bill', "$session/$number");
   }
 
 }

@@ -30,7 +30,7 @@ class ApiResponseManager extends DefaultPluginManager {
   /**
    * Preconfigured logging channel for Openleg API.
    *
-   * @var \Drupal\Core\Logger\LoggerChannel|string|null
+   * @var \Drupal\Core\Logger\LoggerChannel
    */
   protected $logger;
 

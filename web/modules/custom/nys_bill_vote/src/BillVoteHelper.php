@@ -2,6 +2,7 @@
 
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Logger\LoggerChannelFactory;
 
@@ -41,6 +42,13 @@ class BillVoteHelper {
   protected $logger;
 
   /**
+   * Default object for entity_type.manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -48,11 +56,13 @@ class BillVoteHelper {
     CurrentPathStack $current_path,
     CurrentRouteMatch $current_route_match,
     LoggerChannelFactory $logger,
+    EntityTypeManager $entity_type_manager
   ) {
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
     $this->currentRouteMatch = $current_route_match;
     $this->logger = $logger;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -65,7 +75,7 @@ class BillVoteHelper {
    *   The string intent that corresponds to the user's vote. Could be 'support'
    *   or 'oppose'.
    */
-  function getIntentFromVote($vote) {
+  public function getIntentFromVote($vote) {
     $intent = '';
     if ($vote == 'Aye') {
       $intent = 'support';
@@ -78,18 +88,23 @@ class BillVoteHelper {
   }
 
   /**
-   * Translates between vote values and labels.  If a value is passed, the
-   * appropriate label is returned.  If a label is passed, the appropriate
-   * value is returned.  If the passed value is not found in values or labels,
+   * Translates between vote values and labels.
+   *
+   * If a value is passed, the appropriate label is returned.
+   *
+   * If a label is passed, the appropriate value is returned.
+   *
+   * If the passed value is not found in values or labels,
    * a boolean FALSE is returned.
    *
-   * @param $number
+   * @param int $number
    *   A vote value or label to search for.
+   *
    * @return mixed|string
    *   The vote value or label (depending if a label or value, respectively,
    *   was passed).  If passed item is not found, boolean FALSE is returned.
    */
-  function getVal($number) {
+  public function getVal($number) {
     $values = [
       0 => 'no',
       1 => 'yes',
@@ -101,7 +116,7 @@ class BillVoteHelper {
       $ret = array_search($number, $values);
     }
     else {
-      $ret = false;
+      $ret = FALSE;
     }
     return $ret;
   }
@@ -109,9 +124,9 @@ class BillVoteHelper {
   /**
    * Basic default options for nys_bill_vote.
    */
-  function getOptions() {
+  public function getOptions() {
 
-    // TODO: remove the "maybe" vote option
+    // @todo remove the "maybe" vote option
     $options = [
       'yes' => t('Aye'),
       'no' => t('Nay'),
@@ -123,39 +138,46 @@ class BillVoteHelper {
 
   /**
    * Clean results.
+   *
+   * @param array $results
+   *   The results array.
+   *
+   * @return array
+   *   The cleaned results array.
    */
-  function cleanResults($results) {
+  public function cleanResults(array $results) {
     foreach ($results as $key => $value) {
       $results[$value['function']] = $value['value'];
       unset($results[$key]);
     }
-  
+
     return $results;
   }
 
   /**
    * Clean votes.
    */
-  function cleanVotes($results, $entity_type, $entity_id) {
+  public function cleanVotes($results, $entity_type, $entity_id) {
     return $this->cleanResults($results[$entity_type][$entity_id]);
   }
 
   /**
    * Default axis available.
    */
-  function getTags() {
+  public function getTags() {
     return ['nys_bill_vote_aye_nay'];
   }
 
   /**
-   * Gets the vote widget label, which expresses the sentiment of an existing
-   * vote, or a more generic label asking for a vote.
+   * Gets the vote widget label.
    *
-   * @param string $value The existing vote's yes/no value.
+   * @param string $value
+   *   The existing vote's yes/no value.
    *
    * @return string
+   *   The label for the voted option.
    */
-  function getVotedLabel($value = '') {
+  public function getVotedLabel($value = '') {
     // Suss out the label for this rendering.  Default...
     $label = $this->t('Do you support this bill?');
 
@@ -184,15 +206,19 @@ class BillVoteHelper {
   }
 
   /**
-   * @param $entity_type
+   * Process the vote.
+   *
+   * @param string $entity_type
    *   The type of entity receiving a vote.  Should always be 'bill'.
-   * @param $entity_id
+   * @param int $entity_id
    *   The entity ID (i.e., node number) of the entity receiving a vote.
-   * @param $vote_value
+   * @param int $vote_value
    *   The value of the vote being recorded.
+   *
    * @return array|bool
+   *   An array of vote result records affected by the vote.
    */
-  function processVote($entity_type, $entity_id, $vote_value) {
+  public function processVote($entity_type, $entity_id, $vote_value) {
     $user;
     $vote_index = $this->getVal($vote_value);
 
@@ -201,36 +227,41 @@ class BillVoteHelper {
     );
     $this->logger->get('nys_bill_vote')->notice($message);
 
-    $ret = false;
-    if ($vote_index !== false) {
+    $ret = FALSE;
+    if ($vote_index !== FALSE) {
       // Check to see if a vote already exists.
       // If the user ID is zero, pass it through.
       if ($this->currentUser->id() == 0) {
-        $needs_processing = true;
-      } else {
+        $needs_processing = TRUE;
+      }
+      else {
         $vote_check_criteria = [
           'uid' => $this->currentUser->id(),
           'entity_id' => $entity_id,
           'entity_type' => 'node',
-          'tag' => 'nys_bill_vote'
+          'tag' => 'nys_bill_vote',
         ];
+        // @todo Check voting api module.
         $vote_check = votingapi_select_single_vote_value($vote_check_criteria);
 
         // If no vote exists, or if the vote is different, process the vote.
         $needs_processing = (is_null($vote_check) || ($vote_check != $vote_index));
 
         // Also process auto-subscribe if the user has chosen.
-        $account = user_load($this->currentUser->uid);
+        $account = $this->entityTypeManager->getStorage('user')
+          ->load($this->currentUser->id());
 
         // If a subscription was requested, create it.
-        if ($account->field_voting_auto_subscribe[LANGUAGE_NONE][0]['value']) {
-          // Need to get the current node ID, it's taxonomy ID, and user id and email.
-          // The entity_id should be our node ID...look up the tid from there.
-          $node_wrapper = entity_metadata_wrapper('node', node_load($entity_id));
+        if ($account->field_voting_auto_subscribe->value) {
+          // Need to get the current node ID, it's taxonomy ID,
+          // and user id and email. The entity_id should be
+          // our node ID...look up the tid from there.
+          $node = $this->entityTypeManager->getStorage('node')
+            ->load($entity_id);
           try {
-            $tid = $node_wrapper->field_bill_multi_session_root->value()->tid;
+            $tid = $node->field_bill_multi_session_root->value->tid;
           }
-          catch (EntityMetadataWrapperException $e) {
+          catch (\Exception $e) {
             $tid = 0;
           }
 
@@ -239,10 +270,13 @@ class BillVoteHelper {
               'email' => $account->mail,
               'tid' => $tid,
               'nid' => $entity_id,
-              'uid' => $account->uid,
+              'uid' => $account->id(),
               'why' => 2,
-              'confirmed' => user_is_logged_in(),
+              'confirmed' => $this->currentUser->isAuthenticated(),
             ];
+
+            // @todo This method comes from nys_subscriptions module.
+            // Need to confirm if we need to port this on NYSD9-190.
             _real_nys_subscriptions_subscription_signup($data);
           }
         }
@@ -253,13 +287,15 @@ class BillVoteHelper {
         $flag = flag_get_flag('follow_this_bill');
         $flag->flag('flag', $entity_id, user_load($this->currentUser->uid), TRUE);
 
-        $vote = array(
+        $vote = [
           'entity_type' => 'node',
           'entity_id' => $entity_id,
           'value_type' => 'option',
           'value' => $vote_index,
           'tag' => 'nys_bill_vote',
-        );
+        ];
+
+        // @todo This comes from voting api. Need to check further.
         $ret = votingapi_set_votes($vote);
       }
     }

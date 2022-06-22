@@ -74,6 +74,14 @@ breadcrumb:
     component:
       dist/css/breadcrumb.css: {}
 
+bill:
+  css:
+    component:
+      dist/css/bill.css: {}
+  dependencies:
+    - nysenate_theme/registration-form
+    - nysenate_theme/votes
+
 bill-vote-widget:
   css:
     component:
@@ -191,8 +199,6 @@ featured-bills:
   css:
     component:
       dist/css/featured-bills.css: {}
-  dependencies:
-    - nysenate_theme/bill-vote-widget
 
 featured-image:
   css:
@@ -409,6 +415,11 @@ quote-carousel:
   dependencies:
     - rain_theme/slick
 
+registration-form:
+  css:
+    component:
+      dist/css/registration-form.css: {}
+
 search-api-results:
   css:
     component:
@@ -475,6 +486,11 @@ user-account-nav:
   css:
     component:
       dist/css/user-account-nav.css: {}
+
+votes:
+  css:
+    component:
+      dist/css/votes.css: {}
 
 video-embed:
   css:

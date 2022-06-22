@@ -1,0 +1,8 @@
+services:
+  nys_bill_vote.bill_vote:
+    class: Drupal\nys_bil_vote\BillVoteHelper
+    arguments:
+      - '@current_user'
+      - '@path.current'
+      - '@current_route_match'
+      - '@logger.factory'

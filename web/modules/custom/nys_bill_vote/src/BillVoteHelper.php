@@ -1,0 +1,270 @@
+<?php
+
+use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Logger\LoggerChannelFactory;
+
+/**
+ * Helper class for nys_bill_vote module.
+ */
+class BillVoteHelper {
+
+  use StringTranslationTrait;
+
+  /**
+   * Default object for current_user service.
+   *
+   * @var \Drupal\Core\Session\AccountProxy
+   */
+  protected $currentUser;
+
+  /**
+   * Default object for path.current service.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
+   * Default object for current_route_match service.
+   *
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
+   */
+  protected $currentRouteMatch;
+
+  /**
+   * Default object for logger.factory service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    AccountProxy $current_user,
+    CurrentPathStack $current_path,
+    CurrentRouteMatch $current_route_match,
+    LoggerChannelFactory $logger,
+  ) {
+    $this->currentUser = $current_user;
+    $this->currentPath = $current_path;
+    $this->currentRouteMatch = $current_route_match;
+    $this->logger = $logger;
+  }
+
+  /**
+   * Helper function to get 'intent' from a Vote text.
+   *
+   * @param string $vote
+   *   The user's vote. Can be 'Aye' or 'Nay'.
+   *
+   * @return string
+   *   The string intent that corresponds to the user's vote. Could be 'support'
+   *   or 'oppose'.
+   */
+  function getIntentFromVote($vote) {
+    $intent = '';
+    if ($vote == 'Aye') {
+      $intent = 'support';
+    }
+    elseif ($vote == 'Nay') {
+      $intent = 'oppose';
+    }
+
+    return $intent;
+  }
+
+  /**
+   * Translates between vote values and labels.  If a value is passed, the
+   * appropriate label is returned.  If a label is passed, the appropriate
+   * value is returned.  If the passed value is not found in values or labels,
+   * a boolean FALSE is returned.
+   *
+   * @param $number
+   *   A vote value or label to search for.
+   * @return mixed|string
+   *   The vote value or label (depending if a label or value, respectively,
+   *   was passed).  If passed item is not found, boolean FALSE is returned.
+   */
+  function getVal($number) {
+    $values = [
+      0 => 'no',
+      1 => 'yes',
+    ];
+    if (array_key_exists($number, $values)) {
+      $ret = $values[$number];
+    }
+    elseif (in_array($number, $values)) {
+      $ret = array_search($number, $values);
+    }
+    else {
+      $ret = false;
+    }
+    return $ret;
+  }
+
+  /**
+   * Basic default options for nys_bill_vote.
+   */
+  function getOptions() {
+
+    // TODO: remove the "maybe" vote option
+    $options = [
+      'yes' => t('Aye'),
+      'no' => t('Nay'),
+      'maybe' => t('Maybe'),
+    ];
+
+    return $options;
+  }
+
+  /**
+   * Clean results.
+   */
+  function cleanResults($results) {
+    foreach ($results as $key => $value) {
+      $results[$value['function']] = $value['value'];
+      unset($results[$key]);
+    }
+  
+    return $results;
+  }
+
+  /**
+   * Clean votes.
+   */
+  function cleanVotes($results, $entity_type, $entity_id) {
+    return $this->cleanResults($results[$entity_type][$entity_id]);
+  }
+
+  /**
+   * Default axis available.
+   */
+  function getTags() {
+    return ['nys_bill_vote_aye_nay'];
+  }
+
+  /**
+   * Gets the vote widget label, which expresses the sentiment of an existing
+   * vote, or a more generic label asking for a vote.
+   *
+   * @param string $value The existing vote's yes/no value.
+   *
+   * @return string
+   */
+  function getVotedLabel($value = '') {
+    // Suss out the label for this rendering.  Default...
+    $label = $this->t('Do you support this bill?');
+
+    // If this isn't a bill page, other default...
+    $node = $this->currentRouteMatch->getParameter('node');
+    if (!$node->getType() == 'bill') {
+      $label = $this->t("What's your position?");
+    }
+
+    // If this is a user examining a bill through their dashboard...
+    $current_path = $this->currentPath->getPath();
+    $path_args = explode('/', $current_path);
+    if ($path_args[2] == 'dashboard' && $path_args[3] == 'bills') {
+      $label = $this->t("Do you support this bill?");
+    }
+
+    // If an existing vote (including one submitted now) is detected ...
+    if ($value == 'yes') {
+      $label = $this->t('You are in favor of this bill');
+    }
+    elseif ($value == 'no') {
+      $label = $this->t('You are opposed to this bill');
+    }
+
+    return $label;
+  }
+
+  /**
+   * @param $entity_type
+   *   The type of entity receiving a vote.  Should always be 'bill'.
+   * @param $entity_id
+   *   The entity ID (i.e., node number) of the entity receiving a vote.
+   * @param $vote_value
+   *   The value of the vote being recorded.
+   * @return array|bool
+   */
+  function processVote($entity_type, $entity_id, $vote_value) {
+    $user;
+    $vote_index = $this->getVal($vote_value);
+
+    $message = strtr('Vote process received value = %vote_value, found index = %vote_index',
+      ['%vote_value' => $vote_value, '%vote_index' => $vote_index]
+    );
+    $this->logger->get('nys_bill_vote')->notice($message);
+
+    $ret = false;
+    if ($vote_index !== false) {
+      // Check to see if a vote already exists.
+      // If the user ID is zero, pass it through.
+      if ($this->currentUser->id() == 0) {
+        $needs_processing = true;
+      } else {
+        $vote_check_criteria = [
+          'uid' => $this->currentUser->id(),
+          'entity_id' => $entity_id,
+          'entity_type' => 'node',
+          'tag' => 'nys_bill_vote'
+        ];
+        $vote_check = votingapi_select_single_vote_value($vote_check_criteria);
+
+        // If no vote exists, or if the vote is different, process the vote.
+        $needs_processing = (is_null($vote_check) || ($vote_check != $vote_index));
+
+        // Also process auto-subscribe if the user has chosen.
+        $account = user_load($this->currentUser->uid);
+
+        // If a subscription was requested, create it.
+        if ($account->field_voting_auto_subscribe[LANGUAGE_NONE][0]['value']) {
+          // Need to get the current node ID, it's taxonomy ID, and user id and email.
+          // The entity_id should be our node ID...look up the tid from there.
+          $node_wrapper = entity_metadata_wrapper('node', node_load($entity_id));
+          try {
+            $tid = $node_wrapper->field_bill_multi_session_root->value()->tid;
+          }
+          catch (EntityMetadataWrapperException $e) {
+            $tid = 0;
+          }
+
+          if ($tid && $entity_id) {
+            $data = [
+              'email' => $account->mail,
+              'tid' => $tid,
+              'nid' => $entity_id,
+              'uid' => $account->uid,
+              'why' => 2,
+              'confirmed' => user_is_logged_in(),
+            ];
+            _real_nys_subscriptions_subscription_signup($data);
+          }
+        }
+      }
+
+      if ($needs_processing) {
+        // Set the follow flag on this bill for the current user.
+        $flag = flag_get_flag('follow_this_bill');
+        $flag->flag('flag', $entity_id, user_load($this->currentUser->uid), TRUE);
+
+        $vote = array(
+          'entity_type' => 'node',
+          'entity_id' => $entity_id,
+          'value_type' => 'option',
+          'value' => $vote_index,
+          'tag' => 'nys_bill_vote',
+        );
+        $ret = votingapi_set_votes($vote);
+      }
+    }
+
+    return $ret;
+  }
+
+}

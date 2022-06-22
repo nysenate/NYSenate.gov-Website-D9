@@ -30,7 +30,7 @@ class StatuteTree extends ResponseItem {
    *   The documents object of the response.
    */
   public function documents(): object {
-    return $this->response->documents ?? ((object) []);
+    return $this->response->result->documents ?? ((object) []);
   }
 
   /**
@@ -43,6 +43,16 @@ class StatuteTree extends ResponseItem {
     $sorted = $this->response->result->publishedDates ?? [];
     sort($sorted);
     return $sorted;
+  }
+
+  /**
+   * Gets the location ID of this tree's root.
+   *
+   * @return string
+   *   The location ID, or a blank string if not populated.
+   */
+  public function location(): string {
+    return $this->documents()->locationId ?? '';
   }
 
 }

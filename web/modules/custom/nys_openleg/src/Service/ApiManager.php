@@ -3,8 +3,10 @@
 namespace Drupal\nys_openleg\Service;
 
 use Drupal\Core\Logger\LoggerChannel;
+use Drupal\nys_openleg\Api\RequestPluginBase;
 use Drupal\nys_openleg\Api\ResponsePluginBase;
 use Drupal\nys_openleg\Api\Statute;
+use Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail;
 
 /**
  * Primary service for accessing Openleg API Request and Response managers.
@@ -57,7 +59,7 @@ class ApiManager {
    * @return \Drupal\nys_openleg\Api\RequestPluginBase|null
    *   The instantiated requester.
    */
-  public function getRequest(string $item_type): ?ResponsePluginBase {
+  public function getRequest(string $item_type): ?RequestPluginBase {
     if (!array_key_exists($item_type, $this->allRequesters)) {
       try {
         $ret = $this->requester->createInstance($item_type);
@@ -148,13 +150,23 @@ class ApiManager {
   public function getStatuteFull(string $book, string $location, string $history = ''): Statute {
     $param = ['history' => $history];
 
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail */
-    $detail = $this->get('statute', $book . '/' . $location, $param);
-
     /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree */
     $tree = $this->get('statute', $book, $param + ['location' => $location]);
 
-    return new Statute($detail, $tree);
+    if (!$location && $tree->success()) {
+      $location = $tree->location();
+    }
+
+    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail */
+    $detail = $this->get('statute', $book . '/' . $location, $param);
+
+    // If location is empty, only a tree will be returned.  This next part is
+    // a sanity check/guard against this possibility.
+    if (!($detail instanceof StatuteDetail)) {
+      $detail = NULL;
+    }
+
+    return new Statute($tree, $detail);
   }
 
   /**

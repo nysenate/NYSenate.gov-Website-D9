@@ -183,12 +183,11 @@ class MainController extends ControllerBase {
     else {
       // Get the statute.  Consider any historical milestone being requested.
       $history = $this->request->request->get('history') ?: '';
-      /** @var \Drupal\nys_openleg\Api\Statute $statute */
       $statute = $this->apiManager
         ->getStatuteFull($book, $location, $history);
 
       // If the entry is not found (or other OL error), render the error page.
-      if (!($statute->detail->success() && $statute->tree->success())) {
+      if (!($statute->tree->success())) {
         return [
           '#theme' => 'nys_openleg_not_found',
           '#attached' => ['library' => ['nys_openleg/openleg']],

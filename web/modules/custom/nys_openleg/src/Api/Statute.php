@@ -25,15 +25,16 @@ class Statute {
   public StatuteTree $tree;
 
   /**
-   * Overrides the constructor since statute_item is a special composite.
+   * Constructor.
    *
-   * @param \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail
-   *   A statute_item_detail object.
    * @param \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree
-   *   A statute_item_tree object.
+   *   A StatuteTree Response object.
+   * @param \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail|null $detail
+   *   A StatuteDetail Response object.  Could be null for non-locations.
+   *   (e.g., /laws/ABC, vs. /laws/ABC/A1)
    */
-  public function __construct(StatuteDetail $detail, StatuteTree $tree) {
-    $this->detail = $detail;
+  public function __construct(StatuteTree $tree, ?StatuteDetail $detail = NULL) {
+    $this->detail = $detail ?? new StatuteDetail();
     $this->tree = $tree;
   }
 

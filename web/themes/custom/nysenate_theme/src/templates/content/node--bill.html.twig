@@ -8,11 +8,11 @@
     <!-- Bill Title -->
     <div class="c-bill--heading-block">
       <h2 class="nys-title c-bill-title">
-        {{ field_ol_chamber }}
+        {{ content.field_ol_chamber[0]['#markup'] }}
         Bill
         {{ label }}
       </h2>
-      <span class="c-bill--flag">{{ signed_veto_status }}</span>
+      <span class="c-bill--flag">{{ content.field_ol_last_status[0]['#markup'] }}</span>
       <div class="clearfix"></div>
       <div class="c-bill--session-year">
         {{ legislative_session }}
@@ -21,15 +21,15 @@
 
     <div class="c-detail--header-meta" style="margin-bottom: 20px">
       <div class="c-detail--descript">
-        {{ field_ol_name }}
-        {% if field_issues %}
+        {{ content.field_ol_name[0]['#context']['value'] }}
+        {% if issues %}
           <div class="c-meeting-detail--related">
             <ul class="c-meeting-detail--related">
-              {% if field_majority_issue_tag %}
-                <li>{{ field_majority_issue_tag }}</li>
+              {% if majority_issue %}
+                <li>{{ majority_issue }}</li>
               {% endif %}
-              {% if field_issues %}
-                {% for issue in field_issues %}
+              {% if issues %}
+                {% for issue in issues %}
                   <li>{{ issue }}</li>
                 {% endfor %}
               {% endif %}
@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- Bill Pdf Link -->
-    <a href="{{ ol_base_url }}/pdf/bills/{{ field_ol_session }}/{{ label }}" class="c-detail--download" target="_blank">
+    <a href="{{ pdf_link }}" class="c-detail--download" target="_blank">
       download bill text pdf
     </a>
   </div>
@@ -54,11 +54,11 @@
                                   active_amend_url
                                   }}" class="c-detail--social-item facebook">Facebook</a></li>
       <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{
-                                  field_ol_base_print_no
+                                  content.field_ol_base_print_no[0]['#context']['value']
                                   }} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
       <li><a href="mailto:?&subject=From NYSenate.gov: {{
-                                  field_ol_base_print_no
-                                  }}&body=Check out this bill: {{ field_ol_base_print_no }}: < {{
+                                  content.field_ol_base_print_no[0]['#context']['value']
+                                  }}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{
                                   active_amend_url
                                   }} >." class="c-detail--social-item email">Email</a></li>
     </ul>

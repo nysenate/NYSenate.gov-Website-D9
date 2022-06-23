@@ -436,6 +436,39 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__bill(&$variables) {
+  if (isset($variables['content']['field_issues'])) {
+    $issues = [];
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
+    }
+    $variables['issues'] = $issues;
+  }
+
+  if (isset($variables['content']['field_majority_issue_tag'])) {
+    foreach ($variables['content']['field_majority_issue_tag'] as $key => $field_majority_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $variables['majority_issue'] = Link::fromTextAndUrl($field_majority_issues['#title'], $field_majority_issues['#url']);
+    }
+  }
+
+  // Bill PDF Link.
+  $openleg_config = \Drupal::config('nys_openleg.settings');
+  $base_path = $openleg_config->get('base_path');
+  $variables['pdf_link'] = $base_path . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
+
+  $variables['active_amend_url'] = $variables['node']->toUrl('canonical', ['absolute' => TRUE])->toString();
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function nysenate_theme_preprocess_node__resolution(&$variables) {

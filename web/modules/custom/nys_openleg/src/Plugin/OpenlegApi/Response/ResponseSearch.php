@@ -51,7 +51,7 @@ class ResponseSearch extends ResponsePluginBase {
    * Returns an array of the search result items.
    */
   public function items(): array {
-    return $this->result()->result->items ?? [];
+    return $this->result()->items ?? [];
   }
 
 }

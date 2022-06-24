@@ -14,7 +14,7 @@ namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
 class TranscriptUpdateList extends ResponseUpdate {
 
   /**
-   * Returns an array of transcript IDs from an update response.
+   * {@inheritDoc}
    */
   public function listIds(): array {
     return array_unique(array_filter(array_map(

@@ -272,47 +272,50 @@ class MainController extends ControllerBase {
       ->getForm('Drupal\nys_openleg\Form\SearchForm', $search_term);
 
     // Initialize the pager values.  Pager is zero-based, search is not.
+    $use_pager = FALSE;
     $page = $this->pager->findPage() + 1;
     $per_page = (int) $this->request->query->get('per_page', 10);
+    $results = [];
 
     // Execute the search and reformat into the results array.
-    $results = [];
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search */
-    $search = $this->apiManager->getSearch(
-      'statute_item',
-      $search_term,
-      [
-        'page' => $page,
-        'per_page' => $per_page,
-      ]
-    );
-    foreach ($search->items() as $item) {
-      // Find the important data points.
-      $lawId = $item->result->lawId ?? '';
-      $docType = $item->result->docType ?? '';
-      $docLevelId = $item->result->docLevelId ?? '';
-      $locationId = $item->result->locationId ?? '';
-      $title = current($item->highlights->title ?? []) ?: ($item->result->title ?? '');
+    if ($search_term) {
+      /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search */
+      $search = $this->apiManager->getSearch(
+        'statute',
+        $search_term,
+        [
+          'page' => $page,
+          'per_page' => $per_page,
+        ]
+      );
+      foreach ($search->items() as $item) {
+        // Find the important data points.
+        $lawId = $item->result->lawId ?? '';
+        $docType = $item->result->docType ?? '';
+        $docLevelId = $item->result->docLevelId ?? '';
+        $locationId = $item->result->locationId ?? '';
+        $title = current($item->highlights->title ?? []) ?: ($item->result->title ?? '');
 
-      // To ensure presentation, these four data points must be populated.
-      // Location could be empty.
-      if ($lawId && $docType && $docLevelId && $title) {
-        // Create the data structure for the template.
-        $url = StatuteHelper::baseUrl() . '/' .
-          implode('/', array_filter([$lawId, $locationId]));
-        $results[] = [
-          'name' => implode(' ', [$lawId, $docType, $docLevelId]),
-          'title' => $title,
-          'snippets' => $item->highlights->text ?? [],
-          'url' => $url,
-        ];
+        // To ensure presentation, these four data points must be populated.
+        // Location could be empty.
+        if ($lawId && $docType && $docLevelId && $title) {
+          // Create the data structure for the template.
+          $url = StatuteHelper::baseUrl() . '/' .
+            implode('/', array_filter([$lawId, $locationId]));
+          $results[] = [
+            'name' => implode(' ', [$lawId, $docType, $docLevelId]),
+            'title' => $title,
+            'snippets' => $item->highlights->text ?? [],
+            'url' => $url,
+          ];
+        }
       }
-    }
 
-    // Only use the pager theme if the results make sense.
-    $offsets = $search->offset();
-    if ($use_pager = ($search->count() > 0) && ($offsets['start'] < $offsets['end'])) {
-      $this->pager->createPager($offsets['total'], $per_page);
+      // Only use the pager theme if the results make sense.
+      $offsets = $search->offset();
+      if ($use_pager = ($search->count() > 0) && ($offsets['start'] < $offsets['end'])) {
+        $this->pager->createPager($offsets['total'], $per_page);
+      }
     }
 
     return [

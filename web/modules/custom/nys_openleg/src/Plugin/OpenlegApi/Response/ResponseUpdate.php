@@ -22,4 +22,14 @@ class ResponseUpdate extends ResponsePluginBase {
     return $this->result()->items ?? [];
   }
 
+  /**
+   * Returns an array of all identifiers in this update's list.
+   *
+   * As a generic class, ResponseUpdate cannot do anything useful here.  This
+   * method should be overridden by each child type.
+   */
+  public function listIds(): array {
+    return [];
+  }
+
 }

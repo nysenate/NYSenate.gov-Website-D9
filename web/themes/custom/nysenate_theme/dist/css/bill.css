@@ -1,0 +1,635 @@
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+/*-----------------------------
+/	CUSTOM NEW YORK SENATE (nysenate_theme) PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+.contrast_text {
+  color: #000; }
+
+.lgt-text, .c-bill-topic, h4.c-bill-topic {
+  color: #2b6a90; }
+
+.lgt-bg, .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #2b6a90; }
+
+.med-text {
+  color: #175b81; }
+
+.med-bg {
+  background-color: #175b81; }
+
+.drk-text {
+  color: #004d71; }
+
+.drk-bg {
+  background-color: #004d71; }
+
+.link-text {
+  color: #cb8d37; }
+
+.accent-bg {
+  background-color: #1b5187; }
+
+.accent-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .nav-text {
+    color: #444; }
+    .nav-text:hover {
+      color: #2b6a90; }
+    .nav-text.active {
+      color: #2b6a90; } }
+
+.trad_blue .contrast_text {
+  color: #fff; }
+
+.trad_blue .lgt-text, .trad_blue .c-bill-topic {
+  color: #1b5187; }
+
+.trad_blue .lgt-bg, .trad_blue .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #1b5187; }
+
+.trad_blue .med-text {
+  color: #1d446b; }
+
+.trad_blue .med-bg {
+  background-color: #1d446b; }
+
+.trad_blue .drk-text {
+  color: #1c364e; }
+
+.trad_blue .drk-bg {
+  background-color: #1c364e; }
+
+.trad_blue .link-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .trad_blue .nav-text {
+    color: #444; }
+    .trad_blue .nav-text:hover {
+      color: #1b5187; }
+    .trad_blue .nav-text.active {
+      color: #1b5187; } }
+
+.cont_blue .contrast_text {
+  color: #000; }
+
+.cont_blue .lgt-text, .cont_blue .c-bill-topic {
+  color: #04a9c5; }
+
+.cont_blue .lgt-bg, .cont_blue .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #04a9c5; }
+
+.cont_blue .med-text {
+  color: #008ca6; }
+
+.cont_blue .med-bg {
+  background-color: #008ca6; }
+
+.cont_blue .drk-text {
+  color: #1f798f; }
+
+.cont_blue .drk-bg {
+  background-color: #1f798f; }
+
+.cont_blue .link-text {
+  color: #04a9c5; }
+
+@media screen and (min-width: 760px) {
+  .cont_blue .nav-text {
+    color: #444; }
+    .cont_blue .nav-text:hover {
+      color: #04a9c5; }
+    .cont_blue .nav-text.active {
+      color: #04a9c5; } }
+
+.purple .contrast_text {
+  color: #000; }
+
+.purple .lgt-text, .purple .c-bill-topic {
+  color: #90668f; }
+
+.purple .lgt-bg, .purple .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #90668f; }
+
+.purple .med-text {
+  color: #754775; }
+
+.purple .med-bg {
+  background-color: #754775; }
+
+.purple .drk-text {
+  color: #543457; }
+
+.purple .drk-bg {
+  background-color: #543457; }
+
+.purple .link-text {
+  color: #90668f; }
+
+.purple .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .purple .nav-text {
+    color: #444; }
+    .purple .nav-text:hover {
+      color: #90668f; }
+    .purple .nav-text.active {
+      color: #90668f; } }
+
+.trad_red .contrast_text {
+  color: #fff; }
+
+.trad_red .lgt-text, .trad_red .c-bill-topic {
+  color: #87002f; }
+
+.trad_red .lgt-bg, .trad_red .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #87002f; }
+
+.trad_red .med-text {
+  color: #6e0026; }
+
+.trad_red .med-bg {
+  background-color: #6e0026; }
+
+.trad_red .drk-text {
+  color: #500019; }
+
+.trad_red .drk-bg {
+  background-color: #500019; }
+
+.trad_red .link-text {
+  color: #87002f; }
+
+.trad_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_red .nav-text {
+    color: #444; }
+    .trad_red .nav-text:hover {
+      color: #87002f; }
+    .trad_red .nav-text.active {
+      color: #87002f; } }
+
+.cont_red .contrast_text {
+  color: #fff; }
+
+.cont_red .lgt-text, .cont_red .c-bill-topic {
+  color: #c62526; }
+
+.cont_red .lgt-bg, .cont_red .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #c62526; }
+
+.cont_red .med-text {
+  color: #bb0623; }
+
+.cont_red .med-bg {
+  background-color: #bb0623; }
+
+.cont_red .drk-text {
+  color: #a00101; }
+
+.cont_red .drk-bg {
+  background-color: #a00101; }
+
+.cont_red .link-text {
+  color: #c62526; }
+
+.cont_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_red .nav-text {
+    color: #444; }
+    .cont_red .nav-text:hover {
+      color: #c62526; }
+    .cont_red .nav-text.active {
+      color: #c62526; } }
+
+.orange .contrast_text {
+  color: #000; }
+
+.orange .lgt-text, .orange .c-bill-topic {
+  color: #f0673d; }
+
+.orange .lgt-bg, .orange .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #f0673d; }
+
+.orange .med-text {
+  color: #ed4b1c; }
+
+.orange .med-bg {
+  background-color: #ed4b1c; }
+
+.orange .drk-text {
+  color: #c84123; }
+
+.orange .drk-bg {
+  background-color: #c84123; }
+
+.orange .link-text {
+  color: #f0673d; }
+
+.orange .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .orange .nav-text {
+    color: #444; }
+    .orange .nav-text:hover {
+      color: #f0673d; }
+    .orange .nav-text.active {
+      color: #f0673d; } }
+
+.trad_green .contrast_text {
+  color: #000; }
+
+.trad_green .lgt-text, .trad_green .c-bill-topic {
+  color: #60a35f; }
+
+.trad_green .lgt-bg, .trad_green .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #60a35f; }
+
+.trad_green .med-text {
+  color: #4d894f; }
+
+.trad_green .med-bg {
+  background-color: #4d894f; }
+
+.trad_green .drk-text {
+  color: #416837; }
+
+.trad_green .drk-bg {
+  background-color: #416837; }
+
+.trad_green .link-text {
+  color: #60a35f; }
+
+.trad_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_green .nav-text {
+    color: #444; }
+    .trad_green .nav-text:hover {
+      color: #60a35f; }
+    .trad_green .nav-text.active {
+      color: #60a35f; } }
+
+.cont_green .contrast_text {
+  color: #000; }
+
+.cont_green .lgt-text, .cont_green .c-bill-topic {
+  color: #65c5b6; }
+
+.cont_green .lgt-bg, .cont_green .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #65c5b6; }
+
+.cont_green .med-text {
+  color: #479e93; }
+
+.cont_green .med-bg {
+  background-color: #479e93; }
+
+.cont_green .drk-text {
+  color: #378479; }
+
+.cont_green .drk-bg {
+  background-color: #378479; }
+
+.cont_green .link-text {
+  color: #65c5b6; }
+
+.cont_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_green .nav-text {
+    color: #444; }
+    .cont_green .nav-text:hover {
+      color: #65c5b6; }
+    .cont_green .nav-text.active {
+      color: #65c5b6; } }
+
+.inactive-pallette .contrast_text {
+  color: #000; }
+
+.inactive-pallette .lgt-text, .inactive-pallette .c-bill-topic {
+  color: #1b5187; }
+
+.inactive-pallette .lgt-bg, .inactive-pallette .c-bill-path--step.c-bill-path--step__passed {
+  background-color: #b2b2b2; }
+
+.inactive-pallette .med-text {
+  color: #999999; }
+
+.inactive-pallette .med-bg {
+  background-color: #999999; }
+
+.inactive-pallette .drk-text {
+  color: #808080; }
+
+.inactive-pallette .drk-bg {
+  background-color: #808080; }
+
+.inactive-pallette .link-text {
+  color: #1b5187; }
+
+.inactive-pallette .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .inactive-pallette .nav-text {
+    color: #444; }
+    .inactive-pallette .nav-text:hover {
+      color: #1b5187; }
+    .inactive-pallette .nav-text.active {
+      color: #1b5187; } }
+
+/*---------------------------
+/ WIDTHS for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+strong {
+  font-family: "Adelle Bold", serif; }
+
+.font-secondary {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif; }
+  .font-secondary strong {
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+
+.c-detail--header__bill .c-bill--flag {
+  margin-bottom: 10px; }
+  @media screen and (min-width: 760px) {
+    .c-detail--header__bill .c-bill--flag {
+      margin-left: 20px;
+      margin-top: 5px; } }
+
+.c-detail--header.c-detail--header__bill {
+  margin-bottom: 0; }
+  @media screen and (min-width: 760px) {
+    .c-detail--header.c-detail--header__bill {
+      margin-bottom: 20px; } }
+
+.c-bill--heading-block > .nys-title.c-bill-title {
+  margin-bottom: 0; }
+
+.c-detail--header__bill .c-bill--flag {
+  margin-bottom: 10px; }
+  @media screen and (min-width: 760px) {
+    .c-detail--header__bill .c-bill--flag {
+      margin-left: 20px;
+      margin-top: 5px; } }
+
+.cbill--actions-table--row {
+  padding: 18px 0px;
+  border-bottom: 1px solid #bbbbbb; }
+  .cbill--actions-table--row TD {
+    line-height: 26px;
+    background-color: white; }
+
+.cbill--actions-table--row:last-of-type {
+  border-bottom: none; }
+
+h3.c-bill-num {
+  margin: 0 0 0.25em;
+  color: #7d7c7c;
+  font-family: 'Adelle Bold';
+  line-height: 1em;
+  font-size: 20px;
+  letter-spacing: 0.05em; }
+  h3.c-bill-num a {
+    color: #7d7c7c; }
+
+.c-bill-topic {
+  margin-bottom: 1.5em;
+  text-transform: uppercase;
+  font-family: 'Proxima Nova SemiBold';
+  letter-spacing: 0.1em;
+  font-size: 10px; }
+
+h4.c-bill-topic {
+  text-transform: uppercase;
+  font-family: 'Proxima Nova SemiBold';
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  font-style: inherit;
+  margin-top: 0; }
+  h4.c-bill-topic a {
+    font-family: 'Proxima Nova SemiBold'; }
+
+.c-bill-descript {
+  margin: 0 0 10px 0;
+  color: #7d7c7c;
+  font-family: 'Adelle Light';
+  font-size: 20px;
+  line-height: 32px; }
+
+.c-bill-path {
+  position: relative;
+  width: 120px;
+  margin: 0 0 7px 0; }
+  .c-bill-path > ul {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    list-style: none;
+    text-align: center; }
+
+.c-bill-path--line {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 2px;
+  width: 100%;
+  border: 0;
+  background: #aaaaaa; }
+
+.c-bill-path--step {
+  display: block;
+  float: left;
+  height: 10px;
+  width: 10px;
+  background: #eeeeee;
+  border-radius: 50%;
+  background-clip: padding-box;
+  text-indent: -9999px; }
+  .c-bill-path--step + * {
+    margin-left: 10%; }
+
+.c-bill-update--date {
+  display: inline-block;
+  margin: 0 0.25em 0 0;
+  font-family: 'Proxima Nova Regular';
+  font-size: 12px; }
+
+.c-bill-update--location {
+  display: inline-block;
+  margin: 0;
+  font-family: 'Proxima Nova Regular';
+  font-size: 12px;
+  line-height: 1.4;
+  display: inline; }
+  .c-bill-update--location:before {
+    content: '|';
+    display: inline-block;
+    margin-right: 0.5em; }
+
+.c-block-legislation-featured .c-bill-update--location a {
+  color: #fff;
+  border-bottom: solid 0.05em #fff; }
+  .c-block-legislation-featured .c-bill-update--location a:hover {
+    border-bottom: none; }
+
+.c-bill-update--sponsor {
+  display: block;
+  margin: 0;
+  font-family: 'Proxima Nova Regular';
+  font-size: 14px; }
+
+.c-bill-section,
+.c-block.c-bill-section {
+  margin-top: 30px;
+  margin-bottom: 0; }
+
+.c-bill-fulltext {
+  overflow: hidden;
+  font-size: 12px; }
+  @media (max-width: 767px) {
+    .c-bill-fulltext {
+      font-size: 9px; } }
+  @media (max-width: 430px) {
+    .c-bill-fulltext {
+      font-size: 8px; } }
+  @media (max-width: 350px) {
+    .c-bill-fulltext {
+      font-size: 7px; } }
+
+.c-bill-action-version.c-bill--flag {
+  float: left;
+  text-align: center; }
+  .c-bill-action-version.c-bill--flag.c-bill-action--orig-bill {
+    background: #eee;
+    color: #888; }
+
+.c-detail--header.c-detail--header__bill {
+  margin-bottom: 0; }
+  @media screen and (min-width: 760px) {
+    .c-detail--header.c-detail--header__bill {
+      margin-bottom: 20px; } }
+
+.c-detail--header-meta.c-detail--header-meta__bill {
+  width: 100%; }
+
+.c-block.c-bill--amendment-details {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 0; }
+  .c-block.c-bill--amendment-details dl.accordion dd {
+    width: 100%; }
+
+.c-detail--writeup.c-detail--memo {
+  font-family: 'Proxima Nova Regular';
+  background: white; }
+
+.c-action-bill--items {
+  padding: 0; }
+
+.l-tab-bar .c-tab .c-tab-link.c-tab-link--bill-content {
+  padding: 0 40px;
+  text-transform: uppercase; }
+
+.c-bill--amendment-details dd a.c-detail--download {
+  color: #0078a0;
+  text-transform: uppercase; }
+
+.c-bill--amendment-details .l-tab-bar {
+  margin-top: 0; }
+
+.c-bill--amendment-details #amendment-details {
+  position: relative;
+  top: -155px; }
+
+@-moz-document url-prefix() {
+  .c-bill--amendment-details #amendment-details {
+    top: -290px; } }
+
+.c-block.c-block--bill-memo {
+  margin-bottom: 20px; }
+
+.c-bill-section .accordion-navigation {
+  width: 100%; }
+
+#your-voice {
+  display: none; }
+
+.c-bill-amendment-toggle dt {
+  color: #2b6a90;
+  font-family: 'Proxima Nova SemiBold'; }
+
+.c-bill-amendment-toggle dd a {
+  background: white;
+  color: #777; }
+
+.c-bill-amendment-toggle dd.active a {
+  background: #2b6a90;
+  color: white;
+  border-radius: 0; }
+
+@media screen and (min-width: 768px) {
+  .c-bill-meta {
+    width: 25%;
+    max-width: 200px;
+    float: left; }
+  h3.c-bill-num {
+    font-size: 22px; }
+  .c-bill-topic {
+    font-size: 12px; }
+  .c-bill-body {
+    width: 75%;
+    max-width: 560px;
+    float: left; }
+  .c-bill-descript {
+    margin-bottom: 15px; }
+  .c-bill-path {
+    margin-bottom: 12px; }
+  .c-bill-update--date,
+  .c-bill-update--location,
+  .c-bill-update--sponsor {
+    font-size: 14px; }
+  .c-bill-fulltext {
+    font-size: 16px; }
+  .c-bill-text__memo {
+    margin-top: 30px; }
+  .c-bill-text__bill {
+    margin-top: 70px; } }

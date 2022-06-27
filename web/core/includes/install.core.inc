@@ -465,12 +465,6 @@ function install_begin_request($class_loader, &$install_state) {
     if (isset($install_state['profile_info']['distribution']['install']['theme'])) {
       $install_state['theme'] = $install_state['profile_info']['distribution']['install']['theme'];
     }
-    // Ensure all profile directories are registered.
-    $profiles = \Drupal::service('extension.list.profile')->getAncestors($profile);
-    $profile_directories = array_map(function ($extension) {
-      return $extension->getPath();
-    }, $profiles);
-    $listing->setProfileDirectories($profile_directories);
   }
 
   // Before having installed the system module and being able to do a module
@@ -854,22 +848,18 @@ function install_tasks($install_state) {
 
   // Now add any tasks defined by the installation profile.
   if (!empty($install_state['parameters']['profile'])) {
-    $profiles = \Drupal::service('extension.list.profile')->getAncestors($install_state['parameters']['profile']);
-    foreach (array_keys($profiles) as $profile_name) {
-      $profile = $install_state['profiles'][$profile_name];
-      // Load the profile install file, because it is not always loaded when
-      // hook_install_tasks() is invoked (e.g. batch processing).
-      $profile_install_file = $profile->getPath() . '/' . $profile_name . '.install';
-      if (file_exists($profile_install_file)) {
-        include_once \Drupal::root() . '/' . $profile_install_file;
-      }
-      // If this is a base profile then the profile isn't loaded
-      $function = $profile_name . '_install_tasks';
-      if (function_exists($function)) {
-        $result = $function($install_state);
-        if (is_array($result)) {
-          $tasks += $result;
-        }
+    // Load the profile install file, because it is not always loaded when
+    // hook_install_tasks() is invoked (e.g. batch processing).
+    $profile = $install_state['parameters']['profile'];
+    $profile_install_file = $install_state['profiles'][$profile]->getPath() . '/' . $profile . '.install';
+    if (file_exists($profile_install_file)) {
+      include_once \Drupal::root() . '/' . $profile_install_file;
+    }
+    $function = $install_state['parameters']['profile'] . '_install_tasks';
+    if (function_exists($function)) {
+      $result = $function($install_state);
+      if (is_array($result)) {
+        $tasks += $result;
       }
     }
   }
@@ -887,13 +877,11 @@ function install_tasks($install_state) {
 
   // Allow the installation profile to modify the full list of tasks.
   if (!empty($install_state['parameters']['profile'])) {
-    $profiles = \Drupal::service('extension.list.profile')->getAncestors($install_state['parameters']['profile']);
-    foreach (array_keys($profiles) as $profile_name) {
-      if ($install_state['profiles'][$profile_name]->load()) {
-        $function = $profile_name . '_install_tasks_alter';
-        if (function_exists($function)) {
-          $function($tasks, $install_state);
-        }
+    $profile = $install_state['parameters']['profile'];
+    if ($install_state['profiles'][$profile]->load()) {
+      $function = $install_state['parameters']['profile'] . '_install_tasks_alter';
+      if (function_exists($function)) {
+        $function($tasks, $install_state);
       }
     }
   }
@@ -1068,11 +1056,12 @@ function install_display_output($output, $install_state) {
 
   $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
   $response = $bare_html_page_renderer->renderBarePage($output, $output['#title'], 'install_page', $regions);
+  $request_time = \Drupal::time()->getRequestTime();
   $default_headers = [
     'Expires' => 'Sun, 19 Nov 1978 05:00:00 GMT',
-    'Last-Modified' => gmdate(DATE_RFC1123, REQUEST_TIME),
+    'Last-Modified' => gmdate(DATE_RFC1123, $request_time),
     'Cache-Control' => 'no-cache, must-revalidate',
-    'ETag' => '"' . REQUEST_TIME . '"',
+    'ETag' => '"' . $request_time . '"',
   ];
   $response->headers->add($default_headers);
   $response->send();
@@ -1185,7 +1174,7 @@ function install_verify_database_ready() {
   $table = key($system_schema);
 
   $existing_install = FALSE;
-  if ($database = Database::getConnectionInfo()) {
+  if (Database::getConnectionInfo()) {
     try {
       $existing_install = Database::getConnection()->schema()->tableExists($table);
     }
@@ -1277,9 +1266,7 @@ function install_select_profile(&$install_state) {
  *   - For interactive installations via request query parameters.
  *   - For non-interactive installations via install_drupal() settings.
  * - One of the available profiles is a distribution. If multiple profiles are
- *   distributions, then the first discovered profile will be selected. If an
- *   inherited profile is detected that is a distribution, it will be chosen
- *   over its base profile.
+ *   distributions, then the first discovered profile will be selected.
  * - Only one visible profile is available.
  *
  * @param array $install_state
@@ -1304,9 +1291,12 @@ function _install_select_profile(&$install_state) {
       return $profile;
     }
   }
-  // Check for a distribution profile.
-  if ($distribution = \Drupal::service('extension.list.profile')->selectDistribution(array_keys($install_state['profiles']))) {
-    return $distribution;
+  // If any of the profiles are distribution profiles, return the first one.
+  foreach ($install_state['profiles'] as $profile) {
+    $profile_info = install_profile_info($profile->getName());
+    if (!empty($profile_info['distribution'])) {
+      return $profile->getName();
+    }
   }
   // Get all visible (not hidden) profiles.
   $visible_profiles = array_filter($install_state['profiles'], function ($profile) {
@@ -1534,9 +1524,7 @@ function _install_get_version_info($version) {
  */
 function install_load_profile(&$install_state) {
   $profile = $install_state['parameters']['profile'];
-  foreach (array_keys(\Drupal::service('extension.list.profile')->getAncestors($profile)) as $profile_id) {
-    $install_state['profiles'][$profile_id]->load();
-  }
+  $install_state['profiles'][$profile]->load();
   $install_state['profile_info'] = install_profile_info($profile, $install_state['parameters']['langcode'] ?? 'en');
 
   $sync_directory = Settings::get('config_sync_directory');
@@ -1670,10 +1658,6 @@ function install_install_profile(&$install_state) {
 
   \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
 
-  // Install all the profiles.
-  $profiles = \Drupal::service('extension.list.profile')->getAncestors();
-  \Drupal::service('module_installer')->install(array_keys($profiles), FALSE);
-
   // Ensure that the install profile's theme is used.
   // @see _drupal_maintenance_theme()
   \Drupal::theme()->resetActiveTheme();
@@ -1740,7 +1724,8 @@ function install_download_additional_translations_operations(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
-  \Drupal::moduleHandler()->loadInclude('locale', 'translation.inc');
+  $module_handler = \Drupal::moduleHandler();
+  $module_handler->loadInclude('locale', 'inc', 'locale.translation');
 
   // If there is more than one language or the single one is not English, we
   // should import translations.
@@ -1758,7 +1743,7 @@ function install_import_translations(&$install_state) {
       $operations[] = ['locale_translation_batch_fetch_import', ['drupal', $language->getId(), []]];
     }
 
-    module_load_include('fetch.inc', 'locale');
+    $module_handler->loadInclude('locale', 'inc', 'locale.fetch');
     $batch = [
       'operations' => $operations,
       'title' => t('Updating translations.'),
@@ -1780,7 +1765,8 @@ function install_import_translations(&$install_state) {
  *   Server access pattern (to replace language code, version number, etc. in).
  */
 function _install_prepare_import($langcodes, $server_pattern) {
-  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+  $module_handler = \Drupal::moduleHandler();
+  $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
   $matches = [];
 
   foreach ($langcodes as $langcode) {
@@ -1807,7 +1793,7 @@ function _install_prepare_import($langcodes, $server_pattern) {
             'status' => 1,
           ];
           \Drupal::service('locale.project')->set($data['name'], $data);
-          module_load_include('compare.inc', 'locale');
+          $module_handler->loadInclude('locale', 'inc', 'locale.compare');
           // Reset project information static cache so that it uses the data
           // set above.
           locale_translation_clear_cache_projects();
@@ -1898,7 +1884,7 @@ function install_finished(&$install_state) {
   \Drupal::messenger()->addStatus($success_message);
 
   // Record when this install ran.
-  \Drupal::state()->set('install_time', $_SERVER['REQUEST_TIME']);
+  \Drupal::state()->set('install_time', \Drupal::time()->getRequestTime());
 }
 
 /**
@@ -2448,7 +2434,6 @@ function install_config_revert_install_changes() {
       $config_importer->import();
     }
     catch (ConfigImporterException $e) {
-      global $install_state;
       $messenger = \Drupal::messenger();
       // There are validation errors.
       $messenger->addError(t('The configuration synchronization failed validation.'));

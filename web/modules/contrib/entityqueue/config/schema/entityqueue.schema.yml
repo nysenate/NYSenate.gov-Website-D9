@@ -1,0 +1,62 @@
+entityqueue.entity_queue.*:
+  type: config_entity
+  label: 'EntityQueue config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    handler:
+      type: string
+      label: 'Queue handler'
+    handler_configuration:
+      type: entityqueue_handler_configuration.[%parent.handler]
+      label: 'Queue handler configuration'
+    entity_settings:
+      type: mapping
+      label: 'Entity settings'
+      mapping:
+        target_type:
+          type: string
+          label: 'Type of items to queue'
+        handler:
+          type: string
+          label: 'Reference method'
+        handler_settings:
+          type: entity_reference_selection.[%parent.handler]
+          label: 'Entity reference selection plugin settings'
+    queue_settings:
+      type: mapping
+      label: 'Queue settings'
+      mapping:
+        min_size:
+          type: integer
+          label: 'Minimun queue size'
+        max_size:
+          type: integer
+          label: 'Maximum queue size'
+        act_as_queue:
+          type: boolean
+          label: 'Act as queue'
+        reverse:
+          type: boolean
+          label: 'New items will be added to the top of the queue, instead of the bottom'
+
+# Base schema for all entity queue handler schemas.
+entityqueue_handler_configuration:
+  type: mapping
+  label: 'Entity queue handler configuration'
+
+# Schema for all entity queue handlers that are not providing a specific schema.
+entityqueue_handler_configuration.*:
+  type: entityqueue_handler_configuration
+
+views.relationship.entity_queue:
+  type: views_relationship
+  label: 'Entity queue'
+  mapping:
+    limit_queue:
+      type: string
+      label: 'Limit to a specific entity queue'

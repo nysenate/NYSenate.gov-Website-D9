@@ -1,0 +1,263 @@
+@import '../../global/utils/init';
+
+.alert-box {
+  position: relative;
+  padding: 20px 0;
+}
+
+.alert-box-message {
+  width: 80%;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 2%;
+
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+  * + ul,
+  * + ol {
+    margin: 0;
+  }
+}
+
+.l-messages {
+  margin: 0 auto 0;
+  max-width: 1500px;
+  background-color: $grey06;
+  padding: 0 20px;
+
+  .large-12 {
+    padding: 0;
+  }
+
+  .close {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 30px;
+    width: 30px;
+    margin: auto;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+
+    &::after {
+      content: '\78';
+      line-height: 30px;
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+    }
+  }
+}
+
+.l-row--main,
+.node--session-full {
+  .l-messages {
+    .alert-box {
+      padding: 20px;
+    }
+    .close {
+      right: 5px;
+    }
+  }
+}
+
+.alert-box {
+  letter-spacing: 0em;
+  line-height: 26px;
+  color: $grey02;
+  background-color: transparent;
+  border: none;
+  padding: 30px;
+  text-transform: none;
+  color: $grey02;
+  font-size: 16px;
+  font-family: 'Adelle Light';
+  margin: 20px 0 20px 0;
+
+  &.alert {
+    color: $grey02;
+    background-color: $grey06;
+
+    &::before {
+      content: '\45';
+      font-family: 'senate_icons';
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-right: 3px;
+    }
+  }
+
+  &.success {
+    color: $grey02;
+    background-color: $grey06;
+
+    &::before {
+      content: '\31';
+      font-family: 'senate_icons';
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-right: 3px;
+    }
+  }
+
+  &:before {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+    font-size: 24px;
+    color: $blue01;
+    background-color: $grey06;
+
+    @media #{$desktop} {
+      font-size: 46px;
+    }
+  }
+
+  ul {
+    display: inline-block;
+  }
+}
+
+.l-messages-thanks {
+  margin-bottom: 60px;
+  margin: -20px auto 0;
+
+  .alert-box {
+    letter-spacing: 0em;
+    line-height: 26px;
+    color: $grey02;
+    background-color: transparent;
+    border: none;
+    padding: 30px;
+    text-transform: none;
+    color: $grey02;
+    font-size: 24px;
+    font-family: 'Adelle Bold';
+    margin: 20px 0 20px 0;
+
+    &.alert {
+      color: $grey02;
+      background-color: $grey06;
+
+      &::before {
+        content: '\45';
+        font-family: 'senate_icons';
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-right: 3px;
+      }
+    }
+
+    &.success {
+      color: $grey02;
+      background-color: $grey06;
+
+      &::before {
+        content: '\31';
+        font-family: 'senate_icons';
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-right: 3px;
+      }
+    }
+
+    &::before {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0;
+      font-size: 24px;
+      color: $blue01;
+      background-color: $grey06;
+
+      @media #{$desktop} {
+        font-size: 46px;
+      }
+    }
+
+    ul {
+      display: inline-block;
+    }
+  }
+}
+
+.node-type-senator {
+  .alert-box {
+    margin-top: 0px;
+  }
+}
+
+.page-home {
+  .alert-box {
+    margin: 0;
+  }
+}
+
+@media #{$tablet} {
+  .l-messages {
+    padding: 0 9%;
+
+    .alert-box {
+      padding: 30px 0;
+    }
+
+    .alert-box-message {
+      width: 90%;
+      padding: 0 5px;
+    }
+  }
+
+  .l-row--main,
+  .node--session-full {
+
+    .l-messages {
+      padding: 0;
+
+      .alert-box {
+        padding: 30px;
+      }
+      .close {
+        right: 10px;
+      }
+    }
+  }
+
+  .node-type-senator {
+    .alert-box {
+      margin-top: 0px;
+    }
+  }
+}

@@ -28,7 +28,8 @@ function google_analytics_install() {
  * Remove cache directory if module is uninstalled.
  */
 function google_analytics_uninstall() {
-  google_analytics_clear_js_cache();
+  $javascript_service = \Drupal::service('google_analytics.javascript_cache');
+  $javascript_service->clearGoogleAnalyticsJsCache();
 }
 
 /**
@@ -39,9 +40,10 @@ function google_analytics_requirements($phase) {
 
   if ($phase == 'runtime') {
     $config = \Drupal::config('google_analytics.settings');
+    $ga_accounts = \Drupal::service('google_analytics.accounts');
 
     // Raise warning if Google user account has not been set yet.
-    if (!preg_match('/^UA-\d+-\d+$/', $config->get('account'))) {
+    if (!$ga_accounts->getDefaultMeasurementId()) {
       $requirements['google_analytics_account'] = [
         'title' => t('Google Analytics module'),
         'description' => t('Google Analytics module has not been configured yet. Please configure its settings from the <a href=":url">Google Analytics settings page</a>.', [':url' => Url::fromRoute('google_analytics.admin_settings_form')->toString()]),
@@ -71,4 +73,77 @@ function google_analytics_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Migrate create only fields to gtag.js parameters.
+ */
+function google_analytics_update_8300() {
+  $config = \Drupal::configFactory()->getEditable('google_analytics.settings');
+  $create_only_fields = $config->get('codesnippet.create');
+  $parameters = [
+    'client_id' => $create_only_fields['clientId'],
+    'cookie_name' => $create_only_fields['cookieName'],
+    'cookie_domain' => $create_only_fields['cookieDomain'],
+    'cookie_expires' => $create_only_fields['cookieExpires'],
+    'sample_rate' => $create_only_fields['sampleRate'],
+    'site_speed_sample_rate' => $create_only_fields['siteSpeedSampleRate'],
+    'use_amp_client_id' => $create_only_fields['useAmpClientId'],
+    'user_id' => $create_only_fields['userId'],
+  ];
+  $parameters = array_filter($parameters);
+
+  $config
+    ->set('codesnippet.create', $parameters)
+    ->save();
+
+  return t('Migrated create only fields to gtag.js parameters.');
+}
+
+/**
+ * Set default config for tel: link tracking.
+ */
+function google_analytics_update_8301() {
+  \Drupal::configFactory()
+    ->getEditable('google_analytics.settings')
+    ->set('track.tel', TRUE)
+    ->save();
+}
+
+/**
+ * Update existing custom dimensions and metrics to user parameters.
+ */
+function google_analytics_update_8400() {
+  $config = \Drupal::configFactory()->getEditable('google_analytics.settings');
+  $custom_parameters = [];
+  $custom_dimensions = $config->getOriginal('custom.dimension');
+  $custom_metrics = $config->getOriginal('custom.metric');
+
+  // Merge Dimensions
+  if (!empty($custom_dimensions)) {
+    foreach ($custom_dimensions as $key => $dimension) {
+      $custom_parameters['dimension' . $key]['type'] = 'dimension';
+      $custom_parameters['dimension' . $key]['name'] = $dimension['name'];
+      $custom_parameters['dimension' . $key]['value'] = $dimension['value'];
+    }
+  }
+
+  // Merge Metrics
+  if (!empty($custom_metrics)) {
+    foreach ($custom_metrics as $key => $metric) {
+      $custom_parameters['metric' . $key]['type'] = 'metric';
+      $custom_parameters['metric' . $key]['name'] = $metric['name'];
+      $custom_parameters['metric' . $key]['value'] = $metric['value'];
+    }
+  }
+
+  if (!empty($custom_parameters)) {
+    $config->set('custom.parameters', $custom_parameters);
+  }
+  // Remove the legacy settings.
+  $config->clear('custom.metric');
+  $config->clear('custom.dimension');
+
+  // Save the settings
+  $config->save();
 }

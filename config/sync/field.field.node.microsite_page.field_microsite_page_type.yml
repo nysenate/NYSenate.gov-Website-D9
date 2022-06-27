@@ -1,0 +1,29 @@
+uuid: 5425e3e6-529f-4ef0-99d9-b2d5b83c1c5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_microsite_page_type
+    - node.type.microsite_page
+    - taxonomy.vocabulary.microsite_page_type
+id: node.microsite_page.field_microsite_page_type
+field_name: field_microsite_page_type
+entity_type: node
+bundle: microsite_page
+label: 'Microsite Page Type'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      microsite_page_type: microsite_page_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

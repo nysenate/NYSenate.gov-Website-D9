@@ -101,10 +101,6 @@ class CsvEncoder implements EncoderInterface, DecoderInterface {
     $this->escapeChar = $escape_char;
     $this->stripTags = $strip_tags;
     $this->trimValues = $trim_values;
-
-    if (!ini_get("auto_detect_line_endings")) {
-      ini_set("auto_detect_line_endings", '1');
-    }
   }
 
   /**
@@ -166,8 +162,8 @@ class CsvEncoder implements EncoderInterface, DecoderInterface {
         $csv->insertOne($headers);
       }
       $csv->addFormatter([$this, 'formatRow']);
-      if (isset($data[0])) {
-        foreach ($data as $row) {
+      foreach ($data as $row) {
+        if (is_array($row)) {
           $csv->insertOne($row);
         }
       }
@@ -202,14 +198,11 @@ class CsvEncoder implements EncoderInterface, DecoderInterface {
       $allowed_headers = array_keys($first_row);
 
       if (!empty($context['views_style_plugin'])) {
-        $fields = $context['views_style_plugin']
-          ->view
-          ->getDisplay('rest_export_attachment_1')
-          ->getOption('fields');
+        $fields = $context['views_style_plugin']->view->field;
       }
 
       foreach ($allowed_headers as $allowed_header) {
-        $headers[] = !empty($fields[$allowed_header]['label']) ? $fields[$allowed_header]['label'] : $allowed_header;
+        $headers[] = !empty($fields[$allowed_header]->options['label']) ? $fields[$allowed_header]->options['label'] : $allowed_header;
       }
     }
 
@@ -236,7 +229,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface {
         $cell_value = $this->flattenCell($cell_data);
       }
       else {
-        $cell_value = $cell_data;
+        $cell_value = (string) $cell_data;
       }
 
       $formatted_row[] = $this->formatValue($cell_value);
@@ -255,16 +248,16 @@ class CsvEncoder implements EncoderInterface, DecoderInterface {
    *   The string value of the CSV cell, un-sanitized.
    */
   protected function flattenCell(array $data) {
-    $depth = $this->arrayDepth($data);
+    $depth = (int) $this->arrayDepth($data);
 
-    if ($depth == 1) {
+    if ($depth === 1) {
       // @todo Allow customization of this in-cell separator.
       return implode('|', $data);
     }
 
       $cell_value = "";
       foreach ($data as $item) {
-        $cell_value .= '|' . $this->flattenCell($item);
+        $cell_value .= '|' . (is_array($item) ? $this->flattenCell($item) : $item);
       }
 
       return trim($cell_value, '|');

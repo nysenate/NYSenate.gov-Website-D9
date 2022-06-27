@@ -48,6 +48,9 @@ google_analytics.settings:
         mailto:
           type: boolean
           label: 'Track clicks on mailto links'
+        tel:
+          type: boolean
+          label: 'Track clicks on tel links'
         files:
           type: boolean
           label: 'Track downloads'
@@ -92,29 +95,19 @@ google_analytics.settings:
       type: mapping
       label: 'Custom variables'
       mapping:
-        dimension:
+        parameters:
           type: sequence
-          label: 'Custom dimensions'
+          label: 'Custom Parameters'
           sequence:
             type: mapping
-            label: 'Dimension'
+            label: 'Parameter'
             mapping:
-              index:
-                type: integer
-                label: Index
-              value:
+              type:
                 type: string
-                label: Value
-        metric:
-          type: sequence
-          label: 'Custom metrics'
-          sequence:
-            type: mapping
-            label: 'Metric'
-            mapping:
-              index:
-                type: integer
-                label: Index
+                label: type
+              name:
+                type: string
+                label: Name
               value:
                 type: string
                 label: Value
@@ -124,10 +117,10 @@ google_analytics.settings:
       mapping:
         create:
           type: sequence
-          label: 'Create only fields'
+          label: 'Parameters'
           sequence:
             type: ignore
-            label: 'Create field'
+            label: 'Parameter'
         before:
           type: string
           label: 'Code snippet (before)'

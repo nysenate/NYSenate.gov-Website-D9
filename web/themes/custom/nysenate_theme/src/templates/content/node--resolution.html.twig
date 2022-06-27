@@ -1,16 +1,28 @@
 {{ attach_library('nysenate_theme/resolution-page') }}
 
+{%
+  set classes = [
+    'node',
+    'node-resolution',
+    'node-promoted',
+    'view-mode-full',
+    'clearfix',
+  ]
+%}
+
 <!-- RESOLUTION TEMPLATE -->
-  <div class="{{ classes }} clearfix" {{ attributes }}> <div class="c-block c-detail--header c-detail--header__bill">
-    <h2 class="nys-title">{{ title }}</h2>
+  <div {{ attributes.addClass(classes) }}> <div class="c-block c-detail--header c-detail--header__bill">
+    <h2 class="nys-title">{{ label }}</h2>
     <div class="c-bill--flags">
-      <span class="c-bill--flag">{{ last_status }}</span>
+      {% if last_status %}
+        <span class="c-bill--flag">{{ last_status }}</span>
+      {% endif %}
     </div>
   </div>
 
   <div class="c-detail--header-meta">
     <p class="c-detail--descript">
-      {{ field_ol_name }}
+      {{ ol_name }}
     </p>
     <div class="c-detail--related">
       {{ content.field_issues }}
@@ -38,39 +50,41 @@
   <div class="c-block c-detail--sponsors">
     {% if sponsored_by %}
       {{ sponsored_by }}
-    {% elseif sponsor_block %}
+    {% endif %}
+    {% if sponsor_block %}
       {{ sponsor_block }}
     {% endif %}
   </div>
   <!-- .c-block -->
 
-  <div class="c-block c-sponsor-quote">
-    <h3 class="c-sponsor-quote--title">sponsor's position</h3>
-    <p class="c-sponsor-quote--text">{{ content.field_featured_quote }}</p>
-
-    <div class="c-sponsor">
-      {{ content.field_ol_sponsor['#children'] }}
+  {% if content.field_featured_quote and content.field_ol_sponsor  %}
+    <div class="c-block c-sponsor-quote">
+      <h3 class="c-sponsor-quote--title">sponsor's position</h3>
+      <p class="c-sponsor-quote--text">{{ featured_quote }}</p>
+      <div class="c-sponsor">
+        {{ content.field_ol_sponsor }}
+      </div>
+      <button class="js-quote-toggle c-block--btn c-block--btn-toggle">close</button>
+      <div class="c-social">
+        <ul class="c-social--list">
+          <li>
+            <a target="_blank" href="https://www.facebook.com/" class="icon-replace__facebook">facebook</a>
+          </li>
+          <li>
+            <a target="_blank" href="http://twitter.com/" class="icon-replace__twitter">twitter</a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <button class="js-quote-toggle c-block--btn c-block--btn-toggle">close</button>
-    <div class="c-social">
-      <ul class="c-social--list">
-        <li>
-          <a target="_blank" href="https://www.facebook.com/" class="icon-replace__facebook">facebook</a>
-        </li>
-        <li>
-          <a target="_blank" href="http://twitter.com/" class="icon-replace__twitter">twitter</a>
-        </li>
-      </ul>
-    </div>
-  </div>
   <!-- sponsor quote -->
+  {% endif %}
 
   <!-- resolution details -->
   <div class="c-block c-detail--writeup-wrapper">
     <h3 class="c-detail--subhead">text</h3>
     <div class="c-detail--writeup">
-      <h3 class="">{{ title }}</h3>
-      {{ field_ol_full_text }}
+      <h3 class="">{{ label }}</h3>
+      {{ content.field_ol_full_text }}
     </div>
   </div>
 
@@ -111,29 +125,13 @@
         <dt>Versions:</dt>
         {{ amended_versions}}
       {% endif %}
-
-      {% if field_ol_latest_status_committee %}
-        <dt>Committee:</dt>
-        <dd>
-          <a href="#">
-            {{ field_ol_latest_status_committee[0]['value'] }}
-          </a>
-        </dd>
-      {% endif %}
-
-      {% if field_ol_law_section %}
+      {% if ol_law_section %}
         <dt>Law Section:</dt>
         <dd>
-          {{ field_ol_law_section[0]['value'] }}
+          {{ ol_law_section }}
         </dd>
       {% endif %}
-
-      {% if field_ol_law_code %}
-        <dt>Laws Affected:</dt>
-        <dd>{{ field_ol_law_code[0]['value']}}</dd>
-      {% endif %}
     </dl>
-
   </div>
 
   {% if result %}

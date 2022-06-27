@@ -77,7 +77,7 @@ One example for custom dimensions tracking is the "User roles" tracking.
        e.g. "User roles". This step is required. Do not miss it, please.
 
     2. Enter the below configuration data into the Drupal custom dimensions
-       settings form under admin/config/system/googleanalytics. You can also
+       settings form under admin/config/services/googleanalytics. You can also
        choose another index, but keep it always in sync with the index used in
        step #1.
 
@@ -111,6 +111,7 @@ Body:
 ```
 <ul>
   <li><a href="mailto:foo@example.com">Mailto</a></li>
+  <li><a href="tel:+1-303-499-7111">Tel</a></li>
   <li><a href="/files/test.txt">Download file</a></li>
   <li><a class="colorbox" href="#">Open colorbox</a></li>
   <li><a href="https://example.com/">External link</a></li>

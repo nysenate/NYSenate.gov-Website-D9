@@ -2,115 +2,130 @@
 
 namespace Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator;
 
-use Drupal\simple_sitemap\Plugin\simple_sitemap\SimplesitemapPluginBase;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Url;
+use Drupal\simple_sitemap\Exception\SkipElementException;
+use Drupal\simple_sitemap\Plugin\simple_sitemap\SimpleSitemapPluginBase;
+use Drupal\simple_sitemap\Entity\SimpleSitemapInterface;
+use Drupal\simple_sitemap\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\simple_sitemap\Logger;
-use Drupal\simple_sitemap\Simplesitemap;
 
 /**
- * Class UrlGeneratorBase
- * @package Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator
+ * Provides a base class for UrlGenerator plugins.
  */
-abstract class UrlGeneratorBase extends SimplesitemapPluginBase implements UrlGeneratorInterface {
+abstract class UrlGeneratorBase extends SimpleSitemapPluginBase implements UrlGeneratorInterface {
 
   /**
-   * @var \Drupal\simple_sitemap\Simplesitemap
-   */
-  protected $generator;
-
-  /**
+   * Simple XML Sitemap logger.
+   *
    * @var \Drupal\simple_sitemap\Logger
    */
   protected $logger;
 
   /**
-   * @var array
+   * The simple_sitemap.settings service.
+   *
+   * @var \Drupal\simple_sitemap\Settings
    */
   protected $settings;
 
   /**
-   * @var string
+   * The sitemap entity.
+   *
+   * @var \Drupal\simple_sitemap\Entity\SimpleSitemapInterface
    */
-  protected $sitemapVariant;
+  protected $sitemap;
 
   /**
    * UrlGeneratorBase constructor.
+   *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
-   * @param \Drupal\simple_sitemap\Simplesitemap $generator
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\simple_sitemap\Logger $logger
+   *   Simple XML Sitemap logger.
+   * @param \Drupal\simple_sitemap\Settings $settings
+   *   The simple_sitemap.settings service.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    Simplesitemap $generator,
-    Logger $logger
+    Logger $logger,
+    Settings $settings
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->generator = $generator;
     $this->logger = $logger;
+    $this->settings = $settings;
   }
 
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): SimpleSitemapPluginBase {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('simple_sitemap.generator'),
-      $container->get('simple_sitemap.logger')
+      $container->get('simple_sitemap.logger'),
+      $container->get('simple_sitemap.settings')
     );
   }
 
   /**
-   * @param array $settings
-   * @return $this
+   * {@inheritdoc}
    */
-  public function setSettings(array $settings) {
-    $this->settings = $settings;
+  public function setSitemap(SimpleSitemapInterface $sitemap): UrlGeneratorInterface {
+    $this->sitemap = $sitemap;
 
     return $this;
   }
 
   /**
-   * @param string $sitemap_variant
-   * @return $this
-   */
-  public function setSitemapVariant($sitemap_variant) {
-    $this->sitemapVariant = $sitemap_variant;
-
-    return $this;
-  }
-
-  /**
+   * Replaces the base URL with custom URL from settings.
+   *
    * @param string $url
+   *   URL to process.
+   *
    * @return string
+   *   The processed URL.
    */
-  protected function replaceBaseUrlWithCustom($url) {
-    return !empty($this->settings['base_url'])
-      ? str_replace($GLOBALS['base_url'], $this->settings['base_url'], $url)
+  protected function replaceBaseUrlWithCustom(string $url): string {
+    return !empty($base_url = $this->settings->get('base_url'))
+      ? str_replace($GLOBALS['base_url'], $base_url, $url)
       : $url;
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  abstract public function getDataSets();
+  abstract public function getDataSets(): array;
 
   /**
-   * @param $data_set
-   * @return mixed
-   */
-  abstract protected function processDataSet($data_set);
-
-  /**
-   * @param $data_set
+   * Processes the specified dataset.
+   *
+   * @param mixed $data_set
+   *   Dataset to process.
+   *
    * @return array
+   *   Processing result.
    */
-  public function generate($data_set) {
-    $path_data = $this->processDataSet($data_set);
+  abstract protected function processDataSet($data_set): array;
 
-    return FALSE !== $path_data ? [$path_data] : [];
+  /**
+   * {@inheritdoc}
+   */
+  public function generate($data_set): array {
+    try {
+      return [$this->processDataSet($data_set)];
+    }
+    catch (SkipElementException $e) {
+      return [];
+    }
   }
+
 }

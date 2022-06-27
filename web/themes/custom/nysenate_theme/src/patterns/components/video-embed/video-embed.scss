@@ -1,0 +1,31 @@
+@import '../../global/utils/init';
+
+.video-embed {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 56.16%;
+
+  &__container,
+  .player,
+  iframe {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .field {
+
+    &__label {
+      display: none;
+    }
+
+    &__items .field-item {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

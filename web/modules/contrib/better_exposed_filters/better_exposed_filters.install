@@ -205,3 +205,32 @@ function better_exposed_filters_update_8002() {
     }
   }
 }
+
+/**
+ * Provide upgrade path from 8.x-4.x to 8.x-5.x.
+ */
+function better_exposed_filters_update_8003() {
+  $modules = [];
+  $moduleHandler = \Drupal::service('module_handler');
+  // Push jquery_ui module for installation if it isn't enabled already.
+  if (!($moduleHandler->moduleExists('jquery_ui'))) {
+    array_push($modules, 'jquery_ui');
+  }
+  // Push jquery_ui_slider module for installation if it isn't enabled already.
+  if (!($moduleHandler->moduleExists('jquery_ui_slider'))) {
+    array_push($modules, 'jquery_ui_slider');
+  }
+  // Push jquery_ui_touch_punch module for installation if it isn't enabled already.
+  if (!($moduleHandler->moduleExists('jquery_ui_touch_punch'))) {
+    array_push($modules, 'jquery_ui_touch_punch');
+  }
+  // Push jquery_ui_datepicker module for installation if it isn't enabled already.
+  if (!($moduleHandler->moduleExists('jquery_ui_datepicker'))) {
+    array_push($modules, 'jquery_ui_datepicker');
+  }
+
+  // Install the modules.
+  if (!empty($modules)) {
+    \Drupal::service('module_installer')->install($modules);
+  }
+}

@@ -4,7 +4,6 @@ namespace Drupal\Core\Config;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ProfileExtensionList;
 
 /**
  * Storage used by the Drupal installer.
@@ -49,13 +48,6 @@ class InstallStorage extends FileStorage {
   protected $directory;
 
   /**
-   * The profile list, used to find additional folders to scan for config.
-   *
-   * @var \Drupal\Core\Extension\ProfileExtensionList
-   */
-  protected $profileList;
-
-  /**
    * Constructs an InstallStorage object.
    *
    * @param string $directory
@@ -64,14 +56,9 @@ class InstallStorage extends FileStorage {
    * @param string $collection
    *   (optional) The collection to store configuration in. Defaults to the
    *   default collection.
-   * @param \Drupal\Core\Extension\ProfileExtensionList $profile_list
-   *   (optional) The profile list.
    */
-  public function __construct($directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION, ProfileExtensionList $profile_list = NULL) {
+  public function __construct($directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION) {
     parent::__construct($directory, $collection);
-    if (\Drupal::hasService('extension.list.profile')) {
-      $this->profileList = $profile_list ?: \Drupal::service('extension.list.profile');
-    }
   }
 
   /**
@@ -163,9 +150,7 @@ class InstallStorage extends FileStorage {
   protected function getAllFolders() {
     if (!isset($this->folders)) {
       $this->folders = [];
-      $this->folders = $this->getCoreNames() + $this->folders;
-      // Get dependent profiles and add the extension components.
-      $this->folders = $this->getComponentNames($this->profileList->getAncestors()) + $this->folders;
+      $this->folders += $this->getCoreNames();
       // Perform an ExtensionDiscovery scan as we cannot use
       // \Drupal\Core\Extension\ExtensionList::getPath() yet because the system
       // module may not yet be enabled during install.
@@ -182,12 +167,12 @@ class InstallStorage extends FileStorage {
           /** @var \Drupal\Core\Extension\ProfileExtensionList $profile_extension_list */
           $profile_extension_list = \Drupal::service('extension.list.profile');
           $profile_extension_list->setPathname($profile, $profile_list[$profile]->getPathname());
-          $this->folders = $this->getComponentNames([$profile_list[$profile]]) + $this->folders;
+          $this->folders += $this->getComponentNames([$profile_list[$profile]]);
         }
       }
       // @todo Remove as part of https://www.drupal.org/node/2186491
-      $this->folders = $this->getComponentNames($listing->scan('module')) + $this->folders;
-      $this->folders = $this->getComponentNames($listing->scan('theme')) + $this->folders;
+      $this->folders += $this->getComponentNames($listing->scan('module'));
+      $this->folders += $this->getComponentNames($listing->scan('theme'));
     }
     return $this->folders;
   }

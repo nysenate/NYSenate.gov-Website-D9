@@ -61,7 +61,7 @@ class GoogleAnalyticsVisibilityRoles extends ProcessPluginBase implements Contai
       $plugin_id,
       $plugin_definition,
       $container->get('module_handler'),
-      $container->get('plugin.manager.migrate.process')->createInstance('migration', $migration_configuration, $migration)
+      $container->get('plugin.manager.migrate.process')->createInstance('migration_lookup', $migration_configuration, $migration)
     );
   }
 

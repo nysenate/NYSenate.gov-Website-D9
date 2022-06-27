@@ -1,0 +1,62 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.video.field_caption
+    - field.field.media.video.field_copyright
+    - field.field.media.video.field_description
+    - field.field.media.video.field_media_video_embed_field
+    - field.field.media.video.field_source
+    - media.type.video
+  module:
+    - content_moderation
+    - path
+    - text
+    - video_embed_field
+id: media.video.default
+targetEntityType: media
+bundle: video
+mode: default
+content:
+  field_copyright:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_description:
+    type: text_textarea
+    weight: 4
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  field_media_video_embed_field:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: video_embed_field_textfield
+    region: content
+  name:
+    type: string_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_caption: true
+  field_source: true
+  langcode: true
+  uid: true

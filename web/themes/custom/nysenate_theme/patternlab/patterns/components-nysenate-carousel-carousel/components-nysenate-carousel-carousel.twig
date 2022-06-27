@@ -1,0 +1,16 @@
+{{ attach_library('nysenate_theme/carousel') }}
+
+<div class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}"
+  {{- attributes ? attributes|without(class) -}}>
+  <ul class="carousel__list carousel__slick">
+    {% block carousel_items %}
+      {% for i in list['#items'] %}
+        {%
+          include '@nysenate_theme/nysenate-carousel/_carousel-item.twig' with {
+            "item": list[loop.index0]
+          } only
+        %}
+      {% endfor %}
+    {% endblock %}
+  </ul>
+</div>

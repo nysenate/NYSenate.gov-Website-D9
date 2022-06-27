@@ -1,16 +1,19 @@
-uuid: eb5ec4ba-2833-4e0c-921a-870848e00c54
+uuid: 8dbd8b8e-8a69-4099-a24b-ac69afe4dcdc
 langcode: en
 status: true
 dependencies:
   module:
-    - node
+    - field_permissions
     - taxonomy
+third_party_settings:
+  field_permissions:
+    permission_type: public
 id: taxonomy_term.field_senator
 field_name: field_senator
 entity_type: taxonomy_term
 type: entity_reference
 settings:
-  target_type: node
+  target_type: taxonomy_term
 module: core
 locked: false
 cardinality: 1

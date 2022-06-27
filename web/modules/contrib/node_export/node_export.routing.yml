@@ -1,0 +1,63 @@
+node_export.export:
+  path: '/node/{node}/export'
+  defaults:
+    _form: '\Drupal\node_export\Form\NodeExportForm'
+    _title: 'Export Node'
+  requirements:
+    _permission: 'node_export.export_node'
+
+node_export.import:
+  path: 'admin/content/import'
+  defaults:
+    _form: '\Drupal\node_export\Form\NodeImportForm'
+    _title: 'Import Node'
+  requirements:
+    _permission: 'node_export.import_node'
+
+node_export.import_file:
+  path: 'admin/content/import/file'
+  defaults:
+    _form: '\Drupal\node_export\Form\NodeImportFile'
+    _title: 'Import Nodes from File'
+  requirements:
+    _permission: 'node_export.import_node'
+
+node_export.export_content_type:
+  path: 'admin/content/export/contenttype'
+  defaults:
+    _form: '\Drupal\node_export\Form\MultipleNodeExportForm'
+    _title: 'Export Nodes using Content Type'
+  requirements:
+    _permission: 'node_export.export_node'
+
+node_export.export_multiple_submit:
+  path: 'admin/content/export/{content_type}'
+  defaults:
+    _title: 'Export Nodes using Content Type'
+    _form: '\Drupal\node_export\Form\MultipleNodeExportConfirm'
+  requirements:
+    _permission: 'node_export.export_node'
+
+node_export.export_nids:
+  path: 'admin/content/export/nids'
+  defaults:
+    _title: 'Export Nodes using Node IDs'
+    _form: '\Drupal\node_export\Form\MultipleNidsExportForm'
+  requirements:
+    _permission: 'node_export.export_node'
+
+node_export.bulk_export_form:
+  path: '/admin/bulk-export'
+  defaults:
+    _title: 'Bulk Node Export'
+    _form: '\Drupal\node_export\Form\BulkNodeExport'
+  requirements:
+    _permission: 'node_export.export_node'
+
+node_export.config:
+  path: '/admin/config/content/node_export'
+  defaults:
+    _title: 'Node Export Settings'
+    _form: '\Drupal\node_export\Form\NodeExportConfigForm'
+  requirements:
+    _permission: 'node_export.administer'

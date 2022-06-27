@@ -157,7 +157,18 @@ geocoder_provider.configuration.mapbox:
       description: '<a href="https://www.mapbox.com/signup/" target="blank">Get your free API key</a>'
     country:
       type: string
-      label: 'Limit results to one or more countries. Permitted values are <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="blank">ISO 3166 alpha 2</a> country codes separated by commas.'
+      label: 'Countries'
+      description: 'Limit results to one or more countries. Permitted values are <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="blank">ISO 3166 alpha 2</a> country codes separated by commas.'
+      nullable: true
+    location_type:
+      type: string
+      label: 'Location type'
+      description: 'The location type. Check <a href="https://docs.mapbox.com/api/search/geocoding/#data-types" target="_blank">https://docs.mapbox.com/api/search/geocoding/#data-types</a> for all possible location types. Multiple location types can be separated by a comma.'
+      nullable: true
+    fuzzy_match:
+      type: boolean
+      label: 'Fuzzy match'
+      description: 'Specify whether the Geocoding API should attempt approximate, as well as exact, matching when performing searches (true, default), or whether it should opt out of this behavior and only attempt exact matching (false). For example, the default setting might return Washington, DC for a query of Washington, even though the query was misspelled.'
       nullable: true
 
 geocoder_provider.configuration.mapquest:
@@ -173,6 +184,19 @@ geocoder_provider.configuration.mapquest:
       nullable: true
       label: 'Licensed'
       description: 'Whether to use MapQuest''s licensed endpoints. Uncheck to use the open endpoints.'
+
+geocoder_provider.configuration.maptiler:
+  type: geocoder_provider_configuration
+  label: 'MapTiler arguments'
+  mapping:
+    key:
+      type: string
+      label: 'API Key'
+      description: 'Access key from <a href="https://cloud.maptiler.com/">https://cloud.maptiler.com/</a>.'
+    bounds:
+      type: string
+      label: 'Bounds'
+      description: 'Access key from <a href="https://cloud.maptiler.com/">https://cloud.maptiler.com/</a>.'
 
 geocoder_provider.configuration.maxmind:
   type: geocoder_provider_configuration

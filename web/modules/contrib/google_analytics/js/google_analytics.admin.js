@@ -69,6 +69,9 @@
         if ($('input#edit-google-analytics-trackmailto', context).is(':checked')) {
           vals.push(Drupal.t('Mailto links'));
         }
+        if ($('input#edit-google-analytics-tracktel', context).is(':checked')) {
+          vals.push(Drupal.t('Tel links'));
+        }
         if ($('input#edit-google-analytics-trackfiles', context).is(':checked')) {
           vals.push(Drupal.t('Downloads'));
         }

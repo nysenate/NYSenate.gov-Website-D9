@@ -3,6 +3,7 @@
 namespace Drupal\Tests\google_analytics\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Test user fields functionality of Google Analytics module.
@@ -10,6 +11,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group Google Analytics
  */
 class GoogleAnalyticsUserFieldsTest extends BrowserTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * Modules to enable.
@@ -19,9 +22,18 @@ class GoogleAnalyticsUserFieldsTest extends BrowserTestBase {
   public static $modules = ['google_analytics', 'field_ui'];
 
   /**
-   * {@inheritdoc}
+   * Default theme.
+   *
+   * @var string
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Admin user.
+   *
+   * @var \Drupal\user\Entity\User|bool
+   */
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
@@ -36,8 +48,8 @@ class GoogleAnalyticsUserFieldsTest extends BrowserTestBase {
     ];
 
     // User to set up google_analytics.
-    $this->admin_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
@@ -50,27 +62,27 @@ class GoogleAnalyticsUserFieldsTest extends BrowserTestBase {
     // Check if the pseudo field is shown on account forms.
     $this->drupalGet('admin/config/people/accounts/form-display');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseContains(t('Google Analytics settings'));
+    $this->assertSession()->responseContains($this->t('Google Analytics settings'));
 
     // No customization allowed.
     $this->config('google_analytics.settings')->set('visibility.user_account_mode', 0)->save();
-    $this->drupalGet('user/' . $this->admin_user->id() . '/edit');
+    $this->drupalGet('user/' . $this->adminUser->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseNotContains(t('Google Analytics settings'));
+    $this->assertSession()->responseNotContains($this->t('Google Analytics settings'));
 
     // Tracking on by default, users with opt-in or out of tracking permission
     // can opt out.
     $this->config('google_analytics.settings')->set('visibility.user_account_mode', 1)->save();
-    $this->drupalGet('user/' . $this->admin_user->id() . '/edit');
+    $this->drupalGet('user/' . $this->adminUser->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseContains(t('Users are tracked by default, but you are able to opt out.'));
+    $this->assertSession()->responseContains($this->t('Users are tracked by default, but you are able to opt out.'));
 
     // Tracking off by default, users with opt-in or out of tracking permission
     // can opt in.
     $this->config('google_analytics.settings')->set('visibility.user_account_mode', 2)->save();
-    $this->drupalGet('user/' . $this->admin_user->id() . '/edit');
+    $this->drupalGet('user/' . $this->adminUser->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseContains(t('Users are <em>not</em> tracked by default, but you are able to opt in.'));
+    $this->assertSession()->responseContains($this->t('Users are <em>not</em> tracked by default, but you are able to opt in.'));
   }
 
 }

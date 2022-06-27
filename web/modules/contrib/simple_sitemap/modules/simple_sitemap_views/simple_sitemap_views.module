@@ -10,15 +10,7 @@
  */
 function simple_sitemap_views_cron() {
   // Create tasks in the garbage collection queue.
-  \Drupal::service('simple_sitemap.views')->executeGarbageCollection();
-}
-
-/**
- * Implements hook_simple_sitemap_sitemap_types_alter().
- */
-function simple_sitemap_views_simple_sitemap_sitemap_types_alter(array &$sitemap_types) {
-  // Add a 'views' UrlGenerator plugin to the default hreflang sitemap type.
-  if (isset($sitemap_types['default_hreflang'])) {
-    $sitemap_types['default_hreflang']['urlGenerators'][] = 'views';
-  }
+  /** @var \Drupal\simple_sitemap_views\SimpleSitemapViews $simple_sitemap_views */
+  $simple_sitemap_views = \Drupal::service('simple_sitemap.views');
+  $simple_sitemap_views->executeGarbageCollection();
 }

@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * The Node export module.
+ *
+ * Allows users to export nodes and then import them into another Drupal installation.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function node_export_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.node_export':
+      $output .= '<p>' . t("This module allows users to export nodes and then import it into another Drupal installation, or on the same site.</p><p>Using this module you can save yourself a lot of time setting up new websites that have similar nodes to websites you've already made, migrating nodes to new Drupal versions, or between development/staging/production sites.</p><p>You will need the same content types for the imports to work (unless using Feeds to import), and ideally relevant compatibility with fields, and modules.") . '</p>';
+      return $output;
+
+    default:
+  }
+}

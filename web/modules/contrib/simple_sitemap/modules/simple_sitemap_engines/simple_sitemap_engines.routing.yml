@@ -13,3 +13,11 @@ simple_sitemap.engines.settings:
     _title: 'Simple XML Sitemap'
   requirements:
     _permission: 'administer sitemap settings'
+
+simple_sitemap.engines.index_now.key:
+  path: '/simple_sitemap_engines/index_now_key/{key}'
+  defaults:
+    _controller: '\Drupal\simple_sitemap_engines\Controller\IndexNowController::getKeyFile'
+    _disable_route_normalizer: 'TRUE'
+  requirements:
+    _access: 'TRUE'

@@ -1,0 +1,26 @@
+{{ attach_library('nysenate_theme/quick-facts') }}
+
+<div class="c-block c-stats--container c-senate-quick-facts--container {{ classes }}">
+  {{ title_prefix }}
+  {{ title_suffix }}
+    <div class="c-container--header">
+		<h3 class="c-container--title">{{ title }}</h3>
+	</div>
+	<span class="c-stats--highlight u-mobile-only"></span>
+
+  <div class="c-carousel--nav u-mobile-only">
+		<button class="c-carousel--btn prev hidden">prev</button>
+		<button class="c-carousel--btn next">next</button>
+	</div>
+  <ul id="js-carousel-about-stats" class="js-carousel c-carousel">
+    {% for fact in facts %}
+      <li class="c-carousel--item c-stats--item">
+        <a href="{{ fact.link }}">
+          <h4 class="c-stat">{{ fact.statistic }}</h4>
+          <p class="c-stat--descript">{{ fact.description }}</p>
+        </a>
+        <span class="c-stat--illus c-illus__{{ fact.status }}"></span>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

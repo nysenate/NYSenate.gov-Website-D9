@@ -37,7 +37,14 @@
     "conflict": {
         "drupal/commerce": "<2.12"
     },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\email_registration\\Component\\": "lib"
+        }
+    },
     "require-dev": {
-        "drupal/commerce": "^2.0"
+        "drupal/commerce": "^2.0",
+        "drupal/drupal-extension": "^4.0",
+        "friends-of-behat/service-container-extension": "^1.0"
     }
 }

@@ -20,9 +20,18 @@ class GoogleAnalyticsRolesTest extends BrowserTestBase {
   public static $modules = ['google_analytics'];
 
   /**
-   * {@inheritdoc}
+   * Default theme.
+   *
+   * @var string
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Admin user.
+   *
+   * @var \Drupal\user\Entity\User|bool
+   */
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
@@ -36,7 +45,7 @@ class GoogleAnalyticsRolesTest extends BrowserTestBase {
     ];
 
     // User to set up google_analytics.
-    $this->admin_user = $this->drupalCreateUser($permissions);
+    $this->adminUser = $this->drupalCreateUser($permissions);
   }
 
   /**
@@ -59,7 +68,7 @@ class GoogleAnalyticsRolesTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->assertSession()->responseContains('/403.html');
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('');
     $this->assertSession()->responseContains($ua_code);
@@ -89,7 +98,7 @@ class GoogleAnalyticsRolesTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->assertSession()->responseContains('/403.html');
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('');
     $this->assertSession()->responseContains($ua_code);

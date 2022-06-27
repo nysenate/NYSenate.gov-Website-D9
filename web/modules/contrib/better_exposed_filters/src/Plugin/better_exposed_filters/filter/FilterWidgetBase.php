@@ -273,7 +273,7 @@ abstract class FilterWidgetBase extends BetterExposedFiltersWidgetBase implement
 
     // Ensure "- Any -" value does not get sorted.
     $any_option = FALSE;
-    if (empty($element['#required'])) {
+    if (empty($element['#required']) && $element['#required'] !== FALSE) {
       // We use array_slice to preserve they keys needed to determine the value
       // when using a filter (e.g. taxonomy terms).
       $any_option = array_slice($options, 0, 1, TRUE);

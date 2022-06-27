@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Provides automated subqueues for each entity of a given entity type.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\entityqueue\Entity\EntityQueue;
+use Drupal\entityqueue\Entity\EntitySubqueue;
+
+/**
+ * Implements hook_help().
+ */
+function entityqueue_smartqueue_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the entityqueue_smartqueue module.
+    case 'help.page.entityqueue_smartqueue':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Entityqueue Smartqueue - Automated queues for each entity of a given entity type.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_field_storage_info().
+ */
+function entityqueue_smartqueue_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'entity_subqueue') {
+    $field_storage_definitions['attached_entity'] = BaseFieldDefinition::create('entity_reference')
+      ->setName('attached_entity')
+      ->setTargetEntityTypeId('entity_subqueue')
+      ->setTargetBundle(NULL)
+      ->setLabel(t('Attached entity'))
+      // This setting is overridden per bundle (queue) in
+      // entityqueue_smartqueue_entity_bundle_field_info(), but we need to
+      // default to a target entity type that uses strings IDs, in order to
+      // allow both integers and strings to be stored by the default entity
+      // reference field storage.
+      ->setSetting('target_type', 'entity_subqueue');
+
+    return $field_storage_definitions;
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function entityqueue_smartqueue_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  /** @var \Drupal\entityqueue\EntityQueueInterface $queue */
+  if ($entity_type->id() === 'entity_subqueue' && ($queue = EntityQueue::load($bundle)) && $queue->getHandler() === 'smartqueue') {
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getActiveFieldStorageDefinitions('entity_subqueue');
+
+    $field_definitions['attached_entity'] = FieldDefinition::createFromFieldStorageDefinition($field_storage_definitions['attached_entity']);
+    $field_definitions['attached_entity']->setTargetBundle($bundle);
+    $field_definitions['attached_entity']->setSetting('target_type', $queue->getHandlerConfiguration()['entity_type']);
+
+    return $field_definitions;
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function entityqueue_smartqueue_entity_insert(EntityInterface $entity) {
+  $queues = _entityqueue_smartqueue_get_queues($entity->getEntityTypeId());
+  foreach ($queues as $queue) {
+    // Check if the entity that got inserted is of the relevant bundle.
+    if (!in_array($entity->bundle(), $queue->getHandlerConfiguration()['bundles'], TRUE)) {
+      continue;
+    }
+
+    $subqueue = EntitySubqueue::create([
+      'queue' => $queue->id(),
+      'name' => $queue->id() . '__' . $entity->id(),
+      'title' => $entity->label(),
+      'langcode' => $queue->language()->getId(),
+      'attached_entity' => $entity,
+    ]);
+    $subqueue->save();
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function entityqueue_smartqueue_entity_update(EntityInterface $entity) {
+  $queues = _entityqueue_smartqueue_get_queues($entity->getEntityTypeId());
+  foreach ($queues as $queue) {
+    // Check if the entity that got updated is of the relevant bundle.
+    if (!in_array($entity->bundle(), $queue->getHandlerConfiguration()['bundles'], TRUE)) {
+      continue;
+    }
+
+    if ($subqueue = EntitySubqueue::load($queue->id() . '__' . $entity->id())) {
+      $subqueue->set('title', $entity->label());
+      $subqueue->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function entityqueue_smartqueue_entity_delete(EntityInterface $entity) {
+  $queues = _entityqueue_smartqueue_get_queues($entity->getEntityTypeId());
+  foreach ($queues as $queue) {
+    // Check if the entity that got deleted is of the relevant bundle.
+    if (!in_array($entity->bundle(), $queue->getHandlerConfiguration()['bundles'], TRUE)) {
+      continue;
+    }
+
+    if ($subqueue = EntitySubqueue::load($queue->id() . '__' . $entity->id())) {
+      $subqueue->delete();
+    }
+  }
+}
+
+/**
+ * Gets the smartqueues that are configured for an entity type.
+ *
+ * @param string $entity_type_id
+ *   The ID of the target entity type to check for.
+ *
+ * @return \Drupal\entityqueue\EntityQueueInterface[]
+ *   An array of queue entities that are using the 'smartqueue' handler.
+ */
+function _entityqueue_smartqueue_get_queues($entity_type_id) {
+  /** @var \Drupal\entityqueue\EntityQueueInterface[] $queues */
+  $queues = \Drupal::entityTypeManager()->getStorage('entity_queue')
+    ->loadByProperties([
+      'handler' => 'smartqueue',
+      'handler_configuration.entity_type' => $entity_type_id,
+    ]);
+
+  return $queues;
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function entityqueue_smartqueue_views_data_alter(&$data) {
+  $data['entity_subqueue']['name']['argument']['title'] = t('Entityqueue smartqueue name');
+  $data['entity_subqueue']['name']['argument']['id'] = 'entityqueue_smartqueue_name';
+}

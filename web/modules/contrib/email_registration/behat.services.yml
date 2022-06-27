@@ -1,0 +1,9 @@
+services:
+  drupal.authentication_manager:
+    class: Drupal\email_registration\Component\DrupalExtension\EmailRegistrationAuthenticationManager
+    arguments:
+      - "@mink"
+      - "@drupal.user_manager"
+      - "@drupal.drupal"
+      - "%mink.parameters%"
+      - "%drupal.parameters%"

@@ -1,0 +1,37 @@
+node_export.config:
+  title: 'Node Export Settings'
+  parent: system.admin_config_content
+  description: 'Configuration for the node export module'
+  route_name: node_export.config
+node_export.export:
+  title: 'Export nodes'
+  parent: system.admin_content
+  description: 'Export nodes in bulk using content types or node IDs'
+  route_name: node_export.export_content_type
+  weight: 100
+node_export.export_content_type:
+  title: 'Using content type'
+  parent: node_export.export
+  description: 'Export nodes of a content type'
+  route_name: node_export.export_content_type
+node_export.export_nids:
+  title: 'Using node IDs'
+  parent: node_export.export
+  description: 'Export nodes of given node IDs'
+  route_name: node_export.export_nids
+node_export.import:
+  title: 'Import nodes'
+  parent: system.admin_content
+  description: 'Import nodes from a file or using exported code'
+  route_name: node_export.import
+  weight: 100
+node_export.import_file:
+  title: 'Using file'
+  parent: node_export.import
+  description: 'Import nodes from a file'
+  route_name: node_export.import_file
+node_export.import_text:
+  title: 'Using exported code'
+  parent: node_export.import
+  description: 'Import nodes using exported code'
+  route_name: node_export.import

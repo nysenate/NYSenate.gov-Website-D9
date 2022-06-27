@@ -6,6 +6,9 @@
  */
 
 use Drupal\Core\Url;
+use Drupal\Core\Link;
+use Drupal\media\MediaInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocesS_menu_ID().
@@ -61,4 +64,509 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
   $variables['content']['profile_image'] = [
     '#markup' => strtr('<img src="https://unavatar.io/twitter/@username" width="100" height"100" />', $args),
   ];
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__article(&$variables) {
+  $variables['title'] = $variables['label'][0]['#context']['value'];
+  $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+
+  if (isset($variables['content']['field_issues'])) {
+    $issues = [];
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
+    }
+    $variables['issues'] = $issues;
+  }
+
+  if (isset($variables['content']['field_majority_issue_tag'])) {
+    foreach ($variables['content']['field_majority_issue_tag'] as $key => $field_majority_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $variables['majority_issue'] = Link::fromTextAndUrl($field_majority_issues['#title'], $field_majority_issues['#url']);
+    }
+  }
+
+}
+
+/**
+ * Implements hook_preproces_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__honoree_profile_block(&$variables) {
+  $variables['title'] = $variables['elements']['#block_content']->label();
+  if (!empty($variables['content']['field_link'][0])) {
+    $variables['cta'] = [
+      'text' => $variables['content']['field_link'][0]['#title'],
+      'url' => $variables['content']['field_link'][0]['#url']->toString(),
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__quick_facts(&$variables) {
+  $facts = [];
+  $current_year = date('Y');
+  if ($current_year % 2 == 0) {
+    $session_year = $current_year - 1;
+    $first_year   = $session_year;
+    $second_year  = substr($current_year, -2);
+  }
+  else {
+    $session_year = $current_year;
+    $first_year   = $current_year;
+    $second_year  = substr($current_year + 1, -2);
+  }
+
+  foreach ($variables['content']['field_quick_facts'] as $key => $items) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $description = '';
+    $statistic = '';
+
+    if ($items['#paragraph']->field_pg_quick_facts_label->getValue()) {
+      $description = $items['#paragraph']->field_pg_quick_facts_label->getValue();
+      $description = reset($description)['value'];
+    }
+
+    if ($items['#paragraph']->field_pg_quick_facts_no->getValue()) {
+      $statistic = $items['#paragraph']->field_pg_quick_facts_no->getValue();
+      $statistic = reset($statistic)['value'];
+    }
+
+    $facts[] = [
+      'description' => $description,
+      'statistic' => $statistic,
+    ];
+  }
+
+  // Set static status for the facts.
+  $facts[0]['status'] = 'signed';
+  $facts[1]['status'] = 'waiting';
+  $facts[2]['status'] = 'vetoed';
+
+  $bill_status = '';
+  foreach ($facts as $key => $fact) {
+    switch ($fact['status']) {
+      case 'signed':
+        $bill_status = 'SIGNED_BY_GOV';
+        break;
+
+      case 'waiting':
+        $bill_status = 'DELIVERED_TO_GOV';
+        break;
+
+      case 'vetoed':
+        $bill_status = 'VETOED';
+        break;
+
+      default:
+        break;
+    }
+
+    // Arrange array for url params.
+    $params = [
+      'searched' => 'true',
+      'type' => 'f_bill',
+      'bill_session_year' => $session_year,
+      'bill_status' => $bill_status,
+      'page' => 1,
+    ];
+    $link = Url::fromUserInput('/search/legislation', ['query' => $params])->toString();
+    $facts[$key]['link'] = $link;
+  }
+
+  $variables['facts'] = $facts;
+
+  $year = $first_year . '-' . $second_year;
+  $title = $year . ', ' . $variables['elements']['#block_content']->info->getValue()[0]['value'];
+  $variables['title'] = $title;
+}
+
+/**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__featured_image(&$variables) {
+  $variables['title'] = $variables['elements']['#block_content']->info->value;
+  if (isset($variables['content']['field_pg_full_width_bleed'][0]) && !empty($variables['content']['field_pg_full_width_bleed'][0])) {
+    $variables['full_width_bleed'] = strtolower($variables['content']['field_pg_full_width_bleed'][0]['#markup']) == 'on' ? TRUE : FALSE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
+  if (isset($variables['content']['field_bills']) && !empty($variables['content']['field_bills'])) {
+    $bills = [];
+    foreach ($variables['content']['field_bills'] as $key => $bill) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+
+      // Set default values.
+      $comm_sen = FALSE;
+      $floor_sen = FALSE;
+      $passed_sen = FALSE;
+      $comm_assembly = FALSE;
+      $floor_assembly = FALSE;
+      $passed_assembly = FALSE;
+      $delivered_to_gov = FALSE;
+      $signed_by_gov = FALSE;
+
+      // Published date.
+      $date = \Drupal::service('date.formatter')->format(strtotime($bill['#node']->field_ol_publish_date->value), '', 'F d, Y');
+
+      // Last status.
+      $last_status_values = $bill['#node']->field_ol_last_status->getSetting('allowed_values');
+      $last_status = $last_status_values[$bill['#node']->field_ol_last_status->value];
+
+      // All status.
+      $all_statuses = $bill['#node']->field_ol_all_statuses->value;
+      $all_statuses = json_decode($all_statuses);
+      foreach ($all_statuses->items as $key => $value) {
+        switch ($value->statusType) {
+          case 'IN_SENATE_COMM':
+            $comm_sen = TRUE;
+            break;
+
+          case 'SENATE_FLOOR':
+            $floor_sen = TRUE;
+            break;
+
+          case 'PASSED_SENATE':
+            $passed_sen = TRUE;
+            break;
+
+          case 'IN_ASSEMBLY_COMM':
+            $comm_assembly = TRUE;
+            break;
+
+          case 'ASSEMBLY_FLOOR':
+            $floor_assembly = TRUE;
+            break;
+
+          case 'PASSED_ASSEMBLY':
+            $passed_assembly = TRUE;
+            break;
+
+          case 'DELIVERED_TO_GOV':
+            $delivered_to_gov = TRUE;
+            break;
+
+          case 'SIGNED_BY_GOV':
+            $signed_by_gov = TRUE;
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      // Arrange the positions value.
+      $positions = [
+        [
+          'text' => t('Introduced'),
+          'is_passed' => TRUE,
+        ],
+        [
+          'text' => t('In Committee'),
+          'is_passed' => ($comm_sen && $comm_assembly),
+        ],
+        [
+          'text' => t('On Floor Calendar'),
+          'is_passed' => ($floor_sen && $floor_assembly),
+        ],
+        [
+          'is_grouped' => TRUE,
+          'items' => [
+            [
+              'text' => t('Passed Senate'),
+              'is_passed' => $passed_sen,
+            ],
+            [
+              'text' => t('Passed Assembly'),
+              'is_passed' => $passed_assembly,
+            ],
+          ],
+        ],
+        [
+          'text' => t('Delivered to Governor'),
+          'is_passed' => $delivered_to_gov,
+        ],
+        [
+          'text' => t('Signed by Governor'),
+          'is_passed' => $signed_by_gov,
+        ],
+      ];
+
+      $sponsor = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->load($bill['#node']->field_ol_sponsor->target_id);
+
+      if (!empty($sponsor)) {
+        $given = $sponsor->field_senator_name->given ?? '';
+        $family = $sponsor->field_senator_name->family ?? '';
+        $sponsor_name = $given . ' ' . $family;
+      }
+
+      $bills[] = [
+        'number' => $bill['#node']->label(),
+        'description' => $bill['#node']->field_ol_name->value,
+        'date' => $date,
+        'update_location' => $last_status,
+        'sponsor' => $sponsor_name ?? '',
+        'positions' => $positions,
+      ];
+
+      $variables['bills'] = $bills;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_block_content__text(&$variables) {
+  $text = [];
+  foreach ($variables['content']['body'] as $key => $value) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $text[] = [
+      'text' => $value['#text'],
+    ];
+  }
+  $variables['text'] = $text;
+  $variables['is_two_column'] = count($text) == 2 ? TRUE : FALSE;
+  if (isset($variables['content']['field_is_full_bleed'][0])) {
+    $variables['is_full_bleed'] = strtolower($variables['content']['field_is_full_bleed'][0]['#markup']) == 'on' ? TRUE : FALSE;
+  }
+
+  if (isset($variables['content']['field_with_background'][0])) {
+    $variables['with_bg'] = strtolower($variables['content']['field_with_background'][0]['#markup']) == 'on' ? TRUE : FALSE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_block_ID().
+ */
+function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_hero(&$variables) {
+  $result = $variables["content"]["#view"]->result;
+  foreach ($result as $node) {
+    if ($node->_entity->bundle() == 'session' && $node->_entity instanceof NodeInterface) {
+      $date = new DateTime($node->_entity->field_date->value);
+
+      if (!$node->_entity->field_session_calendars->isEmpty() && $node->_entity->field_session_calendars->entity instanceof NodeInterface) {
+        $url_calendar = $node->_entity->field_session_calendars->entity->toUrl()->toString();
+      }
+
+      if (!$node->_entity->field_ustream_url->isEmpty() && $node->_entity->field_ustream_url->entity instanceof MediaInterface) {
+        $media = $node->_entity->field_ustream_url->entity->field_media_oembed_ustream ?? [];
+      }
+
+      $variables['homepage_hero'] = [
+        'date' => $date->format('F d, Y'),
+        'url_calendar' => $url_calendar ?? '#',
+        'media' => $media ?? [],
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
+  if ($variables['view']->current_display == 'senator_today_events') {
+    foreach ($variables['view']->result as $node) {
+      if ($node->_entity->bundle() === 'event') {
+        $date = new \Datetime($node->_entity->field_date_range->value);
+        $now = new \Datetime();
+        if ($date->format('d:M:Y') === $now->format('d:M:Y')) {
+          $variables['items_today'][] = [
+            'title' => $node->_entity->label(),
+            'url' => $node->_entity->toUrl()->toString(),
+            'location' => $node->_entity->field_location[0]->locality,
+            'street_1' => $node->_entity->field_location[0]->address_line1,
+            'street_2' => $node->_entity->field_location[0]->address_line2,
+            'time' => $date->format('h:i A'),
+          ];
+          $variables['now'] = $date->format('M jS');
+        }
+      }
+    }
+  }
+
+  if ($variables['view']->current_display == 'featured_event') {
+    foreach ($variables['view']->result as $node) {
+      if ($node->_entity->bundle() === 'event') {
+        $date = new \Datetime($node->_entity->field_date_range->value);
+        $date_end = new \Datetime($node->_entity->field_date_range->end_value);
+        $variables['item_featured'] = [
+          'title' => $node->_entity->label(),
+          'url' => $node->_entity->toUrl()->toString(),
+          'day' => $date->format('d'),
+          'month' => $date->format('M'),
+          'year' => $date->format('Y'),
+          'url_location' => 'http://maps.google.com/?q=' . $node->_entity->field_location[0]->address_line1 . '+'
+          . $node->_entity->field_location[0]->administrative_area . '%2C+'
+          . $node->_entity->field_location[0]->locality . '%2C+'
+          . $node->_entity->field_location[0]->postal_code,
+          'image' => $node->_entity->field_image_main[0]->entity->field_image,
+          'location' => $node->_entity->field_location[0]->locality,
+          'street_1' => $node->_entity->field_location[0]->address_line1,
+          'street_2' => $node->_entity->field_location[0]->address_line2,
+          'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_node__resolution(&$variables) {
+  $variables['label'] = $variables['label'][0]['#context']['value'] ?? '';
+  $variables['ol_name'] = isset($variables['elements']['field_ol_name'][0]) ? $variables['elements']['field_ol_name'][0]['#context']['value'] : '';
+  $variables['featured_quote'] = isset($variables['elements']['field_featured_quote'][0]) ? $variables['elements']['field_featured_quote'][0]['#context']['value'] : '';
+  $variables['ol_law_section'] = isset($variables['elements']['field_ol_law_section'][0]) ? $variables['elements']['field_ol_law_section'][0]['#context']['value'] : '';
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__event(&$variables) {
+  $start_date = strtotime($variables['content']['field_date_range'][0]['start_date']['#text']);
+  $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
+  $issues = [];
+
+  // Set up reference variables indicating if this event spans multiple days.
+  $is_multiday = !(date('Ymd', $start_date) == date('Ymd', $end_date));
+
+  $variables['is_multiday'] = $is_multiday;
+  $variables['start_date'] = $start_date;
+  $variables['end_date'] = $end_date;
+
+  $address = '';
+  if (isset($variables['content']['field_location'][0])) {
+    if (!empty($variables['content']['field_location'][0]['address_line1']['#value'])) {
+      $address = $variables['content']['field_location'][0]['address_line1']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['locality']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['locality']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['administrative_area']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['administrative_area']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['postal_code']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['postal_code']['#value'];
+    }
+    $variables['location_url'] = urlencode($address);
+  }
+
+  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+    $issues[] = $url;
+  }
+  $variables['field_issues'] = $issues;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_node__session(&$variables) {
+  $date_value = [];
+  if (isset($variables['content']['field_date_range'][0])) {
+    // If date range has same values.
+    if (isset($variables['content']['field_date_range'][0]['#text'])) {
+      $start_date = new DateTime($variables['content']['field_date_range'][0]['#text']);
+      $end_date = new DateTime($variables['content']['field_date_range'][0]['#text']);
+    }
+    // If date range have different start and end dates.
+    elseif (isset($variables['content']['field_date_range'][0]['start_date']['#text'])) {
+      $start_date = new DateTime($variables['content']['field_date_range'][0]['start_date']['#text']);
+      $end_date = new DateTime($variables['content']['field_date_range'][0]['end_date']['#text']);
+    }
+
+    if (isset($start_date) && isset($end_date)) {
+      $date_value['day'] = date_format($start_date, "d");
+      $date_value['month'] = date_format($start_date, "M");
+      $date_value['year'] = date_format($start_date, "Y");
+      $date_value['from_time'] = date_format($start_date, "h:i A");
+      $date_value['to_time'] = date_format($end_date, "h:i A");
+      $date_value['start_date'] = date_format($start_date, "m/d/Y h:i A");
+      $date_value['end_date'] = date_format($end_date, "m/d/Y h:i A");
+    }
+
+  }
+
+  $video_status = [];
+  if (isset($variables['content']['field_video_status'][0])) {
+    $video_status['key'] = $variables['content']['field_video_status']['#items']->value;
+    $video_status['value'] = $variables['content']['field_video_status'][0]['#markup'];
+  }
+
+  $address = '';
+  if (isset($variables['content']['field_location'][0])) {
+    if (!empty($variables['content']['field_location'][0]['address_line1']['#value'])) {
+      $address = $variables['content']['field_location'][0]['address_line1']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['address_line2']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['address_line2']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['locality']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['locality']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['postal_code']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['postal_code']['#value'] . ' ';
+    }
+    if (!empty($variables['content']['field_location'][0]['administrative_area']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['administrative_area']['#value'];
+    }
+  }
+
+  $variables['date_value'] = $date_value;
+  $variables['video_status'] = $video_status;
+  $variables['location'] = $address;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_node(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+
+  if ($variables['view_mode'] == 'upcoming_event') {
+    $node = $variables['elements']['#node'];
+    if ($node->bundle() === 'event') {
+      $date = new \Datetime($node->field_date_range->value);
+      $date_end = new \Datetime($node->field_date_range->end_value);
+      $variables['item'] = [
+        'title' => $node->label(),
+        'url' => $node->toUrl()->toString(),
+        'day' => $date->format('d'),
+        'month' => $date->format('M'),
+        'location' => $node->field_location[0]->locality,
+        'street_1' => $node->field_location[0]->address_line1,
+        'street_2' => $node->field_location[0]->address_line2,
+        'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
+      ];
+    }
+  }
 }

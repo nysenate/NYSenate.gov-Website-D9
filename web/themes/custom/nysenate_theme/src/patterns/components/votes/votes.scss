@@ -1,0 +1,263 @@
+@import '../../global/utils/init';
+
+.c-bill--vote {
+  margin-bottom: 40px;
+  clear: both;
+}
+
+.c-bill--vote-details.vote-header {
+  width:155px;
+  height:50px;
+  font-size:13px;
+  color:#888888;
+  margin-top:10px;
+  float:right;
+}
+
+.c-bill--vote-details.vote-header STRONG {
+  font-family: 'Proxima Nova Regular';
+}
+
+.c-bill--vote-details .c-bill--vote-details-wrapper .vote-container {
+  margin: 15px 0 0px 0;
+}
+
+.c-bill--votes {
+  overflow: hidden;
+}
+
+.c-bill--vote--stats {
+  width: 50%;
+}
+
+.c-bill-vote--accordion {
+  display: block;
+  clear: both;
+}
+
+.pieContainer {
+  width: 180px;
+  margin: 0 auto;
+}
+
+.c-bill--vote-details {
+  width: 180px;
+  margin: 0 auto 40px;
+
+  h3,
+  h4 {
+    color: $grey02;
+    font-family: "Adelle Regular";
+  }
+
+  h3 {
+    margin: 10px 0 20px;
+    font-size: 16px;
+  }
+
+  h4 {
+    clear: both;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  ul {
+    list-style: none;
+    overflow: hidden;
+  }
+
+  li {
+    display: block;
+    float: left;
+    width: 50%;
+  }
+
+  .vote-container {
+    margin-bottom: 18px;
+
+    .aye,
+    .nay {
+      width: auto;
+      float: left;
+      margin-bottom: 20px;
+      padding: 6px 10px;
+      background-color: $grey06;
+      text-align: center;
+
+      &:nth-child(1) {
+        margin-right: 15px;
+      }
+
+      .vote-count {
+        display: inline-block;
+        font: 18px/18px "Adelle Bold";
+        color: $grey03;
+      }
+
+      .vote-label {
+        display: inline-block;
+        font: 13px/16px "Proxima Nova SemiBold";
+        color: $grey04;
+        text-transform: uppercase;
+      }
+    }
+
+    .aye {
+      float:left;
+      border-bottom: 4px solid $cont_blue_lgt;
+
+      &.committee_vote {
+        border-bottom: 4px solid $yellow01;
+      }
+    }
+
+    .nay {
+      float:right;
+      border-bottom: 4px solid $cont_blue_drk;
+
+      &.committee_vote {
+        border-bottom: 4px solid $yellow03;
+      }
+    }
+  }
+
+  .vote-meta {
+    clear: both;
+
+    .meta-row {
+      position: relative;
+      font: 10px/16px "Proxima Nova Regular";
+      color: $grey04;
+      text-transform: uppercase;
+
+      div {
+        display: inline-block;
+
+        &:nth-child(1) {
+          color: $grey03;
+        }
+
+        &:nth-child(2) {
+          position: absolute;
+          left: 25%;
+        }
+      }
+
+      .meta-count {
+        font-family: "Proxima Nova SemiBold";
+      }
+    }
+
+    .meta-comm-referral {
+      margin-top: 20px;
+
+      label {
+        margin: 0;
+        font: 11px/14px "Proxima Nova Regular";
+        color: $grey05;
+      }
+
+      .committee-link {
+        font: 12px/14px "Proxima Nova SemiBold";
+        color: $yellow03;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+@media #{$tablet} {
+  .pieContainer {
+    float: left;
+  }
+
+  .c-bill--vote-details {
+    width: auto;
+    float: left;
+    margin: 0 0 40px 0;
+  }
+
+  .c-bill--vote-details {
+
+    .c-bill--vote-details-wrapper {
+      margin: 0 0 20px 40px;
+
+      .vote-container {
+        margin: 38px 0 0px 0;
+        .aye,
+        .nay {
+          width: 100px;
+          float: left;
+          background-color: $grey06;
+          text-align: center;
+          padding: 0;
+          &:nth-child(1) {
+            margin-right: 20px;
+          }
+          .vote-count {
+            display: block;
+            font: 24px/30px "Adelle Bold";
+            color: $grey03;
+          }
+          .vote-label {
+            display: block;
+            font: 15px/16px "Proxima Nova SemiBold";
+            padding-bottom: 5px;
+            color: $grey04;
+            text-transform: uppercase;
+          }
+        }
+      }
+      .vote-meta {
+        .meta-row {
+          position: relative;
+          font: 10px/16px "Proxima Nova Regular";
+          color: $grey04;
+          text-transform: uppercase;
+          div {
+            display: inline-block;
+            &:nth-child(1) {
+              color: $grey03;
+            }
+            &:nth-child(2) {
+              position: absolute;
+              left: 25%;
+            }
+          }
+        }
+        .meta-comm-referral {
+          margin-top: 20px;
+          label {
+            margin: 0;
+            font: 11px/14px "Proxima Nova Regular";
+            color: $grey05;
+          }
+          .committee-link {
+            font: 12px/14px "Proxima Nova SemiBold";
+            color: $yellow03;
+            text-transform: uppercase;
+          }
+        }
+      }
+      h3 {
+        margin-bottom: 30px;
+        font-size: 20px;
+      }
+      h4 {
+        padding-bottom: 20px;
+        font-size: 16px;
+      }
+      .c-detail--vote-grp {
+        display: block;
+        float: left;
+        width: 47%;
+        margin: 0 6% 30px 0;
+
+        & + .c-detail--vote-grp {
+          margin-top: 0;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}

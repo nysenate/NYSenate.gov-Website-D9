@@ -1,0 +1,13 @@
+administer entityqueue:
+  title: 'Administer entityqueue'
+  description: 'Administer entityqueue configuration and create, update and delete all queues.'
+  restrict access: TRUE
+manipulate entityqueues:
+  title: 'Manipulate queues'
+  description: 'Access the entityqueues list.'
+manipulate all entityqueues:
+  title: 'Manipulate all queues'
+  description: 'Access to update all queues.'
+
+permission_callbacks:
+  - Drupal\entityqueue\EntityQueuePermissions::permissions

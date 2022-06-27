@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\google_analytics\Functional;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -11,6 +12,8 @@ use Drupal\Tests\BrowserTestBase;
  */
 class GoogleAnalyticsUninstallTest extends BrowserTestBase {
 
+  use StringTranslationTrait;
+
   /**
    * Modules to enable.
    *
@@ -19,9 +22,18 @@ class GoogleAnalyticsUninstallTest extends BrowserTestBase {
   public static $modules = ['google_analytics'];
 
   /**
-   * {@inheritdoc}
+   * Default theme.
+   *
+   * @var string
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Admin user.
+   *
+   * @var \Drupal\user\Entity\User|bool
+   */
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
@@ -36,8 +48,8 @@ class GoogleAnalyticsUninstallTest extends BrowserTestBase {
     ];
 
     // User to set up google_analytics.
-    $this->admin_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
@@ -50,27 +62,29 @@ class GoogleAnalyticsUninstallTest extends BrowserTestBase {
     // Show tracker in pages.
     $this->config('google_analytics.settings')->set('account', $ua_code)->save();
 
-    // Enable local caching of analytics.js.
+    // Enable local caching of gtag.js.
     $this->config('google_analytics.settings')->set('cache', 1)->save();
 
-    // Load page to get the analytics.js downloaded into local cache.
+    // Load page to get the gtag.js downloaded into local cache.
     $this->drupalGet('');
 
-    // Test if the directory and analytics.js exists.
-    $this->assertDirectoryExists($cache_path, 'Cache directory "public://google_analytics" has been found.');
-    $this->assertFileExists($cache_path . '/analytics.js', 'Cached analytics.js tracking file has been found.');
-    $this->assertFileExists($cache_path . '/analytics.js.gz', 'Cached analytics.js.gz tracking file has been found.');
+    $file_system = \Drupal::service('file_system');
+    // Test if the directory and gtag.js exists.
+    $this->assertTrue($file_system->prepareDirectory($cache_path), 'Cache directory "public://google_analytics" has been found.');
+    $this->assertTrue(file_exists($cache_path . '/gtag.js'), 'Cached analytics.js tracking file has been found.');
+    $this->assertTrue(file_exists($cache_path . '/gtag.js.gz'), 'Cached analytics.js.gz tracking file has been found.');
 
     // Uninstall the module.
     $edit = [];
     $edit['uninstall[google_analytics]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, $this->t('Uninstall'));
     $this->assertSession()->pageTextNotContains(\Drupal::translation()->translate('Configuration deletions'));
-    $this->drupalPostForm(NULL, NULL, t('Uninstall'));
-    $this->assertSession()->pageTextContains(t('The selected modules have been uninstalled.'));
+    $this->submitForm([], $this->t('Uninstall'));
+    $this->assertSession()->pageTextContains($this->t('The selected modules have been uninstalled.'));
 
     // Test if the directory and all files have been removed.
-    $this->assertDirectoryNotExists($cache_path);
+    $this->assertFalse($file_system->prepareDirectory($cache_path), 'Cache directory "public://google_analytics" has been removed.');
   }
 
 }

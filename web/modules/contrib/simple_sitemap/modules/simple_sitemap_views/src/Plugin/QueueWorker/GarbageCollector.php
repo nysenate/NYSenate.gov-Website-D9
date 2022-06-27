@@ -47,6 +47,9 @@ class GarbageCollector extends QueueWorkerBase implements ContainerFactoryPlugin
    *   Entity type manager.
    * @param \Drupal\simple_sitemap_views\SimpleSitemapViews $sitemap_views
    *   Views sitemap data.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, SimpleSitemapViews $sitemap_views) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -87,15 +90,15 @@ class GarbageCollector extends QueueWorkerBase implements ContainerFactoryPlugin
           continue;
         }
 
-        $variants = $this->sitemapViews->getIndexableVariants($view);
-        $variants = array_keys($variants);
+        $sitemaps = $this->sitemapViews->getIndexableSitemaps($view);
+        $sitemaps = array_keys($sitemaps);
 
         $args_ids = [];
-        foreach ($variants as $variant) {
-          $variant_args_ids = $this->sitemapViews->getIndexableArguments($view, $variant);
+        foreach ($sitemaps as $sitemap) {
+          $sitemap_args_ids = $this->sitemapViews->getIndexableArguments($view, $sitemap);
 
-          if (count($variant_args_ids) > count($args_ids)) {
-            $args_ids = $variant_args_ids;
+          if (count($sitemap_args_ids) > count($args_ids)) {
+            $args_ids = $sitemap_args_ids;
           }
         }
 
@@ -115,16 +118,17 @@ class GarbageCollector extends QueueWorkerBase implements ContainerFactoryPlugin
         $this->sitemapViews->removeArgumentsFromIndex($condition);
 
         $max_links = 0;
-        foreach ($variants as $variant) {
-          $settings = $this->sitemapViews->getSitemapSettings($view, $variant);
-          $variant_max_links = is_numeric($settings['max_links']) ? $settings['max_links'] : 0;
+        foreach ($sitemaps as $sitemap) {
+          $settings = $this->sitemapViews->getSitemapSettings($view, $sitemap);
+          $sitemap_max_links = is_numeric($settings['max_links']) ? $settings['max_links'] : 0;
 
-          if ($variant_max_links == 0) {
+          if ($sitemap_max_links == 0) {
             $max_links = 0;
             break;
           }
-          elseif ($variant_max_links > $max_links) {
-            $max_links = $variant_max_links;
+
+          if ($sitemap_max_links > $max_links) {
+            $max_links = $sitemap_max_links;
           }
         }
 

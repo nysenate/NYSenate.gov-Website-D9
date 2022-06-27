@@ -390,14 +390,45 @@ strong {
   .font-secondary strong {
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
 
+.c-block {
+  display: block;
+  position: relative;
+  margin-bottom: 20px;
+  zoom: 1;
+  clear: both; }
+  .c-block::after {
+    content: '';
+    display: table;
+    clear: both; }
+  @media screen and (min-width: 768px) {
+    .c-block {
+      margin-bottom: 60px; } }
+
+.node-resolution {
+  max-width: 840px;
+  padding: 0 20px;
+  padding-top: 40px;
+  margin: 0 auto; }
+  @media screen and (min-width: 768px) {
+    .node-resolution {
+      padding: 0 40px;
+      padding-top: 80px; } }
+
 .c-detail--header {
   margin-bottom: 20px; }
   .c-detail--header > .nys-title {
+    color: #7d7c7c;
+    text-transform: capitalize;
+    font-family: 'Adelle Bold';
+    font-size: 18px;
     margin-bottom: 0; }
+    @media screen and (min-width: 768px) {
+      .c-detail--header > .nys-title {
+        font-size: 32px; } }
 
 .c-detail--subhead {
   margin: 0 0 10px;
-  color: #444444;
+  color: #7d7c7c;
   font-family: 'Proxima Nova Regular';
   font-size: 14px;
   letter-spacing: 0.1em;
@@ -410,7 +441,9 @@ strong {
     display: block; }
 
 .c-detail--descript {
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  margin-top: 0;
+  color: #666666; }
 
 .c-bill--amended .c-bill--flag {
   display: none; }
@@ -432,7 +465,7 @@ strong {
 .c-detail--related {
   list-style: none;
   line-height: 1.3em; }
-  .c-detail--related .field-name-field-issues {
+  .c-detail--related .field--name-field-issues {
     padding-bottom: 10px; }
 
 .c-detail--related-item {
@@ -711,7 +744,8 @@ strong {
 .c-detail--writeup {
   padding: 30px 20px 20px;
   background: #eeeeee;
-  font-size: 12px; }
+  font-size: 12px;
+  color: #222222; }
   .c-detail--writeup h4 {
     margin-bottom: 30px;
     font-family: 'Adelle Bold';
@@ -737,6 +771,12 @@ strong {
 .c-bill--flags {
   overflow: hidden;
   margin-top: 20px; }
+  @media screen and (min-width: 768px) {
+    .c-bill--flags {
+      display: block;
+      float: left;
+      margin-top: 0;
+      padding: 5px 0 0 20px; } }
 
 .c-bill--flag {
   display: block;
@@ -770,7 +810,7 @@ strong {
   font-size: 14px; }
 
 .c-bill--details dt {
-  color: #444444;
+  color: #7d7c7c;
   line-height: 1.5em; }
 
 .c-bill--details dd + dt {
@@ -1005,7 +1045,7 @@ strong {
   margin: 0 auto 40px; }
   .c-bill--vote-details h3,
   .c-bill--vote-details h4 {
-    color: #444444;
+    color: #7d7c7c;
     font-family: 'Adelle Regular'; }
   .c-bill--vote-details h3 {
     margin: 10px 0 20px;
@@ -1084,7 +1124,7 @@ strong {
 
 .c-vote-detail--date {
   margin: 20px 0;
-  color: #444444;
+  color: #7d7c7c;
   font-family: 'Adelle Regular';
   font-size: 16px;
   line-height: 1; }
@@ -1094,7 +1134,7 @@ strong {
 
 .c-detail--vote-grp .c-detail--section-title {
   margin-bottom: 15px;
-  color: #444444;
+  color: #7d7c7c;
   font-family: "Adelle SemiBold";
   text-transform: uppercase;
   font-size: 14px; }
@@ -1195,7 +1235,7 @@ strong {
   font-family: 'Proxima Nova Regular';
   font-size: 14px; }
   .c-issue--followers > span {
-    color: #444444;
+    color: #7d7c7c;
     margin-right: 5px; }
 
 .c-issue--contact-btn {

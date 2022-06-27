@@ -384,6 +384,28 @@ strong {
   .font-secondary strong {
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
 
+.article-node {
+  max-width: 840px;
+  padding: 20px 20px 0;
+  margin: 0 auto; }
+  @media screen and (min-width: 768px) {
+    .article-node {
+      padding: 40px 20px 0; } }
+
+.nys-article-title {
+  margin: 0 0 20px 0;
+  color: #7d7c7c;
+  font-family: "Adelle Light";
+  font-size: 22px;
+  line-height: 1.2em; }
+
+.c-block {
+  display: block;
+  position: relative;
+  margin-bottom: 20px;
+  zoom: 1;
+  clear: both; }
+
 /*------------------------------------
 /	NEWS:
 /-------------------------------------*/
@@ -461,15 +483,61 @@ strong {
 .c-news--head .c-news--download {
   margin-bottom: 0; }
 
+.c-block p {
+  font-family: "Adelle Light";
+  line-height: 1.5em;
+  color: #666666;
+  font-size: 16px; }
+
+.nys-associated-topics {
+  display: inline;
+  list-style: none;
+  font-size: 15px;
+  line-height: 1.2em;
+  border-left: 1px solid #888888;
+  padding-left: 14px; }
+  .nys-associated-topics ul {
+    display: inline;
+    margin: 0;
+    padding: 0; }
+  .nys-associated-topics li {
+    display: inline;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: "Proxima Nova SemiBold";
+    white-space: normal; }
+  .nys-associated-topics a {
+    color: #cb8d37;
+    text-decoration: none; }
+    .nys-associated-topics a:hover {
+      text-decoration: underline; }
+
+.nys-associated-topics--label {
+  display: inline;
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 1.2em;
+  font-family: "Proxima Nova SemiBold"; }
+
 @media screen and (min-width: 760px) {
   .c-news-download {
     margin-bottom: 30px; }
   .c-news--head .c-news--download {
-    margin-bottom: 0; } }
+    margin-bottom: 0; }
+  .c-block p {
+    font-size: 20px;
+    line-height: 32px; }
+  .nys-associated-topics {
+    display: inline;
+    margin-top: 0; }
+    .nys-associated-topics li {
+      margin-top: 0; } }
 
 .c-news--subtitle {
   margin-bottom: 20px;
-  color: #444444;
+  color: #7d7c7c;
   font-family: "Adelle SemiBold";
   font-size: 18px;
   line-height: 1.4em; }
@@ -494,6 +562,11 @@ strong {
   padding-left: 10px; }
 
 @media screen and (min-width: 760px) {
+  .article-node {
+    padding: 80px 40px 0; }
+  .nys-article-title {
+    margin: 0 0 30px;
+    font-size: 48px; }
   .c-news--head {
     margin-bottom: 30px; }
     .c-news--head ul.links {

@@ -3,13 +3,13 @@
 namespace Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator;
 
 use Drupal\simple_sitemap\Logger;
-use Drupal\simple_sitemap\Simplesitemap;
-use Drupal\Core\Extension\ModuleHandler;
+use Drupal\simple_sitemap\Plugin\simple_sitemap\SimpleSitemapPluginBase;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\simple_sitemap\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class ArbitraryUrlGenerator
- * @package Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator
+ * Provides the arbitrary URL generator.
  *
  * @UrlGenerator(
  *   id = "arbitrary",
@@ -19,66 +19,81 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ArbitraryUrlGenerator extends UrlGeneratorBase {
 
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
   protected $moduleHandler;
 
   /**
    * ArbitraryUrlGenerator constructor.
+   *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
-   * @param \Drupal\simple_sitemap\Simplesitemap $generator
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\simple_sitemap\Logger $logger
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   *   Simple XML Sitemap logger.
+   * @param \Drupal\simple_sitemap\Settings $settings
+   *   The simple_sitemap.settings service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    Simplesitemap $generator,
     Logger $logger,
-    ModuleHandler $module_handler
+    Settings $settings,
+    ModuleHandlerInterface $module_handler
   ) {
     parent::__construct(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $generator,
-      $logger
+      $logger,
+      $settings
     );
     $this->moduleHandler = $module_handler;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(
     ContainerInterface $container,
     array $configuration,
     $plugin_id,
-    $plugin_definition) {
+    $plugin_definition): SimpleSitemapPluginBase {
 
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('simple_sitemap.generator'),
       $container->get('simple_sitemap.logger'),
+      $container->get('simple_sitemap.settings'),
       $container->get('module_handler')
     );
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getDataSets() {
+  public function getDataSets(): array {
     $arbitrary_links = [];
-    $sitemap_variant = $this->sitemapVariant;
-    $this->moduleHandler->alter('simple_sitemap_arbitrary_links', $arbitrary_links, $sitemap_variant);
+    $this->moduleHandler->alter('simple_sitemap_arbitrary_links', $arbitrary_links, $this->sitemap);
 
     return array_values($arbitrary_links);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  protected function processDataSet($data_set) {
+  protected function processDataSet($data_set): array {
     return $data_set;
   }
+
 }

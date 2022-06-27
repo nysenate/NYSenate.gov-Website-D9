@@ -14,7 +14,6 @@ Required step:
 Enable the module as you normally would. See:
 https://www.drupal.org/docs/8/extending-drupal-8/installing-modules
 
-
 CONFIGURATION
 -------------
 
@@ -40,6 +39,28 @@ $settings['locale_custom_strings_en'][''] = [
 
 * If you use Drupal Commerce, adjust your checkout flow to use the alternative 
   login pane provided by this module.
+
+* If you use Behat for testing user scenarios you should override the default
+  login behavior so the e-mail address will be used to log in instead of the
+  username. To do this you should install the Service Container Extension
+  which allows to override the default authentication service from Behat
+  Drupal Extension:
+
+  $ composer require friends-of-behat/service-container-extension
+
+  Then add the following to your `behat.yml` configuration file:
+
+    default:
+      extensions:
+        FriendsOfBehat\ServiceContainerExtension:
+          imports:
+            - "./path/to/modules/contrib/email_registration/behat.services.yml"
+
+  Replace the last line with the actual path to where the Email Registration
+  module is located in your project.
+
+  Note that this only works with Behat Drupal Extension 4.x. Older versions do
+  not have a way to override the default authentication functionality.
 
 BUGS, FEATURES, QUESTIONS
 -------------------------

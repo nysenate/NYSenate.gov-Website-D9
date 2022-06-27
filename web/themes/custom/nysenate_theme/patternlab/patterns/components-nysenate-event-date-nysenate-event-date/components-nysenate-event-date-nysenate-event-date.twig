@@ -1,0 +1,20 @@
+
+
+{% set prefix = prefix ? prefix : 'c-event-date' %}
+
+<div class="{{ prefix }} {{ is_multiday ? prefix ~ '-multiday' }}">
+  <div class="{{ prefix ~ '-start' }}">
+    <span class="{{ prefix ~ '-day' }}">{{ start_date|date("d") }}</span>
+    <span class="{{ prefix ~ '-month' }}">{{ start_date|date("M") }}</span>
+    <span class="{{ prefix ~ '-year' }}">{{ start_date|date("Y") }}</span>
+  </div>
+
+  {% if is_multiday %}
+    <div class="{{ prefix ~ '-separator' }}">&dash;</div>
+    <div class="{{ prefix ~ '-end' }}">
+      <span class="{{ prefix ~ '-day' }}">{{ end_date|date("d") }}</span>
+      <span class="{{ prefix ~ '-month' }}">{{ end_date|date("M") }}</span>
+      <span class="{{ prefix ~ '-year' }}">{{ end_date|date("Y") }}</span>
+    </div>
+  {% endif %}
+</div>

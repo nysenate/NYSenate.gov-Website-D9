@@ -5,7 +5,9 @@ dependencies:
   config:
     - block_content.type.text
     - field.field.block_content.text.body
+    - field.field.block_content.text.field_is_full_bleed
     - field.field.block_content.text.field_title
+    - field.field.block_content.text.field_with_background
   module:
     - text
 _core:
@@ -22,13 +24,33 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  field_is_full_bleed:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_title:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_with_background:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
     region: content
 hidden:
   langcode: true

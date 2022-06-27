@@ -2,23 +2,49 @@
 
 namespace Drupal\simple_sitemap\Plugin\simple_sitemap\SitemapGenerator;
 
+use Drupal\simple_sitemap\Entity\SimpleSitemapInterface;
+use Drupal\simple_sitemap\Plugin\simple_sitemap\SimpleSitemapPluginInterface;
+
 /**
- * Interface SitemapGeneratorInterface
- * @package Drupal\simple_sitemap\Plugin\simple_sitemap\SitemapGenerator
+ * Provides an interface for SitemapGenerator plugins.
  */
-interface SitemapGeneratorInterface {
+interface SitemapGeneratorInterface extends SimpleSitemapPluginInterface {
 
-  public function setSitemapVariant($sitemap_variant);
+  /**
+   * Sets the sitemap.
+   *
+   * @param \Drupal\simple_sitemap\Entity\SimpleSitemapInterface $sitemap
+   *   The sitemap entity to set.
+   *
+   * @return $this
+   */
+  public function setSitemap(SimpleSitemapInterface $sitemap): SitemapGeneratorInterface;
 
-  public function setSettings(array $settings);
+  /**
+   * Generates and returns a sitemap chunk.
+   *
+   * @param array $links
+   *   All links with their multilingual versions and settings.
+   *
+   * @return string
+   *   Sitemap chunk.
+   */
+  public function getChunkContent(array $links): string;
 
-  public function generate(array $links);
+  /**
+   * Generates and returns a sitemap index.
+   *
+   * @return string
+   *   Sitemap index.
+   */
+  public function getIndexContent(): string;
 
-  public function generateIndex();
+  /**
+   * Generates and returns sitemap XSL.
+   *
+   * @return string|null
+   *   Sitemap XSL.
+   */
+  public function getXslContent(): ?string;
 
-  public function publish();
-
-  public function remove();
-
-  public function getSitemapUrl($delta = NULL);
 }

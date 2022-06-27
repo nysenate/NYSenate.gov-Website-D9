@@ -111,6 +111,7 @@ class BetterExposedFilters extends InputRequired {
         'allow_secondary' => FALSE,
         'secondary_label' => $this->t('Advanced options'),
         'secondary_open' => FALSE,
+        'reset_button_always_show' => FALSE,
       ],
       'sort' => [
         'plugin_id' => 'default',
@@ -210,6 +211,18 @@ class BetterExposedFilters extends InputRequired {
     $form['bef']['general']['submit_button'] = $original_form['submit_button'];
     $form['bef']['general']['reset_button'] = $original_form['reset_button'];
     $form['bef']['general']['reset_button_label'] = $original_form['reset_button_label'];
+
+    $form['bef']['general']['reset_button_always_show'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Always show reset button'),
+      '#description' => $this->t('Will keep the reset button visible even without user input.'),
+      '#default_value' => $bef_options['general']['reset_button_always_show'],
+      '#states' => [
+        'invisible' => [
+          'input[name="exposed_form_options[reset_button]"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
 
     // Add the 'auto-submit' functionality.
     $form['bef']['general']['autosubmit'] = [
@@ -819,6 +832,11 @@ class BetterExposedFilters extends InputRequired {
     // If our form has no visible filters, hide the submit button.
     $has_visible_filters = !empty(Element::getVisibleChildren($form)) ?: FALSE;
     $form['actions']['submit']['#access'] = $has_visible_filters;
+
+    if ($bef_options['general']['reset_button_always_show']) {
+      $form['actions']['reset']['#access'] = TRUE;
+    }
+
     // Never enable a reset button that has already been disabled.
     if (!isset($form['actions']['reset']['#access']) || $form['actions']['reset']['#access'] === TRUE) {
       $form['actions']['reset']['#access'] = $has_visible_filters;

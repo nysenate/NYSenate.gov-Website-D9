@@ -2,8 +2,8 @@
 
 namespace Drupal\simple_sitemap_views;
 
+use Drupal\simple_sitemap\Entity\SimpleSitemap;
 use Drupal\simple_sitemap_views\Plugin\views\display_extender\SimpleSitemapDisplayExtender;
-use Drupal\simple_sitemap\SimplesitemapManager;
 use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -22,19 +22,12 @@ class SimpleSitemapViews {
   /**
    * Separator between arguments.
    */
-  const ARGUMENT_SEPARATOR = '/';
+  public const ARGUMENT_SEPARATOR = '/';
 
   /**
    * Views display extender plugin ID.
    */
-  const PLUGIN_ID = 'simple_sitemap_display_extender';
-
-  /**
-   * Simple XML Sitemap manager.
-   *
-   * @var \Drupal\simple_sitemap\SimplesitemapManager
-   */
-  protected $sitemapManager;
+  protected const PLUGIN_ID = 'simple_sitemap_display_extender';
 
   /**
    * View entities storage.
@@ -67,8 +60,6 @@ class SimpleSitemapViews {
   /**
    * SimpleSitemapViews constructor.
    *
-   * @param \Drupal\simple_sitemap\SimplesitemapManager $sitemap_manager
-   *   Simple XML Sitemap manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -77,15 +68,16 @@ class SimpleSitemapViews {
    *   The queue factory.
    * @param \Drupal\Core\Database\Connection $database
    *   The current active database's master connection.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(
-    SimplesitemapManager $sitemap_manager,
     EntityTypeManagerInterface $entity_type_manager,
     ConfigFactoryInterface $config_factory,
     QueueFactory $queue_factory,
     Connection $database
   ) {
-    $this->sitemapManager = $sitemap_manager;
     $this->viewStorage = $entity_type_manager->getStorage('view');
     $this->configFactory = $config_factory;
     $this->queueFactory = $queue_factory;
@@ -98,7 +90,7 @@ class SimpleSitemapViews {
    * @return bool
    *   Returns TRUE if support is enabled, and FALSE otherwise.
    */
-  public function isEnabled() {
+  public function isEnabled(): bool {
     // Support enabled when views display extender is enabled.
     $enabled = Views::getEnabledDisplayExtenders();
     return isset($enabled[self::PLUGIN_ID]);
@@ -107,7 +99,7 @@ class SimpleSitemapViews {
   /**
    * Enables sitemap support for views.
    */
-  public function enable() {
+  public function enable(): void {
     $config = $this->configFactory->getEditable('views.settings');
     $display_extenders = $config->get('display_extenders') ?: [];
 
@@ -120,7 +112,7 @@ class SimpleSitemapViews {
   /**
    * Disables sitemap support for views.
    */
-  public function disable() {
+  public function disable(): void {
     $config = $this->configFactory->getEditable('views.settings');
     $display_extenders = $config->get('display_extenders') ?: [];
 
@@ -147,18 +139,19 @@ class SimpleSitemapViews {
    * @return \Drupal\simple_sitemap_views\Plugin\views\display_extender\SimpleSitemapDisplayExtender|null
    *   The display extender.
    */
-  public function getDisplayExtender(ViewExecutable $view, $display_id = NULL) {
+  public function getDisplayExtender(ViewExecutable $view, ?string $display_id = NULL): ?SimpleSitemapDisplayExtender {
     // Ensure the display was correctly set.
     if (!$view->setDisplay($display_id)) {
       return NULL;
     }
 
     $extenders = $view->display_handler->getExtenders();
-    $extender = isset($extenders[self::PLUGIN_ID]) ? $extenders[self::PLUGIN_ID] : NULL;
+    $extender = $extenders[self::PLUGIN_ID] ?? NULL;
 
     if ($extender instanceof SimpleSitemapDisplayExtender) {
       return $extender;
     }
+
     return NULL;
   }
 
@@ -168,14 +161,14 @@ class SimpleSitemapViews {
    * @param \Drupal\views\ViewExecutable $view
    *   A view executable instance.
    * @param string $variant
-   *   The name of the sitemap variant.
+   *   The ID of the sitemap.
    * @param string|null $display_id
    *   The display id. If empty uses the current display.
    *
    * @return array|null
    *   The sitemap settings if the display is indexed, NULL otherwise.
    */
-  public function getSitemapSettings(ViewExecutable $view, $variant, $display_id = NULL) {
+  public function getSitemapSettings(ViewExecutable $view, string $variant, ?string $display_id = NULL): ?array {
     $extender = $this->getDisplayExtender($view, $display_id);
 
     // Retrieve the sitemap settings from the extender.
@@ -186,6 +179,7 @@ class SimpleSitemapViews {
         return $settings;
       }
     }
+
     return NULL;
   }
 
@@ -195,14 +189,14 @@ class SimpleSitemapViews {
    * @param \Drupal\views\ViewExecutable $view
    *   A view executable instance.
    * @param string $variant
-   *   The name of the sitemap variant.
+   *   The ID of the sitemap.
    * @param string|null $display_id
    *   The display id. If empty uses the current display.
    *
    * @return array
    *   Indexable arguments identifiers.
    */
-  public function getIndexableArguments(ViewExecutable $view, $variant, $display_id = NULL) {
+  public function getIndexableArguments(ViewExecutable $view, string $variant, ?string $display_id = NULL): array {
     $settings = $this->getSitemapSettings($view, $variant, $display_id);
     $indexable_arguments = [];
 
@@ -215,7 +209,7 @@ class SimpleSitemapViews {
       // Required arguments.
       foreach ($bits as $bit) {
         if ($bit == '%' || strpos($bit, '%') === 0) {
-          $indexable_arguments[] = isset($arguments[$arg_index]) ? $arguments[$arg_index] : $bit;
+          $indexable_arguments[] = $arguments[$arg_index] ?? $bit;
           $arg_index++;
         }
       }
@@ -234,6 +228,7 @@ class SimpleSitemapViews {
         }
       }
     }
+
     return $indexable_arguments;
   }
 
@@ -249,17 +244,16 @@ class SimpleSitemapViews {
    *
    * @return bool
    *   TRUE if the arguments are added to the index, FALSE otherwise.
+   *
+   * @throws \Exception
    */
-  public function addArgumentsToIndex(ViewExecutable $view, array $args, $display_id = NULL) {
-    $variants = $this->sitemapManager->getSitemapVariants(NULL, FALSE);
-
-    foreach (array_keys($variants) as $variant) {
-      $result = $this->addArgumentsToIndexByVariant($view, $variant, $args, $display_id);
-
-      if ($result) {
-        return $result;
+  public function addArgumentsToIndex(ViewExecutable $view, array $args, ?string $display_id = NULL): bool {
+    foreach ($this->getSitemaps() as $sitemap) {
+      if ($this->addArgumentsToIndexByVariant($view, $sitemap->id(), $args, $display_id)) {
+        return TRUE;
       }
     }
+
     return FALSE;
   }
 
@@ -269,7 +263,7 @@ class SimpleSitemapViews {
    * @param \Drupal\views\ViewExecutable $view
    *   A view executable instance.
    * @param string $variant
-   *   The name of the sitemap variant.
+   *   The ID of the sitemap.
    * @param array $args
    *   Array of arguments to add to the index.
    * @param string|null $display_id
@@ -277,8 +271,10 @@ class SimpleSitemapViews {
    *
    * @return bool
    *   TRUE if the arguments are added to the index, FALSE otherwise.
+   *
+   * @throws \Exception
    */
-  public function addArgumentsToIndexByVariant(ViewExecutable $view, $variant, array $args, $display_id = NULL) {
+  public function addArgumentsToIndexByVariant(ViewExecutable $view, string $variant, array $args, ?string $display_id = NULL): bool {
     // An array of arguments to be added to the index can not be empty.
     // Also ensure the display was correctly set.
     if (empty($args) || !$view->setDisplay($display_id)) {
@@ -293,7 +289,7 @@ class SimpleSitemapViews {
 
     // Check that the number of identifiers is equal to the number of values.
     $args_ids = array_slice($indexable_arguments, 0, count($args));
-    if (count($args_ids) != count($args)) {
+    if (count($args_ids) !== count($args)) {
       return FALSE;
     }
 
@@ -326,14 +322,14 @@ class SimpleSitemapViews {
     }
 
     // Add a set of arguments to the index.
-    $options = ['return' => Database::RETURN_AFFECTED];
-    $query = $this->database->insert('simple_sitemap_views', $options);
+    $query = $this->database->insert('simple_sitemap_views');
     $query->fields([
       'view_id' => $view->id(),
       'display_id' => $view->current_display,
       'arguments_ids' => $args_ids,
       'arguments_values' => $args_values,
     ]);
+
     return (bool) $query->execute();
   }
 
@@ -352,17 +348,17 @@ class SimpleSitemapViews {
    * @return array
    *   An array with information about the indexed arguments.
    */
-  public function getArgumentsFromIndex(ConditionInterface $condition = NULL, $limit = NULL, $convert = FALSE) {
+  public function getArgumentsFromIndex(?ConditionInterface $condition = NULL, ?int $limit = NULL, bool $convert = FALSE): array {
     $query = $this->database->select('simple_sitemap_views', 'ssv');
     $query->addField('ssv', 'id');
     $query->addField('ssv', 'view_id');
     $query->addField('ssv', 'display_id');
     $query->addField('ssv', 'arguments_values', 'arguments');
 
-    if (!empty($condition)) {
+    if ($condition !== NULL) {
       $query->condition($condition);
     }
-    if (!empty($limit)) {
+    if ($limit !== NULL) {
       $query->range(0, $limit);
     }
 
@@ -376,6 +372,7 @@ class SimpleSitemapViews {
         'arguments' => $convert ? $this->convertArgumentsStringToArray($row->arguments) : $row->arguments,
       ];
     }
+
     return $arguments;
   }
 
@@ -388,12 +385,13 @@ class SimpleSitemapViews {
    * @return int
    *   The number of rows.
    */
-  public function getArgumentsFromIndexCount(ConditionInterface $condition = NULL) {
+  public function getArgumentsFromIndexCount(?ConditionInterface $condition = NULL): int {
     $query = $this->database->select('simple_sitemap_views', 'ssv');
 
-    if (!empty($condition)) {
+    if ($condition !== NULL) {
       $query->condition($condition);
     }
+
     return $query->countQuery()->execute()->fetchField();
   }
 
@@ -408,16 +406,17 @@ class SimpleSitemapViews {
    * @return int|bool
    *   The ID of the record, or FALSE if there is no specified position.
    */
-  public function getIndexIdByPosition($position, ConditionInterface $condition = NULL) {
+  public function getIndexIdByPosition(int $position, ?ConditionInterface $condition = NULL) {
     $query = $this->database->select('simple_sitemap_views', 'ssv');
     $query->addField('ssv', 'id');
 
-    if (!empty($condition)) {
+    if ($condition !== NULL) {
       $query->condition($condition);
     }
 
-    $query->orderBy('id', 'ASC');
+    $query->orderBy('id');
     $query->range($position - 1, 1);
+
     return $query->execute()->fetchField();
   }
 
@@ -427,8 +426,8 @@ class SimpleSitemapViews {
    * @param \Drupal\Core\Database\Query\ConditionInterface|null $condition
    *   The query conditions.
    */
-  public function removeArgumentsFromIndex(ConditionInterface $condition = NULL) {
-    if (empty($condition)) {
+  public function removeArgumentsFromIndex(?ConditionInterface $condition = NULL): void {
+    if ($condition === NULL) {
       // If there are no conditions, use the TRUNCATE query.
       $query = $this->database->truncate('simple_sitemap_views');
     }
@@ -449,15 +448,14 @@ class SimpleSitemapViews {
    * @return array
    *   Array of display identifiers.
    */
-  public function getRouterDisplayIds(ViewEntityInterface $view_entity) {
+  public function getRouterDisplayIds(ViewEntityInterface $view_entity): array {
     $display_plugins = $this->getRouterDisplayPluginIds();
 
     $filter_callback = function (array $display) use ($display_plugins) {
-      return !empty($display['display_plugin']) && in_array($display['display_plugin'], $display_plugins);
+      return !empty($display['display_plugin']) && in_array($display['display_plugin'], $display_plugins, TRUE);
     };
 
-    $displays = array_filter($view_entity->get('display'), $filter_callback);
-    return array_keys($displays);
+    return array_keys(array_filter($view_entity->get('display'), $filter_callback));
   }
 
   /**
@@ -466,7 +464,7 @@ class SimpleSitemapViews {
    * @return \Drupal\views\ViewExecutable[]
    *   An array of ViewExecutable instances.
    */
-  public function getIndexableViews() {
+  public function getIndexableViews(): array {
     // Check that views support is enabled.
     if (!$this->isEnabled()) {
       return [];
@@ -497,38 +495,59 @@ class SimpleSitemapViews {
         }
 
         // Check that the display is enabled and indexed.
-        if ($view->display_handler->isEnabled() && $this->getIndexableVariants($view)) {
+        if ($view->display_handler->isEnabled() && $this->getIndexableSitemaps($view)) {
           $indexable_views[] = $view;
         }
       }
     }
+
     return $indexable_views;
   }
 
   /**
-   * Returns an array of indexable sitemap variants for view display.
+   * Returns an array of indexable sitemaps for view display.
    *
    * @param \Drupal\views\ViewExecutable $view
    *   A view executable instance.
    * @param string|null $display_id
    *   The display id. If empty uses the current display.
    *
-   * @return array
-   *   An array of sitemap variants.
+   * @return \Drupal\simple_sitemap\Entity\SimpleSitemapInterface[]
+   *   An array of sitemap entities.
    */
-  public function getIndexableVariants(ViewExecutable $view, $display_id = NULL) {
+  public function getIndexableSitemaps(ViewExecutable $view, ?string $display_id = NULL): array {
     // Ensure the display was correctly set.
     if (!$view->setDisplay($display_id)) {
       return [];
     }
 
-    $variants = $this->sitemapManager->getSitemapVariants(NULL, FALSE);
-    foreach (array_keys($variants) as $variant) {
+    $sitemaps = $this->getSitemaps();
+    foreach ($sitemaps as $variant => $sitemap) {
       if (!$this->getSitemapSettings($view, $variant)) {
-        unset($variants[$variant]);
+        unset($sitemaps[$variant]);
       }
     }
-    return $variants;
+
+    return $sitemaps;
+  }
+
+  /**
+   * Returns an array of correctly configured sitemaps.
+   *
+   * @return \Drupal\simple_sitemap\Entity\SimpleSitemapInterface[]
+   *   An array of sitemap entities.
+   */
+  public function getSitemaps(): array {
+    $sitemaps = SimpleSitemap::loadMultiple();
+
+    /** @var \Drupal\simple_sitemap\Entity\SimpleSitemapInterface $sitemap */
+    foreach ($sitemaps as $variant => $sitemap) {
+      if (!$sitemap->getType()->hasUrlGenerator('views')) {
+        unset($sitemaps[$variant]);
+      }
+    }
+
+    return $sitemaps;
   }
 
   /**
@@ -564,13 +583,14 @@ class SimpleSitemapViews {
    * @return array
    *   Array of variations of the string representation of arguments.
    */
-  public function getArgumentsStringVariations(array $args) {
+  public function getArgumentsStringVariations(array $args): array {
     $variations = [];
 
     for ($length = 1; $length <= count($args); $length++) {
       $args_slice = array_slice($args, 0, $length);
       $variations[] = $this->convertArgumentsArrayToString($args_slice);
     }
+
     return $variations;
   }
 
@@ -583,7 +603,7 @@ class SimpleSitemapViews {
    * @return string
    *   A string representation of the arguments.
    */
-  protected function convertArgumentsArrayToString(array $args) {
+  protected function convertArgumentsArrayToString(array $args): string {
     return implode(self::ARGUMENT_SEPARATOR, $args);
   }
 
@@ -596,7 +616,7 @@ class SimpleSitemapViews {
    * @return array
    *   Array of arguments.
    */
-  protected function convertArgumentsStringToArray($args) {
+  protected function convertArgumentsStringToArray($args): array {
     return explode(self::ARGUMENT_SEPARATOR, $args);
   }
 
@@ -606,7 +626,7 @@ class SimpleSitemapViews {
    * @return array
    *   An array with plugin identifiers.
    */
-  protected function getRouterDisplayPluginIds() {
+  protected function getRouterDisplayPluginIds(): array {
     static $plugin_ids = [];
 
     if (empty($plugin_ids)) {
@@ -619,6 +639,7 @@ class SimpleSitemapViews {
         }
       }
     }
+
     return $plugin_ids;
   }
 

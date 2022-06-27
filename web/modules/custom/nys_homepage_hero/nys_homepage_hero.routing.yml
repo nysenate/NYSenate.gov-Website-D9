@@ -1,0 +1,8 @@
+nys_homepage_hero.hero_status:
+  path: '/ajax/homepage-hero-status'
+  defaults:
+    _controller: '\Drupal\nys_homepage_hero\Controller\HomepageHeroController::homepageHeroStatus'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE

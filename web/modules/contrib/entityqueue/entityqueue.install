@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Entityqueue module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Updates the internal structure of the entity queue config entities.
+ */
+function entityqueue_update_8001() {
+  $config_factory = \Drupal::configFactory();
+
+  // Iterate over all entity queues.
+  foreach ($config_factory->listAll('entityqueue.entity_queue.') as $queue_id) {
+    $config = $config_factory->getEditable($queue_id);
+
+    $entity_settings = [
+      'target_type' => $config->get('target_type'),
+      'handler' => 'default:' . $config->get('target_type'),
+      'handler_settings' => [],
+    ];
+    $config->set('entity_settings', $entity_settings);
+
+    $queue_settings = [
+      'min_size' => $config->get('min_size'),
+      'max_size' => $config->get('max_size'),
+      'act_as_queue' => $config->get('act_as_queue'),
+    ];
+    $config->set('queue_settings', $queue_settings);
+
+    // Remove outdated properties.
+    $config->clear('min_size')->clear('max_size')->clear('act_as_queue')->clear('target_type');
+
+    $config->save(TRUE);
+  }
+}
+
+/**
+ * Clear views data cache.
+ */
+function entityqueue_update_8002() {
+  // Empty update function that rebuilds the views data in order to account for
+  // the updated entityqueue relationship definition.
+}
+
+/**
+ * Update the definition of the Entity Subqueue entity type.
+ */
+function entityqueue_update_8003() {
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_repository */
+  $entity_repository = \Drupal::service('entity.last_installed_schema.repository');
+
+  $entity_type = $entity_repository->getLastInstalledDefinition('entity_subqueue');
+  $entity_type->setHandlerClass('views_data', 'Drupal\views\EntityViewsData');
+  $entity_type->set('data_table', NULL);
+  $entity_repository->setLastInstalledDefinition($entity_type);
+}
+
+/**
+ * Add the publishing status field to subqueues.
+ */
+function entityqueue_update_8004() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('entity_subqueue');
+
+  // Add the 'published' entity key to the entity_subqueue entity type.
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['published'] = 'status';
+  $entity_type->set('entity_keys', $entity_keys);
+
+  $definition_update_manager->updateEntityType($entity_type);
+
+  // Add the status field.
+  $status = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Publishing status'))
+    ->setDescription(t('A boolean indicating the published state.'))
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE)
+    ->setDefaultValue(TRUE);
+
+  $has_content_translation_status_field = $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'entity_subqueue');
+  if ($has_content_translation_status_field) {
+    $status->setInitialValueFromField('content_translation_status', TRUE);
+  }
+  else {
+    $status->setInitialValue(TRUE);
+  }
+  $definition_update_manager->installFieldStorageDefinition('status', 'entity_subqueue', 'entity_subqueue', $status);
+
+  // Uninstall the 'content_translation_status' field if needed.
+  if ($has_content_translation_status_field) {
+    $content_translation_status = $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'entity_subqueue');
+    $definition_update_manager->uninstallFieldStorageDefinition($content_translation_status);
+  }
+
+  return t('The publishing status field has been added to Entity Subqueues.');
+}
+
+/**
+ * Add the revision metadata fields to subqueues.
+ */
+function entityqueue_update_8005() {
+  // We are adding these fields before the conversion to revisionable in order
+  // to be able to use initial values from the existing 'created' and 'uid'
+  // fields.
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('entity_subqueue');
+
+  // Add the revision metadata keys to the entity_subqueue entity type.
+  $revision_metadata_keys = [
+    'revision_default' => 'revision_default',
+    'revision_user' => 'revision_user',
+    'revision_created' => 'revision_created',
+    'revision_log_message' => 'revision_log_message',
+  ];
+  $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+  $definition_update_manager->updateEntityType($entity_type);
+
+  $revision_created = BaseFieldDefinition::create('created')
+    ->setLabel(new TranslatableMarkup('Revision create time'))
+    ->setDescription(new TranslatableMarkup('The time that the current revision was created.'))
+    ->setRevisionable(TRUE)
+    ->setInitialValueFromField('created');
+  $definition_update_manager->installFieldStorageDefinition('revision_created', 'entity_subqueue', 'entity_subqueue', $revision_created);
+
+  $revision_user = BaseFieldDefinition::create('entity_reference')
+    ->setLabel(new TranslatableMarkup('Revision user'))
+    ->setDescription(new TranslatableMarkup('The user ID of the author of the current revision.'))
+    ->setSetting('target_type', 'user')
+    ->setRevisionable(TRUE)
+    ->setInitialValueFromField('uid');
+  $definition_update_manager->installFieldStorageDefinition('revision_user', 'entity_subqueue', 'entity_subqueue', $revision_user);
+
+  $revision_log_message = BaseFieldDefinition::create('string_long')
+    ->setLabel(new TranslatableMarkup('Revision log message'))
+    ->setDescription(new TranslatableMarkup('Briefly describe the changes you have made.'))
+    ->setRevisionable(TRUE)
+    ->setDefaultValue('');
+  $definition_update_manager->installFieldStorageDefinition('revision_log_message', 'entity_subqueue', 'entity_subqueue', $revision_log_message);
+
+  return t('The revision metadata fields have been added to Entity Subqueues.');
+}
+
+/**
+ * Make entity_subqueue items non-translatable.
+ */
+function entityqueue_update_8006() {
+  // See https://www.drupal.org/project/entityqueue/issues/3150981
+  // If items is translatable, Content Translation creates base field overrides
+  // which does not take into account the bundle specific target type.
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_definition = $definition_update_manager->getFieldStorageDefinition('items', 'entity_subqueue');
+  $field_definition->setTranslatable(FALSE);
+  $definition_update_manager->updateFieldStorageDefinition($field_definition);
+
+  // Remove any BaseFieldOverrides created by Content Translation.
+  $queue_ids = \Drupal::entityTypeManager()
+    ->getStorage('entity_queue')
+    ->getQuery()
+    ->execute();
+
+  $bfo_ids = array_map(function ($queue_id) {
+    return "entity_subqueue.{$queue_id}.items";
+  }, $queue_ids);
+
+  $bfo_storage = \Drupal::entityTypeManager()->getStorage('base_field_override');
+  $bfo_entities = $bfo_storage->loadMultiple($bfo_ids);
+  $bfo_storage->delete($bfo_entities);
+}

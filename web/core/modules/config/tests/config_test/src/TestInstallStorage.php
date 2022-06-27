@@ -21,10 +21,9 @@ class TestInstallStorage extends InstallStorage {
       $this->folders = $this->getCoreNames();
       $listing = new ExtensionDiscovery(\Drupal::root());
       $listing->setProfileDirectories([]);
-      // @todo Remove as part of https://www.drupal.org/node/2186491
-      $this->folders = $this->getComponentNames($listing->scan('profile')) + $this->folders;
-      $this->folders = $this->getComponentNames($listing->scan('module')) + $this->folders;
-      $this->folders = $this->getComponentNames($listing->scan('theme')) + $this->folders;
+      $this->folders += $this->getComponentNames($listing->scan('profile'));
+      $this->folders += $this->getComponentNames($listing->scan('module'));
+      $this->folders += $this->getComponentNames($listing->scan('theme'));
     }
     return $this->folders;
   }

@@ -387,54 +387,608 @@ strong {
 .hero {
   position: relative; }
 
-.hero__content {
+/*-----------------------------
+/
+/	HERO AREAS
+/
+/-----------------------------*/
+/*------------------------------
+/ SITEWIDE HERO
+/-------------------------------*/
+.c-hero--tout {
+  position: relative;
+  padding: 0; }
+  .c-hero--tout.c-hero--featured {
+    padding: 20px;
+    max-width: 440px;
+    background: #FFF; }
+
+.c-hero--welcome {
+  padding: 30px 20px;
+  color: #7d7c7c;
+  font-family: 'Adelle Light';
+  font-size: 24px;
+  line-height: 1.5em;
+  background: #FFF; }
+  .c-hero--welcome a {
+    color: #cb8d37;
+    border-bottom: 1px dotted;
+    font-style: italic; }
+    .c-hero--welcome a:hover {
+      color: #f1af58; }
+
+.c-hero--date {
+  display: inline;
+  margin: 0 10px 20px 0;
+  font-family: 'Proxima Nova Regular';
+  color: #888888;
+  font-size: 12px; }
+
+.c-hero--committee {
+  display: inline;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding-left: 15px;
+  border-left: 1px solid #aaaaaa;
+  text-transform: uppercase;
+  font-family: 'Proxima Nova SemiBold';
+  color: #cb8d37;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  line-height: 1.2em;
+  white-space: normal; }
+
+.c-hero--title {
+  color: #7d7c7c;
+  font-family: 'Adelle Light';
+  font-size: 24px;
+  line-height: 1.3em;
+  padding-top: 20px; }
+  .c-hero--title a {
+    color: #7d7c7c; }
+
+.c-hero--cta {
+  position: relative;
+  width: 100%;
+  background: #2b6990; }
+  .c-hero--cta::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%; }
+  .c-hero--cta .c-block--btn {
+    position: relative;
+    display: block;
+    background: #004c71;
+    font-size: 13px; }
+
+.c-hero--cta-msg {
+  margin: 0;
+  padding: 0 20px;
+  display: inline-block;
+  vertical-align: middle;
+  color: #FFF;
+  font-family: 'Adelle Regular';
+  font-size: 15px;
+  line-height: 1.5em; }
+
+@media screen and (min-width: 760px) {
+  .c-hero--welcome {
+    font-size: 32px;
+    line-height: 60px;
+    padding: 40px; }
+  .c-hero--tout {
+    margin-top: -15%; }
+    .c-hero--tout.c-hero--featured {
+      padding: 40px 70px 60px;
+      max-width: 760px;
+      background: #FFF; }
+  .c-hero--cta {
+    height: 80px; }
+    .c-hero--cta .c-block--btn {
+      position: absolute;
+      left: auto;
+      right: 0;
+      top: 0;
+      width: 35%;
+      max-width: 265px;
+      text-align: center; }
+  .c-hero--cta-msg {
+    width: 65%;
+    max-width: 495px; } }
+
+/*------------------------------
+/ SITEWIDE -- IN SESSION HERO
+/ contains video element
+/-------------------------------*/
+.c-hero__in-session {
+  background: #7d7c7c; }
+
+/*
+	TODO: make sure aspect ratio is correct
+	currently using 560 x 315 or .5625
+*/
+.c-hero--video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 56.25%; }
+
+.c-hero--video {
   display: block;
-  left: 50%;
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.8);
-  margin-right: -50%;
-  max-width: 95%;
-  padding: 1rem;
-  text-align: center; }
-  @media screen and (min-width: 544px) {
-    .hero__content {
-      max-width: 750px;
-      padding: 2rem 3rem; } }
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
 
-.hero__heading {
-  font-size: 1.5rem;
-  font-weight: normal;
-  margin-bottom: 0.5rem; }
-  @media screen and (min-width: 544px) {
-    .hero__heading {
-      font-size: 2rem; } }
-  @media screen and (min-width: 768px) {
-    .hero__heading {
-      font-size: 3rem; } }
-  @media screen and (min-width: 544px) {
-    .hero__heading {
-      margin-bottom: 1rem; } }
+.c-hero--video-info {
+  padding: 30px 20px; }
 
-.hero__eyebrow {
-  color: #464646;
-  display: block;
-  font-size: 0.75rem;
-  font-weight: normal;
-  letter-spacing: 0.15rem;
-  margin-bottom: 0.5rem;
+.c-video-info--title {
+  font-family: 'Proxima Nova Regular';
+  color: #888888;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em; }
+
+.c-video-info--evt-title {
+  font-family: 'Adelle Light';
+  color: #FFF;
+  font-size: 20px; }
+
+.c-video-info--date {
+  margin: 0;
+  font-family: 'Proxima Nova Regular';
+  color: #888888;
+  font-size: 16px; }
+
+.c-hero--docket-wrapper {
+  padding-top: 20px; }
+
+.c-docket--title {
+  margin-bottom: 7px;
+  font-family: 'Proxima Nova Regular';
+  color: #FFF;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em; }
+
+.c-docket {
+  max-width: 60%;
+  height: 148px;
+  list-style: none;
+  overflow-y: scroll;
+  overflow-x: hidden; }
+
+.c-docket--item {
+  font-size: 17px;
+  line-height: 1;
+  padding: 10px 0; }
+
+.c-docket--bill-num {
+  font-family: 'Adelle SemiBold';
+  color: #e29c44; }
+  .c-docket--bill-num::after {
+    content: '-';
+    margin: 0 0.4em 0 0.7em;
+    color: #888888; }
+
+.c-docket--bill-cat {
+  font-family: 'Proxima Nova Regular';
+  color: #888888;
+  font-size: 14px;
   text-transform: uppercase; }
-  @media screen and (min-width: 544px) {
-    .hero__eyebrow {
-      font-size: 0.875rem;
-      margin-bottom: 1.5rem; } }
 
-.hero__body {
-  font-size: 1rem;
-  line-height: 1.625;
-  margin-bottom: 0.5rem; }
-  @media screen and (min-width: 544px) {
-    .hero__body {
-      font-size: 1.5rem;
-      margin-bottom: 3rem; } }
+@media screen and (min-width: 960px) {
+  .c-hero--video-wrapper {
+    float: left;
+    width: 60%;
+    max-width: 900px;
+    height: 0;
+    padding-top: 33.75%; }
+  .c-hero--video-info {
+    float: left;
+    width: 40%;
+    max-width: 600px;
+    padding: 2% 40px 0; }
+  .c-video-info--date {
+    margin-top: 2%; }
+  .c-hero--docket-wrapper {
+    padding-top: 30px; }
+  .c-docket {
+    max-width: 75%;
+    height: 162px; }
+  .c-docket--item {
+    padding: 5px 0; } }
+
+@media screen and (min-width: 1280px) {
+  .c-hero--video-info {
+    padding-top: 4%; }
+  .c-video-info--date {
+    margin-top: 2%; }
+  .c-docket {
+    height: 186px; }
+  .c-docket--item {
+    padding: 7px 0; } }
+
+/*------------------------------
+/ SENATOR HERO
+/-------------------------------*/
+.c-senator-hero {
+  position: relative; }
+
+.c-senator-hero--info {
+  padding: 20px 20px 60px; }
+
+.c-senator-hero--title {
+  margin: 0 0 3px;
+  font-family: 'Proxima Nova Regular';
+  text-transform: uppercase;
+  line-height: 1em;
+  letter-spacing: 0.1em;
+  font-size: 12px; }
+
+.c-senator-hero--name {
+  font-family: 'Adelle Light';
+  color: #FFF;
+  line-height: 1.2em;
+  letter-spacing: 0.05em;
+  font-size: 26px;
+  margin: 0 0 15px;
+  text-transform: capitalize; }
+  .c-senator-hero--name a {
+    color: #FFF; }
+
+.c-senator-hero--roles {
+  margin-bottom: 15px;
+  font-family: 'Proxima Nova SemiBold';
+  color: #FFF;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  line-height: 1.3em; }
+
+.c-senator-hero--district {
+  margin: 0 0 15px;
+  text-transform: uppercase;
+  font-family: 'Proxima Nova Regular';
+  font-size: 12px; }
+  .c-senator-hero--district div {
+    display: inline; }
+
+.c-senator-hero--social {
+  display: none; }
+
+.c-senator-hero--contact-btn {
+  height: 60px;
+  padding-left: 20px; }
+
+.l-row--hero-live .c-actionbar {
+  max-width: 1500px; }
+
+.c-hero-livestream-wrapper {
+  background-color: #323232;
+  color: #FFF; }
+  .c-hero-livestream-wrapper .c-video-redirect {
+    color: #888888;
+    padding: 1.5em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; }
+    .c-hero-livestream-wrapper .c-video-redirect a {
+      color: #FFF; }
+  .c-hero-livestream-wrapper .c-hero-livestream-video {
+    width: 100%;
+    display: inline-block; }
+    .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content {
+      width: 100%;
+      display: inline-block;
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0; }
+      .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important; }
+  .c-hero-livestream-wrapper .c-hero-livestream-data {
+    width: 100%;
+    max-height: 70%;
+    overflow-y: auto;
+    display: inline-block;
+    vertical-align: top;
+    padding: 40px 30px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta h3 {
+      font-family: 'Adelle Light';
+      font-size: 20px;
+      line-height: 26px;
+      margin-bottom: 15px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta h3 a {
+        color: #FFF;
+        font-weight: 400; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta .livestream-date {
+      color: #888888; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-description {
+      display: block;
+      font-weight: normal;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+      font-family: 'Proxima Nova Regular';
+      font-size: 16px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data a {
+      text-decoration: none;
+      color: #04a9c5; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data ul li {
+      color: #666666; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .news {
+      color: #a00101;
+      font-weight: bold; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-links {
+      margin: 20px 0 20px 16px;
+      padding: 0;
+      width: 90%; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-links li {
+        line-height: 16px;
+        font-size: 16px;
+        font-family: 'Proxima Nova Regular';
+        margin-bottom: 10px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-links a {
+        color: #cb8d37;
+        display: inline-block;
+        width: 89%;
+        vertical-align: top; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-session-link {
+      font-family: 'Proxima Nova Regular';
+      font-size: 12px;
+      line-height: 18px;
+      color: #FFF;
+      text-transform: uppercase;
+      display: block;
+      margin: 10px 0 0; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched {
+      margin-top: 20px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched label {
+        color: #FFF; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li {
+        list-style: none;
+        font-family: 'Proxima Nova Regular';
+        color: #888888;
+        font-size: 95.5%;
+        line-height: 26px;
+        text-transform: uppercase;
+        display: inline;
+        margin: 0 3.4% 0 0; }
+        .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li::after {
+          content: '|';
+          display: inline;
+          padding-left: 10px; }
+        .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li a {
+          font-family: 'Adelle SemiBold';
+          color: #cb8d37;
+          font-size: 111%; }
+        .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li:last-child::after {
+          display: none; }
+
+@media screen and (min-width: 760px) {
+  .c-senator-hero {
+    z-index: 2; }
+  .c-senator-hero--img {
+    position: relative;
+    width: 54%; }
+    .c-senator-hero--img::before {
+      content: '';
+      display: block;
+      width: 100%;
+      padding-top: 75%;
+      margin-left: -6px; }
+    .c-senator-hero--img img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%; }
+  .c-senator-hero--info {
+    position: absolute;
+    width: 46%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    padding: 20px 20px 80px 0; }
+    .c-senator-hero--info::before {
+      content: '';
+      height: 100%;
+      width: 0;
+      margin-left: -4px;
+      display: inline-block;
+      vertical-align: middle; }
+    .c-senator-hero--info > div {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 45px; }
+  .c-senator-hero--name {
+    margin-bottom: 20px;
+    font-size: 28px; }
+  .c-senator-hero--roles {
+    margin-bottom: 15px;
+    font-size: 16px; }
+  .c-senator-hero--district {
+    margin-bottom: 0; }
+  .inactive-pallette .c-senator-hero--roles {
+    font-size: 13px; }
+  .c-senator-hero--contact-btn {
+    width: 46%;
+    padding-left: 40px;
+    left: auto;
+    right: 0; }
+  .l-row--hero-live .c-actionbar {
+    max-width: 1500px; }
+  .c-hero-livestream-wrapper .c-hero-livestream-video {
+    width: 70%;
+    display: inline-block; }
+    .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0; }
+      .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important; }
+  .c-hero-livestream-wrapper .c-hero-livestream-data {
+    width: 29%;
+    padding: 27px 25px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta label {
+      margin-bottom: 0;
+      color: #888888;
+      font-size: 0.8rem;
+      text-transform: uppercase; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta h3 {
+      font-size: 15px;
+      line-height: 19px;
+      margin-bottom: 3px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta .livestream-date {
+      font-size: 11px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-session-link {
+      font-size: 12px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched {
+      margin-top: 5px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched label {
+        font-size: 12px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul {
+        margin: 0; }
+        .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li {
+          line-height: 22px;
+          font-size: 12px;
+          display: block; }
+          .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li::after {
+            display: none; }
+          .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li a {
+            font-size: 13px; } }
+
+@media screen and (min-width: 960px) {
+  .c-senator-hero--info {
+    padding: 20px 20px 100px 0; }
+    .c-senator-hero--info > div {
+      margin-left: 60px; }
+  .c-senator-hero--not-active {
+    font-size: 16px;
+    margin-bottom: 20px; }
+  .c-senator-hero--name {
+    margin-bottom: 30px;
+    font-size: 36px; }
+  .c-senator-hero--district {
+    margin-bottom: 20px; }
+  .c-senator-hero--social {
+    display: block;
+    margin: 20px 0 0 -0.3em;
+    padding-left: 0;
+    height: 1em;
+    font-size: 27px; }
+  .c-senator-hero--social-item {
+    display: inline-block;
+    margin-right: 8px; }
+    .c-senator-hero--social-item a {
+      position: relative;
+      display: block;
+      height: 30px;
+      width: 30px;
+      color: #FFF; }
+      .c-senator-hero--social-item a::after {
+        line-height: 1em;
+        width: 100%;
+        height: 100%;
+        color: #FFF; }
+    .c-senator-hero--social-item.twitter a::after {
+      left: 3px; }
+  .inactive-pallette .c-senator-hero--social {
+    display: none; }
+  .c-senator-hero--contact-btn {
+    height: 100px;
+    padding-left: 60px; }
+    .c-senator-hero--contact-btn::before {
+      line-height: 100px; }
+  .c-hero-livestream-wrapper {
+    background-color: #323232;
+    color: #FFF; }
+    .c-hero-livestream-wrapper .c-hero-livestream-video {
+      width: 70%;
+      display: inline-block; }
+      .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0; }
+        .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100% !important;
+          height: 100% !important; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data {
+      width: 29%;
+      display: inline-block;
+      vertical-align: top;
+      padding: 30px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-session-link {
+        font-size: 14px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta h3 {
+        font-size: 24px;
+        line-height: 34px;
+        margin-bottom: 10px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta .livestream-date {
+        font-size: 16px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched label {
+        font-size: 15px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li {
+        font-size: 14px;
+        line-height: 30px; }
+        .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li a {
+          font-size: 16px; } }
+
+@media screen and (min-width: 1280px) {
+  .c-senator-hero--info > div {
+    margin-left: 65px; }
+  .c-senator-hero--not-active {
+    margin-bottom: 50px;
+    font-size: 22px; }
+  .c-senator-hero--rule {
+    margin-bottom: 50px; }
+  .c-senator-hero--title {
+    font-size: 14px; }
+  .c-senator-hero--name {
+    font-size: 50px; }
+  .c-senator-hero--roles {
+    font-size: 18px; }
+  .c-senator-hero--district {
+    font-size: 14px; }
+  .c-senator-hero--contact-btn {
+    padding-left: 65px; }
+  .c-hero-livestream-wrapper {
+    background-color: #323232;
+    color: #FFF; }
+    .c-hero-livestream-wrapper .c-hero-livestream-video {
+      width: 70%;
+      display: inline-block; }
+      .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0; }
+        .c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100% !important;
+          height: 100% !important; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta .livestream-date {
+      font-size: 18px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta h3 {
+      font-size: 34px;
+      line-height: 47px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched label {
+      font-size: 18px; }
+    .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li {
+      font-size: 18px;
+      line-height: 34px; }
+      .c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li a {
+        font-size: 20px; } }

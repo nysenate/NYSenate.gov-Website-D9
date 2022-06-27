@@ -1,0 +1,83 @@
+entity.entity_queue.collection:
+  path: '/admin/structure/entityqueue'
+  defaults:
+    _entity_list: 'entity_queue'
+    _title: 'Entityqueues'
+  requirements:
+    _permission: 'administer entityqueue+manipulate entityqueues+manipulate all entityqueues'
+
+entity.entity_queue.add_form:
+  path: '/admin/structure/entityqueue/add'
+  defaults:
+    _entity_form: 'entity_queue.add'
+    _title: 'Add Entity Queue'
+  requirements:
+    _permission: 'administer entityqueue'
+
+entity.entity_queue.edit_form:
+  path: '/admin/structure/entityqueue/{entity_queue}'
+  defaults:
+    _entity_form: 'entity_queue.edit'
+    _title: 'Edit Entity Queue'
+  requirements:
+    _permission: 'administer entityqueue'
+
+entity.entity_queue.delete_form:
+  path: '/admin/structure/entityqueue/{entity_queue}/delete'
+  defaults:
+    _entity_form: 'entity_queue.delete'
+    _title: 'Delete Entity Queue'
+  requirements:
+    _permission: 'administer entityqueue'
+
+entity.entity_queue.enable:
+  path: '/admin/structure/entityqueue/{entity_queue}/enable'
+  defaults:
+    _controller: '\Drupal\entityqueue\Controller\EntityQueueUIController::ajaxOperation'
+    op: enable
+  requirements:
+    _entity_access: entity_queue.enable
+    _csrf_token: 'TRUE'
+
+entity.entity_queue.disable:
+  path: '/admin/structure/entityqueue/{entity_queue}/disable'
+  defaults:
+    _controller: '\Drupal\entityqueue\Controller\EntityQueueUIController::ajaxOperation'
+    op: disable
+  requirements:
+    _entity_access: entity_queue.disable
+    _csrf_token: 'TRUE'
+
+entity.entity_queue.subqueue_list:
+  path: '/admin/structure/entityqueue/{entity_queue}/list'
+  defaults:
+    _controller: '\Drupal\entityqueue\Controller\EntityQueueUIController::subqueueList'
+    _title: 'Subqueues'
+  requirements:
+    _permission: 'administer entityqueue+manipulate entityqueues+manipulate all entityqueues'
+
+entity.entity_subqueue.add_form:
+  path: '/admin/structure/entityqueue/{entity_queue}/add'
+  defaults:
+    _controller: '\Drupal\entityqueue\Controller\EntityQueueUIController::addForm'
+    _title: 'Add subqueue'
+  requirements:
+    _entity_create_access: 'entity_subqueue:{entity_queue}'
+
+entity.entity_subqueue.add_item:
+  path: '/admin/structure/entityqueue/{entity_queue}/{entity_subqueue}/{entity}/add-item'
+  defaults:
+    _controller: '\Drupal\entityqueue\Controller\EntityQueueUIController::subqueueAjaxOperation'
+    op: addItem
+  requirements:
+    _permission: 'administer entityqueue+manipulate entityqueues+manipulate all entityqueues'
+    _csrf_token: 'TRUE'
+
+entity.entity_subqueue.remove_item:
+  path: '/admin/structure/entityqueue/{entity_queue}/{entity_subqueue}/{entity}/remove-item'
+  defaults:
+    _controller: '\Drupal\entityqueue\Controller\EntityQueueUIController::subqueueAjaxOperation'
+    op: removeItem
+  requirements:
+    _permission: 'administer entityqueue+manipulate entityqueues+manipulate all entityqueues'
+    _csrf_token: 'TRUE'

@@ -13,19 +13,20 @@ actively maintained, and has been marked “End of Life” by the OpenJS
 Foundation. It is not recommended to depend on jQuery UI in your own
 code, and instead to select a replacement solution as soon as possible.
 
-## Instructions
+## Installation
 
-1.  Download this module and the jQuery UI module.
-2.  [Download Jquery Touch Punch](https://github.com/furf/jquery-ui-touch-punch) library and place it in the libraries folder (<drupal root>/libraries). You need the full library which is easily available from the Github repo (the full path to the required js file should be: <drupal root>/libraries/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js).
-3.  Install module the [usual way](https://www.drupal.org/documentation/install/modules-themes/modules-8).
-4.  Change any references in your theme or module from
-    `core/jquery.ui.touch-punch` to `jquery_ui_touch_punch/touch-punch`
+ * Install as you would normally install a contributed Drupal module. Visit
+   https://www.drupal.org/node/1897420 for further information.
 
-### Requirements
+## Requirements
 
   - [jQuery UI](https://www.drupal.org/project/jquery_ui)
 
-### Related modules
+## Maintainers
+
+This module is maintained by developers at Morpht. For more information on the company and our offerings, see [morpht.com](https://morpht.com/).
+
+## Related modules
 
   - [jQuery UI Accordion](https://www.drupal.org/project/jquery_ui_accordion)
   - [jQuery UI Button](https://www.drupal.org/project/jquery_ui_button)

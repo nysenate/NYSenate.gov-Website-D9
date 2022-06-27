@@ -92,15 +92,6 @@ class ExtensionDiscovery {
   protected $sitePath;
 
   /**
-   * The profile list.
-   *
-   * Used to determine the directories in which we want to scan for modules.
-   *
-   * @var \Drupal\Core\Extension\ProfileExtensionList
-   */
-  protected $profileList;
-
-  /**
    * Constructs a new ExtensionDiscovery object.
    *
    * @param string $root
@@ -111,24 +102,12 @@ class ExtensionDiscovery {
    *   The available profile directories
    * @param string $site_path
    *   The path to the site.
-   * @param \Drupal\Core\Extension\ProfileExtensionList|null $profile_list
-   *   (optional) The profile list.
    */
-  public function __construct($root, $use_file_cache = TRUE, $profile_directories = NULL, $site_path = NULL, ProfileExtensionList $profile_list = NULL) {
+  public function __construct(string $root, $use_file_cache = TRUE, array $profile_directories = NULL, string $site_path = NULL) {
     $this->root = $root;
     $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
     $this->profileDirectories = $profile_directories;
     $this->sitePath = $site_path;
-
-    // ExtensionDiscovery can be used without a service container
-    // (@drupalKernel::moduleData), so only use the profile list service if it
-    // is available to us.
-    if ($profile_list) {
-      $this->profileList = $profile_list;
-    }
-    elseif (\Drupal::hasService('extension.list.profile')) {
-      $this->profileList = \Drupal::service('extension.list.profile');
-    }
   }
 
   /**
@@ -250,19 +229,7 @@ class ExtensionDiscovery {
   public function setProfileDirectoriesFromSettings() {
     $this->profileDirectories = [];
     if ($profile = \Drupal::installProfile()) {
-      if ($this->profileList) {
-        $profiles = $this->profileList->getAncestors($profile);
-      }
-      else {
-        $profiles = [
-          $profile => new Extension($this->root, 'profile', \Drupal::service('extension.list.profile')->getPath($profile)),
-        ];
-      }
-
-      $profile_directories = array_map(function (Extension $extension) {
-        return $extension->getPath();
-      }, $profiles);
-      $this->profileDirectories = array_unique(array_merge($profile_directories, $this->profileDirectories));
+      $this->profileDirectories[] = \Drupal::service('extension.list.profile')->getPath($profile);
     }
     return $this;
   }
@@ -312,7 +279,7 @@ class ExtensionDiscovery {
         return TRUE;
       }
 
-      foreach ($this->profileDirectories as $weight => $profile_path) {
+      foreach ($this->profileDirectories as $profile_path) {
         if (strpos($file->getPath(), $profile_path) === 0) {
           // Parent profile found.
           return TRUE;
@@ -477,7 +444,7 @@ class ExtensionDiscovery {
         $type = FALSE;
         $file = $fileinfo->openFile('r');
         while (!$type && !$file->eof()) {
-          preg_match('@^type:\s*(\'|")?(\w+)\1?\s*$@', $file->fgets(), $matches);
+          preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
           if (isset($matches[2])) {
             $type = $matches[2];
           }

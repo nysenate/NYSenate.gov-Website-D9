@@ -1,0 +1,68 @@
+{{ attach_library('nysenate_theme/featured-bills') }}
+
+<div class="c-block c-pg-featured-bills entity entity-paragraphs-item paragraphs-item-pg-featured-bills view-mode-full">
+  <!-- theme template: -->
+  {% for bill in bills %}
+    <div class="c-block c-block-legislation c-block-legislation-featured {% if body %}c-block--half-wrap{% endif %}">
+      <div class="c-legislation-info">
+        <h3 class="c-bill-num">
+          <a href="/legislation/bills/2019/s1500/amendment/d">{{ bill.number }}</a>
+        </h3>
+        <p class="c-bill-descript">
+          {{ bill.description }}
+        </p>
+        <ul class="nys-bill-status nys-bill-status__drk">
+          <hr />
+          {% for position in bill.positions %}
+            {% if position.is_grouped %}
+            <li class="nys-bill-status--assem-sen">
+              <ul class="nys-bill-status">
+              {% for item in position.items %}
+                <li {% if item.is_passed %}class="passed"{% endif %} title="{{ item.text }}">
+                  <span class="nys-bill-status--text">{{ item.text }}</span>
+                </li>
+              {% endfor %}
+              </ul>
+            </li>
+            {% else %}
+              <li {% if position.is_passed == true %}class="passed"{% endif %} title="{{ position.text }}">
+                <span class="nys-bill-status--text">{{ position.text }}</span>
+              </li> 
+            {% endif %}
+          {% endfor %}
+          <li class="spacer"></li>
+        </ul>
+        <div class="c-bill-update">
+          <p class="c-bill-update--date">
+            <span class="date-display-single">{{ bill.date }}</span>
+          </p>
+          <p class="c-bill-update--location">
+            <span>
+              {{ bill.update_location }}
+              {% if bill.committee_link %}
+                <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+              {% endif %}
+            </span>
+          </p>
+        </div>
+
+        {% if bill.sponsor %}
+          <div class="sponsors">
+            <span>Sponsored by</span>
+            <span>{{ bill.sponsor }}</span>
+          </div>
+        {% endif %}
+
+        <div class="c-bill-polling med-bg">
+          {% include '@nysenate_theme/bill-vote-widget/bill-vote-widget.twig' with bill only %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  {% if body %}
+    <div class="c-featured-bills-body">
+      {{ body }}
+    </div>
+  {% endif %}
+</div>

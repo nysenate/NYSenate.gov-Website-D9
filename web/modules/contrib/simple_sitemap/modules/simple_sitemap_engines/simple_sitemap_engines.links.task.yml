@@ -1,14 +1,14 @@
 simple_sitemap.engines:
   route_name: simple_sitemap.engines.status
   title: 'Search engines'
-  base_route: simple_sitemap.sitemaps
-  weight: 2
+  base_route: entity.simple_sitemap.collection
+  weight: 0
 
 simple_sitemap.engines.status:
   route_name: simple_sitemap.engines.status
   title: 'Status'
   parent_id: simple_sitemap.engines
-  weight: 0
+  weight: -1
 
 simple_sitemap.engines.settings:
   route_name: simple_sitemap.engines.settings

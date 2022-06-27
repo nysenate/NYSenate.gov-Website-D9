@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Allows users to collect entities in arbitrarily ordered lists.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\entityqueue\Entity\EntityQueue;
+use Drupal\entityqueue\Entity\EntitySubqueue;
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function entityqueue_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  // Only allow edit access on a subqueue title field if the queue doesn't have
+  // automated subqueues.
+  if ($operation == 'edit' && $field_definition->getName() == 'title' && $items && $items->getEntity()->getEntityTypeId() === 'entity_subqueue') {
+    /** @var \Drupal\entityqueue\EntityQueueInterface $queue */
+    $queue = $items->getEntity()->getQueue();
+    return AccessResult::forbiddenIf($queue->getHandlerPlugin()->hasAutomatedSubqueues());
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_views_pre_render().
+ *
+ * Add contexual links to views before rendering.
+ */
+function entityqueue_views_pre_render(ViewExecutable $view) {
+  // Do not add contextual link on view preview.
+  if (\Drupal::moduleHandler()->moduleExists('views_ui') && views_ui_contextual_links_suppress()) {
+    return;
+  }
+
+  // Allow to disable the contextual links.
+  if (!$view->display_handler->getOption('show_admin_links')) {
+    return;
+  }
+
+  // Get view display relationships.
+  $relationships = $view->relationship;
+  foreach ($relationships as $relationship) {
+    if ($relationship->field == 'entityqueue_relationship') {
+      $referenced_subqueues = (array) $relationship->options['limit_queue'];
+
+      // Contextual links can handle only one set of links coming from a module,
+      // so we'll have to settle for the first referenced queue.
+      if (!empty($referenced_subqueues) && ($subqueue = EntitySubqueue::load(reset($referenced_subqueues)))) {
+        $route_parameters = [
+          'entity_queue' => $subqueue->getQueue()->id(),
+          'entity_subqueue' => $subqueue->id(),
+        ];
+        $view->element['#contextual_links']['entityqueue'] = [
+          'route_parameters' => $route_parameters,
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_contextual_links_view_alter().
+ *
+ * Change Entityqueue on views into offcanvas links if available.
+ */
+function entityqueue_contextual_links_view_alter(&$element, $items) {
+  if (\Drupal::moduleHandler()->moduleExists('settings_tray') && isset($element['#links']['entityentity-subqueueedit-form'])) {
+    $element['#links']['entityentity-subqueueedit-form']['attributes'] = [
+      'class' => ['use-ajax'],
+      'data-dialog-type' => 'dialog',
+      'data-dialog-renderer' => 'off_canvas',
+      'data-settings-tray-edit' => TRUE,
+    ];
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * @todo Remove this when https://www.drupal.org/node/2723323 is fixed.
+ */
+function entityqueue_entity_delete(EntityInterface $entity) {
+  // Get all the entity queues referencing the targets entity type.
+  $queues = EntityQueue::loadMultipleByTargetType($entity->getEntityTypeId());
+  foreach ($queues as $queue) {
+    // Get all the subqueues which are referencing the deleted entity.
+    $query = \Drupal::entityQuery('entity_subqueue')
+      ->condition('queue', $queue->id())
+      ->condition('items', $entity->id());
+    $result = $query->execute();
+    $subqueues = EntitySubqueue::loadMultiple($result);
+
+    // Check if the entity is referenced in a subqueue.
+    foreach ($subqueues as $subqueue) {
+      $items = $subqueue->get('items')->getValue();
+      if (($item_key = array_search($entity->id(), array_column($items, 'target_id'))) !== FALSE) {
+        unset($items[$item_key]);
+        $subqueue->set('items', $items);
+        $subqueue->save();
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "drupal/node_export",
+  "type": "drupal-module",
+  "description": "Allows users to export content and then import into another Drupal installation.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/node_export",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/node_export",
+    "source": "http://cgit.drupalcode.org/node_export"
+  },
+  "require": {
+    "php": ">7.0",
+    "ext-json": "*"
+  },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9"
+      }
+    }
+  }
+}

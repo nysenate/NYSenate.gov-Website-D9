@@ -100,6 +100,7 @@ trait ConfigurableProviderTrait {
       Be aware that if you bulk geocode with a hard throttle, it may take a long time or even reach the maximum execution time."),
       '#open' => FALSE,
       '#tree' => TRUE,
+      '#weight' => 10,
     ];
     foreach ($this->getThrottleOptions() as $option => $option_definition) {
       $form['options']['throttle'][$option] = [

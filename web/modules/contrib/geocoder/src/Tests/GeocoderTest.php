@@ -17,15 +17,6 @@ class GeocoderTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @var bool
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   */
-  protected $strictConfigSchema = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   public static $modules = ['geocoder'];
@@ -57,7 +48,7 @@ class GeocoderTest extends BrowserTestBase {
 
     // Generator test:
     $this->drupalGet('admin/config/system/geocoder');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -70,23 +61,15 @@ class GeocoderTest extends BrowserTestBase {
     // Test form structure.
     $this->drupalLogin($this->user);
     $this->drupalGet('admin/config/system/geocoder');
-    $this->assertResponse(200);
-    $config = $this->config('geocoder.settings');
-    $this->assertFieldByName(
-      'cache',
-      $config->get('cache')
-    );
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->fieldExists('cache');
 
-    $this->drupalPostForm(NULL, [
-      'cache' => FALSE,
-    ], 'Save configuration');
+    $this->submitForm([], 'Save configuration');
 
     $this->drupalGet('admin/config/system/geocoder');
-    $this->assertResponse(200);
-    $this->assertFieldByName(
-      'cache',
-      FALSE
-    );
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->fieldExists('cache');
+
   }
 
 }

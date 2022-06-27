@@ -1,0 +1,11 @@
+entity.entity_queue.add_form:
+  route_name: 'entity.entity_queue.add_form'
+  title: 'Add entity queue'
+  appears_on:
+    - entity.entity_queue.collection
+
+entity.entity_subqueue.add_form:
+  route_name: 'entity.entity_subqueue.add_form'
+  title: 'Add subqueue'
+  appears_on:
+    - entity.entity_queue.subqueue_list

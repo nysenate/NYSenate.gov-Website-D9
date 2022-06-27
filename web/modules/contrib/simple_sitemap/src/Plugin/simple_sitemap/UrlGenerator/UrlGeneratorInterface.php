@@ -2,17 +2,41 @@
 
 namespace Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator;
 
+use Drupal\simple_sitemap\Entity\SimpleSitemapInterface;
+use Drupal\simple_sitemap\Plugin\simple_sitemap\SimpleSitemapPluginInterface;
+
 /**
- * Interface UrlGeneratorInterface
- * @package Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator
+ * Provides an interface for UrlGenerator plugins.
  */
-interface UrlGeneratorInterface {
+interface UrlGeneratorInterface extends SimpleSitemapPluginInterface {
 
-  public function setSettings(array $settings);
+  /**
+   * Sets the sitemap.
+   *
+   * @param \Drupal\simple_sitemap\Entity\SimpleSitemapInterface $sitemap
+   *   The sitemap entity to set.
+   *
+   * @return $this
+   */
+  public function setSitemap(SimpleSitemapInterface $sitemap): UrlGeneratorInterface;
 
-  public function setSitemapVariant($sitemap_variant);
+  /**
+   * Gets the datasets.
+   *
+   * @return array
+   *   The datasets.
+   */
+  public function getDataSets(): array;
 
-  public function getDataSets();
+  /**
+   * Generates URLs from specified dataset.
+   *
+   * @param mixed $data_set
+   *   The dataset to process.
+   *
+   * @return array
+   *   Generation result.
+   */
+  public function generate($data_set): array;
 
-  public function generate($data_set);
 }

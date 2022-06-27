@@ -20,7 +20,7 @@ class GoogleAnalyticsTestController extends ControllerBase {
     $this->messenger()->addMessage($this->t('Example status message.'), 'status');
     $this->messenger()->addMessage($this->t('Example warning message.'), 'warning');
     $this->messenger()->addMessage($this->t('Example error message.'), 'error');
-    $this->messenger()->addMessage($this->t('Example error <em>message</em> with html tags and <a href="http://example.com/">link</a>.'), 'error');
+    $this->messenger()->addMessage($this->t('Example error <em>message</em> with html tags and <a href="https://example.com/">link</a>.'), 'error');
 
     return [];
   }

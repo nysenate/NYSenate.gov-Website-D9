@@ -39,25 +39,12 @@ class GoogleAnalyticsVisibilityPages extends ProcessPluginBase implements Contai
   protected $migrationPlugin;
 
   /**
-   * Whether or not to skip Google Analytics that use PHP for visibility.
-   *
-   * Only applies if the PHP module is not enabled.
-   *
-   * @var bool
-   */
-  protected $skipPHP = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ModuleHandlerInterface $module_handler, MigrateProcessInterface $migration_plugin) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->moduleHandler = $module_handler;
     $this->migrationPlugin = $migration_plugin;
-
-    if (isset($configuration['skip_php'])) {
-      $this->skipPHP = $configuration['skip_php'];
-    }
   }
 
   /**
@@ -75,7 +62,7 @@ class GoogleAnalyticsVisibilityPages extends ProcessPluginBase implements Contai
       $plugin_id,
       $plugin_definition,
       $container->get('module_handler'),
-      $container->get('plugin.manager.migrate.process')->createInstance('migration', $migration_configuration, $migration)
+      $container->get('plugin.manager.migrate.process')->createInstance('migration_lookup', $migration_configuration, $migration)
     );
   }
 
@@ -90,16 +77,10 @@ class GoogleAnalyticsVisibilityPages extends ProcessPluginBase implements Contai
     if ($pages) {
       // 2 == BLOCK_VISIBILITY_PHP in Drupal 6 and 7.
       if ($old_visibility == 2) {
-        // If the PHP module is present, migrate the visibility code unaltered.
-        if ($this->moduleHandler->moduleExists('php')) {
-          $request_path_pages = $pages;
-        }
         // Skip the row if we're configured to. If not, we don't need to do
         // anything else -- the block will simply have no PHP or request_path
-        // visibility configuration.
-        elseif ($this->skipPHP) {
-          throw new MigrateSkipRowException();
-        }
+        // visibility configuration. You will need to manually migrate PHP code.
+        throw new MigrateSkipRowException();
       }
       else {
         $paths = preg_split("(\r\n?|\n)", $pages);

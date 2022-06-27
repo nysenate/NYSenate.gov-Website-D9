@@ -7,11 +7,44 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.c-block {
+  @include clearfix;
+  display: block;
+  position: relative;
+  margin-bottom: 20px;
+  zoom: 1;
+  clear: both;
+
+  @include breakpoint($bp-sm) {
+    margin-bottom: 60px;
+  }
+}
+
+.node-resolution {
+  max-width: 840px;
+  padding: 0 20px;
+  padding-top: 40px;
+  margin: 0 auto;
+
+  @include breakpoint($bp-sm) {
+    padding: 0 40px;
+    padding-top: 80px;
+  }
+}
+
 .c-detail--header {
   margin-bottom: 20px;
 
   > .nys-title {
+    color: $grey02;
+    text-transform: capitalize;
+    font-family: 'Adelle Bold';
+    font-size: 18px;
     margin-bottom: 0;
+
+    @include breakpoint($bp-sm) {
+      font-size: 32px;
+    }
   }
 }
 
@@ -33,6 +66,8 @@
 
 .c-detail--descript {
   margin-bottom: 10px;
+  margin-top: 0;
+  color: $grey03;
 }
 
 .c-bill--amended {
@@ -64,7 +99,7 @@
   list-style: none;
   line-height: 1.3em;
 
-  .field-name-field-issues {
+  .field--name-field-issues {
     padding-bottom: 10px;
   }
 }
@@ -421,6 +456,7 @@
   padding: 30px 20px 20px;
   background: $grey06;
   font-size: 12px;
+  color: $grey10;
 
   h4 {
     margin-bottom: 30px;
@@ -456,6 +492,13 @@
 .c-bill--flags {
   overflow: hidden;
   margin-top: 20px;
+
+  @include breakpoint($bp-sm) {
+    display: block;
+    float: left;
+    margin-top: 0;
+    padding: 5px 0 0 20px;
+  }
 }
 
 .c-bill--flag {

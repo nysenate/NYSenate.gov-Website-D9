@@ -1,0 +1,29 @@
+uuid: 33c6ea1e-dddb-4c56-827b-82f94ff58e02
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: homepage_hero
+label: 'Homepage Hero'
+handler: simple
+handler_configuration: {  }
+entity_settings:
+  target_type: node
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+      event: event
+      meeting: meeting
+      session: session
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: article
+queue_settings:
+  min_size: 0
+  max_size: 1
+  act_as_queue: false
+  reverse: false

@@ -1,0 +1,107 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.carousel-item {
+  position: relative;
+}
+
+// Overriding Slick styles for style guide
+// to match wireframes.
+
+// Repositions prev & next button,
+// also makes them larger
+.carousel__list.slick-slider {
+
+  .slick-slide {
+    height: 200px;
+
+    @media #{$tablet} {
+      height: 377px;
+    }
+
+    .carousel-item__media {
+      height: 100%;
+      width: 100%;
+    
+      .media-item {
+        height: 100%;
+        width: 100%;
+    
+        img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  .slick-prev,
+  .slick-next {
+    top: 50%;
+    z-index: 1;
+    height: 45px;
+    width: 45px;
+    transform: translateY(-50%);
+    background: $blue01;
+    color: #eeeeee;
+
+    @media #{$tablet} {
+      height: 55px;
+      width: 55px;
+    }
+
+    &:hover {
+      color: #eeeeee;
+    }
+
+    &::before {
+      opacity: 1;
+      top: 9px;
+      color: #eeeeee;
+      font-size: 28px;
+      height: 100%;
+      width: 100%;
+      text-indent: 0;
+      position: absolute;
+      left: 0;
+      font-family: "senate_icons";
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+
+      @media #{$tablet} {
+        top: 12px;
+        font-size: 32px;
+      }
+    }
+  }
+
+  .slick-prev {
+    left: -20px;
+
+    &::before {
+      content: "\3c";
+    }
+  }
+
+  .slick-next {
+    right: -20px;
+
+    &::before {
+      content: "\3e";
+    }
+  }
+
+  .slick-disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #id-test {
+
+  }
+}

@@ -1,0 +1,29 @@
+uuid: 0727f608-6a32-4cad-94eb-526c71d493d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.file_uploads
+    - field.storage.block_content.field_pdf
+    - media.type.file
+id: block_content.file_uploads.field_pdf
+field_name: field_pdf
+entity_type: block_content
+bundle: file_uploads
+label: PDF
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      file: file
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

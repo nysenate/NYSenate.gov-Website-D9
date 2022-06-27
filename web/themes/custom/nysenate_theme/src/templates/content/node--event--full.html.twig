@@ -73,6 +73,7 @@
 {%
   set classes = [
     'node',
+    'node--event-full',
     'node--type-' ~ node.bundle|clean_class,
     node.isPromoted() ? 'node--promoted',
     node.isSticky() ? 'node--sticky',
@@ -81,36 +82,131 @@
   ]
 %}
 {{ attach_library('classy/node') }}
+{{ attach_library('nysenate_theme/event') }}
+{{ attach_library('nysenate_theme/nysenate-senators-events') }}
+
 <article{{ attributes.addClass(classes) }}>
 
-  {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
+  <h1 class="nys-event-title">{{ label }}</h1>
+  <div class="c-event-block c-event-block--featured{% if content.field_image_main %}-image{% endif %}">
+    {% if content.field_image_main %}
+      <div class="c-event-image">
+        {{ content.field_image_main }}
+      </div>
+    {% endif %}
 
-  {% if content.field_dates %}
-    <div class="container">
-      {%
-        include '@rain_theme/heading/heading.twig' with {
-          "heading": {
-            "title": content.field_dates,
-            "heading_level": "2",
-            "modifier": "heading--section",
-          },
-        } only
-      %}
-    </div>  
-  {% endif %}
+  {% include "@nysenate_theme/nysenate-event-date/nysenate-event-date.twig" with {
+    is_multiday: is_multiday,
+    start_date: start_date,
+    end_date: end_date,
+  } only %}
 
-  <div{{ content_attributes.addClass('node__body', 'container') }}>
-    {{ content|without('field_link', 'field_dates') }}
+    {% if content.field_event_place[0]['#markup'] == "online" %}
+      <div class="c-event-location">
+        <span class="icon-before__circle-pin"></span>
+        <a href="{{ field_event_online_link }}">Online Event</a>
+
+        {% if content.field_meeting_location[0]['#context']['value'] %}
+          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
+        {% endif %}
+      </div>
+    {% elseif content.field_event_place[0]['#markup'] == "teleconference" %}
+      <div class="c-event-location">
+        <span class="icon-before__circle-pin"></span>Teleconference Event</div>
+      <div class="c-event-location">
+        <strong>TEL:
+        </strong>
+        {{ field_teleconference_number }}
+        {% if field_teleconference_id_number %}
+          <br><strong>ID:
+          </strong>
+          {{ field_teleconference_id_number }}
+        {% endif %}
+        {% if content.field_meeting_location[0]['#context']['value'] %}
+          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
+        {% endif %}
+      </div>
+    {% elseif content.field_location[0]['organization']['#value'] %}
+      <a href="http://maps.google.com/?q={{ location_url }}" class="c-event-location" target="_blank">
+        <span class="icon-before__circle-pin"></span>
+        {{ content.field_location[0]['organization']['#value'] }}
+      </a>
+      <div class="c-event-address">
+        {% if content.field_meeting_location[0]['#context']['value'] %}
+          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+
+    {% if content.field_location[0]['address_line1']['#value'] %}
+      <p class="c-event-address">
+        {{ content.field_location[0]['address_line1']['#value'] }}<br/>{{ content.field_location[0]['locality']['#value'] }},
+        {{ content.field_location[0]['administrative_area']['#value'] }}
+        {{ content.field_location[0]['postal_code']['#value'] }}</p>
+    {% endif %}
+
+    <div class="c-event-time">
+      {{ start_date|date("g:i A") }}
+      {% if end_date %}
+        -
+        {{ end_date|date("g:i A") }}
+      {% endif %}
+    </div>
+
+    <div title="Add to Calendar" class="addthisevent">
+      Add to Calendar
+      <span class="start">{{ start_date|date("m/d/Y g:i A") }}</span>
+      <span class="end">{{ end_date|date("m/d/Y g:i A") }}</span>
+      <span class="timezone">America/New_York</span>
+      <span class="title">{{ label }}</span>
+      <span class="location">{{ field_location }}</span>
+      <span class="date_format">MM/DD/YYYY</span>
+      <span class="organizer">NY STATE SENATE</span>
+      <span class="organizer_email">content@senate.state.ny.us</span>
+    </div>
+
   </div>
 
-  <footer class="node__meta container">
-    {{ content.field_link }}
-  </footer>
+  {% if field_issues or field_majority_issue_tag %}
+    <ul class="nys-associated-topics">
+      <div class="nys-associated-topics--label">related issues:</div>
+      {% if field_majority_issue_tag %}
+        <li>{{ field_majority_issue_tag  }}</li>
+      {% endif %}
+      {% for issue in field_issues %}
+        <li>{{ issue }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if content.field_attachment[0] %}
+    {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+      title: title,
+      attachment: content.field_attachment,
+    } only %}
+  {% endif %}
+
+  {% if content.field_yt[0] %}
+    <div class="c-block">
+      {% include '@nysenate_theme/video-embed/video-embed.twig' with {
+          video: content.field_yt
+        } only
+      %}
+    </div>
+  {% elseif content.field_video_status[0]['#value'] == "streaming_live_now" and content.field_ustream_url[0] %}
+    <div class="c-block">
+      {{ field_ustream_url }}
+    </div>
+  {% endif %}
+
+  <div class="c-block">
+    {{ content.body }}
+  </div>
+
+  {% if social_buttons %}
+    {{ social_buttons }}
+  {% endif %}
 
 </article>
+

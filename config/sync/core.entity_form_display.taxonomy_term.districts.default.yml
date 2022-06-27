@@ -88,10 +88,14 @@ content:
       use_details: true
     third_party_settings: {  }
   field_senator:
-    type: options_select
-    weight: 2
+    type: entity_reference_autocomplete
+    weight: 12
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_subheading:
     type: string_textfield

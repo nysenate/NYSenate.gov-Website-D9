@@ -1,0 +1,23 @@
+uuid: 3e72cce5-75dc-459a-becb-1ab1a2bd2f65
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_image
+    - field.storage.block_content.field_pg_full_width_bleed
+id: block_content.featured_image.field_pg_full_width_bleed
+field_name: field_pg_full_width_bleed
+entity_type: block_content
+bundle: featured_image
+label: 'Full Width Bleed'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -25,8 +25,6 @@
         const $heading = $accordion.find('.nysenate-accordion__heading');
         const $itemCount = $accordion.find('.nysenate-accordion__content', context).length;
 
-        console.log($itemCount, $heading);
-
         $(`<span>(${$itemCount})</span>`).appendTo($heading);
 
         // Attach click handler for accordion.

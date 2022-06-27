@@ -1,0 +1,24 @@
+uuid: 7130e548-4dec-485e-8815-e89c47095ce7
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.file_uploads
+    - field.field.block_content.file_uploads.field_pdf
+id: block_content.file_uploads.default
+targetEntityType: block_content
+bundle: file_uploads
+mode: default
+content:
+  field_pdf:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

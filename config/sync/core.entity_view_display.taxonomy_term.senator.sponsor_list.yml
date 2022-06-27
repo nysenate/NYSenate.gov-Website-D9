@@ -1,8 +1,9 @@
-uuid: afdbf5c2-860d-4227-84d7-00ed62d018d6
+uuid: 940b3935-4fa8-4b4b-85b5-75a005c2ccd1
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.taxonomy_term.sponsor_list
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_conference
     - field.field.taxonomy_term.senator.field_current_duties
@@ -14,49 +15,22 @@ dependencies:
     - field.field.taxonomy_term.senator.field_senator_name
     - taxonomy.vocabulary.senator
   module:
+    - layout_builder
     - name
     - options
     - svg_image
-id: taxonomy_term.senator.default
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.senator.sponsor_list
 targetEntityType: taxonomy_term
 bundle: senator
-mode: default
+mode: sponsor_list
 content:
-  field_active_senator:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 8
-    region: content
-  field_conference:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  field_current_duties:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_email:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 5
-    region: content
   field_member_headshot:
     type: image
-    label: above
+    label: hidden
     settings:
       image_link: ''
       image_style: ''
@@ -69,30 +43,16 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_microsite_theme:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 7
-    region: content
   field_party:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 2
     region: content
-  field_press_inquiries:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 6
-    region: content
   field_senator_name:
     type: name_default
-    label: above
+    label: hidden
     settings:
       format: default
       markup: none
@@ -107,5 +67,11 @@ content:
     region: content
 hidden:
   description: true
+  field_active_senator: true
+  field_conference: true
+  field_current_duties: true
+  field_email: true
+  field_microsite_theme: true
+  field_press_inquiries: true
   langcode: true
   search_api_excerpt: true

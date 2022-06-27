@@ -59,7 +59,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 6
+    weight: 8
     region: content
   field_majority_issue_tag:
     type: entity_reference_label
@@ -67,7 +67,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 7
+    weight: 9
     region: content
   field_ol_base_print_no:
     type: string
@@ -107,6 +107,23 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_ol_sponsor:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: sponsor_list
+      link: false
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_ol_sponsor_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 7
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }
@@ -142,8 +159,6 @@ hidden:
   field_ol_program_info_seq: true
   field_ol_publish_date: true
   field_ol_same_as: true
-  field_ol_sponsor: true
-  field_ol_sponsor_name: true
   field_ol_substituted_by: true
   field_ol_summary: true
   field_ol_votes: true

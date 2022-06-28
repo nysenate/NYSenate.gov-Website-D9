@@ -29,13 +29,7 @@
     'vocabulary-' ~ term.bundle|clean_class,
   ]
 %}
-<div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
-  {{ title_prefix }}
-  {% if name and not page %}
-    <h2><a href="{{ url }}">{{ name }}</a></h2>
-  {% endif %}
-  {{ title_suffix }}
-  <div class="content">
-    {{ content }}
-  </div>
-</div>
+
+{% include "@nysenate_theme/nysenate-sponsor/nysenate-sponsor-list.twig" with {
+  party: party
+} only %}

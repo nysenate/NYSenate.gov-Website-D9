@@ -444,10 +444,41 @@ function nysenate_theme_theme_suggestions_taxonomy_term_alter(array &$suggestion
 }
 
 /**
- * Implements hook_preprocess_taxonomy_term__TYPE().
+ * Implements hook_theme_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variables) {
-  $tid = $variables['term']->id();
+  $variables['party'] = '(D) 50th Senate District';
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nysenate_theme_theme($existing, $type, $theme, $path) {
+  return [
+    'nysenate_sponsor' => [
+      'variables' => [
+        'bill' => NULL,
+      ],
+      'path' => $path . '/src/templates',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_nysenate_sponsor(&$variables) {
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term');
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+  if ($variables['bill']->field_ol_sponsor->target_id) {
+    $ol_sponsor = $storage->load($variables['bill']->field_ol_sponsor->target_id);
+    $ol_sponsor = $view_builder->view($ol_sponsor, 'sponsor_list');
+  }
+
+  $variables['content'] = [
+    'field_ol_sponsor' => $ol_sponsor,
+  ];
 }
 
 /**
@@ -481,6 +512,11 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['pdf_link'] = $base_path . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
 
   $variables['active_amend_url'] = $variables['node']->toUrl('canonical', ['absolute' => TRUE])->toString();
+
+  $variables['sponsored_by'] = [
+    '#theme' => 'nysenate_sponsor',
+    '#bill' => $variables['node'],
+  ];
 }
 
 /**

@@ -69,6 +69,21 @@ content:
     third_party_settings: {  }
     weight: 9
     region: content
+  field_ol_add_sponsor_names:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_ol_add_sponsors:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 11
+    region: content
   field_ol_base_print_no:
     type: string
     label: hidden
@@ -134,8 +149,6 @@ hidden:
   field_bill_no_issue_tags: true
   field_metatags: true
   field_ol_active_version: true
-  field_ol_add_sponsor_names: true
-  field_ol_add_sponsors: true
   field_ol_all_actions: true
   field_ol_all_statuses: true
   field_ol_amendments: true

@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\file\Entity\File;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 
@@ -366,7 +367,10 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
   $result = $variables["content"]["#view"]->result;
   foreach ($result as $node) {
     if ($node->_entity->bundle() == 'session' && $node->_entity instanceof NodeInterface) {
-      $date = new DateTime($node->_entity->field_date->value);
+      $date = NULL;
+      if (isset($node->_entity->field_date)) {
+        $date = new DateTime($node->_entity->field_date->value);
+      }
 
       if (!$node->_entity->field_session_calendars->isEmpty() && $node->_entity->field_session_calendars->entity instanceof NodeInterface) {
         $url_calendar = $node->_entity->field_session_calendars->entity->toUrl()->toString();
@@ -377,7 +381,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       }
 
       $variables['homepage_hero'] = [
-        'date' => $date->format('F d, Y'),
+        'date' => !empty($date) ? $date->format('F d, Y') : '',
         'url_calendar' => $url_calendar ?? '#',
         'media' => $media ?? [],
       ];
@@ -398,9 +402,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           $variables['items_today'][] = [
             'title' => $node->_entity->label(),
             'url' => $node->_entity->toUrl()->toString(),
-            'location' => $node->_entity->field_location[0]->locality,
+            'location' => $node->_entity->field_location[0]->organization,
             'street_1' => $node->_entity->field_location[0]->address_line1,
-            'street_2' => $node->_entity->field_location[0]->address_line2,
+            'street_2' => $node->field_location[0]->locality . ','
+            . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
             'time' => $date->format('h:i A'),
           ];
           $variables['now'] = $date->format('M jS');
@@ -424,10 +429,11 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           . $node->_entity->field_location[0]->administrative_area . '%2C+'
           . $node->_entity->field_location[0]->locality . '%2C+'
           . $node->_entity->field_location[0]->postal_code,
-          'image' => $node->_entity->field_image_main[0]->entity->field_image,
-          'location' => $node->_entity->field_location[0]->locality,
+          'image' => $node->_entity->field_feature_image[0]->entity->field_image,
+          'location' => $node->_entity->field_location[0]->organization,
           'street_1' => $node->_entity->field_location[0]->address_line1,
-          'street_2' => $node->_entity->field_location[0]->address_line2,
+          'street_2' => $node->field_location[0]->locality . ','
+          . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
           'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
         ];
       }
@@ -562,11 +568,45 @@ function nysenate_theme_preprocess_node(&$variables) {
         'url' => $node->toUrl()->toString(),
         'day' => $date->format('d'),
         'month' => $date->format('M'),
-        'location' => $node->field_location[0]->locality,
+        'location' => $node->field_location[0]->organization,
         'street_1' => $node->field_location[0]->address_line1,
-        'street_2' => $node->field_location[0]->address_line2,
+        'street_2' => $node->field_location[0]->locality . ','
+        . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
         'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
       ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_node__open_data(&$variables) {
+  $node = $variables['elements']['#node'];
+  if ($node->bundle() == 'open_data') {
+    $date = new \Datetime($node->field_date->value);
+    $end_date = new \Datetime($node->field_end_date->value);
+    $publication_date = new \Datetime($node->field_publication_date->value);
+    $variables['date'] = $date->format('F d, Y');
+    $variables['end_date'] = $end_date->format('F d, Y');
+    $variables['open_date_type'] = $node->field_open_date_type->first()->value;
+    $variables['published_on'] = $publication_date->format('F d, Y');
+    $variables['body'] = $node->body->first()->value;
+    $variables['title'] = $node->getTitle();
+    $variables['title_social'] = $node->toUrl()->toString();
+    $variables['url'] = $node->toUrl()->setAbsolute()->toString();
+    $variables['cta'] = 'Check out this open data report';
+
+    if (!empty($node->field_open_data_file->getValue())) {
+      foreach ($node->field_open_data_file as $item) {
+        $file = File::load($item->target_id);
+        $file_url_generator = \Drupal::service('file_url_generator');
+        $variables['items'][] = [
+          'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
+          'text' => $item->description,
+          'type' => $file->getMimeType(),
+        ];
+      }
     }
   }
 }

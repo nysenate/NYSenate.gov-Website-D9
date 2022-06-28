@@ -88,10 +88,10 @@
 <article{{ attributes.addClass(classes) }}>
 
   <h1 class="nys-event-title">{{ label }}</h1>
-  <div class="c-event-block c-event-block--featured{% if content.field_image_main %}-image{% endif %}">
-    {% if content.field_image_main %}
+  <div class="c-event-block c-event-block--featured{% if content.field_feature_image %}-image{% endif %}">
+    {% if content.field_feature_image %}
       <div class="c-event-image">
-        {{ content.field_image_main }}
+        {{ content.field_feature_image }}
       </div>
     {% endif %}
 

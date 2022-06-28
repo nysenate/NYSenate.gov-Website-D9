@@ -1,0 +1,22 @@
+uuid: bb0dd9cd-7f6b-48ab-9231-fd7a4be30574
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: open_data
+label: 'Open Data'
+type: 'canonical_entities:node'
+pattern: 'open-data/[node:field_date:date:html_year]/[node:title]'
+selection_criteria:
+  e18bb073-fbe9-44f5-b256-5ee7c80bfe6f:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: e18bb073-fbe9-44f5-b256-5ee7c80bfe6f
+    context_mapping:
+      node: node
+    bundles:
+      open_data: open_data
+selection_logic: and
+weight: -5
+relationships: {  }

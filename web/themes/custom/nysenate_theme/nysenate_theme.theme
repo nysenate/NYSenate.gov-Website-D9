@@ -401,9 +401,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           $variables['items_today'][] = [
             'title' => $node->_entity->label(),
             'url' => $node->_entity->toUrl()->toString(),
-            'location' => $node->_entity->field_location[0]->locality,
+            'location' => $node->_entity->field_location[0]->organization,
             'street_1' => $node->_entity->field_location[0]->address_line1,
-            'street_2' => $node->_entity->field_location[0]->address_line2,
+            'street_2' => $node->field_location[0]->locality . ','
+            . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
             'time' => $date->format('h:i A'),
           ];
           $variables['now'] = $date->format('M jS');
@@ -427,10 +428,11 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           . $node->_entity->field_location[0]->administrative_area . '%2C+'
           . $node->_entity->field_location[0]->locality . '%2C+'
           . $node->_entity->field_location[0]->postal_code,
-          'image' => $node->_entity->field_image_main[0]->entity->field_image,
-          'location' => $node->_entity->field_location[0]->locality,
+          'image' => $node->_entity->field_feature_image[0]->entity->field_image,
+          'location' => $node->_entity->field_location[0]->organization,
           'street_1' => $node->_entity->field_location[0]->address_line1,
-          'street_2' => $node->_entity->field_location[0]->address_line2,
+          'street_2' => $node->field_location[0]->locality . ','
+          . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
           'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
         ];
       }
@@ -565,9 +567,10 @@ function nysenate_theme_preprocess_node(&$variables) {
         'url' => $node->toUrl()->toString(),
         'day' => $date->format('d'),
         'month' => $date->format('M'),
-        'location' => $node->field_location[0]->locality,
+        'location' => $node->field_location[0]->organization,
         'street_1' => $node->field_location[0]->address_line1,
-        'street_2' => $node->field_location[0]->address_line2,
+        'street_2' => $node->field_location[0]->locality . ','
+        . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
         'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
       ];
     }

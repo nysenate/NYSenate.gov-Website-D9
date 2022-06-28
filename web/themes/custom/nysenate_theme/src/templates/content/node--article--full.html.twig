@@ -16,7 +16,7 @@
             {{ content.field_article_author }}
           </p>
         {% endif %}
-        {% if content.field_date %}
+        {% if content.field_date[0] %}
           <p class="c-news--pub-date">
             <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
           </p>

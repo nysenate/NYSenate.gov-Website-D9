@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\file\Entity\File;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 
@@ -573,6 +574,39 @@ function nysenate_theme_preprocess_node(&$variables) {
         . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
         'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
       ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_node__open_data(&$variables) {
+  $node = $variables['elements']['#node'];
+  if ($node->bundle() == 'open_data') {
+    $date = new \Datetime($node->field_date->value);
+    $end_date = new \Datetime($node->field_end_date->value);
+    $publication_date = new \Datetime($node->field_publication_date->value);
+    $variables['date'] = $date->format('F d, Y');
+    $variables['end_date'] = $end_date->format('F d, Y');
+    $variables['open_date_type'] = $node->field_open_date_type->first()->value;
+    $variables['published_on'] = $publication_date->format('F d, Y');
+    $variables['body'] = $node->body->first()->value;
+    $variables['title'] = $node->getTitle();
+    $variables['title_social'] = $node->toUrl()->toString();
+    $variables['url'] = $node->toUrl()->setAbsolute()->toString();
+    $variables['cta'] = 'Check out this open data report';
+
+    if (!empty($node->field_open_data_file->getValue())) {
+      foreach ($node->field_open_data_file as $item) {
+        $file = File::load($item->target_id);
+        $file_url_generator = \Drupal::service('file_url_generator');
+        $variables['items'][] = [
+          'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
+          'text' => $item->description,
+          'type' => $file->getMimeType(),
+        ];
+      }
     }
   }
 }

@@ -38,7 +38,7 @@
 }
 
 .cbill--actions-table--row:last-of-type {
-  border-bottom:none;
+  border-bottom: 0;
 }
 
 h3.c-bill-num {
@@ -146,7 +146,7 @@ h4.c-bill-topic {
   font-size: 12px;
   line-height: 1.4;
   display: inline;
-  &:before {
+  &::before {
     content: '|';
     display: inline-block;
     margin-right: 0.5em;

@@ -1,0 +1,24 @@
+@import "../../global/utils/init";
+
+.nysenate-promotional-banner-list {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 760px;
+  margin: 0 auto;
+
+  .nysenate-promotional-banner {
+
+    &:not(:last-child) {
+      margin-bottom: 40px;
+    }
+
+    &.two-up {
+
+      @media #{$tablet} {
+        &:nth-child(even) {
+          margin-right: 6%;
+        }
+      }
+    }
+  }
+}

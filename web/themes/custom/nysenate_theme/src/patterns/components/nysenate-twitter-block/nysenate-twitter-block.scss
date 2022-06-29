@@ -1,4 +1,4 @@
-@import "../../global/utils/init";
+@import '../../global/utils/init';
 
 // TWITTER WIDGET STYLING OVERRIDE
 .timeline-Widget {
@@ -14,7 +14,7 @@
 .TweetAuthor-screenName,
 .timeline-Tweet-timestamp,
 .timeline-Tweet-metadata {
-  font-family: "Proxima Nova Regular" !important;
+  font-family: 'Proxima Nova Regular' !important;
 }
 
 .timeline-Header,
@@ -44,7 +44,7 @@
   border-top: 1px solid $grey05 !important;
 
   .timeline-Tweet-text {
-    font-family: "Adelle Light" !important;
+    font-family: 'Adelle Light' !important;
     font-size: 18px !important;
     color: $grey04 !important;
     line-height: 1.625 !important;
@@ -127,7 +127,6 @@
 
     .u-even,
     .u-odd {
-
       &:nth-child(-n + 2) {
         border-top: 1px solid $grey05;
 
@@ -182,7 +181,7 @@
   }
 
   .c-twitter-user--name {
-    font-family: "Proxima Nova Regular";
+    font-family: 'Proxima Nova Regular';
     font-size: 19px;
     color: $grey03;
     margin: 0;
@@ -193,7 +192,7 @@
 
     a {
       color: $orange01;
-      font-family: "Proxima Nova SemiBold";
+      font-family: 'Proxima Nova SemiBold';
       font-size: 12px;
       text-transform: uppercase;
       text-decoration: none;
@@ -212,7 +211,7 @@
       color: $orange01;
       font-size: 12px;
       line-height: 1;
-      font-family: "Proxima Nova SemiBold";
+      font-family: 'Proxima Nova SemiBold';
       text-transform: uppercase;
       text-decoration: none;
     }
@@ -224,7 +223,7 @@
     padding: 20px 0 20px;
 
     .c-tweet {
-      font-family: "Adelle Light";
+      font-family: 'Adelle Light';
       font-size: 18px;
       color: $grey04;
       margin-bottom: 30px;
@@ -237,7 +236,7 @@
     .c-timestamp {
       display: block;
       float: left;
-      font-family: "Proxima Nova Regular";
+      font-family: 'Proxima Nova Regular';
       font-size: 12px;
       color: $grey04;
 
@@ -264,25 +263,25 @@
         width: 35px;
         color: $grey04;
 
-        &:after {
+        &::after {
           padding: 0;
           font-size: 28px;
         }
 
-        &[href*="intent/tweet"] {
+        &[href*='intent/tweet'] {
           position: relative;
           display: block;
           overflow: hidden;
           padding-top: 1em;
           text-indent: -99999px;
 
-          &:after {
-            content: "\38";
+          &::after {
+            content: '\38';
             text-indent: 0;
             position: absolute;
             top: 0;
             left: 0;
-            font-family: "senate_icons";
+            font-family: 'senate_icons';
             speak: none;
             font-style: normal;
             font-weight: normal;
@@ -294,20 +293,20 @@
           -moz-osx-font-smoothing: grayscale;
         }
 
-        &[href*="intent/retweet"] {
+        &[href*='intent/retweet'] {
           position: relative;
           display: block;
           overflow: hidden;
           padding-top: 1em;
           text-indent: -99999px;
 
-          &:after {
-            content: "\39";
+          &::after {
+            content: '\39';
             text-indent: 0;
             position: absolute;
             top: 0;
             left: 0;
-            font-family: "senate_icons";
+            font-family: 'senate_icons';
             speak: none;
             font-style: normal;
             font-weight: normal;
@@ -319,20 +318,20 @@
           -moz-osx-font-smoothing: grayscale;
         }
 
-        &[href*="intent/favorite"] {
+        &[href*='intent/favorite'] {
           position: relative;
           display: block;
           overflow: hidden;
           padding-top: 1em;
           text-indent: -99999px;
 
-          &:after {
-            content: "\37";
+          &::after {
+            content: '\37';
             text-indent: 0;
             position: absolute;
             top: 0;
             left: 0;
-            font-family: "senate_icons";
+            font-family: 'senate_icons';
             speak: none;
             font-style: normal;
             font-weight: normal;
@@ -344,12 +343,12 @@
           -moz-osx-font-smoothing: grayscale;
         }
 
-        &[href*="intent/favorite"],
-        &[href*="intent/retweet"],
-        &[href*="intent/tweet"] {
+        &[href*='intent/favorite'],
+        &[href*='intent/retweet'],
+        &[href*='intent/tweet'] {
           padding: 0 5px;
 
-          &:after {
+          &::after {
             top: -6px;
             left: 5px;
           }
@@ -364,7 +363,7 @@
 
   @media #{$tablet} {
     .c-container--title {
-      border: none;
+      border: 0;
       padding: 0 0 15px 0;
     }
 

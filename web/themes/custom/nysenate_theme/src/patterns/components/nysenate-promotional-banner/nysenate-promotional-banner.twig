@@ -1,0 +1,21 @@
+{{ attach_library('nysenate_theme/nysenate-promotional-banner') }}
+
+<article class="nysenate-promotional-banner {% if image %} nysenate-promotional-banner__has-img {% endif %} {{ modifier }}">
+  <div class="nysenate-promotional-banner__wrapper lgt-bg">
+    {% if image %}
+    <a class="image-link" href="{{ cta.url }}">
+      {{ image }}
+    </a>
+    {% endif %}
+    <div class="nysenate-promotional-banner__container">
+      <div class="nysenate-promotional-banner__text-content">
+        <a href="{{ cta.url }}">
+          <h3 class="title">{{ title }}</h3>
+        </a>
+      </div>
+      <a href="{{ cta.url }}" class="btn icon-before__read_more med-bg">
+        <span>{{ cta.text }}</span>
+      </a>
+    </div>
+  </div>
+</article>

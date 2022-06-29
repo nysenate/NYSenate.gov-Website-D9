@@ -1,19 +1,19 @@
-uuid: 073607f7-a29e-46ed-8818-ac8822405b48
+uuid: b2972b39-9d15-406b-8d3d-91f5015aa16f
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.media.field_committee
-    - media.type.remote_video
+    - field.storage.node.field_committee
+    - node.type.video
     - taxonomy.vocabulary.committees
-id: media.remote_video.field_committee
+id: node.video.field_committee
 field_name: field_committee
-entity_type: media
-bundle: remote_video
+entity_type: node
+bundle: video
 label: Committees
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

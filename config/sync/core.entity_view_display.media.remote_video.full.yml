@@ -4,21 +4,11 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.full
-    - field.field.media.remote_video.field_accessible_sitewide
-    - field.field.media.remote_video.field_body
-    - field.field.media.remote_video.field_committee
-    - field.field.media.remote_video.field_date
-    - field.field.media.remote_video.field_hide_feed
-    - field.field.media.remote_video.field_issues
     - field.field.media.remote_video.field_media_oembed_video
-    - field.field.media.remote_video.field_recorded_date
-    - field.field.media.remote_video.field_senator
     - media.type.remote_video
   module:
-    - datetime
     - layout_builder
     - media
-    - text
 third_party_settings:
   layout_builder:
     enabled: false
@@ -28,58 +18,6 @@ targetEntityType: media
 bundle: remote_video
 mode: full
 content:
-  field_accessible_sitewide:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 6
-    region: content
-  field_body:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_committee:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  field_date:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_hide_feed:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 7
-    region: content
-  field_issues:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 5
-    region: content
   field_media_oembed_video:
     type: oembed
     label: visually_hidden
@@ -88,23 +26,6 @@ content:
       max_height: 0
     third_party_settings: {  }
     weight: 0
-    region: content
-  field_recorded_date:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_senator:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 8
     region: content
 hidden:
   created: true

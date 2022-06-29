@@ -3,8 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.calendar.field_bill_cal_number
     - field.field.paragraph.calendar.field_ol_bill
-    - field.field.paragraph.calendar.field_ol_bill_call_number
     - field.field.paragraph.calendar.field_ol_bill_names
     - field.field.paragraph.calendar.field_ol_sequence_no
     - field.field.paragraph.calendar.field_ol_type
@@ -15,6 +15,13 @@ targetEntityType: paragraph
 bundle: calendar
 mode: default
 content:
+  field_bill_cal_number:
+    type: number
+    weight: 6
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_ol_bill:
     type: entity_reference_autocomplete
     weight: 3
@@ -23,13 +30,6 @@ content:
       match_operator: STARTS_WITH
       match_limit: 10
       size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_ol_bill_call_number:
-    type: number
-    weight: 5
-    region: content
-    settings:
       placeholder: ''
     third_party_settings: {  }
   field_ol_bill_names:

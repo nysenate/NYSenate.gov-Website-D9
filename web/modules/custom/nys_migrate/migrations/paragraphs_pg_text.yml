@@ -1,0 +1,35 @@
+id: paragraphs_pg_text
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Paragraphs Content'
+migration_group: nys_general
+label: 'Paragraphs (Text)'
+source:
+  plugin: d7_paragraphs_item
+  bundle: pg_text
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  field_pg_full_width_bleed:
+    -
+      plugin: get
+      source: field_pg_full_width_bleed
+  field_pg_text:
+    -
+      plugin: get
+      source: field_pg_text
+  field_metatag:
+    -
+      plugin: d7_metatag_entities
+      source: pseudo_metatag_entities
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: pg_text
+migration_dependencies:
+  required:
+    - upgrade_d7_paragraphs_type
+  optional:
+    - upgrade_d7_field_instance

@@ -1,0 +1,40 @@
+id: nys_senate_gov_media_image_hero
+migration_tags:
+  - 'Drupal 7'
+  - NYS Media
+migration_group: nys_general
+label: 'Media: Image'
+source:
+  plugin: file_entity
+  type: image
+  get_alt: field_image_hero
+  get_title: field_image_hero
+  get_width: field_image_hero
+  get_height: field_image_hero
+  constants:
+    bundle: image
+process:
+  name: filename
+  bundle: 'constants/bundle'
+  mid: fid
+  uid: uid
+  status: status
+  field_image/target_id:
+    -
+      plugin: migration_lookup
+      migration: nys_senate_gov_managed_files
+      source: fid
+  field_image/width: width
+  field_image/height: height
+  field_image/alt: alt
+  field_image/title: title
+  thumbnail/target_id:
+    - plugin: migration_lookup
+      migration: nys_senate_gov_managed_files
+      source: fid
+destination:
+  plugin: entity:media
+  default_bundle: image
+migration_dependencies:
+  required:
+    - nys_senate_gov_managed_files

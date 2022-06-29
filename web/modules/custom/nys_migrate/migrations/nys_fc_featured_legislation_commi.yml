@@ -1,0 +1,51 @@
+id: nys_fc_featured_legislation_commi
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Field Collection Content'
+migration_group: migrate_drupal_7
+label: 'Field Collections (Featured legislation commi)'
+source:
+  plugin: d7_field_collection_item
+  field_name: field_featured_legislation_commi
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  parent_id:
+    -
+      plugin: get
+      source: parent_id
+  parent_type:
+    -
+      plugin: get
+      source: parent_type
+  parent_field_name:
+    -
+      plugin: get
+      source: field_name
+  field_featurer_senator:
+    -
+      plugin: get
+      source: field_featurer_senator
+  field_featured_bill:
+    -
+      plugin: get
+      source: field_featured_bill
+  field_featured_quote:
+    -
+      plugin: get
+      source: field_featured_quote
+  field_metatag:
+    -
+      plugin: d7_metatag_entities
+      source: pseudo_metatag_entities
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: committee_featured_legislation
+migration_dependencies:
+  required:
+    - upgrade_d7_field_collection_type
+  optional:
+    - upgrade_d7_field_instance

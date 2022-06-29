@@ -1,0 +1,114 @@
+# Migration for D7 Video Nodes to Media Remote Video.
+id: nys_content_video
+label: Video Nodes
+migration_group: nys_general
+
+source:
+  plugin: d7_node
+  node_type: video
+  key: migrate
+
+destination:
+  plugin: 'entity:media'
+  default_bundle: remote_video
+
+process:
+  title:
+    -
+      plugin: get
+      source: title
+
+  uid:
+    -
+      plugin: migration_lookup
+      source: node_uid
+      migration: nys_user
+
+  status:
+    -
+      plugin: get
+      source: status
+
+  created:
+    -
+      plugin: get
+      source: created
+
+  changed:
+    -
+      plugin: get
+      source: timestamp
+
+  field_body:
+    -
+      plugin: get
+      source: body
+
+  field_media_oembed_video:
+    -
+      plugin: sub_process
+      source: field_yt
+      process:
+        value: video_url
+
+  field_date:
+    -
+      plugin: sub_process
+      source: field_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+        end_value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value2
+
+  field_accessible_sitewide:
+    -
+      plugin: get
+      source: field_accessible_sitewide
+
+  field_recorded_date:
+    -
+      plugin: sub_process
+      source: field_recorded_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+        end_value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value2
+
+  field_hide_feed:
+    -
+      plugin: get
+      source: field_hide_feed
+
+  field_issues:
+    -
+      plugin: sub_process
+      source: field_issues
+      process:
+        target_id: tid
+
+  field_committees:
+    -
+      plugin: sub_process
+      source: field_committees
+      process:
+        target_id: tid
+
+  field_senator:
+    -
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
+      source: field_senator

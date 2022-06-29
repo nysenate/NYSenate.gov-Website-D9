@@ -10,12 +10,12 @@ label: 'Media: Image'
 source:
   plugin: file_entity
   type: image
-  get_alt: true
-  get_title: true
-  get_width: true
-  get_height: true
+  get_alt: field_image_main
+  get_title: field_image_main
+  get_width: field_image_main
+  get_height: field_image_main
   constants:
-    bundle: 'image'
+    bundle: image
 process:
   name: filename
   bundle: 'constants/bundle'

@@ -1,0 +1,32 @@
+id: nys_senate_gov_media_file
+migration_tags:
+  - 'Drupal 7'
+  - 'NYS Media'
+migration_group: nys_general
+label: 'Media: File'
+
+source:
+  plugin: file_entity
+  scheme: public
+  type: application
+  key: migrate
+
+destination:
+  plugin: 'entity:media'
+  default_bundle: file
+
+process:
+  name: filename
+  mid: fid
+  uid: uid
+  status: status
+  field_media_file/target_id:
+    -
+      plugin: migration_lookup
+      migration: nys_senate_gov_managed_files
+      source: fid
+  field_media_file/display:
+    plugin: default_value
+    default_value: 1
+
+

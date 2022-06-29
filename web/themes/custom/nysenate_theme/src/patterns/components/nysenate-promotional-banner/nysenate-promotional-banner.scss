@@ -1,10 +1,15 @@
 @import "../../global/utils/init";
 
-.nysenate-women-of-distinction {
+.nysenate-promotional-banner {
   position: relative;
   padding: 0;
   max-width: 760px;
+  width: 100%;
   background-color: $gen_blue_lgt;
+
+  &.purple {
+    background-color: $purple_lgt;
+  }
 
   .btn {
     position: absolute;
@@ -58,7 +63,13 @@
       font-size: 15px;
     }
 
-    &__container {
+    &.two-up {
+      width: 47%;
+      height: 345px;
+    }
+
+    &__container,
+    &__wrapper {
       display: flex;
       align-items: center;
     }
@@ -76,9 +87,8 @@
     }
 
     // has img modifications
-    &.nysenate-women-of-distinction__has-img {
+    &.nysenate-promotional-banner__has-img {
       overflow: hidden;
-      display: flex;
 
       .image-link {
         width: 100%;
@@ -92,7 +102,7 @@
         object-fit: cover;
       }
 
-      .nysenate-women-of-distinction__text-content {
+      .nysenate-promotional-banner__text-content {
         max-width: 475px;
         padding-top: 0;
         padding-bottom: 80px;

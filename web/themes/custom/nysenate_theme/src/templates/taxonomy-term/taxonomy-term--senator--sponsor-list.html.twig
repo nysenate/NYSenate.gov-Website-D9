@@ -31,5 +31,8 @@
 %}
 
 {% include "@nysenate_theme/nysenate-sponsor/nysenate-sponsor-list.twig" with {
+  url: url,
+  name: content.field_senator_name[0]['#markup'],
+  image: content.field_member_headshot,
   party: party
 } only %}

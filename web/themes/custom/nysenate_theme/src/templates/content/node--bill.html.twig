@@ -96,7 +96,7 @@
 
   <div class="c-block c-detail--status c-bill-section">
     <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
-      {% if current_session_year %}
+      {% if current_session_year == content.field_ol_session[0]['#markup'] %}
         Current
       {% else %}
         Archive: Last
@@ -107,12 +107,12 @@
         {{ sub_bill_base_print_no }}
       {% endif %}
       -
-      {{ bill_display_status }}
+      {{ content.field_ol_last_status[0]['#markup'] }}
     </h3>
     <!-- Bill Graph Output -->
-    <ul class="nys-bill-status nys-bill-status__drk">
+    <ul class="nys-bill-status">
       <hr/>
-      {% for position in bill.positions %}
+      {% for position in positions %}
         {% if position.is_grouped %}
           <li class="nys-bill-status--assem-sen">
             <ul class="nys-bill-status">
@@ -147,6 +147,8 @@
 
   <!-- Bill Message Form -->
   <div class="c-bill--message-form clearfix">
+    {# todo: This variable comes from nys_bills custom module. #}
+    {# Need to confirm if we need to port this module. #}
     {{ registration_form }}
   </div>
 

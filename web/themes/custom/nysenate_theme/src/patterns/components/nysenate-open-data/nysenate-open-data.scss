@@ -1,0 +1,111 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.l-row--main {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+// NEWS HEADER AREA
+.c-news--head {
+  margin-bottom: 20px;
+
+  .nys-article-title {
+    margin: 0 0 20px 0;
+    color: $grey02;
+    font-family: "Adelle Light";
+    font-size: 22px;
+    line-height: 1.2em;
+
+    @include breakpoint($bp-sm) {
+      font-size: 48px;
+    }
+  }
+
+  .c-news--head-meta {
+    .c-news--pub-date {
+      display: inline-block;
+      margin: 0 10px 0 0;
+      text-transform: capitalize;
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+      b {
+        font-weight: bold;
+        line-height: inherit;
+        color: $grey04;
+      }
+    }
+    .c-news--author {
+      text-transform: uppercase;
+      display: inline-block;
+      margin: 0 10px 0 0;
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+    }
+  }
+
+  ul.links {
+
+    display: block;
+    list-style: none;
+    line-height: 25px;
+
+    li {
+      display: inline-block;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-family: "Proxima Nova SemiBold";
+      white-space: nowrap;
+    }
+
+    a {
+      font-size: 12px;
+      line-height: 1em;
+      color: $gen_blue_lgt;
+    }
+
+  }
+  .field-name-field-issues { padding: 0; }
+
+}
+
+.c-block {
+  font-family: "Adelle Light";
+  line-height: 1.5em;
+  color: #666;
+  font-size: 16px;
+}
+
+.c-news--download {
+  display: block;
+  margin-bottom: 20px;
+
+  img { display: none; }
+
+  // download styles
+  .file > a {
+    display: block;
+    margin-top: 15px;
+    //text-transform: uppercase;
+    font-size: 12px;
+    font-family: "Proxima Nova SemiBold";
+    color: $gen_blue_lgt;
+
+    &:before {
+      content: '\6b';
+      font-size: 21px;
+      line-height: 12px;
+      font-family: 'senate_icons';
+      display:inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-right: 3px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+}

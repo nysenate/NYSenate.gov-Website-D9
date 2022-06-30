@@ -698,6 +698,8 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
     '#theme' => 'nysenate_sponsor',
     '#bill' => $node,
   ];
+
+  $variables['sponsor_block'] = $node->field_ol_co_sponsor_names->value;
 }
 
 /**

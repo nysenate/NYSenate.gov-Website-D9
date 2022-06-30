@@ -29,27 +29,21 @@ class FileEntity extends FieldableEntity {
     }
 
     // Get the alt text, if configured.
-    if (isset($this->configuration['get_alt'])) {
-      $alt_alias = $query->addJoin('left', 'field_data_field_file_image_alt_text', 'alt', 'f.fid = %alias.entity_id');
-      $query->addField($alt_alias, 'field_file_image_alt_text_value', 'alt');
+    if (isset($this->configuration['image_field'])) {
+      $table = "field_data_" . $this->configuration['image_field'];
+
+      $alt_alias = $query->join($table, 'image_field', 'f.fid = %alias.' . $this->configuration['image_field'] . '_fid');
+      $query->addField($alt_alias, $this->configuration['image_field'] . "_alt", 'alt');
+      $query->addField($alt_alias, $this->configuration['image_field'] . "_title", 'title');
+      $query->addField($alt_alias, $this->configuration['image_field'] . "_width", 'width');
+      $query->addField($alt_alias, $this->configuration['image_field'] . "_height", 'height');
     }
 
-    // Get the title text, if configured.
-    if (isset($this->configuration['get_title'])) {
-      $title_alias = $query->addJoin('left', 'field_data_field_file_image_title_text', 'title', 'f.fid = %alias.entity_id');
-      $query->addField($title_alias, 'field_file_image_title_text_value', 'title');
-    }
-
-    // Get the width.
-    if (isset($this->configuration['get_width'])) {
-      $width_alias = $query->addJoin('left', 'field_data_field_image_main', 'width', 'f.fid = %alias.field_image_main_fid');
-      $query->addField($width_alias, 'field_image_main_width', 'width');
-    }
-
-    // Get the height.
-    if (isset($this->configuration['get_height'])) {
-      $height_alias = $query->addJoin('left', 'field_data_field_image_main', 'height', 'f.fid = %alias.field_image_main_fid');
-      $query->addField($height_alias, 'field_image_main_height', 'height');
+    // Get the file description, if configured.
+    if (isset($this->configuration['file_field'])) {
+      $table = "field_data_" . $this->configuration['file_field'];
+      $description_alias = $query->join($table, 'file_field', 'f.fid = %alias.' . $this->configuration['file_field'] . '_fid');
+      $query->addField($description_alias, $this->configuration['file_field'] . "_description", 'description');
     }
 
     // Filter by scheme(s), if configured.
@@ -101,6 +95,7 @@ class FileEntity extends FieldableEntity {
       'title' => $this->t('Title text of the file (if present)'),
       'width' => $this->t('The width of the file (if present)'),
       'height' => $this->t('The height of the file (if present)'),
+      'description' => $this->t('The description of the file (if present)'),
     ];
   }
 

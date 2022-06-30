@@ -599,7 +599,16 @@ function nysenate_theme_preprocess_nysenate_sponsor(&$variables) {
  *   The positions array.
  */
 function nysenate_bill_positions($node) {
+  $positions = [];
   if ($node->hasField('field_ol_all_statuses') && isset($node->field_ol_all_statuses->value)) {
+    $comm_sen = NULL;
+    $floor_sen = NULL;
+    $passed_sen = NULL;
+    $comm_assembly = NULL;
+    $floor_assembly = NULL;
+    $passed_assembly = NULL;
+    $delivered_to_gov = NULL;
+    $signed_by_gov = NULL;
     // All status.
     $all_statuses = $node->field_ol_all_statuses->value;
     $all_statuses = json_decode($all_statuses);
@@ -678,9 +687,9 @@ function nysenate_bill_positions($node) {
         'is_passed' => $signed_by_gov,
       ],
     ];
-
-    return $positions;
   }
+
+  return $positions;
 }
 
 /**

@@ -1,14 +1,14 @@
-uuid: 65cac06a-8522-4e56-b2a8-d5c692e240d9
+uuid: af00d1e5-430d-4104-aa56-cbb9ef2a6a85
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.media.field_hide_feed
-    - media.type.remote_video
-id: media.remote_video.field_hide_feed
+    - field.storage.node.field_hide_feed
+    - node.type.video
+id: node.video.field_hide_feed
 field_name: field_hide_feed
-entity_type: media
-bundle: remote_video
+entity_type: node
+bundle: video
 label: 'Hide from News Feed'
 description: ''
 required: false

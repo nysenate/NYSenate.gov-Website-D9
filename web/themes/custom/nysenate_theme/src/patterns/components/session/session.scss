@@ -66,7 +66,7 @@
 }
 
 .c-meeting-detail--live-flag + .c-meeting-detail--floor-flag {
-  &:before {
+  &::before {
     content: '|';
     margin: 0 5px;
   }
@@ -78,7 +78,7 @@
   font-family: 'Proxima Nova Regular';
   font-size: 18px;
   vertical-align: top;
-  &:before {
+  &::before {
     color: $orange01;
     font-size: 28px;
     line-height: 16px;
@@ -107,7 +107,7 @@
   font-family: 'Proxima Nova Regular';
   font-size: 16px;
 
-  &:before {
+  &::before {
     content: '/';
     display: inline-block;
     margin: 0 2px 0 5px;
@@ -118,7 +118,7 @@
   margin-bottom: 30px;
   .c-event-location {
     font-size: 14px;
-    color: #222;
+    color: $grey10;
   }
 }
 
@@ -181,8 +181,8 @@
 
 .c-meeting-detail--descript {
   .video-embed {
-		margin-top: 24px;
-	}
+    margin-top: 24px;
+  }
 
   p {
     margin-bottom: 15px;
@@ -283,7 +283,6 @@
   }
 
   .view-content {
-
     .c-update-block {
       border-top: 1px solid $grey05;
     }
@@ -410,7 +409,7 @@
     display: block;
     font-size: 12px;
 
-    &:before {
+    &::before {
       display: none;
     }
   }
@@ -428,7 +427,7 @@
   .c-meeting-detail--location-link {
     color: $grey08;
 
-    &:before {
+    &::before {
       color: $gen_blue_lgt;
     }
   }
@@ -533,7 +532,7 @@
               display: inline-block;
               margin: 0 10px 0 0;
               &:nth-child(1) {
-                &:before {
+                &::before {
                   content: 'Related Issues:';
                   font-family: 'Proxima Nova SemiBold';
                   font-size: 12px;
@@ -707,7 +706,7 @@
           line-height: 26px;
           margin-left: 21%;
           float: none;
-          &:before {
+          &::before {
             color: $blue01;
             font-size: 20px;
             margin-top: -3px;
@@ -802,7 +801,7 @@
     width: 10px;
   }
   .c-meeting-detail--live-flag + .c-meeting-detail--floor-flag {
-    &:before {
+    &::before {
       margin: 0 10px;
     }
   }
@@ -821,7 +820,7 @@
     font-size: 20px;
     line-height: 24px;
 
-    &:before {
+    &::before {
       display: none;
     }
   }
@@ -860,7 +859,7 @@
   }
   .c-meeting-video--status {
     font-size: 20px;
-    &:before {
+    &::before {
       padding-top: 7px;
       font-size: 30px;
     }

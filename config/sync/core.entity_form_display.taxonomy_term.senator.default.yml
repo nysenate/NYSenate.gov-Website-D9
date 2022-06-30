@@ -9,6 +9,8 @@ dependencies:
     - field.field.taxonomy_term.senator.field_email
     - field.field.taxonomy_term.senator.field_member_headshot
     - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_ol_member_id
+    - field.field.taxonomy_term.senator.field_ol_shortname
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
     - field.field.taxonomy_term.senator.field_senator_name
@@ -104,6 +106,21 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_ol_member_id:
+    type: number
+    weight: 5
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_ol_shortname:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_party:
     type: options_select
     weight: 7
@@ -158,7 +175,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   simple_sitemap:
-    weight: 10
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }

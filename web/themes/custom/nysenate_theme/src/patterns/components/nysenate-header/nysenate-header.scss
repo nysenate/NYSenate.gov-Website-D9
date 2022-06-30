@@ -910,7 +910,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     left: auto;
     height: 100%;
     width: 100%;
-    border: none;
+    border: 0;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.2em;
@@ -926,15 +926,15 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       text-decoration: none;
       background-color: $gen_blue_med;
 
-      &:before {
+      &::before {
         line-height: 60px;
         font-size: 32px;
         margin-right: 18px;
       }
     }
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       line-height: 60px;
       font-size: 32px;
       margin-right: 18px;
@@ -1001,7 +1001,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     padding-top: 1em;
     text-indent: -99999px;
 
-    &:after {
+    &::after {
       content: '\6d';
       text-indent: 0;
       position: absolute;
@@ -1018,7 +1018,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    &:after {
+    &::after {
       width: 100%;
       padding: 0;
       line-height: 45px;
@@ -1156,7 +1156,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     overflow: hidden;
 
     &::before,
-    &:after {
+    &::after {
       display: none;
     }
 
@@ -1175,7 +1175,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       overflow: hidden;
       text-indent: -99999px;
 
-      &:after {
+      &::after {
         content: '\78';
         text-indent: 0;
         position: absolute;
@@ -1204,7 +1204,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         padding-top: 1em;
         text-indent: -99999px;
 
-        &:after {
+        &::after {
           content: '\6d';
           text-indent: 0;
           position: absolute;

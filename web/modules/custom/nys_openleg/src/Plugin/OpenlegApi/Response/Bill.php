@@ -13,4 +13,15 @@ namespace Drupal\nys_openleg\Plugin\OpenlegApi\Response;
  */
 class Bill extends ResponseItem {
 
+  /**
+   * TRUE if a non-original, published amendment exists.
+   */
+  public function isAmended(): bool {
+    $ret = 0;
+    foreach (($this->result()->publishStatusMap->items ?? []) as $v) {
+      $ret += ((int) (($v->published ?? 0) && $v->version));
+    }
+    return (bool) $ret;
+  }
+
 }

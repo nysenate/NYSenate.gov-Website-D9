@@ -1,0 +1,29 @@
+uuid: b2972b39-9d15-406b-8d3d-91f5015aa16f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_committee
+    - node.type.video
+    - taxonomy.vocabulary.committees
+id: node.video.field_committee
+field_name: field_committee
+entity_type: node
+bundle: video
+label: Committees
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      committees: committees
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

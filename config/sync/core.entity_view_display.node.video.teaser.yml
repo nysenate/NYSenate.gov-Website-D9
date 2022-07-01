@@ -1,0 +1,48 @@
+uuid: b67a803e-b0fd-4e50-88bc-4f450cb463f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.video.body
+    - field.field.node.video.field_accessible_sitewide
+    - field.field.node.video.field_committee
+    - field.field.node.video.field_date
+    - field.field.node.video.field_hide_feed
+    - field.field.node.video.field_issues
+    - field.field.node.video.field_recorded_date
+    - field.field.node.video.field_senator_multiref
+    - field.field.node.video.field_yt
+    - node.type.video
+  module:
+    - text
+    - user
+id: node.video.teaser
+targetEntityType: node
+bundle: video
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_accessible_sitewide: true
+  field_committee: true
+  field_date: true
+  field_hide_feed: true
+  field_issues: true
+  field_recorded_date: true
+  field_senator_multiref: true
+  field_yt: true
+  langcode: true
+  search_api_excerpt: true

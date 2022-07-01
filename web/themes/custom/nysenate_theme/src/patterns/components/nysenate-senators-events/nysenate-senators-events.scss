@@ -1,5 +1,10 @@
 @import '../../global/utils/init';
 
+.l-row--main {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
 .nyesenate-upcoming-events {
   position: relative;
   margin: 40px 0;
@@ -419,7 +424,7 @@
     span {
       font-family: 'Adelle Bold';
 
-      &:after {
+      &::after {
         content:'/';
         display: inline-block;
         font-family: 'Proxima Nova Regular';
@@ -429,7 +434,7 @@
   }
 
   .c-event-date SPAN:last-of-type {
-    &:after {
+    &::after {
       content: "";
     }
   }
@@ -508,7 +513,7 @@
 
     span {
       font-family: 'Adelle Bold';
-      &:after {
+      &::after {
         content:'/';
         display: inline-block;
         font-family: 'Proxima Nova Regular';
@@ -518,7 +523,7 @@
   }
 
   .c-event-date SPAN:last-of-type {
-    &:after {
+    &::after {
       content: "";
     }
   }
@@ -827,7 +832,7 @@
 
       span {
         font-family: 'Adelle SemiBold';
-        &:after {
+        &::after {
           display: inline-block;
           margin: 0px 0px 0px 5px;
         }
@@ -1030,7 +1035,7 @@
   //@extend .icon-replace__left;
   color: $gen_blue_lgt;
 
-  &:after {
+  &::after {
     width: 42px;
     height: 42px;
     font-size: 30px;
@@ -1047,7 +1052,7 @@
     padding: 0;
     //@extend .icon-replace__right;
 
-    &:after {
+    &::after {
       font-size: 30px;
     }
   }
@@ -1085,13 +1090,13 @@
     background: transparent;
     //@extend .icon-before__left;
 
-    &:before {
+    &::before {
       margin-top: -0.15em;
       padding: 0 10px 0 0;
       font-size: 16px;
       line-height: 47px;
     }
-    &:after {
+    &::after {
       content: "";
       font-size: 30px;
       height: auto;
@@ -1103,11 +1108,11 @@
       width: auto;
      //@extend .icon-after__right;
 
-      &:before {
+      &::before {
         content: "";
         padding: 0;
       }
-      &:after {
+      &::after {
         position: relative;
         margin-top: -0.15em;
         padding: 0 0 0 10px;
@@ -1192,7 +1197,7 @@
   z-index: 1;
   pointer-events: none;
 
-  &:after {
+  &::after {
     font-size: 26px;
   }
 }
@@ -1219,7 +1224,7 @@
   //@extend .icon-after__arrow;
   color: $gen_link;
 
-  &:after {
+  &::after {
     margin-top: -0.15em;
     font-size: 1.5em;
     line-height: 14px;
@@ -1299,7 +1304,7 @@
   .l-tab-bar{
     overflow: hidden;
     margin: 30px 0 -1px 0;
-    border: none;
+    border: 0;
     border-bottom: 1px solid $grey05;
     padding-top: 0;
     height: auto;
@@ -1394,7 +1399,7 @@
   .block-menu-menu-issue-explorer ul {
     overflow: hidden;
     margin: 30px 0 30px 0;
-    border: none;
+    border: 0;
     border-bottom: 1px solid $grey05;
     padding-top: 0;
     height: auto;

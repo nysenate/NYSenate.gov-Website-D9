@@ -214,16 +214,6 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
         continue;
       }
 
-      // Set default values.
-      $comm_sen = FALSE;
-      $floor_sen = FALSE;
-      $passed_sen = FALSE;
-      $comm_assembly = FALSE;
-      $floor_assembly = FALSE;
-      $passed_assembly = FALSE;
-      $delivered_to_gov = FALSE;
-      $signed_by_gov = FALSE;
-
       // Published date.
       $date = \Drupal::service('date.formatter')->format(strtotime($bill['#node']->field_ol_publish_date->value), '', 'F d, Y');
 
@@ -558,9 +548,13 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
 
   // Detect bill substitutions.  If a substitution exists, load the target.
   $variables['is_substituted'] = FALSE;
+  $state_node = NULL;
   if ($bill_sub_by) {
     // @todo This comes from nys_bills module. Need to confirm if we need to port the module.
-    $sub_temp = nys_bills_get_bill_versions($variables['type'], $bill_sub_by, $bill_session_year);
+    // $sub_temp = nys_bills_get_bill_versions(
+    // $variables['type'], $bill_sub_by, $bill_session_year
+    // );
+    $sub_temp = NULL;
     $subst_versions = array_combine(
         array_map(function ($v) {
           return $v['title'];
@@ -640,7 +634,18 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
  *   The positions array.
  */
 function nysenate_bill_positions($node) {
+  $positions = [];
   if ($node->hasField('field_ol_all_statuses') && isset($node->field_ol_all_statuses->value)) {
+    // Set default values.
+    $comm_sen = FALSE;
+    $floor_sen = FALSE;
+    $passed_sen = FALSE;
+    $comm_assembly = FALSE;
+    $floor_assembly = FALSE;
+    $passed_assembly = FALSE;
+    $delivered_to_gov = FALSE;
+    $signed_by_gov = FALSE;
+
     // All status.
     $all_statuses = $node->field_ol_all_statuses->value;
     $all_statuses = json_decode($all_statuses);
@@ -719,9 +724,8 @@ function nysenate_bill_positions($node) {
         'is_passed' => $signed_by_gov,
       ],
     ];
-
-    return $positions;
   }
+  return $positions;
 }
 
 /**

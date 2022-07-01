@@ -1,19 +1,19 @@
-uuid: 72c09046-e38f-42bf-8985-a51b84c3755a
+uuid: 68099add-f746-4fec-b50e-397b61ae1434
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.media.field_senator
-    - media.type.remote_video
+    - field.storage.node.field_senator_multiref
+    - node.type.video
     - taxonomy.vocabulary.senator
-id: media.remote_video.field_senator
-field_name: field_senator
-entity_type: media
-bundle: remote_video
+id: node.video.field_senator_multiref
+field_name: field_senator_multiref
+entity_type: node
+bundle: video
 label: Senator
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

@@ -583,6 +583,51 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
 
   // Build Bill Status Content Section.
   $variables['positions'] = nysenate_bill_positions($node);
+
+  // Build actions list, including substituted actions if applicable.
+  $actions = json_decode($node->field_ol_all_actions->value, TRUE);
+  $actions = $actions['items'];
+  $grouped_actions = [];
+  // Mark the actions from this bill as the original actions.
+  foreach ($actions as &$action) {
+    $action['orig'] = TRUE;
+  }
+  if ($variables['is_substituted']) {
+    // If the bill was substituted,
+    // add the subbed bill's actions from the point of substitution.
+    $sub_actions = json_decode($state_node->field_ol_all_actions->value, TRUE);
+    $action_text_to_find = 'SUBSTITUTED FOR';
+    $action_text_to_find_len = strlen($action_text_to_find);
+    $from_index = 0;
+    foreach ($sub_actions['items'] as $i => $v) {
+      if (substr($v['text'], 0, $action_text_to_find_len) === $action_text_to_find) {
+        $from_index = $i;
+        break;
+      }
+    }
+    $actions = array_merge($actions, array_slice($sub_actions['items'], $from_index));
+  }
+  // Sort by reverse chronological date
+  // and group by base print no -> version -> date.
+  $actions = array_reverse($actions);
+  $variables['actions_count'] = count($actions);
+  foreach ($actions as &$action) {
+    $basePrintNo = $action['billId']['basePrintNo'];
+    $version = $action['billId']['version'];
+    $date = $action['date'];
+    if (!isset($grouped_actions[$basePrintNo])) {
+      $grouped_actions[$basePrintNo] = [];
+    }
+    if (!isset($grouped_actions[$basePrintNo][$version])) {
+      $grouped_actions[$basePrintNo][$version] = [];
+    }
+    if (!isset($grouped_actions[$basePrintNo][$version][$date])) {
+      $grouped_actions[$basePrintNo][$version][$date] = [];
+    }
+    array_push($grouped_actions[$basePrintNo][$version][$date], $action);
+  }
+
+  $variables['grouped_actions'] = $grouped_actions;
 }
 
 /**

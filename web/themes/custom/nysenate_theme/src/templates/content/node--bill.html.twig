@@ -177,12 +177,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for action in actions %}
-                    <tr class="cbill--actions-table--row">
-                      <td class="c-bill--actions-table-col1">{{ action.date }}</td>
-                      <td class="c-bill--actions-table-col2">
-                        <span class="c-bill--action-line-senate">{{ action.title }}</span><br></td>
-                    </tr>
+                  {% for versions, base_print_no in grouped_actions %}
+                    {% for dates, version in base_print_no %}
+                      {% for key, items in version %}
+                        <tr class="cbill--actions-table--row">
+                          <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
+                          <td class="c-bill--actions-table-col2">
+                            <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
+                        </tr>
+                      {% endfor %}
+                    {% endfor %}
                   {% endfor %}
                 </tbody>
               </table>
@@ -219,6 +223,7 @@
     </div>
   {% endif %}
 
+  {# todo: Need to port the nys_bill module to create this template. #}
   {{ amendments_block }}
 
   <div class="content c-bill-section" id="panel-comments">
@@ -232,7 +237,6 @@
       </div>
     {% endif %}
   </div>
-
 
   <!-- Related Bills Content -->
   {% if view_related_bills %}

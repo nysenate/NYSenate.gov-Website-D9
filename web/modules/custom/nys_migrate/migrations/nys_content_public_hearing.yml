@@ -6,7 +6,7 @@ migration_group: nys_general
 label: 'Node Public Hearing'
 
 source:
-  plugin: d7_node_complete
+  plugin: d7_node
   node_type: public_hearing
   key: migrate
 
@@ -24,11 +24,7 @@ process:
     -
       plugin: get
       source: vid
-  langcode:
-    -
-      plugin: default_value
-      source: language
-      default_value: und
+
   title:
     -
       plugin: get
@@ -46,26 +42,6 @@ process:
       plugin: get
       source: created
   changed:
-    -
-      plugin: get
-      source: timestamp
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
     -
       plugin: get
       source: timestamp
@@ -120,20 +96,6 @@ process:
       plugin: get
       source: field_meeting_location
 
-  field_ustream_url:
-    -
-      plugin: sub_process
-      source: field_ustream_url
-      process:
-        target_id: fid
-        display: display
-        description: description
-
-  field_transcript:
-    -
-      plugin: get
-      source: field_transcript
-
   field_video_status:
     -
       plugin: get
@@ -146,7 +108,7 @@ process:
       process:
         target_id:
           plugin: migration_lookup
-          migration: nys_senate_gov_media_file
+          migration: nys_media_file_attach
           source: fid
           no_stub: true
 
@@ -176,8 +138,3 @@ process:
     -
       plugin: field_link
       source: field_event_online_link
-
-  field_metatag:
-    -
-      plugin: d7_metatag_entities
-      source: pseudo_metatag_entities

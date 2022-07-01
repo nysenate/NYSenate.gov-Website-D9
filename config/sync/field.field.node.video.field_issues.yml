@@ -1,19 +1,19 @@
-uuid: 4ea9e7be-c63c-44d0-a431-9a24e37fc442
+uuid: 88469932-eaa1-498d-a60a-ab607ca8109a
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.media.field_issues
-    - media.type.remote_video
+    - field.storage.node.field_issues
+    - node.type.video
     - taxonomy.vocabulary.issues
-id: media.remote_video.field_issues
+id: node.video.field_issues
 field_name: field_issues
-entity_type: media
-bundle: remote_video
+entity_type: node
+bundle: video
 label: Issues
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -24,6 +24,6 @@ settings:
     sort:
       field: name
       direction: asc
-    auto_create: true
+    auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

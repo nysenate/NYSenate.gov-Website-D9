@@ -1,23 +1,22 @@
-uuid: c08b4c10-4bfe-41f5-b5df-08e1cd3de94a
+uuid: 233099f1-1ac5-48eb-9d13-497a35c464bd
 langcode: en
 status: true
 dependencies:
   module:
     - field_permissions
-    - media
-    - taxonomy
+    - paragraphs
 third_party_settings:
   field_permissions:
     permission_type: public
-id: media.field_issues
-field_name: field_issues
-entity_type: media
-type: entity_reference
+id: paragraph.field_ol_excused_names
+field_name: field_ol_excused_names
+entity_type: paragraph
+type: string_long
 settings:
-  target_type: taxonomy_term
+  case_sensitive: false
 module: core
 locked: false
-cardinality: 5
+cardinality: 1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

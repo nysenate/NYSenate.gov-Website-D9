@@ -121,7 +121,7 @@ class Calendars extends ImportProcessorBase {
 
     $to_import = [
       'floor_calendar' => [
-        'items' => $result->floorCalendar->entriesBySection->items ?? [],
+        'items' => $result->floorCalendar->entriesBySection->items ?? new \stdClass(),
         'version' => $result->floorCalendar->version ?? '',
         'seq' => 0,
         'type' => 'floor_calendar',
@@ -129,7 +129,7 @@ class Calendars extends ImportProcessorBase {
     ];
     foreach (($result->supplementalCalendars->items ?? []) as $version => $items) {
       $to_import['supplemental_' . $version] = [
-        'items' => $items->entriesBySection->items ?? [],
+        'items' => $items->entriesBySection->items ?? new \stdClass(),
         'version' => $version,
         'seq' => 0,
         'type' => 'supplemental_calendar',
@@ -137,7 +137,7 @@ class Calendars extends ImportProcessorBase {
     }
     foreach (($result->activeLists->items ?? []) as $version => $items) {
       $to_import['active_' . $version] = [
-        'items' => (object) ['active_' . $version => (object) ['items' => $items->entries->items]],
+        'items' => (object) ['active_' . $version => (object) ['items' => $items->entries->items ?? []]],
         'version' => $version,
         'seq' => $items->sequenceNumber,
         'type' => 'active_list',
@@ -145,13 +145,13 @@ class Calendars extends ImportProcessorBase {
     }
 
     foreach ($to_import as $one_import) {
-      if (count($one_import['items'])) {
+      if (count(get_object_vars($one_import['items']))) {
         /** @var \Drupal\paragraphs\Entity\Paragraph $new_pg */
         $new_pg = $storage->create(['type' => 'calendar']);
         $all_bills = [];
-        foreach ($one_import['items'] as $items) {
-          $this->populateBillData($new_pg, ($items->items ?? []));
-          $all_bills += $items->items;
+        foreach ($one_import['items'] as $reading) {
+          $this->populateBillData($new_pg, ($reading->items ?? []));
+          $all_bills += $reading->items;
         }
         $new_pg->set('field_ol_type', $one_import['type']);
         $new_pg->set('field_ol_bill_names', json_encode($all_bills));

@@ -214,23 +214,24 @@ class Agendas extends ImportProcessorBase {
     ]);
     foreach ($bill_refs as $nid => $bill_node) {
       /** @var \Drupal\node\Entity\Node $bill_node */
-      $title = $bill_node->get('title')->getValue();
+      $title = $bill_node->getTitle();
       if (array_key_exists($title, $votes)) {
-        $votes[$title]['nid'] = $nid;
+        $votes[$title]->nid = $nid;
       }
     }
 
     foreach ($votes as $bill_key => $vote) {
-      if ($vote['nid'] ?? 0) {
+      if ($vote->nid ?? 0) {
         /** @var \Drupal\paragraphs\Entity\Paragraph $new_pg */
         $new_pg = $storage->create(['type' => 'agenda_bills']);
-        $new_pg->set('field_ol_bill', $vote['nid']);
-        $new_pg->set('field_ol_bill_message', $bills[$bill_key]['message']);
+        $new_pg->set('field_ol_bill', $vote->nid);
+        $new_pg->set('field_ol_bill_message', $bills[$bill_key]->message);
         $new_pg->set('field_ol_bill_name', json_encode($bills[$bill_key]));
         foreach ($vote_types as $prop => $field) {
-          $field_name = 'field_ol_' . $field . '_count';
           $value = $vote->vote->memberVotes->items->{$prop}->size ?? 0;
-          $new_pg->set($field_name, $value);
+          if ($value) {
+            $new_pg->set('field_ol_' . $field . '_count', $value);
+          }
         }
         $new_pg->save();
         $new_votes[] = $new_pg;

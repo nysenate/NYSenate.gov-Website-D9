@@ -1,0 +1,77 @@
+uuid: 940b3935-4fa8-4b4b-85b5-75a005c2ccd1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.sponsor_list
+    - field.field.taxonomy_term.senator.field_active_senator
+    - field.field.taxonomy_term.senator.field_conference
+    - field.field.taxonomy_term.senator.field_current_duties
+    - field.field.taxonomy_term.senator.field_email
+    - field.field.taxonomy_term.senator.field_member_headshot
+    - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_party
+    - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_senator_name
+    - taxonomy.vocabulary.senator
+  module:
+    - layout_builder
+    - name
+    - options
+    - svg_image
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.senator.sponsor_list
+targetEntityType: taxonomy_term
+bundle: senator
+mode: sponsor_list
+content:
+  field_member_headshot:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_party:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_senator_name:
+    type: name_default
+    label: hidden
+    settings:
+      format: default
+      markup: none
+      list_format: ''
+      link_target: ''
+      preferred_field_reference: ''
+      preferred_field_reference_separator: ', '
+      alternative_field_reference: ''
+      alternative_field_reference_separator: ', '
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  description: true
+  field_active_senator: true
+  field_conference: true
+  field_current_duties: true
+  field_email: true
+  field_microsite_theme: true
+  field_press_inquiries: true
+  langcode: true
+  search_api_excerpt: true

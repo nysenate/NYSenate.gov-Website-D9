@@ -10,6 +10,9 @@
 // This should only be imported and loaded once.
 @import 'fonts/fonts';
 
+// This should only be imported and loaded once.
+@import 'colors/colors';
+
 // Import utility classes.
 @import 'utils/classes';
 
@@ -240,8 +243,6 @@ template {
 
 // Unset default list margin and padding because if not
 // we'll have to unset it every. single. time.
-ul,
-ol,
 dl {
   margin: 0;
   padding: 0;
@@ -250,6 +251,46 @@ dl {
 li {
   margin: 0;
   padding: 0;
+}
+
+ul,
+ol {
+  clear: both;
+  list-style-position: inside;
+  margin: 0;
+  padding: 0;
+  padding-left: 20px;
+
+  li {
+    font-family: "Adelle Light";
+    line-height: 1.5em;
+    color: #666;
+    font-size: 16px;
+
+    & + li {
+      margin-top: 5px;
+    }
+
+    a {
+      @extend .link-text;
+    }
+  }
+
+  &.menu {
+    margin-top: 0;
+    padding-left: 0;
+
+    li + li {
+      margin-top: 0;
+    }
+  }
+}
+
+* + ul,
+* + ol { margin-top: 20px; }
+
+a {
+  @extend .link-text;
 }
 
 // Headings are always 'just a bit bigger' than body copy.
@@ -287,6 +328,26 @@ p {
   &.nys-title--district {
     margin-bottom: 5px;
   }
+}
+
+.c-block ul {
+  list-style-position: outside;
+  margin-bottom:20px;
+  margin-top:20px;
+}
+
+.c-block ol {
+  margin-bottom:20px;
+  margin-top:20px;
+}
+
+.c-container--title {
+	text-transform: capitalize;
+	font-family: "Adelle SemiBold";
+	font-size: 18px;
+	line-height: 32px;
+	letter-spacing: 0;
+	color: $grey02;
 }
 
 // Override for bill page pie chart colors for committees section

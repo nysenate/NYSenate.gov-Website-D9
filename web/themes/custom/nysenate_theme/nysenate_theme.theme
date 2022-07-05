@@ -254,15 +254,18 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
  */
 function nysenate_theme_preprocess_block_content__text(&$variables) {
   $text = [];
-  foreach ($variables['content']['body'] as $key => $value) {
-    if (!is_numeric($key)) {
-      continue;
-    }
-
-    $text[] = [
-      'text' => $value['#text'],
+  if (isset($variables['content']['field_body_left'][0])) {
+    $text['left'] = [
+      'text' => $variables['content']['field_body_left'][0]['#text'],
     ];
   }
+
+  if (isset($variables['content']['field_body_right'][0])) {
+    $text['right'] = [
+      'text' => $variables['content']['field_body_right'][0]['#text'],
+    ];
+  }
+
   $variables['text'] = $text;
   $variables['is_two_column'] = count($text) == 2 ? TRUE : FALSE;
   if (isset($variables['content']['field_is_full_bleed'][0])) {

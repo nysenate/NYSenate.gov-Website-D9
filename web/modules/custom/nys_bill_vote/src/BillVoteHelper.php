@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -183,8 +184,10 @@ class BillVoteHelper {
 
     // If this isn't a bill page, other default...
     $node = $this->currentRouteMatch->getParameter('node');
-    if (!$node->getType() == 'bill') {
-      $label = $this->t("What's your position?");
+    if ($node instanceof NodeInterface) {
+      if (!$node->getType() == 'bill') {
+        $label = $this->t("What's your position?");
+      }
     }
 
     // If this is a user examining a bill through their dashboard...
@@ -285,7 +288,7 @@ class BillVoteHelper {
       if ($needs_processing) {
         // Set the follow flag on this bill for the current user.
         $flag = flag_get_flag('follow_this_bill');
-        $flag->flag('flag', $entity_id, user_load($this->currentUser->uid), TRUE);
+        $flag->flag('flag', $entity_id, user_load($this->currentUser->id()), TRUE);
 
         $vote = [
           'entity_type' => 'node',
@@ -297,6 +300,42 @@ class BillVoteHelper {
 
         // @todo This comes from voting api. Need to check further.
         $ret = votingapi_set_votes($vote);
+      }
+    }
+
+    return $ret;
+  }
+
+  /**
+   * Retrieve widget settings.
+   *
+   * @param array $form_state
+   *   A Drupal form state array.
+   *
+   * @return array|mixed
+   *   The settings array.
+   */
+  public function widgetBuildSettings(array $form_state) {
+    // Try to detect the build settings in form_state.
+    $build_info = $form_state->getBuildInfo();
+    $ret = $build_info['args'][0] ?? [];
+
+    // If the required info is not found, try to detect it
+    // from the current request.
+    if (array_diff(['entity_id', 'entity_type'], array_keys($ret))) {
+      $node = $this->currentRouteMatch->getParameter('node');
+      if ($node instanceof NodeInterface) {
+        $node_id = $node->id();
+        $node_type = $node->getType();
+      }
+
+      // If good info is found, use it.
+      if ($node_id && $node_type) {
+        $ret = ['entity_id' => $node_id, 'entity_type' => $node_type];
+      }
+      // Otherwise, set up for a graceful failure.
+      else {
+        $ret = [];
       }
     }
 

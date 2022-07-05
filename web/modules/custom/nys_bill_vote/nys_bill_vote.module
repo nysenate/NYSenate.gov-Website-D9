@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Events and their Microsite Content.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function nys_bill_vote_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $type = $entity->getType();
+
+  // If the entity is a bill, get the form and save it to content.
+  if ($type == 'bill') {
+    $bill_vote_form_settings = [
+      'entity_type' => $entity->getType(),
+      'entity_id' => $entity->id(),
+    ];
+    $entity->content['vote_widget'] = \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings);
+  }
+}

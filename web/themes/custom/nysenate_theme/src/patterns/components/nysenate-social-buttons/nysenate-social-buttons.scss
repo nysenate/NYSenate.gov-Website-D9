@@ -8,8 +8,8 @@
   zoom: 1;
   clear: both;
 
-  &:after {
-    content: "";
+  &::after {
+    content: '';
     display: table;
     clear: both;
   }
@@ -26,14 +26,14 @@
   text-decoration: none;
   text-transform: uppercase;
   color: $color-white;
-  font-family: "Proxima Nova SemiBold";
+  font-family: 'Proxima Nova SemiBold';
   letter-spacing: 0.2em;
 
   font-size: 12px;
   line-height: 44px;
   height: 60px;
 
-  &:before {
+  &::before {
     display: inline-block;
     vertical-align: middle;
     text-align: center;
@@ -48,7 +48,7 @@
     width: 80%;
     line-height: 1.5em;
 
-    a{
+    a {
       color: $color-white;
       vertical-align: middle;
       display: inline-block;
@@ -60,7 +60,7 @@
   }
 }
 
-.c-block--social{
+.c-block--social {
   margin-top: 20px;
   margin-bottom: 40px;
 
@@ -72,7 +72,7 @@
     height: 40px;
     width: 60px;
     margin-right: 7%;
-    padding-left: 24px;
+    padding-left: 21px;
     float: left;
     outline: none;
     background-color: $gen_blue_lgt;
@@ -85,12 +85,14 @@
     label {
       display: none;
       cursor: pointer;
+      color: $color-white;
+
       @include breakpoint($bp-sm) {
         display: block;
       }
     }
 
-    &:after {
+    &::after {
       line-height: 40px;
       width: 100%;
       text-align: center;
@@ -105,36 +107,45 @@
 
     svg {
       fill: $color-white;
+      color: $color-white;
+      width: 21px;
+      height: 21px;
       position: absolute;
       left: auto;
       @include breakpoint($bp-sm) {
-        left: 80%;
+        left: 77%;
         width: 22px;
       }
       top: 8px;
+
+      .icon--envelope {
+        width: 20px;
+      }
     }
   }
 }
 
 .c-container--header__top-border {
-  font-family: "Proxima Nova Regular";
+  font-family: 'Proxima Nova Regular';
   text-transform: uppercase;
   border-top: 1px solid $grey05;
   padding: 20px 0;
   position: relative;
 
-  h2, h3 {
+  h2,
+  h3 {
     &.c-container--title {
       color: $grey02;
       text-transform: uppercase;
-      font-family: "Proxima Nova Regular";
+      font-family: 'Proxima Nova Regular';
       font-size: 12px;
       letter-spacing: 0.1em;
       line-height: 1em;
       margin: 0;
 
       @media #{$tablet} {
-        h2, h3 {
+        h2,
+        h3 {
           &.c-container--title {
             font-size: 16px;
           }

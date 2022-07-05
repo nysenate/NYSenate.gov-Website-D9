@@ -37,6 +37,7 @@ class ApiRequestManager extends DefaultPluginManager {
       'Drupal\nys_openleg\Api\RequestPluginInterface',
       'Drupal\nys_openleg\Annotation\OpenlegApiRequest'
     );
+    $this->setCacheBackend($cache_backend, 'openleg_api');
     $this->logger = $logger;
     $this->responseManager = $responseManager;
   }

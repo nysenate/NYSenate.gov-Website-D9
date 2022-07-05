@@ -64,7 +64,9 @@ class Senators extends ImporterBase {
       ]);
       if (count($tax_search) == 1) {
         $term = reset($tax_search);
-        $term->field_ol_member_shortname = strtoupper($shortname);
+        // @phpstan-ignore-next-line
+        $term->field_ol_shortname = strtoupper($shortname);
+        // @phpstan-ignore-next-line
         $term->field_ol_member_id = (int) $id;
         try {
           $term->save();

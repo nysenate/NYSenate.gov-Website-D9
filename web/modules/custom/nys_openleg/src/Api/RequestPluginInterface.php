@@ -47,7 +47,7 @@ interface RequestPluginInterface extends ContainerFactoryPluginInterface {
    * @return \Drupal\nys_openleg\Api\ResponsePluginInterface
    *   The Response object.
    */
-  public function retrieveUpdates($time_from, $time_to, array $params = []): ResponsePluginInterface;
+  public function retrieveUpdates($time_from, $time_to, array $params = []);
 
   /**
    * Retrieves a search result from Openleg.
@@ -60,11 +60,11 @@ interface RequestPluginInterface extends ContainerFactoryPluginInterface {
    * @return \Drupal\nys_openleg\Api\ResponsePluginInterface
    *   The response object.
    */
-  public function retrieveSearch(string $search_term, array $params = []): ResponsePluginInterface;
+  public function retrieveSearch(string $search_term, array $params = []);
 
   /**
    * Sets default parameters for all calls from this requester.
    */
-  public function setParams(array $params): RequestPluginInterface;
+  public function setParams(array $params);
 
 }

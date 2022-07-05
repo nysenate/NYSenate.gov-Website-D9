@@ -14,7 +14,7 @@ interface ImportProcessorInterface extends ContainerFactoryPluginInterface {
   /**
    * Initializes the processor with an Openleg item response.
    */
-  public function init(ResponseItem $item): self;
+  public function init(ResponseItem $item);
 
   /**
    * Processes a single item.

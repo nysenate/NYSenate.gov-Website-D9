@@ -6,8 +6,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\nys_openleg\Api\Request\Statute;
-use Drupal\nys_openleg\Api\Search\Statute as StatuteSearch;
+use Drupal\nys_openleg\Service\ApiManager;
 use Drupal\nys_openleg\StatuteHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,12 +56,19 @@ class MainController extends ControllerBase {
   protected PagerManagerInterface $pager;
 
   /**
+   * The Openleg API Manager service.
+   *
+   * @var \Drupal\nys_openleg\Service\ApiManager
+   */
+  protected ApiManager $apiManager;
+
+  /**
    * Constructor.
    *
    * Sets up the request and config objects, and configures the API
    * key to be used by ApiRequest objects.
    */
-  public function __construct(RequestStack $request, ConfigFactory $config, FormBuilderInterface $formBuilder, PagerManagerInterface $pager) {
+  public function __construct(RequestStack $request, ConfigFactory $config, FormBuilderInterface $formBuilder, PagerManagerInterface $pager, ApiManager $apiManager) {
     // Set the request context to the current request by default.
     $this->setRequest($request->getCurrentRequest());
 
@@ -74,6 +80,9 @@ class MainController extends ControllerBase {
 
     // Set the pager.
     $this->pager = $pager;
+
+    // Set the API Manager service reference.
+    $this->apiManager = $apiManager;
 
     // Configure the OpenLeg API library to use the stored key.
     StatuteHelper::setKey($this->config->get('api_key'));
@@ -99,7 +108,8 @@ class MainController extends ControllerBase {
       $container->get('request_stack'),
       $container->get('config.factory'),
       $container->get('form_builder'),
-      $container->get('pager.manager')
+      $container->get('pager.manager'),
+      $container->get('manager.openleg_api')
     );
   }
 
@@ -173,10 +183,11 @@ class MainController extends ControllerBase {
     else {
       // Get the statute.  Consider any historical milestone being requested.
       $history = $this->request->request->get('history') ?: '';
-      $statute = new Statute($book, $location, $history);
+      $statute = $this->apiManager
+        ->getStatuteFull($book, $location, $history);
 
       // If the entry is not found (or other OL error), render the error page.
-      if (!$statute->tree->success) {
+      if (!($statute->tree->success())) {
         return [
           '#theme' => 'nys_openleg_not_found',
           '#attached' => ['library' => ['nys_openleg/openleg']],
@@ -185,7 +196,7 @@ class MainController extends ControllerBase {
       }
 
       // Set up the breadcrumb sources.
-      $law_type = $statute->tree->result->info->lawType;
+      $law_type = $statute->tree->result()->info->lawType;
       $parents = $statute->parents();
 
       // Set up some template variables.
@@ -261,44 +272,50 @@ class MainController extends ControllerBase {
       ->getForm('Drupal\nys_openleg\Form\SearchForm', $search_term);
 
     // Initialize the pager values.  Pager is zero-based, search is not.
+    $use_pager = FALSE;
     $page = $this->pager->findPage() + 1;
     $per_page = (int) $this->request->query->get('per_page', 10);
+    $results = [];
 
     // Execute the search and reformat into the results array.
-    $results = [];
-    $search = new StatuteSearch(
-      $search_term, [
-        'page' => $page,
-        'per_page' => $per_page,
-      ]
-    );
-    foreach ($search->getResults() as $item) {
-      // Find the important data points.
-      $lawId = $item->result->lawId ?? '';
-      $docType = $item->result->docType ?? '';
-      $docLevelId = $item->result->docLevelId ?? '';
-      $locationId = $item->result->locationId ?? '';
-      $title = current($item->highlights->title ?? []) ?: ($item->result->title ?? '');
+    if ($search_term) {
+      /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search */
+      $search = $this->apiManager->getSearch(
+        'statute',
+        $search_term,
+        [
+          'page' => $page,
+          'per_page' => $per_page,
+        ]
+      );
+      foreach ($search->items() as $item) {
+        // Find the important data points.
+        $lawId = $item->result->lawId ?? '';
+        $docType = $item->result->docType ?? '';
+        $docLevelId = $item->result->docLevelId ?? '';
+        $locationId = $item->result->locationId ?? '';
+        $title = current($item->highlights->title ?? []) ?: ($item->result->title ?? '');
 
-      // To ensure presentation, these four data points must be populated.
-      // Location could be empty.
-      if ($lawId && $docType && $docLevelId && $title) {
-        // Create the data structure for the template.
-        $url = StatuteHelper::baseUrl() . '/' .
-          implode('/', array_filter([$lawId, $locationId]));
-        $results[] = [
-          'name' => implode(' ', [$lawId, $docType, $docLevelId]),
-          'title' => $title,
-          'snippets' => $item->highlights->text ?? [],
-          'url' => $url,
-        ];
+        // To ensure presentation, these four data points must be populated.
+        // Location could be empty.
+        if ($lawId && $docType && $docLevelId && $title) {
+          // Create the data structure for the template.
+          $url = StatuteHelper::baseUrl() . '/' .
+            implode('/', array_filter([$lawId, $locationId]));
+          $results[] = [
+            'name' => implode(' ', [$lawId, $docType, $docLevelId]),
+            'title' => $title,
+            'snippets' => $item->highlights->text ?? [],
+            'url' => $url,
+          ];
+        }
       }
-    }
 
-    // Only use the pager theme if the results make sense.
-    $counts = $search->getCount();
-    if ($use_pager = ($counts['total'] > 0) && ($counts['start'] < $counts['end'])) {
-      $this->pager->createPager($counts['total'], $per_page);
+      // Only use the pager theme if the results make sense.
+      $offsets = $search->offset();
+      if ($use_pager = ($search->count() > 0) && ($offsets['start'] < $offsets['end'])) {
+        $this->pager->createPager($offsets['total'], $per_page);
+      }
     }
 
     return [

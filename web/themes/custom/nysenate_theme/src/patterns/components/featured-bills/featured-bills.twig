@@ -33,17 +33,19 @@
           <li class="spacer"></li>
         </ul>
         <div class="c-bill-update">
-          <p class="c-bill-update--date">
-            <span class="date-display-single">{{ bill.date }}</span>
-          </p>
-          <p class="c-bill-update--location">
-            <span>
-              {{ bill.update_location }}
-              {% if bill.committee_link %}
-                <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
-              {% endif %}
-            </span>
-          </p>
+          <div>
+            <p class="c-bill-update--date">   
+              <span class="date-display-single">{{ bill.date }}</span>
+            </p>
+            <p class="c-bill-update--location">
+              <span>
+                {{ bill.update_location }}
+              </span>
+            </p>
+          </div>
+          {% if bill.committee_link %}
+            <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+          {% endif %}
         </div>
 
         {% if bill.sponsor %}

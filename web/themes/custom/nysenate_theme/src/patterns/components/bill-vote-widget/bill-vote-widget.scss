@@ -4,16 +4,23 @@
   .nys-bill-vote {
     font-size: 0;
     background-color: $gen_blue_med;
+
     &::after {
       content: '';
       clear: both;
       display: block;
     }
+
     .subscribe_email_container {
       input {
         margin: 0;
         background-color: $grey06;
       }
+    }
+
+    .button-wrapper {
+      display: flex;
+      align-items: center;
     }
   }
   .nys-bill-subscribe {
@@ -65,6 +72,10 @@
   }
 
   .c-block--btn {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: $greyVoteBtnText;
     transition: background 0.2s ease;
     background-color: $gen_blue_drk;
@@ -73,8 +84,8 @@
       &::before {
         content: '\2f';
         font-family: 'senate_icons';
-        display: inline-block;
-        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
         font-style: normal;
         font-weight: normal;
         font-variant: normal;
@@ -88,8 +99,8 @@
       &::before {
         content: '\78';
         font-family: 'senate_icons';
-        display: inline-block;
-        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
         font-style: normal;
         font-weight: normal;
         font-variant: normal;
@@ -106,8 +117,8 @@
       &::before {
         content: '\6f';
         font-family: 'senate_icons';
-        display: inline-block;
-        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
         font-style: normal;
         font-weight: normal;
         font-variant: normal;
@@ -271,8 +282,8 @@
     &::before {
       content: '\2f';
       font-family: 'senate_icons';
-      display: inline-block;
-      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
 
       font-style: normal;
       font-weight: normal;
@@ -297,6 +308,7 @@
     .c-bill-polling--cta {
       padding: 0;
       text-align: center;
+
       strong {
         font-family: 'Proxima Nova SemiBold';
       }
@@ -359,7 +371,8 @@
   height: 60px;
 
   &::before {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     vertical-align: middle;
     text-align: center;
     height: 100%;
@@ -682,6 +695,7 @@
       .c-bill-polling--cta {
         padding: 20px;
         line-height: 1.5em;
+
         strong {
           font-family: 'Proxima Nova SemiBold';
         }
@@ -875,8 +889,8 @@
       font-size: 32px;
       margin-right: 25px;
       font-size: 28px;
-      display: inline-block;
-      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
       text-transform: none;
       padding-right: 3px;
     }
@@ -958,8 +972,8 @@
     line-height: 45px;
     &::before {
       font-family: 'senate_icons';
-      display: inline-block;
-      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
 
       font-style: normal;
       font-weight: normal;
@@ -976,8 +990,8 @@
       &::before {
         content: '\78';
         font-family: 'senate_icons';
-        display: inline-block;
-        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
 
         font-style: normal;
         font-weight: normal;
@@ -998,6 +1012,7 @@
     .c-bill-polling--cta {
       padding: 0;
       text-align: center;
+
       strong {
         font-family: 'Proxima Nova SemiBold';
       }

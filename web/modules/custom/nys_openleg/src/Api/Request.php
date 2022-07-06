@@ -31,7 +31,17 @@ use SendGrid\Client;
  *
  * @todo decide how to handle non-200 responses
  */
-class ApiRequest {
+class Request {
+
+  /**
+   * The timestamp format expected by OL in most queries.
+   */
+  const OPENLEG_TIME_FORMAT = 'Y-m-d\TH:i:s';
+
+  /**
+   * The date-only format expected by OL.
+   */
+  const OPENLEG_DATE_FORMAT = 'Y-m-d';
 
   const DEFAULT_HOST = 'legislation.nysenate.gov';
 
@@ -123,7 +133,7 @@ class ApiRequest {
    *
    * @return $this
    */
-  public function setApiKey(string $api_key = ''): ApiRequest {
+  public function setApiKey(string $api_key = ''): Request {
     $this->apiKey = $api_key ?: static::$defaultApiKey;
     return $this;
   }
@@ -206,7 +216,7 @@ class ApiRequest {
   /**
    * Sets the host as provided, or the default host.
    */
-  public function setHost(string $host = ''): ApiRequest {
+  public function setHost(string $host = ''): Request {
     if (!$host) {
       $host = static::DEFAULT_HOST;
     }
@@ -231,7 +241,7 @@ class ApiRequest {
   /**
    * Sets the path prefix.
    */
-  public function setPathPrefix($path_prefix): ApiRequest {
+  public function setPathPrefix($path_prefix): Request {
     $this->pathPrefix = $this->buildPathArray($path_prefix);
     return $this;
   }
@@ -292,7 +302,7 @@ class ApiRequest {
   /**
    * Sets the API version.
    */
-  public function setVersion(string $version): ApiRequest {
+  public function setVersion(string $version): Request {
     $this->version = trim($version, '/');
     return $this;
   }
@@ -314,7 +324,7 @@ class ApiRequest {
   /**
    * Sets the endpoint.
    */
-  public function setEndpoint($endpoint): ApiRequest {
+  public function setEndpoint($endpoint): Request {
     $this->endpoint = $this->buildPathArray($endpoint);
     return $this;
   }
@@ -329,12 +339,30 @@ class ApiRequest {
    *
    * @return $this
    */
-  public function setOptions(array $options): ApiRequest {
+  public function setOptions(array $options): Request {
     $this->setApiKey($options['api_key'] ?? '')
       ->setHost($options['host'] ?? static::DEFAULT_HOST)
       ->setVersion($options['version'] ?? static::DEFAULT_VERSION)
       ->setPathPrefix($options['path_prefix'] ?? static::DEFAULT_PATH_PREFIX);
     return $this;
+  }
+
+  /**
+   * Formats a timestamp as required by Openleg.
+   *
+   * @param mixed $timestamp
+   *   An epoch timestamp, or other valid string-format timestamp.
+   * @param string $format
+   *   Defaults to the class constant.
+   *
+   * @return string
+   *   The formatted timestamp.
+   */
+  public static function formatTimestamp($timestamp, string $format = ''): string {
+    if (!is_numeric($timestamp)) {
+      $timestamp = strtotime($timestamp);
+    }
+    return date($format ?: static::OPENLEG_TIME_FORMAT, $timestamp);
   }
 
 }

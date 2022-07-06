@@ -129,6 +129,7 @@
   font-family: 'Adelle Light';
   font-size: 26px;
   line-height: 1.2em;
+  font-weight: 400;
 
   a {
     color: $grey08;
@@ -138,7 +139,7 @@
 .c-meeting-detail--location-link {
   display: block;
   margin: 0 0 10px 0;
-
+  text-decoration: none;
   font-family: 'Proxima Nova Regular';
   font-size: 18px;
   color: $gen_blue_lgt;
@@ -162,6 +163,14 @@
 
   a {
     color: $gen_blue_lgt;
+
+    &:hover {
+      color: #0078a0;
+    }
+  }
+
+  &:hover {
+    color: #0078a0;
   }
 }
 
@@ -233,6 +242,7 @@
   a {
     display: inline-block;
     color: $gen_link;
+    text-decoration: none;
 
     & + a {
       margin-left: 5px;

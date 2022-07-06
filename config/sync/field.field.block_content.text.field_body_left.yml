@@ -1,22 +1,24 @@
-uuid: 6e1e4d0f-19d1-47cf-b69a-d34af923f320
+uuid: b4b3bd47-d1f4-4931-877f-7fe479e4cee1
 langcode: en
 status: true
 dependencies:
   config:
     - block_content.type.text
-    - field.storage.block_content.body
+    - field.storage.block_content.field_body_left
   module:
+    - allowed_formats
     - text
-_core:
-  default_config_hash: H1iW3I_znq3OpbRyqozlOTDaG41H0UIIa-Iy9I4A2dA
-id: block_content.text.body
-field_name: body
+third_party_settings:
+  allowed_formats:
+    allowed_formats: {  }
+id: block_content.text.field_body_left
+field_name: field_body_left
 entity_type: block_content
 bundle: text
-label: Body
+label: 'Body (Left)'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:

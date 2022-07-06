@@ -4,6 +4,16 @@
 .c-pg-featured-bills {
   max-width: 840px;
   margin: 0 auto;
+
+  .c-block-legislation,
+  .c-featured-bills-body {
+    flex: 1;
+  }
+
+  &.c-block {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .c-block-legislation {
@@ -219,7 +229,6 @@ p.c-bill-update--location {
   font-family: 'Proxima Nova Regular';
   font-size: 12px;
   line-height: 1.4;
-  display: inline;
 
   &::before {
     content: '|';
@@ -491,6 +500,7 @@ p.c-bill-update--location {
   position: relative;
   padding: 30px 20px 130px; // 130 = height of polling + visual padding
   z-index: 3;
+  height: 100%;
 }
 
 .c-bill-polling {
@@ -569,6 +579,23 @@ p.c-bill-update--location {
   height: 0;
 }
 
+.c-bill-update a {
+  font-family: 'Proxima Nova Regular';
+  font-size: 12px;
+  line-height: 1.4;
+  color: #fff;
+  text-decoration: none;
+  border-bottom: solid 0.05em #fff;
+
+  @media #{$tablet} {
+    font-size: 14px;
+  }
+  
+  &:hover {
+    border-bottom: none;
+  }
+}
+
 p.c-bill-polling--cta {
   padding-left: 20px;
   text-transform: uppercase;
@@ -576,7 +603,7 @@ p.c-bill-polling--cta {
   font-family: 'Proxima Nova Regular';
   letter-spacing: 0.1em;
   font-size: 14px;
-  line-height: 40px;
+  line-height: 20px;
 
   span {
     padding: 4px;
@@ -616,9 +643,9 @@ p.c-bill-polling--cta {
 }
 
 .nys-bill-status--text {
-  display: block;
+  display: none;
   position: absolute;
-  top: 35px;
+  top: -35px;
   bottom: auto;
   left: -50px;
   right: -50px;
@@ -1004,6 +1031,7 @@ TABLE.c-bill--actions-table TBODY TR TD {
     font-family: 'Adelle Light';
     line-height: 1.5em;
     font-size: 16px;
+    margin: 0;
 
     & + p {
       margin-top: 20px;
@@ -1033,6 +1061,10 @@ TABLE.c-bill--actions-table TBODY TR TD {
       margin: 0 24px 28px 0px;
       clear: both;
       width: 50%;
+    }
+
+    &.c-block {
+      flex-direction: row;
     }
   }
   .c-block {
@@ -1199,7 +1231,7 @@ TABLE.c-bill--actions-table TBODY TR TD {
   }
 
   .c-legislation-info {
-    padding: 25px 40px 150px;
+    padding: 25px 40px 95px;
     width: 100%;
   }
 
@@ -1210,7 +1242,7 @@ TABLE.c-bill--actions-table TBODY TR TD {
       position: relative;
       height: 200px;
       &.nys-bill-vote-form-embedded {
-        height: 120px;
+        height: 95px;
       }
 
       > div {

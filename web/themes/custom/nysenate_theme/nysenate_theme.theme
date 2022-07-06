@@ -314,16 +314,17 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
     foreach ($variables['view']->result as $node) {
       if ($node->_entity->bundle() === 'event') {
         $date = new \Datetime($node->_entity->field_date_range->value);
+        $end_date = new \Datetime($node->_entity->field_date_range->end_value);
         $now = new \Datetime();
         if ($date->format('d:M:Y') === $now->format('d:M:Y')) {
           $variables['items_today'][] = [
             'title' => $node->_entity->label(),
             'url' => $node->_entity->toUrl()->toString(),
-            'location' => $node->_entity->field_location[0]->organization,
-            'street_1' => $node->_entity->field_location[0]->address_line1,
-            'street_2' => $node->field_location[0]->locality . ','
-            . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
-            'time' => $date->format('h:i A'),
+            'location' => $node->_entity->field_location[0]->organization ?? '',
+            'street_1' => $node->_entity->field_location[0]->address_line1 ?? '',
+            'street_2' => $node->_entity->field_location[0]->locality . ', '
+            . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code ?? '',
+            'time' => $date->format('h:i A') . ' to ' . $end_date->format('h:i A'),
           ];
           $variables['now'] = $date->format('M jS');
         }
@@ -349,8 +350,8 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'image' => $node->_entity->field_feature_image[0]->entity->field_image,
           'location' => $node->_entity->field_location[0]->organization,
           'street_1' => $node->_entity->field_location[0]->address_line1,
-          'street_2' => $node->field_location[0]->locality . ','
-          . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
+          'street_2' => $node->_entity->field_location[0]->locality . ', '
+          . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code,
           'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
         ];
       }
@@ -881,7 +882,7 @@ function nysenate_theme_preprocess_node(&$variables) {
         'month' => $date->format('M'),
         'location' => $node->field_location[0]->organization,
         'street_1' => $node->field_location[0]->address_line1,
-        'street_2' => $node->field_location[0]->locality . ','
+        'street_2' => $node->field_location[0]->locality . ', '
         . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
         'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
       ];

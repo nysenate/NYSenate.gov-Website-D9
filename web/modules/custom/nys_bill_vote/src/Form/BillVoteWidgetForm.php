@@ -172,20 +172,20 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $node = $form_state->getFormObject();
+    $build_info = $form_state->getBuildInfo();
     $value = $form_state->getTriggeringElement()['#value'];
 
     // We want to process the vote if the user is logged in.
     if ($this->currentUser->isAuthenticated()) {
-      $this->billVoteHelper->processVote($node->getType(), $node->id(), $value);
-      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($node->getType(), $node->id(), TRUE));
+      $this->billVoteHelper->processVote($build_info['entity_type'], $build_info['entity_id'], $value);
+      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($build_info['entity_type'], $build_info['entity_id'], TRUE));
       $form['nys_bill_vote']['#options'] = $this->billVoteHelper->getOptions();
     }
 
     // If the user is on a page that isn't the bill node, send them there.
     $test_action = trim(parse_url($form['#action'])['path'], '/');
     $node_match = $this->aliasManager->getAliasByPath($test_action);
-    $bill_path = 'node/' . $node->id();
+    $bill_path = 'node/' . $build_info['entity_id'];
 
     if ($node_match != $bill_path) {
       $options = [];
@@ -222,8 +222,9 @@ class BillVoteWidgetForm extends FormBase {
     // @todo This method comes from nys_accumulator custom module.
     nyslog();
     $node = $form_state->getFormObject();
+    $build_info = $form_state->getBuildInfo();
     $element = $form_state->getTriggeringElement();
-    $this->billVoteHelper->processVote($node->getType(), $node->id(), $element['value']);
+    $this->billVoteHelper->processVote($build_info['entity_type'], $build_info['entity_id'], $element['value']);
   }
 
 }

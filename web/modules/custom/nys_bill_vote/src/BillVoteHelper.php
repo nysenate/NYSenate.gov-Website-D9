@@ -235,7 +235,6 @@ class BillVoteHelper {
    *   An array of vote result records affected by the vote.
    */
   public function processVote($entity_type, $entity_id, $vote_value) {
-    $user;
     $vote_index = $this->getVal($vote_value);
 
     $message = strtr('Vote process received value = %vote_value, found index = %vote_index',
@@ -275,7 +274,7 @@ class BillVoteHelper {
           $node = $this->entityTypeManager->getStorage('node')
             ->load($entity_id);
           try {
-            $tid = $node->field_bill_multi_session_root->value->tid;
+            $tid = $node->field_bill_multi_session_root->value;
           }
           catch (\Exception $e) {
             $tid = 0;
@@ -334,6 +333,8 @@ class BillVoteHelper {
     // Try to detect the build settings in form_state.
     $build_info = $form_state->getBuildInfo();
     $ret = $build_info['args'][0] ?? [];
+    $node_id = NULL;
+    $node_type = NULL;
 
     // If the required info is not found, try to detect it
     // from the current request.

@@ -4,7 +4,7 @@ namespace Drupal\nys_bill_vote\Controller;
 
 use Drupal\Core\Session\AccountProxy;
 use Drupal\nys_bill_vote\BillVoteHelper;
-use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,16 +23,29 @@ class BillVoteController extends ControllerBase {
   /**
    * Default object for current_user service.
    *
-   * @var Drupal\Core\Session\AccountProxy
+   * @var \Drupal\Core\Session\AccountProxy
    */
   protected $currentUser;
 
   /**
    * Default object for entity_type.manager service.
    *
-   * @var Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    BillVoteHelper $bill_vote_helper,
+    AccountProxy $current_user,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
+    $this->billVoteHelper = $bill_vote_helper;
+    $this->currentUser = $current_user;
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -43,19 +56,6 @@ class BillVoteController extends ControllerBase {
       $container->get('current_user'),
       $container->get('entity_type.manager')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(
-    BillVoteHelper $bill_vote_helper,
-    AccountProxy $current_user,
-    EntityTypeManager $entity_type_manager
-  ) {
-    $this->billVoteHelper = $bill_vote_helper;
-    $this->currentUser = $current_user;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\nys_bill_vote\Controller;
+
 use Drupal\Core\Session\AccountProxy;
 use Drupal\nys_bill_vote\BillVoteHelper;
 use Drupal\Core\Entity\EntityTypeManager;

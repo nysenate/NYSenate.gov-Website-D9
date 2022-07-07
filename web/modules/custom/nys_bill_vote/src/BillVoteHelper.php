@@ -1,11 +1,15 @@
 <?php
 
+namespace Drupal\nys_bill_vote;
+
+use Drupal\flag\FlagService;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Helper class for nys_bill_vote module.
@@ -50,6 +54,13 @@ class BillVoteHelper {
   protected $entityTypeManager;
 
   /**
+   * Default object for flag service.
+   *
+   * @var \Drupal\flag\FlagService
+   */
+  protected $flag;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -57,13 +68,15 @@ class BillVoteHelper {
     CurrentPathStack $current_path,
     CurrentRouteMatch $current_route_match,
     LoggerChannelFactory $logger,
-    EntityTypeManager $entity_type_manager
+    EntityTypeManager $entity_type_manager,
+    FlagService $flag
   ) {
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
     $this->currentRouteMatch = $current_route_match;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
+    $this->flag = $flag;
   }
 
   /**
@@ -287,8 +300,10 @@ class BillVoteHelper {
 
       if ($needs_processing) {
         // Set the follow flag on this bill for the current user.
-        $flag = flag_get_flag('follow_this_bill');
-        $flag->flag('flag', $entity_id, user_load($this->currentUser->id()), TRUE);
+        $flag = $this->flag->getFlagById('follow_this_bill');
+        $current_user = $this->entityTypeManager->getStorage('user')
+          ->load($this->currentUser->id());
+        $this->flag->flag($flag, $entity_id, $current_user);
 
         $vote = [
           'entity_type' => 'node',
@@ -309,13 +324,13 @@ class BillVoteHelper {
   /**
    * Retrieve widget settings.
    *
-   * @param array $form_state
+   * @param object $form_state
    *   A Drupal form state array.
    *
    * @return array|mixed
    *   The settings array.
    */
-  public function widgetBuildSettings(array $form_state) {
+  public function widgetBuildSettings(object $form_state) {
     // Try to detect the build settings in form_state.
     $build_info = $form_state->getBuildInfo();
     $ret = $build_info['args'][0] ?? [];
@@ -340,6 +355,66 @@ class BillVoteHelper {
     }
 
     return $ret;
+  }
+
+  /**
+   * Retrieves the default values.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $entity_id
+   *   The entity id.
+   * @param bool $clear
+   *   The clear flag.
+   *
+   * @return mixed
+   *   The default values.
+   */
+  public function getDefault($entity_type, $entity_id, $clear = FALSE) {
+    $entities = &drupal_static(__FUNCTION__, NULL, $clear);
+    if (empty($entities[$entity_type][$entity_id]) && !empty($this->currentUser->id())) {
+      // @todo Confirm if we need to use the voting api module.
+      $entities[$entity_type][$entity_id] = votingapi_select_votes([
+        'tag' => 'nys_bill_vote',
+        'entity_id' => $entity_id,
+        'entity_type' => 'node',
+        'uid' => $this->currentUser->id(),
+      ]);
+    }
+    if (isset($entities[$entity_type][$entity_id][0]['value'])) {
+      return $entities[$entity_type][$entity_id][0]['value'];
+    }
+    else {
+      // @todo this value is tied to the "maybe" vote option.
+      return 2;
+    }
+  }
+
+  /**
+   * Retrieves the votes.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $entity_id
+   *   The entity id.
+   * @param bool $clear
+   *   The clear flag.
+   *
+   * @return array
+   *   The votes.
+   */
+  public function getVotes($entity_type, $entity_id, $clear = FALSE) {
+    $entities = &drupal_static(__FUNCTION__, NULL, $clear);
+    if (empty($entities[$entity_type][$entity_id])) {
+      // @todo Confirm if we need to use the voting api module.
+      $entities[$entity_type][$entity_id] = votingapi_select_results([
+        'tag' => 'nys_bill_vote',
+        'entity_id' => $entity_id,
+        'entity_type' => 'node',
+      ]);
+    }
+
+    return $entities[$entity_type][$entity_id];
   }
 
 }

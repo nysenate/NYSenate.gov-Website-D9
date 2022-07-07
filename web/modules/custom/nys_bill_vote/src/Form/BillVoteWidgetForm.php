@@ -1,11 +1,16 @@
 <?php
 
-use Drupal\nys_bill_vote\BillVoteHelper;
+namespace Drupal\nys_bill_vote\Form;
+
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
-use Drupal\Core\Url;
+use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\nys_bill_vote\BillVoteHelper;
+use Drupal\path_alias\AliasManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The Bill Vote Widget form class.
@@ -27,11 +32,19 @@ class BillVoteWidgetForm extends FormBase {
   protected $currentUser;
 
   /**
+   * Default object for current_user service.
+   *
+   * @var \Drupal\path_alias\AliasManagerInterface
+   */
+  protected $aliasManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(BillVoteHelper $bill_vote_helper, AccountProxy $current_user) {
+  public function __construct(BillVoteHelper $bill_vote_helper, AccountProxy $current_user, AliasManagerInterface $alias_manager) {
     $this->billVoteHelper = $bill_vote_helper;
     $this->currentUser = $current_user;
+    $this->aliasManager = $alias_manager;
   }
 
   /**
@@ -40,6 +53,8 @@ class BillVoteWidgetForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('nys_bill_vote.bill_vote'),
+      $container->get('current_user'),
+      $container->get('path_alias.manager'),
     );
   }
 
@@ -61,22 +76,15 @@ class BillVoteWidgetForm extends FormBase {
     }
 
     // Detect the build settings.
-    $form_state->setBuildInfo($this->billVoteHelper->widgetBuildSettings($form_state));
-
-    // Copy the build settings into $form_state['settings'].
-    // Anything detected in build_info should take precedence.
-    $settings = $form_state['settings'] ?? [];
-    $form_state['settings'] = array_merge($settings, $form_state->getBuildInfo());
+    $form_state->setBuildInfo(array_merge($this->billVoteHelper->widgetBuildSettings($form_state), $form_state->getBuildInfo()));
 
     // Now get the canonical information.
-    $node = $form_state->getFormObject();
-    $node_type = $node->getType();
-    $node_id = $node->id();
+    $node_type = $form_state->getBuildInfo()['entity_type'];
+    $node_id = $form_state->getBuildInfo()['entity_id'];
 
     // Discover if a vote already exists.
-    // @todo Port this method.
-    $default_vote = nys_bill_vote_get_default($node_type, $node_id);
-    $default_value = nys_bill_vote_get_val($default_vote);
+    $default_vote = $this->billVoteHelper->getDefault($node_type, $node_id);
+    $default_value = $this->billVoteHelper->getVal($default_vote);
 
     // Discover if a vote has been submitted.
     if (!empty($form_state->getValue('nys_bill_vote'))) {
@@ -90,7 +98,6 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
-    // @todo Port this D9 style.
     $form['#id'] = 'nys-bill-vote-vote-widget-' . $node_id;
 
     $label = $this->billVoteHelper->getVotedLabel($default_value);
@@ -152,7 +159,7 @@ class BillVoteWidgetForm extends FormBase {
       ],
       '#attached' => [
         'library' => [
-          'nys_bill_vote/nys_bill_vote',
+          'nys_bill_vote/bill_vote',
         ],
       ],
     ];
@@ -171,15 +178,13 @@ class BillVoteWidgetForm extends FormBase {
     // We want to process the vote if the user is logged in.
     if ($this->currentUser->isAuthenticated()) {
       $this->billVoteHelper->processVote($node->getType(), $node->id(), $value);
-      // @todo Port these methods.
-      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal(nys_bill_vote_get_default($node->getType(), $node->id(), TRUE));
+      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($node->getType(), $node->id(), TRUE));
       $form['nys_bill_vote']['#options'] = $this->billVoteHelper->getOptions();
     }
 
     // If the user is on a page that isn't the bill node, send them there.
     $test_action = trim(parse_url($form['#action'])['path'], '/');
-    // @todo Change this to D9 method.
-    $node_match = drupal_get_normal_path($test_action);
+    $node_match = $this->aliasManager->getAliasByPath($test_action);
     $bill_path = 'node/' . $node->id();
 
     if ($node_match != $bill_path) {

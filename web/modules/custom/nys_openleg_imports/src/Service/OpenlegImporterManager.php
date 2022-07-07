@@ -32,7 +32,7 @@ class OpenlegImporterManager extends DefaultPluginManager {
       'Drupal\nys_openleg_imports\Annotation\OpenlegImporter'
     );
     $this->processorManager = $processorManager;
-    $this->setCacheBackend($cache_backend, 'openleg_import');
+    $this->setCacheBackend($cache_backend, 'openleg_imports.importers');
   }
 
   /**

@@ -36,9 +36,10 @@
   margin-bottom: 20px;
 
   > .nys-title {
-    color: $grey02;
+    color: $grey08;
     text-transform: capitalize;
-    font-family: 'Adelle Bold';
+    font-family: $font-serif-bold;
+    font-weight: $font-weight-normal;
     font-size: 18px;
     margin-bottom: 0;
 
@@ -50,8 +51,9 @@
 
 .c-detail--subhead {
   margin: 0 0 10px;
-  color: $grey02;
-  font-family: 'Proxima Nova Regular';
+  color: $grey08;
+  font-family: $font-sans;
+  font-weight: 400;
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -62,6 +64,14 @@
     letter-spacing: 0.01em;
     display: block;
   }
+}
+
+/* TO DO: I added important bcos this is being override by 
+* .trad_blue a global style. Can we just override 
+* the global style with the correct color palette?
+*/
+.c-detail--download {
+  color: $blue01 !important; 
 }
 
 .c-detail--descript {
@@ -89,9 +99,11 @@
   margin-bottom: 20px;
   line-height: 1;
 
-  .c-detail--subhead {
-    display: inline-block;
+  &.c-detail--subhead {
+    // display: inline-block;
     margin-bottom: 0;
+    color: $grey08;
+    font-weight: 400;
   }
 }
 
@@ -119,7 +131,7 @@
   display: block;
   margin-bottom: 20px;
   color: $blue01;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   text-transform: uppercase;
   font-size: 12px;
 
@@ -352,7 +364,7 @@
   margin-bottom: 15px;
   color: $grey01;
   text-transform: uppercase;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 12px;
   letter-spacing: 0.05em;
 
@@ -427,7 +439,7 @@
 
 .c-action--date,
 .c-action--item {
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 14px;
 }
 
@@ -457,10 +469,18 @@
   background: $grey06;
   font-size: 12px;
   color: $grey10;
+  line-height: 24px;
+
+  h3 {
+    font-family: "Helvetica Nueue", sans-serif;
+    font-size: 27px;
+    font-weight: 400;
+    color: $grey10;
+  }
 
   h4 {
     margin-bottom: 30px;
-    font-family: 'Adelle Bold';
+    font-family: $font-serif-bold;
     font-size: 18px;
   }
 
@@ -471,7 +491,7 @@
 
   p {
     margin-bottom: 20px;
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 12px;
   }
 }
@@ -527,7 +547,7 @@
   color: #fff;
   text-align: center;
   text-transform: uppercase;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 14px;
 }
 
@@ -539,7 +559,7 @@
     font-size: 14px;
   }
   dt {
-    color: $grey02;
+    color: $grey08;
     line-height: 1.5em;
   }
   dd + dt {
@@ -617,7 +637,7 @@
 .c-bill-vote-cnt--value {
   display: block;
   color: $blue01;
-  font-family: 'Adelle Bold';
+  font-family: $font-serif-bold;
   font-size: 24px;
   line-height: 1em;
 }
@@ -639,7 +659,7 @@
   li {
     color: $grey04;
     text-transform: uppercase;
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 12px;
     letter-spacing: 0.01em;
   }
@@ -663,7 +683,17 @@
     span {
       text-transform: uppercase;
       color: $grey03;
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
+    }
+  }
+
+  .nys-senator--name {
+    a {
+      font-family: $font-serif;
+      font-size: 16px;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: $grey08;
     }
   }
 }
@@ -860,7 +890,7 @@
 
   h3,
   h4 {
-    color: $grey02;
+    color: $grey08;
     font-family: 'Adelle Regular';
   }
   h3 {
@@ -900,7 +930,7 @@
 
       .vote-count {
         display: inline-block;
-        font: 18px/18px 'Adelle Bold';
+        font: 18px/18px $font-serif-bold;
         color: $grey03;
       }
       .vote-label {
@@ -931,7 +961,7 @@
     clear: both;
     .meta-row {
       position: relative;
-      font: 10px/16px 'Proxima Nova Regular';
+      font: 10px/16px $font-sans;
       color: $grey04;
       text-transform: uppercase;
       div {
@@ -952,7 +982,7 @@
       margin-top: 20px;
       label {
         margin: 0;
-        font: 11px/14px 'Proxima Nova Regular';
+        font: 11px/14px $font-sans;
         color: $grey05;
       }
       .committee-link {
@@ -966,7 +996,7 @@
 
 .c-vote-detail--date {
   margin: 20px 0;
-  color: $grey02;
+  color: $grey08;
   font-family: 'Adelle Regular';
   font-size: 16px;
   line-height: 1;
@@ -979,7 +1009,7 @@
 .c-detail--vote-grp {
   .c-detail--section-title {
     margin-bottom: 15px;
-    color: $grey02;
+    color: $grey08;
     font-family: 'Adelle SemiBold';
     text-transform: uppercase;
     font-size: 14px;
@@ -1045,7 +1075,7 @@
         }
         .vote-count {
           display: block;
-          font: 24px/30px 'Adelle Bold';
+          font: 24px/30px $font-serif-bold;
           color: $grey03;
         }
         .vote-label {
@@ -1120,11 +1150,11 @@
 .c-issue--followers {
   color: $grey04;
   text-transform: uppercase;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 14px;
 
   > span {
-    color: $grey02;
+    color: $grey08;
     margin-right: 5px;
   }
 }
@@ -1510,7 +1540,7 @@
           }
           .vote-count {
             display: block;
-            font: 24px/30px 'Adelle Bold';
+            font: 24px/30px $font-serif-bold;
             color: $grey03;
           }
           .vote-label {
@@ -1526,7 +1556,7 @@
       .vote-meta {
         .meta-row {
           position: relative;
-          font: 10px/16px 'Proxima Nova Regular';
+          font: 10px/16px $font-sans;
           color: $grey04;
           text-transform: uppercase;
           div {
@@ -1545,7 +1575,7 @@
           margin-top: 20px;
           label {
             margin: 0;
-            font: 11px/14px 'Proxima Nova Regular';
+            font: 11px/14px $font-sans;
             color: $grey05;
           }
 

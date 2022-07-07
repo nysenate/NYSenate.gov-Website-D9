@@ -1,31 +1,11 @@
-uuid: ec670e38-c64a-4530-9bb4-a85a2fa58985
+uuid: f2d3a45b-5611-4646-a59b-0e8dfc07bbab
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_member_headshot
+    - media.type.image
     - taxonomy.vocabulary.senator
-  module:
-    - filefield_paths
-    - image
-third_party_settings:
-  filefield_paths:
-    enabled: true
-    file_path:
-      value: senator
-      options:
-        slashes: false
-        pathauto: false
-        transliterate: false
-    file_name:
-      value: '[file:ffp-name-only-original].[file:ffp-extension-original]'
-      options:
-        slashes: false
-        pathauto: false
-        transliterate: false
-    redirect: false
-    retroactive_update: false
-    active_updating: false
 id: taxonomy_term.senator.field_member_headshot
 field_name: field_member_headshot
 entity_type: taxonomy_term
@@ -37,21 +17,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:file'
-  handler_settings: {  }
-  file_directory: '[date:custom:Y]-[date:custom:m]'
-  file_extensions: 'png gif jpg jpeg'
-  max_filesize: ''
-  max_resolution: ''
-  min_resolution: 160x160
-  alt_field: true
-  alt_field_required: true
-  title_field: false
-  title_field_required: false
-  default_image:
-    uuid: ''
-    alt: ''
-    title: ''
-    width: null
-    height: null
-field_type: image
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

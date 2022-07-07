@@ -1,0 +1,29 @@
+uuid: bda60462-49ef-414f-87a3-603c21106eda
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_user_account
+    - taxonomy.vocabulary.senator
+id: taxonomy_term.senator.field_user_account
+field_name: field_user_account
+entity_type: taxonomy_term
+bundle: senator
+label: 'User Account'
+description: 'The senator user account associated with this senator content node (admin only).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: _none
+    include_anonymous: true
+field_type: entity_reference

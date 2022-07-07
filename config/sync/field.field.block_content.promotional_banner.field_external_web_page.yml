@@ -1,0 +1,23 @@
+uuid: ce1a778a-44b7-4965-a673-69a1b3b6833e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.promotional_banner
+    - field.storage.block_content.field_external_web_page
+  module:
+    - link
+id: block_content.promotional_banner.field_external_web_page
+field_name: field_external_web_page
+entity_type: block_content
+bundle: promotional_banner
+label: 'External WebPage'
+description: 'Enter the full URL you wish to link to (e.g., http://www.nyread.com).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 16
+field_type: link

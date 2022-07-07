@@ -1,27 +1,21 @@
-uuid: 896a4bfb-6c1c-44d5-9c28-d7b8f4415a06
+uuid: 8fdbebe5-1e9d-48ff-b392-d30ac5b1cd2c
 langcode: en
 status: true
 dependencies:
   module:
-    - file
-    - image
+    - field_permissions
+    - media
     - taxonomy
+third_party_settings:
+  field_permissions:
+    permission_type: public
 id: taxonomy_term.field_member_headshot
 field_name: field_member_headshot
 entity_type: taxonomy_term
-type: image
+type: entity_reference
 settings:
-  target_type: file
-  display_field: false
-  display_default: false
-  uri_scheme: public
-  default_image:
-    uuid: null
-    alt: ''
-    title: ''
-    width: null
-    height: null
-module: image
+  target_type: media
+module: core
 locked: false
 cardinality: 1
 translatable: true

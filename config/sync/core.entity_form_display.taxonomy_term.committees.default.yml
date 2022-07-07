@@ -103,7 +103,7 @@ content:
     third_party_settings: {  }
   field_assemblymen_chair:
     type: boolean_checkbox
-    weight: 16
+    weight: 10
     region: content
     settings:
       display_label: true
@@ -193,13 +193,6 @@ content:
       form_display_mode: default
       default_paragraph_type: ''
     third_party_settings: {  }
-  langcode:
-    type: language_select
-    weight: 10
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   name:
     type: string_textfield
     weight: 4
@@ -210,15 +203,21 @@ content:
     third_party_settings: {  }
   path:
     type: path
+    weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
     weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 12
+    weight: 13
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  langcode: true

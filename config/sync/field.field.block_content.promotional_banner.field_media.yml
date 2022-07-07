@@ -1,0 +1,29 @@
+uuid: 58fc50c9-a34b-46c8-9103-3811c1234db9
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.promotional_banner
+    - field.storage.block_content.field_media
+    - media.type.image
+id: block_content.promotional_banner.field_media
+field_name: field_media
+entity_type: block_content
+bundle: promotional_banner
+label: 'Image Main'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -74,6 +74,14 @@ breadcrumb:
     component:
       dist/css/breadcrumb.css: {}
 
+bill:
+  css:
+    component:
+      dist/css/bill.css: {}
+  dependencies:
+    - nysenate_theme/registration-form
+    - nysenate_theme/votes
+
 bill-vote-widget:
   css:
     component:
@@ -191,8 +199,6 @@ featured-bills:
   css:
     component:
       dist/css/featured-bills.css: {}
-  dependencies:
-    - nysenate_theme/bill-vote-widget
 
 featured-image:
   css:
@@ -307,6 +313,16 @@ nysenate-featured-event:
     component:
       dist/css/nysenate-featured-event.css: {}
 
+nysenate-open-data:
+  css:
+    component:
+      dist/css/nysenate-open-data.css: {}
+
+nysenate-social-buttons:
+  css:
+    component:
+      dist/css/nysenate-social-buttons.css: {}
+
 nysenate-senators-events:
   css:
     component:
@@ -366,10 +382,10 @@ nysenate-actionbar:
     component:
       dist/css/nysenate-actionbar.css: {}
 
-nysenate-women-of-distinction:
+nysenate-promotional-banner:
   css:
     component:
-      dist/css/nysenate-women-of-distinction.css: {}
+      dist/css/nysenate-promotional-banner.css: {}
 
 page-layout:
   css:
@@ -408,6 +424,11 @@ quote-carousel:
     dist/js/quote-carousel.es6.js: {}
   dependencies:
     - rain_theme/slick
+
+registration-form:
+  css:
+    component:
+      dist/css/registration-form.css: {}
 
 search-api-results:
   css:
@@ -475,6 +496,11 @@ user-account-nav:
   css:
     component:
       dist/css/user-account-nav.css: {}
+
+votes:
+  css:
+    component:
+      dist/css/votes.css: {}
 
 video-embed:
   css:

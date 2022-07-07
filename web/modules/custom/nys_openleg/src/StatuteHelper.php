@@ -2,12 +2,16 @@
 
 namespace Drupal\nys_openleg;
 
-use Drupal\nys_openleg\Api\ApiRequest;
+use Drupal\nys_openleg\Api\Request;
 
 /**
  * Class ApiWrapper.
  *
  * A collection of wrapper and meta-functions for Openleg.
+ *
+ * @todo All of this should probably go in ApiManager.  There are many types of
+ *   items being handled, and this class is strictly for Statutes.  Find an
+ *   organization strategy to minimize clutter.
  */
 class StatuteHelper {
 
@@ -46,7 +50,7 @@ class StatuteHelper {
    *   The API key.
    */
   public static function setKey(string $api_key) {
-    ApiRequest::useKey($api_key);
+    Request::useKey($api_key);
   }
 
   /**
@@ -118,7 +122,7 @@ class StatuteHelper {
     // Call OpenLeg if the cache is not populated.
     if (!$ret) {
       // Call OpenLeg.
-      $response = ApiRequest::fetch('laws');
+      $response = Request::fetch('laws');
       if ($response && ($response->success ?? FALSE)) {
         // Get the items, and re-organize by lawId.
         foreach (($response->result->items ?? []) as $val) {
@@ -153,7 +157,8 @@ class StatuteHelper {
    */
   public static function baseUrl(): string {
     if (!static::$landingUrl) {
-      static::$landingUrl = \Drupal::config('nys_openleg.settings')->get('base_path') ?: static::DEFAULT_LANDING_URL;
+      static::$landingUrl = \Drupal::config('nys_openleg.settings')
+        ->get('base_path') ?: static::DEFAULT_LANDING_URL;
     }
     return static::$landingUrl;
   }
@@ -235,7 +240,7 @@ class StatuteHelper {
    *
    * @param string $law_type
    *   (Optional) The entry's law type.
-   * @param array $parents
+   * @param array|null $parents
    *   (Optional) An array of parent entries.
    *
    * @return array

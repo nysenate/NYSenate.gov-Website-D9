@@ -1,0 +1,276 @@
+{{ attach_library('nysenate_theme/bill') }}
+
+{% set classes = ['node--bill'] %}
+<!-- BILL TEMPLATE -->
+<div class="{{ classes }}" {{ attributes }}>
+  <div
+    class="c-block c-detail--header c-detail--header__bill">
+    <!-- Bill Title -->
+    <div class="c-bill--heading-block">
+      <h2 class="nys-title c-bill-title">
+        {{ content.field_ol_chamber[0]['#markup'] }}
+        Bill
+        {{ label }}
+      </h2>
+      <span class="c-bill--flag">{{ content.field_ol_last_status[0]['#markup'] }}</span>
+      <div class="clearfix"></div>
+      <div class="c-bill--session-year">
+        {{ legislative_session }}
+      </div>
+    </div>
+
+    <div class="c-detail--header-meta" style="margin-bottom: 20px">
+      <div class="c-detail--descript">
+        {{ content.field_ol_name[0]['#context']['value'] }}
+        {% if issues %}
+          <div class="c-meeting-detail--related">
+            <ul class="c-meeting-detail--related">
+              {% if majority_issue %}
+                <li>{{ majority_issue }}</li>
+              {% endif %}
+              {% if issues %}
+                {% for issue in issues %}
+                  <li>{{ issue }}</li>
+                {% endfor %}
+              {% endif %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- Bill Pdf Link -->
+    <a href="{{ pdf_link }}" class="c-detail--download" target="_blank">
+      download bill text pdf
+    </a>
+  </div>
+
+  <!-- Share -->
+  <div class="c-detail--social" style="margin-bottom: 0; padding-bottom: 0">
+    <h3 class="c-detail--subhead">
+      Share this bill
+    </h3>
+    <ul>
+      <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{
+                                  active_amend_url
+                                  }}" class="c-detail--social-item facebook">Facebook</a></li>
+      <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{
+                                  content.field_ol_base_print_no[0]['#context']['value']
+                                  }} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
+      <li><a href="mailto:?&subject=From NYSenate.gov: {{
+                                  content.field_ol_base_print_no[0]['#context']['value']
+                                  }}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{
+                                  active_amend_url
+                                  }} >." class="c-detail--social-item email">Email</a></li>
+    </ul>
+  </div>
+
+  {{ sponsored_by }}
+
+  <!-- Looker Embed -->
+
+  {% if looker_preview_iframe %}
+    <div class="c-block c-detail--status c-bill-section">
+      <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
+        Senate District
+        {{ lc_district }}
+        Bill Analytics (Beta - Internal use only)
+      </h3>
+      {{ looker_preview_iframe }}
+    </div>
+
+    <div class="more_constituent_analytics">
+      <dl style="margin-bottom:0" class="c-block c-detail--actions accordion" data-accordion>
+        <dd class="accordion-navigation">
+          <a href="#accordion" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide additional analytics" data-closed-text="view more analytics">
+            view more constituent analytics
+          </a>
+          <div id="accordion" class="content">
+            {{ looker_extended_iframe }}
+          </div>
+        </dd>
+      </dl>
+    </div>
+  {% endif %}
+
+  <!-- Bill Status -->
+
+  <div class="c-block c-detail--status c-bill-section">
+    <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
+      {% if current_session_year == content.field_ol_session[0]['#markup'] %}
+        Current
+      {% else %}
+        Archive: Last
+      {% endif %}
+      Bill Status
+      {% if is_substituted %}
+        Via
+        {{ sub_bill_base_print_no }}
+      {% endif %}
+      -
+      {{ content.field_ol_last_status[0]['#markup'] }}
+    </h3>
+    <!-- Bill Graph Output -->
+    <ul class="nys-bill-status">
+      <hr/>
+      {% for position in positions %}
+        {% if position.is_grouped %}
+          <li class="nys-bill-status--assem-sen">
+            <ul class="nys-bill-status">
+              {% for item in position.items %}
+                <li {% if item.is_passed %} class="passed" {% endif %} title="{{ item.text }}">
+                  <span class="nys-bill-status--text">{{ item.text }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% else %}
+          <li {% if position.is_passed == true %} class="passed" {% endif %} title="{{ position.text }}">
+            <span class="nys-bill-status--text">{{ position.text }}</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+      <li class="spacer"></li>
+    </ul>
+  </div>
+
+  <!-- Your Voice -->
+  <div class="c-block c-bill-section" id="your-voice">
+    <h3 class="c-detail--subhead c-detail--section-title">Your Voice</h3>
+  </div>
+  <!-- Bill Vote Widget -->
+  <div class="c-bill--vote-widget">
+    {% include '@nysenate_theme/bill-vote-widget/bill-vote-widget.twig' with {
+      bills: bills,
+      has_sub: true
+    } only %}
+  </div>
+
+  <!-- Bill Message Form -->
+  <div class="c-bill--message-form clearfix">
+    {# todo: This variable comes from nys_bills custom module. #}
+    {# Need to confirm if we need to port this module. #}
+    {{ registration_form }}
+  </div>
+
+  <!-- Bill Actions -->
+  <div class="c-block c-bill-section">
+    <h3 class="c-detail--subhead c-detail--section-title">Actions</h3>
+    <dl style="margin-bottom:10px" class="c-block accordion" data-accordion>
+      <dd class="accordion-navigation">
+
+        <a href="#accordion-actions" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide actions {{ actions_count }}" data-closed-text="view actions {{ actions_count }}">
+          view actions
+          {{ actions_count }}
+        </a>
+
+        <div id="accordion-actions" class="content">
+          <div class="content" id="panel-actions">
+            <div>
+              <table width="100%" class="table c-bill--actions-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th class="c-bill--actions-table-header">Assembly Actions -
+                      <strong>Lowercase</strong><br/>Senate Actions -
+                      <strong>UPPERCASE</strong>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for versions, base_print_no in grouped_actions %}
+                    {% for dates, version in base_print_no %}
+                      {% for key, items in version %}
+                        <tr class="cbill--actions-table--row">
+                          <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
+                          <td class="c-bill--actions-table-col2">
+                            <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
+                        </tr>
+                      {% endfor %}
+                    {% endfor %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </dd>
+    </dl>
+  </div>
+
+  {% if votes_block %}
+    <div class="c-block c-bill-section">
+      <h3 class="c-detail--subhead c-detail--section-title">Votes</h3>
+      <dl style="margin-bottom:10px" class="c-block accordion" data-accordion>
+        <dd class="accordion-navigation">
+
+          <a href="#accordion-votes" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide votes" data-closed-text="view votes">
+            view votes
+          </a>
+
+          <div id="accordion-votes" class="content">
+            <div
+              class="content" id="panel-votes">
+              <!-- Bill Votes -->
+              <div class="c-block c-detail--votes-wrapper c-bill-section">
+                <div class="c-detail--votes">
+                  {{ votes_block }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  {% endif %}
+
+  {# todo: Need to port the nys_bill module to create this template. #}
+  {{ amendments_block }}
+
+  <div class="content c-bill-section" id="panel-comments">
+    {% if disqus %}
+      <div class="c-block c-detail--summary">
+        <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>
+        <p>Open Legislation is a forum for New York State legislation. All comments are subject to review and community moderation is encouraged.</p>
+        <p>
+          Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity, hate or toxic speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Attempts to intimidate and silence contributors or deliberately deceive the public, including excessive or extraneous posting/posts, or coordinated activity, are prohibited and may result in the temporary or permanent banning of the user. Comment moderation is generally performed Monday through Friday. By contributing or voting you agree to the Terms of Participation and verify you are over 13.</p>
+        {{ disqus }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Related Bills Content -->
+  {% if view_related_bills %}
+    <div class="c-block c-container">
+      <div class="c-container--header">
+        <h2 class="c-container--title">Related Recent Legislation</h2>
+      </div>
+      {{ view_related_bills }}
+    </div>
+  {% endif %}
+
+  <!-- Related Bills Content -->
+  {% if view_bill_related_issues %}
+    <div class="c-block c-container">
+      <div class="c-container--header">
+        <h2 class="c-container--title">Related Issues</h2>
+        <a href="/explore-issues" class="c-container--link">Explore Issues</a>
+      </div>
+      <div class="c-block">
+        {{ view_bill_related_issues }}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Related Content -->
+  {% if view_related_content %}
+    <div class="c-block c-container">
+      <div class="c-container--header">
+        <h2 class="c-container--title">Related News</h2>
+        <a href="/news-and-issues" class="c-container--link">News and Issues</a>
+      </div>
+      <div class="c-block c-container">
+        {{ view_related_content }}
+      </div>
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,23 @@
+uuid: af00d1e5-430d-4104-aa56-cbb9ef2a6a85
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hide_feed
+    - node.type.video
+id: node.video.field_hide_feed
+field_name: field_hide_feed
+entity_type: node
+bundle: video
+label: 'Hide from News Feed'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Hide from News Feed'
+  off_label: 'Show in News Feed'
+field_type: boolean

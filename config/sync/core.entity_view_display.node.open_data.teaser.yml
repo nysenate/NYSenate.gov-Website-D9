@@ -1,0 +1,42 @@
+uuid: 2d9c7378-9fa6-4369-9396-2a72b93deb9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.open_data.body
+    - field.field.node.open_data.field_date
+    - field.field.node.open_data.field_end_date
+    - field.field.node.open_data.field_open_data_file
+    - field.field.node.open_data.field_open_date_type
+    - field.field.node.open_data.field_publication_date
+    - node.type.open_data
+  module:
+    - text
+    - user
+id: node.open_data.teaser
+targetEntityType: node
+bundle: open_data
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_date: true
+  field_end_date: true
+  field_open_data_file: true
+  field_open_date_type: true
+  field_publication_date: true
+  langcode: true
+  search_api_excerpt: true

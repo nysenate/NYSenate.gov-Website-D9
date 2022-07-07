@@ -33,10 +33,11 @@
 
 .nys-event-title {
   margin-bottom: 20px;
-  color: $grey02;
+  color: $grey08;
   font-family: 'Adelle Light';
   font-size: 22px;
   line-height: 1.2em;
+  font-weight: 400;
 }
 
 .c-event-address {
@@ -97,6 +98,7 @@
     float: left;
     clear: left;
     color: $grey10;
+    text-decoration: none;
 
     span {
       margin-right: 7px;
@@ -189,10 +191,12 @@
     //position: absolute;
     top: 20px;
     left: 0;
-    line-height: 130%;
+    line-height: 1;
     background: $grey06;
     margin-bottom: 24px;
     padding: 6px;
+    color: $grey10;
+
     span {
       font-family: 'Adelle Bold';
       //display: block;
@@ -306,7 +310,7 @@
     span {
       font-family: 'Adelle Bold';
 
-      &:after {
+      &::after {
         content: '/';
         display: inline-block;
         font-family: 'Proxima Nova Regular';
@@ -316,7 +320,7 @@
   }
 
   .c-event-date SPAN:last-of-type {
-    &:after {
+    &::after {
       content: '';
     }
   }
@@ -331,6 +335,7 @@
   .c-event-location {
     font-size: 20px;
     color: $grey10;
+    line-height: 1;
 
     span {
       margin-right: 7px;
@@ -389,13 +394,16 @@
   }
 
   .c-event-date {
-    margin-top: 30px;
     text-transform: uppercase;
     font-size: 24px;
+    line-height: 1;
+    margin: 30px 0 12px;
+    color: $grey10;
 
     span {
       font-family: 'Adelle Bold';
-      &:after {
+
+      &::after {
         content: '/';
         display: inline-block;
         font-family: 'Proxima Nova Regular';
@@ -405,7 +413,7 @@
   }
 
   .c-event-date SPAN:last-of-type {
-    &:after {
+    &::after {
       content: '';
     }
   }
@@ -421,6 +429,7 @@
     font-size: 20px;
     color: #888888;
     line-height: 140%;
+    text-decoration: none;
 
     span {
       margin-right: 7px;
@@ -430,7 +439,7 @@
   }
 
   .c-event-address {
-    margin-top: 0;
+    margin-top: 5px;
     color: $grey04;
     font-size: 20px;
     line-height: 140%;
@@ -484,7 +493,7 @@
       top: 0;
       color: $gen_blue_lgt;
 
-      &:after {
+      &::after {
         font-size: 15px;
         vertical-align: bottom;
       }
@@ -695,7 +704,7 @@
   vertical-align: top;
   margin: 12px 0;
   a {
-    color: #222222;
+    color: $grey10;
   }
   a:before {
     color: #cb8d37;
@@ -719,7 +728,7 @@
   .c-event-block--featured {
     padding-top: 0;
     padding-bottom: 20px;
-    border: none;
+    border: 0;
 
     .c-event-image {
       margin-bottom: 30px;
@@ -910,7 +919,8 @@
 
       span {
         font-family: 'Adelle SemiBold';
-        &:after {
+
+        &::after {
           display: inline-block;
           margin: 0px 0px 0px 5px;
         }

@@ -4,15 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.hero
-    - field.field.media.remote_video.field_accessible_sitewide
-    - field.field.media.remote_video.field_body
-    - field.field.media.remote_video.field_committee
-    - field.field.media.remote_video.field_date
-    - field.field.media.remote_video.field_hide_feed
-    - field.field.media.remote_video.field_issues
     - field.field.media.remote_video.field_media_oembed_video
-    - field.field.media.remote_video.field_recorded_date
-    - field.field.media.remote_video.field_senator
     - media.type.remote_video
   module:
     - layout_builder
@@ -37,14 +29,6 @@ content:
     region: content
 hidden:
   created: true
-  field_accessible_sitewide: true
-  field_body: true
-  field_committee: true
-  field_date: true
-  field_hide_feed: true
-  field_issues: true
-  field_recorded_date: true
-  field_senator: true
   langcode: true
   name: true
   search_api_excerpt: true

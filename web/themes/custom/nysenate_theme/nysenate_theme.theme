@@ -254,15 +254,18 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
  */
 function nysenate_theme_preprocess_block_content__text(&$variables) {
   $text = [];
-  foreach ($variables['content']['body'] as $key => $value) {
-    if (!is_numeric($key)) {
-      continue;
-    }
-
-    $text[] = [
-      'text' => $value['#text'],
+  if (isset($variables['content']['field_body_left'][0])) {
+    $text['left'] = [
+      'text' => $variables['content']['field_body_left'][0]['#text'],
     ];
   }
+
+  if (isset($variables['content']['field_body_right'][0])) {
+    $text['right'] = [
+      'text' => $variables['content']['field_body_right'][0]['#text'],
+    ];
+  }
+
   $variables['text'] = $text;
   $variables['is_two_column'] = count($text) == 2 ? TRUE : FALSE;
   if (isset($variables['content']['field_is_full_bleed'][0])) {
@@ -842,14 +845,20 @@ function nysenate_theme_preprocess_node__session(&$variables) {
     if (!empty($variables['content']['field_location'][0]['locality']['#value'])) {
       $address .= $variables['content']['field_location'][0]['locality']['#value'] . ', ';
     }
-    if (!empty($variables['content']['field_location'][0]['postal_code']['#value'])) {
-      $address .= $variables['content']['field_location'][0]['postal_code']['#value'] . ' ';
-    }
     if (!empty($variables['content']['field_location'][0]['administrative_area']['#value'])) {
-      $address .= $variables['content']['field_location'][0]['administrative_area']['#value'];
+      $address .= $variables['content']['field_location'][0]['administrative_area']['#value'] . ', ';
+    }
+    if (!empty($variables['content']['field_location'][0]['postal_code']['#value'])) {
+      $address .= $variables['content']['field_location'][0]['postal_code']['#value'];
     }
   }
 
+  $location_url = '';
+  if (!empty($variables['content']['field_location'][0]['organization']['#value'])) {
+    $location_url = $variables['content']['field_location'][0]['organization']['#value'] . ', ' . $address;
+  }
+
+  $variables['location_url'] = !empty($location_url) ? urlencode($location_url) : urlencode($address);
   $variables['date_value'] = $date_value;
   $variables['video_status'] = $video_status;
   $variables['location'] = $address;

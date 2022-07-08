@@ -27,7 +27,7 @@ function nys_senators_update_9001() {
   $our_district->save();
 
   $news_room = Term::create([
-    'name' => 'News Room',
+    'name' => 'Newsroom',
     'vid' => 'microsite_page_type',
   ]);
   $news_room->set('field_microsite_menu_weight', 2);

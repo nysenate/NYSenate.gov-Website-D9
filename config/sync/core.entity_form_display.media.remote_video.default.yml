@@ -3,21 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.remote_video.field_accessible_sitewide
-    - field.field.media.remote_video.field_body
-    - field.field.media.remote_video.field_committee
-    - field.field.media.remote_video.field_date
-    - field.field.media.remote_video.field_hide_feed
-    - field.field.media.remote_video.field_issues
     - field.field.media.remote_video.field_media_oembed_video
-    - field.field.media.remote_video.field_recorded_date
-    - field.field.media.remote_video.field_senator
     - media.type.remote_video
   module:
-    - datetime
     - media
     - path
-    - text
 id: media.remote_video.default
 targetEntityType: media
 bundle: remote_video
@@ -29,52 +19,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_accessible_sitewide:
-    type: boolean_checkbox
-    weight: 8
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_body:
-    type: text_textarea_with_summary
-    weight: 2
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-  field_committee:
-    type: options_select
-    weight: 6
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_date:
-    type: datetime_default
-    weight: 3
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_hide_feed:
-    type: boolean_checkbox
-    weight: 1
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_issues:
-    type: entity_reference_autocomplete_tags
-    weight: 7
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   field_media_oembed_video:
     type: oembed_textfield
     weight: 0
@@ -82,18 +26,6 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  field_recorded_date:
-    type: datetime_default
-    weight: 4
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_senator:
-    type: options_select
-    weight: 5
-    region: content
-    settings: {  }
     third_party_settings: {  }
   path:
     type: path

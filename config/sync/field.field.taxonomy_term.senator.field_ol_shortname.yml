@@ -1,0 +1,19 @@
+uuid: 6a07c9cb-b70b-489f-a94f-8443ad972551
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_ol_shortname
+    - taxonomy.vocabulary.senator
+id: taxonomy_term.senator.field_ol_shortname
+field_name: field_ol_shortname
+entity_type: taxonomy_term
+bundle: senator
+label: Shortname
+description: 'Normally the senator''s surname. Created for importing matching.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

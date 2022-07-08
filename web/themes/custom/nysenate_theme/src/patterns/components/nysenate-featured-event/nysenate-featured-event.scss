@@ -156,7 +156,6 @@
     margin-bottom: 20px;
   }
 
-
   .c-event-image {
     width: 100%;
   }
@@ -367,14 +366,13 @@
   }
 }
 
-
 .c-event-block--featured {
+  @include clearfix;
   margin: 0;
   padding-top: 16px;
   padding-bottom: 40px;
   border-top: 2px solid $grey09;
   font-family: 'Proxima Nova Regular';
-  @include clearfix;
 
   .c-title {
     font-family: 'Proxima Nova Regular';
@@ -461,11 +459,11 @@
 }
 
 .c-event-block--featured-image {
+  @include clearfix;
   margin: 0;
   padding-top: 16px;
   padding-bottom: 40px;
   font-family: 'Proxima Nova Regular';
-  @include clearfix;
 
   .c-title {
     font-family: 'Proxima Nova Regular';
@@ -488,7 +486,7 @@
       font-family: 'Adelle Bold';
 
       &::after {
-        content:'/';
+        content: '/';
         display: inline-block;
         font-family: 'Proxima Nova Regular';
         margin: 0 0 0 5px;
@@ -556,7 +554,6 @@
   .addthisevent-drop {
     margin-top: 20px;
   }
-
 }
 
 .c-event-block--upcoming {
@@ -627,7 +624,6 @@
   margin-top: 12px;
   font-family: 'Adelle SemiBold';
 }
-
 
 .c-upcoming-container.today {
   background-color: $grey06;
@@ -704,7 +700,6 @@
   }
 
   .c-event-block--list {
-
     .c-event-image {
       max-width: 380px;
       float: left;
@@ -802,7 +797,6 @@
   }
 
   .c-event-block--featured {
-
     .c-event-image {
       max-width: 380px;
       float: left;
@@ -821,7 +815,6 @@
           margin: 0 0 0 5px;
         }
       }
-
     }
 
     .c-event-name {
@@ -907,7 +900,6 @@
   }
 
   .c-upcoming-container {
-
     .c-event-block--upcoming {
       //width: 50%;
       clear: left;

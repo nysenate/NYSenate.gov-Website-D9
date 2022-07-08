@@ -16,9 +16,9 @@
             {{ content.field_article_author }}
           </p>
         {% endif %}
-        {% if content.field_date %}
+        {% if content.field_date[0] %}
           <p class="c-news--pub-date">
-            <span class="date-display-single">{{ content.field_date }}</span>
+            <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
           </p>
         {% endif %}
         {% if issues or majority_issue %}
@@ -65,8 +65,8 @@
     {% if content.field_image_main %}
       <div class="c-block c-block--img">
         {{ content.field_image_main }}
-        {% if content.field_image_main[LANGUAGE_NONE][0]['title'] %}
-          <p class="c-img--caption">{{ content.field_image_main[LANGUAGE_NONE][0]['title'] }}
+        {% if content.field_image_main %}
+          <p class="c-img--caption">{{ content.field_image_main }}
         {% endif %}
       </div>
     {% endif %}

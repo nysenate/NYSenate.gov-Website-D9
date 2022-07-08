@@ -1,0 +1,12 @@
+{{ attach_library('nysenate_theme/nysenate-promotional-banner') }}
+
+<div class="nysenate-promotional-banner-list">
+  {% for banner in banners %}
+    {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
+      image: banner.image,
+      title: banner.title,
+      cta: banner.cta,
+      modifier: banner.modifier
+    } only %}
+  {% endfor %}
+</div>

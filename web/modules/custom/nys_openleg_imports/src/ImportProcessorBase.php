@@ -108,6 +108,7 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
       }
       catch (\Throwable $e) {
         $ret = FALSE;
+        $this->logger->error(" ! EXCP: @msg", ['@msg' => $e->getMessage()]);
       }
     }
     return $ret;

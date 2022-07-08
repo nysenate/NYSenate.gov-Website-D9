@@ -177,6 +177,12 @@ abstract class ImporterBase implements ImporterInterface {
       try {
         $full_item = $this->requester->retrieve($item_name);
         $processor = $this->getProcessor()->init($full_item);
+        if (!$full_item->success()) {
+          $this->logger->error('API call to retrieve @name failed', [
+            '@name' => $item_name,
+            '@response' => var_export($full_item, 1),
+          ]);
+        }
         $success = $full_item->success() && $processor->process();
       }
       catch (\Throwable $e) {

@@ -59,7 +59,7 @@ class ApiManager {
     $this->requester = $requester;
     $this->responder = $responder;
     $this->config = $config->get('nys_openleg.settings');
-    Request::useKey($this->config->get('api_key'));
+    Request::useKey($this->config->get('api_key') ?? '');
   }
 
   /**

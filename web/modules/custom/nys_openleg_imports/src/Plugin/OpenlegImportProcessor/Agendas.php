@@ -80,48 +80,43 @@ class Agendas extends ImportProcessorBase {
     }
     catch (\Throwable $e) {
       $committee = [];
-      $success = FALSE;
     }
     $committee = reset($committee);
-
-    if ($committee) {
-      $values = [
-        'field_ol_agenda_addendum' => $item->addendumId,
-        'field_ol_agenda_location' => $item->meeting->location,
-        'field_ol_agenda_notes' => $item->meeting->notes,
-        'field_ol_committee' => $committee,
-        'field_ol_committee_name' => $comm_name,
-        'field_ol_meeting_date' => strtotime($item->meeting->meetingDateTime),
-        'field_ol_week' => $item->agendaId->year,
-        'field_ol_year' => $item->agendaId->number,
-        'field_from_openleg' => TRUE,
-      ];
+    if (!$committee) {
+      $this->logger->warning('Committee @name was not found', ['@name' => $comm_name]);
     }
-    else {
+
+    $values = [
+      'field_ol_agenda_addendum' => $item->addendumId,
+      'field_ol_agenda_location' => $item->meeting->location,
+      'field_ol_agenda_notes' => $item->meeting->notes,
+      'field_ol_committee' => $committee ?: NULL,
+      'field_ol_committee_name' => $comm_name,
+      'field_ol_meeting_date' => strtotime($item->meeting->meetingDateTime),
+      'field_ol_week' => $item->agendaId->year,
+      'field_ol_year' => $item->agendaId->number,
+      'field_from_openleg' => TRUE,
+    ];
+
+    // Add all the things to the node.
+    try {
+      foreach ($values as $field => $val) {
+        $node->set($field, $val);
+      }
+      if ($item->hasVotes ?? FALSE) {
+        $this->populateBillVotes($node, $item);
+      }
+    }
+    catch (\Throwable $e) {
       $success = FALSE;
-    }
-
-    if ($success) {
-      // Add all the things to the node.
-      try {
-        foreach ($values as $field => $val) {
-          $node->set($field, $val);
-        }
-        if ($item->hasVotes ?? FALSE) {
-          $this->populateBillVotes($node, $item);
-        }
-      }
-      catch (\Throwable $e) {
-        $success = FALSE;
-        $this->logger->error(
-          'Failed to set properties for node @node from @item',
-          [
-            '@node' => $node->id(),
-            '@item' => $node->get('title')->getValue(),
-            '@message' => $e->getMessage(),
-          ]
-        );
-      }
+      $this->logger->error(
+        'Failed to set properties for node @node from @item',
+        [
+          '@node' => $node->id(),
+          '@item' => $node->get('title')->getValue(),
+          '@message' => $e->getMessage(),
+        ]
+      );
     }
 
     return $success;
@@ -207,16 +202,18 @@ class Agendas extends ImportProcessorBase {
     }
 
     // Resolve the node id references for each bill.
-    $bill_storage = $this->entityTypeManager->getStorage('node');
-    $bill_refs = $bill_storage->loadByProperties([
-      'type' => 'bill',
-      'title' => array_keys($bills),
-    ]);
-    foreach ($bill_refs as $nid => $bill_node) {
-      /** @var \Drupal\node\Entity\Node $bill_node */
-      $title = $bill_node->getTitle();
-      if (array_key_exists($title, $votes)) {
-        $votes[$title]->nid = $nid;
+    if (count($bills)) {
+      $bill_storage = $this->entityTypeManager->getStorage('node');
+      $bill_refs = $bill_storage->loadByProperties([
+        'type' => 'bill',
+        'title' => array_keys($bills),
+      ]);
+      foreach ($bill_refs as $nid => $bill_node) {
+        /** @var \Drupal\node\Entity\Node $bill_node */
+        $title = $bill_node->getTitle();
+        if (array_key_exists($title, $votes)) {
+          $votes[$title]->nid = $nid;
+        }
       }
     }
 

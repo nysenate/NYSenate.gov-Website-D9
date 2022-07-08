@@ -65,9 +65,8 @@
     {% if content.field_image_main %}
       <div class="c-block c-block--img">
         {{ content.field_image_main }}
-        {#TO DO (BE):  update image alt on preprocess #}
-        {% if content.field_image_main %}
-          <p class="c-img--caption">{{ content.field_image_main }}
+        {% if image_caption %}
+          <p class="c-img--caption">{{ image_caption }}
         {% endif %}
       </div>
     {% endif %}

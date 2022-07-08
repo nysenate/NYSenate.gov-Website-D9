@@ -71,6 +71,7 @@ class BillVoteWidgetForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $parameter = []) {
     // In this special case, just leave.
     // @todo This method comes from nys_utils.
+    // @phpstan-ignore-next-line
     if (senator_viewing_constituent_dashboard()) {
       return $form;
     }
@@ -220,6 +221,7 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // @todo This method comes from nys_accumulator custom module.
+    // @phpstan-ignore-next-line
     nyslog();
     $node = $form_state->getFormObject();
     $build_info = $form_state->getBuildInfo();

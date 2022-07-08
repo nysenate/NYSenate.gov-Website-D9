@@ -257,6 +257,7 @@ class BillVoteHelper {
           'tag' => 'nys_bill_vote',
         ];
         // @todo Check voting api module.
+        // @phpstan-ignore-next-line
         $vote_check = votingapi_select_single_vote_value($vote_check_criteria);
 
         // If no vote exists, or if the vote is different, process the vote.
@@ -291,7 +292,7 @@ class BillVoteHelper {
             ];
 
             // @todo This method comes from nys_subscriptions module.
-            // Need to confirm if we need to port this on NYSD9-190.
+            // @phpstan-ignore-next-line
             _real_nys_subscriptions_subscription_signup($data);
           }
         }
@@ -312,7 +313,8 @@ class BillVoteHelper {
           'tag' => 'nys_bill_vote',
         ];
 
-        // @todo This comes from voting api. Need to check further.
+        // @todo This comes from voting api.
+        // @phpstan-ignore-next-line
         $ret = votingapi_set_votes($vote);
       }
     }
@@ -375,6 +377,7 @@ class BillVoteHelper {
     $entities = &drupal_static(__FUNCTION__, NULL, $clear);
     if (empty($entities[$entity_type][$entity_id]) && !empty($this->currentUser->id())) {
       // @todo Confirm if we need to use the voting api module.
+      // @phpstan-ignore-next-line
       $entities[$entity_type][$entity_id] = votingapi_select_votes([
         'tag' => 'nys_bill_vote',
         'entity_id' => $entity_id,
@@ -408,6 +411,7 @@ class BillVoteHelper {
     $entities = &drupal_static(__FUNCTION__, NULL, $clear);
     if (empty($entities[$entity_type][$entity_id])) {
       // @todo Confirm if we need to use the voting api module.
+      // @phpstan-ignore-next-line
       $entities[$entity_type][$entity_id] = votingapi_select_results([
         'tag' => 'nys_bill_vote',
         'entity_id' => $entity_id,

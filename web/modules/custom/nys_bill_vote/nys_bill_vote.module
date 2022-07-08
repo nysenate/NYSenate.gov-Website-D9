@@ -24,6 +24,7 @@ function nys_bill_vote_node_view(array &$build, EntityInterface $entity, EntityV
 
     if ($display->getComponent('vote_widget')) {
       $build['vote_widget'] = [
+        // @phpstan-ignore-next-line
         'form' => \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings),
       ];
     }

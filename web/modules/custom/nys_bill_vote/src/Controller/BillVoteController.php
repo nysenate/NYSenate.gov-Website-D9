@@ -116,7 +116,7 @@ class BillVoteController extends ControllerBase {
         ];
 
         // @todo This method comes from nys_subscriptions module.
-        // Need to confirm if we need to port this on NYSD9-190.
+        // @phpstan-ignore-next-line
         _real_nys_subscriptions_subscription_signup($data);
       }
     }

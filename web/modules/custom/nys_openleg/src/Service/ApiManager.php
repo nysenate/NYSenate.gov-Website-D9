@@ -2,7 +2,10 @@
 
 namespace Drupal\nys_openleg\Service;
 
+use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Logger\LoggerChannel;
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\Api\RequestPluginBase;
 use Drupal\nys_openleg\Api\ResponsePluginBase;
 use Drupal\nys_openleg\Api\Statute;
@@ -42,12 +45,21 @@ class ApiManager {
   protected array $allRequesters = [];
 
   /**
+   * Config object for nys_openleg.settings.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected Config $config;
+
+  /**
    * Constructor.
    */
-  public function __construct(LoggerChannel $logger, ApiRequestManager $requester, ApiResponseManager $responder) {
+  public function __construct(LoggerChannel $logger, ConfigFactory $config, ApiRequestManager $requester, ApiResponseManager $responder) {
     $this->logger = $logger;
     $this->requester = $requester;
     $this->responder = $responder;
+    $this->config = $config->get('nys_openleg.settings');
+    Request::useKey($this->config->get('api_key'));
   }
 
   /**

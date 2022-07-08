@@ -7,13 +7,13 @@
     <header class="c-news--head">
       <h1 class="nys-article-title">{{ title }}</h1>
       <div class="c-news--head-meta">
-        {% if content.field_senator %}
+        {% if content.field_senator[0] %}
           <p class="c-news--author">
-            {{ content.field_senator }}
+            {{ content.field_senator[0] }}
           </p>
-        {% elseif content.field_article_author %}
+        {% elseif content.field_article_author[0] %}
           <p class="c-news--author">
-            {{ content.field_article_author }}
+            {{ content.field_article_author[0] }}
           </p>
         {% endif %}
         {% if content.field_date[0] %}
@@ -65,6 +65,7 @@
     {% if content.field_image_main %}
       <div class="c-block c-block--img">
         {{ content.field_image_main }}
+        {#TO DO (BE):  update image alt on preprocess #}
         {% if content.field_image_main %}
           <p class="c-img--caption">{{ content.field_image_main }}
         {% endif %}

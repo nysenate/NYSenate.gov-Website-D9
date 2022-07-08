@@ -209,11 +209,11 @@ class OpenlegImport extends DrushCommands {
 
     // If a session is specified, search for the items.
     if ($this->options['session']) {
-      /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search */
       $params = [
         'limit' => $this->options['limit'],
         'offset' => $this->options['offset'],
       ];
+      /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search */
       $search = $this->api->get($importer->getRequester(), $this->options['session'], $params);
       $names = $importer->getIdFromYearList($search);
       $this->options['ids'] = array_filter(array_unique(

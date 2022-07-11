@@ -6,6 +6,7 @@ dependencies:
     - field.field.paragraph.promotional_banners.field_body
     - field.field.paragraph.promotional_banners.field_call_to_action
     - field.field.paragraph.promotional_banners.field_external_cta
+    - field.field.paragraph.promotional_banners.field_is_2_up
     - field.field.paragraph.promotional_banners.field_link_type
     - field.field.paragraph.promotional_banners.field_promotional_banner_image
     - field.field.paragraph.promotional_banners.field_promotional_content
@@ -25,21 +26,21 @@ mode: default
 content:
   field_body:
     type: text_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 1
     region: content
   field_call_to_action:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 3
     region: content
   field_external_cta:
     type: link
-    label: above
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -49,16 +50,26 @@ content:
     third_party_settings: {  }
     weight: 8
     region: content
+  field_is_2_up:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 9
+    region: content
   field_link_type:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 6
     region: content
   field_promotional_banner_image:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: false
@@ -67,7 +78,7 @@ content:
     region: content
   field_promotional_content:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -75,7 +86,7 @@ content:
     region: content
   field_published_date:
     type: datetime_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
       format_type: medium
@@ -84,7 +95,7 @@ content:
     region: content
   field_senator_taxonomy:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -92,7 +103,7 @@ content:
     region: content
   field_title:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }

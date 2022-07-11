@@ -6,6 +6,7 @@ dependencies:
     - field.field.paragraph.promotional_banners.field_body
     - field.field.paragraph.promotional_banners.field_call_to_action
     - field.field.paragraph.promotional_banners.field_external_cta
+    - field.field.paragraph.promotional_banners.field_is_2_up
     - field.field.paragraph.promotional_banners.field_link_type
     - field.field.paragraph.promotional_banners.field_promotional_banner_image
     - field.field.paragraph.promotional_banners.field_promotional_content
@@ -66,6 +67,13 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_is_2_up:
+    type: boolean_checkbox
+    weight: 9
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_link_type:
     type: options_select
     weight: 6

@@ -1,0 +1,23 @@
+uuid: f44f644a-f075-47d8-850d-84a149eeeab1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_accessible_sitewide
+    - node.type.video
+id: node.video.field_accessible_sitewide
+field_name: field_accessible_sitewide
+entity_type: node
+bundle: video
+label: 'Accessible Sitewide'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

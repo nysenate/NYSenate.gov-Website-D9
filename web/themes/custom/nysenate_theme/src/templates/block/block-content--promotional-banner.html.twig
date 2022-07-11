@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block content.
+ *
+ * @see template_preprocess_block_content_template()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% embed "@nysenate_theme/nysenate-promotional-banner-list/nysenate-promotional-banner-list.twig" with {
+  promotional_banners: promotional_banners
+} only %}
+
+  {% block banner_list %}
+    {% for banner in promotional_banners %}
+      {{ banner }}
+    {% endfor %}
+  {% endblock %}
+{% endembed %}

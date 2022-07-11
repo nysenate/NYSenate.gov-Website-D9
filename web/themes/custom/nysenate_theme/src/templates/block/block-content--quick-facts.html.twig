@@ -18,7 +18,7 @@
 %}
 
 {% include "@nysenate_theme/quick-facts/quick-facts.twig" with {
-  classes: classes,
+  classes: classes|join(' '),
   title: title,
   facts: facts,
 } only %}

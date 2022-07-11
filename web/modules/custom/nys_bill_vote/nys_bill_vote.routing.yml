@@ -1,0 +1,13 @@
+bill_vote.confirmation:
+  path: '/bill_vote_confirmation/callback/{entity_id}/{vote_value}'
+  defaults:
+    _controller: '\Drupal\nys_bill_vote\Controller\BillVoteController::confirmationAjaxCallback'
+  requirements:
+    _permission: 'access content'
+
+bill_vote.autosub:
+  path: '/bill_vote_autosub/callback/{entity_id}/{autosub}'
+  defaults:
+    _controller: '\Drupal\nys_bill_vote\Controller\BillVoteController::autosubAjaxCallback'
+  requirements:
+    _permission: 'access content'

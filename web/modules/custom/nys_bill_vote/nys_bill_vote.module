@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Events and their Microsite Content.
+ */
+
+use Drupal\node\Entity\NodeType;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function nys_bill_vote_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $type = $entity->bundle();
+
+  // If the entity is a bill, get the form and save it to content.
+  if ($type == 'bill') {
+    $bill_vote_form_settings = [
+      'entity_type' => $entity->bundle(),
+      'entity_id' => $entity->id(),
+    ];
+
+    if ($display->getComponent('vote_widget')) {
+      $build['vote_widget'] = [
+        // @phpstan-ignore-next-line
+        'form' => \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings),
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function nys_bill_vote_entity_extra_field_info() {
+  $extra = [];
+
+  foreach (NodeType::loadMultiple() as $bundle) {
+    if ($bundle->id() == 'bill') {
+      $extra['node'][$bundle->id()]['display']['vote_widget'] = [
+        'label' => t('Vote Widget'),
+        'description' => t('Vote widget from nys_bill_vote'),
+        'weight' => 100,
+        'visible' => TRUE,
+      ];
+    }
+  }
+
+  return $extra;
+}

@@ -1,0 +1,23 @@
+uuid: 6ebc971a-960c-4070-862c-7481d03fb54d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_external_cta
+    - paragraphs.paragraphs_type.promotional_banners
+  module:
+    - link
+id: paragraph.promotional_banners.field_external_cta
+field_name: field_external_cta
+entity_type: paragraph
+bundle: promotional_banners
+label: 'External CTA'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 16
+field_type: link

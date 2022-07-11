@@ -1,0 +1,113 @@
+uuid: 1143c182-1230-4232-b83a-c4971926d5f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.promotional_banners.field_body
+    - field.field.paragraph.promotional_banners.field_call_to_action
+    - field.field.paragraph.promotional_banners.field_external_cta
+    - field.field.paragraph.promotional_banners.field_is_2_up
+    - field.field.paragraph.promotional_banners.field_link_type
+    - field.field.paragraph.promotional_banners.field_promotional_banner_image
+    - field.field.paragraph.promotional_banners.field_promotional_content
+    - field.field.paragraph.promotional_banners.field_published_date
+    - field.field.paragraph.promotional_banners.field_senator_taxonomy
+    - field.field.paragraph.promotional_banners.field_title
+    - paragraphs.paragraphs_type.promotional_banners
+  module:
+    - datetime
+    - link
+    - options
+    - text
+id: paragraph.promotional_banners.default
+targetEntityType: paragraph
+bundle: promotional_banners
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_call_to_action:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_external_cta:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_is_2_up:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_link_type:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_promotional_banner_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_promotional_content:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_published_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_senator_taxonomy:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

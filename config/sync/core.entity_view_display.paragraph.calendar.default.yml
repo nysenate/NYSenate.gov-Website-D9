@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.calendar.field_ol_bill
-    - field.field.paragraph.calendar.field_ol_bill_call_number
+    - field.field.paragraph.calendar.field_ol_bill_cal_number
     - field.field.paragraph.calendar.field_ol_bill_names
     - field.field.paragraph.calendar.field_ol_sequence_no
     - field.field.paragraph.calendar.field_ol_type
@@ -25,14 +25,14 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-  field_ol_bill_call_number:
+  field_ol_bill_cal_number:
     type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 5
+    weight: 7
     region: content
   field_ol_bill_names:
     type: basic_string

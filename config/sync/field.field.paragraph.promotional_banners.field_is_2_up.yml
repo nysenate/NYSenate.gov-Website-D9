@@ -1,0 +1,23 @@
+uuid: f35d7291-3fa7-41d4-b4b1-31d049a4ec5e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_is_2_up
+    - paragraphs.paragraphs_type.promotional_banners
+id: paragraph.promotional_banners.field_is_2_up
+field_name: field_is_2_up
+entity_type: paragraph
+bundle: promotional_banners
+label: 'Is 2-up'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

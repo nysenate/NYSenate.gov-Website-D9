@@ -1,0 +1,136 @@
+uuid: f1f9cd3c-a16a-48da-baba-075c16eaed2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.promotional_banners.field_body
+    - field.field.paragraph.promotional_banners.field_call_to_action
+    - field.field.paragraph.promotional_banners.field_external_cta
+    - field.field.paragraph.promotional_banners.field_link_type
+    - field.field.paragraph.promotional_banners.field_promotional_banner_image
+    - field.field.paragraph.promotional_banners.field_promotional_content
+    - field.field.paragraph.promotional_banners.field_published_date
+    - field.field.paragraph.promotional_banners.field_senator_taxonomy
+    - field.field.paragraph.promotional_banners.field_title
+    - paragraphs.paragraphs_type.promotional_banners
+  module:
+    - conditional_fields
+    - datetime
+    - link
+    - media_library
+    - text
+id: paragraph.promotional_banners.default
+targetEntityType: paragraph
+bundle: promotional_banners
+mode: default
+content:
+  field_body:
+    type: text_textarea_with_summary
+    weight: 1
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_call_to_action:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_external_cta:
+    type: link_default
+    weight: 8
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings:
+      conditional_fields:
+        969579d1-28ea-430f-b3b1-5ec304fd4668:
+          entity_type: paragraph
+          bundle: promotional_banners
+          dependee: field_link_type
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: external
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_link_type:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_promotional_banner_image:
+    type: media_library_widget
+    weight: 2
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_promotional_content:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        4ad5dad0-ff72-43ff-a404-1facf6fc509e:
+          entity_type: paragraph
+          bundle: promotional_banners
+          dependee: field_link_type
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: internal
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_published_date:
+    type: datetime_default
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_senator_taxonomy:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

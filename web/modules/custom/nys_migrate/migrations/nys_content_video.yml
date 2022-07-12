@@ -9,10 +9,14 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity:media'
-  default_bundle: remote_video
+  plugin: 'entity:node'
+  default_bundle: video
 
 process:
+  nid:
+    -
+      plugin: get
+      source: tnid
   title:
     -
       plugin: get
@@ -20,9 +24,8 @@ process:
 
   uid:
     -
-      plugin: migration_lookup
+      plugin: get
       source: node_uid
-      migration: nys_user
 
   status:
     -
@@ -43,13 +46,6 @@ process:
     -
       plugin: get
       source: body
-
-  field_media_oembed_video:
-    -
-      plugin: sub_process
-      source: field_yt
-      process:
-        value: video_url
 
   field_date:
     -
@@ -112,3 +108,10 @@ process:
       plugin: senator_migrate_map_lookup
       migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator
+
+  field_yt:
+    -
+      plugin: migration_lookup
+      migration: nys_media_video
+      source: nid
+      no_stub: true

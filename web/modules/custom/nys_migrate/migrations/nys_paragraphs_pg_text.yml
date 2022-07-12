@@ -1,0 +1,31 @@
+id: nys_paragraphs_pg_text
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Paragraphs Content'
+migration_group: nys_pg_group
+label: 'Paragraphs Text'
+
+source:
+  plugin: d7_paragraphs_item
+  bundle: pg_text
+  key: migrate
+
+destination:
+  plugin: 'entity:block'
+  default_bundle: text
+
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  id:
+    -
+      plugin: get
+      source: item_id
+  body:
+    -
+      plugin: get
+      source: field_pg_text
+

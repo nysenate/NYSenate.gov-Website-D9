@@ -1,13 +1,19 @@
-id: nys_fc_featured_legislation_commi
+id: nys_fc_office_contacts
 migration_tags:
   - 'Drupal 7'
   - Content
   - 'Field Collection Content'
 migration_group: migrate_drupal_7
-label: 'Field Collections (Featured legislation commi)'
+label: 'Field Collections (Office contacts)'
+
 source:
   plugin: d7_field_collection_item
-  field_name: field_featured_legislation_commi
+  field_name: field_office_contacts
+
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: office_contacts
+
 process:
   type:
     -
@@ -25,27 +31,24 @@ process:
     -
       plugin: get
       source: field_name
-  field_featurer_senator:
+  field_office_contact_email:
     -
       plugin: get
-      source: field_featurer_senator
-  field_featured_bill:
+      source: field_office_contact_email
+  field_office_contact_name:
     -
       plugin: get
-      source: field_featured_bill
-  field_featured_quote:
+      source: field_office_contact_name
+  field_office_contact_phone:
     -
       plugin: get
-      source: field_featured_quote
+      source: field_office_contact_phone
+
+  field_office_contact_title:
+    -
+      plugin: get
+      source: field_office_contact_title
   field_metatag:
     -
       plugin: d7_metatag_entities
       source: pseudo_metatag_entities
-destination:
-  plugin: 'entity_reference_revisions:paragraph'
-  default_bundle: committee_featured_legislation
-migration_dependencies:
-  required:
-    - upgrade_d7_field_collection_type
-  optional:
-    - upgrade_d7_field_instance

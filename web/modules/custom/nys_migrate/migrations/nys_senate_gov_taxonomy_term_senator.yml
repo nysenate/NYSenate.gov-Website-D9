@@ -1,15 +1,19 @@
-langcode: en
-status: true
-dependencies: {  }
 id: nys_senate_gov_taxonomy_term_senator
 migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: nys_general
 label: 'Taxonomy terms (Senator)'
+
 source:
   plugin: d7_node
   node_type: senator
+  key: migrate
+
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: senator
+
 process:
   name:
     -
@@ -25,10 +29,71 @@ process:
       plugin: senator_name
       field: field_last_name
       source: nid
+
+  field_member_headshot:
+    -
+      plugin: sub_process
+      source: field_image_headshot
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: nys_media_image_headshot
+          source: fid
+          no_stub: true
+
+  field_party:
+    -
+      plugin: get
+      source: field_party
+
+  field_current_duties:
+    -
+      plugin: get
+      source: field_current_duties
+
   field_conference:
     -
       plugin: get
       source: field_conference
+
+  field_microsite_theme:
+    -
+      plugin: get
+      source: field_pallette_selector
+
+  field_image_hero:
+    -
+      plugin: sub_process
+      source: field_image_hero
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: nys_media_image_hero
+          source: fid
+          no_stub: true
+
+  field_top_issue:
+    -
+      plugin: get
+      source: field_top_issue
+
+  field_facebook_url:
+    -
+      plugin: get
+      source: field_facebook_url
+  field_twitter_url:
+    -
+      plugin: get
+      source: field_twitter_url
+  field_youtube_url:
+    -
+      plugin: get
+      source: field_youtube_url
+  field_instagram_url:
+    -
+      plugin: get
+      source: field_instagram_url
+
   field_email:
     -
       plugin: get
@@ -41,33 +106,90 @@ process:
     -
       plugin: get
       source: field_map_url
-  field_current_duties:
+
+  field_office_contacts:
+    -
+      plugin: sub_process
+      source: field_office_contacts
+      process:
+        target_id: value
+        target_revision_id:
+          -
+            plugin: migration_lookup
+            migration: nys_fc_office_contacts
+            source: value
+          -
+            plugin: extract
+            index:
+              - 1
+
+  field_offices:
+    -
+      plugin: location_to_address
+      source: field_location
+  field_offices_geoloc:
+    -
+      plugin: location_to_geolocation
+      source: field_offices
+
+  field_message_notification_email:
     -
       plugin: get
-      source: field_current_duties
-  field_microsite_theme:
+      source: field_message_notification_email
+  field_user_account:
     -
       plugin: get
-      source: field_pallette_selector
-  field_member_headshot/target_id:
-    plugin: migration_lookup
-    migration: nys_senate_gov_media_image
-    source: field_image_headshot/0/fid
-  field_metatags:
+      source: field_user_account
+  field_autoreply_text:
     -
       plugin: get
-      source: metatags
-  field_ol_member_id:
+      source: field_autoreply_text
+  field_email_autoreply_text:
     -
       plugin: get
-      source: field_ol_member_id
+      source: field_email_autoreply_text
+
+  field_inactive_senator_message:
+    -
+      plugin: get
+      source: field_inactive_senator_message
+
+  field_active:
+    -
+      plugin: get
+      source: field_active
+
   field_ol_shortname:
     -
       plugin: get
       source: field_shortname
-destination:
-  plugin: 'entity:taxonomy_term'
-  default_bundle: senator
-migration_dependencies:
-  required: { }
-  optional: { }
+
+  field_ol_member_id:
+    -
+      plugin: get
+      source: field_ol_member_id
+
+  cer_store_settings:
+    -
+      plugin: get
+      source: cer_store_settings
+
+  field_media_contact:
+    -
+      plugin: get
+      source: field_media_inquiries/0/contact_name
+
+  field_media_email:
+    -
+      plugin: get
+      source: field_media_inquiries/0/email
+
+  field_media_phone:
+    -
+      plugin: get
+      source: field_media_inquiries/0/phone
+
+  field_media_fax:
+    -
+      plugin: get
+      source: field_media_inquiries/0/fax

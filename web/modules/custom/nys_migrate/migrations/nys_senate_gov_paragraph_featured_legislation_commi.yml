@@ -21,8 +21,10 @@ process:
       source: field_featured_bill
   field_featured_senator:
     -
-      plugin: get
-      source: field_featurer_senator
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
+      source: field_featured_senator
+
   field_featured_quote:
     -
       plugin: get

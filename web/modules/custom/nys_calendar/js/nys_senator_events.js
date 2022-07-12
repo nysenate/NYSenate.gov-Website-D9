@@ -58,8 +58,14 @@
       if ($tabFilters && $tabFilters.length > 0) {
         $tabFilters.forEach(function (element) {
           $(element).on('mousedown', function (e) {
-            $('select[name="field_event_place_value"]').val($(this).data('value'));
-            $submit.click();
+            if (!$(this).parents('.l-tab-bar').hasClass('open')
+              && $(window).innerWidth() < 760) {
+              $(this).parents('.l-tab-bar').toggleClass('open');
+            }
+            else {
+              $('select[name="field_event_place_value"]').val($(this).data('value'));
+              $submit.click();
+            }
           })
         });
       }

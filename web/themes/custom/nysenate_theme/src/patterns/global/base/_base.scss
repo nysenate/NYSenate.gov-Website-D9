@@ -1,0 +1,41 @@
+/*-------------------------------------------------------
+/
+/ CONTAINER GLOBALS
+/ containers are reuseable blocks 
+/ things with uniform titles and links to those sections
+/ ie - newsroom container which includes a title,
+/	synopsis of a few articles and a link to the newsroom
+/
+/-------------------------------------------------------*/
+.c-container {
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+.c-container--header {
+	font-family: $font-sans;
+	text-transform: uppercase;
+	border-bottom: 1px solid $grey05;
+	padding-bottom: 20px;
+	position: relative;
+}
+.c-container--header__top-border {
+	font-family: $font-sans;
+	text-transform: uppercase;
+	border-top: 1px solid $grey05;
+	padding: 20px 0;
+	position: relative;
+}
+h2, h3 {
+  &.c-container--title {
+   color: $grey08;
+   text-transform: uppercase;
+   font-family: $font-sans;
+   @include font(12 16 1.2);
+   margin: 0;
+
+	@include breakpoint($bp-sm) {
+		@include font(16 16);
+	}
+ }
+}

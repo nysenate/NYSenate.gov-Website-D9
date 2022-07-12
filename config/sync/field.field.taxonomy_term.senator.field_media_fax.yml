@@ -1,0 +1,21 @@
+uuid: 77e2df86-0c70-40bc-8497-89908a4587ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_media_fax
+    - taxonomy.vocabulary.senator
+  module:
+    - telephone
+id: taxonomy_term.senator.field_media_fax
+field_name: field_media_fax
+entity_type: taxonomy_term
+bundle: senator
+label: 'Fax Number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone

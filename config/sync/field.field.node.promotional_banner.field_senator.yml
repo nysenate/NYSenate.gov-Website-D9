@@ -1,15 +1,15 @@
-uuid: 0e300e1c-8c90-40f5-aced-e877f160fe1c
+uuid: 5b525e15-f8c1-4319-97c4-39c2ab2f1b6e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_senator_taxonomy
-    - paragraphs.paragraphs_type.promotional_banners
+    - field.storage.node.field_senator
+    - node.type.promotional_banner
     - taxonomy.vocabulary.senator
-id: paragraph.promotional_banners.field_senator_taxonomy
-field_name: field_senator_taxonomy
-entity_type: paragraph
-bundle: promotional_banners
+id: node.promotional_banner.field_senator
+field_name: field_senator
+entity_type: node
+bundle: promotional_banner
 label: Senator
 description: ''
 required: false

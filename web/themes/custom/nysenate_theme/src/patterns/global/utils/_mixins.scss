@@ -170,3 +170,27 @@
     }
   }
 }
+
+/**
+ * --------------------------------------------------------------------------------------------
+ * FONT
+ * Apply font-size, line-height, and letter-spacing in one go.
+ * @usage
+ *    @include font($font-size $line-height $letter-spacing);
+ *    // All arguments are optional
+ * --------------------------------------------------------------------------------------------
+ */
+ @mixin font($settings) {
+  // Set font-size
+  @if length($settings) > 0 and type-of(nth($settings, 1)) == number {
+    font-size: nth($settings, 1) * 1px;
+  }
+  // Set line-height
+  @if length($settings) > 1 and type-of(nth($settings, 2)) == number {
+    line-height: nth($settings, 2) * 1px;
+  }
+  // Set letter-spacing
+  @if length($settings) > 2 and type-of(nth($settings, 3)) == number {
+    letter-spacing: nth($settings, 3) * 1px;
+  }
+}

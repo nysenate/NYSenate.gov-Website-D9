@@ -86,14 +86,5 @@ function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $
                       </div>
                     </div>',
     ];
-
-    $form['events_place'] = [
-      '#markup' => '<dl class="l-tab-bar" data-tab="">
-                        <div class="c-tab--arrow u-mobile-only"></div>
-                        <dd class="c-tab"><a class="c-tab-link" id="panel1" data-value="All">All Events</a></dd>
-                        <dd class="c-tab"><a class="c-tab-link" id="panel2" data-value="in_albany">In Albany</a></dd>
-                        <dd class="c-tab"><a class="c-tab-link" id="panel3" data-value="in_district">In the District</a></dd>
-                    </dl>',
-    ];
   }
 }

@@ -140,6 +140,15 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_ol_publish_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: html_datetime
+    third_party_settings: {  }
+    weight: 15
+    region: content
   field_ol_session:
     type: number_integer
     label: hidden
@@ -197,7 +206,6 @@ hidden:
   field_ol_previous_versions: true
   field_ol_program_info: true
   field_ol_program_info_seq: true
-  field_ol_publish_date: true
   field_ol_same_as: true
   field_ol_substituted_by: true
   field_ol_summary: true

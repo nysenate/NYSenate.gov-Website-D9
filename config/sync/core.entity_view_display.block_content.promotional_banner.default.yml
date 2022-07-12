@@ -4,20 +4,18 @@ status: true
 dependencies:
   config:
     - block_content.type.promotional_banner
-    - field.field.block_content.promotional_banner.field_promotional_banners
-  module:
-    - entity_reference_revisions
+    - field.field.block_content.promotional_banner.field_promotional_banner
 id: block_content.promotional_banner.default
 targetEntityType: block_content
 bundle: promotional_banner
 mode: default
 content:
-  field_promotional_banners:
-    type: entity_reference_revisions_entity_view
+  field_promotional_banner:
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      view_mode: default
-      link: ''
+      view_mode: teaser
+      link: false
     third_party_settings: {  }
     weight: 0
     region: content

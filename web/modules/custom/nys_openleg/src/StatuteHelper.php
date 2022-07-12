@@ -44,16 +44,6 @@ class StatuteHelper {
   protected static string $landingUrl = '';
 
   /**
-   * Sets the API key for future requests.
-   *
-   * @param string $api_key
-   *   The API key.
-   */
-  public static function setKey(string $api_key) {
-    Request::useKey($api_key);
-  }
-
-  /**
    * Fetches the known law types.
    *
    * Law types are gleaned from the population of books found in OpenLeg API.

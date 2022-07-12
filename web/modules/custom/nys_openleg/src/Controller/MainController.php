@@ -83,9 +83,6 @@ class MainController extends ControllerBase {
 
     // Set the API Manager service reference.
     $this->apiManager = $apiManager;
-
-    // Configure the OpenLeg API library to use the stored key.
-    StatuteHelper::setKey($this->config->get('api_key'));
   }
 
   /**

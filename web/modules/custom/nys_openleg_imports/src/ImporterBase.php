@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_openleg_imports;
 
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch;
 use Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -153,14 +154,22 @@ abstract class ImporterBase implements ImporterInterface {
   }
 
   /**
+   * Gets the name of the requester this importer uses.
+   */
+  public function getRequester(): string {
+    return $this->definition['requester'] ?? '';
+  }
+
+  /**
    * {@inheritDoc}
    */
   public function import(array $items): ImportResult {
     // Init and report.
     $this->results = $this->getResult();
-    $this->logger->info("Beginning processing of @total @type items", [
+    $this->logger->info("[@time] Beginning processing of @total @type items", [
       '@total' => count($items),
       '@type' => $this->pluginId,
+      '@time' => date(Request::OPENLEG_TIME_FORMAT, time()),
     ]);
 
     // Iterate the items.  Success/fail/exceptions are tracked.
@@ -168,18 +177,27 @@ abstract class ImporterBase implements ImporterInterface {
       try {
         $full_item = $this->requester->retrieve($item_name);
         $processor = $this->getProcessor()->init($full_item);
+        if (!$full_item->success()) {
+          $this->logger->error('API call to retrieve @name failed', [
+            '@name' => $item_name,
+            '@response' => var_export($full_item, 1),
+          ]);
+        }
         $success = $full_item->success() && $processor->process();
       }
       catch (\Throwable $e) {
         $success = FALSE;
         $this->results->addException($e->getMessage());
+        $this->logger->error(" ! EXCP: @msg", ['@msg' => $e->getMessage()]);
       }
 
       if ($success) {
         $this->results->addSuccess();
+        $this->logger->info(" - @name imported successfully.", ['@name' => $item_name]);
       }
       else {
         $this->results->addFail();
+        $this->logger->error(" - @name import failed.", ['@name' => $item_name]);
       }
     }
 
@@ -200,10 +218,11 @@ abstract class ImporterBase implements ImporterInterface {
       '@success' => $this->results->getSuccess(),
       '@fail' => $this->results->getFail(),
       '@skip' => $attempted - $this->results->total(),
+      '@time' => date(Request::OPENLEG_TIME_FORMAT, time()),
     ];
-    $message = "Finished processing @total @type items: @success pass, @fail fail, @skip skipped";
+    $message = "[@time] Finished processing @total @type items: @success pass, @fail fail, @skip skipped";
     if ($full_fail = count($this->results->getExceptions())) {
-      $message = "EXCP($full_fail) ";
+      $message .= " ($full_fail exceptions)";
       $type = 'error';
     }
     else {

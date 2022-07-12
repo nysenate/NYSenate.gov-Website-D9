@@ -45,7 +45,7 @@ class ApiResponseManager extends DefaultPluginManager {
       'Drupal\nys_openleg\Api\ResponsePluginInterface',
       'Drupal\nys_openleg\Annotation\OpenlegApiResponse'
     );
-    $this->setCacheBackend($cache_backend, 'openleg_api');
+    $this->setCacheBackend($cache_backend, 'openleg_api.responses');
     $this->logger = $logger;
   }
 

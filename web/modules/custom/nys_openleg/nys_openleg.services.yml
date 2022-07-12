@@ -12,4 +12,4 @@ services:
     parent: default_plugin_manager
   manager.openleg_api:
     class: Drupal\nys_openleg\Service\ApiManager
-    arguments: ['@logger.channel.openleg_api', '@manager.openleg_requests', '@manager.openleg_responses']
+    arguments: ['@logger.channel.openleg_api', '@config.factory', '@manager.openleg_requests', '@manager.openleg_responses']

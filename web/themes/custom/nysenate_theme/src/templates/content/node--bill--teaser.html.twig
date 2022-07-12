@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Theme override for the "teaser" view mode.
+ */
+#}
+
+{% include "@nysenate_theme/featured-bills/featured-bills.twig" with {
+  text: text|default(FALSE),
+  bills: bills,
+  has_sub: false
+} only %}

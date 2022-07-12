@@ -1,0 +1,64 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-event-featured-story {
+	overflow: hidden;
+	padding-bottom: 40px;
+
+	.l-left {
+ 		width: 100%;
+	}
+
+	.c-story-name {
+		font-family: $font-serif;
+		font-size: 24px;
+		margin: 0px;
+		line-height: 120%;
+		padding-top: 16px;
+		max-width: 440px;
+		margin-bottom: 25px;
+
+		a {
+			color: $grey02;
+			text-decoration: none;
+		}
+	}
+
+	.c-story-image {
+		width: 100%;
+	}
+
+	.c-story-link {
+		color: $yellow03;
+		font-family: $font-sans-bold;
+		font-size: 14px;
+		@extend .lgt-text;
+	}
+
+  .c-featured-story-issue-tag a {
+    text-transform: uppercase;
+    font-family: $font-sans-bold;
+    font-size: 12px;
+    line-height: 1em;
+    letter-spacing: 0.05em;
+		text-decoration: none;
+    @extend .link-text;
+  
+    &:hover {
+      @extend .link-text;
+      text-decoration: underline;
+    }
+  }
+
+  @include breakpoint($bp-sm) {
+
+		.c-story-name {
+			font-size: 26px;
+		}
+
+		.story-container {
+			display: flex;
+			gap: 40px;
+		}
+  }
+}

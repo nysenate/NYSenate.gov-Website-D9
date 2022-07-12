@@ -46,7 +46,6 @@ class FileEntity extends FieldableEntity {
       $query->addField($description_alias, $this->configuration['file_field'] . "_description", 'description');
     }
 
-
     // Filter by scheme(s), if configured.
     if (isset($this->configuration['scheme'])) {
       $schemes = [];

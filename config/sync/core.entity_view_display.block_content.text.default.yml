@@ -7,9 +7,11 @@ dependencies:
     - field.field.block_content.text.field_body_left
     - field.field.block_content.text.field_body_right
     - field.field.block_content.text.field_is_full_bleed
+    - field.field.block_content.text.field_link
     - field.field.block_content.text.field_title
     - field.field.block_content.text.field_with_background
   module:
+    - link
     - text
 _core:
   default_config_hash: eGaHm6OUEVUhIGkUavARa1oTAjDLxw7PGmKddOyuR9I
@@ -41,6 +43,18 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 6
     region: content
   field_title:
     type: string

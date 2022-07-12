@@ -1,16 +1,16 @@
-uuid: bf493ad0-92de-4363-be91-acb75ad52f72
+uuid: fe23a81b-b2d2-4325-8e7d-581709e315aa
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_call_to_action
-    - paragraphs.paragraphs_type.promotional_banners
+    - field.storage.node.field_call_to_action
+    - node.type.promotional_banner
   module:
     - options
-id: paragraph.promotional_banners.field_call_to_action
+id: node.promotional_banner.field_call_to_action
 field_name: field_call_to_action
-entity_type: paragraph
-bundle: promotional_banners
+entity_type: node
+bundle: promotional_banner
 label: 'Call to Action'
 description: ''
 required: false

@@ -1,16 +1,16 @@
-uuid: 5f11d8c7-ec97-4d4b-a80b-cd614799ad53
+uuid: 855994d4-f91e-410d-b8d0-93a60bef9f38
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_link_type
-    - paragraphs.paragraphs_type.promotional_banners
+    - field.storage.node.field_link_type
+    - node.type.promotional_banner
   module:
     - options
-id: paragraph.promotional_banners.field_link_type
+id: node.promotional_banner.field_link_type
 field_name: field_link_type
-entity_type: paragraph
-bundle: promotional_banners
+entity_type: node
+bundle: promotional_banner
 label: 'Link Type'
 description: ''
 required: false

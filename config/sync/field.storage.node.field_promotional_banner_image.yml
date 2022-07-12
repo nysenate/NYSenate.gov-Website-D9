@@ -1,18 +1,20 @@
-uuid: f1a0d952-ef3b-439f-bfb5-699942c1e556
+uuid: a02690f2-3232-409f-9fdb-634f3e15def3
 langcode: en
 status: true
 dependencies:
   module:
     - field_permissions
-    - paragraphs
+    - media
+    - node
 third_party_settings:
   field_permissions:
     permission_type: public
-id: paragraph.field_is_2_up
-field_name: field_is_2_up
-entity_type: paragraph
-type: boolean
-settings: {  }
+id: node.field_promotional_banner_image
+field_name: field_promotional_banner_image
+entity_type: node
+type: entity_reference
+settings:
+  target_type: media
 module: core
 locked: false
 cardinality: 1

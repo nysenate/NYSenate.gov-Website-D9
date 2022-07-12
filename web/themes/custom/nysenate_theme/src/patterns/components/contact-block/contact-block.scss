@@ -208,7 +208,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-block--senator-office {
     padding: 40px 40px 45px;
 
@@ -261,8 +261,8 @@
 
 #nys-messaging-senator-contact-form,
 #nys-messaging-senator-message-form {
-	&:after {
-	  content: "";
+	&::after {
+	  content: '';
 	  display: table;
 	  clear: both;
 	  margin-bottom: 40px;

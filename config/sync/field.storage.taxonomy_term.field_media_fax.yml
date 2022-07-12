@@ -1,21 +1,20 @@
-uuid: 51a71926-9598-4933-8f7f-987aae38df80
+uuid: 5ca6166b-394f-4fb0-82e3-e76b19e8495d
 langcode: en
 status: true
 dependencies:
   module:
-    - block_content
     - field_permissions
-    - node
+    - taxonomy
+    - telephone
 third_party_settings:
   field_permissions:
     permission_type: public
-id: block_content.field_promotional_content
-field_name: field_promotional_content
-entity_type: block_content
-type: entity_reference
-settings:
-  target_type: node
-module: core
+id: taxonomy_term.field_media_fax
+field_name: field_media_fax
+entity_type: taxonomy_term
+type: telephone
+settings: {  }
+module: telephone
 locked: false
 cardinality: 1
 translatable: true

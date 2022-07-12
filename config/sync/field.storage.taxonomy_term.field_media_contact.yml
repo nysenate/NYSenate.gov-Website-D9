@@ -1,20 +1,22 @@
-uuid: eaefcbb6-8cee-41e1-ab73-a277a71fee25
+uuid: 5a6001d4-02c8-4928-ac45-981fe908455c
 langcode: en
 status: true
 dependencies:
   module:
-    - block_content
     - field_permissions
-    - link
+    - taxonomy
 third_party_settings:
   field_permissions:
     permission_type: public
-id: block_content.field_external_web_page
-field_name: field_external_web_page
-entity_type: block_content
-type: link
-settings: {  }
-module: link
+id: taxonomy_term.field_media_contact
+field_name: field_media_contact
+entity_type: taxonomy_term
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
 locked: false
 cardinality: 1
 translatable: true

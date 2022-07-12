@@ -1,21 +1,20 @@
-uuid: 6243d5af-64f1-443d-acf7-2b9f425dac96
+uuid: b8cbfcf4-e758-4697-a0ba-2218c3bac0c6
 langcode: en
 status: true
 dependencies:
   module:
-    - block_content
-    - datetime
     - field_permissions
+    - taxonomy
+    - telephone
 third_party_settings:
   field_permissions:
     permission_type: public
-id: block_content.field_date
-field_name: field_date
-entity_type: block_content
-type: datetime
-settings:
-  datetime_type: datetime
-module: datetime
+id: taxonomy_term.field_media_phone
+field_name: field_media_phone
+entity_type: taxonomy_term
+type: telephone
+settings: {  }
+module: telephone
 locked: false
 cardinality: 1
 translatable: true

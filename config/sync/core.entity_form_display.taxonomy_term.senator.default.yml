@@ -12,6 +12,10 @@ dependencies:
     - field.field.taxonomy_term.senator.field_facebook_url
     - field.field.taxonomy_term.senator.field_image_hero
     - field.field.taxonomy_term.senator.field_instagram_url
+    - field.field.taxonomy_term.senator.field_media_contact
+    - field.field.taxonomy_term.senator.field_media_email
+    - field.field.taxonomy_term.senator.field_media_fax
+    - field.field.taxonomy_term.senator.field_media_phone
     - field.field.taxonomy_term.senator.field_member_headshot
     - field.field.taxonomy_term.senator.field_message_notification_email
     - field.field.taxonomy_term.senator.field_microsite_theme
@@ -35,6 +39,7 @@ dependencies:
     - name
     - paragraphs
     - paragraphs_features
+    - telephone
 third_party_settings:
   field_group:
     group_senator_information:
@@ -97,7 +102,7 @@ third_party_settings:
       label: 'Key Staff'
       region: content
       parent_name: group_contact_page
-      weight: 31
+      weight: 35
       format_type: fieldset
       format_settings:
         classes: ''
@@ -111,7 +116,7 @@ third_party_settings:
       label: 'Office Addresses'
       region: content
       parent_name: group_contact_page
-      weight: 32
+      weight: 36
       format_type: fieldset
       format_settings:
         classes: ''
@@ -126,7 +131,7 @@ third_party_settings:
       label: 'Direct Messaging'
       region: content
       parent_name: ''
-      weight: 8
+      weight: 5
       format_type: fieldset
       format_settings:
         classes: ''
@@ -141,7 +146,7 @@ third_party_settings:
       label: 'Auto-Reply Settings'
       region: content
       parent_name: ''
-      weight: 9
+      weight: 6
       format_type: fieldset
       format_settings:
         classes: ''
@@ -158,7 +163,24 @@ third_party_settings:
       label: 'Contact Page'
       region: content
       parent_name: ''
-      weight: 7
+      weight: 4
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_media_inquiries:
+      children:
+        - field_media_contact
+        - field_media_email
+        - field_media_phone
+        - field_media_fax
+      label: 'Media Inquiries'
+      region: content
+      parent_name: ''
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: ''
@@ -173,7 +195,7 @@ mode: default
 content:
   field_active_senator:
     type: boolean_checkbox
-    weight: 11
+    weight: 7
     region: content
     settings:
       display_label: true
@@ -239,6 +261,36 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_media_contact:
+    type: string_textfield
+    weight: 31
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_media_email:
+    type: email_default
+    weight: 32
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_media_fax:
+    type: telephone_default
+    weight: 34
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_media_phone:
+    type: telephone_default
+    weight: 33
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_member_headshot:
     type: media_library_widget
     weight: 27
@@ -262,7 +314,7 @@ content:
     third_party_settings: {  }
   field_office_contacts:
     type: paragraphs
-    weight: 32
+    weight: 27
     region: content
     settings:
       title: Paragraph
@@ -353,7 +405,7 @@ content:
     third_party_settings: {  }
   field_store_settings:
     type: boolean_checkbox
-    weight: 26
+    weight: 15
     region: content
     settings:
       display_label: true
@@ -378,7 +430,7 @@ content:
     third_party_settings: {  }
   field_user_account:
     type: entity_reference_autocomplete
-    weight: 24
+    weight: 28
     region: content
     settings:
       match_operator: CONTAINS

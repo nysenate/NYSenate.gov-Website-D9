@@ -1,0 +1,21 @@
+uuid: 5f11d8c7-ec97-4d4b-a80b-cd614799ad53
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_link_type
+    - paragraphs.paragraphs_type.promotional_banners
+  module:
+    - options
+id: paragraph.promotional_banners.field_link_type
+field_name: field_link_type
+entity_type: paragraph
+bundle: promotional_banners
+label: 'Link Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

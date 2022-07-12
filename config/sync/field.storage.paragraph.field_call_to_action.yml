@@ -1,0 +1,43 @@
+uuid: a69937f1-5a48-40d0-a26d-6203b7066ffc
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - options
+    - paragraphs
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: paragraph.field_call_to_action
+field_name: field_call_to_action
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: petition
+      label: 'Review the Petition'
+    -
+      value: questionaire
+      label: 'Take the Questionnaire'
+    -
+      value: senator_leadership
+      label: 'Senator Leadership List'
+    -
+      value: view_report
+      label: 'View the Report'
+    -
+      value: view_honorees
+      label: 'View All Honorees'
+    -
+      value: read_more
+      label: 'Read More'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

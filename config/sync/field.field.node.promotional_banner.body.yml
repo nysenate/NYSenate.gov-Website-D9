@@ -1,0 +1,23 @@
+uuid: c62c8974-7e92-4b12-ad0a-2d27e0b00301
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.promotional_banner
+  module:
+    - text
+id: node.promotional_banner.body
+field_name: body
+entity_type: node
+bundle: promotional_banner
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

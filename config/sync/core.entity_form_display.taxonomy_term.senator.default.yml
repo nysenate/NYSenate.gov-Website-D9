@@ -4,33 +4,51 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.senator.field_active_senator
+    - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
     - field.field.taxonomy_term.senator.field_current_duties
     - field.field.taxonomy_term.senator.field_email
+    - field.field.taxonomy_term.senator.field_email_autoreply_text
+    - field.field.taxonomy_term.senator.field_facebook_url
+    - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_instagram_url
+    - field.field.taxonomy_term.senator.field_media_contact
+    - field.field.taxonomy_term.senator.field_media_email
+    - field.field.taxonomy_term.senator.field_media_fax
+    - field.field.taxonomy_term.senator.field_media_phone
     - field.field.taxonomy_term.senator.field_member_headshot
+    - field.field.taxonomy_term.senator.field_message_notification_email
     - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_office_contacts
+    - field.field.taxonomy_term.senator.field_offices
     - field.field.taxonomy_term.senator.field_ol_member_id
     - field.field.taxonomy_term.senator.field_ol_shortname
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
     - field.field.taxonomy_term.senator.field_senator_name
-    - image.style.thumbnail
+    - field.field.taxonomy_term.senator.field_store_settings
+    - field.field.taxonomy_term.senator.field_top_issue
+    - field.field.taxonomy_term.senator.field_twitter_url
+    - field.field.taxonomy_term.senator.field_user_account
+    - field.field.taxonomy_term.senator.field_youtube_url
     - taxonomy.vocabulary.senator
   module:
+    - address
     - field_group
+    - media_library
     - name
-    - svg_image
+    - paragraphs
+    - paragraphs_features
+    - telephone
 third_party_settings:
   field_group:
     group_senator_information:
       children:
         - field_senator_name
-        - field_member_headshot
         - field_party
         - field_current_duties
         - field_conference
-        - field_email
-        - field_press_inquiries
+        - field_member_headshot
       label: 'Senator Information'
       region: content
       parent_name: ''
@@ -46,6 +64,9 @@ third_party_settings:
     group_microsite_settings:
       children:
         - field_microsite_theme
+        - field_image_hero
+        - field_top_issue
+        - group_social_media_links
       label: 'Microsite Settings'
       region: content
       parent_name: ''
@@ -58,6 +79,115 @@ third_party_settings:
         open: false
         description: ''
         required_fields: true
+    group_social_media_links:
+      children:
+        - field_facebook_url
+        - field_twitter_url
+        - field_youtube_url
+        - field_instagram_url
+      label: 'Social Media Links'
+      region: content
+      parent_name: group_microsite_settings
+      weight: 8
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_key_staff:
+      children:
+        - field_office_contacts
+      label: 'Key Staff'
+      region: content
+      parent_name: group_contact_page
+      weight: 35
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_office_addresses:
+      children:
+        - field_offices
+      label: 'Office Addresses'
+      region: content
+      parent_name: group_contact_page
+      weight: 36
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_direct_messaging:
+      children:
+        - field_message_notification_email
+        - field_user_account
+      label: 'Direct Messaging'
+      region: content
+      parent_name: ''
+      weight: 5
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_autoreply:
+      children:
+        - field_email_autoreply_text
+        - field_autoreply_text
+      label: 'Auto-Reply Settings'
+      region: content
+      parent_name: ''
+      weight: 6
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_contact_page:
+      children:
+        - field_email
+        - field_press_inquiries
+        - group_key_staff
+        - group_office_addresses
+      label: 'Contact Page'
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_media_inquiries:
+      children:
+        - field_media_contact
+        - field_media_email
+        - field_media_phone
+        - field_media_fax
+      label: 'Media Inquiries'
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
 id: taxonomy_term.senator.default
 targetEntityType: taxonomy_term
 bundle: senator
@@ -65,10 +195,18 @@ mode: default
 content:
   field_active_senator:
     type: boolean_checkbox
-    weight: 3
+    weight: 7
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_autoreply_text:
+    type: string_textfield
+    weight: 20
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_conference:
     type: options_select
@@ -86,19 +224,87 @@ content:
     third_party_settings: {  }
   field_email:
     type: email_default
-    weight: 10
+    weight: 29
     region: content
     settings:
       placeholder: ''
       size: 60
     third_party_settings: {  }
-  field_member_headshot:
-    type: image_image
+  field_email_autoreply_text:
+    type: string_textfield
+    weight: 19
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_facebook_url:
+    type: string_textfield
     weight: 6
     region: content
     settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_image_hero:
+    type: media_library_widget
+    weight: 6
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_instagram_url:
+    type: string_textfield
+    weight: 9
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_media_contact:
+    type: string_textfield
+    weight: 31
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_media_email:
+    type: email_default
+    weight: 32
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_media_fax:
+    type: telephone_default
+    weight: 34
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_media_phone:
+    type: telephone_default
+    weight: 33
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_member_headshot:
+    type: media_library_widget
+    weight: 27
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_message_notification_email:
+    type: email_default
+    weight: 23
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
     third_party_settings: {  }
   field_microsite_theme:
     type: options_select
@@ -106,16 +312,47 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_office_contacts:
+    type: paragraphs
+    weight: 27
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: office_contacts
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings:
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        split_text: false
+        show_drag_and_drop: true
+  field_offices:
+    type: address_default
+    weight: 33
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_ol_member_id:
     type: number
-    weight: 5
+    weight: 13
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_ol_shortname:
     type: string_textfield
-    weight: 4
+    weight: 12
     region: content
     settings:
       size: 60
@@ -129,7 +366,7 @@ content:
     third_party_settings: {  }
   field_press_inquiries:
     type: email_default
-    weight: 11
+    weight: 30
     region: content
     settings:
       placeholder: ''
@@ -166,6 +403,49 @@ content:
         generational: description
         credentials: description
     third_party_settings: {  }
+  field_store_settings:
+    type: boolean_checkbox
+    weight: 15
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_top_issue:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_twitter_url:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_user_account:
+    type: entity_reference_autocomplete
+    weight: 28
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_youtube_url:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   name:
     type: string_textfield
     weight: 0
@@ -175,7 +455,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   simple_sitemap:
-    weight: 6
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }

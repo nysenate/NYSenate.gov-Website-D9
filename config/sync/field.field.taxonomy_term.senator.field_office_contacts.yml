@@ -1,0 +1,73 @@
+uuid: 1f19727f-b12c-4857-ba43-c3b691c15bb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_office_contacts
+    - paragraphs.paragraphs_type.office_contacts
+    - taxonomy.vocabulary.senator
+  module:
+    - entity_reference_revisions
+id: taxonomy_term.senator.field_office_contacts
+field_name: field_office_contacts
+entity_type: taxonomy_term
+bundle: senator
+label: 'Office Contacts'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      office_contacts: office_contacts
+    negate: 0
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 16
+        enabled: false
+      agenda_bills:
+        weight: 17
+        enabled: false
+      calendar:
+        weight: 18
+        enabled: false
+      card:
+        weight: 19
+        enabled: false
+      carousel:
+        weight: 20
+        enabled: false
+      committee_featured_legislation:
+        weight: 21
+        enabled: false
+      featured_legislation:
+        weight: 22
+        enabled: false
+      gallery_item:
+        weight: 23
+        enabled: false
+      members:
+        weight: 24
+        enabled: false
+      misc_legislative_group_members:
+        weight: 25
+        enabled: false
+      office_contacts:
+        weight: 26
+        enabled: true
+      quick_facts:
+        weight: 27
+        enabled: false
+      quote:
+        weight: 28
+        enabled: false
+      slider_item:
+        weight: 29
+        enabled: false
+      votes:
+        weight: 30
+        enabled: false
+field_type: entity_reference_revisions

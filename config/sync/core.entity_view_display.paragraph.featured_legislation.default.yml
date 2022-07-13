@@ -1,0 +1,31 @@
+uuid: 72e34cf4-8f1f-4060-bf27-f7db2fcdc0c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.featured_legislation.field_featured_bill
+    - field.field.paragraph.featured_legislation.field_featured_quote
+    - paragraphs.paragraphs_type.featured_legislation
+id: paragraph.featured_legislation.default
+targetEntityType: paragraph
+bundle: featured_legislation
+mode: default
+content:
+  field_featured_bill:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_featured_quote:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

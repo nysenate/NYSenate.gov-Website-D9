@@ -3,14 +3,17 @@ langcode: en
 status: true
 dependencies:
   module:
-    - node
+    - field_permissions
     - taxonomy
+third_party_settings:
+  field_permissions:
+    permission_type: public
 id: taxonomy_term.field_chair
 field_name: field_chair
 entity_type: taxonomy_term
 type: entity_reference
 settings:
-  target_type: node
+  target_type: taxonomy_term
 module: core
 locked: false
 cardinality: 1

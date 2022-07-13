@@ -1,0 +1,29 @@
+uuid: 5b525e15-f8c1-4319-97c4-39c2ab2f1b6e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_senator
+    - node.type.promotional_banner
+    - taxonomy.vocabulary.senator
+id: node.promotional_banner.field_senator
+field_name: field_senator
+entity_type: node
+bundle: promotional_banner
+label: Senator
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -315,12 +315,57 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
  */
 function nysenate_theme_preprocess_block_content__promotional_banner(&$variables) {
   $banners = [];
-  if ($variables['content']['field_promotional_banners']) {
-    foreach ($variables['content']['field_promotional_banners'] as $key => $banner) {
+  $entity_manager = \Drupal::entityTypeManager();
+
+  if ($variables['content']['field_promotional_banner']) {
+    foreach ($variables['content']['field_promotional_banner'] as $key => $banner) {
       if (!is_numeric($key)) {
         continue;
       }
-      $banners[] = $banner;
+
+      $modifier = '';
+      if ($key > 0) {
+        $modifier = 'two-up';
+      }
+
+      // Media image.
+      $mid = NULL;
+      if ($banner['#node']->hasField('field_promotional_banner_image') && !$banner['#node']->get('field_promotional_banner_image')->isEmpty()) {
+        $mid = $banner['#node']->field_promotional_banner_image->target_id;
+      }
+
+      $media_image = NULL;
+      if (!empty($mid)) {
+        $media_image = $entity_manager->getStorage('media')->load($mid);
+      }
+
+      // Retrieve the URL.
+      $url = '';
+      if ($banner['#node']->field_link_type->value == 'internal') {
+        $node = $entity_manager->getStorage('node')->load($banner['#node']->field_promotional_content->target_id);
+        $url = $node->toUrl()->toString();
+      }
+
+      elseif ($banner['#node']->field_link_type->value == 'external') {
+        $url = $banner['#node']->field_link->uri;
+      }
+
+      // Call to action string.
+      $text = t('Read More');
+      if ($banner['#node']->hasField('field_call_to_action') && !$banner['#node']->get('field_call_to_action')->isEmpty()) {
+        $text = $banner['#node']->field_call_to_action->getSetting('allowed_values');
+        $text = $text[$banner['#node']->field_call_to_action->value];
+      }
+
+      $banners[] = [
+        'modifier' => $modifier,
+        'image' => !empty($media_image) ? $entity_manager->getViewBuilder('media')->view($media_image, 'default') : NULL,
+        'title' => $banner['#node']->getTitle(),
+        'cta' => [
+          'url' => $url,
+          'text' => $text,
+        ],
+      ];
     }
   }
 

@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.taxonomy_term.field_chair
     - taxonomy.vocabulary.committees
+    - taxonomy.vocabulary.senator
 id: taxonomy_term.committees.field_chair
 field_name: field_chair
 entity_type: taxonomy_term
@@ -16,12 +17,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: 'default:taxonomy_term'
   handler_settings:
-    target_bundles: {  }
+    target_bundles:
+      senator: senator
     sort:
-      field: _none
-      direction: ASC
+      field: name
+      direction: asc
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

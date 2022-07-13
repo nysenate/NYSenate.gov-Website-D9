@@ -21,7 +21,8 @@ process:
       source: field_committee_member_role_type
   field_senator:
     -
-      plugin: get
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator
   field_committee_member_name:
     -
@@ -35,9 +36,7 @@ process:
     -
       plugin: get
       source: field_committee_member_url
+
 destination:
   plugin: entity_reference_revisions:paragraph
   default_bundle: misc_legislative_group_members
-migration_dependencies:
-  required: { }
-  optional: { }

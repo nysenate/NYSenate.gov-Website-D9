@@ -17,7 +17,8 @@ process:
       source: item_id
   field_senator:
     -
-      plugin: get
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator
   field_assemblymen_name:
     -

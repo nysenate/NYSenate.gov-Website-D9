@@ -1,0 +1,150 @@
+id: nys_content_session
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Node Session'
+
+source:
+  plugin: d7_node
+  node_type: session
+
+destination:
+  plugin: 'entity_complete:node'
+  default_bundle: session
+
+process:
+  nid:
+    -
+      plugin: get
+      source: tnid
+
+  vid:
+    -
+      plugin: get
+      source: vid
+
+  title:
+    -
+      plugin: get
+      source: title
+
+  uid:
+    -
+      plugin: get
+      source: node_uid
+
+  status:
+    -
+      plugin: get
+      source: status
+
+  created:
+    -
+      plugin: get
+      source: created
+
+  changed:
+    -
+      plugin: get
+      source: timestamp
+
+  revision_uid:
+    -
+      plugin: get
+      source: revision_uid
+
+  revision_log:
+    -
+      plugin: get
+      source: log
+
+  revision_timestamp:
+    -
+      plugin: get
+      source: timestamp
+
+  body:
+    -
+      plugin: get
+      source: body
+
+  field_calendar_number:
+    -
+      plugin: get
+      source: field_calendar_number
+
+  field_issues:
+    -
+      plugin: sub_process
+      source: field_issues
+      process:
+        target_id: tid
+
+  field_live_message_override:
+    -
+      plugin: get
+      source: field_live_message_override
+
+  field_live_message_status:
+    -
+      plugin: get
+      source: field_live_message_status
+
+  field_location:
+    -
+      plugin: location_to_address
+      source: field_location
+
+  field_location_geoloc:
+    -
+      plugin: location_to_geolocation
+      source: field_location
+
+  field_meeting_location:
+    -
+      plugin: get
+      source: field_meeting_location
+
+  field_session_calendars:
+    -
+      plugin: get
+      source: field_session_calendars
+
+  field_date_range:
+    -
+      plugin: sub_process
+      source: field_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+        end_value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value2
+
+  field_transcript:
+    -
+      plugin: get
+      source: field_transcript
+
+  field_video_redirect:
+    -
+      plugin: get
+      source: field_video_redirect
+
+  field_video_status:
+    -
+      plugin: get
+      source: field_video_status
+
+  field_yt:
+    -
+      plugin: migration_lookup
+      migration: nys_media_video
+      source: nid
+      no_stub: true

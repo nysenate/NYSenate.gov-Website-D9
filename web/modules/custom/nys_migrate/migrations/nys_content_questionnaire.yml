@@ -1,0 +1,153 @@
+id: nys_content_questionnaire
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node Questionnaire'
+
+source:
+  plugin: d7_node
+  node_type: questionnaire
+  key: migrate
+
+destination:
+  plugin: 'entity_complete:node'
+  default_bundle: webform
+
+process:
+  nid:
+    -
+      plugin: get
+      source: tnid
+  vid:
+    -
+      plugin: get
+      source: vid
+
+  title:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: timestamp
+
+  revision_uid:
+    -
+      plugin: get
+      source: revision_uid
+  revision_log:
+    -
+      plugin: get
+      source: log
+  revision_timestamp:
+    -
+      plugin: get
+      source: timestamp
+
+  field_image_main:
+    -
+      plugin: sub_process
+      source: field_image_main
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: nys_media_image_main
+          source: fid
+          no_stub: true
+
+  field_senator_multiref:
+    -
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
+      source: field_senator
+
+  webform:
+    -
+      plugin: get
+      source: field_webform
+
+  field_date:
+    -
+      plugin: sub_process
+      source: field_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+
+  field_accessible_sitewide:
+    -
+      plugin: get
+      source: field_accessible_sitewide
+
+  field_issues:
+    -
+      plugin: sub_process
+      source: field_issues
+      process:
+        target_id: tid
+
+  field_committee:
+    -
+      plugin: sub_process
+      source: field_committee
+      process:
+        target_id: tid
+
+  field_article_author:
+    -
+      plugin: get
+      source: field_article_author
+
+  field_byline:
+    -
+      plugin: get
+      source: field_byline
+
+  field_body:
+    -
+      plugin: get
+      source: field_body
+
+  field_title_stub:
+    -
+      plugin: get
+      source: field_title_stub
+
+  field_expiration_date:
+    -
+      plugin: sub_process
+      source: field_expiration_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+
+  field_last_notified:
+    -
+      plugin: sub_process
+      source: field_last_notified
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value

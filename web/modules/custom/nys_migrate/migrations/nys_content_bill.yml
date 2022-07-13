@@ -1,0 +1,84 @@
+id: nys_content_bill
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node Bill'
+
+source:
+  plugin: d7_node
+  node_type: bill
+
+destination:
+  plugin: 'entity_complete:node'
+  default_bundle: bill
+
+process:
+  nid:
+    -
+      plugin: get
+      source: tnid
+  vid:
+    -
+      plugin: get
+      source: vid
+
+  title:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: timestamp
+
+  revision_uid:
+    -
+      plugin: get
+      source: revision_uid
+  revision_log:
+    -
+      plugin: get
+      source: log
+  revision_timestamp:
+    -
+      plugin: get
+      source: timestamp
+
+  field_issues:
+    -
+      plugin: sub_process
+      source: field_issues
+      process:
+        target_id: tid
+
+  field_bill_multi_session_root:
+    -
+      plugin: sub_process
+      source: field_bill_multi_session_root
+      process:
+        target_id: tid
+
+  field_bill_no_issue_tags:
+    -
+      plugin: get
+      source: field_bill_no_issue_tags
+
+  field_majority_issue_tag:
+    -
+      plugin: sub_process
+      source: field_majority_issue_tag
+      process:
+        target_id: tid

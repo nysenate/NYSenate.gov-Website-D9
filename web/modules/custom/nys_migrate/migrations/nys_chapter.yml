@@ -1,0 +1,60 @@
+id: nys_chapter
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Chapters'
+
+source:
+  plugin: d7_node
+  node_type: chapter
+  key: migrate
+
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: accordion_items
+
+process:
+  id:
+    -
+      plugin: get
+      source: tnid
+  vid:
+    -
+      plugin: get
+      source: vid
+
+  status:
+    -
+      plugin: get
+      source: status
+
+  created:
+    -
+      plugin: get
+      source: created
+
+  parent_type:
+    -
+      plugin: default_value
+      default_value: 'block'
+
+  parent_field_name:
+    -
+      plugin: default_value
+      default_value: 'field_accordion_item'
+
+  parent_id:
+    -
+      plugin: get
+      source: nid
+
+  field_title:
+    -
+      plugin: get
+      source: title
+
+  body:
+    -
+      plugin: get
+      source: body

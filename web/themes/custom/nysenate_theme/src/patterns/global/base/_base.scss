@@ -39,3 +39,22 @@ h2, h3 {
 	}
  }
 }
+
+.c-detail--download {
+  display: block;
+  margin-bottom: 20px;
+  color: $blue01;
+  font-family: $font-sans;
+  text-transform: uppercase;
+  font-size: 12px;
+  @extend .icon-before__bill;
+
+  &:before {
+    font-size: 1.5em;
+    line-height: 1em;
+  }
+
+	@include breakpoint($bp-sm) {
+		margin-bottom: 0;
+	}
+}

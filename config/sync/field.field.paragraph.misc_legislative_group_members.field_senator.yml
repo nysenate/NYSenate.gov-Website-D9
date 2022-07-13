@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.paragraph.field_senator
     - paragraphs.paragraphs_type.misc_legislative_group_members
+    - taxonomy.vocabulary.senator
 id: paragraph.misc_legislative_group_members.field_senator
 field_name: field_senator
 entity_type: paragraph
@@ -16,12 +17,13 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: 'default:taxonomy_term'
   handler_settings:
-    target_bundles: {  }
+    target_bundles:
+      senator: senator
     sort:
-      field: _none
-      direction: ASC
+      field: name
+      direction: asc
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

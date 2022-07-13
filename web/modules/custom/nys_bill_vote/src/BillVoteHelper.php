@@ -378,12 +378,12 @@ class BillVoteHelper {
     if (empty($entities[$entity_type][$entity_id]) && !empty($this->currentUser->id())) {
       // @todo Confirm if we need to use the voting api module.
       // @phpstan-ignore-next-line
-      $entities[$entity_type][$entity_id] = votingapi_select_votes([
-        'tag' => 'nys_bill_vote',
-        'entity_id' => $entity_id,
-        'entity_type' => 'node',
-        'uid' => $this->currentUser->id(),
-      ]);
+      // $entities[$entity_type][$entity_id] = votingapi_select_votes([
+      //   'tag' => 'nys_bill_vote',
+      //   'entity_id' => $entity_id,
+      //   'entity_type' => 'node',
+      //   'uid' => $this->currentUser->id(),
+      // ]);
     }
     if (isset($entities[$entity_type][$entity_id][0]['value'])) {
       return $entities[$entity_type][$entity_id][0]['value'];

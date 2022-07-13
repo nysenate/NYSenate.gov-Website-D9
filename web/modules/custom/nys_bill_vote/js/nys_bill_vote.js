@@ -3,9 +3,9 @@
  * Sets up the Aye/Nay voting widget seen on bill nodes.
  */
  'use strict';
- !(function ($) {
+ (function ($) {
      // Custom return handler for AJAX vote submission.
-     Drupal.ajax.prototype.commands.nysBillVoteUpdate = function (ajax, response, status) {
+     $.fn.nysBillVoteUpdate = function (ajax, response) {
          Drupal.behaviors.nysBillVote.voteOnBill(ajax.element, response);
      };
  
@@ -73,7 +73,7 @@
          attach: function (context, settings) {
              var self = this;
              // Hide the message box if the form is re-loaded.
-             if ($('#nys-bills-bill-form input[name=register],', context).prop('checked') === false && !settings.is_logged_in) {
+             if ($('#nys-bills-bill-form input[name=register]', context).prop('checked') === false && !settings.is_logged_in) {
                  $('.c-bill--message-form .form-item-message', context).hide();
              }
  

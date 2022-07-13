@@ -2,7 +2,7 @@
 
 {% set classes = ['node--bill'] %}
 <!-- BILL TEMPLATE -->
-<div class="{{ classes }}" {{ attributes }}>
+<div class="{{ classes|join(' ') }}" {{ attributes }}>
   <div
     class="c-block c-detail--header c-detail--header__bill">
     <!-- Bill Title -->
@@ -139,10 +139,11 @@
   </div>
   <!-- Bill Vote Widget -->
   <div class="c-bill--vote-widget">
-    {% include '@nysenate_theme/bill-vote-widget/bill-vote-widget.twig' with {
+    {{ content.vote_widget }}
+    {# {% include '@nysenate_theme/bill-vote-widget/bill-vote-widget.twig' with {
       bills: bills,
       has_sub: true
-    } only %}
+    } only %} #}
   </div>
 
   <!-- Bill Message Form -->

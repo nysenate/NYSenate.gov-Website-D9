@@ -4,7 +4,9 @@ namespace Drupal\nys_bill_vote\Form;
 
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,12 +41,20 @@ class BillVoteWidgetForm extends FormBase {
   protected $aliasManager;
 
   /**
+   * Default object for form_builder service.
+   *
+   * @var \Drupal\Core\Form\FormBuilder
+   */
+  protected $formBuilder;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(BillVoteHelper $bill_vote_helper, AccountProxy $current_user, AliasManagerInterface $alias_manager) {
+  public function __construct(BillVoteHelper $bill_vote_helper, AccountProxy $current_user, AliasManagerInterface $alias_manager, FormBuilder $form_builder) {
     $this->billVoteHelper = $bill_vote_helper;
     $this->currentUser = $current_user;
     $this->aliasManager = $alias_manager;
+    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -55,6 +65,7 @@ class BillVoteWidgetForm extends FormBase {
       $container->get('nys_bill_vote.bill_vote'),
       $container->get('current_user'),
       $container->get('path_alias.manager'),
+      $container->get('form_builder'),
     );
   }
 
@@ -72,9 +83,9 @@ class BillVoteWidgetForm extends FormBase {
     // In this special case, just leave.
     // @todo This method comes from nys_utils.
     // @phpstan-ignore-next-line
-    if (senator_viewing_constituent_dashboard()) {
-      return $form;
-    }
+    // if (senator_viewing_constituent_dashboard()) {
+    //   return $form;
+    // }
 
     // Detect the build settings.
     $form_state->setBuildInfo(array_merge($this->billVoteHelper->widgetBuildSettings($form_state), $form_state->getBuildInfo()));
@@ -184,9 +195,9 @@ class BillVoteWidgetForm extends FormBase {
     }
 
     // If the user is on a page that isn't the bill node, send them there.
-    $test_action = trim(parse_url($form['#action'])['path'], '/');
+    $test_action = $this->formBuilder->renderPlaceholderFormAction()['#markup'];
     $node_match = $this->aliasManager->getAliasByPath($test_action);
-    $bill_path = 'node/' . $build_info['entity_id'];
+    $bill_path = '/node/' . $build_info['entity_id'];
 
     if ($node_match != $bill_path) {
       $options = [];
@@ -204,16 +215,9 @@ class BillVoteWidgetForm extends FormBase {
       return $response;
     }
 
-    return [
-      '#type' => 'ajax',
-      '#commands' => [
-        [
-          'command' => 'nysBillVoteUpdate',
-          'vote_label' => $this->billVoteHelper->getVotedLabel($value),
-          'vote_value' => $value,
-        ],
-      ],
-    ];
+    $vote_args = [ $this->billVoteHelper->getVotedLabel($value), $value ];
+    $response->addCommand(new InvokeCommand(NULL, 'nysBillVoteUpdate', $vote_args));
+    return $response;
   }
 
   /**

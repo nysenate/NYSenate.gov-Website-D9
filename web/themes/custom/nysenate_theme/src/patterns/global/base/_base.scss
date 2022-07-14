@@ -75,3 +75,98 @@ h3 {
 		}
 	}
 }
+
+.c-pullquote--citation {
+	display: block;
+	margin-top: 20px;
+	color: $grey02;
+	font-family: $font-sans;
+	text-transform: uppercase;
+	font-size: 12px;
+
+	@include breakpoint($bp-sm) {
+		font-size: 14px;
+		margin-top: -25px;
+		padding-left: 50px;
+	}
+}
+
+.c-pullquote {
+	margin: 0;
+	position: relative;
+	color: $grey02;
+	font-family: $font-serif-semibold;
+	padding: 50px 0 40px;
+	font-size: 18px;
+	line-height: 1.3em;
+
+	p {
+		@extend .icon-before__quotes;
+
+		&:before {
+			position: absolute;
+			top: 0;
+			left: -0.2em;
+			@extend .lgt-text;
+			font-size: 2.7em;
+		}
+	}
+
+	&:before {
+		position: absolute;
+		top: 0;
+		left: -0.2em;
+		@extend .lgt-text;
+		font-size: 2.7em;
+	}
+}
+
+.c-block--btn {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: $color-white;
+	font-family: $font-sans-bold;
+	letter-spacing: 0.2em;
+	font-size: 12px;
+	line-height: 44px;
+	height: 60px;
+
+	&::before {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		height: 100%;
+		margin-right: 0.1em;
+		font-size: 32px;
+	}
+
+	span {
+		display: inline-block;
+		vertical-align: middle;
+		width: 80%;
+		line-height: 1.5em;
+
+		a {
+			color: $color-white;
+			vertical-align: middle;
+			display: inline-block;
+		}
+	}
+
+	&:hover {
+		color: $color-white;
+	}
+
+	@include breakpoint($bp-sm) {
+		height: 80px;
+		font-size: 15px;
+		line-height: 80px;
+	}
+}

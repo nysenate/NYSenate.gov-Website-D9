@@ -6,7 +6,7 @@
   padding: 25px 0;
 
   &__title {
-    font-family: "Proxima Nova Regular";
+    font-family: $font-sans;
     text-transform: uppercase;
     line-height: 1;
     margin: 0 0 25px;
@@ -36,7 +36,7 @@
     }
 
     .event-name {
-      font-family: "Adelle Light";
+      font-family: $font-serif;
       font-size: 40px;
       line-height: 1.175em;
       color: #4E4E4E;
@@ -47,10 +47,10 @@
     .stream-link {
       display: flex;
       align-items: center;
-      font-family: "Proxima Nova Regular";
+      font-family: $font-sans;
       text-transform: uppercase;
       text-decoration: none;
-      color: #000;
+      color: $contrast_drk;
       margin-bottom: 15px;
 
       &:hover {
@@ -65,21 +65,21 @@
         margin-right: 10px;
 
         path {
-          fill: #CB8D37;
+          fill: $orange01;
         }
       }
     }
 
     .stream-title {
-      font-family: "Proxima Nova SemiBold";
+      font-family: $font-sans-bold;
       text-transform: uppercase;
-      color: #CB8D37;
+      color: $orange01;
       margin: 0;
     }
   }
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .nysenate-happening-now {
     padding: 25px 0 50px;
 

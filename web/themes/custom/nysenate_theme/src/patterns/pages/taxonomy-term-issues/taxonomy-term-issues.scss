@@ -18,7 +18,7 @@
             font-family: $font-serif-bold;
             @include font(18 25.4);
             margin-bottom: 0;
-            color: #444444; // TO DO: add to color variable
+            color: $grey08;
 
             @include breakpoint($bp-sm) {
                 @include font(32 44.8);
@@ -28,7 +28,7 @@
                 margin: 0;
                 font-family: $font-sans;
                 @include font(14 21);
-                color: #888888; // TO DO: add to color variable
+                color: $grey04;
                 text-transform: uppercase;
 
                 @include breakpoint($bp-sm) {
@@ -36,7 +36,7 @@
                 }
                 
                 span {
-                    color: #444444;
+                    color: $grey08;
                     margin-right: 5px;
                 }
             }
@@ -59,7 +59,7 @@
             .eyebrow { 
                 margin: 0;
                 @include font(16 24);
-                color: #666666; // TO DO: add to color variable
+                color: $grey03;
                 margin-bottom: 20px;
 
                 @include breakpoint($bp-sm) {
@@ -73,7 +73,7 @@
                 align-items: center;
                 height: 55px;
                 padding: 0 40px;
-                background-color: #2B6990; // TO DO: add to color variable
+                background-color: $blue01;
                 font-family: $font-sans-bold;
                 @include font(14 14 1.5);
                 border: none;
@@ -84,42 +84,25 @@
                 }
 
                 &:hover {
-                    color: #ffffff 
+                    color: $color-whitefff 
                 }
 
                 &.no-senator {
-                    // TO DO: @extend not working. need to put senate icons into a mixin
-                    &:before {
-                        content: '\24';
-                        font-size: 1.8em;
-                        margin-top: -5px;
-                        font-family: 'senate_icons';
-                        display:inline-block;
-                        vertical-align: middle;
-
-                        speak: none;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-variant: normal;
-                        text-transform: none;
-                        padding-right: 3px;
-                        -webkit-font-smoothing: antialiased;
-                        -moz-osx-font-smoothing: grayscale;
-                    }
+                    @extend .icon-before__find-senator;
                 }
             }
         }
 
         .header-social {
             @include breakpoint($bp-sm) {
-                border-left: 1px solid #AAAAAA; // TO DO: add to color variable
+                border-left: 1px solid $grey05;
                 padding-left: 50px;
             }
 
             .heading {
                 font-family: $font-sans;
                 @include font(14 19.6 1.4);
-                color: #444444;
+                color: $grey08;
                 text-transform: uppercase;
                 margin-bottom: 10px;
 
@@ -136,16 +119,16 @@
                 gap: 20px;
 
                 &-icon {
-                    fill: #fff;
+                    fill: $color-white;
                     width: 60px;
                     height: 40px;
-                    background-color: #2B6990;
+                    background-color: $blue01;
                     display: inline-flex;
                     justify-content: center;
                     align-items: center;
 
                     @include breakpoint($bp-sm) {
-                        fill: #2B6990;
+                        fill: $blue01;
                         background-color: transparent;
                         width: auto;
                         height: auto;

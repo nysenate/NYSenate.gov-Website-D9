@@ -14,7 +14,7 @@
   .slick-slide {
     height: 200px;
 
-    @media #{$tablet} {
+    @include breakpoint($bp-sm) {
       height: 377px;
     }
 
@@ -43,21 +43,21 @@
     width: 45px;
     transform: translateY(-50%);
     background: $blue01;
-    color: #eeeeee;
+    $grey06;
 
-    @media #{$tablet} {
+    @include breakpoint($bp-sm) {
       height: 55px;
       width: 55px;
     }
 
     &:hover {
-      color: #eeeeee;
+      $grey06;
     }
 
     &::before {
       opacity: 1;
       top: 9px;
-      color: #eeeeee;
+      $grey06;
       font-size: 28px;
       height: 100%;
       width: 100%;
@@ -72,7 +72,7 @@
       text-transform: none;
       padding-left: 3px;
 
-      @media #{$tablet} {
+      @include breakpoint($bp-sm) {
         top: 12px;
         font-size: 32px;
       }

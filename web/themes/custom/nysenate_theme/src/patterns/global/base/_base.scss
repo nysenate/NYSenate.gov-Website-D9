@@ -29,19 +29,23 @@
 	position: relative;
 }
 
-h2, h3 {
+h2,
+h3 {
+	&.c-container--title {
+		margin: 0;
+		color: $grey08;
+		text-transform: uppercase;
+		font-family: $font-sans;
+		@include font(12 16 1.2);
 
-  &.c-container--title {
-   color: $grey08;
-   text-transform: uppercase;
-   font-family: $font-sans;
-   @include font(12 16 1.2);
-   margin: 0;
+		@include breakpoint($bp-sm) {
+			@include font(16 16);
+		}
 
-	@include breakpoint($bp-sm) {
-		@include font(16 16);
+		a {
+			text-decoration: none;
+		}
 	}
- }
 }
 
 .c-container--link {
@@ -54,7 +58,7 @@ h2, h3 {
 	@extend .icon-after__arrow;
 	@extend .link-text;
 
-	&:after {
+	&::after {
 		margin-top: -2px;
 		font-size: 17px;
 		line-height: 12px;
@@ -64,7 +68,7 @@ h2, h3 {
 		font-size: 16px;
 		line-height: 16px;
 
-		&:after {
+		&::after {
 			margin-top: -4px;
 			font-size: 23px;
 			line-height: 16px;

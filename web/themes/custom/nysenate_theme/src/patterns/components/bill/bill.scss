@@ -44,7 +44,7 @@
 h3.c-bill-num {
   margin: 0 0 0.25em;
   color: $grey02;
-  font-family: 'Adelle Bold';
+  font-family: $font-serif-bold;
   line-height: 1em;
   font-size: 20px;
   letter-spacing: 0.05em;
@@ -57,7 +57,7 @@ h3.c-bill-num {
 .c-bill-topic {
   margin-bottom: 1.5em;
   text-transform: uppercase;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   letter-spacing: 0.1em;
   font-size: 10px;
   @extend .lgt-text;
@@ -65,21 +65,21 @@ h3.c-bill-num {
 
 h4.c-bill-topic {
   text-transform: uppercase;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   letter-spacing: 0.1em;
   font-size: 10px;
   @extend .lgt-text;
   font-style: inherit;
   margin-top: 0;
   a {
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
   }
 }
 
 .c-bill-descript {
   margin: 0 0 10px 0;
   color: $grey02;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   font-size: 20px;
   line-height: 32px;
 }
@@ -135,14 +135,14 @@ h4.c-bill-topic {
 .c-bill-update--date {
   display: inline-block;
   margin: 0 0.25em 0 0;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 12px;
 }
 
 .c-bill-update--location {
   display: inline-block;
   margin: 0;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 12px;
   line-height: 1.4;
   display: inline;
@@ -157,8 +157,8 @@ h4.c-bill-topic {
 .c-block-legislation-featured {
   .c-bill-update--location {
     a {
-      color: #fff;
-      border-bottom: solid 0.05em #fff;
+      color: $color-white;
+      border-bottom: solid 0.05em $color-white;
       
       &:hover {
         border-bottom: none;
@@ -170,8 +170,8 @@ h4.c-bill-topic {
 .c-bill-update--sponsor {
   display: block;
   margin: 0;
-  // color: white;
-  font-family: 'Proxima Nova Regular';
+  // color: $color-white;
+  font-family: $font-sans;
   font-size: 14px;
 }
 
@@ -203,7 +203,7 @@ h4.c-bill-topic {
   text-align: center;
   &.c-bill-action--orig-bill {
     background: #eee;
-    color: #888;
+    color: $grey04;
   }
 }
 
@@ -231,8 +231,8 @@ h4.c-bill-topic {
 }
 
 .c-detail--writeup.c-detail--memo {
-  font-family: 'Proxima Nova Regular';
-  background: white;
+  font-family: $font-sans;
+  background: $color-white;
 }
 
 .c-action-bill--items {
@@ -245,7 +245,7 @@ h4.c-bill-topic {
 }
 
 .c-bill--amendment-details dd a.c-detail--download {
-  color: #0078a0;
+  color: $color-cg-blue;
   text-transform: uppercase;
 }
 
@@ -278,17 +278,17 @@ h4.c-bill-topic {
 
 .c-bill-amendment-toggle {
   dt {
-    color: #2b6a90;
-    font-family: 'Proxima Nova SemiBold';
+    color: $gen_blue_lgt;
+    font-family: $font-sans-bold;
   }
   dd {
     a {
-      background: white;
+      background: $color-white;
       color: #777;
     }
     &.active a {
       background: #2b6a90;
-      color: white;
+      color: $color-white;
       border-radius: 0;
     }
   }

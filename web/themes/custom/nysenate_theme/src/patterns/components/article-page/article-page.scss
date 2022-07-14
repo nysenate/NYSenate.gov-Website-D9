@@ -201,7 +201,7 @@
   font-family: $font-sans-bold;
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.c-news-download {
 		margin-bottom: 30px;
 	}
@@ -250,7 +250,7 @@
 	}
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.article-node {
 		padding: 80px 40px 0;
 	}

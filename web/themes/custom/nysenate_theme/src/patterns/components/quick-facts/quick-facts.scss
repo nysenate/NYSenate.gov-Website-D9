@@ -14,8 +14,8 @@
 
 	.c-container--title {
 		padding: 25px 10px 0 10px;
-		font-family: "Adelle Light";
-		color: #fff;
+		font-family: $font-serif;
+		color: $color-white;
 		text-transform: capitalize;
 		font-size: 18px;
 		text-align: center;
@@ -180,8 +180,8 @@
 	.c-stat {
 		margin-bottom: 5px;
 		text-align: center;
-		color: #fff;
-		font-family: "Adelle Bold";
+		color: $color-white;
+		font-family: $font-serif-bold;
 		font-size: 54px;
 	}
 
@@ -191,7 +191,7 @@
 		text-align: center;
 		color: $grey01;
 		text-transform: uppercase;
-		font-family: "Proxima Nova Regular";
+		font-family: $font-sans;
 		font-size: 14px;
 		line-height: 18px;
 	}
@@ -202,7 +202,7 @@
 		width: 75px;
 		margin: 0 auto;
 		text-align: center;
-		color: #fff;
+		color: $color-white;
 		background: url("../images/sprite-up-to.png");
 		background-size: 100% auto;
 
@@ -220,7 +220,7 @@
 	}
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.c-stats--container {
 		margin-top: 60px;
 		padding-bottom: 45px;

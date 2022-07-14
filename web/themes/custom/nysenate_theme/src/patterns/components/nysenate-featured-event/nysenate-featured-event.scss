@@ -10,7 +10,7 @@
     font-size: 20px;
     line-height: 1em;
     padding-bottom: 20px;
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
   }
 
   &__header {
@@ -81,7 +81,7 @@
           color: $grey02;
           text-transform: uppercase;
           line-height: 18px;
-          font-family: 'Proxima Nova Regular';
+          font-family: $font-sans;
 
           &::before {
             content: '/';
@@ -90,7 +90,7 @@
         }
 
         &.date {
-          font-family: 'Adelle SemiBold';
+          font-family: $font-serif-semibold;
         }
       }
     }
@@ -120,7 +120,7 @@
         color: $grey02;
         display: block;
         text-decoration: none;
-        font-family: 'Adelle Light';
+        font-family: $font-serif;
       }
     }
   }
@@ -145,11 +145,11 @@
   padding-bottom: 40px;
   border-top: 1px solid $grey05;
   overflow: hidden;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   position: relative;
 
   .c-title {
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 14px;
     font-weight: normal;
     text-transform: uppercase;
@@ -171,14 +171,14 @@
     padding: 6px;
 
     span {
-      font-family: 'Adelle Bold';
+      font-family: $font-serif-bold;
       font-size: 26px;
       margin-bottom: 6px;
     }
   }
 
   .c-event-name {
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
     font-size: 24px;
     margin: 0 0 12px;
     line-height: 120%;
@@ -211,7 +211,7 @@
     margin-top: 10px;
     margin-left: 0;
     display: block;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 18px;
   }
 
@@ -219,7 +219,7 @@
     margin: 20px 0 0;
     padding: 9px 11px;
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     display: inline-block;
     text-decoration: none;
     border: 1px solid $grey07;
@@ -258,10 +258,10 @@
   position: relative;
   background-color: $grey06;
   overflow: hidden;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
 
   .c-event-name {
-    font-family: 'Adelle Semibold';
+    font-family: $font-serif-semibold;
     font-size: 24px;
     margin: 14px 20px;
     line-height: 120%;
@@ -304,7 +304,7 @@
     clear: left;
 
     span {
-      font-family: 'Proxima Nova SemiBold';
+      font-family: $font-sans-bold;
       font-size: 16px;
     }
   }
@@ -313,7 +313,7 @@
     margin: 20px 0 0;
     padding: 9px 11px;
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     display: inline-block;
     text-decoration: none;
     border: 1px solid $grey07;
@@ -372,10 +372,10 @@
   padding-top: 16px;
   padding-bottom: 40px;
   border-top: 2px solid $grey09;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
 
   .c-title {
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 14px;
     font-weight: normal;
     text-transform: uppercase;
@@ -392,12 +392,12 @@
     font-size: 20px;
 
     span {
-      font-family: 'Adelle Bold';
+      font-family: $font-serif-bold;
 
       &::after {
         content: '/';
         display: inline-block;
-        font-family: 'Proxima Nova Regular';
+        font-family: $font-sans;
         margin: 0 0 0 5px;
       }
     }
@@ -410,7 +410,7 @@
   }
 
   .c-event-name {
-    font-family: 'Adelle Light';
+    font-family: $font-serif;
     font-size: 24px;
     margin: 18px 0 12px;
     line-height: 120%;
@@ -437,14 +437,14 @@
   .c-event-time {
     margin-top: 10px;
     font-size: 20px;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
   }
 
   .c-event-rsvp {
     margin: 20px 0 0 0;
     padding: 9px 11px;
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     display: inline-block;
     text-decoration: none;
     border: 1px solid $grey07;
@@ -463,10 +463,10 @@
   margin: 0;
   padding-top: 16px;
   padding-bottom: 40px;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
 
   .c-title {
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 14px;
     font-weight: normal;
     text-transform: uppercase;
@@ -483,12 +483,12 @@
     font-size: 24px;
 
     span {
-      font-family: 'Adelle Bold';
+      font-family: $font-serif-bold;
 
       &::after {
         content: '/';
         display: inline-block;
-        font-family: 'Proxima Nova Regular';
+        font-family: $font-sans;
         margin: 0 0 0 5px;
       }
     }
@@ -505,7 +505,7 @@
   }
 
   .c-event-name {
-    font-family: 'Adelle Light';
+    font-family: $font-serif;
     font-size: 24px;
     margin: 18px 0 18px 0;
     line-height: 120%;
@@ -514,7 +514,7 @@
 
   .c-event-location {
     font-size: 20px;
-    color: #888888;
+    color: $grey04;
     line-height: 140%;
 
     span {
@@ -534,7 +534,7 @@
   .c-event-time {
     margin-top: 10px;
     font-size: 20px;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 18px;
   }
 
@@ -542,7 +542,7 @@
     margin: 20px 0 0 0;
     padding: 9px 11px;
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     display: inline-block;
     text-decoration: none;
     border: 1px solid $grey07;
@@ -560,7 +560,7 @@
   margin: 0;
   padding: 20px 0 40px;
   overflow: hidden;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   position: relative;
   border-top: 1px solid $grey09;
 
@@ -577,7 +577,7 @@
     line-height: 130%;
 
     span {
-      font-family: 'Adelle Bold';
+      font-family: $font-serif-bold;
       display: block;
       font-size: 26px;
       margin-bottom: 6px;
@@ -585,7 +585,7 @@
   }
 
   .c-event-name {
-    font-family: 'Adelle Light';
+    font-family: $font-serif;
     font-size: 24px;
     margin: 0 0 12px 60px;
     line-height: 120%;
@@ -622,7 +622,7 @@
 .c-calendar--today .nys-title {
   font-size: 30px;
   margin-top: 12px;
-  font-family: 'Adelle SemiBold';
+  font-family: $font-serif-semibold;
 }
 
 .c-upcoming-container.today {
@@ -632,11 +632,11 @@
   .c-title {
     color: $grey02;
     font-size: 24px;
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
     text-transform: capitalize;
 
     a {
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
       font-size: 14px;
       font-weight: normal;
       text-transform: uppercase;
@@ -659,7 +659,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-event-block--today {
     padding: 24px 0;
     .c-event-name {
@@ -808,7 +808,7 @@
       line-height: 22px;
 
       span {
-        font-family: 'Adelle SemiBold';
+        font-family: $font-serif-semibold;
 
         &::after {
           display: inline-block;

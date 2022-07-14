@@ -10,7 +10,7 @@
     font-size: 20px;
     line-height: 1em;
     padding-bottom: 20px;
-    font-family: "Adelle SemiBold";
+    font-family: $font-serif-semibold;
   }
 
   &__header {
@@ -81,7 +81,7 @@
           color: $grey02;
           text-transform: uppercase;
           line-height: 18px;
-          font-family: "Proxima Nova Regular";
+          font-family: $font-sans;
 
           &::before {
             content: '/';
@@ -90,7 +90,7 @@
         }
 
         &.date {
-          font-family: "Adelle SemiBold";
+          font-family: $font-serif-semibold;
         }
       }
     }
@@ -120,13 +120,13 @@
         color: $grey02;
         display: block;
         text-decoration: none;
-        font-family: "Adelle Light";
+        font-family: $font-serif;
       }
     }
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .nyesenate-upcoming-events {
     position: relative;
     margin: 40px 0;
@@ -145,7 +145,7 @@
         right: 40px;
         bottom: auto;
         line-height: 26px;
-        font-family: "Proxima Nova Regular";
+        font-family: $font-sans;
 
         &::after {
           margin-top: -4px;

@@ -18,11 +18,11 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    font-family: "Proxima Nova SemiBold";
+    font-family: $font-sans-bold;
     text-align: left;
     text-decoration: none;
     text-transform: uppercase;
-    color: #fff;
+    color: $color-white;
     letter-spacing: 0.2em;
     font-size: 12px;
     line-height: 60px;
@@ -46,15 +46,15 @@
     }
 
     .title {
-      color: #fff;
+      color: $color-white;
       font-size: 22px;
       line-height: 1.175em;
       margin-bottom: 0;
-      font-family: "Adelle Light";
+      font-family: $font-serif;
     }
   }
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     clear: both;
     padding: 0;
 
@@ -81,7 +81,7 @@
         font-size: 36px;
   
         a {
-          color: #fff;
+          color: $color-white;
         }
       }
     }

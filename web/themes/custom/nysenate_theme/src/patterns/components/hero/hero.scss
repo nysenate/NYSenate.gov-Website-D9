@@ -29,7 +29,7 @@
 .c-hero--welcome {
   padding: 30px 20px;
   color: $grey02;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   font-size: 24px;
   line-height: 1.5em;
   background: $color-white;
@@ -48,7 +48,7 @@
 .c-hero--date {
   display: inline;
   margin: 0 10px 20px 0;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   color: $grey04;
   font-size: 12px;
 }
@@ -60,7 +60,7 @@
   padding-left: 15px;
   border-left: 1px solid $grey05;
   text-transform: uppercase;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   color: $orange01;
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -70,7 +70,7 @@
 
 .c-hero--title {
   color: $grey02;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   font-size: 24px;
   line-height: 1.3em;
   padding-top: 20px;
@@ -106,12 +106,12 @@
   display: inline-block;
   vertical-align: middle;
   color: $color-white;
-  font-family: 'Adelle Regular';
+  font-family: $font-serif-regular;
   font-size: 15px;
   line-height: 1.5em;
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-hero--welcome {
     font-size: 32px;
     line-height: 60px;
@@ -182,7 +182,7 @@
 }
 
 .c-video-info--title {
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   color: $grey04;
   font-size: 14px;
   text-transform: uppercase;
@@ -190,14 +190,14 @@
 }
 
 .c-video-info--evt-title {
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   color: $color-white;
   font-size: 20px;
 }
 
 .c-video-info--date {
   margin: 0;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   color: $grey04;
   font-size: 16px;
 }
@@ -208,7 +208,7 @@
 
 .c-docket--title {
   margin-bottom: 7px;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   color: $color-white;
   font-size: 16px;
   text-transform: uppercase;
@@ -230,7 +230,7 @@
 }
 
 .c-docket--bill-num {
-  font-family: 'Adelle SemiBold';
+  font-family: $font-serif-semibold;
   color: $yellow02;
 
   &::after {
@@ -241,13 +241,13 @@
 }
 
 .c-docket--bill-cat {
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   color: $grey04;
   font-size: 14px;
   text-transform: uppercase;
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .c-hero--video-wrapper {
     float: left;
     width: 60%;
@@ -281,7 +281,7 @@
   }
 }
 
-@media #{$large} {
+@include breakpoint($bp-lg) {
   .c-hero--video-info {
     padding-top: 4%;
   }
@@ -313,7 +313,7 @@
 
 .c-senator-hero--title {
   margin: 0 0 3px;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   text-transform: uppercase;
   line-height: 1em;
   letter-spacing: 0.1em;
@@ -321,7 +321,7 @@
 }
 
 .c-senator-hero--name {
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   color: $color-white;
   line-height: 1.2em;
   letter-spacing: 0.05em;
@@ -336,7 +336,7 @@
 
 .c-senator-hero--roles {
   margin-bottom: 15px;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   color: $color-white;
   font-size: 14px;
   letter-spacing: 0.1em;
@@ -346,7 +346,7 @@
 .c-senator-hero--district {
   margin: 0 0 15px;
   text-transform: uppercase;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 12px;
 
   div {
@@ -419,7 +419,7 @@
 
     .c-hero-livestream-meta {
       h3 {
-        font-family: 'Adelle Light';
+        font-family: $font-serif;
         font-size: 20px;
         line-height: 26px;
         margin-bottom: 15px;
@@ -440,7 +440,7 @@
       font-weight: normal;
       line-height: 1.5;
       margin-bottom: 0.5rem;
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
       font-size: 16px;
     }
 
@@ -468,7 +468,7 @@
       li {
         line-height: 16px;
         font-size: 16px;
-        font-family: 'Proxima Nova Regular';
+        font-family: $font-sans;
         margin-bottom: 10px;
       }
 
@@ -481,7 +481,7 @@
     }
 
     .c-hero-session-link {
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
       font-size: 12px;
       line-height: 18px;
       color: $color-white;
@@ -500,7 +500,7 @@
       ul {
         li {
           list-style: none;
-          font-family: 'Proxima Nova Regular';
+          font-family: $font-sans;
           color: $grey04;
           font-size: 95.5%;
           line-height: 26px;
@@ -515,7 +515,7 @@
           }
 
           a {
-            font-family: 'Adelle SemiBold';
+            font-family: $font-serif-semibold;
             color: $yellow03;
             font-size: 111%;
           }
@@ -531,7 +531,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-senator-hero {
     z-index: 2;
   }
@@ -693,7 +693,7 @@
   }
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .c-senator-hero--info {
     padding: 20px 20px 100px 0;
 
@@ -833,7 +833,7 @@
   }
 }
 
-@media #{$large} {
+@include breakpoint($bp-lg) {
   .c-senator-hero--info {
     > div {
       margin-left: 65px;

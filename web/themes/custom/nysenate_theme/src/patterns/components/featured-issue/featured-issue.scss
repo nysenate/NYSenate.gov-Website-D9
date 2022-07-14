@@ -1,0 +1,221 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-event-cluster-featured-issue {
+  overflow: hidden;
+  max-width: 840px;
+	padding: 20px 20px 0;
+	margin: 0 auto;
+
+  .c-title {
+    font-family: $font-sans;
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    border-top: 2px solid $grey09;
+    position: relative;
+    margin-bottom: 20px;
+    padding-top: 20px;
+
+    a {
+      @extend .lgt-text;
+      text-decoration: none;
+    }
+  }
+
+  .l-left {
+    float: left;
+    width: 100%;
+
+    .c-link-title {
+      border: none;
+      display: block;
+      padding: 0;
+      margin: 0;
+      color: $grey02;
+      font-family: $font-serif;
+      font-size: 24px;
+      line-height: 130%;
+      text-decoration: none;
+    }
+
+    .c-link {
+      border: 0;
+      padding: 0;
+    }
+
+    .c-link-with-image {
+      padding: 30px 0;
+    }
+  }
+
+  .l-right {
+    float: left;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .c-event-image,
+  .c-event-image img {
+    width: 100%;
+    float: left;
+  }
+
+  .c-link {
+    border-top: 2px solid #d4d4d4;
+    display: block;
+    padding: 30px 0;
+    color: $grey02;
+    font-family: $font-serif;
+    font-size: 16px;
+    line-height: 130%;
+    text-decoration: none;
+  }
+
+  .c-link-with-image {
+    display: table;
+
+    .c-link-image,
+    .c-link-image img {
+      display: table-cell;
+      vertical-align: middle;
+      min-width: 80px;
+      min-height: 60px;
+      width: 80px;
+      height: 60px;
+    }
+
+    .c-link-title {
+      display: table-cell;
+      vertical-align: middle;
+      padding-left: 20px;
+      width: 100%;
+    }
+  }
+
+  h3 {
+    font-size: inherit;
+    font-family: inherit;
+    display: inline;
+    line-height: inherit;
+  }
+
+  @include breakpoint($bp-sm) {
+		padding: 40px 20px 0;
+
+    .c-title {
+      border-bottom: 2px solid $grey09;
+      border-top: none;
+      padding-top: 0;
+      padding-bottom: 20px;
+    }
+
+    .l-left {
+      width: 57%;
+    }
+
+    .l-right {
+      width: 280px;
+      float: right;
+      margin-top: 0;
+    }
+
+    .l-left,
+    .l-right {
+      padding-bottom: 20px;
+    }
+
+    .c-link {
+      text-decoration: none;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
+  }
+}
+
+.c-news-container {
+	overflow: hidden;
+	display: block;
+  max-width: 840px;
+  padding: 20px 20px 0;
+  margin: 0 auto;
+
+  @include breakpoint($bp-sm) {
+    padding: 40px 0 0 20px;
+  }
+
+  .c-news-block {
+    margin: 0px;
+    padding-bottom: 40px;
+    overflow: hidden;
+    font-family: $font-sans;
+    position: relative;
+    border-top: 1px solid $grey05;
+
+    &.first {
+      border: 0;
+    }
+
+    .c-newsroom-name {
+      font-family: $font-serif;
+      font-size: 19px;
+      margin: 0px 0px 25px 0px;
+      line-height: 120%;
+      min-width: 100%;
+
+      a {
+        color: $grey02;
+      }
+    }
+
+    @include breakpoint($bp-sm) {
+      width: 50%;
+      float: left;
+      margin: 0;
+      border-top: none;
+
+      .c-newsroom-name {
+        float: left;
+        clear: left;
+        margin-left: 0;
+        padding-top: 0;
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+.c-title,
+.c-title h3 {
+  font-family: $font-sans;
+  font-size: 14px;
+  font-weight: normal;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  margin: 0;
+  color: $grey08;
+  
+  h2 {
+    font-size: 14px;
+  }
+}
+
+.c-press-release--topic,
+.c-featured-story-issue-tag a {
+	text-transform: uppercase;
+  text-decoration: none;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	@extend .link-text;
+
+	&:hover {
+		@extend .link-text;
+		text-decoration: underline;
+	}
+}

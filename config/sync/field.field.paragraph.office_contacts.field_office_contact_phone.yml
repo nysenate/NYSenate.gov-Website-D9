@@ -1,0 +1,21 @@
+uuid: 619f16ee-301d-41ca-8906-8fe0728db35d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_office_contact_phone
+    - paragraphs.paragraphs_type.office_contacts
+  module:
+    - telephone
+id: paragraph.office_contacts.field_office_contact_phone
+field_name: field_office_contact_phone
+entity_type: paragraph
+bundle: office_contacts
+label: Phone
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone

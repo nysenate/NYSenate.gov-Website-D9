@@ -1,0 +1,51 @@
+uuid: b4ed939b-bedb-4f73-9b9b-a2fa24eada7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.office_contacts.field_office_contact_email
+    - field.field.paragraph.office_contacts.field_office_contact_name
+    - field.field.paragraph.office_contacts.field_office_contact_phone
+    - field.field.paragraph.office_contacts.field_office_contact_title
+    - paragraphs.paragraphs_type.office_contacts
+  module:
+    - telephone
+id: paragraph.office_contacts.default
+targetEntityType: paragraph
+bundle: office_contacts
+mode: default
+content:
+  field_office_contact_email:
+    type: email_default
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_office_contact_name:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_office_contact_phone:
+    type: telephone_default
+    weight: 3
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_office_contact_title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

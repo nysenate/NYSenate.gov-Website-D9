@@ -9,7 +9,7 @@
   }
 
   &::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -42,7 +42,7 @@
   &__title {
     margin: 0 0 15px;
     text-transform: capitalize;
-    font-family: "Adelle Regular";
+    font-family: $font-serif-regular;
     font-size: 18px;
     line-height: 1;
 
@@ -63,5 +63,11 @@
       padding-top: 60px;
       max-width: 840px;
     }
+  }
+
+  .c-container--link {
+    display: block;
+    margin-bottom: 20px;
+    text-align: right;
   }
 }

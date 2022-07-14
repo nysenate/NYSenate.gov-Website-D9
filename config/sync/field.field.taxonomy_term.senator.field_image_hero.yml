@@ -1,0 +1,29 @@
+uuid: 6a182f3e-ac97-41c1-888d-4401c438a777
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_image_hero
+    - media.type.image
+    - taxonomy.vocabulary.senator
+id: taxonomy_term.senator.field_image_hero
+field_name: field_image_hero
+entity_type: taxonomy_term
+bundle: senator
+label: 'Front Page Header Image'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

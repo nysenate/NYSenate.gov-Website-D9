@@ -14,7 +14,7 @@
 
     &.two-up {
 
-      @media #{$tablet} {
+      @include breakpoint($bp-sm) {
         &:nth-child(even) {
           margin-right: 6%;
         }

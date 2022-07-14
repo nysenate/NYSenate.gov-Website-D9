@@ -11,7 +11,7 @@
   margin-bottom: 20px;
 
   .nys-article-title {
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     color: $grey02;
     font-family: $font-serif;
     font-size: 22px;
@@ -29,12 +29,14 @@
       text-transform: capitalize;
       font-family: $font-sans;
       font-size: 12px;
+
       b {
         font-weight: bold;
         line-height: inherit;
         color: $grey04;
       }
     }
+
     .c-news--author {
       text-transform: uppercase;
       display: inline-block;
@@ -44,7 +46,7 @@
     }
   }
 
-  ul.links {
+  ul links {
 
     display: block;
     list-style: none;
@@ -63,7 +65,6 @@
       line-height: 1em;
       color: $gen_blue_lgt;
     }
-
   }
   .field-name-field-issues { padding: 0; }
 
@@ -96,7 +97,7 @@
       font-size: 21px;
       line-height: 12px;
       font-family: 'senate_icons';
-      display:inline-block;
+      display: inline-block;
       vertical-align: middle;
       speak: none;
       font-style: normal;
@@ -104,8 +105,146 @@
       font-variant: normal;
       text-transform: none;
       padding-right: 3px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+}
+
+// OPEN DATA TABLE
+.managed-csv-datatable {
+  thead {
+    background-color: $grey16;
+  }
+}
+
+.dataTables_length {
+  margin-bottom: 1em;
+
+
+  label {
+    color: $grey04;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 12.8px;
+  }
+
+  select {
+    width: 100%;
+    appearance: none;
+    background-color: #FAFAFA;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+');
+    background-position: 100% center;
+    background-repeat: no-repeat;
+    border: 1px solid $grey15;
+    padding: 0.5rem !important;
+    font-size: 0.875rem;
+    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+    color: rgba(0, 0, 0, 0.75);
+    line-height: normal;
+    border-radius: 0;
+    height: 2.3125rem;
+  }
+}
+
+.managed-csv-datatable-container {
+  max-width: 100%;
+  margin-bottom: 5em;
+  overflow: hidden;
+
+  tr .even {
+    background-color: $grey06;
+  }
+}
+
+.managed-csv-datatable-caption {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.managed-csv-removed-data {
+  font-family: 'Proxima Nova Regular';
+  font-size: 14px;
+  margin-bottom: 1em;
+  color: $blue_info;
+  font-weight: bold;
+  overflow-x: hidden;
+  white-space: inherit;
+}
+
+.c-news--title {
+  font-family: 'Adelle Light';
+  font-size: 48px;
+}
+
+.text-content,
+.field-name-field-open-date-type,
+.field-name-field-open-data-file {
+  font-family: 'Proxima Nova Regular';
+  color: $grey01;
+  font-size: 16px;
+  margin-bottom: 10px;
+
+  div {
+    display: inline-block;
+
+    &.field-label {
+      font-family: 'Proxima Nova SemiBold';
+      text-transform: uppercase;
+      color: $grey03;
+      font-size: 14px;
+    }
+  }
+}
+
+.field-name-field-open-data-file {
+  .file {
+    img {
+      margin-right: 8px;
+      background: none;
+    }
+  }
+}
+
+@media #{$tablet} {
+  .open-data-page {
+    .view-display-id-page_1 {
+      .view-filters {
+        select,
+        input[type='text'] {
+          height: 55px;
+          width: 100%;
+        }
+
+        .views-exposed-widget {
+          width: 49%;
+
+          &.views-submit-button {
+            width: 100%;
+            margin-top: 0;
+            text-align: right;
+
+            button {
+              width: auto;
+            }
+          }
+
+          &:first-of-type {
+            margin-right: 2%;
+          }
+        }
+      }
+
+      .views-table {
+        thead {
+          tr {
+            th {
+              &:nth-child(1) {
+                width: 30%;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

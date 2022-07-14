@@ -10,9 +10,9 @@
       jQuery('.managed-csv-datatable-container').each(function (i, v) {
         let $v = jQuery(v),
             table_id = $v.data('fid'),
-            settings = Drupal.settings.opendata.dt_init || {},
+            settings = drupalSettings.opendata.dt_init || {},
             this_set = settings['t_' + table_id] || settings.default || {};
-        $v.children('.managed-csv-datatable').DataTable(this_set);
+        $v.children('.managed-csv-datatable').DataTable(drupalSettings.opendata.settings);
       });
     }
   }

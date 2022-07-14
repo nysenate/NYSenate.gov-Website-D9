@@ -188,7 +188,7 @@ class BillVoteHelper {
    * @param string $value
    *   The existing vote's yes/no value.
    *
-   * @return string
+   * @return object
    *   The label for the voted option.
    */
   public function getVotedLabel($value = '') {
@@ -211,10 +211,10 @@ class BillVoteHelper {
     }
 
     // If an existing vote (including one submitted now) is detected ...
-    if ($value == 'yes') {
+    if ($value == 'aye') {
       $label = $this->t('You are in favor of this bill');
     }
-    elseif ($value == 'no') {
+    elseif ($value == 'nay') {
       $label = $this->t('You are opposed to this bill');
     }
 
@@ -376,13 +376,14 @@ class BillVoteHelper {
   public function getDefault($entity_type, $entity_id, $clear = FALSE) {
     $entities = &drupal_static(__FUNCTION__, NULL, $clear);
     if (empty($entities[$entity_type][$entity_id]) && !empty($this->currentUser->id())) {
-      // @todo Confirm if we need to use the voting api module.
+      // @todo Commenting the following lines to test the module.
+      // @todo Uncomment the code after porting the voting api module.
       // @phpstan-ignore-next-line
       // $entities[$entity_type][$entity_id] = votingapi_select_votes([
-      //   'tag' => 'nys_bill_vote',
-      //   'entity_id' => $entity_id,
-      //   'entity_type' => 'node',
-      //   'uid' => $this->currentUser->id(),
+      // 'tag' => 'nys_bill_vote',
+      // 'entity_id' => $entity_id,
+      // 'entity_type' => 'node',
+      // 'uid' => $this->currentUser->id(),
       // ]);
     }
     if (isset($entities[$entity_type][$entity_id][0]['value'])) {

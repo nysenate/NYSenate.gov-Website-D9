@@ -82,11 +82,11 @@ class BillVoteWidgetForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $parameter = []) {
     // In this special case, just leave.
     // @todo This method comes from nys_utils.
+    // @todo Uncomment the condition after testing.
     // @phpstan-ignore-next-line
     // if (senator_viewing_constituent_dashboard()) {
-    //   return $form;
+    // return $form;
     // }
-
     // Detect the build settings.
     $form_state->setBuildInfo(array_merge($this->billVoteHelper->widgetBuildSettings($form_state), $form_state->getBuildInfo()));
 
@@ -119,7 +119,9 @@ class BillVoteWidgetForm extends FormBase {
       // Main form attributes.
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['nys-bill-vote'],
+        'class' => [
+          'nys-bill-vote',
+        ],
       ],
       '#id' => 'edit-nys-bill-vote-container-' . $node_id,
 
@@ -128,50 +130,63 @@ class BillVoteWidgetForm extends FormBase {
         '#markup' => '<p class="c-bill-polling--cta">' . $label . '</p>',
       ],
 
-      // The "Aye" button.
-      'nys_bill_vote_yes' => [
-        '#type' => 'button',
+      'nys_bill_vote_button_wrapper' => [
+        '#type' => 'container',
         '#attributes' => [
           'class' => [
-            'c-block--btn',
-            'c-half-btn',
-            'c-half-btn--left',
-            'nys-bill-vote-yes',
+            'button-wrapper',
           ],
-          'value' => 'yes',
-          'type' => 'submit',
         ],
-        '#id' => 'edit-nys-bill-vote-yes-' . $node_id,
-        '#value' => 'Aye',
-        '#ajax' => [
-          'callback' => [$this, 'voteAjaxCallback'],
-          'event' => 'click',
-        ],
-      ],
-
-      // The "Nay" button.
-      'nys_bill_vote_no' => [
-        '#type' => 'button',
-        '#attributes' => [
-          'class' => [
-            'c-block--btn',
-            'c-half-btn',
-            'c-half-btn--right',
-            'nys-bill-vote-no',
+        // The "Aye" button.
+        'nys_bill_vote_yes' => [
+          '#uses_button_tag' => TRUE,
+          '#type' => 'button',
+          '#attributes' => [
+            'class' => [
+              'c-block--btn',
+              'c-half-btn',
+              'c-half-btn--left',
+              'nys-bill-vote-yes',
+            ],
+            'type' => 'submit',
           ],
-          'value' => 'no',
-          'type' => 'submit',
+          '#id' => 'edit-nys-bill-vote-yes-' . $node_id,
+          '#value' => 'Aye',
+          '#ajax' => [
+            'callback' => [$this, 'voteAjaxCallback'],
+            'event' => 'click',
+          ],
         ],
-        '#id' => 'edit-nys-bill-vote-no-' . $node_id,
-        '#value' => 'Nay',
-        '#ajax' => [
-          'callback' => [$this, 'voteAjaxCallback'],
-          'event' => 'click',
+        // The "Nay" button.
+        'nys_bill_vote_no' => [
+          '#uses_button_tag' => TRUE,
+          '#type' => 'button',
+          '#attributes' => [
+            'class' => [
+              'c-block--btn',
+              'c-half-btn',
+              'c-half-btn--right',
+              'nys-bill-vote-no',
+            ],
+            'type' => 'submit',
+          ],
+          '#id' => 'edit-nys-bill-vote-no-' . $node_id,
+          '#value' => 'Nay',
+          '#ajax' => [
+            'callback' => [$this, 'voteAjaxCallback'],
+            'event' => 'click',
+          ],
         ],
       ],
       '#attached' => [
         'library' => [
           'nys_bill_vote/bill_vote',
+        ],
+        'drupalSettings' => [
+          'settings' => [
+            'is_logged_in' => $this->currentUser->isAuthenticated(),
+            'auto_subscribe' => TRUE,
+          ],
         ],
       ],
     ];
@@ -185,7 +200,9 @@ class BillVoteWidgetForm extends FormBase {
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
     $build_info = $form_state->getBuildInfo();
-    $value = $form_state->getTriggeringElement()['#value'];
+    $triggering_element = $form_state->getTriggeringElement();
+    $value = $triggering_element['#value'];
+    $id = $triggering_element['#id'];
 
     // We want to process the vote if the user is logged in.
     if ($this->currentUser->isAuthenticated()) {
@@ -215,8 +232,14 @@ class BillVoteWidgetForm extends FormBase {
       return $response;
     }
 
-    $vote_args = [ $this->billVoteHelper->getVotedLabel($value), $value ];
-    $response->addCommand(new InvokeCommand(NULL, 'nysBillVoteUpdate', $vote_args));
+    $intent = $this->billVoteHelper->getIntentFromVote($value);
+    $vote_args = [
+      '#' . $id,
+      $this->billVoteHelper->getVotedLabel($intent)->__toString(),
+      $intent,
+    ];
+
+    $response->addCommand(new InvokeCommand($id, 'nysBillVoteUpdate', $vote_args));
     return $response;
   }
 

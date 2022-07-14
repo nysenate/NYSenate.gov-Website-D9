@@ -414,6 +414,15 @@ function nysenate_theme_theme_suggestions_taxonomy_term_alter(array &$suggestion
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function nysenate_theme_theme_suggestions_form_alter(array &$suggestions, array $variables, $hook) {
+  if (isset($variables['element']['#form_id'])) {
+    $suggestions[] = $hook . '__' . $variables['element']['#form_id'];
+  }
+}
+
+/**
  * Implements hook_theme_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variables) {

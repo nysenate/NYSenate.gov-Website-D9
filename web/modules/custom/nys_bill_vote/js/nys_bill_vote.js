@@ -3,10 +3,10 @@
  * Sets up the Aye/Nay voting widget seen on bill nodes.
  */
  'use strict';
- (function ($) {
+ (function ($, Drupal, drupalSettings) {
      // Custom return handler for AJAX vote submission.
-     $.fn.nysBillVoteUpdate = function (ajax, response) {
-         Drupal.behaviors.nysBillVote.voteOnBill(ajax.element, response);
+     $.fn.nysBillVoteUpdate = function (element, vote_label, vote_value) {
+         Drupal.behaviors.nysBillVote.voteOnBill(element, vote_label, vote_value);
      };
  
      Drupal.theme.createConfirmationModal = function (options) {
@@ -73,7 +73,7 @@
          attach: function (context, settings) {
              var self = this;
              // Hide the message box if the form is re-loaded.
-             if ($('#nys-bills-bill-form input[name=register]', context).prop('checked') === false && !settings.is_logged_in) {
+             if ($('#nys-bills-bill-form input[name=register]', context).prop('checked') === false && !drupalSettings.settings.is_logged_in) {
                  $('.c-bill--message-form .form-item-message', context).hide();
              }
  
@@ -119,7 +119,7 @@
              });
  
              // If the user is not logged in, just process the selection (no modal).
-             if (!settings.is_logged_in) {
+             if (!drupalSettings.settings.is_logged_in) {
                  self.voteOnBill(element, response, intentValue);
                  return;
              }
@@ -225,9 +225,9 @@
           * @returns {string}
           *   Returns a string of user intent.
           */
-         getIntentFromResponse: function (response) {
+         getIntentFromResponse: function (vote_value) {
              var intent;
-             if (response.vote_value === 'yes') {
+             if (vote_value === 'yes') {
                  intent = 'support';
              }
              else {
@@ -269,9 +269,9 @@
           *
           * @returns {void}
           */
-         voteOnBill: function (element, response, userIntent) {
+         voteOnBill: function (element, vote_label, vote_value) {
              var self = this,
-                 intent = userIntent || this.getIntentFromResponse(response),
+                 intent = this.getIntentFromResponse(vote_value),
                  $target = $(element)
              ;
  
@@ -279,7 +279,7 @@
              this.updateQueryStringParam('intent', intent);
  
              // Set the status label.
-             if (Drupal.settings.is_logged_in === false) {
+             if (drupalSettings.settings.is_logged_in === false) {
                  var cta_language = 'Complete this form to <strong>' + intent + '</strong> this bill:';
                  $('p.c-bill-polling--cta', element.form).html(cta_language);
              }
@@ -304,7 +304,7 @@
              $('.c-bill--sentiment-update').show();
  
              // Set the value on the "new" form submit.
-             $('input[name=vote_value]').val(response.vote_value);
+             $('input[name=vote_value]').val(vote_value);
  
              // Scroll to the top of the form area.
              if ($('.nys-bill-vote').length) {
@@ -312,9 +312,9 @@
              }
  
  
-             if (Drupal.settings.is_logged_in === false) {
+             if (drupalSettings.settings.is_logged_in === false) {
                  var buttonText = '';
-                 if (response.vote_value === 'yes') {
+                 if (vote_value === 'yes') {
                      buttonText = Drupal.t('Support this bill');
                  }
                  else {
@@ -324,7 +324,7 @@
              }
  
              // Handle auto-subscription process.
-             if (Drupal.settings.auto_subscribe === false && Drupal.settings.is_logged_in) {
+             if (drupalSettings.settings.auto_subscribe === false && drupalSettings.settings.is_logged_in) {
                  var check_box = $('<input type="checkbox" id="autosub_remember" name="autosub_remember"/>'),
                      check_label = $('<label for="autosub_remember"><span>Remember this selection</span></label>');
                  check_label.prepend(check_box);
@@ -388,5 +388,5 @@
          }
      };
  
- })(jQuery);
+ })(jQuery, Drupal, drupalSettings);
  

@@ -22,9 +22,6 @@
 // Layout builder styles.
 @import 'builder/builder';
 
-// Layout base styles.
-@import 'base/base';
-
 // Base
 //
 // Plain html element styling. Shouldn't require
@@ -63,6 +60,7 @@ html {
 body {
   @include font-stack-secondary;
   margin: 0;
+  color: $grey10;
 }
 
 // Render the `main` element consistently in IE.
@@ -155,6 +153,29 @@ select {
   text-transform: none;
 }
 
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
+  background-position: 100% center;
+  background-repeat: no-repeat;
+  background-color: #FAFAFA;
+  border: 1px solid #cccccc;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  color: rgba(0, 0, 0, 0.75);
+  line-height: normal;
+  border-radius: 0;
+  height: 2.3125rem;
+  box-shadow: none;
+
+  &:hover {
+    background-color: #f3f3f3;
+    border-color: #999999;
+  }
+}
+
 // Correct the inability to style clickable types in iOS and Safari.
 button,
 [type='button'],
@@ -201,6 +222,41 @@ progress {
 // Remove the default vertical scrollbar in IE 10+.
 textarea {
   overflow: auto;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea {
+  font-family: 'Proxima Nova Regular';
+  font-size: 1rem;
+  color: $grey10;
+  padding: 0 10px;
+  box-shadow: none;
+  appearance: none;
+  border-radius: 0px;
+  background-color: #FFFFFF;
+  border: 1px solid #cccccc;
+  display: block;
+  margin: 0 0 1rem 0;
+  height: 2.3125rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: box-shadow 0.45s,border-color 0.45s ease-in-out;
+
+  &:focus {
+    box-shadow: none;
+  }
 }
 
 // Correct the cursor style of increment and decrement buttons in Chrome.
@@ -313,6 +369,34 @@ p {
   @include font-stack-primary;
 }
 
+label {
+  font-size: 0.8rem;
+  color: $grey04;
+  cursor: pointer;
+  display: block;
+  font-weight: normal;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  font-family: 'Proxima Nova Regular';
+  text-transform: uppercase;
+
+  .form-required{
+    color: $orange01;
+  }
+}
+
+.form-item-agree-terms{
+  input[type="checkbox"] + label,
+  input[type="radio"] + label {
+    display: inline-block;
+    margin-left: 20px;
+    margin-right: 1rem;
+    margin-bottom: 0;
+    vertical-align: top;
+    width: 80%;
+  }
+}
+
 .u-mobile-only { display: block; }
 .u-tablet-plus { display: none; }
 
@@ -344,6 +428,211 @@ p {
   margin-top:20px;
 }
 
+.c-container--title {
+	text-transform: capitalize;
+	font-family: $font-serif-semibold;
+	font-size: 18px;
+	line-height: 32px;
+	letter-spacing: 0;
+	color: $grey02;
+}
+
+// Override for bill page pie chart colors for committees section
+.node-type-bill {
+
+  .c-bill--vote_2\27 {
+    margin-top: 30px;
+  }
+}
+
+.layout-content {
+  padding-top: 40px;
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.c-detail--social {
+  margin-bottom: 40px;
+
+  > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
+
+  li {
+    display: block;
+    float: left;
+
+    & + li {
+      margin: 0 0 0 20px;
+    }
+  }
+}
+
+
+.c-detail--social-item {
+  position: relative;
+  display: block;
+  width: 60px;
+  height: 40px;
+  background: $blue01;
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    line-height: 40px;
+    color: #fff;
+  }
+
+  &.facebook {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+
+    &::after {
+      content: '\21';
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+    }
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  &.twitter {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+
+    &::after {
+      content: '\23';
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+    }
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  &.email {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-top: 1em;
+    text-indent: -99999px;
+
+    &::after {
+      content: '\4e';
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+    }
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.c-detail--subhead {
+  margin: 0 0 10px;
+  color: $grey02;
+  font-family: 'Proxima Nova Regular';
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  span {
+    text-transform: capitalize;
+    clear: both;
+    line-height: 1.4em;
+    letter-spacing: 0.01em;
+    display: block;
+  }
+}
+
+@media #{$tablet} {
+  .layout-content {
+    padding-top: 80px;
+  }
+
+  .c-detail--social {
+    width: 28%;
+    float: left;
+    margin-bottom: 0;
+    padding-bottom: 40px;
+    border-left: 1px solid $grey05;
+
+    .c-detail--subhead {
+      float: right;
+      text-align: right;
+    }
+
+    ul {
+      display: block;
+      float: right;
+      clear: both;
+
+      li {
+        & + li {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .c-detail--social-item {
+    background: #fff;
+
+    &::after {
+      color: $blue01;
+      text-align: right;
+    }
+
+    &.twitter {
+      &::after {
+        left: auto;
+        right: 0.2em;
+      }
+    }
+  }
+
+  .c-detail--subhead {
+    font-size: 16px;
+  }
+}
 /* AddThisEvent theme CSS
 ---------------------------------------------------------------------- */
 

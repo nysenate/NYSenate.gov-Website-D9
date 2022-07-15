@@ -89,6 +89,7 @@
           ) {
             actionBar.addClass('hidden');
             headerBar.removeClass('collapsed');
+            nav.removeClass('l-header__collapsed');
           }
         }
         else {
@@ -99,6 +100,7 @@
             menu.addClass('closed');
             actionBar.removeClass('hidden');
             headerBar.addClass('collapsed');
+            nav.addClass('l-header__collapsed');
             self.checkTopBarState(currentTop, previousTop, headerBar, nav);
           }
           else if (
@@ -108,6 +110,7 @@
             menu.removeClass('closed');
             actionBar.addClass('hidden');
             headerBar.removeClass('collapsed');
+            nav.removeClass('l-header__collapsed');
           }
         }
 
@@ -137,14 +140,17 @@
         return;
       }
 
-      if (currentTop > nav.outerHeight() && !headerBar.hasClass('collapsed')) {
+      if (currentTop > nav.outerHeight() && !headerBar.hasClass('collapsed') && !nav.hasClass('l-header__collapsed')) {
         headerBar.addClass('collapsed');
+        nav.addClass('l-header__collapsed');
       }
       else if (
         currentTop <= nav.outerHeight() &&
-        headerBar.hasClass('collapsed')
+        headerBar.hasClass('collapsed') &&
+        nav.hasClass('l-header__collapsed')
       ) {
         headerBar.removeClass('collapsed');
+        nav.removeClass('l-header__collapsed');
       }
     },
     isOutOfBounds: function (currentTop, previousTop) {

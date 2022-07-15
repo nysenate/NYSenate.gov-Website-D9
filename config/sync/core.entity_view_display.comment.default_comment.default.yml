@@ -1,0 +1,29 @@
+uuid: a01388b5-d462-427e-ba65-6604713920ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.default_comment
+    - field.field.comment.default_comment.comment_body
+  module:
+    - text
+id: comment.default_comment.default
+targetEntityType: comment
+bundle: default_comment
+mode: default
+content:
+  comment_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

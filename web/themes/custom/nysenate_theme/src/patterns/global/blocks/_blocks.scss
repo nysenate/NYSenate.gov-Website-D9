@@ -48,3 +48,82 @@ body {
     margin-bottom: 0;
   }
 }
+
+.c-block {
+	display: block;
+	position: relative;
+	margin-bottom: 20px;
+	zoom: 1;
+	clear: both;
+
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+  @include breakpoint($bp-sm) {
+    margin-bottom: 60px;
+  }
+}
+
+.c-block--btn {
+	position: absolute; 
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: #fff;
+	font-family: "Proxima Nova SemiBold";
+	letter-spacing: 0.2em;
+
+	font-size: 12px;
+	line-height: 60px;
+	height: 60px;
+
+	&:before {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		height: 100%;
+		margin-right: 0.1em;
+		font-size: 32px;
+	}
+
+	span {
+		display: inline-block;
+		vertical-align: middle;
+		width: 80%;
+		line-height: 1.5em;
+
+		a{
+			color: #fff;
+			vertical-align: middle;
+			display: inline-block;
+		}
+	}
+
+	&:hover {
+		color: #fff;
+	}
+
+  @include breakpoint($bp-sm) {
+    .flag-success-message {
+			top: 80px;
+			left: auto;
+			right: 0;
+			padding: 20px 30px;
+
+			font-size: 14px;
+			line-height: 14px;
+
+			&:before {
+				font-size: 24px;
+			}
+		}	
+  }
+}

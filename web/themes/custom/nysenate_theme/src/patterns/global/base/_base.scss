@@ -39,7 +39,14 @@ h2, h3 {
    margin: 0;
 
 	@include breakpoint($bp-sm) {
-		@include font(16 16);
+		font-size: 16px;
+		line-height: 16px;
+
+		&::after {
+			margin-top: -4px;
+			font-size: 23px;
+			line-height: 16px;
+		}
 	}
  }
 }

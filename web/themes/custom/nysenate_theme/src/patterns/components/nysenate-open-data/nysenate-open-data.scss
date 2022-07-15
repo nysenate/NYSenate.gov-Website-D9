@@ -13,7 +13,7 @@
   .nys-article-title {
     margin: 0 0 20px 0;
     color: $grey02;
-    font-family: "Adelle Light";
+    font-family: $font-serif;
     font-size: 22px;
     line-height: 1.2em;
 
@@ -27,7 +27,7 @@
       display: inline-block;
       margin: 0 10px 0 0;
       text-transform: capitalize;
-      font-family: "Proxima Nova Regular";
+      font-family: $font-sans;
       font-size: 12px;
       b {
         font-weight: bold;
@@ -39,7 +39,7 @@
       text-transform: uppercase;
       display: inline-block;
       margin: 0 10px 0 0;
-      font-family: "Proxima Nova Regular";
+      font-family: $font-sans;
       font-size: 12px;
     }
   }
@@ -54,7 +54,7 @@
       display: inline-block;
       margin-right: 10px;
       text-transform: uppercase;
-      font-family: "Proxima Nova SemiBold";
+      font-family: $font-sans-bold;
       white-space: nowrap;
     }
 
@@ -70,9 +70,9 @@
 }
 
 .c-block {
-  font-family: "Adelle Light";
+  font-family: $font-serif;
   line-height: 1.5em;
-  color: #666;
+  color: $grey03;
   font-size: 16px;
 }
 
@@ -88,10 +88,10 @@
     margin-top: 15px;
     //text-transform: uppercase;
     font-size: 12px;
-    font-family: "Proxima Nova SemiBold";
+    font-family: $font-sans-bold;
     color: $gen_blue_lgt;
 
-    &:before {
+    &::before {
       content: '\6b';
       font-size: 21px;
       line-height: 12px;

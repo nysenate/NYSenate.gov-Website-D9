@@ -39,7 +39,6 @@
     color: $grey08;
     text-transform: capitalize;
     font-family: $font-serif-bold;
-    font-weight: $font-weight-normal;
     font-size: 18px;
     margin-bottom: 0;
 
@@ -51,9 +50,8 @@
 
 .c-detail--subhead {
   margin: 0 0 10px;
-  color: $grey08;
+  color: $grey02;
   font-family: $font-sans;
-  font-weight: 400;
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -120,6 +118,32 @@
   }
 }
 
+.c-detail--download {
+  display: block;
+  margin-bottom: 20px;
+  color: $blue01;
+  font-family: $font-sans;
+  text-transform: uppercase;
+  font-size: 12px;
+
+  &::before {
+    content: '\30';
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-right: 3px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 1.5em;
+    line-height: 1em;
+  }
+}
+
 .c-detail--social {
   margin-bottom: 40px;
 
@@ -156,7 +180,7 @@
     text-align: center;
     font-size: 28px;
     line-height: 40px;
-    color: #fff;
+    color: $color-white;
   }
 
   &.facebook {
@@ -352,7 +376,7 @@
     z-index: -1;
     top: -0.65em;
     left: -0.2em;
-    color: #fff;
+    color: $color-white;
     font-size: 5em;
   }
 }
@@ -360,7 +384,7 @@
 .c-sponsor-quote--text {
   margin-bottom: 30px;
   color: $grey03;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   font-size: 18px;
   line-height: 1.4em;
 }
@@ -463,7 +487,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-actions--key {
     float: right;
     margin-top: 0;
@@ -493,12 +517,12 @@
   float: left;
   padding: 7px 13px 5px;
   background: $yellow01;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   font-size: 12px;
   line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: $color-white;
   margin-right: 20px;
 }
 
@@ -511,7 +535,7 @@
 .c-bill-widget--cta {
   max-width: 230px;
   margin: 20px auto 15px;
-  color: #fff;
+  color: $color-white;
   text-align: center;
   text-transform: uppercase;
   font-family: $font-sans;
@@ -522,7 +546,7 @@
   dt,
   dd {
     margin: 0;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 14px;
   }
   dt {
@@ -537,7 +561,7 @@
     line-height: 1.4em;
     display: inline-block;
 
-    @media #{$tablet} {
+    @include breakpoint($bp-sm) {
       float: left;
     }
 
@@ -554,7 +578,7 @@
 .c-bill--calendars {
   ul {
     list-style: none;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 14px;
   }
   li {
@@ -613,7 +637,7 @@
   display: block;
   color: $grey04;
   text-transform: uppercase;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   font-size: 15px;
   line-height: 1em;
 }
@@ -634,7 +658,7 @@
     display: inline-block;
     margin-right: 10px;
     color: $grey03;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 12px;
   }
 }
@@ -651,16 +675,6 @@
       text-transform: uppercase;
       color: $grey03;
       font-family: $font-sans;
-    }
-  }
-
-  .nys-senator--name {
-    a {
-      font-family: $font-serif;
-      font-size: 16px;
-      font-weight: 400;
-      text-transform: uppercase;
-      color: $grey08;
     }
   }
 }
@@ -778,7 +792,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-quote--content.bill-sponsor-quote {
     margin: 40px 0;
 
@@ -857,8 +871,8 @@
 
   h3,
   h4 {
-    color: $grey08;
-    font-family: 'Adelle Regular';
+    color: $grey02;
+    font-family: $font-serif-regular;
   }
   h3 {
     margin: 10px 0 20px;
@@ -902,7 +916,7 @@
       }
       .vote-label {
         display: inline-block;
-        font: 13px/16px 'Proxima Nova SemiBold';
+        font: 13px/16px $font-sans-bold;
         color: $grey04;
         text-transform: uppercase;
       }
@@ -942,7 +956,7 @@
         }
       }
       .meta-count {
-        font-family: 'Proxima Nova SemiBold';
+        font-family: $font-sans-bold;
       }
     }
     .meta-comm-referral {
@@ -953,7 +967,7 @@
         color: $grey05;
       }
       .committee-link {
-        font: 12px/14px 'Proxima Nova SemiBold';
+        font: 12px/14px $font-sans-bold;
         color: $yellow03;
         text-transform: uppercase;
       }
@@ -963,8 +977,8 @@
 
 .c-vote-detail--date {
   margin: 20px 0;
-  color: $grey08;
-  font-family: 'Adelle Regular';
+  color: $grey02;
+  font-family: $font-serif-regular;
   font-size: 16px;
   line-height: 1;
 }
@@ -976,8 +990,8 @@
 .c-detail--vote-grp {
   .c-detail--section-title {
     margin-bottom: 15px;
-    color: $grey08;
-    font-family: 'Adelle SemiBold';
+    color: $grey02;
+    font-family: $font-serif-semibold;
     text-transform: uppercase;
     font-size: 14px;
   }
@@ -996,7 +1010,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-detail--header {
     margin-bottom: 30px;
   }
@@ -1047,7 +1061,7 @@
         }
         .vote-label {
           display: block;
-          font: 15px/16px 'Proxima Nova SemiBold';
+          font: 15px/16px $font-sans-bold;
           padding-bottom: 5px;
           color: $grey04;
           text-transform: uppercase;
@@ -1099,7 +1113,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .bill-resolution {
     .c-detail--sponsors {
       margin-bottom: 80px;
@@ -1134,10 +1148,10 @@
   padding: 0;
   margin: 15px 0 30px;
   background: $blue01;
-  color: #fff;
+  color: $color-white;
   text-transform: uppercase;
   text-align: center;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   font-size: 14px;
   letter-spacing: 0.1em;
 
@@ -1150,7 +1164,7 @@
 
   &:hover,
   &:focus {
-    color: #fff;
+    color: $color-white;
   }
 
   .nys-senator--thumb {
@@ -1158,27 +1172,11 @@
   }
 
   a {
-    color: #fff;
+    color: $color-white;
   }
 
   &.no-senator {
-    &::before {
-      content: '\24';
-      font-family: 'senate_icons';
-      display: inline-block;
-      vertical-align: middle;
-
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      font-size: 1.8em;
-      margin-top: -5px;
-    }
+    @extend .icon-before__find-senator;
   }
 }
 
@@ -1209,7 +1207,7 @@
 /	ISSUES SPECIFIC -
 /	tablet and above
 /---------------------------*/
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-issue--contact-btn {
     height: 80px;
     width: auto;
@@ -1249,7 +1247,7 @@
 }
 
 // tablet and above styles
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-detail--subhead {
     font-size: 16px;
   }
@@ -1318,7 +1316,7 @@
     }
   }
   .c-detail--social-item {
-    background: #fff;
+    background: $color-white;
 
     &::after {
       color: $blue01;
@@ -1510,7 +1508,7 @@
           }
           .vote-label {
             display: block;
-            font: 15px/16px 'Proxima Nova SemiBold';
+            font: 15px/16px $font-sans-bold;
             padding-bottom: 5px;
             color: $grey04;
             text-transform: uppercase;
@@ -1545,7 +1543,7 @@
           }
 
           .committee-link {
-            font: 12px/14px 'Proxima Nova SemiBold';
+            font: 12px/14px $font-sans-bold;
             color: $yellow03;
             text-transform: uppercase;
           }

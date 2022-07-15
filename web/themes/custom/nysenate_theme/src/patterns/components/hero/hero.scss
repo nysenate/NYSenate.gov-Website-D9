@@ -299,71 +299,6 @@
   }
 }
 
-
-/*------------------------------
-/ SENATOR HERO
-/-------------------------------*/
-.c-senator-hero {
-  position: relative;
-}
-
-.c-senator-hero--info {
-  padding: 20px 20px 60px;
-}
-
-.c-senator-hero--title {
-  margin: 0 0 3px;
-  font-family: $font-sans;
-  text-transform: uppercase;
-  line-height: 1em;
-  letter-spacing: 0.1em;
-  font-size: 12px;
-}
-
-.c-senator-hero--name {
-  font-family: $font-serif;
-  color: $color-white;
-  line-height: 1.2em;
-  letter-spacing: 0.05em;
-  font-size: 26px;
-  margin: 0 0 15px;
-  text-transform: capitalize;
-
-  a {
-    color: $color-white;
-  }
-}
-
-.c-senator-hero--roles {
-  margin-bottom: 15px;
-  font-family: $font-sans-bold;
-  color: $color-white;
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  line-height: 1.3em;
-}
-
-.c-senator-hero--district {
-  margin: 0 0 15px;
-  text-transform: uppercase;
-  font-family: $font-sans;
-  font-size: 12px;
-
-  div {
-    display: inline;
-  }
-
-}
-
-.c-senator-hero--social {
-  display: none;
-}
-
-.c-senator-hero--contact-btn {
-  height: 60px;
-  padding-left: 20px;
-}
-
 .l-row--hero-live {
   .c-actionbar {
     max-width: 1500px;
@@ -532,81 +467,6 @@
 }
 
 @include breakpoint($bp-sm) {
-  .c-senator-hero {
-    z-index: 2;
-  }
-
-  .c-senator-hero--img {
-    position: relative;
-    width: 54%;
-
-    &::before {
-      content: '';
-      display: block;
-      width: 100%;
-      padding-top: 75%;
-      margin-left: -6px;
-    }
-
-    img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .c-senator-hero--info {
-    position: absolute;
-    width: 46%;
-    height: 100%;
-    top: 0;
-    right: 0;
-    padding: 20px 20px 80px 0;
-
-    &::before {
-      content: '';
-      height: 100%;
-      width: 0;
-      margin-left: -4px;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    > div {
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 45px;
-    }
-  }
-
-  .c-senator-hero--name {
-    margin-bottom: 20px;
-    font-size: 28px;
-  }
-
-  .c-senator-hero--roles {
-    margin-bottom: 15px;
-    font-size: 16px;
-  }
-
-  .c-senator-hero--district {
-    margin-bottom: 0;
-  }
-
-  .inactive-pallette {
-    .c-senator-hero--roles {
-      font-size: 13px;
-    }
-  }
-
-  .c-senator-hero--contact-btn {
-    width: 46%;
-    padding-left: 40px;
-    left: auto;
-    right: 0;
-  }
 
   .l-row--hero-live {
     .c-actionbar {
@@ -694,76 +554,6 @@
 }
 
 @include breakpoint($bp-md) {
-  .c-senator-hero--info {
-    padding: 20px 20px 100px 0;
-
-    > div {
-      margin-left: 60px;
-    }
-  }
-
-  .c-senator-hero--not-active {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-
-  .c-senator-hero--name {
-    margin-bottom: 30px;
-    font-size: 36px;
-  }
-
-  .c-senator-hero--district {
-    margin-bottom: 20px;
-  }
-
-  .c-senator-hero--social {
-    display: block;
-    margin: 20px 0 0 -0.3em;
-    padding-left: 0;
-    height: 1em;
-    font-size: 27px;
-  }
-
-  .c-senator-hero--social-item {
-    display: inline-block;
-    margin-right: 8px;
-
-    a {
-      position: relative;
-      display: block;
-      height: 30px;
-      width: 30px;
-      color: $color-white;
-
-      &::after {
-        line-height: 1em;
-        width: 100%;
-        height: 100%;
-        color: $color-white;
-      }
-    }
-
-    &.twitter {
-      a::after {
-        left: 3px;
-      }
-    }
-  }
-
-  .inactive-pallette {
-    .c-senator-hero--social {
-      display: none;
-    }
-  }
-
-  .c-senator-hero--contact-btn {
-    height: 100px;
-    padding-left: 60px;
-
-    &::before {
-      line-height: 100px;
-    }
-  }
 
   .c-hero-livestream-wrapper {
     background-color: $grey01;
@@ -834,40 +624,6 @@
 }
 
 @include breakpoint($bp-lg) {
-  .c-senator-hero--info {
-    > div {
-      margin-left: 65px;
-    }
-  }
-
-  .c-senator-hero--not-active {
-    margin-bottom: 50px;
-    font-size: 22px;
-  }
-
-  .c-senator-hero--rule {
-    margin-bottom: 50px;
-  }
-
-  .c-senator-hero--title {
-    font-size: 14px;
-  }
-
-  .c-senator-hero--name {
-    font-size: 50px;
-  }
-
-  .c-senator-hero--roles {
-    font-size: 18px;
-  }
-
-  .c-senator-hero--district {
-    font-size: 14px;
-  }
-
-  .c-senator-hero--contact-btn {
-    padding-left: 65px;
-  }
 
   .c-hero-livestream-wrapper {
     background-color: $grey01;
@@ -926,3 +682,407 @@
     }
   }
 }
+
+/*------------------------------
+/ SENATOR HERO
+/-------------------------------*/
+.c-senator-hero {
+  position: relative;
+  @extend .lgt-bg;
+
+  &.l-row--hero {
+    padding: 0;
+  }
+
+  .c-senator-hero--info {
+    padding: 20px 20px 60px;
+  }
+
+  .c-senator-hero--title {
+    margin: 0 0 3px;
+    font-family: $font-sans;
+    text-transform: uppercase;
+    line-height: 1em;
+    letter-spacing: 0.1em;
+    font-size: 12px;
+  }
+
+  .c-senator-hero--name {
+    font-family: $font-serif;
+    color: $color-white;
+    line-height: 1.2em;
+    letter-spacing: 0.05em;
+    font-size: 26px;
+    margin: 0 0 15px;
+    text-transform: capitalize;
+
+    a {
+      color: $color-white;
+    }
+  }
+
+  .c-senator-hero--roles {
+    margin-bottom: 15px;
+    margin-top: 0;
+    font-family: $font-sans-bold;
+    color: $color-white;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    line-height: 1.3em;
+  }
+
+  .c-senator-hero--district {
+    margin: 0 0 15px;
+    text-transform: uppercase;
+    font-family: $font-sans;
+    font-size: 12px;
+    @extend .contrast_text;
+
+    div {
+      display: inline;
+    }
+
+    a {
+      @extend .contrast_text;
+      text-decoration: none;
+    }
+  }
+
+  .c-senator-hero--social {
+    display: none;
+  }
+
+  .c-senator-hero--contact-btn {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding-left: 20px;
+
+    &::before {
+      display: flex;
+    }
+  }
+
+  @include breakpoint($bp-sm) {
+    z-index: 2;
+
+    &.l-row--hero {
+      padding: 0;
+    }
+
+    .c-senator-hero--img {
+      position: relative;
+      width: 54%;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        padding-top: 75%;
+        margin-left: -6px;
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .c-senator-hero--info {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      width: 46%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      padding: 20px 20px 80px 0;
+
+      &::before {
+        content: '';
+        height: 100%;
+        width: 0;
+        margin-left: -4px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      > div {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 45px;
+      }
+    }
+
+    .c-senator-hero--name {
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    .c-senator-hero--roles {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .c-senator-hero--district {
+      margin-bottom: 0;
+    }
+
+    .inactive-pallette {
+      .c-senator-hero--roles {
+        font-size: 13px;
+      }
+    }
+
+    .c-senator-hero--contact-btn {
+      width: 46%;
+      padding-left: 40px;
+      left: auto;
+      right: 0;
+    }
+  }
+
+  @include breakpoint($bp-md) {
+    .c-senator-hero--info {
+      padding: 20px 20px 100px 0;
+
+      > div {
+        margin-left: 60px;
+      }
+    }
+
+    .c-senator-hero--not-active {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .c-senator-hero--name {
+      margin-bottom: 30px;
+      font-size: 36px;
+    }
+
+    .c-senator-hero--district {
+      margin-bottom: 20px;
+    }
+
+    .c-senator-hero--social {
+      display: block;
+      margin: 20px 0 0 -0.3em;
+      padding-left: 0;
+      height: 1em;
+      font-size: 27px;
+    }
+
+    .c-senator-hero--social-item {
+      display: inline-block;
+      margin-right: 8px;
+
+      a {
+        position: relative;
+        display: block;
+        height: 30px;
+        width: 30px;
+        color: $color-white;
+
+        &::after {
+          line-height: 1em;
+          width: 100%;
+          height: 100%;
+          color: $color-white;
+        }
+      }
+
+      &.twitter {
+        a::after {
+          left: 3px;
+        }
+      }
+    }
+
+    .inactive-pallette {
+      .c-senator-hero--social {
+        display: none;
+      }
+    }
+
+    .c-senator-hero--contact-btn {
+      height: 100px;
+      padding-left: 60px;
+
+      &::before {
+        line-height: 100px;
+      }
+    }
+  }
+
+  @include breakpoint($bp-lg) {
+    .c-senator-hero--info {
+      > div {
+        margin-left: 65px;
+      }
+    }
+
+    .c-senator-hero--not-active {
+      margin-bottom: 50px;
+      font-size: 22px;
+    }
+
+    .c-senator-hero--rule {
+      margin-bottom: 50px;
+    }
+
+    .c-senator-hero--title {
+      font-size: 14px;
+    }
+
+    .c-senator-hero--name {
+      font-size: 50px;
+    }
+
+    .c-senator-hero--roles {
+      font-size: 18px;
+    }
+
+    .c-senator-hero--district {
+      font-size: 14px;
+    }
+
+    .c-senator-hero--contact-btn {
+      padding-left: 65px;
+    }
+  }
+}
+
+/*------------------------------
+/ SENATOR HERO COLLAPSED
+/-------------------------------*/
+.l-header__collapsed {
+
+  .c-senator-hero {
+    height: 100px;
+    padding-left: 20px;
+    margin-top: 0;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      height: 50px;
+      width: 1px;
+      margin-left: -1px;
+    }
+
+    &.hidden {
+      margin-top: -100px;
+    }
+  }
+
+  .c-senator-hero--img {
+    display: inline-block;
+    vertical-align: middle;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      position: relative;
+      top: 0;
+      width: auto;
+      max-width: 140%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .c-senator-hero--info {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 0 0 10px;
+  }
+
+  .c-senator-hero--name {
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .c-senator-hero--info-secondary {
+    display: none;
+  }
+
+  .c-senator-hero--contact-btn {
+    width: 100%;
+    height: 50px;
+    padding-left: 24px;
+
+    &::before {
+      line-height: 50px;
+      padding-left: 0px;
+    }
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .l-header__collapsed {
+    .c-senator-hero {
+      display: flex;
+      align-items: center;
+      padding: 0 0 0 9%;
+
+      &::before {
+        height: 100%;
+      }
+    }
+    
+    .c-senator-hero--info {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0 0 0 10px;
+
+      > div {
+        margin-left: 0;
+      }
+
+      &::before {
+        margin-left: 0;
+      }
+    }
+
+    .c-senator-hero--title {
+      display: block;
+    }
+
+    .c-senator-hero--name {
+      font-size: 22px;
+    }
+
+    .c-senator-hero--img {
+      height: 72px;
+      width: 72px;
+
+      > img {
+        position: absolute;
+      }
+
+      picture > img {
+        position: absolute;
+      }
+    }
+
+    .c-senator-hero--contact-btn {
+      height: 100%;
+      max-width: 300px;
+      right: 0;
+      left: auto;
+
+      &::before {
+        line-height: 100px;
+      }
+    }
+  }
+}
+

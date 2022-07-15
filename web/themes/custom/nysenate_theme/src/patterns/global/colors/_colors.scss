@@ -12,7 +12,6 @@ $color-primary: #e74c3c;
 $color-white: #fff;
 $color-secondary: #f6510b;
 $color-rio-grande: #c4d600;
-$color-white: #FFF;
 $color-black: #404040;
 $color-black: #404040;
 $color-blue: #003954;
@@ -37,6 +36,7 @@ $color-orange: #e62600;
 $color-pink: #fcf4f2;
 $color-beige: #fdf8ed;
 $color-brown: #734c00;
+$color-cg-blue: #0078a0;
 
 
 // Transparent colors
@@ -100,7 +100,7 @@ $grey13: #e2e8ec;
 $grey14: #c3c3c3;
 
 $contrast_drk: #000;
-$contrast_lgt: #fff;
+$contrast_lgt: $color-white;
 
 // GENERAL BLUE : senate wide
 $gen_blue_lgt: #2b6a90;
@@ -201,7 +201,7 @@ $ns_accent: #1b5187;
 
 @media #{$tablet} {
   .nav-text {
-    color: #444;
+    color: $grey08;
 
     &:hover {
       color: $gen_blue_lgt;
@@ -240,7 +240,7 @@ $ns_accent: #1b5187;
 
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $trad_blue_lgt;
@@ -280,7 +280,7 @@ $ns_accent: #1b5187;
 
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $cont_blue_lgt;
@@ -319,11 +319,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $purple_lgt;
@@ -362,11 +362,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $trad_red_lgt;
@@ -405,11 +405,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $cont_red_lgt;
@@ -448,11 +448,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $orange_lgt;
@@ -491,11 +491,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $trad_green_lgt;
@@ -534,11 +534,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $cont_green_lgt;
@@ -577,11 +577,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $ns_accent;

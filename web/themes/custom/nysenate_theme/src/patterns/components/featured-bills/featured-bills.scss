@@ -68,7 +68,7 @@
 h3.c-bill-num {
   margin: 0 0 0.25em;
   color: $grey02;
-  font-family: 'Adelle Bold';
+  font-family: $font-serif-bold;
   line-height: 1em;
   font-size: 20px;
   letter-spacing: 0.05em;
@@ -81,7 +81,7 @@ h3.c-bill-num {
 .c-bill-descript {
   margin: 0 0 10px 0;
   color: $grey02;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   font-size: 20px;
   line-height: 32px;
 }
@@ -111,8 +111,8 @@ p.c-bill-update--location {
 .c-block-legislation-featured {
   p.c-bill-update--location {
     a {
-      color: #fff;
-      border-bottom: solid 0.05em #fff;
+      color: $color-white;
+      border-bottom: solid 0.05em $color-white;
       &:hover {
         border-bottom: none;
       }
@@ -140,10 +140,10 @@ p.c-bill-update--location {
     }
 
     .c-bill-num {
-      color: #fff;
+      color: $color-white;
 
       a {
-        color: #fff;
+        color: $color-white;
         text-decoration: none;
       }
     }
@@ -163,7 +163,7 @@ p.c-bill-update--location {
             font-size: 12px;
             font-family: $font-sans;
 
-            @media #{$tablet} {
+            @include breakpoint($bp-sm) {
               font-size: 14px;
             }
           }
@@ -171,13 +171,13 @@ p.c-bill-update--location {
       }
 
       a {
-        color: #fff;
+        color: $color-white;
       }
     }
 
     .c-bill-descript {
       font-family: $font-sans;
-      color: #fff;
+      color: $color-white;
       font-size: 14px;
       line-height: 18px;
     }
@@ -187,7 +187,7 @@ p.c-bill-update--location {
         list-style: none;
 
         &.passed {
-          background: #fff;
+          background: $color-white;
         }
       }
     }
@@ -198,7 +198,7 @@ p.c-bill-update--location {
     }
 
     .sponsors {
-      color: #fff;
+      color: $color-white;
 
       span {
         display: block;
@@ -244,7 +244,7 @@ p.c-bill-update--location {
   .c-block--response {
     padding: 40px 40px;
     text-transform: uppercase;
-    color: #fff;
+    color: $color-white;
     font-family: $font-sans;
     letter-spacing: 0.1em;
     font-size: 14px;
@@ -286,11 +286,11 @@ p.c-bill-update--location {
   font-family: $font-sans;
   font-size: 12px;
   line-height: 1.4;
-  color: #fff;
+  color: $color-white;
   text-decoration: none;
-  border-bottom: solid 0.05em #fff;
+  border-bottom: solid 0.05em $color-white;
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     font-size: 14px;
   }
   
@@ -335,8 +335,8 @@ p.c-bill-update--location {
       display: inline;
       line-height: 1.3;
       a {
-        color: #fff;
-        border-bottom: solid 0.05em #fff;
+        color: $color-white;
+        border-bottom: solid 0.05em $color-white;
         &:hover {
           border-bottom: none;
         }
@@ -351,15 +351,15 @@ p.c-bill-update--location {
 
 .c-featured-bills-body {
   h4 {
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 21px;
     font-style: italic;
     margin: 24px 0 0;
-    color: #666666;
+    color: $grey03;
   }
 
   p {
-    font-family: 'Adelle Light';
+    font-family: $font-serif;
     line-height: 1.5em;
     font-size: 16px;
     margin: 0;
@@ -375,7 +375,7 @@ p.c-bill-update--location {
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-featured-bills-body {
     p {
       font-size: 20px;
@@ -494,7 +494,7 @@ p.c-bill-update--location {
     }
 
     .c-bill-num {
-      color: #fff;
+      color: $color-white;
     }
 
     .c-bill-topic {
@@ -553,7 +553,7 @@ p.c-bill-update--location {
   }
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .c-pg-featured-bills {
     .c-block-legislation-featured.c-block--half-wrap {
       margin: 0 24px 28px -60px;

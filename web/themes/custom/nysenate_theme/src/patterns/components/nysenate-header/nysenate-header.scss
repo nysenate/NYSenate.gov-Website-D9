@@ -42,7 +42,7 @@
     position: static;
   }
 }
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .l-header + .l-header {
     .c-senator-nav--wrap {
       display: block;
@@ -62,7 +62,7 @@
 /-------------------------------*/
 .c-header-bar {
   height: 60px;
-  background: #fff;
+  background: $color-white;
   z-index: 10;
   overflow: hidden;
   position: relative;
@@ -111,7 +111,7 @@
     }
   }
 }
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .l-header {
     .c-actionbar,
     .c-senate-status {
@@ -191,7 +191,7 @@
   padding: 0 20px;
   max-width: 100%;
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     padding: 0 9%;
     max-width: 1500px;
   }
@@ -200,7 +200,7 @@
 /* Navigation */
 .c-nav--wrap {
   position: absolute;
-  background: #fff;
+  background: $color-white;
   top: -110vh;
   left: 0;
   right: 0;
@@ -237,7 +237,7 @@
       margin: 0 auto;
       z-index: 2;
       height: 60px;
-      background: #fff;
+      background: $color-white;
     }
 
     & > nav {
@@ -256,9 +256,9 @@
       @include breakpoint($bp-sm) {
         position: relative;
         padding: 0;
-        background: #fff;
+        background: $color-white;
         overflow: visible;
-        border-top: 1px solid #aaaaaa;
+        border-top: 1px solid $grey05;
         transition: none 0 ease 0s;
       }
     }
@@ -282,7 +282,7 @@
   left: auto;
   height: 40px;
   width: 40px;
-  background: #fff;
+  background: $color-white;
   border: 0;
   padding: 0;
   transform: translateY(-50%);
@@ -336,7 +336,7 @@
     position: static;
   }
 }
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .l-header + .l-header {
     .c-senator-nav--wrap {
       display: block;
@@ -380,7 +380,7 @@
 
   li {
     @include font-stack-secondary;
-    border-top: 1px solid #fff;
+    border-top: 1px solid $color-white;
     text-transform: uppercase;
     font-size: 13px;
     letter-spacing: 0.1em;
@@ -396,11 +396,11 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-senator-nav--wrap {
     position: relative;
     width: 100%;
-    background: #fff;
+    background: $color-white;
 
     .c-senator-nav {
       nav {
@@ -409,7 +409,7 @@
         height: 100%;
         padding: 0;
         overflow: hidden;
-        background: #fff;
+        background: $color-white;
         z-index: 1;
       }
 
@@ -424,7 +424,7 @@
         vertical-align: middle;
         height: 100%;
 
-        font-family: 'Proxima Nova SemiBold';
+        font-family: $font-sans-bold;
         font-size: 14px;
 
         a {
@@ -439,7 +439,7 @@
   }
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .c-senator-nav--wrap {
     .c-senator-nav {
       li {
@@ -518,7 +518,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .l-header__collapsed {
     .c-senator-hero {
       padding: 0 0 0 9%;
@@ -586,7 +586,7 @@
   border-radius: 50px;
   text-align: center;
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     display: none;
   }
 }
@@ -599,7 +599,7 @@ nav ul.c-nav--list li a {
   padding: 20px 0 20px 10px;
   text-decoration: none;
   text-transform: uppercase;
-  color: #fff;
+  color: $color-white;
 
   @include breakpoint($bp-sm) {
     height: auto;
@@ -608,7 +608,7 @@ nav ul.c-nav--list li a {
     padding: 0;
     text-align: center;
     line-height: 14px;
-    color: #444;
+    color: $grey08;
     width: 100%;
   }
 }
@@ -637,10 +637,10 @@ nav ul.c-nav--list {
   width: 30px;
   top: 5px;
   right: 15px;
-  color: #444;
+  color: $grey08;
   font-size: 22px;
   border: 0;
-  background-color: #fff;
+  background-color: $color-white;
 }
 
 .c-header--connect {
@@ -655,7 +655,7 @@ nav ul.c-nav--list {
 }
 
 .c-nav--social {
-  border-top: 1px solid #fff;
+  border-top: 1px solid $color-white;
   margin: 0 20px;
   padding: 20px 0 0 5px;
   line-height: 1em;
@@ -670,7 +670,7 @@ nav ul.c-nav--list {
     float: left;
     margin: 12px 0;
     padding: 0 20px 0 0;
-    border-right: 1px solid #aaaaaa;
+    border-right: 1px solid $grey05;
   }
 }
 
@@ -680,10 +680,10 @@ nav ul.c-nav--list {
   margin-right: 10px;
 
   svg path {
-    fill: #fff;
+    fill: $color-white;
 
     @include breakpoint($bp-sm) {
-      fill: #444444;
+      fill: $grey08;
     }
   }
 
@@ -692,10 +692,10 @@ nav ul.c-nav--list {
     height: 0;
     padding: 28px 0 0 0;
     font-size: 28px;
-    color: #fff;
+    color: $color-white;
 
     &::after {
-      color: #fff;
+      color: $color-white;
       padding: 0;
       font-size: 26px;
       line-height: 28px;
@@ -704,7 +704,7 @@ nav ul.c-nav--list {
       width: 28px;
 
       @include breakpoint($bp-sm) {
-        color: #444444;
+        color: $grey08;
       }
     }
   }
@@ -740,7 +740,7 @@ nav ul.c-nav--list {
     font-size: 20px;
     margin-left: 8px;
     padding-left: 3px;
-    color: #fff;
+    color: $color-white;
     background-color: $gen_blue_lgt;
     overflow: hidden;
     border-radius: 50%;
@@ -759,7 +759,7 @@ nav ul.c-nav--list {
 .c-header--btn {
   display: block;
   float: left;
-  color: #666;
+  color: $grey03;
   font-size: 12px;
   line-height: 28px;
   text-transform: capitalize;
@@ -774,8 +774,8 @@ nav ul.c-nav--list {
   width: 100%;
   height: 72px;
   padding: 0 0 0 30px;
-  color: #fff;
-  font-family: 'Proxima Nova SemiBold';
+  color: $color-white;
+  font-family: $font-sans-bold;
   font-size: 12px;
   line-height: 72px;
   text-transform: uppercase;
@@ -808,7 +808,7 @@ nav ul.c-nav--list {
       left: 0;
       padding-left: 65px;
       text-decoration: none;
-      color: #fff;
+      color: $color-white;
     }
   }
 }
@@ -822,7 +822,7 @@ a.c-header--btn.c-header--btn__taking_action {
 a:hover.c-header--btn.c-header--btn__primary,
 a:hover.c-header--btn.c-header--btn__taking_action {
   background-color: $gen_blue_med;
-  color: #fff;
+  color: $color-white;
 
   &::after {
     background-color: $gen_blue_med;
@@ -832,7 +832,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 .c-nav--list li {
   @include font-stack-secondary;
   margin-top: 0;
-  border-top: 1px solid #fff;
+  border-top: 1px solid $color-white;
   text-transform: uppercase;
   font-size: 13px;
   letter-spacing: 0.1em;
@@ -847,7 +847,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     vertical-align: middle;
     border: 0;
     text-align: left;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 14px;
   }
 
@@ -865,8 +865,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     margin: auto;
     height: 20px;
     width: 20px;
-    background: #fff;
-    border: 1px solid #aaaaaa;
+    background: $color-white;
+    border: 1px solid $grey05;
     -moz-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
@@ -890,7 +890,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   // a simple message - usually not logged-in
   .c-actionbar--cta {
     margin: 0;
-    color: #fff;
+    color: $color-white;
     font-size: 18px;
     max-width: 320px;
   }
@@ -923,7 +923,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       height: 100%;
       padding: 0 18px;
       line-height: 60px;
-      color: #fff;
+      color: $color-white;
       text-decoration: none;
       background-color: $gen_blue_med;
 
@@ -959,7 +959,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     padding: 0 0 0 20px;
     box-shadow: none;
     color: $gen_blue_med;
-    background: #fff;
+    background: $color-white;
     overflow: hidden;
     border-radius: 5px;
     background-clip: padding-box;
@@ -1033,7 +1033,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-actionbar,
   .c-senate-status {
     height: 100px;
@@ -1097,7 +1097,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: 30px;
     top: 15px;
     right: 15px;
-    color: #444;
+    color: $grey08;
     font-size: 22px;
   }
 
@@ -1106,7 +1106,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     .c-site-search--title {
       display: block;
       margin-bottom: 20px;
-      font-family: "Adelle Semibold";
+      font-family: $font-serif-semibold;
       font-size: 26px;
       line-height: 1;
     }
@@ -1226,7 +1226,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .c-actionbar {
     &::before {
       height: 100%;

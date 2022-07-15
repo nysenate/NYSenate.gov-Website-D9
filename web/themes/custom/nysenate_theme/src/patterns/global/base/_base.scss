@@ -29,19 +29,51 @@
 	position: relative;
 }
 
-h2, h3 {
+h2,
+h3 {
+	&.c-container--title {
+		margin: 0;
+		color: $grey08;
+		text-transform: uppercase;
+		font-family: $font-sans;
+		@include font(12 16 1.2);
 
-  &.c-container--title {
-   color: $grey08;
-   text-transform: uppercase;
-   font-family: $font-sans;
-   @include font(12 16 1.2);
-   margin: 0;
+		@include breakpoint($bp-sm) {
+			@include font(16 16);
+		}
+
+		a {
+			text-decoration: none;
+		}
+	}
+}
+
+.c-container--link {
+	text-transform: uppercase;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	line-height: 12px;
+	letter-spacing: 0.1em;
+	text-decoration: none;
+	@extend .icon-after__arrow;
+	@extend .link-text;
+
+	&::after {
+		margin-top: -2px;
+		font-size: 17px;
+		line-height: 12px;
+	}
 
 	@include breakpoint($bp-sm) {
-		@include font(16 16);
+		font-size: 16px;
+		line-height: 16px;
+
+		&::after {
+			margin-top: -4px;
+			font-size: 23px;
+			line-height: 16px;
+		}
 	}
- }
 }
 
 

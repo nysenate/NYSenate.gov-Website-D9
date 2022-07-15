@@ -27,12 +27,12 @@
     background-color: $gen_blue_med;
     margin-top: 2em;
     padding-bottom: 1em;
-    color: #ffffff;
+    color: $color-white;
     .nys-bill-subscribe-beta {
       padding: 0.5em;
       font-size: 1.5em;
       text-align: center;
-      background-color: #f1af58 !important;
+      background-color: $yellow01 !important;
     }
     .nys-bill-subscribe-title {
       padding: 1em 2em;
@@ -45,7 +45,7 @@
       font-size: 1.5em;
       letter-spacing: 0.07em;
       label {
-        color: #ffffff;
+        color: $color-white;
         margin: 0;
       }
       input {
@@ -56,12 +56,12 @@
   .subscribe_result {
     font-size: initial;
     padding: 1em;
-    color: #ffffff;
+    color: $color-white;
   }
   .subscribe_email_error {
     font-size: initial;
     padding: 1em;
-    color: #fad2d2;
+    color: $yellow01;
   }
 
   .ajax-progress.ajax-progress-throbber {
@@ -134,7 +134,7 @@
     }
 
     &.selected {
-      color: #fff;
+      color: $color-white;
     }
   }
 
@@ -181,7 +181,7 @@
       &::after {
         content: '\78';
         margin-left: 20px;
-        color: #fff;
+        color: $color-white;
         font-size: 23px;
         line-height: 40px;
         text-align: center;
@@ -213,8 +213,8 @@
       padding: 0 20px;
       transition: background 0.2s ease;
       background-color: $gen_blue_drk;
-      color: #fff;
-      font-family: 'Proxima Nova SemiBold';
+      color: $color-white;
+      font-family: $font-sans-bold;
       text-transform: uppercase;
       font-size: 12px;
       letter-spacing: 0.2em;
@@ -245,8 +245,8 @@
   .bill-vote-thanks {
     padding-left: 55px;
     text-transform: uppercase;
-    color: #fff;
-    font-family: 'Proxima Nova Regular';
+    color: $color-white;
+    font-family: $font-sans;
     letter-spacing: 0.1em;
     font-size: 14px;
     line-height: 40px;
@@ -329,7 +329,7 @@
       text-align: center;
 
       strong {
-        font-family: 'Proxima Nova SemiBold';
+        font-family: $font-sans-bold;
       }
     }
 
@@ -364,7 +364,7 @@
     margin-right: 1em;
   }
   .confirmed-vote {
-    background-color: #2b6a90;
+    background-color: $gen_blue_lgt;
     &:hover {
       background-color: #007095;
     }
@@ -381,8 +381,8 @@
   text-align: left;
   text-decoration: none;
   text-transform: uppercase;
-  color: #fff;
-  font-family: 'Proxima Nova SemiBold';
+  color: $color-white;
+  font-family: $font-sans-bold;
   letter-spacing: 0.2em;
 
   font-size: 12px;
@@ -406,14 +406,14 @@
     line-height: 1.5em;
 
     a {
-      color: #fff;
+      color: $color-white;
       vertical-align: middle;
       display: inline-block;
     }
   }
 
   &:hover {
-    color: #fff;
+    color: $color-white;
   }
 }
 
@@ -461,7 +461,7 @@
     height: 1em;
     width: 1em;
     margin-top: -0.8em;
-    background: #fff;
+    background: $color-white;
     border: 0.2em solid $grey05;
     border-radius: 50%;
 
@@ -542,7 +542,7 @@
     }
 
     &.nys-bill-status--assem-sen {
-      background: #fff;
+      background: $color-white;
       min-height: 20px;
       height: 20px;
       width: 18%;
@@ -605,7 +605,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .nys-bill-status {
     padding: 0 20px;
     margin: 90px 0 100px;
@@ -648,7 +648,7 @@
     color: $grey02;
     text-align: center;
     text-transform: capitalize;
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 12px;
     line-height: 1.4em;
   }
@@ -716,7 +716,7 @@
         line-height: 1.5em;
 
         strong {
-          font-family: 'Proxima Nova SemiBold';
+          font-family: $font-sans-bold;
         }
       }
 
@@ -755,7 +755,7 @@
   }
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .c-bill--vote-widget {
     @media (max-height: 800px) {
       top: 200px;
@@ -851,7 +851,7 @@
     }
   }
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     margin-top: 0;
     width: 100%;
 
@@ -924,7 +924,7 @@
   background-color: $gen_blue_med;
 
   .c-bill--sentiment-text {
-    color: #fff;
+    color: $color-white;
     font-size: 2em;
     line-height: 1.5em;
     text-align: left;
@@ -938,7 +938,7 @@
       width: 40px;
       height: 40px;
       padding: 0;
-      color: #fff;
+      color: $color-white;
       text-align: center;
       overflow: hidden;
       padding-top: 1em;
@@ -1033,7 +1033,7 @@
       text-align: center;
 
       strong {
-        font-family: 'Proxima Nova SemiBold';
+        font-family: $font-sans-bold;
       }
     }
 

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - comment
     - media
     - system
 _core:
@@ -12,5 +13,7 @@ label: 'Anonymous user'
 weight: 0
 is_admin: false
 permissions:
+  - 'access comments'
   - 'access content'
+  - 'post comments'
   - 'view media'

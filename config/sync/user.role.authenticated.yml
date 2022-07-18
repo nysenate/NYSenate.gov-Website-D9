@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - comment
     - google_analytics
     - media
     - system
@@ -13,6 +14,8 @@ label: 'Authenticated user'
 weight: 1
 is_admin: false
 permissions:
+  - 'access comments'
   - 'access content'
   - 'opt-in or out of google analytics tracking'
+  - 'post comments'
   - 'view media'

@@ -7,28 +7,12 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
-.c-block {
-  @include clearfix;
-  display: block;
-  position: relative;
-  margin-bottom: 20px;
-  zoom: 1;
-  clear: both;
-
-  @include breakpoint($bp-sm) {
-    margin-bottom: 60px;
-  }
-}
-
 .node-resolution {
-  max-width: 840px;
   padding: 0 20px;
-  padding-top: 40px;
   margin: 0 auto;
 
   @include breakpoint($bp-sm) {
     padding: 0 40px;
-    padding-top: 80px;
   }
 }
 
@@ -36,31 +20,16 @@
   margin-bottom: 20px;
 
   > .nys-title {
-    color: $grey02;
+    color: $grey08;
     text-transform: capitalize;
     font-family: $font-serif-bold;
+    font-weight: $font-weight-normal;
     font-size: 18px;
     margin-bottom: 0;
 
     @include breakpoint($bp-sm) {
       font-size: 32px;
     }
-  }
-}
-
-.c-detail--subhead {
-  margin: 0 0 10px;
-  color: $grey02;
-  font-family: $font-sans;
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  span {
-    text-transform: capitalize;
-    clear: both;
-    line-height: 1.4em;
-    letter-spacing: 0.01em;
-    display: block;
   }
 }
 
@@ -89,9 +58,11 @@
   margin-bottom: 20px;
   line-height: 1;
 
-  .c-detail--subhead {
-    display: inline-block;
+  &.c-detail--subhead {
+    // display: inline-block;
     margin-bottom: 0;
+    color: $grey08;
+    font-weight: 400;
   }
 }
 
@@ -138,120 +109,6 @@
     -moz-osx-font-smoothing: grayscale;
     font-size: 1.5em;
     line-height: 1em;
-  }
-}
-
-.c-detail--social {
-  margin-bottom: 40px;
-
-  > ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    overflow: hidden;
-  }
-
-  li {
-    display: block;
-    float: left;
-
-    & + li {
-      margin: 0 0 0 20px;
-    }
-  }
-}
-
-.c-detail--social-item {
-  position: relative;
-  display: block;
-  width: 60px;
-  height: 40px;
-  background: $blue01;
-
-  &::after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    font-size: 28px;
-    line-height: 40px;
-    color: $color-white;
-  }
-
-  &.facebook {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\21';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  &.twitter {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\23';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  &.email {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\4e';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -457,6 +314,14 @@
   background: $grey06;
   font-size: 12px;
   color: $grey10;
+  line-height: 24px;
+
+  h3 {
+    font-family: "Helvetica Nueue", sans-serif;
+    font-size: 27px;
+    font-weight: 400;
+    color: $grey10;
+  }
 
   h4 {
     margin-bottom: 30px;
@@ -539,7 +404,7 @@
     font-size: 14px;
   }
   dt {
-    color: $grey02;
+    color: $grey08;
     line-height: 1.5em;
   }
   dd + dt {
@@ -860,7 +725,7 @@
 
   h3,
   h4 {
-    color: $grey02;
+    color: $grey08;
     font-family: $font-serif-regular;
   }
   h3 {
@@ -966,7 +831,7 @@
 
 .c-vote-detail--date {
   margin: 20px 0;
-  color: $grey02;
+  color: $grey08;
   font-family: $font-serif-regular;
   font-size: 16px;
   line-height: 1;
@@ -979,7 +844,7 @@
 .c-detail--vote-grp {
   .c-detail--section-title {
     margin-bottom: 15px;
-    color: $grey02;
+    color: $grey08;
     font-family: $font-serif-semibold;
     text-transform: uppercase;
     font-size: 14px;
@@ -1124,7 +989,7 @@
   font-size: 14px;
 
   > span {
-    color: $grey02;
+    color: $grey08;
     margin-right: 5px;
   }
 }
@@ -1277,50 +1142,8 @@
   .c-detail--related-item {
     margin-right: 10px;
   }
-  .c-detail--download {
-    margin-bottom: 0;
-  }
 
-  // social
-  .c-detail--social {
-    width: 28%;
-    float: left;
-    margin-bottom: 0;
-    padding-bottom: 40px;
-    border-left: 1px solid $grey05;
 
-    .c-detail--subhead {
-      float: right;
-      text-align: right;
-    }
-
-    ul {
-      display: block;
-      float: right;
-      clear: both;
-
-      li {
-        & + li {
-          margin-left: 0;
-        }
-      }
-    }
-  }
-  .c-detail--social-item {
-    background: $color-white;
-
-    &::after {
-      color: $blue01;
-      text-align: right;
-    }
-
-    &.twitter {
-      &::after {
-        left: auto;
-        right: 0.2em;
-      }
-    }
-  }
   // sponsors
   .c-detail--sponsors {
     overflow: visible;

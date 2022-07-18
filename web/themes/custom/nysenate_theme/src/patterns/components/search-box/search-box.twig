@@ -13,7 +13,7 @@ This file matches output from Drupal, with some additions for the submit button.
         <input title="{{ 'Enter the terms you wish to search for.'|t }}" placeholder="{{ placeholder_text|default('Search Site') }}" data-drupal-selector="{{ field_id|default('search') }}" type="search" id="{{ field_id|default('search') }}" name="{{ field_name|default('Search'|t) }}" value="{{ query }}" size="60" maxlength="128" class="form-search" />
       </div>
       <div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions">
-        <button class="search__submit" type="submit" name="{{ field_submit_name|default('submit') }}">
+        <button class="search__submit button" type="submit" name="{{ field_submit_name|default('submit') }}">
           <span class="search__submit-icon">
             {{ icons.get('icon-search') }}
           </span>

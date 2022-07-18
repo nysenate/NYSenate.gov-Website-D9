@@ -13,6 +13,9 @@
  * @var $debug mixed
  */
 #}
+<h2 class="nys-title">
+  Legislation
+</h2>
 <div class="nys-openleg-statute-container">
   {{ search }}
   {{ include('nys-openleg-result-head-breadcrumbs.html.twig') }}
@@ -52,11 +55,11 @@
     </div>
 
     <div class="nys-openleg-content-container">
-      {% for val in list_items %}
         <div class="nys-openleg-items-container">
-          {{ include('nys-openleg-result-item.html.twig', val) }}
+          {% for val in list_items %}
+            {{ include('nys-openleg-result-item.html.twig', val) }}
+          {% endfor %}
         </div>
-      {% endfor %}
       {% if entry_text %}
       <div class="nys-openleg-result-text">{{ entry_text|raw }}</div>
       {% endif %}

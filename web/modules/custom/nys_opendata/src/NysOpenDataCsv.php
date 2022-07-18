@@ -3,6 +3,8 @@
 namespace Drupal\nys_opendata;
 
 use Drupal\file\Entity\File;
+use http\Exception\RuntimeException;
+use http\Exception\UnexpectedValueException;
 
 /**
  * Class NysOpenDataCsv.
@@ -25,21 +27,21 @@ class NysOpenDataCsv {
    * @var string
    * @see \drupal_realpath()
    */
-  private $physicalPath = '';
+  private string $physicalPath = '';
 
   /**
    * Array of header cells.
    *
    * @var array
    */
-  private $header = [];
+  private array $header = [];
 
   /**
    * Array of data rows.  Each row is an array of data cells.
    *
    * @var array
    */
-  private $data = [];
+  private array $data = [];
 
   /**
    * Array of "extra" rows.
@@ -51,7 +53,7 @@ class NysOpenDataCsv {
    *
    * To the person who made this necessary, may you live in interesting times.
    */
-  private $extra = [];
+  private array $extra = [];
 
   /**
    * NysOpenDataCsv constructor.
@@ -72,8 +74,8 @@ class NysOpenDataCsv {
    * @return bool
    *   Returns a boolean.
    */
-  public static function rewriteFile($fid) {
-    if (!((int) $fid)) {
+  public static function rewriteFile(int $fid) {
+    if (!($fid)) {
       throw new UnexpectedValueException("Expected an integer file id");
     }
     $csv = new NysOpenDataCsv();
@@ -127,20 +129,20 @@ class NysOpenDataCsv {
   }
 
   /**
-   * Gets the Drupal managed_file object.
+   * Gets the Drupal managedFile object.
    *
    * @return object
    *   Returns an object.
    */
   public function getManagedFile(): object {
-    return $this->managed_file;
+    return $this->managedFile;
   }
 
   /**
    * Gets the physical path of the file.
    */
   public function getPhysicalPath(): string {
-    return $this->physical_path;
+    return $this->physicalPath;
   }
 
   /**
@@ -159,8 +161,8 @@ class NysOpenDataCsv {
     if (in_array($field, ['header', 'data', 'extra'])) {
       $ret = $this->{$field};
     }
-    elseif ($this->managed_file->{$field} ?? FALSE) {
-      $ret = $this->managed_file->{$field};
+    elseif ($this->managedFile->{$field} ?? FALSE) {
+      $ret = $this->managedFile->{$field};
     }
 
     return $ret;
@@ -243,8 +245,8 @@ class NysOpenDataCsv {
     $this->resetData();
 
     // If the file exists, read as array, and parse each line into fields.
-    if ($this->physical_path) {
-      $data = file($this->physical_path);
+    if ($this->physicalPath) {
+      $data = file($this->physicalPath);
 
       // Data is any row in which the first field does not start with
       // a hash character.
@@ -295,9 +297,9 @@ class NysOpenDataCsv {
    */
   public function setFile($fid = 0) {
     $this->resetData();
-    $this->managed_file = (int) $fid ? File::load($fid) : FALSE;
-    $this->physical_path = ($this->managed_file->uri->value ?? '')
-      ? \Drupal::service('file_system')->realpath($this->managed_file->uri->value)
+    $this->managedFile = (int) $fid ? File::load($fid) : FALSE;
+    $this->physicalPath = ($this->managedFile->uri->value ?? '')
+      ? \Drupal::service('file_system')->realpath($this->managedFile->uri->value)
       : '';
   }
 

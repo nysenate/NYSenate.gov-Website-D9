@@ -2,7 +2,7 @@
 
 {% set classes = ['node--bill'] %}
 <!-- BILL TEMPLATE -->
-<div class="{{ classes }}" {{ attributes }}>
+<div class="{{ classes|join(' ') }}" {{ attributes }}>
   <div
     class="c-block c-detail--header c-detail--header__bill">
     <!-- Bill Title -->
@@ -273,4 +273,9 @@
       </div>
     </div>
   {% endif %}
+
+  {% if content.field_comments %}
+    {{ content.field_comments }}
+  {% endif %}
+  
 </div>

@@ -69,3 +69,26 @@
     }
   }
 }
+
+@include breakpoint($bp-md) {
+  .c-actionbar {
+    &::before {
+      height: 100%;
+    }
+
+    .c-actionbar--info .c-actionbar--cta,
+    .c-actionbar--cta {
+      font-size: 18px;
+      width: 100%;
+      max-width: 380px;
+    }
+  }
+  .c-actionbar.c-actionbar--committee {
+    .c-actionbar--info .c-actionbar--cta,
+    .c-actionbar--cta {
+      font-size: 18px;
+      width: 100%;
+      max-width: 465px;
+    }
+  }
+}

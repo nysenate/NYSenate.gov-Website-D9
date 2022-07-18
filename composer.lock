@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "444ce8409498576b45dbbf56bfbf12c7",
+    "content-hash": "5613919607661f7ac4ab78b7f64d800c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1232,15 +1232,6 @@
                 "source": "https://github.com/cweagans/composer-patches/tree/1.7.2"
             },
             "time": "2022-01-25T19:21:20+00:00"
-        },
-        {
-            "name": "datatables/datatables",
-            "version": "1.12.1",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/DataTables/DataTablesSrc/archive/refs/tags/1.12.1.zip"
-            },
-            "type": "drupal-library"
         },
         {
             "name": "davedevelopment/stiphle",
@@ -11819,6 +11810,55 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v4.14.0"
             },
             "time": "2022-05-31T20:59:12+00:00"
+        },
+        {
+            "name": "npm-asset/datatables.net",
+            "version": "2.1.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/datatables.net/-/datatables.net-2.1.1.tgz"
+            },
+            "require": {
+                "npm-asset/jquery": ">=1.7"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/datatables.net-dt",
+            "version": "3.2.2",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:DataTables/Dist-DataTables-DataTables.git",
+                "reference": "6dc8eccf208cd4b5e5f450d9eb23674915c035e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-DataTables/zipball/6dc8eccf208cd4b5e5f450d9eb23674915c035e6",
+                "reference": "6dc8eccf208cd4b5e5f450d9eb23674915c035e6"
+            },
+            "require": {
+                "npm-asset/datatables.net": ">=1.10.9",
+                "npm-asset/jquery": ">=1.7"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/jquery",
+            "version": "3.6.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/jquery/-/jquery-3.6.0.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "oomphinc/composer-installers-extender",

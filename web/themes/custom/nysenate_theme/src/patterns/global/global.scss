@@ -365,8 +365,15 @@ h6 {
   line-height: 1.4;
 }
 
+
 p {
   @include font-stack-primary;
+  @include font(16 24); 
+  color: $grey03;
+
+  @include breakpoint($bp-sm) {
+    @include font(20 32)
+  }
 }
 
 label {
@@ -407,7 +414,7 @@ label {
 
 .nys-title {
   margin: 0 0 20px 0;
-  color: $grey02;
+  color: $grey08;
   text-transform: capitalize;
   font-family: $font-serif-bold;
   font-size: 18px;

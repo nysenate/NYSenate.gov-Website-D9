@@ -98,21 +98,165 @@ h2, h3 {
 	}
 }
 
-.c-detail--download {
-  display: block;
-  margin-bottom: 20px;
-  color: $blue01;
-  font-family: $font-sans;
-  text-transform: uppercase;
-  font-size: 12px;
-  @extend .icon-before__bill;
+/*-------------------------------------
+/
+/ LAYOUT - COLUMNS
+/ controls overall width of elements
+/
+/-------------------------------------*/
+.l-col {
+  position: relative;
+  float: left;
+  width: 100%;
+}
 
-  &:before {
-    font-size: 1.5em;
-    line-height: 1em;
+@media #{$tablet} {
+  .l-col-2 {
+    width: 50%;
+
+    &.l-col--padded {
+      padding-right: 5%;
+    }
+
+    & + .l-col-2 {
+
+      &.l-col--padded {
+        padding-right: 0;
+        padding-left: 5%;
+      }
+    }
   }
 
-	@include breakpoint($bp-sm) {
-		margin-bottom: 0;
+  .l-col-3 {
+    width: 33.33%;
+  }
+
+  .l-col-4 {
+    width: 25%;
+  }
+
+  // used for update feeds and the like
+  .l-col-1-of-3 {
+    width: 24%;
+    padding-right: 2%;
+  }
+
+  .l-col-1-of-2 {
+    width: 24%;
+    padding-right: 2%;
+  }
+
+  .l-col-2-of-2 {
+    width: 76%;
+    padding-right: 10%;
+  }
+
+  .l-col-2-of-3 {
+    width: 49%;
+    padding-right: 2%;
+  }
+
+  // use this is if your second column doesn't have a third.
+  .l-col-2-of-3__full {
+    width: 72%;
+  }
+  
+  .l-col-3-of-3 {
+    width: 27%;
+  }
+}
+
+.c-container--link {
+	text-transform: uppercase;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	line-height: 12px;
+	letter-spacing: 0.1em;
+	text-decoration: none;
+	@extend .icon-after__arrow;
+	@extend .link-text;
+
+	&:after {
+		margin-top: -2px;
+		font-size: 17px;
+		line-height: 12px;
 	}
+
+	@include breakpoint($bp-sm) {
+		font-size: 16px;
+		line-height: 16px;
+
+		&:after {
+			margin-top: -4px;
+			font-size: 23px;
+			line-height: 16px;
+		}
+	}
+}
+/*-------------------------------------
+/
+/ LAYOUT - COLUMNS
+/ controls overall width of elements
+/
+/-------------------------------------*/
+.l-col {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+@media #{$tablet} {
+  .l-col-2 {
+    width: 50%;
+
+    &.l-col--padded {
+      padding-right: 5%;
+    }
+
+    & + .l-col-2 {
+
+      &.l-col--padded {
+        padding-right: 0;
+        padding-left: 5%;
+      }
+    }
+  }
+
+  .l-col-3 {
+    width: 33.33%;
+  }
+
+  .l-col-4 {
+    width: 25%;
+  }
+
+  // used for update feeds and the like
+  .l-col-1-of-3 {
+    width: 24%;
+    padding-right: 2%;
+  }
+
+  .l-col-1-of-2 {
+    width: 24%;
+    padding-right: 2%;
+  }
+
+  .l-col-2-of-2 {
+    width: 76%;
+    padding-right: 10%;
+  }
+
+  .l-col-2-of-3 {
+    width: 49%;
+    padding-right: 2%;
+  }
+
+  // use this is if your second column doesn't have a third.
+  .l-col-2-of-3__full {
+    width: 72%;
+  }
+  
+  .l-col-3-of-3 {
+    width: 27%;
+  }
 }

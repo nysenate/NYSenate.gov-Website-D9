@@ -20,9 +20,10 @@
   margin-bottom: 20px;
 
   > .nys-title {
-    color: $grey02;
+    color: $grey08;
     text-transform: capitalize;
     font-family: $font-serif-bold;
+    font-weight: $font-weight-normal;
     font-size: 18px;
     margin-bottom: 0;
 
@@ -57,9 +58,11 @@
   margin-bottom: 20px;
   line-height: 1;
 
-  .c-detail--subhead {
-    display: inline-block;
+  &.c-detail--subhead {
+    // display: inline-block;
     margin-bottom: 0;
+    color: $grey08;
+    font-weight: 400;
   }
 }
 
@@ -311,6 +314,14 @@
   background: $grey06;
   font-size: 12px;
   color: $grey10;
+  line-height: 24px;
+
+  h3 {
+    font-family: "Helvetica Nueue", sans-serif;
+    font-size: 27px;
+    font-weight: 400;
+    color: $grey10;
+  }
 
   h4 {
     margin-bottom: 30px;
@@ -393,7 +404,7 @@
     font-size: 14px;
   }
   dt {
-    color: $grey02;
+    color: $grey08;
     line-height: 1.5em;
   }
   dd + dt {
@@ -714,7 +725,7 @@
 
   h3,
   h4 {
-    color: $grey02;
+    color: $grey08;
     font-family: $font-serif-regular;
   }
   h3 {
@@ -820,7 +831,7 @@
 
 .c-vote-detail--date {
   margin: 20px 0;
-  color: $grey02;
+  color: $grey08;
   font-family: $font-serif-regular;
   font-size: 16px;
   line-height: 1;
@@ -833,7 +844,7 @@
 .c-detail--vote-grp {
   .c-detail--section-title {
     margin-bottom: 15px;
-    color: $grey02;
+    color: $grey08;
     font-family: $font-serif-semibold;
     text-transform: uppercase;
     font-size: 14px;
@@ -978,7 +989,7 @@
   font-size: 14px;
 
   > span {
-    color: $grey02;
+    color: $grey08;
     margin-right: 5px;
   }
 }
@@ -1131,9 +1142,7 @@
   .c-detail--related-item {
     margin-right: 10px;
   }
-  .c-detail--download {
-    margin-bottom: 0;
-  }
+
 
   // sponsors
   .c-detail--sponsors {

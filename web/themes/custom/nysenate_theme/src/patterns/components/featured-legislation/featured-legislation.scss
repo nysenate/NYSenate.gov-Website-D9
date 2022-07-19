@@ -1,11 +1,17 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.c-block.c-block-legislation-featured .c-block--btn-toggle,
+.c-block-legislation .c-block--btn-toggle {
+  @extend .icon-replace__share;
+}
+
 .c-block-legislation {
   position: relative;
   border-top: 1px solid $grey05;
   padding: 20px 0 35px;
   margin-bottom: 0;
+  overflow: visible;
 
   .c-block {
 
@@ -13,7 +19,24 @@
       margin-bottom: 0;
     }
   }
-}
+
+  .c-block--btn-toggle {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 11;
+    background: transparent;
+	  text-indent: -99999px;
+
+    &:after {
+      font-size: 26px;
+      line-height: 42px;
+      color: $grey05 !important;
+    }
+  }
+} 
 
 .c-legislation--quote {
   position: relative;
@@ -29,8 +52,10 @@
     z-index: 2;
     padding: 45px 0 0;
     font-family: $font-serif;
+    position: relative;
 
-    &:before {
+    &::before {
+      position: absolute;
       z-index: -1;
       top: 10px;
       left: -10px;
@@ -76,6 +101,7 @@
       display: block;
       width: 100%;
       height: 100%;
+      padding: 0;
 
       &::after {
         width: 100%;
@@ -175,6 +201,11 @@
 		padding-left: 0.2em;
 	}
 
+  .c-block.c-block-legislation-featured .c-block--btn-toggle {
+    background: transparent;
+    border: 0;
+  }
+
   .c-social {
     position: absolute;
     display: block;
@@ -222,7 +253,7 @@
     top: 0;
     z-index: 2;
 
-    &:before {
+    &::before {
       content: "";
       display: inline-block;
       vertical-align: middle;
@@ -243,7 +274,7 @@
       padding: 60px 0 0;
       font-size: 22px;
 
-      &:before {
+      &::before {
         left: -20px;
         top: 15px;
         font-size: 98px;

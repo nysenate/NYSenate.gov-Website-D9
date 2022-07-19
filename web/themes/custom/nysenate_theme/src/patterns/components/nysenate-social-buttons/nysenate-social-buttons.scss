@@ -5,6 +5,25 @@
   margin-top: 20px;
   margin-bottom: 40px;
 
+  .c-container--header__top-border {
+    font-family: $font-sans;
+    text-transform: uppercase;
+    border-top: 1px solid #AAAAAA;
+    padding: 20px 0;
+    position: relative;
+    letter-spacing: 0.1em;
+
+    .container--title {
+      font-size: 12px;
+      margin: 0;
+      font-weight: normal;
+      color: $grey08;
+
+      @include breakpoint($bp-sm) {
+        font-size: 16px;
+      }
+    }
+  }
 
   .c-btn--small,
   .share-icon {
@@ -13,7 +32,8 @@
     height: 40px;
     width: 60px;
     margin-right: 7%;
-    padding-left: 21px;
+    padding-left: 20px;
+    padding-top: 10px;
     float: left;
     outline: none;
     background-color: $gen_blue_lgt;
@@ -27,6 +47,7 @@
       display: none;
       cursor: pointer;
       color: $color-white;
+      font-family: $font-sans-bold;
 
       @include breakpoint($bp-sm) {
         display: block;

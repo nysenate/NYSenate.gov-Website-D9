@@ -56,8 +56,8 @@ body {
 	zoom: 1;
 	clear: both;
 
-	&:after {
-		content: "";
+	&::after {
+		content: '';
 		display: table;
 		clear: both;
 	}
@@ -77,15 +77,15 @@ body {
 	text-align: left;
 	text-decoration: none;
 	text-transform: uppercase;
-	color: #fff;
-	font-family: "Proxima Nova SemiBold";
+	color: $color-white;
+	font-family: $font-sans-bold;
 	letter-spacing: 0.2em;
 
 	font-size: 12px;
 	line-height: 60px;
 	height: 60px;
 
-	&:before {
+	&::before {
 		display: inline-block;
 		vertical-align: middle;
 		text-align: center;
@@ -101,17 +101,21 @@ body {
 		line-height: 1.5em;
 
 		a{
-			color: #fff;
+			color: $color-white;
 			vertical-align: middle;
 			display: inline-block;
 		}
 	}
 
 	&:hover {
-		color: #fff;
+		color: $color-white;
 	}
 
   @include breakpoint($bp-sm) {
+		height: 80px;
+		font-size: 15px;
+		line-height: 80px;
+		
     .flag-success-message {
 			top: 80px;
 			left: auto;
@@ -121,7 +125,7 @@ body {
 			font-size: 14px;
 			line-height: 14px;
 
-			&:before {
+			&::before {
 				font-size: 24px;
 			}
 		}	

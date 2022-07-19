@@ -14,6 +14,19 @@ use http\Exception\UnexpectedValueException;
 class NysOpenDataCsv {
 
   /**
+   * Default settings for datatables initialization.
+   *
+   * @var array
+   */
+  public static $datatableSettings = [
+    'paging' => TRUE,
+    'pageLength' => 100,
+    'scrollY' => 400,
+    'scrollX' => TRUE,
+    'searching' => FALSE,
+  ];
+
+  /**
    * The managed file object loaded by Drupal.
    *
    * @var object
@@ -162,7 +175,7 @@ class NysOpenDataCsv {
       $ret = $this->{$field};
     }
     elseif ($this->managedFile->{$field} ?? FALSE) {
-      $ret = $this->managedFile->{$field};
+      $ret = $this->managedFile->{$field}->value;
     }
 
     return $ret;
@@ -202,27 +215,37 @@ class NysOpenDataCsv {
   /**
    * Builds the #attach portion of the OpenData render array for this file.
    */
-  public function buildAttachedArray($fid) {
-    $key = 't_' . $this->getManagedFile()->fid->value;
-    $val = [
-      'ajax' => '/open-data/datasrc/' . $this->getManagedFile()->fid->value,
+  public function buildAttachedArray($settings = []) {
+    $key = 't_' . $this->get('fid');
+    $val = $settings + [
+      'url' => '/open-data/datasrc/' . $this->get('fid'),
+      'serverSide' => TRUE,
+    ] + static::$datatableSettings;
+
+    return [
+      'drupalSettings' => [
+        'opendata' => [
+          'dt_init' => [$key => $val],
+        ],
+      ],
     ];
-    return $val;
   }
 
   /**
    * Builds the Drupal render array for this data file.
    */
   public function buildRenderArray($include_data = FALSE, $settings = []) {
-
     // Generate the render array for this CSV table.
     return [
       '#type' => 'table',
       '#header' => $this->header,
-      '#footer' => $this->header,
+      // Seems to do nothing since D7 code.
+      // '#footer' => $this->header,.
       '#rows' => $include_data ? $this->data : [],
       '#sticky' => FALSE,
       '#empty' => 'No data was loaded',
+      '#attached' => $this->buildAttachedArray($settings),
+      '#extra' => $this->extra,
     ];
 
   }

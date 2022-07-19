@@ -168,6 +168,13 @@ resolution-page:
   css:
     component:
       dist/css/resolution-page.css: {}
+  js:
+    dist/js/resolution-page.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
 
 event:
   css:
@@ -229,7 +236,13 @@ featured-legislation:
   css:
     component:
       dist/css/featured-legislation.css: {}
+  js:
+    dist/js/featured-legislation.js: {}
   dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
     - nysenate_theme/nysenate-social-buttons
 
 file-uploads:

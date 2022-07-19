@@ -1,0 +1,158 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+/*----------------------------------------
+/
+/	CONTACT PAGE STYLES
+/
+/-----------------------------------------*/
+.contact-form {
+	.columns {
+    display: block;
+    float: left;
+
+		&.medium-6 {
+			width: 100%;
+		}
+
+		#edit-submit {
+			margin: 20px 0 5px;
+			font-family: $font-sans-bold;
+			text-transform: uppercase;
+			font-size: 14px;
+			letter-spacing: 0.2em;
+			@extend .med-bg;
+		}
+
+    textarea {
+      height: auto;
+    }
+	}
+
+  p {
+    margin: 0;
+  }
+
+  .form-item,
+  .form-actions {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .form-checkboxes .form-item, 
+  .form-radios .form-item {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+  }
+}
+
+@include breakpoint($bp-sm) {
+
+	.contact-form {
+		.form-type-radio {
+			display: block;
+			float: left;
+		}
+
+		.columns {
+
+      & > div {
+        width: 100%;
+      }
+
+      & > button {
+        display: inline-block;
+      }
+
+			&.medium-6 {
+				width: 50%;
+			}
+
+			#edit-submit {
+				font-size: 16px;
+			}
+		}
+	}
+}
+
+#nys-messaging-senator-contact-form,
+#nys-messaging-senator-message-form {
+	&::after {
+	  content: '';
+	  display: table;
+	  clear: both;
+	  margin-bottom: 40px;
+	}
+
+	.form-type-radio {
+		display: flex;
+    align-items: center;
+
+    label {
+      margin-bottom: 0;
+      margin-left: 0.5rem;
+      margin-right: 1rem;
+    }
+	}
+
+	#edit-submit {
+		padding: 0 20px;
+		font-family: $font-sans-bold;
+		text-transform: uppercase;
+		font-size: 14px;
+		letter-spacing: 0.2em;
+		line-height: 40px;
+		@extend .med-bg;
+	}
+
+	.ajax-progress-throbber {
+	  .throbber {
+	    padding: 0 20px;
+	  }
+	}
+
+	h3 {
+		margin: 30px 0 10px 0;
+		font-family: $font-serif-semibold;
+		font-size: 24px;
+	}
+
+	input[type="text"] {
+		height: 55px;
+	}
+
+	input[name="first_name"],
+	input[name="last_name"],
+	input[name="from_email"],
+	input[name="phone"],
+	input[name="city"],
+	input[name="zip"] {
+		width: 95%;
+	}
+
+	input[name="last_name"],
+	input[name="phone"],
+	input[name="zip"],
+	label[for="edit-last-name"],
+	label[for="edit-phone"],
+	label[for="edit-zip"] {
+		margin-left: 18px;
+	}
+
+  input[type="file"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin: 0.9rem 0 1rem 0;
+  }
+}
+
+#nys-messaging-senator-message-form {
+  padding: 0 8px;
+  #edit-submit {
+    @extend .lgt-bg;
+    margin-top: 30px;
+  }
+  input[type="text"] {
+    margin-bottom: 30px;
+  }
+}

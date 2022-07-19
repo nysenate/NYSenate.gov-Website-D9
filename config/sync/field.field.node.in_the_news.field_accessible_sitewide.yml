@@ -1,0 +1,23 @@
+uuid: faa1a7d1-650f-46cf-93a3-1d37c9d7e35e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_accessible_sitewide
+    - node.type.in_the_news
+id: node.in_the_news.field_accessible_sitewide
+field_name: field_accessible_sitewide
+entity_type: node
+bundle: in_the_news
+label: 'Accessible Sitewide'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

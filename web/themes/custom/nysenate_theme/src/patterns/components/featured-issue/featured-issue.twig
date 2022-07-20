@@ -1,6 +1,6 @@
 {{ attach_library('nysenate_theme/featured-issue') }}
 
-<div class="{% if main_issue %} c-event-cluster c-event-cluster-featured-issue {% else %} c-container c-news-container {% endif %}">
+<div class="{% if main_issue %} c-event-cluster c-event-cluster-featured-issue {% else %} c-container c-news-container featured-issue {% endif %}">
   <div class="c-container--header">
     <h2 class="c-container--title">Featured Issue:
       <a href="{{ featured_issue_link }}">{{ featured_issue_name }}</a>

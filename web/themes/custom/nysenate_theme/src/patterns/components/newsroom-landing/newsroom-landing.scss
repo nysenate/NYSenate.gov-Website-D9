@@ -1,0 +1,44 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.newsroom-landing {
+  .odd,
+  .even {
+    width: 100%;
+    float: none;
+
+    .c-bill-meta,
+    .c-bill-body {
+      width: 100%;
+    }
+  }
+
+  .even {
+    float: none;
+  }
+
+
+  @include breakpoint($bp-sm) {
+    .odd,
+    .even {
+      width: 45%;
+      float: left;
+      clear: both;
+      .c-bill-meta,
+      .c-bill-body {
+        width: 100%;
+      }
+    }
+  
+    .even {
+      float: right;
+      clear: none;
+    }
+
+    &.c-news-container .c-title {
+      font-size: 16px;
+      border-top: 1px solid $grey05;
+    }
+  
+  }
+}

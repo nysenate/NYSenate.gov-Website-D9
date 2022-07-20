@@ -1168,13 +1168,15 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
 
     if (!empty($node->field_open_data_file->getValue())) {
       foreach ($node->field_open_data_file as $item) {
-        $file = File::load($item->target_id);
-        $file_url_generator = \Drupal::service('file_url_generator');
-        $variables['items'][] = [
-          'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-          'text' => ($item->description !== '') ? $item->description : $file->origname[0]->value,
-          'type' => $file->getMimeType(),
-        ];
+        if ($item->isDisplayed()) {
+          $file = File::load($item->target_id);
+          $file_url_generator = \Drupal::service('file_url_generator');
+          $variables['file_items'][] = [
+            'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
+            'text' => ($item->description !== '') ? $item->description : $file->origname[0]->value,
+            'type' => $file->getMimeType(),
+          ];
+        }
       }
     }
   }

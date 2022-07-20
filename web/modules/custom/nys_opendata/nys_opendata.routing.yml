@@ -1,0 +1,7 @@
+nys_opendata.menu:
+  path: 'open-data/datasrc/{fid}'
+  defaults:
+    _controller: '\Drupal\nys_opendata\Controller\OpenDataController::nysOpenDataFetchDatasource'
+    _title: 'NYS Open Data Datasource Callback'
+  requirements:
+    _permission: 'access content'

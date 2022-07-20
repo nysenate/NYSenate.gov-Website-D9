@@ -1,0 +1,29 @@
+uuid: 6d002f4d-7a0d-4aa0-833a-4105534eacb3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_issues
+    - node.type.in_the_news
+    - taxonomy.vocabulary.issues
+id: node.in_the_news.field_issues
+field_name: field_issues
+entity_type: node
+bundle: in_the_news
+label: Issues
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      issues: issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

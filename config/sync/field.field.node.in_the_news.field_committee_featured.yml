@@ -1,0 +1,23 @@
+uuid: cfcf4cd5-5361-4fb7-a666-c91dc33f1fc8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_committee_featured
+    - node.type.in_the_news
+id: node.in_the_news.field_committee_featured
+field_name: field_committee_featured
+entity_type: node
+bundle: in_the_news
+label: 'Committee Featured'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

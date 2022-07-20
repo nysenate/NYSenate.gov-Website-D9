@@ -137,6 +137,10 @@
     left: auto;
     z-index: 11;
     background: transparent;
+    height: 42px;
+    width: 42px;
+    border: 0;
+    text-indent: -99999px;
 
     &::after {
       content: '\73';
@@ -566,9 +570,11 @@
       top: -40px;
     }
   }
+
   .nys-senator.sponsor-list {
     float: none;
   }
+  
   .nys-senator.sponsor-list .nys-senator--party span {
     color: $grey04;
   }
@@ -580,6 +586,10 @@
     left: auto;
     z-index: 11;
     background: transparent;
+    height: 42px;
+    width: 42px;
+    border: 0;
+    text-indent: -99999px;
 
     &::after {
       content: '\73';
@@ -1213,7 +1223,7 @@
     &.c-social-visible {
       .c-social {
         right: -40px;
-        transition: right 0.3 ease;
+        transition: right 0.3s ease;
       }
     }
   }

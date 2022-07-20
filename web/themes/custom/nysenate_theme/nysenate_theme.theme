@@ -186,6 +186,22 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_senator_microsite_menu_block(&$variables) {
+  if (!empty($variables['menu_links'])) {
+    $links = [];
+    foreach ($variables['menu_links'] as $link) {
+      $links[] = [
+        'text' => $link['menu_title'],
+        'url' => $link['menu_url'],
+      ];
+    }
+    $variables['links'] = $links;
+  }
+}
+
+/**
  * Implements hook_preproces_block_content_ID().
  */
 function nysenate_theme_preprocess_block_content__honoree_profile_block(&$variables) {
@@ -1141,9 +1157,10 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
     $publication_date = new \Datetime($node->field_publication_date->value);
     $variables['date'] = $date->format('F d, Y');
     $variables['end_date'] = $end_date->format('F d, Y');
-    $variables['open_date_type'] = $node->field_open_date_type->first()->value;
+    $variables['open_date_type'] = $node->field_open_date_type
+      ->getSetting('allowed_values')[$node->field_open_date_type->value];
     $variables['published_on'] = $publication_date->format('F d, Y');
-    $variables['body'] = $node->body->first()->value;
+    $variables['body'] = $node->body->view();
     $variables['title'] = $node->getTitle();
     $variables['title_social'] = $node->toUrl()->toString();
     $variables['url'] = $node->toUrl()->setAbsolute()->toString();
@@ -1155,7 +1172,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
         $file_url_generator = \Drupal::service('file_url_generator');
         $variables['items'][] = [
           'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-          'text' => $item->description,
+          'text' => ($item->description !== '') ? $item->description : $file->origname[0]->value,
           'type' => $file->getMimeType(),
         ];
       }

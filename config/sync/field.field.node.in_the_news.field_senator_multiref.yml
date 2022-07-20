@@ -1,26 +1,26 @@
-uuid: f2eda5b9-184f-4ea1-bc78-77e7fb44be6d
+uuid: 073625f6-9cd2-4c31-a8f9-f940f4bcac8d
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_committee
-    - node.type.article
-    - taxonomy.vocabulary.committees
-id: node.article.field_committee
-field_name: field_committee
+    - field.storage.node.field_senator_multiref
+    - node.type.in_the_news
+    - taxonomy.vocabulary.senator
+id: node.in_the_news.field_senator_multiref
+field_name: field_senator_multiref
 entity_type: node
-bundle: article
-label: Committee
+bundle: in_the_news
+label: Senator
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      committees: committees
+      senator: senator
     sort:
       field: name
       direction: asc

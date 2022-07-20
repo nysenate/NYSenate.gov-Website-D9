@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block content.
+ *
+ * @see template_preprocess_block_content_template()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'block-content',
+    'block-content--type-' ~ bundle|clean_class,
+    'block-content--' ~ id,
+    'block-content--view-mode-' ~ view_mode|clean_class
+  ]
+%}
+
+{% include "@nysenate_theme/hero/hero.twig" with {
+  is_collapsed: is_collapsed,
+  type: 'senator',
+  senator_microsite_link: "",
+  image_hero: content.field_microsite_hero_image[0],
+  default_image: "",
+  is_active: is_active,
+  senator_name: senator_name,
+  inactive_senator_message: "",
+  current_duties: current_duties,
+  senator_party: senator_party,
+  district_number: district_number,
+  socials: socials,
+  user_id: 0,
+  message_senator_link: "#",
+  your_dashboard_link: "#"
+} only %}

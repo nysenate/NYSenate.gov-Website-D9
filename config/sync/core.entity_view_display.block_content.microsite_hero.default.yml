@@ -14,7 +14,7 @@ mode: default
 content:
   field_collapsed:
     type: boolean
-    label: above
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
@@ -24,7 +24,7 @@ content:
     region: content
   field_microsite_hero_image:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: false
@@ -32,10 +32,9 @@ content:
     weight: 1
     region: content
   field_senator:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
+    type: entity_reference_entity_id
+    label: hidden
+    settings: {  }
     third_party_settings: {  }
     weight: 2
     region: content

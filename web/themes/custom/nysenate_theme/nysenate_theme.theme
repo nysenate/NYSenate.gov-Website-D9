@@ -146,12 +146,43 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     'text' => get_senator_district($sid),
   ];
 
+  // Social links.
+  $socials = [];
+  if (!empty($senator->field_facebook_url->value)) {
+    $socials[] = [
+      'name' => 'facebook',
+      'url' => $senator->field_facebook_url->value,
+    ];
+  }
+
+  if (!empty($senator->field_twitter_url->value)) {
+    $socials[] = [
+      'name' => 'twitter',
+      'url' => $senator->field_twitter_url->value,
+    ];
+  }
+
+  if (!empty($senator->field_youtube_url->value)) {
+    $socials[] = [
+      'name' => 'youtube',
+      'url' => $senator->field_youtube_url->value,
+    ];
+  }
+
+  if (!empty($senator->field_instagram_url->value)) {
+    $socials[] = [
+      'name' => 'instagram',
+      'url' => $senator->field_instagram_url->value,
+    ];
+  }
+
   $variables['is_collapsed'] = strtolower($variables['content']['field_collapsed'][0]['#markup']) == 'on' ? TRUE : FALSE;
   $variables['senator_name'] = $senator_name;
   $variables['senator_party'] = '( ' . $party . ' )';
   $variables['current_duties'] = $senator->field_current_duties->value;
   $variables['district_number'] = $district_number;
   $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
+  $variables['socials'] = $socials;
 }
 
 /**

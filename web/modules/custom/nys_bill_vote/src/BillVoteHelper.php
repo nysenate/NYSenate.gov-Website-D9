@@ -56,9 +56,16 @@ class BillVoteHelper {
   /**
    * Default object for flag service.
    *
-   * @var \Drupal\flag\FlagService
+   * @var \Drupal\flag\FlagInterface
    */
   protected $flag;
+
+  /**
+   * The Flag Service.
+   *
+   * @var \Drupal\flag\FlagService
+   */
+  protected $flagService;
 
   /**
    * {@inheritdoc}
@@ -69,14 +76,14 @@ class BillVoteHelper {
     CurrentRouteMatch $current_route_match,
     LoggerChannelFactory $logger,
     EntityTypeManager $entity_type_manager,
-    FlagService $flag
+    FlagService $flag_service
   ) {
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
     $this->currentRouteMatch = $current_route_match;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
-    $this->flag = $flag;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -300,10 +307,10 @@ class BillVoteHelper {
 
       if ($needs_processing) {
         // Set the follow flag on this bill for the current user.
-        $flag = $this->flag->getFlagById('follow_this_bill');
+        $flag = $this->flagService->getFlagById('follow_this_bill');
         $current_user = $this->entityTypeManager->getStorage('user')
           ->load($this->currentUser->id());
-        $this->flag->flag($flag, $entity_id, $current_user);
+        $this->flagService->flag($flag, $entity_id, $current_user);
 
         $vote = [
           'entity_type' => 'node',

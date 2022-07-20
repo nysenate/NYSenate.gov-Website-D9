@@ -30,18 +30,6 @@
   }
 
   .c-block--btn {
-    @include font-stack-secondary;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: auto;
-    height: 100%;
-    width: 100%;
-    border: 0;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
 
     a {
       display: block;
@@ -66,6 +54,29 @@
       line-height: 60px;
       font-size: 32px;
       margin-right: 18px;
+    }
+  }
+}
+
+@include breakpoint($bp-md) {
+  .c-actionbar {
+    &::before {
+      height: 100%;
+    }
+
+    .c-actionbar--info .c-actionbar--cta,
+    .c-actionbar--cta {
+      font-size: 18px;
+      width: 100%;
+      max-width: 380px;
+    }
+  }
+  .c-actionbar.c-actionbar--committee {
+    .c-actionbar--info .c-actionbar--cta,
+    .c-actionbar--cta {
+      font-size: 18px;
+      width: 100%;
+      max-width: 465px;
     }
   }
 }

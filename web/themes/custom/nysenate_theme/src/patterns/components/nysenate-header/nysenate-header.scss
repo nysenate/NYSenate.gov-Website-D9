@@ -19,44 +19,6 @@
   }
 }
 
-// Non-modular or client styles for .l-header region.
-.l-header {
-  width: 100%;
-  z-index: 5;
-  top: 0;
-  position: relative;
-
-  // display none for original nav when cloned.
-  & + .l-header {
-    .c-senator-nav--wrap {
-      display: none;
-    }
-  }
-
-  &.fixed {
-    position: fixed;
-  }
-
-  // this is to fix mobile button positioning when logged in as admin
-  .contextual-links-region {
-    position: static;
-  }
-}
-@include breakpoint($bp-sm) {
-  .l-header + .l-header {
-    .c-senator-nav--wrap {
-      display: block;
-    }
-  }
-
-  .l-header {
-    // this is to fix mobile button positioning when logged in as admin
-    .contextual-links-region {
-      position: relative;
-    }
-  }
-}
-
 /*------------------------------
 / SITE WIDE TOP BAR
 /-------------------------------*/
@@ -67,6 +29,7 @@
   overflow: hidden;
   position: relative;
 }
+
 .c-topbar {
   position: relative;
   display: block;
@@ -82,6 +45,7 @@
     vertical-align: middle;
   }
 }
+
 .c-page-title {
   display: inline-block;
   vertical-align: middle;
@@ -111,6 +75,7 @@
     }
   }
 }
+
 @include breakpoint($bp-sm) {
   .l-header {
     .c-actionbar,
@@ -269,6 +234,102 @@
   top: 0;
 }
 
+@include breakpoint($bp-sm) {
+  .c-nav--wrap {
+		position: relative;
+		top: 0;
+		bottom: auto;
+		width: 100%;
+		height: 60px;
+		transition: height 0.3s ease;
+		overflow: hidden;
+
+		// class added to .c-nav--wrap through js
+		&.closed {
+			height: 0;
+		}
+
+		.c-nav {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			width: 100%;
+			margin: 0 auto;
+			z-index: 2;
+			height: 60px;
+			background: $color-white;
+
+			> nav {
+				position: relative;
+				top: 0;
+				height: 100%;
+				padding: 0;
+				background: $color-white;
+				overflow: visible;
+				border-top: 1px solid $grey05;
+				transition: none 0 ease;
+			}
+		}
+	}
+	.c-nav--list {
+		width: 100%;
+		height: 60px;
+		margin: 0;
+		padding: 0 10% 0 0;
+		display: flex;
+  	justify-content: space-between;
+
+		li {
+			position: relative;
+			width: 100px;
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+			border: none;
+			text-align: left;
+			font-family: $font-sans-bold;
+			font-size: 14px;
+
+			&:before {
+				content: '';
+				position: relative;
+				display: inline-block;
+				vertical-align: middle;
+				height: 100%;
+				width: 0px;
+			}
+
+			a {
+				height: auto;
+				display: inline-block;
+				vertical-align: middle;
+				padding: 0;
+				text-align: center;
+				line-height: 14px;
+			}
+
+			&.active-trail {
+				&:after {
+					content: '';
+					display: block;
+					position: absolute;
+					left: 0;
+					right: 0;
+					top: -15px;
+					margin: auto;
+					height: 20px;
+					width: 20px;
+					background: $color-white;
+					border: 1px solid $grey05;
+					transform: rotate(45deg);
+				}
+			}
+		}
+	}
+}
+
 .pane-content {
   position: relative;
 }
@@ -351,105 +412,6 @@
 }
 
 /*------------------------------
-/ SENATOR NAV
-/-------------------------------*/
-.c-senator-nav--wrap {
-  .c-site-search {
-    top: 100px;
-  }
-
-  .c-site-search--btn {
-    top: 0;
-    bottom: 0;
-    margin: auto;
-  }
-
-  .c-site-search {
-    .c-site-search--btn {
-      top: -45px;
-    }
-  }
-
-  &.closed {
-    height: 0;
-  }
-
-  &.search-open {
-    height: 325px; //100px (nav height) + 225px (search area height)
-  }
-
-  li {
-    @include font-stack-secondary;
-    border-top: 1px solid $color-white;
-    text-transform: uppercase;
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    line-height: 1em;
-    display: inline-block;
-
-    a {
-      display: block;
-      height: 100%;
-      width: 100%;
-      padding: 20px 0 20px 10px;
-    }
-  }
-}
-
-@include breakpoint($bp-sm) {
-  .c-senator-nav--wrap {
-    position: relative;
-    width: 100%;
-    background: $color-white;
-
-    .c-senator-nav {
-      nav {
-        position: relative;
-        top: 0;
-        height: 100%;
-        padding: 0;
-        overflow: hidden;
-        background: $color-white;
-        z-index: 1;
-      }
-
-      ul {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-      }
-
-      li {
-        display: inline-block;
-        vertical-align: middle;
-        height: 100%;
-
-        font-family: $font-sans-bold;
-        font-size: 14px;
-
-        a {
-          line-height: 14px;
-        }
-      }
-    }
-
-    &.closed {
-      height: 0;
-    }
-  }
-}
-
-@include breakpoint($bp-md) {
-  .c-senator-nav--wrap {
-    .c-senator-nav {
-      li {
-        font-size: 14px;
-      }
-    }
-  }
-}
-
-/*------------------------------
 / HEADER COLLAPSED
 /-------------------------------*/
 .l-header__collapsed {
@@ -459,116 +421,6 @@
   // Senator variant
   .node-type-senator &.messages-open {
     top: 87px;
-  }
-
-  // HERO
-  .c-senator-hero {
-    height: 100px;
-    padding-left: 20px;
-    margin-top: 0;
-
-    &::before {
-      content: '';
-      display: inline-block;
-      vertical-align: middle;
-      height: 50px;
-      width: 1px;
-      margin-left: -1px;
-    }
-
-    &.hidden {
-      margin-top: -100px;
-    }
-  }
-  .c-senator-hero--img {
-    display: inline-block;
-    vertical-align: middle;
-    height: 35px;
-    width: 35px;
-
-    img {
-      position: relative;
-      top: 0;
-      width: auto;
-      max-width: 140%;
-      height: 100%;
-    }
-  }
-  .c-senator-hero--info {
-    display: flex;
-    vertical-align: middle;
-    padding: 0 0 0 10px;
-  }
-  .c-senator-hero--name {
-    font-size: 15px;
-    margin: 0;
-  }
-  .c-senator-hero--info-secondary {
-    display: none;
-  }
-  .c-senator-hero--contact-btn {
-    width: 100%;
-    height: 50px;
-    padding-left: 24px;
-
-    &::before {
-      line-height: 50px;
-      padding-left: 0px;
-    }
-  }
-}
-
-@include breakpoint($bp-sm) {
-  .l-header__collapsed {
-    .c-senator-hero {
-      padding: 0 0 0 9%;
-
-      &::before {
-        height: 100%;
-      }
-    }
-    .c-senator-hero--info {
-      position: relative;
-      display: flex;
-      vertical-align: middle;
-
-      > div {
-        margin-left: 0;
-      }
-
-      &::before {
-        margin-left: 0;
-      }
-    }
-    .c-senator-hero--title {
-      display: block;
-    }
-    .c-senator-hero--name {
-      font-size: 22px;
-    }
-    .c-senator-hero--img {
-      height: 72px;
-      width: 72px;
-
-      > img {
-        position: absolute;
-      }
-
-      picture > img {
-        position: absolute;
-      }
-    }
-
-    .c-senator-hero--contact-btn {
-      height: 100%;
-      max-width: 300px;
-      right: 0;
-      left: auto;
-
-      &::before {
-        line-height: 100px;
-      }
-    }
   }
 }
 
@@ -874,75 +726,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 }
 
-.c-actionbar,
-.c-senate-status {
-  position: relative;
-  display: block;
-  top: 0;
-  width: 100%;
-  height: 60px;
-  padding: 0 60px 0 18px;
-  background-color: $gen_blue_lgt;
-  max-width: unset;
-  transition: margin 0.25s ease;
-
-  // used when actionbar only contains
-  // a simple message - usually not logged-in
-  .c-actionbar--cta {
-    margin: 0;
-    color: $color-white;
-    font-size: 18px;
-    max-width: 320px;
-  }
-
-  .c-actionbar--info {
-    display: none;
-  }
-
-  .nys-senator {
-    margin-bottom: 0;
-  }
-
-  .c-block--btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: auto;
-    height: 100%;
-    width: 100%;
-    border: 0;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-
-    a {
-      display: block;
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding: 0 18px;
-      line-height: 60px;
-      color: $color-white;
-      text-decoration: none;
-      background-color: $gen_blue_med;
-
-      &::before {
-        line-height: 60px;
-        font-size: 32px;
-        margin-right: 18px;
-      }
-    }
-
-    &::before,
-    &::after {
-      line-height: 60px;
-      font-size: 32px;
-      margin-right: 18px;
-    }
-  }
-}
-
 .c-site-search {
   position: absolute;
   top: 40px;
@@ -987,50 +770,28 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
   .c-site-search--btn:focus,
   .c-site-search--btn {
-    cursor: pointer;
     position: absolute;
     top: 30px;
     right: 20px;
     padding: 0;
-    height: 45px;
+    height: 45px; // font-size;
     width: 45px;
     font-size: 22px;
     background: transparent;
-    color: $gen_blue_med;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\6d';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    &::after {
+    @extend .med-text;
+    @extend .icon-replace__search;
+  
+    &:after {
       width: 100%;
       padding: 0;
       line-height: 45px;
     }
-
+  
     &:hover {
       background: transparent;
-      color: $gen_blue_drk;
+      @extend .drk-text;
     }
   }
-
 }
 
 @include breakpoint($bp-sm) {
@@ -1222,29 +983,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-    }
-  }
-}
-
-@include breakpoint($bp-md) {
-  .c-actionbar {
-    &::before {
-      height: 100%;
-    }
-
-    .c-actionbar--info .c-actionbar--cta,
-    .c-actionbar--cta {
-      font-size: 18px;
-      width: 100%;
-      max-width: 380px;
-    }
-  }
-  .c-actionbar.c-actionbar--committee {
-    .c-actionbar--info .c-actionbar--cta,
-    .c-actionbar--cta {
-      font-size: 18px;
-      width: 100%;
-      max-width: 465px;
     }
   }
 }

@@ -1,0 +1,19 @@
+uuid: 24454d5e-6ffd-45b8-a84c-af72b2d43a04
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_article_author
+    - node.type.in_the_news
+id: node.in_the_news.field_article_author
+field_name: field_article_author
+entity_type: node
+bundle: in_the_news
+label: Author
+description: 'This field can be left blank. If it''s to be leveraged, it usually makes sense to have it authored as follows "John Doe - Press Officer". It usually doesn''t make sense for these sorts of articles to be authored by the Senator.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

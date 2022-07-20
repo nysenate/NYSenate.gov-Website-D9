@@ -1,116 +1,124 @@
 @import "../../global/utils/init";
 
-.nysenate-promotional-banner {
-  position: relative;
-  padding: 0;
-  max-width: 760px;
-  width: 100%;
-  background-color: $gen_blue_lgt;
+.c-block--initiative {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	@extend .lgt-bg;
 
-  &.purple {
-    background-color: $purple_lgt;
-  }
+	.c-block--btn {
+		display: flex;
+		align-items: center;
+		padding-left: 20px;
 
-  .btn {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: $font-sans-bold;
-    text-align: left;
-    text-decoration: none;
-    text-transform: uppercase;
-    color: $color-white;
-    letter-spacing: 0.2em;
+		&::before {
+			display: flex;
+			align-items: center;
+		}
+	}
+
+	img {
+		display: none;
+	}
+}
+
+.c-initiative--content {
+	padding: 30px 20px 90px;
+
+  .senator-name {
+    font-family: $font-sans;
     font-size: 12px;
-    line-height: 60px;
-    height: 60px;
-    padding-left: 20px;
-
-    &::before {
-      font-size: 32px;
-    }
+    line-height: 16px;
+    color: $color-white;
+    text-transform: uppercase;
   }
+}
 
-  img {
-    display: none;
+.c-initiative--title {
+	font-family: $font-serif-regular;
+	color: $color-white;
+	font-size: 22px;
+	line-height: 1.175em;
+
+  a {
+    text-decoration: none;
+		color: $color-white;
   }
+}
 
-  &__text-content {
-    padding: 30px 20px 90px;
+@include breakpoint($bp-sm) {
 
-    a {
-      text-decoration: none;
-    }
+	.c-block--initiative {
+		clear: both;
+		padding: 0;
 
-    .title {
-      color: $color-white;
-      font-size: 22px;
-      line-height: 1.175em;
-      margin-bottom: 0;
-      font-family: $font-serif;
-    }
-  }
+		.c-block--btn {
+			padding-left: 25px;
+		}
 
-  @include breakpoint($bp-sm) {
-    clear: both;
-    padding: 0;
+		&.c-block-position--1{
+			margin-bottom: 40px;
+		}
+	}
 
-    .btn {
-      padding-left: 25px;
-      font-size: 15px;
-    }
+	.c-initiative--content {
+		padding: 35px 35px 120px;
+	}
 
-    &.two-up {
-      width: 47%;
-      height: 345px;
-    }
+	.c-initiative--title {
+		font-family: $font-serif;
+		font-size: 36px;
+	}
 
-    &__container,
-    &__wrapper {
-      display: flex;
-      align-items: center;
-    }
+	// has img modifications
+	.c-block--initiative__has-img {
+		overflow: hidden;
 
-    &__text-content {
-      padding: 35px 35px 120px;
+		img {
+			display: inline-block;
+			height: 280px;
+			width: 280px;
+      object-fit: cover;
+			vertical-align: middle;
+		}
 
-      .title {
-        font-size: 36px;
-  
-        a {
-          color: $color-white;
-        }
-      }
-    }
+		.c-initiative--content {
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			width: 58%;
+			max-width: 475px;
+			padding-top: 0;
+			padding-bottom: 80px;
+		}
 
-    // has img modifications
-    &.nysenate-promotional-banner__has-img {
-      overflow: hidden;
+		.c-block--btn {
+			left: 280px;
+		}
+	}
 
-      .image-link {
-        width: 100%;
-        max-width: 280px;
-      }
+	// half size modifications
+	.c-initiative-block__half-wrap {
+		width: 100%;
+		margin-left: 0;
+    float: left;
+	}
 
-      img {
-        display: block;
-        height: 280px;
-        width: 280px;
-        object-fit: cover;
-      }
+	.c-block--initiative__half {
+		width: 47%;
+		margin-left: 0;
+		margin-right: 0;
+    margin-bottom: 40px;
+		height: 345px;
+		float: left;
+		clear: none;
 
-      .nysenate-promotional-banner__text-content {
-        max-width: 475px;
-        padding-top: 0;
-        padding-bottom: 80px;
-      }
+		&.c-block--even {
+			margin-right: 6%;
+		}
 
-      .btn {
-        left: 280px;
-      }
-    }
-  }
+		.c-initiative--title {
+			font-size: 32px;
+		}
+	}
 }

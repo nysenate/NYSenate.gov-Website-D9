@@ -141,6 +141,11 @@ contact-block:
     component:
       dist/css/contact-block.css: {}
 
+contact-form:
+  css:
+    component:
+      dist/css/contact-form.css: {}
+
 content-card:
   css:
     component:
@@ -168,6 +173,13 @@ resolution-page:
   css:
     component:
       dist/css/resolution-page.css: {}
+  js:
+    dist/js/resolution-page.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
 
 event:
   css:
@@ -200,6 +212,11 @@ event-teaser:
     component:
       dist/css/event-teaser.css: {}
 
+bill-item:
+  css:
+    component:
+      dist/css/bill-item.css: {}
+
 featured-bills:
   css:
     component:
@@ -219,6 +236,19 @@ featured-image:
   css:
     component:
       dist/css/featured-image.css: {}
+
+featured-legislation:
+  css:
+    component:
+      dist/css/featured-legislation.css: {}
+  js:
+    dist/js/featured-legislation.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    - nysenate_theme/nysenate-social-buttons
 
 file-uploads:
   css:
@@ -300,6 +330,13 @@ message:
   css:
     component:
       dist/css/message.css: {}
+
+microsite-menu:
+  css:
+    component:
+      dist/css/microsite-menu.css: {}
+  dependencies:
+    - nysenate_theme/nysenate-header
 
 news-teaser:
   css:

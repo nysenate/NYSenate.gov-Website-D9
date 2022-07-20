@@ -1,0 +1,32 @@
+uuid: e4ddfdb5-1eb8-486a-a736-2fbcb8213f7e
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: false
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: false
+    unpublish_required: false
+    unpublish_revision: false
+name: 'In the News'
+type: in_the_news
+description: 'Senators can use this content type to link to external articles in traditional and new media (newspapers, blogs, etc.) in which the Senator was recently quoted or featured, or to reports and articles that are relevant to bills currently being considered. You will be required to put the external source''s title, link, and original publication date.'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: true

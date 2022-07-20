@@ -1,0 +1,24 @@
+uuid: c02401bc-eaa2-43e8-ac55-ebb94cde8440
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publication_source_date
+    - node.type.in_the_news
+  module:
+    - datetime
+id: node.in_the_news.field_publication_source_date
+field_name: field_publication_source_date
+entity_type: node
+bundle: in_the_news
+label: 'Source Date'
+description: 'The date the source you are citing was published.'
+required: false
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

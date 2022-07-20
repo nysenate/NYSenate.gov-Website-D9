@@ -10,11 +10,16 @@
 .c-news--head {
   margin-bottom: 20px;
 
+  @include breakpoint($bp-sm) {
+    margin-bottom: 30px;
+  }
+
   .nys-article-title {
-    margin: 0 0 20px 0;
-    color: $grey02;
+    margin-bottom: 30px;
+    color: $grey08;
     font-family: $font-serif;
     font-size: 22px;
+    font-weight: 400;
     line-height: 1.2em;
 
     @include breakpoint($bp-sm) {
@@ -23,24 +28,47 @@
   }
 
   .c-news--head-meta {
+    line-height: 15px;
+
     .c-news--pub-date {
       display: inline-block;
       margin: 0 10px 0 0;
       text-transform: capitalize;
       font-family: $font-sans;
       font-size: 12px;
+      line-height: 1.2em;
+
+      @include breakpoint($bp-sm) {
+        font-size: 15px;
+      }
+
       b {
         font-weight: bold;
         line-height: inherit;
         color: $grey04;
+        font-family: $font-serif-bold;
+
+        .date-display-single {
+          font-family: $font-serif-bold;
+        }
       }
     }
+
     .c-news--author {
       text-transform: uppercase;
       display: inline-block;
       margin: 0 10px 0 0;
       font-family: $font-sans;
       font-size: 12px;
+      line-height: 1.2em;
+
+      @include breakpoint($bp-sm) {
+        font-size: 15px;
+      }
+    }
+
+    p {
+      color: #666;
     }
   }
 
@@ -73,7 +101,31 @@
   font-family: $font-serif;
   line-height: 1.5em;
   color: $grey03;
-  font-size: 16px;
+
+  .field--name-body {
+    .field__label {
+      display: none;
+    }
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5em;
+    margin: 0;
+
+    @include breakpoint($bp-sm) {
+      font-size: 20px;
+      line-height: 32px;
+    }
+  }
+
+  p + p {
+    margin-top: 20px;
+
+    @include breakpoint($bp-sm) {
+      margin-top: 40px
+    }
+  }
 }
 
 .c-news--download {

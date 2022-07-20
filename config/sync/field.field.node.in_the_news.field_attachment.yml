@@ -1,0 +1,29 @@
+uuid: d0547590-7010-45c4-82f9-c5bf3bb0471c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_attachment
+    - media.type.file
+    - node.type.in_the_news
+id: node.in_the_news.field_attachment
+field_name: field_attachment
+entity_type: node
+bundle: in_the_news
+label: Attachment
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      file: file
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

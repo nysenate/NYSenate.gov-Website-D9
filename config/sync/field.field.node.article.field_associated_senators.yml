@@ -1,16 +1,16 @@
-uuid: f2eda5b9-184f-4ea1-bc78-77e7fb44be6d
+uuid: 3b16527e-1d66-43c8-a41b-36c70c0ab45f
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_committee
+    - field.storage.node.field_associated_senators
     - node.type.article
-    - taxonomy.vocabulary.committees
-id: node.article.field_committee
-field_name: field_committee
+    - taxonomy.vocabulary.senator
+id: node.article.field_associated_senators
+field_name: field_associated_senators
 entity_type: node
 bundle: article
-label: Committee
+label: 'Associated Senators'
 description: ''
 required: false
 translatable: false
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      committees: committees
+      senator: senator
     sort:
       field: name
       direction: asc

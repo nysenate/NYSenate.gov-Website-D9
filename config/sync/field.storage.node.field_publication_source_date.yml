@@ -1,22 +1,21 @@
-uuid: d4d70f34-fd17-416e-a45c-c1c335b4851f
+uuid: 37a45367-53a2-4dbc-888f-5a908eb1cb9f
 langcode: en
 status: true
 dependencies:
   module:
+    - datetime
     - field_permissions
     - node
 third_party_settings:
   field_permissions:
     permission_type: public
-id: node.field_publication_title
-field_name: field_publication_title
+id: node.field_publication_source_date
+field_name: field_publication_source_date
 entity_type: node
-type: string
+type: datetime
 settings:
-  max_length: 255
-  case_sensitive: false
-  is_ascii: false
-module: core
+  datetime_type: date
+module: datetime
 locked: false
 cardinality: 1
 translatable: true

@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_article_author
+    - field.field.node.article.field_associated_senators
     - field.field.node.article.field_attachment
     - field.field.node.article.field_bills
     - field.field.node.article.field_category
@@ -16,19 +17,16 @@ dependencies:
     - field.field.node.article.field_image_hero
     - field.field.node.article.field_image_main
     - field.field.node.article.field_issues
+    - field.field.node.article.field_layout_components
     - field.field.node.article.field_majority_issue_tag
-    - field.field.node.article.field_paragraphs
-    - field.field.node.article.field_publication_date
-    - field.field.node.article.field_publication_source_link
-    - field.field.node.article.field_publication_title
     - field.field.node.article.field_senator_multiref
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
     - field.field.node.article.field_subtitle
     - node.type.article
   module:
+    - block_field
     - datetime
-    - entity_reference_revisions
     - options
     - text
     - user
@@ -61,6 +59,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_associated_senators:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_attachment:
     type: entity_reference_entity_view
@@ -150,6 +156,13 @@ content:
     third_party_settings: {  }
     weight: 16
     region: content
+  field_layout_components:
+    type: block_field
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 23
+    region: content
   field_majority_issue_tag:
     type: entity_reference_label
     label: hidden
@@ -157,40 +170,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 10
-    region: content
-  field_paragraphs:
-    type: entity_reference_revisions_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    weight: 7
-    region: content
-  field_publication_date:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 19
-    region: content
-  field_publication_source_link:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 21
-    region: content
-  field_publication_title:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 20
     region: content
   field_senator_multiref:
     type: entity_reference_label

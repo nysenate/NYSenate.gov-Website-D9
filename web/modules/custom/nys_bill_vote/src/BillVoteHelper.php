@@ -2,7 +2,6 @@
 
 namespace Drupal\nys_bill_vote;
 
-use Drupal\flag\FlagService;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
@@ -54,20 +53,6 @@ class BillVoteHelper {
   protected $entityTypeManager;
 
   /**
-   * Default object for flag service.
-   *
-   * @var \Drupal\flag\FlagInterface
-   */
-  protected $flag;
-
-  /**
-   * The Flag Service.
-   *
-   * @var \Drupal\flag\FlagService
-   */
-  protected $flagService;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -75,15 +60,13 @@ class BillVoteHelper {
     CurrentPathStack $current_path,
     CurrentRouteMatch $current_route_match,
     LoggerChannelFactory $logger,
-    EntityTypeManager $entity_type_manager,
-    FlagService $flag_service
+    EntityTypeManager $entity_type_manager
   ) {
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
     $this->currentRouteMatch = $current_route_match;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
-    $this->flagService = $flag_service;
   }
 
   /**
@@ -307,10 +290,11 @@ class BillVoteHelper {
 
       if ($needs_processing) {
         // Set the follow flag on this bill for the current user.
-        $flag = $this->flagService->getFlagById('follow_this_bill');
+        $flag_service = \Drupal::service('flag');
+        $flag = $flag_service->getFlagById('follow_this_bill');
         $current_user = $this->entityTypeManager->getStorage('user')
           ->load($this->currentUser->id());
-        $this->flagService->flag($flag, $entity_id, $current_user);
+        $flag_service->flag($flag, $entity_id, $current_user);
 
         $vote = [
           'entity_type' => 'node',
@@ -375,7 +359,7 @@ class BillVoteHelper {
    * @param string $entity_id
    *   The entity id.
    * @param bool $clear
-   *   The clear flag.
+   *   The clear value.
    *
    * @return mixed
    *   The default values.

@@ -102,6 +102,22 @@ function nysenate_theme_preprocess_node__article(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_block_content_ID().
+ */
+function nysenate_theme_preprocess_senator_microsite_menu_block(&$variables) {
+  if (!empty($variables['menu_links'])) {
+    $links = [];
+    foreach ($variables['menu_links'] as $link) {
+      $links[] = [
+        'text' => $link['menu_title'],
+        'url' => $link['menu_url'],
+      ];
+    }
+    $variables['links'] = $links;
+  }
+}
+
+/**
  * Implements hook_preproces_block_content_ID().
  */
 function nysenate_theme_preprocess_block_content__honoree_profile_block(&$variables) {

@@ -104,6 +104,90 @@ function nysenate_theme_preprocess_node__article(&$variables) {
 /**
  * Implements hook_preprocess_block_content_ID().
  */
+function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
+  $sid = $variables['content']['field_senator'][0]['#plain_text'];
+  $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+    ->load($sid);
+
+  // Senator name.
+  $senator_name = '';
+  if ($senator->field_senator_name) {
+    $title = $senator->field_senator_name->title ?? '';
+    $given = $senator->field_senator_name->given ?? '';
+    $family = $senator->field_senator_name->family ?? '';
+    $senator_name = $title . ' ' . $given . ' ' . $family;
+    $senator_name = trim($senator_name);
+  }
+
+  // Party Affiliation.
+  $party_affiliation = $senator->get('field_party')->getValue();
+  $arr_party = [];
+  foreach ($party_affiliation as $party) {
+    $arr_party[] = $party['value'];
+  }
+  $party = implode(', ', $arr_party);
+
+  // District.
+  $district_url = '';
+  $query = \Drupal::database()->select('taxonomy_term__field_senator', 's')
+    ->fields('s', ['entity_id'])
+    ->condition('s.field_senator_target_id', $sid);
+  $district_id = $query->execute()->fetchField();
+
+  if (!empty($district_id)) {
+    $district = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->load($district_id);
+    $district_url = $district->toUrl()->toString();
+  }
+
+  $district_number = [
+    'url' => $district_url,
+    'text' => get_senator_district($sid),
+  ];
+
+  // Social links.
+  $socials = [];
+  if (!empty($senator->field_facebook_url->value)) {
+    $socials[] = [
+      'name' => 'facebook',
+      'url' => $senator->field_facebook_url->value,
+    ];
+  }
+
+  if (!empty($senator->field_twitter_url->value)) {
+    $socials[] = [
+      'name' => 'twitter',
+      'url' => $senator->field_twitter_url->value,
+    ];
+  }
+
+  if (!empty($senator->field_youtube_url->value)) {
+    $socials[] = [
+      'name' => 'youtube',
+      'url' => $senator->field_youtube_url->value,
+    ];
+  }
+
+  if (!empty($senator->field_instagram_url->value)) {
+    $socials[] = [
+      'name' => 'instagram',
+      'url' => $senator->field_instagram_url->value,
+    ];
+  }
+
+  $variables['is_collapsed'] = strtolower($variables['content']['field_collapsed'][0]['#markup']) == 'on' ? TRUE : FALSE;
+  $variables['senator_name'] = $senator_name;
+  $variables['senator_party'] = '( ' . $party . ' )';
+  $variables['current_duties'] = $senator->field_current_duties->value;
+  $variables['district_number'] = $district_number;
+  $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
+  $variables['socials'] = $socials;
+}
+
+/**
+ * Implements hook_preprocess_block_content_ID().
+ */
 function nysenate_theme_preprocess_senator_microsite_menu_block(&$variables) {
   if (!empty($variables['menu_links'])) {
     $links = [];

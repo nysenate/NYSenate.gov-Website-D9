@@ -1181,3 +1181,53 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__article__featured_content(&$variables) {
+  $variables['item_cta'] = [
+    'url' => $variables['node']->toUrl()->toString(),
+    'text' => 'Read More',
+    'value' => 'read_more',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
+  $variables['item_cta'] = [
+    'url' => $variables['url'],
+    'text' => 'Read More',
+    'value' => 'read_more',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__event__featured_content(&$variables) {
+  $variables['image_main'] = !empty($variables['content']['field_image_main'][0]) ? $variables['content']['field_image_main'][0] : [];
+  $variables['item_cta'] = [
+    'url' => $variables['url'],
+    'text' => 'Read More',
+    'value' => 'read_more',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$variables) {
+  $variables['banner_image'] = !empty($variables['content']['field_promotional_banner_image'][0]) ? $variables['content']['field_promotional_banner_image'][0] : [];
+  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $variables['node']->field_call_to_action->value;
+    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+    $variables['item_cta'] = [
+      'url' => $variables['node']->field_link->uri ?? '',
+      'text' => $allowed_values[$banner_cta_value],
+      'value' => $banner_cta_value,
+    ];
+  }
+}

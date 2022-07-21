@@ -551,6 +551,101 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
+  $view = $variables['view'];
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
+
+  // Newsroom Landing.
+  if ($view->id() == 'senator_microsite_content' && $view->current_display == 'block_1') {
+    $items = [];
+    foreach ($view->result as $row) {
+      $node = $row->_entity;
+      $allowed_values = $node->field_category->getSetting('allowed_values');
+      $term = NULL;
+      if ($node->field_issues->target_id) {
+        $term = $term_storage->load($node->field_issues->target_id);
+      }
+
+      $news_image = NULL;
+      if ($node->field_image_main->target_id) {
+        $media = $media_storage->load($node->field_image_main->target_id);
+        $file = File::load($media->field_image->target_id);
+        $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      }
+
+      $items[] = [
+        'news_title' => $allowed_values[$node->field_category->value],
+        'news_url' => $node->toUrl()->toString(),
+        'news_image' => $news_image,
+        'news_name' => $node->getTitle(),
+        'news_topic' => [
+          'url' => !empty($term) ? $term->toUrl()->toString() : '',
+          'text' => !empty($term) ? $term->label() : '',
+        ],
+      ];
+    }
+
+    $variables['items'] = $items;
+  }
+
+  // Events Landing.
+  if ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
+    $items = [];
+    foreach ($view->result as $row) {
+      $node = $row->_entity;
+      $start_date = $node->field_date_range->value;
+      $end_date = $node->field_date_range->end_value;
+      $states = \Drupal::service('address.subdivision_repository')->getList(['US']);
+
+      $address = '';
+      $location_url = '';
+      $location_name = '';
+      if ($node->field_location) {
+        $location_name = $node->field_location->organization;
+
+        if ($node->field_location->address_line1) {
+          $address = $node->field_location->address_line1 . '<br>';
+        }
+
+        if ($node->field_location->locality) {
+          $address .= $node->field_location->locality . ', ';
+        }
+
+        if ($node->field_location->administrative_area) {
+          $address .= $states[$node->field_location->administrative_area] . ' ';
+        }
+
+        if ($node->field_location->postal_code) {
+          $address .= $node->field_location->postal_code;
+        }
+      }
+
+      if (!empty($address)) {
+        $location_url = str_replace('<br>', ' ', $address);
+        $location_url = 'http://maps.google.com/?q=' . urlencode($location_url);
+      }
+
+      $items[] = [
+        'event_date' => \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'd'),
+        'event_month' => \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'M'),
+        'event_url' => $node->toUrl()->toString(),
+        'event_name' => $node->getTitle(),
+        'event_location_url' => $location_url,
+        'event_location_name' => $location_name,
+        'event_address' => $address,
+        'event_time_start' => \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'g:i A'),
+        'event_time_end' => \Drupal::service('date.formatter')->format(strtotime($end_date), '', 'g:i A'),
+      ];
+
+      $variables['items'] = $items;
+    }
+  }
+}
+
+/**
  * Implements hook_theme_suggestions_TYPE_alter().
  */
 function nysenate_theme_theme_suggestions_taxonomy_term_alter(array &$suggestions, array $variables, $hook) {

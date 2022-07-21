@@ -338,6 +338,13 @@ microsite-menu:
   dependencies:
     - nysenate_theme/nysenate-header
 
+newsroom-content:
+  css:
+    component:
+      dist/css/newsroom-landing.css: {}
+  dependencies:
+    - nysenate_theme/nysenate-tabs
+
 newsroom-landing:
   css:
     component:
@@ -384,11 +391,20 @@ nysenate-senators-events:
   css:
     component:
       dist/css/nysenate-senators-events.css: {}
+  dependencies:
+    - nysenate_theme/nysenate-tabs
 
 nysenate-tabs:
   css:
     component:
       dist/css/nysenate-tabs.css: {}
+  js:
+    dist/js/nysenate-tabs.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
 
 nysenate-footer:
   css:

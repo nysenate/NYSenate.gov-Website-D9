@@ -1,9 +1,9 @@
-uuid: 940b3935-4fa8-4b4b-85b5-75a005c2ccd1
+uuid: 948575f1-1092-49bc-9088-fe2c4b74ee6e
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.taxonomy_term.sponsor_list
+    - core.entity_view_mode.taxonomy_term.related_content
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
@@ -35,44 +35,26 @@ dependencies:
     - taxonomy.vocabulary.senator
   module:
     - layout_builder
-    - name
-    - options
 third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-id: taxonomy_term.senator.sponsor_list
+id: taxonomy_term.senator.related_content
 targetEntityType: taxonomy_term
 bundle: senator
-mode: sponsor_list
+mode: related_content
 content:
-  field_party:
-    type: list_default
-    label: hidden
+  admin_microsite_content_senator_admin_content_eva:
     settings: {  }
     third_party_settings: {  }
     weight: 1
     region: content
-  field_senator_name:
-    type: name_default
-    label: hidden
-    settings:
-      format: default
-      markup: none
-      list_format: ''
-      link_target: ''
-      preferred_field_reference: ''
-      preferred_field_reference_separator: ', '
-      alternative_field_reference: ''
-      alternative_field_reference_separator: ', '
+  admin_microsite_content_senator_admin_content_eva_form:
+    settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
 hidden:
-  admin_microsite_content_senator_admin_content_eva: true
-  admin_microsite_content_senator_admin_content_eva_form: true
-  admin_microsite_legislation_senator_admin_legislation_eva: true
-  admin_microsite_legislation_senator_admin_legislation_eva_form: true
   description: true
   field_active_senator: true
   field_autoreply_text: true
@@ -94,7 +76,9 @@ hidden:
   field_offices: true
   field_ol_member_id: true
   field_ol_shortname: true
+  field_party: true
   field_press_inquiries: true
+  field_senator_name: true
   field_store_settings: true
   field_top_issue: true
   field_twitter_url: true

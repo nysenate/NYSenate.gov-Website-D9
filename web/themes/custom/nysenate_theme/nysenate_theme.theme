@@ -1231,3 +1231,18 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
     ];
   }
 }
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {
+  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $variables['node']->field_call_to_action->value;
+    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+    $variables['item_cta'] = [
+      'url' => $variables['node']->field_link->uri ?? '',
+      'text' => $allowed_values[$banner_cta_value],
+      'value' => $banner_cta_value,
+    ];
+  }
+}

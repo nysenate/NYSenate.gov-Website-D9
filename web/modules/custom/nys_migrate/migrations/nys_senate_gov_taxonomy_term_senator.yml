@@ -126,7 +126,7 @@ process:
   field_offices:
     -
       plugin: location_to_address
-      source: field_location
+      source: field_offices
   field_offices_geoloc:
     -
       plugin: location_to_geolocation
@@ -140,14 +140,6 @@ process:
     -
       plugin: get
       source: field_user_account
-  field_autoreply_text:
-    -
-      plugin: get
-      source: field_autoreply_text
-  field_email_autoreply_text:
-    -
-      plugin: get
-      source: field_email_autoreply_text
 
   field_inactive_senator_message:
     -

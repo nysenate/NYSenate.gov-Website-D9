@@ -1,59 +1,46 @@
-id: nys_content_questionnaire
+id: nys_content_petition
 migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_drupal_7
-label: 'Node Questionnaire'
+label: 'Node Petition'
 
 source:
   plugin: d7_node
-  node_type: questionnaire
+  node_type: petition
   key: migrate
 
 destination:
-  plugin: 'entity_complete:node'
-  default_bundle: webform
+  plugin: 'entity:node'
+  default_bundle: petition
 
 process:
   nid:
     -
       plugin: get
       source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
 
   title:
     -
       plugin: get
       source: title
+
   uid:
     -
       plugin: get
       source: node_uid
+
   status:
     -
       plugin: get
       source: status
+
   created:
     -
       plugin: get
       source: created
-  changed:
-    -
-      plugin: get
-      source: timestamp
 
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
+  changed:
     -
       plugin: get
       source: timestamp
@@ -75,10 +62,17 @@ process:
       migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator
 
-  webform:
+  body:
     -
       plugin: get
-      source: field_webform
+      source: body
+
+  field_issues:
+    -
+      plugin: sub_process
+      source: field_issues
+      process:
+        target_id: tid
 
   field_date:
     -
@@ -91,39 +85,20 @@ process:
           to_format: 'Y-m-d\TH:i:s'
           source: value
 
-  field_accessible_sitewide:
+  field_subheading:
     -
       plugin: get
-      source: field_accessible_sitewide
-
-  field_issues:
-    -
-      plugin: sub_process
-      source: field_issues
-      process:
-        target_id: tid
-
-  field_committee:
-    -
-      plugin: sub_process
-      source: field_committee
-      process:
-        target_id: tid
+      source: field_subheading
 
   field_article_author:
     -
       plugin: get
       source: field_article_author
 
-  field_byline:
+  field_featured:
     -
       plugin: get
-      source: field_byline
-
-  field_body:
-    -
-      plugin: get
-      source: field_body
+      source: field_featured
 
   field_title_stub:
     -

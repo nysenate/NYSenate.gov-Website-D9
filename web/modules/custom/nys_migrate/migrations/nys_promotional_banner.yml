@@ -1,18 +1,18 @@
-id: nys_content_resolution
+id: nys_promotional_banner
 migration_tags:
   - 'Drupal 7'
   - Content
-migration_group: migrate_drupal_7
-label: 'Node Resolution'
+migration_group: nys_general
+label: 'Node Promotional Banner'
 
 source:
   plugin: d7_node
-  node_type: resolution
+  node_type: promotional_banner
   key: migrate
 
 destination:
-  plugin: 'entity_complete:node'
-  default_bundle: resolution
+  plugin: 'entity:node'
+  default_bundle: promotional_banner
 
 process:
   nid:
@@ -58,7 +58,24 @@ process:
       plugin: get
       source: timestamp
 
-  field_image_main:
+  body:
+    -
+      plugin: get
+      source: body
+
+
+  field_senator:
+    -
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
+      source: field_senator
+
+  field_call_to_action:
+    -
+      plugin: get
+      source: field_call_to_action
+
+  field_promotional_banner_image:
     -
       plugin: sub_process
       source: field_image_main
@@ -69,21 +86,23 @@ process:
           source: fid
           no_stub: true
 
-  field_issues:
+  field_date:
     -
       plugin: sub_process
-      source: field_issues
+      source: field_published
       process:
-        target_id: tid
+        value:
+          plugin: format_date
+          from_format: 'Y-m-d\TH:i:s'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
 
-  field_majority_issue_tag:
-    -
-      plugin: sub_process
-      source: field_majority_issue_tag
-      process:
-        target_id: tid
-
-  field_featured_quote:
+  field_external_web_page:
     -
       plugin: get
-      source: field_featured_quote
+      source: field_external_web_page
+
+  field_link_type:
+    -
+      plugin: get
+      source: field_link_type

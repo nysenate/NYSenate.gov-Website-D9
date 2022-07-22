@@ -11,7 +11,7 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity_complete:node'
+  plugin: 'entity:node'
   translations: true
   default_bundle: public_hearing
 
@@ -20,10 +20,6 @@ process:
     -
       plugin: get
       source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
 
   title:
     -

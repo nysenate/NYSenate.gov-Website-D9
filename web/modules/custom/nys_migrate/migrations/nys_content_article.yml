@@ -1,18 +1,18 @@
-id: nys_content_event
+id: nys_content_article
 migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: nys_general
-label: 'Node Event'
+label: 'Node Article'
 
 source:
   plugin: d7_node
-  node_type: event
+  node_type: article
   key: migrate
 
 destination:
   plugin: 'entity_complete:node'
-  default_bundle: event
+  default_bundle: article
 
 process:
   nid:
@@ -45,38 +45,15 @@ process:
       plugin: get
       source: timestamp
 
-  revision_uid:
+  field_category:
     -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
+      plugin: default_value
+      default_value: 'article'
+
   body:
     -
       plugin: get
       source: body
-
-  field_date_range:
-    -
-      plugin: sub_process
-      source: field_date
-      process:
-        value:
-          plugin: format_date
-          from_format: 'U'
-          to_format: 'Y-m-d\TH:i:s'
-          source: value
-        end_value:
-          plugin: format_date
-          from_format: 'U'
-          to_format: 'Y-m-d\TH:i:s'
-          source: value2
 
   field_featured:
     -
@@ -94,26 +71,22 @@ process:
           source: fid
           no_stub: true
 
-  field_location:
-    -
-      plugin: location_to_address
-      source: field_location
-
-  field_location_geoloc:
-    -
-      plugin: location_to_geolocation
-      source: field_location
-
-  field_senator_multiref:
-    -
-      plugin: senator_migrate_map_lookup
-      migration: nys_senate_gov_taxonomy_term_senator
-      source: field_senator
-
-  field_event_place:
+  field_subtitle:
     -
       plugin: get
-      source: field_event_place
+      source: field_subtitle
+
+  field_issues:
+    -
+      plugin: sub_process
+      source: field_issues
+      process:
+        target_id: tid
+
+  field_article_author:
+    -
+      plugin: get
+      source: field_article_author
 
   field_committee_featured:
     -
@@ -127,23 +100,26 @@ process:
       process:
         target_id: tid
 
-  field_issues:
+  field_image_hero:
     -
       plugin: sub_process
-      source: field_issues
-      process:
-        target_id: tid
-
-  field_feature_image:
-    -
-      plugin: sub_process
-      source: field_feature_image
+      source: field_image_hero
       process:
         target_id:
           plugin: migration_lookup
-          migration: nys_media_image_feature
+          migration: nys_media_image_hero
           source: fid
           no_stub: true
+
+  field_accessible_sitewide:
+    -
+      plugin: get
+      source: field_accessible_sitewide
+
+  field_bills:
+    -
+      plugin: get
+      source: field_bills
 
   field_attachment:
     -
@@ -156,10 +132,16 @@ process:
           source: fid
           no_stub: true
 
-  field_video_status:
+  field_date:
     -
-      plugin: get
-      source: field_video_status
+      plugin: sub_process
+      source: field_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
 
   field_social_image:
     -
@@ -177,11 +159,6 @@ process:
       plugin: get
       source: field_social_teaser
 
-  field_accessible_sitewide:
-    -
-      plugin: get
-      source: field_accessible_sitewide
-
   field_majority_issue_tag:
     -
       plugin: sub_process
@@ -189,29 +166,8 @@ process:
       process:
         target_id: tid
 
-  field_event_online_link:
+  field_senator_multiref:
     -
-      plugin: field_link
-      source: field_event_online_link
-
-  field_meeting_location:
-    -
-      plugin: get
-      source: field_meeting_location
-
-  field_teleconference_id_number:
-    -
-      plugin: get
-      source: field_teleconference_id_number
-
-  field_teleconference_number:
-    -
-      plugin: get
-      source: field_teleconference_number
-
-  field_yt:
-    -
-      plugin: migration_lookup
-      migration: nys_media_video
-      source: nid
-      no_stub: true
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
+      source: field_senator

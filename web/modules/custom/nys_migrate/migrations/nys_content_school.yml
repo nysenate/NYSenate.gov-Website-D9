@@ -9,20 +9,13 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity_complete:node'
+  plugin: 'entity:node'
   default_bundle: school
 
 process:
   nid:
     - plugin: get
       source: tnid
-  vid:
-    - plugin: get
-      source: vid
-  langcode:
-    - plugin: default_value
-      source: language
-      default_value: und
   title:
     - plugin: get
       source: title
@@ -38,21 +31,7 @@ process:
   changed:
     - plugin: get
       source: timestamp
-  promote:
-    - plugin: get
-      source: promote
-  sticky:
-    - plugin: get
-      source: sticky
-  revision_uid:
-    - plugin: get
-      source: revision_uid
-  revision_log:
-    - plugin: get
-      source: log
-  revision_timestamp:
-    - plugin: get
-      source: timestamp
+
   body:
     -
       plugin: get
@@ -136,7 +115,5 @@ process:
 
   field_district:
     -
-      plugin: sub_process
+      plugin: get
       source: field_district
-      process:
-        target_id: tid

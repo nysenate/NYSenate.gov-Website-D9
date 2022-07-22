@@ -11,7 +11,8 @@ use Drupal\migrate\MigrateExecutableInterface;
  * The process plugin for getting the senator term id.
  *
  * @MigrateProcessPlugin(
- *   id = "senator_migrate_map_lookup"
+ *   id = "senator_migrate_map_lookup",
+ *   source_module = "nys_migrate"
  * )
  */
 class SenatorMigrateMapLookup extends ProcessPluginBase {

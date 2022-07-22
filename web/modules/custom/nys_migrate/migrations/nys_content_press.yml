@@ -1,17 +1,17 @@
-id: nys_content_article
+id: nys_content_press
 migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: nys_general
-label: 'Node Article'
+label: 'Node Press Release'
 
 source:
   plugin: d7_node
-  node_type: article
+  node_type: press_release
   key: migrate
 
 destination:
-  plugin: 'entity_complete:node'
+  plugin: 'entity:node'
   default_bundle: article
 
 process:
@@ -23,11 +23,7 @@ process:
     -
       plugin: get
       source: vid
-  langcode:
-    -
-      plugin: default_value
-      source: language
-      default_value: und
+
   title:
     -
       plugin: get
@@ -48,41 +44,16 @@ process:
     -
       plugin: get
       source: timestamp
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
 
   field_category:
     -
       plugin: default_value
-      default_value: 'press_release'
+      default_value: 'article'
 
   body:
     -
       plugin: get
       source: body
-
-  field_featured:
-    -
-      plugin: get
-      source: field_featured
 
   field_image_main:
     -
@@ -195,3 +166,9 @@ process:
       plugin: senator_migrate_map_lookup
       migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator
+
+  field_associated_senators:
+    -
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
+      source: field_associated_senators

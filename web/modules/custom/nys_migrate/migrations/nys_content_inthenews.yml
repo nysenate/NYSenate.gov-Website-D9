@@ -1,0 +1,160 @@
+id: nys_inthenews
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node In The News'
+
+source:
+  plugin: d7_node
+  node_type: in_the_news
+  key: migrate
+
+destination:
+  plugin: 'entity:node'
+  default_bundle: in_the_news
+
+process:
+  nid:
+    -
+      plugin: get
+      source: tnid
+  vid:
+    -
+      plugin: get
+      source: vid
+
+  title:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: timestamp
+
+  body:
+    -
+      plugin: get
+      source: body
+
+  field_attachment:
+    -
+      plugin: sub_process
+      source: field_attachment
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: nys_media_file_attach
+          source: fid
+          no_stub: true
+
+  field_senator_multiref:
+    - plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
+      source: field_senator
+
+  field_issues:
+    -
+      plugin: sub_process
+      source: field_issues
+      process:
+        target_id: tid
+
+  field_image_main:
+    -
+      plugin: sub_process
+      source: field_image_main
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: nys_media_image_main
+          source: fid
+          no_stub: true
+
+  field_publication_title:
+    -
+      plugin: get
+      source: field_publication_title
+
+  field_committee_featured:
+    -
+      plugin: get
+      source: field_committee_featured
+
+  field_committee:
+    -
+      plugin: sub_process
+      source: field_committee
+      process:
+        target_id: tid
+
+  field_date:
+    -
+      plugin: sub_process
+      source: field_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+
+  field_publication_source_url:
+    -
+      plugin: get
+      source: field_publication_source_link
+
+  field_accessible_sitewide:
+    -
+      plugin: get
+      source: field_accessible_sitewide
+
+  field_image_hero:
+    -
+      plugin: sub_process
+      source: field_image_hero
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: nys_media_image_hero
+          source: fid
+          no_stub: true
+
+  field_subheading:
+    -
+      plugin: get
+      source: field_subheading
+
+  field_article_author:
+    -
+      plugin: get
+      source: field_article_author
+
+  field_publication_source_date:
+    -
+      plugin: sub_process
+      source: field_itn_publication_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+
+  field_featured:
+    -
+      plugin: get
+      source: field_featured

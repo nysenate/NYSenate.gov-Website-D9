@@ -1,4 +1,4 @@
-# Migration for D7 Video Nodes to Media Remote Video.
+# Migration for D7 Video Nodes to D9 Video Nodes.
 id: nys_content_video
 label: Video Nodes
 migration_group: nys_general
@@ -57,11 +57,6 @@ process:
           from_format: 'U'
           to_format: 'Y-m-d\TH:i:s'
           source: value
-        end_value:
-          plugin: format_date
-          from_format: 'U'
-          to_format: 'Y-m-d\TH:i:s'
-          source: value2
 
   field_accessible_sitewide:
     -
@@ -78,11 +73,6 @@ process:
           from_format: 'U'
           to_format: 'Y-m-d\TH:i:s'
           source: value
-        end_value:
-          plugin: format_date
-          from_format: 'U'
-          to_format: 'Y-m-d\TH:i:s'
-          source: value2
 
   field_hide_feed:
     -
@@ -103,7 +93,7 @@ process:
       process:
         target_id: tid
 
-  field_senator:
+  field_senator_multiref:
     -
       plugin: senator_migrate_map_lookup
       migration: nys_senate_gov_taxonomy_term_senator

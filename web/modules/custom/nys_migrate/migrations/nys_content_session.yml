@@ -8,9 +8,10 @@ label: 'Node Session'
 source:
   plugin: d7_node
   node_type: session
+  key: migrate
 
 destination:
-  plugin: 'entity_complete:node'
+  plugin: 'entity:node'
   default_bundle: session
 
 process:
@@ -18,11 +19,6 @@ process:
     -
       plugin: get
       source: tnid
-
-  vid:
-    -
-      plugin: get
-      source: vid
 
   title:
     -
@@ -45,21 +41,6 @@ process:
       source: created
 
   changed:
-    -
-      plugin: get
-      source: timestamp
-
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-
-  revision_log:
-    -
-      plugin: get
-      source: log
-
-  revision_timestamp:
     -
       plugin: get
       source: timestamp

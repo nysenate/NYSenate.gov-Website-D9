@@ -555,6 +555,8 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
+  $current_path = \Drupal::service('path.current')->getPath();
+  $aliased_path = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $media_storage = \Drupal::entityTypeManager()->getStorage('media');
 
@@ -588,11 +590,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       ];
     }
 
+    $variables['cta_url'] = $aliased_path . '/newsroom';
     $variables['items'] = $items;
   }
 
   // Events Landing.
-  if ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
     $items = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
@@ -640,8 +643,38 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         'event_time_end' => \Drupal::service('date.formatter')->format(strtotime($end_date), '', 'g:i A'),
       ];
 
+      $variables['cta_url'] = $aliased_path . '/calendar';
       $variables['items'] = $items;
     }
+  }
+
+  // Legislation Landing.
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_legislation_landing') {
+    $items = [];
+    foreach ($view->result as $row) {
+      $node = $row->_entity;
+      $allowed_values = $node->field_ol_last_status->getSetting('allowed_values');
+      $published_date = '';
+      if ($node->field_ol_publish_date) {
+        $published_date = $node->field_ol_publish_date->value;
+      }
+
+      $last_status = '';
+      if ($node->field_ol_last_status) {
+        $last_status = $allowed_values[$node->field_ol_last_status->value];
+      }
+
+      $items[] = [
+        'bill_number' => $node->getTitle(),
+        'bill_url' => $node->toUrl()->toString(),
+        'bill_description' => $node->field_ol_name->value,
+        'bill_date' => !empty($published_date) ? \Drupal::service('date.formatter')->format(strtotime($published_date), '', 'F d, Y') : '',
+        'bill_positions' => nysenate_bill_positions($node),
+        'bill_status' => $last_status,
+      ];
+    }
+    $variables['cta_url'] = $aliased_path . '/legislation';
+    $variables['items'] = $items;
   }
 }
 

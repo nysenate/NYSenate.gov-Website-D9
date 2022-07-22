@@ -55,6 +55,9 @@ class Chapters extends SqlBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function prepareRow(Row $row) {
 
     // Fetch nid from row.
@@ -68,7 +71,7 @@ class Chapters extends SqlBase {
 
     // Clean up results.
     $chapter_refs = [];
-    foreach($chapter_nids as $chapter) {
+    foreach ($chapter_nids as $chapter) {
       $chapter_refs[] = $chapter;
     }
 

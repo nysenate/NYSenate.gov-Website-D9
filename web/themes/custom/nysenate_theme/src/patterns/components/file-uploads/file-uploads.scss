@@ -3,7 +3,6 @@
 
 .c-news--download {
 	display: block;
-	margin-bottom: 20px;
 
 	img {
 		display: none;
@@ -18,25 +17,9 @@
 			font-size: 12px;
 			line-height: 18px;
 			font-family: $font-sans-bold;
-			color: $gen_blue_lgt;
 			text-decoration: none;
-	
-			&::before {
-				content: '\6b';
-				font-size: 21px;
-				line-height: 12px;
-				font-family: 'senate_icons';
-				display:inline-block;
-				vertical-align: middle;
-				speak: none;
-				font-style: normal;
-				font-weight: normal;
-				font-variant: normal;
-				text-transform: none;
-				padding-right: 3px;
-				-webkit-font-smoothing: antialiased;
-				-moz-osx-font-smoothing: grayscale;
-			}
+			@extend .lgt-text;
+			@extend .icon-before__presskit;
 		}
 	}
 

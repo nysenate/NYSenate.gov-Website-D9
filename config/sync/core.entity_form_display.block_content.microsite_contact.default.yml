@@ -1,0 +1,45 @@
+uuid: 7d3dd609-3699-4fb5-a418-0eeb2bde553f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_contact
+    - field.field.block_content.microsite_contact.field_contact_type
+    - field.field.block_content.microsite_contact.field_senator
+id: block_content.microsite_contact.default
+targetEntityType: block_content
+bundle: microsite_contact
+mode: default
+content:
+  field_contact_type:
+    type: options_select
+    weight: 27
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_senator:
+    type: entity_reference_autocomplete
+    weight: 26
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

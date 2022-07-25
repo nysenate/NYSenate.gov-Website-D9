@@ -37,6 +37,7 @@ dependencies:
     - entity_reference_revisions
     - name
     - options
+    - telephone
 id: taxonomy_term.senator.default
 targetEntityType: taxonomy_term
 bundle: senator
@@ -50,7 +51,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 8
+    weight: 6
     region: content
   field_autoreply_text:
     type: string
@@ -58,14 +59,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 29
+    weight: 19
     region: content
   field_conference:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   field_current_duties:
     type: string
@@ -73,14 +74,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_email:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 4
     region: content
   field_email_autoreply_text:
     type: string
@@ -88,7 +89,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 28
+    weight: 18
     region: content
   field_facebook_url:
     type: string
@@ -96,7 +97,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 13
+    weight: 11
     region: content
   field_image_hero:
     type: entity_reference_label
@@ -104,7 +105,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 11
+    weight: 9
     region: content
   field_instagram_url:
     type: string
@@ -112,7 +113,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 16
+    weight: 14
     region: content
   field_media_contact:
     type: string
@@ -120,28 +121,30 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 36
+    weight: 24
     region: content
   field_media_email:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 37
+    weight: 25
     region: content
   field_media_fax:
-    type: basic_string
+    type: telephone_link
     label: above
-    settings: {  }
+    settings:
+      title: ''
     third_party_settings: {  }
-    weight: 39
+    weight: 27
     region: content
   field_media_phone:
-    type: basic_string
+    type: telephone_link
     label: above
-    settings: {  }
+    settings:
+      title: ''
     third_party_settings: {  }
-    weight: 38
+    weight: 26
     region: content
   field_member_headshot:
     type: entity_reference_entity_view
@@ -150,21 +153,21 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 34
+    weight: 22
     region: content
   field_message_notification_email:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 32
+    weight: 20
     region: content
   field_microsite_theme:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 7
+    weight: 5
     region: content
   field_office_contacts:
     type: entity_reference_revisions_entity_view
@@ -173,14 +176,14 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 25
+    weight: 15
     region: content
   field_offices:
     type: address_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 26
+    weight: 16
     region: content
   field_ol_member_id:
     type: number_integer
@@ -189,7 +192,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 9
+    weight: 7
     region: content
   field_ol_shortname:
     type: string
@@ -197,21 +200,21 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 10
+    weight: 8
     region: content
   field_party:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   field_press_inquiries:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 35
+    weight: 23
     region: content
   field_senator_name:
     type: name_default
@@ -236,7 +239,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 33
+    weight: 21
     region: content
   field_top_issue:
     type: entity_reference_label
@@ -244,7 +247,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 12
+    weight: 10
     region: content
   field_twitter_url:
     type: string
@@ -252,7 +255,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 14
+    weight: 12
     region: content
   field_user_account:
     type: entity_reference_label
@@ -260,7 +263,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 27
+    weight: 17
     region: content
   field_youtube_url:
     type: string
@@ -268,9 +271,13 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 15
+    weight: 13
     region: content
 hidden:
+  admin_microsite_content_senator_admin_content_eva: true
+  admin_microsite_content_senator_admin_content_eva_form: true
+  admin_microsite_legislation_senator_admin_legislation_eva: true
+  admin_microsite_legislation_senator_admin_legislation_eva_form: true
   description: true
   langcode: true
   search_api_excerpt: true

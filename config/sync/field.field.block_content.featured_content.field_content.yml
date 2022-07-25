@@ -1,0 +1,35 @@
+uuid: 8e3c63e7-ced8-418f-b6e3-7506b9fc57e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_content
+    - field.storage.block_content.field_content
+    - node.type.article
+    - node.type.bill
+    - node.type.event
+    - node.type.promotional_banner
+id: block_content.featured_content.field_content
+field_name: field_content
+entity_type: block_content
+bundle: featured_content
+label: Content
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+      bill: bill
+      event: event
+      promotional_banner: promotional_banner
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: article
+field_type: entity_reference

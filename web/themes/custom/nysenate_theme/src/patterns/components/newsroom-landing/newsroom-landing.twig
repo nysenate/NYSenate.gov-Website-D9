@@ -26,9 +26,11 @@
       {% if news %}
         <article class="c-news-block {% if loop.first %} first {% endif %} {% if loop.index is even %} u-even {% else %} u-odd {% endif %}">
           <div class="c-title">{{ item.news_title }}</div>
-          <div class="c-newsroom-image">
-            <a href="{{ item.news_url }}"><img src="{{ item.news_image }}" width="360" height="200" alt=""></a>
-          </div>
+          {% if item.news_image %}
+            <div class="c-newsroom-image">
+              <a href="{{ item.news_url }}"><img src="{{ item.news_image }}" width="360" height="200" alt=""></a>
+            </div>
+          {% endif %}
           <h3 class="c-newsroom-name">
             <a href="{{ item.news_url }}">{{ item.news_name }}</a>
           </h3>
@@ -83,31 +85,23 @@
               <h4 class="c-bill-descript">{{ item.bill_description }}</h4>
               <ul class="nys-bill-status nys-bill-status__sml">
                 <hr>
-                <li class="passed" title="Introduced">
-                  <span class="nys-bill-status--text">Introduced</span>
-                </li>
-                <li class="passed" title="In Committee">
-                  <span class="nys-bill-status--text">In Committee</span>
-                </li>
-                <li class="passed" title="On Floor Calendar">
-                  <span class="nys-bill-status--text">On Floor Calendar</span>
-                </li>
-                <li class="nys-bill-status--assem-sen">
-                  <ul class="nys-bill-status">
-                    <li class="passed" title="Passed Senate">
-                      <span class="nys-bill-status--text">Passed Senate</span>
-                    </li>
-                    <li class="passed" title="Passed Assembly">
-                      <span class="nys-bill-status--text">Passed Assembly</span>
-                    </li>
-                  </ul>
-                </li>
-                <li class="passed" title="Delivered to Governor">
-                  <span class="nys-bill-status--text">Delivered to Governor</span>
-                </li>
-                <li class="passed" title="Signed by Governor">
-                  <span class="nys-bill-status--text">Signed by Governor</span>
-                </li>
+                {% for position in item.bill_positions %}
+                  {% if position.is_grouped %}
+                  <li class="nys-bill-status--assem-sen">
+                    <ul class="nys-bill-status">
+                    {% for item in position.items %}
+                      <li {% if item.is_passed %}class="passed"{% endif %} title="{{ item.text }}">
+                        <span class="nys-bill-status--text">{{ item.text }}</span>
+                      </li>
+                    {% endfor %}
+                    </ul>
+                  </li>
+                  {% else %}
+                    <li {% if position.is_passed == true %}class="passed"{% endif %} title="{{ position.text }}">
+                      <span class="nys-bill-status--text">{{ position.text }}</span>
+                    </li> 
+                  {% endif %}
+                {% endfor %}
                 <li class="spacer"></li>
               </ul>
               <div class="c-bill-update">

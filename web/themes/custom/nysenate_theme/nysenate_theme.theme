@@ -72,7 +72,9 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
   $variables['title'] = $variables['label'][0]['#context']['value'];
-  $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  if (isset($variables['content']['field_date'][0]['#markup'])) {
+    $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  }
 
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
@@ -1172,7 +1174,6 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   if (isset($variables['content']['field_date_range'][0]['end_date']['#text'])) {
     $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
   }
-  $issues = [];
 
   // Set up reference variables indicating if this event spans multiple days.
   $is_multiday = FALSE;
@@ -1201,12 +1202,15 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     $variables['location_url'] = urlencode($address);
   }
 
-  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-    if (!is_numeric($key)) {
-      continue;
+  $issues = [];
+  if (!empty($variables['content']['field_issues'])) {
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
     }
-    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
-    $issues[] = $url;
   }
   $variables['field_issues'] = $issues;
 }

@@ -72,7 +72,9 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
   $variables['title'] = $variables['label'][0]['#context']['value'];
-  $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  if (isset($variables['content']['field_date'][0]['#markup'])) {
+    $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  }
 
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
@@ -1172,7 +1174,6 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   if (isset($variables['content']['field_date_range'][0]['end_date']['#text'])) {
     $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
   }
-  $issues = [];
 
   // Set up reference variables indicating if this event spans multiple days.
   $is_multiday = FALSE;
@@ -1201,12 +1202,15 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     $variables['location_url'] = urlencode($address);
   }
 
-  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-    if (!is_numeric($key)) {
-      continue;
+  $issues = [];
+  if (!empty($variables['content']['field_issues'])) {
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
     }
-    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
-    $issues[] = $url;
   }
   $variables['field_issues'] = $issues;
 }
@@ -1377,6 +1381,21 @@ function nysenate_theme_preprocess_node__event__featured_content(&$variables) {
  */
 function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$variables) {
   $variables['banner_image'] = !empty($variables['content']['field_promotional_banner_image'][0]) ? $variables['content']['field_promotional_banner_image'][0] : [];
+  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $variables['node']->field_call_to_action->value;
+    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+    $variables['item_cta'] = [
+      'url' => $variables['node']->field_link->uri ?? '',
+      'text' => $allowed_values[$banner_cta_value],
+      'value' => $banner_cta_value,
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {
   if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
     $banner_cta_value = $variables['node']->field_call_to_action->value;
     $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');

@@ -723,7 +723,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->field_issues->target_id) {
         $term = $term_storage->load($node->field_issues->target_id);
         if (!empty($term)) {
-          $issues = [
+          $issues[] = [
             'name' => $term->label(),
             'url' => $term->toUrl()->toString(),
           ];
@@ -1440,6 +1440,18 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
  */
 function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (!empty($form['#id']) && $form['#id'] == 'views-exposed-form-senator-microsite-content-microsite-newsroom-content') {
+    $form['#attributes']['class'][] = 'l-tab-bar';
+    $form['#attached']['library'][] = 'nysenate_theme/newsroom-content';
+  }
+}
 
+/**
+ * Implements hook_form_element_alter().
+ */
+function nysenate_theme_preprocess_form_element(&$variables) {
+  if (in_array('type_1', $variables['element']['#parents'])) {
+    if ($variables['label']['#id'] == 'edit-type-1-all') {
+      $variables['label']['#title'] = t('All News');
+    }
   }
 }

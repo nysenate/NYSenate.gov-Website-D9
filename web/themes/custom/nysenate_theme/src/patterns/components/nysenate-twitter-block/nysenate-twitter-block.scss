@@ -268,80 +268,15 @@
           font-size: 28px;
         }
 
-        &[href*='intent/tweet'] {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          padding-top: 1em;
-          text-indent: -99999px;
-
-          &::after {
-            content: '\38';
-            text-indent: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-family: 'senate_icons';
-            speak: none;
-            font-style: normal;
-            font-weight: normal;
-            font-variant: normal;
-            text-transform: none;
-            padding-left: 3px;
-          }
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-        &[href*='intent/retweet'] {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          padding-top: 1em;
-          text-indent: -99999px;
-
-          &::after {
-            content: '\39';
-            text-indent: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-family: 'senate_icons';
-            speak: none;
-            font-style: normal;
-            font-weight: normal;
-            font-variant: normal;
-            text-transform: none;
-            padding-left: 3px;
-          }
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-        &[href*='intent/favorite'] {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          padding-top: 1em;
-          text-indent: -99999px;
-
-          &::after {
-            content: '\37';
-            text-indent: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-family: 'senate_icons';
-            speak: none;
-            font-style: normal;
-            font-weight: normal;
-            font-variant: normal;
-            text-transform: none;
-            padding-left: 3px;
-          }
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
+				&[href*="intent/tweet"] {
+					@extend .icon-replace__twitter-reply;
+				}
+				&[href*="intent/retweet"] {
+					@extend .icon-replace__twitter-retweet;
+				}
+				&[href*="intent/favorite"] {
+					@extend .icon-replace__twitter-fav;
+				}
 
         &[href*='intent/favorite'],
         &[href*='intent/retweet'],

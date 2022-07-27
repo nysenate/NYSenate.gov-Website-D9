@@ -4,6 +4,7 @@
 .element-invisible {
   @include element-invisible;
 }
+
 .element-focusable {
   @include element-focusable;
 }
@@ -58,7 +59,7 @@
     display: inline-block;
     vertical-align: middle;
     min-width: 250px;
-    color: $grey02;
+    color: $grey08;
     white-space: nowrap;
     text-decoration: none;
 
@@ -70,7 +71,7 @@
       height: 20px;
       margin-right: 10px;
       background: transparent url('http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg')
-        center center no-repeat;
+      center center no-repeat;
       background-size: cover;
     }
   }
@@ -93,6 +94,7 @@
         font-size: 18px;
         line-height: 1.3em;
       }
+
       .c-block--btn {
         font-size: 16px;
       }
@@ -121,6 +123,7 @@
       }
     }
   }
+
   .c-page-title {
     font-size: 22px;
 
@@ -143,7 +146,7 @@
   height: 55px;
 }
 
-.l-row:after {
+.l-row::after {
   content: '';
   display: table;
   clear: both;
@@ -214,7 +217,7 @@
       margin: auto;
       width: 100%;
       height: 100%;
-      padding: 125px 0 0 0;
+      padding: 125px 0 0;
       overflow: scroll;
       background: $gen_blue_lgt;
 
@@ -234,11 +237,9 @@
         position: absolute;
       }
 
-
       ul > li.leaf {
         top: -16px;
       }
-
     }
 
   }
@@ -250,96 +251,97 @@
 
 @include breakpoint($bp-sm) {
   .c-nav--wrap {
-		position: relative;
-		top: 0;
-		bottom: auto;
-		width: 100%;
-		height: 60px;
-		transition: height 0.3s ease;
-		overflow: hidden;
+    position: relative;
+    top: 0;
+    bottom: auto;
+    width: 100%;
+    height: 60px;
+    transition: height 0.3s ease;
+    overflow: hidden;
 
-		// class added to .c-nav--wrap through js
-		&.closed {
-			height: 0;
-		}
+    // class added to .c-nav--wrap through js
+    &.closed {
+      height: 0;
+    }
 
-		.c-nav {
-			display: block;
-			position: inherit;
-			top: 0;
-			left: 0;
-			right: 0;
-			width: 100%;
-			margin: 0 auto;
-			z-index: 2;
-			height: 60px;
-			background: $color-white;
+    .c-nav {
+      display: block;
+      position: inherit;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      margin: 0 auto;
+      z-index: 2;
+      height: 60px;
+      background: $color-white;
 
-			> nav {
-				position: relative;
-				top: 0;
-				height: 100%;
-				padding: 0;
-				background: $color-white;
-				overflow: visible;
-				border-top: 1px solid $grey05;
-				transition: none 0 ease;
-			}
-		}
-	}
-	.c-nav--list {
-		width: 100%;
-		height: 60px;
-		margin: 0;
-		padding: 0 10% 0 0;
-		display: flex;
-  	justify-content: space-between;
+      > nav {
+        position: relative;
+        top: 0;
+        height: 100%;
+        padding: 0;
+        background: $color-white;
+        overflow: visible;
+        border-top: 1px solid $grey05;
+        transition: none 0 ease;
+      }
+    }
+  }
 
-		li {
-			position: relative;
-			width: 100px;
-			height: 100%;
-			display: inline-block;
-			vertical-align: middle;
-			border: none;
-			text-align: left;
-			font-family: $font-sans-bold;
-			font-size: 14px;
+  .c-nav--list {
+    width: 100%;
+    height: 60px;
+    margin: 0;
+    padding: 0 10% 0 0;
+    display: flex;
+    justify-content: space-between;
 
-			&:before {
-				content: '';
-				position: relative;
-				display: inline-block;
-				vertical-align: middle;
-				height: 100%;
-				width: 0px;
-			}
+    li {
+      position: relative;
+      width: 100px;
+      height: 100%;
+      display: inline-block;
+      vertical-align: middle;
+      border: none;
+      text-align: left;
+      font-family: $font-sans-bold;
+      font-size: 14px;
 
-			a {
-				height: auto;
-				display: inline-block;
-				vertical-align: middle;
-				padding: 0;
-				text-align: center;
-				line-height: 14px;
-			}
+      &:before {
+        content: '';
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+        width: 0px;
+      }
 
-			&.active-trail {
-				&:after {
-					content: '';
-					display: block;
-					position: absolute;
-					left: 0;
-					right: 0;
-					top: -15px;
-					margin: auto;
-					height: 20px;
-					width: 20px;
-					background: $color-white;
-					border: 1px solid $grey05;
-					transform: rotate(45deg);
-				}
-			}
+      a {
+        height: auto;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0;
+        text-align: center;
+        line-height: 14px;
+      }
+
+      &.active-trail {
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: -15px;
+          margin: auto;
+          height: 20px;
+          width: 20px;
+          background: $color-white;
+          border: 1px solid $grey05;
+          transform: rotate(45deg);
+        }
+      }
 		}
 	}
 }
@@ -421,6 +423,7 @@
       display: block;
     }
   }
+
   .l-header {
     // this is to fix mobile button positioning when logged in as admin
     .contextual-links-region {
@@ -551,7 +554,7 @@ nav ul.c-nav--list {
 .c-nav--social li {
   display: inline-block;
   border: 0;
-  margin-right: 10px;
+  margin: 0 10px;
 
   svg path {
     fill: $color-white;
@@ -586,7 +589,7 @@ nav ul.c-nav--list {
 
 .c-header--btn.c-header--btn__taking_action,
 .c-header--btn.c-header--btn__primary {
-  @include font-stack-secondary;
+  font-family: $font-sans-bold;
   cursor: pointer;
   position: relative;
   height: 100%;
@@ -729,7 +732,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: auto;
   }
 
-  &.active-trail:after {
+  &.active-trail::after {
     content: '';
     display: block;
     position: absolute;
@@ -741,9 +744,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: 20px;
     background: $color-white;
     border: 1px solid $grey05;
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
   }
 }
@@ -842,7 +842,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       padding: 0 40px;
       font-size: 16px;
       line-height: 100px;
-
       background-color: $gen_blue_med;
 
       &::before {
@@ -852,6 +851,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         line-height: 100px;
       }
     }
+
     .c-block--btn {
       width: auto;
       right: 0;

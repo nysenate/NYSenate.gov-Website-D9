@@ -216,7 +216,7 @@
       height: 100%;
       padding: 125px 0 0 0;
       overflow: scroll;
-      background: $gen_blue_lgt;
+      @extend .lgt-bg;
 
       @include breakpoint($bp-sm) {
         position: relative;
@@ -347,31 +347,20 @@
   border: 0;
   padding: 0;
   transform: translateY(-50%);
+	@extend .icon-replace__hamburger;
 
   @include breakpoint($bp-sm) {
     display: none;
   }
 
-  &::after {
-    content: '\68';
-    width: 100%;
-    margin-left: 1px;
-    font-size: 24px;
-    line-height: 40px;
-    text-align: center;
-    text-indent: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: 'senate_icons';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-left: 3px;
-    color: $gen_blue_med;
-  }
+	&:after {
+		width: 100%;
+		margin-left: 1px;
+		font-size: 24px;
+		line-height: 60px;
+		text-align: center;
+		@extend .med-text;
+	}
 }
 
 /* From old site */
@@ -427,14 +416,14 @@
 .messages-number {
   display: block;
   font-size: 15px;
-  color: $contrast_lgt;
+  @extend .contrast_text;
   position: absolute;
   right: 22px;
   top: 8px;
   z-index: 999999;
   width: 20px;
   height: 20px;
-  background: $gen_blue_med;
+  @extend .med-bg;
   border-radius: 50px;
   text-align: center;
 
@@ -479,7 +468,7 @@ nav ul.c-nav--list {
 
 .nav-text:hover,
 .c-nav--list li a:hover {
-  color: $gen_blue_med;
+  @extend .med-text;
 }
 
 .c-site-search--btn {
@@ -593,7 +582,7 @@ nav ul.c-nav--list {
     margin-left: 8px;
     padding-left: 3px;
     color: $color-white;
-    background-color: $gen_blue_lgt;
+    @extend .lgt-bg;
     overflow: hidden;
     border-radius: 50%;
     background-clip: padding-box;
@@ -635,7 +624,7 @@ nav ul.c-nav--list {
 }
 
 .c-header--btn-login {
-  background-color: $gen_blue_med;
+  @extend .med-bg;
 }
 
 .c-mobile-login--list {
@@ -667,17 +656,17 @@ nav ul.c-nav--list {
 
 a.c-header--btn.c-header--btn__primary,
 a.c-header--btn.c-header--btn__taking_action {
-  color: $gen_blue_lgt;
+  @extend .lgt-text;
   text-decoration: none;
 }
 
 a:hover.c-header--btn.c-header--btn__primary,
 a:hover.c-header--btn.c-header--btn__taking_action {
-  background-color: $gen_blue_med;
+  @extend .med-bg;
   color: $color-white;
 
   &::after {
-    background-color: $gen_blue_med;
+    @extend .med-bg;
   }
 }
 
@@ -741,7 +730,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     margin: 0 45px 0 0;
     padding: 0 0 0 20px;
     box-shadow: none;
-    color: $gen_blue_med;
+    @extend .med-text;
     background: $color-white;
     overflow: hidden;
     border-radius: 5px;
@@ -820,8 +809,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       padding: 0 40px;
       font-size: 16px;
       line-height: 100px;
-
-      background-color: $gen_blue_med;
+      @extend .med-bg;
 
       &::before {
         height: 100%;
@@ -936,23 +924,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: block;
       overflow: hidden;
       text-indent: -99999px;
-
-      &::after {
-        content: '\78';
-        text-indent: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-family: 'senate_icons';
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-left: 3px;
-      }
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      @extend .icon-replace__x;
     }
 
     .c-site-search {
@@ -965,23 +937,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         overflow: hidden;
         padding-top: 1em;
         text-indent: -99999px;
-
-        &::after {
-          content: '\6d';
-          text-indent: 0;
-          position: absolute;
-          top: 0;
-          left: 0;
-          font-family: 'senate_icons';
-          speak: none;
-          font-style: normal;
-          font-weight: normal;
-          font-variant: normal;
-          text-transform: none;
-          padding-left: 3px;
-        }
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        @extend .icon-replace__search;
       }
     }
   }

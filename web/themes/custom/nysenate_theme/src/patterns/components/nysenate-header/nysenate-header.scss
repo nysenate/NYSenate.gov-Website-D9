@@ -197,7 +197,7 @@
 
     @include breakpoint($bp-sm) {
       display: block;
-      position: relative;
+      position: inherit;
       right: 0;
       margin: 0 auto;
       z-index: 2;
@@ -227,6 +227,20 @@
         transition: none 0 ease 0s;
       }
     }
+
+    nav {
+      .c-site-search--btn {
+        color: $grey08;
+        position: absolute;
+      }
+
+
+      ul > li.leaf {
+        top: -16px;
+      }
+
+    }
+
   }
 }
 
@@ -251,7 +265,7 @@
 
 		.c-nav {
 			display: block;
-			position: absolute;
+			position: inherit;
 			top: 0;
 			left: 0;
 			right: 0;
@@ -332,6 +346,10 @@
 
 .pane-content {
   position: relative;
+
+  .button--menu {
+    position: absolute;
+  }
 }
 
 .c-nav--toggle {
@@ -496,7 +514,7 @@ nav ul.c-nav--list {
 }
 
 .c-header--connect {
-  display: flex;
+  display: none;
   align-items: center;
   position: absolute;
   top: 0;
@@ -504,6 +522,10 @@ nav ul.c-nav--list {
   bottom: 0;
   margin: auto;
   height: 55px;
+
+  @include breakpoint($bp-sm) {
+    display: flex;
+  }
 }
 
 .c-nav--social {
@@ -780,13 +802,13 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     background: transparent;
     @extend .med-text;
     @extend .icon-replace__search;
-  
+
     &:after {
       width: 100%;
       padding: 0;
       line-height: 45px;
     }
-  
+
     &:hover {
       background: transparent;
       @extend .drk-text;

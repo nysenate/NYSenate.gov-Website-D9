@@ -40,12 +40,21 @@
         </div>
       </section>
       <!--.c-header-bar -->
-      <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace"></button>
+      <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace button--menu"></button>
 
       <div class="c-nav--wrap">
         <div class="c-nav l-row l-row--nav">
           <nav>
-          {{ drupal_menu('main') }}
+            {% block menu %}
+              {%
+                include '@nysenate_theme/main-menu/main-menu.twig' with
+                {
+                  items: items,
+                  attributes: attributes,
+                }
+              %}
+            {% endblock %}
+            {#            {{ drupal_menu('main') }}#}
 
             <div class="u-mobile-only">
               <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
@@ -103,7 +112,11 @@
     </div>
 
     <div class="container">
-      {% include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' %}
+      {%
+        include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
+        is_logged: is_logged
+      } only
+      %}
     </div>
 
   </div>

@@ -72,7 +72,9 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
   $variables['title'] = $variables['label'][0]['#context']['value'];
-  $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  if (isset($variables['content']['field_date'][0]['#markup'])) {
+    $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  }
 
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
@@ -452,18 +454,46 @@ function nysenate_theme_preprocess_block_content__promotional_banner(&$variables
 
       // Call to action string.
       $text = t('Read More');
+      $senator_name = NULL;
       if ($banner['#node']->hasField('field_call_to_action') && !$banner['#node']->get('field_call_to_action')->isEmpty()) {
         $text = $banner['#node']->field_call_to_action->getSetting('allowed_values');
         $text = $text[$banner['#node']->field_call_to_action->value];
+
+        // Add senator name.
+        if ($banner['#node']->field_call_to_action->value == 'petition') {
+          $node = \Drupal::routeMatch()->getParameter('node');
+          if ($node instanceof NodeInterface) {
+            if ($node->bundle() == 'microsite_page') {
+              if (!empty($node->field_senator_multiref->target_id)) {
+                // Load the senator taxonomy term found
+                // in field_senator_multiref field.
+                $senator = $entity_manager->getStorage('taxonomy_term')->load($node->field_senator_multiref->target_id);
+              }
+
+              if (!empty($senator)) {
+                // Senator name.
+                if ($senator->field_senator_name) {
+                  $title = $senator->field_senator_name->title ?? '';
+                  $given = $senator->field_senator_name->given ?? '';
+                  $family = $senator->field_senator_name->family ?? '';
+                  $senator_name = $title . ' ' . $given . ' ' . $family;
+                  $senator_name = trim($senator_name);
+                }
+              }
+            }
+          }
+        }
       }
 
       $banners[] = [
         'modifier' => $modifier,
         'image' => !empty($media_image) ? $entity_manager->getViewBuilder('media')->view($media_image, 'default') : NULL,
         'title' => $banner['#node']->getTitle(),
+        'senator_name' => $senator_name,
         'cta' => [
           'url' => $url,
           'text' => $text,
+          'value' => $banner['#node']->field_call_to_action->value,
         ],
       ];
     }
@@ -1144,7 +1174,6 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   if (isset($variables['content']['field_date_range'][0]['end_date']['#text'])) {
     $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
   }
-  $issues = [];
 
   // Set up reference variables indicating if this event spans multiple days.
   $is_multiday = FALSE;
@@ -1173,12 +1202,15 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     $variables['location_url'] = urlencode($address);
   }
 
-  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-    if (!is_numeric($key)) {
-      continue;
+  $issues = [];
+  if (!empty($variables['content']['field_issues'])) {
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
     }
-    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
-    $issues[] = $url;
   }
   $variables['field_issues'] = $issues;
 }
@@ -1390,4 +1422,19 @@ function nysenate_theme_preprocess_page(&$variables) {
     ];
   }
   $variables['socials'] = $socials;
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {
+  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $variables['node']->field_call_to_action->value;
+    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+    $variables['item_cta'] = [
+      'url' => $variables['node']->field_link->uri ?? '',
+      'text' => $allowed_values[$banner_cta_value],
+      'value' => $banner_cta_value,
+    ];
+  }
 }

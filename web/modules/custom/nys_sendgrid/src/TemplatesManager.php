@@ -102,6 +102,7 @@ abstract class TemplatesManager {
           /** @var \Drupal\nys_slack\Service\Slack $slack */
           $slack = \Drupal::getContainer()->get('slack_messaging');
           $slack->setTitle($msg)
+            ->addAttachment("env\n" . ($_ENV['PANTHEON_ENVIRONMENT'] ?? 'n/a'))
             ->addAttachment("body\n" . var_export($response->body(), 1))
             ->send('SendGrid API returned status code ' . $response->statusCode());
           $slack_sent = TRUE;

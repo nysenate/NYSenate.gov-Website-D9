@@ -1,11 +1,6 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
-.l-row--main {
-  max-width: 840px;
-  margin: 0 auto;
-}
-
 // NEWS HEADER AREA
 .c-news--head {
   margin-bottom: 20px;
@@ -130,7 +125,6 @@
 
 .c-news--download {
   display: block;
-  margin-bottom: 20px;
 
   img { display: none; }
 
@@ -141,22 +135,9 @@
     //text-transform: uppercase;
     font-size: 12px;
     font-family: $font-sans-bold;
-    color: $gen_blue_lgt;
-
-    &::before {
-      content: '\6b';
-      font-size: 21px;
-      line-height: 12px;
-      font-family: 'senate_icons';
-      display: inline-block;
-      vertical-align: middle;
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-    }
+    text-decoration: none;
+		@extend .lgt-text;
+		@extend .icon-before__presskit;
   }
 }
 

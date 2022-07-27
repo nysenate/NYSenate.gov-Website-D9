@@ -32,11 +32,12 @@
 h2,
 h3 {
   &.c-container--title {
+    @include font(12 16 1.2);
     color: $grey08;
     text-transform: uppercase;
     font-family: $font-sans;
-    @include font(12 16 1.2);
     margin: 0;
+    font-weight: $font-weight-normal;
 
     @include breakpoint($bp-sm) {
       font-size: 16px;
@@ -161,6 +162,108 @@ h3 {
 
 /*-------------------------------------
 /
+/ LAYOUT - ROWS
+/ controls overall width of elements
+/
+/-------------------------------------*/
+.l-row {
+  position: relative;
+  clear: both;
+  margin: 0 auto;
+  width: 100%;
+
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.l-row--nav {
+  padding: 0 20px;
+  max-width: 100%;
+}
+.l-row--hero {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.l-row--main {
+  position: relative;
+  z-index: 3;
+  // max-width should account for padding,
+  // so + 40 (20px left and 20px right)
+  padding: 0 20px;
+  max-width: 440px;
+}
+.page-node-dashboard {
+  .l-row--main {
+    max-width: 100%;
+  }
+  .row {
+    margin: 0;
+  }
+}
+.l-row--footer { max-width: 1040px; }
+
+@include breakpoint($bp-sm) {
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main {
+    padding: 0 40px;
+    max-width: 840px;
+  }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+  .l-row--footer { max-width: 1040px; }
+}
+
+@include breakpoint($bp-md) {
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main { max-width: 840px; }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+}
+
+@include breakpoint($bp-lg) {
+
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main { max-width: 840px; }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+}
+
+/*-------------------------------------
+/
 / LAYOUT - COLUMNS
 / controls overall width of elements
 /
@@ -267,6 +370,13 @@ h3 {
       line-height: 42px;
     }
   }
+}
+
+.nys-senator--name {
+  font-family: $font-serif;
+  font-weight: $font-weight-normal;
+  color: $grey08;
+  font-size: 16px;
 }
 
 /*-------------------------------------------------------

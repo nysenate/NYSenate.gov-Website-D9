@@ -1,0 +1,29 @@
+uuid: 5a0e376e-6ed9-4e67-9d07-b30fdb8882d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.promotional_banners_list
+    - field.storage.block_content.field_promotional_banners
+    - node.type.promotional_banner
+id: block_content.promotional_banners_list.field_promotional_banners
+field_name: field_promotional_banners
+entity_type: block_content
+bundle: promotional_banners_list
+label: 'Promotional Banners'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      promotional_banner: promotional_banner
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

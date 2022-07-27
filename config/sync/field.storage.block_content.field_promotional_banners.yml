@@ -1,0 +1,24 @@
+uuid: d0b3f774-6aa0-4b70-8fb9-3b4c2bd7d191
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - field_permissions
+    - node
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: block_content.field_promotional_banners
+field_name: field_promotional_banners
+entity_type: block_content
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 6
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

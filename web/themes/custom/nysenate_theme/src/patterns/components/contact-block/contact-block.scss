@@ -39,7 +39,7 @@
   .tel,
   .email,
   .c-senator-media--item {
-    color: $grey02;
+    color: $grey08;
     font-family: $font-sans;
     font-size: 16px;
     line-height: 1.2em;
@@ -211,7 +211,16 @@
   }
 }
 
+.nys-title.contact-block__title {
+  font-family: $font-serif-bold;
+  font-weight: $font-weight-normal;
+}
+
 @include breakpoint($bp-sm) {
+  .nys-title.contact-block__title {
+    font-size: 32px;
+  }
+
   .c-block--senator-office {
     padding: 40px 40px 45px;
 

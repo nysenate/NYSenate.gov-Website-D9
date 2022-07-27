@@ -920,7 +920,6 @@
 
   &::before {
     @include breakpoint($bp-sm) {
-      margin-top: -0.15em;
       padding: 0 10px 0 0;
       font-size: 16px;
       line-height: 47px;
@@ -949,7 +948,7 @@
     width: 42px;
     height: 42px;
     padding: 0;
-    @extend .icon-replace__right;
+    @extend .icon-after__right;
 
     @include breakpoint($bp-sm) {
       text-indent: 0;
@@ -968,8 +967,7 @@
       font-size: 30px;
 
       @include breakpoint($bp-sm) {
-        position: relative;
-        margin-top: -0.15em;
+        position: relative !important;
         padding: 0 0 0 10px;
         font-size: 16px;
         line-height: 47px;

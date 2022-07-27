@@ -93,20 +93,9 @@
   font-family: $font-sans;
   text-transform: uppercase;
   font-size: 12px;
+  @extend .icon-before__bill;
 
-  &::before {
-    content: '\30';
-    font-family: 'senate_icons';
-    display: inline-block;
-    vertical-align: middle;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-right: 3px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  &:before {
     font-size: 1.5em;
     line-height: 1em;
   }
@@ -190,7 +179,7 @@
         &::after {
           width: 100%;
           height: 100%;
-          color: $gen_blue_med;
+          @extend .med-text;
           font-size: 36px;
         }
       }
@@ -216,25 +205,14 @@
   font-family: $font-sans;
   font-size: 12px;
   letter-spacing: 0.05em;
+  @extend .icon-before__quotes;
 
-  &::before {
-    content: '\71';
-    font-family: 'senate_icons';
-    display: inline-block;
-    vertical-align: middle;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-right: 3px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  &:before {
     position: absolute;
     z-index: -1;
     top: -0.65em;
     left: -0.2em;
-    color: $color-white;
+    color: #fff;
     font-size: 5em;
   }
 }
@@ -639,7 +617,7 @@
         &::after {
           width: 100%;
           height: 100%;
-          color: $gen_blue_med;
+          @extend .med-text;
           font-size: 36px;
         }
       }

@@ -512,9 +512,11 @@ label {
   margin: 0 0 10px;
   color: $grey02;
   font-family: $font-sans;
+  font-weight: $font-weight-normal;
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+
   span {
     text-transform: capitalize;
     clear: both;
@@ -640,7 +642,7 @@ label {
 }
 .addthisevent_dropdown span:hover {
   background: #f4f4f4;
-  color: $contrast_drk;
+  @extend .contrast_text;
   text-decoration: none;
   font-size: 14px;
 }

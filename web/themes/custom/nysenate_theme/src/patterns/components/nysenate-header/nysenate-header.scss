@@ -351,6 +351,7 @@
 
   .button--menu {
     position: absolute;
+    top: auto;
   }
 }
 
@@ -687,11 +688,11 @@ a.c-header--btn.c-header--btn__taking_action {
 
 a:hover.c-header--btn.c-header--btn__primary,
 a:hover.c-header--btn.c-header--btn__taking_action {
-  @extend .med-bg;
+  background-color: $gen_blue_med;
   color: $color-white;
 
   &::after {
-    @extend .med-bg;
+    background-color: $gen_blue_med;
   }
 }
 
@@ -832,7 +833,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       font-size: 16px;
       line-height: 100px;
       background-color: $gen_blue_med;
-      @extend .med-bg;
+
 
       &::before {
         height: 100%;
@@ -948,7 +949,20 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: block;
       overflow: hidden;
       text-indent: -99999px;
-      @extend .icon-replace__x;
+      &::after {
+        content: '\78';
+        text-indent: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: 'senate_icons';
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px;
+      }
     }
 
     .c-site-search {
@@ -961,7 +975,21 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         overflow: hidden;
         padding-top: 1em;
         text-indent: -99999px;
-        @extend .icon-replace__search;
+
+        &::after {
+          content: '\6d';
+          text-indent: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          font-family: 'senate_icons';
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          padding-left: 3px;
+        }
       }
     }
   }

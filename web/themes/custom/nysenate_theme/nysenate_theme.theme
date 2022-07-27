@@ -1396,6 +1396,37 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
 }
 
 /**
+ * Implements hook_preprocess_page().
+ */
+function nysenate_theme_preprocess_page(&$variables) {
+  $menu_tree = \Drupal::menuTree();
+  // Build the typical default set of menu tree parameters.
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('socials');
+  // Load the tree based on this set of parameters.
+  $tree = $menu_tree->load('socials', $parameters);
+
+  $manipulators = [
+    ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ];
+
+  // Transform the tree using the manipulators you want.
+  $tree = $menu_tree->transform($tree, $manipulators);
+  // Finally, build a renderable array from the transformed tree.
+  $menu = $menu_tree->build($tree);
+
+  $socials = [];
+  foreach ($menu['#items'] as $link) {
+    $socials[] = [
+      'icon' => $link['title'],
+      'url' => $link['url']->toString(),
+    ];
+  }
+  $variables['socials'] = $socials;
+}
+
+/**
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {

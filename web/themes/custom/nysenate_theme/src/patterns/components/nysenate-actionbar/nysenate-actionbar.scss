@@ -8,7 +8,9 @@
   height: 60px;
   padding: 0 60px 0 18px;
   background-color: $gen_blue_lgt;
-  max-width: 1500px;
+  @extend .lgt-bg;
+  max-width: unset;
+
   transition: margin 0.25s ease;
 
   @include breakpoint($bp-sm) {
@@ -79,7 +81,7 @@
       font-family: $font-sans-bold;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-
+      @extend .med-bg;
 
       @include breakpoint($bp-sm) {
         position: absolute;
@@ -88,7 +90,6 @@
         top: -20px;
         width: auto;
         height: 100px !important;
-        //max-width: 265px;
         text-align: center;
       }
 

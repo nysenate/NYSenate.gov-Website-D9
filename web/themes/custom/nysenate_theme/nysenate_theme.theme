@@ -8,8 +8,9 @@
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\file\Entity\File;
-use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
+use Drupal\media\MediaInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -704,6 +705,52 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $variables['cta_url'] = $aliased_path . '/legislation';
     $variables['items'] = $items;
   }
+
+  // Newsroom.
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content') {
+    $contents = [];
+    foreach ($view->result as $row) {
+      $node = $row->_entity;
+      $bundle = $node->bundle();
+      if ($bundle == 'article') {
+        if ($node->field_category->value) {
+          $bundle = $node->field_category->getSetting('allowed_values');
+          $bundle = $bundle[$node->field_category->value];
+        }
+      }
+
+      $issues = [];
+      if ($node->field_issues->target_id) {
+        $term = $term_storage->load($node->field_issues->target_id);
+        if (!empty($term)) {
+          $issues = [
+            'name' => $term->label(),
+            'url' => $term->toUrl()->toString(),
+          ];
+        }
+      }
+
+      $image_main = NULL;
+      if ($node->field_image_main->target_id) {
+        $media = $media_storage->load($node->field_image_main->target_id);
+        $file = File::load($media->field_image->target_id);
+        $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      }
+
+      $contents[] = [
+        'title' => $bundle,
+        'topics' => $issues,
+        'description' => [
+          'text' => $node->label(),
+          'url' => $node->toUrl()->toString(),
+        ],
+        'date' => $node->field_date->value ? \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y') : NULL,
+        'img_src' => $image_main,
+      ];
+    }
+
+    $variables['contents'] = $contents;
+  }
 }
 
 /**
@@ -1385,5 +1432,14 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];
+  }
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!empty($form['#id']) && $form['#id'] == 'views-exposed-form-senator-microsite-content-microsite-newsroom-content') {
+
   }
 }

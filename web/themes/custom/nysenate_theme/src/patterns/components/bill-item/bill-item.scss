@@ -200,20 +200,24 @@ h3.c-bill-num {
   }
 }
 
-.c-bill-update a {
-  font-family: $font-sans;
-  font-size: 12px;
-  line-height: 1.4;
-  color: $color-white;
-  text-decoration: none;
-  border-bottom: solid 0.05em $color-white;
+.c-bill-update {
+  display: flex;
 
-  @include breakpoint($bp-sm) {
-    font-size: 14px;
-  }
+  a {
+    font-family: $font-sans;
+    font-size: 12px;
+    line-height: 1.4;
+    color: $color-white;
+    text-decoration: none;
+    border-bottom: solid 0.05em $color-white;
   
-  &:hover {
-    border-bottom: none;
+    @include breakpoint($bp-sm) {
+      font-size: 14px;
+    }
+    
+    &:hover {
+      border-bottom: none;
+    }
   }
 }
 

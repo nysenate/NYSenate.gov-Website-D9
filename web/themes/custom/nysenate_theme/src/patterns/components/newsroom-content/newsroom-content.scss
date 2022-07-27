@@ -1,6 +1,60 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.newsroom-content {
+  .item-list .pager {
+    &.pager-load-more.newsroom-content {
+      list-style: none;
+    }
+  }
+
+  .c-upcoming--header {
+
+    .c-month-title {
+      color: $grey10;
+    }
+  }
+
+  .view-senator-events.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
+    border: 0;
+  }
+
+  .tabs-content .c-event-name {
+    color: $grey08;
+  }
+
+  .c-legislation-info {
+    padding: 0
+  }
+
+  .nys-bill-status { 
+    
+    hr {
+      background: $grey-line;
+    }
+  }
+
+  .c-bill-update {
+    display: block;
+  }
+  
+  .c-bill-update--date {
+    margin-right: 0.5em;
+    display: inline;
+  }
+
+  .c-bill-update--location {
+    margin: 0;
+    display: inline;
+
+    &::before {
+      content: '|';
+      display: inline-block;
+      margin-right: 0.5em;
+    }
+  }
+}
+
 /*----------------------------------------
 / PRESS RELEASES
 /----------------------------------------*/

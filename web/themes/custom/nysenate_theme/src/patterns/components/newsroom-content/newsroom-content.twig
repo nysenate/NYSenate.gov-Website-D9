@@ -1,71 +1,158 @@
 {{ attach_library('nysenate_theme/newsroom-content') }}
 
-<div class="l-row">
+<div class="newsroom-content l-row">
+  {% if event %}
+    <div class="c-upcoming--header" id="tab_top_bar">
+      <h3 class='c-month-title'>{{ date }}</h3>
+      <div class="c-upcoming--nav">
+        {% for month in months %}
+          {{ month.link }}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 
-  <dl class="l-tab-bar" data-tab="">
+  <div class="l-tab-bar">
     <div class="c-tab--arrow u-mobile-only"></div>
     {% for panel in panels %}
-      <dd class="c-tab {% if loop.first %}active{% endif %}">
-        <a class="c-tab-link {% if loop.first %}first{% endif %}" href="#panel{{ loop.index }}">{{ panel.tab_text }}</a>
-      </dd>
+      <label class="c-tab {% if loop.first %}active{% endif %}"><input type="radio" name="language" value="#panel{{ loop.index }}">
+        <span class="c-tab-link">{{ panel.tab_text }}</span>
+      </label>
     {% endfor %}
-  </dl>
+  </div>
+
   <div class="tabs-content">
-    {% for panel in panels %}
-      <div class="panel-pane pane-views pane-senator-news content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
+
+    {% if news %}
+      {% for panel in panels %}
+        <div class="panel-pane pane-views pane-senator-news content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
 
 
-        <div class="pane-content">
-          <div class="c-news-container view view-senator-news view-id-senator_news view-display-id-all_news">
+          <div class="pane-content">
+            <div class="c-news-container view view-senator-news view-id-senator_news view-display-id-all_news">
 
 
-            <div class="view-content">
-              {% for content in panel.contents %}
-                <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
-                  <article class="c-block c-block-press-release">
-                    <div class="c-press-release--header">
-                      <p class="c-press-release--title">{{ content.title }}</p>
-                      {% for topic in content.topics %}
-                        {% if loop.last %}
-                          <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>
-                        {% else %}
-                          <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>,
-                        {% endif %}
-                      {% endfor %}
-                    </div>
-                    <div class="c-press-release--body {% if content.img_src %}c-press-release--body__has-img {% endif %}">
-                      <h3 class="c-press-release--descript">
-                        <a href="{{ content.description.url }}">{{ content.description.text }}</a>
-                      </h3>
-                      <p class="c-press-release--date">
-                        <span class="date-display-single">{{ content.date }}</span>
-                      </p>
-                      <!-- if has video thumbnail it would go here -->
-                      <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
-                    </div>
-                  </article>
-                </div>
-              {% endfor %}
+              <div class="view-content">
+                {% for content in panel.contents %}
+                  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+                    <article class="c-block c-block-press-release">
+                      <div class="c-press-release--header">
+                        <p class="c-press-release--title">{{ content.title }}</p>
+                        {% for topic in content.topics %}
+                          {% if loop.last %}
+                            <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>
+                          {% else %}
+                            <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>,
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                      <div class="c-press-release--body {% if content.img_src %}c-press-release--body__has-img {% endif %}">
+                        <h3 class="c-press-release--descript">
+                          <a href="{{ content.description.url }}">{{ content.description.text }}</a>
+                        </h3>
+                        <p class="c-press-release--date">
+                          <span class="date-display-single">{{ content.date }}</span>
+                        </p>
+                        <!-- if has video thumbnail it would go here -->
+                        <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
+                      </div>
+                    </article>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="item-list">
+                <ul class="pager pager-load-more">
+                  <li class="pager-next first last">
+                    <a href="{{ panel.pagination_link }}">See More
+                      {{ panel.pagination_link_text }}</a>
+                  </li>
+                </ul>
+              </div>
             </div>
+          </div>
 
-            <div class="item-list">
-              <ul class="pager pager-load-more">
-                <li class="pager-next first last">
-                  <a href="{{ panel.pagination_link }}">See More {{ panel.pagination_link_text }}</a>
-                </li>
-              </ul>
+
+        </div>
+        {% if not loop.last %}
+          <div class="panel-separator"></div>
+        {% endif %}
+      {% endfor %}
+    {% elseif event %}
+      {% for panel in panels %}
+        <div class="content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
+          <div id="wrapper1">
+            <div class="view view-senator-events view-id-senator_events view-display-id-upcoming_events view-dom-id-">
+
+              <div class="view-content">
+                {% for content in panel.contents %}
+                  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
+                    <article class="c-event-block c-event-block--list">
+                      <div class="c-event-date">
+                        <span>{{ content.date }}</span>
+                        {{ content.month }}</div>
+                      <a href="/calendar/events/joseph-p-addabbo-jr/july-08-2022/nylag-mobile-legal-help-center">
+                        <h3 class="c-event-name">{{ content.event_name }}</h3>
+                      </a>
+                      <a class="c-event-location" href="{{ content.location.link }}" target="_blank">
+                        <span class="icon-before__circle-pin"></span>
+                        <span>{{ content.location.name }}</span>
+                      </a>
+                      <div class="c-event-address">{{ content.address|raw }}
+                      </div>
+                      <div class="c-event-time">
+                        <span class="date-display-single">
+                          <span class="date-display-range">
+                            <span class="date-display-start">{{ content.time_start }}</span>
+                            to
+                            <span class="date-display-end">{{ content.time_end }}</span>
+                          </span>
+                        </span>
+                      </div>
+                    </article>
+                  </div>
+                {% endfor %}
+              </div>
+
+
             </div>
-
-
           </div>
         </div>
+      {% endfor %}
+    {% elseif legislation %}
+      {% for panel in panels %}
+        <div class="panel-pane pane-views pane-legislation-bills content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
 
 
-      </div>
-      {% if not loop.last %}
-        <div class="panel-separator"></div>
-      {% endif %}
-    {% endfor %}
+          <div class="pane-content">
+            <div class="view view-legislation-bills view-id-legislation_bills view-display-id-senator_legislation_bills c-news-container view-dom-id-f2615fca79255f15c96de0c4e84396e0 jquery-once-1-processed refresh-processed">
+
+
+              <div class="view-content">
+                {% for content in panel.contents %}
+                  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
+
+                    {% include "@nysenate_theme/bill-item/bill-item.twig" with {
+                        bill: content.bill
+                      } only %}
+                  </div>
+                {% endfor %}
+              </div>
+
+
+              <div class="c-container--header link">
+                <a href="{{ panel.view_all_link }}" class="c-container--link">
+                  {{ panel.view_all_text }}
+                </a>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      {% endfor %}
+    {% endif %}
+
   </div>
 
 </div>

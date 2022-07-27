@@ -216,7 +216,7 @@
       height: 100%;
       padding: 125px 0 0 0;
       overflow: scroll;
-      @extend .lgt-bg;
+      background: $gen_blue_lgt;
 
       @include breakpoint($bp-sm) {
         position: relative;
@@ -347,20 +347,31 @@
   border: 0;
   padding: 0;
   transform: translateY(-50%);
-	@extend .icon-replace__hamburger;
 
   @include breakpoint($bp-sm) {
     display: none;
   }
 
-	&:after {
-		width: 100%;
-		margin-left: 1px;
-		font-size: 24px;
-		line-height: 60px;
-		text-align: center;
-		@extend .med-text;
-	}
+  &::after {
+    content: '\68';
+    width: 100%;
+    margin-left: 1px;
+    font-size: 24px;
+    line-height: 40px;
+    text-align: center;
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: 'senate_icons';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px;
+    color: $gen_blue_med;
+  }
 }
 
 /* From old site */
@@ -416,14 +427,14 @@
 .messages-number {
   display: block;
   font-size: 15px;
-  @extend .contrast_text;
+  color: $contrast_lgt;
   position: absolute;
   right: 22px;
   top: 8px;
   z-index: 999999;
   width: 20px;
   height: 20px;
-  @extend .med-bg;
+  background: $gen_blue_med;
   border-radius: 50px;
   text-align: center;
 
@@ -468,7 +479,7 @@ nav ul.c-nav--list {
 
 .nav-text:hover,
 .c-nav--list li a:hover {
-  @extend .med-text;
+  color: $gen_blue_med;
 }
 
 .c-site-search--btn {
@@ -582,7 +593,7 @@ nav ul.c-nav--list {
     margin-left: 8px;
     padding-left: 3px;
     color: $color-white;
-    @extend .lgt-bg;
+    background-color: $gen_blue_lgt;
     overflow: hidden;
     border-radius: 50%;
     background-clip: padding-box;
@@ -624,7 +635,7 @@ nav ul.c-nav--list {
 }
 
 .c-header--btn-login {
-  @extend .med-bg;
+  background-color: $gen_blue_med;
 }
 
 .c-mobile-login--list {
@@ -656,17 +667,17 @@ nav ul.c-nav--list {
 
 a.c-header--btn.c-header--btn__primary,
 a.c-header--btn.c-header--btn__taking_action {
-  @extend .lgt-text;
+  color: $gen_blue_lgt;
   text-decoration: none;
 }
 
 a:hover.c-header--btn.c-header--btn__primary,
 a:hover.c-header--btn.c-header--btn__taking_action {
-  @extend .med-bg;
+  background-color: $gen_blue_med;
   color: $color-white;
 
   &::after {
-    @extend .med-bg;
+    background-color: $gen_blue_med;
   }
 }
 
@@ -730,7 +741,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     margin: 0 45px 0 0;
     padding: 0 0 0 20px;
     box-shadow: none;
-    @extend .med-text;
+    color: $gen_blue_med;
     background: $color-white;
     overflow: hidden;
     border-radius: 5px;
@@ -801,7 +812,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       width: 100%;
       max-width: 400px;
       font-size: 14px;
-      font-size: 1.7vw;
       line-height: 1.75em;
     }
 
@@ -809,7 +819,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       padding: 0 40px;
       font-size: 16px;
       line-height: 100px;
-      @extend .med-bg;
+
+      background-color: $gen_blue_med;
 
       &::before {
         height: 100%;
@@ -924,7 +935,23 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: block;
       overflow: hidden;
       text-indent: -99999px;
-      @extend .icon-replace__x;
+
+      &::after {
+        content: '\78';
+        text-indent: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: 'senate_icons';
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px;
+      }
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .c-site-search {
@@ -937,7 +964,23 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         overflow: hidden;
         padding-top: 1em;
         text-indent: -99999px;
-        @extend .icon-replace__search;
+
+        &::after {
+          content: '\6d';
+          text-indent: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          font-family: 'senate_icons';
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          padding-left: 3px;
+        }
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
     }
   }

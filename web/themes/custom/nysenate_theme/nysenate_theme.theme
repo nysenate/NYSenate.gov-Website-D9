@@ -595,7 +595,10 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $items = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
-      $allowed_values = $node->field_category->getSetting('allowed_values');
+      $allowed_values = [];
+      if ($node->field_category->value) {
+        $allowed_values = $node->field_category->getSetting('allowed_values');
+      }
       $term = NULL;
       if ($node->field_issues->target_id) {
         $term = $term_storage->load($node->field_issues->target_id);
@@ -609,7 +612,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $items[] = [
-        'news_title' => $allowed_values[$node->field_category->value],
+        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : '',
         'news_url' => $node->toUrl()->toString(),
         'news_image' => $news_image,
         'news_name' => $node->getTitle(),

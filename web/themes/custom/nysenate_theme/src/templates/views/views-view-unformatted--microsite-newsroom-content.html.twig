@@ -18,29 +18,33 @@
 
 {{ attach_library('nysenate_theme/newsroom-content') }}
 
-{% for content in contents %}
-  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
-    <article class="c-block c-block-press-release">
-      <div class="c-press-release--header">
-        <p class="c-press-release--title">{{ content.title }}</p>
-        {% for topic in content.topics %}
-          {% if loop.last %}
-            <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>
-          {% else %}
-            <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>,
-          {% endif %}
-        {% endfor %}
+<div class="tabs-content">
+  <div class="view-content">
+    {% for content in contents %}
+      <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+        <article class="c-block c-block-press-release">
+          <div class="c-press-release--header">
+            <p class="c-press-release--title">{{ content.title }}</p>
+            {% for topic in content.topics %}
+              {% if loop.last %}
+                <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>
+              {% else %}
+                <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>,
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="c-press-release--body {% if content.img_src %}c-press-release--body__has-img {% endif %}">
+            <h3 class="c-press-release--descript">
+              <a href="{{ content.description.url }}">{{ content.description.text }}</a>
+            </h3>
+            <p class="c-press-release--date">
+              <span class="date-display-single">{{ content.date }}</span>
+            </p>
+            <!-- if has video thumbnail it would go here -->
+            <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
+          </div>
+        </article>
       </div>
-      <div class="c-press-release--body {% if content.img_src %}c-press-release--body__has-img {% endif %}">
-        <h3 class="c-press-release--descript">
-          <a href="{{ content.description.url }}">{{ content.description.text }}</a>
-        </h3>
-        <p class="c-press-release--date">
-          <span class="date-display-single">{{ content.date }}</span>
-        </p>
-        <!-- if has video thumbnail it would go here -->
-        <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
-      </div>
-    </article>
+    {% endfor %}
   </div>
-{% endfor %}
+</div>

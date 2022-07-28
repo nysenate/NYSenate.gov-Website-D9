@@ -22,7 +22,7 @@
   .c-office-info--title {
     display: block;
     margin-bottom: 10px;
-    color: $contrast_drk;
+    @extend .contrast_text;
     font-family: $font-sans-bold;
     text-transform: uppercase;
     font-size: 14px;
@@ -39,7 +39,7 @@
   .tel,
   .email,
   .c-senator-media--item {
-    color: $grey02;
+    color: $grey08;
     font-family: $font-sans;
     font-size: 16px;
     line-height: 1.2em;
@@ -54,7 +54,7 @@
   .c-senator-media--item {
     text-transform: none;
     span {
-      color: $contrast_drk;
+      @extend .contrast_text;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
@@ -70,7 +70,7 @@
   .tel {
     clear: left;
     span {
-      color: $contrast_drk;
+      @extend .contrast_text;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
@@ -139,7 +139,7 @@
     }
 
     span {
-      color: $contrast_drk;
+      @extend .contrast_text;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
@@ -211,7 +211,16 @@
   }
 }
 
+.nys-title.contact-block__title {
+  font-family: $font-serif-bold;
+  font-weight: $font-weight-normal;
+}
+
 @include breakpoint($bp-sm) {
+  .nys-title.contact-block__title {
+    font-size: 32px;
+  }
+
   .c-block--senator-office {
     padding: 40px 40px 45px;
 

@@ -1,11 +1,6 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
-.l-row--main {
-  max-width: 840px;
-  margin: 0 auto;
-}
-
 // NEWS HEADER AREA
 .c-news--head {
   margin-bottom: 20px;
@@ -90,7 +85,7 @@
     a {
       font-size: 12px;
       line-height: 1em;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
   .field-name-field-issues { padding: 0; }

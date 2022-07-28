@@ -133,27 +133,16 @@
   text-decoration: none;
   font-family: $font-sans;
   font-size: 18px;
-  color: $gen_blue_lgt;
+  @extend .lgt-text;
+  @extend .icon-before__circle-pin;
 
-  &::before {
-    content: '\32';
-    font-family: 'senate_icons';
-    display: inline-block;
-    vertical-align: middle;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-right: 3px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  &:before {
     margin-top: -5px;
     font-size: 20px;
   }
 
   a {
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
 
     &:hover {
       color: $color-cg-blue;
@@ -232,7 +221,7 @@
 
   a {
     display: inline-block;
-    color: $gen_link;
+    @extend .link-text;
     text-decoration: none;
 
     & + a {
@@ -364,7 +353,7 @@
     text-transform: uppercase;
     font-family: $font-sans-bold;
     font-size: 10px;
-    color: $gen_link;
+    @extend .link-text;
   }
 }
 
@@ -429,7 +418,7 @@
     color: $grey08;
 
     &::before {
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
   .c-detail--location,

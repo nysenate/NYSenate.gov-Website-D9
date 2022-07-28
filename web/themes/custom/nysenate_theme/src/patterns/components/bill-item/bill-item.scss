@@ -28,7 +28,7 @@ h3.c-bill-num {
     border: 0;
     margin-bottom: 20px;
     overflow: hidden;
-    background-color: $gen_blue_lgt;
+    @extend .lgt-bg;
 
     .c-block-legislation-featured {
       margin-bottom: 0;
@@ -48,7 +48,7 @@ h3.c-bill-num {
     }
 
     .c-bill-topic {
-      color: $contrast_drk;
+      @extend .contrast_text;
 
       .field-name-field-issues {
         padding-bottom: 0px;
@@ -149,7 +149,7 @@ h3.c-bill-num {
   left: 0;
   width: 100%;
   height: initial;
-  background-color: $gen_blue_med;
+  @extend .med-bg;
 
   .c-block--btn {
     text-align: center;
@@ -439,11 +439,11 @@ h3.c-bill-num {
 // colored colors
 .nys-bill-status.nys-bill-status__drk {
   hr {
-    background-color: $gen_blue_drk;
+    @extend .drk-bg;
   }
 
   li {
-    background-color: $gen_blue_med;
+    @extend .med-bg;
 
     &.passed {
       background: $grey05;
@@ -451,7 +451,7 @@ h3.c-bill-num {
     &.nys-bill-status--assem-sen {
       border: 2px solid;
       color: $gen_blue_drk;
-      background-color: $gen_blue_lgt;
+      @extend .lgt-bg;
     }
   }
 }
@@ -635,12 +635,6 @@ h3.c-bill-num {
 
     .c-block--btn-toggle {
       background: $grey05;
-
-      &:hover {
-        &::after {
-          color: $gen_blue_lgt;
-        }
-      }
     }
 
     .c-legislation-info {

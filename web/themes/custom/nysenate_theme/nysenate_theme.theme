@@ -73,7 +73,9 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
   $variables['title'] = $variables['label'][0]['#context']['value'];
-  $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  if (isset($variables['content']['field_date'][0]['#markup'])) {
+    $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  }
 
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
@@ -594,7 +596,10 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $items = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
-      $allowed_values = $node->field_category->getSetting('allowed_values');
+      $allowed_values = [];
+      if ($node->field_category->value) {
+        $allowed_values = $node->field_category->getSetting('allowed_values');
+      }
       $term = NULL;
       if ($node->field_issues->target_id) {
         $term = $term_storage->load($node->field_issues->target_id);
@@ -608,7 +613,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $items[] = [
-        'news_title' => $allowed_values[$node->field_category->value],
+        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : '',
         'news_url' => $node->toUrl()->toString(),
         'news_image' => $news_image,
         'news_name' => $node->getTitle(),
@@ -1262,7 +1267,6 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   if (isset($variables['content']['field_date_range'][0]['end_date']['#text'])) {
     $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
   }
-  $issues = [];
 
   // Set up reference variables indicating if this event spans multiple days.
   $is_multiday = FALSE;
@@ -1291,12 +1295,15 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     $variables['location_url'] = urlencode($address);
   }
 
-  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-    if (!is_numeric($key)) {
-      continue;
+  $issues = [];
+  if (!empty($variables['content']['field_issues'])) {
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
     }
-    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
-    $issues[] = $url;
   }
   $variables['field_issues'] = $issues;
 }
@@ -1508,5 +1515,51 @@ function nysenate_theme_preprocess_form_element(&$variables) {
   if (array_intersect(['type_1', 'type'], $variables['element']['#parents'])) {
     $variables['attributes']['class'][] = 'c-tab';
     $variables['label']['#attributes']['class'][] = 'c-tab-link';
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nysenate_theme_preprocess_page(&$variables) {
+  $menu_tree = \Drupal::menuTree();
+  // Build the typical default set of menu tree parameters.
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('socials');
+  // Load the tree based on this set of parameters.
+  $tree = $menu_tree->load('socials', $parameters);
+
+  $manipulators = [
+    ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ];
+
+  // Transform the tree using the manipulators you want.
+  $tree = $menu_tree->transform($tree, $manipulators);
+  // Finally, build a renderable array from the transformed tree.
+  $menu = $menu_tree->build($tree);
+
+  $socials = [];
+  foreach ($menu['#items'] as $link) {
+    $socials[] = [
+      'icon' => $link['title'],
+      'url' => $link['url']->toString(),
+    ];
+  }
+  $variables['socials'] = $socials;
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {
+  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $variables['node']->field_call_to_action->value;
+    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+    $variables['item_cta'] = [
+      'url' => $variables['node']->field_link->uri ?? '',
+      'text' => $allowed_values[$banner_cta_value],
+      'value' => $banner_cta_value,
+    ];
   }
 }

@@ -56,7 +56,10 @@
 
 <div class="layout-container page">
 
-  {% include "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
+  {%
+    embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
+    "is_logged": logged_in,
+    "socials": socials,
     "search": {
       "title": "Search",
       "link": {
@@ -65,7 +68,12 @@
       },
       "value": "{'tab':''}"
     },
-  } only %}
+  } %}
+    {% block menu %}
+      {{ drupal_menu('main') }}
+    {% endblock %}
+  {% endembed %}
+
 
   {{ page.primary_menu }}
   {{ page.secondary_menu }}
@@ -76,7 +84,7 @@
 
   {{ page.help }}
 
-  <main role="main" class="container">
+  <main role="main" class="container l-row l-main">
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
     <div {{ attributes.addClass(layout_classes) }}>
       {{ page.content }}

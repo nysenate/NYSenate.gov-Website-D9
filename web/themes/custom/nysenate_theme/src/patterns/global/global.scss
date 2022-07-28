@@ -427,6 +427,7 @@ label {
   color: $grey08;
   text-transform: capitalize;
   font-family: $font-serif-bold;
+  font-weight: $font-weight-normal;
   font-size: 18px;
 
   &.nys-title--district {
@@ -445,15 +446,6 @@ label {
   margin-top: 20px;
 }
 
-.c-container--title {
-  text-transform: capitalize;
-  font-family: $font-serif-semibold;
-  font-size: 18px;
-  line-height: 32px;
-  letter-spacing: 0;
-  color: $grey02;
-}
-
 // Override for bill page pie chart colors for committees section
 .node-type-bill {
   .c-bill--vote_2\27 {
@@ -462,7 +454,6 @@ label {
 }
 
 .layout-content {
-  padding-top: 40px;
   margin: 0 auto;
 }
 
@@ -520,9 +511,11 @@ label {
   margin: 0 0 10px;
   color: $grey02;
   font-family: $font-sans;
+  font-weight: $font-weight-normal;
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+
   span {
     text-transform: capitalize;
     clear: both;
@@ -533,9 +526,6 @@ label {
 }
 
 @include breakpoint($bp-sm) {
-  .layout-content {
-    padding-top: 80px;
-  }
 
   .c-detail--social {
     width: 28%;
@@ -648,7 +638,7 @@ label {
 }
 .addthisevent_dropdown span:hover {
   background: #f4f4f4;
-  color: $contrast_drk;
+  @extend .contrast_text;
   text-decoration: none;
   font-size: 14px;
 }

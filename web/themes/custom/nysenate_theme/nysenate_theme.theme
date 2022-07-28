@@ -1416,14 +1416,16 @@ function nysenate_theme_preprocess_page(&$variables) {
   // Finally, build a renderable array from the transformed tree.
   $menu = $menu_tree->build($tree);
 
-  $socials = [];
-  foreach ($menu['#items'] as $link) {
-    $socials[] = [
-      'icon' => $link['title'],
-      'url' => $link['url']->toString(),
-    ];
+  if (isset($menu['#items'])) {
+    $socials = [];
+    foreach ($menu['#items'] as $link) {
+      $socials[] = [
+        'icon' => $link['title'],
+        'url' => $link['url']->toString(),
+      ];
+    }
+    $variables['socials'] = $socials;
   }
-  $variables['socials'] = $socials;
 }
 
 /**

@@ -596,6 +596,20 @@ h3 {
   border-top: 1px solid $grey05;
 }
 
-.field > .field__item:not(:last-child) {
-  margin-bottom: 40px;
+.field {
+
+  &.field__items {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 440px;
+
+    @include breakpoint($bp-sm) {
+      padding: 0 40px;
+      max-width: 840px;
+    }
+  }
+
+  & > .field__item:not(:last-child) {
+    margin-bottom: 40px;
+  }
 }

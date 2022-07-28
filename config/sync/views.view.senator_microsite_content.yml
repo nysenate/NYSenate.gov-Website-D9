@@ -21,6 +21,7 @@ dependencies:
     - node.type.video
   module:
     - address
+    - better_exposed_filters
     - datetime
     - datetime_range
     - geocoder_address
@@ -1989,6 +1990,41 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: true
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              type:
+                plugin_id: bef
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: true
       arguments:
         field_ol_sponsor_target_id:
           id: field_ol_sponsor_target_id
@@ -2083,6 +2119,32 @@ display:
             default_group_multiple: {  }
             group_items:
               1:
+                title: Bills
+                operator: in
+                value:
+                  bill: bill
+                  all: '0'
+                  agenda: '0'
+                  article: '0'
+                  calendar: '0'
+                  event: '0'
+                  honoree: '0'
+                  in_the_news: '0'
+                  landing: '0'
+                  meeting: '0'
+                  microsite_page: '0'
+                  open_data: '0'
+                  petition: '0'
+                  promotional_banner: '0'
+                  public_hearing: '0'
+                  webform: '0'
+                  resolution: '0'
+                  school: '0'
+                  session: '0'
+                  student_program: '0'
+                  transcript: '0'
+                  video: '0'
+              2:
                 title: Resolutions
                 operator: in
                 value:
@@ -2094,55 +2156,38 @@ display:
                   calendar: '0'
                   event: '0'
                   honoree: '0'
+                  in_the_news: '0'
                   landing: '0'
                   meeting: '0'
                   microsite_page: '0'
                   open_data: '0'
                   petition: '0'
+                  promotional_banner: '0'
                   public_hearing: '0'
                   webform: '0'
                   school: '0'
                   session: '0'
                   student_program: '0'
                   transcript: '0'
-              2:
-                title: Bills
-                operator: in
-                value:
-                  bill: bill
-                  all: '0'
-                  agenda: '0'
-                  article: '0'
-                  calendar: '0'
-                  event: '0'
-                  honoree: '0'
-                  landing: '0'
-                  meeting: '0'
-                  microsite_page: '0'
-                  open_data: '0'
-                  petition: '0'
-                  public_hearing: '0'
-                  webform: '0'
-                  resolution: '0'
-                  school: '0'
-                  session: '0'
-                  student_program: '0'
-                  transcript: '0'
+                  video: '0'
       filter_groups:
         operator: AND
         groups:
           1: AND
       defaults:
         title: false
+        use_ajax: false
         use_more: false
         use_more_always: false
         use_more_text: false
+        exposed_form: false
         link_display: false
         link_url: false
         fields: false
         arguments: false
         filters: false
         filter_groups: false
+      use_ajax: true
       display_description: ''
       use_more: true
       use_more_always: true
@@ -2989,6 +3034,41 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: true
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              type_1:
+                plugin_id: bef
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: true
       arguments:
         field_senator_multiref_target_id:
           id: field_senator_multiref_target_id
@@ -3113,7 +3193,7 @@ display:
             reduce: false
           is_grouped: true
           group_info:
-            label: 'Content type'
+            label: ''
             description: ''
             identifier: type_1
             optional: true
@@ -3124,7 +3204,7 @@ display:
             default_group_multiple: {  }
             group_items:
               1:
-                title: News
+                title: 'Press Releases'
                 operator: in
                 value:
                   article: article
@@ -3134,6 +3214,7 @@ display:
                   calendar: '0'
                   event: '0'
                   honoree: '0'
+                  in_the_news: '0'
                   landing: '0'
                   meeting: '0'
                   microsite_page: '0'
@@ -3160,6 +3241,7 @@ display:
                   calendar: '0'
                   event: '0'
                   honoree: '0'
+                  in_the_news: '0'
                   landing: '0'
                   meeting: '0'
                   microsite_page: '0'
@@ -3179,13 +3261,16 @@ display:
           1: AND
       defaults:
         title: false
+        use_ajax: false
         use_more: false
         use_more_always: false
         use_more_text: false
+        exposed_form: false
         fields: false
         arguments: false
         filters: false
         filter_groups: false
+      use_ajax: true
       display_description: 'Newsroom Block'
       use_more: false
       use_more_always: false

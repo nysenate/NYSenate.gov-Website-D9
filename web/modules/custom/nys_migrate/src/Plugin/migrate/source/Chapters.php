@@ -65,7 +65,7 @@ class Chapters extends SqlBase {
 
     // Fetch all chapters referenced by node.
     $chapter_nids = $this->select('field_data_field_chapters', 'fc')
-      ->fields('fc', 'field_chapters_target_id')
+      ->fields('fc', ['field_chapters_target_id'])
       ->condition('entity_id', $node_nid)
       ->execute()->fetchCol();
 

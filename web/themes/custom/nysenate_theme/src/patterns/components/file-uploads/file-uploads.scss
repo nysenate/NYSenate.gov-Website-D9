@@ -1,6 +1,14 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.c-block.c-block--pg-file-uploads  {
+	margin-bottom: 20px;
+
+	@include breakpoint($bp-sm) {
+    margin-bottom: 30px;
+  }
+}
+
 .c-news--download {
 	display: block;
 
@@ -18,7 +26,7 @@
 			line-height: 18px;
 			font-family: $font-sans-bold;
 			text-decoration: none;
-			@extend .lgt-text;
+			@extend .accent-text;
 			@extend .icon-before__presskit;
 		}
 	}

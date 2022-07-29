@@ -38,15 +38,6 @@ accordion:
   js:
     dist/js/accordion.es6.js: {}
 
-addthisevent:
-  js:
-    dist/js/ate.min.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/jquery.once
-    - core/jquery
-
 alert-box:
   css:
     component:
@@ -186,7 +177,7 @@ event:
     component:
       dist/css/event.css: {}
   dependencies:
-    - nysenate_theme/addthisevent
+    - nysenate_theme/nysenate-featured-event
 
 event-card:
   css:
@@ -401,6 +392,7 @@ nysenate-senators-events:
       dist/css/nysenate-senators-events.css: {}
   dependencies:
     - nysenate_theme/nysenate-tabs
+    - nysenate_theme/nysenate-featured-event
 
 nysenate-tabs:
   css:
@@ -530,8 +522,6 @@ session:
   css:
     component:
       dist/css/session.css: {}
-  dependencies:
-    - nysenate_theme/addthisevent
 
 site-branding:
   css:

@@ -88,7 +88,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -129,7 +129,7 @@
     margin-left: 20px;
     float: left;
     clear: left;
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
   }
 }
 
@@ -208,7 +208,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -241,7 +241,7 @@
     font-size: 12px;
     float: left;
     clear: left;
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
   }
   .c-meeting-video--status:before {
     padding: 0;
@@ -325,7 +325,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -352,7 +352,7 @@
     border: 1px solid $grey07;
     border-top: 2px solid $grey05;
     font-size: 18px;
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
   }
   .addthisevent-drop {
     margin-top: 20px;
@@ -419,7 +419,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -447,7 +447,7 @@
     border: 1px solid $grey07;
     border-top: 2px solid $grey05;
     font-size: 18px;
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
   }
   .addthisevent-drop {
     margin-top: 20px;
@@ -476,75 +476,12 @@
       position: absolute;
       right: 0;
       top: 0;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
 
       &::after {
         font-size: 15px;
         vertical-align: bottom;
       }
-    }
-  }
-
-  .c-event-block--upcoming {
-    margin: 0px;
-    padding: 20px 0 40px;
-    overflow: hidden;
-    font-family: $font-sans;
-    position: relative;
-    border-top: 1px solid $grey09;
-
-    &.u-odd {
-      clear: left;
-    }
-
-    .c-event-date {
-      text-transform: uppercase;
-      font-size: 12px;
-      position: absolute;
-      top: 20px;
-      left: 0;
-      line-height: 130%;
-
-      span {
-        font-family: $font-serif-bold;
-        display: block;
-        font-size: 26px;
-        margin-bottom: 6px;
-      }
-    }
-
-    .c-event-name {
-      font-family: $font-serif;
-      font-size: 24px;
-      margin: 0px 0px 12px 60px;
-      line-height: 120%;
-    }
-
-    .c-event-location {
-      font-size: 14px;
-      margin-left: 60px;
-      color: $grey10;
-
-      span {
-        margin-right: 7px;
-        font-size: 18px;
-        color: $gen_blue_lgt;
-      }
-    }
-
-    .c-event-address {
-      margin-top: 15px;
-      color: $grey04;
-      font-size: 14px;
-      line-height: 140%;
-      display: none;
-      margin-bottom: 0px;
-    }
-
-    .c-event-time {
-      margin-top: 20px;
-      display: none;
-      font-size: 14px;
     }
   }
 }
@@ -993,66 +930,6 @@
     }
   }
 
-  .c-upcoming-container {
-    .c-event-block--upcoming {
-      //width: 50%;
-      clear: left;
-      margin: 0;
-      padding-top: 0;
-      padding-left: 20px;
-      padding-right: 0px;
-      border-top: none;
-
-      &.u-odd {
-        padding-right: 20px;
-        padding-left: 0px;
-      }
-
-      .c-event-date {
-        float: left;
-        width: 100%;
-        text-transform: uppercase;
-        font-size: 14px;
-        margin-top: 0;
-        //position: static;
-        line-height: 1;
-        //border-top: 1px solid $grey09;
-        padding-top: 16px;
-
-        span {
-          font-size: 40px;
-        }
-      }
-
-      .c-event-name {
-        float: left;
-        clear: left;
-        margin-left: 200px;
-        margin-top: 24px;
-        padding-top: 0;
-      }
-
-      .c-event-location {
-        float: left;
-        clear: left;
-        margin-left: 200px;
-      }
-
-      .c-event-address {
-        float: left;
-        clear: left;
-        display: block;
-        margin-left: 200px;
-      }
-
-      .c-event-time {
-        float: left;
-        clear: left;
-        display: block;
-        margin-left: 200px;
-      }
-    }
-  }
   .c-upcoming-container.today {
     .c-event-name {
       margin-top: 0;

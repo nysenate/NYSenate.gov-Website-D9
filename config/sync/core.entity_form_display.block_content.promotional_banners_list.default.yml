@@ -1,0 +1,38 @@
+uuid: 86536ef1-c239-4230-b98a-ef7dcd861905
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.promotional_banners_list
+    - field.field.block_content.promotional_banners_list.field_promotional_banners
+id: block_content.promotional_banners_list.default
+targetEntityType: block_content
+bundle: promotional_banners_list
+mode: default
+content:
+  field_promotional_banners:
+    type: entity_reference_autocomplete
+    weight: 26
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

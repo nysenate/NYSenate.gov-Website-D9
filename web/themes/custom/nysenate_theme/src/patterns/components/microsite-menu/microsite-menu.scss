@@ -1,7 +1,6 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
-
 /*------------------------------
 / SENATOR NAV
 /-------------------------------*/
@@ -14,6 +13,8 @@
     top: 0;
     bottom: 0;
     margin: auto;
+    @extend .med-text;
+    @extend .icon-replace__search;
 
     &::after {
       width: 100%;
@@ -37,9 +38,9 @@
   }
 
   li {
-    border-top: 1px solid #fff;
+    border-top: 1px solid $color-white;
     text-transform: uppercase;
-    font-family: "Proxima Nova Regular";
+    font-family: $font-sans;
     font-size: 13px;
     letter-spacing: 0.1em;
     line-height: 1em;

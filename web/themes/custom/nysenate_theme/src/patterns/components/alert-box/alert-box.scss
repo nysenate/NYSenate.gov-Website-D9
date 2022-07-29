@@ -44,21 +44,10 @@
     overflow: hidden;
     padding-top: 1em;
     text-indent: -99999px;
+    @extend .icon-replace__x;
 
-    &::after {
-      content: '\78';
+    &:after {
       line-height: 30px;
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
     }
   }
 }

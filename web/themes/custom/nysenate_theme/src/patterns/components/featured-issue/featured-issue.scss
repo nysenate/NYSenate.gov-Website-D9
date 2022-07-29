@@ -1,11 +1,15 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.c-container.c-news-container.featured-issue,
 .c-event-cluster-featured-issue {
-  overflow: hidden;
   max-width: 840px;
 	padding: 20px 20px 0;
 	margin: 0 auto;
+}
+
+.c-event-cluster-featured-issue {
+  overflow: hidden;
 
   .c-title {
     font-family: $font-sans;
@@ -32,8 +36,9 @@
       display: block;
       padding: 0;
       margin: 0;
-      color: $grey02;
+      color: $grey08;
       font-family: $font-serif;
+      font-weight: $font-weight-normal;
       font-size: 24px;
       line-height: 130%;
       text-decoration: none;
@@ -90,6 +95,8 @@
       vertical-align: middle;
       padding-left: 20px;
       width: 100%;
+      color: $grey10;
+      font-weight: $font-weight-normal;
     }
   }
 
@@ -130,58 +137,6 @@
 
       &:first-child {
         border-top: none;
-      }
-    }
-  }
-}
-
-.c-news-container {
-	overflow: hidden;
-	display: block;
-  max-width: 840px;
-  padding: 20px 20px 0;
-  margin: 0 auto;
-
-  @include breakpoint($bp-sm) {
-    padding: 40px 0 0 20px;
-  }
-
-  .c-news-block {
-    margin: 0px;
-    padding-bottom: 40px;
-    overflow: hidden;
-    font-family: $font-sans;
-    position: relative;
-    border-top: 1px solid $grey05;
-
-    &.first {
-      border: 0;
-    }
-
-    .c-newsroom-name {
-      font-family: $font-serif;
-      font-size: 19px;
-      margin: 0px 0px 25px 0px;
-      line-height: 120%;
-      min-width: 100%;
-
-      a {
-        color: $grey02;
-      }
-    }
-
-    @include breakpoint($bp-sm) {
-      width: 50%;
-      float: left;
-      margin: 0;
-      border-top: none;
-
-      .c-newsroom-name {
-        float: left;
-        clear: left;
-        margin-left: 0;
-        padding-top: 0;
-        font-size: 22px;
       }
     }
   }

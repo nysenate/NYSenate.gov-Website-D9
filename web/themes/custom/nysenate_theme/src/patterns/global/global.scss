@@ -5,14 +5,6 @@
 // Only variables / mixins / settings.
 @import 'utils/init';
 
-// Import font-face fonts.
-//
-// This should only be imported and loaded once.
-@import 'fonts/fonts';
-
-// This should only be imported and loaded once.
-@import 'colors/colors';
-
 // Import utility classes.
 @import 'utils/classes';
 
@@ -21,6 +13,9 @@
 
 // Layout builder styles.
 @import 'builder/builder';
+
+// Import base styles.
+@import 'base/base';
 
 // Base
 //
@@ -159,11 +154,11 @@ select {
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
   background-position: 100% center;
   background-repeat: no-repeat;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   border: 1px solid #cccccc;
   padding: 0.5rem;
   font-size: 0.875rem;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
   color: rgba(0, 0, 0, 0.75);
   line-height: normal;
   border-radius: 0;
@@ -224,19 +219,19 @@ textarea {
   overflow: auto;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="date"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="month"],
-input[type="week"],
-input[type="email"],
-input[type="number"],
-input[type="search"],
-input[type="tel"],
-input[type="time"],
-input[type="url"],
+input[type='text'],
+input[type='password'],
+input[type='date'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='week'],
+input[type='email'],
+input[type='number'],
+input[type='search'],
+input[type='tel'],
+input[type='time'],
+input[type='url'],
 textarea {
   font-family: $font-sans;
   font-size: 1rem;
@@ -245,14 +240,14 @@ textarea {
   box-shadow: none;
   appearance: none;
   border-radius: 0px;
-  background-color: #FFFFFF;
+  background-color: $color-white;
   border: 1px solid #cccccc;
   display: block;
   margin: 0 0 1rem 0;
   height: 2.3125rem;
   width: 100%;
   box-sizing: border-box;
-  transition: box-shadow 0.45s,border-color 0.45s ease-in-out;
+  transition: box-shadow 0.45s, border-color 0.45s ease-in-out;
 
   &:focus {
     box-shadow: none;
@@ -346,7 +341,9 @@ ol {
 }
 
 * + ul,
-* + ol { margin-top: 20px; }
+* + ol {
+  margin-top: 20px;
+}
 
 a {
   @extend .link-text;
@@ -365,14 +362,17 @@ h6 {
   line-height: 1.4;
 }
 
+a {
+  text-decoration: none;
+}
 
 p {
   @include font-stack-primary;
-  @include font(16 24); 
+  @include font(16 24);
   color: $grey03;
 
   @include breakpoint($bp-sm) {
-    @include font(20 32)
+    @include font(20 32);
   }
 }
 
@@ -387,14 +387,14 @@ label {
   font-family: $font-sans;
   text-transform: uppercase;
 
-  .form-required{
+  .form-required {
     color: $orange01;
   }
 }
 
-.form-item-agree-terms{
-  input[type="checkbox"] + label,
-  input[type="radio"] + label {
+.form-item-agree-terms {
+  input[type='checkbox'] + label,
+  input[type='radio'] + label {
     display: inline-block;
     margin-left: 20px;
     margin-right: 1rem;
@@ -404,12 +404,22 @@ label {
   }
 }
 
-.u-mobile-only { display: block; }
-.u-tablet-plus { display: none; }
+.u-mobile-only {
+  display: block;
+}
+
+.u-tablet-plus {
+  display: none;
+}
 
 @include breakpoint($bp-sm) {
-	.u-mobile-only { display: none; }
-	.u-tablet-plus { display: block; }
+  .u-mobile-only {
+    display: none;
+  }
+
+  .u-tablet-plus {
+    display: block;
+  }
 }
 
 .nys-title {
@@ -417,6 +427,7 @@ label {
   color: $grey08;
   text-transform: capitalize;
   font-family: $font-serif-bold;
+  font-weight: $font-weight-normal;
   font-size: 18px;
 
   &.nys-title--district {
@@ -426,34 +437,23 @@ label {
 
 .c-block ul {
   list-style-position: outside;
-  margin-bottom:20px;
-  margin-top:20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .c-block ol {
-  margin-bottom:20px;
-  margin-top:20px;
-}
-
-.c-container--title {
-	text-transform: capitalize;
-	font-family: $font-serif-semibold;
-	font-size: 18px;
-	line-height: 32px;
-	letter-spacing: 0;
-	color: $grey02;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 // Override for bill page pie chart colors for committees section
 .node-type-bill {
-
   .c-bill--vote_2\27 {
     margin-top: 30px;
   }
 }
 
 .layout-content {
-  padding-top: 40px;
   margin: 0 auto;
 }
 
@@ -477,7 +477,6 @@ label {
   }
 }
 
-
 .c-detail--social-item {
   position: relative;
   display: block;
@@ -494,82 +493,17 @@ label {
     text-align: center;
     font-size: 28px;
     line-height: 40px;
-    color: #fff;
+    color: $color-white;
   }
 
   &.facebook {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\21';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @extend .icon-replace__facebook;
   }
-
   &.twitter {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\23';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @extend .icon-replace__twitter;
   }
-  
   &.email {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
-
-    &::after {
-      content: '\4e';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @extend .icon-replace__mail;
   }
 }
 
@@ -577,9 +511,11 @@ label {
   margin: 0 0 10px;
   color: $grey02;
   font-family: $font-sans;
+  font-weight: $font-weight-normal;
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+
   span {
     text-transform: capitalize;
     clear: both;
@@ -589,10 +525,7 @@ label {
   }
 }
 
-@media #{$tablet} {
-  .layout-content {
-    padding-top: 80px;
-  }
+@include breakpoint($bp-sm) {
 
   .c-detail--social {
     width: 28%;
@@ -620,7 +553,7 @@ label {
   }
 
   .c-detail--social-item {
-    background: #fff;
+    background: $color-white;
 
     &::after {
       color: $blue01;
@@ -643,21 +576,108 @@ label {
 ---------------------------------------------------------------------- */
 
 /* General */
-.addthisevent 							{visibility:hidden; float:left;}
-.addthisevent span 						{display:none!important;}
-.addthisevent .data 					{display:none!important;}
+.addthisevent {
+  visibility: hidden;
+  float: left;
+}
+.addthisevent span {
+  display: none !important;
+}
+.addthisevent .data {
+  display: none !important;
+}
 
 /* The button */
-.addthisevent-drop 					{display:inline-block;position:relative;z-index:999998;font-family:Roboto,Optima,Segoe,"Segoe UI",Candara,Calibri,Arial,sans-serif;font-weight:300;color:#333;text-decoration:none;font-size:16px;cursor:pointer;}
-.addthisevent-drop:hover 				{color:#555;font-size:16px;text-decoration:underline;}
+.addthisevent-drop {
+  display: inline-block;
+  position: relative;
+  z-index: 999998;
+  font-family: Roboto, Optima, Segoe, 'Segoe UI', Candara, Calibri, Arial,
+    sans-serif;
+  font-weight: 300;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+.addthisevent-drop:hover {
+  color: #555;
+  font-size: 16px;
+  text-decoration: underline;
+}
 
 /* The drop down */
-.addthisevent_dropdown 					{width:200px;position:absolute;z-index:99999;padding:6px 0px 0px 0px;background:$color-white;text-align:left;display:none;margin-top:4px;margin-left:-1px;border-top:1px solid #c8c8c8;border-right:1px solid #bebebe;border-bottom:1px solid #a8a8a8;border-left:1px solid #bebebe;-moz-border-radius:2px;-webkit-border-radius:2px;-webkit-box-shadow:1px 3px 6px rgba(0,0,0,0.15);-moz-box-shadow:1px 3px 6px rgba(0,0,0,0.15);box-shadow:1px 3px 6px rgba(0,0,0,0.15);}
-.addthisevent_dropdown span 			{display:block;line-height:110%;background:$color-white;text-decoration:none;font-size:14px;color:#333;padding:8px 10px 9px 15px;}
-.addthisevent_dropdown span:hover 		{background:#f4f4f4;color:$contrast_drk;text-decoration:none;font-size:14px;}
-.addthisevent_dropdown .copyx 			{height:21px;display:block;position:relative;cursor:default;}
-.addthisevent_dropdown .brx 			{height:1px;overflow:hidden;background:#e0e0e0;position:absolute;z-index:100;left:10px;right:10px;top:9px;}
-.addthisevent_dropdown .frs 			{position:absolute;top:5px;cursor:pointer;right:10px;padding-left:10px;font-style:normal;font-weight:normal;text-align:right;z-index:101;line-height:110%;background:$color-white;text-decoration:none;font-size:9px;color:#cacaca;}
-.addthisevent_dropdown .frs:hover 		{color:#6d84b4;}
+.addthisevent_dropdown {
+  width: 200px;
+  position: absolute;
+  z-index: 99999;
+  padding: 6px 0px 0px 0px;
+  background: $color-white;
+  text-align: left;
+  display: none;
+  margin-top: 4px;
+  margin-left: -1px;
+  border-top: 1px solid #c8c8c8;
+  border-right: 1px solid #bebebe;
+  border-bottom: 1px solid #a8a8a8;
+  border-left: 1px solid #bebebe;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.15);
+}
+.addthisevent_dropdown span {
+  display: block;
+  line-height: 110%;
+  background: $color-white;
+  text-decoration: none;
+  font-size: 14px;
+  color: #333;
+  padding: 8px 10px 9px 15px;
+}
+.addthisevent_dropdown span:hover {
+  background: #f4f4f4;
+  @extend .contrast_text;
+  text-decoration: none;
+  font-size: 14px;
+}
+.addthisevent_dropdown .copyx {
+  height: 21px;
+  display: block;
+  position: relative;
+  cursor: default;
+}
+.addthisevent_dropdown .brx {
+  height: 1px;
+  overflow: hidden;
+  background: #e0e0e0;
+  position: absolute;
+  z-index: 100;
+  left: 10px;
+  right: 10px;
+  top: 9px;
+}
+.addthisevent_dropdown .frs {
+  position: absolute;
+  top: 5px;
+  cursor: pointer;
+  right: 10px;
+  padding-left: 10px;
+  font-style: normal;
+  font-weight: normal;
+  text-align: right;
+  z-index: 101;
+  line-height: 110%;
+  background: $color-white;
+  text-decoration: none;
+  font-size: 9px;
+  color: #cacaca;
+}
+.addthisevent_dropdown .frs:hover {
+  color: #6d84b4;
+}
 
-.addthisevent-drop {margin-top: 20px;}
+.addthisevent-drop {
+  margin-top: 20px;
+}

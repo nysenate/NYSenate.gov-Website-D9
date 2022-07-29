@@ -1,0 +1,24 @@
+uuid: c3bdb017-fcf1-4790-aae6-867024c032d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.promotional_banners_list
+    - field.field.block_content.promotional_banners_list.field_promotional_banners
+id: block_content.promotional_banners_list.default
+targetEntityType: block_content
+bundle: promotional_banners_list
+mode: default
+content:
+  field_promotional_banners:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: card_list
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

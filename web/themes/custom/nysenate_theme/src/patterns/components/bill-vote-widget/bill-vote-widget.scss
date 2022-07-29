@@ -2,7 +2,8 @@
 
 .nys-bill-vote-form {
   .nys-bill-vote {
-    background-color: $gen_blue_med;
+    font-size: 0;
+    @extend .med-bg;
 
     &::after {
       content: '';
@@ -24,7 +25,7 @@
   }
 
   .nys-bill-subscribe {
-    background-color: $gen_blue_med;
+    @extend .med-bg;
     margin-top: 2em;
     padding-bottom: 1em;
     color: $color-white;
@@ -85,60 +86,18 @@
     align-items: center;
     color: $greyVoteBtnText;
     transition: background 0.2s ease;
-    background-color: $gen_blue_drk;
+    @extend .drk-bg;
 
-    &.nys-bill-vote-yes {
-      &::before {
-        content: '\2f';
-        font-family: 'senate_icons';
-        display: inline-flex;
-        align-items: center;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    }
-
-    &.nys-bill-vote-no {
-      &::before {
-        content: '\78';
-        font-family: 'senate_icons';
-        display: inline-flex;
-        align-items: center;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    }
+		&.nys-bill-vote-yes { @extend .icon-before__check; }
+		&.nys-bill-vote-no { @extend .icon-before__x; }
 
     &.nys-subscribe-button {
       width: 100%;
-
-      &::before {
-        content: '\6f';
-        font-family: 'senate_icons';
-        display: inline-flex;
-        align-items: center;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
+      @extend .icon-before__notification;
     }
 
     &:hover {
-      background-color: $gen_blue_lgt;
+      @extend .lgt-bg;
     }
 
     &.selected {
@@ -171,7 +130,7 @@
     height: 100px;
     border: 0;
     z-index: 5;
-    background-color: $gen_blue_med;
+    @extend .med-bg;
     font-size: 14px;
 
     .closer {
@@ -185,27 +144,16 @@
       overflow: hidden;
       padding-top: 1em;
       text-indent: -99999px;
+			@extend .icon-replace__x;
 
-      &::after {
-        content: '\78';
-        margin-left: 20px;
-        color: $color-white;
-        font-size: 23px;
-        line-height: 40px;
-        text-align: center;
+			&:after {
+				margin-left: 20px;
+				color: $color-white;
+				font-size: 23px;
+				line-height: 40px;
+				text-align: center;
         transition: color 0.2s ease;
-        text-indent: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-family: 'senate_icons';
-
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-left: 3px;
-      }
+			}
 
       &:hover {
         &::after {
@@ -220,32 +168,17 @@
       width: 100%;
       padding: 0 20px;
       transition: background 0.2s ease;
-      background-color: $gen_blue_drk;
+      @extend .drk-bg;
       color: $color-white;
       font-family: $font-sans-bold;
       text-transform: uppercase;
       font-size: 12px;
       letter-spacing: 0.2em;
       line-height: 60px;
+      @extend .icon-before__mail;
 
       &:hover {
-        background-color: $gen_blue_lgt;
-      }
-
-      &::before {
-        content: '\4e';
-        display: block;
-        float: left;
-        font-size: 32px;
-        line-height: 60px;
-        font-family: 'senate_icons';
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        @extend .lgt-bg;
       }
     }
   }
@@ -373,7 +306,7 @@
     margin-right: 1em;
   }
   .confirmed-vote {
-    background-color: $gen_blue_lgt;
+    @extend .lgt-bg;
 
     &:hover {
       background-color: #007095;
@@ -384,9 +317,9 @@
 /*----------------------------------------
 / BILL STATUS
 / styling for a list denoting a bill's status
-/ list items are circle 
-/ add 'passed' class to illustrate we're 
-/	passed that step	
+/ list items are circle
+/ add 'passed' class to illustrate we're
+/	passed that step
 /----------------------------------------*/
 
 .c-bill-section {
@@ -464,7 +397,7 @@
         }
       }
     }
-    /* 
+    /*
 			spacer is necessary to pull off
 			justified lists
 		*/
@@ -552,19 +485,19 @@
 // colored colors
 .nys-bill-status.nys-bill-status__drk {
   hr {
-    background-color: $gen_blue_drk;
+    @extend .drk-bg;
   }
 
   li {
-    background-color: $gen_blue_med;
+    @extend .med-bg;
 
     &.passed {
       background: $grey05;
     }
     &.nys-bill-status--assem-sen {
       border: 2px solid;
-      color: $gen_blue_drk;
-      background-color: $gen_blue_lgt;
+      @extend .drk-text;
+      @extend .lgt-bg;
     }
   }
 }

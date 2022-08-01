@@ -41,19 +41,6 @@
   border-bottom: 0;
 }
 
-h3.c-bill-num {
-  margin: 0 0 0.25em;
-  color: $grey02;
-  font-family: $font-serif-bold;
-  line-height: 1em;
-  font-size: 20px;
-  letter-spacing: 0.05em;
-
-  a {
-    color: $grey02;
-  }
-}
-
 .c-bill-topic {
   margin-bottom: 1.5em;
   text-transform: uppercase;
@@ -74,14 +61,6 @@ h4.c-bill-topic {
   a {
     font-family: $font-sans-bold;
   }
-}
-
-.c-bill-descript {
-  margin: 0 0 10px 0;
-  color: $grey02;
-  font-family: $font-serif;
-  font-size: 20px;
-  line-height: 32px;
 }
 
 // bill detail page widget
@@ -108,23 +87,11 @@ h4.c-bill-topic {
     text-transform: uppercase;
     font-size: 12px;
     line-height: 45px;
-    background-color: $gen_blue_drk;
+    @extend .drk-bg;
 
-    &::before {
-      content: '\2f';
-      font-family: 'senate_icons';
-      display: inline-flex;
-      align-items: center;
-
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
+		&.nys-bill-vote-yes { @extend .icon-before__check; }
+		&.nys-bill-vote-no { @extend .icon-before__x; }
+    
     &.nys-subscribe-button {
       border-top-width: 1px;
       border-bottom-width: 1px;
@@ -330,7 +297,7 @@ h4.c-bill-topic {
 
 .c-bill-amendment-toggle {
   dt {
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
     font-family: $font-sans-bold;
   }
   dd {
@@ -510,10 +477,6 @@ h4.c-bill-topic {
     float: left;
   }
 
-  h3.c-bill-num {
-    font-size: 22px;
-  }
-
   .c-bill-topic {
     font-size: 12px;
   }
@@ -522,10 +485,6 @@ h4.c-bill-topic {
     width: 75%;
     max-width: 560px;
     float: left;
-  }
-
-  .c-bill-descript {
-    margin-bottom: 15px;
   }
 
   .c-bill-path {

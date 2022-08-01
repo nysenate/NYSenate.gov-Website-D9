@@ -8,8 +8,9 @@
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\file\Entity\File;
-use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
+use Drupal\media\MediaInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -72,7 +73,9 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
   $variables['title'] = $variables['label'][0]['#context']['value'];
-  $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  if (isset($variables['content']['field_date'][0]['#markup'])) {
+    $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
+  }
 
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
@@ -95,8 +98,8 @@ function nysenate_theme_preprocess_node__article(&$variables) {
     }
   }
 
-  if (isset($variables['content']['field_image_main'][0])) {
-    $variables['image_caption'] = $variables['content']['field_image_main'][0]['#media']->getName();
+  if (isset($variables['content']['field_image_caption'][0])) {
+    $variables['image_caption'] = $variables['content']['field_image_caption'][0]['#context']['value'];
   }
 
 }
@@ -558,7 +561,7 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
             'street_1' => $node->_entity->field_location[0]->address_line1 ?? '',
             'street_2' => $node->_entity->field_location[0]->locality . ', '
             . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code ?? '',
-            'time' => $date->format('h:i A') . ' to ' . $end_date->format('h:i A'),
+            'time' => $date->format('g:i A') . ' to ' . $end_date->format('g:i A'),
           ];
           $variables['now'] = $date->format('M jS');
         }
@@ -586,11 +589,18 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'street_1' => $node->_entity->field_location[0]->address_line1,
           'street_2' => $node->_entity->field_location[0]->locality . ', '
           . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code,
-          'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
+          'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
         ];
       }
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID().
+ */
+function nysenate_theme_preprocess_views_view__senator_microsite_content(&$variables) {
+  $variables['attributes']['class'][] = 'newsroom-content';
 }
 
 /**
@@ -608,7 +618,10 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $items = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
-      $allowed_values = $node->field_category->getSetting('allowed_values');
+      $allowed_values = [];
+      if ($node->field_category->value) {
+        $allowed_values = $node->field_category->getSetting('allowed_values');
+      }
       $term = NULL;
       if ($node->field_issues->target_id) {
         $term = $term_storage->load($node->field_issues->target_id);
@@ -622,7 +635,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $items[] = [
-        'news_title' => $allowed_values[$node->field_category->value],
+        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : '',
         'news_url' => $node->toUrl()->toString(),
         'news_image' => $news_image,
         'news_name' => $node->getTitle(),
@@ -718,6 +731,95 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     }
     $variables['cta_url'] = $aliased_path . '/legislation';
     $variables['items'] = $items;
+  }
+
+  // Newsroom.
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content') {
+    $contents = [];
+    foreach ($view->result as $row) {
+      $node = $row->_entity;
+      $bundle = $node->bundle();
+      if ($bundle == 'article') {
+        if ($node->field_category->value) {
+          $bundle = $node->field_category->getSetting('allowed_values');
+          $bundle = $bundle[$node->field_category->value];
+        }
+      }
+
+      $issues = [];
+      if ($node->field_issues->target_id) {
+        $term = $term_storage->load($node->field_issues->target_id);
+        if (!empty($term)) {
+          $issues[] = [
+            'name' => $term->label(),
+            'url' => $term->toUrl()->toString(),
+          ];
+        }
+      }
+
+      $image_main = NULL;
+      if ($node->field_image_main->target_id) {
+        $media = $media_storage->load($node->field_image_main->target_id);
+        $file = File::load($media->field_image->target_id);
+        $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      }
+
+      $contents[] = [
+        'title' => $bundle,
+        'topics' => $issues,
+        'description' => [
+          'text' => $node->label(),
+          'url' => $node->toUrl()->toString(),
+        ],
+        'date' => $node->field_date->value ? \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y') : NULL,
+        'img_src' => $image_main,
+      ];
+    }
+
+    $variables['contents'] = $contents;
+  }
+
+  // Legislation.
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_legislation_content') {
+    $contents = [];
+    $bill = [];
+    foreach ($view->result as $row) {
+      $node = $row->_entity;
+      $bundle = $node->bundle();
+
+      // Published date.
+      $date = '';
+      if (!empty($node->field_ol_publish_date)) {
+        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_ol_publish_date->value), '', 'F d, Y');
+      }
+
+      // Last status.
+      $last_status = '';
+      if (!empty($node->field_ol_last_status)) {
+        $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
+        $last_status = $last_status_values[$node->field_ol_last_status->value];
+      }
+
+      $bill = [
+        'featured' => FALSE,
+        'small' => TRUE,
+        'is_poll' => FALSE,
+        'resolution' => FALSE,
+        'link' => $node->toUrl()->toString(),
+        'number' => $node->getTitle(),
+        'description_position' => 'top',
+        'description' => !empty($node->field_ol_name->value) ? $node->field_ol_name->value : '',
+        'date' => $date,
+        'update_location' => $last_status,
+        'positions' => nysenate_bill_positions($node),
+      ];
+
+      $contents[] = [
+        'bill' => $bill,
+      ];
+    }
+
+    $variables['contents'] = $contents;
   }
 }
 
@@ -1007,14 +1109,17 @@ function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
 
   // Last status.
   $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
-  $last_status = $last_status_values[$node->field_ol_last_status->value];
+  $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
 
   // All status.
   $positions = nysenate_bill_positions($node);
 
-  $sponsor = \Drupal::entityTypeManager()
-    ->getStorage('taxonomy_term')
-    ->load($node->field_ol_sponsor->target_id);
+  $sponsor = NULL;
+  if (!empty($node->field_ol_sponsor->target_id)) {
+    $sponsor = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->load($node->field_ol_sponsor->target_id);
+  }
 
   if (!empty($sponsor)) {
     $given = $sponsor->field_senator_name->given ?? '';
@@ -1187,7 +1292,6 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   if (isset($variables['content']['field_date_range'][0]['end_date']['#text'])) {
     $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
   }
-  $issues = [];
 
   // Set up reference variables indicating if this event spans multiple days.
   $is_multiday = FALSE;
@@ -1216,12 +1320,15 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     $variables['location_url'] = urlencode($address);
   }
 
-  foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-    if (!is_numeric($key)) {
-      continue;
+  $issues = [];
+  if (!empty($variables['content']['field_issues'])) {
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
     }
-    $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
-    $issues[] = $url;
   }
   $variables['field_issues'] = $issues;
 }
@@ -1311,7 +1418,7 @@ function nysenate_theme_preprocess_node(&$variables) {
         'street_1' => $node->field_location[0]->address_line1,
         'street_2' => $node->field_location[0]->locality . ', '
         . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
-        'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
+        'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
       ];
     }
   }
@@ -1392,6 +1499,87 @@ function nysenate_theme_preprocess_node__event__featured_content(&$variables) {
  */
 function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$variables) {
   $variables['banner_image'] = !empty($variables['content']['field_promotional_banner_image'][0]) ? $variables['content']['field_promotional_banner_image'][0] : [];
+  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $variables['node']->field_call_to_action->value;
+    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+    $variables['item_cta'] = [
+      'url' => $variables['node']->field_link->uri ?? '',
+      'text' => $allowed_values[$banner_cta_value],
+      'value' => $banner_cta_value,
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $views_id = [
+    'views-exposed-form-senator-microsite-content-microsite-newsroom-content',
+    'views-exposed-form-senator-microsite-content-microsite-legislation-content',
+  ];
+
+  if (!empty($form['#id']) && in_array($form['#id'], $views_id)) {
+    $form['#attributes']['class'][] = 'l-tab-bar';
+    $form['#attached']['library'][] = 'nysenate_theme/newsroom-content';
+
+    if ($form['#id'] == 'views-exposed-form-senator-microsite-content-microsite-newsroom-content') {
+      $form['type_1']['#options']['All'] = t('All News');
+    }
+
+    if ($form['#id'] == 'views-exposed-form-senator-microsite-content-microsite-legislation-content') {
+      unset($form['type']['#options']['All']);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_element_alter().
+ */
+function nysenate_theme_preprocess_form_element(&$variables) {
+  if (array_intersect(['type_1', 'type'], $variables['element']['#parents'])) {
+    $variables['attributes']['class'][] = 'c-tab';
+    $variables['label']['#attributes']['class'][] = 'c-tab-link';
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nysenate_theme_preprocess_page(&$variables) {
+  $menu_tree = \Drupal::menuTree();
+  // Build the typical default set of menu tree parameters.
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('socials');
+  // Load the tree based on this set of parameters.
+  $tree = $menu_tree->load('socials', $parameters);
+
+  $manipulators = [
+    ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ];
+
+  // Transform the tree using the manipulators you want.
+  $tree = $menu_tree->transform($tree, $manipulators);
+  // Finally, build a renderable array from the transformed tree.
+  $menu = $menu_tree->build($tree);
+
+  if (isset($menu['#items'])) {
+    $socials = [];
+    foreach ($menu['#items'] as $link) {
+      $socials[] = [
+        'icon' => $link['title'],
+        'url' => $link['url']->toString(),
+      ];
+    }
+    $variables['socials'] = $socials;
+  }
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {
   if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
     $banner_cta_value = $variables['node']->field_call_to_action->value;
     $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');

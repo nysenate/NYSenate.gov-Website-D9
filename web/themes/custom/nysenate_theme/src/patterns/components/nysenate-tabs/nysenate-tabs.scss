@@ -37,11 +37,11 @@
   }
 
   .c-tab {
+    display: flex;
     margin: 0;
     width: 100%;
     height: 45px;
     box-sizing: border-box;
-
     text-transform: uppercase;
 
     .c-tab-link {
@@ -54,6 +54,10 @@
       font-size: 14px;
       line-height: 45px;
       letter-spacing: 0.03em;
+    }
+
+    input {
+      opacity: 0;
     }
   }
 

@@ -6,7 +6,7 @@
   padding-bottom: 40px;
 
   &__title {
-    color: $grey02;
+    color: $grey08;
     font-size: 20px;
     line-height: 1em;
     padding-bottom: 20px;
@@ -131,10 +131,10 @@
   width: 100%;
 
   .c-event-name {
-    color: $grey02;
+    color: $grey08;
 
     a {
-      color: $grey02;
+      color: $grey08;
     }
   }
 }
@@ -166,7 +166,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -209,7 +209,7 @@
     margin-left: 20px;
     float: left;
     clear: left;
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
   }
 }
 
@@ -285,7 +285,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -312,11 +312,7 @@
     border: 1px solid $grey07;
     border-top: 2px solid $grey05;
     font-size: 18px;
-    color: $gen_blue_lgt;
-  }
-
-  .addthisevent-drop {
-    margin-top: 20px;
+    @extend .lgt-text;
   }
 }
 
@@ -367,11 +363,11 @@
   }
 
   .c-event-name {
-    font-family: $font-serif;
+    font-family: $font-serif-semibold;
     font-size: 24px;
     margin: 18px 0 18px 0;
     line-height: 120%;
-    color: $blue01;
+    color: $grey08;
   }
 
   .c-event-location {
@@ -382,7 +378,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -410,11 +406,7 @@
     border: 1px solid $grey07;
     border-top: 2px solid $grey05;
     font-size: 18px;
-    color: $gen_blue_lgt;
-  }
-
-  .addthisevent-drop {
-    margin-top: 20px;
+    @extend .lgt-text;
   }
 }
 
@@ -543,11 +535,6 @@
       clear: right;
       margin-right: 430px;
     }
-
-    .addthisevent-drop {
-      clear: right;
-      margin-right: 400px;
-    }
   }
 
   .c-event-block--featured-image {
@@ -565,6 +552,7 @@
     .c-event-name {
       float: right;
       width: 300px;
+      font-weight: 400;
       clear: right;
     }
 
@@ -590,14 +578,6 @@
       float: right;
       clear: right;
       margin-right: 145px;
-    }
-
-    .addthisevent-drop {
-      clear: right;
-      float: right;
-      width: 180px;
-      margin-top: 20px;
-      margin-right: 120px;
     }
   }
 

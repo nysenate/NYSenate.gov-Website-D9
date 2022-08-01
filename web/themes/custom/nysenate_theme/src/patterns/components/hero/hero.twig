@@ -2,7 +2,7 @@
 
 <section class="hero">
 {# is_collapsed variable is only for patternlab view #}
-  <div class="container {% if is_collapsed %} l-header__collapsed {% endif %}">
+  <div class="{% if is_collapsed %} l-header__collapsed {% endif %}">
     {% if type == "senator" %}
       {# start of senator hero #}
       <div class="l-header-region l-row l-row--hero c-senator-hero">
@@ -71,7 +71,11 @@
       </div>
       {# end of senator hero #}
     {% else %}
-      {% include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' %}
+      {%
+        include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
+          is_logged: is_logged
+        } only
+      %}
       <div class="l-header-region l-row c-hero">
         <div class="c-hero-livestream-wrapper">
           <div class="c-hero-livestream-video">

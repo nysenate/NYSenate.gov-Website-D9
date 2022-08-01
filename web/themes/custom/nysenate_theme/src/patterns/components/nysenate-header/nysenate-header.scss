@@ -4,6 +4,7 @@
 .element-invisible {
   @include element-invisible;
 }
+
 .element-focusable {
   @include element-focusable;
 }
@@ -58,7 +59,7 @@
     display: inline-block;
     vertical-align: middle;
     min-width: 250px;
-    color: $grey02;
+    color: $grey08;
     white-space: nowrap;
     text-decoration: none;
 
@@ -70,7 +71,7 @@
       height: 20px;
       margin-right: 10px;
       background: transparent url('http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg')
-        center center no-repeat;
+      center center no-repeat;
       background-size: cover;
     }
   }
@@ -93,6 +94,7 @@
         font-size: 18px;
         line-height: 1.3em;
       }
+
       .c-block--btn {
         font-size: 16px;
       }
@@ -121,6 +123,7 @@
       }
     }
   }
+
   .c-page-title {
     font-size: 22px;
 
@@ -143,7 +146,7 @@
   height: 55px;
 }
 
-.l-row:after {
+.l-row::after {
   content: '';
   display: table;
   clear: both;
@@ -197,7 +200,7 @@
 
     @include breakpoint($bp-sm) {
       display: block;
-      position: relative;
+      position: inherit;
       right: 0;
       margin: 0 auto;
       z-index: 2;
@@ -214,9 +217,9 @@
       margin: auto;
       width: 100%;
       height: 100%;
-      padding: 125px 0 0 0;
+      padding: 125px 0 0;
       overflow: scroll;
-      background: $gen_blue_lgt;
+      @extend .lgt-bg;
 
       @include breakpoint($bp-sm) {
         position: relative;
@@ -227,6 +230,22 @@
         transition: none 0 ease 0s;
       }
     }
+
+    nav {
+      .c-site-search--btn {
+        color: $grey08;
+        position: absolute;
+        
+        &::after {
+          top: 12px;
+        }
+      }
+
+      ul > li.leaf {
+        top: -16px;
+      }
+    }
+
   }
 }
 
@@ -236,102 +255,108 @@
 
 @include breakpoint($bp-sm) {
   .c-nav--wrap {
-		position: relative;
-		top: 0;
-		bottom: auto;
-		width: 100%;
-		height: 60px;
-		transition: height 0.3s ease;
-		overflow: hidden;
+    position: relative;
+    top: 0;
+    bottom: auto;
+    width: 100%;
+    height: 60px;
+    transition: height 0.3s ease;
+    overflow: hidden;
 
-		// class added to .c-nav--wrap through js
-		&.closed {
-			height: 0;
-		}
+    // class added to .c-nav--wrap through js
+    &.closed {
+      height: 0;
+    }
 
-		.c-nav {
-			display: block;
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			width: 100%;
-			margin: 0 auto;
-			z-index: 2;
-			height: 60px;
-			background: $color-white;
+    .c-nav {
+      display: block;
+      position: inherit;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      margin: 0 auto;
+      z-index: 2;
+      height: 60px;
+      background: $color-white;
 
-			> nav {
-				position: relative;
-				top: 0;
-				height: 100%;
-				padding: 0;
-				background: $color-white;
-				overflow: visible;
-				border-top: 1px solid $grey05;
-				transition: none 0 ease;
-			}
-		}
-	}
-	.c-nav--list {
-		width: 100%;
-		height: 60px;
-		margin: 0;
-		padding: 0 10% 0 0;
-		display: flex;
-  	justify-content: space-between;
+      > nav {
+        position: relative;
+        top: 0;
+        height: 100%;
+        padding: 0;
+        background: $color-white;
+        overflow: visible;
+        border-top: 1px solid $grey05;
+        transition: none 0 ease;
+      }
+    }
+  }
 
-		li {
-			position: relative;
-			width: 100px;
-			height: 100%;
-			display: inline-block;
-			vertical-align: middle;
-			border: none;
-			text-align: left;
-			font-family: $font-sans-bold;
-			font-size: 14px;
+  .c-nav--list {
+    width: 100%;
+    height: 60px;
+    margin: 0;
+    padding: 0 10% 0 0;
+    display: flex;
+    justify-content: space-between;
 
-			&:before {
-				content: '';
-				position: relative;
-				display: inline-block;
-				vertical-align: middle;
-				height: 100%;
-				width: 0px;
-			}
+    li {
+      position: relative;
+      width: 100px;
+      height: 100%;
+      display: inline-block;
+      vertical-align: middle;
+      border: none;
+      text-align: left;
+      font-family: $font-sans-bold;
+      font-size: 14px;
 
-			a {
-				height: auto;
-				display: inline-block;
-				vertical-align: middle;
-				padding: 0;
-				text-align: center;
-				line-height: 14px;
-			}
+      &:before {
+        content: '';
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+        width: 0px;
+      }
 
-			&.active-trail {
-				&:after {
-					content: '';
-					display: block;
-					position: absolute;
-					left: 0;
-					right: 0;
-					top: -15px;
-					margin: auto;
-					height: 20px;
-					width: 20px;
-					background: $color-white;
-					border: 1px solid $grey05;
-					transform: rotate(45deg);
-				}
-			}
+      a {
+        height: auto;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0;
+        text-align: center;
+        line-height: 14px;
+      }
+
+      &.active-trail {
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: -15px;
+          margin: auto;
+          height: 20px;
+          width: 20px;
+          background: $color-white;
+          border: 1px solid $grey05;
+          transform: rotate(45deg);
+        }
+      }
 		}
 	}
 }
 
 .pane-content {
   position: relative;
+
+  .button--menu {
+    position: absolute;
+    top: auto;
+  }
 }
 
 .c-nav--toggle {
@@ -347,31 +372,20 @@
   border: 0;
   padding: 0;
   transform: translateY(-50%);
+	@extend .icon-replace__hamburger;
 
   @include breakpoint($bp-sm) {
     display: none;
   }
 
-  &::after {
-    content: '\68';
-    width: 100%;
-    margin-left: 1px;
-    font-size: 24px;
-    line-height: 40px;
-    text-align: center;
-    text-indent: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: 'senate_icons';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-left: 3px;
-    color: $gen_blue_med;
-  }
+	&:after {
+		width: 100%;
+		margin-left: 1px;
+		font-size: 24px;
+		line-height: 60px;
+		text-align: center;
+		@extend .med-text;
+	}
 }
 
 /* From old site */
@@ -403,6 +417,7 @@
       display: block;
     }
   }
+
   .l-header {
     // this is to fix mobile button positioning when logged in as admin
     .contextual-links-region {
@@ -427,14 +442,14 @@
 .messages-number {
   display: block;
   font-size: 15px;
-  color: $contrast_lgt;
+  @extend .contrast_text;
   position: absolute;
   right: 22px;
   top: 8px;
   z-index: 999999;
   width: 20px;
   height: 20px;
-  background: $gen_blue_med;
+  @extend .med-bg;
   border-radius: 50px;
   text-align: center;
 
@@ -479,7 +494,7 @@ nav ul.c-nav--list {
 
 .nav-text:hover,
 .c-nav--list li a:hover {
-  color: $gen_blue_med;
+  @extend .med-text;
 }
 
 .c-site-search--btn {
@@ -496,7 +511,7 @@ nav ul.c-nav--list {
 }
 
 .c-header--connect {
-  display: flex;
+  display: none;
   align-items: center;
   position: absolute;
   top: 0;
@@ -504,6 +519,10 @@ nav ul.c-nav--list {
   bottom: 0;
   margin: auto;
   height: 55px;
+
+  @include breakpoint($bp-sm) {
+    display: flex;
+  }
 }
 
 .c-nav--social {
@@ -529,7 +548,7 @@ nav ul.c-nav--list {
 .c-nav--social li {
   display: inline-block;
   border: 0;
-  margin-right: 10px;
+  margin: 0 10px;
 
   svg path {
     fill: $color-white;
@@ -564,7 +583,7 @@ nav ul.c-nav--list {
 
 .c-header--btn.c-header--btn__taking_action,
 .c-header--btn.c-header--btn__primary {
-  @include font-stack-secondary;
+  font-family: $font-sans-bold;
   cursor: pointer;
   position: relative;
   height: 100%;
@@ -593,7 +612,7 @@ nav ul.c-nav--list {
     margin-left: 8px;
     padding-left: 3px;
     color: $color-white;
-    background-color: $gen_blue_lgt;
+    @extend .lgt-bg;
     overflow: hidden;
     border-radius: 50%;
     background-clip: padding-box;
@@ -635,7 +654,7 @@ nav ul.c-nav--list {
 }
 
 .c-header--btn-login {
-  background-color: $gen_blue_med;
+  @extend .med-bg;
 }
 
 .c-mobile-login--list {
@@ -667,7 +686,7 @@ nav ul.c-nav--list {
 
 a.c-header--btn.c-header--btn__primary,
 a.c-header--btn.c-header--btn__taking_action {
-  color: $gen_blue_lgt;
+  @extend .lgt-text;
   text-decoration: none;
 }
 
@@ -707,7 +726,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: auto;
   }
 
-  &.active-trail:after {
+  &.active-trail::after {
     content: '';
     display: block;
     position: absolute;
@@ -719,9 +738,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: 20px;
     background: $color-white;
     border: 1px solid $grey05;
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
   }
 }
@@ -741,7 +757,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     margin: 0 45px 0 0;
     padding: 0 0 0 20px;
     box-shadow: none;
-    color: $gen_blue_med;
+    @extend .med-text;
     background: $color-white;
     overflow: hidden;
     border-radius: 5px;
@@ -780,13 +796,13 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     background: transparent;
     @extend .med-text;
     @extend .icon-replace__search;
-  
+
     &:after {
       width: 100%;
       padding: 0;
       line-height: 45px;
     }
-  
+
     &:hover {
       background: transparent;
       @extend .drk-text;
@@ -820,8 +836,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       padding: 0 40px;
       font-size: 16px;
       line-height: 100px;
-
       background-color: $gen_blue_med;
+
 
       &::before {
         height: 100%;
@@ -830,6 +846,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         line-height: 100px;
       }
     }
+
     .c-block--btn {
       width: auto;
       right: 0;
@@ -936,7 +953,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: block;
       overflow: hidden;
       text-indent: -99999px;
-
       &::after {
         content: '\78';
         text-indent: 0;
@@ -951,8 +967,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         text-transform: none;
         padding-left: 3px;
       }
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     .c-site-search {
@@ -980,8 +994,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
           text-transform: none;
           padding-left: 3px;
         }
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
       }
     }
   }

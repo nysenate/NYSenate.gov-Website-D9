@@ -1,0 +1,16 @@
+@import "../../global/utils/init";
+
+.nysenate-promotional-banner-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 760px;
+  margin: 0 auto;
+  gap: 40px;
+
+  .c-block--initiative {
+
+    &__has-img {
+      grid-column: 1 / span 2;
+    }
+  }
+}

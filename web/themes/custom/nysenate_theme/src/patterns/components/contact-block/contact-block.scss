@@ -1,0 +1,271 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-office-location-link {
+  display: none;
+}
+
+.c-block--senator-office,
+.c-block--senator-media {
+  background: $greyLight;
+
+  .vcard,
+  .l-col-2 {
+    padding: 0;
+    display: block;
+    width: 100%;
+    margin-bottom: 30px;
+    border: none;
+  }
+
+  .fn[itemprop="name"],
+  .c-office-info--title {
+    display: block;
+    margin-bottom: 10px;
+    @extend .contrast_text;
+    font-family: $font-sans-bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  abbr[title] { border: none; }
+
+  .fn,
+  .street-address,
+  .locality,
+  .region,
+  .postal-code,
+  .tel,
+  .email,
+  .c-senator-media--item {
+    color: $grey08;
+    font-family: $font-sans;
+    font-size: 16px;
+    line-height: 1.2em;
+    font-weight: normal;
+    text-transform: capitalize;
+
+    & + * {
+      margin-top: 5px;
+    }
+  }
+
+  .c-senator-media--item {
+    text-transform: none;
+    span {
+      @extend .contrast_text;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      font-weight: normal;
+    }
+  }
+
+  .locality,
+  .region,
+  .postal-code {
+    display: inline-block;
+  }
+
+  .tel {
+    clear: left;
+    span {
+      @extend .contrast_text;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      font-weight: normal;
+    }
+  }
+
+  .email {
+    text-transform: none;
+
+    .type {
+      display: none;
+    }
+
+    a { 
+      color: $grey02;
+    }
+  }
+
+  .additional {
+    display: block;
+  }
+
+  .street-address {
+
+    span + span {
+      margin-top: 5px;
+    }
+  }
+
+  .c-senator-media--item {
+    display: block;
+  }
+
+  .c-block--senator-email {
+    clear: both;
+    font-family: $font-sans;
+    font-size: 16px;
+    line-height: 1.2em;
+    margin-bottom: 30px;
+
+    a {
+      text-decoration: none;
+      @extend .lgt-text;
+    }
+  }
+
+  .c-block--senator-office-contacts {
+    clear: both;
+    margin-top:20px;
+    color:$grey08;
+  }
+
+  .c-office-info--office-contact {
+    font-family:$font-sans;
+    font-size:16px;
+    line-height: 1.2em;
+    @extend .lgt-text;
+
+    strong {
+      font-family:$font-sans;
+    }
+
+    &.vcard {
+      color:$grey08;
+      line-height: 1.4;
+    }
+
+    span {
+      @extend .contrast_text;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    a {
+      text-decoration: none;
+      @extend .lgt-text;
+    }
+  }
+
+  .c-office-location-link {
+    display: block;
+    font-family: $font-sans-bold;
+    font-size: 16px;
+    text-decoration: none;
+    @extend .lgt-text;
+    @extend .icon-before__circle-pin;
+  }
+}
+
+.c-block--senator-office {
+  padding: 40px 20px 15px;
+
+  .l-col {
+    clear: left;
+  }
+}
+
+.c-block--senator-media {
+  padding: 40px 20px 30px;
+
+  .vcard {
+    margin: 0;
+  }
+
+  .email {
+    margin-top: 20px;
+  }
+
+  .c-office-location-link { 
+    display: none; 
+  }
+
+}
+
+.panel-separator + .pane-senator-contact-blocks {
+  margin-top: 40px;
+}
+
+.view-display-id-senator_press_kit_block {
+
+  .views-field-field-press-kit {
+    position: relative;
+    width: 100%;
+    height: 54px;
+    margin-top: -40px;
+
+    .c-block--btn {
+      padding-left: 20px;
+      transition: background-color 0.25s ease;
+      @extend .lgt-bg;
+      @extend .icon-before__presskit;
+
+      &:hover {
+        @extend .drk-bg;
+      }
+    }
+  }
+}
+
+.nys-title.contact-block__title {
+  font-family: $font-serif-bold;
+  font-weight: $font-weight-normal;
+}
+
+@include breakpoint($bp-sm) {
+  .nys-title.contact-block__title {
+    font-size: 32px;
+  }
+
+  .c-block--senator-office {
+    padding: 40px 40px 45px;
+
+    .field-content {
+      margin: 0 auto;
+      display: grid;
+      grid-gap: 15px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .c-office-info--office-contact.vcard,
+    .l-col-2 {
+      float: left;
+      width: 50%;
+      padding-right: 1%;
+      }
+
+      .l-col-2 {
+        margin-bottom: 0;
+      }
+  }
+    .c-block--senator-media {
+      padding: 40px 40px 45px;
+
+      .vcard,
+      .l-col-2 {
+          float: left;
+          width: 50%;
+          padding-right: 1%;
+        }
+
+        .l-col-2 {
+          margin-bottom: 0;
+        }
+      }
+
+
+  .view-display-id-senator_press_kit_block {
+    .views-field-field-press-kit {
+      margin-top: -60px;
+      height: 80px;
+
+      .c-block--btn {
+        padding-left: 40px;
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+uuid: 6113a26b-9bf3-49d3-b104-cbf708b18a90
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_committee
+    - node.type.in_the_news
+    - taxonomy.vocabulary.committees
+id: node.in_the_news.field_committee
+field_name: field_committee
+entity_type: node
+bundle: in_the_news
+label: Committee
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      committees: committees
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

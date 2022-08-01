@@ -6,15 +6,6 @@
 /
 /-------------------------------*/
 
-.node--session-full {
-  padding-top: 40px;
-  max-width: 840px;
-  margin: 0 auto;
-
-  @include breakpoint($bp-sm) {
-    padding-top: 80px;
-  }
-}
 
 // HEADER
 
@@ -30,7 +21,7 @@
     display: inline-block;
     color: $grey08;
     text-transform: uppercase;
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 12px;
 
     & + p {
@@ -41,14 +32,14 @@
 
 .pane-1 {
   .c-title {
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
     font-size: 26px;
     line-height: 43px;
     margin-bottom: 10px;
     color: $grey08;
   }
   .c-committee-type {
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 14px;
     color: $yellow03;
     text-transform: uppercase;
@@ -66,7 +57,7 @@
 }
 
 .c-meeting-detail--live-flag + .c-meeting-detail--floor-flag {
-  &:before {
+  &::before {
     content: '|';
     margin: 0 5px;
   }
@@ -75,10 +66,10 @@
 .c-meeting-video--status {
   color: $grey03;
   text-transform: uppercase;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 18px;
   vertical-align: top;
-  &:before {
+  &::before {
     color: $orange01;
     font-size: 28px;
     line-height: 16px;
@@ -96,7 +87,7 @@
 .c-meeting-date--num,
 .c-meeting-news--type {
   color: $grey08;
-  font-family: 'Adelle Bold';
+  font-family: $font-serif-bold;
   font-size: 20px;
 }
 
@@ -104,10 +95,10 @@
 .c-meeting-date--year {
   color: $grey08;
   text-transform: uppercase;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 16px;
 
-  &:before {
+  &::before {
     content: '/';
     display: inline-block;
     margin: 0 2px 0 5px;
@@ -118,7 +109,7 @@
   margin-bottom: 30px;
   .c-event-location {
     font-size: 14px;
-    color: #222;
+    color: $grey10;
   }
 }
 
@@ -126,9 +117,10 @@
   margin-bottom: 20px;
 
   color: $grey08;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   font-size: 26px;
   line-height: 1.2em;
+  font-weight: 400;
 
   a {
     color: $grey08;
@@ -138,51 +130,48 @@
 .c-meeting-detail--location-link {
   display: block;
   margin: 0 0 10px 0;
-
-  font-family: 'Proxima Nova Regular';
+  text-decoration: none;
+  font-family: $font-sans;
   font-size: 18px;
-  color: $gen_blue_lgt;
+  @extend .lgt-text;
+  @extend .icon-before__circle-pin;
 
-  &::before {
-    content: '\32';
-    font-family: 'senate_icons';
-    display: inline-block;
-    vertical-align: middle;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-right: 3px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  &:before {
     margin-top: -5px;
     font-size: 20px;
   }
 
   a {
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
+
+    &:hover {
+      color: $color-cg-blue;
+    }
+  }
+
+  &:hover {
+    color: $color-cg-blue;
   }
 }
 
 .c-meeting-detail--location {
   margin: 0 0 10px 0;
   color: $grey04;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 18px;
 }
 
 .c-meeting-detail--time {
   margin: 0;
   color: $grey08;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   font-size: 18px;
 }
 
 .c-meeting-detail--descript {
   .video-embed {
-		margin-top: 24px;
-	}
+    margin-top: 24px;
+  }
 
   p {
     margin-bottom: 15px;
@@ -192,7 +181,7 @@
 
 .c-meeting-detail--related {
   text-transform: uppercase;
-  font-family: 'Proxima Nova SemiBold';
+  font-family: $font-sans-bold;
   font-size: 10px;
   line-height: 1.5em;
 
@@ -219,7 +208,7 @@
   p,
   a {
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 10px;
     line-height: 2.5em;
   }
@@ -232,7 +221,8 @@
 
   a {
     display: inline-block;
-    color: $gen_link;
+    @extend .link-text;
+    text-decoration: none;
 
     & + a {
       margin-left: 5px;
@@ -248,7 +238,7 @@
   .panel-pane .pane-content {
     div {
       .c-when {
-        font-family: 'Proxima Nova Regular';
+        font-family: $font-sans;
         font-size: 14px;
         line-height: 20px;
         text-transform: uppercase;
@@ -269,7 +259,7 @@
     padding-bottom: 10px;
 
     h4 {
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
       font-size: 12px;
       line-height: 1;
       text-transform: uppercase;
@@ -283,7 +273,6 @@
   }
 
   .view-content {
-
     .c-update-block {
       border-top: 1px solid $grey05;
     }
@@ -312,7 +301,7 @@
     .l-panel-col {
       color: $grey08;
       text-transform: uppercase;
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
       font-size: 12px;
       line-height: 1;
     }
@@ -345,7 +334,7 @@
 .c-meeting-section--title {
   margin: 20px 0 30px;
   color: $grey08;
-  font-family: 'Adelle Semibold';
+  font-family: $font-serif-semibold;
   font-size: 18px;
   line-height: 1;
 }
@@ -354,7 +343,7 @@
   margin-bottom: 5px;
 
   color: $grey08;
-  font-family: 'Adelle Bold';
+  font-family: $font-serif-bold;
   font-size: 24px;
   line-height: 1;
 }
@@ -362,15 +351,15 @@
 .c-meeting-list--issues {
   a {
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 10px;
-    color: $gen_link;
+    @extend .link-text;
   }
 }
 
 .c-meeting-list--descript {
   margin-top: 10px;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   font-size: 18px;
 
   a {
@@ -410,7 +399,7 @@
     display: block;
     font-size: 12px;
 
-    &:before {
+    &::before {
       display: none;
     }
   }
@@ -428,8 +417,8 @@
   .c-meeting-detail--location-link {
     color: $grey08;
 
-    &:before {
-      color: $gen_blue_lgt;
+    &::before {
+      @extend .lgt-text;
     }
   }
   .c-detail--location,
@@ -466,7 +455,7 @@
 
 .c-meeting-news--date {
   color: $grey04;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   font-size: 12px;
 }
 
@@ -479,7 +468,7 @@
       .view-content {
         position: relative;
         .meeting-status {
-          font-family: 'Proxima Nova Regular';
+          font-family: $font-sans;
           font-size: 16px;
           line-height: 20px;
           color: $grey08;
@@ -489,20 +478,20 @@
           margin-bottom: 25px;
         }
         .meeting-title {
-          font-family: 'Adelle Light';
+          font-family: $font-serif;
           font-size: 42px;
           line-height: 46px;
           color: $grey08;
           margin-top: -65px;
         }
         .meeting-location {
-          font-family: 'Proxima Nova Regular';
+          font-family: $font-sans;
           font-size: 14px;
           line-height: 18px;
           color: $blue01;
         }
         .meeting-date {
-          font-family: 'Proxima Nova SemiBold';
+          font-family: $font-sans-bold;
           font-size: 14px;
           line-height: 21px;
         }
@@ -510,7 +499,7 @@
           font-size: 48px;
           line-height: 30px;
           margin-bottom: 6px;
-          font-family: 'Adelle Bold';
+          font-family: $font-serif-bold;
           color: $grey08;
         }
         .meeting-month {
@@ -533,9 +522,9 @@
               display: inline-block;
               margin: 0 10px 0 0;
               &:nth-child(1) {
-                &:before {
+                &::before {
                   content: 'Related Issues:';
-                  font-family: 'Proxima Nova SemiBold';
+                  font-family: $font-sans-bold;
                   font-size: 12px;
                   line-height: 18px;
                   text-transform: uppercase;
@@ -558,7 +547,7 @@
     }
   }
   .c-members-title {
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 16px;
     line-height: 26px;
     padding-bottom: 20px;
@@ -569,7 +558,7 @@
   }
   .pane-meeting-agenda .pane-title,
   .nys-title {
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
     font-size: 26px;
     line-height: 38px;
     margin-bottom: 0px;
@@ -615,7 +604,7 @@
               .c-chair_info {
                 margin-left: 55px;
                 .sponsor-name {
-                  font-family: 'Proxima Nova Regular';
+                  font-family: $font-sans;
                   font-size: 10px;
                   line-height: 14px;
                   text-transform: uppercase;
@@ -669,12 +658,12 @@
           text-align: left;
 
           span {
-            font-family: 'Proxima Nova Regular';
+            font-family: $font-sans;
             font-size: 16px;
             line-height: 24px;
             text-transform: uppercase;
             span {
-              font-family: 'Adelle Bold';
+              font-family: $font-serif-bold;
               font-size: 40px;
               line-height: 24px;
               text-transform: none;
@@ -685,7 +674,7 @@
           margin: -8px 0px 10px 21%;
           float: none;
           a {
-            font-family: 'Adelle Light';
+            font-family: $font-serif;
             font-size: 24px;
             line-height: 24px;
             color: $grey08;
@@ -694,7 +683,7 @@
         .c-category {
           margin-left: 21%;
           a {
-            font-family: 'Proxima Nova SemiBold';
+            font-family: $font-sans-bold;
             font-size: 12px;
             line-height: 14px;
             color: $yellow03;
@@ -702,19 +691,19 @@
           }
         }
         .c-event-location {
-          font-family: 'Proxima Nova Regular';
+          font-family: $font-sans;
           font-size: 14px;
           line-height: 26px;
           margin-left: 21%;
           float: none;
-          &:before {
+          &::before {
             color: $blue01;
             font-size: 20px;
             margin-top: -3px;
           }
         }
         .c-event-time {
-          font-family: 'Proxima Nova SemiBold';
+          font-family: $font-sans-bold;
           font-size: 14px;
           line-height: 30px;
           margin: 0 0 0 21%;
@@ -726,11 +715,7 @@
       }
     }
   }
-  .block-nys-blocks-how-senate-works-block {
-    max-width: 840px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
+
   .view-senator-news {
     .view-content {
       .u-odd,
@@ -761,7 +746,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .l-messages {
     padding: 0 9%;
 
@@ -802,7 +787,7 @@
     width: 10px;
   }
   .c-meeting-detail--live-flag + .c-meeting-detail--floor-flag {
-    &:before {
+    &::before {
       margin: 0 10px;
     }
   }
@@ -821,7 +806,7 @@
     font-size: 20px;
     line-height: 24px;
 
-    &:before {
+    &::before {
       display: none;
     }
   }
@@ -860,7 +845,7 @@
   }
   .c-meeting-video--status {
     font-size: 20px;
-    &:before {
+    &::before {
       padding-top: 7px;
       font-size: 30px;
     }

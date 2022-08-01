@@ -64,7 +64,7 @@
 
       <div class="c-meeting-detail--info">
         <h1 class="c-meeting-detail--title">Session</h1>
-        <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >NYS Capitol Building</a>
+        <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank" >{{ content.field_location[0].organization['#value'] }}</a>
         <div class="c-meeting-detail--location">
           {% if content.field_meeting_location %}
             {{ content.field_meeting_location }}
@@ -82,7 +82,7 @@
             <span class="c-meeting-video--status icon-before__youtube">{{ video_status.value }}</span>
           {% endif %}
         </p>
-        <div title="Add to Calendar" class="addthisevent">
+        <div title="Add to Calendar">
           Add to Calendar
           <span class="start">{{ date_value.start_date }}</span>
           <span class="end">{{ date_value.end_date }}</span>

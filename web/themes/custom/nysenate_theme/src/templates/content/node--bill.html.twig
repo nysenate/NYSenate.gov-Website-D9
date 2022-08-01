@@ -2,17 +2,17 @@
 
 {% set classes = ['node--bill'] %}
 <!-- BILL TEMPLATE -->
-<div class="{{ classes }}" {{ attributes }}>
+<div class="{{ classes|join(' ') }}" {{ attributes }}>
   <div
     class="c-block c-detail--header c-detail--header__bill">
     <!-- Bill Title -->
     <div class="c-bill--heading-block">
       <h2 class="nys-title c-bill-title">
-        {{ field_ol_chamber }}
+        {{ content.field_ol_chamber[0]['#markup'] }}
         Bill
         {{ label }}
       </h2>
-      <span class="c-bill--flag">{{ signed_veto_status }}</span>
+      <span class="c-bill--flag">{{ content.field_ol_last_status[0]['#markup'] }}</span>
       <div class="clearfix"></div>
       <div class="c-bill--session-year">
         {{ legislative_session }}
@@ -21,15 +21,15 @@
 
     <div class="c-detail--header-meta" style="margin-bottom: 20px">
       <div class="c-detail--descript">
-        {{ field_ol_name }}
-        {% if field_issues %}
+        {{ content.field_ol_name[0]['#context']['value'] }}
+        {% if issues %}
           <div class="c-meeting-detail--related">
             <ul class="c-meeting-detail--related">
-              {% if field_majority_issue_tag %}
-                <li>{{ field_majority_issue_tag }}</li>
+              {% if majority_issue %}
+                <li>{{ majority_issue }}</li>
               {% endif %}
-              {% if field_issues %}
-                {% for issue in field_issues %}
+              {% if issues %}
+                {% for issue in issues %}
                   <li>{{ issue }}</li>
                 {% endfor %}
               {% endif %}
@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- Bill Pdf Link -->
-    <a href="{{ ol_base_url }}/pdf/bills/{{ field_ol_session }}/{{ label }}" class="c-detail--download" target="_blank">
+    <a href="{{ pdf_link }}" class="c-detail--download" target="_blank">
       download bill text pdf
     </a>
   </div>
@@ -54,11 +54,11 @@
                                   active_amend_url
                                   }}" class="c-detail--social-item facebook">Facebook</a></li>
       <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{
-                                  field_ol_base_print_no
+                                  content.field_ol_base_print_no[0]['#context']['value']
                                   }} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
       <li><a href="mailto:?&subject=From NYSenate.gov: {{
-                                  field_ol_base_print_no
-                                  }}&body=Check out this bill: {{ field_ol_base_print_no }}: < {{
+                                  content.field_ol_base_print_no[0]['#context']['value']
+                                  }}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{
                                   active_amend_url
                                   }} >." class="c-detail--social-item email">Email</a></li>
     </ul>
@@ -96,7 +96,7 @@
 
   <div class="c-block c-detail--status c-bill-section">
     <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
-      {% if current_session_year %}
+      {% if current_session_year == content.field_ol_session[0]['#markup'] %}
         Current
       {% else %}
         Archive: Last
@@ -107,12 +107,12 @@
         {{ sub_bill_base_print_no }}
       {% endif %}
       -
-      {{ bill_display_status }}
+      {{ content.field_ol_last_status[0]['#markup'] }}
     </h3>
     <!-- Bill Graph Output -->
-    <ul class="nys-bill-status nys-bill-status__drk">
+    <ul class="nys-bill-status">
       <hr/>
-      {% for position in bill.positions %}
+      {% for position in positions %}
         {% if position.is_grouped %}
           <li class="nys-bill-status--assem-sen">
             <ul class="nys-bill-status">
@@ -147,6 +147,8 @@
 
   <!-- Bill Message Form -->
   <div class="c-bill--message-form clearfix">
+    {# todo: This variable comes from nys_bills custom module. #}
+    {# Need to confirm if we need to port this module. #}
     {{ registration_form }}
   </div>
 
@@ -175,12 +177,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for action in actions %}
-                    <tr class="cbill--actions-table--row">
-                      <td class="c-bill--actions-table-col1">{{ action.date }}</td>
-                      <td class="c-bill--actions-table-col2">
-                        <span class="c-bill--action-line-senate">{{ action.title }}</span><br></td>
-                    </tr>
+                  {% for versions, base_print_no in grouped_actions %}
+                    {% for dates, version in base_print_no %}
+                      {% for key, items in version %}
+                        <tr class="cbill--actions-table--row">
+                          <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
+                          <td class="c-bill--actions-table-col2">
+                            <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
+                        </tr>
+                      {% endfor %}
+                    {% endfor %}
                   {% endfor %}
                 </tbody>
               </table>
@@ -217,6 +223,7 @@
     </div>
   {% endif %}
 
+  {# todo: Need to port the nys_bill module to create this template. #}
   {{ amendments_block }}
 
   <div class="content c-bill-section" id="panel-comments">
@@ -230,7 +237,6 @@
       </div>
     {% endif %}
   </div>
-
 
   <!-- Related Bills Content -->
   {% if view_related_bills %}
@@ -267,4 +273,9 @@
       </div>
     </div>
   {% endif %}
+
+  {% if content.field_comments %}
+    {{ content.field_comments }}
+  {% endif %}
+  
 </div>

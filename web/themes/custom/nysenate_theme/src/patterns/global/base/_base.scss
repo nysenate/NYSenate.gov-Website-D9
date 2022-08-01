@@ -1,0 +1,599 @@
+/*-------------------------------------------------------
+/
+/ CONTAINER GLOBALS
+/ containers are reuseable blocks 
+/ things with uniform titles and links to those sections
+/ ie - newsroom container which includes a title,
+/	synopsis of a few articles and a link to the newsroom
+/
+/-------------------------------------------------------*/
+.c-container {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.c-container--header {
+  font-family: $font-sans;
+  text-transform: uppercase;
+  border-bottom: 1px solid $grey05;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.c-container--header__top-border {
+  font-family: $font-sans;
+  text-transform: uppercase;
+  border-top: 1px solid $grey05;
+  padding: 20px 0;
+  position: relative;
+}
+
+h2,
+h3 {
+  &.c-container--title {
+    @include font(12 16 1.2);
+    color: $grey08;
+    text-transform: uppercase;
+    font-family: $font-sans;
+    margin: 0;
+    font-weight: $font-weight-normal;
+
+    @include breakpoint($bp-sm) {
+      font-size: 16px;
+      line-height: 16px;
+
+      &::after {
+        margin-top: -4px;
+        font-size: 23px;
+        line-height: 16px;
+      }
+    }
+  }
+}
+
+.c-detail--download {
+  display: block;
+  margin-bottom: 20px;
+  color: $blue01;
+  font-family: $font-sans;
+  text-transform: uppercase;
+  font-size: 12px;
+  @extend .icon-before__bill;
+
+  &::before {
+    font-size: 1.5em;
+    line-height: 1em;
+  }
+
+  @include breakpoint($bp-sm) {
+    margin-bottom: 0;
+  }
+}
+
+.c-pullquote--citation {
+  display: block;
+  margin-top: 20px;
+  color: $grey02;
+  font-family: $font-sans;
+  text-transform: uppercase;
+  font-size: 12px;
+
+  @include breakpoint($bp-sm) {
+    font-size: 14px;
+    margin-top: -25px;
+    padding-left: 50px;
+  }
+}
+
+.c-container--link {
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  @extend .icon-after__arrow;
+  @extend .link-text;
+
+  &::after {
+    margin-top: -2px;
+    font-size: 17px;
+    line-height: 12px;
+  }
+
+  @include breakpoint($bp-sm) {
+    font-size: 16px;
+    line-height: 16px;
+
+    &::after {
+      margin-top: -4px;
+      font-size: 23px;
+      line-height: 16px;
+    }
+  }
+}
+
+.c-pullquote {
+  margin: 0;
+  position: relative;
+  color: $grey02;
+  font-family: $font-serif-semibold;
+  padding: 50px 0 40px;
+  font-size: 18px;
+  line-height: 1.3em;
+
+  p {
+    @extend .icon-before__quotes;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: -0.2em;
+      @extend .lgt-text;
+      font-size: 2.7em;
+    }
+  }
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: -0.2em;
+    @extend .lgt-text;
+    font-size: 2.7em;
+  }
+}
+
+// COMMON
+/*----------------------------------------
+/ IMAGE
+/----------------------------------------*/
+.c-img--caption {
+  margin: 0;
+  padding: 10px 20px 10px;
+  background: $grey06;
+  color: $grey02;
+  font-family: $font-sans;
+  @include font(12 18);
+}
+
+/*-------------------------------------
+/
+/ LAYOUT - ROWS
+/ controls overall width of elements
+/
+/-------------------------------------*/
+.l-row {
+  position: relative;
+  clear: both;
+  margin: 0 auto;
+  width: 100%;
+
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.l-row--nav {
+  padding: 0 20px;
+  max-width: 100%;
+}
+.l-row--hero {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.l-row--main {
+  position: relative;
+  z-index: 3;
+  margin-left: auto;
+  margin-right: auto;
+  // max-width should account for padding,
+  // so + 40 (20px left and 20px right)
+  padding: 0 20px;
+  max-width: 440px;
+}
+.page-node-dashboard {
+  .l-row--main {
+    max-width: 100%;
+  }
+  .row {
+    margin: 0;
+  }
+}
+.l-row--footer { max-width: 1040px; }
+
+@include breakpoint($bp-sm) {
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main {
+    padding: 0 40px;
+    max-width: 840px;
+  }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+  .l-row--footer { max-width: 1040px; }
+}
+
+@include breakpoint($bp-md) {
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main { max-width: 840px; }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+}
+
+@include breakpoint($bp-lg) {
+
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main { max-width: 840px; }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+}
+
+/*-------------------------------------
+/
+/ LAYOUT - COLUMNS
+/ controls overall width of elements
+/
+/-------------------------------------*/
+.l-col {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+@include breakpoint($bp-sm) {
+  .l-col-2 {
+    width: 50%;
+
+    &.l-col--padded {
+      padding-right: 5%;
+    }
+
+    & + .l-col-2 {
+      &.l-col--padded {
+        padding-right: 0;
+        padding-left: 5%;
+      }
+    }
+  }
+
+  .l-col-3 {
+    width: 33.33%;
+  }
+
+  .l-col-4 {
+    width: 25%;
+  }
+
+  // used for update feeds and the like
+  .l-col-1-of-3 {
+    width: 24%;
+    padding-right: 2%;
+  }
+
+  .l-col-1-of-2 {
+    width: 24%;
+    padding-right: 2%;
+  }
+
+  .l-col-2-of-2 {
+    width: 76%;
+    padding-right: 10%;
+  }
+
+  .l-col-2-of-3 {
+    width: 49%;
+    padding-right: 2%;
+  }
+
+  // use this is if your second column doesn't have a third.
+  .l-col-2-of-3__full {
+    width: 72%;
+  }
+
+  .l-col-3-of-3 {
+    width: 27%;
+  }
+}
+
+/*-------------------------------------
+/ TOGGLE BUTTON
+/-------------------------------------*/
+.c-block--btn-toggle {
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: 0;
+  left: auto;
+  height: 42px;
+  width: 42px;
+  @extend .icon-replace__minus;
+
+  @include breakpoint($bp-sm) {
+    padding-left: 0.2em;
+  }
+
+  &:after {
+    width: 100%;
+    height: 100%;
+    padding-left: 0.1em;
+    text-align: center;
+    line-height: 42px;
+    font-size: 26px;
+  }
+}
+
+.c-block__collapsed {
+  .c-block--btn-toggle {
+    position: absolute;
+    height: 42px;
+    width: 42px;
+    @extend .icon-replace__plus;
+
+    &:after {
+      font-size: 26px;
+      line-height: 42px;
+    }
+  }
+}
+
+.nys-senator--name {
+  font-family: $font-serif;
+  font-weight: $font-weight-normal;
+  color: $grey08;
+  font-size: 16px;
+}
+
+/*-------------------------------------------------------
+/
+/ 	NEWS CLUSTER
+/ 	Covers: News Videos, Press Releases and Tweets
+/ 	Exists on : Homepage
+/
+/-------------------------------------------------------*/
+.c-news-container {
+  overflow: hidden;
+  display: block;
+
+  .c-container--header {
+    margin-bottom: -1px;
+  }
+
+  .c-title,
+  .c-title h3 {
+    font-family: $font-sans;
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin: 0;
+
+    h2 {
+      font-size: 14px;
+    }
+
+    .c-newsroom {
+      position: absolute;
+      right: 0;
+      top: 0;
+      border: 1px solid $grey05;
+      padding: 9px 12px;
+      margin-top: 10px;
+      @extend .lgt-text;
+
+      &:after {
+        font-size: 15px;
+        vertical-align: bottom;
+      }
+    }
+  }
+
+  .c-news-date {
+    font-family: $font-sans;
+    font-size: 13px;
+    color: $grey05;
+    text-transform: none;
+    padding-left: 9px;
+  }
+
+  .c-news-block {
+    margin: 0px;
+    padding-bottom: 40px;
+    overflow: hidden;
+    font-family: $font-sans;
+    position: relative;
+    border-top: 1px solid $grey05;
+
+    &.u-odd {
+      clear: left;
+    }
+
+    .c-newsroom-name {
+      font-family: $font-serif;
+      font-size: 19px;
+      margin: 0px 0px 25px 0px;
+      line-height: 120%;
+      min-width: 100%;
+
+      a {
+        color: $grey02;
+      }
+    }
+
+    .c-newsroom-image {
+      margin-bottom: 20px;
+      width: 100%;
+      iframe {
+        max-width: 360px;
+        max-height: 202px;
+      }
+    }
+
+    .c-senator-card {
+      margin-top: 20px;
+    }
+
+    .c-newsroom-link {
+      font-size: 13px;
+      text-transform: uppercase;
+      @extend .lgt-text;
+    }
+
+    .l-twitter-container {
+      display: table;
+
+      img {
+        display: table-cell;
+        vertical-align: middle;
+        width: 60px;
+        height: 60px;
+      }
+
+      .c-twitter_info {
+        display: table-cell;
+        vertical-align: middle;
+        padding-left: 20px;
+
+        h3 {
+          font-family: $font-sans;
+          color: $grey03;
+          font-size: 18px;
+        }
+
+        a {
+          font-size: 14px;
+          @extend .lgt-text;
+        }
+      }
+    }
+
+    .c-tweet {
+      margin-top: 20px;
+      margin-bottom: 25px;
+      color: $grey02;
+      font-size: 19px;
+      line-height: 120%;
+
+      a {
+        @extend .lgt-text;
+      }
+    }
+
+    .c-timestamp {
+      font-size: 12px;
+      color: $grey04;
+    }
+
+    .nys-senator--info > span {
+      display: none;
+    }
+
+    .nys-senator--name {
+      font-family: $font-sans;
+      font-size: 14px;
+    }
+
+    .nys-senator--party,
+    .nys-senator--district {
+      color: $grey04;
+      font-family: $font-sans-bold;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    .nys-senator--involved {
+      color: $yellow02;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+
+      &:before {
+        @extend .icon-before__recruit-friends;
+        background-color: $yellow02;
+        color: $color-white;
+        height: 30px;
+        width: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 20px;
+        margin-left: 0;
+        padding-left: 3px;
+        color: $color-white;
+        overflow: hidden;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        background-clip: padding-box;
+        margin-right: 8px;
+      }
+    }
+
+    @include breakpoint($bp-sm) {
+      width: 50%;
+      float: left;
+      margin: 0;
+      padding-left: 20px;
+      padding-right: 0px;
+      border-top: none;
+
+      &.u-odd {
+        padding-right: 20px;
+        padding-left: 0px;
+      }
+
+      .c-newsroom-name {
+        float: left;
+        clear: left;
+        margin-left: 0;
+        padding-top: 0;
+
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+/*----------------------------------------
+/ LIST ITEM 
+/----------------------------------------*/
+.c-list-item {
+  padding-top: 20px;
+  border-top: 1px solid $grey05;
+}

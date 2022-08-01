@@ -1,0 +1,40 @@
+uuid: 0d219252-ebac-466d-88a5-78df1941cbad
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - node
+    - options
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: node.field_open_date_type
+field_name: field_open_date_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: annual_reports
+      label: 'Annual Committee Report'
+    -
+      value: payroll
+      label: 'Payroll Report'
+    -
+      value: expenditure
+      label: 'Expenditure Report'
+    -
+      value: nomination
+      label: 'NY State and Municipal Facilities Program Project Nomination'
+    -
+      value: senate_journal
+      label: 'Senate Journal'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

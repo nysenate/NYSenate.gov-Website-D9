@@ -241,3 +241,29 @@ function nys_senators_form_node_form_alter(&$form, $form_state) {
     $form['field_senator_multiref']['widget']['#options'] = $result;
   }
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_senators_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'block_content_microsite_hero_form') {
+    $user = \Drupal::currentUser();
+    $user = User::load($user->id());
+    $user_roles = $user->getRoles();
+    if (in_array('microsite_content_producer', $user_roles, FALSE) && !in_array('administrator', $user_roles, FALSE)) {
+      if ($user->hasField('field_senator_multiref') && count($user->field_senator_multiref->getValue()) == 1) {
+        $form['field_senator']['#disabled'] = TRUE;
+        $form['field_senator']['widget']['#default_value'] = array_column($user->field_senator_multiref->getValue(), 'target_id');
+      }
+      $targets = array_column($user->field_senator_multiref->getValue(), 'target_id');
+      $options = $form['field_senator']['widget']['#options'];
+      $result = [];
+      foreach ($options as $key => $option) {
+        if ($key == '_none' || in_array($key, $targets)) {
+          $result[$key] = $option;
+        }
+      }
+      $form['field_senator']['widget']['#options'] = $result;
+    }
+  }
+}

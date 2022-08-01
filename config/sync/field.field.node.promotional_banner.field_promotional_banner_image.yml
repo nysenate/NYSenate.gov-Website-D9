@@ -1,0 +1,29 @@
+uuid: f89e7e30-2f01-47ad-b991-37c45c20644a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_promotional_banner_image
+    - media.type.image
+    - node.type.promotional_banner
+id: node.promotional_banner.field_promotional_banner_image
+field_name: field_promotional_banner_image
+entity_type: node
+bundle: promotional_banner
+label: 'Promotional Banner Image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: file
+field_type: entity_reference

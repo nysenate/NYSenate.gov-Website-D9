@@ -57,6 +57,14 @@ process:
     -
       plugin: get
       source: metatags
+  field_ol_member_id:
+    -
+      plugin: get
+      source: field_ol_member_id
+  field_ol_shortname:
+    -
+      plugin: get
+      source: field_shortname
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: senator

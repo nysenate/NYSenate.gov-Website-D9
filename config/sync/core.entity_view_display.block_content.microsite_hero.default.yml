@@ -1,0 +1,43 @@
+uuid: 8185c79d-6ab2-41d0-a558-044319ff6c5b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_hero
+    - field.field.block_content.microsite_hero.field_collapsed
+    - field.field.block_content.microsite_hero.field_microsite_hero_image
+    - field.field.block_content.microsite_hero.field_senator
+id: block_content.microsite_hero.default
+targetEntityType: block_content
+bundle: microsite_hero
+mode: default
+content:
+  field_collapsed:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_microsite_hero_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: senator_microsite_hero
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_senator:
+    type: entity_reference_entity_id
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

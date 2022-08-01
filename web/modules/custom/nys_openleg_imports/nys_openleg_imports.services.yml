@@ -1,0 +1,12 @@
+services:
+  manager.openleg_importers:
+    class: Drupal\nys_openleg_imports\Service\OpenlegImporterManager
+    parent: default_plugin_manager
+    arguments: ['@manager.openleg_import_processors']
+  manager.openleg_import_processors:
+    class: Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager
+    parent: default_plugin_manager
+    arguments: ['@entity_type.manager']
+  logger.channel.openleg_imports:
+    parent: logger.channel_base
+    arguments: ['nys_openleg_imports']

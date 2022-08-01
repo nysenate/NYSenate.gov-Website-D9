@@ -12,7 +12,6 @@ $color-primary: #e74c3c;
 $color-white: #fff;
 $color-secondary: #f6510b;
 $color-rio-grande: #c4d600;
-$color-white: #FFF;
 $color-black: #404040;
 $color-black: #404040;
 $color-blue: #003954;
@@ -37,7 +36,7 @@ $color-orange: #e62600;
 $color-pink: #fcf4f2;
 $color-beige: #fdf8ed;
 $color-brown: #734c00;
-
+$color-cg-blue: #0078a0;
 
 // Transparent colors
 $color-transparent-white: rgba(255, 255, 255, 0.8);
@@ -98,9 +97,14 @@ $grey11: #f6f8f9;
 $grey12: #f7f8f9;
 $grey13: #e2e8ec;
 $grey14: #c3c3c3;
+$grey15: #cccccc;
+
+// Info blue
+$blue_info: #2055cc;
+$grey16: #f5f5f5;
 
 $contrast_drk: #000;
-$contrast_lgt: #fff;
+$contrast_lgt: $color-white;
 
 // GENERAL BLUE : senate wide
 $gen_blue_lgt: #2b6a90;
@@ -201,7 +205,7 @@ $ns_accent: #1b5187;
 
 @media #{$tablet} {
   .nav-text {
-    color: #444;
+    color: $grey08;
 
     &:hover {
       color: $gen_blue_lgt;
@@ -240,7 +244,7 @@ $ns_accent: #1b5187;
 
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $trad_blue_lgt;
@@ -280,7 +284,7 @@ $ns_accent: #1b5187;
 
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $cont_blue_lgt;
@@ -319,11 +323,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $purple_lgt;
@@ -362,11 +366,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $trad_red_lgt;
@@ -405,11 +409,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $cont_red_lgt;
@@ -448,11 +452,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $orange_lgt;
@@ -491,11 +495,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $trad_green_lgt;
@@ -534,11 +538,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $cont_green_lgt;
@@ -577,11 +581,11 @@ $ns_accent: #1b5187;
   }
 
   .nav-text {
-    color: #fff;
+    color: $color-white;
   }
   @media #{$tablet} {
     .nav-text {
-      color: #444;
+      color: $grey08;
 
       &:hover {
         color: $ns_accent;
@@ -592,3 +596,12 @@ $ns_accent: #1b5187;
     }
   }
 }
+
+.trad_blue .c-press-release--descript a { color: $trad_blue_lgt; }
+.cont_blue .c-press-release--descript a { color: $cont_blue_lgt; }
+.purple .c-press-release--descript a { color: $purple_lgt; }
+.trad_red .c-press-release--descript a { color: $trad_red_lgt; }
+.cont_red .c-press-release--descript a { color: $cont_red_lgt; }
+.orange .c-press-release--descript a { color: $orange_lgt; }
+.trad_green .c-press-release--descript a { color: $trad_green_lgt; }
+.cont_green .c-press-release--descript a { color: $cont_green_lgt; }

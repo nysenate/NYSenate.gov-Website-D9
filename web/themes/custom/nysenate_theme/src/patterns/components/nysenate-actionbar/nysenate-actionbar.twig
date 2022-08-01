@@ -1,12 +1,18 @@
 {{ attach_library('nysenate_theme/nysenate-actionbar') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
-<div class="container c-actionbar hidden">
-  <div class="c-actionbar--info">
-    <p class="c-actionbar--cta">Find your Senator and share your views on important issues.</p>
-  </div>
-  <span class="c-block--btn">
-    <a class="icon-before__find-senator" href="/registration/nojs/form/start/find-my-senator">find your senator</a>
-  </span>
-  <!-- <a href="/user/login?destination=" class="c-block-btn ctools-use-modal ctools-use-modal-processed" title="Start">find your senator</a> -->
+<div class="c-actionbar hidden">
+    <div class="c-actionbar--info {{ is_logged ? 'content-logged' }}">
+      <p class="actionbar--cta">{{ is_logged ? "See activity on Issues, Bills and Committees you're following."|t :
+        "Find your Senator and share your views on important issues." }}</p>
+    </div>
+    <span class="c-block--btn {{ is_logged ? 'logged' }}">
+      <a class="{{ is_logged ? 'icon-before__arrow' : 'icon-before__find-senator' }}"
+         href="{{ is_logged ? '/users/nysadmin/dashboard/issues' : '/registration/nojs/form/start/find-my-senator' }}">
+        <label class="{{ is_logged ? 'logged-text' : '' }}" for="">
+        {{ is_logged ? "your dashboard"|t : "find your senator"|t }}</a>
+        </label>
+    </span>
+  <!-- <a href="/user/login?destination=" class="c-block-btn ctools-use-modal ctools-use-modal-processed"
+  title="Start">find your senator</a> -->
 </div>

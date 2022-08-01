@@ -10,12 +10,23 @@
 
   p {
     color: $grey03;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 
   &::after {
     content: '';
     display: table;
     clear: both;
+  }
+
+  .c-container--link {
+    display: block;
+    position: relative;
+    margin-bottom: 20px;
+    text-align: right;
   }
 
   &--2-col .text-layout__body {
@@ -61,10 +72,26 @@
     }
   }
 
-  .c-container--link {
-    display: block;
-    position: relative;
-    margin-bottom: 20px;
-    text-align: right;
+  &__body {
+    h2, h3, h4 {
+      font-family: $font-serif-bold;
+      font-weight: $font-weight-normal;
+    }
+
+    h2 {
+      font-size: 32px;
+    }
+    
+    h3 {
+      font-size: 22px;
+    }
+
+    h4 {
+      font-size: 18px;
+    }
+
+    a.c-container--link {
+      text-align: left;
+    }
   }
 }

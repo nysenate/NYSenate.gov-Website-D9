@@ -53,6 +53,7 @@
     padding: 45px 0 0;
     font-family: $font-serif;
     position: relative;
+    color: $grey08;
 
     &::before {
       position: absolute;
@@ -118,8 +119,10 @@
   text-transform: uppercase;
   color: $grey01;
   font-family: $font-sans;
+  font-weight: $font-weight-normal;
   font-size: 12px;
   line-height: 1em;
+  margin-bottom: 5px;
 }
 
 .c-pullquote--citation {
@@ -167,7 +170,7 @@
   margin: 0;
   font-family: $font-serif;
   font-size: 16px;
-  line-height: 1em;
+  line-height: 1;
 
   a {
     text-decoration: none;
@@ -273,6 +276,7 @@
       vertical-align: middle;
       padding: 60px 0 0;
       font-size: 22px;
+      line-height: 28.6px;
 
       &::before {
         left: -20px;
@@ -280,5 +284,10 @@
         font-size: 98px;
       }
     }
+  }
+
+  .c-sponsor--name {
+    font-size: 16px;
+    line-height: 1;
   }
 }

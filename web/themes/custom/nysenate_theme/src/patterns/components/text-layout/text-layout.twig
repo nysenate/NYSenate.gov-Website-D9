@@ -2,16 +2,24 @@
 
 <div class="text-layout {% if contents|length > 1 %}text-layout--2-col{% endif %} {% if is_full_bleed %}text-layout--full-bleed{% endif %} {% if with_bg %}text-layout--with-bg{% endif %}">
   <div class="text-layout__container">
-    {% if title %}
-      <div class="text-layout__title">
-        {{ title }}
-      </div>
-    {% endif %}
     <div class="text-layout__body">
       {% for content in contents %}
-        <div class="content">
-          {{ content.text|raw }}
-        </div>
+        {% if loop.first %}
+          <div class="content">
+            {% if title %}
+              <div class="text-layout__title">
+                {{ title }}
+              </div>
+            {% endif %}
+            <div>
+              {{ content.text|raw }}
+            </div>
+          </div>
+        {% else %}
+          <div class="content">
+            {{ content.text|raw }}
+          </div>
+        {% endif %}
       {% endfor %}
     </div>
     {% if link %}

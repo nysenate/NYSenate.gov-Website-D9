@@ -546,7 +546,7 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
             'street_1' => $node->_entity->field_location[0]->address_line1 ?? '',
             'street_2' => $node->_entity->field_location[0]->locality . ', '
             . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code ?? '',
-            'time' => $date->format('h:i A') . ' to ' . $end_date->format('h:i A'),
+            'time' => $date->format('g:i A') . ' to ' . $end_date->format('g:i A'),
           ];
           $variables['now'] = $date->format('M jS');
         }
@@ -574,7 +574,7 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'street_1' => $node->_entity->field_location[0]->address_line1,
           'street_2' => $node->_entity->field_location[0]->locality . ', '
           . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code,
-          'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
+          'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
         ];
       }
     }
@@ -1403,7 +1403,7 @@ function nysenate_theme_preprocess_node(&$variables) {
         'street_1' => $node->field_location[0]->address_line1,
         'street_2' => $node->field_location[0]->locality . ', '
         . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
-        'time' => $date->format('h:i A') . ' to ' . $date_end->format('h:i A'),
+        'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
       ];
     }
   }

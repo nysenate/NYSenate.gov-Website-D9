@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.article.field_committee_featured
     - field.field.node.article.field_date
     - field.field.node.article.field_featured
+    - field.field.node.article.field_image_caption
     - field.field.node.article.field_image_hero
     - field.field.node.article.field_image_main
     - field.field.node.article.field_issues
@@ -41,6 +42,7 @@ third_party_settings:
         - title
         - field_category
         - field_image_main
+        - field_image_caption
         - field_article_author
         - field_date
       label: 'Heading Information'
@@ -198,7 +200,7 @@ content:
     third_party_settings: {  }
   field_article_author:
     type: string_textfield
-    weight: 4
+    weight: 5
     region: content
     settings:
       size: 60
@@ -280,7 +282,7 @@ content:
     third_party_settings: {  }
   field_date:
     type: datetime_default
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -309,6 +311,14 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_image_caption:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_image_hero:
     type: media_library_widget
     weight: 9

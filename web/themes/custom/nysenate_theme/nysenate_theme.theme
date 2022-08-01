@@ -357,6 +357,17 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ */
+function nysenate_theme_preprocess_block(&$variables) {
+  if (isset($variables['content']['#block_content'])) {
+    if ($variables['content']['#block_content']->type->target_id == 'text') {
+      $variables['content']['#block_content']->label_display = $variables['configuration']['label_display'];
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_block_content_ID().
  */
 function nysenate_theme_preprocess_block_content__text(&$variables) {
@@ -381,6 +392,10 @@ function nysenate_theme_preprocess_block_content__text(&$variables) {
 
   if (isset($variables['content']['field_with_background'][0])) {
     $variables['with_bg'] = strtolower($variables['content']['field_with_background'][0]['#markup']) == 'on' ? TRUE : FALSE;
+  }
+
+  if (isset($variables['elements']['#block_content']->label_display)) {
+    $variables['label_display'] = $variables['elements']['#block_content']->label_display == 'visible' ? TRUE : FALSE;
   }
 }
 

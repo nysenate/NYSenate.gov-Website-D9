@@ -124,14 +124,14 @@ class LanguageCategoriesTest extends LayoutBuilderRestrictionsTestBase {
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-all"]');
     $assert_session->checkboxChecked('edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-all');
-    $assert_session->checkboxNotChecked('edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-whitelisted');
+    $assert_session->checkboxNotChecked('edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-allowlisted');
     $assert_session->checkboxChecked('edit-layout-builder-restrictions-allowed-blocks-inline-blocks-restriction-all');
-    $assert_session->checkboxNotChecked('edit-layout-builder-restrictions-allowed-blocks-inline-blocks-restriction-whitelisted');
+    $assert_session->checkboxNotChecked('edit-layout-builder-restrictions-allowed-blocks-inline-blocks-restriction-allowlisted');
     // Restrict all 'Content' fields from options.
-    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-whitelisted"]');
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-content-fields-restriction-allowlisted"]');
     $element->click();
     // Restrict the Hjelp block.
-    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-help-restriction-whitelisted"]');
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-help-restriction-allowlisted"]');
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-help-available-blocks-help-block"]');
     $element->click();

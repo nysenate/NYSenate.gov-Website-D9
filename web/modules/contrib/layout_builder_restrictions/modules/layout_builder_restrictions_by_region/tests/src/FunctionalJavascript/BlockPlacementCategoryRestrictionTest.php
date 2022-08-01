@@ -101,7 +101,7 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $element->click();
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-restriction-behavior-per-region"]');
     $element->click();
-    $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]', 'Restricted');
+    $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]', 'Unrestricted');
     $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="second"]', 'Unrestricted');
     $page->pressButton('Save');
 
@@ -166,9 +166,16 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     $this->drupalGet("$field_ui_prefix/display/default");
+
+    // Verify the UI reflects the restriction: the "first" section should not read
+    // "Unrestricted," while the second region *should* still read "Unrestricted."
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
+    $element->click();
+    $assert_session->elementNotContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]', 'Unrestricted');
+    $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="second"]', 'Unrestricted');
+
     $this->clickLink('Manage layout');
     $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
-
     // Select 'Add block' link in First region.
     $element = $page->find('xpath', '//*[contains(@class, "layout__region--first")]//a');
     $element->click();

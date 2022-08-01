@@ -1,0 +1,1534 @@
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+/*-----------------------------
+/	CUSTOM NEW YORK SENATE (nysenate_theme) PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+.contrast_text, .c-block--senator-office .fn[itemprop="name"],
+.c-block--senator-office .c-office-info--title,
+.c-block--senator-media .fn[itemprop="name"],
+.c-block--senator-media .c-office-info--title, .c-block--senator-office .c-senator-media--item span,
+.c-block--senator-media .c-senator-media--item span, .c-block--senator-office .tel span,
+.c-block--senator-media .tel span, .c-block--senator-office .c-office-info--office-contact span,
+.c-block--senator-media .c-office-info--office-contact span {
+  color: #000; }
+
+.lgt-text, .c-block--senator-office .c-block--senator-email a,
+.c-block--senator-media .c-block--senator-email a, .c-block--senator-office .c-office-info--office-contact,
+.c-block--senator-media .c-office-info--office-contact, .c-block--senator-office .c-office-info--office-contact a,
+.c-block--senator-media .c-office-info--office-contact a, .c-block--senator-office .c-office-location-link,
+.c-block--senator-media .c-office-location-link {
+  color: #2b6a90; }
+
+.lgt-bg, .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn {
+  background-color: #2b6a90; }
+
+.med-text {
+  color: #175b81; }
+
+.med-bg {
+  background-color: #175b81; }
+
+.drk-text {
+  color: #004d71; }
+
+.drk-bg, .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover {
+  background-color: #004d71; }
+
+.link-text {
+  color: #cb8d37; }
+
+.accent-bg {
+  background-color: #1b5187; }
+
+.accent-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .nav-text {
+    color: #444444; }
+    .nav-text:hover {
+      color: #2b6a90; }
+    .nav-text.active {
+      color: #2b6a90; } }
+
+.trad_blue .contrast_text, .trad_blue .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .trad_blue .fn[itemprop="name"],
+.trad_blue .c-block--senator-office .c-office-info--title, .c-block--senator-office .trad_blue .c-office-info--title,
+.trad_blue .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .trad_blue .fn[itemprop="name"],
+.trad_blue .c-block--senator-media .c-office-info--title, .c-block--senator-media .trad_blue .c-office-info--title, .trad_blue .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .trad_blue span,
+.trad_blue .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .trad_blue span, .trad_blue .c-block--senator-office .tel span, .c-block--senator-office .tel .trad_blue span,
+.trad_blue .c-block--senator-media .tel span, .c-block--senator-media .tel .trad_blue span, .trad_blue .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .trad_blue span,
+.trad_blue .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .trad_blue span {
+  color: #fff; }
+
+.trad_blue .lgt-text, .trad_blue .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .trad_blue a,
+.trad_blue .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .trad_blue a, .trad_blue .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .trad_blue .c-office-info--office-contact,
+.trad_blue .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .trad_blue .c-office-info--office-contact, .trad_blue .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .trad_blue a,
+.trad_blue .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .trad_blue a, .trad_blue .c-block--senator-office .c-office-location-link, .c-block--senator-office .trad_blue .c-office-location-link,
+.trad_blue .c-block--senator-media .c-office-location-link, .c-block--senator-media .trad_blue .c-office-location-link {
+  color: #1b5187; }
+
+.trad_blue .lgt-bg, .trad_blue .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .trad_blue .c-block--btn {
+  background-color: #1b5187; }
+
+.trad_blue .med-text {
+  color: #1d446b; }
+
+.trad_blue .med-bg {
+  background-color: #1d446b; }
+
+.trad_blue .drk-text {
+  color: #1c364e; }
+
+.trad_blue .drk-bg, .trad_blue .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .trad_blue .c-block--btn:hover {
+  background-color: #1c364e; }
+
+.trad_blue .link-text {
+  color: #1b5187; }
+
+@media screen and (min-width: 760px) {
+  .trad_blue .nav-text {
+    color: #444444; }
+    .trad_blue .nav-text:hover {
+      color: #1b5187; }
+    .trad_blue .nav-text.active {
+      color: #1b5187; } }
+
+.cont_blue .contrast_text, .cont_blue .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .cont_blue .fn[itemprop="name"],
+.cont_blue .c-block--senator-office .c-office-info--title, .c-block--senator-office .cont_blue .c-office-info--title,
+.cont_blue .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .cont_blue .fn[itemprop="name"],
+.cont_blue .c-block--senator-media .c-office-info--title, .c-block--senator-media .cont_blue .c-office-info--title, .cont_blue .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .cont_blue span,
+.cont_blue .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .cont_blue span, .cont_blue .c-block--senator-office .tel span, .c-block--senator-office .tel .cont_blue span,
+.cont_blue .c-block--senator-media .tel span, .c-block--senator-media .tel .cont_blue span, .cont_blue .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .cont_blue span,
+.cont_blue .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .cont_blue span {
+  color: #000; }
+
+.cont_blue .lgt-text, .cont_blue .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .cont_blue a,
+.cont_blue .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .cont_blue a, .cont_blue .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .cont_blue .c-office-info--office-contact,
+.cont_blue .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .cont_blue .c-office-info--office-contact, .cont_blue .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .cont_blue a,
+.cont_blue .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .cont_blue a, .cont_blue .c-block--senator-office .c-office-location-link, .c-block--senator-office .cont_blue .c-office-location-link,
+.cont_blue .c-block--senator-media .c-office-location-link, .c-block--senator-media .cont_blue .c-office-location-link {
+  color: #04a9c5; }
+
+.cont_blue .lgt-bg, .cont_blue .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .cont_blue .c-block--btn {
+  background-color: #04a9c5; }
+
+.cont_blue .med-text {
+  color: #008ca6; }
+
+.cont_blue .med-bg {
+  background-color: #008ca6; }
+
+.cont_blue .drk-text {
+  color: #1f798f; }
+
+.cont_blue .drk-bg, .cont_blue .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .cont_blue .c-block--btn:hover {
+  background-color: #1f798f; }
+
+.cont_blue .link-text {
+  color: #04a9c5; }
+
+@media screen and (min-width: 760px) {
+  .cont_blue .nav-text {
+    color: #444444; }
+    .cont_blue .nav-text:hover {
+      color: #04a9c5; }
+    .cont_blue .nav-text.active {
+      color: #04a9c5; } }
+
+.purple .contrast_text, .purple .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .purple .fn[itemprop="name"],
+.purple .c-block--senator-office .c-office-info--title, .c-block--senator-office .purple .c-office-info--title,
+.purple .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .purple .fn[itemprop="name"],
+.purple .c-block--senator-media .c-office-info--title, .c-block--senator-media .purple .c-office-info--title, .purple .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .purple span,
+.purple .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .purple span, .purple .c-block--senator-office .tel span, .c-block--senator-office .tel .purple span,
+.purple .c-block--senator-media .tel span, .c-block--senator-media .tel .purple span, .purple .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .purple span,
+.purple .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .purple span {
+  color: #000; }
+
+.purple .lgt-text, .purple .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .purple a,
+.purple .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .purple a, .purple .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .purple .c-office-info--office-contact,
+.purple .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .purple .c-office-info--office-contact, .purple .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .purple a,
+.purple .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .purple a, .purple .c-block--senator-office .c-office-location-link, .c-block--senator-office .purple .c-office-location-link,
+.purple .c-block--senator-media .c-office-location-link, .c-block--senator-media .purple .c-office-location-link {
+  color: #90668f; }
+
+.purple .lgt-bg, .purple .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .purple .c-block--btn {
+  background-color: #90668f; }
+
+.purple .med-text {
+  color: #754775; }
+
+.purple .med-bg {
+  background-color: #754775; }
+
+.purple .drk-text {
+  color: #543457; }
+
+.purple .drk-bg, .purple .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .purple .c-block--btn:hover {
+  background-color: #543457; }
+
+.purple .link-text {
+  color: #90668f; }
+
+.purple .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .purple .nav-text {
+    color: #444444; }
+    .purple .nav-text:hover {
+      color: #90668f; }
+    .purple .nav-text.active {
+      color: #90668f; } }
+
+.trad_red .contrast_text, .trad_red .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .trad_red .fn[itemprop="name"],
+.trad_red .c-block--senator-office .c-office-info--title, .c-block--senator-office .trad_red .c-office-info--title,
+.trad_red .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .trad_red .fn[itemprop="name"],
+.trad_red .c-block--senator-media .c-office-info--title, .c-block--senator-media .trad_red .c-office-info--title, .trad_red .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .trad_red span,
+.trad_red .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .trad_red span, .trad_red .c-block--senator-office .tel span, .c-block--senator-office .tel .trad_red span,
+.trad_red .c-block--senator-media .tel span, .c-block--senator-media .tel .trad_red span, .trad_red .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .trad_red span,
+.trad_red .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .trad_red span {
+  color: #fff; }
+
+.trad_red .lgt-text, .trad_red .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .trad_red a,
+.trad_red .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .trad_red a, .trad_red .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .trad_red .c-office-info--office-contact,
+.trad_red .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .trad_red .c-office-info--office-contact, .trad_red .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .trad_red a,
+.trad_red .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .trad_red a, .trad_red .c-block--senator-office .c-office-location-link, .c-block--senator-office .trad_red .c-office-location-link,
+.trad_red .c-block--senator-media .c-office-location-link, .c-block--senator-media .trad_red .c-office-location-link {
+  color: #87002f; }
+
+.trad_red .lgt-bg, .trad_red .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .trad_red .c-block--btn {
+  background-color: #87002f; }
+
+.trad_red .med-text {
+  color: #6e0026; }
+
+.trad_red .med-bg {
+  background-color: #6e0026; }
+
+.trad_red .drk-text {
+  color: #500019; }
+
+.trad_red .drk-bg, .trad_red .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .trad_red .c-block--btn:hover {
+  background-color: #500019; }
+
+.trad_red .link-text {
+  color: #87002f; }
+
+.trad_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_red .nav-text {
+    color: #444444; }
+    .trad_red .nav-text:hover {
+      color: #87002f; }
+    .trad_red .nav-text.active {
+      color: #87002f; } }
+
+.cont_red .contrast_text, .cont_red .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .cont_red .fn[itemprop="name"],
+.cont_red .c-block--senator-office .c-office-info--title, .c-block--senator-office .cont_red .c-office-info--title,
+.cont_red .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .cont_red .fn[itemprop="name"],
+.cont_red .c-block--senator-media .c-office-info--title, .c-block--senator-media .cont_red .c-office-info--title, .cont_red .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .cont_red span,
+.cont_red .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .cont_red span, .cont_red .c-block--senator-office .tel span, .c-block--senator-office .tel .cont_red span,
+.cont_red .c-block--senator-media .tel span, .c-block--senator-media .tel .cont_red span, .cont_red .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .cont_red span,
+.cont_red .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .cont_red span {
+  color: #fff; }
+
+.cont_red .lgt-text, .cont_red .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .cont_red a,
+.cont_red .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .cont_red a, .cont_red .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .cont_red .c-office-info--office-contact,
+.cont_red .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .cont_red .c-office-info--office-contact, .cont_red .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .cont_red a,
+.cont_red .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .cont_red a, .cont_red .c-block--senator-office .c-office-location-link, .c-block--senator-office .cont_red .c-office-location-link,
+.cont_red .c-block--senator-media .c-office-location-link, .c-block--senator-media .cont_red .c-office-location-link {
+  color: #c62526; }
+
+.cont_red .lgt-bg, .cont_red .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .cont_red .c-block--btn {
+  background-color: #c62526; }
+
+.cont_red .med-text {
+  color: #bb0623; }
+
+.cont_red .med-bg {
+  background-color: #bb0623; }
+
+.cont_red .drk-text {
+  color: #a00101; }
+
+.cont_red .drk-bg, .cont_red .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .cont_red .c-block--btn:hover {
+  background-color: #a00101; }
+
+.cont_red .link-text {
+  color: #c62526; }
+
+.cont_red .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_red .nav-text {
+    color: #444444; }
+    .cont_red .nav-text:hover {
+      color: #c62526; }
+    .cont_red .nav-text.active {
+      color: #c62526; } }
+
+.orange .contrast_text, .orange .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .orange .fn[itemprop="name"],
+.orange .c-block--senator-office .c-office-info--title, .c-block--senator-office .orange .c-office-info--title,
+.orange .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .orange .fn[itemprop="name"],
+.orange .c-block--senator-media .c-office-info--title, .c-block--senator-media .orange .c-office-info--title, .orange .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .orange span,
+.orange .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .orange span, .orange .c-block--senator-office .tel span, .c-block--senator-office .tel .orange span,
+.orange .c-block--senator-media .tel span, .c-block--senator-media .tel .orange span, .orange .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .orange span,
+.orange .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .orange span {
+  color: #000; }
+
+.orange .lgt-text, .orange .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .orange a,
+.orange .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .orange a, .orange .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .orange .c-office-info--office-contact,
+.orange .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .orange .c-office-info--office-contact, .orange .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .orange a,
+.orange .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .orange a, .orange .c-block--senator-office .c-office-location-link, .c-block--senator-office .orange .c-office-location-link,
+.orange .c-block--senator-media .c-office-location-link, .c-block--senator-media .orange .c-office-location-link {
+  color: #f0673d; }
+
+.orange .lgt-bg, .orange .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .orange .c-block--btn {
+  background-color: #f0673d; }
+
+.orange .med-text {
+  color: #ed4b1c; }
+
+.orange .med-bg {
+  background-color: #ed4b1c; }
+
+.orange .drk-text {
+  color: #c84123; }
+
+.orange .drk-bg, .orange .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .orange .c-block--btn:hover {
+  background-color: #c84123; }
+
+.orange .link-text {
+  color: #f0673d; }
+
+.orange .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .orange .nav-text {
+    color: #444444; }
+    .orange .nav-text:hover {
+      color: #f0673d; }
+    .orange .nav-text.active {
+      color: #f0673d; } }
+
+.trad_green .contrast_text, .trad_green .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .trad_green .fn[itemprop="name"],
+.trad_green .c-block--senator-office .c-office-info--title, .c-block--senator-office .trad_green .c-office-info--title,
+.trad_green .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .trad_green .fn[itemprop="name"],
+.trad_green .c-block--senator-media .c-office-info--title, .c-block--senator-media .trad_green .c-office-info--title, .trad_green .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .trad_green span,
+.trad_green .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .trad_green span, .trad_green .c-block--senator-office .tel span, .c-block--senator-office .tel .trad_green span,
+.trad_green .c-block--senator-media .tel span, .c-block--senator-media .tel .trad_green span, .trad_green .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .trad_green span,
+.trad_green .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .trad_green span {
+  color: #000; }
+
+.trad_green .lgt-text, .trad_green .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .trad_green a,
+.trad_green .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .trad_green a, .trad_green .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .trad_green .c-office-info--office-contact,
+.trad_green .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .trad_green .c-office-info--office-contact, .trad_green .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .trad_green a,
+.trad_green .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .trad_green a, .trad_green .c-block--senator-office .c-office-location-link, .c-block--senator-office .trad_green .c-office-location-link,
+.trad_green .c-block--senator-media .c-office-location-link, .c-block--senator-media .trad_green .c-office-location-link {
+  color: #60a35f; }
+
+.trad_green .lgt-bg, .trad_green .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .trad_green .c-block--btn {
+  background-color: #60a35f; }
+
+.trad_green .med-text {
+  color: #4d894f; }
+
+.trad_green .med-bg {
+  background-color: #4d894f; }
+
+.trad_green .drk-text {
+  color: #416837; }
+
+.trad_green .drk-bg, .trad_green .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .trad_green .c-block--btn:hover {
+  background-color: #416837; }
+
+.trad_green .link-text {
+  color: #60a35f; }
+
+.trad_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .trad_green .nav-text {
+    color: #444444; }
+    .trad_green .nav-text:hover {
+      color: #60a35f; }
+    .trad_green .nav-text.active {
+      color: #60a35f; } }
+
+.cont_green .contrast_text, .cont_green .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .cont_green .fn[itemprop="name"],
+.cont_green .c-block--senator-office .c-office-info--title, .c-block--senator-office .cont_green .c-office-info--title,
+.cont_green .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .cont_green .fn[itemprop="name"],
+.cont_green .c-block--senator-media .c-office-info--title, .c-block--senator-media .cont_green .c-office-info--title, .cont_green .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .cont_green span,
+.cont_green .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .cont_green span, .cont_green .c-block--senator-office .tel span, .c-block--senator-office .tel .cont_green span,
+.cont_green .c-block--senator-media .tel span, .c-block--senator-media .tel .cont_green span, .cont_green .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .cont_green span,
+.cont_green .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .cont_green span {
+  color: #000; }
+
+.cont_green .lgt-text, .cont_green .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .cont_green a,
+.cont_green .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .cont_green a, .cont_green .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .cont_green .c-office-info--office-contact,
+.cont_green .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .cont_green .c-office-info--office-contact, .cont_green .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .cont_green a,
+.cont_green .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .cont_green a, .cont_green .c-block--senator-office .c-office-location-link, .c-block--senator-office .cont_green .c-office-location-link,
+.cont_green .c-block--senator-media .c-office-location-link, .c-block--senator-media .cont_green .c-office-location-link {
+  color: #65c5b6; }
+
+.cont_green .lgt-bg, .cont_green .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .cont_green .c-block--btn {
+  background-color: #65c5b6; }
+
+.cont_green .med-text {
+  color: #479e93; }
+
+.cont_green .med-bg {
+  background-color: #479e93; }
+
+.cont_green .drk-text {
+  color: #378479; }
+
+.cont_green .drk-bg, .cont_green .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .cont_green .c-block--btn:hover {
+  background-color: #378479; }
+
+.cont_green .link-text {
+  color: #65c5b6; }
+
+.cont_green .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .cont_green .nav-text {
+    color: #444444; }
+    .cont_green .nav-text:hover {
+      color: #65c5b6; }
+    .cont_green .nav-text.active {
+      color: #65c5b6; } }
+
+.inactive-pallette .contrast_text, .inactive-pallette .c-block--senator-office .fn[itemprop="name"], .c-block--senator-office .inactive-pallette .fn[itemprop="name"],
+.inactive-pallette .c-block--senator-office .c-office-info--title, .c-block--senator-office .inactive-pallette .c-office-info--title,
+.inactive-pallette .c-block--senator-media .fn[itemprop="name"], .c-block--senator-media .inactive-pallette .fn[itemprop="name"],
+.inactive-pallette .c-block--senator-media .c-office-info--title, .c-block--senator-media .inactive-pallette .c-office-info--title, .inactive-pallette .c-block--senator-office .c-senator-media--item span, .c-block--senator-office .c-senator-media--item .inactive-pallette span,
+.inactive-pallette .c-block--senator-media .c-senator-media--item span, .c-block--senator-media .c-senator-media--item .inactive-pallette span, .inactive-pallette .c-block--senator-office .tel span, .c-block--senator-office .tel .inactive-pallette span,
+.inactive-pallette .c-block--senator-media .tel span, .c-block--senator-media .tel .inactive-pallette span, .inactive-pallette .c-block--senator-office .c-office-info--office-contact span, .c-block--senator-office .c-office-info--office-contact .inactive-pallette span,
+.inactive-pallette .c-block--senator-media .c-office-info--office-contact span, .c-block--senator-media .c-office-info--office-contact .inactive-pallette span {
+  color: #000; }
+
+.inactive-pallette .lgt-text, .inactive-pallette .c-block--senator-office .c-block--senator-email a, .c-block--senator-office .c-block--senator-email .inactive-pallette a,
+.inactive-pallette .c-block--senator-media .c-block--senator-email a, .c-block--senator-media .c-block--senator-email .inactive-pallette a, .inactive-pallette .c-block--senator-office .c-office-info--office-contact, .c-block--senator-office .inactive-pallette .c-office-info--office-contact,
+.inactive-pallette .c-block--senator-media .c-office-info--office-contact, .c-block--senator-media .inactive-pallette .c-office-info--office-contact, .inactive-pallette .c-block--senator-office .c-office-info--office-contact a, .c-block--senator-office .c-office-info--office-contact .inactive-pallette a,
+.inactive-pallette .c-block--senator-media .c-office-info--office-contact a, .c-block--senator-media .c-office-info--office-contact .inactive-pallette a, .inactive-pallette .c-block--senator-office .c-office-location-link, .c-block--senator-office .inactive-pallette .c-office-location-link,
+.inactive-pallette .c-block--senator-media .c-office-location-link, .c-block--senator-media .inactive-pallette .c-office-location-link {
+  color: #1b5187; }
+
+.inactive-pallette .lgt-bg, .inactive-pallette .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, .view-display-id-senator_press_kit_block .views-field-field-press-kit .inactive-pallette .c-block--btn {
+  background-color: #b2b2b2; }
+
+.inactive-pallette .med-text {
+  color: #999999; }
+
+.inactive-pallette .med-bg {
+  background-color: #999999; }
+
+.inactive-pallette .drk-text {
+  color: #808080; }
+
+.inactive-pallette .drk-bg, .inactive-pallette .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:hover, .view-display-id-senator_press_kit_block .views-field-field-press-kit .inactive-pallette .c-block--btn:hover {
+  background-color: #808080; }
+
+.inactive-pallette .link-text {
+  color: #1b5187; }
+
+.inactive-pallette .nav-text {
+  color: #fff; }
+
+@media screen and (min-width: 760px) {
+  .inactive-pallette .nav-text {
+    color: #444444; }
+    .inactive-pallette .nav-text:hover {
+      color: #1b5187; }
+    .inactive-pallette .nav-text.active {
+      color: #1b5187; } }
+
+.trad_blue .c-press-release--descript a {
+  color: #1b5187; }
+
+.cont_blue .c-press-release--descript a {
+  color: #04a9c5; }
+
+.purple .c-press-release--descript a {
+  color: #90668f; }
+
+.trad_red .c-press-release--descript a {
+  color: #87002f; }
+
+.cont_red .c-press-release--descript a {
+  color: #c62526; }
+
+.orange .c-press-release--descript a {
+  color: #f0673d; }
+
+.trad_green .c-press-release--descript a {
+  color: #60a35f; }
+
+.cont_green .c-press-release--descript a {
+  color: #65c5b6; }
+
+/**
+ * --------------------------------------------------------------------------------------------
+ * FONT
+ * Apply font-size, line-height, and letter-spacing in one go.
+ * @usage
+ *    @include font($font-size $line-height $letter-spacing);
+ *    // All arguments are optional
+ * --------------------------------------------------------------------------------------------
+ */
+/*---------------------------
+/ WIDTHS for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+/*---------------------------
+/ MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
+/---------------------------*/
+strong {
+  font-family: "Adelle Bold", serif; }
+
+.font-secondary {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif; }
+  .font-secondary strong {
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+
+/* NY Senate */
+/*---------------------------------/
+/
+/	CUSTOM FONT DEFINITIONS
+/
+/----------------------------------*/
+/*---------------------------------/
+/	ADELLE
+/----------------------------------*/
+@font-face {
+  font-family: 'Adelle Light';
+  src: url("../fonts/adelle_light-webfont.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/adelle_light-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/adelle_light-webfont.woff") format("woff"), url("../fonts/adelle_light-webfont.ttf") format("truetype"), url("../fonts/adelle_light-webfont.svg#c49f46be445783d8ed80db158e3ab0c9") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: normal; }
+
+@font-face {
+  font-family: 'Adelle Regular';
+  src: url("../fonts/adelle_regular-webfont.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/adelle_regular-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/adelle_regular-webfont.woff") format("woff"), url("../fonts/adelle_regular-webfont.ttf") format("truetype"), url("../fonts/adelle_regular-webfont.svg#99729e3539ef0462a0ca8a01772e9888") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: normal; }
+
+@font-face {
+  font-family: 'Adelle SemiBold';
+  src: url("../fonts/adelle_semibold-webfont.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/adelle_semibold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/adelle_semibold-webfont.woff") format("woff"), url("../fonts/adelle_semibold-webfont.ttf") format("truetype"), url("../fonts/adelle_semibold-webfont.svg#0a4f2185508fb7ba59ff5878a2a1ccf5") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: normal; }
+
+@font-face {
+  font-family: 'Adelle Bold';
+  src: url("../fonts/adelle_bold-webfont.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/adelle_bold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/adelle_bold-webfont.woff") format("woff"), url("../fonts/adelle_bold-webfont.ttf") format("truetype"), url("../fonts/adelle_bold-webfont.svg#c0e1fa2165fee45abc3a74ff7feb0488") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: normal; }
+
+/*---------------------------------/
+/	PROXIMA NOVA
+/----------------------------------*/
+@font-face {
+  font-family: 'Proxima Nova Regular';
+  src: url("../fonts/ProximaNova-Regular.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/ProximaNova-Regular.eot?#iefix") format("embedded-opentype"), url("../fonts/ProximaNova-Regular.woff") format("woff"), url("../fonts/ProximaNova-Regular.ttf") format("truetype"), url("../fonts/ProximaNova-Regular.svg#2c1459d58560f08b4b0586fbe80aa4cd") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: normal; }
+
+@font-face {
+  font-family: 'Proxima Nova SemiBold';
+  src: url("../fonts/ProximaNova-Semibold.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/ProximaNova-Semibold.eot?#iefix") format("embedded-opentype"), url("../fonts/ProximaNova-Semibold.woff") format("woff"), url("../fonts/ProximaNova-Semibold.ttf") format("truetype"), url("../fonts/ProximaNova-Semibold.svg#67a6c9f6d7dc8f35ecb08de766ea56f0") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: normal; }
+
+/*---------------------------------/
+/	FREIGHT TEXT BOOK
+/----------------------------------*/
+@font-face {
+  font-family: 'FreightText Book';
+  src: url("../fonts/FreightText-Book.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/FreightText-Book.eot?#iefix") format("embedded-opentype"), url("../fonts/FreightText-Book.woff") format("woff"), url("../fonts/FreightText-Book.ttf") format("truetype"), url("../fonts/FreightText-Book.svg#d9e64e66ba0f4be8f0ea154778490c10") format("svg");
+  /* Legacy iOS */
+  font-style: normal;
+  font-weight: 400; }
+
+/*----------------------------------------------/
+/
+/	CUSTOM ICON FONT
+/
+/	to apply an icon :
+/	add class 'icon-[placement]__[type]'
+/ placements = before, after, replace
+/
+/----------------------------------------------*/
+@font-face {
+  font-family: 'senate_icons';
+  src: url("../fonts/senate_icons.eot?-wreofx");
+  src: url("../fonts/senate_icons.eot?#iefix-wreofx") format("embedded-opentype"), url("../fonts/senate_icons.woff?-wreofx") format("woff"), url("../fonts/senate_icons.ttf?-wreofx") format("truetype"), url("../fonts/senate_icons.svg?-wreofx#sentate_icons") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+/*---------------------------------/
+/	ICON BEFORE
+/----------------------------------*/
+[class^='icon-before']::before,
+[class*=' icon-before']::before,
+.icon-before__quotes::before,
+.icon-before__find-senator::before,
+.icon-before__recruit-friends::before,
+.icon-before__left::before,
+.icon-before__right::before,
+.icon-before__arrow::before,
+.icon-before__search::before,
+.icon-before__presskit::before,
+.view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn::before,
+.icon-before__bill::before,
+.icon-before__facebook::before,
+.icon-before__x::before,
+.icon-before__check::before,
+.icon-before__circle-check::before,
+.icon-before__see-more::before,
+.icon-before__petition::before,
+.icon-before__error::before,
+.icon-before__circle-pin::before,
+.c-block--senator-office .c-office-location-link::before,
+.c-block--senator-media .c-office-location-link::before,
+.icon-before__questionaire::before,
+.icon-before__plus::before,
+.icon-before__mail::before,
+.icon-before__notification::before,
+.flag-action::before,
+.unflag-action::before {
+  font-family: 'senate_icons';
+  display: inline-block;
+  vertical-align: middle;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  padding-right: 3px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.icon-before__down-arrow::before {
+  content: '\e601'; }
+
+.icon-before__error::before {
+  content: '\45'; }
+
+.icon-before__calendar-month::before {
+  content: '\67'; }
+
+.icon-before__calendar-week::before {
+  content: '\47'; }
+
+.icon-before__arrow::before {
+  content: '\72'; }
+
+.icon-before__awards::before {
+  content: '\61'; }
+
+.icon-before__bill-follow::before {
+  content: '\62'; }
+
+.icon-before__bill-unfollow::before {
+  content: '\42'; }
+
+.icon-before__bill::before {
+  content: '\30'; }
+
+.icon-before__calendar-old::before {
+  content: '\e609'; }
+
+.icon-before__calendar-view::before {
+  content: '\76'; }
+
+.icon-before__calendar2::before {
+  content: '\64'; }
+
+.icon-before__check::before {
+  content: '\2f'; }
+
+.icon-before__circle-check::before {
+  content: '\31'; }
+
+
+.icon-before__circle-pin::before,
+.c-block--senator-office .c-office-location-link::before,
+.c-block--senator-media .c-office-location-link::before {
+  content: '\32'; }
+
+.icon-before__circle-question::before {
+  content: '\33'; }
+
+.icon-before__circle-senators::before {
+  content: '\34'; }
+
+.icon-before__comment::before {
+  content: '\6a'; }
+
+.icon-before__committee-confirm::before {
+  content: '\35'; }
+
+.icon-before__committee-follow::before {
+  content: '\63'; }
+
+.icon-before__committee-unfollow::before {
+  content: '\43'; }
+
+.icon-before__contact::before {
+  content: '\6e'; }
+
+.icon-before__external-link::before {
+  content: '\6c'; }
+
+.icon-before__facebook::before {
+  content: '\21'; }
+
+.icon-before__find-senator::before {
+  content: '\24'; }
+
+.icon-before__hamburger::before {
+  content: '\68'; }
+
+.icon-before__home::before {
+  content: '\48'; }
+
+.icon-before__instagram2::before {
+  content: '\40'; }
+
+.icon-before__issue-follow::before {
+  content: '\e600'; }
+
+.icon-before__issue-unfollow::before {
+  content: '\49'; }
+
+.icon-before__issue::before {
+  content: '\69'; }
+
+.icon-before__left::before {
+  content: '\3c'; }
+
+.icon-before__link::before {
+  content: '\75'; }
+
+.icon-before__logout::before {
+  content: '\36'; }
+
+.icon-before__mail::before {
+  content: '\4e'; }
+
+.icon-before__minus::before {
+  content: '\2d'; }
+
+.icon-before__notification::before {
+  content: '\6f'; }
+
+.icon-before__petition::before {
+  content: '\70'; }
+
+.icon-before__play-outline::before {
+  content: '\50'; }
+
+.icon-before__plus::before {
+  content: '\2b'; }
+
+
+.icon-before__presskit::before,
+.view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn::before {
+  content: '\6b'; }
+
+.icon-before__questionaire::before {
+  content: '\3f'; }
+
+.icon-before__quotes::before {
+  content: '\71'; }
+
+.icon-before__recruit-friends::before {
+  content: '\66'; }
+
+.icon-before__right::before {
+  content: '\3e'; }
+
+.icon-before__search::before {
+  content: '\6d'; }
+
+.icon-before__see-less::before {
+  content: '\5e'; }
+
+.icon-before__see-more::before {
+  content: '\65'; }
+
+.icon-before__share::before {
+  content: '\73'; }
+
+.icon-before__twitter-fav::before {
+  content: '\37'; }
+
+.icon-before__twitter-reply::before {
+  content: '\38'; }
+
+.icon-before__twitter-retweet::before {
+  content: '\39'; }
+
+.icon-before__twitter::before {
+  content: '\23'; }
+
+.icon-before__x::before {
+  content: '\78'; }
+
+.icon-before__youtube::before {
+  content: '\79'; }
+
+.icon-before__view_report::before {
+  content: '\6b'; }
+
+.icon-before__view_honorees::before {
+  content: '\61'; }
+
+.icon-before__read_more::before {
+  content: '\61'; }
+
+/*---------------------------------/
+/	ICON AFTER
+/----------------------------------*/
+[class^='icon-after']::after,
+[class*=' icon-after']::after,
+.icon-after__facebook::after,
+.icon-after__twitter::after,
+.icon-after__mail::after,
+.icon-after__left::after,
+.icon-after__right::after,
+.icon-after__arrow::after,
+.icon-after__recruit-friends::after,
+.icon-after__user-guide::after,
+.icon-after__see-less::after,
+.icon-after__see-more::after,
+.flag-action::after,
+.icon-after__down-arrow::after,
+.unflag-action::after {
+  font-family: 'senate_icons';
+  display: inline-block;
+  vertical-align: middle;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  padding-left: 3px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.icon-after__down-arrow::after {
+  content: '\e601'; }
+
+.icon-after__error::after {
+  content: '\45'; }
+
+.icon-after__calendar-month::after {
+  content: '\67'; }
+
+.icon-after__calendar-week::after {
+  content: '\47'; }
+
+.icon-after__arrow::after {
+  content: '\72'; }
+
+.icon-after__awards::after {
+  content: '\61'; }
+
+.icon-after__bill-follow::after {
+  content: '\62'; }
+
+.icon-after__bill-unfollow::after {
+  content: '\42'; }
+
+.icon-after__bill::after {
+  content: '\30'; }
+
+.icon-after__calendar-old::after {
+  content: '\e609'; }
+
+.icon-after__calendar-view::after {
+  content: '\76'; }
+
+.icon-after__calendar2::after {
+  content: '\64'; }
+
+.icon-after__check::after {
+  content: '\2f'; }
+
+.icon-after__circle-check::after {
+  content: '\31'; }
+
+.icon-after__circle-pin::after {
+  content: '\32'; }
+
+.icon-after__circle-question::after {
+  content: '\33'; }
+
+.icon-after__circle-senators::after {
+  content: '\34'; }
+
+.icon-after__comment::after {
+  content: '\6a'; }
+
+.icon-after__committee-confirm::after {
+  content: '\35'; }
+
+.icon-after__committee-follow::after {
+  content: '\63'; }
+
+.icon-after__committee-unfollow::after {
+  content: '\43'; }
+
+.icon-after__contact::after {
+  content: '\6e'; }
+
+.icon-after__external-link::after {
+  content: '\6c'; }
+
+.icon-after__facebook::after {
+  content: '\21'; }
+
+.icon-after__find-senator::after {
+  content: '\24'; }
+
+.icon-after__hamburger::after {
+  content: '\68'; }
+
+.icon-after__home::after {
+  content: '\48'; }
+
+.icon-after__instagram2::after {
+  content: '\40'; }
+
+.icon-after__issue-follow::after {
+  content: '\e600'; }
+
+.icon-after__issue-unfollow::after {
+  content: '\49'; }
+
+.icon-after__issue::after {
+  content: '\69'; }
+
+.icon-after__left::after {
+  content: '\3c'; }
+
+.icon-after__link::after {
+  content: '\75'; }
+
+.icon-after__logout::after {
+  content: '\36'; }
+
+.icon-after__mail::after {
+  content: '\4e'; }
+
+.icon-after__minus::after {
+  content: '\2d'; }
+
+.icon-after__notification::after {
+  content: '\6f'; }
+
+.icon-after__petition::after {
+  content: '\70'; }
+
+.icon-after__play-outline::after {
+  content: '\50'; }
+
+.icon-after__plus::after {
+  content: '\2b'; }
+
+.icon-after__presskit::after {
+  content: '\6b'; }
+
+.icon-after__questionaire::after {
+  content: '\3f'; }
+
+.icon-after__quotes::after {
+  content: '\71'; }
+
+.icon-after__recruit-friends::after {
+  content: '\66'; }
+
+.icon-after__user-guide::after {
+  content: '\69'; }
+
+.icon-after__right::after {
+  content: '\3e'; }
+
+.icon-after__search::after {
+  content: '\6d'; }
+
+.icon-after__see-less::after {
+  content: '\5e'; }
+
+.icon-after__see-more::after {
+  content: '\65'; }
+
+.icon-after__share::after {
+  content: '\73'; }
+
+.icon-after__twitter-fav::after {
+  content: '\37'; }
+
+.icon-after__twitter-reply::after {
+  content: '\38'; }
+
+.icon-after__twitter-retweet::after {
+  content: '\39'; }
+
+.icon-after__twitter::after {
+  content: '\23'; }
+
+.icon-after__x::after {
+  content: '\78'; }
+
+.icon-after__youtube::after {
+  content: '\79'; }
+
+/*---------------------------------/
+/	ICON REPLACE
+/----------------------------------*/
+[class^='icon-replace'],
+[class*=' icon-replace'],
+.icon-replace__minus,
+.icon-replace__plus,
+.icon-replace__facebook,
+.icon-replace__twitter,
+.icon-replace__mail,
+.icon-replace__x,
+.icon-replace__hamburger,
+.icon-replace__left,
+.icon-replace__right,
+.icon-replace__arrow,
+.icon-replace__search,
+.icon-replace__twitter-fav,
+.icon-replace__twitter-reply,
+.icon-replace__twitter-retweet,
+.icon-replace__see-more,
+.icon-replace__see-less {
+  position: relative;
+  overflow: hidden;
+  padding-top: 1em;
+  text-indent: -99999px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+  [class^='icon-replace']::after,
+  [class*=' icon-replace']::after,
+  .icon-replace__minus::after,
+  .icon-replace__plus::after,
+  .icon-replace__facebook::after,
+  .icon-replace__twitter::after,
+  .icon-replace__mail::after,
+  .icon-replace__x::after,
+  .icon-replace__hamburger::after,
+  .icon-replace__left::after,
+  .icon-replace__right::after,
+  .icon-replace__arrow::after,
+  .icon-replace__search::after,
+  .icon-replace__twitter-fav::after,
+  .icon-replace__twitter-reply::after,
+  .icon-replace__twitter-retweet::after,
+  .icon-replace__see-more::after,
+  .icon-replace__see-less::after {
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: 'senate_icons';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px; }
+
+.icon-replace__down-arrow::after {
+  content: '\e601'; }
+
+.icon-replace__error::after {
+  content: '\45'; }
+
+.icon-replace__calendar-month::after {
+  content: '\67'; }
+
+.icon-replace__calendar-week::after {
+  content: '\47'; }
+
+.icon-replace__arrow::after {
+  content: '\72'; }
+
+.icon-replace__awards::after {
+  content: '\61'; }
+
+.icon-replace__bill-follow::after {
+  content: '\62'; }
+
+.icon-replace__bill-unfollow::after {
+  content: '\42'; }
+
+.icon-replace__bill::after {
+  content: '\30'; }
+
+.icon-replace__calendar-old::after {
+  content: '\e609'; }
+
+.icon-replace__calendar-view::after {
+  content: '\76'; }
+
+.icon-replace__calendar2::after {
+  content: '\64'; }
+
+.icon-replace__check::after {
+  content: '\2f'; }
+
+.icon-replace__circle-check::after {
+  content: '\31'; }
+
+.icon-replace__circle-pin::after {
+  content: '\32'; }
+
+.icon-replace__circle-question::after {
+  content: '\33'; }
+
+.icon-replace__circle-senators::after {
+  content: '\34'; }
+
+.icon-replace__comment::after {
+  content: '\6a'; }
+
+.icon-replace__committee-confirm::after {
+  content: '\35'; }
+
+.icon-replace__committee-follow::after {
+  content: '\63'; }
+
+.icon-replace__committee-unfollow::after {
+  content: '\43'; }
+
+.icon-replace__contact::after {
+  content: '\6e'; }
+
+.icon-replace__external-link::after {
+  content: '\6c'; }
+
+.icon-replace__facebook::after {
+  content: '\21'; }
+
+.icon-replace__find-senator::after {
+  content: '\24'; }
+
+.icon-replace__hamburger::after {
+  content: '\68'; }
+
+.icon-replace__home::after {
+  content: '\48'; }
+
+.icon-replace__instagram2::after {
+  content: '\40'; }
+
+.icon-replace__issue-follow::after {
+  content: '\e600'; }
+
+.icon-replace__issue-unfollow::after {
+  content: '\49'; }
+
+.icon-replace__issue::after {
+  content: '\69'; }
+
+.icon-replace__left::after {
+  content: '\3c'; }
+
+.icon-replace__link::after {
+  content: '\75'; }
+
+.icon-replace__logout::after {
+  content: '\36'; }
+
+.icon-replace__mail::after {
+  content: '\4e'; }
+
+.icon-replace__minus::after {
+  content: '\2d'; }
+
+.icon-replace__notification::after {
+  content: '\6f'; }
+
+.icon-replace__petition::after {
+  content: '\70'; }
+
+.icon-replace__play-outline::after {
+  content: '\50'; }
+
+.icon-replace__plus::after {
+  content: '\2b'; }
+
+.icon-replace__presskit::after {
+  content: '\6b'; }
+
+.icon-replace__questionaire::after {
+  content: '\3f'; }
+
+.icon-replace__quotes::after {
+  content: '\71'; }
+
+.icon-replace__recruit-friends::after {
+  content: '\66'; }
+
+.icon-replace__right::after {
+  content: '\3e'; }
+
+.icon-replace__search::after {
+  content: '\6d'; }
+
+.icon-replace__see-less::after {
+  content: '\5e'; }
+
+.icon-replace__see-more::after {
+  content: '\65'; }
+
+.icon-replace__share::after {
+  content: '\73'; }
+
+.icon-replace__twitter-fav::after {
+  content: '\37'; }
+
+.icon-replace__twitter-reply::after {
+  content: '\38'; }
+
+.icon-replace__twitter-retweet::after {
+  content: '\39'; }
+
+.icon-replace__twitter::after {
+  content: '\23'; }
+
+.icon-replace__x::after {
+  content: '\78'; }
+
+.icon-replace__youtube::after {
+  content: '\79'; }
+
+[class^='icon-replace']:after,
+[class*=' icon-replace']:after,
+.icon-replace__minus:after,
+.c-block--btn-toggle:after,
+.icon-replace__plus:after,
+.c-block__collapsed .c-block--btn-toggle:after,
+.c-block__collapsed.c-block-legislation .c-block--btn-toggle:after,
+.icon-replace__facebook:after,
+.c-btn--facebook:after,
+.share-icon-facebook:after,
+.c-btn--facebook-login:after,
+.c-detail--social-item.facebook:after,
+.icon-replace__twitter:after,
+.c-btn--twitter:after,
+.share-icon-twitter:after,
+.c-detail--social-item.twitter:after,
+.icon-replace__mail:after,
+.c-btn--email:after,
+.share-icon-email:after,
+.c-detail--social-item.email:after,
+.icon-replace__x:after,
+.l-messages .close:after,
+.c-actionbar [class*='c-btn--follow-'] .flag-success-message .close-message:after,
+.c-senate-status [class*='c-btn--follow-'] .flag-success-message .close-message:after,
+.nav-open .c-nav--toggle:after,
+.c-nav--wrap.search-open .c-site-search--btn:after,
+.c-block--issue .c-block--btn .close-message:after,
+.nys-bill-vote-form .bill-vote-message-prompt .closer:after,
+.c-bill--sentiment-update .c-bill--sentiment-text .closer:after,
+.icon-replace__hamburger:after,
+.c-nav--toggle:after,
+.icon-replace__left:after,
+.c-carousel--btn.prev:after,
+.c-upcoming--nav-item:after,
+.icon-replace__right:after,
+.c-carousel--btn.next:after,
+.c-upcoming--nav-item + .c-upcoming--nav-item:after,
+.icon-replace__arrow:after,
+.c-actionbar--loggedin .c-block--btn:after,
+.icon-replace__search:after,
+.c-site-search--btn:focus:after,
+.c-site-search--btn:after,
+.c-nav--wrap.search-open .c-site-search .c-site-search--btn:after,
+#views-exposed-form-explore-issues-explore-issues .views-submit-button button:after,
+#views-exposed-form-explore-issues-solr-explore-issues .views-submit-button button:after,
+#views-exposed-form-explore-issues-tabs-explore-issues-alpha .views-submit-button button:after,
+.icon-replace__twitter-fav:after,
+.c-twitter-block-container .c-twitter-block .c-web_intents a[href*='intent/favorite']:after,
+.icon-replace__twitter-reply:after,
+.c-twitter-block-container .c-twitter-block .c-web_intents a[href*='intent/tweet']:after,
+.icon-replace__twitter-retweet:after,
+.c-twitter-block-container .c-twitter-block .c-web_intents a[href*='intent/retweet']:after,
+.icon-replace__see-more:after,
+.c-tab--arrow:after,
+.icon-replace__see-less:after,
+.l-tab-bar.open .c-tab--arrow:after {
+  text-indent: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: 'senate_icons';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  padding-left: 3px; }
+
+.c-office-location-link {
+  display: none; }
+
+.c-block--senator-office,
+.c-block--senator-media {
+  background: #f4f4f7; }
+  .c-block--senator-office .vcard,
+  .c-block--senator-office .l-col-2,
+  .c-block--senator-media .vcard,
+  .c-block--senator-media .l-col-2 {
+    padding: 0;
+    display: block;
+    width: 100%;
+    margin-bottom: 30px;
+    border: none; }
+  .c-block--senator-office .fn[itemprop="name"],
+  .c-block--senator-office .c-office-info--title,
+  .c-block--senator-media .fn[itemprop="name"],
+  .c-block--senator-media .c-office-info--title {
+    display: block;
+    margin-bottom: 10px;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: normal; }
+  .c-block--senator-office abbr[title],
+  .c-block--senator-media abbr[title] {
+    border: none; }
+  .c-block--senator-office .fn,
+  .c-block--senator-office .street-address,
+  .c-block--senator-office .locality,
+  .c-block--senator-office .region,
+  .c-block--senator-office .postal-code,
+  .c-block--senator-office .tel,
+  .c-block--senator-office .email,
+  .c-block--senator-office .c-senator-media--item,
+  .c-block--senator-media .fn,
+  .c-block--senator-media .street-address,
+  .c-block--senator-media .locality,
+  .c-block--senator-media .region,
+  .c-block--senator-media .postal-code,
+  .c-block--senator-media .tel,
+  .c-block--senator-media .email,
+  .c-block--senator-media .c-senator-media--item {
+    color: #444444;
+    font-family: "Proxima Nova Regular", "Arial", sans-serif;
+    font-size: 16px;
+    line-height: 1.2em;
+    font-weight: normal;
+    text-transform: capitalize; }
+    .c-block--senator-office .fn + *,
+    .c-block--senator-office .street-address + *,
+    .c-block--senator-office .locality + *,
+    .c-block--senator-office .region + *,
+    .c-block--senator-office .postal-code + *,
+    .c-block--senator-office .tel + *,
+    .c-block--senator-office .email + *,
+    .c-block--senator-office .c-senator-media--item + *,
+    .c-block--senator-media .fn + *,
+    .c-block--senator-media .street-address + *,
+    .c-block--senator-media .locality + *,
+    .c-block--senator-media .region + *,
+    .c-block--senator-media .postal-code + *,
+    .c-block--senator-media .tel + *,
+    .c-block--senator-media .email + *,
+    .c-block--senator-media .c-senator-media--item + * {
+      margin-top: 5px; }
+  .c-block--senator-office .c-senator-media--item,
+  .c-block--senator-media .c-senator-media--item {
+    text-transform: none; }
+    .c-block--senator-office .c-senator-media--item span,
+    .c-block--senator-media .c-senator-media--item span {
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-size: 14px;
+      font-weight: normal; }
+  .c-block--senator-office .locality,
+  .c-block--senator-office .region,
+  .c-block--senator-office .postal-code,
+  .c-block--senator-media .locality,
+  .c-block--senator-media .region,
+  .c-block--senator-media .postal-code {
+    display: inline-block; }
+  .c-block--senator-office .tel,
+  .c-block--senator-media .tel {
+    clear: left; }
+    .c-block--senator-office .tel span,
+    .c-block--senator-media .tel span {
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-size: 14px;
+      font-weight: normal; }
+  .c-block--senator-office .email,
+  .c-block--senator-media .email {
+    text-transform: none; }
+    .c-block--senator-office .email .type,
+    .c-block--senator-media .email .type {
+      display: none; }
+    .c-block--senator-office .email a,
+    .c-block--senator-media .email a {
+      color: #7d7c7c; }
+  .c-block--senator-office .additional,
+  .c-block--senator-media .additional {
+    display: block; }
+  .c-block--senator-office .street-address span + span,
+  .c-block--senator-media .street-address span + span {
+    margin-top: 5px; }
+  .c-block--senator-office .c-senator-media--item,
+  .c-block--senator-media .c-senator-media--item {
+    display: block; }
+  .c-block--senator-office .c-block--senator-email,
+  .c-block--senator-media .c-block--senator-email {
+    clear: both;
+    font-family: "Proxima Nova Regular", "Arial", sans-serif;
+    font-size: 16px;
+    line-height: 1.2em;
+    margin-bottom: 30px; }
+    .c-block--senator-office .c-block--senator-email a,
+    .c-block--senator-media .c-block--senator-email a {
+      text-decoration: none; }
+  .c-block--senator-office .c-block--senator-office-contacts,
+  .c-block--senator-media .c-block--senator-office-contacts {
+    clear: both;
+    margin-top: 20px;
+    color: #444444; }
+  .c-block--senator-office .c-office-info--office-contact,
+  .c-block--senator-media .c-office-info--office-contact {
+    font-family: "Proxima Nova Regular", "Arial", sans-serif;
+    font-size: 16px;
+    line-height: 1.2em; }
+    .c-block--senator-office .c-office-info--office-contact strong,
+    .c-block--senator-media .c-office-info--office-contact strong {
+      font-family: "Proxima Nova Regular", "Arial", sans-serif; }
+    .c-block--senator-office .c-office-info--office-contact.vcard,
+    .c-block--senator-media .c-office-info--office-contact.vcard {
+      color: #444444;
+      line-height: 1.4; }
+    .c-block--senator-office .c-office-info--office-contact span,
+    .c-block--senator-media .c-office-info--office-contact span {
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-size: 14px;
+      font-weight: normal; }
+    .c-block--senator-office .c-office-info--office-contact a,
+    .c-block--senator-media .c-office-info--office-contact a {
+      text-decoration: none; }
+  .c-block--senator-office .c-office-location-link,
+  .c-block--senator-media .c-office-location-link {
+    display: block;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    font-size: 16px;
+    text-decoration: none; }
+
+.c-block--senator-office {
+  padding: 40px 20px 15px; }
+  .c-block--senator-office .l-col {
+    clear: left; }
+
+.c-block--senator-media {
+  padding: 40px 20px 30px; }
+  .c-block--senator-media .vcard {
+    margin: 0; }
+  .c-block--senator-media .email {
+    margin-top: 20px; }
+  .c-block--senator-media .c-office-location-link {
+    display: none; }
+
+.panel-separator + .pane-senator-contact-blocks {
+  margin-top: 40px; }
+
+.view-display-id-senator_press_kit_block .views-field-field-press-kit {
+  position: relative;
+  width: 100%;
+  height: 54px;
+  margin-top: -40px; }
+  .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn {
+    padding-left: 20px;
+    transition: background-color 0.25s ease; }
+
+.nys-title.contact-block__title {
+  font-family: "Adelle Bold", serif;
+  font-weight: 400; }
+
+@media screen and (min-width: 768px) {
+  .nys-title.contact-block__title {
+    font-size: 32px; }
+  .c-block--senator-office {
+    padding: 40px 40px 45px; }
+    .c-block--senator-office .field-content {
+      margin: 0 auto;
+      display: grid;
+      grid-gap: 15px;
+      grid-template-columns: 1fr 1fr; }
+    .c-block--senator-office .c-office-info--office-contact.vcard,
+    .c-block--senator-office .l-col-2 {
+      float: left;
+      width: 50%;
+      padding-right: 1%; }
+    .c-block--senator-office .l-col-2 {
+      margin-bottom: 0; }
+  .c-block--senator-media {
+    padding: 40px 40px 45px; }
+    .c-block--senator-media .vcard,
+    .c-block--senator-media .l-col-2 {
+      float: left;
+      width: 50%;
+      padding-right: 1%; }
+    .c-block--senator-media .l-col-2 {
+      margin-bottom: 0; }
+  .view-display-id-senator_press_kit_block .views-field-field-press-kit {
+    margin-top: -60px;
+    height: 80px; }
+    .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn {
+      padding-left: 40px; } }

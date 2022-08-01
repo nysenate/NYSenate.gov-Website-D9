@@ -341,12 +341,12 @@ class SplitFilter extends ConfigFilterBase implements ContainerFactoryPluginInte
     $blacklist = $this->configuration['blacklist'];
     $modules = array_keys($this->configuration['module']);
     if ($modules) {
-      $blacklist = array_merge($blacklist, array_keys($this->manager->findConfigEntityDependents('module', $modules)));
+      $blacklist = array_merge($blacklist, array_keys($this->manager->findConfigEntityDependencies('module', $modules)));
     }
 
     $themes = array_keys($this->configuration['theme']);
     if ($themes) {
-      $blacklist = array_merge($blacklist, array_keys($this->manager->findConfigEntityDependents('theme', $themes)));
+      $blacklist = array_merge($blacklist, array_keys($this->manager->findConfigEntityDependencies('theme', $themes)));
     }
 
     $extensions = array_merge([], $modules, $themes);
@@ -358,7 +358,7 @@ class SplitFilter extends ConfigFilterBase implements ContainerFactoryPluginInte
 
     $blacklist = array_filter($this->manager->getConfigFactory()->listAll(), function ($name) use ($extensions, $blacklist) {
       // Filter the list of config objects since they are not included in
-      // findConfigEntityDependents.
+      // findConfigEntityDependencies.
       foreach ($extensions as $extension) {
         if (strpos($name, $extension . '.') === 0) {
           return TRUE;
@@ -370,7 +370,7 @@ class SplitFilter extends ConfigFilterBase implements ContainerFactoryPluginInte
     });
     sort($blacklist);
     // Finally merge all dependencies of the blacklisted config.
-    $blacklist = array_unique(array_merge($blacklist, array_keys($this->manager->findConfigEntityDependents('config', $blacklist))));
+    $blacklist = array_unique(array_merge($blacklist, array_keys($this->manager->findConfigEntityDependencies('config', $blacklist))));
     // Exclude from the complete split what is conditionally split.
     return array_diff($blacklist, $this->getGraylist());
   }
@@ -397,7 +397,7 @@ class SplitFilter extends ConfigFilterBase implements ContainerFactoryPluginInte
 
     if ($this->configuration['graylist_dependents']) {
       // Find dependent configuration and add it to the list.
-      $graylist = array_unique(array_merge($graylist, array_keys($this->manager->findConfigEntityDependents('config', $graylist))));
+      $graylist = array_unique(array_merge($graylist, array_keys($this->manager->findConfigEntityDependencies('config', $graylist))));
     }
 
     return $graylist;
@@ -471,7 +471,7 @@ class SplitFilter extends ConfigFilterBase implements ContainerFactoryPluginInte
     }
 
     // When the folder is not set use a database.
-    return new DatabaseStorage($connection, $connection->escapeTable(strtr($config->getName(), ['.' => '_'])));
+    return new DatabaseStorage($connection, $connection->escapeTable(strtr((string) $config->getName(), ['.' => '_'])));
   }
 
 }

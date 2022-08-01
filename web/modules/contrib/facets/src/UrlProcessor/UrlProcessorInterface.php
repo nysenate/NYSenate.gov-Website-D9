@@ -60,6 +60,14 @@ interface UrlProcessorInterface {
   public function getSeparator();
 
   /**
+   * Returns the multi-value delimiter.
+   *
+   * @return string
+   *   A string containing the multi-value delimiter.
+   */
+  public function getDelimiter(): string;
+
+  /**
    * Returns the active filters.
    *
    * @return array

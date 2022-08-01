@@ -292,7 +292,7 @@ class FacetSettingsForm extends EntityForm {
       $this->messenger()->addMessage($this->t('Facet %name has been updated.', ['%name' => $facet->getName()]));
     }
 
-    list($type,) = explode(':', $facet_source_id);
+    [$type] = explode(':', $facet_source_id);
     if ($type !== 'search_api') {
       return $facet;
     }
@@ -305,9 +305,10 @@ class FacetSettingsForm extends EntityForm {
         if ($view->display_handler instanceof Block) {
           $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
         }
-        $view->display_handler->overrideOption('cache', ['type' => 'none']);
-        $view->save();
-        $this->messenger()->addMessage($this->t('Caching of view %view has been disabled.', ['%view' => $view->storage->label()]));
+        $views_cache_type = $view->display_handler->getOption('cache')['type'];
+        if ($views_cache_type !== 'none') {
+          $this->messenger()->addMessage($this->t('You may experience issues, because %view use cache. In case you will try to turn set cache plugin to none.', ['%view' => $view->storage->label()]));
+        }
       }
     }
 

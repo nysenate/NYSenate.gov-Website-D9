@@ -376,6 +376,7 @@ class FilteredStorageTest extends CachedStorageTest {
     // We would do this with $this->expectException but alas drupal is stuck on
     // phpunit 4 and we try not to add deprecated code.
     try {
+      // @phpstan-ignore-next-line Wrong arguments is what we test here.
       new FilteredStorage($source->reveal(), [new \stdClass()]);
       $this->fail('An exception should have been thrown.');
     }

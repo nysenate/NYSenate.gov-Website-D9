@@ -14,21 +14,21 @@ layout_builder_restrictions.entity_view_mode_restriction:
       sequence:
         type: string
         label: 'Layout ID'
-    blacklisted_blocks:
+    denylisted_blocks:
       type: sequence
-      label: 'Blacklisted blocks by category'
+      label: 'Denylisted blocks by category'
       sequence:
         type: sequence
-        label: 'Blacklisted blocks'
+        label: 'Denylisted blocks'
         sequence:
           type: string
           label: 'Block ID'
-    whitelisted_blocks:
+    allowlisted_blocks:
       type: sequence
-      label: 'Whitelisted blocks by category'
+      label: 'Allowlisted blocks by category'
       sequence:
         type: sequence
-        label: 'Whitelisted blocks'
+        label: 'Allowlisted blocks'
         sequence:
           type: string
           label: 'Block ID'

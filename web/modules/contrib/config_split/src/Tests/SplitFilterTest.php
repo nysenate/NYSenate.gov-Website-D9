@@ -32,15 +32,15 @@ class SplitFilterTest extends UnitTestCase {
 
     // The config manager returns dependent entities for modules and themes.
     $manager = $this->prophesize('Drupal\Core\Config\ConfigManagerInterface');
-    $manager->findConfigEntityDependents(Argument::exact('module'), Argument::exact(['module1', 'module2']))
+    $manager->findConfigEntityDependencies(Argument::exact('module'), Argument::exact(['module1', 'module2']))
       ->willReturn(['c' => 0, 'd' => 0, 'a' => 0]);
-    $manager->findConfigEntityDependents(Argument::exact('theme'), Argument::exact(['theme1']))
+    $manager->findConfigEntityDependencies(Argument::exact('theme'), Argument::exact(['theme1']))
       ->willReturn(['e' => 0, 'f' => 0, 'c' => 0]);
     // Add a config storage returning some settings for the filtered modules.
     $all_config = array_merge(array_fill_keys(range("a", "z"), []), ['module1.settings' => [], 'module3.settings' => []]);
     $manager->getConfigFactory()->willReturn($this->getConfigStorageStub($all_config));
     // Add more config dependencies, independently of what is asked for.
-    $manager->findConfigEntityDependents(Argument::exact('config'), Argument::cetera())
+    $manager->findConfigEntityDependencies(Argument::exact('config'), Argument::cetera())
       ->willReturn(['f' => 0, 'g' => 0, 'b' => 0]);
 
     $filter = new SplitFilter($configuration, 'config_split', [], $manager->reveal());
@@ -48,7 +48,7 @@ class SplitFilterTest extends UnitTestCase {
     // The order of values and keys are not important.
     sort($actual);
     $expected = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'module1.settings'];
-    $this->assertArrayEquals($expected, $actual);
+    self::assertEqualsCanonicalizing($expected, $actual);
   }
 
   /**
@@ -64,21 +64,21 @@ class SplitFilterTest extends UnitTestCase {
 
     // The config manager returns dependent entities for modules and themes.
     $manager = $this->prophesize('Drupal\Core\Config\ConfigManagerInterface');
-    $manager->findConfigEntityDependents(Argument::exact('module'), Argument::cetera())->willReturn([]);
-    $manager->findConfigEntityDependents(Argument::exact('theme'), Argument::cetera())->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('module'), Argument::cetera())->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('theme'), Argument::cetera())->willReturn([]);
     // Add a config storage returning some settings for the filtered modules.
     $all_config = array_merge(array_fill_keys(range("a", "z"), []), ['module1.settings' => [], 'module3.settings' => []]);
     $manager->getConfigFactory()->willReturn($this->getConfigStorageStub($all_config));
     // Add more config dependencies, independently of what is asked for.
-    $manager->findConfigEntityDependents(Argument::exact('config'), Argument::exact([]))->willReturn([]);
-    $manager->findConfigEntityDependents(Argument::exact('config'), Argument::exact(['a', 'b']))
+    $manager->findConfigEntityDependencies(Argument::exact('config'), Argument::exact([]))->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('config'), Argument::exact(['a', 'b']))
       ->willReturn(['f' => 0, 'g' => 0, 'b' => 0]);
 
     $filter = new SplitFilter($configuration, 'config_split', [], $manager->reveal());
     $actual = $filter->getGraylist();
     // The order of values and keys are not important.
     sort($actual);
-    $this->assertArrayEquals(['a', 'b', 'f', 'g'], $actual);
+    self::assertEquals(['a', 'b', 'f', 'g'], $actual);
   }
 
   /**
@@ -94,22 +94,22 @@ class SplitFilterTest extends UnitTestCase {
 
     // The config manager returns dependent entities for modules and themes.
     $manager = $this->prophesize('Drupal\Core\Config\ConfigManagerInterface');
-    $manager->findConfigEntityDependents(Argument::exact('module'), Argument::cetera())->willReturn([]);
-    $manager->findConfigEntityDependents(Argument::exact('theme'), Argument::cetera())->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('module'), Argument::cetera())->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('theme'), Argument::cetera())->willReturn([]);
     // Add a config storage returning some settings for the filtered modules.
     $all_config = array_merge(array_fill_keys(range("a", "z"), []), ['module1.settings' => [], 'module3.settings' => []]);
     $manager->getConfigFactory()->willReturn($this->getConfigStorageStub($all_config));
     // Add more config dependencies, independently of what is asked for.
-    $manager->findConfigEntityDependents(Argument::exact('config'), Argument::exact(['b', 'c', 'd']))
+    $manager->findConfigEntityDependencies(Argument::exact('config'), Argument::exact(['b', 'c', 'd']))
       ->willReturn(['e' => 0]);
-    $manager->findConfigEntityDependents(Argument::exact('config'), Argument::exact(['a']))
+    $manager->findConfigEntityDependencies(Argument::exact('config'), Argument::exact(['a']))
       ->willReturn(['f' => 0, 'b' => 0]);
 
     $filter = new SplitFilter($configuration, 'config_split', [], $manager->reveal());
     $actual = $filter->getBlacklist();
     // The order of values and keys are not important.
     sort($actual);
-    $this->assertArrayEquals(['c', 'd', 'e'], $actual);
+    self::assertEquals(['c', 'd', 'e'], $actual);
   }
 
   /**
@@ -132,8 +132,8 @@ class SplitFilterTest extends UnitTestCase {
 
     // The config manager returns dependent entities for modules and themes.
     $manager = $this->prophesize('Drupal\Core\Config\ConfigManagerInterface');
-    $manager->findConfigEntityDependents(Argument::exact('module'), Argument::cetera())->willReturn([]);
-    $manager->findConfigEntityDependents(Argument::exact('theme'), Argument::cetera())->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('module'), Argument::cetera())->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('theme'), Argument::cetera())->willReturn([]);
     // Add a config storage returning some settings for the filtered modules.
     $all_config = array_merge(array_fill_keys(range("a", "z"), []), [
       'contact' => [],
@@ -165,12 +165,12 @@ class SplitFilterTest extends UnitTestCase {
       'x',
     ];
 
-    $manager->findConfigEntityDependents(Argument::exact('config'), Argument::exact($expected))->willReturn([]);
-    $manager->findConfigEntityDependents(Argument::exact('config'), Argument::exact([]))->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('config'), Argument::exact($expected))->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::exact('config'), Argument::exact([]))->willReturn([]);
 
     $filter = new SplitFilter($configuration, 'config_split', [], $manager->reveal());
     $actual = $filter->{$method}();
-    $this->assertArrayEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   /**
@@ -192,7 +192,7 @@ class SplitFilterTest extends UnitTestCase {
     $name = $this->randomMachineName();
     $data = (array) $this->getRandomGenerator()->object();
     $filter = $this->getFilter();
-    $this->assertEquals($data, $filter->filterRead($name, $data));
+    self::assertEquals($data, $filter->filterRead($name, $data));
 
     // Filter with a storage that has an alternative.
     $name2 = $this->randomMachineName();
@@ -201,8 +201,8 @@ class SplitFilterTest extends UnitTestCase {
     $storage->read($name)->willReturn(NULL);
     $storage->read($name2)->willReturn($data2);
     $filter = $this->getFilter($storage->reveal());
-    $this->assertEquals($data, $filter->filterRead($name, $data));
-    $this->assertEquals($data2, $filter->filterRead($name2, $data));
+    self::assertEquals($data, $filter->filterRead($name, $data));
+    self::assertEquals($data2, $filter->filterRead($name2, $data));
 
     // Test that extensions are correctly added.
     $extensions = [
@@ -235,24 +235,24 @@ class SplitFilterTest extends UnitTestCase {
       'theme' => ['stable' => 0, 'classy' => 0, 'custom_theme' => 0],
     ];
     $filter = $this->getFilter(NULL, [], $modules, $themes);
-    $this->assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions));
-    $this->assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions_extra));
+    self::assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions));
+    self::assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions_extra));
 
     // Test with reading from the wrapper storage.
     $filter = $this->getFilter(NULL, [], ['none' => 0], ['none' => 0], [], $name);
     $storage = $this->prophesize(StorageInterface::class);
     $storage->read($name)->willReturn(['module' => $modules, 'theme' => $themes]);
     $filter->setFilteredStorage($storage->reveal());
-    $this->assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions));
-    $this->assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions_extra));
+    self::assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions));
+    self::assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions_extra));
 
     // Test with reading from the wrapper storage.
     $filter = $this->getFilter(NULL, [], ['none' => 0], ['none' => 0], [], $name);
     $storage = $this->prophesize(StorageInterface::class);
     $storage->read($name)->willReturn(FALSE);
     $filter->setFilteredStorage($storage->reveal());
-    $this->assertEquals($extensions, $filter->filterRead('core.extension', $extensions));
-    $this->assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions_extra));
+    self::assertEquals($extensions, $filter->filterRead('core.extension', $extensions));
+    self::assertEquals($extensions_extra, $filter->filterRead('core.extension', $extensions_extra));
   }
 
   /**
@@ -269,24 +269,24 @@ class SplitFilterTest extends UnitTestCase {
       $this->fail('The filter needs a storage.');
     }
     catch (\InvalidArgumentException $exception) {
-      $this->assertTrue(TRUE, 'Exception thrown.');
+      self::assertTrue(TRUE, 'Exception thrown.');
     }
 
     $filter = $this->getFilter(new NullStorage());
-    $this->assertEquals($data, $filter->filterWrite($name, $data));
+    self::assertEquals($data, $filter->filterWrite($name, $data));
 
     // Filter with a blacklist.
     $name2 = $this->randomMachineName();
     $filter = $this->getFilter(new NullStorage(), [$name2], [], []);
-    $this->assertEquals($data, $filter->filterWrite($name, $data));
-    $this->assertNull($filter->filterWrite($name2, $data));
+    self::assertEquals($data, $filter->filterWrite($name, $data));
+    self::assertNull($filter->filterWrite($name2, $data));
     // Filter with a blacklist and a storage.
     $storage = $this->prophesize(StorageInterface::class);
     $storage->write(Argument::cetera())->willReturn(TRUE);
     $storage->exists($name)->willReturn(FALSE);
     $filter = $this->getFilter($storage->reveal(), [$name2], [], []);
-    $this->assertEquals($data, $filter->filterWrite($name, $data));
-    $this->assertNull($filter->filterWrite($name2, $data));
+    self::assertEquals($data, $filter->filterWrite($name, $data));
+    self::assertNull($filter->filterWrite($name2, $data));
 
     // Filter with a gray list and a storage.
     $name3 = $this->randomMachineName();
@@ -299,9 +299,9 @@ class SplitFilterTest extends UnitTestCase {
     $storage = $storage->reveal();
     $filter = $this->getFilter($storage, [$name2], [], [], [$name3]);
     $filter->setSourceStorage($storage);
-    $this->assertEquals($data, $filter->filterWrite($name, $data));
-    $this->assertNull($filter->filterWrite($name2, $data));
-    $this->assertEquals($data3, $filter->filterWrite($name3, $data));
+    self::assertEquals($data, $filter->filterWrite($name, $data));
+    self::assertNull($filter->filterWrite($name2, $data));
+    self::assertEquals($data3, $filter->filterWrite($name3, $data));
 
     // Filter with graylist and skipping equal data.
     $primary = $this->prophesize(StorageInterface::class);
@@ -317,10 +317,10 @@ class SplitFilterTest extends UnitTestCase {
 
     $filter = $this->getFilter($secondary, [$name2], [], [], [$name3], 'test', TRUE);
     $filter->setSourceStorage($primary);
-    $this->assertEquals($data, $filter->filterWrite($name, $data));
-    $this->assertNull($filter->filterWrite($name2, $data));
-    $this->assertEquals($data3, $filter->filterWrite($name3, $data));
-    $this->assertEquals($data3, $filter->filterWrite($name3, $data3));
+    self::assertEquals($data, $filter->filterWrite($name, $data));
+    self::assertNull($filter->filterWrite($name2, $data));
+    self::assertEquals($data3, $filter->filterWrite($name3, $data));
+    self::assertEquals($data3, $filter->filterWrite($name3, $data3));
 
     // Test that extensions are correctly removed.
     $extensions = [
@@ -353,16 +353,16 @@ class SplitFilterTest extends UnitTestCase {
       'theme' => ['stable' => 0, 'classy' => 0, 'custom_theme' => 0],
     ];
     $filter = $this->getFilter(new NullStorage(), [], $modules, $themes);
-    $this->assertEquals($extensions, $filter->filterWrite('core.extension', $extensions));
-    $this->assertEquals($extensions, $filter->filterWrite('core.extension', $extensions_extra));
+    self::assertEquals($extensions, $filter->filterWrite('core.extension', $extensions));
+    self::assertEquals($extensions, $filter->filterWrite('core.extension', $extensions_extra));
 
     // Test that empty config is not written to the split storage.
     $storage = $this->prophesize(StorageInterface::class);
     $storage->write($name2, [])->shouldNotBeCalled();
     $storage->write($name3, [])->shouldNotBeCalled();
     $filter = $this->getFilter($storage->reveal(), [$name2], [], [], [$name3], 'test', TRUE);
-    $this->assertNull($filter->filterWrite($name2, []));
-    $this->assertNull($filter->filterWrite($name3, []));
+    self::assertNull($filter->filterWrite($name2, []));
+    self::assertNull($filter->filterWrite($name3, []));
   }
 
   /**
@@ -376,15 +376,15 @@ class SplitFilterTest extends UnitTestCase {
     $transparent = $this->getFilter(NULL);
     $filter = $this->getFilter($storage->reveal());
 
-    $this->assertTrue($transparent->filterExists('Yes', TRUE));
-    $this->assertTrue($transparent->filterExists('No', TRUE));
-    $this->assertFalse($transparent->filterExists('Yes', FALSE));
-    $this->assertFalse($transparent->filterExists('No', FALSE));
+    self::assertTrue($transparent->filterExists('Yes', TRUE));
+    self::assertTrue($transparent->filterExists('No', TRUE));
+    self::assertFalse($transparent->filterExists('Yes', FALSE));
+    self::assertFalse($transparent->filterExists('No', FALSE));
 
-    $this->assertTrue($filter->filterExists('Yes', TRUE));
-    $this->assertTrue($filter->filterExists('No', TRUE));
-    $this->assertTrue($filter->filterExists('Yes', FALSE));
-    $this->assertFalse($filter->filterExists('No', FALSE));
+    self::assertTrue($filter->filterExists('Yes', TRUE));
+    self::assertTrue($filter->filterExists('No', TRUE));
+    self::assertTrue($filter->filterExists('Yes', FALSE));
+    self::assertFalse($filter->filterExists('No', FALSE));
   }
 
   /**
@@ -398,11 +398,11 @@ class SplitFilterTest extends UnitTestCase {
     $transparent = $this->getFilter(NULL);
     $filter = $this->getFilter($storage->reveal());
 
-    $this->assertTrue($transparent->filterDelete('Yes', TRUE));
-    $this->assertFalse($transparent->filterDelete('No', FALSE));
+    self::assertTrue($transparent->filterDelete('Yes', TRUE));
+    self::assertFalse($transparent->filterDelete('No', FALSE));
 
-    $this->assertTrue($filter->filterDelete('Yes', TRUE));
-    $this->assertFalse($filter->filterDelete('No', FALSE));
+    self::assertTrue($filter->filterDelete('Yes', TRUE));
+    self::assertFalse($filter->filterDelete('No', FALSE));
   }
 
   /**
@@ -420,8 +420,8 @@ class SplitFilterTest extends UnitTestCase {
     $filter = $this->getFilter($storage->reveal());
 
     // Test listing config.
-    $this->assertArrayEquals($primary, $transparent->filterReadMultiple(array_keys($merged), $primary));
-    $this->assertArrayEquals($merged, $filter->filterReadMultiple(array_keys($merged), $primary));
+    self::assertEquals($primary, $transparent->filterReadMultiple(array_keys($merged), $primary));
+    self::assertEquals($merged, $filter->filterReadMultiple(array_keys($merged), $primary));
   }
 
   /**
@@ -438,8 +438,8 @@ class SplitFilterTest extends UnitTestCase {
     $filter = $this->getFilter($storage);
 
     // Test listing config.
-    $this->assertArrayEquals(array_keys($primary), $transparent->filterListAll('', array_keys($primary)));
-    $this->assertArrayEquals(array_keys($merged), $filter->filterListAll('', array_keys($primary)));
+    self::assertEquals(array_keys($primary), $transparent->filterListAll('', array_keys($primary)));
+    self::assertEquals(array_keys($merged), $filter->filterListAll('', array_keys($primary)));
   }
 
   /**
@@ -452,18 +452,18 @@ class SplitFilterTest extends UnitTestCase {
     $transparent = $this->getFilter(NULL);
     $filter = $this->getFilter($storage->reveal());
 
-    $this->assertTrue($transparent->filterDeleteAll('Yes', TRUE));
-    $this->assertFalse($transparent->filterDeleteAll('No', FALSE));
+    self::assertTrue($transparent->filterDeleteAll('Yes', TRUE));
+    self::assertFalse($transparent->filterDeleteAll('No', FALSE));
 
-    $this->assertTrue($filter->filterDeleteAll('Yes', TRUE));
-    $this->assertFalse($filter->filterDeleteAll('No', FALSE));
+    self::assertTrue($filter->filterDeleteAll('Yes', TRUE));
+    self::assertFalse($filter->filterDeleteAll('No', FALSE));
 
     // Test that the storage can throw an exception without affecting execution.
     $failing = $this->prophesize(StorageInterface::class);
     $failing->deleteAll('Yes')->willThrow('\UnexpectedValueException');
 
     $filter = $this->getFilter($failing->reveal());
-    $this->assertTrue($filter->filterDeleteAll('Yes', TRUE));
+    self::assertTrue($filter->filterDeleteAll('Yes', TRUE));
   }
 
   /**
@@ -476,7 +476,7 @@ class SplitFilterTest extends UnitTestCase {
     $storage->createCollection($collection)->willReturn($collection_storage);
 
     $transparent = $this->getFilter(NULL);
-    $this->assertEquals($transparent, $transparent->filterCreateCollection($collection));
+    self::assertEquals($transparent, $transparent->filterCreateCollection($collection));
 
     $filter = $this->getFilter($storage->reveal());
     $new_filter = $filter->filterCreateCollection($collection);
@@ -485,7 +485,7 @@ class SplitFilterTest extends UnitTestCase {
     $internal = new \ReflectionProperty(SplitFilter::class, 'secondaryStorage');
     $internal->setAccessible(TRUE);
     $actual = $internal->getValue($new_filter);
-    $this->assertEquals($collection_storage, $actual);
+    self::assertEquals($collection_storage, $actual);
   }
 
   /**
@@ -500,8 +500,8 @@ class SplitFilterTest extends UnitTestCase {
     $transparent = $this->getFilter(NULL);
     $filter = $this->getFilter($storage->reveal());
 
-    $this->assertArrayEquals($collections, $transparent->filterGetAllCollectionNames($collections));
-    $this->assertArrayEquals(array_merge($collections, $extra), $filter->filterGetAllCollectionNames($collections));
+    self::assertEquals($collections, $transparent->filterGetAllCollectionNames($collections));
+    self::assertEquals(array_merge($collections, $extra), $filter->filterGetAllCollectionNames($collections));
   }
 
   /**
@@ -530,10 +530,10 @@ class SplitFilterTest extends UnitTestCase {
     ];
 
     $filter = SplitFilter::create($container->reveal(), $configuration, $this->getRandomGenerator()->name(), []);
-    $this->assertTrue($folder->hasChild('.htaccess'), 'htaccess written to split folder.');
+    self::assertTrue($folder->hasChild('.htaccess'), 'htaccess written to split folder.');
 
     $folder->addChild(new vfsStreamFile($name . '.' . FileStorage::getFileExtension()));
-    $this->assertTrue($filter->filterExists($name, FALSE), 'Assert filename');
+    self::assertTrue($filter->filterExists($name, FALSE), 'Assert filename');
 
     // Test split with db storage.
     $name = 'config_split.' . $this->getRandomGenerator()->name();
@@ -561,7 +561,7 @@ class SplitFilterTest extends UnitTestCase {
     $storage->setAccessible(TRUE);
     $secondary = $storage->getValue($filter);
 
-    $this->assertInstanceOf(DatabaseStorage::class, $secondary);
+    self::assertInstanceOf(DatabaseStorage::class, $secondary);
   }
 
   /**
@@ -619,7 +619,7 @@ class SplitFilterTest extends UnitTestCase {
     // This means that the blacklist is not enhanced but only the one passed
     // as an argument is used.
     $manager = $this->prophesize('Drupal\Core\Config\ConfigManagerInterface');
-    $manager->findConfigEntityDependents(Argument::cetera())->willReturn([]);
+    $manager->findConfigEntityDependencies(Argument::cetera())->willReturn([]);
     // The config factory should return config names for at least all
     // blacklisted and gray listed configuration.
     $all_config = array_fill_keys(array_merge($blacklist, $graylist, array_keys($modules), array_keys($themes)), []);

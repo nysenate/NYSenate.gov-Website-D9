@@ -26,7 +26,7 @@ class ViewsBulkOperationsSimpleTestAction extends ViewsBulkOperationsActionBase 
       $this->configuration['preconfig'],
       $entity->label()
     ));
-    return 'Test';
+    return $this->t('Test');
   }
 
   /**

@@ -3,7 +3,6 @@ type: profile
 description: 'Rename this profile to the appropriate client or project name.'
 core: 8.x
 core_version_requirement: '^8 || ^9'
-base profile: rain
 
 # Optional: Declare your installation profile as a distribution
 # This will make the installer auto-select this installation profile.
@@ -24,7 +23,7 @@ base profile: rain
 dependencies:
 # Required modules
 # Installs Guardr recommended modules and configuration.
-  # - guardr_core
+ - rain_core
 
 # List any themes that should be installed as part of the installation
 # profile installation.

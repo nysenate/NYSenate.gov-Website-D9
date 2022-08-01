@@ -72,6 +72,11 @@ class Links extends FilterWidgetBase {
       // select_as_links options as they will use the wrong path. We
       // provide a hint for theme functions to correct this.
       $form[$field_id]['#bef_path'] = $this->getExposedFormActionUrl($form_state);
+
+      if ($filter->view->ajaxEnabled() || $filter->view->display_handler->ajaxEnabled()) {
+        $form[$field_id]['#attributes']['class'][] = 'bef-links-use-ajax';
+        $form['#attached']['library'][] = 'better_exposed_filters/links_use_ajax';
+      }
     }
   }
 

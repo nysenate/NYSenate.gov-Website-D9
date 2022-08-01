@@ -10,10 +10,12 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Entity\FacetSource;
 use Drupal\facets\FacetInterface;
+use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\views\Entity\View;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -202,8 +204,18 @@ function facets_entity_predelete(EntityInterface $entity) {
  * @see https://www.drupal.org/node/1842756
  */
 function facets_preprocess_facets_item_list(array &$variables) {
-  if ($variables['facet'] !== NULL && $variables['facet']->get('show_title') === TRUE) {
-    $variables['title'] = $variables['facet']->label();
+  /** @var FacetInterface $facet */
+  $facet = $variables['facet'];
+  if ($facet !== NULL) {
+    if ($facet->get('show_title') === TRUE) {
+      $variables['title'] = $facet->label();
+    }
+    if (Settings::get('facets_debug_cacheable_metadata', FALSE) && $facet->getFacetSource() instanceof SearchApiFacetSourceInterface) {
+      $variables['cache_hash'] = $hash = substr(base_convert(hash('sha256', uniqid(time())), 16, 36), 0, 6);
+      $variables['cache_contexts'] = implode(', ', $facet->getCacheContexts());
+      $variables['cache_tags'] = implode(', ', $facet->getCacheTags());
+      $variables['cache_max_age'] = $facet->getCacheMaxAge();
+    }
   }
   template_preprocess_item_list($variables);
 }

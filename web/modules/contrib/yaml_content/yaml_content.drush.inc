@@ -94,19 +94,23 @@ function drush_yaml_content_import_module($module, $file = NULL) {
  * Import specified yaml content file(s) from a designated profile.
  *
  * @param string $profile
- *   The profile to look for content files within.
- *
- *   This command assumes files will be contained within a `content/` directory
- *   at the top of the profiles's main directory. Any files within matching the
- *   pattern `*.content.yml` will then be imported.
+ *   (optional) The machine name of a profile to be searched for content. If
+ *   not provided the site's install profile will be used. This command looks
+ *   for files in a directory named `content` at the top of the profiles's
+ *   main directory, sub directories are not supported; all files in this
+ *   directory matching the pattern `*.content.yml` in this directory will be
+ *   imported.
  * @param string|string[] $file
  *   (Optional) The name of a file to be imported or an array of files to
  *   import. If this argument is not provided then all files in the directory
- *   matching `*.content.yml` are queued for import.
+ *   matching `*.content.yml` will be imported.
  *
  * @see \Drupal\yaml_content\Service\LoadHelper::importProfile()
  */
-function drush_yaml_content_import_profile($profile, $file = NULL) {
+function drush_yaml_content_import_profile($profile = NULL, $file = NULL) {
+  if (empty($profile)) {
+    $profile = \Drupal::installProfile();
+  }
   $load_helper = \Drupal::service('yaml_content.load_helper');
   $load_helper->importProfile($profile, $file);
 }

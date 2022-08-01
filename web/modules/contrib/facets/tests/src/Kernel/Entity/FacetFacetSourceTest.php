@@ -31,7 +31,6 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
     'search_api_db',
     'search_api_test_db',
     'search_api_test_example_content',
-    'search_api_test_views',
     'views',
     'rest',
     'serialization',
@@ -60,7 +59,7 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
       'search_api_test_db',
     ]);
 
-    $this->installConfig('search_api_test_views');
+    $this->installConfig('facets_search_api_dependency');
   }
 
   /**

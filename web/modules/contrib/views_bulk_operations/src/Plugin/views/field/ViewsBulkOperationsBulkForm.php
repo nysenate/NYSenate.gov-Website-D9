@@ -782,8 +782,8 @@ class ViewsBulkOperationsBulkForm extends FieldPluginBase implements CacheableDe
           '#type' => 'details',
           '#open' => FALSE,
           '#title' => $this->formatPlural($count,
-            'Selected 1 item in this view',
-            'Selected @count items in this view'
+            'Selected 1 item',
+            'Selected @count items'
           ),
           '#attributes' => [
             // Add view_id and display_id to be available for
@@ -808,7 +808,7 @@ class ViewsBulkOperationsBulkForm extends FieldPluginBase implements CacheableDe
       if ($display_select_all || !($this->view->style_plugin instanceof Table)) {
         $form['header'][$this->options['id']]['select_all'] = [
           '#type' => 'checkbox',
-          '#title' => $this->t('Select / deselect all results in this view (all pages, @count total)', [
+          '#title' => $this->t('Select / deselect all results (all pages, @count total)', [
             '@count' => $this->tempStoreData['total_results'],
           ]),
           '#attributes' => ['class' => ['vbo-select-all']],

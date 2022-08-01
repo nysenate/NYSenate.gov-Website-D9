@@ -3,6 +3,7 @@
 namespace Drupal\facets\Plugin\facets\processor;
 
 use Drupal\Component\Transliteration\TransliterationInterface;
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\facets\Processor\SortProcessorPluginBase;
@@ -23,6 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class DisplayValueWidgetOrderProcessor extends SortProcessorPluginBase implements SortProcessorInterface, ContainerFactoryPluginInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * The transliteration service.

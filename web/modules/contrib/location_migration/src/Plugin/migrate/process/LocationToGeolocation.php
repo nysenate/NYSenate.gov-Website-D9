@@ -2,7 +2,7 @@
 
 namespace Drupal\location_migration\Plugin\migrate\process;
 
-use Drupal\Core\Database\Driver\sqlite\Connection as SQLiteConnection;
+use Drupal\location_migration\LocationMigration;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
@@ -31,6 +31,13 @@ class LocationToGeolocation extends LocationProcessPluginBase {
   const COORDINATE_EMPTY_VALUE_SQLITE = '0.0';
 
   /**
+   * The empty coordinate value on SQLite on PHP 8.1.+.
+   *
+   * @var string
+   */
+  const COORDINATE_EMPTY_VALUE_SQLITE_PHP81 = '0';
+
+  /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
@@ -39,8 +46,12 @@ class LocationToGeolocation extends LocationProcessPluginBase {
       return NULL;
     }
 
-    $empty_value = $this->database instanceof SQLiteConnection
-      ? self::COORDINATE_EMPTY_VALUE_SQLITE
+    $empty_sqlite_value = version_compare(PHP_VERSION, '8.1.0-dev', 'ge')
+      ? self::COORDINATE_EMPTY_VALUE_SQLITE_PHP81
+      : self::COORDINATE_EMPTY_VALUE_SQLITE;
+
+    $empty_value = LocationMigration::connectionIsSqlite($this->database)
+      ? $empty_sqlite_value
       : self::COORDINATE_EMPTY_VALUE;
     $processed_values = [];
     foreach ($lids as $lid) {

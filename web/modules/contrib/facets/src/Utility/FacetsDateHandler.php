@@ -150,8 +150,8 @@ class FacetsDateHandler {
 
     // Gets gap numbers for both the gap and minimum gap, checks if the next gap
     // is within the limit set by the $min_gap parameter.
-    $gap_num = isset($gap_numbers[$gap]) ? $gap_numbers[$gap] : 6;
-    $min_num = isset($gap_numbers[$min_gap]) ? $gap_numbers[$min_gap] : 1;
+    $gap_num = $gap_numbers[$gap] ?? 6;
+    $min_num = $gap_numbers[$min_gap] ?? 1;
     return ($gap_num > $min_num) ? array_search($gap_num - 1, $gap_numbers) : $min_gap;
   }
 
@@ -383,8 +383,8 @@ class FacetsDateHandler {
       static::FACETS_DATE_SECOND => 1,
     ];
 
-    $gap1_num = isset($gap_numbers[$gap1]) ? $gap_numbers[$gap1] : 6;
-    $gap2_num = isset($gap_numbers[$gap2]) ? $gap_numbers[$gap2] : 6;
+    $gap1_num = $gap_numbers[$gap1] ?? 6;
+    $gap2_num = $gap_numbers[$gap2] ?? 6;
 
     if ($gap1_num == $gap2_num) {
       return 0;

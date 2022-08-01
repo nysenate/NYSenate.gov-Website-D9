@@ -56,7 +56,7 @@ class ViewsBulkOperationsAdvancedTestAction extends ViewsBulkOperationsActionBas
       $entity->save();
     }
 
-    return 'Test';
+    return $this->t('Test');
   }
 
   /**

@@ -48,8 +48,8 @@ function nys_homepage_hero_cron() {
     $now = new DrupalDateTime('now', 'UTC');
     $interval = DrupalDateTime::createFromTimestamp($interval_time, 'UTC');
     $query = \Drupal::entityQuery('node');
-    $query->condition('field_date', $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '>');
-    $query->condition('field_date', $interval->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '<=');
+    $query->condition('field_date_range', $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '>');
+    $query->condition('field_date_range', $interval->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '<=');
     $results = $query->execute();
 
     if (!empty($results)) {

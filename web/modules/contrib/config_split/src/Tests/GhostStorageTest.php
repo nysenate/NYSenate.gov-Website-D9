@@ -39,7 +39,7 @@ class GhostStorageTest extends ReadonlyStorageTest {
     $storage = $this->getStorage($source->reveal());
 
     $actual = call_user_func_array([$storage, $method], $arguments);
-    $this->assertTrue($actual);
+    self::assertTrue($actual);
   }
 
 }

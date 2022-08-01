@@ -370,11 +370,17 @@ class AdminForm extends ConfigFormBase {
    */
   protected function getModulesList() {
     $list = [];
-    foreach ($this->moduleHandler->getImplementations('mail') as $module) {
-      $list[$module] = $this->moduleHandler->getName($module);
+    if (method_exists($this->moduleHandler, 'invokeAllWIth')) {
+      $this->moduleHandler->invokeAllWith('mail', function (callable $hook, string $module) use (&$list) {
+        $list[$module] = $this->moduleHandler->getName($module);
+      });
+    }
+    else {
+      foreach ($this->moduleHandler->getImplementations('mail') as $module) {
+        $list[$module] = $this->moduleHandler->getName($module);
+      }
     }
     asort($list);
-
     return $list;
   }
 

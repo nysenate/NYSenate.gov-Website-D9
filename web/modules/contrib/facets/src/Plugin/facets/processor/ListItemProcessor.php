@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -29,6 +30,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInterface, ContainerFactoryPluginInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * The config manager.
@@ -133,12 +136,13 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
         $fieldDefinition->getTargetEntityTypeId(),
         $fieldDefinition->getName()
       );
+
       if ($fieldDefinition instanceof BaseFieldDefinition) {
         if (isset($base_fields[$field->getPropertyPath()])) {
           $field = $base_fields[$field->getPropertyPath()];
         }
-
       }
+
       // Diggs down to get the referenced field the entity reference is based
       // on.
       elseif ($this->configManager->loadConfigEntityByName($referenced_entity_name) !== NULL) {
@@ -148,6 +152,7 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
     }
     if ($field instanceof FieldStorageDefinitionInterface) {
       if ($field->getName() !== 'type') {
+        $facet->addCacheableDependency($field);
         $allowed_values = options_allowed_values($field);
         if (!empty($allowed_values)) {
           return $this->overWriteDisplayValues($results, $allowed_values);
@@ -158,6 +163,7 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
     // bundle field.
     $list_bundles = $this->entityTypeBundleInfo->getBundleInfo($entity);
     if (!empty($list_bundles)) {
+      $facet->addCacheTags(['entity_bundles']);
       foreach ($list_bundles as $key => $bundle) {
         $allowed_values[$key] = $bundle['label'];
       }

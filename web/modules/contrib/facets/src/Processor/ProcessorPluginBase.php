@@ -2,6 +2,8 @@
 
 namespace Drupal\facets\Processor;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Plugin\PluginBase;
@@ -9,9 +11,14 @@ use Drupal\facets\FacetInterface;
 
 /**
  * A base class for plugins that implements most of the boilerplate.
+ *
+ * By default all plugins that will extend this class will disable facets
+ * caching mechanism. It is strongly recommended to turn it on by implementing
+ * own methods for the CacheableDependencyInterface interface.
  */
-class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
+class ProcessorPluginBase extends PluginBase implements ProcessorInterface, CacheableDependencyInterface {
 
+  use UncacheableDependencyTrait;
   use DependencyTrait;
 
   /**
@@ -69,7 +76,7 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
    */
   public function getDescription() {
     $plugin_definition = $this->getPluginDefinition();
-    return isset($plugin_definition['description']) ? $plugin_definition['description'] : '';
+    return $plugin_definition['description'] ?? '';
   }
 
   /**

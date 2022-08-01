@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -116,7 +117,12 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
     // Loop over all results.
     foreach ($results as $i => $result) {
       if (!isset($entities[$ids[$i]])) {
-        unset($results[$i]);
+        if ($result->isMissing()) {
+          $results[$i]->setDisplayValue($facet->getMissingLabel());
+        }
+        else {
+          unset($results[$i]);
+        }
         continue;
       }
 
@@ -128,7 +134,7 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
       if ($entity instanceof TranslatableInterface && $entity->hasTranslation($language_interface->getId())) {
         $entity = $entity->getTranslation($language_interface->getId());
       }
-
+      $facet->addCacheableDependency($entity);
       // Overwrite the result's display value.
       $results[$i]->setDisplayValue($entity->label());
     }
@@ -156,6 +162,23 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
       }
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return Cache::mergeContexts(parent::getCacheContexts(), ['languages:language_interface']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    // This will work unless the Search API Query uses "wrong" caching. Ideally
+    // we would set a cache tag to invalidate the cache whenever a translatable
+    // entity is added or changed. But there's no tag in drupal yet.
+    return Cache::PERMANENT;
   }
 
 }

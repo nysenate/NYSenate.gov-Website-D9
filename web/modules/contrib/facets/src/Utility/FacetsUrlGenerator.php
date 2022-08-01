@@ -3,8 +3,11 @@
 namespace Drupal\facets\Utility;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
 use Drupal\facets\Result\Result;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Facets Url Generator service.
@@ -107,6 +110,71 @@ class FacetsUrlGenerator {
       return $result->getUrl();
     }
     return NULL;
+  }
+
+  /**
+   * Gets the URL object for a request.
+   *
+   * This method statically caches the URL object for a request based on the
+   * facet source path. This reduces subsequent calls to the processor from
+   * having to regenerate the URL object.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   * @param string $facet_source_path
+   *   The facet source path.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL.
+   */
+  public function getUrlForRequest(Request $request, $facet_source_path = NULL): Url {
+    /** @var \Drupal\Core\Url[] $requestUrlsByPath */
+    $requestUrlsByPath = &drupal_static(__CLASS__ . __FUNCTION__, []);
+    $request_uri = $request->getRequestUri();
+
+    if (array_key_exists($request_uri, $requestUrlsByPath)) {
+      return $requestUrlsByPath[$request_uri];
+    }
+
+    // Try to grab any route params from the original request.
+    // In case of request path not having a matching route, Url generator will
+    // fail with.
+    try {
+      $requestUrl = Url::createFromRequest($request);
+    }
+    catch (ResourceNotFoundException $e) {
+      // Bypass exception if no path available.
+      // Should be unreachable in default FacetSource implementations,
+      // but you never know.
+      if ($facet_source_path) {
+        $requestUrl = Url::fromUserInput($facet_source_path, [
+          'query' => [
+            '_format' => \Drupal::request()->get('_format'),
+          ],
+        ]);
+      }
+      else {
+        if ('system.404' === $request->attributes->get('_route')) {
+          // It seems that a facet that is configured to be rendered without its
+          // facet source is currently rendered on a dedicated "page not found"
+          // page. If the facet source has a valid path we would not land here
+          // but in the condition above. So the facet source must be view block
+          // display or something similar. In this case we could assume that
+          // such a facet takes care about its link target itself and doesn't
+          // depend on the current path or the facet source path. Let's provide
+          // the front page as valid fallback to let the facet do its job.
+          $requestUrl = Url::fromRoute('<front>');
+        }
+        else {
+          throw $e;
+        }
+      }
+    }
+
+    $requestUrl->setOption('attributes', ['rel' => 'nofollow']);
+    $requestUrlsByPath[$request_uri] = $requestUrl;
+
+    return $requestUrl;
   }
 
 }

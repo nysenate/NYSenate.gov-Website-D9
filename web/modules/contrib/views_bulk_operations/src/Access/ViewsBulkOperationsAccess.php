@@ -8,11 +8,14 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Access\AccessResult;
 use Drupal\views\Views;
+use Drupal\views_bulk_operations\Form\ViewsBulkOperationsFormTrait;
 
 /**
  * Defines module access rules.
  */
 class ViewsBulkOperationsAccess implements AccessInterface {
+
+  use ViewsBulkOperationsFormTrait;
 
   /**
    * The tempstore service.
@@ -40,6 +43,9 @@ class ViewsBulkOperationsAccess implements AccessInterface {
     $parameters = $routeMatch->getParameters()->all();
 
     if ($view = Views::getView($parameters['view_id'])) {
+      // Set view arguments, sometimes needed for access checks.
+      $view_data = $this->getTempstore($parameters['view_id'], $parameters['display_id'])->get($account->id());
+      $view->setArguments($view_data['arguments']);
       if ($view->access($parameters['display_id'], $account)) {
         return AccessResult::allowed();
       }

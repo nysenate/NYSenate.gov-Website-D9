@@ -1,0 +1,13 @@
+{{ attach_library('nysenate_theme/nysenate-social-buttons') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+<section class="c-block c-block--social">
+  <div class="c-container--header__top-border">
+    <h2 class="container--title"> {{ "Share this "|t ~ title }}</h2>
+  </div>
+    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ node_url }}" class="c-block--btn c-btn--small c-btn--facebook"><label
+        for="">{{ "facebook"|t }}</label>{{ icons.get("facebook") }}</a>
+    <a target="_blank" href="https://twitter.com/intent/tweet?text={{ title }} Via: @nysenate: {{ node_url }}" class="c-block--btn c-btn--small c-btn--twitter"><label
+        for="">{{ "twitter"|t }}</label>{{ icons.get("twitter") }}</a>
+    <a href="mailto:?&subject=From NYSenate.gov: {{ title }}&body={{ cta }}: {{ title }}: {{ node_url }} " class="c-block--btn c-btn--small c-btn--email"><label
+        for="">{{ "email"|t }}</label>{{ icons.get("envelope") }}</a>
+</section>

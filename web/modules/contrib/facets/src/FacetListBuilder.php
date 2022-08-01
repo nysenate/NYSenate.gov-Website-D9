@@ -191,6 +191,7 @@ class FacetListBuilder extends DraggableListBuilder {
         '#type' => 'markup',
         '#markup' => 'Facet source',
       ],
+      'machine_name' => ['#markup' => $facet_source['id']],
       'title' => [
         '#theme_wrappers' => [
           'container' => [
@@ -198,9 +199,9 @@ class FacetListBuilder extends DraggableListBuilder {
           ],
         ],
         '#type' => 'markup',
-        '#markup' => $facet_source['id'],
+        '#markup' => $facet_source['label'],
         '#wrapper_attributes' => [
-          'colspan' => 3,
+          'colspan' => 2,
         ],
       ],
       'operations' => [

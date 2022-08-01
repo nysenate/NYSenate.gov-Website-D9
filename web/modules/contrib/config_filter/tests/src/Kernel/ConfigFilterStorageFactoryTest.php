@@ -18,7 +18,7 @@ class ConfigFilterStorageFactoryTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'config_filter',
     'config_filter_test',

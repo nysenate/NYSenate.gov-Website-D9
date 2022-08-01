@@ -292,9 +292,7 @@ class FacetsSummaryForm extends EntityForm {
     foreach ($processors_by_stage as $stage => $processors) {
       /** @var \Drupal\facets\Processor\ProcessorInterface $processor */
       foreach ($processors as $processor_id => $processor) {
-        $weight = isset($processor_settings[$processor_id]['weights'][$stage])
-          ? $processor_settings[$processor_id]['weights'][$stage]
-          : $processor->getDefaultWeight($stage);
+        $weight = $processor_settings[$processor_id]['weights'][$stage] ?? $processor->getDefaultWeight($stage);
         if ($processor->isHidden()) {
           $form['processors'][$processor_id]['weights'][$stage] = [
             '#type' => 'value',

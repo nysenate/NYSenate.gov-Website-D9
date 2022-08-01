@@ -58,12 +58,17 @@ class SearchApiRange extends QueryTypePluginBase {
     if (!empty($this->results)) {
       $facet_results = [];
       foreach ($this->results as $result) {
-        if ($result['count'] || $query_operator == 'or') {
+        if ($result['count'] || $query_operator === 'or') {
           $count = $result['count'];
           while (is_array($result['filter'])) {
             $result['filter'] = current($result['filter']);
           }
           $result_filter = trim($result['filter'], '"');
+          if ($result_filter === 'NULL' || $result_filter === '') {
+            // "Missing" facet items could not be handled in ranges.
+            continue;
+          }
+
           $result = new Result($this->facet, $result_filter, $result_filter, $count);
           $facet_results[] = $result;
         }

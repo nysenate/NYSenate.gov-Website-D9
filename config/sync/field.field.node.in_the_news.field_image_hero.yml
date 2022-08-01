@@ -1,0 +1,29 @@
+uuid: bf2ade55-5bfb-493e-81bb-c4e8b3a2a0ed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_image_hero
+    - media.type.image
+    - node.type.in_the_news
+id: node.in_the_news.field_image_hero
+field_name: field_image_hero
+entity_type: node
+bundle: in_the_news
+label: 'Homepage Hero Image'
+description: 'Image must be minimum 1280x510 and 16:9 ratio to be featured on the Homepage.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

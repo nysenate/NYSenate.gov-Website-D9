@@ -2,6 +2,8 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
@@ -24,6 +26,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class TermWeightWidgetOrderProcessor extends SortProcessorPluginBase implements ContainerFactoryPluginInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * The entity type manager.
@@ -124,6 +128,13 @@ class TermWeightWidgetOrderProcessor extends SortProcessorPluginBase implements 
       }
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return Cache::mergeTags(parent::getCacheTags(), ['taxonomy_term_list']);
   }
 
 }

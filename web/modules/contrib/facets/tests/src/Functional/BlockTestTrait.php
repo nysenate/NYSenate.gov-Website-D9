@@ -85,9 +85,7 @@ trait BlockTestTrait {
    *   The id of the block.
    */
   protected function deleteBlock($id) {
-    // Delete a facet block through the UI, the text for the success message has
-    // changed in Drupal::VERSION 9.3.
-    $orig_success_message = 'The block ' . $this->blocks[$id]->label() . ' has been removed' . (\Drupal::VERSION >= 9.3 ? ' from the Footer region' : '') . '.';
+    $orig_success_message = 'The block ' . $this->blocks[$id]->label() . ' has been removed from the Footer region.';
 
     $this->drupalGet('admin/structure/block/manage/' . $this->blocks[$id]->id(), ['query' => ['destination' => 'admin']]);
     $this->clickLink('Remove block');

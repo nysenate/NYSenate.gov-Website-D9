@@ -41,7 +41,9 @@ class ViewsBulkOperationExampleAction extends ViewsBulkOperationsActionBase impl
     // Do some processing..
     // ...
     $this->messenger()->addMessage($entity->label() . ' - ' . $entity->language()->getId() . ' - ' . $entity->id());
-    return sprintf('Example action (configuration: %s)', print_r($this->configuration, TRUE));
+    return $this->t('Example action (configuration: @configuration)', [
+      '@configuration' => print_r($this->configuration, TRUE)
+    ]);
   }
 
   /**
@@ -101,15 +103,9 @@ class ViewsBulkOperationExampleAction extends ViewsBulkOperationsActionBase impl
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    if ($object->getEntityType() === 'node') {
-      $access = $object->access('update', $account, TRUE)
-        ->andIf($object->status->access('edit', $account, TRUE));
-      return $return_as_object ? $access : $access->isAllowed();
-    }
-
-    // Other entity types may have different
-    // access methods and properties.
-    return TRUE;
+    // If certain fields are updated, access should be checked against them as well.
+    // @see Drupal\Core\Field\FieldUpdateActionBase::access().
+    return $object->access('update', $account, $return_as_object);
   }
 
 }

@@ -67,12 +67,19 @@ class YamlContentCommands extends DrushCommands {
   }
 
   /**
-   * Import yaml content from a profile.
+   * Import yaml content from an installation profile.
    *
    * @param string $profile
-   *   The machine name of a profile to be searched for content.
+   *   (optional) The machine name of a profile to be searched for content. If
+   *   not provided the site's install profile will be used. This command looks
+   *   for files in a directory named `content` at the top of the profiles's
+   *   main directory, sub directories are not supported; all files in this
+   *   directory matching the pattern `*.content.yml` in this directory will be
+   *   imported.
    * @param string $file
-   *   (Optional) The name of a content file to be imported.
+   *   (Optional) The name of a content file to be imported. If this argument is
+   *   not provided then all files in the directory matching `*.content.yml`
+   *   will be imported.
    * @param array $options
    *   An associative array of options whose values come from cli, aliases,
    *   config, etc.
@@ -82,7 +89,10 @@ class YamlContentCommands extends DrushCommands {
    *   Set this to create content even if it is already in the system.
    * @aliases ycip,yaml-content-import-profile
    */
-  public function contentImportProfile($profile, $file = NULL, array $options = ['create-new' => NULL]) {
+  public function contentImportProfile($profile = NULL, $file = NULL, array $options = ['create-new' => NULL]) {
+    if (empty($profile)) {
+      $profile = \Drupal::installProfile();
+    }
     $this->loader->importProfile($profile, $file);
   }
 

@@ -34,6 +34,7 @@ class ConfigFilterServiceProvider extends ServiceProviderBase {
     $container->setDefinition('config_filter.storage.original', $original);
 
     $definition = new Definition(FilteredStorage::class);
+    $definition->setPublic(TRUE);
     $definition->setFactory([new Reference('config_filter.storage_factory'), 'getSync']);
     $container->setDefinition($id, $definition);
   }

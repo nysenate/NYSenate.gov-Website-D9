@@ -2,17 +2,18 @@
 
 namespace Drupal\facets\Plugin\facets\url_processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\Core\Url;
 use Drupal\facets\Event\ActiveFiltersParsed;
 use Drupal\facets\Event\QueryStringCreated;
+use Drupal\facets\Event\UrlCreated;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginBase;
+use Drupal\facets\Utility\FacetsUrlGenerator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Query string URL processor.
@@ -24,6 +25,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  * )
  */
 class QueryString extends UrlProcessorPluginBase {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * A string of how to represent the facet in the url.
@@ -40,11 +43,19 @@ class QueryString extends UrlProcessorPluginBase {
   protected $eventDispatcher;
 
   /**
+   * The URL generator.
+   *
+   * @var \Drupal\facets\Utility\FacetsUrlGenerator
+   */
+  protected $urlGenerator;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, EntityTypeManagerInterface $entity_type_manager, EventDispatcherInterface $eventDispatcher) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, EntityTypeManagerInterface $entity_type_manager, EventDispatcherInterface $eventDispatcher, FacetsUrlGenerator $urlGenerator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $request, $entity_type_manager);
     $this->eventDispatcher = $eventDispatcher;
+    $this->urlGenerator = $urlGenerator;
     $this->initializeActiveFilters();
   }
 
@@ -58,7 +69,8 @@ class QueryString extends UrlProcessorPluginBase {
       $plugin_definition,
       $container->get('request_stack')->getCurrentRequest(),
       $container->get('entity_type.manager'),
-      $container->get('event_dispatcher')
+      $container->get('event_dispatcher'),
+      $container->get('facets.utility.url_generator')
     );
   }
 
@@ -84,6 +96,8 @@ class QueryString extends UrlProcessorPluginBase {
     // Set the url alias from the facet object.
     $this->urlAlias = $facet->getUrlAlias();
 
+    // In case of a view page display, the facet source has a path, If the
+    // source is a block, the path is null.
     $facet_source_path = $facet->getFacetSource()->getPath();
     $request = $this->getRequestByFacetSourcePath($facet_source_path);
     $requestUrl = $this->getUrlForRequest($facet_source_path, $request);
@@ -108,8 +122,13 @@ class QueryString extends UrlProcessorPluginBase {
         $this->buildUrls($facet, $children);
       }
 
+      $filter_missing = '';
       if ($result->getRawValue() === NULL) {
         $filter_string = NULL;
+      }
+      elseif ($result->isMissing()) {
+        $filter_missing = $this->urlAlias . $this->getSeparator() . '!(';
+        $filter_string = $filter_missing . implode($this->getDelimiter(), $result->getMissingFilters()) . ')';
       }
       else {
         $filter_string = $this->urlAlias . $this->getSeparator() . $result->getRawValue();
@@ -121,11 +140,11 @@ class QueryString extends UrlProcessorPluginBase {
       // If the value is active, remove the filter string from the parameters.
       if ($result->isActive()) {
         foreach ($filter_params as $key => $filter_param) {
-          if ($filter_param == $filter_string) {
+          if ($filter_param === $filter_string || ($filter_missing && str_starts_with($filter_param, $filter_missing))) {
             unset($filter_params[$key]);
           }
         }
-        if ($facet->getUseHierarchy()) {
+        if ($facet->getUseHierarchy() && !$result->isMissing()) {
           $id = $result->getRawValue();
 
           // Disable child filters.
@@ -197,7 +216,7 @@ class QueryString extends UrlProcessorPluginBase {
         }
       }
 
-      // Allow other modules to alter the result url built.
+      // Allow other modules to alter the result url query string built.
       $event = new QueryStringCreated($result_get_params, $filter_params, $result, $this->activeFilters, $facet);
       $this->eventDispatcher->dispatch($event);
       $filter_params = $event->getFilterParameters();
@@ -216,14 +235,18 @@ class QueryString extends UrlProcessorPluginBase {
         // See https://www.drupal.org/node/2898189.
         unset($new_url_params['page']);
 
-        // Remove core wrapper format (e.g. render-as-ajax-response) paremeters.
+        // Remove core wrapper format (e.g. render-as-ajax-response) parameters.
         unset($new_url_params[MainContentViewSubscriber::WRAPPER_FORMAT]);
 
         // Set the new url parameters.
         $url->setOption('query', $new_url_params);
       }
 
-      $result->setUrl($url);
+      // Allow other modules to alter the result url built.
+      $event = new UrlCreated($url, $result, $facet);
+      $this->eventDispatcher->dispatch($event);
+
+      $result->setUrl($event->getUrl());
     }
 
     // Restore page parameter again. See https://www.drupal.org/node/2726455.
@@ -266,9 +289,8 @@ class QueryString extends UrlProcessorPluginBase {
   /**
    * Gets the URL object for a request.
    *
-   * This method statically caches the URL object for a request based on the
-   * facet source path. This reduces subsequent calls to the processor from
-   * having to regenerate the URL object.
+   * This method delegates to the URL generator service. But we keep it for
+   * backward compatibility for custom implementations that extend this class.
    *
    * @param string $facet_source_path
    *   The facet source path.
@@ -279,37 +301,7 @@ class QueryString extends UrlProcessorPluginBase {
    *   The URL.
    */
   protected function getUrlForRequest($facet_source_path, Request $request) {
-    /** @var \Drupal\Core\Url[] $requestUrlsByPath */
-    $requestUrlsByPath = &drupal_static(__CLASS__ . __FUNCTION__, []);
-
-    if (array_key_exists($facet_source_path, $requestUrlsByPath)) {
-      return $requestUrlsByPath[$facet_source_path];
-    }
-
-    // Try to grab any route params from the original request.
-    // In case of request path not having a matching route, Url generator will
-    // fail with.
-    try {
-      $requestUrl = Url::createFromRequest($request);
-    }
-    catch (ResourceNotFoundException $e) {
-      // Bypass exception if no path available.
-      // Should be unreachable in default FacetSource implementations,
-      // but you never know.
-      if (!$facet_source_path) {
-        throw $e;
-      }
-
-      $requestUrl = Url::fromUserInput($facet_source_path, [
-        'query' => [
-          '_format' => $this->request->get('_format'),
-        ],
-      ]);
-    }
-
-    $requestUrl->setOption('attributes', ['rel' => 'nofollow']);
-    $requestUrlsByPath[$facet_source_path] = $requestUrl;
-    return $requestUrl;
+    return $this->urlGenerator->getUrlForRequest($request, $facet_source_path);
   }
 
   /**
@@ -415,6 +407,13 @@ class QueryString extends UrlProcessorPluginBase {
       $mapping[$facet_source_id][$facet_id] = $facet->getUrlAlias();
     }
     return $mapping[$facet_source_id][$facet_id];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['url.query_args'];
   }
 
 }

@@ -1,0 +1,88 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-block--social {
+  margin-top: 20px;
+  margin-bottom: 40px;
+
+  .c-container--header__top-border {
+    font-family: $font-sans;
+    text-transform: uppercase;
+    border-top: 1px solid $grey05;
+    padding: 20px 0;
+    position: relative;
+    letter-spacing: 0.1em;
+
+    .container--title {
+      font-size: 12px;
+      margin: 0;
+      font-weight: normal;
+      color: $grey08;
+
+      @include breakpoint($bp-sm) {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .c-btn--small,
+  .share-icon {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+    width: 60px;
+    margin-right: 7%;
+    padding-left: 20px;
+    padding-top: 10px;
+    float: left;
+    outline: none;
+    @extend .lgt-bg;
+    cursor: pointer;
+
+    @include breakpoint($bp-sm) {
+      width: 160px;
+    }
+
+    label {
+      display: none;
+      cursor: pointer;
+      color: $color-white;
+      font-family: $font-sans-bold;
+
+      @include breakpoint($bp-sm) {
+        display: block;
+      }
+    }
+
+    &::after {
+      line-height: 40px;
+      width: 100%;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      outline: 0;
+    }
+
+    svg {
+      fill: $color-white;
+      color: $color-white;
+      width: 21px;
+      height: 21px;
+      position: absolute;
+      left: auto;
+      @include breakpoint($bp-sm) {
+        left: 77%;
+        width: 22px;
+      }
+      top: 8px;
+
+      .icon--envelope {
+        width: 20px;
+      }
+    }
+  }
+}

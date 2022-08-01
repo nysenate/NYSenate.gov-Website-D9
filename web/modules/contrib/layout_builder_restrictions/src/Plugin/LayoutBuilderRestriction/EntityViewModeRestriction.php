@@ -83,13 +83,13 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
       if ($default instanceof ThirdPartySettingsInterface) {
         $third_party_settings = $default->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction', []);
         $allowed_block_categories = $default->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
-        $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
-        $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
+        $allowlisted_blocks = (isset($third_party_settings['allowlisted_blocks'])) ? $third_party_settings['allowlisted_blocks'] : [];
+        $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'])) ? $third_party_settings['denylisted_blocks'] : [];
         $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
       }
       else {
-        $whitelisted_blocks = [];
-        $blacklisted_blocks = [];
+        $allowlisted_blocks = [];
+        $denylisted_blocks = [];
         $restricted_categories = [];
       }
 
@@ -108,7 +108,7 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
         if ($definition['provider'] == 'block_content') {
           // 'Custom block types' are disregarded if 'Custom blocks'
           // restrictions are enabled.
-          if (isset($whitelisted_blocks['Custom blocks']) || isset($blacklisted_blocks['Custom blocks'])) {
+          if (isset($allowlisted_blocks['Custom blocks']) || isset($denylisted_blocks['Custom blocks'])) {
             $category = 'Custom blocks';
           }
           else {
@@ -121,15 +121,15 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
         if (in_array($category, $restricted_categories)) {
           unset($definitions[$original_delta]);
         }
-        elseif (in_array($category, array_keys($whitelisted_blocks))) {
-          if (!in_array($delta, $whitelisted_blocks[$category])) {
-            // The current block is not whitelisted. Remove it.
+        elseif (in_array($category, array_keys($allowlisted_blocks))) {
+          if (!in_array($delta, $allowlisted_blocks[$category])) {
+            // The current block is not allowlisted. Remove it.
             unset($definitions[$original_delta]);
           }
         }
-        elseif (in_array($category, array_keys($blacklisted_blocks))) {
-          if (in_array($delta, $blacklisted_blocks[$category])) {
-            // The current block is blacklisted. Remove it.
+        elseif (in_array($category, array_keys($denylisted_blocks))) {
+          if (in_array($delta, $denylisted_blocks[$category])) {
+            // The current block is denylisted. Remove it.
             unset($definitions[$original_delta]);
           }
         }
@@ -173,8 +173,8 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
     // There ARE restrictions. Start by assuming *this* block is not restricted.
     $has_restrictions = FALSE;
 
-    $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
-    $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
+    $allowlisted_blocks = (isset($third_party_settings['allowlisted_blocks'])) ? $third_party_settings['allowlisted_blocks'] : [];
+    $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'])) ? $third_party_settings['denylisted_blocks'] : [];
     $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
     $bundle = $this->getValuefromSectionStorage([$section_storage], 'bundle');
 
@@ -193,66 +193,66 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
     // Load the plugin definition.
     if ($definition = $this->blockManager()->getDefinition($block_id)) {
       $category = $this->getUntranslatedCategory($definition['category']);
-      if (isset($whitelisted_blocks[$category]) || isset($blacklisted_blocks[$category]) || isset($restricted_categories[$category])) {
+      if (isset($allowlisted_blocks[$category]) || isset($denylisted_blocks[$category]) || isset($restricted_categories[$category])) {
         // If there is a restriction, assume this block is restricted.
-        // If the block is whitelisted or NOT blacklisted,
+        // If the block is allowlisted or NOT denylisted,
         // the restriction will be removed, below.
         $has_restrictions = TRUE;
       }
 
-      if (!isset($restricted_categories[$category]) && !isset($whitelisted_blocks[$category]) && !isset($blacklisted_blocks[$category]) && $category != "Custom blocks") {
+      if (!isset($restricted_categories[$category]) && !isset($allowlisted_blocks[$category]) && !isset($denylisted_blocks[$category]) && $category != "Custom blocks") {
         // No restrictions have been placed on this category.
         $has_restrictions = FALSE;
       }
       else {
         // Some type of restriction has been placed.
-        if (isset($whitelisted_blocks[$category])) {
-          // An explicitly whitelisted block means it's allowed.
-          if (in_array($block_id, $whitelisted_blocks[$category])) {
+        if (isset($allowlisted_blocks[$category])) {
+          // An explicitly allowlisted block means it's allowed.
+          if (in_array($block_id, $allowlisted_blocks[$category])) {
             $has_restrictions = FALSE;
           }
         }
-        elseif (isset($blacklisted_blocks[$category])) {
-          // If absent from the blacklist, it's allowed.
-          if (!in_array($block_id, $blacklisted_blocks[$category])) {
+        elseif (isset($denylisted_blocks[$category])) {
+          // If absent from the denylist, it's allowed.
+          if (!in_array($block_id, $denylisted_blocks[$category])) {
             $has_restrictions = FALSE;
           }
         }
       }
 
       // Edge case: if block *type* restrictions are present...
-      if (!empty($whitelisted_blocks['Custom block types'])) {
+      if (!empty($allowlisted_blocks['Custom block types'])) {
         $content_block_types_by_uuid = $this->getBlockTypeByUuid();
         // If no specific custom block restrictions are set
         // check block type restrict by block type.
-        if ($category == 'Custom blocks' && !isset($whitelisted_blocks['Custom blocks'])) {
+        if ($category == 'Custom blocks' && !isset($allowlisted_blocks['Custom blocks'])) {
           $block_bundle = $content_block_types_by_uuid[end($block_id_parts)];
-          if (in_array($block_bundle, $whitelisted_blocks['Custom block types'])) {
+          if (in_array($block_bundle, $allowlisted_blocks['Custom block types'])) {
             // There are block type restrictions AND
-            // this block type has been whitelisted.
+            // this block type has been allowlisted.
             $has_restrictions = FALSE;
           }
           else {
             // There are block type restrictions BUT
-            // this block type has NOT been whitelisted.
+            // this block type has NOT been allowlisted.
             $has_restrictions = TRUE;
           }
         }
       }
-      elseif (!empty($blacklisted_blocks['Custom block types'])) {
+      elseif (!empty($denylisted_blocks['Custom block types'])) {
         $content_block_types_by_uuid = $this->getBlockTypeByUuid();
         // If no specific custom block restrictions are set
         // check block type restrict by block type.
-        if ($category == 'Custom blocks' && !isset($blacklisted_blocks['Custom blocks'])) {
+        if ($category == 'Custom blocks' && !isset($denylisted_blocks['Custom blocks'])) {
           $block_bundle = $content_block_types_by_uuid[end($block_id_parts)];
-          if (in_array($block_bundle, $blacklisted_blocks['Custom block types'])) {
+          if (in_array($block_bundle, $denylisted_blocks['Custom block types'])) {
             // There are block type restrictions AND
-            // this block type has been blacklisted.
+            // this block type has been denylisted.
             $has_restrictions = TRUE;
           }
           else {
             // There are block type restrictions BUT
-            // this block type has NOT been blacklisted.
+            // this block type has NOT been denylisted.
             $has_restrictions = FALSE;
           }
         }
@@ -277,24 +277,24 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
   public function inlineBlocksAllowedinContext(SectionStorageInterface $section_storage, $delta, $region) {
     $view_display = $this->getValuefromSectionStorage([$section_storage], 'view_display');
     $third_party_settings = $view_display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction', []);
-    $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
-    $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
+    $allowlisted_blocks = (isset($third_party_settings['allowlisted_blocks'])) ? $third_party_settings['allowlisted_blocks'] : [];
+    $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'])) ? $third_party_settings['denylisted_blocks'] : [];
     $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
     if (in_array('Inline blocks', $restricted_categories)) {
       // All inline blocks have been restricted.
       return [];
     }
     // Check if allowed inline blocks are defined in config.
-    elseif (isset($whitelisted_blocks['Inline blocks'])) {
-      return $whitelisted_blocks['Inline blocks'];
+    elseif (isset($allowlisted_blocks['Inline blocks'])) {
+      return $allowlisted_blocks['Inline blocks'];
     }
     // If not, then allow all inline blocks.
     else {
       $inline_blocks = $this->getInlineBlockPlugins();
-      if (isset($blacklisted_blocks['Inline blocks'])) {
+      if (isset($denylisted_blocks['Inline blocks'])) {
         foreach ($inline_blocks as $key => $block) {
-          // Unset explicitly blacklisted inline blocks.
-          if (in_array($block, $blacklisted_blocks['Inline blocks'])) {
+          // Unset explicitly denylisted inline blocks.
+          if (in_array($block, $denylisted_blocks['Inline blocks'])) {
             unset($inline_blocks[$key]);
           }
         }

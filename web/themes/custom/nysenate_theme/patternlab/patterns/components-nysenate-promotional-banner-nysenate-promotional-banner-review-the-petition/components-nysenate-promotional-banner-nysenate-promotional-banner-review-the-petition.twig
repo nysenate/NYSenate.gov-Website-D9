@@ -1,0 +1,27 @@
+{{ attach_library('nysenate_theme/nysenate-promotional-banner') }}
+
+<div class="c-block c-block--initiative {% if image %}c-block--initiative__has-img{% endif %}">
+  {% if image %}
+    <a href="{{ cta.url }}">{{ image }}</a>
+  {% endif %}
+  <div class="c-initiative--content">
+    <div class="c-initiative--inner">
+      {% if cta.value == 'petition' %}
+        {% if senator_name %}
+          <h4 class="senator-name">
+            {{ senator_name }}'s petition
+          </h4>
+        {% endif %}
+      {% endif %}
+      <h3 class="c-initiative--title">
+        <a href="{{ cta.url }}">{{ title }}</a>
+      </h3>
+    </div>
+  </div>
+  <a href="{{ cta.url }}"
+    class="c-block--btn icon-before__awards icon-before__{{
+    cta.value
+    }} med-bg">
+    {{ cta.text }}
+  </a>
+</div>

@@ -48,7 +48,7 @@ class SearchApiGranular extends QueryTypeRangeBase {
       $query_operator = $this->facet->getQueryOperator();
       $facet_results = [];
       foreach ($this->results as $result) {
-        if ($result['count'] || $query_operator == 'or') {
+        if ($result['count'] || $query_operator === 'or') {
           $result_filter = trim($result['filter'], '"');
           $facet_results[] = new Result($this->facet, $result_filter, $result_filter, $result['count']);
         }

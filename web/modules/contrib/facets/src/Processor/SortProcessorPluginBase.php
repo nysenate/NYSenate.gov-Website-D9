@@ -2,20 +2,21 @@
 
 namespace Drupal\facets\Processor;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
 
 /**
  * A base class for plugins that implements some boilerplate for a widget order.
  */
-abstract class SortProcessorPluginBase extends ProcessorPluginBase implements SortProcessorInterface {
+abstract class SortProcessorPluginBase extends ProcessorPluginBase implements SortProcessorInterface, CacheableDependencyInterface {
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $processors = $facet->getProcessors();
-    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
+    $config = $processors[$this->getPluginId()] ?? NULL;
 
     $build['sort'] = [
       '#type' => 'radios',

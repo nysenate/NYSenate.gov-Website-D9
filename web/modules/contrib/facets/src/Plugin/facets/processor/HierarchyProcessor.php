@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
@@ -21,6 +22,8 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  */
 class HierarchyProcessor extends ProcessorPluginBase implements BuildProcessorInterface {
 
+  use UnchangingCacheableDependencyTrait;
+
   /**
    * An array of all entity ids in the active resultset which are a child.
    *
@@ -38,8 +41,10 @@ class HierarchyProcessor extends ProcessorPluginBase implements BuildProcessorIn
       foreach ($results as $result) {
         $keyed_results[$result->getRawValue()] = $result;
       }
+      $hierarchy = $facet->getHierarchyInstance();
+      $facet->addCacheableDependency($hierarchy);
 
-      $parent_groups = $facet->getHierarchyInstance()->getChildIds(array_keys($keyed_results));
+      $parent_groups = $hierarchy->getChildIds(array_keys($keyed_results));
       $keyed_results = $this->buildHierarchicalTree($keyed_results, $parent_groups);
 
       // Remove children from primary level.

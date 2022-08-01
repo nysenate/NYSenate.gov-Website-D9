@@ -28,7 +28,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     // Unauthorized user should not have access.
     $this->drupalGet('admin/config/system/mailsystem');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Check the overview.
     $user = $this->createUser(['administer_mailsystem']);
@@ -46,14 +46,14 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $assert_session->optionExists('edit-custom-custom-module', 'User');
 
     // Configure the default Mail System.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'mailsystem[default_formatter]' => 'test_mail_collector',
       'mailsystem[default_sender]' => 'test_mail_collector',
       'mailsystem[default_theme]' => 'current',
     ], 'Save configuration');
 
     // Configure a specific module configuration.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module]' => 'system',
       'custom[custom_module_key]' => 'aaa',
       'custom[custom_formatter]' => 'test_mail_collector',
@@ -64,7 +64,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
 
     // Add additional custom module settings, one with test_mail_collector and
     // one with php_mail.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module]' => 'system',
       'custom[custom_module_key]' => 'bbb',
       'custom[custom_formatter]' => 'test_mail_collector',
@@ -73,7 +73,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/mailsystem');
     $assert_session->pageTextContains('bbb');
 
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module]' => 'system',
       'custom[custom_module_key]' => 'ccc',
       'custom[custom_formatter]' => 'php_mail',
@@ -83,7 +83,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $assert_session->pageTextContains('ccc');
 
     // Add a custom module settings, without specifying any key.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module]' => 'system',
       'custom[custom_formatter]' => 'test_mail_collector',
       'custom[custom_sender]' => 'test_mail_collector',
@@ -93,7 +93,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
 
     // Try to add a custom module, first without setting the module, then
     // without formatter nor sender, then just specifying a key.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module_key]' => 'ddd',
       'custom[custom_formatter]' => 'test_mail_collector',
       'custom[custom_sender]' => 'test_mail_collector',
@@ -102,7 +102,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $assert_session->pageTextContains('The module is required.');
     $this->drupalGet('admin/config/system/mailsystem');
 
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module]' => 'system',
       'custom[custom_module_key]' => 'ddd',
     ], 'Add');
@@ -110,7 +110,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $assert_session->pageTextContains('At least a formatter or sender is required.');
     $this->drupalGet('admin/config/system/mailsystem');
 
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module_key]' => 'ddd',
     ], 'Add');
     $assert_session->pageTextNotContains('ddd');
@@ -134,7 +134,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $this->assertNull($config->get('modules.system.ddd'));
 
     // Try to update the formatter of the module keyed as 'ccc' from the form.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module_key]' => 'ccc',
       'custom[custom_formatter]' => 'test_mail_collector',
     ], 'Add');
@@ -142,7 +142,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/mailsystem');
 
     // Try to update 'modules.system.ccc' formatter and sender from the form.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module]' => 'system',
       'custom[custom_module_key]' => 'ccc',
       'custom[custom_formatter]' => 'test_mail_collector',
@@ -153,7 +153,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
 
     // Try to add a custom module with the same settings of an existing one,
     // without formatter and sender.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[custom_module]' => 'system',
       'custom[custom_module_key]' => 'ccc',
     ], 'Add');
@@ -162,7 +162,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/mailsystem');
 
     // Edit the second and third custom module formatter from the table.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[modules][system.bbb][formatter]' => 'php_mail',
       'custom[modules][system.ccc][formatter]' => 'test_mail_collector',
     ], 'Save configuration');
@@ -175,7 +175,7 @@ class AdminFormSettingsTest extends BrowserTestBase {
     $this->assertEquals($config->get('modules.system.none.formatter'), 'test_mail_collector');
 
     // Remove the first custom module.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'custom[modules][system.aaa][remove]' => TRUE,
     ], 'Save configuration');
     $config->clear('modules.system.aaa')->save();

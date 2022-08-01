@@ -234,7 +234,7 @@ class FacetsSummarySettingsForm extends EntityForm {
     // Clear Drupal cache for blocks to reflect recent changes.
     $this->blockManager->clearCachedDefinitions();
     $facet_source_id = $form_state->getValue('facet_source_id');
-    list($type,) = explode(':', $facet_source_id);
+    [$type] = explode(':', $facet_source_id);
     if ($type !== 'search_api') {
       return $facets_summary;
     }

@@ -26,7 +26,7 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
@@ -41,7 +41,7 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('user');
@@ -72,28 +72,28 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
     $file_target = StreamWrapperManager::getTarget($uri);
     $file_path = $temp_folder . '/' . $file_target;
     $archiver = new Tar($file_path);
-    $this->assertNotEmpty($archiver->listContents(), 'Downloaded archive file is not empty.');
+    self::assertNotEmpty($archiver->listContents(), 'Downloaded archive file is not empty.');
 
     // Extract the zip to a virtual file system.
     $core_export = vfsStream::setup('core-export');
     $archiver->extract($core_export->url());
-    $this->assertNotEmpty($core_export->getChildren(), 'Successfully extract archive.');
+    self::assertNotEmpty($core_export->getChildren(), 'Successfully extract archive.');
 
     // Set a new virtual file system for the split export.
     $split_export = vfsStream::setup('split-export');
     $primary = new FileStorage($split_export->url());
-    $this->assertEmpty($split_export->getChildren(), 'Before exporting the folder is empty.');
+    self::assertEmpty($split_export->getChildren(), 'Before exporting the folder is empty.');
 
     // Do the export without a split configuration to the export folder.
     $this->container->get('config_split.cli')->export($primary);
 
     // Assert that the exported configuration is the same in both cases.
-    $this->assertEquals(count($core_export->getChildren()), count($split_export->getChildren()), 'The same amount of config is exported.');
+    self::assertEquals(count($core_export->getChildren()), count($split_export->getChildren()), 'The same amount of config is exported.');
     foreach ($core_export->getChildren() as $child) {
       $name = $child->getName();
       if ($child->getType() == vfsStreamContent::TYPE_FILE) {
         // If it is a file we can compare the content.
-        $this->assertEquals($child->getContent(), $split_export->getChild($name)->getContent(), 'The content of the exported file is the same.');
+        self::assertEquals($child->getContent(), $split_export->getChild($name)->getContent(), 'The content of the exported file is the same.');
       }
     }
 
@@ -151,8 +151,8 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
         $split_config[$child->getName()] = $child->getContent();
       }
     }
-    $this->assertNotEmpty($split_config, 'There is split off configuration.');
-    $this->assertEquals(count($vanilla_config), count($sync_config) + count($split_config), 'All the config is still here.');
+    self::assertNotEmpty($split_config, 'There is split off configuration.');
+    self::assertEquals(count($vanilla_config), count($sync_config) + count($split_config), 'All the config is still here.');
 
     foreach ($vanilla_config as $name => $content) {
       if ($name == 'core.extension.yml') {
@@ -160,17 +160,17 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
       }
       // All the filtered test config has config_test in its name.
       if (strpos($name, 'config_test') === FALSE) {
-        $this->assertEquals($content, $sync_config[$name], 'The configuration is complete.');
-        $this->assertNotContains($name, array_keys($split_config), 'And it does not exist in the other folder.');
+        self::assertEquals($content, $sync_config[$name], 'The configuration is complete.');
+        self::assertNotContains($name, array_keys($split_config), 'And it does not exist in the other folder.');
       }
       else {
-        $this->assertEquals($content, $split_config[$name], 'The configuration is complete.');
-        $this->assertNotContains($name, array_keys($sync_config), 'And it does not exist in the other folder.');
+        self::assertEquals($content, $split_config[$name], 'The configuration is complete.');
+        self::assertNotContains($name, array_keys($sync_config), 'And it does not exist in the other folder.');
       }
     }
 
-    $this->assertNotFalse(strpos($vanilla_config['core.extension.yml'], 'config_test'), 'config_test is enabled.');
-    $this->assertFalse(strpos($sync_config['core.extension.yml'], 'config_test'), 'config_test is not enabled.');
+    self::assertNotFalse(strpos($vanilla_config['core.extension.yml'], 'config_test'), 'config_test is enabled.');
+    self::assertFalse(strpos($sync_config['core.extension.yml'], 'config_test'), 'config_test is not enabled.');
 
   }
 
@@ -201,9 +201,9 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
       }
     }
 
-    $this->assertFalse($split->hasChild('split'), 'The split directory is empty.');
-    $this->assertTrue(isset($original_config['config_test.system.yml']), 'The graylisted config is exported.');
-    $this->assertTrue(isset($original_config['config_test.types.yml']), 'The blacklisted config is exported.');
+    self::assertFalse($split->hasChild('split'), 'The split directory is empty.');
+    self::assertTrue(isset($original_config['config_test.system.yml']), 'The graylisted config is exported.');
+    self::assertTrue(isset($original_config['config_test.types.yml']), 'The blacklisted config is exported.');
 
     // Change the gray listed config to see if it is exported the same.
     $this->config('config_test.system')->set('foo', 'baz')->save();
@@ -227,14 +227,14 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
       }
     }
 
-    $this->assertTrue(isset($split_config['config_test.system.yml']), 'The graylisted config is exported to the split.');
-    $this->assertTrue(isset($split_config['config_test.types.yml']), 'The blacklisted config is exported to the split.');
-    $this->assertTrue(isset($sync_config['config_test.system.yml']), 'The graylisted config is exported to the sync.');
-    $this->assertFalse(isset($sync_config['config_test.types.yml']), 'The blacklisted config is not exported to the sync.');
+    self::assertTrue(isset($split_config['config_test.system.yml']), 'The graylisted config is exported to the split.');
+    self::assertTrue(isset($split_config['config_test.types.yml']), 'The blacklisted config is exported to the split.');
+    self::assertTrue(isset($sync_config['config_test.system.yml']), 'The graylisted config is exported to the sync.');
+    self::assertFalse(isset($sync_config['config_test.types.yml']), 'The blacklisted config is not exported to the sync.');
 
-    $this->assertEquals($original_config['config_test.types.yml'], $split_config['config_test.types.yml'], 'The split blacklisted config is the same..');
-    $this->assertEquals($original_config['config_test.system.yml'], $sync_config['config_test.system.yml'], 'The graylisted config stayed the same.');
-    $this->assertNotEquals($original_config['config_test.system.yml'], $split_config['config_test.system.yml'], 'The split graylisted config is different.');
+    self::assertEquals($original_config['config_test.types.yml'], $split_config['config_test.types.yml'], 'The split blacklisted config is the same..');
+    self::assertEquals($original_config['config_test.system.yml'], $sync_config['config_test.system.yml'], 'The graylisted config stayed the same.');
+    self::assertNotEquals($original_config['config_test.system.yml'], $split_config['config_test.system.yml'], 'The split graylisted config is different.');
 
     // Change the filter.
     $config->initWithData([
@@ -264,10 +264,10 @@ class ConfigSplitCliServiceTest extends KernelTestBase {
       }
     }
 
-    $this->assertFalse(isset($sync_config['config_test.system.yml']), 'The newly blacklisted config is removed.');
-    $this->assertTrue(isset($split_config['config_test.system.yml']), 'The newly blacklisted config is exported to the split.');
-    $this->assertFalse(isset($split_config['config_test.types.yml']), 'The config no longer blacklisted is not exported to the split.');
-    $this->assertTrue(isset($sync_config['config_test.types.yml']), 'The config no longer blacklisted is exported to the sync.');
+    self::assertFalse(isset($sync_config['config_test.system.yml']), 'The newly blacklisted config is removed.');
+    self::assertTrue(isset($split_config['config_test.system.yml']), 'The newly blacklisted config is exported to the split.');
+    self::assertFalse(isset($split_config['config_test.types.yml']), 'The config no longer blacklisted is not exported to the split.');
+    self::assertTrue(isset($sync_config['config_test.types.yml']), 'The config no longer blacklisted is exported to the sync.');
 
   }
 

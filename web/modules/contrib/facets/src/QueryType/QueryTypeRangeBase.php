@@ -71,9 +71,14 @@ abstract class QueryTypeRangeBase extends QueryTypePluginBase {
     foreach ($this->results as $result) {
       // Go through the results and add facet results grouped by filters
       // defined by self::calculateResultFilter().
-      if ($result['count'] || $query_operator == 'or') {
+      if ($result['count'] || $query_operator === 'or') {
         $count = $result['count'];
         if ($result_filter = $this->calculateResultFilter(trim($result['filter'], '"'))) {
+          if ($result_filter === 'NULL' || $result_filter === '') {
+            // "Missing" facet items could not be handled in ranges.
+            continue;
+          }
+
           if (isset($facet_results[$result_filter['raw']])) {
             $facet_results[$result_filter['raw']]->setCount(
               $facet_results[$result_filter['raw']]->getCount() + $count

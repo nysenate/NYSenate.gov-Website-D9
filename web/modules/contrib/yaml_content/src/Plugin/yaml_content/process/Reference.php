@@ -89,7 +89,6 @@ class Reference extends YamlContentProcessBase implements YamlContentProcessInte
       // configuration.
       $target = 'target_id';
       if (!empty($this->configuration[2])) {
-        print_r($this->configuration[2]);
         $target = $this->configuration[2];
       }
 

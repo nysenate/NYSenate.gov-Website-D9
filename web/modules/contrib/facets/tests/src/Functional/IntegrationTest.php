@@ -202,7 +202,7 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertFacetLabel('article');
 
     $this->clickLink('item');
-    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'ab_facet:item']]);
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f' => ['ab_facet:item']]]);
     $this->assertSession()->addressEquals($url);
 
     $this->drupalGet($facet_edit_page);
@@ -213,7 +213,7 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertFacetLabel('article');
 
     $this->clickLink('item');
-    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'llama:item']]);
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f' => ['llama:item']]]);
     $this->assertSession()->addressEquals($url);
   }
 
@@ -811,7 +811,7 @@ class IntegrationTest extends FacetsTestBase {
     // Make sure numbers are displayed.
     $edit = [
       'widget_config[show_numbers]' => 1,
-      'facet_settings[min_count]' => 0,
+      'facet_settings[min_count]' => 1,
     ];
     $this->drupalGet('admin/config/search/facets/snow_owl/edit');
     $this->submitForm($edit, 'Save');
@@ -840,7 +840,9 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextContains('Displaying 2 search results');
     $this->checkFacetIsActive('article');
     $this->assertFacetLabel('article_category (2)');
-    $this->assertFacetLabel('item_category (0)');
+    // As min_count=1 and query_operator='and' we expect zero-result
+    // item_category to be hidden, see testMultipleFacets().
+    $this->assertSession()->pageTextNotContains('item_category');
   }
 
   /**
@@ -873,29 +875,34 @@ class IntegrationTest extends FacetsTestBase {
    * Check that the disabling of the cache works.
    */
   public function testViewsCacheDisable() {
-    // Load the view, verify cache settings.
-    $view = Views::getView('search_api_test_view');
-    $view->setDisplay('page_1');
-    $current_cache = $view->display_handler->getOption('cache');
-    $this->assertEquals('none', $current_cache['type']);
-    $view->display_handler->setOption('cache', ['type' => 'tag']);
-    $view->save();
-    $current_cache = $view->display_handler->getOption('cache');
-    $this->assertEquals('tag', $current_cache['type']);
-
-    // Create a facet and check for the cache disabled message.
-    $id = "western_screech_owl";
-    $name = "Western screech owl";
-    $this->createFacet($name, $id);
-    $this->drupalGet('admin/config/search/facets/' . $id . '/settings');
-    $this->submitForm([], 'Save');
-    $this->assertSession()->pageTextContains('Caching of view Search API Test Fulltext search view has been disabled.');
-
-    // Check the view's cache settings again to see if they've been updated.
-    $view = Views::getView('search_api_test_view');
-    $view->setDisplay('page_1');
-    $current_cache = $view->display_handler->getOption('cache');
-    $this->assertEquals('none', $current_cache['type']);
+    $caches = [
+      // Tag cache plugin should be replaced by none, as it's not supported.
+      'page_1' => 'none',
+      // Search API cache plugin shouldn't be changed.
+      'page_2_sapi_tag' => 'search_api_tag',
+      'page_2_sapi_time' => 'search_api_time',
+    ];
+    foreach ($caches as $display_id => $expected_cache_plugin) {
+      // Create a facet and check for the cache disabled message.
+      $id = 'western_screech_owl_' . $display_id;
+      $name = 'Western screech owl';
+      $this->createFacet($name, $id, 'type', $display_id);
+      $this->drupalGet('admin/config/search/facets/' . $id . '/settings');
+      $this->submitForm([], 'Save');
+      $warning = 'You may experience issues, because Search API Test Fulltext search view use cache. In case you will try to turn set cache plugin to none.';
+      if ($display_id === 'page_1') {
+        // Make sure that user will get a warning about source cache plugin.
+        $this->assertSession()->pageTextNotContains($warning);
+      }
+      else {
+        $this->assertSession()->pageTextContains($warning);
+      }
+      // Check the view's cache settings again to see if they've been updated.
+      $view = Views::getView('search_api_test_view');
+      $view->setDisplay($display_id);
+      $current_cache = $view->display_handler->getOption('cache');
+      $this->assertEquals($expected_cache_plugin, $current_cache['type']);
+    }
   }
 
   /**

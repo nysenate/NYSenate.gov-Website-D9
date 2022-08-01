@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
@@ -22,6 +23,8 @@ use Drupal\facets\Result\Result;
  */
 class ShowSiblingsProcessor extends ProcessorPluginBase implements BuildProcessorInterface {
 
+  use UnchangingCacheableDependencyTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -31,7 +34,9 @@ class ShowSiblingsProcessor extends ProcessorPluginBase implements BuildProcesso
       $rawValues = array_map(function ($result) {
         return $result->getRawValue();
       }, $results);
-      foreach ($facet->getHierarchyInstance()->getSiblingIds($rawValues, $facet->getActiveItems(), $this->getConfiguration()['show_parent_siblings']) as $siblingId) {
+      $hierarchy = $facet->getHierarchyInstance();
+      $facet->addCacheableDependency($hierarchy);
+      foreach ($hierarchy->getSiblingIds($rawValues, $facet->getActiveItems(), $this->getConfiguration()['show_parent_siblings']) as $siblingId) {
         $results[] = new Result($facet, $siblingId, $siblingId, 0);
       }
     }

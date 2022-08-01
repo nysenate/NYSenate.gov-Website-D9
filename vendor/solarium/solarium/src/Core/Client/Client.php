@@ -77,11 +77,12 @@ use Solarium\QueryType\Update\Result as UpdateResult;
  * The client is the main interface for usage of the Solarium library.
  * You can use it to get query instances and to execute them.
  * It also allows to register plugins and query types to customize Solarium.
+ * It gives access to the event dispatcher so that you can add listeners.
  * Finally, it also gives access to the adapter, which holds the Solr connection settings.
  *
  * Example usage with default settings:
  * <code>
- * $client = new Solarium\Client;
+ * $client = new Solarium\Client($adapter, $eventDispatcher);
  * $query = $client->createSelect();
  * $result = $client->select($query);
  * </code>
@@ -355,7 +356,7 @@ class Client extends Configurable implements ClientInterface
             throw new InvalidArgumentException('An endpoint must have a key value');
         }
 
-        //double add calls for the same endpoint are ignored, but non-unique keys cause an exception
+        // double add calls for the same endpoint are ignored, but non-unique keys cause an exception
         if (\array_key_exists($key, $this->endpoints) && $this->endpoints[$key] !== $endpoint) {
             throw new InvalidArgumentException('An endpoint must have a unique key');
         }
@@ -830,7 +831,7 @@ class Client extends Configurable implements ClientInterface
         $event = new PreExecuteRequestEvent($request, $endpoint);
         $this->eventDispatcher->dispatch($event);
         if (null !== $event->getResponse()) {
-            $response = $event->getResponse(); //a plugin result overrules the standard execution result
+            $response = $event->getResponse(); // a plugin result overrules the standard execution result
         } else {
             $response = $this->getAdapter()->execute($request, $endpoint);
         }
@@ -1292,42 +1293,6 @@ class Client extends Configurable implements ClientInterface
     }
 
     /**
-     * Create a managed resources query instance.
-     *
-     * @param mixed $options
-     *
-     * @return \Solarium\Core\Query\AbstractQuery|\Solarium\QueryType\ManagedResources\Query\Resources
-     */
-    public function createManagedResources(array $options = null)
-    {
-        return $this->createQuery(self::QUERY_MANAGED_RESOURCES, $options);
-    }
-
-    /**
-     * Create a managed stopwords query instance.
-     *
-     * @param mixed $options
-     *
-     * @return \Solarium\Core\Query\AbstractQuery|\Solarium\QueryType\ManagedResources\Query\Stopwords
-     */
-    public function createManagedStopwords(array $options = null)
-    {
-        return $this->createQuery(self::QUERY_MANAGED_STOPWORDS, $options);
-    }
-
-    /**
-     * Create a managed synonyms query instance.
-     *
-     * @param mixed $options
-     *
-     * @return \Solarium\Core\Query\AbstractQuery|\Solarium\QueryType\ManagedResources\Query\Synonyms
-     */
-    public function createManagedSynonyms(array $options = null)
-    {
-        return $this->createQuery(self::QUERY_MANAGED_SYNONYMS, $options);
-    }
-
-    /**
      * Create a Collections API query instance.
      *
      * @param mixed $options
@@ -1361,6 +1326,42 @@ class Client extends Configurable implements ClientInterface
     public function createApi(array $options = null): ApiQuery
     {
         return $this->createQuery(self::QUERY_API, $options);
+    }
+
+    /**
+     * Create a managed resources query instance.
+     *
+     * @param mixed $options
+     *
+     * @return \Solarium\Core\Query\AbstractQuery|\Solarium\QueryType\ManagedResources\Query\Resources
+     */
+    public function createManagedResources(array $options = null)
+    {
+        return $this->createQuery(self::QUERY_MANAGED_RESOURCES, $options);
+    }
+
+    /**
+     * Create a managed stopwords query instance.
+     *
+     * @param mixed $options
+     *
+     * @return \Solarium\Core\Query\AbstractQuery|\Solarium\QueryType\ManagedResources\Query\Stopwords
+     */
+    public function createManagedStopwords(array $options = null)
+    {
+        return $this->createQuery(self::QUERY_MANAGED_STOPWORDS, $options);
+    }
+
+    /**
+     * Create a managed synonyms query instance.
+     *
+     * @param mixed $options
+     *
+     * @return \Solarium\Core\Query\AbstractQuery|\Solarium\QueryType\ManagedResources\Query\Synonyms
+     */
+    public function createManagedSynonyms(array $options = null)
+    {
+        return $this->createQuery(self::QUERY_MANAGED_SYNONYMS, $options);
     }
 
     /**

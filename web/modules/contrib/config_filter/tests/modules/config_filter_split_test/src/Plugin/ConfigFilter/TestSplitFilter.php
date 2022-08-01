@@ -144,7 +144,7 @@ class TestSplitFilter extends ConfigFilterBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function filterDeleteAll($prefix, $delete) {
-    if ($delete && $this->storage) {
+    if ($delete) {
       try {
         $this->storage->deleteAll($prefix);
       }

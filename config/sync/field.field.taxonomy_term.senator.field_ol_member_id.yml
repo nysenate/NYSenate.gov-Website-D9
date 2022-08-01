@@ -1,0 +1,23 @@
+uuid: f19a5304-5102-4cf4-b487-af109490e644
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_ol_member_id
+    - taxonomy.vocabulary.senator
+id: taxonomy_term.senator.field_ol_member_id
+field_name: field_ol_member_id
+entity_type: taxonomy_term
+bundle: senator
+label: 'Member ID'
+description: 'Used to associate this Senator to their OpenLeg data on import.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

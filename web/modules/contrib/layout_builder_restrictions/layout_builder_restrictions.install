@@ -126,7 +126,7 @@ function layout_builder_restrictions_update_8211(&$sandbox) {
 }
 
 /**
- * Relocate 'allowed_blocks' to 'whitelisted_blocks'.
+ * Relocate 'allowed_blocks' to 'allowlisted_blocks'.
  */
 function layout_builder_restrictions_update_8212(&$sandbox) {
   // When upgrading to 2.6, configuration for 'allowed_blocks'
@@ -149,6 +149,38 @@ function layout_builder_restrictions_update_8212(&$sandbox) {
         ->clear('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.allowed_blocks')
         ->set('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.whitelisted_blocks', $allowed_blocks_by_category)
         ->set('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.blacklisted_blocks', [])
+        ->save();
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['ids']) ? 1 : ($sandbox['count'] - count($sandbox['ids'])) / $sandbox['count'];
+}
+
+/**
+ * Relocate 'whitelisted_' and 'blacklisted' to 'allowlisted' and 'denylisted'.
+ */
+function layout_builder_restrictions_update_8213(&$sandbox) {
+  // When upgrading to 2.14, configuration for 'whitelisted_blocks'
+  // is relocated to 'allowlisted_blocks' and 'blacklisted_blocks' to'
+  // 'denylisted_blocks'. See #3179983.
+  $config_factory = \Drupal::configFactory();
+
+  if (!isset($sandbox['count'])) {
+    $sandbox['ids'] = $config_factory->listAll('core.entity_view_display.');
+    $sandbox['count'] = count($sandbox['ids']);
+  }
+
+  $ids = array_splice($sandbox['ids'], 0, 50);
+  foreach ($ids as $id) {
+    $display = $config_factory->getEditable($id);
+    if ($display->get('third_party_settings.layout_builder_restrictions')) {
+      $allowed_blocks_by_category_whitelisted = $display->get('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.whitelisted_blocks');
+      $allowed_blocks_by_category_blacklisted = $display->get('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.blacklisted_blocks');
+      $display
+        ->clear('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.whitelisted_blocks')
+        ->set('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.allowlisted_blocks', $allowed_blocks_by_category_whitelisted)
+        ->clear('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.blacklisted_blocks')
+        ->set('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.denylisted_blocks', $allowed_blocks_by_category_blacklisted)
         ->save();
     }
   }

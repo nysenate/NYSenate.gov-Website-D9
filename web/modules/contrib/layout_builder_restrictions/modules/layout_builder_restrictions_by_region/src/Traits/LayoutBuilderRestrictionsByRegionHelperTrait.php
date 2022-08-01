@@ -53,11 +53,11 @@ trait LayoutBuilderRestrictionsByRegionHelperTrait {
       if (isset($third_party_settings['restricted_categories'][$layout_plugin][$region_id])) {
         return TRUE;
       }
-      if (isset($third_party_settings['whitelisted_blocks'][$layout_plugin][$region_id])) {
+      if (isset($third_party_settings['allowlisted_blocks'][$layout_plugin][$region_id])) {
         return TRUE;
       }
-      elseif (isset($third_party_settings['blacklisted_blocks'][$layout_plugin][$region_id])) {
-        if (!empty($third_party_settings['blacklisted_blocks'][$layout_plugin][$region_id])) {
+      elseif (isset($third_party_settings['denylisted_blocks'][$layout_plugin][$region_id])) {
+        if (!empty($third_party_settings['denylisted_blocks'][$layout_plugin][$region_id])) {
           return TRUE;
         }
         else {

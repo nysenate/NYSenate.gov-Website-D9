@@ -2,10 +2,14 @@
 
 namespace Drupal\facets\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetManager\DefaultFacetManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,6 +36,11 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $facetStorage;
+
+  /**
+   * @var \Drupal\facets\FacetInterface
+   */
+  protected $facet;
 
   /**
    * Construct a FacetBlock instance.
@@ -70,24 +79,19 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
-    /** @var \Drupal\facets\FacetInterface $facet */
-    $facet = $this->facetStorage->load($this->getDerivativeId());
-
-    // No need to build the facet if it does not need to be visible.
-    if ($facet->getOnlyVisibleWhenFacetSourceIsVisible() &&
-      (!$facet->getFacetSource() || !$facet->getFacetSource()->isRenderedInCurrentRequest())) {
-      return [];
-    }
-
     // Do not build the facet if the block is being previewed.
     if ($this->getContextValue('in_preview')) {
       return [];
     }
 
+    $facet = $this->getFacet();
+
     // Let the facet_manager build the facets.
     $build = $this->facetManager->build($facet);
 
     if (!empty($build)) {
+      CacheableMetadata::createFromObject($facet)->applyTo($build);
+
       // Add extra elements from facet source, for example, ajax scripts.
       // @see Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay
       /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
@@ -123,46 +127,44 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   }
 
   /**
+   * Get facet block entity.
+   *
+   * @return \Drupal\facets\FacetInterface
+   *   The facet entity.
+   */
+  protected function getFacet(): FacetInterface {
+    if (!$this->facet) {
+      $this->facet = $this->facetStorage->load($this->getDerivativeId());
+    }
+    return $this->facet;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return $this->getFacet()->getCacheTags();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return $this->getFacet()->getCacheContexts();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
-    // A facet block cannot be cached, because it must always match the current
-    // search results, and Search API gets those search results from a data
-    // source that can be external to Drupal. Therefore it is impossible to
-    // guarantee that the search results are in sync with the data managed by
-    // Drupal. Consequently, it is not possible to cache the search results at
-    // all. If the search results cannot be cached, then neither can the facets,
-    // because they must always match.
-    // Fortunately, facet blocks are rendered using a lazy builder (like all
-    // blocks in Drupal), which means their rendering can be deferred (unlike
-    // the search results, which are the main content of the page, and deferring
-    // their rendering would mean sending an empty page to the user). This means
-    // that facet blocks can be rendered and sent *after* the initial page was
-    // loaded, by installing the BigPipe (big_pipe) module.
-    //
-    // When BigPipe is enabled, the search results will appear first, and then
-    // each facet block will appear one-by-one, in DOM order.
-    // See https://www.drupal.org/project/big_pipe.
-    //
-    // In a future version of Facet API, this could be refined, but due to the
-    // reliance on external data sources, it will be very difficult if not
-    // impossible to improve this significantly.
-    //
-    // Note: when using Drupal core's Search module instead of the contributed
-    // Search API module, the above limitations do not apply, but for now it is
-    // not considered worth the effort to optimize this just for Drupal core's
-    // Search.
-    return 0;
+    return $this->getFacet()->getCacheMaxAge();
   }
 
   /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    /** @var \Drupal\facets\FacetInterface $facet */
-    $facet = $this->facetStorage->load($this->getDerivativeId());
-
-    return ['config' => [$facet->getConfigDependencyName()]];
+    return ['config' => [$this->getFacet()->getConfigDependencyName()]];
   }
 
   /**
@@ -183,6 +185,21 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function getPreviewFallbackString() {
     return $this->t('Placeholder for the "@facet" facet', ['@facet' => $this->getDerivativeId()]);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * Allow to render facet block if one of the following conditions are met:
+   * - facet is allowed to be displayed regardless of the source visibility
+   * - facet source is rendered in the same request as facet.
+   */
+  public function blockAccess(AccountInterface $account) {
+    $facet = $this->getFacet();
+    return AccessResult::allowedIf(
+      !$facet->getOnlyVisibleWhenFacetSourceIsVisible()
+      || ($facet->getFacetSource() && $facet->getFacetSource()->isRenderedInCurrentRequest())
+    )->addCacheableDependency($facet);
   }
 
 }

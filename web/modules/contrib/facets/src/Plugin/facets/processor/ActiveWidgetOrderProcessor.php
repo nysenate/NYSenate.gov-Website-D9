@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\facets\Processor\SortProcessorPluginBase;
 use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\facets\Result\Result;
@@ -20,6 +21,8 @@ use Drupal\facets\Result\Result;
  * )
  */
 class ActiveWidgetOrderProcessor extends SortProcessorPluginBase implements SortProcessorInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * {@inheritdoc}

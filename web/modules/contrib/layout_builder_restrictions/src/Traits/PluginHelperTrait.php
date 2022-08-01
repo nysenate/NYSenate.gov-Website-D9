@@ -144,7 +144,7 @@ trait PluginHelperTrait {
   }
 
   /**
-   * Helper function to check the default block category whitelist.
+   * Helper function to check the default block category allowlist.
    *
    * @param string $category
    *   The identifier of the category.
@@ -157,9 +157,9 @@ trait PluginHelperTrait {
   public function categoryIsRestricted($category, array $allowed_block_categories) {
     if (!empty($allowed_block_categories)) {
       // There is no explicit indication whether the blocks from
-      // this category should be restricted. Check the default whitelist.
+      // this category should be restricted. Check the default allowlist.
       if (!in_array($category, $allowed_block_categories)) {
-        // This block's category has not been whitelisted.
+        // This block's category has not been allowlisted.
         return TRUE;
       }
     }

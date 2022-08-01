@@ -19,7 +19,7 @@ class ExampleStorageKernelTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'config_filter',
     'config_filter_test',

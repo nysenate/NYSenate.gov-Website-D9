@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.bill.field_bill_multi_session_root
     - field.field.node.bill.field_bill_no_issue_tags
+    - field.field.node.bill.field_comments
     - field.field.node.bill.field_issues
     - field.field.node.bill.field_majority_issue_tag
     - field.field.node.bill.field_metatags
@@ -140,6 +141,15 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_ol_publish_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: html_datetime
+    third_party_settings: {  }
+    weight: 15
+    region: content
   field_ol_session:
     type: number_integer
     label: hidden
@@ -177,6 +187,7 @@ content:
 hidden:
   field_bill_multi_session_root: true
   field_bill_no_issue_tags: true
+  field_comments: true
   field_majority_issue_tag: true
   field_metatags: true
   field_ol_active_version: true
@@ -197,7 +208,6 @@ hidden:
   field_ol_previous_versions: true
   field_ol_program_info: true
   field_ol_program_info_seq: true
-  field_ol_publish_date: true
   field_ol_same_as: true
   field_ol_substituted_by: true
   field_ol_summary: true

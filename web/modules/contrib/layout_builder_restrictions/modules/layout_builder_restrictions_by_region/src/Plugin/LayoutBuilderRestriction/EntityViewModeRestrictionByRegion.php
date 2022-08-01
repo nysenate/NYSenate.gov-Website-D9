@@ -79,7 +79,7 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
   public function alterBlockDefinitions(array $definitions, array $context) {
     // If this method is being called by any action other than 'Add block',
     // then do nothing.
-    // @TODO: Re-assess after https://www.drupal.org/node/3099121
+    // @todo Re-assess after https://www.drupal.org/node/3099121
     // has been addressed.
     if (!isset($context['delta'])) {
       return $definitions;
@@ -98,20 +98,20 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
         $region = $context['region'];
 
         $allowed_block_categories = $default->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
-        $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'][$layout_id])) ? $third_party_settings['whitelisted_blocks'][$layout_id] : [];
-        $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'][$layout_id])) ? $third_party_settings['blacklisted_blocks'][$layout_id] : [];
+        $allowlisted_blocks = (isset($third_party_settings['allowlisted_blocks'][$layout_id])) ? $third_party_settings['allowlisted_blocks'][$layout_id] : [];
+        $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'][$layout_id])) ? $third_party_settings['denylisted_blocks'][$layout_id] : [];
         $restricted_categories = (isset($third_party_settings['restricted_categories'][$layout_id])) ? $third_party_settings['restricted_categories'][$layout_id] : [];
 
         // If restriction applies to all regions, then overwrite region
         // to 'all_regions'.
-        if (isset($whitelisted_blocks['all_regions']) || isset($blacklisted_blocks['all_regions']) || isset($restricted_categories['all_regions'])) {
+        if (isset($allowlisted_blocks['all_regions']) || isset($denylisted_blocks['all_regions']) || isset($restricted_categories['all_regions'])) {
           $region = 'all_regions';
         }
 
         // Filter blocks from entity-specific SectionStorage (i.e., UI).
         $content_block_types_by_uuid = $this->getBlockTypeByUuid();
 
-        if (!empty($whitelisted_blocks) || !empty($blacklisted_blocks) || !empty($restricted_categories)) {
+        if (!empty($allowlisted_blocks) || !empty($denylisted_blocks) || !empty($restricted_categories)) {
           foreach ($definitions as $delta => $definition) {
             $original_delta = $delta;
             $category = $this->getUntranslatedCategory($definition['category']);
@@ -119,7 +119,7 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
             if ($definition['provider'] == 'block_content') {
               // 'Custom block types' are disregarded if 'Custom blocks'
               // restrictions are enabled.
-              if (isset($whitelisted_blocks[$region]['Custom blocks']) || isset($blacklisted_blocks[$region]['Custom blocks'])) {
+              if (isset($allowlisted_blocks[$region]['Custom blocks']) || isset($denylisted_blocks[$region]['Custom blocks'])) {
                 $category = 'Custom blocks';
               }
               else {
@@ -132,15 +132,15 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
             if (isset($restricted_categories[$region]) && in_array($category, $restricted_categories[$region])) {
               unset($definitions[$original_delta]);
             }
-            elseif (isset($whitelisted_blocks[$region]) && in_array($category, array_keys($whitelisted_blocks[$region]))) {
-              if (!in_array($delta, $whitelisted_blocks[$region][$category])) {
-                // The current block is not whitelisted. Remove it.
+            elseif (isset($allowlisted_blocks[$region]) && in_array($category, array_keys($allowlisted_blocks[$region]))) {
+              if (!in_array($delta, $allowlisted_blocks[$region][$category])) {
+                // The current block is not allowlisted. Remove it.
                 unset($definitions[$original_delta]);
               }
             }
-            elseif (isset($blacklisted_blocks[$region]) && in_array($category, array_keys($blacklisted_blocks[$region]))) {
-              if (in_array($delta, $blacklisted_blocks[$region][$category])) {
-                // The current block is blacklisted. Remove it.
+            elseif (isset($denylisted_blocks[$region]) && in_array($category, array_keys($denylisted_blocks[$region]))) {
+              if (in_array($delta, $denylisted_blocks[$region][$category])) {
+                // The current block is denylisted. Remove it.
                 unset($definitions[$original_delta]);
               }
             }
@@ -198,13 +198,13 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
     $layout_id = $region->getLayoutId();
 
     // Get region restrictions.
-    $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'][$layout_id])) ? $third_party_settings['whitelisted_blocks'][$layout_id] : [];
-    $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'][$layout_id])) ? $third_party_settings['blacklisted_blocks'][$layout_id] : [];
+    $allowlisted_blocks = (isset($third_party_settings['allowlisted_blocks'][$layout_id])) ? $third_party_settings['allowlisted_blocks'][$layout_id] : [];
+    $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'][$layout_id])) ? $third_party_settings['denylisted_blocks'][$layout_id] : [];
     $restricted_categories = (isset($third_party_settings['restricted_categories'][$layout_id])) ? $third_party_settings['restricted_categories'][$layout_id] : [];
 
     // If restriction applies to all regions, then overwrite region_to
     // to 'all_regions'.
-    if (isset($third_party_settings['whitelisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['blacklisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['restricted_categories'][$layout_id]['all_regions'])) {
+    if (isset($third_party_settings['allowlisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['denylisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['restricted_categories'][$layout_id]['all_regions'])) {
       $region_to = 'all_regions';
     }
 
@@ -216,68 +216,68 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
     // Load the plugin definition.
     if ($definition = $this->blockManager()->getDefinition($block_id)) {
       $category = $this->getUntranslatedCategory($definition['category']);
-      if (isset($whitelisted_blocks[$region_to][$category]) || isset($blacklisted_blocks[$region_to][$category])) {
+      if (isset($allowlisted_blocks[$region_to][$category]) || isset($denylisted_blocks[$region_to][$category])) {
         // If there is a restriction, assume this block is restricted.
-        // If the block is whitelisted or NOT blacklisted,
+        // If the block is allowlisted or NOT denylisted,
         // the restriction will be removed, below.
         $has_restrictions = TRUE;
       }
       if (isset($restricted_categories[$region_to]) && in_array($category, array_values($restricted_categories[$region_to]))) {
         $has_restrictions = TRUE;
       }
-      elseif (!isset($restricted_categories[$region_to][$category]) && !isset($blacklisted_blocks[$region_to][$category]) && !isset($whitelisted_blocks[$region_to][$category]) && $category != "Custom blocks") {
+      elseif (!isset($restricted_categories[$region_to][$category]) && !isset($denylisted_blocks[$region_to][$category]) && !isset($allowlisted_blocks[$region_to][$category]) && $category != "Custom blocks") {
         // No restrictions have been placed on this category.
         $has_restrictions = FALSE;
       }
       else {
         // Some type of restriction has been placed.
-        if (isset($whitelisted_blocks[$region_to][$category])) {
-          // An explicitly whitelisted block means it's allowed.
-          if (in_array($block_id, $whitelisted_blocks[$region_to][$category])) {
+        if (isset($allowlisted_blocks[$region_to][$category])) {
+          // An explicitly allowlisted block means it's allowed.
+          if (in_array($block_id, $allowlisted_blocks[$region_to][$category])) {
             $has_restrictions = FALSE;
           }
         }
-        elseif (isset($blacklisted_blocks[$region_to][$category])) {
-          // If absent from the blacklist, it's allowed.
-          if (!in_array($block_id, $blacklisted_blocks[$region_to][$category])) {
+        elseif (isset($denylisted_blocks[$region_to][$category])) {
+          // If absent from the denylist, it's allowed.
+          if (!in_array($block_id, $denylisted_blocks[$region_to][$category])) {
             $has_restrictions = FALSE;
           }
         }
       }
 
       // Edge case: if block *type* restrictions are present...
-      if (!empty($whitelisted_blocks[$region_to]['Custom block types'])) {
+      if (!empty($allowlisted_blocks[$region_to]['Custom block types'])) {
         $content_block_types_by_uuid = $this->getBlockTypeByUuid();
         // If no specific custom block restrictions are set
         // check block type restrict by block type.
-        if ($category == 'Custom blocks' && !isset($whitelisted_blocks[$region_to]['Custom blocks'])) {
+        if ($category == 'Custom blocks' && !isset($allowlisted_blocks[$region_to]['Custom blocks'])) {
           $block_bundle = $content_block_types_by_uuid[end($block_id_parts)];
-          if (in_array($block_bundle, $whitelisted_blocks[$region_to]['Custom block types'])) {
+          if (in_array($block_bundle, $allowlisted_blocks[$region_to]['Custom block types'])) {
             // There are block type restrictions AND
-            // this block type has been whitelisted.
+            // this block type has been allowlisted.
             $has_restrictions = FALSE;
           }
           else {
             // There are block type restrictions BUT
-            // this block type has NOT been whitelisted.
+            // this block type has NOT been allowlisted.
             $has_restrictions = TRUE;
           }
         }
       }
-      elseif (!empty($blacklisted_blocks[$region_to]['Custom block types'])) {
+      elseif (!empty($denylisted_blocks[$region_to]['Custom block types'])) {
         $content_block_types_by_uuid = $this->getBlockTypeByUuid();
         // If no specific custom block restrictions are set
         // check block type restrict by block type.
-        if ($category == 'Custom blocks' && !isset($blacklisted_blocks[$region_to]['Custom blocks'])) {
+        if ($category == 'Custom blocks' && !isset($denylisted_blocks[$region_to]['Custom blocks'])) {
           $block_bundle = $content_block_types_by_uuid[end($block_id_parts)];
-          if (in_array($block_bundle, $blacklisted_blocks[$region_to]['Custom block types'])) {
+          if (in_array($block_bundle, $denylisted_blocks[$region_to]['Custom block types'])) {
             // There are block type restrictions AND
-            // this block type has been blacklostlisted.
+            // this block type has been denylisted.
             $has_restrictions = TRUE;
           }
           else {
             // There are block type restrictions BUT
-            // this block type has NOT been blacklisted.
+            // this block type has NOT been denylisted.
             $has_restrictions = FALSE;
           }
         }
@@ -302,28 +302,28 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
   public function inlineBlocksAllowedinContext(SectionStorageInterface $section_storage, $delta, $region) {
     $view_display = $this->getValuefromSectionStorage([$section_storage], 'view_display');
     $third_party_settings = $view_display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction_by_region', []);
-    $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
-    $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
+    $allowlisted_blocks = (isset($third_party_settings['allowlisted_blocks'])) ? $third_party_settings['allowlisted_blocks'] : [];
+    $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'])) ? $third_party_settings['denylisted_blocks'] : [];
 
     $layout_id = $section_storage->getSection($delta)->getLayoutId();
 
     // If restriction behavior is for all regions, then overwrite
     // region with 'all_regions'.
-    if (isset($third_party_settings['whitelisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['blacklisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['restricted_categories'][$layout_id]['all_regions'])) {
+    if (isset($third_party_settings['allowlisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['denylisted_blocks'][$layout_id]['all_regions']) || isset($third_party_settings['restricted_categories'][$layout_id]['all_regions'])) {
       $region = 'all_regions';
     }
 
     // Check if allowed inline blocks are defined in config.
-    if (isset($whitelisted_blocks[$layout_id][$region]['Inline blocks'])) {
-      return $whitelisted_blocks[$layout_id][$region]['Inline blocks'];
+    if (isset($allowlisted_blocks[$layout_id][$region]['Inline blocks'])) {
+      return $allowlisted_blocks[$layout_id][$region]['Inline blocks'];
     }
-    // If not, then allow some inline blocks and check for blacklisting.
+    // If not, then allow some inline blocks and check for denylisting.
     else {
       $inline_blocks = $this->getInlineBlockPlugins();
-      if (isset($blacklisted_blocks[$layout_id][$region]['Inline blocks'])) {
+      if (isset($denylisted_blocks[$layout_id][$region]['Inline blocks'])) {
         foreach ($inline_blocks as $key => $block) {
-          // Unset explicitly blacklisted inline blocks.
-          if (in_array($block, $blacklisted_blocks[$layout_id][$region]['Inline blocks'])) {
+          // Unset explicitly denylisted inline blocks.
+          if (in_array($block, $denylisted_blocks[$layout_id][$region]['Inline blocks'])) {
             unset($inline_blocks[$key]);
           }
         }

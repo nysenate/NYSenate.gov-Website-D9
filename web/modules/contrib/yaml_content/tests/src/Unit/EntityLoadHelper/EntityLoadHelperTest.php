@@ -22,7 +22,7 @@ class EntityLoadHelperTest extends UnitTestCase {
   /**
    * A prepared EntityLoadHelper object for testing.
    *
-   * @var \Drupal\yaml_content\Service\EntityLoadHelper|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\yaml_content\Service\EntityLoadHelper|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $loadHelper;
 
@@ -37,7 +37,7 @@ class EntityLoadHelperTest extends UnitTestCase {
    *   this argument is omitted all methods are mocked and execute their
    *   original code.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    *   The mocked ContentLoader object with
    */
   protected function getEntityLoadHelperMock($stubbed_methods = NULL) {
@@ -552,7 +552,7 @@ class EntityLoadHelperTest extends UnitTestCase {
    * @param string $entity_type
    *   The identifier for the entity type definition being mocked.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject|ContentEntityTypeInterface
+   * @return \PHPUnit\Framework\MockObject\MockObject|ContentEntityTypeInterface
    *   The mock for the entity definition.
    */
   public function getEntityDefinition($entity_type) {
@@ -589,7 +589,7 @@ class EntityLoadHelperTest extends UnitTestCase {
   /**
    * Get a mock for an entity storage handler.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject|EntityStorageInterface
+   * @return \PHPUnit\Framework\MockObject\MockObject|EntityStorageInterface
    */
   protected function getEntityStorageMock() {
     $mock = $this->getMockForAbstractClass(EntityStorageInterface::class);
@@ -600,7 +600,7 @@ class EntityLoadHelperTest extends UnitTestCase {
   /**
    * Get a mock for an entity.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject|ContentEntityInterface
+   * @return \PHPUnit\Framework\MockObject\MockObject|ContentEntityInterface
    */
   protected function getEntityMock() {
     $mock = $this->getMockForAbstractClass(ContentEntityInterface::class);

@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\facets\FacetInterface;
@@ -34,6 +35,7 @@ class UidToUserNameCallbackProcessor extends ProcessorPluginBase implements Buil
       /** @var \Drupal\user\Entity\User $user */
       if (($user = User::load($result->getRawValue())) !== NULL) {
         $result->setDisplayValue($user->getDisplayName());
+        $facet->addCacheableDependency($user);
         $usernames[] = $result;
       }
     }
@@ -66,6 +68,20 @@ class UidToUserNameCallbackProcessor extends ProcessorPluginBase implements Buil
       }
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return Cache::mergeTags(parent::getCacheTags(), ['user_list']);
   }
 
 }

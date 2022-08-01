@@ -41,8 +41,8 @@ interface ViewsBulkOperationsActionInterface extends ActionInterface {
    * @param array $objects
    *   An array of entities.
    *
-   * @return array
-   *   An array of translatable markup objects or strings (optional)
+   * @return \Drupal\Component\Render\MarkupInterface[]
+   *   An array of MarkupInterface objects or an empty array.
    */
   public function executeMultiple(array $objects);
 

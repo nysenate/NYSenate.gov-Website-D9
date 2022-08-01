@@ -3,6 +3,9 @@
 namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -24,12 +27,27 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides a facet source based on a Search API display.
  *
+ * @todo The support for non views displays might be removed from facets 3.x and
+ *       moved into a sub or contributed module. So this class needs to become
+ *       something like "SearchApiViewsDisplay" and a "SearchApiCustomDisplay"
+ *       plugin needs to be provided by the sub or contributed module. At the
+ *       moment we have switches within this class for example to get the cache
+ *       metadata. Those need to be removed.
+ *
  * @FacetsFacetSource(
  *   id = "search_api",
  *   deriver = "Drupal\facets\Plugin\facets\facet_source\SearchApiDisplayDeriver"
  * )
  */
 class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSourceInterface {
+
+  /**
+   * List of Search API cache plugins that works with Facets cache system.
+   */
+  const CACHEABLE_PLUGINS = [
+    'search_api_tag',
+    'search_api_time',
+  ];
 
   /**
    * The search index the query should is executed on.
@@ -65,6 +83,13 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
    * @var \Drupal\Core\Extension\ModuleHandler
    */
   protected $moduleHandler;
+
+  /**
+   * Indicates if the display is edited and saved.
+   *
+   * @var bool
+   */
+  protected $display_edit_in_progress = FALSE;
 
   /**
    * Constructs a SearchApiBaseFacetSource object.
@@ -115,9 +140,7 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
       $container->get('plugin.manager.facets.query_type'),
       $container->get('search_api.query_helper'),
       $container->get('plugin.manager.search_api.display'),
-      // Support 9.3+.
-      // @todo remove switch after 9.3 or greater is required.
-      version_compare(\Drupal::VERSION, '9.3', '>=') ? $request_stack->getMainRequest() : $request_stack->getMasterRequest(),
+      $request_stack->getMainRequest(),
       $container->get('module_handler')
     );
   }
@@ -159,16 +182,28 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
 
     // If there are no results, we can check the Search API Display plugin has
     // configuration for views. If that configuration exists, we can execute
-    // that view and try to use it's results.
+    // that view and try to use its results.
     $display_definition = $this->getDisplay()->getPluginDefinition();
+    $view = NULL;
+
     if ($results === NULL && isset($display_definition['view_id'])) {
       $view = Views::getView($display_definition['view_id']);
       $view->setDisplay($display_definition['view_display']);
+      $view->preExecute();
       $view->execute();
       $results = $this->searchApiQueryHelper->getResults($search_id);
     }
 
     if (!$results instanceof ResultSetInterface) {
+      if ($view) {
+        foreach ($facets as $facet) {
+          // In case of an empty result we must inherit the cache metadata of
+          // the query. It will know if no results is a valid "result" or a
+          // temporary issue or an error and set the metadata accordingly.
+          $facet->addCacheableDependency($view->getQuery());
+        }
+      }
+
       return;
     }
 
@@ -187,13 +222,16 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
       $configuration = [
         'query' => $results->getQuery(),
         'facet' => $facet,
-        'results' => isset($facet_results[$facet->getFieldIdentifier()]) ? $facet_results[$facet->getFieldIdentifier()] : [],
+        'results' => $facet_results[$facet->getFieldIdentifier()] ?? [],
       ];
 
-      // Get the Facet Specific Query Type so we can process the results
+      // Get the Facet Specific Query Type, so we can process the results
       // using the build() function of the query type.
       $query_type = $this->queryTypePluginManager->createInstance($facet->getQueryType(), $configuration);
       $query_type->build();
+
+      // Merge the runtime cache metadata of the query.
+      $facet->addCacheableDependency($results->getQuery());
     }
   }
 
@@ -416,6 +454,123 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
           ->getResultCount();
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    if ($views_display = $this->getViewsDisplay()) {
+      if ($this->isDisplayEditInProgress()) {
+        return [];
+      }
+      return $views_display
+        ->getDisplay()
+        ->getCacheMetadata()
+        ->getCacheContexts();
+    }
+
+    // Custom display implementations should provide their own cache metadata.
+    $display = $this->getDisplay();
+    if ($display instanceof CacheableDependencyInterface) {
+      return $display->getCacheContexts();
+    }
+
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    if ($views_display = $this->getViewsDisplay()) {
+      if ($this->isDisplayEditInProgress()) {
+        return [];
+      }
+      return Cache::mergeTags(
+        $views_display->getDisplay()->getCacheMetadata()->getCacheTags(),
+        $views_display->getCacheTags()
+      );
+    }
+
+    // Custom display implementations should provide their own cache metadata.
+    $display = $this->getDisplay();
+    if ($display instanceof CacheableDependencyInterface) {
+      return $display->getCacheTags();
+    }
+
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    if ($views_display = $this->getViewsDisplay()) {
+      if ($this->isDisplayEditInProgress()) {
+        return CacheBackendInterface::CACHE_PERMANENT;
+      }
+      $cache_plugin = $views_display->getDisplay()->getPlugin('cache');
+      return Cache::mergeMaxAges(
+        $views_display->getDisplay()->getCacheMetadata()->getCacheMaxAge(),
+        $cache_plugin ? $cache_plugin->getCacheMaxAge() : 0
+      );
+    }
+
+    // Custom display implementations should provide their own cache metadata.
+    $display = $this->getDisplay();
+    if ($display instanceof CacheableDependencyInterface) {
+      return $display->getCacheMaxAge();
+    }
+
+    // Caching is not supported.
+    return 0;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * Alter views view cache metadata:
+   *  - When view being re-saved it will collect all cache metadata from its
+   * plugins, including cache plugin.
+   *  - Search API cache plugin will pre-execute the query and collect cacheable
+   * metadata from all facets and will pass it to the view.
+   *
+   * View will use collected cache tags to invalidate search results. And cache
+   * context provided by the facet to vary results.
+   *
+   * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::calculateCacheMetadata()
+   * @see \Drupal\search_api\Plugin\views\cache\SearchApiCachePluginTrait::alterCacheMetadata()
+   * @see \Drupal\facets\FacetManager\DefaultFacetManager::alterQuery()
+   */
+  public function registerFacet(FacetInterface $facet) {
+    if (
+      // On the config-sync or site install view will already have all required
+      // cache tags, so don't react if it's already there.
+      !in_array('config:' . $facet->getConfigDependencyName(), $this->getCacheTags())
+      // Re-save it only if we know that views cache plugin works with facets.
+      && in_array($this->getViewsDisplay()->getDisplay()->getOption('cache')['type'], static::CACHEABLE_PLUGINS)
+    ) {
+      $this->getViewsDisplay()->save();
+    }
+  }
+
+  /**
+   * Is the display currently edited and saved?
+   *
+   * @return bool
+   */
+  public function isDisplayEditInProgress(): bool {
+    return $this->display_edit_in_progress;
+  }
+
+  /**
+   * Set the state, that the display is currently edited and saved.
+   *
+   * @param bool $display_edit_in_progress
+   */
+  public function setDisplayEditInProgress(bool $display_edit_in_progress): void {
+    $this->display_edit_in_progress = $display_edit_in_progress;
   }
 
 }

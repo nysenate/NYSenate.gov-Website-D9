@@ -97,12 +97,12 @@
 
   <div{{ content_attributes.addClass('node__content') }}>
     <article class="c-event-block c-event-block--list">
-      <div class="c-event-date"><span>{{ item.day }}</span>{{ item.month }}</div>
+      <div class="c-event-date"><span>{{ item.day }}</span> {{ item.month }}</div>
       <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
       <a class="c-event-location" href=""> <span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
       <div class="c-event-address">{{ item.street_1 }}</div>
       <div class="c-event-address">{{ item.street_2 }}</div>
-      <div class="c-event-time"><span class="date-display-single">"{{ item.time }}"</span></div>
+      <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>
     </article>
   </div>
 

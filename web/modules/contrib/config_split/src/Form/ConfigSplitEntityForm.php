@@ -367,6 +367,8 @@ class ConfigSplitEntityForm extends EntityForm {
         ));
     }
     $form_state->setRedirectUrl($config_split->toUrl('collection'));
+
+    return $status;
   }
 
   /**

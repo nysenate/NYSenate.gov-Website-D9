@@ -42,7 +42,7 @@ INSTALLATION & MANAGEMENT IN THE UI
 2. Expand the "Layout options" fieldset and choose either "Blocks available for
 placement" or "Layouts available for placement". Initially, all blocks and
 layouts are available, as would be the case if the module were not enabled.
-For blocks, each "provider" is listed, and can either be whitelisted to allow
+For blocks, each "provider" is listed, and can either be allowlisted to allow
 all blocks from the given provider, or restricted with the "Choose specific..."
 option:
 
@@ -65,13 +65,21 @@ additional plugins have been added, site builders can control which plugins are
 active at `/admin/config/content/layout-builder-restrictions`
 
 ### Disambiguation: block types, individual custom blocks, and inline blocks
-This module provides separate restrictions for "CUSTOM BLOCK TYPES", "CUSTOM BLOCKS", and "INLINE BLOCKS."
+This module provides separate restrictions for "CUSTOM BLOCK TYPES",
+"CUSTOM BLOCKS", and "INLINE BLOCKS."
 
-Restrictions for "CUSTOM BLOCK TYPES" will prevent *any* individual blocks of a restricted type, created through the block library, from being placed.
+Restrictions for "CUSTOM BLOCK TYPES" will prevent *any* individual blocks of a
+restricted type, created through the block library, from being placed.
 
-If, on the other hand, the "CUSTOM BLOCKS" restriction section is used -- i.e., restrictions are placed on *specific instances* of blocks -- this restriction will take precedence over those defined in "CUSTOM BLOCK TYPES." For most site configurations, you will likely use either block type-level restrictions or individual block restrictions, but not both.
+If, on the other hand, the "CUSTOM BLOCKS" restriction section is used -- i.e.,
+restrictions are placed on *specific instances* of blocks -- this restriction
+will take precedence over those defined in "CUSTOM BLOCK TYPES." For most site
+configurations, you will likely use either block type-level restrictions or
+individual block restrictions, but not both.
 
-Separately, the "INLINE BLOCKS" section regulates which block types are restricted from being created inline (i.e., on the `Layout` tab of a Layout Builder-enabled entity).
+Separately, the "INLINE BLOCKS" section regulates which block types are
+restricted from being created inline (i.e., on the `Layout` tab of a Layout
+Builder-enabled entity).
 
 ADD NEW RESTRICTIONS VIA PLUGIN (DEVELOPERS)
 --------------------------------------------

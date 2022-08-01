@@ -50,7 +50,7 @@ class UpdateTest extends KernelTestBase {
     ])->save();
 
     // Run update function.
-    module_load_install('oembed_providers');
+    \Drupal::service('module_handler')->loadInclude('oembed_providers', 'install');
     oembed_providers_update_8201();
 
     // Verify that a 'video' provider bucket was created and that the providers

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\location_migration\Traits;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Driver\sqlite\Connection as SQLiteConnection;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\location_migration\LocationMigration;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\user\UserInterface;
@@ -269,7 +269,7 @@ trait LocationMigrationAssertionsTrait {
     $expected_features = $expected_features + static::getDefaultFieldExpectationConfiguration();
     $node = $this->container->get('entity_type.manager')->getStorage('node')->load(2);
     assert($node instanceof NodeInterface);
-    $destination_is_sqlite = Database::getConnection() instanceof SQLiteConnection;
+    $destination_is_sqlite = LocationMigration::connectionIsSqlite(Database::getConnection()) && version_compare(PHP_VERSION, '8.1.0-dev', 'lt');
 
     $expected_entity_structure = [
       'nid' => [['value' => 2]],

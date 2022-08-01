@@ -29,7 +29,7 @@ abstract class ContentLoaderTestBase extends UnitTestCase {
    *   this argument is omitted all methods are mocked and execute their
    *   original code.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    *   The mocked ContentLoader object with
    */
   protected function getContentLoaderMock($stubbed_methods = NULL) {

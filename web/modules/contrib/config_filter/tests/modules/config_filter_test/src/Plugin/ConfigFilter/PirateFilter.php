@@ -22,8 +22,9 @@ class PirateFilter extends ConfigFilterBase {
     if ($name == 'system.site') {
       $data['name'] = $data['name'] . ' Arrr';
     }
-
+    // @phpstan-ignore-next-line Drupal state in test is acceptable.
     if ($name === 'system.pirates' && \Drupal::state()->get('config_filter_test_bluff', FALSE)) {
+      $data = is_array($data) ? $data : [];
       $data['captain'] = 'n/a';
     }
 
@@ -52,6 +53,7 @@ class PirateFilter extends ConfigFilterBase {
    * {@inheritdoc}
    */
   public function filterExists($name, $exists) {
+    // @phpstan-ignore-next-line Drupal state in test is acceptable.
     if ($name === 'system.pirates' && \Drupal::state()->get('config_filter_test_bluff', FALSE)) {
       return TRUE;
     }

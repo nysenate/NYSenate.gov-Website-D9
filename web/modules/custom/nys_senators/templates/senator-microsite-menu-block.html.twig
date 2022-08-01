@@ -4,6 +4,7 @@
  * Template for 'Senator Microsite Menu Block'.
  */
 #}
-{% for key,value in menu_links %}
-  <a href='{{ value.menu_url }}'>{{ value.menu_title }}</a>
-{% endfor%}
+
+{% include "@nysenate_theme/microsite-menu/microsite-menu.twig" with {
+  links: links
+} %}

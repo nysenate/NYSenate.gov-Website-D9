@@ -112,6 +112,8 @@ class ViewsBulkOperationsViewData implements ViewsBulkOperationsViewDataInterfac
    *   Part of views data that refers to the current view.
    */
   protected function getData() {
+    $viewsData = Views::viewsData();
+
     if (!empty($this->relationship) && $this->relationship != 'none') {
       $relationship = $this->displayHandler->getOption('relationships')[$this->relationship];
       $table_data = $viewsData->get($relationship['table']);
@@ -122,7 +124,6 @@ class ViewsBulkOperationsViewData implements ViewsBulkOperationsViewDataInterfac
     }
 
     if (!array_key_exists($key, $this->data)) {
-      $viewsData = Views::viewsData();
       $this->data[$key] = $viewsData->get($key);
     }
 

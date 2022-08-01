@@ -8,6 +8,7 @@
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Entity\FacetSource;
 use Drupal\block\Entity\Block;
+use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
 
 /**
  * Implements hook_update_dependencies().
@@ -211,8 +212,50 @@ function facets_update_8008() {
  * Resave facets for consistent configuration export.
  */
 function facets_update_8009() {
+  // Moved to facets_update_8011().
+}
+
+/**
+ * Enable facet block caching for the views with "Search API tag or time" cache.
+ */
+function facets_update_8010() {
+  // Moved to facets_update_8012().
+}
+
+/**
+ * Resave facets for consistent configuration export.
+ */
+function facets_update_8011() {
   $facets = Facet::loadMultiple();
   foreach ($facets as $facet) {
     $facet->save();
   }
+}
+
+/**
+ * Update facet block caching for the views with "Search API tag or time" cache.
+ */
+function facets_update_8012() {
+  $facet_storage = \Drupal::entityTypeManager()->getStorage('facets_facet');
+  $processed_views = [];
+  /** @var \Drupal\facets\FacetInterface $facet */
+  foreach ($facet_storage->loadMultiple() as $facet) {
+    if (
+      ($source = $facet->getFacetSource())
+      && $source instanceof SearchApiDisplay
+      && ($view_executable = $source->getViewsDisplay())
+      && !in_array($view_executable->id(), $processed_views)
+      && ($cache_plugin = $view_executable->getDisplay()->getPlugin('cache'))
+      && in_array(
+        $cache_plugin->getPluginId(),
+        ['search_api_tag', 'search_api_time']
+      )
+    ) {
+      $view_executable->save();
+      $processed_views[] = $view_executable->id();
+    }
+  }
+  return !empty($processed_views)
+    ? sprintf('Facet caching was updated for the following views: %s.', implode(', ', $processed_views))
+    : 'There are no views with search API cache plugins and facets in the same time, so nothing has been updated.';
 }

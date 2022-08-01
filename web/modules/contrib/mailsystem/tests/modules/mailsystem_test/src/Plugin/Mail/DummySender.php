@@ -27,7 +27,7 @@ class DummySender implements MailInterface {
    */
   public function mail(array $message) {
     // TODO: Implement format() method.
-    \debug([
+    \dump([
       'Subject' => $message['subject'],
       'Body' => $message['body'],
       'Headers' => $message['headers'],

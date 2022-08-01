@@ -24,6 +24,8 @@
     display_id: '',
     list: {},
     $summary: null,
+    $actionSelect: null,
+    vbo_form: null,
 
     /**
      * Bind event handlers to an element.
@@ -54,6 +56,38 @@
       }
     },
 
+    bindCheckboxes: function () {
+      var selectionObject = this;
+      var checkboxes = $('.form-checkbox', this.vbo_form);
+      checkboxes.on('change', function (event) {
+        selectionObject.toggleButtonsState();
+      });
+    },
+
+    toggleButtonsState: function() {
+      // If no rows are checked, disable any form submit actions.
+      var checkedCheckboxes = $('.form-checkbox:checked', this.vbo_form);
+      var buttons = $('[id^="edit-actions"] input[type="submit"], [id^="edit-actions"] button[type="submit"]', this.vbo_form);
+      var selectedAjaxItems = $('.vbo-info-list-wrapper li', this.vbo_form);
+      var anyItemsSelected = selectedAjaxItems.length || checkedCheckboxes.length;
+      if (this.$actionSelect.length) {
+        var has_selection = anyItemsSelected && this.$actionSelect.val() !== '';
+        buttons.prop('disabled', !has_selection);
+      }
+      else {
+        buttons.prop('disabled', !anyItemsSelected);
+      }
+    },
+
+    bindActionSelect: function () {
+      if (this.$actionSelect.length) {
+        var selectionObject = this;
+        this.$actionSelect.on('change', function (event) {
+          selectionObject.toggleButtonsState();
+        });
+      }
+    },
+
     /**
      * Perform an AJAX request to update selection.
      *
@@ -68,6 +102,7 @@
       if (this.view_id.length && this.display_id.length) {
         // TODO: prevent form submission when ajaxing.
 
+        var selectionObject = this;
         var list = {}, op = '';
         if (index === 'selection_method_change') {
           var op = state ? 'method_exclude' : 'method_include';
@@ -97,7 +132,8 @@
           },
           success: function (data) {
             $selectionInfo.html(data.selection_info);
-            $summary.text(Drupal.formatPlural(data.count, 'Selected 1 item in this view', 'Selected @count items in this view'));
+            $summary.text(Drupal.formatPlural(data.count, 'Selected 1 item', 'Selected @count items'));
+            selectionObject.toggleButtonsState();
           }
         });
       }
@@ -112,6 +148,8 @@
     var $viewsTables = $('.vbo-table', $vboForm);
     var $primarySelectAll = $('.vbo-select-all', $vboForm);
     var tableSelectAll = [];
+    Drupal.viewsBulkOperationsSelection.vbo_form = $vboForm;
+    Drupal.viewsBulkOperationsSelection.$actionSelect = $('select[name="action"]', $vboForm);
 
     // When grouping is enabled, there can be multiple tables.
     if ($viewsTables.length) {
@@ -129,7 +167,6 @@
       Drupal.viewsBulkOperationsSelection.$summary = $multiSelectElement.find('summary').first();
       Drupal.viewsBulkOperationsSelection.view_id = $multiSelectElement.attr('data-view-id');
       Drupal.viewsBulkOperationsSelection.display_id = $multiSelectElement.attr('data-display-id');
-      Drupal.viewsBulkOperationsSelection.vbo_form = $vboForm;
 
       // Get the list of all checkbox values and add AJAX callback.
       Drupal.viewsBulkOperationsSelection.list = [];
@@ -194,6 +231,9 @@
         Drupal.viewsBulkOperationsSelection.bindEventHandlers($primarySelectAll, 'selection_method_change');
       }
     }
+    Drupal.viewsBulkOperationsSelection.bindCheckboxes();
+    Drupal.viewsBulkOperationsSelection.bindActionSelect();
+    Drupal.viewsBulkOperationsSelection.toggleButtonsState();
   };
 
 })(jQuery, Drupal);

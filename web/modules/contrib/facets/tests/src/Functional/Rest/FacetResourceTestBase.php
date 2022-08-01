@@ -77,6 +77,8 @@ abstract class FacetResourceTestBase extends EntityResourceTestBase {
       'id' => 'owl',
       'langcode' => 'en',
       'min_count' => 1,
+      'missing' => FALSE,
+      'missing_label' => 'others',
       'name' => NULL,
       'only_visible_when_facet_source_is_visible' => NULL,
       'processor_configs' => [
@@ -111,6 +113,19 @@ abstract class FacetResourceTestBase extends EntityResourceTestBase {
    */
   protected function getNormalizedPostEntity() {
     // @todo Update after https://www.drupal.org/node/2300677.
+  }
+
+  /**
+   * The expected cache contexts for the GET/HEAD response of the test entity.
+   *
+   * @see ::testGet
+   *
+   * @return string[]
+   */
+  protected function getExpectedCacheContexts() {
+    return array_merge(parent::getExpectedCacheContexts(), [
+      'url.query_args',
+    ]);
   }
 
 }

@@ -5,6 +5,7 @@
   ]
 %}
 {% set is_nested = true %}
+<input type="hidden" name="{{ element["#name"] }}" value="{{ element["#value"] }}" />
 <div{{ attributes.addClass(classes) }}>
   {% set current_nesting_level = 0 %}
   {% for child in children %}

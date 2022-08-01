@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\facets\FacetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
@@ -21,6 +22,8 @@ use Drupal\facets\Plugin\facets\query_type\SearchApiDate;
  * )
  */
 class DateItemProcessor extends ProcessorPluginBase implements BuildProcessorInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * {@inheritdoc}

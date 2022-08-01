@@ -50,6 +50,38 @@ interface ResultInterface {
   public function setCount($count);
 
   /**
+   * Set if this result represents the "missing" facet item.
+   *
+   * @return bool
+   *   True if this result represents the missing facet item.
+   */
+  public function isMissing(): bool;
+
+  /**
+   * Returns true if this result represents the "missing" facet item.
+   *
+   * @param bool $missing
+   *   True if this result represents the missing facet item.
+   */
+  public function setMissing(bool $missing);
+
+  /**
+   * Get the filter values of the non-missing values to be inverted.
+   *
+   * @return array
+   *   The filter values of the non-missing values to be inverted.
+   */
+  public function getMissingFilters(): array;
+
+  /**
+   * Set the filter values of the non-missing values to be inverted.
+   *
+   * @param array $filters
+   *   The filter values of the non-missing values to be inverted.
+   */
+  public function setMissingFilters(array $filters);
+
+  /**
    * Returns the url.
    *
    * @return \Drupal\Core\Url

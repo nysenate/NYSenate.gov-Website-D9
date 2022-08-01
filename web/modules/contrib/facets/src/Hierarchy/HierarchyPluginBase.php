@@ -2,6 +2,8 @@
 
 namespace Drupal\facets\Hierarchy;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
@@ -9,17 +11,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A base class for plugins that implements most of the boilerplate.
+ *
+ * By default all plugins that will extend this class will disable facets
+ * caching mechanism. It is strongly recommended to turn it on by implementing
+ * own methods for the CacheableDependencyInterface interface.
  */
-abstract class HierarchyPluginBase extends ProcessorPluginBase implements HierarchyInterface, ContainerFactoryPluginInterface {
+abstract class HierarchyPluginBase extends ProcessorPluginBase implements HierarchyInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
+
+  use UncacheableDependencyTrait;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $request_stack = $container->get('request_stack');
-    // Support 9.3+.
-    // @todo remove switch after 9.3 or greater is required.
-    $request = version_compare(\Drupal::VERSION, '9.3', '>=') ? $request_stack->getMainRequest() : $request_stack->getMasterRequest();
+    $request = $request_stack->getMainRequest();
 
     return new static($configuration, $plugin_id, $plugin_definition, $request);
   }

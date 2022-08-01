@@ -28,7 +28,7 @@ class SplitMergeTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'language',
     'user',

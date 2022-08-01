@@ -128,8 +128,8 @@ class FormAlter implements ContainerInjectionInterface {
         ],
       ];
       $third_party_settings = $display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction', []);
-      $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
-      $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
+      $allowlisted_blocks = (isset($third_party_settings['allowlisted_blocks'])) ? $third_party_settings['allowlisted_blocks'] : [];
+      $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'])) ? $third_party_settings['denylisted_blocks'] : [];
       $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
       $allowed_block_categories = $display->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
 
@@ -148,11 +148,11 @@ class FormAlter implements ContainerInjectionInterface {
         $category_is_restricted = (!empty($allowed_block_categories) && !in_array($category, $allowed_block_categories));
         // The category is 'restricted' if it's already been specified as such,
         // or if the default behavior for new categories indicate such.
-        if (in_array($category, array_keys($whitelisted_blocks))) {
-          $category_setting = 'whitelisted';
+        if (in_array($category, array_keys($allowlisted_blocks))) {
+          $category_setting = 'allowlisted';
         }
-        elseif (in_array($category, array_keys($blacklisted_blocks))) {
-          $category_setting = 'blacklisted';
+        elseif (in_array($category, array_keys($denylisted_blocks))) {
+          $category_setting = 'denylisted';
         }
         elseif ($category_is_restricted) {
           $category_setting = 'restrict_all';
@@ -168,8 +168,8 @@ class FormAlter implements ContainerInjectionInterface {
           '#options' => [
             "all" => $this->t('Allow all existing & new %category blocks.', ['%category' => $data['label']]),
             "restrict_all" => $this->t('Restrict all existing & new %category blocks.', ['%category' => $data['label']]),
-            "whitelisted" => $this->t('Allow specific %category blocks:', ['%category' => $data['label']]),
-            "blacklisted" => $this->t('Restrict specific %category blocks:', ['%category' => $data['label']]),
+            "allowlisted" => $this->t('Allow specific %category blocks:', ['%category' => $data['label']]),
+            "denylisted" => $this->t('Restrict specific %category blocks:', ['%category' => $data['label']]),
           ],
           '#default_value' => $category_setting,
           '#parents' => [
@@ -190,10 +190,10 @@ class FormAlter implements ContainerInjectionInterface {
         ];
         foreach ($data['definitions'] as $block_id => $block) {
           $enabled = FALSE;
-          if ($category_setting == 'whitelisted' && isset($whitelisted_blocks[$category]) && in_array($block_id, $whitelisted_blocks[$category])) {
+          if ($category_setting == 'allowlisted' && isset($allowlisted_blocks[$category]) && in_array($block_id, $allowlisted_blocks[$category])) {
             $enabled = TRUE;
           }
-          elseif ($category_setting == 'blacklisted' && isset($blacklisted_blocks[$category]) && in_array($block_id, $blacklisted_blocks[$category])) {
+          elseif ($category_setting == 'denylisted' && isset($denylisted_blocks[$category]) && in_array($block_id, $denylisted_blocks[$category])) {
             $enabled = TRUE;
           }
           $category_form['available_blocks'][$block_id] = [
@@ -278,8 +278,8 @@ class FormAlter implements ContainerInjectionInterface {
   public function entityFormEntityBuild($entity_type_id, LayoutEntityDisplayInterface $display, &$form, FormStateInterface &$form_state) {
     $third_party_settings = $display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction');
     $block_restrictions = $this->setAllowedBlocks($form_state);
-    $third_party_settings['whitelisted_blocks'] = isset($block_restrictions['whitelisted']) ? $block_restrictions['whitelisted'] : [];
-    $third_party_settings['blacklisted_blocks'] = isset($block_restrictions['blacklisted']) ? $block_restrictions['blacklisted'] : [];
+    $third_party_settings['allowlisted_blocks'] = $block_restrictions['allowlisted'] ?? [];
+    $third_party_settings['denylisted_blocks'] = $block_restrictions['denylisted'] ?? [];
     $third_party_settings['restricted_categories'] = $block_restrictions['restricted_categories'];
     $third_party_settings['allowed_layouts'] = $this->setAllowedLayouts($form_state);
     $allowed_block_categories = $this->setAllowedBlockCategories($form_state, $display);
@@ -307,7 +307,7 @@ class FormAlter implements ContainerInjectionInterface {
     if (!empty($categories)) {
       foreach ($categories as $category => $settings) {
         $restriction_type = $settings['restriction'];
-        if (in_array($restriction_type, ['whitelisted', 'blacklisted'])) {
+        if (in_array($restriction_type, ['allowlisted', 'denylisted'])) {
           $block_restrictions[$restriction_type][$category] = [];
           foreach ($settings['available_blocks'] as $block_id => $block_setting) {
             if ($block_setting == '1') {
@@ -364,7 +364,7 @@ class FormAlter implements ContainerInjectionInterface {
       'allowed_block_categories',
     ]);
     if ($block_category_default == 'restricted') {
-      // Create a whitelist of categories whose blocks should be allowed.
+      // Create a allowlist of categories whose blocks should be allowed.
       // Newly available categories' blocks not in this list will be
       // disallowed.
       $allowed_block_categories = array_keys($this->getBlockDefinitions($display));

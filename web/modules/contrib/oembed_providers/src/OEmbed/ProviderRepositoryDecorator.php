@@ -194,8 +194,9 @@ final class ProviderRepositoryDecorator implements ProviderRepositoryInterface {
         $keyed_providers[$name] = new Provider($provider['provider_name'], $provider['provider_url'], $provider['endpoints']);
       }
       catch (ProviderException $e) {
-        // Just skip all the invalid providers.
-        // @todo Log the exception message to help with debugging.
+        // Skip invalid providers, but log the exception message to help with
+        // debugging.
+        $this->logger->warning($e->getMessage());
       }
     }
     $this->keyValue->set('oembed_providers', [

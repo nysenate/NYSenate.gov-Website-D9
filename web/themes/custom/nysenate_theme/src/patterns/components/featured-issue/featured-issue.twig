@@ -1,0 +1,44 @@
+{{ attach_library('nysenate_theme/featured-issue') }}
+
+<div class="{% if main_issue %} c-event-cluster c-event-cluster-featured-issue {% else %} c-container c-news-container featured-issue {% endif %}">
+  <div class="c-container--header">
+    <h2 class="c-container--title">Featured Issue:
+      <a href="{{ featured_issue_link }}">{{ featured_issue_name }}</a>
+    </h2>
+  </div>
+
+  {% if main_issue %}
+    <div class="l-left">
+      {% if main_issue.large_image %}
+        <a class="c-link c-link-with-image" href="{{ main_issue.link }}">
+          <div class="c-event-image">{{ main_issue.large_image }}</div>
+        </a>
+      {% endif %}
+      <a class="c-link" href="{{ main_issue.link }}">
+        <h3 class="c-link-title">{{ main_issue.title }}</h3>
+        <a class="c-press-release--topic" href="{{ featured_issue_link }}">{{ featured_issue_name }}</a>
+      </a>
+    </div>
+    <div class="l-right">
+      {% for issue in issues %}
+        <a class="c-link {% if issue.thumb_image %} c-link-with-image {% endif %}" href="{{ issue.link }}">
+          <div class="c-link-image">{{ issue.thumb_image }}</div>
+          <h3 class="c-link-title">{{ issue.title }}</h3>
+          <a class="c-press-release--topic" href="{{ featured_issue_link }}">{{ featured_issue_name }}</a>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    {% for issue in issues %}
+      <div class="c-news-block {% if loop.first %} first {% elseif loop.index is even %} even {% elseif loop.index is odd %} odd {% endif %}">
+        <div class="c-title">{{ issue.title }}</div>
+        {% if issue.newsroom %}
+          <div class="c-newsroom-name">
+            <a href="{{ issue.newsroom.link_url }}">{{ issue.newsroom.link_text }}</a>
+          </div>
+        {% endif %}
+        <a class="c-press-release--topic" href="{{ featured_issue_link }}">{{ featured_issue_name }}</a>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>

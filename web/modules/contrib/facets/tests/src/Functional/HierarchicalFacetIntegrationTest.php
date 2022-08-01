@@ -383,7 +383,7 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
    */
   public function testHierarchyBreadcrumb() {
     $this->drupalGet('admin/config/search/facets');
-    $this->clickLink('Configure', 1);
+    $this->clickLink('Configure', 2);
     $default_config = [
       'filter_key' => 'f',
       'url_processor' => 'query_string',

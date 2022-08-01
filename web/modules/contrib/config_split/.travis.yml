@@ -1,0 +1,25 @@
+language: minimal
+
+services:
+  - docker
+
+jobs:
+  include:
+    - env: DRUPAL_VERSION=8.8
+    - env: DRUPAL_VERSION=9
+
+before_script:
+  - docker-compose up -d
+  - docker-compose run -u root drupal composer require drupal/core-recommended $DRUPAL_VERSION
+  - docker-compose run -u root drupal composer si
+
+script:
+  # This is also run by grumphp, but running it individually gives more output on travis
+  - docker-compose run drupal composer phpcs
+  - docker-compose run drupal composer lint
+  # The phpunit 8 compatibility wants to write to the sites/simpletest folder
+  - docker-compose run -u root drupal composer unit
+  - docker-compose run -u root drupal composer phpstan
+
+notifications:
+  email: false

@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,6 +23,8 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * )
  */
 class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessorInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * {@inheritdoc}

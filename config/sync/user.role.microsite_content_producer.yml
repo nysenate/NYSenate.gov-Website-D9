@@ -8,7 +8,9 @@ dependencies:
     - node.type.petition
     - taxonomy.vocabulary.senator
   module:
+    - block
     - field_permissions
+    - layout_builder
     - node
     - system
     - taxonomy
@@ -22,6 +24,8 @@ permissions:
   - 'access content overview'
   - 'access taxonomy overview'
   - 'access toolbar'
+  - 'administer blocks'
+  - 'create and edit custom blocks'
   - 'create article content'
   - 'create event content'
   - 'create field_featured'

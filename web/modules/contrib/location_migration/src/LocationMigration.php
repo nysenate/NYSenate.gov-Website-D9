@@ -2,8 +2,11 @@
 
 namespace Drupal\location_migration;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Driver\sqlite\Connection as DeprecatedSqliteConnection;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\sqlite\Driver\Database\sqlite\Connection as SqliteConnection;
 
 /**
  * Constants and migration-related helper functions for location migrations.
@@ -235,6 +238,19 @@ final class LocationMigration {
    */
   public static function getWwwFieldName(string $field_name): string {
     return mb_substr($field_name, 0, FieldStorageConfig::NAME_MAX_LENGTH - mb_strlen(LocationMigration::WWW_FIELD_NAME_SUFFIX)) . LocationMigration::WWW_FIELD_NAME_SUFFIX;
+  }
+
+  /**
+   * Determines whether the given connection is a sqlite connection or not.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The connection to check.
+   *
+   * @return bool
+   *   Whether the given connection is a sqlite connection.
+   */
+  public static function connectionIsSqlite(Connection $connection): bool {
+    return ($connection instanceof DeprecatedSqliteConnection) || ($connection instanceof SqliteConnection);
   }
 
 }

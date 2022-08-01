@@ -38,11 +38,7 @@ class EntityDeleteAction extends ViewsBulkOperationsActionBase {
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    $access = $object->access('delete', $account, TRUE);
-    if ($object->getEntityType() === 'node') {
-      $access->andIf($object->status->access('delete', $account, TRUE));
-    }
-    return $return_as_object ? $access : $access->isAllowed();
+    return $object->access('delete', $account, $return_as_object);
   }
 
 }

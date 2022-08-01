@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
@@ -19,6 +20,8 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * )
  */
 class HideOnlyOneItemProcessor extends ProcessorPluginBase implements BuildProcessorInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * {@inheritdoc}

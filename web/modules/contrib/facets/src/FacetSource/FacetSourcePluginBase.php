@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\FacetSource;
 
+use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,6 +12,11 @@ use Drupal\facets\QueryType\QueryTypePluginManager;
 
 /**
  * Defines a base class from which other facet sources may extend.
+ *
+ * By default all plugins that will extend this class will disable facets
+ * caching mechanism. It is strongly recommended to turn it on by implementing
+ * own methods for the CacheableDependencyInterface interface and
+ * ::registerFacet() method.
  *
  * Plugins extending this class need to define a plugin definition array through
  * annotation. The definition includes the following keys:
@@ -24,6 +30,7 @@ use Drupal\facets\QueryType\QueryTypePluginManager;
  * @see plugin_api
  */
 abstract class FacetSourcePluginBase extends PluginBase implements FacetSourcePluginInterface, ContainerFactoryPluginInterface {
+  use UncacheableDependencyTrait;
 
   /**
    * The plugin manager.
@@ -151,6 +158,12 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourcePl
     $facet_source_id = $this->facet->getFacetSourceId();
     $field_identifier = $form_state->getValue('facet_source_configs')[$facet_source_id]['field_identifier'];
     $this->facet->setFieldIdentifier($field_identifier);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function registerFacet(FacetInterface $facet) {
   }
 
 }

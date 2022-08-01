@@ -8,7 +8,7 @@ layout_builder_restrictions.entity_view_mode_restriction_by_region:
       sequence:
         type: string
         label: 'Layout ID'
-    whitelisted_blocks:
+    allowlisted_blocks:
       type: sequence
       label: 'Layouts to be restricted'
       sequence:
@@ -23,7 +23,7 @@ layout_builder_restrictions.entity_view_mode_restriction_by_region:
             sequence:
               type: string
               label: Category
-    blacklisted_blocks:
+    denylisted_blocks:
       type: sequence
       label: 'Layouts to be restricted'
       sequence:
@@ -50,4 +50,3 @@ layout_builder_restrictions.entity_view_mode_restriction_by_region:
           sequence:
             type: string
             label: 'Region restrictions'
-

@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\hierarchy;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\facets\Hierarchy\HierarchyPluginBase;
 
 /**
@@ -14,6 +15,8 @@ use Drupal\facets\Hierarchy\HierarchyPluginBase;
  * )
  */
 class DateItems extends HierarchyPluginBase {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * Static cache for the parents.

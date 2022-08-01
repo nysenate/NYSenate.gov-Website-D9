@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block content.
+ *
+ * @see template_preprocess_block_content_template()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% include "@nysenate_theme/nysenate-promotional-banner-list/nysenate-promotional-banner-list.twig" with {
+  banners: promotional_banners,
+} only %}

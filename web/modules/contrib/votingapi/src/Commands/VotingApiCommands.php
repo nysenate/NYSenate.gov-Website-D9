@@ -20,9 +20,6 @@ class VotingApiCommands extends DrushCommands {
    *   The type of entity to generate votes for.
    * @param string $vote_type
    *   The type of votes to generate, defaults to 'percent'.
-   * @param array $options
-   *   An associative array of options whose values come from cli, aliases,
-   *   config, etc.
    *
    * @command voting:generate
    * @aliases genv,generate-votes
@@ -39,13 +36,7 @@ class VotingApiCommands extends DrushCommands {
    * @usage drush voting:generate [entity_type]
    *   Creates dummy voting data for the specified entity type.
    */
-  public function votes($entity_type, $vote_type, array $options = []) {
-    $options += [
-      'kill_votes' => NULL,
-      'age' => NULL,
-      'node_types' => NULL,
-    ];
-
+  public function votes($entity_type, $vote_type = 'percent', array $options = ['kill_votes' => NULL, 'age' => NULL, 'node_types' => NULL]) {
     $this->generateVotes($entity_type, $vote_type, $options);
 
     $this->logger->success(dt('Generated @vtype votes for @etype entities.', [

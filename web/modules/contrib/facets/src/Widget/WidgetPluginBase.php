@@ -81,12 +81,6 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
         'class' => [$facet->getActiveItems() ? 'facet-active' : 'facet-inactive'],
       ],
       '#context' => !empty($widget['type']) ? ['list_style' => $widget['type']] : [],
-      '#cache' => [
-        'contexts' => [
-          'url.path',
-          'url.query_args',
-        ],
-      ],
     ];
   }
 

@@ -84,18 +84,18 @@ class AllowedBlocksForm extends FormBase {
   protected $tempData;
 
   /**
-   * An array of whitelisted blocks, by category.
+   * An array of allowlisted blocks, by category.
    *
    * @var array
    */
-  protected $whitelistedBlocks;
+  protected $allowlistedBlocks;
 
   /**
-   * An array of blacklisted blocks, by category.
+   * An array of denylisted blocks, by category.
    *
    * @var array
    */
-  protected $blacklistedBlocks;
+  protected $denylistedBlocks;
 
   /**
    * An array of restricted block categories.
@@ -159,8 +159,8 @@ class AllowedBlocksForm extends FormBase {
     $this->regionId = $current_request->query->get('region_id');
     $this->allowedBlockCategories = $display->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
     $third_party_settings = $display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction_by_region', []);
-    $this->whitelistedBlocks = (isset($third_party_settings['whitelisted_blocks'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['whitelisted_blocks'][$this->layoutPluginId][$this->regionId] : [];
-    $this->blacklistedBlocks = (isset($third_party_settings['blacklisted_blocks'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['blacklisted_blocks'][$this->layoutPluginId][$this->regionId] : [];
+    $this->allowlistedBlocks = (isset($third_party_settings['allowlisted_blocks'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['allowlisted_blocks'][$this->layoutPluginId][$this->regionId] : [];
+    $this->denylistedBlocks = (isset($third_party_settings['denylisted_blocks'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['denylisted_blocks'][$this->layoutPluginId][$this->regionId] : [];
     $this->restrictedCategories = (isset($third_party_settings['restricted_categories'][$this->layoutPluginId][$this->regionId])) ? $third_party_settings['restricted_categories'][$this->layoutPluginId][$this->regionId] : [];
   }
 
@@ -231,8 +231,8 @@ class AllowedBlocksForm extends FormBase {
         '#options' => [
           "all" => $this->t('Allow all existing & new %category blocks.', ['%category' => $data['label']]),
           "restrict_all" => $this->t('Restrict all existing & new %category blocks.', ['%category' => $data['label']]),
-          "whitelisted" => $this->t('Allow specific %category blocks:', ['%category' => $data['label']]),
-          "blacklisted" => $this->t('Restrict specific %category blocks:', ['%category' => $data['label']]),
+          "allowlisted" => $this->t('Allow specific %category blocks:', ['%category' => $data['label']]),
+          "denylisted" => $this->t('Restrict specific %category blocks:', ['%category' => $data['label']]),
         ],
         '#parents' => [
           'allowed_blocks',
@@ -336,7 +336,7 @@ class AllowedBlocksForm extends FormBase {
       foreach ($categories as $category => $category_setting) {
         $restriction_type = $category_setting['restriction'];
         $block_restrictions[$category]['restriction_type'] = $restriction_type;
-        if (in_array($restriction_type, ['whitelisted', 'blacklisted'])) {
+        if (in_array($restriction_type, ['allowlisted', 'denylisted'])) {
           foreach ($category_setting['allowed_blocks'] as $block_id => $block_setting) {
             if ($block_setting == '1') {
               // Include only checked blocks.
@@ -388,7 +388,7 @@ class AllowedBlocksForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
   /**
-   * Business logic to set category to 'all', 'whitelisted' or 'blacklisted'.
+   * Business logic to set category to 'all', 'allowlisted' or 'denylisted'.
    *
    * @param string $category
    *   The block's category.
@@ -396,7 +396,7 @@ class AllowedBlocksForm extends FormBase {
    *   The data stored between AJAX submits or null.
    *
    * @return string
-   *   The value 'all', 'whitelisted', 'blacklisted', or 'restrict_all'.
+   *   The value 'all', 'allowlisted', 'denylisted', or 'restrict_all'.
    */
   protected function getCategoryBehavior($category, $temp_data) {
     // Check whether this is a newly available category that has been
@@ -408,18 +408,18 @@ class AllowedBlocksForm extends FormBase {
       return $temp_data[$category]['restriction_type'];
     }
     else {
-      if (isset($this->whitelistedBlocks) && in_array($category, array_keys($this->whitelistedBlocks))) {
-        return "whitelisted";
+      if (isset($this->allowlistedBlocks) && in_array($category, array_keys($this->allowlistedBlocks))) {
+        return "allowlisted";
       }
-      elseif (isset($this->blacklistedBlocks) && in_array($category, array_keys($this->blacklistedBlocks))) {
-        return "blacklisted";
+      elseif (isset($this->denylistedBlocks) && in_array($category, array_keys($this->denylistedBlocks))) {
+        return "denylisted";
       }
       elseif (in_array($category, $this->restrictedCategories)) {
         return 'restrict_all';
       }
       elseif ($category_is_restricted) {
         // If there is no configuration, but the category hasn't been 'allowed',
-        // use 'whitelisted' to preset this as if all blocks were restricted.
+        // use 'allowlisted' to preset this as if all blocks were restricted.
         return "restrict_all";
       }
       else {
@@ -429,7 +429,7 @@ class AllowedBlocksForm extends FormBase {
   }
 
   /**
-   * Business logic to set category to 'all', 'whitelisted' or 'blacklisted'.
+   * Business logic to set category to 'all', 'allowlisted' or 'denylisted'.
    *
    * @param string $block_id
    *   The Drupal block ID.
@@ -452,11 +452,11 @@ class AllowedBlocksForm extends FormBase {
       }
     }
     else {
-      if (isset($this->whitelistedBlocks[$category])) {
-        return in_array($block_id, $this->whitelistedBlocks[$category]);
+      if (isset($this->allowlistedBlocks[$category])) {
+        return in_array($block_id, $this->allowlistedBlocks[$category]);
       }
-      if (isset($this->blacklistedBlocks[$category])) {
-        return in_array($block_id, $this->blacklistedBlocks[$category]);
+      if (isset($this->denylistedBlocks[$category])) {
+        return in_array($block_id, $this->denylistedBlocks[$category]);
       }
       else {
         return FALSE;

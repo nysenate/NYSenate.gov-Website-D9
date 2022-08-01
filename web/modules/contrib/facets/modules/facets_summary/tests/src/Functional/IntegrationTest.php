@@ -249,6 +249,7 @@ class IntegrationTest extends FacetsTestBase {
       'id' => $id,
       'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
     ];
+
     $this->drupalGet('admin/config/search/facets/add-facet-summary');
     $this->submitForm($values, 'Save');
     $this->assertSession()->pageTextContains('Caching of view Search API Test Fulltext search view has been disabled.');

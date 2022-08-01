@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\UrlProcessor\UrlProcessorInterface;
+use Drupal\facets\Utility\FacetsUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -273,10 +274,15 @@ class LinksWidgetTest extends WidgetTestBase {
       ->method('getStorage')
       ->willReturn($storage);
 
+    $facets_url_generator = $this->getMockBuilder(FacetsUrlGenerator::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $container = new ContainerBuilder();
     $container->set('router.no_access_checks', $router);
     $container->set('entity_type.manager', $em);
     $container->set('plugin.manager.facets.url_processor', $manager);
+    $container->set('facets.utility.url_generator', $facets_url_generator);
     \Drupal::setContainer($container);
   }
 

@@ -7,6 +7,7 @@ use Drupal\views\Views;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\views_bulk_operations\ViewsBulkOperationsBatch;
 use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionInterface;
@@ -304,7 +305,9 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
       $batch_list = $list;
     }
 
-    $this->view->setItemsPerPage($batch_size);
+    // Note: this needs to be set to 0 because otherwise we may lose
+    // entity translations from the results.
+    $this->view->setItemsPerPage(0);
     $this->view->setCurrentPage(0);
     $this->view->setOffset(0);
     $this->view->initHandlers();
@@ -326,7 +329,7 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
     // Modify the view query: determine and apply the base field condition.
     $base_field_values = [];
     foreach ($batch_list as $item) {
-      $base_field_values[] = $item[0];
+      $base_field_values[$item[0]] = $item[0];
     }
     if (empty($base_field_values)) {
       return 0;
@@ -367,21 +370,21 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
     // Get entities.
     $this->viewDataService->init($this->view, $this->view->getDisplay(), $this->bulkFormData['relationship_id']);
 
-    foreach ($this->view->result as $row_index => $row) {
-      // This may return rows for all possible languages.
-      // Check if the current language is on the list.
-      $found = FALSE;
-      $entity = $this->viewDataService->getEntity($row);
-      foreach ($batch_list as $delta => $item) {
+    // Get all the entities in the batch_list from the view.
+    // Check labnguage as well as the query will fetch results basing on
+    // base ID field for all languages.
+    $result_hits = [];
+    foreach ($batch_list as $delta => $item) {
+      foreach ($this->view->result as $row_index => $row) {
+        if (array_key_exists($row_index, $result_hits)) {
+          continue;
+        }
+        $entity = $this->viewDataService->getEntity($row);
         if ($row->{$base_field} === $item[0] && $entity->language()->getId() === $item[1]) {
+          $result_hits[$row_index] = TRUE;
           $this->queue[] = $entity;
-          $found = TRUE;
-          unset($batch_list[$delta]);
           break;
         }
-      }
-      if (!$found) {
-        unset($this->view->result[$row_index]);
       }
     }
 
@@ -478,6 +481,25 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
 
     // Process queue.
     $results = $this->action->executeMultiple($this->queue);
+
+    // Prepare for the next major change: type hinting.
+    if ($this->action instanceof ViewsBulkOperationsActionInterface) {
+      $deprecated = FALSE;
+      if (!is_array($results)) {
+        $deprecated = TRUE;
+      }
+      else {
+        foreach ($results as $result) {
+          if (!$result instanceof MarkupInterface) {
+            $deprecated = TRUE;
+            break;
+          }
+        }
+      }
+      if ($deprecated) {
+        @trigger_error(sprintf('The executeMultiple method of the %s class must return an array of \Drupal\Component\Render\MarkupInterface, other return types are deprecated.', E_USER_DEPRECATED));
+      }
+    }
 
     // Populate output.
     if (empty($results)) {

@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
@@ -12,7 +13,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * The URL processor handler triggers the actual url processor.
  *
  * The URL processor handler allows managing the weight of the actual URL
- * processor per Facet.  This handler will trigger the actual.
+ * processor per Facet. This handler will trigger the actual.
  *
  * @FacetsUrlProcessor, which can be configured on the Facet source.
  *
@@ -80,6 +81,27 @@ class UrlProcessorHandler extends ProcessorPluginBase implements BuildProcessorI
    */
   public function preQuery(FacetInterface $facet) {
     $this->processor->setActiveItems($facet);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return CacheableMetadata::createFromObject($this->processor)->getCacheTags();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return CacheableMetadata::createFromObject($this->processor)->getCacheContexts();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return CacheableMetadata::createFromObject($this->processor)->getCacheMaxAge();
   }
 
 }

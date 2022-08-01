@@ -3,6 +3,7 @@
 namespace Drupal\facets\FacetSource;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\facets\FacetInterface;
 
@@ -15,7 +16,7 @@ use Drupal\facets\FacetInterface;
  *
  * @see plugin_api
  */
-interface FacetSourcePluginInterface extends PluginFormInterface, DependentPluginInterface {
+interface FacetSourcePluginInterface extends PluginFormInterface, DependentPluginInterface, CacheableDependencyInterface {
 
   /**
    * Fills the facet entities with results from the facet source.
@@ -114,5 +115,17 @@ interface FacetSourcePluginInterface extends PluginFormInterface, DependentPlugi
    * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay
    */
   public function buildFacet();
+
+  /**
+   * Register newly added facet within its source.
+   *
+   * Add facet cache tags and contexts into the facet source, to make sure that
+   * search results will change whenever facets will be updated. Usually can be
+   * achieved by adding facet entity as a cache dependency to a search results.
+   *
+   * @param \Drupal\facets\FacetInterface $facet
+   *   Facet entity that being inserted.
+   */
+  public function registerFacet(FacetInterface $facet);
 
 }

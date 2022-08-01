@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
@@ -24,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class CombineFacetProcessor extends ProcessorPluginBase implements BuildProcessorInterface, ContainerFactoryPluginInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * The language manager.
@@ -148,7 +151,6 @@ class CombineFacetProcessor extends ProcessorPluginBase implements BuildProcesso
       /** @var \Drupal\facets\Entity\Facet $current_facet */
       $current_facet = $this->facetStorage->load($facet_id);
       $current_facet = $this->facetsManager->returnBuiltFacet($current_facet);
-
       switch ($settings['mode']) {
         case 'union':
           $results = $keyed_results + $current_facet->getResultsKeyedByRawValue();
@@ -162,6 +164,8 @@ class CombineFacetProcessor extends ProcessorPluginBase implements BuildProcesso
           $results = array_intersect_key($keyed_results, $current_facet->getResultsKeyedByRawValue());
           break;
       }
+      // Pass build processor information into current facet.
+      $facet->addCacheableDependency($current_facet);
     }
 
     return $results;

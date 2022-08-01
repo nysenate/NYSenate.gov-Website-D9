@@ -3,8 +3,10 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.default_comment.default
     - field.field.node.bill.field_bill_multi_session_root
     - field.field.node.bill.field_bill_no_issue_tags
+    - field.field.node.bill.field_comments
     - field.field.node.bill.field_issues
     - field.field.node.bill.field_majority_issue_tag
     - field.field.node.bill.field_metatags
@@ -46,9 +48,7 @@ dependencies:
     - field.field.node.bill.field_ol_votes
     - node.type.bill
   module:
-    - datetime
-    - entity_reference_revisions
-    - metatag
+    - comment
     - options
     - user
 id: node.bill.default
@@ -56,23 +56,14 @@ targetEntityType: node
 bundle: bill
 mode: default
 content:
-  field_bill_multi_session_root:
-    type: entity_reference_label
-    label: above
+  field_comments:
+    type: comment_default
+    label: hidden
     settings:
-      link: true
+      view_mode: default
+      pager_id: 0
     third_party_settings: {  }
-    weight: 41
-    region: content
-  field_bill_no_issue_tags:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 2
+    weight: 12
     region: content
   field_issues:
     type: entity_reference_label
@@ -80,66 +71,31 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 1
+    weight: 8
     region: content
   field_majority_issue_tag:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 3
-    region: content
-  field_metatags:
-    type: metatag_empty_formatter
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  field_ol_active_version:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 8
+    weight: 9
     region: content
   field_ol_add_sponsor_names:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 15
+    weight: 10
     region: content
   field_ol_add_sponsors:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      link: true
+      view_mode: sponsor_list
+      link: false
     third_party_settings: {  }
-    weight: 16
-    region: content
-  field_ol_all_actions:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 18
-    region: content
-  field_ol_all_statuses:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 17
-    region: content
-  field_ol_amendments:
-    type: basic_string
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-    weight: 24
+    weight: 11
     region: content
   field_ol_base_print_no:
     type: string
@@ -147,190 +103,28 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 7
+    weight: 3
     region: content
   field_ol_chamber:
     type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 5
-    region: content
-  field_ol_co_sponsor_names:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 33
-    region: content
-  field_ol_co_sponsors:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 32
-    region: content
-  field_ol_full_text:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 31
-    region: content
-  field_ol_has_same_as:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 26
-    region: content
-  field_ol_is_active_version:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 40
-    region: content
-  field_ol_is_amended:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 10
+    weight: 1
     region: content
   field_ol_last_status:
     type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 20
-    region: content
-  field_ol_last_status_date:
-    type: datetime_custom
-    label: hidden
-    settings:
-      timezone_override: ''
-      date_format: 'Y-m-d H:i:s'
-    third_party_settings: {  }
-    weight: 21
-    region: content
-  field_ol_latest_status:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 19
-    region: content
-  field_ol_latest_status_committee:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 22
-    region: content
-  field_ol_law_code:
-    type: basic_string
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-    weight: 29
-    region: content
-  field_ol_law_section:
-    type: string
-    label: inline
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 28
-    region: content
-  field_ol_memo:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 30
-    region: content
-  field_ol_multi_sponsor_names:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 35
-    region: content
-  field_ol_multi_sponsors:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 34
+    weight: 4
     region: content
   field_ol_name:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 11
-    region: content
-  field_ol_previous_versions:
-    type: basic_string
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-    weight: 25
-    region: content
-  field_ol_print_no:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 9
-    region: content
-  field_ol_program_info:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 38
-    region: content
-  field_ol_program_info_seq:
-    type: number_integer
-    label: above
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
-    third_party_settings: {  }
-    weight: 39
-    region: content
-  field_ol_publish_date:
-    type: datetime_custom
-    label: hidden
-    settings:
-      timezone_override: ''
-      date_format: 'Y-m-d H:i:s'
-    third_party_settings: {  }
-    weight: 12
-    region: content
-  field_ol_same_as:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 27
+    weight: 5
     region: content
   field_ol_session:
     type: number_integer
@@ -339,15 +133,16 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 6
+    weight: 2
     region: content
   field_ol_sponsor:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      link: true
+      view_mode: sponsor_list
+      link: false
     third_party_settings: {  }
-    weight: 13
+    weight: 6
     region: content
   field_ol_sponsor_name:
     type: string
@@ -355,31 +150,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 14
-    region: content
-  field_ol_substituted_by:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 37
-    region: content
-  field_ol_summary:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 23
-    region: content
-  field_ol_votes:
-    type: entity_reference_revisions_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    weight: 36
+    weight: 7
     region: content
   links:
     settings: {  }
@@ -387,5 +158,35 @@ content:
     weight: 0
     region: content
 hidden:
+  field_bill_multi_session_root: true
+  field_bill_no_issue_tags: true
+  field_metatags: true
+  field_ol_active_version: true
+  field_ol_all_actions: true
+  field_ol_all_statuses: true
+  field_ol_amendments: true
+  field_ol_co_sponsor_names: true
+  field_ol_co_sponsors: true
+  field_ol_full_text: true
+  field_ol_has_same_as: true
+  field_ol_is_active_version: true
+  field_ol_is_amended: true
+  field_ol_last_status_date: true
+  field_ol_latest_status: true
+  field_ol_latest_status_committee: true
+  field_ol_law_code: true
+  field_ol_law_section: true
+  field_ol_memo: true
+  field_ol_multi_sponsor_names: true
+  field_ol_multi_sponsors: true
+  field_ol_previous_versions: true
+  field_ol_print_no: true
+  field_ol_program_info: true
+  field_ol_program_info_seq: true
+  field_ol_publish_date: true
+  field_ol_same_as: true
+  field_ol_substituted_by: true
+  field_ol_summary: true
+  field_ol_votes: true
   langcode: true
   search_api_excerpt: true

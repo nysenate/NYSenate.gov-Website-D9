@@ -39,6 +39,20 @@ class Result implements ResultInterface {
   protected $count = 0;
 
   /**
+   * Indicates if this is the additional result item for "missing".
+   *
+   * @var bool
+   */
+  protected $missing = FALSE;
+
+  /**
+   * Other filters that might become active if result item isn't "missing".
+   *
+   * @var array
+   */
+  protected $missingFilters = [];
+
+  /**
    * The Url object.
    *
    * @var \Drupal\Core\Url
@@ -104,6 +118,36 @@ class Result implements ResultInterface {
    */
   public function setCount($count) {
     $this->count = (int) $count;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isMissing(): bool {
+    return $this->missing;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMissing(bool $missing) {
+    $this->missing = $missing;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMissingFilters(): array {
+    return $this->missingFilters;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMissingFilters(array $filters) {
+    $this->missingFilters = array_filter($filters, static function ($filter) {
+      return $filter !== '!';
+    });
   }
 
   /**

@@ -54,6 +54,8 @@ class ConfigSplitEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
 
       return $route;
     }
+
+    return NULL;
   }
 
 }

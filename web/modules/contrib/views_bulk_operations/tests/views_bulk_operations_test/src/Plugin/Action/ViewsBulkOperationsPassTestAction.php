@@ -21,7 +21,7 @@ class ViewsBulkOperationsPassTestAction extends ViewsBulkOperationsActionBase {
   /**
    * {@inheritdoc}
    */
-  public function executeMultiple(array $nodes) {
+  public function executeMultiple(array $nodes): array {
     if (!empty($this->context['sandbox'])) {
       $this->messenger()->addMessage(sprintf(
         'Processed %s of %s.',
@@ -54,6 +54,8 @@ class ViewsBulkOperationsPassTestAction extends ViewsBulkOperationsActionBase {
         $this->messenger()->addMessage('Passed view results match the entity queue.');
       }
     }
+
+    return [];
   }
 
   /**

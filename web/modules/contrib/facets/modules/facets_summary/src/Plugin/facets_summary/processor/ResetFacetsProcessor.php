@@ -51,9 +51,7 @@ class ResetFacetsProcessor extends ProcessorPluginBase implements BuildProcessor
     }
 
     $request_stack = \Drupal::requestStack();
-    // Support 9.3+.
-    // @todo remove switch after 9.3 or greater is required.
-    $request = version_compare(\Drupal::VERSION, '9.3', '>=') ? $request_stack->getMainRequest() : $request_stack->getMasterRequest();
+    $request = $request_stack->getMainRequest();
     $query_params = $request->query->all();
 
     // Bypass all active facets and remove them from the query parameters array.

@@ -47,7 +47,17 @@ class SearchApiString extends QueryTypePluginBase {
       if (count($active_items)) {
         $filter = $query->createConditionGroup($operator, ['facet:' . $field_identifier]);
         foreach ($active_items as $value) {
-          $filter->addCondition($this->facet->getFieldIdentifier(), $value, $exclude ? '<>' : '=');
+          if (str_starts_with($value, '!(')) {
+            /** @var \Drupal\facets\UrlProcessor\UrlProcessorInterface $urlProcessor */
+            $urlProcessor = $this->facet->getProcessors()['url_processor_handler']->getProcessor();
+            foreach (explode($urlProcessor->getDelimiter(), substr($value, 2, -1)) as $missing_value) {
+              // Note that $exclude needs to be inverted for "missing".
+              $filter->addCondition($this->facet->getFieldIdentifier(), $missing_value, !$exclude ? '<>' : '=');
+            }
+          }
+          else {
+            $filter->addCondition($this->facet->getFieldIdentifier(), $value, $exclude ? '<>' : '=');
+          }
         }
         $query->addConditionGroup($filter);
       }
@@ -63,8 +73,8 @@ class SearchApiString extends QueryTypePluginBase {
     if (!empty($this->results)) {
       $facet_results = [];
       foreach ($this->results as $result) {
-        if ($result['count'] || $query_operator == 'or') {
-          $result_filter = $result['filter'];
+        if ($result['count'] || $query_operator === 'or') {
+          $result_filter = $result['filter'] ?? '';
           if ($result_filter[0] === '"') {
             $result_filter = substr($result_filter, 1);
           }
@@ -73,10 +83,16 @@ class SearchApiString extends QueryTypePluginBase {
           }
           $count = $result['count'];
           $result = new Result($this->facet, $result_filter, $result_filter, $count);
-          $facet_results[] = $result;
+          $result->setMissing($this->facet->isMissing() && $result_filter === '!');
+          $facet_results[$result_filter] = $result;
         }
       }
-      $this->facet->setResults($facet_results);
+
+      if (isset($facet_results['!']) && $facet_results['!']->isMissing()) {
+        $facet_results['!']->setMissingFilters(array_keys($facet_results));
+      }
+
+      $this->facet->setResults(array_values($facet_results));
     }
 
     return $this->facet;

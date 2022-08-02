@@ -604,7 +604,7 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
 }
 
 /**
- * Implements hook_theme_suggestions_HOOK_alter().
+ * Implements hook_preprocess_views_view_unformatted().
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
@@ -1573,6 +1573,20 @@ function nysenate_theme_preprocess_page(&$variables) {
       ];
     }
     $variables['socials'] = $socials;
+  }
+
+  // Microsite theme settings.
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!empty($node) && $node->bundle() == 'microsite_page') {
+    if (!empty($node->field_senator_multiref)) {
+      $sid = $node->field_senator_multiref->target_id;
+      $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+        ->load($sid);
+
+      if (!empty($senator->field_microsite_theme)) {
+        $variables['theme'] = $senator->field_microsite_theme->value;
+      }
+    }
   }
 }
 

@@ -590,28 +590,29 @@ h3 {
   }
 }
 
+.nys-btn--gold {
+  transition: background-color 0.2s ease;
+  position: relative;
+  display: block;
+  padding: 20px 10px;
+  background: $yellow01;
+  color: $color-white;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+
+  &:hover {
+    color: $color-white;
+    background: $yellow03;
+  }
+}
+
 /*----------------------------------------
 / LIST ITEM 
 /----------------------------------------*/
 .c-list-item {
   padding-top: 20px;
   border-top: 1px solid $grey05;
-}
-
-.field {
-
-  &.field__items {
-    margin: 0 auto;
-    padding: 0 20px;
-    max-width: 440px;
-
-    @include breakpoint($bp-sm) {
-      padding: 0 40px;
-      max-width: 840px;
-    }
-  }
-
-  & > .field__item:not(:last-child) {
-    margin-bottom: 40px;
-  }
 }

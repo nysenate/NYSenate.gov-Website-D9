@@ -29,6 +29,6 @@
   with_bg: with_bg,
   is_two_column: is_two_column,
   contents: text,
-  title: content.field_title[0]['#context']['value'],
+  title: label_display == TRUE ? content.field_title[0]['#context']['value'] : '',
   link: link
 } only %}

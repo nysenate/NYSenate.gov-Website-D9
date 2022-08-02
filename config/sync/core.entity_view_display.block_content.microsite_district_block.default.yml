@@ -1,0 +1,24 @@
+uuid: 0b476fb7-9e8a-473a-a2e0-8d611c4f2fae
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_district_block
+    - field.field.block_content.microsite_district_block.field_district
+id: block_content.microsite_district_block.default
+targetEntityType: block_content
+bundle: microsite_district_block
+mode: default
+content:
+  field_district:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: district
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

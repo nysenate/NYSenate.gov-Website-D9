@@ -604,7 +604,7 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
 }
 
 /**
- * Implements hook_theme_suggestions_HOOK_alter().
+ * Implements hook_preprocess_views_view_unformatted().
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
@@ -619,7 +619,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     foreach ($view->result as $row) {
       $node = $row->_entity;
       $allowed_values = [];
-      if ($node->field_category->value) {
+      if ($node->field_category) {
         $allowed_values = $node->field_category->getSetting('allowed_values');
       }
       $term = NULL;
@@ -628,7 +628,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $news_image = NULL;
-      if ($node->field_image_main->target_id) {
+      if ($node->field_image_main) {
         $media = $media_storage->load($node->field_image_main->target_id);
         $file = File::load($media->field_image->target_id);
         $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
@@ -829,6 +829,15 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 function nysenate_theme_theme_suggestions_taxonomy_term_alter(array &$suggestions, array $variables, $hook) {
   $term = $variables['elements']['#taxonomy_term'];
   $suggestions[] = $hook . '__' . $term->bundle() . '__' . $variables['elements']['#view_mode'];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function nysenate_theme_theme_suggestions_form_alter(array &$suggestions, array $variables, $hook) {
+  if (isset($variables['element']['#form_id'])) {
+    $suggestions[] = $hook . '__' . $variables['element']['#form_id'];
+  }
 }
 
 /**
@@ -1573,6 +1582,20 @@ function nysenate_theme_preprocess_page(&$variables) {
       ];
     }
     $variables['socials'] = $socials;
+  }
+
+  // Microsite theme settings.
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!empty($node) && $node->bundle() == 'microsite_page') {
+    if (!empty($node->field_senator_multiref)) {
+      $sid = $node->field_senator_multiref->target_id;
+      $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+        ->load($sid);
+
+      if (!empty($senator->field_microsite_theme)) {
+        $variables['theme'] = $senator->field_microsite_theme->value;
+      }
+    }
   }
 }
 

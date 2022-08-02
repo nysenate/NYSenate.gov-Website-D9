@@ -71,3 +71,31 @@ function nys_senators_update_9003() {
   $contact->set('field_microsite_menu_weight', 5);
   $contact->save();
 }
+
+/**
+ * Add Senator microsite pages for existing terms.
+ */
+function nys_senators_update_9004() {
+  // Queries all senator terms that are published and active.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+    'status' => 1,
+    'field_active_senator' => TRUE,
+  ]);
+
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    // Queries looking for microsite pages that reference the term in senator
+    // multiref field.
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->execute();
+
+    // Creates the senator microsites pages if the query return empty.
+    if (empty($query)) {
+      _nys_senators_create_senator_microsites($senator_term);
+    }
+  }
+}

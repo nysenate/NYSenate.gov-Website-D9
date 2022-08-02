@@ -1,0 +1,38 @@
+uuid: 8cb13f3f-72a0-476b-9323-fa757481ccfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_district_block
+    - field.field.block_content.microsite_district_block.field_district
+id: block_content.microsite_district_block.default
+targetEntityType: block_content
+bundle: microsite_district_block
+mode: default
+content:
+  field_district:
+    type: entity_reference_autocomplete
+    weight: 26
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

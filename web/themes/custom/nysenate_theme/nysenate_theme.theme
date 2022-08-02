@@ -619,7 +619,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     foreach ($view->result as $row) {
       $node = $row->_entity;
       $allowed_values = [];
-      if ($node->field_category->value) {
+      if ($node->field_category) {
         $allowed_values = $node->field_category->getSetting('allowed_values');
       }
       $term = NULL;
@@ -628,7 +628,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $news_image = NULL;
-      if ($node->field_image_main->target_id) {
+      if ($node->field_image_main) {
         $media = $media_storage->load($node->field_image_main->target_id);
         $file = File::load($media->field_image->target_id);
         $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());

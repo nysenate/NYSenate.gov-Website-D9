@@ -5,11 +5,16 @@
  * Contains custom code for Senators and their Microsite Content.
  */
 
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\pathauto\Entity\PathautoPattern;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
@@ -264,6 +269,154 @@ function nys_senators_form_alter(&$form, $form_state, $form_id) {
         }
       }
       $form['field_senator']['widget']['#options'] = $result;
+    }
+  }
+}
+
+/**
+ * Creates senator microsites pages.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity interface.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _nys_senators_create_senator_microsites(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->name->value;
+
+  // Creates hero block to be attached to the microsite content.
+  $heroBlock = BlockContent::create([
+    'info' => $entity->getName() . ' - Hero block',
+    'type' => 'microsite_hero',
+    'field_senator' => [
+      'target_id' => $entity->id(),
+    ],
+  ]);
+  $heroBlock->save();
+
+  // Creates menu block to be attached to the microsite content.
+  $menuBlock = BlockContent::create([
+    'info' => $entity->getName() . ' - Menu block',
+    'type' => 'senator_microsite_menu',
+  ]);
+  $menuBlock->save();
+
+  // Loads microsite page type terms.
+  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  // Iterates through each microsite term and creates the microsite page.
+  foreach ($micrositeTypes as $micrositeType) {
+    // Default node values.
+    $nodeValues = [
+      'type' => 'microsite_page',
+      'status' => 1,
+      'field_microsite_page_type' => [
+        'target_id' => $micrositeType->id(),
+      ],
+      'field_block' => [
+        [
+          'target_id' => $heroBlock->id(),
+          'target_revision_id' => $heroBlock->getRevisionId(),
+        ],
+        [
+          'target_id' => $menuBlock->id(),
+          'target_revision_id' => $menuBlock->getRevisionId(),
+        ],
+      ],
+      'field_senator_multiref' => [
+        [
+          'target_id' => $entity->id(),
+        ],
+      ],
+    ];
+
+    // Sets the node title value considering the microsite page we are creating.
+    switch ($micrositeType->getName()) {
+      case 'Landing':
+        $nodeValues['title'] = $senator_name;
+        break;
+
+      case 'About':
+      case 'Newsroom':
+      case 'Legislation':
+      case 'Events':
+      case 'Contact':
+        // @todo Add extra title logic if needed.
+        $nodeValues['title'] = 'About ' . $senator_name;
+        break;
+
+      case 'Our District':
+        $nodeValues['title'] = $micrositeType->getName();
+        break;
+
+    }
+
+    // Creates the new microsite page.
+    $node = Node::create($nodeValues);
+    $node->save();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function nys_senators_taxonomy_term_insert(EntityInterface $entity) {
+  // Acts on every new senator taxonomy term that's added.
+  if ($entity->bundle() === 'senator') {
+    _nys_senators_create_senator_microsites($entity);
+  }
+}
+
+/**
+ * Implements hook_pathauto_pattern_alter().
+ */
+function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $context) {
+  // When nodes are created or updated, alter pattern with criteria logic.
+  if ($context['module'] === 'node'
+    && $context['bundle'] === 'microsite_page'
+    && ($context['op'] === 'insert' || $context['op'] === 'update')) {
+    /** @var \Drupal\node\Entity\Node $node */
+    $node = $context['data']['node'];
+
+    $replacements = [];
+    if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+      $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
+      $term = Term::load($tid);
+      if ($term instanceof TermInterface && !empty($term->getName())) {
+        switch ($term->getName()) {
+          case 'Landing':
+            $replacements[] = '';
+            break;
+
+          case 'About':
+          case 'Newsroom':
+          case 'Legislation':
+          case 'Contact':
+            // @todo Add extra logic if needed.
+            break;
+
+          case 'Our District':
+            $replacements[] = 'district';
+            break;
+
+          case 'Events':
+            $replacements[] = 'calendar';
+            break;
+
+        }
+      }
+    }
+
+    if ($replacements) {
+      $replacements = implode('/', $replacements);
+
+      // Replace default "[node:field_microsite_page_type:entity:name]" with
+      // the dynamic pattern set before in the replacements array.
+      $pattern->setPattern(preg_replace('/\[node:field_microsite_page_type:entity:name\]/', $replacements . '$1', $pattern->getPattern()));
     }
   }
 }

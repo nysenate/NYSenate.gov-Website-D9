@@ -283,11 +283,11 @@ function nys_senators_form_alter(&$form, $form_state, $form_id) {
  */
 function _nys_senators_create_senator_microsites(EntityInterface $entity) {
   // Gets the senator name value.
-  $senator_name = $entity->name->value;
+  $senator_name = $entity->label();
 
   // Creates hero block to be attached to the microsite content.
   $heroBlock = BlockContent::create([
-    'info' => $entity->getName() . ' - Hero block',
+    'info' => $senator_name . ' - Hero block',
     'type' => 'microsite_hero',
     'field_senator' => [
       'target_id' => $entity->id(),
@@ -297,7 +297,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
 
   // Creates menu block to be attached to the microsite content.
   $menuBlock = BlockContent::create([
-    'info' => $entity->getName() . ' - Menu block',
+    'info' => $senator_name . ' - Menu block',
     'type' => 'senator_microsite_menu',
   ]);
   $menuBlock->save();

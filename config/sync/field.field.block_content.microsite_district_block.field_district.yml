@@ -1,0 +1,29 @@
+uuid: dfe8e769-0312-43cf-a931-b2eacd4f7acc
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_district_block
+    - field.storage.block_content.field_district
+    - taxonomy.vocabulary.districts
+id: block_content.microsite_district_block.field_district
+field_name: field_district
+entity_type: block_content
+bundle: microsite_district_block
+label: District
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      districts: districts
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

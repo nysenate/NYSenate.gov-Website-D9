@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57bb97ac70ed7650ff137ee1ef3e0d26",
+    "content-hash": "3ee66e26f15cc023b1b9de7e3e8c3fe9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2820,16 +2820,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "9.4.4",
+            "version": "9.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "7522be4ba7f6c1f0b09b7fb37a657d7a50b36f44"
+                "reference": "23b4d51ee5bd8b506a97bd21c5635ce18b7abd76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/7522be4ba7f6c1f0b09b7fb37a657d7a50b36f44",
-                "reference": "7522be4ba7f6c1f0b09b7fb37a657d7a50b36f44",
+                "url": "https://api.github.com/repos/drupal/core/zipball/23b4d51ee5bd8b506a97bd21c5635ce18b7abd76",
+                "reference": "23b4d51ee5bd8b506a97bd21c5635ce18b7abd76",
                 "shasum": ""
             },
             "require": {
@@ -2881,6 +2881,33 @@
             "conflict": {
                 "drush/drush": "<8.1.10",
                 "symfony/http-foundation": "4.4.42"
+            },
+            "replace": {
+                "drupal/core-annotation": "self.version",
+                "drupal/core-assertion": "self.version",
+                "drupal/core-bridge": "self.version",
+                "drupal/core-class-finder": "self.version",
+                "drupal/core-datetime": "self.version",
+                "drupal/core-dependency-injection": "self.version",
+                "drupal/core-diff": "self.version",
+                "drupal/core-discovery": "self.version",
+                "drupal/core-event-dispatcher": "self.version",
+                "drupal/core-file-cache": "self.version",
+                "drupal/core-file-security": "self.version",
+                "drupal/core-filesystem": "self.version",
+                "drupal/core-front-matter": "self.version",
+                "drupal/core-gettext": "self.version",
+                "drupal/core-graph": "self.version",
+                "drupal/core-http-foundation": "self.version",
+                "drupal/core-php-storage": "self.version",
+                "drupal/core-plugin": "self.version",
+                "drupal/core-proxy-builder": "self.version",
+                "drupal/core-render": "self.version",
+                "drupal/core-serialization": "self.version",
+                "drupal/core-transliteration": "self.version",
+                "drupal/core-utility": "self.version",
+                "drupal/core-uuid": "self.version",
+                "drupal/core-version": "self.version"
             },
             "type": "drupal-core",
             "extra": {
@@ -2954,13 +2981,13 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/9.4.4"
+                "source": "https://github.com/drupal/core/tree/9.4.5"
             },
-            "time": "2022-07-28T19:27:35+00:00"
+            "time": "2022-08-03T16:33:29+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "9.4.4",
+            "version": "9.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -3004,22 +3031,22 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.4.4"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.4.5"
             },
             "time": "2022-06-19T16:14:23+00:00"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "9.4.4",
+            "version": "9.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "e0cb3cb6aac8ff9f23f2d1f37e69626e42d03781"
+                "reference": "a809ecbcfb7c8737c93159cf48246e040efdaf47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/e0cb3cb6aac8ff9f23f2d1f37e69626e42d03781",
-                "reference": "e0cb3cb6aac8ff9f23f2d1f37e69626e42d03781",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/a809ecbcfb7c8737c93159cf48246e040efdaf47",
+                "reference": "a809ecbcfb7c8737c93159cf48246e040efdaf47",
                 "shasum": ""
             },
             "require": {
@@ -3028,7 +3055,7 @@
                 "doctrine/annotations": "~1.13.2",
                 "doctrine/lexer": "~1.2.3",
                 "doctrine/reflection": "~1.2.3",
-                "drupal/core": "9.4.4",
+                "drupal/core": "9.4.5",
                 "egulias/email-validator": "~3.2",
                 "guzzlehttp/guzzle": "~6.5.8",
                 "guzzlehttp/promises": "~1.5.1",
@@ -3090,9 +3117,9 @@
             ],
             "description": "Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/9.4.4"
+                "source": "https://github.com/drupal/core-recommended/tree/9.4.5"
             },
-            "time": "2022-07-28T19:27:35+00:00"
+            "time": "2022-08-03T16:33:29+00:00"
         },
         {
             "name": "drupal/csv_serialization",
@@ -3146,26 +3173,26 @@
         },
         {
             "name": "drupal/ctools",
-            "version": "3.9.0",
+            "version": "3.10.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/ctools.git",
-                "reference": "8.x-3.9"
+                "reference": "8.x-3.10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/ctools-8.x-3.9.zip",
-                "reference": "8.x-3.9",
-                "shasum": "227ba06f5f98bded0658b83322949c33d1b3183e"
+                "url": "https://ftp.drupal.org/files/projects/ctools-8.x-3.10.zip",
+                "reference": "8.x-3.10",
+                "shasum": "8b515a3816a47a9eb55e0c4f4df42839ff4f2660"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9.3 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.9",
-                    "datestamp": "1658864511",
+                    "version": "8.x-3.10",
+                    "datestamp": "1659040378",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7082,20 +7109,20 @@
         },
         {
             "name": "drupal/pathauto",
-            "version": "1.10.0",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/pathauto.git",
-                "reference": "8.x-1.10"
+                "reference": "8.x-1.11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/pathauto-8.x-1.10.zip",
-                "reference": "8.x-1.10",
-                "shasum": "f49d5fbcd7a2c1b4de1da07194fe01d9012237ec"
+                "url": "https://ftp.drupal.org/files/projects/pathauto-8.x-1.11.zip",
+                "reference": "8.x-1.11",
+                "shasum": "a006fe9e6046a9833711a1ae56aa4752e65bcdc8"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9",
+                "drupal/core": "^9.3 || ^10",
                 "drupal/ctools": "*",
                 "drupal/token": "*"
             },
@@ -7105,8 +7132,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.10",
-                    "datestamp": "1650806739",
+                    "version": "8.x-1.11",
+                    "datestamp": "1659472597",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -8552,26 +8579,26 @@
         },
         {
             "name": "drupal/token",
-            "version": "1.10.0",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/token.git",
-                "reference": "8.x-1.10"
+                "reference": "8.x-1.11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/token-8.x-1.10.zip",
-                "reference": "8.x-1.10",
-                "shasum": "8b81224ab0420221b292e8d3b66d0da726317400"
+                "url": "https://ftp.drupal.org/files/projects/token-8.x-1.11.zip",
+                "reference": "8.x-1.11",
+                "shasum": "da264b36d1f88eb0c74bf84e18e8789854f98400"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9.2 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.10",
-                    "datestamp": "1638619775",
+                    "version": "8.x-1.11",
+                    "datestamp": "1659471813",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -17377,6 +17404,69 @@
             "time": "2022-03-28T14:22:43+00:00"
         },
         {
+            "name": "behat/mink-browserkit-driver",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/minkphp/MinkBrowserKitDriver.git",
+                "reference": "057926c9da452bac5bfcffb92eb4f3e1ce74dae9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minkphp/MinkBrowserKitDriver/zipball/057926c9da452bac5bfcffb92eb4f3e1ce74dae9",
+                "reference": "057926c9da452bac5bfcffb92eb4f3e1ce74dae9",
+                "shasum": ""
+            },
+            "require": {
+                "behat/mink": "^1.7.1@dev",
+                "php": ">=5.4",
+                "symfony/browser-kit": "~2.3|~3.0|~4.0",
+                "symfony/dom-crawler": "~2.3|~3.0|~4.0"
+            },
+            "require-dev": {
+                "mink/driver-testsuite": "dev-master",
+                "phpunit/phpunit": "^4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.18 || ^8.5 || ^9.5",
+                "symfony/debug": "^2.7|^3.0|^4.0",
+                "symfony/http-kernel": "~2.3|~3.0|~4.0",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "type": "mink-driver",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Behat\\Mink\\Driver\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Kudryashov",
+                    "email": "ever.zet@gmail.com",
+                    "homepage": "http://everzet.com"
+                }
+            ],
+            "description": "Symfony2 BrowserKit driver for Mink framework",
+            "homepage": "https://mink.behat.org/",
+            "keywords": [
+                "Mink",
+                "Symfony2",
+                "browser",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/minkphp/MinkBrowserKitDriver/issues",
+                "source": "https://github.com/minkphp/MinkBrowserKitDriver/tree/v1.4.1"
+            },
+            "time": "2021-12-10T14:17:06+00:00"
+        },
+        {
             "name": "behat/mink-extension",
             "version": "2.3.1",
             "source": {
@@ -18804,30 +18894,29 @@
         },
         {
             "name": "drupal/core-dev",
-            "version": "9.4.4",
+            "version": "9.1.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-dev.git",
-                "reference": "72ddd684df05fc22e97d42ddba5fb6c5ee9f9b29"
+                "reference": "559e6611014b0815c61b8004598854617d541d97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-dev/zipball/72ddd684df05fc22e97d42ddba5fb6c5ee9f9b29",
-                "reference": "72ddd684df05fc22e97d42ddba5fb6c5ee9f9b29",
+                "url": "https://api.github.com/repos/drupal/core-dev/zipball/559e6611014b0815c61b8004598854617d541d97",
+                "reference": "559e6611014b0815c61b8004598854617d541d97",
                 "shasum": ""
             },
             "require": {
                 "behat/mink": "^1.8",
+                "behat/mink-goutte-driver": "^1.2",
                 "behat/mink-selenium2-driver": "^1.4",
-                "composer/composer": "^2.2.12",
-                "drupal/coder": "^8.3.10",
+                "composer/composer": "^2.0.2",
+                "drupal/coder": "^8.3.7",
                 "easyrdf/easyrdf": "^0.9 || ^1.0",
-                "friends-of-behat/mink-browserkit-driver": "^1.4",
-                "instaclick/php-webdriver": "^1.4.1",
                 "justinrainbow/json-schema": "^5.2",
                 "mikey179/vfsstream": "^1.6.8",
-                "phpspec/prophecy": "^1.12",
-                "phpunit/phpunit": "^8.5.14 || ^9",
+                "phpspec/prophecy": "^1.7",
+                "phpunit/phpunit": "^8.4.1 || ^9",
                 "symfony/browser-kit": "^4.4",
                 "symfony/css-selector": "^4.4",
                 "symfony/dom-crawler": "^4.4 !=4.4.5",
@@ -18835,8 +18924,8 @@
                 "symfony/filesystem": "^4.4",
                 "symfony/finder": "^4.4",
                 "symfony/lock": "^4.4",
-                "symfony/phpunit-bridge": "^5.4",
-                "symfony/var-dumper": "^5.4"
+                "symfony/phpunit-bridge": "^5.1.4",
+                "symfony/var-dumper": "^5.1.2"
             },
             "conflict": {
                 "webflo/drupal-core-require-dev": "*"
@@ -18848,46 +18937,9 @@
             ],
             "description": "require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-dev/tree/9.4.4"
+                "source": "https://github.com/drupal/core-dev/tree/9.1.15"
             },
-            "time": "2022-04-14T00:37:13+00:00"
-        },
-        {
-            "name": "drupal/core-utility",
-            "version": "9.4.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/drupal/core-utility.git",
-                "reference": "1651443725d808f6e35cefbeddf8a976eea5f336"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-utility/zipball/1651443725d808f6e35cefbeddf8a976eea5f336",
-                "reference": "1651443725d808f6e35cefbeddf8a976eea5f336",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\Component\\Utility\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Mostly static utility classes for string, xss, array, image, and other commonly needed manipulations.",
-            "homepage": "https://www.drupal.org/project/drupal",
-            "keywords": [
-                "drupal"
-            ],
-            "support": {
-                "source": "https://github.com/drupal/core-utility/tree/9.4.4"
-            },
-            "time": "2022-07-21T12:41:09+00:00"
+            "time": "2020-10-28T08:13:15+00:00"
         },
         {
             "name": "drupal/devel",
@@ -19354,68 +19406,6 @@
                 "source": "https://github.com/FriendsOfPHP/Goutte/tree/v3.3.1"
             },
             "time": "2020-11-01T09:30:18+00:00"
-        },
-        {
-            "name": "friends-of-behat/mink-browserkit-driver",
-            "version": "v1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfBehat/MinkBrowserKitDriver.git",
-                "reference": "8110b99ed1ac2b50ad287280bfc20e08f58b6cc6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfBehat/MinkBrowserKitDriver/zipball/8110b99ed1ac2b50ad287280bfc20e08f58b6cc6",
-                "reference": "8110b99ed1ac2b50ad287280bfc20e08f58b6cc6",
-                "shasum": ""
-            },
-            "require": {
-                "behat/mink": "^1.7",
-                "php": "^7.2|^8.0",
-                "symfony/browser-kit": "^4.4|^5.0",
-                "symfony/dom-crawler": "^4.4|^5.0"
-            },
-            "replace": {
-                "behat/mink-browserkit-driver": "self.version"
-            },
-            "require-dev": {
-                "friends-of-behat/mink-driver-testsuite": "dev-master",
-                "symfony/http-kernel": "^4.4|^5.0"
-            },
-            "type": "mink-driver",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Behat\\Mink\\Driver\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                }
-            ],
-            "description": "Symfony2 BrowserKit driver for Mink framework",
-            "homepage": "http://mink.behat.org/",
-            "keywords": [
-                "Mink",
-                "Symfony2",
-                "browser",
-                "testing"
-            ],
-            "support": {
-                "source": "https://github.com/FriendsOfBehat/MinkBrowserKitDriver/tree/v1.5.0"
-            },
-            "time": "2021-02-04T14:39:46+00:00"
         },
         {
             "name": "friends-of-behat/mink-extension",
@@ -24007,5 +23997,5 @@
     "platform-overrides": {
         "php": "7.3"
     },
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }

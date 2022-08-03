@@ -217,26 +217,6 @@
              return response;
          },
          /**
-          * Helper function to derive an 'intent' from a response object.
-          *
-          * @param {object} response
-          *   The response object.
-          *
-          * @returns {string}
-          *   Returns a string of user intent.
-          */
-         getIntentFromResponse: function (vote_value) {
-             var intent;
-             if (vote_value === 'yes') {
-                 intent = 'support';
-             }
-             else {
-                 intent = 'oppose';
-             }
- 
-             return intent;
-         },
-         /**
           * Helper function to get the triggering button for a vote.
           *
           * @param {string} intent
@@ -271,7 +251,7 @@
           */
          voteOnBill: function (element, vote_label, vote_value) {
              var self = this,
-                 intent = this.getIntentFromResponse(vote_value),
+                 intent = vote_value,
                  $target = $(element)
              ;
  

@@ -1,0 +1,22 @@
+uuid: 457a9012-02a3-4a6f-8247-9d526b519b46
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: senator_micro_site
+label: 'Senator Micro Site'
+type: 'canonical_entities:node'
+pattern: 'senators/[node:field_senator_multiref:0]/[node:field_microsite_page_type:entity:name]'
+selection_criteria:
+  15fafeaa-9a69-4d28-b8c7-c54487de1a62:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 15fafeaa-9a69-4d28-b8c7-c54487de1a62
+    context_mapping:
+      node: node
+    bundles:
+      microsite_page: microsite_page
+selection_logic: and
+weight: -5
+relationships: {  }

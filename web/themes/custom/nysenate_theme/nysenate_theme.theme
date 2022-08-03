@@ -11,6 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\media\MediaInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -1613,5 +1614,23 @@ function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variabl
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($node->hasField('field_microsite_page_type') &&
+    !$node->get('field_microsite_page_type')->isEmpty()) {
+    $term = $node->field_microsite_page_type->entity ?? [];
+    if ($term instanceof TermInterface) {
+      $name = $term->name->value ?? '';
+      if ($name === 'Events') {
+        $variables['is_events'] = TRUE;
+      }
+    }
   }
 }

@@ -18,7 +18,7 @@ process:
   nid:
     -
       plugin: get
-      source: tnid
+      source: nid
 
   title:
     -
@@ -62,10 +62,11 @@ process:
           source: fid
           no_stub: true
 
-  field_chapters:
+  field_accordion:
     -
-      plugin: chapters
-      source: field_chapters
+      plugin: migration_lookup
+      migration: nys_chapter_blocks
+      source: nid
 
   field_date:
     -

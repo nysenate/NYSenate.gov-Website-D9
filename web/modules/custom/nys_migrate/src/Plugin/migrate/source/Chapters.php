@@ -73,11 +73,12 @@ class Chapters extends SqlBase {
     // Clean up results.
     $chapter_refs = [];
     foreach ($chapter_nids as $chapter) {
-      $chapter_refs[] = $chapter;
+      $chapter_refs[]['value'] = $chapter;
     }
 
     // Add results to row.
     $row->setSourceProperty('chapter_nids', $chapter_refs);
+    return parent::prepareRow();
   }
 
 }

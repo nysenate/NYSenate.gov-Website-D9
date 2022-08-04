@@ -2,9 +2,11 @@ id: upgrade_d7_webform_submission
 label: 'Webform Form Submission'
 migration_tags:
   - 'Drupal 7'
-migration_group: migrate_drupal_7
+migration_group: nys_general
+
 source:
   plugin: d7_webform_submission
+
 process:
   sid: sid
   webform_id: webform_id
@@ -27,8 +29,6 @@ process:
   notes: {}
   serial: {}
   data: webform_data
+
 destination:
   plugin: 'entity:webform_submission'
-migration_dependencies:
-  required:
-    - upgrade_d7_webform

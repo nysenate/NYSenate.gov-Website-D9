@@ -66,7 +66,7 @@ process:
         target_id:
           plugin: migration_lookup
           migration: upgrade_d7_webform
-          source: webform_id
+          source: target_id
           no_stub: true
 
   field_date:

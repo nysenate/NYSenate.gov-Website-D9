@@ -232,7 +232,7 @@ pipelines:
             # Alternately update existing site for each multidev
             - terminus build-env:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH} --yes --clone-content
             - terminus connection:set "${SITE_ENV}" git
-            - terminus build:workflow:wait ${SITE_ENV} "Enable git push mode for \"${PANTHEON_BRANCH}\""
+            - sleep 60
             - terminus remote:drush ${SITE_ENV} -- deploy -y
             - terminus drush -n "${SITE_ENV}" -- status
             - terminus drush -n "${SITE_ENV}" -- uli

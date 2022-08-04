@@ -616,3 +616,100 @@ h3 {
   padding-top: 20px;
   border-top: 1px solid $grey05;
 }
+
+/*-------------------------------------
+/	Subpage Header styles
+/-------------------------------------*/
+
+h2.c-subpage-header--title {
+	margin: 0;
+	font-family: $font-serif-bold;
+	line-height: 1em;
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+.c-subpage-header--title02 {
+	margin: 0;
+	font-family: $font-serif-bold;
+	line-height: 1em;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+.c-subpage-header--title03 {
+	margin: 0;
+	font-family: $font-serif-bold;
+	line-height: 1em;
+	font-size: 18px;
+	margin: 20px 0;
+}
+
+.c-subpage-header--subtitle01 {
+	margin: 0;
+	color: $grey08;
+	font-family: $font-sans;
+	font-size: 14px;
+}
+
+.c-subpage-header--subtitle02 {
+	margin: 0;
+	//color defined on element
+	font-family: $font-sans-bold;
+	text-transform: uppercase;
+	font-size: 12px;
+}
+
+.c-subpage-header--subtitle03 {
+	margin: 0 0 25px 0;
+	color: $grey04;
+	font-family: $font-sans;
+	text-transform: uppercase;
+	font-size: 12px;
+}
+
+.c-subpage-header--subtitle04 {
+	margin: 0;
+	font-family: $font-serif-bold;
+	line-height: 1em;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+.c-subpage-header--subtitle05{
+	display: inline-block;
+	text-transform: uppercase;
+	font-family: $font-sans;
+	font-size: 12px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	margin-bottom: 20px;
+}
+
+@include breakpoint($bp-sm) {
+	h2.c-subpage-header--title {
+		font-size: 32px;
+	}
+
+	.c-subpage-header--title02 {
+		font-size: 32px;
+	}
+
+	.c-subpage-header--title03 {
+		font-size: 24px;
+	}
+
+	.c-subpage-header--subtitle01 {
+		font-size: 16px;
+	}
+
+	.c-subpage-header--subtitle02 {
+		font-size: 14px;
+	}
+
+	.c-subpage-header--subtitle03 {
+		font-size: 14px;
+		margin-bottom: 20px;
+		margin-bottom: 40px;
+	}
+}

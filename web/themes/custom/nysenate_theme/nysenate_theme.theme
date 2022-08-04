@@ -760,7 +760,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $image_main = NULL;
-      if ($node->field_image_main->target_id) {
+      if (isset($node->field_image_main) && !empty($node->field_image_main->target_id)) {
         $media = $media_storage->load($node->field_image_main->target_id);
         $file = File::load($media->field_image->target_id);
         $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());

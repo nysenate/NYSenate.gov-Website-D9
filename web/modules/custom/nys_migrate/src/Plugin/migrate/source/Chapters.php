@@ -40,6 +40,7 @@ class Chapters extends SqlBase {
   public function fields() {
     return [
       'nid' => $this->t('NID'),
+      'title' => $this->t('Title'),
     ];
   }
 

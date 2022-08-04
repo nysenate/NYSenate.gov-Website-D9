@@ -214,10 +214,10 @@ pipelines:
             # Build and deploy to Pantheon
             - DDEV_PROJECT=false ./scripts/hobson release:build Pantheon ${BITBUCKET_BRANCH}
             - cd ./build/release_repo
-            - PANTHEON_BRANCH=$( echo "ci-$(echo ${BITBUCKET_BRANCH} | sed 's/[^0-9]*//g' | cut -c 1-4)b${BITBUCKET_BUILD_NUMBER//[[:space:]]}" | cut -c 1-11)
+            - PANTHEON_BRANCH=$( echo "ci-$(echo ${BITBUCKET_BRANCH} | sed 's/[^0-9]*//g' | cut -c 1-4)${BITBUCKET_BUILD_NUMBER//[[:space:]]}" | cut -c 1-11)
             - echo ${PANTHEON_BRANCH}
             # Remove older "ci-" multidev environments
-            - MULTIDEV_KEEP=4
+            - MULTIDEV_KEEP=3
             - MULTIDEV_LIST=$(terminus build-env:list ${TERMINUS_SITE} --format=string --fields=id)
             - set -- $MULTIDEV_LIST; while [ $# -gt $MULTIDEV_KEEP ]; do terminus multidev:delete ${TERMINUS_SITE}.$1 --delete-branch -y;  shift;  done
             - terminus env:wake -n "${TERMINUS_SITE}.develop"
@@ -231,6 +231,7 @@ pipelines:
             # - terminus drush -n "${SITE_ENV}" -- site-install nysenate -y --site-name="${SITE_ENV}" --account-name="${ADMIN_USERNAME}" --account-mail="${ADMIN_EMAIL}" --account-pass="${ADMIN_PASSWORD}" --site-mail="${ADMIN_EMAIL}"
             # Alternately update existing site for each multidev
             - terminus build-env:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH} --yes --clone-content
+            - terminus build:workflow:wait ${SITE_ENV} "Enable on-server development via SFTP for \"${PANTHEON_BRANCH}\""
             - terminus connection:set "${SITE_ENV}" git
             - terminus remote:drush ${SITE_ENV} -- deploy -y
             - terminus drush -n "${SITE_ENV}" -- status

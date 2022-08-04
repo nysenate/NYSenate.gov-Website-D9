@@ -2,7 +2,7 @@ id: nys_content_questionnaire
 migration_tags:
   - 'Drupal 7'
   - Content
-migration_group: migrate_drupal_7
+migration_group: nys_general
 label: 'Node Questionnaire'
 
 source:
@@ -60,8 +60,14 @@ process:
 
   webform:
     -
-      plugin: get
+      plugin: sub_process
       source: field_webform
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: upgrade_d7_webform
+          source: webform_id
+          no_stub: true
 
   field_date:
     -

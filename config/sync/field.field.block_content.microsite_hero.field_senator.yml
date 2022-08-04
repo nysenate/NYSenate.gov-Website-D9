@@ -1,0 +1,29 @@
+uuid: 45203055-6f3c-461d-8539-6a174ffce730
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_hero
+    - field.storage.block_content.field_senator
+    - taxonomy.vocabulary.senator
+id: block_content.microsite_hero.field_senator
+field_name: field_senator
+entity_type: block_content
+bundle: microsite_hero
+label: Senator
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

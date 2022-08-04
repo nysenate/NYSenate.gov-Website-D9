@@ -12,7 +12,7 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity:block'
+  plugin: 'entity:block_content'
   default_bundle: text
 
 process:
@@ -20,10 +20,6 @@ process:
     -
       plugin: get
       source: bundle
-  id:
-    -
-      plugin: get
-      source: item_id
   body:
     -
       plugin: get

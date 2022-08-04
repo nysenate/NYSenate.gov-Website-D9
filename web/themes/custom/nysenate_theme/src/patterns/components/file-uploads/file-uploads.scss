@@ -3,7 +3,6 @@
 
 .c-news--download {
 	display: block;
-	margin-bottom: 20px;
 
 	img {
 		display: none;
@@ -17,26 +16,10 @@
 			margin-top: 15px;
 			font-size: 12px;
 			line-height: 18px;
-			font-family: 'Proxima Nova SemiBold';
-			color: $gen_blue_lgt;
+			font-family: $font-sans-bold;
 			text-decoration: none;
-	
-			&::before {
-				content: '\6b';
-				font-size: 21px;
-				line-height: 12px;
-				font-family: 'senate_icons';
-				display:inline-block;
-				vertical-align: middle;
-				speak: none;
-				font-style: normal;
-				font-weight: normal;
-				font-variant: normal;
-				text-transform: none;
-				padding-right: 3px;
-				-webkit-font-smoothing: antialiased;
-				-moz-osx-font-smoothing: grayscale;
-			}
+			@extend .lgt-text;
+			@extend .icon-before__presskit;
 		}
 	}
 
@@ -49,7 +32,7 @@
 	margin-bottom: 0;
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.c-news-download {
 		margin-bottom: 30px;
 	}

@@ -2,9 +2,7 @@
 @import '../../global/utils/init';
 
 .article-node {
-	max-width: 840px;
 	padding: 20px 20px 0;
-	margin: 0 auto;
 
 	@include breakpoint($bp-sm) {
 		padding: 40px 20px 0;
@@ -17,14 +15,6 @@
   font-family: $font-serif;
   @include font(22 57.6);
   font-weight: 400;
-}
-
-.c-block {
-  display: block;
-  position: relative;
-  margin-bottom: 20px;
-  zoom: 1;
-  clear: both;
 }
 
 /*------------------------------------
@@ -52,7 +42,7 @@
 		a {
 			font-size: 12px;
 			line-height: 1em;
-			color: $gen_blue_lgt;
+			@extend .lgt-text;
 		}
 
 	}
@@ -110,7 +100,6 @@
 }
 .c-news--download {
 	display: block;
-	margin-bottom: 20px;
 	flex-basis: 100%;
 
 	img { display: none; }
@@ -126,39 +115,14 @@
 			//text-transform: uppercase;
 			font-size: 12px;
 			font-family: $font-sans-bold;
-			color: $gen_blue_lgt;
-
-			&::before {
-		content: '\6b';
-				font-size: 21px;
-				line-height: 12px;
-		font-family: 'senate_icons';
-		display:inline-block;
-		vertical-align: middle;
-	
-		speak: none;
-		font-style: normal;
-		font-weight: normal;
-		font-variant: normal;
-		text-transform: none;
-		padding-right: 3px;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-			}
+			text-decoration: none;
+			@extend .lgt-text;
+			@extend .icon-before__presskit;
 		}
 	}
 }
 .c-news--head .c-news--download {
 	margin-bottom: 0;
-}
-
-.c-block {
-	p {
-		font-family: $font-serif;
-    line-height: 1.5em;
-    color: $grey03;
-    font-size: 16px;
-	}
 }
 
 .nys-associated-topics {
@@ -201,18 +165,12 @@
   font-family: $font-sans-bold;
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.c-news-download {
 		margin-bottom: 30px;
 	}
 	.c-news--head .c-news--download {
 		margin-bottom: 0;
-	}
-	.c-block {
-		p {
-			font-size: 20px;
-			line-height: 32px;
-		}
 	}
 	.nys-associated-topics {
     display: inline;
@@ -239,7 +197,7 @@
 	font-size: 18px;
 
 	a {
-		color: $gen_blue_lgt;
+		@extend .lgt-text;
 	}
 }
 .c-in-the-news--body {
@@ -250,7 +208,7 @@
 	}
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.article-node {
 		padding: 80px 40px 0;
 	}

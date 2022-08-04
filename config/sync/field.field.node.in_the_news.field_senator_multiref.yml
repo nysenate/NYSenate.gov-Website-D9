@@ -1,0 +1,29 @@
+uuid: 073625f6-9cd2-4c31-a8f9-f940f4bcac8d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_senator_multiref
+    - node.type.in_the_news
+    - taxonomy.vocabulary.senator
+id: node.in_the_news.field_senator_multiref
+field_name: field_senator_multiref
+entity_type: node
+bundle: in_the_news
+label: Senator
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

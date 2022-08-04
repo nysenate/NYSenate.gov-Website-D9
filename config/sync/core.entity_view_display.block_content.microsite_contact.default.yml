@@ -1,0 +1,33 @@
+uuid: 2fa5c9ec-469b-4188-a546-6806d962fea6
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_contact
+    - field.field.block_content.microsite_contact.field_contact_type
+    - field.field.block_content.microsite_contact.field_senator
+  module:
+    - options
+id: block_content.microsite_contact.default
+targetEntityType: block_content
+bundle: microsite_contact
+mode: default
+content:
+  field_contact_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_senator:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

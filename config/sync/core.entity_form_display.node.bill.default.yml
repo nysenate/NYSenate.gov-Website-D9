@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.bill.field_bill_multi_session_root
     - field.field.node.bill.field_bill_no_issue_tags
+    - field.field.node.bill.field_comments
     - field.field.node.bill.field_issues
     - field.field.node.bill.field_majority_issue_tag
     - field.field.node.bill.field_metatags
@@ -46,6 +47,7 @@ dependencies:
     - field.field.node.bill.field_ol_votes
     - node.type.bill
   module:
+    - comment
     - datetime
     - inline_entity_form
     - metatag
@@ -78,6 +80,12 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_comments:
+    type: comment_default
+    weight: 49
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
@@ -396,6 +404,11 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 31
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -95,8 +95,9 @@
       published_on: published_on,
       date: date,
       end_date: end_date == '' ? '' : end_date,
-      body: body|striptags|raw,
-      items: items,
+      body: body,
+      file_items: file_items,
+      open_data_tables: open_data_tables,
     } only
     %}
 

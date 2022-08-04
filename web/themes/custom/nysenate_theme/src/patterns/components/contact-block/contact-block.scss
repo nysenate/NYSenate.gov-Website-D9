@@ -22,7 +22,7 @@
   .c-office-info--title {
     display: block;
     margin-bottom: 10px;
-    color: #000;
+    @extend .contrast_text;
     font-family: $font-sans-bold;
     text-transform: uppercase;
     font-size: 14px;
@@ -39,7 +39,7 @@
   .tel,
   .email,
   .c-senator-media--item {
-    color: $grey02;
+    color: $grey08;
     font-family: $font-sans;
     font-size: 16px;
     line-height: 1.2em;
@@ -54,7 +54,7 @@
   .c-senator-media--item {
     text-transform: none;
     span {
-      color: #000;
+      @extend .contrast_text;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
@@ -70,7 +70,7 @@
   .tel {
     clear: left;
     span {
-      color: #000;
+      @extend .contrast_text;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
@@ -112,6 +112,7 @@
     margin-bottom: 30px;
 
     a {
+      text-decoration: none;
       @extend .lgt-text;
     }
   }
@@ -138,13 +139,14 @@
     }
 
     span {
-      color: #000;
+      @extend .contrast_text;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
     }
 
     a {
+      text-decoration: none;
       @extend .lgt-text;
     }
   }
@@ -153,6 +155,7 @@
     display: block;
     font-family: $font-sans-bold;
     font-size: 16px;
+    text-decoration: none;
     @extend .lgt-text;
     @extend .icon-before__circle-pin;
   }
@@ -208,7 +211,16 @@
   }
 }
 
+.nys-title.contact-block__title {
+  font-family: $font-serif-bold;
+  font-weight: $font-weight-normal;
+}
+
 @include breakpoint($bp-sm) {
+  .nys-title.contact-block__title {
+    font-size: 32px;
+  }
+
   .c-block--senator-office {
     padding: 40px 40px 45px;
 
@@ -255,75 +267,5 @@
         padding-left: 40px;
       }
     }
-  }
-}
-
-
-#nys-messaging-senator-contact-form,
-#nys-messaging-senator-message-form {
-	&::after {
-	  content: '';
-	  display: table;
-	  clear: both;
-	  margin-bottom: 40px;
-	}
-
-	.form-type-radio {
-		display: inline-block;
-	}
-
-	#edit-submit {
-		padding: 0 20px;
-		font-family: $font-sans-bold;
-		text-transform: uppercase;
-		font-size: 14px;
-		letter-spacing: 0.2em;
-		line-height: 40px;
-		@extend .med-bg;
-	}
-
-	.ajax-progress-throbber {
-	  .throbber {
-	    padding: 0 20px;
-	  }
-	}
-
-	h3 {
-		margin: 30px 0 10px 0;
-		font-family: $font-serif-semibold;
-		font-size: 24px;
-	}
-
-	input[type="text"] {
-		height: 55px;
-	}
-
-	input[name="first_name"],
-	input[name="last_name"],
-	input[name="from_email"],
-	input[name="phone"],
-	input[name="city"],
-	input[name="zip"] {
-		width: 95%;
-	}
-
-	input[name="last_name"],
-	input[name="phone"],
-	input[name="zip"],
-	label[for="edit-last-name"],
-	label[for="edit-phone"],
-	label[for="edit-zip"] {
-		margin-left: 18px;
-	}
-}
-
-#nys-messaging-senator-message-form {
-  padding: 0 8px;
-  #edit-submit {
-    @extend .lgt-bg;
-    margin-top: 30px;
-  }
-  input[type="text"] {
-    margin-bottom: 30px;
   }
 }

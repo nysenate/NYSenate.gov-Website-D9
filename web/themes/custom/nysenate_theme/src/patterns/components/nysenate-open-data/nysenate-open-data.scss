@@ -1,20 +1,20 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
-.l-row--main {
-  max-width: 840px;
-  margin: 0 auto;
-}
-
 // NEWS HEADER AREA
 .c-news--head {
   margin-bottom: 20px;
 
+  @include breakpoint($bp-sm) {
+    margin-bottom: 30px;
+  }
+
   .nys-article-title {
-    margin: 0 0 20px 0;
-    color: $grey02;
-    font-family: "Adelle Light";
+    margin-bottom: 30px;
+    color: $grey08;
+    font-family: $font-serif;
     font-size: 22px;
+    font-weight: 400;
     line-height: 1.2em;
 
     @include breakpoint($bp-sm) {
@@ -23,28 +23,52 @@
   }
 
   .c-news--head-meta {
+    line-height: 15px;
+
     .c-news--pub-date {
       display: inline-block;
       margin: 0 10px 0 0;
       text-transform: capitalize;
-      font-family: "Proxima Nova Regular";
+      font-family: $font-sans;
       font-size: 12px;
+      line-height: 1.2em;
+      color: $grey04;
+
+      @include breakpoint($bp-sm) {
+        font-size: 15px;
+      }
+
       b {
         font-weight: bold;
         line-height: inherit;
         color: $grey04;
+        font-family: $font-serif-bold;
+
+        .date-display-single {
+          font-family: $font-serif-bold;
+        }
       }
     }
+
     .c-news--author {
       text-transform: uppercase;
       display: inline-block;
       margin: 0 10px 0 0;
-      font-family: "Proxima Nova Regular";
+      font-family: $font-sans;
       font-size: 12px;
+      line-height: 1.2em;
+
+      @include breakpoint($bp-sm) {
+        font-size: 15px;
+      }
+    }
+
+    p {
+      color: #666;
     }
   }
 
-  ul.links {
+  ul links {
 
     display: block;
     list-style: none;
@@ -54,31 +78,53 @@
       display: inline-block;
       margin-right: 10px;
       text-transform: uppercase;
-      font-family: "Proxima Nova SemiBold";
+      font-family: $font-sans-bold;
       white-space: nowrap;
     }
 
     a {
       font-size: 12px;
       line-height: 1em;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
-
   }
   .field-name-field-issues { padding: 0; }
 
 }
 
 .c-block {
-  font-family: "Adelle Light";
+  font-family: $font-serif;
   line-height: 1.5em;
-  color: #666;
-  font-size: 16px;
+  color: $grey03;
+
+  .field--name-body {
+    .field__label {
+      display: none;
+    }
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5em;
+    margin: 0;
+
+    @include breakpoint($bp-sm) {
+      font-size: 20px;
+      line-height: 32px;
+    }
+  }
+
+  p + p {
+    margin-top: 20px;
+
+    @include breakpoint($bp-sm) {
+      margin-top: 40px
+    }
+  }
 }
 
 .c-news--download {
   display: block;
-  margin-bottom: 20px;
 
   img { display: none; }
 
@@ -88,24 +134,149 @@
     margin-top: 15px;
     //text-transform: uppercase;
     font-size: 12px;
-    font-family: "Proxima Nova SemiBold";
-    color: $gen_blue_lgt;
+    font-family: $font-sans-bold;
+    text-decoration: none;
+		@extend .lgt-text;
+		@extend .icon-before__presskit;
+  }
+}
 
-    &:before {
-      content: '\6b';
-      font-size: 21px;
-      line-height: 12px;
-      font-family: 'senate_icons';
-      display:inline-block;
-      vertical-align: middle;
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+// OPEN DATA TABLE
+.managed-csv-datatable {
+  thead {
+    background-color: $grey16;
+  }
+}
+
+.dataTables_length {
+  margin-bottom: 1em;
+
+
+  label {
+    color: $grey04;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 12.8px;
+  }
+
+  select {
+    width: 100%;
+    appearance: none;
+    background-color: #FAFAFA;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+');
+    background-position: 100% center;
+    background-repeat: no-repeat;
+    border: 1px solid $grey15;
+    padding: 0.5rem !important;
+    font-size: 0.875rem;
+    font-family: $font-serif;
+    color: rgba(0, 0, 0, 0.75);
+    line-height: normal;
+    border-radius: 0;
+    height: 2.3125rem;
+  }
+}
+
+.managed-csv-datatable-container {
+  max-width: 100%;
+  margin-bottom: 5em;
+  overflow: hidden;
+
+  tr.even {
+    background-color: $grey06;
+  }
+}
+
+.managed-csv-datatable-caption {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.managed-csv-removed-data {
+  font-family: $font-sans;
+  font-size: 14px;
+  margin-bottom: 1em;
+  color: $blue_info;
+  font-weight: bold;
+  overflow-x: hidden;
+  white-space: inherit;
+}
+
+.c-news--title {
+  font-family: $font-serif;
+  font-size: 48px;
+}
+
+.text-content,
+.field-name-field-open-date-type,
+.field-name-field-open-data-file {
+  font-family: $font-sans;
+  color: $grey01;
+  font-size: 16px;
+  margin-bottom: 10px;
+
+  div {
+    display: inline-block;
+
+    &.field-label {
+      font-family: $font-sans;
+      text-transform: uppercase;
+      color: $grey03;
+      font-size: 14px;
+    }
+  }
+}
+
+.field-name-field-open-data-file {
+  .file {
+    img {
+      margin-right: 8px;
+      background: none;
+    }
+  }
+}
+
+@media #{$tablet} {
+  .open-data-page {
+    .view-display-id-page_1 {
+      .view-filters {
+        select,
+        input[type='text'] {
+          height: 55px;
+          width: 100%;
+        }
+
+        .views-exposed-widget {
+          width: 49%;
+
+          &.views-submit-button {
+            width: 100%;
+            margin-top: 0;
+            text-align: right;
+
+            button {
+              width: auto;
+            }
+          }
+
+          &:first-of-type {
+            margin-right: 2%;
+          }
+        }
+      }
+
+      .views-table {
+        thead {
+          tr {
+            th {
+              &:nth-child(1) {
+                width: 30%;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

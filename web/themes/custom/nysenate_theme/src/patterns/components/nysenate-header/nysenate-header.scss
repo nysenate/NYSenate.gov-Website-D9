@@ -4,6 +4,7 @@
 .element-invisible {
   @include element-invisible;
 }
+
 .element-focusable {
   @include element-focusable;
 }
@@ -19,54 +20,17 @@
   }
 }
 
-// Non-modular or client styles for .l-header region.
-.l-header {
-  width: 100%;
-  z-index: 5;
-  top: 0;
-  position: relative;
-
-  // display none for original nav when cloned.
-  & + .l-header {
-    .c-senator-nav--wrap {
-      display: none;
-    }
-  }
-
-  &.fixed {
-    position: fixed;
-  }
-
-  // this is to fix mobile button positioning when logged in as admin
-  .contextual-links-region {
-    position: static;
-  }
-}
-@media #{$tablet} {
-  .l-header + .l-header {
-    .c-senator-nav--wrap {
-      display: block;
-    }
-  }
-
-  .l-header {
-    // this is to fix mobile button positioning when logged in as admin
-    .contextual-links-region {
-      position: relative;
-    }
-  }
-}
-
 /*------------------------------
 / SITE WIDE TOP BAR
 /-------------------------------*/
 .c-header-bar {
   height: 60px;
-  background: #fff;
+  background: $color-white;
   z-index: 10;
   overflow: hidden;
   position: relative;
 }
+
 .c-topbar {
   position: relative;
   display: block;
@@ -82,6 +46,7 @@
     vertical-align: middle;
   }
 }
+
 .c-page-title {
   display: inline-block;
   vertical-align: middle;
@@ -94,7 +59,7 @@
     display: inline-block;
     vertical-align: middle;
     min-width: 250px;
-    color: $grey02;
+    color: $grey08;
     white-space: nowrap;
     text-decoration: none;
 
@@ -106,12 +71,13 @@
       height: 20px;
       margin-right: 10px;
       background: transparent url('http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg')
-        center center no-repeat;
+      center center no-repeat;
       background-size: cover;
     }
   }
 }
-@media #{$tablet} {
+
+@include breakpoint($bp-sm) {
   .l-header {
     .c-actionbar,
     .c-senate-status {
@@ -128,6 +94,7 @@
         font-size: 18px;
         line-height: 1.3em;
       }
+
       .c-block--btn {
         font-size: 16px;
       }
@@ -156,6 +123,7 @@
       }
     }
   }
+
   .c-page-title {
     font-size: 22px;
 
@@ -178,7 +146,7 @@
   height: 55px;
 }
 
-.l-row:after {
+.l-row::after {
   content: '';
   display: table;
   clear: both;
@@ -191,7 +159,7 @@
   padding: 0 20px;
   max-width: 100%;
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     padding: 0 9%;
     max-width: 1500px;
   }
@@ -200,7 +168,7 @@
 /* Navigation */
 .c-nav--wrap {
   position: absolute;
-  background: #fff;
+  background: $color-white;
   top: -110vh;
   left: 0;
   right: 0;
@@ -232,12 +200,12 @@
 
     @include breakpoint($bp-sm) {
       display: block;
-      position: relative;
+      position: inherit;
       right: 0;
       margin: 0 auto;
       z-index: 2;
       height: 60px;
-      background: #fff;
+      background: $color-white;
     }
 
     & > nav {
@@ -249,19 +217,31 @@
       margin: auto;
       width: 100%;
       height: 100%;
-      padding: 125px 0 0 0;
+      padding: 125px 0 0;
       overflow: scroll;
-      background: $gen_blue_lgt;
+      @extend .lgt-bg;
 
       @include breakpoint($bp-sm) {
         position: relative;
         padding: 0;
-        background: #fff;
+        background: $color-white;
         overflow: visible;
-        border-top: 1px solid #aaaaaa;
+        border-top: 1px solid $grey05;
         transition: none 0 ease 0s;
       }
     }
+
+    nav {
+      .c-site-search--btn {
+        color: $grey08;
+        position: absolute;
+      }
+
+      ul > li.leaf {
+        top: -16px;
+      }
+    }
+
   }
 }
 
@@ -269,8 +249,110 @@
   top: 0;
 }
 
+@include breakpoint($bp-sm) {
+  .c-nav--wrap {
+    position: relative;
+    top: 0;
+    bottom: auto;
+    width: 100%;
+    height: 60px;
+    transition: height 0.3s ease;
+    overflow: hidden;
+
+    // class added to .c-nav--wrap through js
+    &.closed {
+      height: 0;
+    }
+
+    .c-nav {
+      display: block;
+      position: inherit;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      margin: 0 auto;
+      z-index: 2;
+      height: 60px;
+      background: $color-white;
+
+      > nav {
+        position: relative;
+        top: 0;
+        height: 100%;
+        padding: 0;
+        background: $color-white;
+        overflow: visible;
+        border-top: 1px solid $grey05;
+        transition: none 0 ease;
+      }
+    }
+  }
+
+  .c-nav--list {
+    width: 100%;
+    height: 60px;
+    margin: 0;
+    padding: 0 10% 0 0;
+    display: flex;
+    justify-content: space-between;
+
+    li {
+      position: relative;
+      width: 100px;
+      height: 100%;
+      display: inline-block;
+      vertical-align: middle;
+      border: none;
+      text-align: left;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+
+      &:before {
+        content: '';
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+        width: 0px;
+      }
+
+      a {
+        height: auto;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0;
+        text-align: center;
+        line-height: 14px;
+      }
+
+      &.active-trail {
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: -15px;
+          margin: auto;
+          height: 20px;
+          width: 20px;
+          background: $color-white;
+          border: 1px solid $grey05;
+          transform: rotate(45deg);
+        }
+      }
+		}
+	}
+}
+
 .pane-content {
   position: relative;
+
+  .button--menu {
+    position: absolute;
+    top: auto;
+  }
 }
 
 .c-nav--toggle {
@@ -282,35 +364,24 @@
   left: auto;
   height: 40px;
   width: 40px;
-  background: #fff;
+  background: $color-white;
   border: 0;
   padding: 0;
   transform: translateY(-50%);
+	@extend .icon-replace__hamburger;
 
   @include breakpoint($bp-sm) {
     display: none;
   }
 
-  &::after {
-    content: '\68';
-    width: 100%;
-    margin-left: 1px;
-    font-size: 24px;
-    line-height: 40px;
-    text-align: center;
-    text-indent: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: 'senate_icons';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-left: 3px;
-    color: $gen_blue_med;
-  }
+	&:after {
+		width: 100%;
+		margin-left: 1px;
+		font-size: 24px;
+		line-height: 60px;
+		text-align: center;
+		@extend .med-text;
+	}
 }
 
 /* From old site */
@@ -336,115 +407,17 @@
     position: static;
   }
 }
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .l-header + .l-header {
     .c-senator-nav--wrap {
       display: block;
     }
   }
+
   .l-header {
     // this is to fix mobile button positioning when logged in as admin
     .contextual-links-region {
       position: relative;
-    }
-  }
-}
-
-/*------------------------------
-/ SENATOR NAV
-/-------------------------------*/
-.c-senator-nav--wrap {
-  .c-site-search {
-    top: 100px;
-  }
-
-  .c-site-search--btn {
-    top: 0;
-    bottom: 0;
-    margin: auto;
-  }
-
-  .c-site-search {
-    .c-site-search--btn {
-      top: -45px;
-    }
-  }
-
-  &.closed {
-    height: 0;
-  }
-
-  &.search-open {
-    height: 325px; //100px (nav height) + 225px (search area height)
-  }
-
-  li {
-    @include font-stack-secondary;
-    border-top: 1px solid #fff;
-    text-transform: uppercase;
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    line-height: 1em;
-    display: inline-block;
-
-    a {
-      display: block;
-      height: 100%;
-      width: 100%;
-      padding: 20px 0 20px 10px;
-    }
-  }
-}
-
-@media #{$tablet} {
-  .c-senator-nav--wrap {
-    position: relative;
-    width: 100%;
-    background: #fff;
-
-    .c-senator-nav {
-      nav {
-        position: relative;
-        top: 0;
-        height: 100%;
-        padding: 0;
-        overflow: hidden;
-        background: #fff;
-        z-index: 1;
-      }
-
-      ul {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-      }
-
-      li {
-        display: inline-block;
-        vertical-align: middle;
-        height: 100%;
-
-        font-family: 'Proxima Nova SemiBold';
-        font-size: 14px;
-
-        a {
-          line-height: 14px;
-        }
-      }
-    }
-
-    &.closed {
-      height: 0;
-    }
-  }
-}
-
-@media #{$desktop} {
-  .c-senator-nav--wrap {
-    .c-senator-nav {
-      li {
-        font-size: 14px;
-      }
     }
   }
 }
@@ -460,133 +433,23 @@
   .node-type-senator &.messages-open {
     top: 87px;
   }
-
-  // HERO
-  .c-senator-hero {
-    height: 100px;
-    padding-left: 20px;
-    margin-top: 0;
-
-    &::before {
-      content: '';
-      display: inline-block;
-      vertical-align: middle;
-      height: 50px;
-      width: 1px;
-      margin-left: -1px;
-    }
-
-    &.hidden {
-      margin-top: -100px;
-    }
-  }
-  .c-senator-hero--img {
-    display: inline-block;
-    vertical-align: middle;
-    height: 35px;
-    width: 35px;
-
-    img {
-      position: relative;
-      top: 0;
-      width: auto;
-      max-width: 140%;
-      height: 100%;
-    }
-  }
-  .c-senator-hero--info {
-    display: flex;
-    vertical-align: middle;
-    padding: 0 0 0 10px;
-  }
-  .c-senator-hero--name {
-    font-size: 15px;
-    margin: 0;
-  }
-  .c-senator-hero--info-secondary {
-    display: none;
-  }
-  .c-senator-hero--contact-btn {
-    width: 100%;
-    height: 50px;
-    padding-left: 24px;
-
-    &::before {
-      line-height: 50px;
-      padding-left: 0px;
-    }
-  }
-}
-
-@media #{$tablet} {
-  .l-header__collapsed {
-    .c-senator-hero {
-      padding: 0 0 0 9%;
-
-      &::before {
-        height: 100%;
-      }
-    }
-    .c-senator-hero--info {
-      position: relative;
-      display: flex;
-      vertical-align: middle;
-
-      > div {
-        margin-left: 0;
-      }
-
-      &::before {
-        margin-left: 0;
-      }
-    }
-    .c-senator-hero--title {
-      display: block;
-    }
-    .c-senator-hero--name {
-      font-size: 22px;
-    }
-    .c-senator-hero--img {
-      height: 72px;
-      width: 72px;
-
-      > img {
-        position: absolute;
-      }
-
-      picture > img {
-        position: absolute;
-      }
-    }
-
-    .c-senator-hero--contact-btn {
-      height: 100%;
-      max-width: 300px;
-      right: 0;
-      left: auto;
-
-      &::before {
-        line-height: 100px;
-      }
-    }
-  }
 }
 
 .messages-number {
   display: block;
   font-size: 15px;
-  color: $contrast_lgt;
+  @extend .contrast_text;
   position: absolute;
   right: 22px;
   top: 8px;
   z-index: 999999;
   width: 20px;
   height: 20px;
-  background: $gen_blue_med;
+  @extend .med-bg;
   border-radius: 50px;
   text-align: center;
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     display: none;
   }
 }
@@ -599,7 +462,7 @@ nav ul.c-nav--list li a {
   padding: 20px 0 20px 10px;
   text-decoration: none;
   text-transform: uppercase;
-  color: #fff;
+  color: $color-white;
 
   @include breakpoint($bp-sm) {
     height: auto;
@@ -608,7 +471,7 @@ nav ul.c-nav--list li a {
     padding: 0;
     text-align: center;
     line-height: 14px;
-    color: #444;
+    color: $grey08;
     width: 100%;
   }
 }
@@ -627,7 +490,7 @@ nav ul.c-nav--list {
 
 .nav-text:hover,
 .c-nav--list li a:hover {
-  color: $gen_blue_med;
+  @extend .med-text;
 }
 
 .c-site-search--btn {
@@ -637,14 +500,14 @@ nav ul.c-nav--list {
   width: 30px;
   top: 5px;
   right: 15px;
-  color: #444;
+  color: $grey08;
   font-size: 22px;
   border: 0;
-  background-color: #fff;
+  background-color: $color-white;
 }
 
 .c-header--connect {
-  display: flex;
+  display: none;
   align-items: center;
   position: absolute;
   top: 0;
@@ -652,10 +515,14 @@ nav ul.c-nav--list {
   bottom: 0;
   margin: auto;
   height: 55px;
+
+  @include breakpoint($bp-sm) {
+    display: flex;
+  }
 }
 
 .c-nav--social {
-  border-top: 1px solid #fff;
+  border-top: 1px solid $color-white;
   margin: 0 20px;
   padding: 20px 0 0 5px;
   line-height: 1em;
@@ -670,20 +537,20 @@ nav ul.c-nav--list {
     float: left;
     margin: 12px 0;
     padding: 0 20px 0 0;
-    border-right: 1px solid #aaaaaa;
+    border-right: 1px solid $grey05;
   }
 }
 
 .c-nav--social li {
   display: inline-block;
   border: 0;
-  margin-right: 10px;
+  margin: 0 10px;
 
   svg path {
-    fill: #fff;
+    fill: $color-white;
 
     @include breakpoint($bp-sm) {
-      fill: #444444;
+      fill: $grey08;
     }
   }
 
@@ -692,10 +559,10 @@ nav ul.c-nav--list {
     height: 0;
     padding: 28px 0 0 0;
     font-size: 28px;
-    color: #fff;
+    color: $color-white;
 
     &::after {
-      color: #fff;
+      color: $color-white;
       padding: 0;
       font-size: 26px;
       line-height: 28px;
@@ -704,7 +571,7 @@ nav ul.c-nav--list {
       width: 28px;
 
       @include breakpoint($bp-sm) {
-        color: #444444;
+        color: $grey08;
       }
     }
   }
@@ -712,7 +579,7 @@ nav ul.c-nav--list {
 
 .c-header--btn.c-header--btn__taking_action,
 .c-header--btn.c-header--btn__primary {
-  @include font-stack-secondary;
+  font-family: $font-sans-bold;
   cursor: pointer;
   position: relative;
   height: 100%;
@@ -740,8 +607,8 @@ nav ul.c-nav--list {
     font-size: 20px;
     margin-left: 8px;
     padding-left: 3px;
-    color: #fff;
-    background-color: $gen_blue_lgt;
+    color: $color-white;
+    @extend .lgt-bg;
     overflow: hidden;
     border-radius: 50%;
     background-clip: padding-box;
@@ -759,7 +626,7 @@ nav ul.c-nav--list {
 .c-header--btn {
   display: block;
   float: left;
-  color: #666;
+  color: $grey03;
   font-size: 12px;
   line-height: 28px;
   text-transform: capitalize;
@@ -774,8 +641,8 @@ nav ul.c-nav--list {
   width: 100%;
   height: 72px;
   padding: 0 0 0 30px;
-  color: #fff;
-  font-family: 'Proxima Nova SemiBold';
+  color: $color-white;
+  font-family: $font-sans-bold;
   font-size: 12px;
   line-height: 72px;
   text-transform: uppercase;
@@ -783,7 +650,7 @@ nav ul.c-nav--list {
 }
 
 .c-header--btn-login {
-  background-color: $gen_blue_med;
+  @extend .med-bg;
 }
 
 .c-mobile-login--list {
@@ -808,21 +675,21 @@ nav ul.c-nav--list {
       left: 0;
       padding-left: 65px;
       text-decoration: none;
-      color: #fff;
+      color: $color-white;
     }
   }
 }
 
 a.c-header--btn.c-header--btn__primary,
 a.c-header--btn.c-header--btn__taking_action {
-  color: $gen_blue_lgt;
+  @extend .lgt-text;
   text-decoration: none;
 }
 
 a:hover.c-header--btn.c-header--btn__primary,
 a:hover.c-header--btn.c-header--btn__taking_action {
   background-color: $gen_blue_med;
-  color: #fff;
+  color: $color-white;
 
   &::after {
     background-color: $gen_blue_med;
@@ -832,7 +699,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 .c-nav--list li {
   @include font-stack-secondary;
   margin-top: 0;
-  border-top: 1px solid #fff;
+  border-top: 1px solid $color-white;
   text-transform: uppercase;
   font-size: 13px;
   letter-spacing: 0.1em;
@@ -847,7 +714,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     vertical-align: middle;
     border: 0;
     text-align: left;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 14px;
   }
 
@@ -855,7 +722,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: auto;
   }
 
-  &.active-trail:after {
+  &.active-trail::after {
     content: '';
     display: block;
     position: absolute;
@@ -865,81 +732,9 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     margin: auto;
     height: 20px;
     width: 20px;
-    background: #fff;
-    border: 1px solid #aaaaaa;
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
+    background: $color-white;
+    border: 1px solid $grey05;
     transform: rotate(45deg);
-  }
-}
-
-.c-actionbar,
-.c-senate-status {
-  position: relative;
-  display: block;
-  top: 0;
-  width: 100%;
-  height: 60px;
-  padding: 0 60px 0 18px;
-  background-color: $gen_blue_lgt;
-  max-width: unset;
-  transition: margin 0.25s ease;
-
-  // used when actionbar only contains
-  // a simple message - usually not logged-in
-  .c-actionbar--cta {
-    margin: 0;
-    color: #fff;
-    font-size: 18px;
-    max-width: 320px;
-  }
-
-  .c-actionbar--info {
-    display: none;
-  }
-
-  .nys-senator {
-    margin-bottom: 0;
-  }
-
-  .c-block--btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: auto;
-    height: 100%;
-    width: 100%;
-    border: 0;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-
-    a {
-      display: block;
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding: 0 18px;
-      line-height: 60px;
-      color: #fff;
-      text-decoration: none;
-      background-color: $gen_blue_med;
-
-      &::before {
-        line-height: 60px;
-        font-size: 32px;
-        margin-right: 18px;
-      }
-    }
-
-    &::before,
-    &::after {
-      line-height: 60px;
-      font-size: 32px;
-      margin-right: 18px;
-    }
   }
 }
 
@@ -958,8 +753,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     margin: 0 45px 0 0;
     padding: 0 0 0 20px;
     box-shadow: none;
-    color: $gen_blue_med;
-    background: #fff;
+    @extend .med-text;
+    background: $color-white;
     overflow: hidden;
     border-radius: 5px;
     background-clip: padding-box;
@@ -987,39 +782,18 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
   .c-site-search--btn:focus,
   .c-site-search--btn {
-    cursor: pointer;
     position: absolute;
     top: 30px;
     right: 20px;
     padding: 0;
-    height: 45px;
+    height: 45px; // font-size;
     width: 45px;
     font-size: 22px;
     background: transparent;
-    color: $gen_blue_med;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px;
+    @extend .med-text;
+    @extend .icon-replace__search;
 
-    &::after {
-      content: '\6d';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
-    }
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    &::after {
+    &:after {
       width: 100%;
       padding: 0;
       line-height: 45px;
@@ -1027,13 +801,12 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
     &:hover {
       background: transparent;
-      color: $gen_blue_drk;
+      @extend .drk-text;
     }
   }
-
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-actionbar,
   .c-senate-status {
     height: 100px;
@@ -1059,8 +832,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       padding: 0 40px;
       font-size: 16px;
       line-height: 100px;
-
       background-color: $gen_blue_med;
+
 
       &::before {
         height: 100%;
@@ -1069,6 +842,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         line-height: 100px;
       }
     }
+
     .c-block--btn {
       width: auto;
       right: 0;
@@ -1097,7 +871,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: 30px;
     top: 15px;
     right: 15px;
-    color: #444;
+    color: $grey08;
     font-size: 22px;
   }
 
@@ -1106,7 +880,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     .c-site-search--title {
       display: block;
       margin-bottom: 20px;
-      font-family: "Adelle Semibold";
+      font-family: $font-serif-semibold;
       font-size: 26px;
       line-height: 1;
     }
@@ -1175,7 +949,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: block;
       overflow: hidden;
       text-indent: -99999px;
-
       &::after {
         content: '\78';
         text-indent: 0;
@@ -1190,8 +963,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         text-transform: none;
         padding-left: 3px;
       }
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     .c-site-search {
@@ -1219,32 +990,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
           text-transform: none;
           padding-left: 3px;
         }
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
       }
-    }
-  }
-}
-
-@media #{$desktop} {
-  .c-actionbar {
-    &::before {
-      height: 100%;
-    }
-
-    .c-actionbar--info .c-actionbar--cta,
-    .c-actionbar--cta {
-      font-size: 18px;
-      width: 100%;
-      max-width: 380px;
-    }
-  }
-  .c-actionbar.c-actionbar--committee {
-    .c-actionbar--info .c-actionbar--cta,
-    .c-actionbar--cta {
-      font-size: 18px;
-      width: 100%;
-      max-width: 465px;
     }
   }
 }

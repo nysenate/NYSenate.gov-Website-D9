@@ -1,0 +1,93 @@
+uuid: 46a7afbe-e966-4375-82b0-85d2ba743661
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.event.body
+    - field.field.node.event.field_accessible_sitewide
+    - field.field.node.event.field_attachment
+    - field.field.node.event.field_committee
+    - field.field.node.event.field_committee_featured
+    - field.field.node.event.field_date_range
+    - field.field.node.event.field_event_online_link
+    - field.field.node.event.field_event_place
+    - field.field.node.event.field_event_type
+    - field.field.node.event.field_feature_image
+    - field.field.node.event.field_featured
+    - field.field.node.event.field_image_main
+    - field.field.node.event.field_issues
+    - field.field.node.event.field_location
+    - field.field.node.event.field_meeting_location
+    - field.field.node.event.field_senator_multiref
+    - field.field.node.event.field_social_image
+    - field.field.node.event.field_social_teaser
+    - field.field.node.event.field_teleconference_id_number
+    - field.field.node.event.field_teleconference_number
+    - field.field.node.event.field_ustream_url
+    - field.field.node.event.field_video_status
+    - field.field.node.event.field_yt
+    - node.type.event
+  module:
+    - address
+    - address_map_link
+    - datetime_range
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.event.card
+targetEntityType: node
+bundle: event
+mode: card
+content:
+  field_date_range:
+    type: daterange_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: long
+      separator: '-'
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_location:
+    type: address_plain
+    label: hidden
+    settings: {  }
+    third_party_settings:
+      address_map_link:
+        link_address: true
+        map_link_type: google_maps
+        map_link_position: before
+        map_link_text: '[node:field_location:organization]'
+        map_link_new_window: false
+    weight: 1
+    region: content
+hidden:
+  body: true
+  field_accessible_sitewide: true
+  field_attachment: true
+  field_committee: true
+  field_committee_featured: true
+  field_event_online_link: true
+  field_event_place: true
+  field_event_type: true
+  field_feature_image: true
+  field_featured: true
+  field_image_main: true
+  field_issues: true
+  field_meeting_location: true
+  field_senator_multiref: true
+  field_social_image: true
+  field_social_teaser: true
+  field_teleconference_id_number: true
+  field_teleconference_number: true
+  field_ustream_url: true
+  field_video_status: true
+  field_yt: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

@@ -9,6 +9,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
@@ -419,4 +420,62 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
       $pattern->setPattern(preg_replace('/\[node:field_microsite_page_type:entity:name\]/', $replacements . '$1', $pattern->getPattern()));
     }
   }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function nys_senators_token_info() {
+  // Adds current page senator name token.
+  $info['tokens']['current-page']['senator-name'] = [
+    'name' => t('Current Page Senator name'),
+    'description' => t('The current page senator name'),
+    'needs-data' => 'node',
+  ];
+
+  // Adds current page senator TID token.
+  $info['tokens']['current-page']['senator-tid'] = [
+    'name' => t('Current Page Senator TID'),
+    'description' => t('The current page senator TID'),
+  ];
+
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function nys_senators_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $replacements = [];
+
+  if ($type === 'current-page') {
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'senator-name':
+          $node = \Drupal::routeMatch()->getParameter('node');
+          if ($node instanceof NodeInterface
+            && $node->hasField('field_senator_multiref')
+            && !$node->get('field_senator_multiref')->isEmpty()) {
+            $term = $node->field_senator_multiref->entity;
+            $senator_name = ($term instanceof TermInterface && !empty($term->getName())) ? $term->getName() : '';
+            $replacements[$original] = $senator_name;
+          }
+          break;
+
+        case 'senator-tid':
+          $node = \Drupal::routeMatch()->getParameter('node');
+          if ($node instanceof NodeInterface
+            && $node->hasField('field_senator_multiref')
+            && !$node->get('field_senator_multiref')->isEmpty()) {
+            $term = $node->field_senator_multiref->entity;
+            $senator_tid = ($term instanceof TermInterface && !empty($term->id())) ? $term->id() : '';
+            $replacements[$original] = $senator_tid;
+          }
+          break;
+
+      }
+    }
+  }
+
+  return $replacements;
 }

@@ -1,0 +1,38 @@
+uuid: 4ecf2fe3-604c-4b18-8d59-a12ea8552d1a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_contact_webform
+    - field.field.block_content.microsite_contact_webform.field_contact_webform
+  module:
+    - webform
+id: block_content.microsite_contact_webform.default
+targetEntityType: block_content
+bundle: microsite_contact_webform
+mode: default
+content:
+  field_contact_webform:
+    type: webform_entity_reference_select
+    weight: 27
+    region: content
+    settings:
+      default_data: true
+      webforms: {  }
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

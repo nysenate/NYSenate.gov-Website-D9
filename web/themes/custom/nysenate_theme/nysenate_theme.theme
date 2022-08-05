@@ -631,9 +631,11 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $news_image = NULL;
       if ($node->field_image_main) {
         $media = $media_storage->load($node->field_image_main->target_id);
-        $file = File::load($media->field_image->target_id);
-        if (!empty($file)) {
-          $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        if (!empty($media)) {
+          $file = File::load($media->field_image->target_id);
+          if (!empty($file)) {
+            $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
         }
       }
 

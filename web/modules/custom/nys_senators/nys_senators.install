@@ -99,3 +99,14 @@ function nys_senators_update_9004() {
     }
   }
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function nys_senators_update_9005() {
+  $term = Term::create([
+    'name' => 'Inactive',
+    'vid' => 'microsite_page_type',
+  ]);
+  $term->save();
+}

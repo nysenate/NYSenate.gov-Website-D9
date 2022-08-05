@@ -373,6 +373,49 @@ function nys_senators_taxonomy_term_insert(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function nys_senators_taxonomy_term_update(EntityInterface $entity) {
+  // Acts on every new senator taxonomy term that's added.
+  if ($entity->bundle() === 'senator' &&
+    $entity->get('field_active_senator')->value === 0) {
+
+    // Loads microsite page type terms.
+    $termEntityManager = \Drupal::service('entity_type.manager')
+      ->getStorage('taxonomy_term');
+
+    $termEntityManager->loadByProperties([
+      'vid' => 'microsite_page_type',
+      'name' => 'Inactive',
+    ]);
+    // Loads microsite page type terms.
+    $termEntityManagerNode = \Drupal::service('entity_type.manager')
+      ->getStorage('node');
+
+    $micrositePage = $termEntityManagerNode->loadByProperties([
+      'type' => 'microsite_page',
+    ]);
+    $currentTid = $entity->id();
+
+    $pages = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$currentTid], 'IN')
+      ->execute();
+    if (!empty($pages)) {
+      $nodes = Node::loadMultiple($pages);
+      foreach ($nodes as $node) {
+        if ($node->isPublished()) {
+          $node->set('status', '0');
+          $node->save();
+
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_pathauto_pattern_alter().
  */
 function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $context) {

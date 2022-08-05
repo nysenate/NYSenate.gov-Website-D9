@@ -823,6 +823,45 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
     $variables['contents'] = $contents;
   }
+
+  // Featured issue EVA.
+  if ($view->id() == 'featured_issue' && $view->current_display == 'featured_issue') {
+    $results = $view->result;
+    if (!empty($results)) {
+      $issues = [];
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+      $featured_issue = $term_storage->load($view->args[0]);
+
+      foreach ($results as $row) {
+        $node = $row->_entity;
+
+        $image = NULL;
+        if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+          $image = $media_storage->load($node->field_image_main->target_id);
+          $image = $view_builder->view($image, 'default');
+        }
+
+        $issues[] = [
+          'thumb_image' => $image,
+          'link' => $node->toUrl()->toString(),
+          'title' => $node->label(),
+        ];
+      }
+
+      $variables['featured_issue_link'] = $featured_issue->toUrl()->toString();
+      $variables['featured_issue_name'] = $featured_issue->label();
+
+      // Set the first element as the main issue.
+      $main_issue = array_shift($issues);
+      $variables['main_issue'] = [
+        'large_image' => $main_issue['thumb_image'],
+        'link' => $main_issue['link'],
+        'title' => $main_issue['title'],
+      ];
+
+      $variables['issues'] = $issues;
+    }
+  }
 }
 
 /**

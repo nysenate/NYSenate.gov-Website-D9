@@ -11,6 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\media\MediaInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -760,7 +761,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $image_main = NULL;
-      if ($node->field_image_main->target_id) {
+      if (isset($node->field_image_main) && !empty($node->field_image_main->target_id)) {
         $media = $media_storage->load($node->field_image_main->target_id);
         $file = File::load($media->field_image->target_id);
         $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
@@ -1011,7 +1012,9 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   // Bill PDF Link.
   $openleg_config = \Drupal::config('nys_openleg.settings');
   $base_path = $openleg_config->get('base_path');
-  $variables['pdf_link'] = $base_path . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
+  if (isset($variables['content']['field_ol_session'][0]['#markup'])) {
+    $variables['pdf_link'] = $base_path . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
+  }
 
   $variables['active_amend_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
 
@@ -1557,9 +1560,11 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
  * Implements hook_form_element_alter().
  */
 function nysenate_theme_preprocess_form_element(&$variables) {
-  if (array_intersect(['type_1', 'type'], $variables['element']['#parents'])) {
-    $variables['attributes']['class'][] = 'c-tab';
-    $variables['label']['#attributes']['class'][] = 'c-tab-link';
+  if (!empty($variables['element']['#parents'])) {
+    if (array_intersect(['type_1', 'type'], $variables['element']['#parents'])) {
+      $variables['attributes']['class'][] = 'c-tab';
+      $variables['label']['#attributes']['class'][] = 'c-tab-link';
+    }
   }
 }
 
@@ -1622,5 +1627,23 @@ function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variabl
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($node->hasField('field_microsite_page_type') &&
+    !$node->get('field_microsite_page_type')->isEmpty()) {
+    $term = $node->field_microsite_page_type->entity ?? [];
+    if ($term instanceof TermInterface) {
+      $name = $term->name->value ?? '';
+      if ($name === 'Events') {
+        $variables['is_events'] = TRUE;
+      }
+    }
   }
 }

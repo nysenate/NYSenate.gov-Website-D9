@@ -11,6 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\media\MediaInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -630,9 +631,11 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $news_image = NULL;
       if ($node->field_image_main) {
         $media = $media_storage->load($node->field_image_main->target_id);
-        $file = File::load($media->field_image->target_id);
-        if (!empty($file)) {
-          $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        if (!empty($media)) {
+          $file = File::load($media->field_image->target_id);
+          if (!empty($file)) {
+            $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
         }
       }
 
@@ -822,6 +825,45 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     }
 
     $variables['contents'] = $contents;
+  }
+
+  // Featured issue EVA.
+  if ($view->id() == 'featured_issue' && $view->current_display == 'featured_issue') {
+    $results = $view->result;
+    if (!empty($results)) {
+      $issues = [];
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+      $featured_issue = $term_storage->load($view->args[0]);
+
+      foreach ($results as $row) {
+        $node = $row->_entity;
+
+        $image = NULL;
+        if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+          $image = $media_storage->load($node->field_image_main->target_id);
+          $image = $view_builder->view($image, 'default');
+        }
+
+        $issues[] = [
+          'thumb_image' => $image,
+          'link' => $node->toUrl()->toString(),
+          'title' => $node->label(),
+        ];
+      }
+
+      $variables['featured_issue_link'] = $featured_issue->toUrl()->toString();
+      $variables['featured_issue_name'] = $featured_issue->label();
+
+      // Set the first element as the main issue.
+      $main_issue = array_shift($issues);
+      $variables['main_issue'] = [
+        'large_image' => $main_issue['thumb_image'],
+        'link' => $main_issue['link'],
+        'title' => $main_issue['title'],
+      ];
+
+      $variables['issues'] = $issues;
+    }
   }
 }
 
@@ -1626,5 +1668,23 @@ function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variabl
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($node->hasField('field_microsite_page_type') &&
+    !$node->get('field_microsite_page_type')->isEmpty()) {
+    $term = $node->field_microsite_page_type->entity ?? [];
+    if ($term instanceof TermInterface) {
+      $name = $term->name->value ?? '';
+      if ($name === 'Events') {
+        $variables['is_events'] = TRUE;
+      }
+    }
   }
 }

@@ -1,0 +1,25 @@
+uuid: 0a647439-f451-4e07-92be-a5a54bfa5b18
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_contact_webform
+    - field.field.block_content.microsite_contact_webform.field_contact_webform
+  module:
+    - webform
+id: block_content.microsite_contact_webform.default
+targetEntityType: block_content
+bundle: microsite_contact_webform
+mode: default
+content:
+  field_contact_webform:
+    type: webform_entity_reference_entity_view
+    label: hidden
+    settings:
+      source_entity: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

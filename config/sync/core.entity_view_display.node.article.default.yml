@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.article.field_committee_featured
     - field.field.node.article.field_date
     - field.field.node.article.field_featured
+    - field.field.node.article.field_image_caption
     - field.field.node.article.field_image_hero
     - field.field.node.article.field_image_main
     - field.field.node.article.field_issues
@@ -129,6 +130,14 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 12
+    region: content
+  field_image_caption:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 25
     region: content
   field_image_hero:
     type: entity_reference_entity_view

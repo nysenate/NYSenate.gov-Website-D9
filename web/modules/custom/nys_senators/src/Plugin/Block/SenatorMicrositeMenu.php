@@ -6,6 +6,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -80,8 +81,8 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
-    if ($node && $node->getType() == 'microsite_page') {
-      $senator_terms = $node->get('field_senator_multiref')->getValue();
+    if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
+      $senator_terms = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->getValue() : [];
       $tids = [];
       foreach ($senator_terms as $tid) {
         $tids[] = (int) $tid['target_id'];

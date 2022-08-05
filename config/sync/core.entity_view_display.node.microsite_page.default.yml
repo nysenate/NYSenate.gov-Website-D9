@@ -14,7 +14,6 @@ dependencies:
     - node.type.microsite_page
   module:
     - entity_reference_revisions
-    - options
     - user
 id: node.microsite_page.default
 targetEntityType: node
@@ -30,31 +29,11 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
-  field_microsite_page_type:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_senator_multiref:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_senator_tab:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
 hidden:
   field_meta_tags: true
+  field_microsite_page_type: true
+  field_senator_multiref: true
+  field_senator_tab: true
   field_short_title: true
   field_summary: true
   field_thumbnail: true

@@ -127,7 +127,7 @@
 }
 
 .c-event-name {
-  color: $grey02;
+  color: $grey08;
 
   a {
     color: $grey02;
@@ -144,10 +144,10 @@
   width: 100%;
 
   .c-event-name {
-    color: $grey02;
+    color: $grey08;
 
     a {
-      color: $grey02;
+      color: $grey08;
     }
   }
 }
@@ -199,9 +199,8 @@
   .c-event-name {
     font-family: $font-serif-semibold;
     font-size: 24px;
-    margin: 0px 0px 12px 0px;
+    margin: 0 0 12px 0;
     line-height: 120%;
-    margin-left: 0;
   }
 
   .c-event-location {
@@ -281,6 +280,7 @@
   .c-event-name {
     font-family: $font-serif-semibold;
     font-size: 24px;
+    font-weight: 400;
     margin: 14px 20px 14px 20px;
     line-height: 120%;
     float: left;
@@ -355,7 +355,7 @@
   }
 }
 
-.nys-title {
+.tabs-content .nys-title {
   font-size: 30px;
   margin-top: 12px;
   font-family: $font-serif-semibold;
@@ -390,196 +390,11 @@
   }
 }
 
-
-.c-event-block--featured {
-  margin: 0;
-  padding-top: 16px;
-  padding-bottom: 40px;
-  border-top: 2px solid $grey09;
-  font-family: $font-sans;
-  @include clearfix;
-
-  .c-title {
-    font-family: $font-sans;
-    font-size: 14px;
-    font-weight: normal;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .c-event-image {
-    width: 100%;
-  }
-
-  .c-event-date {
-    margin-top: -15px;
-    text-transform: uppercase;
-    font-size: 20px;
-
-    span {
-      font-family: $font-serif-bold;
-
-      &::after {
-        content:'/';
-        display: inline-block;
-        font-family: $font-sans;
-        margin: 0px 0px 0px 5px;
-      }
-    }
-  }
-
-  .c-event-date SPAN:last-of-type {
-    &::after {
-      content: '';
-    }
-  }
-
-  .c-event-name {
-    font-family: $font-serif;
-    font-size: 24px;
-    margin: 18px 0px 12px 0px;
-    line-height: 120%;
-  }
-
-  .c-event-location {
-    font-size: 20px;
-    color: $grey10;
-
-    span {
-      margin-right: 7px;
-      font-size: 18px;
-      @extend .lgt-text;
-    }
-  }
-
-  .c-event-address {
-    margin-top: 15px;
-    color: $grey04;
-    font-size: 20px;
-    line-height: 140%;
-  }
-
-  .c-event-time {
-    margin-top: 10px;
-    font-size: 20px;
-    font-family: $font-sans-bold;
-  }
-
-  .c-event-rsvp {
-    margin: 20px 0 0 0;
-    padding: 9px 11px;
-    text-transform: uppercase;
-    font-family: $font-sans-bold;
-    display: inline-block;
-    text-decoration: none;
-    border: 1px solid $grey07;
-    border-top: 2px solid $grey05;
-    font-size: 18px;
-    @extend .lgt-text;
-  }
-  .addthisevent-drop {
-    margin-top: 20px;
-  }
-}
-
-.c-event-block--featured-image {
-  margin: 0;
-  padding-top: 16px;
-  padding-bottom: 40px;
-  font-family: $font-sans;
-  @include clearfix;
-
-  .c-title {
-    font-family: $font-sans;
-    font-size: 14px;
-    font-weight: normal;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .c-event-image {
-    width: 100%;
-  }
-
-  .c-event-date {
-    margin-top: 30px;
-    text-transform: uppercase;
-    font-size: 24px;
-
-    span {
-      font-family: $font-serif-bold;
-      &::after {
-        content:'/';
-        display: inline-block;
-        font-family: $font-sans;
-        margin: 0px 0px 0px 5px;
-      }
-    }
-  }
-
-  .c-event-date SPAN:last-of-type {
-    &::after {
-      content: '';
-    }
-  }
-
-  .c-event-name {
-    font-family: $font-serif;
-    font-size: 24px;
-    margin: 18px 0px 18px 0px;
-    line-height: 120%;
-  }
-
-  .c-event-location {
-    font-size: 20px;
-    color: $grey04;
-    line-height: 140%;
-
-    span {
-      margin-right: 7px;
-      font-size: 18px;
-      @extend .lgt-text;
-    }
-  }
-
-  .c-event-address {
-    margin-top: 0;
-    color: $grey04;
-    font-size: 20px;
-    line-height: 140%;
-  }
-
-  .c-event-time {
-    margin-top: 10px;
-    font-size: 20px;
-    font-family: $font-sans-bold;
-    font-size: 18px;
-  }
-
-  .c-event-rsvp {
-    margin: 20px 0 0 0;
-    padding: 9px 11px;
-    text-transform: uppercase;
-    font-family: $font-sans-bold;
-    display: inline-block;
-    text-decoration: none;
-    border: 1px solid $grey07;
-    border-top: 2px solid $grey05;
-    font-size: 18px;
-    @extend .lgt-text;
-  }
-
-  .addthisevent-drop {
-    margin-top: 20px;
-  }
-}
-
 .c-calendar--today .nys-title {
   font-size: 30px;
   margin-top: 12px;
   font-family: $font-serif-semibold;
 }
-
 
 .c-upcoming-container.today {
   background-color: $grey06;
@@ -681,7 +496,8 @@
     .c-event-name {
       float: right;
       width: 460px;
-      margin: 12px 120px 10px 0px;
+      margin: 12px 120px 10px 0;
+      font-weight: 400;
     }
 
     .c-event-location {
@@ -796,61 +612,6 @@
       clear: right;
       margin-right: 430px;
     }
-
-    .addthisevent-drop {
-      clear: right;
-      margin-right: 400px;
-    }
-  }
-
-  .c-event-block--featured-image {
-    .c-event-image {
-      width: 50%;
-      float: left;
-    }
-
-    .c-event-date {
-      margin-top: 0;
-      float: right;
-      width: 300px;
-    }
-
-    .c-event-name {
-      float: right;
-      width: 300px;
-      clear: right;
-    }
-
-    .c-event-location {
-      float: right;
-      width: 300px;
-      clear: right;
-    }
-
-    .c-event-address {
-      float: right;
-      width: 300px;
-      clear: right;
-    }
-
-    .c-event-time {
-      float: right;
-      clear: right;
-      width: 300px;
-    }
-
-    .c-event-rsvp {
-      float: right;
-      clear: right;
-      margin-right: 145px;
-    }
-    .addthisevent-drop {
-      clear: right;
-      float: right;
-      width: 180px;
-      margin-top: 20px;
-      margin-right: 120px;
-    }
   }
 
   .c-upcoming-container.today {
@@ -882,7 +643,7 @@
   font-family: $font-serif-semibold;
   font-size: 30px;
   line-height: 42px;
-  color: $grey02;
+  color: $grey08;
 }
 
 .c-upcoming--nav {

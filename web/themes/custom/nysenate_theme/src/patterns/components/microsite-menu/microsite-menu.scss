@@ -6,15 +6,15 @@
 /-------------------------------*/
 .c-nav--wrap.c-senator-nav--wrap {
 
-  .c-site-search--btn {
+  nav .c-site-search--btn {
     position: absolute;
     background-color: transparent;
     padding: 0;
     top: 0;
     bottom: 0;
     margin: auto;
-    @extend .med-text;
     @extend .icon-replace__search;
+    @extend .med-text;
 
     &::after {
       width: 100%;
@@ -52,6 +52,10 @@
       padding: 20px 0 20px 10px;
     }
   }
+
+  nav ul > li.leaf {
+    top: auto;
+  }
 }
 
 @include breakpoint($bp-sm) {
@@ -69,11 +73,12 @@
     .c-senator-nav {
       position: relative;
       height: 100px;
-      background: $greyLight;
+      background-color: $greyLight !important;
       border-bottom: 1px solid $grey05;
       padding: 0 9%;
 
       nav {
+        background-color: $greyLight !important;
         position: relative;
         top: 0;
         height: 100%;

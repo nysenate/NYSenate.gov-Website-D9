@@ -1,0 +1,23 @@
+uuid: f07fd33f-c822-4a3b-bd33-90cdaa0e5e19
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_issue
+    - field.field.block_content.featured_issue.field_issue
+    - field.field.block_content.featured_issue.field_senator
+id: block_content.featured_issue.default
+targetEntityType: block_content
+bundle: featured_issue
+mode: default
+content:
+  featured_issue_entity_view_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_issue: true
+  field_senator: true
+  langcode: true
+  search_api_excerpt: true

@@ -1,0 +1,29 @@
+uuid: 5bcb3da7-51e3-4972-b517-5f7d054e600b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_issue
+    - field.storage.block_content.field_issue
+    - taxonomy.vocabulary.issues
+id: block_content.featured_issue.field_issue
+field_name: field_issue
+entity_type: block_content
+bundle: featured_issue
+label: Issue
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      issues: issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1150,10 +1150,15 @@ function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
   }
 
   $bills[] = [
+    'featured' => TRUE,
+    'small' => FALSE,
+    'is_poll' => TRUE,
+    'resolution' => TRUE,
+    'link' => $node->toUrl()->toString(),
     'number' => $node->label(),
     'description' => $node->field_ol_name->value,
     'date' => $date,
-    'update_location' => $last_status,
+    'update_location' => $last_status ?? '',
     'sponsor' => $sponsor_name ?? '',
     'positions' => $positions,
   ];

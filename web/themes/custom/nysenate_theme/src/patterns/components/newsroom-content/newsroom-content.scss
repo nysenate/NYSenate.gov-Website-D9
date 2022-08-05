@@ -53,6 +53,13 @@
       margin-right: 0.5em;
     }
   }
+
+  @include breakpoint($bp-sm) {
+    .nys-bill-status__sml li,
+    .nys-bill-status__drk li {
+      margin-top: -7.5px;
+    }
+  }
 }
 
 /*----------------------------------------

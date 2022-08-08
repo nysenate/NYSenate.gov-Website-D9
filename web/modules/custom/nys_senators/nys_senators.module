@@ -290,6 +290,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
   $heroBlock = BlockContent::create([
     'info' => $senator_name . ' - Hero block',
     'type' => 'microsite_hero',
+    'revision_user' => 1,
     'field_senator' => [
       'target_id' => $entity->id(),
     ],
@@ -300,6 +301,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
   $menuBlock = BlockContent::create([
     'info' => $senator_name . ' - Menu block',
     'type' => 'senator_microsite_menu',
+    'revision_user' => 1,
   ]);
   $menuBlock->save();
 
@@ -315,6 +317,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
     $nodeValues = [
       'type' => 'microsite_page',
       'status' => 1,
+      'uid' => 1,
       'field_microsite_page_type' => [
         'target_id' => $micrositeType->id(),
       ],

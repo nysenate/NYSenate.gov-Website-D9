@@ -120,7 +120,7 @@
         "mediacurrent/ci-scripts": "^1.11.0",
         "mediacurrent/ci-tests": "dev-master",
         "mglaman/drupal-check": "^1.0",
-        "phpro/grumphp": "^1.0.0",
+        "phpro/grumphp-shim": "^1.13",
         "phpspec/prophecy-phpunit": "^2",
         "vlucas/phpdotenv": "^2.4"
     },
@@ -133,15 +133,15 @@
         "discard-changes": true,
         "sort-packages": true,
         "platform": {
-            "php": "7.3"
+            "php": "7.4"
         },
         "allow-plugins": {
             "composer/installers": true,
             "cweagans/composer-patches": true,
             "drupal/core-composer-scaffold": true,
             "oomphinc/composer-installers-extender": true,
-            "phpro/grumphp": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpro/grumphp-shim": true
         }
     },
     "autoload": {

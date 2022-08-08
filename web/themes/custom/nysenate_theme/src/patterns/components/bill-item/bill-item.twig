@@ -44,11 +44,13 @@
           <p class="c-bill-update--date">   
             <span class="date-display-single">{{ bill.date }}</span>
           </p>
-          <p class="c-bill-update--location">
-            <span>
-              {{ bill.update_location }}
-            </span>
-          </p>
+          {% if bill.update_location %}
+            <p class="c-bill-update--location">
+              <span>
+                {{ bill.update_location }}
+              </span>
+            </p>
+          {% endif %}
         </div>
         {% if bill.committee_link %}
           <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
@@ -59,11 +61,13 @@
         <p class="c-bill-update--date">   
           <span class="date-display-single">{{ bill.date }}</span>
         </p>
-        <p class="c-bill-update--location">
-          <span>
-            {{ bill.update_location }}
-          </span>
-        </p>
+        {% if bill.update_location %}
+          <p class="c-bill-update--location">
+            <span>
+              {{ bill.update_location }}
+            </span>
+          </p>
+        {% endif %}
         {% if bill.sponsor_name_only %}
           <p class="c-bill-update--sponsor">{{ bill.sponsor_name_only }}</p>
         {% endif %}

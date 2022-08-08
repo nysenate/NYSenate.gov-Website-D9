@@ -7,6 +7,15 @@
 	@include breakpoint($bp-sm) {
 		padding: 40px 20px 0;
 	}
+
+	.nys-bill-status {
+		height: 25px;
+		margin-top: 15px;
+	}
+
+	.nys-bill-status hr {
+		top: 2px;
+	}
 }
 
 .nys-article-title {
@@ -125,46 +134,6 @@
 	margin-bottom: 0;
 }
 
-.nys-associated-topics {
-  display: inline;
-  list-style: none;
-  font-size: 15px;
-  line-height: 1.2em;
-  //padding-left: 0;
-  border-left: 1px solid $grey04;
-  padding-left: 14px;
-  ul {
-    display: inline;
-    margin: 0;
-    padding: 0;
-  }
-
-  li {
-    display: inline;
-    margin-right: 10px;
-    text-transform: uppercase;
-    font-size: 15px;
-    font-family: $font-sans-bold;
-    white-space: normal;
-  }
-
-  a {
-    color: $orange01;
-		text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-.nys-associated-topics--label {
-  display: inline;
-  margin-right: 10px;
-  text-transform: uppercase;
-  font-size: 15px;
-  line-height: 1.2em;
-  font-family: $font-sans-bold;
-}
-
 @include breakpoint($bp-sm) {
 	.c-news-download {
 		margin-bottom: 30px;
@@ -182,11 +151,11 @@
   }
 }
 
-
 .c-block-quoted-body {
 	padding-left: 40px;
 	border-left: 5px solid #eee;
 }
+
 /*------------------------------------
 / 'IN THE NEWS' elements
 /------------------------------------*/

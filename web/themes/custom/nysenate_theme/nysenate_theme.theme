@@ -721,7 +721,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $last_status = '';
-      if ($node->field_ol_last_status) {
+      if ($node->hasField('field_ol_last_status') && !$node->get('field_ol_last_status')->isEmpty()) {
         $last_status = $allowed_values[$node->field_ol_last_status->value];
       }
 

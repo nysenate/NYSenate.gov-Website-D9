@@ -1,0 +1,49 @@
+uuid: 788e0632-00d7-46d8-9895-5b782e3ce7d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_issue
+    - field.field.block_content.featured_issue.field_issue
+    - field.field.block_content.featured_issue.field_senator
+id: block_content.featured_issue.default
+targetEntityType: block_content
+bundle: featured_issue
+mode: default
+content:
+  field_issue:
+    type: entity_reference_autocomplete
+    weight: 26
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_senator:
+    type: entity_reference_autocomplete
+    weight: 27
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

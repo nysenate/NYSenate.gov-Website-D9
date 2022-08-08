@@ -42,6 +42,12 @@
       <!--.c-header-bar -->
       <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace button--menu"></button>
 
+      {% block microsite_hero %}
+        {% if microsite_hero %}
+          {{ microsite_hero }}
+        {% endif %}
+      {% endblock %}
+
       <div class="c-nav--wrap">
         <div class="c-nav l-row l-row--nav">
           <nav>

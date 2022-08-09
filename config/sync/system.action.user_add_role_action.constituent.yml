@@ -1,0 +1,14 @@
+uuid: 1cfc236d-ae5e-4512-ada5-a276b014d937
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.constituent
+  module:
+    - user
+id: user_add_role_action.constituent
+label: 'Add the Constituent role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: constituent

@@ -12,7 +12,7 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity:block'
+  plugin: 'entity:block_content'
   default_bundle: pg_image_slider
 
 process:
@@ -20,11 +20,11 @@ process:
     -
       plugin: get
       source: bundle
-  field_pg_imageslider_title:
+  field_slider_title:
     -
       plugin: get
       source: field_pg_imageslider_title
-  field_pg_slider_images:
+  field_slider_item:
     -
       plugin: sub_process
       source: field_pg_feature_image

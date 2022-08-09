@@ -2,7 +2,7 @@ id: nys_content_meeting
 migration_tags:
   - 'Drupal 7'
   - Content
-migration_group: migrate_drupal_7
+migration_group: nys_general
 label: 'Node Meeting'
 
 source:
@@ -90,8 +90,10 @@ process:
 
   field_event_online_link:
     -
-      plugin: field_link
+      plugin: sub_process
       source: field_event_online_link
+      process:
+        uri: url
 
   field_meeting_location:
     -

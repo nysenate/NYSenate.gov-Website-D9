@@ -11,7 +11,7 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity_complete:node'
+  plugin: 'entity:node'
   default_bundle: article
 
 process:
@@ -19,10 +19,6 @@ process:
     -
       plugin: get
       source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
 
   title:
     -

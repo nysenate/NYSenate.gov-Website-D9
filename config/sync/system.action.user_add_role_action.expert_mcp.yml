@@ -1,0 +1,14 @@
+uuid: b1c0a14a-d0e6-4e04-9963-0c274bb151be
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.expert_mcp
+  module:
+    - user
+id: user_add_role_action.expert_mcp
+label: 'Add the Expert MCP role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: expert_mcp

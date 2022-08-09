@@ -1,4 +1,4 @@
-id: nys_inthenews
+id: nys_content_inthenews
 migration_tags:
   - 'Drupal 7'
   - Content
@@ -19,10 +19,6 @@ process:
     -
       plugin: get
       source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
 
   title:
     -
@@ -114,8 +110,10 @@ process:
 
   field_publication_source_url:
     -
-      plugin: get
+      plugin: sub_process
       source: field_publication_source_link
+      process:
+        uri: value
 
   field_accessible_sitewide:
     -

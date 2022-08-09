@@ -15,9 +15,10 @@
   <div class="l-tab-bar">
     <div class="c-tab--arrow u-mobile-only"></div>
     {% for panel in panels %}
-      <label class="c-tab {% if loop.first %}active{% endif %}"><input type="radio" name="language" value="#panel{{ loop.index }}">
-        <span class="c-tab-link">{{ panel.tab_text }}</span>
-      </label>
+      <div class="c-tab">
+        <input type="radio" name="language" value="#panel{{ loop.index }}"  {% if loop.first %}checked="checked"{% endif %}>
+        <label class="c-tab-link">{{ panel.tab_text }}</label>
+      </div>
     {% endfor %}
   </div>
 

@@ -19,6 +19,10 @@
   border-bottom: 1px solid $grey05;
   padding-bottom: 20px;
   position: relative;
+
+  &.link {
+    border-bottom: 0;
+  }
 }
 
 .c-container--header__top-border {
@@ -330,6 +334,52 @@ h3 {
     width: 27%;
   }
 }
+
+.c-block-legislation {
+  position: relative;
+  border-top: 1px solid $grey05;
+  padding: 20px 0 35px;
+  margin-bottom: 0;
+  overflow: visible;
+
+  .c-block {
+
+    &.c-legislation-block {
+      margin-bottom: 0;
+    }
+  }
+
+  .c-block--btn-toggle {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 11;
+    background: transparent;
+	  text-indent: -99999px;
+
+    &:after {
+      font-size: 26px;
+      line-height: 42px;
+      color: $grey05 !important;
+    }
+  }
+} 
+
+@include breakpoint($bp-sm) {
+  .c-block-legislation .c-block--btn-toggle {
+		height: 42px;
+		width: 42px;
+		padding-left: 0.2em;
+	}
+
+  .c-block.c-block-legislation-featured .c-block--btn-toggle {
+    background: transparent;
+    border: 0;
+  }
+}
+
 
 /*-------------------------------------
 / TOGGLE BUTTON

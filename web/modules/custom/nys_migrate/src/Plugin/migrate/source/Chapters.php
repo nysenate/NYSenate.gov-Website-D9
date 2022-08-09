@@ -78,7 +78,7 @@ class Chapters extends SqlBase {
 
     // Add results to row.
     $row->setSourceProperty('chapter_nids', $chapter_refs);
-    return parent::prepareRow();
+    return parent::prepareRow($row);
   }
 
 }

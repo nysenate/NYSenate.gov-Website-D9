@@ -62,10 +62,17 @@ process:
           source: fid
           no_stub: true
 
-  field_accordion:
+  field_accordion/target_id:
     -
       plugin: migration_lookup
       migration: nys_chapter_blocks
+      no_stub: true
+      source: nid
+  field_accordion/target_revision_id:
+    -
+      plugin: migration_lookup
+      migration: nys_chapter_blocks
+      no_stub: true
       source: nid
 
   field_date:

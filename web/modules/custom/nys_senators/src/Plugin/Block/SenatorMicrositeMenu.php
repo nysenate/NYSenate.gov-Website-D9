@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -91,25 +92,29 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       if (!isset($nids)) {
         // Get all 'Microsite Pages' with the same senator reference.
         $nids = $this->entityTypeManager->getStorage('node')->getQuery()
+          ->accessCheck(FALSE)
           ->condition('status', 1)
           ->condition('type', 'microsite_page')
-          ->condition('field_senator_multiref', $tids)
+          ->condition("field_senator_multiref.%delta.target_id", $tids, 'IN')
+          ->condition("field_senator_multiref.%delta", [0], 'IN')
           ->execute();
       }
       $nodes = Node::loadMultiple($nids);
       $menu_links = [];
+      /** @var \Drupal\node\Entity\Node $node */
       foreach ($nodes as $node) {
-        /** @var \Drupal\name\Plugin\Field\FieldType\NameItem $entity */
-        $entity = $node->get('field_microsite_page_type')->entity;
-        /** @var \Drupal\Core\Field\FieldDefinitionInterface $menu_title */
-        $menu_title = $entity->getName();
-        if ($entity->get('field_microsite_menu_weight')->getValue()) {
-          /** @var \Drupal\name\Plugin\Field\FieldType\NameItem $menu_weight */
-          $menu_weight = $entity->get('field_microsite_menu_weight')->getValue()[0]['value'];
-          // Get the url alias for each 'Microsite Page' and populate
-          // links for menu block.
-          $menu_links[$menu_weight]['menu_url'] = $node->toUrl()->toString();
-          $menu_links[$menu_weight]['menu_title'] = $menu_title;
+        /** @var \Drupal\taxonomy\Entity\Term $term */
+        $term = $node->get('field_microsite_page_type')->entity ?? [];
+        if ($term instanceof TermInterface) {
+          $menu_title = $term->getName() ?? '';
+          if (!$term->get('field_microsite_menu_weight')->isEmpty()) {
+            $menu_weight = $term->get('field_microsite_menu_weight')->getValue();
+            $weight_value = $menu_weight[0]['value'];
+            // Get the url alias for each 'Microsite Page' and populate
+            // links for menu block.
+            $menu_links[$weight_value]['menu_url'] = $node->toUrl()->toString();
+            $menu_links[$weight_value]['menu_title'] = $menu_title;
+          }
         }
       }
       return [

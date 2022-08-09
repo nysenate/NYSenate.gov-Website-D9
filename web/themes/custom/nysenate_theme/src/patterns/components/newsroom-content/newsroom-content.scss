@@ -2,6 +2,10 @@
 @import '../../global/utils/init';
 
 .newsroom-content {
+  .bef-exposed-form .form--inline > .form-item {
+    margin: 0;
+  }
+
   .item-list .pager {
     &.pager-load-more.newsroom-content {
       list-style: none;
@@ -24,7 +28,13 @@
   }
 
   .c-legislation-info {
-    padding: 0
+    display: flex;
+    padding: 0;
+
+    .c-bill-num {
+      width: 25%;
+      max-width: 200px;
+    }
   }
 
   .nys-bill-status { 

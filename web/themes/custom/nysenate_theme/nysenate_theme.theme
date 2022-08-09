@@ -620,19 +620,19 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     foreach ($view->result as $row) {
       $node = $row->_entity;
       $allowed_values = [];
-      if ($node->field_category) {
+      if ($node->hasField('field_category')) {
         $allowed_values = $node->field_category->getSetting('allowed_values');
       }
       $term = NULL;
-      if ($node->field_issues->target_id) {
-        $term = $term_storage->load($node->field_issues->target_id);
+      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+        $term = !empty($node->field_issues->target_id) ? $term_storage->load($node->field_issues->target_id) : NULL;
       }
 
       $news_image = NULL;
-      if ($node->field_image_main) {
-        $media = $media_storage->load($node->field_image_main->target_id);
+      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $file = File::load($media->field_image->target_id);
+          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
           if (!empty($file)) {
             $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
           }

@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.bill.field_bill_multi_session_root
     - field.field.node.bill.field_bill_no_issue_tags
+    - field.field.node.bill.field_comments
     - field.field.node.bill.field_issues
     - field.field.node.bill.field_majority_issue_tag
     - field.field.node.bill.field_metatags
@@ -183,9 +184,15 @@ content:
     third_party_settings: {  }
     weight: 10
     region: content
+  vote_widget:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
 hidden:
   field_bill_multi_session_root: true
   field_bill_no_issue_tags: true
+  field_comments: true
   field_majority_issue_tag: true
   field_metatags: true
   field_ol_active_version: true

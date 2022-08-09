@@ -1,0 +1,21 @@
+uuid: 3a8475c1-9b1d-47cc-975e-0c79ba5ece7e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_contact
+    - field.storage.block_content.field_contact_type
+  module:
+    - options
+id: block_content.microsite_contact.field_contact_type
+field_name: field_contact_type
+entity_type: block_content
+bundle: microsite_contact
+label: 'Contact Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

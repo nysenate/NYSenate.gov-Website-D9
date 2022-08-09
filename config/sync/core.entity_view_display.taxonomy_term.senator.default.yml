@@ -4,21 +4,40 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.senator.field_active_senator
+    - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
     - field.field.taxonomy_term.senator.field_current_duties
     - field.field.taxonomy_term.senator.field_email
+    - field.field.taxonomy_term.senator.field_email_autoreply_text
+    - field.field.taxonomy_term.senator.field_facebook_url
+    - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_instagram_url
+    - field.field.taxonomy_term.senator.field_media_contact
+    - field.field.taxonomy_term.senator.field_media_email
+    - field.field.taxonomy_term.senator.field_media_fax
+    - field.field.taxonomy_term.senator.field_media_phone
     - field.field.taxonomy_term.senator.field_member_headshot
+    - field.field.taxonomy_term.senator.field_message_notification_email
     - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_office_contacts
+    - field.field.taxonomy_term.senator.field_offices
     - field.field.taxonomy_term.senator.field_ol_member_id
     - field.field.taxonomy_term.senator.field_ol_shortname
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
     - field.field.taxonomy_term.senator.field_senator_name
+    - field.field.taxonomy_term.senator.field_store_settings
+    - field.field.taxonomy_term.senator.field_top_issue
+    - field.field.taxonomy_term.senator.field_twitter_url
+    - field.field.taxonomy_term.senator.field_user_account
+    - field.field.taxonomy_term.senator.field_youtube_url
     - taxonomy.vocabulary.senator
   module:
+    - address
+    - entity_reference_revisions
     - name
     - options
-    - svg_image
+    - telephone
 id: taxonomy_term.senator.default
 targetEntityType: taxonomy_term
 bundle: senator
@@ -32,14 +51,22 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 8
+    weight: 6
+    region: content
+  field_autoreply_text:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 19
     region: content
   field_conference:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   field_current_duties:
     type: string
@@ -47,36 +74,116 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_email:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 4
     region: content
-  field_member_headshot:
-    type: image
+  field_email_autoreply_text:
+    type: string
     label: above
     settings:
-      image_link: ''
-      image_style: ''
-      svg_attributes:
-        width: null
-        height: null
-      svg_render_as_image: true
-      image_loading:
-        attribute: lazy
+      link_to_entity: false
     third_party_settings: {  }
-    weight: 1
+    weight: 18
+    region: content
+  field_facebook_url:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_image_hero:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_instagram_url:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 14
+    region: content
+  field_media_contact:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 24
+    region: content
+  field_media_email:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 25
+    region: content
+  field_media_fax:
+    type: telephone_link
+    label: above
+    settings:
+      title: ''
+    third_party_settings: {  }
+    weight: 27
+    region: content
+  field_media_phone:
+    type: telephone_link
+    label: above
+    settings:
+      title: ''
+    third_party_settings: {  }
+    weight: 26
+    region: content
+  field_member_headshot:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 22
+    region: content
+  field_message_notification_email:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 20
     region: content
   field_microsite_theme:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 7
+    weight: 5
+    region: content
+  field_office_contacts:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 15
+    region: content
+  field_offices:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 16
     region: content
   field_ol_member_id:
     type: number_integer
@@ -85,7 +192,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 9
+    weight: 7
     region: content
   field_ol_shortname:
     type: string
@@ -93,21 +200,21 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 10
+    weight: 8
     region: content
   field_party:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   field_press_inquiries:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    weight: 23
     region: content
   field_senator_name:
     type: name_default
@@ -124,7 +231,53 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  field_store_settings:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 21
+    region: content
+  field_top_issue:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_twitter_url:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  field_user_account:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 17
+    region: content
+  field_youtube_url:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 13
+    region: content
 hidden:
+  admin_microsite_content_senator_admin_content_eva: true
+  admin_microsite_content_senator_admin_content_eva_form: true
+  admin_microsite_legislation_senator_admin_legislation_eva: true
+  admin_microsite_legislation_senator_admin_legislation_eva_form: true
   description: true
   langcode: true
   search_api_excerpt: true

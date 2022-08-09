@@ -1,0 +1,45 @@
+uuid: 8a523dfa-ad27-4ed4-a187-8c6256830c3b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.senator_microsite_hero
+    - field.field.media.image.field_image
+    - image.style.senator_hero
+    - media.type.image
+  module:
+    - layout_builder
+    - svg_image
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: Pyq580AsIX5NVdYP57-DmtQq09IcAVP3GFVYBX_ydZY
+id: media.image.senator_microsite_hero
+targetEntityType: media
+bundle: image
+mode: senator_microsite_hero
+content:
+  field_image:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: senator_hero
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

@@ -24,6 +24,8 @@ grumphp:
       whitelist_patterns:
         - /^((?!grumphp.yml).)*$/
         - /^web\/themes\/custom\/(.*)/
+      ignore_patterns:
+        - /^config\/sync\/webform(.*)/
       triggered_by:
         - inc
         - install

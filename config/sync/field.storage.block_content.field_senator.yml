@@ -1,0 +1,24 @@
+uuid: facd9dfe-3fd3-4d8c-a060-488da8f1fcba
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - field_permissions
+    - taxonomy
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: block_content.field_senator
+field_name: field_senator
+entity_type: block_content
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

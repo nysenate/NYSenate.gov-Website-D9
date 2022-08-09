@@ -1,0 +1,14 @@
+uuid: d7c76571-44ca-45f8-86a8-96187d51c6e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.student_programs
+  module:
+    - user
+id: user_remove_role_action.student_programs
+label: 'Remove the Student Programs role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: student_programs

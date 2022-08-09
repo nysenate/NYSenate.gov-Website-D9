@@ -9,13 +9,13 @@
   width: 155px;
   height: 50px;
   font-size: 13px;
-  color: #888888;
+  color: $grey04;
   margin-top: 10px;
   float: right;
 }
 
 .c-bill--vote-details.vote-header STRONG {
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
 }
 
 .c-bill--vote-details .c-bill--vote-details-wrapper .vote-container {
@@ -47,7 +47,7 @@
   h3,
   h4 {
     color: $grey02;
-    font-family: 'Adelle Regular';
+    font-family: $font-serif-regular;
   }
 
   h3 {
@@ -90,13 +90,13 @@
 
       .vote-count {
         display: inline-block;
-        font: 18px/18px 'Adelle Bold';
+        font: 18px/18px $font-serif-bold;
         color: $grey03;
       }
 
       .vote-label {
         display: inline-block;
-        font: 13px/16px 'Proxima Nova SemiBold';
+        font: 13px/16px $font-sans-bold;
         color: $grey04;
         text-transform: uppercase;
       }
@@ -126,7 +126,7 @@
 
     .meta-row {
       position: relative;
-      font: 10px/16px 'Proxima Nova Regular';
+      font: 10px/16px $font-sans;
       color: $grey04;
       text-transform: uppercase;
 
@@ -144,7 +144,7 @@
       }
 
       .meta-count {
-        font-family: 'Proxima Nova SemiBold';
+        font-family: $font-sans-bold;
       }
     }
 
@@ -153,12 +153,12 @@
 
       label {
         margin: 0;
-        font: 11px/14px 'Proxima Nova Regular';
+        font: 11px/14px $font-sans;
         color: $grey05;
       }
 
       .committee-link {
-        font: 12px/14px 'Proxima Nova SemiBold';
+        font: 12px/14px $font-sans-bold;
         color: $yellow03;
         text-transform: uppercase;
       }
@@ -166,7 +166,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .pieContainer {
     float: left;
   }
@@ -195,12 +195,12 @@
           }
           .vote-count {
             display: block;
-            font: 24px/30px 'Adelle Bold';
+            font: 24px/30px $font-serif-bold;
             color: $grey03;
           }
           .vote-label {
             display: block;
-            font: 15px/16px 'Proxima Nova SemiBold';
+            font: 15px/16px $font-sans-bold;
             padding-bottom: 5px;
             color: $grey04;
             text-transform: uppercase;
@@ -210,7 +210,7 @@
       .vote-meta {
         .meta-row {
           position: relative;
-          font: 10px/16px 'Proxima Nova Regular';
+          font: 10px/16px $font-sans;
           color: $grey04;
           text-transform: uppercase;
           div {
@@ -228,11 +228,11 @@
           margin-top: 20px;
           label {
             margin: 0;
-            font: 11px/14px 'Proxima Nova Regular';
+            font: 11px/14px $font-sans;
             color: $grey05;
           }
           .committee-link {
-            font: 12px/14px 'Proxima Nova SemiBold';
+            font: 12px/14px $font-sans-bold;
             color: $yellow03;
             text-transform: uppercase;
           }

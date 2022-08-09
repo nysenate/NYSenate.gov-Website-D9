@@ -1,10 +1,5 @@
 @import '../../global/utils/init';
 
-.l-row--main {
-  max-width: 840px;
-  margin: 0 auto;
-}
-
 .nyesenate-upcoming-events {
   position: relative;
   margin: 40px 0;
@@ -15,7 +10,7 @@
     font-size: 20px;
     line-height: 1em;
     padding-bottom: 20px;
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
   }
 
   &__header {
@@ -86,7 +81,7 @@
           color: $grey02;
           text-transform: uppercase;
           line-height: 18px;
-          font-family: 'Proxima Nova Regular';
+          font-family: $font-sans;
 
           &::before {
             content: '/';
@@ -95,7 +90,7 @@
         }
 
         &.date {
-          font-family: 'Adelle SemiBold';
+          font-family: $font-serif-semibold;
         }
       }
     }
@@ -125,14 +120,14 @@
         color: $grey02;
         display: block;
         text-decoration: none;
-        font-family: 'Adelle Light';
+        font-family: $font-serif;
       }
     }
   }
 }
 
 .c-event-name {
-  color: $grey02;
+  color: $grey08;
 
   a {
     color: $grey02;
@@ -149,10 +144,10 @@
   width: 100%;
 
   .c-event-name {
-    color: $grey02;
+    color: $grey08;
 
     a {
-      color: $grey02;
+      color: $grey08;
     }
   }
 }
@@ -163,11 +158,11 @@
   padding-bottom: 40px;
   border-top: 1px solid $grey05;
   overflow: hidden;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
   position: relative;
 
   .c-title {
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
     font-size: 14px;
     font-weight: normal;
     text-transform: uppercase;
@@ -175,7 +170,7 @@
   }
 
   .c-event-address {
-    font-family: 'Proxima Nova Regular';
+    font-family: $font-sans;
   }
 
   .c-event-image {
@@ -194,7 +189,7 @@
     padding: 6px;
 
     span {
-      font-family: 'Adelle Bold';
+      font-family: $font-serif-bold;
       //display: block;
       font-size: 26px;
       margin-bottom: 6px;
@@ -202,11 +197,10 @@
   }
 
   .c-event-name {
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
     font-size: 24px;
-    margin: 0px 0px 12px 0px;
+    margin: 0 0 12px 0;
     line-height: 120%;
-    margin-left: 0;
   }
 
   .c-event-location {
@@ -219,7 +213,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -236,7 +230,7 @@
     margin-top: 10px;
     margin-left: 0;
     display: block;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     font-size: 18px;
   }
 
@@ -244,7 +238,7 @@
     margin: 20px 0 0 0px;
     padding: 9px 11px;
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     display: inline-block;
     text-decoration: none;
     border: 1px solid $grey07;
@@ -252,7 +246,7 @@
     font-size: 12px;
     float: left;
     clear: left;
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
   }
   .c-meeting-video--status:before {
     padding: 0;
@@ -281,11 +275,12 @@
   position: relative;
   background-color: $grey06;
   overflow: hidden;
-  font-family: 'Proxima Nova Regular';
+  font-family: $font-sans;
 
   .c-event-name {
-    font-family: 'Adelle Semibold';
+    font-family: $font-serif-semibold;
     font-size: 24px;
+    font-weight: 400;
     margin: 14px 20px 14px 20px;
     line-height: 120%;
     float: left;
@@ -303,7 +298,7 @@
     span {
       margin-right: 7px;
       font-size: 18px;
-      color: $gen_blue_lgt;
+      @extend .lgt-text;
     }
   }
 
@@ -330,7 +325,7 @@
     clear: left;
 
     span {
-      font-family: 'Proxima Nova SemiBold';
+      font-family: $font-sans-bold;
       font-size: 16px;
     }
   }
@@ -339,7 +334,7 @@
     margin: 20px 0 0 0;
     padding: 9px 11px;
     text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
+    font-family: $font-sans-bold;
     display: inline-block;
     text-decoration: none;
     border: 1px solid $grey07;
@@ -348,7 +343,7 @@
     margin-left: 20px;
     float: left;
     clear: left;
-    color: $gen_blue_lgt;
+    @extend .lgt-text;
   }
 }
 
@@ -360,10 +355,10 @@
   }
 }
 
-.nys-title {
+.tabs-content .nys-title {
   font-size: 30px;
   margin-top: 12px;
-  font-family: 'Adelle SemiBold';
+  font-family: $font-serif-semibold;
 }
 
 .view-previous-sessions {
@@ -395,259 +390,11 @@
   }
 }
 
-
-.c-event-block--featured {
-  margin: 0;
-  padding-top: 16px;
-  padding-bottom: 40px;
-  border-top: 2px solid $grey09;
-  font-family: 'Proxima Nova Regular';
-  @include clearfix;
-
-  .c-title {
-    font-family: 'Proxima Nova Regular';
-    font-size: 14px;
-    font-weight: normal;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .c-event-image {
-    width: 100%;
-  }
-
-  .c-event-date {
-    margin-top: -15px;
-    text-transform: uppercase;
-    font-size: 20px;
-
-    span {
-      font-family: 'Adelle Bold';
-
-      &::after {
-        content:'/';
-        display: inline-block;
-        font-family: 'Proxima Nova Regular';
-        margin: 0px 0px 0px 5px;
-      }
-    }
-  }
-
-  .c-event-date SPAN:last-of-type {
-    &::after {
-      content: "";
-    }
-  }
-
-  .c-event-name {
-    font-family: 'Adelle Light';
-    font-size: 24px;
-    margin: 18px 0px 12px 0px;
-    line-height: 120%;
-  }
-
-  .c-event-location {
-    font-size: 20px;
-    color: $grey10;
-
-    span {
-      margin-right: 7px;
-      font-size: 18px;
-      color: $gen_blue_lgt;
-    }
-  }
-
-  .c-event-address {
-    margin-top: 15px;
-    color: $grey04;
-    font-size: 20px;
-    line-height: 140%;
-  }
-
-  .c-event-time {
-    margin-top: 10px;
-    font-size: 20px;
-    font-family: 'Proxima Nova SemiBold';
-  }
-
-  .c-event-rsvp {
-    margin: 20px 0 0 0;
-    padding: 9px 11px;
-    text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
-    display: inline-block;
-    text-decoration: none;
-    border: 1px solid $grey07;
-    border-top: 2px solid $grey05;
-    font-size: 18px;
-    color: $gen_blue_lgt;
-  }
-  .addthisevent-drop {
-    margin-top: 20px;
-  }
-}
-
-.c-event-block--featured-image {
-  margin: 0;
-  padding-top: 16px;
-  padding-bottom: 40px;
-  font-family: 'Proxima Nova Regular';
-  @include clearfix;
-
-  .c-title {
-    font-family: 'Proxima Nova Regular';
-    font-size: 14px;
-    font-weight: normal;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .c-event-image {
-    width: 100%;
-  }
-
-  .c-event-date {
-    margin-top: 30px;
-    text-transform: uppercase;
-    font-size: 24px;
-
-    span {
-      font-family: 'Adelle Bold';
-      &::after {
-        content:'/';
-        display: inline-block;
-        font-family: 'Proxima Nova Regular';
-        margin: 0px 0px 0px 5px;
-      }
-    }
-  }
-
-  .c-event-date SPAN:last-of-type {
-    &::after {
-      content: "";
-    }
-  }
-
-  .c-event-name {
-    font-family: 'Adelle Light';
-    font-size: 24px;
-    margin: 18px 0px 18px 0px;
-    line-height: 120%;
-  }
-
-  .c-event-location {
-    font-size: 20px;
-    color: #888888;
-    line-height: 140%;
-
-    span {
-      margin-right: 7px;
-      font-size: 18px;
-      color: $gen_blue_lgt;
-    }
-  }
-
-  .c-event-address {
-    margin-top: 0;
-    color: $grey04;
-    font-size: 20px;
-    line-height: 140%;
-  }
-
-  .c-event-time {
-    margin-top: 10px;
-    font-size: 20px;
-    font-family: 'Proxima Nova SemiBold';
-    font-size: 18px;
-  }
-
-  .c-event-rsvp {
-    margin: 20px 0 0 0;
-    padding: 9px 11px;
-    text-transform: uppercase;
-    font-family: 'Proxima Nova SemiBold';
-    display: inline-block;
-    text-decoration: none;
-    border: 1px solid $grey07;
-    border-top: 2px solid $grey05;
-    font-size: 18px;
-    color: $gen_blue_lgt;
-  }
-
-  .addthisevent-drop {
-    margin-top: 20px;
-  }
-}
-
-.c-event-block--upcoming {
-  margin: 0px;
-  padding: 20px 0 40px;
-  overflow: hidden;
-  font-family: 'Proxima Nova Regular';
-  position: relative;
-  border-top: 1px solid $grey09;
-
-  &.u-odd {
-    clear: left;
-  }
-
-  .c-event-date {
-    text-transform: uppercase;
-    font-size: 12px;
-    position: absolute;
-    top: 20px;
-    left: 0;
-    line-height: 130%;
-
-    span {
-      font-family: 'Adelle Bold';
-      display: block;
-      font-size: 26px;
-      margin-bottom: 6px;
-    }
-  }
-
-  .c-event-name {
-    font-family: 'Adelle Light';
-    font-size: 24px;
-    margin: 0px 0px 12px 60px;
-    line-height: 120%;
-  }
-
-  .c-event-location {
-    font-size: 14px;
-    margin-left: 60px;
-    color: $grey10;
-
-    span {
-      margin-right: 7px;
-      font-size: 18px;
-      color: $gen_blue_lgt;
-    }
-  }
-
-  .c-event-address {
-    margin-top: 15px;
-    color: $grey04;
-    font-size: 14px;
-    line-height: 140%;
-    display: none;
-    margin-bottom: 0px;
-  }
-
-  .c-event-time {
-    margin-top: 20px;
-    display: none;
-    font-size: 14px;
-  }
-}
-
 .c-calendar--today .nys-title {
   font-size: 30px;
   margin-top: 12px;
-  font-family: 'Adelle SemiBold';
+  font-family: $font-serif-semibold;
 }
-
 
 .c-upcoming-container.today {
   background-color: $grey06;
@@ -656,11 +403,11 @@
   .c-title {
     color: $grey02;
     font-size: 24px;
-    font-family: 'Adelle SemiBold';
+    font-family: $font-serif-semibold;
     text-transform: capitalize;
 
     a {
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
       font-size: 14px;
       font-weight: normal;
       text-transform: uppercase;
@@ -683,7 +430,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .c-event-block--today {
     padding: 24px 0;
     .c-event-name {
@@ -749,7 +496,8 @@
     .c-event-name {
       float: right;
       width: 460px;
-      margin: 12px 120px 10px 0px;
+      margin: 12px 120px 10px 0;
+      font-weight: 400;
     }
 
     .c-event-location {
@@ -831,7 +579,7 @@
       line-height: 22px;
 
       span {
-        font-family: 'Adelle SemiBold';
+        font-family: $font-serif-semibold;
         &::after {
           display: inline-block;
           margin: 0px 0px 0px 5px;
@@ -864,122 +612,8 @@
       clear: right;
       margin-right: 430px;
     }
-
-    .addthisevent-drop {
-      clear: right;
-      margin-right: 400px;
-    }
   }
 
-  .c-event-block--featured-image {
-    .c-event-image {
-      width: 50%;
-      float: left;
-    }
-
-    .c-event-date {
-      margin-top: 0;
-      float: right;
-      width: 300px;
-    }
-
-    .c-event-name {
-      float: right;
-      width: 300px;
-      clear: right;
-    }
-
-    .c-event-location {
-      float: right;
-      width: 300px;
-      clear: right;
-    }
-
-    .c-event-address {
-      float: right;
-      width: 300px;
-      clear: right;
-    }
-
-    .c-event-time {
-      float: right;
-      clear: right;
-      width: 300px;
-    }
-
-    .c-event-rsvp {
-      float: right;
-      clear: right;
-      margin-right: 145px;
-    }
-    .addthisevent-drop {
-      clear: right;
-      float: right;
-      width: 180px;
-      margin-top: 20px;
-      margin-right: 120px;
-    }
-  }
-
-  .c-upcoming-container {
-
-    .c-event-block--upcoming {
-      //width: 50%;
-      clear: left;
-      margin: 0;
-      padding-top: 0;
-      padding-left: 20px;
-      padding-right: 0;
-      border-top: none;
-
-      &.u-odd {
-        padding-right: 20px;
-        padding-left: 0;
-      }
-
-      .c-event-date {
-        float: left;
-        width: 100%;
-        text-transform: uppercase;
-        font-size: 14px;
-        margin-top: 0;
-        line-height: 1;
-        padding-top: 16px;
-
-        span {
-          font-size: 40px;
-        }
-      }
-
-      .c-event-name {
-        float: left;
-        clear: left;
-        margin-left: 200px;
-        margin-top: 24px;
-        padding-top: 0;
-      }
-
-      .c-event-location {
-        float: left;
-        clear: left;
-        margin-left: 200px;
-      }
-
-      .c-event-address {
-        float: left;
-        clear: left;
-        display: block;
-        margin-left: 200px;
-      }
-
-      .c-event-time {
-        float: left;
-        clear: left;
-        display: block;
-        margin-left: 200px;
-      }
-    }
-  }
   .c-upcoming-container.today {
     .c-event-name {
       margin-top: 0;
@@ -998,7 +632,7 @@
   height: 42px;
   margin-bottom: 30px;
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     height: auto;
   }
 }
@@ -1006,10 +640,10 @@
 .c-month-title {
   margin: 0;
   text-align: center;
-  font-family: 'Adelle SemiBold';
+  font-family: $font-serif-semibold;
   font-size: 30px;
   line-height: 42px;
-  color: $grey02;
+  color: $grey08;
 }
 
 .c-upcoming--nav {
@@ -1018,6 +652,9 @@
   left: 0;
   height: 100%;
   width: 100%;
+  a {
+    cursor: pointer;
+  }
 }
 
 .c-upcoming--nav-item {
@@ -1028,7 +665,7 @@
   width: 42px;
   height: 42px;
   padding: 0;
-  font-family: "Proxima Nova SemiBold";
+  font-family: $font-sans-bold;
   text-transform: uppercase;
   text-align: center;
   line-height: 42px;
@@ -1038,30 +675,29 @@
   @extend .lgt-text;
   @extend .icon-before__left;
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     text-indent: 0;
     width: auto;
     background: transparent;
     //@extend .icon-before__left;
   }
 
-  &:before {
-    @media #{$tablet} {
-      margin-top: -0.15em;
+  &::before {
+    @include breakpoint($bp-sm) {
       padding: 0 10px 0 0;
       font-size: 16px;
       line-height: 47px;
     }
   }
 
-  &:after {
+  &::after {
     width: 42px;
     height: 42px;
     font-size: 30px;
     @extend .lgt-text;
 
-    @media #{$tablet} {
-      content: "";
+    @include breakpoint($bp-sm) {
+      content: '';
       font-size: 30px;
       height: auto;
       width: auto;
@@ -1076,27 +712,26 @@
     width: 42px;
     height: 42px;
     padding: 0;
-    @extend .icon-replace__right;
+    @extend .icon-after__right;
 
-    @media #{$tablet} {
+    @include breakpoint($bp-sm) {
       text-indent: 0;
       width: auto;
       //@extend .icon-after__right;
     }
 
-    &:before {
-      @media #{$tablet} {
-        content: "";
+    &::before {
+      @include breakpoint($bp-sm) {
+        content: '';
         padding: 0;
       }
     }
 
-    &:after {
+    &::after {
       font-size: 30px;
 
-      @media #{$tablet} {
-        position: relative;
-        margin-top: -0.15em;
+      @include breakpoint($bp-sm) {
+        position: relative !important;
         padding: 0 0 0 10px;
         font-size: 16px;
         line-height: 47px;
@@ -1122,222 +757,4 @@
       }
     }
   }
-}
-
-/*-------------------------------------------------------
-/
-/   Tabs
-/
-/-------------------------------------------------------*/
-.c-tab-block--title {
-  font-family: "Adelle SemiBold";
-  font-size: 18px;
-  line-height: 21px;
-  color: $grey02;
-  margin-bottom: 20px;
-  text-transform: capitalize;
-}
-
-.l-tab-bar {
-  position: relative;
-  width: 100%;
-  height: 45px;
-  box-sizing: border-box;
-  overflow: hidden;
-  padding-top: 45px;
-  border: 1px solid #C0C0C0;
-  margin-bottom: -1px;
-
-  .arrow {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 2;
-    pointer-events: none;
-    font-size: 24px;
-    width: 45px;
-    height: 45px;
-    @extend .lgt-text;
-  }
-
-  .c-tab {
-    margin: 0;
-    width: 100%;
-    height: 45px;
-    box-sizing: border-box;
-    text-transform: uppercase;
-
-    .c-tab-link {
-      width: 100%;
-      height: 100%;
-      padding: 0px 0px 0px 20px;
-      display: block;
-      @extend .lgt-text;
-      font-family: 'Proxima Nova SemiBold';
-      font-size: 14px;
-      line-height: 45px;
-      letter-spacing: 0.03em;
-    }
-  }
-
-  .c-tab.active {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-}
-
-.c-tab--arrow {
-  position: absolute;
-  right: 16px;
-  top: 4px;
-  height: 45px;
-  width: 25px;
-  @extend .lgt-text;
-  @extend .icon-replace__see-more;
-  z-index: 1;
-  pointer-events: none;
-
-  &:after {
-    font-size: 26px;
-  }
-}
-
-.c-tabs--related-issues {
-  a {
-    text-transform: uppercase;
-    font-family: "Proxima Nova Semibold";
-    font-size: 12px;
-    line-height: 1em;
-    @extend .link-text;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-.c-tab--link-more {
-  display: block;
-  text-align: right;
-  text-transform: uppercase;
-  font-family: "Proxima Nova SemiBold";
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  @extend .icon-after__arrow;
-  @extend .link-text;
-
-  &:after {
-    margin-top: -0.15em;
-    font-size: 1.5em;
-    line-height: 14px;
-  }
-}
-
-.l-tab-bar.open {
-  height: auto;
-
-  .c-tab--arrow {
-    position: absolute;
-    right: 16px;
-    top: 4px;
-    height: 45px;
-    width: 25px;
-    @extend .icon-replace__see-less;
-  }
-}
-
-.tabs-content>.content {
-  padding: 0;
-}
-
-@media #{$tablet} {
-  .c-tab-block--title {
-    font-family: "Adelle Bold";
-    font-size: 32px;
-    line-height: 41px;
-    color: $grey02;
-  }
-
-  .l-tab-bar {
-    overflow: hidden;
-    margin: 30px 0 -1px 0;
-    border: none;
-    border-bottom: 1px solid $grey05;
-    padding-top: 0;
-    height: auto;
-
-    .arrow {
-      display: none;
-    }
-
-    .c-tab {
-      list-style: none;
-      float: left;
-      height: 50px;
-      border: 1px solid transparent;
-      margin-right: -2px;
-      margin-bottom: -2px;
-      text-transform: uppercase;
-      width: auto;
-      cursor: pointer;
-
-      .section-committees & {
-        width:33.5%
-      }
-
-      .c-tab-link {
-        display: block;
-        width: 100%;
-        height: 100%;
-        padding: 0 50px;
-        text-align: center;
-        white-space: nowrap;
-        background: none;
-        line-height: 50px;
-      }
-      .c-tab-link:hover, a:hover {
-        background: none;
-      }
-    }
-
-    .c-tab-link.first {
-      border-left: none;
-    }
-
-    .c-tab.active{
-      border: 1px solid #aaa;
-      position: relative;
-      z-index: 2;
-      .c-tab-link,  li.leaf a{
-        border-left: none;
-      }
-    }
-  }
-  .l-tab-bar.open .c-tab--arrow { display: none; }
-  .tabs dd>a {
-    padding: 0;
-  }
-
-  .c-tab--link-more {
-    font-size: 14px;
-  }
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-#user-profile-view {
-  .dash-user-img, .dash-senator-img {
-    width: auto;
-  }
-}
-
-.u-mobile-only { display: block; }
-.u-tablet-plus { display: none; }
-
-@media #{$tablet} {
-  .u-mobile-only { display: none; }
-  .u-tablet-plus { display: block; }
 }

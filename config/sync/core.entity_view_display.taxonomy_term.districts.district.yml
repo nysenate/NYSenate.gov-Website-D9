@@ -1,0 +1,55 @@
+uuid: 6d1750d4-fbbd-40f9-8846-8fd0183c609c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.district
+    - field.field.taxonomy_term.districts.field_chapters
+    - field.field.taxonomy_term.districts.field_district_number
+    - field.field.taxonomy_term.districts.field_map_url
+    - field.field.taxonomy_term.districts.field_metatags
+    - field.field.taxonomy_term.districts.field_senator
+    - field.field.taxonomy_term.districts.field_subheading
+    - taxonomy.vocabulary.districts
+  module:
+    - layout_builder
+    - text
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.districts.district
+targetEntityType: taxonomy_term
+bundle: districts
+mode: district
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_map_url:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_subheading:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_chapters: true
+  field_district_number: true
+  field_metatags: true
+  field_senator: true
+  langcode: true
+  search_api_excerpt: true

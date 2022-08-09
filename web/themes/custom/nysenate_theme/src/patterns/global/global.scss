@@ -5,14 +5,6 @@
 // Only variables / mixins / settings.
 @import 'utils/init';
 
-// Import font-face fonts.
-//
-// This should only be imported and loaded once.
-@import 'fonts/fonts';
-
-// This should only be imported and loaded once.
-@import 'colors/colors';
-
 // Import utility classes.
 @import 'utils/classes';
 
@@ -22,7 +14,7 @@
 // Layout builder styles.
 @import 'builder/builder';
 
-// Layout base styles.
+// Import base styles.
 @import 'base/base';
 
 // Base
@@ -63,6 +55,7 @@ html {
 body {
   @include font-stack-secondary;
   margin: 0;
+  color: $grey10;
 }
 
 // Render the `main` element consistently in IE.
@@ -155,6 +148,29 @@ select {
   text-transform: none;
 }
 
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
+  background-position: 100% center;
+  background-repeat: no-repeat;
+  background-color: #fafafa;
+  border: 1px solid #cccccc;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+  color: rgba(0, 0, 0, 0.75);
+  line-height: normal;
+  border-radius: 0;
+  height: 2.3125rem;
+  box-shadow: none;
+
+  &:hover {
+    background-color: #f3f3f3;
+    border-color: #999999;
+  }
+}
+
 // Correct the inability to style clickable types in iOS and Safari.
 button,
 [type='button'],
@@ -201,6 +217,41 @@ progress {
 // Remove the default vertical scrollbar in IE 10+.
 textarea {
   overflow: auto;
+}
+
+input[type='text'],
+input[type='password'],
+input[type='date'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='week'],
+input[type='email'],
+input[type='number'],
+input[type='search'],
+input[type='tel'],
+input[type='time'],
+input[type='url'],
+textarea {
+  font-family: $font-sans;
+  font-size: 1rem;
+  color: $grey10;
+  padding: 0 10px;
+  box-shadow: none;
+  appearance: none;
+  border-radius: 0px;
+  background-color: $color-white;
+  border: 1px solid #cccccc;
+  display: block;
+  margin: 0 0 1rem 0;
+  height: 2.3125rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: box-shadow 0.45s, border-color 0.45s ease-in-out;
+
+  &:focus {
+    box-shadow: none;
+  }
 }
 
 // Correct the cursor style of increment and decrement buttons in Chrome.
@@ -265,9 +316,9 @@ ol {
   padding-left: 20px;
 
   li {
-    font-family: "Adelle Light";
+    font-family: $font-serif;
     line-height: 1.5em;
-    color: #666;
+    color: $grey03;
     font-size: 16px;
 
     & + li {
@@ -290,7 +341,9 @@ ol {
 }
 
 * + ul,
-* + ol { margin-top: 20px; }
+* + ol {
+  margin-top: 20px;
+}
 
 a {
   @extend .link-text;
@@ -309,77 +362,222 @@ h6 {
   line-height: 1.4;
 }
 
-p {
-  @include font-stack-primary;
+a {
+  text-decoration: none;
 }
 
-.u-mobile-only { display: block; }
-.u-tablet-plus { display: none; }
+p {
+  @include font-stack-primary;
+  @include font(16 24);
+  color: $grey03;
 
-@media #{$tablet} {
-	.u-mobile-only { display: none; }
-	.u-tablet-plus { display: block; }
+  @include breakpoint($bp-sm) {
+    @include font(20 32);
+  }
+}
+
+label {
+  font-size: 0.8rem;
+  color: $grey04;
+  cursor: pointer;
+  display: block;
+  font-weight: normal;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  font-family: $font-sans;
+  text-transform: uppercase;
+
+  .form-required {
+    color: $orange01;
+  }
+}
+
+.form-item-agree-terms {
+  input[type='checkbox'] + label,
+  input[type='radio'] + label {
+    display: inline-block;
+    margin-left: 20px;
+    margin-right: 1rem;
+    margin-bottom: 0;
+    vertical-align: top;
+    width: 80%;
+  }
+}
+
+.u-mobile-only {
+  display: block;
+}
+
+.u-tablet-plus {
+  display: none;
+}
+
+@include breakpoint($bp-sm) {
+  .u-mobile-only {
+    display: none;
+  }
+
+  .u-tablet-plus {
+    display: block;
+  }
 }
 
 .nys-title {
   margin: 0 0 20px 0;
-  color: $grey02;
+  color: $grey08;
   text-transform: capitalize;
-  font-family: 'Adelle Bold';
+  font-family: $font-serif-bold;
+  font-weight: $font-weight-normal;
   font-size: 18px;
 
   &.nys-title--district {
     margin-bottom: 5px;
   }
+
+  @include breakpoint($bp-sm) {
+    font-size: 32px;
+  }
 }
 
 .c-block ul {
   list-style-position: outside;
-  margin-bottom:20px;
-  margin-top:20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .c-block ol {
-  margin-bottom:20px;
-  margin-top:20px;
-}
-
-.c-container--title {
-	text-transform: capitalize;
-	font-family: "Adelle SemiBold";
-	font-size: 18px;
-	line-height: 32px;
-	letter-spacing: 0;
-	color: $grey02;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 // Override for bill page pie chart colors for committees section
 .node-type-bill {
-
   .c-bill--vote_2\27 {
     margin-top: 30px;
   }
 }
 
-/* AddThisEvent theme CSS
----------------------------------------------------------------------- */
+.layout-content {
+  margin: 0 auto;
+}
 
-/* General */
-.addthisevent 							{visibility:hidden; float:left;}
-.addthisevent span 						{display:none!important;}
-.addthisevent .data 					{display:none!important;}
+.c-detail--social {
+  margin-bottom: 40px;
 
-/* The button */
-.addthisevent-drop 					{display:inline-block;position:relative;z-index:999998;font-family:Roboto,Optima,Segoe,"Segoe UI",Candara,Calibri,Arial,sans-serif;font-weight:300;color:#333;text-decoration:none;font-size:16px;cursor:pointer;}
-.addthisevent-drop:hover 				{color:#555;font-size:16px;text-decoration:underline;}
+  > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
 
-/* The drop down */
-.addthisevent_dropdown 					{width:200px;position:absolute;z-index:99999;padding:6px 0px 0px 0px;background:#fff;text-align:left;display:none;margin-top:4px;margin-left:-1px;border-top:1px solid #c8c8c8;border-right:1px solid #bebebe;border-bottom:1px solid #a8a8a8;border-left:1px solid #bebebe;-moz-border-radius:2px;-webkit-border-radius:2px;-webkit-box-shadow:1px 3px 6px rgba(0,0,0,0.15);-moz-box-shadow:1px 3px 6px rgba(0,0,0,0.15);box-shadow:1px 3px 6px rgba(0,0,0,0.15);}
-.addthisevent_dropdown span 			{display:block;line-height:110%;background:#fff;text-decoration:none;font-size:14px;color:#333;padding:8px 10px 9px 15px;}
-.addthisevent_dropdown span:hover 		{background:#f4f4f4;color:#000;text-decoration:none;font-size:14px;}
-.addthisevent_dropdown .copyx 			{height:21px;display:block;position:relative;cursor:default;}
-.addthisevent_dropdown .brx 			{height:1px;overflow:hidden;background:#e0e0e0;position:absolute;z-index:100;left:10px;right:10px;top:9px;}
-.addthisevent_dropdown .frs 			{position:absolute;top:5px;cursor:pointer;right:10px;padding-left:10px;font-style:normal;font-weight:normal;text-align:right;z-index:101;line-height:110%;background:#fff;text-decoration:none;font-size:9px;color:#cacaca;}
-.addthisevent_dropdown .frs:hover 		{color:#6d84b4;}
+  li {
+    display: block;
+    float: left;
 
-.addthisevent-drop {margin-top: 20px;}
+    & + li {
+      margin: 0 0 0 20px;
+    }
+  }
+}
+
+.c-detail--social-item {
+  position: relative;
+  display: block;
+  width: 60px;
+  height: 40px;
+  background: $blue01;
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    line-height: 40px;
+    color: $color-white;
+  }
+
+  &.facebook {
+    @extend .icon-replace__facebook;
+  }
+  &.twitter {
+    @extend .icon-replace__twitter;
+  }
+  &.email {
+    @extend .icon-replace__mail;
+  }
+}
+
+.c-detail--subhead {
+  margin: 0 0 10px;
+  color: $grey02;
+  font-family: $font-sans;
+  font-weight: $font-weight-normal;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  span {
+    text-transform: capitalize;
+    clear: both;
+    line-height: 1.4em;
+    letter-spacing: 0.01em;
+    display: block;
+  }
+}
+
+@include breakpoint($bp-sm) {
+
+  .c-detail--social {
+    width: 28%;
+    float: left;
+    margin-bottom: 0;
+    padding-bottom: 40px;
+    border-left: 1px solid $grey05;
+
+    .c-detail--subhead {
+      float: right;
+      text-align: right;
+    }
+
+    ul {
+      display: block;
+      float: right;
+      clear: both;
+
+      li {
+        & + li {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .c-detail--social-item {
+    background: $color-white;
+
+    &::after {
+      color: $blue01;
+      text-align: right;
+    }
+
+    &.twitter {
+      &::after {
+        left: auto;
+        right: 0.2em;
+      }
+    }
+  }
+
+  .c-detail--subhead {
+    font-size: 16px;
+  }
+}
+
+textarea[name="email_body"] {
+  padding: 10px;
+  height: auto;
+}

@@ -38,6 +38,7 @@
     {{ title_suffix }}
     {% block content %}
       {% include '@nysenate_theme/hero/hero.twig' with {
+        is_logged : logged_in,
         date: homepage_hero.date,
         video: homepage_hero.media|view,
         url_calendar: homepage_hero.url_calendar

@@ -8,7 +8,8 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  * The 'video_embed' source plugin.
  *
  * @MigrateSource(
- *   id = "video_embeds"
+ *   id = "video_embeds",
+ *   source_module = "nys_migrate"
  * )
  */
 class VideoEmbeds extends SqlBase {

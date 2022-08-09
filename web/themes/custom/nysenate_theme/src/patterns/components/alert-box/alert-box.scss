@@ -44,21 +44,10 @@
     overflow: hidden;
     padding-top: 1em;
     text-indent: -99999px;
+    @extend .icon-replace__x;
 
-    &::after {
-      content: '\78';
+    &:after {
       line-height: 30px;
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px;
     }
   }
 }
@@ -85,43 +74,19 @@
   text-transform: none;
   color: $grey02;
   font-size: 16px;
-  font-family: 'Adelle Light';
+  font-family: $font-serif;
   margin: 20px 0 20px 0;
 
   &.alert {
     color: $grey02;
     background-color: $grey06;
-
-    &::before {
-      content: '\45';
-      font-family: 'senate_icons';
-      display: inline-block;
-      vertical-align: middle;
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-    }
+    @extend .icon-before__error;
   }
 
   &.success {
     color: $grey02;
     background-color: $grey06;
-
-    &::before {
-      content: '\31';
-      font-family: 'senate_icons';
-      display: inline-block;
-      vertical-align: middle;
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-    }
+    @extend .icon-before__circle-check;
   }
 
   &::before {
@@ -132,7 +97,7 @@
     color: $blue01;
     background-color: $grey06;
 
-    @media #{$desktop} {
+    @include breakpoint($bp-md) {
       font-size: 46px;
     }
   }
@@ -156,43 +121,19 @@
     text-transform: none;
     color: $grey02;
     font-size: 24px;
-    font-family: 'Adelle Bold';
+    font-family: $font-serif-bold;
     margin: 20px 0 20px 0;
 
     &.alert {
       color: $grey02;
       background-color: $grey06;
-
-      &::before {
-        content: '\45';
-        font-family: 'senate_icons';
-        display: inline-block;
-        vertical-align: middle;
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-      }
+      @extend .icon-before__error;
     }
 
     &.success {
       color: $grey02;
       background-color: $grey06;
-
-      &::before {
-        content: '\31';
-        font-family: 'senate_icons';
-        display: inline-block;
-        vertical-align: middle;
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-      }
+      @extend .icon-before__circle-check;
     }
 
     &::before {
@@ -203,7 +144,7 @@
       color: $blue01;
       background-color: $grey06;
 
-      @media #{$desktop} {
+      @include breakpoint($bp-md) {
         font-size: 46px;
       }
     }
@@ -226,7 +167,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .l-messages {
     padding: 0 9%;
 

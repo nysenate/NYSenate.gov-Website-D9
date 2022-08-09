@@ -1,0 +1,29 @@
+uuid: 3b16527e-1d66-43c8-a41b-36c70c0ab45f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_associated_senators
+    - node.type.article
+    - taxonomy.vocabulary.senator
+id: node.article.field_associated_senators
+field_name: field_associated_senators
+entity_type: node
+bundle: article
+label: 'Associated Senators'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

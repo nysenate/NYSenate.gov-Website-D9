@@ -1,0 +1,119 @@
+# Migration for Example Nodes.
+id: nys_content_school
+label: School Nodes
+migration_group: nys_general
+
+source:
+  plugin: d7_node
+  node_type: school
+  key: migrate
+
+destination:
+  plugin: 'entity:node'
+  default_bundle: school
+
+process:
+  nid:
+    - plugin: get
+      source: tnid
+  title:
+    - plugin: get
+      source: title
+  uid:
+    - plugin: get
+      source: node_uid
+  status:
+    - plugin: get
+      source: status
+  created:
+    - plugin: get
+      source: created
+  changed:
+    - plugin: get
+      source: timestamp
+
+  body:
+    -
+      plugin: get
+      source: body
+
+  field_school_community_type:
+    -
+      plugin: get
+      source: field_school_community_type
+
+  field_school_grade_organization:
+    -
+      plugin: get
+      source: field_school_grade_organization
+
+  field_school_sub_type:
+    -
+      plugin: get
+      source: field_school_subtype_description
+
+  field_school_ceo_email:
+    -
+      plugin: get
+      source: field_school_ceo_email
+
+  field_school_ceo_first_name:
+    -
+      plugin: get
+      source: field_school_ceo_first_name
+
+  field_school_ceo_last_name:
+    -
+      plugin: get
+      source: field_school_ceo_last_name
+
+  field_school_ceo_phone:
+    -
+      plugin: get
+      source: field_school_ceo_phone
+
+  field_school_ceo_salutation:
+    -
+      plugin: get
+      source: field_school_ceo_salutation
+
+  field_school_needs_description:
+    -
+      plugin: get
+      source: field_school_needs_description
+
+  field_school_legal_name:
+    -
+      plugin: get
+      source: field_school_legal_name
+
+  field_school_type:
+    -
+      plugin: get
+      source: field_school_type
+
+  field_school_education_id:
+    -
+      plugin: get
+      source: field_school_education_id
+
+  field_school_address:
+    -
+      plugin: location_to_address
+      source: field_school_address
+  field_school_address_geoloc:
+    -
+      plugin: location_to_geolocation
+      source: field_school_address
+
+  field_county:
+    -
+      plugin: migration_lookup
+      source: field_county
+      migration: nys_senate_gov_taxonomy_term_nys_counties
+      no_stub: true
+
+  field_district:
+    -
+      plugin: get
+      source: field_district

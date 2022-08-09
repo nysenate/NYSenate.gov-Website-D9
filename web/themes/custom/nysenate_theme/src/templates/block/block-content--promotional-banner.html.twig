@@ -9,13 +9,6 @@
  */
 #}
 
-{% embed "@nysenate_theme/nysenate-promotional-banner-list/nysenate-promotional-banner-list.twig" with {
-  promotional_banners: promotional_banners
+{% include "@nysenate_theme/nysenate-promotional-banner-list/nysenate-promotional-banner-list.twig" with {
+  banners: promotional_banners,
 } only %}
-
-  {% block banner_list %}
-    {% for banner in promotional_banners %}
-      {{ banner }}
-    {% endfor %}
-  {% endblock %}
-{% endembed %}

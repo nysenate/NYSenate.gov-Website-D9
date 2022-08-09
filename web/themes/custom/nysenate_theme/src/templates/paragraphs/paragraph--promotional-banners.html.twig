@@ -49,6 +49,7 @@
 
 {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
   image: content.field_promotional_banner_image[0],
-  title: content.field_title[0]['#context']['value'],
-  modifier: modifier,
+  title: content.field_title[0]['#context']['value']
 } %}
+
+{# integration to do: add cta and senator name variables #}

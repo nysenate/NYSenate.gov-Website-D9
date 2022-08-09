@@ -38,15 +38,6 @@ accordion:
   js:
     dist/js/accordion.es6.js: {}
 
-addthisevent:
-  js:
-    dist/js/ate.min.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/jquery.once
-    - core/jquery
-
 alert-box:
   css:
     component:
@@ -136,6 +127,16 @@ columns:
     component:
       dist/css/columns.css: {}
 
+contact-block:
+  css:
+    component:
+      dist/css/contact-block.css: {}
+
+contact-form:
+  css:
+    component:
+      dist/css/contact-form.css: {}
+
 content-card:
   css:
     component:
@@ -150,6 +151,11 @@ content-carousel:
   dependencies:
     - rain_theme/slick
 
+district:
+  css:
+    component:
+      dist/css/district.css: {}
+
 gallery-lightbox:
   css:
     theme:
@@ -163,13 +169,20 @@ resolution-page:
   css:
     component:
       dist/css/resolution-page.css: {}
+  js:
+    dist/js/resolution-page.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
 
 event:
   css:
     component:
       dist/css/event.css: {}
   dependencies:
-    - nysenate_theme/addthisevent
+    - nysenate_theme/nysenate-featured-event
 
 event-card:
   css:
@@ -195,15 +208,43 @@ event-teaser:
     component:
       dist/css/event-teaser.css: {}
 
+bill-item:
+  css:
+    component:
+      dist/css/bill-item.css: {}
+
 featured-bills:
   css:
     component:
       dist/css/featured-bills.css: {}
 
+featured-issue:
+  css:
+    component:
+      dist/css/featured-issue.css: {}
+
+featured-story:
+  css:
+    component:
+      dist/css/featured-story.css: {}
+
 featured-image:
   css:
     component:
       dist/css/featured-image.css: {}
+
+featured-legislation:
+  css:
+    component:
+      dist/css/featured-legislation.css: {}
+  js:
+    dist/js/featured-legislation.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    - nysenate_theme/nysenate-social-buttons
 
 file-uploads:
   css:
@@ -286,6 +327,33 @@ message:
     component:
       dist/css/message.css: {}
 
+microsite-menu:
+  css:
+    component:
+      dist/css/microsite-menu.css: {}
+  dependencies:
+    - nysenate_theme/nysenate-header
+
+newsroom-content:
+  css:
+    component:
+      dist/css/newsroom-content.css: {}
+  dependencies:
+    - nysenate_theme/nysenate-tabs
+    - nysenate_theme/bill-item
+    - nysenate_theme/event
+    - nysenate_theme/bill
+
+newsroom-landing:
+  css:
+    component:
+      dist/css/newsroom-landing.css: {}
+  dependencies:
+    - nysenate_theme/event
+    - nysenate_theme/bill
+    - nysenate_theme/bill-item
+    - nysenate_theme/bill-vote-widget
+
 news-teaser:
   css:
     component:
@@ -327,11 +395,21 @@ nysenate-senators-events:
   css:
     component:
       dist/css/nysenate-senators-events.css: {}
+  dependencies:
+    - nysenate_theme/nysenate-tabs
+    - nysenate_theme/nysenate-featured-event
 
 nysenate-tabs:
   css:
     component:
       dist/css/nysenate-tabs.css: {}
+  js:
+    dist/js/nysenate-tabs.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
 
 nysenate-footer:
   css:
@@ -449,8 +527,6 @@ session:
   css:
     component:
       dist/css/session.css: {}
-  dependencies:
-    - nysenate_theme/addthisevent
 
 site-branding:
   css:

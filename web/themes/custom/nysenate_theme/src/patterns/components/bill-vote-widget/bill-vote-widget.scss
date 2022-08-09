@@ -3,7 +3,7 @@
 .nys-bill-vote-form {
   .nys-bill-vote {
     font-size: 0;
-    background-color: $gen_blue_med;
+    @extend .med-bg;
 
     &::after {
       content: '';
@@ -23,45 +23,53 @@
       align-items: center;
     }
   }
+
   .nys-bill-subscribe {
-    background-color: $gen_blue_med;
+    @extend .med-bg;
     margin-top: 2em;
     padding-bottom: 1em;
-    color: #ffffff;
+    color: $color-white;
+
     .nys-bill-subscribe-beta {
       padding: 0.5em;
       font-size: 1.5em;
       text-align: center;
-      background-color: #f1af58 !important;
+      background-color: $yellow01 !important;
     }
+
     .nys-bill-subscribe-title {
       padding: 1em 2em;
       font-size: 1.5em;
       text-transform: uppercase;
       text-align: center;
     }
+
     .form-item-email {
       padding: 0 1.25em;
       font-size: 1.5em;
       letter-spacing: 0.07em;
+
       label {
-        color: #ffffff;
+        color: $color-white;
         margin: 0;
       }
+
       input {
         height: 1.75em;
       }
     }
   }
+
   .subscribe_result {
     font-size: initial;
     padding: 1em;
-    color: #ffffff;
+    color: $color-white;
   }
+
   .subscribe_email_error {
     font-size: initial;
     padding: 1em;
-    color: #fad2d2;
+    color: $yellow01;
   }
 
   .ajax-progress.ajax-progress-throbber {
@@ -78,63 +86,22 @@
     align-items: center;
     color: $greyVoteBtnText;
     transition: background 0.2s ease;
-    background-color: $gen_blue_drk;
+    @extend .drk-bg;
 
-    &.nys-bill-vote-yes {
-      &::before {
-        content: '\2f';
-        font-family: 'senate_icons';
-        display: inline-flex;
-        align-items: center;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    }
-    &.nys-bill-vote-no {
-      &::before {
-        content: '\78';
-        font-family: 'senate_icons';
-        display: inline-flex;
-        align-items: center;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    }
+		&.nys-bill-vote-yes { @extend .icon-before__check; }
+		&.nys-bill-vote-no { @extend .icon-before__x; }
 
     &.nys-subscribe-button {
       width: 100%;
-
-      &::before {
-        content: '\6f';
-        font-family: 'senate_icons';
-        display: inline-flex;
-        align-items: center;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
+      @extend .icon-before__notification;
     }
 
     &:hover {
-      background-color: $gen_blue_lgt;
+      @extend .lgt-bg;
     }
 
     &.selected {
-      color: #fff;
+      color: $color-white;
     }
   }
 
@@ -163,7 +130,7 @@
     height: 100px;
     border: 0;
     z-index: 5;
-    background-color: $gen_blue_med;
+    @extend .med-bg;
     font-size: 14px;
 
     .closer {
@@ -177,27 +144,16 @@
       overflow: hidden;
       padding-top: 1em;
       text-indent: -99999px;
+			@extend .icon-replace__x;
 
-      &::after {
-        content: '\78';
-        margin-left: 20px;
-        color: #fff;
-        font-size: 23px;
-        line-height: 40px;
-        text-align: center;
+			&:after {
+				margin-left: 20px;
+				color: $color-white;
+				font-size: 23px;
+				line-height: 40px;
+				text-align: center;
         transition: color 0.2s ease;
-        text-indent: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-family: 'senate_icons';
-
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-left: 3px;
-      }
+			}
 
       &:hover {
         &::after {
@@ -212,32 +168,17 @@
       width: 100%;
       padding: 0 20px;
       transition: background 0.2s ease;
-      background-color: $gen_blue_drk;
-      color: #fff;
-      font-family: 'Proxima Nova SemiBold';
+      @extend .drk-bg;
+      color: $color-white;
+      font-family: $font-sans-bold;
       text-transform: uppercase;
       font-size: 12px;
       letter-spacing: 0.2em;
       line-height: 60px;
+      @extend .icon-before__mail;
 
       &:hover {
-        background-color: $gen_blue_lgt;
-      }
-
-      &::before {
-        content: '\4e';
-        display: block;
-        float: left;
-        font-size: 32px;
-        line-height: 60px;
-        font-family: 'senate_icons';
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-right: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        @extend .lgt-bg;
       }
     }
   }
@@ -245,11 +186,31 @@
   .bill-vote-thanks {
     padding-left: 55px;
     text-transform: uppercase;
-    color: #fff;
-    font-family: 'Proxima Nova Regular';
+    color: $color-white;
+    font-family: $font-sans;
     letter-spacing: 0.1em;
     font-size: 14px;
     line-height: 40px;
+  }
+}
+
+.c-block p.c-bill-polling--cta,
+.nys-bill-vote p.c-bill-polling--cta {
+  padding-left: 20px;
+  text-transform: uppercase;
+  color: $color-white;
+  font-family: $font-sans;
+  letter-spacing: 0.1em;
+  font-size: 14px;
+  line-height: 40px;
+  margin: 0;
+
+  span {
+    padding: 4px;
+  }
+
+  strong {
+    font-family: $font-sans-bold;
   }
 }
 
@@ -298,19 +259,19 @@
       border-top-width: 1px;
       border-bottom-width: 1px;
     }
-    
+
     &::before {
       position: relative;
     }
   }
 
   .nys-bill-vote {
-    .c-bill-polling--cta {
+    p.c-bill-polling--cta {
       padding: 0;
       text-align: center;
 
       strong {
-        font-family: 'Proxima Nova SemiBold';
+        font-family: $font-sans-bold;
       }
     }
 
@@ -345,313 +306,15 @@
     margin-right: 1em;
   }
   .confirmed-vote {
-    background-color: #2b6a90;
+    @extend .lgt-bg;
+
     &:hover {
       background-color: #007095;
     }
   }
 }
 
-.c-block--btn {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-  text-decoration: none;
-  text-transform: uppercase;
-  color: #fff;
-  font-family: 'Proxima Nova SemiBold';
-  letter-spacing: 0.2em;
-
-  font-size: 12px;
-  line-height: 60px;
-  height: 60px;
-
-  &::before {
-    display: inline-flex;
-    align-items: center;
-    vertical-align: middle;
-    text-align: center;
-    height: 100%;
-    margin-right: 0.1em;
-    font-size: 32px;
-  }
-
-  span {
-    display: inline-block;
-    vertical-align: middle;
-    width: 80%;
-    line-height: 1.5em;
-
-    a {
-      color: #fff;
-      vertical-align: middle;
-      display: inline-block;
-    }
-  }
-
-  &:hover {
-    color: #fff;
-  }
-}
-
-/*----------------------------------------
-/ BILL STATUS
-/ styling for a list denoting a bill's status
-/ list items are circle 
-/ add 'passed' class to illustrate we're 
-/	passed that step	
-/----------------------------------------*/
-
-.c-bill-section {
-  ul.nys-bill-status {
-    margin: 90px 0;
-  }
-}
-
-.nys-bill-status {
-  position: relative;
-  margin: 25px 0;
-  padding: 0;
-  height: 20px;
-  list-style: none;
-  text-align: justify;
-  font-size: 20px;
-
-  hr {
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    height: 2px;
-    width: 90%;
-    border: 0;
-    background: $grey05;
-  }
-
-  li {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    height: 1em;
-    width: 1em;
-    margin-top: -0.8em;
-    background: #fff;
-    border: 0.2em solid $grey05;
-    border-radius: 50%;
-
-    &.passed {
-      border: 0;
-      background: $blue01;
-    }
-    &.nys-bill-status--assem-sen {
-      height: auto;
-      width: 18%;
-      min-height: 2em;
-      border-width: 2px; // match hr height
-      border-radius: 0;
-      overflow: visible;
-
-      .nys-bill-status {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-      }
-
-      li {
-        position: absolute;
-        top: -0.5em;
-        bottom: auto;
-        left: 0;
-        right: 0;
-        margin: auto;
-
-        & + li {
-          top: auto;
-          bottom: -0.5em;
-        }
-      }
-    }
-    /* 
-			spacer is necessary to pull off
-			justified lists
-		*/
-    &.spacer {
-      width: 100%;
-      height: 0;
-      border: 0;
-      background: transparent;
-    }
-  }
-}
-.nys-bill-status--text {
-  display: none;
-}
-// smaller bill status and/or colored
-.nys-bill-status__sml,
-.nys-bill-status__drk {
-  width: 125px;
-  margin: 15px 0;
-  padding: 0;
-
-  hr {
-    width: 70%;
-    left: -15%;
-  }
-
-  li {
-    width: 10px;
-    height: 10px;
-    background: $grey-dot;
-    border: 0;
-
-    &.spacer {
-      display: none;
-    }
-
-    &.passed {
-      background: $blue01;
-    }
-
-    &.nys-bill-status--assem-sen {
-      background: #fff;
-      min-height: 20px;
-      height: 20px;
-      width: 18%;
-      border: 2px solid $grey-line; // match hr height
-
-      .nys-bill-status {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-
-        > li {
-          top: -6px;
-
-          & + li {
-            top: auto;
-            bottom: -6px;
-          }
-        }
-      }
-    }
-  }
-}
-// small colors
-.nys-bill-status__sml {
-  hr {
-    background: $grey-line;
-  }
-  li {
-    background: $grey-dot;
-
-    &.passed {
-      background: $blue01;
-    }
-
-    &.nys-bill-status--assem-sen {
-      border: 2px solid $grey-line; // match hr height
-    }
-  }
-}
-// colored colors
-.nys-bill-status.nys-bill-status__drk {
-  hr {
-    background-color: $gen_blue_drk;
-  }
-
-  li {
-    background-color: $gen_blue_med;
-
-    &.passed {
-      background: $grey05;
-    }
-    &.nys-bill-status--assem-sen {
-      border: 2px solid;
-      color: $gen_blue_drk;
-      background-color: $gen_blue_lgt;
-    }
-  }
-}
-
-@media #{$tablet} {
-  .nys-bill-status {
-    padding: 0 20px;
-    margin: 90px 0 100px;
-
-    hr {
-      max-width: 710px;
-    }
-    li {
-      overflow: visible;
-      margin-top: -1.25em;
-
-      &.nys-bill-status--assem-sen {
-        height: 70px;
-
-        li {
-          .nys-bill-status--text {
-            top: -35px;
-          }
-
-          & + li {
-            .nys-bill-status--text {
-              top: 35px;
-            }
-          }
-        }
-      }
-    }
-  }
-  .nys-bill-status--text {
-    display: block;
-    position: absolute;
-    top: 35px;
-    bottom: auto;
-    left: -50px;
-    right: -50px;
-    margin: auto;
-    height: auto;
-    width: 100px;
-
-    color: $grey02;
-    text-align: center;
-    text-transform: capitalize;
-    font-family: 'Proxima Nova Regular';
-    font-size: 12px;
-    line-height: 1.4em;
-  }
-
-  .nys-bill-status__sml,
-  .nys-bill-status__drk {
-    padding: 0;
-    margin: 15px 0;
-
-    li {
-      margin-top: -15px;
-      &.nys-bill-status--assem-sen {
-        height: 20px;
-      }
-    }
-    .nys-bill-status {
-      padding: 0;
-    }
-    .nys-bill-status--text {
-      display: none;
-    }
-  }
+@include breakpoint($bp-sm) {
 
   .c-block--btn,
   .c-bill-polling--choices-choice {
@@ -692,12 +355,12 @@
     margin-top: 80px;
 
     .nys-bill-vote {
-      .c-bill-polling--cta {
+      p.c-bill-polling--cta {
         padding: 20px;
         line-height: 1.5em;
 
         strong {
-          font-family: 'Proxima Nova SemiBold';
+          font-family: $font-sans-bold;
         }
       }
 
@@ -736,7 +399,7 @@
   }
 }
 
-@media #{$desktop} {
+@include breakpoint($bp-md) {
   .c-bill--vote-widget {
     @media (max-height: 800px) {
       top: 200px;
@@ -832,7 +495,7 @@
     }
   }
 
-  @media #{$tablet} {
+  @include breakpoint($bp-sm) {
     margin-top: 0;
     width: 100%;
 
@@ -905,7 +568,7 @@
   background-color: $gen_blue_med;
 
   .c-bill--sentiment-text {
-    color: #fff;
+    color: $color-white;
     font-size: 2em;
     line-height: 1.5em;
     text-align: left;
@@ -919,7 +582,7 @@
       width: 40px;
       height: 40px;
       padding: 0;
-      color: #fff;
+      color: $color-white;
       text-align: center;
       overflow: hidden;
       padding-top: 1em;
@@ -1009,12 +672,12 @@
   }
 
   .nys-bill-vote {
-    .c-bill-polling--cta {
+    p.c-bill-polling--cta {
       padding: 0;
       text-align: center;
 
       strong {
-        font-family: 'Proxima Nova SemiBold';
+        font-family: $font-sans-bold;
       }
     }
 

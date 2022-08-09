@@ -1,25 +1,10 @@
-# The machine name of the group, by which it is referenced in individual migrations.
+uuid: 3ab2b216-f15f-4ab5-a9a2-6206ddee637c
+langcode: en
+status: true
+dependencies: {  }
 id: nys_general
-
-# A human-friendly label for the group.
-label: General
-
-# More information about the group.
-description: Custom migration group for general configurations.
-
-# Short description of the type of source, e.g. "Drupal 6" or "WordPress".
-source_type: Drupal 7
-
-# Here we add any default configuration settings to be shared among all
-# migrations in the group.
-shared_configuration:
- source:
-   key: migrate
-
-# We add dependencies just to make sure everything we need will be available
-dependencies:
-  enforced:
-    module:
-      - nys_migrate
-      - migrate_drupal
-      - migrate_tools
+label: nys_general
+description: ''
+source_type: null
+module: null
+shared_configuration: null

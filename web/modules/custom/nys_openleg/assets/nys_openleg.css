@@ -2,8 +2,21 @@
   padding: 20px 0;
 }
 
+.nys-openleg-statute.nys-title {
+  font-size: 32px;
+  font-weight: 400;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .nys-openleg-statute-container {
-  font-size: 1.5em;
+  font-size: 15px;
+}
+
+.nys-openleg-result-nav-item-link,
+.nys-openleg-result-breadcrumb-link {
+  color: #008CBA !important;
+  text-decoration: none;
 }
 
 .nys-openleg-result-tools {
@@ -65,7 +78,11 @@
   line-height: 1em;
   letter-spacing: 0.05em;
   padding: 20px 0;
-  color: #444;
+  color: #444 !important;
+}
+
+.nys-openleg-result-item-link:hover {
+  color: #0078a0 !important;
 }
 
 .nys-openleg-result-item-name {
@@ -92,7 +109,7 @@
 }
 
 .nys-openleg-deprecation-warning {
-  font-size: 1.5em;
+  font-size: 15px;
   font-weight: bold;
   margin: 1em 2em 2em;
 }
@@ -140,11 +157,12 @@
  */
 .nys-openleg-result-nav-bar {
   text-align: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .nys-openleg-result-nav-bar-item {
   width: 32%;
-  margin: 2em .5% 0;
   display: inline-block;
   vertical-align: top;
 }
@@ -213,7 +231,7 @@
   z-index: 1;
 }
 
-.nys-openleg-history-note:before {
+.nys-openleg-history-note::before {
   display: inline-block;
   content: '\33';
   font-family: 'senate_icons', sans-serif;
@@ -246,12 +264,17 @@
   padding: 20px 0 20px 20px;
   text-align: right;
   float: none;
+  border-left: 1px solid #AAAAAA;
 }
 
 .nys-openleg-result-tools .c-detail--social ul {
   float: none;
   display: inline-block;
   text-align: left;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
 }
 
 .nys-openleg-result-tools .c-detail--social .c-detail--subhead {
@@ -269,7 +292,7 @@
   background-color: #fff;
 }
 
-.nys-openleg-result-tools .c-detail--social-item:after {
+.nys-openleg-result-tools .c-detail--social-item::after {
   top: 0;
   left: 0;
   height: 100%;
@@ -285,29 +308,45 @@
  */
 .nys-openleg-statute-search-container {
   padding: 1em 2em;
-  font-size: 1.5em;
+  font-size: 15px;
 }
 
 .search-title {
   font-family: 'Adelle SemiBold', serif;
+  font-weight: 400;
 }
 
 .nys-openleg-statute-search-container .search-title {
   text-align: center;
   margin-right: 0.7em;
-  font-size: 1.5em;
+  font-size: 15px;
   font-weight: bold;
 }
 
-#nys-openleg-statute-search-form .form-item-search-term {
+#nys-openleg-search-form .form-item-search-term  {
   display: inline-block;
   width: 80%;
 }
 
-#nys-openleg-statute-search-form button#edit-go {
+#nys-openleg-search-form button.search__submit {
   padding: 0.6em;
   margin-left: 1em;
   width: 15%;
+  background-color: #008CBA !important;
+  border-color: #007095 !important;
+}
+
+#nys-openleg-search-form button.search__submit:hover {
+  background-color: #007095 !important;
+  color: #fff !important;
+}
+
+#nys-openleg-search-form button .search__submit-icon {
+  display: none;
+}
+
+#nys-openleg-search-form button .search__submit-text {
+  font-family: "Helvetica Nueue", sans-serif;
 }
 
 .nys-openleg-search-results-container .search-results-item-container {
@@ -359,6 +398,11 @@
   border-bottom-left-radius: 0.7em;
   border-bottom-right-radius: .7em;
   cursor: pointer;
+  font-size: 15px;
+}
+
+.nys-openleg-statute-container .container {
+  max-width: unset;
 }
 
 .nys-openleg-search-no-results {

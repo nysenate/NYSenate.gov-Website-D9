@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_article_author
+    - field.field.node.article.field_associated_senators
     - field.field.node.article.field_attachment
     - field.field.node.article.field_bills
     - field.field.node.article.field_category
@@ -14,25 +15,23 @@ dependencies:
     - field.field.node.article.field_committee_featured
     - field.field.node.article.field_date
     - field.field.node.article.field_featured
+    - field.field.node.article.field_image_caption
     - field.field.node.article.field_image_hero
     - field.field.node.article.field_image_main
     - field.field.node.article.field_issues
+    - field.field.node.article.field_layout_components
     - field.field.node.article.field_majority_issue_tag
-    - field.field.node.article.field_paragraphs
-    - field.field.node.article.field_publication_date
-    - field.field.node.article.field_publication_source_link
-    - field.field.node.article.field_publication_title
     - field.field.node.article.field_senator_multiref
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
     - field.field.node.article.field_subtitle
     - node.type.article
   module:
+    - block_field
     - datetime
     - field_group
     - inline_entity_form
     - media_library
-    - paragraphs
     - path
     - scheduler
     - text
@@ -41,11 +40,12 @@ third_party_settings:
     group_heading_info:
       children:
         - title
-        - field_article_author
         - field_category
-        - field_attachment
+        - field_image_main
+        - field_image_caption
+        - field_article_author
         - field_date
-      label: 'Article Heading Information'
+      label: 'Heading Information'
       region: content
       parent_name: ''
       weight: 0
@@ -58,15 +58,15 @@ third_party_settings:
         required_fields: true
     group_article_content:
       children:
-        - field_image_main
         - field_subtitle
         - body
-        - field_paragraphs
+        - field_attachment
         - field_bills
+        - field_layout_components
       label: 'Article Content'
       region: content
       parent_name: ''
-      weight: 2
+      weight: 1
       format_type: fieldset
       format_settings:
         classes: ''
@@ -76,12 +76,12 @@ third_party_settings:
         required_fields: true
     group_discoverability:
       children:
-        - group_site_promotion
         - field_issues
+        - group_site_promotion
       label: Discoverability
       region: content
       parent_name: ''
-      weight: 3
+      weight: 2
       format_type: fieldset
       format_settings:
         classes: ''
@@ -97,7 +97,7 @@ third_party_settings:
       label: 'Promotion and Visibility'
       region: content
       parent_name: group_discoverability
-      weight: 25
+      weight: 8
       format_type: tabs
       format_settings:
         classes: ''
@@ -107,6 +107,7 @@ third_party_settings:
         width_breakpoint: 640
     group_sitewide_settings:
       children:
+        - field_associated_senators
         - field_accessible_sitewide
         - field_majority_issue_tag
         - field_image_hero
@@ -124,6 +125,7 @@ third_party_settings:
         required_fields: true
     group_microsite_settings:
       children:
+        - field_senator_multiref
         - field_featured
       label: 'Senator Microsite Settings'
       region: content
@@ -160,7 +162,7 @@ third_party_settings:
       label: 'Social Sharing'
       region: content
       parent_name: ''
-      weight: 4
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: ''
@@ -175,7 +177,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 14
+    weight: 13
     region: content
     settings:
       rows: 9
@@ -191,22 +193,50 @@ content:
     third_party_settings: {  }
   field_accessible_sitewide:
     type: boolean_checkbox
-    weight: 11
+    weight: 7
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_article_author:
     type: string_textfield
-    weight: 2
+    weight: 5
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_associated_senators:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        aff63e0d-4de3-4976-8107-7617a2083f0a:
+          entity_type: node
+          bundle: article
+          dependee: field_category
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: press_release
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_attachment:
     type: inline_entity_form_simple
-    weight: 4
+    weight: 14
     region: content
     settings:
       form_mode: inline_entity
@@ -219,7 +249,7 @@ content:
     third_party_settings: {  }
   field_bills:
     type: entity_reference_autocomplete
-    weight: 16
+    weight: 15
     region: content
     settings:
       match_operator: CONTAINS
@@ -229,7 +259,7 @@ content:
     third_party_settings: {  }
   field_category:
     type: options_select
-    weight: 3
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -252,7 +282,7 @@ content:
     third_party_settings: {  }
   field_date:
     type: datetime_default
-    weight: 4
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -262,24 +292,50 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings:
+      conditional_fields:
+        e224d956-cf2e-448c-95bb-9ec60cd0c0d2:
+          entity_type: node
+          bundle: article
+          dependee: field_category
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: article
+            effect: show
+            effect_options: {  }
+            selector: ''
+  field_image_caption:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_image_hero:
     type: media_library_widget
-    weight: 13
+    weight: 9
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_image_main:
     type: media_library_widget
-    weight: 11
+    weight: 3
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
-    weight: 26
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -287,68 +343,37 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_layout_components:
+    type: block_field_default
+    weight: 16
+    region: content
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
   field_majority_issue_tag:
     type: options_select
-    weight: 12
+    weight: 8
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_paragraphs:
-    type: paragraphs
-    weight: 15
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-  field_publication_date:
-    type: datetime_default
-    weight: 10
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_publication_source_link:
-    type: string_textfield
-    weight: 12
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_publication_title:
-    type: string_textfield
-    weight: 11
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
   field_senator_multiref:
     type: options_select
-    weight: 13
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_social_image:
     type: media_library_widget
-    weight: 12
+    weight: 6
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_social_teaser:
     type: string_textarea
-    weight: 13
+    weight: 7
     region: content
     settings:
       rows: 5
@@ -370,7 +395,12 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -401,7 +431,7 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }

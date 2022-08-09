@@ -14,5 +14,8 @@
         </div>
       {% endfor %}
     </div>
+    {% if link %}
+      <a href="{{ link.url }}" class="c-container--link">{{ link.text }}</a>
+    {% endif %}
   </div>
 </div>

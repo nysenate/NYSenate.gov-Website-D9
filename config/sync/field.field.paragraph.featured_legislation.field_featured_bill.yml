@@ -1,0 +1,29 @@
+uuid: eb98ff78-4f6c-4063-8a4c-9eb81a49329e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_featured_bill
+    - node.type.bill
+    - paragraphs.paragraphs_type.featured_legislation
+id: paragraph.featured_legislation.field_featured_bill
+field_name: field_featured_bill
+entity_type: paragraph
+bundle: featured_legislation
+label: 'Featured Bill'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      bill: bill
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

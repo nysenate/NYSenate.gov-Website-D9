@@ -4,22 +4,29 @@
   max-width: 440px;
   margin: 0 auto;
 
-  p {
-    color: $grey03;
-  }
-
-  &::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
   @include breakpoint($bp-sm) {
     max-width: 840px;
   }
 
-  .text-layout__body {
-    font-size: 20px;
+  p {
+    color: $grey03;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+
+  .c-container--link {
+    display: block;
+    position: relative;
+    margin-bottom: 20px;
+    text-align: right;
   }
 
   &--2-col .text-layout__body {
@@ -42,7 +49,7 @@
   &__title {
     margin: 0 0 15px;
     text-transform: capitalize;
-    font-family: "Adelle Regular";
+    font-family: $font-serif-regular;
     font-size: 18px;
     line-height: 1;
 
@@ -62,6 +69,29 @@
       padding: 0 40px;
       padding-top: 60px;
       max-width: 840px;
+    }
+  }
+
+  &__body {
+    h2, h3, h4 {
+      font-family: $font-serif-bold;
+      font-weight: $font-weight-normal;
+    }
+
+    h2 {
+      font-size: 32px;
+    }
+    
+    h3 {
+      font-size: 22px;
+    }
+
+    h4 {
+      font-size: 18px;
+    }
+
+    a.c-container--link {
+      text-align: left;
     }
   }
 }

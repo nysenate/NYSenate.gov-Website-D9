@@ -1,0 +1,23 @@
+uuid: c8b3c770-d892-4585-bc75-bcabecda0214
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - paragraphs
+    - telephone
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: paragraph.field_office_contact_phone
+field_name: field_office_contact_phone
+entity_type: paragraph
+type: telephone
+settings: {  }
+module: telephone
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

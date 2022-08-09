@@ -1,0 +1,26 @@
+uuid: c30be36b-a9a3-4ced-a1a4-19b04d8714cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_content
+    - field.field.block_content.featured_content.field_content
+    - field.field.block_content.featured_content.field_title
+id: block_content.featured_content.default
+targetEntityType: block_content
+bundle: featured_content
+mode: default
+content:
+  field_content:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: featured_content
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_title: true
+  langcode: true
+  search_api_excerpt: true

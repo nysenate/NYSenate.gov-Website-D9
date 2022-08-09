@@ -721,7 +721,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $last_status = '';
-      if ($node->field_ol_last_status) {
+      if ($node->hasField('field_ol_last_status') && !$node->get('field_ol_last_status')->isEmpty()) {
         $last_status = $allowed_values[$node->field_ol_last_status->value];
       }
 
@@ -882,6 +882,53 @@ function nysenate_theme_theme_suggestions_form_alter(array &$suggestions, array 
   if (isset($variables['element']['#form_id'])) {
     $suggestions[] = $hook . '__' . $variables['element']['#form_id'];
   }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function nysenate_theme_theme_suggestions_page_alter(array &$suggestions, array $variables, $hook) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!empty($node) && $node->bundle() == 'microsite_page') {
+    $suggestions[] = $hook . '__node__' . $node->bundle();
+  }
+}
+
+/**
+ * Implements hook_preprocess_page__node__TYPE().
+ */
+function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
+  $node = $variables['node'];
+  if ($node->hasField('field_block') && !$node->get('field_block')->isEmpty()) {
+    $block_types = [
+      'microsite_hero',
+      'senator_microsite_menu',
+    ];
+    foreach ($node->get('field_block') as $key => $block) {
+      $field_block = $block->entity;
+      // Alter the field_block contents to be displayed.
+      if (in_array($field_block->bundle(), $block_types)) {
+        if ($block->entity->bundle() == 'microsite_hero') {
+          $variables['microsite_hero'] = \Drupal::entityTypeManager()->getViewBuilder('block_content')
+            ->view($block->entity);
+        }
+
+        elseif ($field_block->bundle() == 'senator_microsite_menu') {
+          $variables['microsite_menu'] = \Drupal::entityTypeManager()->getViewBuilder('block_content')
+            ->view($block->entity);
+        }
+
+        // Set both microsite blocks to empty array
+        // to prevent from rendering in the display.
+        $node->get('field_block')[$key] = [];
+      }
+    }
+  }
+
+  // Override the main content.
+  // Display the microsite node with altered contents.
+  $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()->getViewBuilder('node')
+    ->view($node, 'full');
 }
 
 /**
@@ -1192,10 +1239,15 @@ function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
   }
 
   $bills[] = [
+    'featured' => TRUE,
+    'small' => FALSE,
+    'is_poll' => TRUE,
+    'resolution' => TRUE,
+    'link' => $node->toUrl()->toString(),
     'number' => $node->label(),
     'description' => $node->field_ol_name->value,
     'date' => $date,
-    'update_location' => $last_status,
+    'update_location' => $last_status ?? '',
     'sponsor' => $sponsor_name ?? '',
     'positions' => $positions,
   ];

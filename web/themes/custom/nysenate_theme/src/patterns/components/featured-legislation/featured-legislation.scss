@@ -4,6 +4,7 @@
 .c-block.c-block-legislation-featured .c-block--btn-toggle,
 .c-block-legislation .c-block--btn-toggle {
   @extend .icon-replace__share;
+  background: transparent;
 }
 
 .c-legislation--quote {
@@ -101,6 +102,8 @@
 }
 
 .c-legislation--sponsor {
+  display: flex;
+  align-items: center;
   margin-top: 20px;
 }
 
@@ -134,7 +137,7 @@
   margin-left: 20px;
 }
 
-.c-sponsor--name {
+.c-block .c-sponsor--name {
   margin: 0;
   font-family: $font-serif;
   font-size: 16px;
@@ -145,12 +148,13 @@
   }
 }
 
-.c-sponsor--party {
+.c-block .c-sponsor--party {
   display: inline-block;
   margin: 0;
   @extend .med-text;
   font-family: $font-sans-bold;
   font-size: 12px;
+  line-height: 18px;
 }
 
 .c-sponsor--dist {
@@ -243,7 +247,7 @@
     }
   }
 
-  .c-sponsor--name {
+  .c-block .c-sponsor--name {
     font-size: 16px;
     line-height: 1;
   }

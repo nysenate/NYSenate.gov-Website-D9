@@ -245,6 +245,26 @@
   top: 0;
 }
 
+// class added to .c-nav--wrap through js
+.c-nav--wrap.search-open {
+
+  .c-site-search--btn {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    @extend .icon-replace__x;
+  }
+
+  .c-site-search {
+    .c-site-search--btn {
+      cursor: pointer;
+      position: relative;
+      top: -45px;
+      @extend .icon-replace__search;
+    }
+  }
+}
+
 @include breakpoint($bp-sm) {
   .c-nav--wrap {
     position: relative;
@@ -937,25 +957,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     &.open {
       height: 225px;
       padding: 25px 9%;
-    }
-  }
-  // class added to .c-nav--wrap through js
-  .search-open {
-
-    .c-site-search--btn {
-      cursor: pointer;
-      position: absolute;
-			top: 10px;
-      @extend .icon-replace__x;
-    }
-
-    .c-site-search {
-      .c-site-search--btn {
-        cursor: pointer;
-        position: relative;
-        top: -45px;
-        @extend .icon-replace__search;
-      }
     }
   }
 }

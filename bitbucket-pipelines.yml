@@ -231,8 +231,8 @@ pipelines:
             # - terminus drush -n "${SITE_ENV}" -- site-install nysenate -y --site-name="${SITE_ENV}" --account-name="${ADMIN_USERNAME}" --account-mail="${ADMIN_EMAIL}" --account-pass="${ADMIN_PASSWORD}" --site-mail="${ADMIN_EMAIL}"
             # Alternately update existing site for each multidev
             - terminus build-env:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH} --yes --clone-content
-            - terminus connection:set "${SITE_ENV}" git
             - terminus env:wake -n ${SITE_ENV}
+            - terminus connection:set "${SITE_ENV}" git
             - terminus remote:drush ${SITE_ENV} -- deploy -y
             - terminus drush -n "${SITE_ENV}" -- status
             - terminus drush -n "${SITE_ENV}" -- uli

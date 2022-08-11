@@ -12,15 +12,15 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity:block'
-  default_bundle: pg_file_uploads
+  plugin: 'entity:block_content'
+  default_bundle: file_uploads
 
 process:
   type:
     -
       plugin: get
       source: bundle
-  field_attachment:
+  field_pdf:
     -
       plugin: sub_process
       source: field_attachment
@@ -30,7 +30,7 @@ process:
           migration: nys_media_file_attach
           source: fid
           no_stub: true
-  field_pg_file_title:
+  field_title:
     -
       plugin: get
       source: field_pg_file_title

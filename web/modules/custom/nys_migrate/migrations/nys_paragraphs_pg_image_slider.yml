@@ -13,14 +13,14 @@ source:
 
 destination:
   plugin: 'entity:block_content'
-  default_bundle: pg_image_slider
+  default_bundle: slider
 
 process:
   type:
     -
       plugin: get
       source: bundle
-  field_slider_title:
+  field_title:
     -
       plugin: get
       source: field_pg_imageslider_title

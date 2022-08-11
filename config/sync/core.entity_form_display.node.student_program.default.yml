@@ -16,7 +16,6 @@ dependencies:
     - field.field.node.student_program.field_subtitle
     - node.type.student_program
   module:
-    - block_field
     - datetime
     - inline_entity_form
     - media_library
@@ -45,13 +44,21 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_accordion:
-    type: block_field_default
+    type: inline_entity_form_complex
     weight: 26
     region: content
     settings:
-      plugin_id: ''
-      settings: {  }
-      configuration_form: full
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: true
+      allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: true
+      collapsed: true
+      revision: false
     third_party_settings: {  }
   field_article_author:
     type: string_textfield

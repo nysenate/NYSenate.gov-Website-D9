@@ -9,6 +9,9 @@ use Drupal\Core\State\State;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 
+/**
+ * Helper class for nys_school_importer.
+ */
 class ImporterHelper {
 
   const NYS_SCHOOL_IMPORTER_CONTENT_TYPE = 'nys_school_importer_content_type';
@@ -35,7 +38,7 @@ class ImporterHelper {
    *
    * @var \Drupal\Core\Extension\ExtensionPathResolver
    */
-  protected $path_resolver;
+  protected $pathResolver;
 
   /**
    * Default object for entity_type.manager service.
@@ -63,7 +66,7 @@ class ImporterHelper {
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactory
    */
-  protected $logger;
+  protected $loggerFactory;
 
   /**
    * {@inheritdoc}
@@ -74,14 +77,14 @@ class ImporterHelper {
     EntityTypeManagerInterface $entity_type_manager,
     State $state,
     MessengerInterface $messenger,
-    LoggerChannelFactory $logger,
+    LoggerChannelFactory $logger
   ) {
     $this->connection = $connection;
     $this->pathResolver = $path_resolver;
     $this->entityTypeManager = $entity_type_manager;
     $this->state = $state;
     $this->messenger = $messenger;
-    $this->logger = $logger;
+    $this->loggerFactory = $logger;
   }
 
   /**
@@ -231,12 +234,12 @@ class ImporterHelper {
   }
 
   /**
-   * Returns school_name_index num_keys that needed to form a unique school name.
+   * Returns school_name_index num_keys to form a unique school name.
    *
    * @param string $legal_name
    *   The legal name.
    *
-   * @return integer
+   * @return int
    *   The school name index key.
    */
   public function getSchoolNameIndexNumKeys($legal_name) {
@@ -280,7 +283,7 @@ class ImporterHelper {
    */
   public function validateFile($data) {
     // Get the mappings.
-    $data_mappings = nys_school_importer_get_mappings();
+    $data_mappings = $this->getMappings();
     foreach ($data as $key => $value) {
       $index = $key + 1;
       if ($value != $data_mappings->$index->csv_colname) {
@@ -293,7 +296,7 @@ class ImporterHelper {
   /**
    * Returns the mapping json as an array.
    *
-   * @return array|NULL
+   * @return array|null
    *   The mapping as an array.
    */
   public function getMappings() {
@@ -311,7 +314,7 @@ class ImporterHelper {
    * @param string $column_name
    *   The column name.
    *
-   * @return boolean|string
+   * @return bool|string
    *   The csv column name or FALSE.
    */
   public function getColumnNumber($column_name) {
@@ -387,12 +390,12 @@ class ImporterHelper {
    *   The legal name.
    * @param string $grade_organization
    *   The grade organization.
-   * @param string $city.
+   * @param string $city
    *   The city name.
    * @param string $zip
    *   The zip code.
    *
-   * @return object|boolean
+   * @return object|bool
    *   The node object
    */
   public function loadSchoolNode($legal_name, $grade_organization, $city, $zip) {
@@ -507,7 +510,8 @@ class ImporterHelper {
     }
 
     if ($node->hasField('field_district') && !$node->get('field_district')->isEmpty()) {
-      // If the district is not set, force an update so a fresh sage lookup can be done.
+      // If the district is not set, force an update
+      // so a fresh sage lookup can be done.
       return FALSE;
     }
 
@@ -523,7 +527,8 @@ class ImporterHelper {
     $location_array["province"] = "NY";
 
     if (empty($node) == FALSE && is_array($data) == TRUE && count($data) > 0) {
-      // For each item map columns to fields in`nys_school_importer_mapping.json`.
+      // For each item map columns
+      // to fields in`nys_school_importer_mapping.json`.
       foreach ($data as $col_index => $col_value) {
         // Set a drupal field.
         $column_number = $col_index + 1;
@@ -549,7 +554,7 @@ class ImporterHelper {
       } // Of for each column.
 
       // Final overrides and cleanup.
-      $this->importerCleanup($node, $data, $location_array);
+      $this->cleanup($node, $data, $location_array);
 
       // Add the $location_array to field_school_address in the node.
       if (count($location_array) > 0) {
@@ -578,7 +583,8 @@ class ImporterHelper {
 
     // Get the override value for the school name index.
     $default_override_num_keys = self::NYS_SCHOOL_IMPORTER_DEFAULT_SCHOOL_NAMES_INDEX_NAME ?? '';
-    if (empty($default_override_num_keys) == TRUE && $default_override_num_keys !== 0 && $default_override_num_keys !== '0') {
+    $num_keys = NULL;
+    if ($default_override_num_keys !== 0 && $default_override_num_keys !== '0') {
       // If there is no override use 4.
       $num_keys = self::NYS_SCHOOL_IMPORTER_DEFAULT_SCHOOL_NAMES_INDEX_VALUE;
     }
@@ -586,7 +592,7 @@ class ImporterHelper {
       // If the override is zero use the built in uniqueness calculated value.
       $num_keys = $this->getSchoolNameIndexNumKeys($legal_name);
     }
-    elseif (empty($default_override_num_keys) == FALSE && is_numeric($default_override_num_keys) == TRUE && $default_override_num_keys > 0) {
+    elseif (is_numeric($default_override_num_keys) == TRUE && $default_override_num_keys > 0) {
       // Use the supplied value.
       $num_keys = $this->getSchoolNameIndexNumKeys($legal_name);
     }
@@ -665,7 +671,7 @@ class ImporterHelper {
    *
    * THE to the beginning if necessary.
    *
-   * @param string @raw_message.
+   * @param string $raw_message
    *   The name to beautify.
    *
    * @return string
@@ -691,14 +697,6 @@ class ImporterHelper {
 
   /**
    * Matches string ending characters.
-   *
-   * @param string $haystack
-   *   The string to be searched.
-   * @param string $needle
-   *   The string to be used in searching.
-   *
-   * @return string
-   *   
    */
   public function nameEndsWith($haystack, $needle) {
     // Search forward starting from end minus needle length characters.
@@ -723,11 +721,11 @@ class ImporterHelper {
     $term = $this->entityTypeManager->getStorage('taxonomy_term')
       ->loadByProperties([
         'vid' => self::NYS_SCHOOL_IMPORTER_COUNTY_TAXONOMY_VID,
-        'name' => $district_name
+        'name' => $district_name,
       ]);
 
     if (!empty($term)) {
-      return $term->id();
+      return $term;
     }
 
     return FALSE;
@@ -741,22 +739,22 @@ class ImporterHelper {
     $term = $this->entityTypeManager->getStorage('taxonomy_term')
       ->loadByProperties([
         'vid' => self::NYS_SCHOOL_IMPORTER_DISTRICT_TAXONOMY_VID,
-        'name' => $county_name
+        'name' => $county_name,
       ]);
 
     if (!empty($term)) {
-      return $term->id();
+      return $term;
     }
 
     return FALSE;
   }
 
   /**
-   *  Gets the district assign data structure from sage.
+   * Gets the district assign data structure from sage.
    */
   public function getSageDistrictAssignData($addr1, $city, $state, $zip5) {
-    $sage_base_url   = 'http://pubgeo.nysenate.gov/api/v2/';
-    $sage_district   = 'district/assign';
+    $sage_base_url = 'http://pubgeo.nysenate.gov/api/v2/';
+    $sage_district = 'district/assign';
 
     $sage_parameters =
         '?addr1=' . urlencode($addr1)
@@ -772,7 +770,7 @@ class ImporterHelper {
   }
 
   /**
-   * Create or Update institution data in our SED database based on the sed_code.
+   * Create or Update institution data in SED database based on the sed_code.
    */
   public function insertOrUpdateNysedData(
     $institution_id,
@@ -802,26 +800,26 @@ class ImporterHelper {
     ON DUPLICATE KEY UPDATE `institution_id` = :institution_id, `popular_name` = :popular_name, `institution_type_desc` = :institution_type_desc, `institution_sub_type_desc` = :institution_sub_type_desc, `physical_address_line_1` = :physical_address_line_1, `address_line_2` = :address_line_2, `city` = :city, `state` = :state, `zip_code` = :zip_code, `ceo_first_name` = :ceo_first_name, `ceo_last_name` = :ceo_last_name, `ceo_title` = :ceo_title, `ceo_phone_number` = :ceo_phone_number, `senatorial_dist_1` = :senatorial_dist_1, `senatorial_dist_2` = :senatorial_dist_2, `senatorial_dist_3` = :senatorial_dist_3, `senatorial_dist_4` = :senatorial_dist_4, `senatorial_dist_5` = :senatorial_dist_5, `senatorial_dist_6` = :senatorial_dist_6";
 
     $values = [
-    ':institution_id' => $institution_id,
-    ':popular_name' => $popular_name,
-    ':sed_code' => $sed_code,
-    ':institution_type_desc' => $institution_type_desc,
-    ':institution_sub_type_desc' => $institution_sub_type_desc,
-    ':physical_address_line_1' => $physical_address_line_1,
-    ':address_line_2' => $address_line_2,
-    ':city' => $city,
-    ':state' => $state,
-    ':zip_code' => $zip_code,
-    ':ceo_first_name' => $ceo_first_name,
-    ':ceo_last_name' => $ceo_last_name,
-    ':ceo_title' => $ceo_title,
-    ':ceo_phone_number' => $ceo_phone_number,
-    ':senatorial_dist_1' => $senatorial_dist_1,
-    ':senatorial_dist_2' => $senatorial_dist_2,
-    ':senatorial_dist_3' => $senatorial_dist_3,
-    ':senatorial_dist_4' => $senatorial_dist_4,
-    ':senatorial_dist_5' => $senatorial_dist_5,
-    ':senatorial_dist_6' => $senatorial_dist_6,
+      ':institution_id' => $institution_id,
+      ':popular_name' => $popular_name,
+      ':sed_code' => $sed_code,
+      ':institution_type_desc' => $institution_type_desc,
+      ':institution_sub_type_desc' => $institution_sub_type_desc,
+      ':physical_address_line_1' => $physical_address_line_1,
+      ':address_line_2' => $address_line_2,
+      ':city' => $city,
+      ':state' => $state,
+      ':zip_code' => $zip_code,
+      ':ceo_first_name' => $ceo_first_name,
+      ':ceo_last_name' => $ceo_last_name,
+      ':ceo_title' => $ceo_title,
+      ':ceo_phone_number' => $ceo_phone_number,
+      ':senatorial_dist_1' => $senatorial_dist_1,
+      ':senatorial_dist_2' => $senatorial_dist_2,
+      ':senatorial_dist_3' => $senatorial_dist_3,
+      ':senatorial_dist_4' => $senatorial_dist_4,
+      ':senatorial_dist_5' => $senatorial_dist_5,
+      ':senatorial_dist_6' => $senatorial_dist_6,
     ];
 
     $this->connection->query($sql, $values);
@@ -830,13 +828,13 @@ class ImporterHelper {
   /**
    * Get the nysed data for a school ID.
    *
-   * @param integer $nysed_id
+   * @param int $nysed_id
    *   The nysed id.
    *
    * @return object
    *   The nysed data.
    */
-  function getNysedData($nysed_id) {
+  public function getNysedData($nysed_id) {
     $result = $this->connection->query("SELECT * FROM `nys_school_nysed_data` WHERE sed_code = :nysed_id", [
       ':nysed_id' => $nysed_id,
     ]);
@@ -849,7 +847,8 @@ class ImporterHelper {
   /**
    * Get the nysed data size.
    */
-  function getNysedDataCount() {
+  public function getNysedDataCount() {
     return $this->connection->query("SELECT COUNT(*) FROM `nys_school_nysed_data`")->fetchField();
   }
+
 }

@@ -15,6 +15,12 @@ destination:
   default_bundle: student_program
 
 process:
+  chapter_block_id:
+    -
+      plugin: migration_lookup
+      migration: nys_chapter_blocks
+      source: nid
+
   nid:
     -
       plugin: get
@@ -62,18 +68,11 @@ process:
           source: fid
           no_stub: true
 
-  field_accordion/target_id:
-    -
-      plugin: migration_lookup
-      migration: nys_chapter_blocks
-      no_stub: true
-      source: nid
+  field_accordion/target_id: '@chapter_block_id'
   field_accordion/target_revision_id:
     -
-      plugin: migration_lookup
-      migration: nys_chapter_blocks
-      no_stub: true
-      source: nid
+      plugin: get_block_rev_id
+      source: '@chapter_block_id'
 
   field_date:
     -

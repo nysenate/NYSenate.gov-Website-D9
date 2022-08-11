@@ -1,9 +1,10 @@
-uuid: 33c31776-bc8c-4e29-bd39-4df596e5a5ef
+uuid: 9d6b300f-83b6-4f95-bdb4-2f588da568be
 langcode: en
 status: true
 dependencies:
   module:
-    - block_field
+    - block_content
+    - entity_reference_revisions
     - field_permissions
     - node
 third_party_settings:
@@ -12,9 +13,10 @@ third_party_settings:
 id: node.field_accordion
 field_name: field_accordion
 entity_type: node
-type: block_field
-settings: {  }
-module: block_field
+type: entity_reference_revisions
+settings:
+  target_type: block_content
+module: entity_reference_revisions
 locked: false
 cardinality: 1
 translatable: true

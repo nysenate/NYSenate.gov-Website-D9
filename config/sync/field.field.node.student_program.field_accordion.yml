@@ -1,12 +1,13 @@
-uuid: e37ee998-e01e-4d8b-aac6-554fabfb7098
+uuid: ca7a626c-ff24-489a-9c93-f78bb51bdb16
 langcode: en
 status: true
 dependencies:
   config:
+    - block_content.type.accordion
     - field.storage.node.field_accordion
     - node.type.student_program
   module:
-    - block_field
+    - entity_reference_revisions
 id: node.student_program.field_accordion
 field_name: field_accordion
 entity_type: node
@@ -18,8 +19,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  selection: blocks
-  selection_settings:
-    plugin_ids:
-      'inline_block:accordion': 'inline_block:accordion'
-field_type: block_field
+  handler: 'default:block_content'
+  handler_settings:
+    target_bundles:
+      accordion: accordion
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference_revisions

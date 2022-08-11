@@ -15,8 +15,8 @@ dependencies:
     - field.field.node.student_program.field_subtitle
     - node.type.student_program
   module:
-    - block_field
     - datetime
+    - entity_reference_revisions
     - text
     - user
 id: node.student_program.default
@@ -32,9 +32,11 @@ content:
     weight: 101
     region: content
   field_accordion:
-    type: block_field
-    label: above
-    settings: {  }
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
     third_party_settings: {  }
     weight: 110
     region: content

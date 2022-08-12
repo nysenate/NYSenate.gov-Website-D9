@@ -720,8 +720,9 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $items = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
+      $allowed_values = '';
       if ($node->hasField('field_ol_last_status')) {
-        $allowed_values = $node->field_ol_last_status->getSetting('allowed_values') ?? '';
+        $allowed_values = $node->field_ol_last_status->getSetting('allowed_values');
       }
       $published_date = '';
       if ($node->hasField('field_ol_publish_date') &&

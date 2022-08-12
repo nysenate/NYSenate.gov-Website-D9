@@ -26,12 +26,26 @@
     }
   }
 
-  .view-senator-events.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
-    border: 0;
+  .view-senator-events {
+    max-width: unset;
+
+    .container {
+      max-width: unset;
+    }
+
+    &.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
+      border: 0;
+    }
   }
 
   .tabs-content .c-event-name {
     color: $grey08;
+  }
+
+  .item-list .pager.pager-load-more {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .c-legislation-info {
@@ -120,11 +134,21 @@
     }
   }
 
-  @include breakpoint($bp-sm) {
-    .nys-bill-status__sml li,
-    .nys-bill-status__drk li {
-      margin-top: -14px;
-    }
+  .nys-bill-status__sml li,
+  .nys-bill-status__drk li {
+    margin-top: -14px;
+  }
+}
+
+.view-senator-events {
+  max-width: unset;
+
+  .container {
+    max-width: unset;
+  }
+
+  &.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
+    border: 0;
   }
 }
 

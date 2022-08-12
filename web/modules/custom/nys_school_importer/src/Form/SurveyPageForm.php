@@ -9,15 +9,14 @@ use Drupal\Core\File\FileSystem;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\nys_school_importer\ImporterHelper;
-use Drupal\Core\Extension\ExtensionPathResolver;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Form class for NYSED importer.
+ * Form class for school survey.
  */
-class NysedPageForm extends FormBase {
+class SurveyPageForm extends FormBase {
 
   use StringTranslationTrait;
 
@@ -34,13 +33,6 @@ class NysedPageForm extends FormBase {
    * @var \Drupal\Core\State\State
    */
   protected $state;
-
-  /**
-   * Default object for extension.path.resolver service.
-   *
-   * @var \Drupal\Core\Extension\ExtensionPathResolver
-   */
-  protected $pathResolver;
 
   /**
    * Default object for messenger service.
@@ -63,8 +55,6 @@ class NysedPageForm extends FormBase {
    *   The importer helper class.
    * @param \Drupal\Core\State\State $state
    *   The state class.
-   * @param \Drupal\Core\Extension\ExtensionPathResolver $path_resolver
-   *   The extension path resolver class.
    * @param \Drupal\Core\Messenger\Messenger $messenger
    *   The messenger class.
    * @param \Drupal\Core\File\FileSystem $file_system
@@ -73,13 +63,11 @@ class NysedPageForm extends FormBase {
   public function __construct(
     ImporterHelper $importer_helper,
     State $state,
-    ExtensionPathResolver $path_resolver,
     Messenger $messenger,
     FileSystem $file_system
   ) {
     $this->importerHelper = $importer_helper;
     $this->state = $state;
-    $this->pathResolver = $path_resolver;
     $this->messenger = $messenger;
     $this->fileSystem = $file_system;
   }
@@ -91,7 +79,6 @@ class NysedPageForm extends FormBase {
     return new static(
       $container->get('nys_school_importer.importer'),
       $container->get('state'),
-      $container->get('extension.path.resolver'),
       $container->get('messenger'),
       $container->get('file_system')
     );
@@ -101,7 +88,7 @@ class NysedPageForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'nysed_importer_form';
+    return 'nys_school_importer_form';
   }
 
   /**
@@ -113,13 +100,6 @@ class NysedPageForm extends FormBase {
       '#attributes' => [
         'enctype' => 'multipart/form-data',
       ],
-      'html_markup' => [
-        '#markup' => '<p>You can merge multiple NYSED data files by repeatedly uploading csv files. </p>
-                      <p>You can get a NYSED csv data export at this link <a href="https://portal.nysed.gov/discoverer/app/export?event=startExport">https://portal.nysed.gov/discoverer/app/export?event=startExport</a></p>',
-      ],
-      'html_markup_2' => [
-        '#markup' => '<h3>There are currently ' . $this->importerHelper->getNysedDataCount() . ' NYSED institutions.</h3>',
-      ],
       'csvfile' => [
         '#title' => $this->t('CSV File'),
         '#type'  => 'file',
@@ -127,20 +107,10 @@ class NysedPageForm extends FormBase {
       ],
       'submit' => [
         '#type' => 'submit',
-        '#id' => 'submit_button',
         '#value' => $this->t('Commence Import'),
-        '#submit' => [$this, 'importerFormSubmit'],
-      ],
-      'continue_button' => [
-        '#type' => 'submit',
-        '#id' => 'continue_button',
-        '#value' => $this->t('Completed NYSED Uploads - Continue To School Import'),
-        '#submit' => [
-          [$this, 'continueToSchoolUpload'],
-        ],
       ],
       '#validate' => [
-        [$this, 'validateFileupload'],
+        [$this, 'validateFileUpload'],
         [$this, 'formValidate'],
       ],
     ];
@@ -149,15 +119,9 @@ class NysedPageForm extends FormBase {
   }
 
   /**
-   * Custom validation for the file being uploaded.
+   * Validates the file upload.
    */
   public function validateFileupload(array &$form, FormStateInterface $form_state) {
-    // If the continue_to_school_upload button was clicked valid.
-    $triggering_element = $form_state->getTriggeringElement();
-    if ($triggering_element['#id'] == 'continue_button') {
-      return;
-    }
-
     // Looking for csv files.
     $validators = [
       'file_validate_extensions' => ['csv'],
@@ -172,35 +136,38 @@ class NysedPageForm extends FormBase {
   }
 
   /**
-   * Custom form validation.
+   * Validate the inout file.
    */
   public function formValidate(array &$form, FormStateInterface $form_state) {
     // If the file is specified.
     if (!empty($form_state->getValue('csvupload'))) {
       if ($handle = fopen($form_state->getValue('csvupload'), 'r')) {
-        for ($i = 0; $i <= 10; $i++) {
-          $line = fgetcsv($handle, 4096);
-          if (empty($line) == FALSE && is_array($line) == TRUE) {
-            $line_count = count($line);
-            foreach ($line as $column) {
-              if (($column == 'Institution Id' && $line_count == 19) || ($line_count == 19)) {
-                $form_state->setError('csvfile', t('This file has the incorrect number of columns. Expecting 19'));
-              }
-            }
+        $line_count = 1;
+        if ($line = fgetcsv($handle, 4096)) {
+
+          // Begin Validation.
+          if (count($line) != 23) {
+            $form_state->setError('csvfile', $this->t('This file has the incorrect number of columns. Expecting 23'));
           }
+
+          if ($this->importerHelper->validateFile($line) == FALSE) {
+            $form_state->setError('csvfile', $this->t('The Columns in the Import File csv do not match the schema.'));
+          }
+
+          // End validating aspects of the CSV file.
         }
         fclose($handle);
       }
       else {
-        $form_state->setError('csvfile', t('Unable to read uploaded file !filepath', ['!filepath' => $form_state['values']['csvupload']]));
+        $form_state->setError('csvfile', $this->t('Unable to read uploaded file %filepath', ['%filepath' => $form_state->getValue('csvupload')]));
       }
     }
   }
 
   /**
-   * Custom submit handler.
+   * {@inheritdoc}
    */
-  public function importerFormSubmit(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Setup the batch.
     $batch = [
       'title' => $this->t('Importing School Names CSV ...'),
@@ -211,23 +178,23 @@ class NysedPageForm extends FormBase {
       'finished' => 'importFinished',
     ];
 
-    if (!empty($form_state->getValue('csvupload'))) {
+    if (isset($form_state['values']['csvupload'])) {
       // File uploaded.
-      $this->state->set('nys_school_nysed_importer_csvupload', $form_state->getValue('csvupload'));
+      $this->state->set('nys_school_importer_csvupload', $form_state->getValue('csvupload'));
 
       // Clear the nys_school_names table.
-      // nys_school_importer_clear_nys_school_names();
+      $this->importerHelper->clearNysSchoolNames();
+
       // Reset the importer status.
       $this->state->set('nys_school_importer_failed', FALSE);
 
       // Load the nys_school_names table.
-      if ($handle = fopen($form_state->getValue('csvupload'), 'r')) {
+      if ($handle = fopen($form_state['values']['csvupload'], 'r')) {
         $batch['operations'][] = [
           'rememberFilename',
-          [$form_state->getValue('csvupload')],
+          [$form_state['values']['csvupload']],
         ];
         $line_count = 1;
-        $first = TRUE;
         // Read the header line.
         $header_line = fgetcsv($handle, 4096);
         // Read the rest of the lines.
@@ -246,53 +213,47 @@ class NysedPageForm extends FormBase {
           ];
         }
         fclose($handle);
-      } // we caught this in nys_school_nysed_importer_form_validate()
-    } // we caught this in nys_school_nysed_importer_form_validate()
+      } // we caught this in nys_school_importer_form_validate()
+    } // we caught this in nys_school_importer_form_validate()
     batch_set($batch);
   }
 
   /**
-   * Stores the filename.
+   * Helper function.
    */
   public function rememberFilename($filename, &$context) {
     $context['results']['uploaded_filename'] = $filename;
   }
 
   /**
-   * Processs the line.
+   * Processsing complete.
    */
   public function importSchoolNamesLine($line, $session_nid, &$context = NULL) {
-    $line = $cleaned_line = array_map('base64_decode', $line);
-    if (is_numeric($line[0]) == TRUE && is_numeric($line[2]) == TRUE) {
-      $this->importerHelper->insertOrUpdateNysedData($line[0],
-                                                      $line[1],
-                                                      $line[2],
-                                                      $line[3],
-                                                      $line[4],
-                                                      $line[5],
-                                                      $line[6],
-                                                      $line[7],
-                                                      $line[8],
-                                                      $line[9],
-                                                      $line[10],
-                                                      $line[11],
-                                                      $line[12],
-                                                      $line[13],
-                                                      $line[14],
-                                                      $line[15],
-                                                      $line[16],
-                                                      $line[17],
-                                                      $line[18],
-                                                      $line[19]);
-    }
-  }
+    // Handle encoded file.
+    $line = array_map('base64_decode', $line);
 
-  /**
-   * Handler for the continue_button.
-   */
-  public function continueToSchoolUpload($form, &$form_state) {
-    $response = new RedirectResponse('nys-school-import');
-    $response->send();
+    // Get the Key columns and save them.
+    $legal_name = $line[$this->importerHelper->getColumnNumber('LEGAL NAME') - 1];
+    $grade_organization = $line[$this->importerHelper->getColumnNumber('GRADE ORGANIZATION DESCRIPTION') - 1];
+    $city = $line[$this->importerHelper->getColumnNumber('CITY') - 1];
+    $zip = $line[$this->importerHelper->getColumnNumber('ZIP') - 1];
+    $this->importerHelper->createSchoolName($legal_name, $grade_organization, $city, $zip);
+
+    // Get the county name for the referential integrity check.
+    $county_name = $line[$this->importerHelper->getColumnNumber('COUNTY') - 1];
+    $county_tid = $this->importerHelper->getCountyTid($county_name);
+    if ($county_tid == FALSE) {
+      // The supplied county name is not in the County taxonomy.
+      $this->messenger->addStatus($this->t("County `%country` not found in taxonomy for - %legal_name, %grade_organization, %city, %zip", [
+        '%country_name' => $county_name,
+        '%legal_name' => $legal_name,
+        '%grade_organization' => $grade_organization,
+        '%city' => $city,
+        '%zip' => $zip,
+      ]));
+      $this->state->set('nys_school_importer_failed', TRUE);
+    }
+
   }
 
   /**
@@ -317,42 +278,30 @@ class NysedPageForm extends FormBase {
             fputcsv($handle, $failed_row);
           }
           fclose($handle);
-          $this->messenger->addError(t('Some rows failed to import. You may download a CSV of these rows: !csv_url', $targs));
+          $this->messenger->addError($this->t('Some rows failed to import. You may download a CSV of these rows: !csv_url', $targs));
         }
         else {
-          $this->messenger->addError(t('Some rows failed to import, but unable to write error CSV to %csv_filepath', $targs));
+          $this->messenger->addError($this->t('Some rows failed to import, but unable to write error CSV to %csv_filepath', $targs));
         }
       }
       else {
-        $this->messenger->addError(t('Some rows failed to import, but unable to create directory for error CSV at %csv_directory', $targs));
+        $this->messenger->addError($this->t('Some rows failed to import, but unable to create directory for error CSV at %csv_directory', $targs));
       }
     }
 
-    $nys_school_nysed_importer_failed = $this->state->get('nys_school_importer_failed', FALSE);
-    if ($nys_school_nysed_importer_failed == TRUE) {
+    $nys_school_importer_failed = $this->state->get('nys_school_importer_failed', FALSE);
+    if ($nys_school_importer_failed == TRUE) {
       $this->messenger->addWarning($this->t('The School Survey failed because of a missing or mismatched County Taxonomy Term.'));
       $response = new RedirectResponse('nys-school-report');
       $response->send();
       return $this->t('The CSV import was not complete.');
     }
     else {
-      $this->messenger->addStatus($this->t('The CSV import has completed.'));
+      $this->messenger->addStatus(t('The CSV import has completed.'));
+      $response = new RedirectResponse('nys-school-analyze');
+      $response->send();
       return $this->t('The CSV import has completed.');
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-
   }
 
 }

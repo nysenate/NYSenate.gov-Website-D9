@@ -350,13 +350,26 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
         case 'Newsroom':
         case 'Legislation':
         case 'Events':
-        case 'Contact':
           // @todo Add extra title logic if needed.
           $nodeValues['title'] = 'About ' . $senator_name;
           break;
 
         case 'Our District':
           $nodeValues['title'] = $micrositeType->getName();
+          break;
+
+        case 'Contact':
+          $nodeValues['title'] = 'About ' . $senator_name;
+          $senatorContactBlock = \Drupal::service('entity_type.manager')->getStorage('block_content')->loadByProperties([
+            'type' => 'microsite_contact_webform',
+            'status' => 1,
+            'info' => 'Senator contact form - Microsite Contact block',
+          ]);
+          $senatorContactBlock = reset($senatorContactBlock);
+          $nodeValues['field_block'][] = [
+            'target_id' => $senatorContactBlock->id(),
+            'target_revision_id' => $senatorContactBlock->getRevisionId(),
+          ];
           break;
 
       }

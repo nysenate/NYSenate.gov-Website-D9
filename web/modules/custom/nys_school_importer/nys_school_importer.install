@@ -1,0 +1,230 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for nys_school_importer.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_school_importer_schema() {
+  $schema['nys_school_names'] = [
+    'description' => 'School data managed by nys_school_importer.module.',
+    'fields' => [
+      'sid' => [
+        'description' => 'Primary Key: Unique school ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'legal_name' => [
+        'description' => 'School Legal Name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'grade_organization' => [
+        'description' => 'School Grade Organization Description.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => FALSE,
+      ],
+      'city' => [
+        'description' => 'School City.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => FALSE,
+      ],
+      'zip' => [
+        'description' => 'School Zip Code.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['sid'],
+  ];
+  $schema['nys_school_names_index'] = [
+    'description' => 'List of non unique School Names and the number of keys required for a unique name.',
+    'fields' => [
+      'snid' => [
+        'description' => 'Unique School Name Index.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'legal_name' => [
+        'description' => 'School Legal Name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'num_keys' => [
+        'description' => 'Number of Keys Required For Uniqueness.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ],
+    ],
+    'primary key' => ['snid'],
+    'unique keys' => [
+      'legal_name' => ['legal_name'],
+    ],
+  ];
+  $schema['nys_school_nysed_data'] = [
+    'description' => 'Lookup table for the Senatorial District for a school.',
+    'fields' => [
+      'institution_id' => [
+        'description' => 'Institution Id',
+        'type' => 'varchar',
+        'length' => 32,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'popular_name' => [
+        'description' => 'Popular Name',
+        'type' => 'varchar',
+        'length' => 80,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'sed_code' => [
+        'description' => 'Sed Code',
+        'type' => 'varchar',
+        'length' => 32,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'institution_type_desc' => [
+        'institution_type_desc' => 'Institution Type Desc',
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'institution_sub_type_desc' => [
+        'description' => 'Institution Sub Type Desc',
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'physical_address_line_1' => [
+        'description' => 'Physical Address Line1',
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'address_line_2' => [
+        'description' => 'Address Line2',
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'city' => [
+        'description' => 'City',
+        'type' => 'varchar',
+        'length' => 50,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'state' => [
+        'description' => 'State',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'zip_code' => [
+        'description' => 'Zip Code',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'ceo_first_name' => [
+        'description' => 'CEO First Name',
+        'type' => 'varchar',
+        'length' => 80,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'ceo_last_name' => [
+        'description' => 'CEO Last Name',
+        'type' => 'varchar',
+        'length' => 80,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'ceo_title' => [
+        'description' => 'CEO Title',
+        'type' => 'varchar',
+        'length' => 80,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'ceo_phone_number' => [
+        'description' => 'CEO Phone Number',
+        'type' => 'varchar',
+        'length' => 40,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'senatorial_dist_1' => [
+        'description' => 'Senatorial Dist1',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'senatorial_dist_2' => [
+        'description' => 'Senatorial Dist2',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'senatorial_dist_3' => [
+        'description' => 'Senatorial Dist3',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'senatorial_dist_4' => [
+        'description' => 'Senatorial Dist4',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'senatorial_dist_5' => [
+        'description' => 'Senatorial Dist5',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'senatorial_dist_6' => [
+        'description' => 'Senatorial Dist6',
+        'type' => 'varchar',
+        'length' => 20,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+
+    ],
+    'primary key' => ['sed_code'],
+  ];
+
+  return $schema;
+}

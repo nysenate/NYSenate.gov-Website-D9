@@ -290,6 +290,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
   $heroBlock = BlockContent::create([
     'info' => $senator_name . ' - Hero block',
     'type' => 'microsite_hero',
+    'revision_user' => 1,
     'field_senator' => [
       'target_id' => $entity->id(),
     ],
@@ -300,6 +301,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
   $menuBlock = BlockContent::create([
     'info' => $senator_name . ' - Menu block',
     'type' => 'senator_microsite_menu',
+    'revision_user' => 1,
   ]);
   $menuBlock->save();
 
@@ -311,54 +313,58 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
 
   // Iterates through each microsite term and creates the microsite page.
   foreach ($micrositeTypes as $micrositeType) {
-    // Default node values.
-    $nodeValues = [
-      'type' => 'microsite_page',
-      'status' => 1,
-      'field_microsite_page_type' => [
-        'target_id' => $micrositeType->id(),
-      ],
-      'field_block' => [
-        [
-          'target_id' => $heroBlock->id(),
-          'target_revision_id' => $heroBlock->getRevisionId(),
+    if ($micrositeType->getName() !== 'Inactive') {
+      // Default node values.
+      $nodeValues = [
+        'type' => 'microsite_page',
+        'status' => 1,
+        'uid' => 1,
+        'field_microsite_page_type' => [
+          'target_id' => $micrositeType->id(),
         ],
-        [
-          'target_id' => $menuBlock->id(),
-          'target_revision_id' => $menuBlock->getRevisionId(),
+        'field_block' => [
+          [
+            'target_id' => $heroBlock->id(),
+            'target_revision_id' => $heroBlock->getRevisionId(),
+          ],
+          [
+            'target_id' => $menuBlock->id(),
+            'target_revision_id' => $menuBlock->getRevisionId(),
+          ],
         ],
-      ],
-      'field_senator_multiref' => [
-        [
-          'target_id' => $entity->id(),
+        'field_senator_multiref' => [
+          [
+            'target_id' => $entity->id(),
+          ],
         ],
-      ],
-    ];
+      ];
 
-    // Sets the node title value considering the microsite page we are creating.
-    switch ($micrositeType->getName()) {
-      case 'Landing':
-        $nodeValues['title'] = $senator_name;
-        break;
+      // Sets the node title value considering the microsite page we are
+      // creating.
+      switch ($micrositeType->getName()) {
+        case 'Landing':
+          $nodeValues['title'] = $senator_name;
+          break;
 
-      case 'About':
-      case 'Newsroom':
-      case 'Legislation':
-      case 'Events':
-      case 'Contact':
-        // @todo Add extra title logic if needed.
-        $nodeValues['title'] = 'About ' . $senator_name;
-        break;
+        case 'About':
+        case 'Newsroom':
+        case 'Legislation':
+        case 'Events':
+        case 'Contact':
+          // @todo Add extra title logic if needed.
+          $nodeValues['title'] = 'About ' . $senator_name;
+          break;
 
-      case 'Our District':
-        $nodeValues['title'] = $micrositeType->getName();
-        break;
+        case 'Our District':
+          $nodeValues['title'] = $micrositeType->getName();
+          break;
 
+      }
+
+      // Creates the new microsite page.
+      $node = Node::create($nodeValues);
+      $node->save();
     }
-
-    // Creates the new microsite page.
-    $node = Node::create($nodeValues);
-    $node->save();
   }
 }
 
@@ -369,6 +375,109 @@ function nys_senators_taxonomy_term_insert(EntityInterface $entity) {
   // Acts on every new senator taxonomy term that's added.
   if ($entity->bundle() === 'senator') {
     _nys_senators_create_senator_microsites($entity);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function nys_senators_taxonomy_term_update(EntityInterface $entity) {
+  /** @var \Drupal\taxonomy\Entity\Term $term */
+  $term = $entity;
+  // Acts on every new senator taxonomy term that's updated.
+  if ($term->bundle() === 'senator' &&
+    $term->get('field_active_senator')->value === 0) {
+    // Sets currentTid variable from the term.
+    $currentTid = $entity->id();
+
+    // Looks for the Microsite pages that are referencing this senator.
+    $pages = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$currentTid], 'IN')
+      ->execute();
+
+    // Checks if there are results or not.
+    if (!empty($pages)) {
+      // Loads the microsite pages found.
+      $nodes = Node::loadMultiple($pages);
+
+      // Unpublishes each senator microsite page.
+      foreach ($nodes as $node) {
+        if ($node->isPublished()) {
+          $node->set('status', '0');
+          if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+            $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
+            $term = Term::load($tid);
+            if ($term instanceof TermInterface && !empty($term->getName()) && $term->getName() === 'Landing') {
+              $aliasEntity = \Drupal::entityTypeManager()->getStorage('path_alias')->loadByProperties([
+                'path' => '/node/' . $node->id(),
+              ]);
+              $aliasEntity = reset($aliasEntity);
+              $aliasEntity->set('alias', $aliasEntity->get('alias')->value . '/landing');
+              $aliasEntity->save();
+            }
+          }
+          $node->save();
+        }
+      }
+    }
+
+    // Loads the Inactive term.
+    $inactiveTerm = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+      'vid' => 'microsite_page_type',
+      'name' => 'Inactive',
+    ]);
+    $inactiveTerm = reset($inactiveTerm);
+
+    // Creates hero block to be attached to the microsite content.
+    $heroBlock = BlockContent::create([
+      'info' => $entity->label() . ' - Hero block',
+      'type' => 'microsite_hero',
+      'revision_user' => 1,
+      'field_senator' => [
+        'target_id' => $entity->id(),
+      ],
+    ]);
+    $heroBlock->save();
+
+    // Creates inactive senator block to be attached to the microsite content.
+    $inactiveSenatorBlock = BlockContent::create([
+      'info' => $entity->label() . ' - Inactive block',
+      'type' => 'inactive_senator_block',
+      'revision_user' => 1,
+    ]);
+    $inactiveSenatorBlock->save();
+
+    // Inactive Microsite page node values.
+    $nodeValues = [
+      'type' => 'microsite_page',
+      'status' => 1,
+      'uid' => 1,
+      'title' => $entity->label(),
+      'field_microsite_page_type' => [
+        'target_id' => $inactiveTerm->id(),
+      ],
+      'field_block' => [
+        [
+          'target_id' => $heroBlock->id(),
+          'target_revision_id' => $heroBlock->getRevisionId(),
+        ],
+        [
+          'target_id' => $inactiveSenatorBlock->id(),
+          'target_revision_id' => $inactiveSenatorBlock->getRevisionId(),
+        ],
+      ],
+      'field_senator_multiref' => [
+        [
+          'target_id' => $currentTid,
+        ],
+      ],
+    ];
+
+    // Creates the new microsite page.
+    $node = Node::create($nodeValues);
+    $node->save();
   }
 }
 
@@ -390,7 +499,13 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
       if ($term instanceof TermInterface && !empty($term->getName())) {
         switch ($term->getName()) {
           case 'Landing':
-            $replacements[] = '';
+          case 'Inactive':
+            // Workaround to allow nys_senators_taxonomy_term_update update
+            // Senator Landing alias.
+            if (($term->getName() === 'Landing' && $context['op'] !== 'update')
+                || $term->getName() === 'Inactive') {
+              $replacements[] = '';
+            }
             break;
 
           case 'About':

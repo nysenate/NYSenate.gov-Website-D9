@@ -4,7 +4,8 @@
  * Template for 'Senator Microsite Menu Block'.
  */
 #}
-
-{% include "@nysenate_theme/microsite-menu/microsite-menu.twig" with {
-  links: links
-} %}
+{% if links %}
+  {% include "@nysenate_theme/microsite-menu/microsite-menu.twig" with {
+    links: links
+  } %}
+{% endif %}

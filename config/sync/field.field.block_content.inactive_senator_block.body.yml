@@ -1,0 +1,31 @@
+uuid: 1cf680ed-0408-4fb0-b6ea-8166399bcdbf
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.inactive_senator_block
+    - field.storage.block_content.body
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats: {  }
+id: block_content.inactive_senator_block.body
+field_name: body
+entity_type: block_content
+bundle: inactive_senator_block
+label: Body
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: "<p>This Senator is no longer serving in the New York State Senate.</p>\r\n"
+    summary: ''
+    format: basic_html
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

@@ -262,7 +262,7 @@ class SurveyPageForm extends FormBase {
   public function importFinished($success, $results, $operations) {
     // If there were failures.
     if (!empty($results['failed_rows'])) {
-      $dir = $this->fileSystem->realPath(file_build_uri('')) . '/csvImporter/';
+      $dir = $this->fileSystem->realPath('/csvImporter/');
       $csv_filename = 'failed_rows-' . basename($results['uploaded_filename']);
       $csv_filepath = $dir . '/' . $csv_filename;
       $csv_url = Link::fromTextAndUrl(htmlspecialchars($csv_filename), $csv_filepath);

@@ -15,11 +15,11 @@ school_importer.survey:
 school_importer.analyze:
   path: '/admin/nys-school-analyze'
   defaults:
-    _controller: '\Drupal\nys_school_improter\Controller\AnalyzeController::analyzePage'
+    _controller: '\Drupal\nys_school_importer\Controller\AnalyzeController::analyzePage'
   requirements:
     _permission: 'administer site configuration'
 school_importer.import:
-  path: '/admin/nys-school-import',
+  path: '/admin/nys-school-import'
   defaults:
     _controller: '\Drupal\nys_school_importer\Controller\ImportController::importPage'
   requirements:

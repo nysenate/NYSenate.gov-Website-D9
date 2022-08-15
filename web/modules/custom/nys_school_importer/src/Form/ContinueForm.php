@@ -4,8 +4,9 @@ namespace Drupal\nys_school_importer\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\nys_school_importer\SchoolImporterHelper;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\nys_school_importer\Controller\ImportController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The ContinueForm class.
@@ -13,6 +14,32 @@ use Drupal\nys_school_importer\Controller\ImportController;
 class ContinueForm extends FormBase {
 
   use StringTranslationTrait;
+
+  /**
+   * Default object for nys_school_importer.school_importer service.
+   *
+   * @var \Drupal\nys_school_importer\SchoolImporterHelper
+   */
+  protected $schoolImporterHelper;
+
+  /**
+   * The constructor method.
+   *
+   * @param \Drupal\nys_school_importer\SchoolImporterHelper $school_importer_helper
+   *   The importer helper service.
+   */
+  public function __construct(SchoolImporterHelper $school_importer_helper) {
+    $this->schoolImporterHelper = $school_importer_helper;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container_interface) {
+    return new static(
+      $container_interface->get('nys_school_importer.school_importer')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -25,12 +52,10 @@ class ContinueForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $import_controller = new ImportController();
-
     $form['from'] = [
       '#type' => 'item',
       '#title' => $this->t('Remaining Schools With Name Issues'),
-      '#markup' => $import_controller->getOffendingSchoolNamesMarkup(5),
+      '#markup' => $this->schoolImporterHelper->getOffendingSchoolNamesMarkup(5),
     ];
 
     $form['submit'] = [
@@ -45,8 +70,7 @@ class ContinueForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $import_controller = new ImportController();
-    $import_controller->processImport();
+    $this->schoolImporterHelper->processImport();
   }
 
 }

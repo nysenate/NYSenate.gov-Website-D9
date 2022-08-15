@@ -88,22 +88,22 @@
   {% endif %}
   {{ title_suffix }}
 
-    <div{{ content_attributes.addClass('node__body', 'container') }}>
-      {{ content }}
-    </div>
+  <div{{ content_attributes.addClass('node__body', 'container') }}>
+    {{ content }}
+  </div>
 
-    {% if display_submitted %}
-      <footer class="node__meta">
-        {{ author_picture }}
-        <div{{ author_attributes.addClass('node__submitted') }}>
-          {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-          {{ metadata }}
-        </div>
-      </footer>
-    {% endif %}
+  {% if display_submitted %}
+    <footer class="node__meta">
+      {{ author_picture }}
+      <div{{ author_attributes.addClass('node__submitted') }}>
+        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        {{ metadata }}
+      </div>
+    </footer>
+  {% endif %}
 
   {% if is_events %}
-    <div{{ content_attributes.addClass('node__content','l-row--main') }}>
+    <div{{ content_attributes.addClass('node__content') }}>
         {{ drupal_view('senator_events', 'senator_today_events',content.field_senator_multiref['#items'].0.target_id) }}
         {{ drupal_view('senator_events', 'featured_event',content.field_senator_multiref['#items'].0.target_id) }}
         {{ drupal_view('senator_events', 'upcoming_events',content.field_senator_multiref['#items'].0.target_id) }}

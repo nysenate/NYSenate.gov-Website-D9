@@ -390,6 +390,9 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
     // Sets currentTid variable from the term.
     $currentTid = $entity->id();
 
+    // Initialize aboutNode to store About page information.
+    $aboutNode = [];
+
     // Looks for the Microsite pages that are referencing this senator.
     $pages = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
@@ -408,14 +411,17 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
           $node->set('status', '0');
           if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
             $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
-            $term = Term::load($tid);
-            if ($term instanceof TermInterface && !empty($term->getName()) && $term->getName() === 'Landing') {
+            $micrositeTerm = Term::load($tid);
+            if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing') {
               $aliasEntity = \Drupal::entityTypeManager()->getStorage('path_alias')->loadByProperties([
                 'path' => '/node/' . $node->id(),
               ]);
               $aliasEntity = reset($aliasEntity);
               $aliasEntity->set('alias', $aliasEntity->get('alias')->value . '/landing');
               $aliasEntity->save();
+            }
+            elseif ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About') {
+              $aboutNode = $node;
             }
           }
           $node->save();
@@ -474,6 +480,46 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
         ],
       ],
     ];
+
+    // Checks if aboutNode is set and has blocks to iterate with.
+    if ($aboutNode instanceof NodeInterface
+        && $aboutNode->hasField('field_block')
+        && !$aboutNode->get('field_block')->isEmpty()) {
+      // Iterates through each field block.
+      foreach ($aboutNode->get('field_block') as $value) {
+        /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+        $block_content = $value->entity;
+
+        if ($block_content instanceof BlockContent) {
+          // Sets inactiveText for former Senator page.
+          if ($block_content->bundle() === 'text') {
+            $existingText = !$block_content->get('field_body_left')->isEmpty() ? $block_content->get('field_body_left')->getValue() : '';
+            $existingText = !empty($existingText) ? $existingText[0]['value'] : '';
+            $inactiveHeader = '<h2>About Former Senator ' . $term->getName() . '\'s</h2>';
+            $inactiveFooter = '<div><p><em>Last edited by Senator ' . $term->getName() . '\'s staff prior to last day in office.</em></p></div>';
+            $inactiveText = $inactiveHeader . $existingText . $inactiveFooter;
+          }
+        }
+      }
+    }
+
+    // Checks if inactiveText is set.
+    if (isset($inactiveText) && !empty($inactiveText)) {
+      // Creates inactive text senator block to copy the about page information
+      // and attach to the inactive microsite content.
+      $textSenatorBlock = BlockContent::create([
+        'field_title' => $entity->label() . ' - Text block',
+        'type' => 'text',
+        'revision_user' => 1,
+        'field_body_left' => $inactiveText ?? '',
+      ]);
+      $textSenatorBlock->save();
+
+      $nodeValues['field_block'][] = [
+        'target_id' => $textSenatorBlock->id(),
+        'target_revision_id' => $textSenatorBlock->getRevisionId(),
+      ];
+    }
 
     // Creates the new microsite page.
     $node = Node::create($nodeValues);

@@ -5,6 +5,9 @@
  * Create 'Microsite Page Type' taxonomy terms programmatically.
  */
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -109,4 +112,55 @@ function nys_senators_update_9005() {
     'vid' => 'microsite_page_type',
   ]);
   $term->save();
+}
+
+/**
+ * Add Senator Contact block to microsite Contact pages on active senators.
+ */
+function nys_senators_update_9006() {
+  // Creates the default Microsite Contact Webform block to be attached to the
+  // existing microsite nodes.
+  $senatorContactBlock = BlockContent::create([
+    'info' => 'Senator contact form - Microsite Contact block',
+    'type' => 'microsite_contact_webform',
+    'revision_user' => 1,
+    'field_contact_webform' => [
+      'target_id' => 'senator_contact_webform',
+      'default_data' => '',
+      'status' => 'open',
+      'open' => '',
+      'close' => '',
+    ],
+  ]);
+  $senatorContactBlock->save();
+
+  // Queries all senator terms that are published and active.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+    'status' => 1,
+    'field_active_senator' => TRUE,
+  ]);
+
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    // Queries looking for microsite pages that reference the term in senator
+    // multiref field and Contact pages only.
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      // Query the Contact term page.
+      ->condition('field_microsite_page_type', 93784, '=')
+      ->execute();
+
+    // Appends the Contact Webform block to the microsite pages.
+    if (!empty($query)) {
+      $nid = reset($query);
+      $node = Node::load($nid);
+      if ($node instanceof NodeInterface) {
+        $node->get('field_block')->appendItem($senatorContactBlock);
+        $node->save();
+      }
+    }
+  }
 }

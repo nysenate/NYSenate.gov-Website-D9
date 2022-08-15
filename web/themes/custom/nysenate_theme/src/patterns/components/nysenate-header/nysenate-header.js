@@ -242,17 +242,19 @@
 
       // homepage NOT in session has different actionbar behavior
       // if(this.isHomepage() && !this.isInSession()) {
-      if(
-        this.isMovingDown(currentTop, previousTop)
+      if (origActionBar) {
+        if(
+          this.isMovingDown(currentTop, previousTop)
           && currentTop + nav.outerHeight() >= origActionBar.offset().top
-      ) {
-        actionBar.removeClass('hidden');
-      }
-      else if(
-        this.isMovingUp(currentTop, previousTop)
+        ) {
+          actionBar.removeClass('hidden');
+        }
+        else if(
+          this.isMovingUp(currentTop, previousTop)
         && currentTop <= origActionBar.offset().top
-      ) {
-        actionBar.addClass('hidden');
+        ) {
+          actionBar.addClass('hidden');
+        }
       }
       // }
 

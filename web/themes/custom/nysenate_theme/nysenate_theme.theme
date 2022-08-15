@@ -5,6 +5,8 @@
  * Functions to support theming in the rain_theme theme.
  */
 
+use Drupal\address\Plugin\Field\FieldType\AddressItem;
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\file\Entity\File;
@@ -147,7 +149,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
   $district_number = [
     'url' => $district_url,
-    'text' => get_senator_district($sid),
+    'text' => get_senator_district($sid) ?? '',
   ];
 
   // Social links.
@@ -328,8 +330,7 @@ function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
 
       // Last status.
       $last_status_values = $bill['#node']->field_ol_last_status->getSetting('allowed_values');
-      $last_status = $last_status_values[$bill['#node']->field_ol_last_status->value];
-
+      $last_status = !empty($bill['#node']->field_ol_last_status->value) ? $last_status_values[$bill['#node']->field_ol_last_status->value] : '';
       // All status.
       $positions = nysenate_bill_positions($bill['#node']);
 
@@ -618,6 +619,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   if ($view->id() == 'senator_microsite_content' && $view->current_display == 'block_1') {
     $items = [];
     foreach ($view->result as $row) {
+      /** @var \Drupal\node\Entity\Node $node */
       $node = $row->_entity;
       $allowed_values = [];
       if ($node->hasField('field_category')) {
@@ -625,6 +627,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
       $term = NULL;
       if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+        /** @var \Drupal\taxonomy\Entity\Term $term */
         $term = !empty($node->field_issues->target_id) ? $term_storage->load($node->field_issues->target_id) : NULL;
       }
 
@@ -659,31 +662,34 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
     $items = [];
     foreach ($view->result as $row) {
+      /** @var \Drupal\node\Entity\Node $node */
       $node = $row->_entity;
-      $start_date = $node->field_date_range->value;
-      $end_date = $node->field_date_range->end_value;
+      $start_date = $node->get('field_date_range')->getValue()[0]['value'];
+      $end_date = $node->get('field_date_range')->getValue()[0]['end_value'];
       $states = \Drupal::service('address.subdivision_repository')->getList(['US']);
 
       $address = '';
       $location_url = '';
       $location_name = '';
-      if ($node->field_location) {
-        $location_name = $node->field_location->organization;
+      /** @var Drupal\address\Plugin\Field\FieldType\AddressItem $field_location */
+      $field_location = ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) ? $node->get('field_location')->first() : '';
+      if ($field_location instanceof AddressItem) {
+        $location_name = $field_location->getOrganization() ?? '';
 
-        if ($node->field_location->address_line1) {
-          $address = $node->field_location->address_line1 . '<br>';
+        if ($field_location->getAddressLine1()) {
+          $address = $field_location->getAddressLine1() . '<br>';
         }
 
-        if ($node->field_location->locality) {
-          $address .= $node->field_location->locality . ', ';
+        if ($field_location->getLocality()) {
+          $address .= $field_location->getLocality() . ', ';
         }
 
-        if ($node->field_location->administrative_area) {
-          $address .= $states[$node->field_location->administrative_area] . ' ';
+        if ($field_location->getAdministrativeArea()) {
+          $address .= $states[$field_location->getAdministrativeArea()] . ' ';
         }
 
-        if ($node->field_location->postal_code) {
-          $address .= $node->field_location->postal_code;
+        if ($field_location->getPostalCode()) {
+          $address .= $field_location->getPostalCode();
         }
       }
 
@@ -714,9 +720,13 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $items = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
-      $allowed_values = $node->field_ol_last_status->getSetting('allowed_values');
+      $allowed_values = '';
+      if ($node->hasField('field_ol_last_status')) {
+        $allowed_values = $node->field_ol_last_status->getSetting('allowed_values');
+      }
       $published_date = '';
-      if ($node->field_ol_publish_date) {
+      if ($node->hasField('field_ol_publish_date') &&
+        !$node->get('field_ol_publish_date')->isEmpty()) {
         $published_date = $node->field_ol_publish_date->value;
       }
 
@@ -744,21 +754,23 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     foreach ($view->result as $row) {
       $node = $row->_entity;
       $bundle = $node->bundle();
-      if ($bundle == 'article') {
-        if ($node->field_category->value) {
-          $bundle = $node->field_category->getSetting('allowed_values');
-          $bundle = $bundle[$node->field_category->value];
-        }
+      if ($bundle == 'article' && $node->hasField('field_category')
+        && !$node->get('field_category')->isEmpty()) {
+        $bundle = $node->field_category->getSetting('allowed_values');
+        $bundle = $bundle[$node->field_category->value];
       }
 
       $issues = [];
-      if ($node->field_issues->target_id) {
-        $term = $term_storage->load($node->field_issues->target_id);
-        if (!empty($term)) {
-          $issues[] = [
-            'name' => $term->label(),
-            'url' => $term->toUrl()->toString(),
-          ];
+      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+        if ($node->field_issues->target_id) {
+          /** @var \Drupal\taxonomy\Entity\Term $term */
+          $term = $term_storage->load($node->field_issues->target_id);
+          if ($term instanceof TermInterface) {
+            $issues[] = [
+              'name' => $term->label(),
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
         }
       }
 
@@ -802,7 +814,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $last_status = '';
       if (!empty($node->field_ol_last_status)) {
         $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
-        $last_status = $last_status_values[$node->field_ol_last_status->value];
+        $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
       }
 
       $bill = [
@@ -904,23 +916,28 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
       'microsite_hero',
       'senator_microsite_menu',
     ];
-    foreach ($node->get('field_block') as $key => $block) {
-      $field_block = $block->entity;
-      // Alter the field_block contents to be displayed.
-      if (in_array($field_block->bundle(), $block_types)) {
-        if ($block->entity->bundle() == 'microsite_hero') {
-          $variables['microsite_hero'] = \Drupal::entityTypeManager()->getViewBuilder('block_content')
-            ->view($block->entity);
-        }
+    foreach ($node->get('field_block') as $key => $value) {
+      /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+      $block_content = $value->entity;
 
-        elseif ($field_block->bundle() == 'senator_microsite_menu') {
-          $variables['microsite_menu'] = \Drupal::entityTypeManager()->getViewBuilder('block_content')
-            ->view($block->entity);
-        }
+      if ($block_content instanceof BlockContent) {
+        // Alter the field_block contents to be displayed.
+        if (in_array($block_content->bundle(), $block_types)) {
+          if ($block_content->bundle() == 'microsite_hero') {
+            $variables['microsite_hero'] = \Drupal::entityTypeManager()
+              ->getViewBuilder('block_content')
+              ->view($block_content);
+          }
+          elseif ($block_content->bundle() == 'senator_microsite_menu') {
+            $variables['microsite_menu'] = \Drupal::entityTypeManager()
+              ->getViewBuilder('block_content')
+              ->view($block_content);
+          }
 
-        // Set both microsite blocks to empty array
-        // to prevent from rendering in the display.
-        $node->get('field_block')[$key] = [];
+          // Set both microsite blocks to empty array
+          // to prevent from rendering in the display.
+          $node->get('field_block')[$key] = [];
+        }
       }
     }
   }
@@ -962,12 +979,17 @@ function get_senator_district($tid) {
     ->condition('s.field_senator_target_id', $tid);
   $district_id = $query->execute()->fetchField();
 
-  $district = \Drupal::entityTypeManager()
-    ->getStorage('taxonomy_term')
-    ->load($district_id);
+  $district_number = '';
+  if (!empty($district_id)) {
+    $district = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->load($district_id);
 
-  $district_number = (int) $district->field_district_number->value;
-  return ordinal_suffix($district_number);
+    $district_number = (int) $district->field_district_number->value;
+    return ordinal_suffix($district_number);
+  }
+
+  return $district_number;
 }
 
 /**
@@ -1567,7 +1589,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
           $file_url_generator = \Drupal::service('file_url_generator');
           $variables['file_items'][] = [
             'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-            'text' => ($item->description !== '') ? $item->description : $file->origname[0]->value,
+            'text' => ($item->description !== '') ? $item->description : $file->origname->value,
             'type' => $file->getMimeType(),
           ];
         }

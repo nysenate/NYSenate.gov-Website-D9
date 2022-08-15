@@ -2,6 +2,13 @@
 @import '../../global/utils/init';
 
 .newsroom-content {
+  max-width: unset;
+  
+  .container {
+    margin: 0;
+    max-width: unset;
+  }
+
   .bef-exposed-form .form--inline > .form-item {
     margin: 0;
   }
@@ -19,21 +26,46 @@
     }
   }
 
-  .view-senator-events.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
-    border: 0;
+  .view-senator-events {
+    max-width: unset;
+
+    .container {
+      max-width: unset;
+    }
+
+    &.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
+      border: 0;
+    }
   }
 
   .tabs-content .c-event-name {
     color: $grey08;
   }
 
+  .item-list .pager.pager-load-more {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   .c-legislation-info {
     display: flex;
+    flex-direction: column;
     padding: 0;
 
-    .c-bill-num {
-      width: 25%;
-      max-width: 200px;
+
+    @include breakpoint($bp-sm) {
+      flex-direction: row;
+
+      .c-bill-num {
+        width: 25%;
+        max-width: 200px;
+      }
+  
+      & > div {
+        width: 75%;
+        flex: 1;
+      }
     }
   }
 
@@ -64,11 +96,59 @@
     }
   }
 
-  @include breakpoint($bp-sm) {
-    .nys-bill-status__sml li,
-    .nys-bill-status__drk li {
-      margin-top: -7.5px;
+  .more-link {
+    font-family: $font-sans;
+    text-transform: uppercase;
+    padding-bottom: 20px;
+    position: relative;
+
+    a {
+      position: absolute;
+      right: 0;
+      top: 0;
+      text-transform: uppercase;
+      font-family: $font-sans-bold;
+      font-size: 12px;
+      line-height: 12px;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      @extend .icon-after__arrow;
+      @extend .link-text;
+    
+      &::after {
+        margin-top: -2px;
+        font-size: 17px;
+        line-height: 12px;
+      }
+    
+      @include breakpoint($bp-sm) {
+        font-size: 16px;
+        line-height: 16px;
+    
+        &::after {
+          margin-top: -4px;
+          font-size: 23px;
+          line-height: 16px;
+        }
+      }
     }
+  }
+
+  .nys-bill-status__sml li,
+  .nys-bill-status__drk li {
+    margin-top: -14px;
+  }
+}
+
+.view-senator-events {
+  max-width: unset;
+
+  .container {
+    max-width: unset;
+  }
+
+  &.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
+    border: 0;
   }
 }
 

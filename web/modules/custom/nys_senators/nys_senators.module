@@ -504,14 +504,14 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
     }
 
     // Checks if inactiveText is set.
-    if (isset($inactiveText) && !empty($inactiveText)) {
+    if (isset($inactiveText)) {
       // Creates inactive text senator block to copy the about page information
       // and attach to the inactive microsite content.
       $textSenatorBlock = BlockContent::create([
         'field_title' => $entity->label() . ' - Text block',
         'type' => 'text',
         'revision_user' => 1,
-        'field_body_left' => $inactiveText ?? '',
+        'field_body_left' => $inactiveText,
       ]);
       $textSenatorBlock->save();
 

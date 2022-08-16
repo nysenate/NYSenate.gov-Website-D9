@@ -1,0 +1,26 @@
+school_importer.nysed:
+  path: '/admin/config/system/nys-school-nysed-import'
+  defaults:
+    _form: '\Drupal\nys_school_importer\Form\NysedPageForm'
+    _title: 'Import NYSED and School Data from CSV Files'
+  requirements:
+    _permission: 'administer site configuration'
+school_importer.survey:
+  path: '/admin/config/system/nys-school-import'
+  defaults:
+    _form:  'Drupal\nys_school_importer\Form\SurveyPageForm'
+    _title: 'Import School Data from CSV File'
+  requirements:
+    _permission: 'administer site configuration'
+school_importer.analyze:
+  path: '/admin/nys-school-analyze'
+  defaults:
+    _controller: '\Drupal\nys_school_importer\Controller\AnalyzeController::analyzePage'
+  requirements:
+    _permission: 'administer site configuration'
+school_importer.import:
+  path: '/admin/nys-school-import'
+  defaults:
+    _controller: '\Drupal\nys_school_importer\Controller\ImportController::importPage'
+  requirements:
+    _permission: 'administer site configuration'

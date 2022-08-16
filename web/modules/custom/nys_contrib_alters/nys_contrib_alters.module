@@ -29,9 +29,19 @@ function nys_contrib_alters_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
+ * Implements hook_field_formatter_info_alter().
+ */
+function nys_contrib_alters_field_formatter_info_alter(array &$info) {
+  // Make the boolean formatter apply to all field_types.
+  $info['boolean']['field_types'] = array_keys(
+    \Drupal::service('plugin.manager.field.field_type')->getDefinitions()
+  );
+}
+
+/**
  * Renames labels in address contrib module.
  */
-function nys_contrib_alters_customize_address($element, $form_state) {
+function nys_contrib_alters_customize_address($element, $form_state): array {
   $element['address']['organization']['#title'] = t('Location Name');
   $element['address']['address_line1']['#title'] = t('Street');
   $element['address']['address_line2']['#title'] = t('Additional');

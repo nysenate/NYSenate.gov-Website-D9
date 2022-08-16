@@ -118,7 +118,11 @@ abstract class RequestPluginBase implements RequestPluginInterface {
       $this->prepParams($params) + ['limit' => '0'],
       ['offset' => '', 'limit' => '']
     );
-    $f_time_to = $this->formatTimestamp($time_to ?: time());
+
+    // If no end time was passed, set it to now.
+    $time_to = $time_to ?: time();
+    $f_time_to = $this->formatTimestamp($time_to);
+    // From time defaults to one day ago.
     $f_time_from = $this->formatTimestamp($time_from ?: ($time_to - 86400));
     $resource = "updates/$f_time_from/$f_time_to";
 

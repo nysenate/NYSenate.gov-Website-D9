@@ -159,7 +159,7 @@ class SchoolImporterHelper {
       $error_operation = reset($operations);
       $message = $this->t('An error occurred while processing %error_operation with arguments: @arguments', [
         '%error_operation' => $error_operation[0],
-        '@arguments' => print_r($error_operation[1], TRUE),
+        '@arguments' => var_export($error_operation[1], TRUE),
       ]);
       $this->messenger->addError($message);
     }

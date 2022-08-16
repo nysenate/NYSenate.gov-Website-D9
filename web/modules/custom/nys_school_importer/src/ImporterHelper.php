@@ -651,7 +651,7 @@ class ImporterHelper {
         $this->messenger->addStatus("Sage could not supply district data for %cleaned_up_name.", [
           '%cleaned_up_name' => $cleaned_up_name,
         ]);
-        $this->loggerFactory->get('nys_school_importer')->notice(print_r($sage_data, TRUE));
+        $this->loggerFactory->get('nys_school_importer')->notice(var_export($sage_data, TRUE));
       }
     }
 

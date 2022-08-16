@@ -47,28 +47,29 @@
               <span>{{ item.event_date }}</span>
               {{ item.event_month }}
             </div>
+            <div class="event-details">
+              <a href="{{ item.event_url }}">
+                <h3 class="c-event-name">{{ item.event_name }}</h3>
+              </a>
 
-            <a href="{{ item.event_url }}">
-              <h3 class="c-event-name">{{ item.event_name }}</h3>
-            </a>
+              <a class="c-event-location" href="{{ item.event_location_url }}" target="_blank">
+                <span class="icon-before__circle-pin"></span>
+                {{ item.event_location_name }}
+              </a>
 
-            <a class="c-event-location" href="{{ item.event_location_url }}" target="_blank">
-              <span class="icon-before__circle-pin"></span>
-              {{ item.event_location_name }}
-            </a>
+              <div class="c-event-address">
+                {{ item.event_address|raw }}
+              </div>
 
-            <div class="c-event-address">
-              {{ item.event_address|raw }}
-            </div>
-
-            <div class="c-event-time">
-              <span class="date-display-single">
-                <span class="date-display-range">
-                  <span class="date-display-start">{{ item.event_time_start }}</span>
-                  to
-                  <span class="date-display-end">{{ item.event_time_end }}</span>
+              <div class="c-event-time">
+                <span class="date-display-single">
+                  <span class="date-display-range">
+                    <span class="date-display-start">{{ item.event_time_start }}</span>
+                    to
+                    <span class="date-display-end">{{ item.event_time_end }}</span>
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
           </article>
         </article>

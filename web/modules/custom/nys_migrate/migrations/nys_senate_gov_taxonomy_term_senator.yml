@@ -112,7 +112,15 @@ process:
       plugin: sub_process
       source: field_office_contacts
       process:
-        target_id: value
+        target_id:
+          -
+            plugin: migration_lookup
+            migration: nys_fc_office_contacts
+            source: value
+          -
+            plugin: extract
+            index:
+              - 0
         target_revision_id:
           -
             plugin: migration_lookup
@@ -168,20 +176,20 @@ process:
 
   field_media_contact:
     -
-      plugin: get
-      source: field_media_inquiries/0/contact_name
+      plugin: location_contact_to_contact
+      source: field_media_inquiries
 
   field_media_email:
     -
-      plugin: get
-      source: field_media_inquiries/0/email
+      plugin: location_email_to_email
+      source: field_media_inquiries
 
   field_media_phone:
     -
-      plugin: get
-      source: field_media_inquiries/0/phone
+      plugin: location_phone_to_telephone
+      source: field_media_inquiries
 
   field_media_fax:
     -
-      plugin: get
-      source: field_media_inquiries/0/fax
+      plugin: location_fax_to_telephone
+      source: field_media_inquiries

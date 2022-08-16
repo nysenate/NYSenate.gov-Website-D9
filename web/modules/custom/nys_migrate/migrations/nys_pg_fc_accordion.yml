@@ -1,0 +1,41 @@
+id: nys_pg_fc_accordion
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Field Collection Content'
+migration_group: nys_general
+label: 'Field Collections (Pg fc accordion)'
+
+source:
+  plugin: d7_field_collection_item
+  field_name: field_pg_fc_accordion
+
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: accordion_item
+
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  parent_id:
+    -
+      plugin: get
+      source: parent_id
+  parent_type:
+    -
+      plugin: get
+      source: parent_type
+  parent_field_name:
+    -
+      plugin: get
+      source: field_name
+  field_body:
+    -
+      plugin: get
+      source: field_pg_accordion_body
+  field_title:
+    -
+      plugin: get
+      source: field_pg_accordion_title

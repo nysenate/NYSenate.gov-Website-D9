@@ -12,8 +12,8 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity:block'
-  default_bundle: pg_featured_bills
+  plugin: 'entity:block_content'
+  default_bundle: featured_bill
 
 process:
   type:
@@ -27,4 +27,4 @@ process:
   field_pg_text:
     -
       plugin: get
-      source: field_pg_text
+      source: field_text

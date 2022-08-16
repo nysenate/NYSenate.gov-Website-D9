@@ -35,9 +35,9 @@ dependencies:
   module:
     - address
     - field_group
+    - inline_entity_form
     - media_library
     - name
-    - paragraphs
     - paragraphs_features
     - telephone
 third_party_settings:
@@ -313,23 +313,17 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_office_contacts:
-    type: paragraphs
+    type: inline_entity_form_simple
     weight: 27
     region: content
     settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: closed
-      closed_mode: preview
-      autocollapse: all
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: office_contacts
-      features:
-        add_above: '0'
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings:
       paragraphs_features:
         add_in_between: false

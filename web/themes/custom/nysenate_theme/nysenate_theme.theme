@@ -396,6 +396,10 @@ function nysenate_theme_preprocess_block_content__text(&$variables) {
     $variables['with_bg'] = strtolower($variables['content']['field_with_background'][0]['#markup']) == 'on' ? TRUE : FALSE;
   }
 
+  // Set default value for label display.
+  $variables['label_display'] = TRUE;
+  // Override value if the title display is being controlled
+  // by 'Display Title' checkbox in block configuration.
   if (isset($variables['elements']['#block_content']->label_display)) {
     $variables['label_display'] = $variables['elements']['#block_content']->label_display == 'visible' ? TRUE : FALSE;
   }
@@ -664,8 +668,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     foreach ($view->result as $row) {
       /** @var \Drupal\node\Entity\Node $node */
       $node = $row->_entity;
-      $start_date = $node->get('field_date_range')->getValue()[0]['value'];
-      $end_date = $node->get('field_date_range')->getValue()[0]['end_value'];
+      $start_date = NULL;
+      $end_date = NULL;
+      if ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
+        $start_date = $node->get('field_date_range')->getValue()[0]['value'];
+        $end_date = $node->get('field_date_range')->getValue()[0]['end_value'];
+      }
       $states = \Drupal::service('address.subdivision_repository')->getList(['US']);
 
       $address = '';
@@ -699,15 +707,15 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $items[] = [
-        'event_date' => \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'd'),
-        'event_month' => \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'M'),
+        'event_date' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'd') : '',
+        'event_month' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'M') : '',
         'event_url' => $node->toUrl()->toString(),
         'event_name' => $node->getTitle(),
         'event_location_url' => $location_url,
         'event_location_name' => $location_name,
         'event_address' => $address,
-        'event_time_start' => \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'g:i A'),
-        'event_time_end' => \Drupal::service('date.formatter')->format(strtotime($end_date), '', 'g:i A'),
+        'event_time_start' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'g:i A') : '',
+        'event_time_end' => !empty($end_date) ? \Drupal::service('date.formatter')->format(strtotime($end_date), '', 'g:i A') : '',
       ];
 
       $variables['cta_url'] = $aliased_path . '/calendar';
@@ -806,7 +814,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
       // Published date.
       $date = '';
-      if (!empty($node->field_ol_publish_date)) {
+      if ($node->hasField('field_ol_publish_date') && !$node->get('field_ol_publish_date')->isEmpty()) {
         $date = \Drupal::service('date.formatter')->format(strtotime($node->field_ol_publish_date->value), '', 'F d, Y');
       }
 

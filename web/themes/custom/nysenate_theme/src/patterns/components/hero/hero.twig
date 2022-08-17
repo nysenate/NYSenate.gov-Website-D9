@@ -1,6 +1,6 @@
 {{ attach_library('nysenate_theme/hero') }}
 
-<section class="hero">
+<section class="hero {% if type == "senator" %} hero--senator {% else %} hero--homepage {% endif %}">
 {# is_collapsed variable is only for patternlab view #}
   <div class="{% if is_collapsed %} l-header__collapsed {% endif %}">
     {% if type == "senator" %}

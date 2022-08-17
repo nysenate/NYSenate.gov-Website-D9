@@ -1,0 +1,24 @@
+uuid: d29b0534-4a73-4c51-9356-d3a8caa7706c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.inactive_senator_block
+    - field.field.block_content.inactive_senator_block.body
+  module:
+    - text
+id: block_content.inactive_senator_block.default
+targetEntityType: block_content
+bundle: inactive_senator_block
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

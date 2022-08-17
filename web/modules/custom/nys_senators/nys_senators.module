@@ -486,9 +486,10 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
         && $aboutNode->hasField('field_block')
         && !$aboutNode->get('field_block')->isEmpty()) {
       // Iterates through each field block.
-      foreach ($aboutNode->get('field_block') as $value) {
+      /** @var \Drupal\Core\Field\FieldItemInterface $value */
+      foreach ($aboutNode->get('field_block') as $key => $value) {
         /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-        $block_content = $value->entity;
+        $block_content = $value->getEntity();
 
         if ($block_content instanceof BlockContent) {
           // Sets inactiveText for former Senator page.

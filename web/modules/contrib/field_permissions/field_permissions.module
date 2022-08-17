@@ -157,3 +157,21 @@ function field_permission_field_config_edit_form_submit(array &$form, FormStateI
   }
 
 }
+
+/**
+ * Implements hook_migration_plugins_alter().
+ *
+ * Adds process plugin to insert field_permissions as third party settings.
+ */
+function field_permissions_migration_plugins_alter(array &$migrations) {
+  $field_migrations = array_filter(
+    $migrations,
+    function ($definition) {
+      return $definition['id'] === 'd7_field';
+    }
+  );
+
+  foreach (array_keys($field_migrations) as $plugin_id) {
+    $migrations[$plugin_id]['process']['third_party_settings/field_permissions']['plugin'] = 'd7_field_permission_settings';
+  }
+}

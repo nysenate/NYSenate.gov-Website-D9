@@ -15,7 +15,7 @@ class FieldPermissionsCommentTest extends FieldPermissionsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment'];
+  protected static $modules = ['comment'];
 
   /**
    * Test comment subject.
@@ -34,7 +34,7 @@ class FieldPermissionsCommentTest extends FieldPermissionsTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     // Add comment permissions to authenticated user.
@@ -175,11 +175,11 @@ class FieldPermissionsCommentTest extends FieldPermissionsTestBase {
     $this->drupalGet($path);
     if ($perm === FieldPermissionTypeInterface::ACCESS_PUBLIC || $perm === FieldPermissionTypeInterface::ACCESS_PRIVATE) {
       $edit = ['type' => $perm];
-      $this->drupalPostForm(NULL, $edit, t('Save settings'));
+      $this->submitForm($edit, 'Save settings');
     }
     elseif ($perm === FieldPermissionTypeInterface::ACCESS_CUSTOM && !empty($custom_permission)) {
       $custom_permission['type'] = $perm;
-      $this->drupalPostForm(NULL, $custom_permission, t('Save settings'));
+      $this->submitForm($custom_permission, 'Save settings');
     }
   }
 
@@ -196,7 +196,7 @@ class FieldPermissionsCommentTest extends FieldPermissionsTestBase {
     // Add comment to node.
     $edit['subject[0][value]'] = $this->commentSubject;
     $edit[$this->fieldName . '[0][value]'] = $this->fieldText;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('node/' . $this->node->id());
     $this->assertSession()->assertEscaped($this->fieldText);
     $this->assertSession()->assertEscaped($this->commentSubject);
@@ -211,7 +211,7 @@ class FieldPermissionsCommentTest extends FieldPermissionsTestBase {
     $edit = [];
     $edit['subject[0][value]'] = 'Limit User comment subject';
     $edit[$this->fieldName . '[0][value]'] = 'Limit User comment body';
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('node/' . $this->node->id());
     // Test visibility second comment by limituser..
     $this->assertSession()->pageTextContains('Limit User comment subject');

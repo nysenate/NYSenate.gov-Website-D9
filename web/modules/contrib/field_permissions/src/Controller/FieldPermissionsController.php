@@ -14,7 +14,7 @@ use Drupal\user\RoleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Define FieldPermissionsController.
+ * Field Permissions Controller/Page.
  */
 class FieldPermissionsController extends ControllerBase {
 
@@ -142,7 +142,7 @@ class FieldPermissionsController extends ControllerBase {
     }
     $row[1]['data'] = $field_storage->getType();
     $row[2]['data'] = $field_storage->getTargetEntityTypeId();
-    $row[3]['data'] = implode(",", $field_storage->getBundles());
+    $row[3]['data'] = implode(", ", $field_storage->getBundles());
 
     $default_type = $this->fieldPermissions->fieldGetPermissionType($field_storage);
     $field_permissions = $this->fieldPermissions->getPermissionsByRole();

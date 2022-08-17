@@ -15,9 +15,10 @@
   <div class="l-tab-bar">
     <div class="c-tab--arrow u-mobile-only"></div>
     {% for panel in panels %}
-      <label class="c-tab {% if loop.first %}active{% endif %}"><input type="radio" name="language" value="#panel{{ loop.index }}">
-        <span class="c-tab-link">{{ panel.tab_text }}</span>
-      </label>
+      <div class="c-tab {% if loop.first %}active{% endif %}">
+        <input type="radio" name="language" value="#panel{{ loop.index }}"  {% if loop.first %}checked="checked"{% endif %}>
+        <label class="c-tab-link">{{ panel.tab_text }}</label>
+      </div>
     {% endfor %}
   </div>
 
@@ -53,8 +54,10 @@
                         <p class="c-press-release--date">
                           <span class="date-display-single">{{ content.date }}</span>
                         </p>
-                        <!-- if has video thumbnail it would go here -->
-                        <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
+                        {% if content.img_src %}
+                          <!-- if has video thumbnail it would go here -->
+                          <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
+                        {% endif %}
                       </div>
                     </article>
                   </div>
@@ -91,23 +94,25 @@
                       <div class="c-event-date">
                         <span>{{ content.date }}</span>
                         {{ content.month }}</div>
-                      <a href="/calendar/events/joseph-p-addabbo-jr/july-08-2022/nylag-mobile-legal-help-center">
-                        <h3 class="c-event-name">{{ content.event_name }}</h3>
-                      </a>
-                      <a class="c-event-location" href="{{ content.location.link }}" target="_blank">
-                        <span class="icon-before__circle-pin"></span>
-                        <span>{{ content.location.name }}</span>
-                      </a>
-                      <div class="c-event-address">{{ content.address|raw }}
-                      </div>
-                      <div class="c-event-time">
-                        <span class="date-display-single">
-                          <span class="date-display-range">
-                            <span class="date-display-start">{{ content.time_start }}</span>
-                            to
-                            <span class="date-display-end">{{ content.time_end }}</span>
+                      <div class="event-details">
+                        <a href="{{ content.event_url }}">
+                          <h3 class="c-event-name">{{ content.event_name }}</h3>
+                        </a>
+                        <a class="c-event-location" href="{{ content.location.link }}" target="_blank">
+                          <span class="icon-before__circle-pin"></span>
+                          <span>{{ content.location.name }}</span>
+                        </a>
+                        <div class="c-event-address">{{ content.address|raw }}
+                        </div>
+                        <div class="c-event-time">
+                          <span class="date-display-single">
+                            <span class="date-display-range">
+                              <span class="date-display-start">{{ content.time_start }}</span>
+                              to
+                              <span class="date-display-end">{{ content.time_end }}</span>
+                            </span>
                           </span>
-                        </span>
+                        </div>
                       </div>
                     </article>
                   </div>

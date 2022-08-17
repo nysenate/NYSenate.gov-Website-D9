@@ -19,7 +19,7 @@ class FieldReportTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field_permissions',
     'entity_test',
     'field_ui',
@@ -41,7 +41,7 @@ class FieldReportTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $admin = $this->drupalCreateUser([
@@ -100,7 +100,7 @@ class FieldReportTest extends BrowserTestBase {
       $role = $this->container->get('entity_type.manager')
         ->getStorage('user_role')
         ->load($role_id);
-      $role->grantPermission('view_field_test')->save();
+      $role->grantPermission('view field_test')->save();
     }
     $this->drupalGet(Url::fromRoute('field_permissions.reports'));
     $this->assertSession()->statusCodeEquals(200);

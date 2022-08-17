@@ -34,7 +34,7 @@ class NodeRevisionGenerateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Creating content types.

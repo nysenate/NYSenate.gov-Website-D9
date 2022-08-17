@@ -19,14 +19,14 @@ class NodeRevisionGenerateForm extends FormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The node revision generate interface.
    *
    * @var \Drupal\node_revision_generate\NodeRevisionGenerateInterface
    */
-  protected $nodeRevisionGenerate;
+  protected NodeRevisionGenerateInterface $nodeRevisionGenerate;
 
   /**
    * Constructor.
@@ -57,14 +57,14 @@ class NodeRevisionGenerateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'node_revision_generate_generate_revisions';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     // Get all Content types.
     $content_types = [];
     $form['bundles'] = [];
@@ -148,7 +148,7 @@ class NodeRevisionGenerateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Get selected content types.
     $bundles = array_filter($form_state->getValue('bundles'));
 

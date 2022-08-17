@@ -25,21 +25,21 @@ class CandidateNodesForm extends FormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The node revision delete interface.
    *
    * @var \Drupal\node_revision_delete\NodeRevisionDeleteInterface
    */
-  protected $nodeRevisionDelete;
+  protected NodeRevisionDeleteInterface $nodeRevisionDelete;
 
   /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
-  protected $dateFormatter;
+  protected DateFormatterInterface $dateFormatter;
 
   /**
    * Constructor.
@@ -75,14 +75,14 @@ class CandidateNodesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'node_revision_delete_candidates_nodes';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, NodeTypeInterface $node_type = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?NodeTypeInterface $node_type = NULL): array {
     // Table header.
     $header = [
       $this->t('Nid'),
@@ -203,7 +203,7 @@ class CandidateNodesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Get selected candidate nodes.
     $nids = array_filter($form_state->getValue('candidate_nodes'));
 
@@ -211,7 +211,7 @@ class CandidateNodesForm extends FormBase {
       // Get selected node's candidate revisions from form_state to delete.
       $candidate_revisions = [];
       $candidate_revisions_by_nid = array_intersect_key($form_state->get('candidate_revisions'), $nids);
-      foreach ($candidate_revisions_by_nid as $nid => $revisions) {
+      foreach ($candidate_revisions_by_nid as $revisions) {
         $candidate_revisions = array_merge($candidate_revisions, $revisions);
       }
 

@@ -23,7 +23,7 @@ class NodeRevisionGenerateBatch {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public static function generateRevisions($nid, $revision_date, &$context) {
+  public static function generateRevisions(int $nid, int $revision_date, &$context): void {
     if (empty($context['results'])) {
       $context['results']['revisions'] = 0;
     }
@@ -54,7 +54,7 @@ class NodeRevisionGenerateBatch {
    * @param array $operations
    *   The array of operations remained unprocessed.
    */
-  public static function finish($success, array $results, array $operations) {
+  public static function finish(bool $success, array $results, array $operations): void {
     $messenger = \Drupal::messenger();
     $logger = \Drupal::logger('node_revision_generate');
 

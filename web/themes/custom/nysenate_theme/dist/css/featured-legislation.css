@@ -32,7 +32,7 @@
 .lgt-bg {
   background-color: #2b6a90; }
 
-.med-text, .c-social .c-social--list a::after, .c-sponsor--party {
+.med-text, .c-social .c-social--list a::after, .c-block .c-sponsor--party {
   color: #175b81; }
 
 .med-bg {
@@ -70,7 +70,7 @@
 .trad_blue .lgt-bg {
   background-color: #1b5187; }
 
-.trad_blue .med-text, .trad_blue .c-social .c-social--list a::after, .c-social .c-social--list .trad_blue a::after, .trad_blue .c-sponsor--party {
+.trad_blue .med-text, .trad_blue .c-social .c-social--list a::after, .c-social .c-social--list .trad_blue a::after, .trad_blue .c-block .c-sponsor--party, .c-block .trad_blue .c-sponsor--party {
   color: #1d446b; }
 
 .trad_blue .med-bg {
@@ -102,7 +102,7 @@
 .cont_blue .lgt-bg {
   background-color: #04a9c5; }
 
-.cont_blue .med-text, .cont_blue .c-social .c-social--list a::after, .c-social .c-social--list .cont_blue a::after, .cont_blue .c-sponsor--party {
+.cont_blue .med-text, .cont_blue .c-social .c-social--list a::after, .c-social .c-social--list .cont_blue a::after, .cont_blue .c-block .c-sponsor--party, .c-block .cont_blue .c-sponsor--party {
   color: #008ca6; }
 
 .cont_blue .med-bg {
@@ -134,7 +134,7 @@
 .purple .lgt-bg {
   background-color: #90668f; }
 
-.purple .med-text, .purple .c-social .c-social--list a::after, .c-social .c-social--list .purple a::after, .purple .c-sponsor--party {
+.purple .med-text, .purple .c-social .c-social--list a::after, .c-social .c-social--list .purple a::after, .purple .c-block .c-sponsor--party, .c-block .purple .c-sponsor--party {
   color: #754775; }
 
 .purple .med-bg {
@@ -169,7 +169,7 @@
 .trad_red .lgt-bg {
   background-color: #87002f; }
 
-.trad_red .med-text, .trad_red .c-social .c-social--list a::after, .c-social .c-social--list .trad_red a::after, .trad_red .c-sponsor--party {
+.trad_red .med-text, .trad_red .c-social .c-social--list a::after, .c-social .c-social--list .trad_red a::after, .trad_red .c-block .c-sponsor--party, .c-block .trad_red .c-sponsor--party {
   color: #6e0026; }
 
 .trad_red .med-bg {
@@ -204,7 +204,7 @@
 .cont_red .lgt-bg {
   background-color: #c62526; }
 
-.cont_red .med-text, .cont_red .c-social .c-social--list a::after, .c-social .c-social--list .cont_red a::after, .cont_red .c-sponsor--party {
+.cont_red .med-text, .cont_red .c-social .c-social--list a::after, .c-social .c-social--list .cont_red a::after, .cont_red .c-block .c-sponsor--party, .c-block .cont_red .c-sponsor--party {
   color: #bb0623; }
 
 .cont_red .med-bg {
@@ -239,7 +239,7 @@
 .orange .lgt-bg {
   background-color: #f0673d; }
 
-.orange .med-text, .orange .c-social .c-social--list a::after, .c-social .c-social--list .orange a::after, .orange .c-sponsor--party {
+.orange .med-text, .orange .c-social .c-social--list a::after, .c-social .c-social--list .orange a::after, .orange .c-block .c-sponsor--party, .c-block .orange .c-sponsor--party {
   color: #ed4b1c; }
 
 .orange .med-bg {
@@ -274,7 +274,7 @@
 .trad_green .lgt-bg {
   background-color: #60a35f; }
 
-.trad_green .med-text, .trad_green .c-social .c-social--list a::after, .c-social .c-social--list .trad_green a::after, .trad_green .c-sponsor--party {
+.trad_green .med-text, .trad_green .c-social .c-social--list a::after, .c-social .c-social--list .trad_green a::after, .trad_green .c-block .c-sponsor--party, .c-block .trad_green .c-sponsor--party {
   color: #4d894f; }
 
 .trad_green .med-bg {
@@ -309,7 +309,7 @@
 .cont_green .lgt-bg {
   background-color: #65c5b6; }
 
-.cont_green .med-text, .cont_green .c-social .c-social--list a::after, .c-social .c-social--list .cont_green a::after, .cont_green .c-sponsor--party {
+.cont_green .med-text, .cont_green .c-social .c-social--list a::after, .c-social .c-social--list .cont_green a::after, .cont_green .c-block .c-sponsor--party, .c-block .cont_green .c-sponsor--party {
   color: #479e93; }
 
 .cont_green .med-bg {
@@ -344,7 +344,7 @@
 .inactive-pallette .lgt-bg {
   background-color: #b2b2b2; }
 
-.inactive-pallette .med-text, .inactive-pallette .c-social .c-social--list a::after, .c-social .c-social--list .inactive-pallette a::after, .inactive-pallette .c-sponsor--party {
+.inactive-pallette .med-text, .inactive-pallette .c-social .c-social--list a::after, .c-social .c-social--list .inactive-pallette a::after, .inactive-pallette .c-block .c-sponsor--party, .c-block .inactive-pallette .c-sponsor--party {
   color: #999999; }
 
 .inactive-pallette .med-bg {
@@ -1214,27 +1214,9 @@ strong {
   text-transform: none;
   padding-left: 3px; }
 
-.c-block-legislation {
-  position: relative;
-  border-top: 1px solid #aaaaaa;
-  padding: 20px 0 35px;
-  margin-bottom: 0;
-  overflow: visible; }
-  .c-block-legislation .c-block.c-legislation-block {
-    margin-bottom: 0; }
-  .c-block-legislation .c-block--btn-toggle {
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: auto;
-    z-index: 11;
-    background: transparent;
-    text-indent: -99999px; }
-    .c-block-legislation .c-block--btn-toggle:after {
-      font-size: 26px;
-      line-height: 42px;
-      color: #aaaaaa !important; }
+.c-block.c-block-legislation-featured .c-block--btn-toggle,
+.c-block-legislation .c-block--btn-toggle {
+  background: transparent; }
 
 .c-legislation--quote {
   position: relative;
@@ -1310,6 +1292,8 @@ strong {
   display: none; }
 
 .c-legislation--sponsor {
+  display: flex;
+  align-items: center;
   margin-top: 20px; }
 
 .c-sponsor--img {
@@ -1337,19 +1321,20 @@ strong {
   vertical-align: middle;
   margin-left: 20px; }
 
-.c-sponsor--name {
+.c-block .c-sponsor--name {
   margin: 0;
   font-family: "Adelle Light", serif;
   font-size: 16px;
   line-height: 1; }
-  .c-sponsor--name a {
+  .c-block .c-sponsor--name a {
     text-decoration: none; }
 
-.c-sponsor--party {
+.c-block .c-sponsor--party {
   display: inline-block;
   margin: 0;
   font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
-  font-size: 12px; }
+  font-size: 12px;
+  line-height: 18px; }
 
 .c-sponsor--dist {
   display: inline-block;
@@ -1361,13 +1346,6 @@ strong {
 @media screen and (min-width: 768px) {
   .featured-legislation .c-legislation-info {
     width: 50%; }
-  .c-block-legislation .c-block--btn-toggle {
-    height: 42px;
-    width: 42px;
-    padding-left: 0.2em; }
-  .c-block.c-block-legislation-featured .c-block--btn-toggle {
-    background: transparent;
-    border: 0; }
   .c-social {
     position: absolute;
     display: block;
@@ -1424,6 +1402,6 @@ strong {
         left: -20px;
         top: 15px;
         font-size: 98px; }
-  .c-sponsor--name {
+  .c-block .c-sponsor--name {
     font-size: 16px;
     line-height: 1; } }

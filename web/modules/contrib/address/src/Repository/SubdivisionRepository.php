@@ -50,7 +50,7 @@ class SubdivisionRepository extends ExternalSubdivisionRepository {
   /**
    * {@inheritdoc}
    */
-  protected function loadDefinitions(array $parents) {
+  protected function loadDefinitions(array $parents): array {
     $group = $this->buildGroup($parents);
     if (isset($this->definitions[$group])) {
       return $this->definitions[$group];

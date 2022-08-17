@@ -3,7 +3,8 @@
 namespace Drupal\node_revision_delete\Commands;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\node_revision_delete\NodeRevisionDelete;
+use Drupal\node\Entity\NodeType;
+use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
 use Drush\Commands\DrushCommands;
 use Consolidation\AnnotatedCommand\CommandData;
 use Drupal\node_revision_delete\Utility\Time;
@@ -23,42 +24,42 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * The NodeRevisionDelete service.
    *
-   * @var \Drupal\node_revision_delete\NodeRevisionDelete
+   * @var \Drupal\node_revision_delete\NodeRevisionDeleteInterface
    */
-  protected $nodeRevisionDelete;
+  protected NodeRevisionDeleteInterface $nodeRevisionDelete;
 
   /**
    * The DateFormatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
-  protected $dateFormatter;
+  protected DateFormatterInterface $dateFormatter;
 
   /**
    * The State service.
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  protected $state;
+  protected StateInterface $state;
 
   /**
    * The EntityTypeManager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * NodeRevisionDeleteCommands constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The ConfigManager service.
-   * @param \Drupal\node_revision_delete\NodeRevisionDelete $nodeRevisionDelete
+   * @param \Drupal\node_revision_delete\NodeRevisionDeleteInterface $nodeRevisionDelete
    *   The NodeRevisionDelete service.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The DateFormatter service.
@@ -69,7 +70,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    */
   public function __construct(
     ConfigFactoryInterface $configFactory,
-    NodeRevisionDelete $nodeRevisionDelete,
+    NodeRevisionDeleteInterface $nodeRevisionDelete,
     DateFormatterInterface $dateFormatter,
     StateInterface $state,
     EntityTypeManagerInterface $entityTypeManager
@@ -86,6 +87,8 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    *
    * @param string $type
    *   Content type machine name.
+   * @param array $options
+   *   The options.
    *
    * @option dry_run Test run without deleting revisions but seeing the output.
    *
@@ -98,7 +101,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @command node-revision-delete
    * @aliases nrd
    */
-  public function nodeRevisionDelete($type, $options = ['dry_run' => FALSE]) {
+  public function nodeRevisionDelete(string $type, array $options = ['dry_run' => FALSE]): void {
     // Get all the candidate revisions.
     $candidate_revisions = $this->nodeRevisionDelete->getCandidatesRevisions($type);
     // Checking if this is a dry run.
@@ -114,7 +117,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
   /**
    * Configures how many revisions delete per cron run.
    *
-   * @param int $quantity
+   * @param int|null $quantity
    *   Revisions quantity to delete per cron run.
    *
    * @usage nrd-delete-cron-run
@@ -125,7 +128,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @command nrd:delete-cron-run
    * @aliases nrd-dcr, nrd-delete-cron-run
    */
-  public function deleteCronRun($quantity = NULL) {
+  public function deleteCronRun(?int $quantity = NULL): void {
     // Getting an editable config because we will get and set a value.
     $config = $this->configFactory->getEditable('node_revision_delete.settings');
     // If no argument found?
@@ -154,7 +157,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @command nrd:last-execute
    * @aliases nrd-le, nrd-last-execute
    */
-  public function lastExecute() {
+  public function lastExecute(): void {
     // Getting the value.
     $last_execute = $this->state->get('node_revision_delete.last_execute', 0);
     if (!empty($last_execute)) {
@@ -183,10 +186,8 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    *
    * @command nrd:set-time
    * @aliases nrd-st, nrd-set-time
-   *
-   * @throws \Drush\Exceptions\UserAbortException
    */
-  public function setTime($time = '') {
+  public function setTime(string $time = ''): void {
     // Getting an editable config because we will get and set a value.
     $config = $this->configFactory->getEditable('node_revision_delete.settings');
 
@@ -223,7 +224,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @command nrd:get-time
    * @aliases nrd-gt, nrd-get-time
    */
-  public function getTime() {
+  public function getTime(): void {
     // Getting the config.
     $config = $this->configFactory->get('node_revision_delete.settings');
     // Getting the values from the config.
@@ -240,9 +241,9 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * Configures the time options for the inactivity time that the revision must
    * have to be deleted.
    *
-   * @param int $max_number
+   * @param int|null $max_number
    *   The maximum number for inactivity time configuration.
-   * @param int $time
+   * @param int|null $time
    *   The time value for inactivity time configuration (days, weeks or months).
    *
    * @usage nrd-when-to-delete-time
@@ -255,7 +256,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @command nrd:when-to-delete-time
    * @aliases nrd-wtdt, nrd-when-to-delete-time
    */
-  public function whenToDeleteTime($max_number = NULL, $time = NULL) {
+  public function whenToDeleteTime(?int $max_number = NULL, ?int $time = NULL): void {
     // Getting an editable config because we will get and set a value.
     $config = $this->configFactory->getEditable('node_revision_delete.settings');
     // Getting or setting values?
@@ -266,11 +267,11 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       $config->set('node_revision_delete_when_to_delete_time', $node_revision_delete_when_to_delete_time);
       $config->save();
 
+      $time = $this->nodeRevisionDelete->getTimeNumberString($time) == 1 ? $time['singular'] : $time['plural'];
       // We need to update the max_number in the existing content type
       // configuration if the new value is lower than the actual.
       $this->nodeRevisionDelete->updateTimeMaxNumberConfig('when_to_delete', $max_number);
 
-      $time = $this->nodeRevisionDelete->getTimeNumberString($max_number, $time);
       $message = dt('<info>The maximum inactivity time was set to @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
       $this->writeln($message);
     }
@@ -278,9 +279,8 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       // Getting the values from the config.
       $node_revision_delete_when_to_delete_time = $config->get('node_revision_delete_when_to_delete_time');
       $max_number = $node_revision_delete_when_to_delete_time['max_number'];
-      $time = $node_revision_delete_when_to_delete_time['time'];
+      $time = $this->nodeRevisionDelete->getTimeNumberString($time) == 1 ? $time['singular'] : $time['plural'];
 
-      $time = $this->nodeRevisionDelete->getTimeNumberString($max_number, $time);
       $message = dt('<info>The maximum inactivity time is: @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
       $this->writeln($message);
     }
@@ -292,9 +292,9 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * Configures time options to know the minimum age. that the revision must
    * have to be delete.
    *
-   * @param int $max_number
+   * @param int|null $max_number
    *   The maximum number for minimum age configuration.
-   * @param int $time
+   * @param int|null $time
    *   The time value for minimum age configuration (days, weeks or months).
    *
    * @usage nrd-minimum-age-to-delete-time
@@ -307,7 +307,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @command nrd:minimum-age-to-delete-time
    * @aliases nrd-matdt, nrd-minimum-age-to-delete-time
    */
-  public function minimumAgeToDeleteTime($max_number = NULL, $time = NULL) {
+  public function minimumAgeToDeleteTime(?int $max_number = NULL, ?int $time = NULL): void {
     // Getting an editable config because we will get and set a value.
     $config = $this->configFactory->getEditable('node_revision_delete.settings');
     // Getting or setting values?
@@ -321,9 +321,9 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       // We need to update the max_number in the existing content type
       // configuration if the new value is lower than the actual.
       $this->nodeRevisionDelete->updateTimeMaxNumberConfig('minimum_age_to_delete', $max_number);
+      $time = $this->nodeRevisionDelete->getTimeNumberString($time) == 1 ? $time['singular'] : $time['plural'];
 
       // Is singular or plural?
-      $time = $this->nodeRevisionDelete->getTimeNumberString($max_number, $time);
       $message = dt('<info>The maximum time for the minimum age was set to @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
       $this->writeln($message);
     }
@@ -331,10 +331,9 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       // Getting the values from the config.
       $node_revision_delete_minimum_age_to_delete_time = $config->get('node_revision_delete_minimum_age_to_delete_time');
       $max_number = $node_revision_delete_minimum_age_to_delete_time['max_number'];
-      $time = $node_revision_delete_minimum_age_to_delete_time['time'];
+      $time = $this->nodeRevisionDelete->getTimeNumberString($time) == 1 ? $time['singular'] : $time['plural'];
 
       // Is singular or plural?
-      $time = $this->nodeRevisionDelete->getTimeNumberString($max_number, $time);
       $message = dt('<info>The maximum time for the minimum age is: @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
       $this->writeln($message);
     }
@@ -356,7 +355,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function deletePriorRevisions($nid = 0, $vid = 0) {
+  public function deletePriorRevisions(int $nid = 0, int $vid = 0): void {
     // Get list of prior revisions.
     $previousRevisions = $this->nodeRevisionDelete->getPreviousRevisions($nid, $vid);
 
@@ -378,7 +377,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
   }
 
   /**
-   * Validate inputs before executing the drush command.
+   * Validate inputs before executing the drush command node-revision-delete.
    *
    * @param \Consolidation\AnnotatedCommand\CommandData $commandData
    *   The command data.
@@ -388,22 +387,11 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    *
    * @hook validate nrd
    */
-  public function nodeRevisionDeleteValidate(CommandData $commandData) {
+  public function nodeRevisionDeleteValidate(CommandData $commandData): bool {
     $input = $commandData->input();
     $type = $input->getArgument('type');
 
-    // Make sure the content type exists and is configured.
-    $available_content_types = array_map(function ($content_type) {
-      /** @var \Drupal\node\NodeTypeInterface $content_type */
-      return $content_type->id();
-    }, $this->nodeRevisionDelete->getConfiguredContentTypes());
-
-    if (!in_array($type, $available_content_types)) {
-      $this->io()->error(dt('The following content type is not configured for revision deletion: @name',
-        [
-          '@name' => $type,
-        ]
-      ));
+    if (!$this->configuredContentType($type)) {
       return FALSE;
     }
 
@@ -417,7 +405,7 @@ class NodeRevisionDeleteCommands extends DrushCommands {
   }
 
   /**
-   * Validate inputs before executing the drush command.
+   * Validate inputs before executing the drush command nrd-dpr.
    *
    * @param \Consolidation\AnnotatedCommand\CommandData $commandData
    *   The command data.
@@ -430,22 +418,9 @@ class NodeRevisionDeleteCommands extends DrushCommands {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function deletePriorRevisionsValidate(CommandData $commandData) {
+  public function deletePriorRevisionsValidate(CommandData $commandData): bool {
     $input = $commandData->input();
     $nid = $input->getArgument('nid');
-    $vid = $input->getArgument('vid');
-
-    // Nid argument must be numeric.
-    if (!is_numeric($nid)) {
-      $this->io()->error(dt('Argument nid must be numeric.'));
-      return FALSE;
-    }
-
-    // Vid argument must be numeric.
-    if (!is_numeric($vid)) {
-      $this->io()->error(dt('Argument vid must be numeric.'));
-      return FALSE;
-    }
 
     // Check if argument nid is a valid node id.
     $node = $this->entityTypeManager->getStorage('node')->load($nid);
@@ -453,6 +428,117 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       $this->io()->error(dt("@nid is not a valid node id.", ['@nid' => $nid]));
       return FALSE;
     }
+
+    return TRUE;
+  }
+
+  /**
+   * Untrack a content type.
+   *
+   * @param string $type
+   *   The content type name.
+   *
+   * @usage nrd-untrack article
+   *   Untrack the content type article.
+   * @command nrd:untrack
+   * @aliases nrd-u, nrd-untrack
+   */
+  public function untrack(string $type): void {
+    $this->nodeRevisionDelete->deleteContentTypeConfig($type);
+    $message = dt('<info>The content type @type is now untracked.</info>', ['@type' => $type]);
+    $this->writeln($message);
+  }
+
+  /**
+   * Validate inputs before executing the drush command nrd-untrack.
+   *
+   * @param \Consolidation\AnnotatedCommand\CommandData $commandData
+   *   The command data.
+   *
+   * @return bool
+   *   Returns TRUE if the validations has passed FALSE otherwise.
+   *
+   * @hook validate nrd-u
+   */
+  public function untrackValidate(CommandData $commandData): bool {
+    $input = $commandData->input();
+    $type = $input->getArgument('type');
+
+    if (!$this->configuredContentType($type)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Validate inputs before executing the drush command nrd-untrack.
+   *
+   * @param string $type
+   *   The content type name.
+   *
+   * @return bool
+   *   Returns if a content type is configured.
+   */
+  private function configuredContentType(string $type): bool {
+    // Make sure the content type exists and is configured.
+    $available_content_types = array_map(static function ($content_type) {
+      /** @var \Drupal\node\NodeTypeInterface $content_type */
+      return $content_type->id();
+    }, $this->nodeRevisionDelete->getConfiguredContentTypes());
+
+    if (!in_array($type, $available_content_types, TRUE)) {
+      $this->io()->error(dt('The following content type is not configured for revision deletion: @name',
+        [
+          '@name' => $type,
+        ]
+      ));
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Track a content type into node revision delete system.
+   *
+   * @usage nrd-track article 50 1 15
+   *   Track the article content type with:
+   *   50 minimum number of revision to keep.
+   *   1 minimum age of revision to delete.
+   *   15 when to delete the revisions.
+   *
+   * @command nrd:track
+   * @aliases nrd-t, nrd-track
+   */
+  public function track(string $content_type, int $minimum_revisions_to_keep, int $minimum_age_to_delete, int $when_to_delete): bool {
+    // Validate for a valid content type.
+    $content_types = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
+    $content_types_ids = array_map(function (NodeType $object) {
+      return $object->id();
+    }, $content_types);
+
+    if (!in_array($content_type, $content_types_ids)) {
+      $this->io()->error(dt('Argument content type is not a valid content type.'));
+      return FALSE;
+    }
+
+    // Validate for Maximum number allowed.
+    $config = $this->configFactory->getEditable('node_revision_delete.settings');
+    $node_revision_delete_minimum_age_to_delete_time = $config->get('node_revision_delete_minimum_age_to_delete_time');
+    $node_revision_delete_when_to_delete_time = $config->get('node_revision_delete_when_to_delete_time');
+    if ($minimum_age_to_delete > $node_revision_delete_minimum_age_to_delete_time['max_number']) {
+      $this->io()->error(dt('Argument minimum_age_to_delete must lower or equal to @number', ['@number' => $node_revision_delete_minimum_age_to_delete_time['max_number']]));
+      return FALSE;
+    }
+
+    if ($when_to_delete > $node_revision_delete_when_to_delete_time['max_number']) {
+      $this->io()->error(dt('Argument when_to_delete must lower or equal to @number.', ['@number' => $node_revision_delete_when_to_delete_time['max_number']]));
+      return FALSE;
+    }
+
+    $this->nodeRevisionDelete->saveContentTypeConfig($content_type, $minimum_revisions_to_keep, $minimum_age_to_delete, $when_to_delete);
+    $message = dt('<info>The content type @content_type is now tracked.</info>', ['@content_type' => $content_type]);
+    $this->writeln($message);
 
     return TRUE;
   }

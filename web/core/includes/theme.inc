@@ -2102,6 +2102,9 @@ function drupal_common_theme() {
     'input' => [
       'render element' => 'element',
     ],
+    'button' => [
+      'render element' => 'element',
+    ],
     'select' => [
       'render element' => 'element',
     ],

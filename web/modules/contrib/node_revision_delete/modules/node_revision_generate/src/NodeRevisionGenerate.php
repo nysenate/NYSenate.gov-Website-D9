@@ -22,14 +22,14 @@ class NodeRevisionGenerate implements NodeRevisionGenerateInterface {
    *
    * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
-   * Drupal\Core\Database\Driver\mysql\Connection definition.
+   * Drupal\Core\Database\Connection definition.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  protected Connection $connection;
 
   /**
    * Constructor.
@@ -54,7 +54,7 @@ class NodeRevisionGenerate implements NodeRevisionGenerateInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAvailableNodesForRevisions(array $bundles, $revisions_age) {
+  public function getAvailableNodesForRevisions(array $bundles, int $revisions_age): array {
     // Variable with the placeholders arguments needed for the expression.
     $interval_time = [
       ':interval' => $revisions_age,
@@ -83,7 +83,7 @@ class NodeRevisionGenerate implements NodeRevisionGenerateInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRevisionCreationBatch(array $nodes_for_revisions, $revisions_number, $revisions_age) {
+  public function getRevisionCreationBatch(array $nodes_for_revisions, int $revisions_number, int $revisions_age): array {
     // Defining the batch builder.
     $batch_builder = new BatchBuilder();
     $batch_builder->setTitle($this->t('Generating revisions'))
@@ -116,7 +116,7 @@ class NodeRevisionGenerate implements NodeRevisionGenerateInterface {
   /**
    * {@inheritdoc}
    */
-  public function existsNodesContentType($content_type) {
+  public function existsNodesContentType(string $content_type): bool {
     $query = $this->connection->select('node');
     // Get the node id to generate revisions.
     $query->addField('node', 'nid');

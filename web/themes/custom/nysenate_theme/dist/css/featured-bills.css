@@ -1244,6 +1244,9 @@ strong {
   text-decoration: none; }
 
 @media screen and (min-width: 768px) {
+  .nys-bill-status__sml li,
+  .nys-bill-status__drk li {
+    margin-top: -7.5px; }
   .c-featured-bills-body p {
     font-size: 20px;
     line-height: 32px; }
@@ -1252,8 +1255,9 @@ strong {
   .c-pg-featured-bills.c-block {
     flex-direction: row; }
   .c-pg-featured-bills .bills-container.c-block--half-wrap {
-    width: 50%; }
+    width: 50%;
+    margin-right: 60px; }
   .c-pg-featured-bills .c-block-legislation-featured.c-block--half-wrap {
-    margin: 0 24px 28px -60px;
+    margin: 0 24px 28px 0;
     clear: both;
     width: 100%; } }

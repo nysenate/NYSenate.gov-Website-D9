@@ -21,6 +21,9 @@ class FieldPermissionSettings extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $value = $row->getSourceProperty('field_permissions');
+    if ($value === NULL) {
+      return ['permission_type' => FieldPermissionTypeInterface::ACCESS_PUBLIC];
+    }
     switch ($value['type']) {
       case 0:
         $permission_type = FieldPermissionTypeInterface::ACCESS_PUBLIC;
@@ -34,7 +37,7 @@ class FieldPermissionSettings extends ProcessPluginBase {
         $permission_type = FieldPermissionTypeInterface::ACCESS_CUSTOM;
         break;
     }
-    return ['field_permissions' => ['permission_type' => $permission_type]];
+    return ['permission_type' => $permission_type];
   }
 
 }

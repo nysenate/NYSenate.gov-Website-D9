@@ -14,7 +14,7 @@ use Drupal\views\ViewExecutable;
  * Implements hook_theme_registry_alter().
  */
 function media_library_theme_reset_theme_registry_alter(&$theme_registry) {
-  $media_library_theme_reset_path = drupal_get_path('module', 'media_library_theme_reset') . '/templates';
+  $media_library_theme_reset_path = \Drupal::service('extension.list.module')->getPath('media_library_theme_reset') . '/templates';
 
   // Add media-library templates directly copied from Classy/Seven.
   $theme_registry['views_view__media_library__widget'] = $theme_registry['views_view'];

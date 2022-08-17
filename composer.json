@@ -40,6 +40,7 @@
         "drupal/config_split": "^1.7",
         "drupal/core-composer-scaffold": "^9.0",
         "drupal/core-recommended": "^9.0@stable",
+        "drupal/ctools": "^3.10",
         "drupal/diff": "^1.0",
         "drupal/eck": "^1.0@beta",
         "drupal/email_registration": "^1.1",
@@ -119,7 +120,7 @@
         "mediacurrent/ci-scripts": "^1.11.0",
         "mediacurrent/ci-tests": "dev-master",
         "mglaman/drupal-check": "^1.0",
-        "phpro/grumphp": "^1.0.0",
+        "phpro/grumphp-shim": "^1.13",
         "phpspec/prophecy-phpunit": "^2",
         "vlucas/phpdotenv": "^2.4"
     },
@@ -132,15 +133,16 @@
         "discard-changes": true,
         "sort-packages": true,
         "platform": {
-            "php": "7.3"
+            "php": "8.0"
         },
         "allow-plugins": {
             "composer/installers": true,
             "cweagans/composer-patches": true,
             "drupal/core-composer-scaffold": true,
             "oomphinc/composer-installers-extender": true,
-            "phpro/grumphp": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpro/grumphp-shim": true,
+            "phpro/grumphp": true
         }
     },
     "autoload": {
@@ -196,7 +198,8 @@
             "drupal/core": {
                 "2827921 - Exception thrown by responsive srcset images when the image is not yet in the file system (such as with Stage File Proxy)": "https://www.drupal.org/files/issues/2021-09-03/responsive_image-remove_missing_response_image_width_exception-2827921-22.patch",
                 "2949017 - There is no way to delete or update file entities of other users": "https://www.drupal.org/files/issues/2021-12-01/2949017-85.patch",
-                "763380 - Do not use \\Drupal\\taxonomy\\TermStorageInterface::loadTree() in \\Drupal\\taxonomy\\Form\\OverviewTerms::buildForm()": "https://www.drupal.org/files/issues/2021-05-26/763380-73.patch"
+                "763380 - Do not use \\Drupal\\taxonomy\\TermStorageInterface::loadTree() in \\Drupal\\taxonomy\\Form\\OverviewTerms::buildForm()": "https://www.drupal.org/files/issues/2021-05-26/763380-73.patch",
+                "1671190 - Use <button /> form element type instead of <input type='submit'/>": "https://www.drupal.org/files/issues/2022-01-07/1671190-92.patch"
             },
             "drupal/email_registration": {
                 "2843505 - Add support for Behat tests": "https://www.drupal.org/files/issues/2020-10-21/2843505-39.patch"

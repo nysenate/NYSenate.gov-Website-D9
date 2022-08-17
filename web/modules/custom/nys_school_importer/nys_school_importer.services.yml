@@ -1,0 +1,17 @@
+services:
+  nys_school_importer.importer:
+    class: Drupal\nys_school_importer\ImporterHelper
+    arguments:
+      - '@database'
+      - '@extension.path.resolver'
+      - '@entity_type.manager'
+      - '@state'
+      - '@messenger'
+      - '@logger.factory'
+  nys_school_importer.school_importer:
+    class: Drupal\nys_school_importer\SchoolImporterHelper
+    arguments:
+      - '@nys_school_importer.importer'
+      - '@state'
+      - '@messenger'
+      - '@database'

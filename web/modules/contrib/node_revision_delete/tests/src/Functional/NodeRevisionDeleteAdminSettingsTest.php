@@ -39,7 +39,7 @@ class NodeRevisionDeleteAdminSettingsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     // Setting the config file.
     $this->configurationFileName = 'node_revision_delete.settings';

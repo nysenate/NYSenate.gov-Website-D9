@@ -3,58 +3,75 @@
  * Permission page behaviors.
  */
 
-(function ($, Drupal, debounce) {
+(function (Drupal, debounce) {
 
     'use strict';
     Drupal.behaviors.permissionTableFilterByText = {
         attach: function (context, settings) {
-            var $input = $('input.table-filter-text').once('table-filter-text');
-            var $table = $($input.attr('data-table'));
+            var $input = once('table-filter-text', 'input.table-filter-text')[0];
+            var $table = document.querySelector($input.getAttribute('data-table'));
             var $rowsAndDetails;
             var $rows;
             var $details;
             var searching = false;
 
-            function hidePackageDetails(index, element) {
-                var $packDetails = $(element);
-                var $visibleRows = $packDetails.find('tbody tr:visible');
-                $packDetails.toggle($visibleRows.length > 0);
+            function hidePackageDetails(element) {
+                [...element.querySelectorAll('tbody tr')]
+                    .forEach((row) => {
+                        row.style.display = 'none'
+                    });
             }
 
             function filterPermissionList(e) {
-                var query = $(e.target).val();
+                var query = e.target.value;
                 // Case insensitive expression to find query at the beginning of a word.
                 var re = new RegExp('\\b' + query, 'i');
 
-                function showPermissionRow(index, row) {
-                    var $row = $(row);
-                    var $sources = $row.find('.table-filter-text-source, .module, .permission');
-                    var textMatch = $sources.text().search(re) !== -1;
-                    $row.closest('tr').toggle(textMatch);
+                function showPermissionRow(row) {
+                    var source = row.querySelector('.table-filter-text-source, .module, .permission');
+                    var textMatch = source.textContent.search(re) !== -1;
+                    row.closest('tr').style.display = textMatch ? '' : 'none';
                 }
+
                 // Search over all rows and packages.
-                $rowsAndDetails.show();
+                [...$rowsAndDetails].forEach((row) => {
+                    row.style.display = ''
+                });
 
                 // Filter if the length of the query is at least 2 characters.
                 if (query.length >= 2) {
                     searching = true;
-                    $rows.each(showPermissionRow);
-                    $details.not('[open]').attr('data-drupal-system-state', 'forced-open');
-                    $details.attr('open', true).each(hidePackageDetails);
+                    [...$rows].forEach(showPermissionRow);
+                    $details
+                        .filter((element) => !element.getAttribute('open'))
+                        .forEach((element) => element.setAttribute('data-drupal-system-state', 'forced-open'));
+
+                    $details.forEach((element) => {
+                        element.setAttribute('open', true);
+                        hidePackageDetails(element);
+                    });
+
+                    var visibleRowCount = [...$rowsAndDetails]
+                        .filter((element) => element.style.display === '').length;
 
                     Drupal.announce(
-                            Drupal.t(
-                                    '!permissions permissions are available in the modified list.',
-                                    {'!permissions': $rowsAndDetails.find('tbody tr:visible').length}
-                            )
-                            );
+                        Drupal.t(
+                            '!permissions permissions are available in the modified list.',
+                            {'!permissions': visibleRowCount}
+                        )
+                    );
                 }
                 else if (searching) {
                     searching = false;
-                    $rowsAndDetails.show();
-                    $details.filter('[data-drupal-system-state="forced-open"]')
-                            .removeAttr('data-drupal-system-state')
-                            .attr('open', false);
+                    [...$rowsAndDetails].forEach((row) => {
+                        row.style.display = '';
+                    });
+                    $details
+                        .filter((element) => element.getAttribute('data-drupal-system-state') === 'forced-open')
+                        .forEach((element) => {
+                            element.removeAttribute('data-drupal-system-state');
+                            element.setAttribute('open', false);
+                        });
                 }
             }
 
@@ -65,17 +82,15 @@
                 }
             }
 
-            if ($table.length) {
-                $rowsAndDetails = $table.find('tr, details');
-                $rows = $table.find('tbody tr');
-                $details = $rowsAndDetails.filter('.js-permissions');
+            if ($table) {
+                $rowsAndDetails = $table.querySelectorAll('tbody tr, tbody details');
+                $rows = $table.querySelectorAll('tbody tr');
+                $details = [...$rowsAndDetails].filter((element) => element.classList.contains('js-permissions'));
 
-                $input.on({
-                    keyup: debounce(filterPermissionList, 200),
-                    keydown: preventEnterKey
-                });
+                $input.addEventListener('keyup', debounce(filterPermissionList, 200));
+                $input.addEventListener('keydown', preventEnterKey);
             }
         }
     };
 
-}(jQuery, Drupal, Drupal.debounce));
+}(Drupal, Drupal.debounce));

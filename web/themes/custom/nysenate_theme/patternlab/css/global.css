@@ -1484,6 +1484,8 @@ body .block-content--type-gallery {
   border-bottom: 1px solid #aaaaaa;
   padding-bottom: 20px;
   position: relative; }
+  .c-container--header.link {
+    border-bottom: 0; }
 
 .c-container--header__top-border {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
@@ -1512,6 +1514,12 @@ h3.c-container--title {
         margin-top: -4px;
         font-size: 23px;
         line-height: 16px; } }
+
+.c-block p {
+  font-family: "Adelle Light", serif;
+  line-height: 1.5em;
+  color: #666666;
+  font-size: 16px; }
 
 .c-detail--download {
   display: block;
@@ -1589,7 +1597,7 @@ h3.c-container--title {
   margin: 0;
   padding: 10px 20px 10px;
   background: #eeeeee;
-  color: #7d7c7c;
+  color: #444444;
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 12px;
   line-height: 18px; }
@@ -1718,6 +1726,37 @@ h3.c-container--title {
   .l-col-3-of-3 {
     width: 27%; } }
 
+.c-block-legislation {
+  position: relative;
+  border-top: 1px solid #aaaaaa;
+  padding: 20px 0 35px;
+  margin-bottom: 0;
+  overflow: visible; }
+  .c-block-legislation .c-block.c-legislation-block {
+    margin-bottom: 0; }
+  .c-block-legislation .c-block--btn-toggle {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 11;
+    background: transparent;
+    text-indent: -99999px; }
+    .c-block-legislation .c-block--btn-toggle:after {
+      font-size: 26px;
+      line-height: 42px;
+      color: #aaaaaa !important; }
+
+@media screen and (min-width: 768px) {
+  .c-block-legislation .c-block--btn-toggle {
+    height: 42px;
+    width: 42px;
+    padding-left: 0.2em; }
+  .c-block.c-block-legislation-featured .c-block--btn-toggle {
+    background: transparent;
+    border: 0; } }
+
 /*-------------------------------------
 / TOGGLE BUTTON
 /-------------------------------------*/
@@ -1749,6 +1788,10 @@ h3.c-container--title {
   .c-block__collapsed .c-block--btn-toggle:after {
     font-size: 26px;
     line-height: 42px; }
+
+.c-block--social {
+  margin-top: 20px;
+  margin-bottom: 40px; }
 
 .nys-senator--name {
   font-family: "Adelle Light", serif;
@@ -1901,12 +1944,136 @@ h3.c-container--title {
           padding-top: 0;
           font-size: 22px; } }
 
+.nys-btn--gold {
+  transition: background-color 0.2s ease;
+  position: relative;
+  display: block;
+  padding: 20px 10px;
+  background: #f1af58;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.1em; }
+  .nys-btn--gold:hover {
+    color: #fff;
+    background: #cb8d37; }
+
 /*----------------------------------------
 / LIST ITEM 
 /----------------------------------------*/
 .c-list-item {
   padding-top: 20px;
   border-top: 1px solid #aaaaaa; }
+
+/*-------------------------------------
+/	Subpage Header styles
+/-------------------------------------*/
+h2.c-subpage-header--title {
+  margin: 0;
+  font-family: "Adelle Bold", serif;
+  line-height: 1em;
+  font-size: 18px;
+  margin-bottom: 10px; }
+
+.c-subpage-header--title02 {
+  margin: 0;
+  font-family: "Adelle Bold", serif;
+  line-height: 1em;
+  font-size: 18px;
+  margin-bottom: 5px; }
+
+.c-subpage-header--title03 {
+  margin: 0;
+  font-family: "Adelle Bold", serif;
+  line-height: 1em;
+  font-size: 18px;
+  margin: 20px 0; }
+
+.c-subpage-header--subtitle01 {
+  margin: 0;
+  color: #444444;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 14px; }
+
+.c-subpage-header--subtitle02 {
+  margin: 0;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  text-transform: uppercase;
+  font-size: 12px; }
+
+.c-subpage-header--subtitle03 {
+  margin: 0 0 25px 0;
+  color: #888888;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  text-transform: uppercase;
+  font-size: 12px; }
+
+.c-subpage-header--subtitle04 {
+  margin: 0;
+  font-family: "Adelle Bold", serif;
+  line-height: 1em;
+  font-size: 18px;
+  margin-bottom: 5px; }
+
+.c-subpage-header--subtitle05 {
+  display: inline-block;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 12px;
+  line-height: 1em;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px; }
+
+@media screen and (min-width: 768px) {
+  h2.c-subpage-header--title {
+    font-size: 32px; }
+  .c-subpage-header--title02 {
+    font-size: 32px; }
+  .c-subpage-header--title03 {
+    font-size: 24px; }
+  .c-subpage-header--subtitle01 {
+    font-size: 16px; }
+  .c-subpage-header--subtitle02 {
+    font-size: 14px; }
+  .c-subpage-header--subtitle03 {
+    font-size: 14px;
+    margin-bottom: 20px;
+    margin-bottom: 40px; } }
+
+.nys-associated-topics {
+  display: inline;
+  list-style: none;
+  font-size: 15px;
+  line-height: 1.2em;
+  border-left: 1px solid #888888;
+  padding-left: 14px;
+  color: #222222; }
+  .nys-associated-topics ul {
+    display: inline;
+    margin: 0;
+    padding: 0; }
+  .nys-associated-topics li {
+    display: inline;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    white-space: normal; }
+  .nys-associated-topics a {
+    color: #1b5187;
+    text-decoration: none; }
+    .nys-associated-topics a:hover {
+      text-decoration: underline; }
+
+.nys-associated-topics--label {
+  display: inline;
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 1.2em;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
 
 html {
   font-size: 100%;
@@ -1923,6 +2090,9 @@ body {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   margin: 0;
   color: #222222; }
+  body.nav-open {
+    position: fixed;
+    overflow: hidden; }
 
 main {
   display: block; }
@@ -2223,6 +2393,9 @@ label {
   font-size: 18px; }
   .nys-title.nys-title--district {
     margin-bottom: 5px; }
+  @media screen and (min-width: 768px) {
+    .nys-title {
+      font-size: 32px; } }
 
 .c-block ul {
   list-style-position: outside;
@@ -2310,3 +2483,7 @@ label {
       right: 0.2em; }
   .c-detail--subhead {
     font-size: 16px; } }
+
+textarea[name="email_body"] {
+  padding: 10px;
+  height: auto; }

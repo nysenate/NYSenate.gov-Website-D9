@@ -15,7 +15,7 @@ class Donation {
    * @return string
    *   The donation message.
    */
-  public static function getDonationText() {
+  public static function getDonationText(): string {
     $url = ['@url' => 'http://paypal.me/adriancid'];
     return '<div class="description">' . t('If you would like to say thanks and support the development of this module, a <a target="_blank" href="@url">donation</a> will be much appreciated.', $url) . '</div>';
   }

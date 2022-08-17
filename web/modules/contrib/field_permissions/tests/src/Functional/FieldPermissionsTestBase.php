@@ -76,7 +76,7 @@ abstract class FieldPermissionsTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'field',
     'field_ui',
@@ -92,7 +92,7 @@ abstract class FieldPermissionsTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     // Create node type.

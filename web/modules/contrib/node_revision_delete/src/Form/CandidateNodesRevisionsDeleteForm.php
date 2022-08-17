@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a candidate node revision deletion confirmation form.
@@ -19,14 +20,14 @@ class CandidateNodesRevisionsDeleteForm extends ConfirmFormBase {
    *
    * @var \Drupal\node\NodeInterface
    */
-  protected $node;
+  protected NodeInterface $node;
 
   /**
    * The node revision delete interface.
    *
    * @var \Drupal\node_revision_delete\NodeRevisionDeleteInterface
    */
-  protected $nodeRevisionDelete;
+  protected NodeRevisionDeleteInterface $nodeRevisionDelete;
 
   /**
    * Constructor.
@@ -50,7 +51,7 @@ class CandidateNodesRevisionsDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'node_revision_delete_candidates_nodes_revisions_delete';
   }
 
@@ -69,7 +70,7 @@ class CandidateNodesRevisionsDeleteForm extends ConfirmFormBase {
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $node_type = NULL, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?string $node_type = NULL, ?NodeInterface $node = NULL): array {
     $this->node = $node;
     return parent::buildForm($form, $form_state);
   }
@@ -77,21 +78,21 @@ class CandidateNodesRevisionsDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getQuestion() {
+  public function getQuestion(): TranslatableMarkup {
     return $this->t('Are you sure you want to delete the candidates revisions for the node "%node_title" ?', ['%node_title' => $this->node->getTitle()]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfirmText() {
+  public function getConfirmText(): TranslatableMarkup {
     return $this->t('Delete');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDescription() {
+  public function getDescription(): string {
     $description = '<p>' . $this->t('This action will delete the candidate revisions for the "@node_title" content type.', ['@node_title' => $this->node->getTitle()]) . '</p>';
     $description .= '<p>' . parent::getDescription() . '</p>';
     return $description;
@@ -100,21 +101,21 @@ class CandidateNodesRevisionsDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelText() {
+  public function getCancelText(): TranslatableMarkup {
     return $this->t('Cancel');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCancelUrl() {
+  public function getCancelUrl(): Url {
     return new Url('node_revision_delete.candidate_nodes', ['node_type' => $this->node->getType()]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Getting the content type candidate revisions.
     $candidate_revisions = $this->nodeRevisionDelete->getCandidatesRevisionsByNids([$this->node->id()]);
 

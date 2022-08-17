@@ -499,28 +499,43 @@ class FormAlter implements ContainerInjectionInterface {
    *   The updated 3rd party settings.
    */
   public function prepareRegionRestrictions($section, $scope, array $layout_definitions, PrivateTempStore $store, $static_id, array $third_party_settings = []) {
+    $types = [
+      'restricted_categories',
+      'allowlisted_blocks',
+      'denylisted_blocks',
+    ];
     $layout_definition = $layout_definitions[$section];
     $regions = $layout_definition->getRegions();
-    // First check if 'all_regions' settings have been made.
+    // First check if the layout's restriction is set to apply to all regions.
     // If so, we should delete all other regions.
-    $all_regions_temp = $store->get($static_id . ':' . $section . ':all_regions');
-    if (!is_null($all_regions_temp) || $scope == 'all') {
+    if ($scope === 'all') {
       // Delete any previously stored restrictions for specific regions.
       foreach (array_keys($regions) as $region) {
-        unset($third_party_settings['restricted_categories'][$section][$region]);
-        unset($third_party_settings['allowlisted_blocks'][$section][$region]);
-        unset($third_party_settings['denylisted_blocks'][$section][$region]);
+        foreach ($types as $type) {
+          unset($third_party_settings[$type][$section][$region]);
+        }
       }
-      // Now set the all_regions value.
-      $third_party_settings = $this->setRegionSettings('all_regions', $section, $all_regions_temp, $third_party_settings);
+      $all_regions_temp = $store->get($static_id . ':' . $section . ':all_regions');
+      if (!empty($all_regions_temp)) {
+        // Now set the all_regions value.
+        $third_party_settings = $this->setRegionSettings('all_regions', $section, $all_regions_temp, $third_party_settings);
+      }
+      foreach ($types as $type) {
+        if (empty($third_party_settings[$type][$section])) {
+          unset($third_party_settings[$type][$section]);
+        }
+      }
     }
-    else {
+    elseif ($scope === 'per-region') {
+      unset($third_party_settings['restricted_categories'][$section]['all_regions']);
+      unset($third_party_settings['allowlisted_blocks'][$section]['all_regions']);
+      unset($third_party_settings['denylisted_blocks'][$section]['all_regions']);
       // Second, check each region for temp data.
       // If there is temp data, that means changes have been made prior to save.
       // Otherwise, preserve whatever what is present before.
       foreach (array_keys($regions) as $region) {
         $region_temp = $store->get($static_id . ':' . $section . ':' . $region);
-        if (!is_null($region_temp)) {
+        if (!empty($region_temp)) {
           $third_party_settings = $this->setRegionSettings($region, $section, $region_temp, $third_party_settings);
         }
       }

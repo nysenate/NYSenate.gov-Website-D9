@@ -25,7 +25,7 @@ function permissions_filter_help($route_name, RouteMatchInterface $route_match) 
 }
 
 /**
- * Implements hook_form_alter() on behalf of permissions_filter.module.
+ * Implements hook_form_alter() for permissions_filter.module.
  */
 function permissions_filter_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if ($form_id == 'user_admin_permissions') {

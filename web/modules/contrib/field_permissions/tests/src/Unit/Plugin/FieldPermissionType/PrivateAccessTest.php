@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_permissions\Unit\Plugin\FieldPermissionType;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\FieldStorageConfigInterface;
@@ -19,6 +20,7 @@ use Drupal\user\UserInterface;
  */
 class PrivateAccessTest extends UnitTestCase {
 
+  use ProphecyTrait;
   /**
    * The private access plugin.
    *
@@ -29,7 +31,7 @@ class PrivateAccessTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $storage = $this->prophesize(FieldStorageConfigInterface::class);

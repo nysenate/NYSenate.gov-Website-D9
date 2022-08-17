@@ -56,7 +56,7 @@ class ViewsFieldAccessTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field_permissions',
     'entity_test',
     'text',
@@ -88,7 +88,7 @@ class ViewsFieldAccessTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp($import_test_views = TRUE) {
+  public function setUp($import_test_views = TRUE):void {
     parent::setUp($import_test_views);
 
     $this->installEntitySchema('entity_test');
@@ -114,6 +114,7 @@ class ViewsFieldAccessTest extends ViewsKernelTestBase {
     // revoke permissions as needed.
     $role_with_access = Role::create([
       'id' => 'with_access',
+      'label' => $this->randomString(),
       'permissions' => ['view test entity'],
     ]);
     $role_with_access->save();
@@ -121,6 +122,7 @@ class ViewsFieldAccessTest extends ViewsKernelTestBase {
 
     $role_without_access = Role::create([
       'id' => 'without_access',
+      'label' => $this->randomString(),
       'permissions' => ['view test entity'],
     ]);
     $role_without_access->save();
@@ -224,7 +226,7 @@ class ViewsFieldAccessTest extends ViewsKernelTestBase {
     $this->setRawContent($renderer->renderRoot($build));
 
     $this->assertText($field_content);
-    $this->assertTrue(isset($executable->field[$field_name]));
+    $this->assertArrayHasKey($field_name, $executable->field);
 
     $account_switcher->switchTo($this->userWithoutAccess);
     $executable = Views::getView($view_id);

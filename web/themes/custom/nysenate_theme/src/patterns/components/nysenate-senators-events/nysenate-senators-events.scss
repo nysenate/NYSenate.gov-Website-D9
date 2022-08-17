@@ -127,7 +127,7 @@
 }
 
 .c-event-name {
-  color: $grey02;
+  color: $grey08;
 
   a {
     color: $grey02;
@@ -144,10 +144,10 @@
   width: 100%;
 
   .c-event-name {
-    color: $grey02;
+    color: $grey08;
 
     a {
-      color: $grey02;
+      color: $grey08;
     }
   }
 }
@@ -199,9 +199,8 @@
   .c-event-name {
     font-family: $font-serif-semibold;
     font-size: 24px;
-    margin: 0px 0px 12px 0px;
+    margin: 0 0 12px 0;
     line-height: 120%;
-    margin-left: 0;
   }
 
   .c-event-location {
@@ -281,6 +280,7 @@
   .c-event-name {
     font-family: $font-serif-semibold;
     font-size: 24px;
+    font-weight: 400;
     margin: 14px 20px 14px 20px;
     line-height: 120%;
     float: left;
@@ -355,7 +355,7 @@
   }
 }
 
-.nys-title {
+.tabs-content .nys-title {
   font-size: 30px;
   margin-top: 12px;
   font-family: $font-serif-semibold;
@@ -496,14 +496,15 @@
     .c-event-name {
       float: right;
       width: 460px;
-      margin: 12px 120px 10px 0px;
+      margin: 12px 6px 10px 0;
+      font-weight: 400;
     }
 
     .c-event-location {
       float: right;
       width: 460px;
       clear: right;
-      margin-right: 120px;
+      margin-right: 6px;
       margin-left: 0;
       .icon-before__circle-pin:before {
         vertical-align: top;
@@ -514,7 +515,7 @@
       float: right;
       width: 460px;
       clear: right;
-      margin-right: 120px;
+      margin-right: 6px;
       display: block;
     }
 
@@ -522,7 +523,7 @@
       float: right;
       width: 460px;
       clear: right;
-      margin-right: 120px;
+      margin-right: 6px;
       display: block;
     }
 
@@ -589,22 +590,22 @@
 
     .c-event-name {
       margin-top: 0;
-      margin-right: 120px;
+      margin-right: 6px;
     }
 
     .c-event-location {
       clear: right;
-      margin-right: 120px;
+      margin-right: 6px;
     }
 
     .c-event-address {
       clear: right;
-      margin-right: 120px;
+      margin-right: 6px;
     }
 
     .c-event-time {
       clear: right;
-      margin-right: 120px;
+      margin-right: 6px;
     }
 
     .c-event-rsvp {
@@ -642,7 +643,7 @@
   font-family: $font-serif-semibold;
   font-size: 30px;
   line-height: 42px;
-  color: $grey02;
+  color: $grey08;
 }
 
 .c-upcoming--nav {
@@ -651,6 +652,9 @@
   left: 0;
   height: 100%;
   width: 100%;
+  a {
+    cursor: pointer;
+  }
 }
 
 .c-upcoming--nav-item {

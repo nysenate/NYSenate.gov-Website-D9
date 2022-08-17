@@ -24,7 +24,7 @@ class FieldPermissionsUserTest extends FieldPermissionsTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
     $this->fieldName = mb_strtolower($this->randomMachineName());
     // Remove the '@' symbol so it isn't converted to an email link.
@@ -105,7 +105,7 @@ class FieldPermissionsUserTest extends FieldPermissionsTestBase {
     $this->assertSession()->pageTextContains('Textfield');
     $edit = [];
     $edit[$this->fieldName . '[0][value]'] = $this->fieldText;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, 'Save');
     $this->drupalGet($account->toUrl());
     $this->assertSession()->assertEscaped($this->fieldText);
   }
@@ -170,11 +170,11 @@ class FieldPermissionsUserTest extends FieldPermissionsTestBase {
     $this->drupalGet('admin/config/people/accounts/fields/user.user.' . $this->fieldName);
     if ($perm === FieldPermissionTypeInterface::ACCESS_PUBLIC || $perm === FieldPermissionTypeInterface::ACCESS_PRIVATE) {
       $edit = ['type' => $perm];
-      $this->drupalPostForm(NULL, $edit, t('Save settings'));
+      $this->submitForm($edit, 'Save settings');
     }
     elseif ($perm === FieldPermissionTypeInterface::ACCESS_CUSTOM && !empty($custom_permission)) {
       $custom_permission['type'] = $perm;
-      $this->drupalPostForm(NULL, $custom_permission, t('Save settings'));
+      $this->submitForm($custom_permission, 'Save settings');
     }
     if ($current_user) {
       $this->drupalLogin($current_user);

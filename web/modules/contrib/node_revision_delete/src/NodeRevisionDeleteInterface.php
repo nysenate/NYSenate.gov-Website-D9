@@ -2,6 +2,8 @@
 
 namespace Drupal\node_revision_delete;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Interface NodeRevisionDeleteInterface.
  *
@@ -21,7 +23,7 @@ interface NodeRevisionDeleteInterface {
    * @param int $max_number
    *   The maximum number for $config_name parameter.
    */
-  public function updateTimeMaxNumberConfig($config_name, $max_number);
+  public function updateTimeMaxNumberConfig(string $config_name, int $max_number): void;
 
   /**
    * Return the time string for the config_name parameter.
@@ -34,7 +36,7 @@ interface NodeRevisionDeleteInterface {
    * @return string
    *   The time string for the $config_name parameter.
    */
-  public function getTimeString($config_name, $number);
+  public function getTimeString(string $config_name, int $number): string;
 
   /**
    * Save the content type config variable.
@@ -48,7 +50,7 @@ interface NodeRevisionDeleteInterface {
    * @param int $when_to_delete
    *   Number of inactivity months to wait for delete a revision.
    */
-  public function saveContentTypeConfig($content_type, $minimum_revisions_to_keep, $minimum_age_to_delete, $when_to_delete);
+  public function saveContentTypeConfig(string $content_type, int $minimum_revisions_to_keep, int $minimum_age_to_delete, int $when_to_delete): void;
 
   /**
    * Delete the content type config variable.
@@ -56,31 +58,29 @@ interface NodeRevisionDeleteInterface {
    * @param string $content_type
    *   Content type machine name.
    */
-  public function deleteContentTypeConfig($content_type);
+  public function deleteContentTypeConfig(string $content_type): void;
 
   /**
    * Return the available values for time frequency.
    *
-   * @param string $index
+   * @param string|null $index
    *   The index to retrieve.
    *
    * @return string|array
    *   The index value (human readable value).
    */
-  public function getTimeValues($index = NULL);
+  public function getTimeValues(?string $index = NULL);
 
   /**
    * Return the time option in singular or plural.
    *
-   * @param string $number
-   *   The number.
    * @param string $time
    *   The time option (days, weeks or months).
    *
-   * @return string
-   *   The singular or plural value for the time.
+   * @return array
+   *   The singular and plural for the time.
    */
-  public function getTimeNumberString($number, $time);
+  public function getTimeNumberString(string $time): array;
 
   /**
    * Return the list of candidate nodes for node revision delete.
@@ -91,7 +91,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   Array of nids.
    */
-  public function getCandidatesNodes($content_type);
+  public function getCandidatesNodes(string $content_type): array;
 
   /**
    * Get all revision that are older than current deleted revision.
@@ -107,7 +107,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   An array with the previous revisions.
    */
-  public function getPreviousRevisions($nid, $currently_deleted_revision_id);
+  public function getPreviousRevisions(int $nid, int $currently_deleted_revision_id): array;
 
   /**
    * Return the list of candidate revisions to be deleted.
@@ -120,7 +120,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   Array of vids.
    */
-  public function getCandidatesRevisions($content_type, $number = PHP_INT_MAX);
+  public function getCandidatesRevisions(string $content_type, int $number = PHP_INT_MAX): array;
 
   /**
    * Determine the time value for a node type and a variable type.
@@ -133,7 +133,7 @@ interface NodeRevisionDeleteInterface {
    * @return int
    *   The timestamp representing the relative time for the node type variable.
    */
-  public function getRelativeTime($config_name, $number);
+  public function getRelativeTime(string $config_name, int $number): int;
 
   /**
    * Return the configuration for a content type.
@@ -144,7 +144,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   An array with the configuration for the content type.
    */
-  public function getContentTypeConfig($content_type);
+  public function getContentTypeConfig(string $content_type): array;
 
   /**
    * Return the configuration for a content type with the relative time.
@@ -155,7 +155,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   An array with the configuration for the content type.
    */
-  public function getContentTypeConfigWithRelativeTime($content_type);
+  public function getContentTypeConfigWithRelativeTime(string $content_type): array;
 
   /**
    * Get the content types configured for node revision delete.
@@ -163,7 +163,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   An array with the configured content types objects.
    */
-  public function getConfiguredContentTypes();
+  public function getConfiguredContentTypes(): array;
 
   /**
    * Return a number of candidate revisions to be deleted.
@@ -174,7 +174,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   Array of vids.
    */
-  public function getCandidatesRevisionsByNumber($number);
+  public function getCandidatesRevisionsByNumber(int $number): array;
 
   /**
    * Return the revision deletion batch definition.
@@ -187,7 +187,7 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   The batch definition.
    */
-  public function getRevisionDeletionBatch(array $revisions, $dry_run);
+  public function getRevisionDeletionBatch(array $revisions, bool $dry_run): array;
 
   /**
    * Return the candidate revisions to be deleted if a group of nids.
@@ -200,6 +200,6 @@ interface NodeRevisionDeleteInterface {
    * @return array
    *   Array of vids.
    */
-  public function getCandidatesRevisionsByNids(array $nids);
+  public function getCandidatesRevisionsByNids(array $nids): array;
 
 }

@@ -51,7 +51,7 @@ class NodeRevisionDeleteConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->configurationFileName = 'node_revision_delete.settings';

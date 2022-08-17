@@ -20,28 +20,28 @@ class NodeRevisionDeleteTest extends UnitTestCase {
   /**
    * A connection instance.
    *
-   * @var \Drupal\Core\Database\Connection|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Database\Connection|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $connection;
 
   /**
    * A config factory instance.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $configFactory;
 
   /**
    * An entity type manager instance.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * A language manager instance.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
@@ -62,7 +62,7 @@ class NodeRevisionDeleteTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     // Setting the config file.
     $this->configFile = 'node_revision_delete.settings';
@@ -245,19 +245,21 @@ class NodeRevisionDeleteTest extends UnitTestCase {
   /**
    * Tests the getTimeNumberString() method.
    *
-   * @param int $expected
-   *   The expected result from calling the function.
-   * @param string $number
-   *   The number.
    * @param string $time
    *   The time option (days, weeks or months).
+   * @param array $expected
+   *   The expected result from calling the function.
    *
    * @covers ::getTimeNumberString
    * @dataProvider providerGetTimeNumberString
    */
-  public function testGetTimeNumberString($expected, $number, $time) {
+  public function testGetTimeNumberString($time, array $expected) {
     // Testing the method.
-    $this->assertEquals($expected, $this->nodeRevisionDelete->getTimeNumberString($number, $time));
+    $this->assertEquals($expected['singular'], $this->nodeRevisionDelete
+      ->getTimeNumberString($time)['singular']->getUntranslatedString());
+
+    $this->assertEquals($expected['plural'], $this->nodeRevisionDelete
+      ->getTimeNumberString($time)['plural']->getUntranslatedString());
   }
 
   /**
@@ -266,24 +268,33 @@ class NodeRevisionDeleteTest extends UnitTestCase {
    * @return array
    *   An array of arrays, each containing:
    *   - 'expected' - Expected return from getTimeNumberString().
-   *   - 'number' - The number.
    *   - 'time' - The time option (days, weeks or months).
    *
    * @see testGetTimeNumberString()
    */
   public function providerGetTimeNumberString() {
     // Days.
-    $tests['day singular'] = ['day', 1, 'days'];
-    $tests['day plural 1'] = ['days', 2, 'days'];
-    $tests['day plural 2'] = ['days', 10, 'days'];
+    $tests['days'] = [
+      'days', [
+        'singular' => 'day',
+        'plural' => 'days',
+      ],
+    ];
     // Weeks.
-    $tests['week singular'] = ['week', 1, 'weeks'];
-    $tests['week plural 1'] = ['weeks', 2, 'weeks'];
-    $tests['week plural 2'] = ['weeks', 10, 'weeks'];
+    $tests['weeks'] = [
+      'weeks', [
+        'singular' => 'week',
+        'plural' => 'weeks',
+      ],
+    ];
     // Months.
-    $tests['month singular'] = ['month', 1, 'months'];
-    $tests['month plural 1'] = ['months', 2, 'months'];
-    $tests['month plural 2'] = ['months', 10, 'months'];
+    $tests['months'] = [
+      'months',
+      [
+        'singular' => 'month',
+        'plural' => 'months',
+      ],
+    ];
 
     return $tests;
   }
@@ -358,7 +369,7 @@ class NodeRevisionDeleteTest extends UnitTestCase {
       foreach ($revisions as $revision) {
         $expected[$set]['operations'][] = [
           [NodeRevisionDeleteBatch::class, 'deleteRevision'],
-          [$revision, $dry_run_set[$set]],
+          [$revision, $dry_run_set[$set], count($revisions)],
         ];
       }
     }
@@ -650,7 +661,7 @@ class NodeRevisionDeleteTest extends UnitTestCase {
    */
   private function getNodeRevisionDeleteMock(array $content_types_list) {
     // Mock NodeRevisionDelete.
-    /** @var \Drupal\node_revision_delete\NodeRevisionDelete|\PHPUnit_Framework_MockObject_MockObject $controller */
+    /** @var \Drupal\node_revision_delete\NodeRevisionDelete|\PHPUnit\Framework\MockObject\MockObject $controller */
     $controller = $this->getMockBuilder('Drupal\node_revision_delete\NodeRevisionDelete')
       ->setConstructorArgs([
         $this->configFactory,

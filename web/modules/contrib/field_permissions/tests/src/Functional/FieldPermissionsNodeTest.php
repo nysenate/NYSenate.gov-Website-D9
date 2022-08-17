@@ -15,7 +15,7 @@ class FieldPermissionsNodeTest extends FieldPermissionsTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     // Grant the web user permission to administer node fields.
@@ -56,11 +56,11 @@ class FieldPermissionsNodeTest extends FieldPermissionsTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body');
     if ($perm === FieldPermissionTypeInterface::ACCESS_PUBLIC || $perm === FieldPermissionTypeInterface::ACCESS_PRIVATE) {
       $edit = ['type' => $perm];
-      $this->drupalPostForm(NULL, $edit, t('Save settings'));
+      $this->submitForm($edit, 'Save settings');
     }
     elseif ($perm === FieldPermissionTypeInterface::ACCESS_CUSTOM && !empty($custom_permission)) {
       $custom_permission['type'] = $perm;
-      $this->drupalPostForm(NULL, $custom_permission, t('Save settings'));
+      $this->submitForm($custom_permission, 'Save settings');
     }
     if ($current_user) {
       $this->drupalLogin($current_user);
@@ -87,7 +87,7 @@ class FieldPermissionsNodeTest extends FieldPermissionsTestBase {
     $node_name = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomString();
     $edit['title[0][value]'] = $node_name;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains(t('Article @name has been created.', ['@name' => $node_name]));
   }
 

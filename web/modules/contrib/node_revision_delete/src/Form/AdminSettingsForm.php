@@ -24,14 +24,14 @@ class AdminSettingsForm extends ConfigFormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The node revision delete interface.
    *
    * @var \Drupal\node_revision_delete\NodeRevisionDeleteInterface
    */
-  protected $nodeRevisionDelete;
+  protected NodeRevisionDeleteInterface $nodeRevisionDelete;
 
   /**
    * Constructor.
@@ -64,7 +64,7 @@ class AdminSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames() {
+  protected function getEditableConfigNames(): array {
     return [
       'node_revision_delete.settings',
     ];
@@ -73,14 +73,14 @@ class AdminSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'node_revision_delete_admin_settings';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     // Table header.
     $header = [
       $this->t('Content type'),
@@ -367,7 +367,7 @@ class AdminSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     parent::submitForm($form, $form_state);
     // Getting the values for node_revision_delete_when_to_delete_time.
     $when_to_delete_time_max_number = $form_state->getValue('node_revision_delete_when_to_delete_time_max_number');

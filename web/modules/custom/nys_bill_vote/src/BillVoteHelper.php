@@ -2,7 +2,6 @@
 
 namespace Drupal\nys_bill_vote;
 
-use Drupal\flag\FlagService;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
@@ -54,13 +53,6 @@ class BillVoteHelper {
   protected $entityTypeManager;
 
   /**
-   * Default object for flag service.
-   *
-   * @var \Drupal\flag\FlagService
-   */
-  protected $flag;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -68,15 +60,13 @@ class BillVoteHelper {
     CurrentPathStack $current_path,
     CurrentRouteMatch $current_route_match,
     LoggerChannelFactory $logger,
-    EntityTypeManager $entity_type_manager,
-    FlagService $flag
+    EntityTypeManager $entity_type_manager
   ) {
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
     $this->currentRouteMatch = $current_route_match;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
-    $this->flag = $flag;
   }
 
   /**
@@ -188,7 +178,7 @@ class BillVoteHelper {
    * @param string $value
    *   The existing vote's yes/no value.
    *
-   * @return string
+   * @return object
    *   The label for the voted option.
    */
   public function getVotedLabel($value = '') {
@@ -211,10 +201,10 @@ class BillVoteHelper {
     }
 
     // If an existing vote (including one submitted now) is detected ...
-    if ($value == 'yes') {
+    if ($value == 'aye') {
       $label = $this->t('You are in favor of this bill');
     }
-    elseif ($value == 'no') {
+    elseif ($value == 'nay') {
       $label = $this->t('You are opposed to this bill');
     }
 
@@ -300,10 +290,11 @@ class BillVoteHelper {
 
       if ($needs_processing) {
         // Set the follow flag on this bill for the current user.
-        $flag = $this->flag->getFlagById('follow_this_bill');
+        $flag_service = \Drupal::service('flag');
+        $flag = $flag_service->getFlagById('follow_this_bill');
         $current_user = $this->entityTypeManager->getStorage('user')
           ->load($this->currentUser->id());
-        $this->flag->flag($flag, $entity_id, $current_user);
+        $flag_service->flag($flag, $entity_id, $current_user);
 
         $vote = [
           'entity_type' => 'node',
@@ -368,7 +359,7 @@ class BillVoteHelper {
    * @param string $entity_id
    *   The entity id.
    * @param bool $clear
-   *   The clear flag.
+   *   The clear value.
    *
    * @return mixed
    *   The default values.
@@ -376,14 +367,15 @@ class BillVoteHelper {
   public function getDefault($entity_type, $entity_id, $clear = FALSE) {
     $entities = &drupal_static(__FUNCTION__, NULL, $clear);
     if (empty($entities[$entity_type][$entity_id]) && !empty($this->currentUser->id())) {
-      // @todo Confirm if we need to use the voting api module.
+      // @todo Commenting the following lines to test the module.
+      // @todo Uncomment the code after porting the voting api module.
       // @phpstan-ignore-next-line
-      $entities[$entity_type][$entity_id] = votingapi_select_votes([
-        'tag' => 'nys_bill_vote',
-        'entity_id' => $entity_id,
-        'entity_type' => 'node',
-        'uid' => $this->currentUser->id(),
-      ]);
+      // $entities[$entity_type][$entity_id] = votingapi_select_votes([
+      // 'tag' => 'nys_bill_vote',
+      // 'entity_id' => $entity_id,
+      // 'entity_type' => 'node',
+      // 'uid' => $this->currentUser->id(),
+      // ]);
     }
     if (isset($entities[$entity_type][$entity_id][0]['value'])) {
       return $entities[$entity_type][$entity_id][0]['value'];

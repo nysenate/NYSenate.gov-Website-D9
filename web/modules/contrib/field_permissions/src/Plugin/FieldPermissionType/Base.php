@@ -67,7 +67,7 @@ abstract class Base extends PluginBase implements FieldPermissionTypeInterface, 
   /**
    * Determines if the given account may view the field, regardless of entity.
    *
-   * This should only return TRUE if
+   * This should only return TRUE if:
    * @code
    * $this->hasFieldAccess('view', $entity, $account);
    * @endcode
@@ -85,4 +85,5 @@ abstract class Base extends PluginBase implements FieldPermissionTypeInterface, 
   public function hasFieldViewAccessForEveryEntity(AccountInterface $account) {
     return FALSE;
   }
+
 }

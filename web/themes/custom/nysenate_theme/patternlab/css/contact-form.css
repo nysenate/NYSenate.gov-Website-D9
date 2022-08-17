@@ -1218,32 +1218,31 @@ strong {
 /	CONTACT PAGE STYLES
 /
 /-----------------------------------------*/
-.contact-form .columns {
-  display: block;
-  float: left; }
-  .contact-form .columns.medium-6 {
-    width: 100%; }
-  .contact-form .columns #edit-submit {
-    margin: 20px 0 5px;
-    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
-    text-transform: uppercase;
-    font-size: 14px;
-    letter-spacing: 0.2em; }
-  .contact-form .columns textarea {
-    height: auto; }
-
-.contact-form p {
-  margin: 0; }
-
-.contact-form .form-item,
-.contact-form .form-actions {
-  margin-top: 1em;
-  margin-bottom: 1em; }
-
-.contact-form .form-checkboxes .form-item,
-.contact-form .form-radios .form-item {
-  margin-top: 0.4em;
-  margin-bottom: 0.4em; }
+.contact-form {
+  max-width: 1600px; }
+  .contact-form .columns {
+    display: block;
+    float: left; }
+    .contact-form .columns.medium-6 {
+      width: 100%; }
+    .contact-form .columns #edit-submit {
+      margin: 20px 0 5px;
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 0.2em; }
+    .contact-form .columns textarea {
+      height: auto; }
+  .contact-form p {
+    margin: 0; }
+  .contact-form .form-item,
+  .contact-form .form-actions {
+    margin-top: 1em;
+    margin-bottom: 1em; }
+  .contact-form .form-checkboxes .form-item,
+  .contact-form .form-radios .form-item {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em; }
 
 @media screen and (min-width: 768px) {
   .contact-form .form-type-radio {
@@ -1325,7 +1324,9 @@ strong {
 #nys-messaging-senator-message-form label[for="edit-last-name"],
 #nys-messaging-senator-message-form label[for="edit-phone"],
 #nys-messaging-senator-message-form label[for="edit-zip"] {
-  margin-left: 18px; }
+  margin-left: 18px;
+  margin-right: 0;
+  width: -webkit-fill-available; }
 
 #nys-messaging-senator-contact-form input[type="file"],
 #nys-messaging-senator-contact-form input[type="checkbox"],

@@ -177,7 +177,7 @@ class FieldPermissionsService implements FieldPermissionsServiceInterface, Conta
   /**
    * Determines if the given account may view the field, regardless of entity.
    *
-   * This should only return TRUE if
+   * This should only return TRUE if:
    * @code
    * $this->getFieldAccess('view', $items, $account, $field_definition);
    * @endcode

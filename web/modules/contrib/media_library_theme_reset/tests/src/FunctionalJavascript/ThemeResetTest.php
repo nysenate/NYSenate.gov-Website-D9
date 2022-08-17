@@ -20,7 +20,7 @@ class ThemeResetTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'node',
     'field',
@@ -45,7 +45,7 @@ class ThemeResetTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $account = $this->drupalCreateUser([
@@ -63,7 +63,7 @@ class ThemeResetTest extends WebDriverTestBase {
   /**
    * Test styles inherited from module.
    */
-  public function testCustomBlockStyles() {
+  public function testCustomBlockStyles(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert = $this->assertSession();

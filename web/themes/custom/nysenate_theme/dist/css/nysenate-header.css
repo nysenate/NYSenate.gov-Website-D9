@@ -984,12 +984,14 @@ strong {
 .icon-replace__twitter,
 .icon-replace__mail,
 .icon-replace__x,
+.c-nav--wrap.search-open .c-site-search--btn,
 .icon-replace__hamburger,
 .c-nav--toggle,
 .icon-replace__left,
 .icon-replace__right,
 .icon-replace__arrow,
 .icon-replace__search,
+.c-nav--wrap.search-open .c-site-search .c-site-search--btn,
 .c-site-search .c-site-search--btn:focus,
 .c-site-search .c-site-search--btn,
 .icon-replace__twitter-fav,
@@ -1011,12 +1013,14 @@ strong {
   .icon-replace__twitter::after,
   .icon-replace__mail::after,
   .icon-replace__x::after,
+  .c-nav--wrap.search-open .c-site-search--btn::after,
   .icon-replace__hamburger::after,
   .c-nav--toggle::after,
   .icon-replace__left::after,
   .icon-replace__right::after,
   .icon-replace__arrow::after,
   .icon-replace__search::after,
+  .c-nav--wrap.search-open .c-site-search .c-site-search--btn::after,
   .c-site-search .c-site-search--btn:focus::after,
   .c-site-search .c-site-search--btn::after,
   .icon-replace__twitter-fav::after,
@@ -1175,6 +1179,7 @@ strong {
 
 
 .icon-replace__search::after,
+.c-nav--wrap.search-open .c-site-search .c-site-search--btn::after,
 .c-site-search .c-site-search--btn:focus::after,
 .c-site-search .c-site-search--btn::after {
   content: '\6d'; }
@@ -1200,7 +1205,9 @@ strong {
 .icon-replace__twitter::after {
   content: '\23'; }
 
-.icon-replace__x::after {
+
+.icon-replace__x::after,
+.c-nav--wrap.search-open .c-site-search--btn::after {
   content: '\78'; }
 
 .icon-replace__youtube::after {
@@ -1227,6 +1234,7 @@ strong {
 .share-icon-email:after,
 .c-detail--social-item.email:after,
 .icon-replace__x:after,
+.c-nav--wrap.search-open .c-site-search--btn:after,
 .l-messages .close:after,
 .c-actionbar [class*='c-btn--follow-'] .flag-success-message .close-message:after,
 .c-senate-status [class*='c-btn--follow-'] .flag-success-message .close-message:after,
@@ -1247,6 +1255,7 @@ strong {
 .icon-replace__arrow:after,
 .c-actionbar--loggedin .c-block--btn:after,
 .icon-replace__search:after,
+.c-nav--wrap.search-open .c-site-search .c-site-search--btn:after,
 .c-site-search .c-site-search--btn:focus:after,
 .c-site-search .c-site-search--btn:after,
 .c-site-search--btn:focus:after,
@@ -1424,7 +1433,8 @@ strong {
   height: 100vh;
   width: 100vw;
   z-index: 6;
-  transition: top 0.3s ease-out 0s; }
+  transition: top 0.3s ease-out 0s;
+  padding: 0; }
   @media screen and (min-width: 768px) {
     .c-nav--wrap {
       position: relative;
@@ -1439,8 +1449,7 @@ strong {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    padding: 0; }
+    height: 100%; }
     @media screen and (min-width: 768px) {
       .c-nav--wrap .c-nav {
         display: block;
@@ -1459,26 +1468,29 @@ strong {
       margin: auto;
       width: 100%;
       height: 100%;
-      padding: 125px 0 0;
+      padding: 155px 0 0;
       overflow: scroll; }
-      @media screen and (min-width: 768px) {
-        .c-nav--wrap .c-nav > nav {
-          position: relative;
-          padding: 0;
-          background: #fff;
-          overflow: visible;
-          border-top: 1px solid #aaaaaa;
-          transition: none 0 ease 0s; } }
     .c-nav--wrap .c-nav nav .c-site-search--btn {
       color: #444444;
-      position: absolute; }
+      position: absolute;
+      background-color: transparent; }
       .c-nav--wrap .c-nav nav .c-site-search--btn::after {
-        top: 12px; }
+        top: 2px; }
     .c-nav--wrap .c-nav nav ul > li.leaf {
       top: -16px; }
 
 .nav-open .c-nav--wrap {
   top: 0; }
+
+.c-nav--wrap.search-open .c-site-search--btn {
+  cursor: pointer;
+  position: absolute;
+  top: 10px; }
+
+.c-nav--wrap.search-open .c-site-search .c-site-search--btn {
+  cursor: pointer;
+  position: relative;
+  top: -45px; }
 
 @media screen and (min-width: 768px) {
   .c-nav--wrap {
@@ -1501,13 +1513,13 @@ strong {
       margin: 0 auto;
       z-index: 2;
       height: 60px;
-      background: #fff; }
+      background-color: #fff !important; }
       .c-nav--wrap .c-nav > nav {
         position: relative;
         top: 0;
         height: 100%;
         padding: 0;
-        background: #fff;
+        background-color: #fff !important;
         overflow: visible;
         border-top: 1px solid #aaaaaa;
         transition: none 0 ease; }
@@ -1561,6 +1573,9 @@ strong {
   .pane-content .button--menu {
     position: absolute;
     top: auto; }
+
+#js-sticky .c-nav--toggle {
+  display: none; }
 
 .c-nav--toggle {
   cursor: pointer;
@@ -1662,7 +1677,7 @@ nav ul.c-nav--list {
   position: absolute;
   height: 45px;
   width: 30px;
-  top: 5px;
+  top: 17px;
   right: 15px;
   color: #444444;
   font-size: 22px;
@@ -1865,7 +1880,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
 .c-site-search {
   position: absolute;
-  top: 40px;
+  top: 60px;
   width: 100%;
   padding: 30px 20px 20px 20px;
   margin: 0; }
@@ -1896,7 +1911,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .c-site-search .c-site-search--btn:focus,
   .c-site-search .c-site-search--btn {
     position: absolute;
-    top: 30px;
+    top: 17px;
     right: 20px;
     padding: 0;
     height: 45px;
@@ -1961,8 +1976,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
           line-height: 100px; }
   .search-open .c-site-search .c-site-search--btn,
   .search-open .c-site-search .c-site-search--btn:focus,
-  .c-site-search--btn:focus,
-  .c-site-search--btn {
+  .c-site-search--btn:focus {
     position: absolute;
     height: 45px;
     width: 30px;
@@ -2015,45 +2029,4 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: none; }
     .c-site-search.open {
       height: 225px;
-      padding: 25px 9%; }
-  .search-open .c-site-search--btn {
-    cursor: pointer;
-    position: absolute;
-    display: block;
-    overflow: hidden;
-    text-indent: -99999px; }
-    .search-open .c-site-search--btn::after {
-      content: '\78';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px; }
-  .search-open .c-site-search .c-site-search--btn {
-    cursor: pointer;
-    position: relative;
-    top: -45px;
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-top: 1em;
-    text-indent: -99999px; }
-    .search-open .c-site-search .c-site-search--btn::after {
-      content: '\6d';
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-family: 'senate_icons';
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-left: 3px; } }
+      padding: 25px 9%; } }

@@ -27,28 +27,28 @@ class CandidateRevisionsContentTypeForm extends FormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The node revision delete interface.
    *
    * @var \Drupal\node_revision_delete\NodeRevisionDeleteInterface
    */
-  protected $nodeRevisionDelete;
+  protected NodeRevisionDeleteInterface $nodeRevisionDelete;
 
   /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
-  protected $dateFormatter;
+  protected DateFormatterInterface $dateFormatter;
 
   /**
    * The renderer service.
    *
    * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  protected RendererInterface $renderer;
 
   /**
    * Constructor.
@@ -89,14 +89,14 @@ class CandidateRevisionsContentTypeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'node_revision_delete_candidates_revisions_content_type';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, NodeTypeInterface $node_type = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?NodeTypeInterface $node_type = NULL): array {
     // Table header.
     $header = [
       $this->t('Revision ID'),
@@ -222,7 +222,7 @@ class CandidateRevisionsContentTypeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Get selected revisions.
     $candidate_revisions = array_filter($form_state->getValue('candidate_revisions'));
 

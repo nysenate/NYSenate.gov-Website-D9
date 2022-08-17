@@ -6,9 +6,9 @@ get the desired result without scrolling down.
  -------
  Simply install Permission Filter like you would install any other module.
 
- 1) Copy the permission_filter folder in the modules folder in your Drupal docroot.
+ 1) Copy the permission_filter folder in the modules folder in your Drupal
+ docroot.
 
  2) Enable the module using Manage -> Extend (/admin/modules).
 
  3) Goto People --> Permissions (/admin/people/permissions).
-

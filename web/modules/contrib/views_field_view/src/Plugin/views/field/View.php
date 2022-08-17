@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_field_view\Plugin\views\field\View.
- */
-
 namespace Drupal\views_field_view\Plugin\views\field;
 
 use Drupal\Component\Utility\Html;
@@ -67,9 +62,12 @@ class View extends FieldPluginBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Only allow the field to be there, no other aggregation make sense
    */
-  public function usesGroupBy() {
-    return FALSE;
+  public function buildGroupByForm(&$form, FormStateInterface $form_state) {
+    parent::buildGroupByForm($form, $form_state);
+    $form['group_type']['#options'] = [$form['group_type']['#options']['group']];
   }
 
   /**
@@ -244,7 +242,7 @@ class View extends FieldPluginBase {
           if ($view->display_handler->isPagerEnabled()) {
             // Check whether the pager IDs should be rewritten.
             $view->initQuery();
-            // Find a proper start value for the ascening pager IDs.
+            // Find a proper start value for the ascending pager IDs.
             $start = 0;
             $pager = $view->display_handler->getOption('pager');
             if (isset($this->query->pager->options['id'])) {
@@ -314,7 +312,7 @@ class View extends FieldPluginBase {
         $value = $view->field[$id]->getValue($values);
         break;
       case 'fields':
-        $value = $view->field[$id]->last_render;
+        $value = (string) $view->field[$id]->last_render;
         break;
       case 'raw_arguments':
         $value = $view->args[array_flip(array_keys($view->argument))[$id]];

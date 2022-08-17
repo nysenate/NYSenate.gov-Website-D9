@@ -720,6 +720,7 @@
     line-height: 1em;
     letter-spacing: 0.1em;
     font-size: 12px;
+    @extend .contrast_text;
   }
 
   .c-senator-hero--name {
@@ -1015,6 +1016,11 @@
       max-width: 140%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .contextual-region.media--type-image {
+      position: absolute;
+      top: 0;
     }
   }
 

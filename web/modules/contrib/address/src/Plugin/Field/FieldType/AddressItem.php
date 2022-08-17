@@ -362,85 +362,85 @@ class AddressItem extends FieldItemBase implements AddressInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCountryCode() {
-    return $this->country_code;
+  public function getCountryCode(): string {
+    return $this->country_code ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getAdministrativeArea() {
-    return $this->administrative_area;
+  public function getAdministrativeArea(): string {
+    return $this->administrative_area ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLocality() {
-    return $this->locality;
+  public function getLocality(): string {
+    return $this->locality ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDependentLocality() {
-    return $this->dependent_locality;
+  public function getDependentLocality(): string {
+    return $this->dependent_locality ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPostalCode() {
-    return $this->postal_code;
+  public function getPostalCode(): string {
+    return $this->postal_code ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSortingCode() {
-    return $this->sorting_code;
+  public function getSortingCode(): string {
+    return $this->sorting_code ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getAddressLine1() {
-    return $this->address_line1;
+  public function getAddressLine1(): string {
+    return $this->address_line1 ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getAddressLine2() {
-    return $this->address_line2;
+  public function getAddressLine2(): string {
+    return $this->address_line2 ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getOrganization() {
-    return $this->organization;
+  public function getOrganization(): string {
+    return $this->organization ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getGivenName() {
-    return $this->given_name;
+  public function getGivenName(): string {
+    return $this->given_name ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getAdditionalName() {
-    return $this->additional_name;
+  public function getAdditionalName(): string {
+    return $this->additional_name ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFamilyName() {
-    return $this->family_name;
+  public function getFamilyName(): string {
+    return $this->family_name ?? '';
   }
 
 }

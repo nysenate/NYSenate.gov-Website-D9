@@ -9,6 +9,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Class NodeRevisionDelete.
@@ -24,35 +25,35 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * The configuration file name.
    *
    * @var string
    */
-  protected $configurationFileName;
+  protected string $configurationFileName;
 
   /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  protected Connection $connection;
 
   /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The language manager service.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * Constructor.
@@ -86,7 +87,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateTimeMaxNumberConfig($config_name, $max_number) {
+  public function updateTimeMaxNumberConfig(string $config_name, int $max_number): void {
     // Looking for all the configured content types.
     $content_types = $this->getConfiguredContentTypes();
     // Checking the when_to_delete value for all the configured content types.
@@ -97,7 +98,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
       // If the new defined max_number is smaller than the defined
       // when_to_delete value in the config, we need to change the stored config
       // value.
-      if ($max_number < $third_party_settings['node_revision_delete'][$config_name]) {
+      if (is_null($third_party_settings) || $max_number < $third_party_settings['node_revision_delete'][$config_name]) {
         $third_party_settings['node_revision_delete'][$config_name] = $max_number;
         // Saving the values in the config.
         $config->set('third_party_settings', $third_party_settings)->save();
@@ -108,7 +109,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getConfiguredContentTypes() {
+  public function getConfiguredContentTypes(): array {
     $configured_content_types = [];
     // Looking for all the content types.
     $content_types = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
@@ -127,23 +128,20 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTimeString($config_name, $number) {
+  public function getTimeString(string $config_name, int $number): string {
     // Getting the config.
     $config_name_time = $this->configFactory->get($this->configurationFileName)->get('node_revision_delete_' . $config_name . '_time');
     // Is singular or plural?
-    $time = $this->getTimeNumberString($number, $config_name_time['time']);
+    $time = $this->getTimeNumberString($config_name_time['time']);
     // Return the time string for the $config_name parameter.
     $result = '';
     switch ($config_name) {
       case 'minimum_age_to_delete':
-        $result = $number . ' ' . $time;
+        $result = $number . ' ' . ($number == 1 ? $time['singular'] : $time['plural']);
         break;
 
       case 'when_to_delete':
-        $result = $this->t('After @number @time of inactivity', [
-          '@number' => $number,
-          '@time' => $time,
-        ]);
+        $result = $this->formatPlural($number, "After 1 {$time['singular']} of inactivity", "After @count {$time['plural']} of inactivity");
         break;
     }
 
@@ -153,7 +151,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTimeNumberString($number, $time) {
+  public function getTimeNumberString(string $time): array {
     // Time options.
     $time_options = [
       'days' => [
@@ -170,13 +168,13 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
       ],
     ];
 
-    return $number == 1 ? $time_options[$time]['singular'] : $time_options[$time]['plural'];
+    return $time_options[$time];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function saveContentTypeConfig($content_type, $minimum_revisions_to_keep, $minimum_age_to_delete, $when_to_delete) {
+  public function saveContentTypeConfig(string $content_type, int $minimum_revisions_to_keep, int $minimum_age_to_delete, int $when_to_delete): void {
     // Getting the config file.
     $config = $this->configFactory->getEditable('node.type.' . $content_type);
     // Getting the variables with the content types configuration.
@@ -194,7 +192,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteContentTypeConfig($content_type) {
+  public function deleteContentTypeConfig(string $content_type): void {
     // Getting the config file.
     $config = $this->configFactory->getEditable('node.type.' . $content_type);
     // Getting the variables with the content types configuration.
@@ -211,7 +209,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTimeValues($index = NULL) {
+  public function getTimeValues(string $index = NULL) {
 
     $options_node_revision_delete_time = [
       '-1'       => $this->t('Never'),
@@ -239,7 +237,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPreviousRevisions($nid, $currently_deleted_revision_id) {
+  public function getPreviousRevisions(int $nid, int $currently_deleted_revision_id): array {
     // @TODO check if the method can be improved.
     // Getting the node storage.
     $node_storage = $this->entityTypeManager->getStorage('node');
@@ -286,7 +284,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCandidatesRevisionsByNumber($number) {
+  public function getCandidatesRevisionsByNumber(int $number): array {
     if (!is_int($number) && $number < 0) {
       throw new \InvalidArgumentException("\$number parameter must be a positive integer");
     }
@@ -312,7 +310,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCandidatesRevisions($content_type, $number = PHP_INT_MAX) {
+  public function getCandidatesRevisions(string $content_type, int $number = PHP_INT_MAX): array {
     // @TODO check if the method can be improved.
     if (!is_int($number) && $number < 0) {
       throw new \InvalidArgumentException("\$number parameter must be a positive integer");
@@ -366,7 +364,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCandidatesRevisionsByNids(array $nids) {
+  public function getCandidatesRevisionsByNids(array $nids): array {
     // @TODO check if the method can be improved.
     $candidate_revisions = [];
     // If we don't have nids returning an empty array.
@@ -423,7 +421,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getContentTypeConfigWithRelativeTime($content_type) {
+  public function getContentTypeConfigWithRelativeTime(string $content_type): array {
     // Getting the content type config.
     $content_type_config = $this->getContentTypeConfig($content_type);
 
@@ -440,7 +438,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getContentTypeConfig($content_type) {
+  public function getContentTypeConfig(string $content_type): array {
     // Getting the variables with the content types configuration.
     $third_party_settings = $this->configFactory->get('node.type.' . $content_type)->get('third_party_settings');
 
@@ -454,7 +452,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRelativeTime($config_name, $number) {
+  public function getRelativeTime(string $config_name, int $number): int {
     // Getting the time interval.
     $time_interval = $this->configFactory->get($this->configurationFileName)->get('node_revision_delete_' . $config_name . '_time')['time'];
     // Getting the relative time.
@@ -466,7 +464,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCandidatesNodes($content_type) {
+  public function getCandidatesNodes(string $content_type): array {
     // @TODO check if the method can be improved.
     $result = [];
     // Getting the content type config.
@@ -496,7 +494,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRevisionDeletionBatch(array $revisions, $dry_run) {
+  public function getRevisionDeletionBatch(array $revisions, bool $dry_run): array {
     // Defining the batch builder.
     $batch_builder = new BatchBuilder();
     $batch_builder->setTitle($this->t('Deleting revisions'))
@@ -510,7 +508,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
       // Adding the operation.
       $batch_builder->addOperation(
         [NodeRevisionDeleteBatch::class, 'deleteRevision'],
-        [$revision, $dry_run]
+        [$revision, $dry_run, count($revisions)]
       );
     }
 

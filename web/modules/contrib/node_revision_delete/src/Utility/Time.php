@@ -12,13 +12,13 @@ class Time {
   /**
    * Return a mapping of the old word values to numeric equivalents.
    *
-   * @param string $word
+   * @param string|null $word
    *   The old word to map.
    *
    * @return array|string
    *   The numeric value when a word is provided or the whole map.
    */
-  public static function convertWordToTime($word = NULL) {
+  public static function convertWordToTime(?string $word = NULL) {
     $word_map = [
       'never'           => '-1',
       'every_time'      => '0',

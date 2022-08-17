@@ -105,6 +105,30 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="second"]', 'Unrestricted');
     $page->pressButton('Save');
 
+    // Allow One Column Layout, with all-region restriction.
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts"]/summary');
+    $element->click();
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts-layout-restriction-restricted"]');
+    $element->click();
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-layouts-layouts-layout-onecol"]');
+    $element->click();
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-onecol"]/summary');
+    $element->click();
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-onecol-table"]/tbody/tr[@data-region="all_regions"]//a');
+    $element->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    // Set 'Content' fields category to be restricted.
+    $element = $page->find('xpath', '//*[contains(@class, "form-item-allowed-blocks-content-fields-restriction")]/input[@value="restrict_all"]');
+    $element->click();
+    $element = $page->find('xpath', '//*[starts-with(@id,"edit-submit--")]');
+    $element->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save');
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-onecol"]/summary');
+    $element->click();
+    $assert_session->elementNotContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-onecol-table"]/tbody/tr[@data-region="all_regions"]', 'Unrestricted');
+
     $this->clickLink('Manage layout');
     // Remove default one-column layout and replace with two-column layout.
     $this->clickLink('Remove Section 1');
@@ -189,6 +213,59 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
+
+    // Restrict Inline blocks categorically
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
+    $element->click();
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-restriction-behavior-per-region"]');
+    $element->click();
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]//a');
+    $element->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+
+    // Impose Custom Block type restrictions.
+    $assert_session->checkboxChecked('Allow all existing & new Inline blocks blocks.');
+    $assert_session->checkboxNotChecked('Restrict specific Inline blocks blocks:');
+
+    // Set Inline blocks category to be restricted.
+    $element = $page->find('xpath', '//*[contains(@class, "form-item-allowed-blocks-inline-blocks-restriction")]/input[@value="restrict_all"]');
+    $element->click();
+    $element = $page->find('xpath', '//*[starts-with(@id,"edit-submit--")]');
+    $element->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save');
+
+    $this->drupalGet("$field_ui_prefix/display/default");
+
+    // Verify the UI reflects the restriction: the "first" section should not read
+    // "Unrestricted," while the second region *should* still read "Unrestricted."
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
+    $element->click();
+    $assert_session->elementNotContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]', 'Unrestricted');
+    $assert_session->elementContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="second"]', 'Unrestricted');
+
+    $this->clickLink('Manage layout');
+    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
+    // Select 'Add block' link in First region.
+    $element = $page->find('xpath', '//*[contains(@class, "layout__region--first")]//a');
+    $element->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    // Inline block types are restricted.
+    $assert_session->linkNotExists('Create custom block');
+
+    // Verify configuration isn't lost with two layouts, one using all regions.
+    // See #3301668
+    // 1. Allow Layout A and Layout B to have layout-specific restrictions.
+    // 2. Apply any "all regions" restriction to Layout A.
+    // 3. Apply any "per region" restriction to Layout B.
+    // 4. Make any change on the restrictions for Layout B.
+    // 5. The "all regions" restriction on Layout A is not lost.
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-onecol"]/summary');
+    $element->click();
+    $assert_session->elementNotContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-onecol-table"]/tbody/tr[@data-region="all_regions"]', 'Unrestricted');
   }
 
   /**

@@ -25,7 +25,7 @@ interface NodeRevisionGenerateInterface {
    *   Returns the available nodes ids to generate the revisions and its next
    *   revision date.
    */
-  public function getAvailableNodesForRevisions(array $bundles, $revisions_age);
+  public function getAvailableNodesForRevisions(array $bundles, int $revisions_age): array;
 
   /**
    * Return the revision creation batch definition.
@@ -41,7 +41,7 @@ interface NodeRevisionGenerateInterface {
    * @return array
    *   The batch definition.
    */
-  public function getRevisionCreationBatch(array $nodes_for_revisions, $revisions_number, $revisions_age);
+  public function getRevisionCreationBatch(array $nodes_for_revisions, int $revisions_number, int $revisions_age): array;
 
   /**
    * Returns if exists nodes of a content type.
@@ -52,6 +52,6 @@ interface NodeRevisionGenerateInterface {
    * @return bool
    *   If exists nodes or not for a content type.
    */
-  public function existsNodesContentType($content_type);
+  public function existsNodesContentType(string $content_type): bool;
 
 }

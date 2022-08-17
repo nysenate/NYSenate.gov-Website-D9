@@ -56,6 +56,11 @@ body {
   @include font-stack-secondary;
   margin: 0;
   color: $grey10;
+
+  &.nav-open {
+    position: fixed;
+    overflow: hidden;
+  }
 }
 
 // Render the `main` element consistently in IE.
@@ -433,6 +438,10 @@ label {
   &.nys-title--district {
     margin-bottom: 5px;
   }
+
+  @include breakpoint($bp-sm) {
+    font-size: 32px;
+  }
 }
 
 .c-block ul {
@@ -571,4 +580,9 @@ label {
   .c-detail--subhead {
     font-size: 16px;
   }
+}
+
+textarea[name="email_body"] {
+  padding: 10px;
+  height: auto;
 }

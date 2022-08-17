@@ -41,7 +41,9 @@
               <span class="date-display-single">{{ content.date }}</span>
             </p>
             <!-- if has video thumbnail it would go here -->
-            <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
+            {% if content.img_src %}
+              <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
+            {% endif %}
           </div>
         </article>
       </div>

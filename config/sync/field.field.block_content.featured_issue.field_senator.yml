@@ -1,0 +1,29 @@
+uuid: 2eed921c-00e1-40cc-bac1-c0d048c03903
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_issue
+    - field.storage.block_content.field_senator
+    - taxonomy.vocabulary.senator
+id: block_content.featured_issue.field_senator
+field_name: field_senator
+entity_type: block_content
+bundle: featured_issue
+label: Senator
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

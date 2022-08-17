@@ -88,7 +88,6 @@
   {% endif %}
   {{ title_suffix }}
 
-  {% if content.field_senator_tab['#items'][0].value is not same as 'events' %}
     <div{{ content_attributes.addClass('node__body', 'container') }}>
       {{ content }}
     </div>
@@ -102,15 +101,12 @@
         </div>
       </footer>
     {% endif %}
-  {% endif%}
 
-  {% if content.field_senator_tab['#items'][0].value is same as 'events' %}
+  {% if is_events %}
     <div{{ content_attributes.addClass('node__content','l-row--main') }}>
-      {% if content.field_senator_multiref['#items'].0.target_id is not empty %}
         {{ drupal_view('senator_events', 'senator_today_events',content.field_senator_multiref['#items'].0.target_id) }}
         {{ drupal_view('senator_events', 'featured_event',content.field_senator_multiref['#items'].0.target_id) }}
         {{ drupal_view('senator_events', 'upcoming_events',content.field_senator_multiref['#items'].0.target_id) }}
-      {% endif%}
     </div>
   {% endif%}
 </article>

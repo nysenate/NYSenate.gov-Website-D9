@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 /**
  * Implements hook_ENTITY_TYPE_view().
  */
-function nys_bill_vote_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+function nys_bill_vote_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   $type = $entity->bundle();
 
   // If the entity is a bill, get the form and save it to content.

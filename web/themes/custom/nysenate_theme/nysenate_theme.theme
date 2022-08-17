@@ -396,6 +396,10 @@ function nysenate_theme_preprocess_block_content__text(&$variables) {
     $variables['with_bg'] = strtolower($variables['content']['field_with_background'][0]['#markup']) == 'on' ? TRUE : FALSE;
   }
 
+  // Set default value for label display.
+  $variables['label_display'] = TRUE;
+  // Override value if the title display is being controlled
+  // by 'Display Title' checkbox in block configuration.
   if (isset($variables['elements']['#block_content']->label_display)) {
     $variables['label_display'] = $variables['elements']['#block_content']->label_display == 'visible' ? TRUE : FALSE;
   }

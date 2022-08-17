@@ -2,11 +2,6 @@
 {{ attach_library('nysenate_theme/nysenate-actionbar') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
-<!-- Skiplink -->
-<div class="skip-link">
-  <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
-</div>
-
 <header
   id="js-sticky" role="banner" class="l-header" style="z-index: 100;">
   <!-- Begin Header -->
@@ -48,82 +43,87 @@
         {% endif %}
       {% endblock %}
 
-      <div class="c-nav--wrap">
-        <div class="c-nav l-row l-row--nav">
-          <nav>
-            {% block menu %}
-              {%
-                include '@nysenate_theme/main-menu/main-menu.twig' with
-                {
-                  items: items,
-                  attributes: attributes,
-                }
-              %}
-            {% endblock %}
-            {#            {{ drupal_menu('main') }}#}
 
-            <div class="u-mobile-only">
-              <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
-                <div>
-                  <h2 class="c-site-search--title">{{ search.title }}</h2>
-                  <div class="container-inline form-wrapper" id="edit-basic">
-                    <div class="form-item form-type-textfield form-item-keys">
-                      <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys" name="keys" value="" size="50" maxlength="255">
-                    </div>
-                    <button class="c-site-search--btn" id="edit-submit--5" name="op" value="Search" type="submit">{{ search.title }}</button>
-                    <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
-                  </div><input type="hidden" name="form_build_id" value="form-FC0wF3CvJ0qqbg-Og-28NKW67zlrErO_gu76VIeD9S8">
-                  <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
-                </div>
-              </form>
-            </div>
+      {% if type == 'senator' %}
+        {{ microsite_menu }}
+      {% else %}
+        <div class="c-nav--wrap">
+          <div class="c-nav l-row l-row--nav">
+            <nav>
+              {% block menu %}
+                {%
+                  include '@nysenate_theme/main-menu/main-menu.twig' with
+                  {
+                    items: items,
+                    attributes: attributes,
+                  }
+                %}
+              {% endblock %}
+              {#            {{ drupal_menu('main') }}#}
 
-            <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">search</button>
-
-
-            <ul class="c-nav--social u-mobile-only">
-              {% for social in socials %}
-                <li class="{% if loop.first %}first {% endif %}leaf">
-                  <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
-                </li>
-              {% endfor %}
-            </ul>
-
-            <div class="c-mobile-login--list u-mobile-only">
-              <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
-                <a href="/user/login">login</a>
-              </span>
-            </div>
-
-
-          </nav>
-        </div>
-      </div>
-
-      <div class="u-tablet-plus">
-        <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
-          <div>
-            <h2 class="c-site-search--title">{{ search.title }}</h2>
-            <div class="container-inline form-wrapper" id="edit-basic--2">
-              <div class="form-item form-type-textfield form-item-keys">
-                <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys--2" name="keys" value="" size="50" maxlength="255">
+              <div class="u-mobile-only">
+                <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
+                  <div>
+                    <h2 class="c-site-search--title">{{ search.title }}</h2>
+                    <div class="container-inline form-wrapper" id="edit-basic">
+                      <div class="form-item form-type-textfield form-item-keys">
+                        <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys" name="keys" value="" size="50" maxlength="255">
+                      </div>
+                      <button class="c-site-search--btn" id="edit-submit--5" name="op" value="Search" type="submit">{{ search.title }}</button>
+                      <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
+                    </div><input type="hidden" name="form_build_id" value="form-FC0wF3CvJ0qqbg-Og-28NKW67zlrErO_gu76VIeD9S8">
+                    <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
+                  </div>
+                </form>
               </div>
-              <button class="c-site-search--btn" id="edit-submit--6" name="op" value="Search" type="submit">{{ search.title }}</button>
-              <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
-            </div><input type="hidden" name="form_build_id" value="form-gkuK188nles5x0ywuUfhqAHj75yMu5J5FTGzpm7vDdU">
-            <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
+
+              <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">search</button>
+
+
+              <ul class="c-nav--social u-mobile-only">
+                {% for social in socials %}
+                  <li class="{% if loop.first %}first {% endif %}leaf">
+                    <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+
+              <div class="c-mobile-login--list u-mobile-only">
+                <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
+                  <a href="/user/login">login</a>
+                </span>
+              </div>
+
+
+            </nav>
           </div>
-        </form>
-      </div>
+        </div>
+
+        <div class="u-tablet-plus">
+          <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
+            <div>
+              <h2 class="c-site-search--title">{{ search.title }}</h2>
+              <div class="container-inline form-wrapper" id="edit-basic--2">
+                <div class="form-item form-type-textfield form-item-keys">
+                  <input class="c-site-search--box icon_after__search form-text" placeholder="Search" type="text" id="edit-keys--2" name="keys" value="" size="50" maxlength="255">
+                </div>
+                <button class="c-site-search--btn" id="edit-submit--6" name="op" value="Search" type="submit">{{ search.title }}</button>
+                <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
+              </div><input type="hidden" name="form_build_id" value="form-gkuK188nles5x0ywuUfhqAHj75yMu5J5FTGzpm7vDdU">
+              <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
+            </div>
+          </form>
+        </div>
+      {% endif %}
     </div>
 
-    <div class="container l-row l-main">
+    {% if type != 'senator' %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
-        is_logged: is_logged
-      } only
+          is_logged: is_logged
+        } only
       %}
-    </div>
+    {% endif %}
 
   </div>
 </header>

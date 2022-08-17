@@ -38,6 +38,7 @@
 
   .c-tab {
     display: flex;
+    position: relative;
     margin: 0;
     width: 100%;
     height: 45px;
@@ -57,7 +58,18 @@
     }
 
     input {
+      cursor: pointer;
       opacity: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+
+    &:first-child {
+      input {
+        width: auto;
+      }
     }
   }
 
@@ -305,6 +317,12 @@
       a:hover {
         background: none;
       }
+
+      &:first-child {
+        input {
+          width: 100%;
+        }
+      }
     }
 
     .c-tab-link.first {
@@ -313,6 +331,7 @@
 
     .c-tab.active {
       border: 1px solid #aaa;
+      border-bottom: 0;
       position: relative;
       z-index: 2;
 

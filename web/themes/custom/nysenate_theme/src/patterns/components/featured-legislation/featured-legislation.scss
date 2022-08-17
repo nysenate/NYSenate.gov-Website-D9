@@ -4,39 +4,8 @@
 .c-block.c-block-legislation-featured .c-block--btn-toggle,
 .c-block-legislation .c-block--btn-toggle {
   @extend .icon-replace__share;
+  background: transparent;
 }
-
-.c-block-legislation {
-  position: relative;
-  border-top: 1px solid $grey05;
-  padding: 20px 0 35px;
-  margin-bottom: 0;
-  overflow: visible;
-
-  .c-block {
-
-    &.c-legislation-block {
-      margin-bottom: 0;
-    }
-  }
-
-  .c-block--btn-toggle {
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: auto;
-    z-index: 11;
-    background: transparent;
-	  text-indent: -99999px;
-
-    &:after {
-      font-size: 26px;
-      line-height: 42px;
-      color: $grey05 !important;
-    }
-  }
-} 
 
 .c-legislation--quote {
   position: relative;
@@ -133,6 +102,8 @@
 }
 
 .c-legislation--sponsor {
+  display: flex;
+  align-items: center;
   margin-top: 20px;
 }
 
@@ -166,7 +137,7 @@
   margin-left: 20px;
 }
 
-.c-sponsor--name {
+.c-block .c-sponsor--name {
   margin: 0;
   font-family: $font-serif;
   font-size: 16px;
@@ -177,12 +148,13 @@
   }
 }
 
-.c-sponsor--party {
+.c-block .c-sponsor--party {
   display: inline-block;
   margin: 0;
   @extend .med-text;
   font-family: $font-sans-bold;
   font-size: 12px;
+  line-height: 18px;
 }
 
 .c-sponsor--dist {
@@ -196,17 +168,6 @@
 @include breakpoint($bp-sm) {
   .featured-legislation .c-legislation-info {
     width: 50%;
-  }
-
-  .c-block-legislation .c-block--btn-toggle {
-		height: 42px;
-		width: 42px;
-		padding-left: 0.2em;
-	}
-
-  .c-block.c-block-legislation-featured .c-block--btn-toggle {
-    background: transparent;
-    border: 0;
   }
 
   .c-social {
@@ -286,7 +247,7 @@
     }
   }
 
-  .c-sponsor--name {
+  .c-block .c-sponsor--name {
     font-size: 16px;
     line-height: 1;
   }

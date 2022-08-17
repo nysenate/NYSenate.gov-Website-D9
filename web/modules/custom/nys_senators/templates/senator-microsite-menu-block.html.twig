@@ -4,7 +4,16 @@
  * Template for 'Senator Microsite Menu Block'.
  */
 #}
-
-{% include "@nysenate_theme/microsite-menu/microsite-menu.twig" with {
-  links: links
-} %}
+{% if links %}
+  {% include "@nysenate_theme/microsite-menu/microsite-menu.twig" with {
+    links: links,
+    search: {
+      title: "Search",
+      link: {
+        href: "/search/legislation",
+        text: "Advanced Legislation Search"
+      },
+      value: "{'tab':''}"
+    },
+  } %}
+{% endif %}

@@ -556,8 +556,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
   if ($variables['view']->current_display == 'senator_today_events') {
     foreach ($variables['view']->result as $node) {
       if ($node->_entity->bundle() === 'event') {
-        $date = new \Datetime($node->_entity->field_date_range->value);
-        $end_date = new \Datetime($node->_entity->field_date_range->end_value);
+        $date = new \Datetime($node->_entity->field_date_range->value, new DateTimeZone('UTC'));
+        $date->setTimezone(new DateTimeZone('America/New_York'));
+        $end_date = new \Datetime($node->_entity->field_date_range->end_value, new DateTimeZone('UTC'));
+        $end_date->setTimezone(new DateTimeZone('America/New_York'));
         $now = new \Datetime();
         if ($date->format('d:M:Y') === $now->format('d:M:Y')) {
           $variables['items_today'][] = [
@@ -578,8 +580,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
   if ($variables['view']->current_display == 'featured_event') {
     foreach ($variables['view']->result as $node) {
       if ($node->_entity->bundle() === 'event') {
-        $date = new \Datetime($node->_entity->field_date_range->value);
-        $date_end = new \Datetime($node->_entity->field_date_range->end_value);
+        $date = new \Datetime($node->_entity->field_date_range->value, new DateTimeZone('UTC'));
+        $date->setTimezone(new DateTimeZone('America/New_York'));
+        $date_end = new \Datetime($node->_entity->field_date_range->end_value, new DateTimeZone('UTC'));
+        $date_end->setTimezone(new DateTimeZone('America/New_York'));
         $variables['item_featured'] = [
           'title' => $node->_entity->label(),
           'url' => $node->_entity->toUrl()->toString(),
@@ -1553,8 +1557,10 @@ function nysenate_theme_preprocess_node(&$variables) {
   if ($variables['view_mode'] == 'upcoming_event') {
     $node = $variables['elements']['#node'];
     if ($node->bundle() === 'event') {
-      $date = new \Datetime($node->field_date_range->value);
-      $date_end = new \Datetime($node->field_date_range->end_value);
+      $date = new \Datetime($node->field_date_range->value, new DateTimeZone('UTC'));
+      $date->setTimezone(new DateTimeZone('America/New_York'));
+      $date_end = new \Datetime($node->field_date_range->end_value, new DateTimeZone('UTC'));
+      $date_end->setTimezone(new DateTimeZone('America/New_York'));
       $variables['item'] = [
         'title' => $node->label(),
         'url' => $node->toUrl()->toString(),

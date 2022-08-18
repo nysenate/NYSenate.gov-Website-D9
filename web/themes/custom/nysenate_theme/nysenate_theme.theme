@@ -13,6 +13,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\media\MediaInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -204,6 +205,15 @@ function nysenate_theme_preprocess_senator_microsite_menu_block(&$variables) {
       ];
     }
     $variables['links'] = $links;
+    /** @var \Drupal\node\NodeInterface $micrositeNode */
+    $micrositeNode = \Drupal::routeMatch()->getParameter('node');
+    if ($micrositeNode->hasField('field_senator_multiref') && !$micrositeNode->get('field_senator_multiref')->isEmpty()) {
+      $tid = $micrositeNode->get('field_senator_multiref')->first()->getString() ?? '';
+      if (!empty($tid)) {
+        $senatorName = Term::load($tid)->get('name')->value;
+        $variables['senatorName'] = $senatorName;
+      }
+    }
   }
 }
 

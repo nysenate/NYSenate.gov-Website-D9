@@ -120,14 +120,12 @@ h3.c-bill-num {
       color: $color-white;
 
       span {
+        @include font-stack-secondary;
         display: block;
-        font-size: 14px;
-
-        &:first-child {
-          font-size: 12px;
-          margin-top: 20px;
-          text-transform: uppercase;
-        }
+        line-height: 18px;
+        font-size: 12px;
+        margin-top: 20px;
+        text-transform: uppercase;
       }
     }
 

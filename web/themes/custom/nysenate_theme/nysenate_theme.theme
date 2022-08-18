@@ -1607,7 +1607,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
           $file_url_generator = \Drupal::service('file_url_generator');
           $variables['file_items'][] = [
             'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-            'text' => ($item->description !== '') ? $item->description : $file->origname->value,
+            'text' => ($item->description !== '') ? $item->description : $file->getFilename(),
             'type' => $file->getMimeType(),
           ];
         }

@@ -76,9 +76,30 @@ function nys_senators_update_9003() {
 }
 
 /**
- * Add Senator microsite pages for existing terms.
+ * Add the default Microsite Contact Webform block.
  */
 function nys_senators_update_9004() {
+  // Creates the default Microsite Contact Webform block to be attached to the
+  // existing microsite nodes.
+  $senatorContactBlock = BlockContent::create([
+    'info' => 'Senator contact form - Microsite Contact block',
+    'type' => 'microsite_contact_webform',
+    'revision_user' => 1,
+    'field_contact_webform' => [
+      'target_id' => 'senator_contact_webform',
+      'default_data' => '',
+      'status' => 'open',
+      'open' => '',
+      'close' => '',
+    ],
+  ]);
+  $senatorContactBlock->save();
+}
+
+/**
+ * Add Senator microsite pages for existing terms.
+ */
+function nys_senators_update_9005() {
   // Queries all senator terms that are published and active.
   $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
     'vid' => 'senator',
@@ -104,9 +125,9 @@ function nys_senators_update_9004() {
 }
 
 /**
- * Implements hook_update_N().
+ * Create Inactive term.
  */
-function nys_senators_update_9005() {
+function nys_senators_update_9006() {
   $term = Term::create([
     'name' => 'Inactive',
     'vid' => 'microsite_page_type',
@@ -117,23 +138,13 @@ function nys_senators_update_9005() {
 /**
  * Add Senator Contact block to microsite Contact pages on active senators.
  */
-function nys_senators_update_9006() {
-  // Creates the default Microsite Contact Webform block to be attached to the
-  // existing microsite nodes.
-  $senatorContactBlock = BlockContent::create([
-    'info' => 'Senator contact form - Microsite Contact block',
+function nys_senators_update_9007() {
+  $senatorContactBlock = \Drupal::service('entity_type.manager')->getStorage('block_content')->loadByProperties([
     'type' => 'microsite_contact_webform',
-    'revision_user' => 1,
-    'field_contact_webform' => [
-      'target_id' => 'senator_contact_webform',
-      'default_data' => '',
-      'status' => 'open',
-      'open' => '',
-      'close' => '',
-    ],
+    'status' => 1,
+    'info' => 'Senator contact form - Microsite Contact block',
   ]);
-  $senatorContactBlock->save();
-
+  $senatorContactBlock = reset($senatorContactBlock);
   // Queries all senator terms that are published and active.
   $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
     'vid' => 'senator',

@@ -75,10 +75,6 @@
 }
 
 .c-news--head-meta {
-	display: flex;
-    align-items: flex-start;
-	flex-wrap: wrap;
-    column-gap: 10px;
 	@include font(12 18);
 	color: $grey04;
 
@@ -91,9 +87,11 @@
 		padding-left: 14px;
 	}
 }
+
 .c-news--author,
 .c-news--pub-date {
-	margin: 0;
+	display: inline-block;
+	margin: 0 10px 0 0;
 	text-transform: capitalize;
 	font-family: $font-sans;
 	@include font(12 18);
@@ -107,6 +105,7 @@
 		display: none;
 	}
 }
+
 .c-news--download {
 	display: block;
 	flex-basis: 100%;

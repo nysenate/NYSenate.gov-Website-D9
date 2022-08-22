@@ -985,6 +985,54 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
 }
 
 /**
+ * Implements hoo_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
+
+  $variables['senator'] = '';
+  $user = \Drupal::entityTypeManager()->getStorage('user')
+    ->load(\Drupal::currentUser()->id());
+
+  if ($user->hasField('field_senator_multiref') && !$user->get('field_senator_multiref')->isEmpty()) {
+    $senator = $user->get('field_senator_multiref')->entity;
+    $variables['senator'] = $senator;
+
+    // Senator name.
+    $senator_name = '';
+    if ($senator->field_senator_name) {
+      $title = $senator->field_senator_name->title ?? '';
+      $given = $senator->field_senator_name->given ?? '';
+      $family = $senator->field_senator_name->family ?? '';
+      $senator_name = $title . ' ' . $given . ' ' . $family;
+      $senator_name = trim($senator_name);
+    }
+    $variables['senator_name'] = $senator_name;
+
+    if ($senator->hasField('field_image_headshot') && !$senator->get('field_image_headshot')->isEmpty()) {
+      $variables['senator_image'] = $senator->field_member_headshot->entity;
+    }
+  }
+
+  // @todo user_is_out_of_state() comes from nys_utils module.
+  // $variables['user_is_out_of_state'] = user_is_out_of_state($user);
+  // @todo user_is_senator() method comes from nys_utils module.
+  // $variables['is_senator'] = user_is_senator($user);
+
+  $variables['absolute_url'] = \Drupal::request()->getSchemeAndHttpHost() . $variables['url'];
+
+  // Quick facts.
+  $variables['quick_facts'] = [
+    '#theme' => 'nysenate_issue_quick_facts',
+    '#term' => $variables['term'],
+  ];
+
+  $variables['senators_talking_about_this_issue'] = [
+    '#theme' => 'nysenate_senators_talking_about_this_issue',
+    '#term' => $variables['term'],
+  ];
+}
+
+/**
  * Retrieves the senator district in ordinal format.
  *
  * @param int $tid
@@ -1072,6 +1120,18 @@ function nysenate_theme_theme($existing, $type, $theme, $path) {
       ],
       'path' => $path . '/src/templates',
     ],
+    'nysenate_issue_quick_facts' => [
+      'variables' => [
+        'term' => NULL,
+      ],
+      'path' => $path . '/src/templates',
+    ],
+    'nysenate_senators_talking_about_this_issue' => [
+      'variables' => [
+        'term' => NULL,
+      ],
+      'path' => $path . '/src/templates',
+    ],
   ];
 }
 
@@ -1113,6 +1173,99 @@ function nysenate_theme_preprocess_nysenate_sponsor(&$variables) {
 
     $variables['sponsor_names'] = implode(', ', $sponsor_names);
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_nysenate_issue_quick_facts(&$variables) {
+  $term = $variables['term'];
+  $variables['title'] = $term->getName() . ' Quick Facts';
+
+  // Get quick fact counts #quick_facts #quickfacts for bills and resolutions
+  $query = "SELECT count(*) from node__field_issues fi
+    JOIN node_field_data n on n.nid = fi.entity_id
+    WHERE n.type IN ('bill', 'resolution')
+    AND n.status = 1 AND fi.field_issues_target_id = :tid";
+
+  $bills_facts_count = (int) \Drupal::database()
+    ->query($query, [':tid' => $term->id()])->fetchField();
+
+  // Get quick fact counts #quick_facts #quickfacts for news and stories
+  $query = "SELECT count(*)from node__field_issues fi
+    JOIN node_field_data n on n.nid = fi.entity_id
+    WHERE n.type IN ('article','in_the_news','press_release','video')
+    AND n.status = 1 and fi.field_issues_target_id = :tid;";
+
+  $news_stories_facts_count = (int) \Drupal::database()
+   ->query($query, [':tid' => $term->id()])->fetchField();
+
+  // Get quick fact counts #quick_facts #quickfacts for event types
+  $query = "SELECT count(*)from node__field_issues fi
+    JOIN node_field_data n on n.nid = fi.entity_id
+    WHERE n.type IN ('meeting','public_hearing','events')
+    AND n.status = 1 AND fi.field_issues_target_id = :tid";
+
+  $meetings_facts_count = (int) \Drupal::database()
+   ->query($query, [':tid' => $term->id()])->fetchField();
+
+  $variables['facts'] = [
+    [
+      'link' => '#',
+      'statistic' => $bills_facts_count,
+      'description' => "Bills and Resolutions",
+    ],
+    [
+      'link' => '#',
+      'statistic' => $news_stories_facts_count,
+      'description' => "News Stories",
+    ],
+    [
+      'link' => '#',
+      'statistic' => $meetings_facts_count,
+      'description' => "Meetings or Public Hearings",
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_nysenate_senators_talking_about_this_issue(&$variables) {
+  $term = $variables['term'];
+  $senators = [];
+
+  $cid = 'senators_talking_about_' . $term->id();
+  if ($cache = \Drupal::cache()->get($cid)) {
+    $senators = $cache->data;
+  }
+  else {
+
+    $query = "SELECT COUNT(*) as count, fs.field_senator_multiref_target_id tid FROM node__field_issues fi
+    JOIN node__field_senator_multiref fs ON fs.entity_id = fi.entity_id
+    AND fs.bundle = fi.bundle
+    JOIN taxonomy_term__field_active_senator fa ON fa.entity_id = fs.field_senator_multiref_target_id
+    AND fa.bundle = 'senator'
+    WHERE fi.bundle IN ('article', 'in_the_news', 'press_release', 'video') AND fi.field_issues_target_id = :tid
+    AND fa.field_active_senator_value = 1
+    GROUP by fs.field_senator_multiref_target_id ORDER BY count DESC;
+    ";
+    $result = \Drupal::database()->query($query, [':tid' => $term->id()])->fetchAll();
+
+    foreach ($result as $r) {
+      $senator_term = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->load($r->tid);
+    
+      if (!empty($senator_term) && $senator_term->hasField('field_active_senator') && !$senator_term->get('field_active_senator')->isEmpty()) {
+        $senator = \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->view($senator_term, 'senators_invovled');
+        $senators[] = $senator;
+      }
+    }
+    \Drupal::cache()->set($cid, $senators);
+  }
+
+  $variables['senators'] = $senators;
 }
 
 /**
@@ -1260,7 +1413,10 @@ function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
   $node = $variables['node'];
   $bills = [];
   // Published date.
-  $date = \Drupal::service('date.formatter')->format(strtotime($node->field_ol_publish_date->value), '', 'F d, Y');
+  $date = '';
+  if ($node->hasField('field_ol_publish_date') && !$node->get('field_ol_publish_date')->isEmpty()) {
+    $date = \Drupal::service('date.formatter')->format(strtotime($node->field_ol_publish_date->value), '', 'F d, Y');
+  }
 
   // Last status.
   $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');

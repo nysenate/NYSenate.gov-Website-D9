@@ -1,0 +1,108 @@
+uuid: ca3b44b9-fb5b-49d5-b8da-dde69927c74c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.senators_involved
+    - field.field.taxonomy_term.senator.field_active_senator
+    - field.field.taxonomy_term.senator.field_autoreply_text
+    - field.field.taxonomy_term.senator.field_conference
+    - field.field.taxonomy_term.senator.field_current_duties
+    - field.field.taxonomy_term.senator.field_email
+    - field.field.taxonomy_term.senator.field_email_autoreply_text
+    - field.field.taxonomy_term.senator.field_facebook_url
+    - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_instagram_url
+    - field.field.taxonomy_term.senator.field_media_contact
+    - field.field.taxonomy_term.senator.field_media_email
+    - field.field.taxonomy_term.senator.field_media_fax
+    - field.field.taxonomy_term.senator.field_media_phone
+    - field.field.taxonomy_term.senator.field_member_headshot
+    - field.field.taxonomy_term.senator.field_message_notification_email
+    - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_office_contacts
+    - field.field.taxonomy_term.senator.field_offices
+    - field.field.taxonomy_term.senator.field_ol_member_id
+    - field.field.taxonomy_term.senator.field_ol_shortname
+    - field.field.taxonomy_term.senator.field_party
+    - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_senator_name
+    - field.field.taxonomy_term.senator.field_store_settings
+    - field.field.taxonomy_term.senator.field_top_issue
+    - field.field.taxonomy_term.senator.field_twitter_url
+    - field.field.taxonomy_term.senator.field_user_account
+    - field.field.taxonomy_term.senator.field_youtube_url
+    - taxonomy.vocabulary.senator
+  module:
+    - layout_builder
+    - media
+    - name
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.senator.senators_involved
+targetEntityType: taxonomy_term
+bundle: senator
+mode: senators_involved
+content:
+  field_member_headshot:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_senator_name:
+    type: name_default
+    label: hidden
+    settings:
+      format: default
+      markup: none
+      list_format: ''
+      link_target: ''
+      preferred_field_reference: ''
+      preferred_field_reference_separator: ', '
+      alternative_field_reference: ''
+      alternative_field_reference_separator: ', '
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  admin_microsite_content_senator_admin_content_eva: true
+  admin_microsite_content_senator_admin_content_eva_form: true
+  admin_microsite_legislation_senator_admin_legislation_eva: true
+  admin_microsite_legislation_senator_admin_legislation_eva_form: true
+  description: true
+  field_active_senator: true
+  field_autoreply_text: true
+  field_conference: true
+  field_current_duties: true
+  field_email: true
+  field_email_autoreply_text: true
+  field_facebook_url: true
+  field_image_hero: true
+  field_instagram_url: true
+  field_media_contact: true
+  field_media_email: true
+  field_media_fax: true
+  field_media_phone: true
+  field_message_notification_email: true
+  field_microsite_theme: true
+  field_office_contacts: true
+  field_offices: true
+  field_ol_member_id: true
+  field_ol_shortname: true
+  field_party: true
+  field_press_inquiries: true
+  field_store_settings: true
+  field_top_issue: true
+  field_twitter_url: true
+  field_user_account: true
+  field_youtube_url: true
+  langcode: true
+  search_api_excerpt: true

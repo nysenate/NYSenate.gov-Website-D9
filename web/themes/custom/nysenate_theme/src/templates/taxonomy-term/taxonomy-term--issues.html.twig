@@ -93,7 +93,30 @@
           {{ quick_facts }}
 
           {{ senators_talking_about_this_issue }}
+
+          {{ petitions }}
         </div>
+
+        <div class="l-row c-block">
+          <h2 class="c-tab-block--title"
+              id="issuesUpdatesHeader">{{ name[0]['#context']['value'] ~ ' Updates' }}</h2>
+          <dl class="l-tab-bar" data-tab>
+              <div class="c-tab--arrow u-mobile-only"></div>
+              <dd class="c-tab active">
+                  <a class="c-tab-link first" href="#panel1" id="tab1">News</a></dd>
+              <dd class="c-tab">
+                  <a class="c-tab-link" href="#panel2" id="tab2">Legislation</a>
+              </dd>
+              <dd class="c-tab">
+                  <a class="c-tab-link" href="#panel3" id="tab3">Events</a>
+              </dd>
+          </dl>
+          <div class="tabs-content">
+            {{ news }}
+            {{ news_by_bill }}
+            {{ meeting_by_issue }}
+          </div>
+      </div>
     </div>
   </div>
 </div>

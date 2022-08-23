@@ -5,16 +5,17 @@
  * Functions to support theming in the rain_theme theme.
  */
 
-use Drupal\address\Plugin\Field\FieldType\AddressItem;
-use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\media\MediaInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\address\Plugin\Field\FieldType\AddressItem;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -899,6 +900,34 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $variables['issues'] = $issues;
     }
   }
+
+  if ($view->id() == 'news_by_issue' && $view->current_display == 'petition') {
+    $results = $view->result;
+    if (!empty($results)) {
+      $petitions = [];
+      foreach ($results as $row) {
+        $node = $row->_entity;
+
+        if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+          $senator = $node->field_senator_multiref->entity;
+          $senator_name = $senator->getName();
+        }
+
+        $petitions[] = [
+          'title' => $node->getTitle(),
+          'senator_name' => $senator_name,
+          'cta' => [
+            'url' => $node->toUrl()->toString(),
+            'text' => 'Review the Petition',
+            'value' => 'petition',
+          ],
+        ];
+      }
+
+      $variables['title'] = 'Petitions Related to this Issue';
+      $variables['petitions'] = $petitions;
+    }
+  }
 }
 
 /**
@@ -985,10 +1014,17 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
 }
 
 /**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$variables) {
+  $term = $variables['term'];
+  $variables['district'] = get_senator_district($term->id());
+}
+
+/**
  * Implements hoo_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
-
   $variables['senator'] = '';
   $user = \Drupal::entityTypeManager()->getStorage('user')
     ->load(\Drupal::currentUser()->id());
@@ -1026,10 +1062,50 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     '#term' => $variables['term'],
   ];
 
+  // Senators talking about this issue.
   $variables['senators_talking_about_this_issue'] = [
     '#theme' => 'nysenate_senators_talking_about_this_issue',
     '#term' => $variables['term'],
   ];
+
+  // Petitions related to this issue.
+  $args = [$variables['term']->id()];
+  $petition_view = Views::getView('news_by_issue');
+  if (is_object($petition_view)) {
+    $petition_view->setArguments($args);
+    $petition_view->setDisplay('petition');
+    $petition_view->preExecute();
+    $petition_view->execute();
+    $variables['petitions'] = $petition_view->buildRenderable('petition', $args);
+  }
+
+  // News.
+  $news_view = Views::getView('news_by_issue');
+  if (is_object($news_view)) {
+    $news_view->setDisplay('news');
+    $news_view->preExecute();
+    $news_view->execute();
+    $variables['news'] = $news_view->buildRenderable('news', $args);
+  }
+
+  // Legislation.
+  $news_by_bill_view = Views::getView('news_by_issue');
+  if (is_object($news_by_bill_view)) {
+    $news_by_bill_view->setDisplay('news_by_bill');
+    $news_by_bill_view->preExecute();
+    $news_by_bill_view->execute();
+    $variables['news_by_bill'] = $news_by_bill_view->buildRenderable('news_by_bill', $args);
+  }
+
+  // Meetings.
+  $meeting_by_issue_view = Views::getView('news_by_issue');
+  if (is_object($meeting_by_issue_view)) {
+    $meeting_by_issue_view->setDisplay('meeting_by_issue');
+    $meeting_by_issue_view->preExecute();
+    $meeting_by_issue_view->execute();
+    $variables['meeting_by_issue'] = $meeting_by_issue_view->buildRenderable('meeting_by_issue', $args);
+  }
+    
 }
 
 /**
@@ -1258,7 +1334,7 @@ function nysenate_theme_preprocess_nysenate_senators_talking_about_this_issue(&$
         ->load($r->tid);
     
       if (!empty($senator_term) && $senator_term->hasField('field_active_senator') && !$senator_term->get('field_active_senator')->isEmpty()) {
-        $senator = \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->view($senator_term, 'senators_invovled');
+        $senator = \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->view($senator_term, 'senators_involved');
         $senators[] = $senator;
       }
     }

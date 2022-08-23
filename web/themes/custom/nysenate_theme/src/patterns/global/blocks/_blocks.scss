@@ -2,8 +2,23 @@
 body {
   .block-content--type-text,
   .node__body {
-    margin-bottom: 30px;
-    padding: 0 1.5rem;
+		margin: 0;
+		padding: 0;
+	
+		p {
+			font-family: 'Muli-Regular', sans-serif;
+			font-size: 1.1rem;
+			line-height: 1.5;
+			color: $color-black;
+	
+			@include breakpoint($bp-sm) {
+				font-size: 1.2rem;
+			}
+	
+			@include breakpoint($bp-lg) {
+				font-size: 1.5rem;
+			}
+		}
 
     ul,
     ol {

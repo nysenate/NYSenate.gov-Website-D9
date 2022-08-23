@@ -609,7 +609,8 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'street_1' => $node->_entity->field_location[0]->address_line1,
           'street_2' => $node->_entity->field_location[0]->locality . ', '
           . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code,
-          'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
+          'time_start' => $date->format('g:i A'),
+          'time_end' => $date_end->format('g:i A'),
         ];
       }
     }

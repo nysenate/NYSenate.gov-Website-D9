@@ -12,8 +12,8 @@ source:
   key: migrate
 
 destination:
-  plugin: 'entity:block'
-  default_bundle: feature_image
+  plugin: 'entity:block_content'
+  default_bundle: featured_image
 
 process:
   type:
@@ -31,11 +31,6 @@ process:
           migration: nys_media_image_pgfeature
           source: fid
           no_stub: true
-
-  field_pg_feature_image_title:
-    -
-      plugin: get
-      source: field_pg_feature_image_title
 
   field_pg_full_width_bleed:
     -

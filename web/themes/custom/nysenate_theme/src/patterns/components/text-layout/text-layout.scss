@@ -64,7 +64,7 @@
     padding-top: 40px;
     max-width: 440px;
     margin: 0 auto;
-  
+
     @include breakpoint($bp-sm) {
       padding: 0 40px;
       padding-top: 60px;
@@ -81,7 +81,7 @@
     h2 {
       font-size: 32px;
     }
-    
+
     h3 {
       font-size: 22px;
     }
@@ -92,6 +92,17 @@
 
     a.c-container--link {
       text-align: left;
+    }
+  }
+}
+
+// Hide block title when senator is disabled.
+.field--type-entity-reference-revisions {
+  .field__item:nth-child(2) {
+    .text-layout__container {
+      .text-layout__title {
+        display: none;
+      }
     }
   }
 }

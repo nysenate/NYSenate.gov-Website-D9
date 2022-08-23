@@ -63,6 +63,22 @@ h3 {
     line-height: 1.5em;
     color: $grey03;
     font-size: 16px;
+    line-height: 24px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+
+    &:first-child {
+      margin-top: 3px;
+    }
+
+    &:last-child {
+      margin-bottom: 24px;
+    }
+
+    @include breakpoint($bp-sm) {
+      font-size: 20px;
+      line-height: 32px;
+    }
 	}
 }
 
@@ -745,6 +761,7 @@ h2.c-subpage-header--title {
 	display: inline-block;
 	text-transform: uppercase;
 	font-family: $font-sans;
+  font-weight: $font-weight-normal;
 	font-size: 12px;
 	line-height: 1em;
 	letter-spacing: 0.05em;

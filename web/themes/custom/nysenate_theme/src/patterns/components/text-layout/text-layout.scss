@@ -1,12 +1,6 @@
 @import '../../global/utils/init';
 
 .text-layout {
-  max-width: 440px;
-  margin: 0 auto;
-
-  @include breakpoint($bp-sm) {
-    max-width: 840px;
-  }
 
   p {
     color: $grey03;
@@ -56,19 +50,6 @@
     @include breakpoint($bp-sm) {
       margin: 0 0 30px;
       font-size: 26px;
-    }
-  }
-
-  &__container {
-    padding: 0 20px;
-    padding-top: 40px;
-    max-width: 440px;
-    margin: 0 auto;
-  
-    @include breakpoint($bp-sm) {
-      padding: 0 40px;
-      padding-top: 60px;
-      max-width: 840px;
     }
   }
 

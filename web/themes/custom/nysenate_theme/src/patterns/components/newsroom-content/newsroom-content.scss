@@ -22,6 +22,7 @@
   .c-upcoming--header {
 
     .c-month-title {
+      font-weight: $font-weight-normal;
       color: $grey10;
     }
   }
@@ -83,9 +84,15 @@
   .c-bill-update--date {
     margin-right: 0.5em;
     display: inline;
+
+    @include breakpoint($bp-sm) {
+      font-size: 14px;
+      line-height: 18.2px;
+    }
   }
 
   .c-bill-update--location {
+    font-family: $font-sans;
     margin: 0;
     display: inline;
 
@@ -93,6 +100,11 @@
       content: '|';
       display: inline-block;
       margin-right: 0.5em;
+    }
+
+    @include breakpoint($bp-sm) {
+      font-size: 14px;
+      line-height: 18.2px;
     }
   }
 
@@ -206,6 +218,7 @@
   }
 
   .c-press-release--descript {
+    font-weight: $font-weight-normal;
     margin-bottom: 10px;
     font-size: 18px;
     line-height: 1.3em;

@@ -597,3 +597,15 @@ media-library:
   css:
     component:
       dist/css/media-library.css: {}
+
+sticky-nav:
+  css:
+    component:
+      dist/css/sticky-nav.css: {}
+  js:
+    dist/js/sticky-nav.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

@@ -208,12 +208,12 @@ content:
           bundle: public_hearing
           dependee: field_event_place
           settings:
-            state: '!visible'
+            state: visible
             condition: value
             grouping: AND
-            values_set: 1
+            values_set: 3
             value: ''
-            values: {  }
+            values: "in_albany\r\nin_district"
             value_form:
               -
                 value: online
@@ -283,6 +283,11 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
     weight: 10
     region: content
     settings: {  }

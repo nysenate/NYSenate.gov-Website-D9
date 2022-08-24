@@ -958,6 +958,163 @@ function nysenate_theme_theme_suggestions_page_alter(array &$suggestions, array 
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function nysenate_theme_theme_suggestions_semanticviews_row_alter(array &$suggestions, array $variables, $hook) {
+  $view = $variables['view'];
+  $display_id = $view->getDisplay();
+  $display_id = $display_id->display['id'];
+  $suggestions[] = $hook . '__' . $view->id() . '__' . $display_id;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_row__news_by_issue__news(&$variables) {
+  $node = $variables['row']->_entity;
+
+  // Retrieve the article category if Article content type.
+  if ($node->bundle() == 'article') {
+    if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+      $allowed_values = $node->field_category->getSetting('allowed_values');
+      $variables['title'] = $allowed_values[$node->field_category->value];
+    }
+  }
+  // If other content type...
+  else {
+    $variables['title'] = $node->type->entity->label();
+  }
+
+  if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+    $node->field_issues->entity;
+    $issues = [];
+    foreach ($node->field_issues as $value) {
+      $term = $value->entity;
+      $issues[] = [
+        'name' => $term->getName(),
+        'url' => $term->toUrl()->toString(),
+      ];
+    }
+    $variables['issues'] = $issues;
+  }
+
+  if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+    $media = \Drupal::entityTypeManager()->getStorage('media')->load($node->field_image_main->target_id);
+    if (!empty($media)) {
+      $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+      if (!empty($file)) {
+        $variables['img_src'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      }
+    }
+  }
+
+  if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+    $field_date = $node->field_date->value;
+    $variables['date'] = \Drupal::service('date.formatter')->format(strtotime($field_date), '', 'F j, Y');
+  }
+
+  if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+    $senator = $node->get('field_senator_multiref')->first()->entity;
+    $variables['senator'] = [
+      'name' => $senator->name->value,
+      'url' => $senator->toUrl()->toString(),
+    ];
+  }
+
+  $variables['description'] = [
+    'url' => $node->toUrl()->toString(),
+    'text' => $node->getTitle(),
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_row__news_by_issue__news_by_bill(&$variables) {
+  $node = $variables['row']->_entity;
+  $bill = [
+    'featured' => FALSE,
+    'small' => TRUE,
+    'is_poll' => FALSE,
+    'resolution' => FALSE,
+    'link' => $node->toUrl()->toString(),
+    'number' => $node->getTitle(),
+    'description_position' => 'top',
+  ];
+
+  if ($node->hasField('field_ol_name') && !$node->get('field_ol_name')->isEmpty()) {
+    $bill['description'] = $node->field_ol_name->value;
+  }
+
+  if ($node->hasField('field_ol_last_status_date') && !$node->get('field_ol_last_status_date')->isEmpty()) {
+    $last_status_date = $node->field_ol_last_status_date->value;
+    $bill['date'] = \Drupal::service('date.formatter')->format(strtotime($last_status_date), '', 'F j, Y');
+  }
+
+  if ($node->hasField('field_ol_last_status') && !$node->get('field_ol_last_status')->isEmpty()) {
+    $allowed_values = $node->get('field_ol_last_status')->getSetting('allowed_values');
+    $bill['update_location'] = $allowed_values[$node->field_ol_last_status->value];
+  }
+
+  if ($node->hasField('field_ol_all_statuses') && !$node->get('field_ol_all_statuses')->isEmpty()) {
+    $bill['positions'] = nysenate_bill_positions($node);
+  }
+
+  if ($node->hasField('field_ol_sponsor') && !$node->get('field_ol_sponsor')->isEmpty()) {
+    $sponsor = $node->field_ol_sponsor->entity;
+    $bill['ol_sponsor'] = [
+      'text' => $sponsor->getName(),
+      'url' => $sponsor->toUrl()->toString(),
+    ];
+  }
+
+  $variables['bill'] = $bill;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_row__news_by_issue__meeting_by_issue(&$variables) {
+  $node = $variables['row']->_entity;
+
+  if ($node->bundle() == 'public_hearing') {
+    if ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
+      $variables['date'] = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'd');
+      $variables['month'] = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'M');
+    }
+
+    $address = '';
+    if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
+      if (isset($node->field_location[0]->address_line1) && !empty($node->field_location[0]->address_line1)) {
+        $address = $node->field_location[0]->address_line1;
+      }
+
+      if (isset($node->field_location[0]->locality) && !empty($node->field_location[0]->locality)) {
+        $address .= $node->field_location[0]->locality . ', ';
+      }
+
+      if (isset($node->field_location[0]->administrative_area) && !empty($node->field_location[0]->administrative_area)) {
+        $address .= $node->field_location[0]->administrative_area . ', ';
+      }
+
+      if (isset($node->field_location[0]->postal_code) && !empty($node->field_location[0]->postal_code)) {
+        $address .= $node->field_location[0]->postal_code . ', ';
+      }
+
+      if (!empty($address)) {
+        $variables['location']['link'] = 'http://maps.google.com/?q=' . urlencode($address);
+      }
+    }
+  }
+
+  if ($node->hasField('field_meeting_location') && !$node->get('field_meeting_location')->isEmpty()) {
+    $variables['location']['name'] = $node->field_meeting_location->value;
+  }
+
+  $variables['event_name'] = $node->getTitle();
+}
+
+/**
  * Implements hook_preprocess_page__node__TYPE().
  */
 function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
@@ -1053,7 +1210,6 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
   // $variables['user_is_out_of_state'] = user_is_out_of_state($user);
   // @todo user_is_senator() method comes from nys_utils module.
   // $variables['is_senator'] = user_is_senator($user);
-
   $variables['absolute_url'] = \Drupal::request()->getSchemeAndHttpHost() . $variables['url'];
 
   // Quick facts.
@@ -1105,7 +1261,7 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     $meeting_by_issue_view->execute();
     $variables['meeting_by_issue'] = $meeting_by_issue_view->buildRenderable('meeting_by_issue', $args);
   }
-    
+
 }
 
 /**
@@ -1258,7 +1414,7 @@ function nysenate_theme_preprocess_nysenate_issue_quick_facts(&$variables) {
   $term = $variables['term'];
   $variables['title'] = $term->getName() . ' Quick Facts';
 
-  // Get quick fact counts #quick_facts #quickfacts for bills and resolutions
+  // Get quick fact counts #quick_facts #quickfacts for bills and resolutions.
   $query = "SELECT count(*) from node__field_issues fi
     JOIN node_field_data n on n.nid = fi.entity_id
     WHERE n.type IN ('bill', 'resolution')
@@ -1267,23 +1423,23 @@ function nysenate_theme_preprocess_nysenate_issue_quick_facts(&$variables) {
   $bills_facts_count = (int) \Drupal::database()
     ->query($query, [':tid' => $term->id()])->fetchField();
 
-  // Get quick fact counts #quick_facts #quickfacts for news and stories
+  // Get quick fact counts #quick_facts #quickfacts for news and stories.
   $query = "SELECT count(*)from node__field_issues fi
     JOIN node_field_data n on n.nid = fi.entity_id
     WHERE n.type IN ('article','in_the_news','press_release','video')
     AND n.status = 1 and fi.field_issues_target_id = :tid;";
 
   $news_stories_facts_count = (int) \Drupal::database()
-   ->query($query, [':tid' => $term->id()])->fetchField();
+    ->query($query, [':tid' => $term->id()])->fetchField();
 
-  // Get quick fact counts #quick_facts #quickfacts for event types
+  // Get quick fact counts #quick_facts #quickfacts for event types.
   $query = "SELECT count(*)from node__field_issues fi
     JOIN node_field_data n on n.nid = fi.entity_id
     WHERE n.type IN ('meeting','public_hearing','events')
     AND n.status = 1 AND fi.field_issues_target_id = :tid";
 
   $meetings_facts_count = (int) \Drupal::database()
-   ->query($query, [':tid' => $term->id()])->fetchField();
+    ->query($query, [':tid' => $term->id()])->fetchField();
 
   $variables['facts'] = [
     [
@@ -1332,7 +1488,7 @@ function nysenate_theme_preprocess_nysenate_senators_talking_about_this_issue(&$
       $senator_term = \Drupal::entityTypeManager()
         ->getStorage('taxonomy_term')
         ->load($r->tid);
-    
+
       if (!empty($senator_term) && $senator_term->hasField('field_active_senator') && !$senator_term->get('field_active_senator')->isEmpty()) {
         $senator = \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->view($senator_term, 'senators_involved');
         $senators[] = $senator;

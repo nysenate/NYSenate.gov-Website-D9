@@ -23,6 +23,9 @@
  * @see template_preprocess_taxonomy_term()
  */
 #}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+
 {%
   set classes = [
     'taxonomy-term',
@@ -36,8 +39,6 @@
   {% endif %}
   {{ title_suffix }}
   <div class="content">
-    {# {{ content }} #}
-
     <div class="c-block c-detail--header">
         <h2 class="nys-title">{{ name }}</h2>
         {% if flag_count %}
@@ -97,24 +98,36 @@
           {{ petitions }}
         </div>
 
-        <div class="l-row c-block">
+        <div class="newsroom-content l-row">
           <h2 class="c-tab-block--title"
               id="issuesUpdatesHeader">{{ name[0]['#context']['value'] ~ ' Updates' }}</h2>
           <dl class="l-tab-bar" data-tab>
               <div class="c-tab--arrow u-mobile-only"></div>
-              <dd class="c-tab active">
-                  <a class="c-tab-link first" href="#panel1" id="tab1">News</a></dd>
-              <dd class="c-tab">
-                  <a class="c-tab-link" href="#panel2" id="tab2">Legislation</a>
-              </dd>
-              <dd class="c-tab">
-                  <a class="c-tab-link" href="#panel3" id="tab3">Events</a>
-              </dd>
+              <div class="c-tab active">
+                <input type="radio" name="language" value="#panel1" checked="checked">
+                <label class="c-tab-link">News</label>
+              </div>
+              <div class="c-tab">
+                <input type="radio" name="language" value="#panel2" checked="checked">
+                <label class="c-tab-link">Legislation</label>
+              </div>
+              <div class="c-tab">
+                <input type="radio" name="language" value="#panel3" checked="checked">
+                <label class="c-tab-link">News</label>
+              </div>
           </dl>
           <div class="tabs-content">
-            {{ news }}
-            {{ news_by_bill }}
-            {{ meeting_by_issue }}
+            <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1">
+              {{ news }}
+            </div>
+
+            <div class="panel-pane pane-views pane-news-by-issue content" id="panel2">
+              {{ news_by_bill }}
+            </div>
+
+            <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
+              {{ meeting_by_issue }}
+            </div>
           </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 // Import site utilities.
-@import "../../global/utils/init";
+@import '../../global/utils/init';
 
 .c-block.c-senate-works-container {
 	padding-bottom: 60px;
@@ -63,8 +63,8 @@
 		background: $yellow01;
 		border-radius: 50%;
 		text-align: center;
-		font-family: "Adelle Regular";
-		color: #fff;
+		font-family: $font-serif-regular;
+		color: $color-white;
 		font-size: 16px;
 		line-height: 1.3em;
 
@@ -118,7 +118,7 @@
 		}
 
 		&:before {
-			font-family: "senate_icons";
+			font-family: 'senate_icons';
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -127,7 +127,7 @@
 			margin: auto;
 			text-align: center;
 			line-height: 120px;
-			color: #fff;
+			color: $color-white;
 			font-size: 36px;
 		}
 	}
@@ -136,7 +136,7 @@
 		margin: 25px 0 20px 0;
 		line-height: 100%;
 		text-align: center;
-		font-family: "Proxima Nova Regular";
+		font-family: $font-sans;
 		font-size: 13px;
 		color: $grey02;
 	}
@@ -265,7 +265,7 @@
 
 			// TRIANGLE!!
 			&:after {
-				content: "";
+				content: '';
 				display: block;
 				position: absolute;
 				z-index: 1;

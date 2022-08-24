@@ -280,6 +280,15 @@ heading:
     component:
       dist/css/heading.css: {}
 
+how-senate-works:
+  css:
+    component:
+      dist/css/how-senate-works.css: {}
+  js:
+    dist/js/how-senate-works.es6.js: {}
+  dependencies:
+    - nysenate_theme/hammer
+
 latest-news:
   css:
     component:
@@ -563,6 +572,18 @@ slick:
     - core/jquery.once
     - core/jquery
 
+sticky-nav:
+  css:
+    component:
+      dist/css/sticky-nav.css: {}
+  js:
+    dist/js/sticky-nav.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
 tabs:
   css:
     component:
@@ -598,11 +619,7 @@ media-library:
     component:
       dist/css/media-library.css: {}
 
-how-senate-works:
+want-to:
   css:
     component:
-      dist/css/how-senate-works.css: {}
-  js:
-    dist/js/how-senate-works.es6.js: {}
-  dependencies:
-    - nysenate_theme/hammer
+      dist/css/want-to.css: {}

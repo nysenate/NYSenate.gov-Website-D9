@@ -1,6 +1,6 @@
 /**
  * @file
- * Behaviors for the Quick Facts.
+ * Behaviors for the How Senate Works.
  */
 /* eslint-disable max-len */
 
@@ -8,7 +8,7 @@
   'use strict';
 
   /**
-   * Setup and attach the Quick Facts behaviors.
+   * Setup and attach the How Senate Works behaviors.
    *
    * @type {Drupal~behavior}
    */

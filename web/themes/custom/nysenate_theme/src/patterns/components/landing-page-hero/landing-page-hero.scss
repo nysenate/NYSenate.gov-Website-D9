@@ -1,0 +1,56 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.landing-page-hero {
+  margin-bottom: 48px;
+
+  img {
+    width: 100%;
+  }
+
+  .video-wrapper {
+    width: 100%;
+    position: relative;
+    padding-top: 56.25%;
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .l-row {
+
+    &.l-row--main {
+      max-width: 840px;
+    }
+
+    &.c-hero--tout {
+      position: relative;
+      padding: 0;
+  
+      @include breakpoint($bp-sm) {
+        margin-top: -15%;
+      }
+    }
+  
+    .c-about--welcome {
+      background: $color-white;
+      padding: 0 20px 40px;
+  
+      @include breakpoint($bp-sm) {
+        padding: 20px 60px 60px;
+      }
+    }
+  }
+
+  .l-row--hero {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+}

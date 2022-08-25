@@ -30,5 +30,5 @@
   is_two_column: is_two_column,
   contents: text,
   title: label_display == TRUE ? content.field_title[0]['#context']['value'] : '',
-  link: link
+  link: link.url is not same as NULL ? link : NULL
 } only %}

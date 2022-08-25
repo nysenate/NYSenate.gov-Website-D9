@@ -907,7 +907,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $petitions = [];
       foreach ($results as $row) {
         $node = $row->_entity;
-
+        $senator_name = '';
         if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
           $senator = $node->field_senator_multiref->entity;
           $senator_name = $senator->getName();
@@ -954,6 +954,20 @@ function nysenate_theme_theme_suggestions_page_alter(array &$suggestions, array 
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!empty($node) && $node->bundle() == 'microsite_page') {
     $suggestions[] = $hook . '__node__' . $node->bundle();
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function nysenate_theme_theme_suggestions_views_view_alter(array &$suggestions, array $variables, $hook) {
+  $view = $variables['view'];
+  $tid = $view->args[0];
+  $term = Term::load($tid);
+
+  // Override the issues bundle.
+  if (!empty($term) && $term->bundle() == 'issues') {
+    $suggestions[] = $hook . '__' . $view->id() . '__issues';
   }
 }
 
@@ -1115,6 +1129,20 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__meeting_by_
 }
 
 /**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_row__news_by_issue__video(&$variables) {
+  $view = $variables['view'];
+  $tid = $view->args[0];
+  $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+    ->load($tid);
+
+  if (!empty($term) && is_object($term)) {
+    $variables['title'] = t('Latest %term_name Video', ['%term_name' => $term->name->value]);
+  }
+}
+
+/**
  * Implements hook_preprocess_page__node__TYPE().
  */
 function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
@@ -1182,24 +1210,21 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$v
  * Implements hoo_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
-  $variables['senator'] = '';
   $user = \Drupal::entityTypeManager()->getStorage('user')
     ->load(\Drupal::currentUser()->id());
 
   if ($user->hasField('field_senator_multiref') && !$user->get('field_senator_multiref')->isEmpty()) {
-    $senator = $user->get('field_senator_multiref')->entity;
+    $tid = $user->get('field_senator_multiref')->first()->getString() ?? '';
+    $senator = NULL;
+    if (!empty($tid)) {
+      $senator = Term::load($tid);
+    }
     $variables['senator'] = $senator;
 
     // Senator name.
-    $senator_name = '';
-    if ($senator->field_senator_name) {
-      $title = $senator->field_senator_name->title ?? '';
-      $given = $senator->field_senator_name->given ?? '';
-      $family = $senator->field_senator_name->family ?? '';
-      $senator_name = $title . ' ' . $given . ' ' . $family;
-      $senator_name = trim($senator_name);
+    if (!empty($senator) && isset($senator->name->value) && !empty($senator->name->value)) {
+      $variables['senator_name'] = $senator->name->value;
     }
-    $variables['senator_name'] = $senator_name;
 
     if ($senator->hasField('field_image_headshot') && !$senator->get('field_image_headshot')->isEmpty()) {
       $variables['senator_image'] = $senator->field_member_headshot->entity;
@@ -1262,6 +1287,14 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     $variables['meeting_by_issue'] = $meeting_by_issue_view->buildRenderable('meeting_by_issue', $args);
   }
 
+  // Video.
+  $video_view = Views::getView('news_by_issue');
+  if (is_object($video_view)) {
+    $video_view->setDisplay('video');
+    $video_view->preExecute();
+    $video_view->execute();
+    $variables['video'] = $video_view->buildRenderable('video', $args);
+  }
 }
 
 /**

@@ -33,7 +33,6 @@ dependencies:
     - field.field.taxonomy_term.senator.field_youtube_url
     - taxonomy.vocabulary.senator
   module:
-    - address
     - field_group
     - media_library
     - name
@@ -338,10 +337,16 @@ content:
         split_text: false
         show_drag_and_drop: true
   field_offices:
-    type: address_default
-    weight: 33
+    type: entity_reference_paragraphs
+    weight: 37
     region: content
-    settings: {  }
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
     third_party_settings: {  }
   field_ol_member_id:
     type: number

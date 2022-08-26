@@ -94,7 +94,9 @@
       {% for contact in office_contacts %}
         <div class="c-office-info--office-contact vcard">
           {{ contact.name }}
+          </br>
           {{ contact.title }}
+          </br>
           {% if contact.phone %}
             <span>Phone: </span>{{ contact.phone }}<br />
           {% endif %}

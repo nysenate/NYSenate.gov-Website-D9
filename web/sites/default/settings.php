@@ -771,18 +771,12 @@ $_ENV['site_url'] = 'https://' . $_ENV['site_host'];
 
 // Pantheon environment-specific config.
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-  // Enable email rerouting for all Pantheon env.
-  // Re-factor before launch to remove from Live.
-  $config['reroute_email.settings']['enable'] = TRUE;
-  $config['reroute_email.settings']['address'] = 'nys.senate.dev@gmail.com';
-  $config['reroute_email.settings']['description'] = TRUE;
-  $config['reroute_email.settings']['message'] = TRUE;
 
   switch($_ENV['PANTHEON_ENVIRONMENT']) {
      case 'develop':
       // Enable the Develop environment's config split.
       $config['config_split.config_split.develop']['status'] = TRUE;
-      $config['reroute_email.settings']['address'] = 'nys.senate.dev@gmail.com,qa@mediacurrent.com,nys-developer@mediacurrent.com';
+
       // Configure the Develop environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Develop';
       $config['environment_indicator.indicator']['bg_color'] = '#0e6655';
@@ -828,8 +822,13 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['bg_color'] = '#3D004B';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
 
+      // Enable email rerouting for all Pantheon env.
+      // Re-factor before launch to remove from Live.
+      $config['reroute_email.settings']['enable'] = TRUE;
+      $config['reroute_email.settings']['address'] = 'nys.senate.dev@gmail.com';
+      $config['reroute_email.settings']['description'] = TRUE;
+      $config['reroute_email.settings']['message'] = TRUE;
   }
-
 }
 else {
   // Automatically generated include for settings managed by ddev.

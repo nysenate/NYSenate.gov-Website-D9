@@ -15,16 +15,15 @@ mode: default
 content:
   field_contact_type:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 1
     region: content
   field_senator:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
+    type: entity_reference_entity_id
+    label: hidden
+    settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content

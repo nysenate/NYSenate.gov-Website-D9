@@ -1226,16 +1226,12 @@ strong {
   text-transform: none;
   padding-left: 3px; }
 
-.article-node {
-  padding: 20px 20px 0; }
-  @media screen and (min-width: 768px) {
-    .article-node {
-      padding: 40px 20px 0; } }
-  .article-node .nys-bill-status {
-    height: 25px;
-    margin-top: 15px; }
-  .article-node .nys-bill-status hr {
-    top: 2px; }
+.article-node .nys-bill-status {
+  height: 25px;
+  margin-top: 15px; }
+
+.article-node .nys-bill-status hr {
+  top: 2px; }
 
 .nys-article-title {
   margin: 0 0 20px 0;
@@ -1289,11 +1285,6 @@ strong {
       line-height: 36.4px; } }
 
 .c-news--head-meta {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  -moz-column-gap: 10px;
-  column-gap: 10px;
   font-size: 12px;
   line-height: 18px;
   color: #888888; }
@@ -1307,7 +1298,8 @@ strong {
 
 .c-news--author,
 .c-news--pub-date {
-  margin: 0;
+  display: inline-block;
+  margin: 0 10px 0 0;
   text-transform: capitalize;
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 12px;
@@ -1369,8 +1361,6 @@ strong {
   padding-left: 10px; }
 
 @media screen and (min-width: 768px) {
-  .article-node {
-    padding: 80px 40px 0; }
   .nys-article-title {
     margin: 0 0 30px;
     font-size: 48px; }

@@ -33,7 +33,6 @@ dependencies:
     - field.field.taxonomy_term.senator.field_youtube_url
     - taxonomy.vocabulary.senator
   module:
-    - address
     - entity_reference_revisions
     - name
     - options
@@ -179,11 +178,13 @@ content:
     weight: 15
     region: content
   field_offices:
-    type: address_default
+    type: entity_reference_revisions_entity_view
     label: above
-    settings: {  }
+    settings:
+      view_mode: default
+      link: ''
     third_party_settings: {  }
-    weight: 16
+    weight: 28
     region: content
   field_ol_member_id:
     type: number_integer

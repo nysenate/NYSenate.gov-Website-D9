@@ -1237,6 +1237,7 @@ strong {
   .newsroom-content .item-list .pager.pager-load-more.newsroom-content {
     list-style: none; }
   .newsroom-content .c-upcoming--header .c-month-title {
+    font-weight: 400;
     color: #222222; }
   .newsroom-content .view-senator-events {
     max-width: unset; }
@@ -1270,13 +1271,22 @@ strong {
   .newsroom-content .c-bill-update--date {
     margin-right: 0.5em;
     display: inline; }
+    @media screen and (min-width: 768px) {
+      .newsroom-content .c-bill-update--date {
+        font-size: 14px;
+        line-height: 18.2px; } }
   .newsroom-content .c-bill-update--location {
+    font-family: "Proxima Nova Regular", "Arial", sans-serif;
     margin: 0;
     display: inline; }
     .newsroom-content .c-bill-update--location::before {
       content: '|';
       display: inline-block;
       margin-right: 0.5em; }
+    @media screen and (min-width: 768px) {
+      .newsroom-content .c-bill-update--location {
+        font-size: 14px;
+        line-height: 18.2px; } }
   .newsroom-content .more-link {
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
     text-transform: uppercase;
@@ -1355,6 +1365,7 @@ strong {
   padding-right: 120px; }
 
 .c-block .c-press-release--descript {
+  font-weight: 400;
   margin-bottom: 10px;
   font-size: 18px;
   line-height: 1.3em;

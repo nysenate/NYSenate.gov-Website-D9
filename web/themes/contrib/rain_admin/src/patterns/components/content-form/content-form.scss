@@ -6,6 +6,29 @@
 // stylelint-disable declaration-no-important, selector-no-qualifying-type
 .rain-admin-theme {
 
+  // Override styles on Quick Clone tab.
+  &.path-clone {
+
+    .content-form__advanced {
+      background: inherit;
+
+      // Cleanup of the primary button.
+      .button--primary {
+        max-width: 400px;
+      }
+
+      .content-form__advanced-actions {
+        padding: 0;
+      }
+
+      // Hide meta and advanced settings.
+      .content-form__advanced-settings,
+      .content-form__document-settings-container {
+        display: none;
+      }
+    }
+  }
+
   .content-form__main {
 
     > details[open] {
@@ -82,6 +105,7 @@
   }
 
   .js &.advanced-sidebar-tray .content-form__advanced {
+    display: block;
     background-color: $color-faint-violet;
     box-shadow: -1px 0 6px 1px $color-faint-gray;
     border: 1px solid $color-pale-gray;

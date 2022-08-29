@@ -13,6 +13,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\media\MediaInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -105,6 +106,100 @@ function nysenate_theme_preprocess_node__article(&$variables) {
     $variables['image_caption'] = $variables['content']['field_image_caption'][0]['#context']['value'];
   }
 
+}
+
+/**
+ * Implements hook_preprocess_block_content__ID().
+ */
+function nysenate_theme_preprocess_block_content__microsite_contact(&$variables) {
+  $id = $variables['content']['field_senator'][0]['#plain_text'];
+  if (empty($id)) {
+    return FALSE;
+  }
+
+  $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+    ->load($id);
+
+  if (isset($senator->name->value) && !empty($senator->name->value)) {
+    $variables['title'] = $senator->name->value . '\'s';
+  }
+
+  if ($senator->hasField('field_email') && !$senator->get('field_email')->isEmpty()) {
+    $variables['email'] = $senator->field_email->value;
+  }
+
+  if ($senator->hasField('field_offices') && !$senator->get('field_offices')->isEmpty()) {
+    $offices = [];
+    foreach ($senator->field_offices as $field_office) {
+      $office = $field_office->entity;
+      if ($office->hasField('field_office_address') && !$office->get('field_office_address')->isEmpty()) {
+        $address = $office->field_office_address;
+        $loc = '';
+        if (!empty($address->organization)) {
+          $name = $address->organization;
+        }
+
+        if (!empty($address->address_line1)) {
+          $street = $address->address_line1;
+          $loc = $street . ', ';
+        }
+
+        if (!empty($address->locality)) {
+          $city = $address->locality;
+          $loc .= $city . ', ';
+        }
+
+        if (!empty($address->administrative_area)) {
+          $province = $address->administrative_area;
+          $loc .= $province . ', ';
+        }
+
+        if (!empty($address->postal_code)) {
+          $postal_code = $address->postal_code;
+          $loc .= $postal_code;
+        }
+      }
+
+      // Phone number.
+      if ($office->hasField('field_office_contact_phone') && !$office->get('field_office_contact_phone')->isEmpty()) {
+        $phone = $office->field_office_contact_phone->value;
+      }
+
+      // Fax.
+      if ($office->hasField('field_fax') && !$office->get('field_fax')->isEmpty()) {
+        $fax = $office->field_fax->value;
+      }
+
+      $offices[] = [
+        'name' => $name ?? '',
+        'street' => $street ?? '',
+        'city' => $city ?? '',
+        'province' => $province ?? '',
+        'postal_code' => $postal_code ?? '',
+        'phone' => $phone ?? '',
+        'fax' => $fax ?? '',
+        'loc' => !empty($loc) ? urlencode($loc) : '',
+      ];
+    }
+
+    $variables['office_locations'] = $offices;
+  }
+
+  if ($senator->hasField('field_office_contacts') && !$senator->get('field_office_contacts')->isEmpty()) {
+    $contacts = [];
+    foreach ($senator->field_office_contacts as $office_contact) {
+      $contact = $office_contact->entity;
+
+      $contacts[] = [
+        'name' => $contact->field_office_contact_name->value ?? '',
+        'title' => $contact->field_office_contact_title->value ?? '',
+        'phone' => $contact->field_office_contact_phone->value ?? '',
+        'email' => $contact->field_office_contact_email->value ?? '',
+      ];
+    }
+
+    $variables['office_contacts'] = $contacts;
+  }
 }
 
 /**
@@ -204,6 +299,15 @@ function nysenate_theme_preprocess_senator_microsite_menu_block(&$variables) {
       ];
     }
     $variables['links'] = $links;
+    /** @var \Drupal\node\NodeInterface $micrositeNode */
+    $micrositeNode = \Drupal::routeMatch()->getParameter('node');
+    if ($micrositeNode->hasField('field_senator_multiref') && !$micrositeNode->get('field_senator_multiref')->isEmpty()) {
+      $tid = $micrositeNode->get('field_senator_multiref')->first()->getString() ?? '';
+      if (!empty($tid)) {
+        $senatorName = Term::load($tid)->get('name')->value;
+        $variables['senatorName'] = $senatorName;
+      }
+    }
   }
 }
 
@@ -556,8 +660,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
   if ($variables['view']->current_display == 'senator_today_events') {
     foreach ($variables['view']->result as $node) {
       if ($node->_entity->bundle() === 'event') {
-        $date = new \Datetime($node->_entity->field_date_range->value);
-        $end_date = new \Datetime($node->_entity->field_date_range->end_value);
+        $date = new \Datetime($node->_entity->field_date_range->value, new DateTimeZone('UTC'));
+        $date->setTimezone(new DateTimeZone('America/New_York'));
+        $end_date = new \Datetime($node->_entity->field_date_range->end_value, new DateTimeZone('UTC'));
+        $end_date->setTimezone(new DateTimeZone('America/New_York'));
         $now = new \Datetime();
         if ($date->format('d:M:Y') === $now->format('d:M:Y')) {
           $variables['items_today'][] = [
@@ -578,8 +684,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
   if ($variables['view']->current_display == 'featured_event') {
     foreach ($variables['view']->result as $node) {
       if ($node->_entity->bundle() === 'event') {
-        $date = new \Datetime($node->_entity->field_date_range->value);
-        $date_end = new \Datetime($node->_entity->field_date_range->end_value);
+        $date = new \Datetime($node->_entity->field_date_range->value, new DateTimeZone('UTC'));
+        $date->setTimezone(new DateTimeZone('America/New_York'));
+        $date_end = new \Datetime($node->_entity->field_date_range->end_value, new DateTimeZone('UTC'));
+        $date_end->setTimezone(new DateTimeZone('America/New_York'));
         $variables['item_featured'] = [
           'title' => $node->_entity->label(),
           'url' => $node->_entity->toUrl()->toString(),
@@ -1553,8 +1661,10 @@ function nysenate_theme_preprocess_node(&$variables) {
   if ($variables['view_mode'] == 'upcoming_event') {
     $node = $variables['elements']['#node'];
     if ($node->bundle() === 'event') {
-      $date = new \Datetime($node->field_date_range->value);
-      $date_end = new \Datetime($node->field_date_range->end_value);
+      $date = new \Datetime($node->field_date_range->value, new DateTimeZone('UTC'));
+      $date->setTimezone(new DateTimeZone('America/New_York'));
+      $date_end = new \Datetime($node->field_date_range->end_value, new DateTimeZone('UTC'));
+      $date_end->setTimezone(new DateTimeZone('America/New_York'));
       $variables['item'] = [
         'title' => $node->label(),
         'url' => $node->toUrl()->toString(),
@@ -1597,7 +1707,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
           $file_url_generator = \Drupal::service('file_url_generator');
           $variables['file_items'][] = [
             'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-            'text' => ($item->description !== '') ? $item->description : $file->origname->value,
+            'text' => ($item->description !== '') ? $item->description : $file->getFilename(),
             'type' => $file->getMimeType(),
           ];
         }

@@ -4,6 +4,11 @@
 
 .rain-admin-theme {
 
+  // Hide on unused bullet on paragraphs library page.
+  .paragraph-bullet {
+    display: none;
+  }
+
   .paragraph-type-label {
     font-style: italic;
   }
@@ -49,15 +54,6 @@
   .paragraphs-actions {
     margin-bottom: 5px;
 
-    .button[value='Remove'],
-    .button[value='Remove']:focus,
-    .button[value='Remove']:hover {
-      background-color: $color-faint-gray;
-      border-color: $color-faint-gray;
-      color: $color-mid-gray;
-      padding: 15px 25px;
-    }
-
     .button + .button {
       margin-left: 10px;
     }
@@ -70,6 +66,16 @@
 
     .paragraphs-dropdown-actions {
       top: 43px;
+
+      .button,
+      .button:focus,
+      .button:hover {
+        background-color: $color-faint-gray;
+        border-color: $color-faint-gray;
+        color: $color-mid-gray;
+        padding: 15px 25px;
+        margin-left: 0 !important;
+      }
     }
   }
 
@@ -112,6 +118,14 @@
 
     div {
       margin-bottom: 2rem;
+    }
+  }
+
+  .paragraphs-features__delete-confirmation {
+
+    .button {
+      margin-right: 0;
+      margin-left: 0;
     }
   }
 }

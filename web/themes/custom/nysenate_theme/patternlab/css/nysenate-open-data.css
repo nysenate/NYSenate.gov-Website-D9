@@ -1250,7 +1250,11 @@ strong {
         color: #888888;
         font-family: "Adelle Bold", serif; }
         .c-news--head .c-news--head-meta .c-news--pub-date b .date-display-single {
-          font-family: "Adelle Bold", serif; }
+          font-family: "Proxima Nova Regular", "Arial", sans-serif; }
+          @media screen and (min-width: 768px) {
+            .c-news--head .c-news--head-meta .c-news--pub-date b .date-display-single {
+              font-size: 14px;
+              line-height: 18.2px; } }
     .c-news--head .c-news--head-meta .c-news--author {
       text-transform: uppercase;
       display: inline-block;
@@ -1278,26 +1282,6 @@ strong {
       line-height: 1em; }
   .c-news--head .field-name-field-issues {
     padding: 0; }
-
-.c-block {
-  font-family: "Adelle Light", serif;
-  line-height: 1.5em;
-  color: #666666; }
-  .c-block .field--name-body .field__label {
-    display: none; }
-  .c-block p {
-    font-size: 16px;
-    line-height: 1.5em;
-    margin: 0; }
-    @media screen and (min-width: 768px) {
-      .c-block p {
-        font-size: 20px;
-        line-height: 32px; } }
-  .c-block p + p {
-    margin-top: 20px; }
-    @media screen and (min-width: 768px) {
-      .c-block p + p {
-        margin-top: 40px; } }
 
 .c-news--download {
   display: block; }

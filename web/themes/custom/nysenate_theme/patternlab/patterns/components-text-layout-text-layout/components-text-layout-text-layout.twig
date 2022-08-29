@@ -14,7 +14,7 @@
         </div>
       {% endfor %}
     </div>
-    {% if link %}
+    {% if link is not empty %}
       <a href="{{ link.url }}" class="c-container--link">{{ link.text }}</a>
     {% endif %}
   </div>

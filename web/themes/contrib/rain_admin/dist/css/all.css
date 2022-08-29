@@ -333,7 +333,8 @@ body.cke_editable {
   .breadcrumb li {
     align-items: center;
     color: #012635;
-    display: flex; }
+    display: flex;
+    font-size: 0.75rem; }
     .breadcrumb li::before {
       background-image: url("../images/icon-details-arrow--blue.svg");
       background-position: center;
@@ -553,6 +554,16 @@ body.cke_editable {
     .content-field__content a:hover, .content-field__content a:active {
       text-decoration: none; }
 
+.rain-admin-theme.path-clone .content-form__advanced {
+  background: inherit; }
+  .rain-admin-theme.path-clone .content-form__advanced .button--primary {
+    max-width: 400px; }
+  .rain-admin-theme.path-clone .content-form__advanced .content-form__advanced-actions {
+    padding: 0; }
+  .rain-admin-theme.path-clone .content-form__advanced .content-form__advanced-settings,
+  .rain-admin-theme.path-clone .content-form__advanced .content-form__document-settings-container {
+    display: none; }
+
 .rain-admin-theme .content-form__main > details[open] {
   background-color: #fafbfe;
   border-color: #019cb6;
@@ -603,6 +614,7 @@ body.cke_editable {
   top: 90px !important; }
 
 .js .rain-admin-theme.advanced-sidebar-tray .content-form__advanced {
+  display: block;
   background-color: #f4f6f9;
   box-shadow: -1px 0 6px 1px #d8d8d8;
   border: 1px solid #cbcbcb;
@@ -1106,19 +1118,7 @@ body.cke_editable {
 
 .js .rain-admin-theme .field-multiple-table thead,
 .rain-admin-theme .field-multiple-table thead {
-  position: relative;
-  height: 60px; }
-  .js .rain-admin-theme .field-multiple-table thead th,
-  .rain-admin-theme .field-multiple-table thead th {
-    padding-top: 0;
-    padding-bottom: 0; }
-  .js .rain-admin-theme .field-multiple-table thead .tabledrag-toggle-checkbox-wrapper button,
-  .rain-admin-theme .field-multiple-table thead .tabledrag-toggle-checkbox-wrapper button {
-    position: absolute;
-    top: 0; }
-  .js .rain-admin-theme .field-multiple-table thead .field-label .label,
-  .rain-admin-theme .field-multiple-table thead .field-label .label {
-    display: none; }
+  display: none; }
 
 .js .rain-admin-theme .field-multiple-table tr.draggable,
 .js .rain-admin-theme .field-multiple-table tr.draggable:hover,
@@ -1504,6 +1504,9 @@ tr .image-widget-data .form-item {
   .page-title em {
     font-style: normal; }
 
+.rain-admin-theme .paragraph-bullet {
+  display: none; }
+
 .rain-admin-theme .paragraph-type-label {
   font-style: italic; }
 
@@ -1531,13 +1534,6 @@ tr .image-widget-data .form-item {
 
 .rain-admin-theme .paragraphs-actions {
   margin-bottom: 5px; }
-  .rain-admin-theme .paragraphs-actions .button[value='Remove'],
-  .rain-admin-theme .paragraphs-actions .button[value='Remove']:focus,
-  .rain-admin-theme .paragraphs-actions .button[value='Remove']:hover {
-    background-color: #d8d8d8;
-    border-color: #d8d8d8;
-    color: #717171;
-    padding: 15px 25px; }
   .rain-admin-theme .paragraphs-actions .button + .button {
     margin-left: 10px; }
   .rain-admin-theme .paragraphs-actions .paragraphs-dropdown-toggle {
@@ -1546,6 +1542,14 @@ tr .image-widget-data .form-item {
     top: 5px; }
   .rain-admin-theme .paragraphs-actions .paragraphs-dropdown-actions {
     top: 43px; }
+    .rain-admin-theme .paragraphs-actions .paragraphs-dropdown-actions .button,
+    .rain-admin-theme .paragraphs-actions .paragraphs-dropdown-actions .button:focus,
+    .rain-admin-theme .paragraphs-actions .paragraphs-dropdown-actions .button:hover {
+      background-color: #d8d8d8;
+      border-color: #d8d8d8;
+      color: #717171;
+      padding: 15px 25px;
+      margin-left: 0 !important; }
 
 .rain-admin-theme .paragraphs-add-wrapper.button {
   margin-left: 60px;
@@ -1577,6 +1581,10 @@ tr .image-widget-data .form-item {
 .rain-admin-theme .paragraphs-browser-paragraph-type div {
   margin-bottom: 2rem; }
 
+.rain-admin-theme .paragraphs-features__delete-confirmation .button {
+  margin-right: 0;
+  margin-left: 0; }
+
 .system-modules td {
   vertical-align: middle; }
 
@@ -1589,7 +1597,7 @@ table tbody tr:hover {
 table.ief-entity-table tr td:not([class]) > div.table__cell-wrapper > div.ief-entity-operations {
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   display: grid;
-  grid-gap: 8px; }
+  grid-gap: 2px; }
   table.ief-entity-table tr td:not([class]) > div.table__cell-wrapper > div.ief-entity-operations input[type='submit'] {
     margin: 0px; }
   table.ief-entity-table tr td:not([class]) > div.table__cell-wrapper > div.ief-entity-operations input[type='submit'] + div.ajax-progress {

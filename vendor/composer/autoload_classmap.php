@@ -481,6 +481,8 @@ return array(
     'Doctrine\\Common\\Reflection\\StaticReflectionParser' => $vendorDir . '/doctrine/reflection/lib/Doctrine/Common/Reflection/StaticReflectionParser.php',
     'Doctrine\\Common\\Reflection\\StaticReflectionProperty' => $vendorDir . '/doctrine/reflection/lib/Doctrine/Common/Reflection/StaticReflectionProperty.php',
     'Doctrine\\Common\\Reflection\\TypedNoDefaultReflectionProperty' => $vendorDir . '/doctrine/reflection/lib/Doctrine/Common/Reflection/TypedNoDefaultReflectionProperty.php',
+    'Doctrine\\Deprecations\\Deprecation' => $vendorDir . '/doctrine/deprecations/lib/Doctrine/Deprecations/Deprecation.php',
+    'Doctrine\\Deprecations\\PHPUnit\\VerifyDeprecations' => $vendorDir . '/doctrine/deprecations/lib/Doctrine/Deprecations/PHPUnit/VerifyDeprecations.php',
     'Drupal' => $baseDir . '/web/core/lib/Drupal.php',
     'DrupalCodeGenerator\\ApplicationFactory' => $vendorDir . '/chi-teck/drupal-code-generator/src/ApplicationFactory.php',
     'DrupalCodeGenerator\\Asset' => $vendorDir . '/chi-teck/drupal-code-generator/src/Asset.php',

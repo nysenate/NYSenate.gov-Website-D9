@@ -4,10 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.media.image.field_image
+    - image.style.760x377
     - media.type.image
-    - responsive_image.styles.16_9_images
   module:
-    - responsive_image
+    - svg_image
 _core:
   default_config_hash: Pyq580AsIX5NVdYP57-DmtQq09IcAVP3GFVYBX_ydZY
 id: media.image.default
@@ -16,11 +16,17 @@ bundle: image
 mode: default
 content:
   field_image:
-    type: responsive_image
+    type: image
     label: hidden
     settings:
-      responsive_image_style: 16_9_images
       image_link: ''
+      image_style: 760x377
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 0
     region: content

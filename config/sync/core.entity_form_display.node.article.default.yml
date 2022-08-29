@@ -27,7 +27,6 @@ dependencies:
     - field.field.node.article.field_subtitle
     - node.type.article
   module:
-    - block_field
     - datetime
     - field_group
     - inline_entity_form
@@ -344,13 +343,21 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_layout_components:
-    type: block_field_default
-    weight: 16
+    type: inline_entity_form_complex
+    weight: 26
     region: content
     settings:
-      plugin_id: ''
-      settings: {  }
-      configuration_form: full
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: true
+      allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: true
+      collapsed: true
+      revision: false
     third_party_settings: {  }
   field_majority_issue_tag:
     type: options_select

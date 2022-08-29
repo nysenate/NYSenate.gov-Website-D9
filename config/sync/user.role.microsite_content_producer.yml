@@ -3,38 +3,127 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - node.type.article
     - node.type.event
+    - node.type.in_the_news
     - node.type.petition
-    - taxonomy.vocabulary.senator
+    - node.type.promotional_banner
+    - node.type.public_hearing
+    - node.type.video
+    - node.type.webform
   module:
-    - block
     - field_permissions
-    - layout_builder
+    - filter
     - node
     - system
-    - taxonomy
     - toolbar
 id: microsite_content_producer
 label: 'Microsite Content Producer'
-weight: 2
+weight: 6
 is_admin: null
 permissions:
+  - 'Access Admin Link in Dashboard'
+  - 'access administration menu'
+  - 'access administration pages'
+  - 'access all webform results'
   - 'access content'
-  - 'access content overview'
-  - 'access taxonomy overview'
+  - 'access dashboard'
+  - 'access media browser'
+  - 'access own webform results'
+  - 'access own webform submissions'
+  - 'access site-wide contact form'
   - 'access toolbar'
-  - 'administer blocks'
-  - 'create and edit custom blocks'
+  - 'access user contact forms'
+  - 'add media from remote sources'
+  - 'administer nodes'
+  - 'allow disabling privatemsg'
+  - 'create advpoll content'
   - 'create article content'
+  - 'create chapter content'
   - 'create event content'
+  - 'create field_advpoll_featured'
   - 'create field_featured'
+  - 'create field_form_description'
+  - 'create files'
+  - 'create in_the_news content'
+  - 'create initiative content'
   - 'create petition content'
+  - 'create photo content'
+  - 'create press_release content'
+  - 'create promotional_banner content'
+  - 'create public_hearing content'
+  - 'create questionnaire content'
+  - 'create video content'
+  - 'create webform content'
+  - 'delete any promotional_banner content'
+  - 'delete any public_hearing content'
+  - 'delete own advpoll content'
+  - 'delete own article content'
+  - 'delete own chapter content'
+  - 'delete own in_the_news content'
+  - 'delete own initiative content'
+  - 'delete own petition content'
+  - 'delete own photo content'
+  - 'delete own press_release content'
+  - 'delete own promotional_banner content'
+  - 'delete own public_hearing content'
+  - 'delete own questionnaire content'
+  - 'delete own video content'
+  - 'delete own webform content'
+  - 'delete own webform submissions'
+  - 'edit any chapter content'
+  - 'edit any promotional_banner content'
+  - 'edit any public_hearing content'
+  - 'edit any senator content'
+  - 'edit meta tags'
+  - 'edit own advpoll content'
+  - 'edit own article content'
+  - 'edit own chapter content'
+  - 'edit own event content'
+  - 'edit own field_advpoll_featured'
   - 'edit own field_featured'
-  - 'edit terms in senator'
-  - 'view article revisions'
-  - 'view event revisions'
+  - 'edit own field_form_description'
+  - 'edit own in_the_news content'
+  - 'edit own initiative content'
+  - 'edit own petition content'
+  - 'edit own photo content'
+  - 'edit own press_release content'
+  - 'edit own promotional_banner content'
+  - 'edit own public_hearing content'
+  - 'edit own questionnaire content'
+  - 'edit own senator content'
+  - 'edit own video content'
+  - 'edit own webform content'
+  - 'edit own webform submissions'
+  - 'execute node_publish_action'
+  - 'execute node_save_action'
+  - 'execute node_unpublish_action'
+  - 'flag follow_committee'
+  - 'flag follow_group'
+  - 'flag follow_issue'
+  - 'flag follow_this_bill'
+  - 'flag sign_petition'
+  - 'read privatemsg'
+  - 'search content'
+  - 'unflag follow_committee'
+  - 'unflag follow_group'
+  - 'unflag follow_issue'
+  - 'unflag follow_this_bill'
+  - 'unflag sign_petition'
+  - 'use advanced search'
+  - 'use media wysiwyg'
+  - 'use text format full_html'
+  - 'view disqus comments'
+  - 'view field_chair'
+  - 'view field_form_description'
+  - 'view field_members'
+  - 'view field_promo_image'
+  - 'view own field_advpoll_featured'
+  - 'view own field_chair'
   - 'view own field_featured'
+  - 'view own field_form_description'
+  - 'view own field_members'
   - 'view own unpublished content'
-  - 'view petition revisions'
   - 'view the administration theme'
+  - 'write privatemsg'

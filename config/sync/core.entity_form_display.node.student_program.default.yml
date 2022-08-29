@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_form_mode.media.inline_entity
     - field.field.node.student_program.body
+    - field.field.node.student_program.field_accordion
     - field.field.node.student_program.field_article_author
     - field.field.node.student_program.field_attachment
     - field.field.node.student_program.field_date
@@ -41,6 +42,23 @@ content:
     weight: 11
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_accordion:
+    type: inline_entity_form_complex
+    weight: 26
+    region: content
+    settings:
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: true
+      allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: true
+      collapsed: true
+      revision: false
     third_party_settings: {  }
   field_article_author:
     type: string_textfield
@@ -117,6 +135,11 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

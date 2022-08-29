@@ -1,0 +1,174 @@
+uuid: 7d6dd417-cfab-4575-ba8e-1fae1b7a81bc
+langcode: en
+status: open
+dependencies: {  }
+weight: 0
+open: null
+close: null
+uid: 1
+template: false
+archive: false
+id: webform_6155671
+title: 'Freedom of Information Request Form'
+description: null
+category: null
+elements: |
+  hidden_anchor:
+    '#type': processed_text
+    '#format': full_html
+    '#text': ""
+    '#title': 'Hidden Anchor' 
+    '#description': ""
+  first_name:
+    '#type': textfield
+    '#title': 'First Name' 
+    '#description': ""
+    '#required': true
+  last_name:
+    '#type': textfield
+    '#title': 'Last Name' 
+    '#description': ""
+    '#required': true
+  email_address:
+    '#type': email
+    '#size': 20
+    '#title': 'Email Address' 
+    '#description': ""
+    '#required': true
+  fieldset_home_address:
+    '#type': fieldset
+    '#open': true
+    '#title': 'Home Address' 
+    '#description': ""
+    street_4:
+      '#type': textfield
+      '#title': 'Street' 
+      '#description': ""
+      '#required': true
+    city_4:
+      '#type': textfield
+      '#title': 'City' 
+      '#description': ""
+      '#required': true
+    state_4:
+      '#type': textfield
+      '#title': 'State' 
+      '#description': ""
+      '#required': true
+    zip_4:
+      '#type': textfield
+      '#title': 'Zip' 
+      '#description': ""
+      '#required': true
+  fieldset_business_address:
+    '#type': fieldset
+    '#open': true
+    '#title': 'Business Address (Optional)' 
+    '#description': ""
+    organization_9:
+      '#type': textfield
+      '#title': 'Organization' 
+      '#description': ""
+    street_9:
+      '#type': textfield
+      '#title': 'Street' 
+      '#description': ""
+    city_9:
+      '#type': textfield
+      '#title': 'City' 
+      '#description': ""
+    state_9:
+      '#type': textfield
+      '#title': 'State' 
+      '#description': ""
+    postal_code_9:
+      '#type': textfield
+      '#title': 'Postal Code' 
+      '#description': ""
+    phone_number_9:
+      '#type': textfield
+      '#title': 'Phone Number' 
+      '#description': ""
+  request_text:
+    '#type': textarea
+    '#title': 'To the best of your ability, please identify the New York State Senate documents you would like. Use record name, content, committee, date, etc.' 
+    '#description': ""
+    '#required': true
+  preferences:
+    '#type': radios
+    '#options':
+      email: 'Emailed to the address above as electronic files, if available in such form'
+      cd: 'Put on CD as electronic files, if available in such form'
+      papermail: 'Hard copies sent to the mailing address above'
+      paperpickup: 'In person at the Journal Clerk"s Offices in the Capital'
+    '#title': 'Please let us know how you would like your data' 
+    '#description': ""
+    '#required': true
+  contact:
+    '#type': radios
+    '#options':
+      yes: 'Yes, please contact me.'
+      no: 'No, please do not contact me.'
+    '#title': 'Contact me in writing if my request is denied for any reason with the legal basis for denial and with information on how to appeal' 
+    '#description': ""
+    '#required': true
+css: ''
+javascript: ''
+settings:
+  page: true
+  wizard_progress_bar: true
+  preview: 0
+  draft: '0'
+  draft_auto_save: false
+  confirmation_type: page
+  confirmation_url: ''
+  confirmation_message: ''
+  limit_total: null
+  limit_user: null
+  form_submit_label: ''
+  wizard_complete: 1
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+handlers:
+  email_1:
+    id: email
+    handler_id: email_1
+    label: 'Email 1'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 1
+    settings:
+      states:
+        - completed
+      to_mail: foil@nysenate.gov
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      from_mail: '[webform_submission:values:email_address:raw]'
+      from_options: {  }
+      from_name: default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: default
+      body: default
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: false
+      attachments: false
+      twig: false
+      theme_name: ''
+      parameters: {  }
+      debug: false
+variants: {  }

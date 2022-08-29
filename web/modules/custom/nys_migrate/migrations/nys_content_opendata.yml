@@ -1,0 +1,84 @@
+id: nys_content_opendata
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Node complete Open Data'
+
+source:
+  plugin: d7_node
+  node_type: open_data
+
+destination:
+  plugin: 'entity:node'
+  default_bundle: open_data
+
+process:
+  nid:
+    -
+      plugin: get
+      source: tnid
+
+  title:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: timestamp
+
+  field_date:
+    -
+      plugin: sub_process
+      source: field_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'U'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+
+  field_open_data_file:
+    -
+      plugin: sub_process
+      source: field_open_data_file
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: nys_media_file_opendata
+          source: fid
+          no_stub: true
+
+  field_open_date_type:
+    -
+      plugin: get
+      source: field_open_date_type
+
+  field_publication_date:
+    -
+      plugin: sub_process
+      source: field_publication_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'Y-m-d H:i:s'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+
+  field_body:
+    -
+      plugin: get
+      source: field_body

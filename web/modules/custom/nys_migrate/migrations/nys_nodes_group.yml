@@ -1,0 +1,34 @@
+# Migration Group for nodes
+id: nys_nodes_group
+label: Nodes Group
+description: Common config for node migrations
+
+# Here we add any default configuration settings to be shared
+# among all migrations in the group.
+shared_configuration:
+  source:
+    key: migrate
+
+  process:
+    nid: nid
+    type: type
+    title: title
+    uid:
+      plugin: migration_lookup
+      source: node_uid
+      migration: nys_user
+
+    status: status
+    created: created
+    changed: changed
+    comment: comment
+    promote: promote
+    sticky: sticky
+
+  migration_dependencies:
+    required:
+      - nys_senate_gov_taxonomy_term_issues
+      - nys_senate_gov_taxonomy_term_senator
+      - nys_user
+
+  dependencies: { }

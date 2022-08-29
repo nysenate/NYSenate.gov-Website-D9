@@ -5,6 +5,7 @@ dependencies:
   config:
     - block_content.type.file_uploads
     - field.field.block_content.file_uploads.field_pdf
+    - field.field.block_content.file_uploads.field_title
 id: block_content.file_uploads.default
 targetEntityType: block_content
 bundle: file_uploads
@@ -18,6 +19,14 @@ content:
       link: false
     third_party_settings: {  }
     weight: 0
+    region: content
+  field_title:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
     region: content
 hidden:
   langcode: true

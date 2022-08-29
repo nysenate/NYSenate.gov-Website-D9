@@ -347,11 +347,19 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           break;
 
         case 'About':
-        case 'Newsroom':
-        case 'Legislation':
-        case 'Events':
-          // @todo Add extra title logic if needed.
           $nodeValues['title'] = 'About ' . $senator_name;
+          break;
+
+        case 'Newsroom':
+          $nodeValues['title'] = 'Newsroom';
+          break;
+
+        case 'Legislation':
+          $nodeValues['title'] = 'Legislation';
+          break;
+
+        case 'Events':
+          $nodeValues['title'] = 'Events ';
           break;
 
         case 'Our District':
@@ -359,7 +367,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           break;
 
         case 'Contact':
-          $nodeValues['title'] = 'About ' . $senator_name;
+          $nodeValues['title'] = 'Contact ' . $senator_name . "'s office";
           $senatorContactBlock = \Drupal::service('entity_type.manager')->getStorage('block_content')->loadByProperties([
             'type' => 'microsite_contact_webform',
             'status' => 1,

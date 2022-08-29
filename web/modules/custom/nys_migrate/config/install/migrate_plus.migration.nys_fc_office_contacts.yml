@@ -1,0 +1,50 @@
+id: nys_fc_office_contacts
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Field Collection Content'
+migration_group: migrate_drupal_7
+label: 'Field Collections (Office contacts)'
+
+source:
+  plugin: d7_field_collection_item
+  field_name: field_office_contacts
+
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: office_contacts
+
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  parent_id:
+    -
+      plugin: get
+      source: parent_id
+  parent_type:
+    -
+      plugin: get
+      source: parent_type
+  parent_field_name:
+    -
+      plugin: get
+      source: field_name
+  field_office_contact_email:
+    -
+      plugin: get
+      source: field_office_contact_email
+  field_office_contact_name:
+    -
+      plugin: get
+      source: field_office_contact_name
+  field_office_contact_phone:
+    -
+      plugin: get
+      source: field_office_contact_phone
+
+  field_office_contact_title:
+    -
+      plugin: get
+      source: field_office_contact_title

@@ -1,0 +1,22 @@
+id: nys_chapter
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Chapters'
+
+source:
+  plugin: d7_node
+  node_type: chapter
+  key: migrate
+
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: accordion_item
+
+process:
+  field_title: title
+  field_body: body
+  created: created
+  changed: changed
+  type: 'accordion_item'

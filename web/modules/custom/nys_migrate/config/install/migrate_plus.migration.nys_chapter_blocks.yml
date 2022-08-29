@@ -1,0 +1,39 @@
+id: nys_chapter_blocks
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: nys_general
+label: 'Chapter Blocks'
+
+source:
+  plugin: chapters
+  key: migrate
+
+process:
+  field_title: title
+  field_accordion_item:
+    plugin: sub_process
+    source: chapter_nids
+    process:
+      target_id:
+        -
+          plugin: migration_lookup
+          migration: nys_chapter
+          source: value
+        -
+          plugin: extract
+          index:
+            - 0
+      target_revision_id:
+        -
+          plugin: migration_lookup
+          migration: nys_chapter
+          source: value
+        -
+          plugin: extract
+          index:
+            - 1
+
+destination:
+  plugin: 'entity:block_content'
+  default_bundle: accordion

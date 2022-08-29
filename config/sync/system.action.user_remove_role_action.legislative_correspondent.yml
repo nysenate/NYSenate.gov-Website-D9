@@ -1,0 +1,14 @@
+uuid: 17e6540f-c386-4352-84fe-b13b59c0ec4f
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.legislative_correspondent
+  module:
+    - user
+id: user_remove_role_action.legislative_correspondent
+label: 'Remove the Legislative Correspondent role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: legislative_correspondent

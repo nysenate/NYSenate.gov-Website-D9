@@ -124,12 +124,12 @@ process:
       plugin: location_to_geolocation
       source: field_address
   # Entity reference fields, has content migration dependencies.
-  field_top_issue:
-    -
-      plugin: sub_process
-      source: field_top_issue
-      process:
-        target_id: target_id
+  #field_top_issue:
+   # -
+   #   plugin: sub_process
+   #   source: field_top_issue
+   #   process:
+   #     target_id: target_id
   field_district:
     -
       plugin: sub_process
@@ -149,5 +149,5 @@ destination:
 migration_dependencies:
   required:
     - nys_user_roles
-    - nys_senate_gov_taxonomy_term_issues
+   # - nys_senate_gov_taxonomy_term_issues
   optional: {  }

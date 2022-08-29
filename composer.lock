@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c6f2c82ccdadb2f39df3e023dc2e5f3",
+    "content-hash": "ecb896d3a882cd1e096cb8ee89b93255",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6586,41 +6586,32 @@
         },
         {
             "name": "drupal/migrate_upgrade",
-            "version": "3.2.0",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/migrate_upgrade.git",
-                "reference": "8.x-3.2"
+                "reference": "4.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/migrate_upgrade-8.x-3.2.zip",
-                "reference": "8.x-3.2",
-                "shasum": "f7be28c9fa9e2c56db24fafaf4e9cd6815582aed"
+                "url": "https://ftp.drupal.org/files/projects/migrate_upgrade-4.0.0.zip",
+                "reference": "4.0.0",
+                "shasum": "710ba15d9adb998a3e1458808086ac7642f1ae9c"
             },
             "require": {
-                "drupal/core": "^8 || ^9",
-                "drupal/migrate_plus": "^4 || ^5",
-                "drush/drush": "^8 || ^9 || ^10",
-                "php": ">7.1"
-            },
-            "require-dev": {
-                "drupal/migrate_plus": "^5",
-                "drush/drush": "^10"
+                "drupal/core": ">=9",
+                "drupal/migrate_plus": ">=5",
+                "drush/drush": ">=9",
+                "php": ">7.3"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.2",
-                    "datestamp": "1588260599",
+                    "version": "4.0.0",
+                    "datestamp": "1650660030",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
-                    }
-                },
-                "drush": {
-                    "services": {
-                        "drush.services.yml": "^9 || ^10"
                     }
                 }
             },
@@ -19206,80 +19197,6 @@
                 "source": "https://github.com/FriendsOfBehat/MinkExtension/tree/2.3.1"
             },
             "time": "2018-02-06T15:36:30+00:00"
-        },
-        {
-            "name": "gitonomy/gitlib",
-            "version": "v1.3.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gitonomy/gitlib.git",
-                "reference": "33ae0a2e469accc19d1a06bed63ed93dbf368ae2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gitonomy/gitlib/zipball/33ae0a2e469accc19d1a06bed63ed93dbf368ae2",
-                "reference": "33ae0a2e469accc19d1a06bed63ed93dbf368ae2",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pcre": "*",
-                "php": "^5.6 || ^7.0 || ^8.0",
-                "symfony/polyfill-mbstring": "^1.7",
-                "symfony/process": "^3.4 || ^4.4 || ^5.0 || ^6.0"
-            },
-            "require-dev": {
-                "ext-fileinfo": "*",
-                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5.20 || ^9.5.9",
-                "psr/log": "^1.0"
-            },
-            "suggest": {
-                "ext-fileinfo": "Required to determine the mimetype of a blob",
-                "psr/log": "Required to use loggers for reporting of execution"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Gitonomy\\Git\\": "src/Gitonomy/Git/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Graham Campbell",
-                    "email": "hello@gjcampbell.co.uk",
-                    "homepage": "https://github.com/GrahamCampbell"
-                },
-                {
-                    "name": "Julien Didier",
-                    "email": "genzo.wm@gmail.com",
-                    "homepage": "https://github.com/juliendidier"
-                },
-                {
-                    "name": "Grégoire Pineau",
-                    "email": "lyrixx@lyrixx.info",
-                    "homepage": "https://github.com/lyrixx"
-                },
-                {
-                    "name": "Alexandre Salomé",
-                    "email": "alexandre.salome@gmail.com",
-                    "homepage": "https://github.com/alexandresalome"
-                }
-            ],
-            "description": "Library for accessing git",
-            "support": {
-                "issues": "https://github.com/gitonomy/gitlib/issues",
-                "source": "https://github.com/gitonomy/gitlib/tree/v1.3.6"
-            },
-            "funding": [
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/gitonomy/gitlib",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-08-05T09:17:13+00:00"
         },
         {
             "name": "instaclick/php-webdriver",

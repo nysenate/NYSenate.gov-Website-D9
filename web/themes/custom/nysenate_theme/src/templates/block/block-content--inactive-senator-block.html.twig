@@ -23,7 +23,7 @@
   <div class="block-content__content">
     {% block content %}
       {% include '@nysenate_theme/message-block/message-block.twig' with {
-        text : content['body'][0]['#text']|striptags,
+        text : content.body,
       } only %}
     {% endblock %}
 

@@ -11,8 +11,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  *
  * @MigrateSource(
  *   id = "file_entity",
- *   source_provider = "file",
- *   source_module = "nys_migrate"
+ *   source_provider = "file"
  * )
  */
 class FileEntity extends FieldableEntity {

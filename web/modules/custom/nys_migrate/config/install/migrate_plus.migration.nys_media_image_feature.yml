@@ -2,7 +2,7 @@ id: nys_media_image_feature
 migration_tags:
   - 'Drupal 7'
   - NYS Media
-migration_group: nys_files
+migration_group: nys_general
 label: 'Media: Image'
 
 source:
@@ -32,7 +32,7 @@ process:
       source: fid
 
 destination:
-  plugin: entity:media
+  plugin: 'entity:media'
   default_bundle: image
 
 migration_dependencies:

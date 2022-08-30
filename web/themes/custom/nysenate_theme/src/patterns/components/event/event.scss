@@ -6,7 +6,10 @@
 
   .nys-associated-topics {
     display: block;
-    margin-bottom: 30px;
+
+    @include breakpoint($bp-sm) {
+      margin-bottom: 30px;
+    }
   }
 
   .c-news--download .file > a {

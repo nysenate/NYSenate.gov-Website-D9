@@ -7,7 +7,7 @@
   display: none;
 }
 
-@include breakpoint($bp-md) {
+@media screen and (min-width: #{$desktopWidth}px) {
 
   .c-about--nav {
     transition: height 0.25s ease;

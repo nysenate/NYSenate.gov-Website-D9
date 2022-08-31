@@ -153,6 +153,17 @@
         {{ end_date|date("g:i A") }}
       {% endif %}
     </div>
+
+    {% if calendar_links %}
+    <div class="c-event-address addthisevent">
+      <span class="addthisevent_dropdown">
+        {% for key, link in calendar_links %}
+          <a href="{{ link }}">{{ key }}</a>
+        {% endfor %}
+      </span>
+    </div>
+    {% endif %}
+    
   </div>
 
   {% if field_issues or field_majority_issue_tag %}

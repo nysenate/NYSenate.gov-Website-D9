@@ -155,13 +155,9 @@
     </div>
 
     {% if calendar_links %}
-    <div class="c-event-address addthisevent">
-      <span class="addthisevent_dropdown">
-        {% for key, link in calendar_links %}
-          <a href="{{ link }}">{{ key }}</a>
-        {% endfor %}
-      </span>
-    </div>
+      {% include "@nysenate_theme/add-to-calendar/add-to-calendar.twig" with {
+        calendar_links: calendar_links
+      } only %}
     {% endif %}
     
   </div>

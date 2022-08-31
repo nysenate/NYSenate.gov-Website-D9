@@ -83,9 +83,11 @@
           {% endif %}
         </p>
 
-      
-
-
+        {% if calendar_links %}
+          {% include "@nysenate_theme/add-to-calendar/add-to-calendar.twig" with {
+            calendar_links: calendar_links
+          } only %}
+        {% endif %}
       </div>
     {% endif %}
 

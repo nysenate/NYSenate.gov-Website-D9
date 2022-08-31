@@ -1495,34 +1495,9 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   // Only generate the calendar links
   // if there's a start date.
   if (!empty($start_date)) {
-    $calendar_types = [
-      'ics' => 'Apple iCalendar',
-      'google' => 'Google',
-      'webOffice' => 'Outlook',
-      'webOutlook' => 'Outlook.com',
-      'yahoo' => 'Yahoo',
-    ];
-
-    $links = [];
-    $calendar_link_service = \Drupal::service('calendar_link.twig_extension');
-
-    $start_date = new DateTime($start_date);
-    $end_date = !empty($end_date) ? new DateTime($end_date) : $start_date;
-
-    foreach ($calendar_types as $key => $calendar) {
-      $link_text = $calendar_link_service->calendarLink(
-        $key,
-        $variables['node']->getTitle(),
-        $start_date,
-        $end_date,
-        $is_multiday,
-        $variables['content']['body'][0]['#text'],
-        $address,
-      );
-
-      $links[$calendar] = $link_text;
-    }
-    $variables['calendar_links'] = $links;
+    $title = $variables['node']->getTitle();
+    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
   }
 
 }
@@ -1586,10 +1561,97 @@ function nysenate_theme_preprocess_node__session(&$variables) {
     $location_url = $variables['content']['field_location'][0]['organization']['#value'] . ', ' . $address;
   }
 
+  // Only generate the calendar invite
+  // if there's start_date.
+  if (isset($start_date)) {
+    $title = $variables['node']->getTitle();
+    // Set up reference variables indicating if this event spans multiple days.
+    $is_multiday = FALSE;
+    if (!empty($start_date) && !empty($end_date)) {
+      $is_multiday = !($start_date->format('Ymd') == $end_date->format('Ymd'));
+    }
+    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
+  }
+
   $variables['location_url'] = !empty($location_url) ? urlencode($location_url) : urlencode($address);
   $variables['date_value'] = $date_value;
   $variables['video_status'] = $video_status;
   $variables['location'] = $address;
+}
+
+/**
+ * Method for generating the Add to Calendar links.
+ */
+function nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address) {
+  $links = [];
+  if (!empty($start_date)) {
+    $calendar_types = [
+      'ics' => 'Apple iCalendar',
+      'google' => 'Google',
+      'webOffice' => 'Outlook',
+      'webOutlook' => 'Outlook.com',
+      'yahoo' => 'Yahoo',
+    ];
+
+    $calendar_link_service = \Drupal::service('calendar_link.twig_extension');
+
+    if (!$start_date instanceof DateTime) {
+      $start_date = new DateTime($start_date);
+    }
+
+    if (empty($end_date)) {
+      $end_date = $start_date;
+    }
+
+    elseif (!empty($end_date) && !$end_date instanceof DateTime) {
+      $end_date = new DateTime($end_date);
+    }
+
+    foreach ($calendar_types as $key => $calendar) {
+      $link_text = $calendar_link_service->calendarLink(
+        $key,
+        $title,
+        $start_date,
+        $end_date,
+        $is_multiday,
+        $description,
+        $address,
+      );
+
+      $class = strtolower($key);
+      switch ($key) {
+        case 'ics':
+          $class = 'apple-cal';
+          break;
+
+        case 'webOffice':
+          $class = 'outlook';
+          break;
+
+        case 'webOutlook':
+          $class = 'outlookcom';
+          break;
+
+        default:
+          break;
+      }
+
+      $is_online = FALSE;
+      if (in_array($key, ['google', 'webOutlook', 'yahoo'])) {
+        $is_online = TRUE;
+      }
+
+      $links[] = [
+        'type' => $calendar,
+        'class' => $class,
+        'is_online' => $is_online,
+        'url' => $link_text,
+      ];
+    }
+  }
+
+  return $links;
 }
 
 /**

@@ -1,0 +1,14 @@
+<div class="add-event" id="add-to-calendar">
+  Add to Calendar
+  <ul id="add-to-calendar-dropdown" class="add-event__dropdown" aria-expanded="false" role="list">
+    {% for calendar_link in calendar_links %}
+      <li class="add-event__dropdown-item {{ calendar_link.class }}">
+        <a href="{{ calendar_link.url }}">{{ calendar_link.type }}
+        {% if calendar_link.is_online == true %}
+          <em>(online)</em>
+        {% endif %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

@@ -18,7 +18,7 @@ dependencies:
     - field.field.node.meeting.field_off_the_floor
     - field.field.node.meeting.field_paragraphs
     - field.field.node.meeting.field_transcript
-    - field.field.node.meeting.field_ustream_url
+    - field.field.node.meeting.field_ustream
     - field.field.node.meeting.field_video_redirect
     - field.field.node.meeting.field_video_status
     - field.field.node.meeting.field_yt
@@ -162,13 +162,12 @@ content:
     third_party_settings: {  }
     weight: 115
     region: content
-  field_ustream_url:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
+  field_ustream:
+    type: list_key
+    label: hidden
+    settings: {  }
     third_party_settings: {  }
-    weight: 111
+    weight: 120
     region: content
   field_video_redirect:
     type: string

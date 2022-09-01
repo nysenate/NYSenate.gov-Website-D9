@@ -1,0 +1,21 @@
+uuid: 773f9493-7096-4bf4-9868-9968d6d24509
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ustream
+    - node.type.session
+  module:
+    - options
+id: node.session.field_ustream
+field_name: field_ustream
+entity_type: node
+bundle: session
+label: 'Ustream Channel'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

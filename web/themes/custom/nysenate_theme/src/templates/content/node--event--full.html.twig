@@ -181,9 +181,9 @@
         } only
       %}
     </div>
-  {% elseif content.field_video_status[0]['#value'] == "streaming_live_now" and content.field_ustream_url[0] %}
+  {% elseif node.field_video_status.0.value == "streaming_live_now" and content.field_ustream[0]  %}
     <div class="c-block">
-      {{ field_ustream_url }}
+      {{ content.field_ustream }}
     </div>
   {% endif %}
 

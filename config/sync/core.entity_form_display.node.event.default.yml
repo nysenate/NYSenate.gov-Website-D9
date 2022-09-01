@@ -24,7 +24,7 @@ dependencies:
     - field.field.node.event.field_social_teaser
     - field.field.node.event.field_teleconference_id_number
     - field.field.node.event.field_teleconference_number
-    - field.field.node.event.field_ustream_url
+    - field.field.node.event.field_ustream
     - field.field.node.event.field_video_status
     - field.field.node.event.field_yt
     - node.type.event
@@ -102,7 +102,7 @@ third_party_settings:
       label: 'Promotion and Visibility'
       region: content
       parent_name: group_discoverability
-      weight: 12
+      weight: 35
       format_type: tabs
       format_settings:
         classes: 'group-promotion field-group-htabs'
@@ -133,7 +133,7 @@ third_party_settings:
       label: '  Committee Settings'
       region: content
       parent_name: group_promotion
-      weight: 33
+      weight: 34
       format_type: tab
       format_settings:
         classes: 'group-committee-settings field-group-htab'
@@ -144,8 +144,8 @@ third_party_settings:
         required_fields: true
     group_video_settings:
       children:
+        - field_ustream
         - field_yt
-        - field_ustream_url
         - field_video_status
       label: 'Event Video Settings'
       region: content
@@ -298,7 +298,7 @@ content:
     third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
-    weight: 10
+    weight: 34
     region: content
     settings:
       match_operator: CONTAINS
@@ -429,22 +429,21 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
-  field_ustream_url:
-    type: media_library_widget
+  field_ustream:
+    type: options_select
     weight: 28
     region: content
-    settings:
-      media_types: {  }
+    settings: {  }
     third_party_settings: {  }
   field_video_status:
     type: options_select
-    weight: 29
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
   field_yt:
     type: inline_entity_form_simple
-    weight: 26
+    weight: 29
     region: content
     settings:
       form_mode: inline_entity
@@ -457,18 +456,18 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   simple_sitemap:
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -489,7 +488,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 9
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -499,12 +498,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }

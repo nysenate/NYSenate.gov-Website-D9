@@ -229,7 +229,7 @@ pipelines:
             # - terminus connection:set "${SITE_ENV}" git
             # - terminus drush -n "${SITE_ENV}" -- site-install nysenate -y --site-name="${SITE_ENV}" --account-name="${ADMIN_USERNAME}" --account-mail="${ADMIN_EMAIL}" --account-pass="${ADMIN_PASSWORD}" --site-mail="${ADMIN_EMAIL}"
             # Alternately update existing site for each multidev
-            - DDEV_PROJECT=false ./scripts/hobson release:build Pantheon ${BITBUCKET_BRANCH} --release_branch=${PANTHEON_BRANCH}
+            - DDEV_PROJECT=false ./scripts/hobson release:build Pantheon ${BITBUCKET_BRANCH} --release_branch=${PANTHEON_BRANCH} --theme_build=themes/custom/nysenate_theme --gitignore=themes/custom/nysenate_theme/node_modules
             - DDEV_PROJECT=false ./scripts/hobson release:deploy Pantheon ${PANTHEON_BRANCH} -y
             - terminus multidev:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH} --no-files
             - terminus env:wake -n ${SITE_ENV}

@@ -280,6 +280,15 @@ heading:
     component:
       dist/css/heading.css: {}
 
+how-senate-works:
+  css:
+    component:
+      dist/css/how-senate-works.css: {}
+  js:
+    dist/js/how-senate-works.es6.js: {}
+  dependencies:
+    - nysenate_theme/hammer
+
 latest-news:
   css:
     component:
@@ -299,6 +308,13 @@ l-flex:
   css:
     component:
       dist/css/l-flex.css: {}
+
+landing-page-hero:
+  css:
+    component:
+      dist/css/landing-page-hero.css: {}
+  dependencies:
+    - nysenate_theme/hero
 
 map:
   css:
@@ -563,10 +579,27 @@ slick:
     - core/jquery.once
     - core/jquery
 
+sticky-nav:
+  css:
+    component:
+      dist/css/sticky-nav.css: {}
+  js:
+    dist/js/sticky-nav.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
 tabs:
   css:
     component:
       dist/css/tabs.css: {}
+
+taxonomy-term-issues:
+  css:
+    component:
+      dist/css/taxonomy-term-issues.css: {}
 
 text-layout:
   css:
@@ -597,3 +630,8 @@ media-library:
   css:
     component:
       dist/css/media-library.css: {}
+
+want-to:
+  css:
+    component:
+      dist/css/want-to.css: {}

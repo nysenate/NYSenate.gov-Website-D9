@@ -25,6 +25,7 @@
 #}
 {{ attach_library('nysenate_theme/newsroom-content') }}
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/taxonomy-term-issues') }}
 
 {%
   set classes = [
@@ -47,47 +48,49 @@
           </p>
         {% endif %}
 
-        <div class="c-detail--header-meta">
-            <!-- Check login state for action url -->
-          {% if not is_senator %}
-            {% if user and user.id is not same as(0) and senator %}
-              <p>Contact your Senator about this issue</p>
-              <a class="c-issue--contact-btn"
-                href="/user/dashboard/inbox/new?context=issue&issue_id={{ term.id }}">
-                  <div class="nys-senator--thumb">
-                    {{ senator_image }}
-                  </div>
-                  <span>contact {{ senator_name }}</span>
-              </a>
-
-            {% elseif logged_in and user_is_out_of_state %}
-              <p>Contact the Senate about this issue</p>
-              <a class="c-issue--contact-btn" href="/contact">
-                  <div class="nys-senator--thumb">
-                    {{ senator_image }}
-                  </div>
-                  <span>Contact Senate</span>
-              </a>
-            {% elseif not logged_in %}
-              <p>{{ 'Find and contact your Senator about this issue'|t }}</p>
-              <a href="registration/nojs/login" class="c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
+        <div class="taxonomy-issues__header-cta">
+          <div class="c-detail--header-meta header-meta">
+              <!-- Check login state for action url -->
+            {% if not is_senator %}
+              {% if user and user.id is not same as(0) and senator %}
+                <p class="eyebrow">Contact your Senator about this issue</p>
+                <a class="c-issue--contact-btn"
+                  href="/user/dashboard/inbox/new?context=issue&issue_id={{ term.id }}">
+                    <div class="nys-senator--thumb">
+                      {{ senator_image }}
+                    </div>
+                    <span>contact {{ senator_name }}</span>
+                </a>
+  
+              {% elseif logged_in and user_is_out_of_state %}
+                <p>Contact the Senate about this issue</p>
+                <a class="c-issue--contact-btn" href="/contact">
+                    <div class="nys-senator--thumb">
+                      {{ senator_image }}
+                    </div>
+                    <span>Contact Senate</span>
+                </a>
+              {% elseif not logged_in %}
+                <p>Find and contact your Senator about this issue</p>
+                <a href="registration/nojs/login" class="button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
+              {% endif %}
             {% endif %}
-          {% endif %}
-        </div>
-
-        <div class="c-detail--social">
-          <h3 class="c-detail--subhead">raise awareness</h3>
-          <ul>
-            <li><a target="_blank"
-                  href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url }}"
-                  class="c-detail--social-item facebook"></a></li>
-            <li><a target="_blank"
-                  href="https://twitter.com/intent/tweet?text={{ name[0]['#context']['value'] }} Via: @nysenate: {{ absolute_url }}"
-                  class="c-detail--social-item twitter"></a></li>
-            <li>
-                <a href="mailto:?&subject=From NYSenate.gov: {{ name[0]['#context']['value'] }}&body=Check out this issue: {{ name[0]['#context']['value'] }}: < {{ absolute_url }} >."
-                  class="c-detail--social-item email"></a></li>
-          </ul>
+          </div>
+  
+          <div class="c-detail--social header-social">
+            <h3 class="c-detail--subhead">raise awareness</h3>
+            <ul>
+              <li><a target="_blank"
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url }}"
+                    class="c-detail--social-item facebook"></a></li>
+              <li><a target="_blank"
+                    href="https://twitter.com/intent/tweet?text={{ name[0]['#context']['value'] }} Via: @nysenate: {{ absolute_url }}"
+                    class="c-detail--social-item twitter"></a></li>
+              <li>
+                  <a href="mailto:?&subject=From NYSenate.gov: {{ name[0]['#context']['value'] }}&body=Check out this issue: {{ name[0]['#context']['value'] }}: < {{ absolute_url }} >."
+                    class="c-detail--social-item email"></a></li>
+            </ul>
+          </div>
         </div>
 
         <div class="l-row c-block c-top-content-wrapper">
@@ -113,7 +116,7 @@
               </div>
               <div class="c-tab">
                 <input type="radio" name="language" value="#panel3" checked="checked">
-                <label class="c-tab-link">News</label>
+                <label class="c-tab-link">Events</label>
               </div>
           </dl>
           <div class="tabs-content">

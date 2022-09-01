@@ -17,6 +17,13 @@
     float: none;
   }
 
+  .c-legislation-block {
+
+    .nys-bill-status__sml li {
+      margin-top: -0.95em;
+    }
+  }
+
 
   @include breakpoint($bp-sm) {
     .odd,
@@ -38,6 +45,13 @@
     &.c-news-container .c-title {
       font-size: 16px;
       border-top: 1px solid $grey05;
+    }
+
+    .c-legislation-block {
+
+      .nys-bill-status__sml li {
+        margin-top: -14px;
+      }
     }
   
   }

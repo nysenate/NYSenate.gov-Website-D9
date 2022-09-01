@@ -434,6 +434,7 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
               $aliasEntity->save();
             }
             elseif ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About') {
+              /** @var \Drupal\node\Entity\Node $aboutNode */
               $aboutNode = $node;
             }
           }
@@ -499,10 +500,11 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
         && $aboutNode->hasField('field_block')
         && !$aboutNode->get('field_block')->isEmpty()) {
       // Iterates through each field block.
-      /** @var \Drupal\Core\Field\FieldItemInterface $value */
       foreach ($aboutNode->get('field_block') as $key => $value) {
+        /** @var \Drupal\Core\Entity\Plugin\DataType\EntityReference $entityReference */
+        $entityReference = $value->get('entity');
         /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-        $block_content = $value->getEntity();
+        $block_content = $entityReference->getTarget()->getValue();
 
         if ($block_content instanceof BlockContent) {
           // Sets inactiveText for former Senator page.

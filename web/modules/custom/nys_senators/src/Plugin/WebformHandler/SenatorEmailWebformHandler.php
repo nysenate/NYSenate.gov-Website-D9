@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_senators\Plugin\WebformHandler;
 
+use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
 use Drupal\webform\Plugin\WebformHandler\EmailWebformHandler;
 use Drupal\webform\WebformSubmissionInterface;
@@ -58,6 +59,17 @@ class SenatorEmailWebformHandler extends EmailWebformHandler {
         && !$senator_term->get('field_email')->isEmpty()) {
       $message['to_mail'] = $senator_term->field_email->value;
     }
+
+    // Gets address, city & zip values from webform submission.
+    $address = $webform_submission->getData()['address'] ?? '';
+    $city = $webform_submission->getData()['city'] ?? '';
+    $zip = $webform_submission->getData()['zip'] ?? '';
+
+    // Build SD postal address URL.
+    $find_senator_url = Url::fromUri('base:find-my-senator');
+    $find_senator_url->setAbsolute(TRUE);
+    $sd_url = $find_senator_url->toString() . '?search=true&addr1=' . urlencode($address) . '&city=' . urlencode($city) . '&zip5=' . urlencode($zip);
+    $message['body'] = preg_replace('/\[sd-placeholder\]/', $sd_url . '$1', $message['body']);
 
     return parent::sendMessage($webform_submission, $message);
   }

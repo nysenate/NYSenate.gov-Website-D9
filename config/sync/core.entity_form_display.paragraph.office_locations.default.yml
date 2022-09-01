@@ -1,0 +1,41 @@
+uuid: a3e8c86c-4daa-4279-a27f-5ef2b3231256
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.office_locations.field_fax
+    - field.field.paragraph.office_locations.field_office_address
+    - field.field.paragraph.office_locations.field_office_contact_phone
+    - paragraphs.paragraphs_type.office_locations
+  module:
+    - address
+    - telephone
+id: paragraph.office_locations.default
+targetEntityType: paragraph
+bundle: office_locations
+mode: default
+content:
+  field_fax:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_office_address:
+    type: address_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_office_contact_phone:
+    type: telephone_default
+    weight: 1
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

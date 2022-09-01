@@ -324,7 +324,7 @@
       font-family: $font-sans-bold;
       font-size: 14px;
 
-      &:before {
+      &::before {
         content: '';
         position: relative;
         display: inline-block;
@@ -343,7 +343,7 @@
       }
 
       &.active-trail {
-        &:after {
+        &::after {
           content: '';
           display: block;
           position: absolute;
@@ -394,7 +394,7 @@
     display: none;
   }
 
-	&:after {
+	&::after {
 		width: 100%;
 		margin-left: 1px;
 		font-size: 24px;
@@ -813,7 +813,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     @extend .med-text;
     @extend .icon-replace__search;
 
-    &:after {
+    &::after {
       width: 100%;
       padding: 0;
       line-height: 45px;

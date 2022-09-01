@@ -22,6 +22,7 @@
   .c-upcoming--header {
 
     .c-month-title {
+      font-weight: $font-weight-normal;
       color: $grey10;
     }
   }
@@ -53,6 +54,9 @@
     flex-direction: column;
     padding: 0;
 
+    .c-bill-num a {
+      color: $grey08;
+    }
 
     @include breakpoint($bp-sm) {
       flex-direction: row;
@@ -81,11 +85,18 @@
   }
   
   .c-bill-update--date {
+    @include font-stack-secondary;
     margin-right: 0.5em;
     display: inline;
+
+    @include breakpoint($bp-sm) {
+      font-size: 14px;
+      line-height: 18.2px;
+    }
   }
 
   .c-bill-update--location {
+    @include font-stack-secondary;
     margin: 0;
     display: inline;
 
@@ -94,10 +105,15 @@
       display: inline-block;
       margin-right: 0.5em;
     }
+
+    @include breakpoint($bp-sm) {
+      font-size: 14px;
+      line-height: 18.2px;
+    }
   }
 
   .more-link {
-    font-family: $font-sans;
+    @include font-stack-secondary;
     text-transform: uppercase;
     padding-bottom: 20px;
     position: relative;
@@ -206,6 +222,7 @@
   }
 
   .c-press-release--descript {
+    font-weight: $font-weight-normal;
     margin-bottom: 10px;
     font-size: 18px;
     line-height: 1.3em;
@@ -217,17 +234,17 @@
   }
 
   .c-press-release--senator {
+    @include font-stack-secondary;
     margin: 10px 0;
     color: $grey04;
-    font-family: $font-sans;
     font-size: 12px;
     line-height: 1em;
   }
 
   .c-press-release--date {
+    @include font-stack-secondary;
     margin: 0;
     color: $grey04;
-    font-family: $font-sans;
     font-size: 12px;
     line-height: 1em;
   }

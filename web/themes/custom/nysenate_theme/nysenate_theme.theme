@@ -1589,34 +1589,9 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   // Only generate the calendar links
   // if there's a start date.
   if (!empty($start_date)) {
-    $calendar_types = [
-      'ics' => 'Apple iCalendar',
-      'google' => 'Google',
-      'webOffice' => 'Outlook',
-      'webOutlook' => 'Outlook.com',
-      'yahoo' => 'Yahoo',
-    ];
-
-    $links = [];
-    $calendar_link_service = \Drupal::service('calendar_link.twig_extension');
-
-    $start_date = new DateTime($start_date);
-    $end_date = !empty($end_date) ? new DateTime($end_date) : $start_date;
-
-    foreach ($calendar_types as $key => $calendar) {
-      $link_text = $calendar_link_service->calendarLink(
-        $key,
-        $variables['node']->getTitle(),
-        $start_date,
-        $end_date,
-        $is_multiday,
-        $variables['content']['body'][0]['#text'],
-        $address,
-      );
-
-      $links[$calendar] = $link_text;
-    }
-    $variables['calendar_links'] = $links;
+    $title = $variables['node']->getTitle();
+    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
   }
 
 }

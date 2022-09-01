@@ -229,7 +229,9 @@ pipelines:
             # - terminus connection:set "${SITE_ENV}" git
             # - terminus drush -n "${SITE_ENV}" -- site-install nysenate -y --site-name="${SITE_ENV}" --account-name="${ADMIN_USERNAME}" --account-mail="${ADMIN_EMAIL}" --account-pass="${ADMIN_PASSWORD}" --site-mail="${ADMIN_EMAIL}"
             # Alternately update existing site for each multidev
-            - terminus build-env:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH} --yes --clone-content
+            - ./scripts/hobson release:build --release_branch
+            - ./scripts/hobson release:deploy
+            - terminus multidev:create --help
             - terminus env:wake -n ${SITE_ENV}
             - terminus connection:set "${SITE_ENV}" git
             - terminus remote:drush ${SITE_ENV} -- deploy -y

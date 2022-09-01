@@ -1,0 +1,14 @@
+uuid: 0e117393-b896-4da1-8990-d00a60e6f07e
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.senate_services
+  module:
+    - user
+id: user_add_role_action.senate_services
+label: 'Add the Senate Services role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: senate_services

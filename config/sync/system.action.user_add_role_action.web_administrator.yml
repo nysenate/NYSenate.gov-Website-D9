@@ -1,0 +1,14 @@
+uuid: 9e2de22f-14a4-4d6f-a1bf-6065294907b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.web_administrator
+  module:
+    - user
+id: user_add_role_action.web_administrator
+label: 'Add the Web Administrator role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: web_administrator

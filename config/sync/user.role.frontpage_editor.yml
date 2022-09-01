@@ -1,0 +1,40 @@
+uuid: f44fd256-ef1e-473c-870d-1e5336eb4e9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.article
+    - node.type.event
+    - node.type.landing
+    - node.type.promotional_banner
+    - node.type.public_hearing
+  module:
+    - node
+    - nys_access_permissions
+    - system
+    - toolbar
+id: frontpage_editor
+label: 'Frontpage Editor'
+weight: 2
+is_admin: null
+permissions:
+  - 'access content'
+  - 'access content overview'
+  - 'access toolbar'
+  - 'administer hero images'
+  - 'administer nodes'
+  - 'administer nys access permissions settings'
+  - 'create article content'
+  - 'create event content'
+  - 'create landing content'
+  - 'delete any event content'
+  - 'delete own event content'
+  - 'edit any event content'
+  - 'edit any promotional_banner content'
+  - 'edit any public_hearing content'
+  - 'edit own article content'
+  - 'edit own event content'
+  - 'edit own landing content'
+  - 'edit same role'
+  - 'view own unpublished content'
+  - 'view the administration theme'

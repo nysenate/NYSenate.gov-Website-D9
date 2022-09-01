@@ -5,7 +5,13 @@ dependencies:
   config:
     - node.type.article
     - node.type.event
+    - node.type.honoree
+    - node.type.in_the_news
     - node.type.petition
+    - node.type.promotional_banner
+    - node.type.public_hearing
+    - node.type.video
+    - node.type.webform
     - taxonomy.vocabulary.senator
   module:
     - block
@@ -30,7 +36,16 @@ permissions:
   - 'create event content'
   - 'create field_featured'
   - 'create petition content'
+  - 'edit own article content'
+  - 'edit own event content'
   - 'edit own field_featured'
+  - 'edit own honoree content'
+  - 'edit own in_the_news content'
+  - 'edit own petition content'
+  - 'edit own promotional_banner content'
+  - 'edit own public_hearing content'
+  - 'edit own video content'
+  - 'edit own webform content'
   - 'edit terms in senator'
   - 'view article revisions'
   - 'view event revisions'

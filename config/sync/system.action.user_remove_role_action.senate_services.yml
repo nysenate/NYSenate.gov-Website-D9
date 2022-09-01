@@ -1,0 +1,14 @@
+uuid: 5aa3356b-9a05-43c5-9c67-4cb667fee71a
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.senate_services
+  module:
+    - user
+id: user_remove_role_action.senate_services
+label: 'Remove the Senate Services role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: senate_services

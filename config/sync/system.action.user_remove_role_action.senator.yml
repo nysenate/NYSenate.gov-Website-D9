@@ -1,0 +1,14 @@
+uuid: d796e04b-80f6-4904-9eb7-3646180136c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.senator
+  module:
+    - user
+id: user_remove_role_action.senator
+label: 'Remove the Senator role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: senator

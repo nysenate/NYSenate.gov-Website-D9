@@ -4,13 +4,22 @@ status: true
 dependencies:
   config:
     - node.type.honoree
+    - node.type.video
   module:
     - node
     - nys_access_permissions
+    - system
+    - toolbar
 id: senate_services
 label: 'Senate Services'
 weight: 3
 is_admin: null
 permissions:
+  - 'access content overview'
+  - 'access toolbar'
+  - 'create honoree content'
+  - 'create video content'
   - 'edit any honoree content'
   - 'edit same role'
+  - 'view own unpublished content'
+  - 'view the administration theme'

@@ -79,7 +79,7 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
   // Chapter content if access is granted.
   // @todo Create the chapter content type.
   $is_mcp = in_array('microsite_content_producer', $account->getRoles());
-  if ($is_mcp && $operation == 'update' && $account->hasPermission('edit any chapter content') && !empty($has_senators)) {
+  if ($is_mcp && $operation == 'update' && $account->hasPermission('edit any chapter content')) {
     if ($node->bundle() == 'chapter') {
       return AccessResult::allowed();
     }
@@ -109,8 +109,8 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
     if ($is_mcp && $operation == 'update') {
       if ($node->hasField('field_committee') && !empty($node->field_committee->getValue())) {
         $committee = $node->field_committee->entity;
-        if ($senator_id = $committee->field_chair->target_id) {
-          if (_nys_access_permissions_user_is_senators_microsite_producer($senator_id, $account->id())) {
+        if ($committee->hasField('field_chair') && !empty($committee->field_chair->target_id)) {
+          if (_nys_access_permissions_user_is_senators_microsite_producer($committee->field_chair->target_id, $account->id())) {
             return AccessResult::allowed();
           }
         }

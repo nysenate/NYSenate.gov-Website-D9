@@ -1,4 +1,4 @@
-uuid: 9f109718-c61e-4e1d-ac5a-ee52524336bd
+uuid: 56d3f59c-14f3-4110-ad06-30d84e1d1e3f
 langcode: en
 status: open
 dependencies: {  }
@@ -21,6 +21,17 @@ elements: |
   address___zip_code:
     '#type': textfield
     '#title': 'Address / Zip Code' 
+    '#description': ""
+    '#required': true
+  e_mail:
+    '#type': email
+    '#size': 20
+    '#title': 'E-Mail' 
+    '#description': ""
+    '#required': true
+  phone_number:
+    '#type': textfield
+    '#title': 'Phone Number ' 
     '#description': ""
     '#required': true
   can_you_attend:

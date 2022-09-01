@@ -1,4 +1,4 @@
-uuid: d03e9de2-3a30-4a17-b2d8-cfb7abf38174
+uuid: 115bdb10-e2b3-4d2a-a201-94d71988c67a
 langcode: en
 status: open
 dependencies: {  }
@@ -67,15 +67,28 @@ elements: |
     '#type': radios
     '#options':
       Unemployment : 'Unemployment'
-      Covid-19: 'Covid-19'
-      Veterans: 'Veterans, Seniors, or First Responder Benefits'
-      Other: 'Other'
-    '#title': 'Would you like to be contacted by our office for assistance with any of the following?' 
+      Covid-19 : '  Covid-19'
+      Veterans, Seniors, or First Responder Benefits : ' Veterans, Seniors, or First Responder Benefits'
+      Other  : ' Other'
+    '#title': ' Would you like to be contacted by our office for assistance with any of the following?' 
     '#description': "(check boxes) if yes, please include your phone number on the return.\n"
   phone_number:
     '#title': 'Phone number' 
     '#description': ""
-
+    '#states':
+      visible:
+        ':input[name="would_you_like_to_be_contacted_by_our_office_for_assistance_with_any_of_the_following"]':
+          value: 'Unemployment '
+          
+        ':input[name="would_you_like_to_be_contacted_by_our_office_for_assistance_with_any_of_the_following"]':
+          value: 'Covid-19 '
+          
+        ':input[name="would_you_like_to_be_contacted_by_our_office_for_assistance_with_any_of_the_following"]':
+          value: 'Veterans, Seniors, or First Responder Benefits '
+          
+        ':input[name="would_you_like_to_be_contacted_by_our_office_for_assistance_with_any_of_the_following"]':
+          value: 'Other  '
+          
 css: ''
 javascript: ''
 settings:

@@ -167,3 +167,27 @@ process:
       plugin: senator_migrate_map_lookup
       migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator
+
+  field_layout_components:
+    -
+      plugin: subprocess
+      source: field_layout_components
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            migration: senator_offices
+            source: lid
+          -
+            plugin: extract
+            index:
+              - 0
+        target_revision_id:
+          -
+            plugin: migration_lookup
+            migration: senator_offices
+            source: lid
+          -
+            plugin: extract
+            index:
+              - 1

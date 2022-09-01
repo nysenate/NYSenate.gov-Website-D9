@@ -133,12 +133,27 @@ process:
 
   field_offices:
     -
-      plugin: location_to_address
+      plugin: sub_process
       source: field_offices
-  field_offices_geoloc:
-    -
-      plugin: location_to_geolocation
-      source: field_offices
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            migration: senator_offices
+            source: lid
+          -
+            plugin: extract
+            index:
+              - 0
+        target_revision_id:
+          -
+            plugin: migration_lookup
+            migration: senator_offices
+            source: lid
+          -
+            plugin: extract
+            index:
+              - 1
 
   field_message_notification_email:
     -

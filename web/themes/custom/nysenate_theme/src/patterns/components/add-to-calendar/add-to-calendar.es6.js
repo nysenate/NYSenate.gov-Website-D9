@@ -13,7 +13,7 @@
    */
   Drupal.behaviors.addToCalendar = {
     attach: function() {
-      const dropdownToggle = $('.add-to-calendar');
+      const dropdownToggle = $('.add-to-calendar__container');
 
       dropdownToggle.on('click', function () {
         const dropdownContent = $(this).find('.add-to-calendar__dropdown');

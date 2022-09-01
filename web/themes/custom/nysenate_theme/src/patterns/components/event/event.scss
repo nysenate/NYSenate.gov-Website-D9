@@ -1,6 +1,27 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.node--event-full {
+
+
+  .nys-associated-topics {
+    display: block;
+
+    @include breakpoint($bp-sm) {
+      margin-bottom: 30px;
+    }
+  }
+
+  .c-news--download .file > a {
+    margin-top: 0;
+
+    &::before {
+      font-size: 21px;
+      line-height: 12px;
+    }
+  }
+}
+
 .nys-event-title {
   margin-bottom: 20px;
   color: $grey08;

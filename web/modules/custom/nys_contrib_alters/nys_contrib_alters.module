@@ -9,21 +9,40 @@
  * Implements hook_form_FORM_ID_alter().
  */
 function nys_contrib_alters_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'node_session_form' || $form_id == 'node_public_hearing_form' || $form_id == 'node_school_form') {
+  if ($form_id == 'node_session_form' || $form_id == 'node_session_edit_form' ||
+    $form_id == 'node_event_form' || $form_id == 'node_event_edit_form' ||
+    $form_id === 'node_public_hearing_edit_form' || $form_id === 'node_public_hearing_form' ||
+    $form_id == 'node_school_form' || $form_id == 'node_school_edit_form') {
     $form['field_location']['widget'][0]['#after_build'][] = 'nys_contrib_alters_customize_address';
+    if (!empty($form_state->getUserInput())) {
+      $form['field_location']['widget'][0]['address']['#default_value']['administrative_area'] = $form_state->getUserInput()['field_location'][0]['address']['administrative_area'] ?? '';
+      $form['field_location']['widget'][0]['address']['#default_value']['locality'] = $form_state->getUserInput()['field_location'][0]['address']['locality'] ?? '';
+      $form['field_location']['widget'][0]['address']['#default_value']['postal_code'] = $form_state->getUserInput()['field_location'][0]['address']['postal_code'] ?? '';
+      $form['field_location']['widget'][0]['address']['#default_value']['address_line1'] = $form_state->getUserInput()['field_location'][0]['address']['address_line1'] ?? '';
+      $form['field_location']['widget'][0]['address']['#default_value']['address_line2'] = $form_state->getUserInput()['field_location'][0]['address']['address_line2'] ?? '';
+      $form['field_location']['widget'][0]['address']['#default_value']['organization'] = $form_state->getUserInput()['field_location'][0]['address']['organization'] ?? '';
+    }
   }
-  if (($form_id === 'node_public_hearing_form') || ($form_id === 'node_session_form') || ($form_id === 'node_event_form')) {
+  if (($form_id === 'node_public_hearing_form') ||
+    ($form_id === 'node_public_hearing_edit_form') ||
+    ($form_id === 'node_session_form') ||
+    ($form_id === 'node_session_edit_form') ||
+    ($form_id === 'node_event_form') ||
+    ($form_id === 'node_event_edit_form')) {
     unset($form['field_event_place']['widget']['#options']['cap']);
     unset($form['field_event_place']['widget']['#options']['lob']);
   }
-  if (($form_id === 'node_public_hearing_form') || ($form_id === 'node_meeting_form')) {
+  if (($form_id === 'node_public_hearing_form') ||
+    ($form_id === 'node_public_hearing_edit_form') ||
+    ($form_id === 'node_meeting_form') ||
+    ($form_id === 'node_meeting_edit_form')) {
     unset($form['field_event_place']['widget']['#options']['teleconference']);
   }
-  if ($form_id === 'node_meeting_form') {
+  if ($form_id === 'node_meeting_form' || $form_id === 'node_meeting_edit_form') {
     unset($form['field_event_place']['widget']['#options']['in_district']);
     unset($form['field_event_place']['widget']['#options']['in_albany']);
   }
-  if ($form_id === 'node_event_form') {
+  if ($form_id === 'node_event_form' || $form_id === 'node_event_edit_form') {
     unset($form['field_video_status']['widget']['#options']['cancelled']);
   }
 }

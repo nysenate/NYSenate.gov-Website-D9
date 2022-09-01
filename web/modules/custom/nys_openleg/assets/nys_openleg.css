@@ -1,12 +1,11 @@
-.page-legislation main.l-row--main {
+.path-legislation main.l-row--main {
   padding: 20px 0;
 }
 
 .nys-openleg-statute.nys-title {
-  font-size: 32px;
+  font-size: 18px;
   font-weight: 400;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 0 20px 0;
 }
 
 .nys-openleg-statute-container {
@@ -216,7 +215,6 @@
   width: fit-content;
   padding: 0 1em;
   font-family: 'Adelle SemiBold', serif;
-  margin: 0 0 0 1em;
 }
 
 .nys-openleg-history-published {
@@ -265,7 +263,6 @@
   padding: 20px 0 20px 20px;
   text-align: right;
   float: none;
-  border-left: 1px solid #AAAAAA;
 }
 
 .nys-openleg-result-tools .c-detail--social ul {
@@ -288,7 +285,7 @@
 
 .nys-openleg-result-tools .c-detail--social-item {
   display: block;
-  width: 60px;
+  width: 25px;
   height: 40px;
   background-color: #fff;
 }
@@ -410,4 +407,23 @@
 .nys-openleg-search-no-results {
   font-weight: bold;
   color: #f00;
+}
+
+
+@media screen and (min-width: 960px){
+  .nys-openleg-statute.nys-title {
+    font-size: 32px;
+  }
+
+  .nys-openleg-result-tools .c-detail--social {
+    border-left: 1px solid #AAAAAA;
+  }
+
+  .nys-openleg-result-tools .c-detail--social-item {
+    width: 60px;
+  }
+
+  .nys-openleg-history-container .form-item-history select {
+    margin: 0 0 0 1em;
+  }
 }

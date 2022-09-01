@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecb896d3a882cd1e096cb8ee89b93255",
+    "content-hash": "20bfca16ecfbfb750a742104d4ba0d35",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -9218,12 +9218,8 @@
                     "homepage": "https://www.drupal.org/u/graber"
                 },
                 {
-                    "name": "Jon Pugh",
-                    "homepage": "https://www.drupal.org/user/17028"
-                },
-                {
-                    "name": "bojanz",
-                    "homepage": "https://www.drupal.org/user/86106"
+                    "name": "Graber",
+                    "homepage": "https://www.drupal.org/user/1599440"
                 },
                 {
                     "name": "infojunkie",
@@ -9232,6 +9228,10 @@
                 {
                     "name": "joelpittet",
                     "homepage": "https://www.drupal.org/user/160302"
+                },
+                {
+                    "name": "Jon Pugh",
+                    "homepage": "https://www.drupal.org/user/17028"
                 }
             ],
             "description": "Adds an ability to perform bulk operations on selected entities from view results. Provides an API to create such operations.",
@@ -9503,6 +9503,66 @@
             "support": {
                 "source": "http://git.drupal.org/project/views_list_sort.git",
                 "issues": "https://www.drupal.org/project/issues/views_list_sort"
+            }
+        },
+        {
+            "name": "drupal/views_load_more",
+            "version": "2.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_load_more.git",
+                "reference": "2.0.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_load_more-2.0.0-alpha1.zip",
+                "reference": "2.0.0-alpha1",
+                "shasum": "badedb1750c0db3a168e3253ebedaf6eab44f0a3"
+            },
+            "require": {
+                "drupal/core": "^8.8.3 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-alpha1",
+                    "datestamp": "1625153330",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "attila.fekete",
+                    "homepage": "https://www.drupal.org/user/762986"
+                },
+                {
+                    "name": "baikho",
+                    "homepage": "https://www.drupal.org/user/2727459"
+                },
+                {
+                    "name": "ericduran",
+                    "homepage": "https://www.drupal.org/user/244460"
+                },
+                {
+                    "name": "m4olivei",
+                    "homepage": "https://www.drupal.org/user/410384"
+                },
+                {
+                    "name": "wjaspers",
+                    "homepage": "https://www.drupal.org/user/813890"
+                }
+            ],
+            "description": "A pager plugin for views. Gives users the option to add a \"more\" button to a view and have the results appended to existing results being displayed.",
+            "homepage": "https://www.drupal.org/project/views_load_more",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_load_more"
             }
         },
         {
@@ -23040,6 +23100,7 @@
         "drupal/video_embed_field_migrate": 20,
         "drupal/views_exclude_previous": 20,
         "drupal/views_field_view": 10,
+        "drupal/views_load_more": 15,
         "drupal/votingapi": 10,
         "mediacurrent/rain_admin": 10,
         "mediacurrent/rain_demo": 10,

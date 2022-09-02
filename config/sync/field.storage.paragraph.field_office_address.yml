@@ -1,0 +1,23 @@
+uuid: d2f30fbd-5a19-4b4c-8204-d5fecd50b101
+langcode: en
+status: true
+dependencies:
+  module:
+    - address
+    - field_permissions
+    - paragraphs
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: paragraph.field_office_address
+field_name: field_office_address
+entity_type: paragraph
+type: address
+settings: {  }
+module: address
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

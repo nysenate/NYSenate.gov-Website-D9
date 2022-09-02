@@ -1,31 +1,31 @@
-uuid: b417ef2d-c898-49e8-8908-cf82ec2a04ad
+uuid: d4553ec8-9a35-401e-a2b5-d227d6a95e6e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_school_address
-    - node.type.school
+    - field.storage.paragraph.field_office_address
+    - paragraphs.paragraphs_type.office_locations
   module:
     - address
-id: node.school.field_school_address
-field_name: field_school_address
-entity_type: node
-bundle: school
-label: 'School Address'
+id: paragraph.office_locations.field_office_address
+field_name: field_office_address
+entity_type: paragraph
+bundle: office_locations
+label: 'Office Address'
 description: ''
-required: true
+required: false
 translatable: false
 default_value:
   -
     langcode: null
     country_code: US
-    administrative_area: NY
-    locality: ''
+    administrative_area: null
+    locality: null
     dependent_locality: null
-    postal_code: ''
+    postal_code: null
     sorting_code: null
-    address_line1: ''
-    address_line2: ''
+    address_line1: null
+    address_line2: null
     organization: null
     given_name: null
     additional_name: null
@@ -42,9 +42,9 @@ settings:
       override: hidden
     familyName:
       override: hidden
-    organization:
-      override: hidden
     sortingCode:
+      override: hidden
+    dependentLocality:
       override: hidden
   fields: {  }
 field_type: address

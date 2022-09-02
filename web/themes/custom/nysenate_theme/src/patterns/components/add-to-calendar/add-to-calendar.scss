@@ -2,12 +2,6 @@
 @import '../../global/utils/init';
 
 .add-to-calendar {
-  
-  @include breakpoint($bp-sm) {
-    float: right;
-    clear: right;
-    width: 300px;
-  }
 
   &__container {
     display: inline-block;
@@ -80,20 +74,20 @@
     }
 
     &.apple-cal {
-      background-image: url("../images/apple.png");
+      background-image: url('../images/apple.png');
     }
 
     &.google {
-      background-image: url("../images/google.png");
+      background-image: url('../images/google.png');
     }
 
     &.outlook,
     &.outlookcom {
-      background-image: url("../images/windows.png");
+      background-image: url('../images/windows.png');
     }
 
     &.yahoo {
-      background-image: url("../images/yahoo.png");
+      background-image: url('../images/yahoo.png');
     }
   }
 }
@@ -101,6 +95,12 @@
 .c-event-block--featured .add-to-calendar,
 .c-event-block--featured-image .add-to-calendar {
   margin-top: 20px;
+    
+  @include breakpoint($bp-sm) {
+    float: right;
+    clear: right;
+    width: 300px;
+  }
 }
 
 .c-event-block--featured .add-to-calendar {

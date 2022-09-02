@@ -21,7 +21,7 @@
         $(this).toggleClass('active');
 
         dropdownContent.attr('aria-expanded', function(index, attr) {
-          return attr === true ? false : true;
+          return attr === 'true' ? 'false' : 'true';
         });
         dropdownContent.toggleClass('active');
       });

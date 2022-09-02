@@ -19,7 +19,9 @@
           <h4 class="c-stat">{{ fact.statistic }}</h4>
           <p class="c-stat--descript">{{ fact.description }}</p>
         </a>
-        <span class="c-stat--illus c-illus__{{ fact.status }}"></span>
+        {% if fact.status %}
+          <span class="c-stat--illus c-illus__{{ fact.status }}"></span>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>

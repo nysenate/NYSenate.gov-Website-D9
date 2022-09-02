@@ -44,7 +44,7 @@
         <h2 class="nys-title">{{ name }}</h2>
         {% if flag_count %}
           <p class="c-issue--followers">
-            <span>{{ flag_count }}</span> followers
+            <span>{{ flag_count }}</span> {{ 'followers'|t }}
           </p>
         {% endif %}
 
@@ -53,7 +53,7 @@
               <!-- Check login state for action url -->
             {% if not is_senator %}
               {% if user and user.id is not same as(0) and senator %}
-                <p class="eyebrow">Contact your Senator about this issue</p>
+                <p class="eyebrow">{{ 'Contact your Senator about this issue'|t }}</p>
                 <a class="c-issue--contact-btn"
                   href="/user/dashboard/inbox/new?context=issue&issue_id={{ term.id }}">
                     <div class="nys-senator--thumb">
@@ -63,22 +63,22 @@
                 </a>
   
               {% elseif logged_in and user_is_out_of_state %}
-                <p>Contact the Senate about this issue</p>
+                <p>{{ 'Contact the Senate about this issue'|t }}</p>
                 <a class="c-issue--contact-btn" href="/contact">
                     <div class="nys-senator--thumb">
                       {{ senator_image }}
                     </div>
-                    <span>Contact Senate</span>
+                    <span>{{ 'Contact Senate'|t }}</span>
                 </a>
               {% elseif not logged_in %}
-                <p>Find and contact your Senator about this issue</p>
+                <p>{{ 'Find and contact your Senator about this issue'|t }}</p>
                 <a href="registration/nojs/login" class="button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
               {% endif %}
             {% endif %}
           </div>
   
           <div class="c-detail--social header-social">
-            <h3 class="c-detail--subhead">raise awareness</h3>
+            <h3 class="c-detail--subhead">{{ 'raise awareness'|t }}</h3>
             <ul>
               <li><a target="_blank"
                     href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url }}"
@@ -108,15 +108,15 @@
               <div class="c-tab--arrow u-mobile-only"></div>
               <div class="c-tab active">
                 <input type="radio" name="language" value="#panel1" checked="checked">
-                <label class="c-tab-link">News</label>
+                <label class="c-tab-link">{{ 'News'|t }}</label>
               </div>
               <div class="c-tab">
                 <input type="radio" name="language" value="#panel2" checked="checked">
-                <label class="c-tab-link">Legislation</label>
+                <label class="c-tab-link">{{ 'Legislation'|t }}</label>
               </div>
               <div class="c-tab">
                 <input type="radio" name="language" value="#panel3" checked="checked">
-                <label class="c-tab-link">Events</label>
+                <label class="c-tab-link">{{ 'Events'|t }}</label>
               </div>
           </dl>
           <div class="tabs-content">

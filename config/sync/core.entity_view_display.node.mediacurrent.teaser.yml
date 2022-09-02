@@ -1,0 +1,30 @@
+uuid: 6ea0843d-47c7-45c4-a160-4b3b8ad9d276
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.mediacurrent.field_list_listfomatter
+    - field.field.node.mediacurrent.field_listfomatter
+    - field.field.node.mediacurrent.field_taxonomy_listformatter
+    - field.field.node.mediacurrent.field_text_listfomatter
+    - node.type.mediacurrent
+  module:
+    - user
+id: node.mediacurrent.teaser
+targetEntityType: node
+bundle: mediacurrent
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_list_listfomatter: true
+  field_listfomatter: true
+  field_taxonomy_listformatter: true
+  field_text_listfomatter: true
+  langcode: true
+  search_api_excerpt: true

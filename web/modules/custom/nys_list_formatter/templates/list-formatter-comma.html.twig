@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Theme override to display a comma separated list.
+ *
+ * Available variables:
+ * - items: The field items.
+ * - separator: The separator string printed in between the items.
+ * - tag: Wrapper tag, configured in field formatter.
+ * - attributes: array of HTML attributes, intended to be added to the
+ *   wrapper tag (if configured).
+ * - comma_and: Boolean that checks whether the last item should be prepended
+ *   with 'and'. Configured in field formattter.
+ * - period: A '.' string when command_and is TRUE, otherwise an empty string.
+ *
+ * @see template_preprocess_list_formatter_comma()
+ */
+#}
+
+{% if tag %}
+  <{{ tag }}{{ attributes }}>
+{% endif %}
+
+{% if comma_and and items|length > 1 %}
+  {{ items|slice(0, -1)|safe_join(separator) }}{{ ' and ' }}{{ items|last }}{{ period }}
+{% else %}
+  {{ items|safe_join(separator) }}{{ period }}
+{% endif %}
+
+{% if tag %}
+  </{{ tag }}>
+{% endif %}

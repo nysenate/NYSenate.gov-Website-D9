@@ -13,7 +13,7 @@ dependencies:
     - field.field.node.session.field_meeting_location
     - field.field.node.session.field_session_calendars
     - field.field.node.session.field_transcript
-    - field.field.node.session.field_ustream_url
+    - field.field.node.session.field_ustream
     - field.field.node.session.field_video_redirect
     - field.field.node.session.field_video_status
     - field.field.node.session.field_yt
@@ -109,12 +109,10 @@ content:
     third_party_settings: {  }
     weight: 10
     region: content
-  field_ustream_url:
-    type: entity_reference_entity_view
+  field_ustream:
+    type: list_key
     label: hidden
-    settings:
-      view_mode: default
-      link: true
+    settings: {  }
     third_party_settings: {  }
     weight: 15
     region: content

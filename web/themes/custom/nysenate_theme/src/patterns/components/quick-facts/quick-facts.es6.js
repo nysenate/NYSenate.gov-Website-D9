@@ -114,12 +114,12 @@
     },
     highlightUpTo: function() {
       $('.c-stats--container').each(function () {
-        var item = $(this).find('.c-stats--item');
-        var highlight = $(this).find('.c-stats--highlight');
+        const item = $(this).find('.c-stats--item');
+        const highlight = $(this).find('.c-stats--highlight');
 
         if ($(window).innerWidth() > 760 && $(this).hasClass('with-hover')) {
           $(item).on('mouseenter', function() {
-            var elem = $(this).children('.c-stat--illus');
+            const elem = $(this).children('.c-stat--illus');
 
             if (elem.hasClass('c-illus__signed')) {
               highlight.attr('class', 'c-stats--highlight highlight-first');

@@ -1,13 +1,6 @@
 {{ attach_library('nysenate_theme/transcript') }}
 
-{%
-  set classes = [
-    'node',
-    'node--transcript'
-  ]
-%}
-
-<section id="node-{{ node_id }}" class="{{ classes }}" {{ attributes }}>
+<section id="node-{{ node_id }}" class="node node--transcript" {{ attributes }}>
 
   {{ title_prefix }}
 
@@ -31,7 +24,7 @@
   </div>
 
   <pre class="c-bill-fulltext">
-    {{ field_ol_text }}
+    {{ content.field_ol_text[0]['#context']['value'] }}
   </pre>
 
 </section>

@@ -54,10 +54,25 @@ class SenatorEmailWebformHandler extends EmailWebformHandler {
 
     // Checks for senator email value and overrides email recipient.
     if ($senator_term instanceof TermInterface
-        && $senator_term->bundle() === 'senator'
-        && $senator_term->hasField('field_email')
-        && !$senator_term->get('field_email')->isEmpty()) {
-      $message['to_mail'] = $senator_term->field_email->value;
+        && $senator_term->bundle() === 'senator') {
+
+      $inquiry_type = $webform_submission->getData()['inquiry_type'];
+
+      switch ($inquiry_type) {
+        case 'general_inquiry':
+          if (!$senator_term->get('field_email')->isEmpty()
+            && $senator_term->hasField('field_email')) {
+            $message['to_mail'] = $senator_term->field_email->value;
+          }
+          break;
+
+        case 'press_inquiry':
+          if (!$senator_term->get('field_press_inquiries')->isEmpty()
+            && $senator_term->hasField('field_press_inquiries')) {
+            $message['to_mail'] = $senator_term->field_press_inquiries->value;
+          }
+          break;
+      }
     }
 
     // Gets address, city & zip values from webform submission.

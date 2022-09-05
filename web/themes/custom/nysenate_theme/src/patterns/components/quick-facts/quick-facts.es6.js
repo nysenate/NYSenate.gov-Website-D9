@@ -122,13 +122,13 @@
             const elem = $(this).children('.c-stat--illus');
 
             if (elem.hasClass('c-illus__signed')) {
-              highlight.attr('class', 'c-stats--highlight highlight-first');
+              highlight.addClass('c-stats--highlight highlight-first');
             }
             else if (elem.hasClass('c-illus__waiting')) {
-              highlight.attr('class', 'c-stats--highlight highlight-second');
+              highlight.addClass('c-stats--highlight highlight-second');
             }
             else if (elem.hasClass('c-illus__vetoed')) {
-              highlight.attr('class', 'c-stats--highlight highlight-third');
+              highlight.addClass('c-stats--highlight highlight-third');
             }
           });
         }

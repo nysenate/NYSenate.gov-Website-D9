@@ -2010,6 +2010,8 @@ function nysenate_theme_preprocess_node__event(&$variables) {
  */
 function nysenate_theme_preprocess_node__session(&$variables) {
   $date_value = [];
+  $start_date = NULL;
+  $end_date = NULL;
   if (isset($variables['content']['field_date_range'][0])) {
     // If date range has same values.
     if (isset($variables['content']['field_date_range'][0]['#text'])) {
@@ -2069,10 +2071,7 @@ function nysenate_theme_preprocess_node__session(&$variables) {
   if (isset($start_date)) {
     $title = $variables['node']->getTitle();
     // Set up reference variables indicating if this event spans multiple days.
-    $is_multiday = FALSE;
-    if (!empty($start_date) && !empty($end_date)) {
-      $is_multiday = !($start_date->format('Ymd') == $end_date->format('Ymd'));
-    }
+    $is_multiday = !($start_date->format('Ymd') == $end_date->format('Ymd'));
     $description = $variables['content']['body'][0]['#text'] ?? '';
     $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
   }

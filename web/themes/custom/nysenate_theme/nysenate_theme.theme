@@ -1326,10 +1326,11 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     }
   }
 
-  // @todo user_is_out_of_state() comes from nys_utils module.
-  // $variables['user_is_out_of_state'] = user_is_out_of_state($user);
-  // @todo user_is_senator() method comes from nys_utils module.
-  // $variables['is_senator'] = user_is_senator($user);
+  $variables['user'] = $user;
+  $variables['user_id'] = $user->id();
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
+  $variables['user_is_out_of_state'] = \Drupal::service('nys_users.user_helper')->isOutOfState($user);
+  $variables['is_senator'] = \Drupal::service('nys_users.user_helper')->isSenator($user);
   $variables['absolute_url'] = \Drupal::request()->getSchemeAndHttpHost() . $variables['url'];
 
   // Quick facts.

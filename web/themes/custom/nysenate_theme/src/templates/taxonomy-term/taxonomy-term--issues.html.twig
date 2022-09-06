@@ -52,7 +52,7 @@
           <div class="c-detail--header-meta header-meta">
               <!-- Check login state for action url -->
             {% if not is_senator %}
-              {% if user and user.id is not same as(0) and senator %}
+              {% if user and user_id is not same as(0) and senator %}
                 <p class="eyebrow">{{ 'Contact your Senator about this issue'|t }}</p>
                 <a class="c-issue--contact-btn"
                   href="/user/dashboard/inbox/new?context=issue&issue_id={{ term.id }}">

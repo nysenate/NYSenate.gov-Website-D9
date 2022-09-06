@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install file for the nys_comment module.
+ */
+
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_comment_uninstall() {
+  \Drupal::configFactory()->getEditable('system.action.ban_user_comment')->delete();
+
+  // Deleting field storage.
+  FieldStorageConfig::loadByName('user', 'field_user_banned_comments')->delete();
+}

@@ -75,16 +75,7 @@ function nys_access_permissions_entity_access(EntityInterface $entity, $operatio
  * Grant access to content on unique content basis.
  */
 function nys_access_permissions_node_access(NodeInterface $node, $operation, AccountInterface $account) {
-  // This is specifically for allowing MCP to edit other people's
-  // Chapter content if access is granted.
-  // @todo Create the chapter content type.
   $is_mcp = in_array('microsite_content_producer', $account->getRoles());
-  if ($is_mcp && $operation == 'update' && $account->hasPermission('edit any chapter content')) {
-    if ($node->bundle() == 'chapter') {
-      return AccessResult::allowed();
-    }
-  }
-
   if (is_object($node) && is_object($account)) {
     $edit_own = 'edit own ' . $node->bundle() . ' content';
     // If user has access to edit own content.
@@ -130,17 +121,6 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
         }
       }
       return AccessResult::forbidden();
-    }
-
-    // The node 143167 does not exist in D7 and D9, probably
-    // needs to remove this code.
-    if (in_array('foil_administrator', $account->getRoles()) && $operation == 'update') {
-      if ($node->id() == 143167) {
-        return AccessResult::allowed();
-      }
-      else {
-        return AccessResult::forbidden();
-      }
     }
 
     // Allow access to bulk operation's manipulation

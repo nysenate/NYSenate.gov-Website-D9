@@ -95,7 +95,7 @@ abstract class TemplatesManager {
       else {
         $msg = 'Call to SendGrid templates() failed.';
         \Drupal::logger('nys_sendgrid')
-          ->error($msg, ['%response' => $response]);
+          ->error($msg, ['%response' => $response->body()]);
 
         // Send to slack.
         if (!$slack_sent) {

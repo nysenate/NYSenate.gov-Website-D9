@@ -56,6 +56,28 @@ h3 {
   }
 }
 
+.c-block {
+  p {
+    font-family: $font-serif;
+    line-height: 1.5em;
+    color: $grey03;
+    font-size: 16px;
+  }
+}
+
+.c-detail--section-title {
+  overflow: hidden;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $grey05;
+  margin-bottom: 20px;
+  line-height: 1;
+
+  &.c-detail--subhead {
+    color: $grey08;
+    font-weight: 400;
+  }
+}
+
 .c-detail--download {
   display: block;
   margin-bottom: 20px;
@@ -151,19 +173,6 @@ h3 {
   }
 }
 
-// COMMON
-/*----------------------------------------
-/ IMAGE
-/----------------------------------------*/
-.c-img--caption {
-  margin: 0;
-  padding: 10px 20px 10px;
-  background: $grey06;
-  color: $grey08;
-  font-family: $font-sans;
-  @include font(12 18);
-}
-
 /*-------------------------------------
 /
 / LAYOUT - ROWS
@@ -177,7 +186,7 @@ h3 {
   width: 100%;
 
   &::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }

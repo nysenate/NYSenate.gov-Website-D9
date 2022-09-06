@@ -1,0 +1,21 @@
+uuid: b8691a75-dedd-4d98-838f-49f855754879
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ustream
+    - node.type.public_hearing
+  module:
+    - options
+id: node.public_hearing.field_ustream
+field_name: field_ustream
+entity_type: node
+bundle: public_hearing
+label: 'Ustream Channel'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -153,13 +153,6 @@
         {{ end_date|date("g:i A") }}
       {% endif %}
     </div>
-
-    {% if calendar_links %}
-      {% include "@nysenate_theme/add-to-calendar/add-to-calendar.twig" with {
-        calendar_links: calendar_links
-      } only %}
-    {% endif %}
-    
   </div>
 
   {% if field_issues or field_majority_issue_tag %}

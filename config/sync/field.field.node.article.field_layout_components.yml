@@ -4,8 +4,11 @@ status: true
 dependencies:
   config:
     - block_content.type.accordion
-    - block_content.type.card
+    - block_content.type.featured_bill
+    - block_content.type.featured_image
+    - block_content.type.file_uploads
     - block_content.type.media
+    - block_content.type.slider
     - block_content.type.text
     - field.storage.node.field_layout_components
     - node.type.article
@@ -26,8 +29,11 @@ settings:
   handler_settings:
     target_bundles:
       accordion: accordion
-      card: card
+      featured_bill: featured_bill
+      featured_image: featured_image
+      file_uploads: file_uploads
       media: media
+      slider: slider
       text: text
     sort:
       field: _none

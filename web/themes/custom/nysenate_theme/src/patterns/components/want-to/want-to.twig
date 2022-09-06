@@ -1,0 +1,16 @@
+{{ attach_library('nysenate_theme/want-to') }}
+
+<div class="c-block c-container c-container--want-to">
+  <div class="c-container--header">
+    <h2 class="c-container--title">{{ title }}</h2>
+  </div>
+
+  <div class="c-container--body">
+    {% for item in items %}
+      <div class="c-want-to--item c-want-to--item__{{ item.icon }}">
+        <p class="c-want-to--cta">{{ item.text }}</p>
+        <a href="{{ item.cta.url }}" class="c-block--btn">{{ item.cta.text }}</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>

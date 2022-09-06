@@ -1,10 +1,19 @@
-uuid: eca2fb12-cb1e-4b61-8162-719b2dd76e02
+uuid: 03d0aa48-ba10-4bdc-921a-806ee8313269
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - nys_migrate
+      - migrate_drupal
+      - migrate_tools
+_core:
+  default_config_hash: eKe3gJSnfz0EkqJM6Vu8lFETgm5u0ewqTaPeUZcTkXA
 id: nys_files
-label: nys_files
-description: ''
-source_type: null
+label: General
+description: 'Custom migration group for general file and media configurations.'
+source_type: 'Drupal 7'
 module: null
-shared_configuration: null
+shared_configuration:
+  source:
+    key: migrate

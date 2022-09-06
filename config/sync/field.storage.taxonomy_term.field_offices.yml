@@ -1,10 +1,11 @@
-uuid: b7cbd343-d040-483e-b339-a8a7cc8dfc80
+uuid: 7bdf00b0-3c94-44a3-90b2-d15d168c94d0
 langcode: en
 status: true
 dependencies:
   module:
-    - address
+    - entity_reference_revisions
     - field_permissions
+    - paragraphs
     - taxonomy
 third_party_settings:
   field_permissions:
@@ -12,11 +13,12 @@ third_party_settings:
 id: taxonomy_term.field_offices
 field_name: field_offices
 entity_type: taxonomy_term
-type: address
-settings: {  }
-module: address
+type: entity_reference_revisions
+settings:
+  target_type: paragraph
+module: entity_reference_revisions
 locked: false
-cardinality: 1
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

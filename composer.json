@@ -70,7 +70,7 @@
         "drupal/migrate_devel": "^2.0@alpha",
         "drupal/migrate_plus": "^5.2",
         "drupal/migrate_tools": "^5.1",
-        "drupal/migrate_upgrade": "^3.2",
+        "drupal/migrate_upgrade": "^4.0",
         "drupal/name": "^1.0@RC",
         "drupal/node_export": "^1.0@alpha",
         "drupal/oembed_providers": "^2.0",
@@ -94,6 +94,7 @@
         "drupal/views_field_view": "^1.0@beta",
         "drupal/views_infinite_scroll": "^2.0",
         "drupal/views_list_sort": "^1.4",
+        "drupal/views_load_more": "^2.0@alpha",
         "drupal/views_send": "^1.6",
         "drupal/votingapi": "^3.0@beta",
         "drupal/webform": "^6.1",
@@ -184,7 +185,8 @@
             "file-mapping": {
                 "[project-root]/.editorconfig": false,
                 "[project-root]/pantheon.upstream.yml": false,
-                "[project-root]/.gitattributes": false
+                "[project-root]/.gitattributes": false,
+                "[web-root]/sites/development.services.yml": false
             }
         },
         "installer-paths": {
@@ -220,6 +222,9 @@
             },
             "drupal/votingapi": {
                 "#3192657-2: Update drush command declaration with regard to options": "https://www.drupal.org/files/issues/2022-07-07/votingapi-3294809.patch"
+            },
+            "drupal/eva": {
+                "#3111965-2: Rendering empty text in a table causes empty text to be rendered twice": "https://www.drupal.org/files/issues/2020-02-07/eva-empty-text-3111965-2.patch"
             }
         }
     }

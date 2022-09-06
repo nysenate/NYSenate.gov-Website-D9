@@ -20,7 +20,11 @@
   .c-legislation-block {
 
     .nys-bill-status__sml li {
-      margin-top: -0.95em;
+      margin-top: -0.9em;
+
+      &.nys-bill-status--assem-sen .nys-bill-status > li:first-child {
+        top: 8px;
+      }
     }
   }
 
@@ -50,7 +54,7 @@
     .c-legislation-block {
 
       .nys-bill-status__sml li {
-        margin-top: -14px;
+        margin-top: -13px;
       }
     }
   

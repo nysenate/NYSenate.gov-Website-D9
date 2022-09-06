@@ -1,0 +1,144 @@
+{#
+/**
+ * @file
+ * Theme override to display a taxonomy term.
+ *
+ * Available variables:
+ * - url: URL of the current term.
+ * - name: (optional) Name of the current term.
+ * - content: Items for the content of the term (fields and description).
+ *   Use 'content' to print them all, or print a subset such as
+ *   'content.description'. Use the following code to exclude the
+ *   printing of a given child element:
+ *   @code
+ *   {{ content|without('description') }}
+ *   @endcode
+ * - attributes: HTML attributes for the wrapper.
+ * - page: Flag for the full page state.
+ * - term: The taxonomy term entity, including:
+ *   - id: The ID of the taxonomy term.
+ *   - bundle: Machine name of the current vocabulary.
+ * - view_mode: View mode, e.g. 'full', 'teaser', etc.
+ *
+ * @see template_preprocess_taxonomy_term()
+ */
+#}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/taxonomy-term-issues') }}
+
+{%
+  set classes = [
+    'taxonomy-term',
+    'vocabulary-' ~ term.bundle|clean_class,
+  ]
+%}
+<div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
+  {{ title_prefix }}
+  {% if name and not page %}
+    <h2><a href="{{ url }}">{{ name }}</a></h2>
+  {% endif %}
+  {{ title_suffix }}
+  <div class="content">
+    <div class="c-block c-detail--header">
+        <h2 class="nys-title">{{ name }}</h2>
+        {% if flag_count %}
+          <p class="c-issue--followers">
+            <span>{{ flag_count }}</span> {{ 'followers'|t }}
+          </p>
+        {% endif %}
+
+        <div class="taxonomy-issues__header-cta">
+          <div class="c-detail--header-meta header-meta">
+              <!-- Check login state for action url -->
+            {% if not is_senator %}
+              {% if user and user_id is not same as(0) and senator %}
+                <p class="eyebrow">{{ 'Contact your Senator about this issue'|t }}</p>
+                <a class="c-issue--contact-btn"
+                  href="/user/dashboard/inbox/new?context=issue&issue_id={{ term.id }}">
+                    <div class="nys-senator--thumb">
+                      {{ senator_image }}
+                    </div>
+                    <span>contact {{ senator_name }}</span>
+                </a>
+  
+              {% elseif logged_in and user_is_out_of_state %}
+                <p>{{ 'Contact the Senate about this issue'|t }}</p>
+                <a class="c-issue--contact-btn" href="/contact">
+                    <div class="nys-senator--thumb">
+                      {{ senator_image }}
+                    </div>
+                    <span>{{ 'Contact Senate'|t }}</span>
+                </a>
+              {% elseif not logged_in %}
+                <p>{{ 'Find and contact your Senator about this issue'|t }}</p>
+                <a href="registration/nojs/login" class="button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
+              {% endif %}
+            {% endif %}
+          </div>
+  
+          <div class="c-detail--social header-social">
+            <h3 class="c-detail--subhead">{{ 'raise awareness'|t }}</h3>
+            <ul>
+              <li><a target="_blank"
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url }}"
+                    class="c-detail--social-item facebook"></a></li>
+              <li><a target="_blank"
+                    href="https://twitter.com/intent/tweet?text={{ name[0]['#context']['value'] }} Via: @nysenate: {{ absolute_url }}"
+                    class="c-detail--social-item twitter"></a></li>
+              <li>
+                  <a href="mailto:?&subject=From NYSenate.gov: {{ name[0]['#context']['value'] }}&body=Check out this issue: {{ name[0]['#context']['value'] }}: < {{ absolute_url }} >."
+                    class="c-detail--social-item email"></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="l-row c-block c-top-content-wrapper">
+          {{ quick_facts }}
+
+          {{ senators_talking_about_this_issue }}
+
+          {{ petitions }}
+        </div>
+
+        <div class="newsroom-content l-row">
+          <h2 class="c-tab-block--title"
+              id="issuesUpdatesHeader">{{ name[0]['#context']['value'] ~ ' Updates' }}</h2>
+          <dl class="l-tab-bar" data-tab>
+              <div class="c-tab--arrow u-mobile-only"></div>
+              <div class="c-tab active">
+                <input type="radio" name="language" value="#panel1" checked="checked">
+                <label class="c-tab-link">{{ 'News'|t }}</label>
+              </div>
+              <div class="c-tab">
+                <input type="radio" name="language" value="#panel2" checked="checked">
+                <label class="c-tab-link">{{ 'Legislation'|t }}</label>
+              </div>
+              <div class="c-tab">
+                <input type="radio" name="language" value="#panel3" checked="checked">
+                <label class="c-tab-link">{{ 'Events'|t }}</label>
+              </div>
+          </dl>
+          <div class="tabs-content">
+            <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1">
+              {{ news }}
+            </div>
+
+            <div class="panel-pane pane-views pane-news-by-issue content" id="panel2">
+              {{ news_by_bill }}
+            </div>
+
+            <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
+              {{ meeting_by_issue }}
+            </div>
+          </div>
+        </div>
+
+        <div class="c-block l-row c-latest-issue-video">
+          <div class="panel-pane pane-views pane-news-by-issue content">
+            {{ video }}
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

@@ -15,7 +15,7 @@ dependencies:
     - field.field.node.public_hearing.field_location
     - field.field.node.public_hearing.field_meeting_location
     - field.field.node.public_hearing.field_transcript
-    - field.field.node.public_hearing.field_ustream_url
+    - field.field.node.public_hearing.field_ustream
     - field.field.node.public_hearing.field_video_redirect
     - field.field.node.public_hearing.field_video_status
     - field.field.node.public_hearing.field_yt
@@ -84,7 +84,7 @@ third_party_settings:
       children:
         - field_video_redirect
         - field_video_status
-        - field_ustream_url
+        - field_ustream
         - field_yt
       label: Video
       region: content
@@ -114,7 +114,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -163,7 +163,7 @@ content:
       placeholder_title: ''
     third_party_settings:
       conditional_fields:
-        4a58fdad-46e2-4549-97ed-5e57b48e2166:
+        69ac30e6-003c-424e-8c7a-32311f6648c1:
           entity_type: node
           bundle: public_hearing
           dependee: field_event_place
@@ -203,17 +203,17 @@ content:
     settings: {  }
     third_party_settings:
       conditional_fields:
-        82c9febc-7d78-448a-8a7c-7aaeb657a4fb:
+        3588e512-ea19-4021-ab89-12d9ac723338:
           entity_type: node
           bundle: public_hearing
           dependee: field_event_place
           settings:
-            state: '!visible'
+            state: visible
             condition: value
             grouping: AND
-            values_set: 1
+            values_set: 3
             value: ''
-            values: {  }
+            values: "in_albany\r\nin_district"
             value_form:
               -
                 value: online
@@ -238,15 +238,11 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_ustream_url:
-    type: entity_reference_autocomplete
+  field_ustream:
+    type: options_select
     weight: 9
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
   field_video_redirect:
     type: string_textfield
@@ -277,19 +273,24 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 10
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 13
+    weight: 15
     region: content
     settings:
       display_label: true
@@ -314,12 +315,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 11
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 12
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -2311,7 +2311,9 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
     $pointer = rawurlencode($variables['content']['field_ol_filename'][0]['#context']['value']);
   }
   else {
-    $pointer = date("Y-m-d\TH:i", $publish_date);
+    if (!empty($publish_date)) {
+      $pointer = date("Y-m-d\TH:i", $publish_date);
+    }
   }
 
   // Set a label indicating the type of transcript.
@@ -2320,5 +2322,9 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
   // Trailing slash is needed in the pdf url.
   $variables['pdf_url'] = $transcript_base_url . $pointer_type . '/' . $pointer . '/';
   $variables['node_id'] = $variables['node']->id();
-  $variables['transcript_title'] = $tx_type_field . ' - ' . date('F j, Y', $publish_date);
+  $title_date = '';
+  if (!empty($publish_date)) {
+    $title_date = date('F j, Y', $publish_date);
+  }
+  $variables['transcript_title'] = $tx_type_field . ' - ' . $title_date;
 }

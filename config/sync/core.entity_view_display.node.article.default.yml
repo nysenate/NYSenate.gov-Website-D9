@@ -13,7 +13,6 @@ dependencies:
     - field.field.node.article.field_committee
     - field.field.node.article.field_committee_featured
     - field.field.node.article.field_date
-    - field.field.node.article.field_featured
     - field.field.node.article.field_image_caption
     - field.field.node.article.field_image_hero
     - field.field.node.article.field_image_main
@@ -120,16 +119,6 @@ content:
       date_format: 'F j, Y'
     third_party_settings: {  }
     weight: 3
-    region: content
-  field_featured:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 12
     region: content
   field_image_caption:
     type: string

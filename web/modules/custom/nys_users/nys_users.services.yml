@@ -1,0 +1,7 @@
+services:
+  nys_users.user_helper:
+    class: Drupal\nys_users\UsersHelper
+    arguments:
+      - '@current_user'
+      - '@database'
+      - '@entity_type.manager'

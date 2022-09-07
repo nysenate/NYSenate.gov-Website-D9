@@ -38,6 +38,18 @@ accordion:
   js:
     dist/js/accordion.es6.js: {}
 
+add-to-calendar:
+  css:
+    component:
+      dist/css/add-to-calendar.css: {}
+  js:
+    dist/js/add-to-calendar.es6.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
 alert-box:
   css:
     component:
@@ -595,6 +607,11 @@ tabs:
   css:
     component:
       dist/css/tabs.css: {}
+
+taxonomy-term-issues:
+  css:
+    component:
+      dist/css/taxonomy-term-issues.css: {}
 
 text-layout:
   css:

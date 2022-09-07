@@ -16,8 +16,9 @@ use Symfony\Component\Validator\Constraint;
 class CommentsBanConstraint extends Constraint {
 
   /**
+   * Message for banned users.
+   *
    * @var string
-   *   Message for banned users.
    */
   public $userCommentBanned = 'You\'re not allowed to post this comment';
 

@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- *
+ * Controller class for nys_comment module.
  */
 class CommentController extends ControllerBase {
 
@@ -25,7 +25,7 @@ class CommentController extends ControllerBase {
   /**
    * The constructor method.
    *
-   * @param Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager class.
    */
   public function __construct(EntityTypeManagerInterface $entityTypeManager) {
@@ -48,13 +48,17 @@ class CommentController extends ControllerBase {
    *   A comment entity.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   The redirect response.
    */
   public function banUser(int $comment) {
     $comment = $this->entityTypeManager->getStorage('comment')
       ->load($comment);
 
-    $user = $comment->uid->entity;
-    $user->field_user_banned_comments = 1;
+    $uid = $comment->uid->target_id;
+    $user = $this->entityTypeManager->getStorage('user')
+      ->load($uid);
+
+    $user->set('field_user_banned_comments', 1);
     $user->save();
 
     $this->messenger()->addStatus($this->t('User banned.'));

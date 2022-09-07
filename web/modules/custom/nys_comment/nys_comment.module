@@ -30,6 +30,11 @@ function nys_comment_form_alter(&$form, FormStateInterface $form_state, $form_id
       }
     }
   }
+
+  if ($form_id == 'views_form_comment_page_unapproved') {
+    $form['header']['comment_bulk_form']['action']['#options']['ban_user_comment'] = t('Ban User');
+    $form['header']['comment_bulk_form']['action']['#options']['comment_publish_action'] = t('Approve');
+  }
 }
 
 /**
@@ -40,12 +45,16 @@ function nys_comment_entity_operation_alter(array &$operations, EntityInterface 
   if ($entityTypeId !== 'comment') {
     return;
   }
-  $commentType = $entity->bundle();
+
   $cid = $entity->id();
-  if ($commentType === 'default_comment') {
-    // @todo fix the operations button.
-    // The override should only apply to unapproved
-    // comments list.
+  /** @var \Drupal\comment\Entity\Comment; */
+  $comment = \Drupal::service('entity_type.manager')->getStorage('comment')
+    ->load($cid);
+  $commentType = $comment->bundle();
+  $status = $comment->status->value;
+  if ($commentType === 'default_comment' && $status == '0') {
+    // Override the operational links if the comment
+    // is unpublished.
     $operations = [];
 
     // Add approve operation.

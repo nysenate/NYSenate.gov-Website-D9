@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.promotional_banner.field_link_type
     - field.field.node.promotional_banner.field_promotional_banner_image
     - field.field.node.promotional_banner.field_promotional_content
+    - field.field.node.promotional_banner.field_senator_multiref
     - node.type.promotional_banner
   module:
     - link
@@ -75,6 +76,7 @@ content:
     region: content
 hidden:
   field_date: true
+  field_senator_multiref: true
   langcode: true
   links: true
   search_api_excerpt: true

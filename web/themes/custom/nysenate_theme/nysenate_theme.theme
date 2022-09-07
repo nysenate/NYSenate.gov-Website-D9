@@ -1945,23 +1945,23 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   $start_date = NULL;
   $end_date = NULL;
   // If the start and end date is the same,
-  // get the text straight from the field.
+  // set then end_date same as the start_date.
   if (isset($variables['content']['field_date_range'][0]['#text'])) {
-    $start_date = $variables['content']['field_date_range'][0]['#text'];
+    $start_date = new DateTime($variables['content']['field_date_range'][0]['#text']);
+    $end_date = $start_date;
   }
 
+  // If there's a start_date key, probably there's
+  // end_date key also.
   if (isset($variables['content']['field_date_range'][0]['start_date']['#text'])) {
-    $start_date = strtotime($variables['content']['field_date_range'][0]['start_date']['#text']);
-  }
-
-  if (isset($variables['content']['field_date_range'][0]['end_date']['#text'])) {
-    $end_date = strtotime($variables['content']['field_date_range'][0]['end_date']['#text']);
+    $start_date = new DateTime($variables['content']['field_date_range'][0]['start_date']['#text']);
+    $end_date = new DateTime($variables['content']['field_date_range'][0]['end_date']['#text']);
   }
 
   // Set up reference variables indicating if this event spans multiple days.
   $is_multiday = FALSE;
   if (!empty($start_date) && !empty($end_date)) {
-    $is_multiday = !(date('Ymd', $start_date) == date('Ymd', $end_date));
+    $is_multiday = !($start_date->format('Ymd') == $end_date->format('Ymd'));
   }
 
   $variables['is_multiday'] = $is_multiday;
@@ -1996,6 +1996,15 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     }
   }
   $variables['field_issues'] = $issues;
+
+  // Only generate the calendar links
+  // if there's a start date.
+  if (!empty($start_date)) {
+    $title = $variables['node']->getTitle();
+    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
+  }
+
 }
 
 /**
@@ -2003,6 +2012,8 @@ function nysenate_theme_preprocess_node__event(&$variables) {
  */
 function nysenate_theme_preprocess_node__session(&$variables) {
   $date_value = [];
+  $start_date = NULL;
+  $end_date = NULL;
   if (isset($variables['content']['field_date_range'][0])) {
     // If date range has same values.
     if (isset($variables['content']['field_date_range'][0]['#text'])) {
@@ -2057,10 +2068,86 @@ function nysenate_theme_preprocess_node__session(&$variables) {
     $location_url = $variables['content']['field_location'][0]['organization']['#value'] . ', ' . $address;
   }
 
+  // Only generate the calendar invite
+  // if there's start_date.
+  if (isset($start_date)) {
+    $title = $variables['node']->getTitle();
+    // Set up reference variables indicating if this event spans multiple days.
+    $is_multiday = !($start_date->format('Ymd') == $end_date->format('Ymd'));
+    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
+  }
+
   $variables['location_url'] = !empty($location_url) ? urlencode($location_url) : urlencode($address);
   $variables['date_value'] = $date_value;
   $variables['video_status'] = $video_status;
   $variables['location'] = $address;
+}
+
+/**
+ * Method for generating the Add to Calendar links.
+ */
+function nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address) {
+  $links = [];
+  $calendar_types = [
+    'ics' => 'Apple iCalendar',
+    'google' => 'Google',
+    'webOffice' => 'Outlook',
+    'webOutlook' => 'Outlook.com',
+    'yahoo' => 'Yahoo',
+  ];
+
+  $calendar_link_service = \Drupal::service('calendar_link.twig_extension');
+  // The end_date of the method calendarLink cannot
+  // be empty. Assign the start_date as the end_date
+  // if its empty.
+  if (empty($end_date)) {
+    $end_date = $start_date;
+  }
+
+  foreach ($calendar_types as $key => $calendar) {
+    $link_text = $calendar_link_service->calendarLink(
+      $key,
+      $title,
+      $start_date,
+      $end_date,
+      $is_multiday,
+      $description,
+      $address,
+    );
+
+    $class = strtolower($key);
+    switch ($key) {
+      case 'ics':
+        $class = 'apple-cal';
+        break;
+
+      case 'webOffice':
+        $class = 'outlook';
+        break;
+
+      case 'webOutlook':
+        $class = 'outlookcom';
+        break;
+
+      default:
+        break;
+    }
+
+    $is_online = FALSE;
+    if (in_array($key, ['google', 'webOutlook', 'yahoo'])) {
+      $is_online = TRUE;
+    }
+
+    $links[] = [
+      'type' => $calendar,
+      'class' => $class,
+      'is_online' => $is_online,
+      'url' => $link_text,
+    ];
+  }
+
+  return $links;
 }
 
 /**

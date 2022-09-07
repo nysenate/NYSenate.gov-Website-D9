@@ -218,6 +218,11 @@ function nys_senators_user_presave(UserInterface $user) {
       $user->set('field_senator_multiref', 0);
     }
   }
+
+  // The contact your senator component relies on field_address
+  // of the user entity. Invalidate the issues taxonomy
+  // term when updating the users.
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['taxonomy_term_list:issues']);
 }
 
 /**

@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.promotional_banner.field_link_type
     - field.field.node.promotional_banner.field_promotional_banner_image
     - field.field.node.promotional_banner.field_promotional_content
+    - field.field.node.promotional_banner.field_senator_multiref
     - node.type.promotional_banner
   module:
     - datetime
@@ -80,6 +81,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 107
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 109
     region: content
   links:
     settings: {  }

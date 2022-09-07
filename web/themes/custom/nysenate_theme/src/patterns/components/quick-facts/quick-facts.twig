@@ -1,6 +1,6 @@
 {{ attach_library('nysenate_theme/quick-facts') }}
 
-<div class="c-block c-stats--container c-senate-quick-facts--container {{ classes }}">
+<div class="c-block c-stats--container c-senate-quick-facts--container {{ modifier }} {{ classes }}">
   {{ title_prefix }}
   {{ title_suffix }}
     <div class="c-container--header">
@@ -14,7 +14,7 @@
 	</div>
   <ul id="js-carousel-about-stats" class="js-carousel c-carousel">
     {% for fact in facts %}
-      <li class="c-carousel--item c-stats--item">
+      <li class="c-carousel--item c-stats--item {% if fact.status %} with-icon {% endif %}">
         <a href="{{ fact.link }}">
           <h4 class="c-stat">{{ fact.statistic }}</h4>
           <p class="c-stat--descript">{{ fact.description }}</p>

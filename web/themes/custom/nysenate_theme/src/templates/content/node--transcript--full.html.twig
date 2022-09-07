@@ -1,0 +1,30 @@
+{{ attach_library('nysenate_theme/transcript') }}
+
+<section id="node-{{ node_id }}" class="node node--transcript" {{ attributes }}>
+
+  {{ title_prefix }}
+
+  <div class="c-news--head">
+    <h2 class="nys-title">
+      {% if transcript_title %}
+        {{ transcript_title }}
+      {% endif %}
+    </h2>
+    <div class="c-news--head-meta">
+      {% if field_senator %}
+        <p class="c-news--author">
+          {{ field_senator }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div>
+    <a href="{{ pdf_url }}" class="c-detail--download" target="_blank">{{ 'Download PDF'|t }}</a>
+  </div>
+
+  <pre class="c-bill-fulltext">
+    {{ content.field_ol_text[0]['#context']['value'] }}
+  </pre>
+
+</section>

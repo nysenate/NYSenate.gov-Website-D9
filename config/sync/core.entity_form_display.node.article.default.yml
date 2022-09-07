@@ -14,7 +14,6 @@ dependencies:
     - field.field.node.article.field_committee
     - field.field.node.article.field_committee_featured
     - field.field.node.article.field_date
-    - field.field.node.article.field_featured
     - field.field.node.article.field_image_caption
     - field.field.node.article.field_image_hero
     - field.field.node.article.field_image_main
@@ -286,31 +285,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_featured:
-    type: boolean_checkbox
-    weight: 7
-    region: content
-    settings:
-      display_label: true
-    third_party_settings:
-      conditional_fields:
-        e224d956-cf2e-448c-95bb-9ec60cd0c0d2:
-          entity_type: node
-          bundle: article
-          dependee: field_category
-          settings:
-            state: visible
-            condition: value
-            grouping: AND
-            values_set: 1
-            value: ''
-            values: {  }
-            value_form:
-              -
-                value: article
-            effect: show
-            effect_options: {  }
-            selector: ''
   field_image_caption:
     type: string_textfield
     weight: 4

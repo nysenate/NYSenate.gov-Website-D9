@@ -1,0 +1,22 @@
+uuid: 9ad0e293-69c1-4fa2-8f56-279ab659527e
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: questionnaire
+label: Questionnaire
+type: 'canonical_entities:node'
+pattern: 'questionnaires/[node:field_senator_multiref:0:entity:name]/[node:title]'
+selection_criteria:
+  e9b18094-00a4-404a-b5ad-38f616c0677b:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: e9b18094-00a4-404a-b5ad-38f616c0677b
+    context_mapping:
+      node: node
+    bundles:
+      webform: webform
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,22 @@
+uuid: 31958e0b-62b8-42ee-a26b-fb7c2d2baa2d
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: committees
+label: Committees
+type: 'canonical_entities:taxonomy_term'
+pattern: 'committees/[term:name]'
+selection_criteria:
+  e21d8fe7-aba7-478b-b5cf-c96d8c6232e6:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: e21d8fe7-aba7-478b-b5cf-c96d8c6232e6
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      committees: committees
+selection_logic: and
+weight: -5
+relationships: {  }

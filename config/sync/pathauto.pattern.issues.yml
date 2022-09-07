@@ -1,0 +1,22 @@
+uuid: 0d8fa3d6-1b11-4c4e-9e6b-80d1500e93c9
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: issues
+label: Issues
+type: 'canonical_entities:taxonomy_term'
+pattern: 'issues/[term:name]'
+selection_criteria:
+  c4c240b9-ac53-4e05-94c5-a0c726889e55:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: c4c240b9-ac53-4e05-94c5-a0c726889e55
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      issues: issues
+selection_logic: and
+weight: -5
+relationships: {  }

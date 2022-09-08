@@ -181,21 +181,34 @@ class UsersHelper {
         if ($user->hasField('field_senator_multiref') && !$user->get('field_senator_multiref')->isEmpty()) {
           $tid = $user->get('field_senator_multiref')->first()->getString() ?? '';
           if (!empty($tid)) {
-            $senator = $this->entityTypeManagerInterface->getStorage('user')
+            $senator = $this->entityTypeManagerInterface->getStorage('taxonomy_term')
               ->load($tid);
           }
         }
       }
-    }
 
-    if (!empty($senator)) {
-      $query = "SELECT fs.entity_id as district_tid FROM taxonomy_term__field_senator fs WHERE fs.field_senator_target_id = :sid AND fs.bundle = :bundle";
-      $result = $this->connection->query($query, [
-        ':sid' => $senator->id(),
-        ':bundle' => 'districts',
-      ])->fetchAssoc();
+      if (!empty($senator)) {
+        $query = "SELECT fs.entity_id as district_tid FROM taxonomy_term__field_senator fs WHERE fs.field_senator_target_id = :sid AND fs.bundle = :bundle";
+        $result = $this->connection->query($query, [
+          ':sid' => $senator->id(),
+          ':bundle' => 'districts',
+        ])->fetchAssoc();
 
-      $user_district_senator_info[$uid] = $result;
+        if (!empty($result)) {
+          return $user_district_senator_info[$uid] = $result;
+        }
+        // If a senator does not belong to a district,
+        // return NULL.
+        else {
+          return NULL;
+        }
+      }
+
+      // For anonymous users, return NULL
+      // if there's no senator.
+      else {
+        return NULL;
+      }
     }
 
     return $user_district_senator_info[$uid];

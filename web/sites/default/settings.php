@@ -813,6 +813,19 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
       break;
 
+    case 'migration':
+      // Drupal 7 migrate config.
+      $databases['migrate']['default'] = array(
+        'database' => 'd7senate',
+        'driver' => 'mysql',
+        'host' => $_ENV['DB_HOST'],
+        'password' => $_ENV['DB_PASSWORD'],
+        'port' => $_ENV['DB_PORT'],
+        'prefix' => '',
+        'username' => $_ENV['DB_USER'],
+      );
+      break;
+
     default:
       // Enable a mutlidev environment's config split.
       $config['config_split.config_split.multidev']['status'] = TRUE;
@@ -870,18 +883,4 @@ if (file_exists($app_root . '/' . $site_path . '/private_settings.php')) {
  */
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
-}
-
-// Pantheon environment-specific config.
-if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-  // Drupal 7 migrate config.
-  $databases['migrate']['default'] = array(
-    'database' => 'd7senate',
-    'driver' => 'mysql',
-    'host' => $_ENV['DB_HOST'],
-    'password' => $_ENV['DB_PASSWORD'],
-    'port' => $_ENV['DB_PORT'],
-    'prefix' => '',
-    'username' => $_ENV['DB_USER'],
-  );
 }

@@ -1,0 +1,12 @@
+{% if logged_in %}
+  <p class="eyebrow">{{ title }}</p>
+  <a class="c-issue--contact-btn" href="{{ link.url }}">
+    <div class="nys-senator--thumb">
+      {{ senator_image }}
+    </div>
+    <span>{{ link.text }}</span>
+  </a>
+{% else %}
+  <p>{{ 'Find and contact your Senator about this issue'|t }}</p>
+  <a href="registration/nojs/login" class="button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
+{% endif %}

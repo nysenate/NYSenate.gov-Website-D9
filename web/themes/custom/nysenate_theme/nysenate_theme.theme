@@ -10,7 +10,6 @@ use Drupal\Core\Link;
 use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
-use Drupal\media\MediaInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Component\Utility\Html;
 use Drupal\taxonomy\TermInterface;
@@ -517,24 +516,32 @@ function nysenate_theme_preprocess_block_content__text(&$variables) {
 function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_hero(&$variables) {
   $result = $variables["content"]["#view"]->result;
   foreach ($result as $node) {
-    if ($node->_entity->bundle() == 'session' && $node->_entity instanceof NodeInterface) {
+    $node = $node->_entity;
+    if ($node instanceof NodeInterface && $node->bundle() == 'session') {
       $date = NULL;
-      if (isset($node->_entity->field_date)) {
-        $date = new DateTime($node->_entity->field_date->value);
+      if (isset($node->field_date_range)) {
+        $date_range = $node->field_date_range;
+        if (!empty($date_range->start_date)) {
+          /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
+          $start_date = $date_range->start_date;
+          $date = \Drupal::service('date.formatter')->format(
+            $start_date->getTimestamp(), 'custom', 'F d, Y'
+          );
+        }
       }
 
-      if (!$node->_entity->field_session_calendars->isEmpty() && $node->_entity->field_session_calendars->entity instanceof NodeInterface) {
-        $url_calendar = $node->_entity->field_session_calendars->entity->toUrl()->toString();
+      if (!$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
+        $url_calendar = $node->field_session_calendars->entity->toUrl()->toString();
       }
 
-      if (!$node->_entity->field_ustream_url->isEmpty() && $node->_entity->field_ustream_url->entity instanceof MediaInterface) {
-        $media = $node->_entity->field_ustream_url->entity->field_media_oembed_ustream ?? [];
+      if (!$node->field_ustream->isEmpty()) {
+        $media_id = $node->field_ustream->value ?? [];
       }
 
       $variables['homepage_hero'] = [
-        'date' => !empty($date) ? $date->format('F d, Y') : '',
+        'date' => $date ?? '',
         'url_calendar' => $url_calendar ?? '#',
-        'media' => $media ?? [],
+        'media_id' => $media_id ?? [],
       ];
     }
   }
@@ -1302,12 +1309,14 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$v
 }
 
 /**
- * Implements hoo_preprocess_taxonomy_term__TAXONOMY().
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
   $user = \Drupal::entityTypeManager()->getStorage('user')
     ->load(\Drupal::currentUser()->id());
 
+  $senator_name = '';
+  $senator_image = NULL;
   if ($user->hasField('field_senator_multiref') && !$user->get('field_senator_multiref')->isEmpty()) {
     $tid = $user->get('field_senator_multiref')->first()->getString() ?? '';
     $senator = NULL;
@@ -1318,18 +1327,43 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
 
     // Senator name.
     if (!empty($senator) && isset($senator->name->value) && !empty($senator->name->value)) {
-      $variables['senator_name'] = $senator->name->value;
+      $senator_name = $senator->name->value;
     }
 
+    // Senator image.
     if ($senator->hasField('field_image_headshot') && !$senator->get('field_image_headshot')->isEmpty()) {
-      $variables['senator_image'] = $senator->field_member_headshot->entity;
+      $senator_image = $senator->field_member_headshot->entity;
     }
   }
 
-  $variables['user'] = $user;
-  $variables['user_id'] = $user->id();
-  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
-  $variables['user_is_out_of_state'] = \Drupal::service('nys_users.user_helper')->isOutOfState($user);
+  // Generate the contact your senator variables.
+  $url = '';
+  $title = '';
+  $link = [];
+  $is_out_of_state = \Drupal::service('nys_users.user_helper')->isOutOfState($user);
+  if ($is_out_of_state) {
+    $title = t('Contact the Senate about this issue');
+    $link = [
+      'url' => '/contact',
+      'text' => t('Contact Senate'),
+    ];
+  }
+
+  else {
+    $title = t('Contact your Senator about this issue');
+    $link = [
+      'url' => '/user/dashboard/inbox/new?context=issue&issue_id=' . $variables['term']->id(),
+      'text' => t('Contact %senator', ['%senator' => $senator_name]),
+    ];
+  }
+
+  $variables['contact_your_senator'] = [
+    'logged_in' => \Drupal::currentUser()->isAuthenticated(),
+    'title' => $title,
+    'senator_image' => $senator_image,
+    'link' => $link,
+  ];
+
   $variables['is_senator'] = \Drupal::service('nys_users.user_helper')->isSenator($user);
   $variables['absolute_url'] = \Drupal::request()->getSchemeAndHttpHost() . $variables['url'];
 
@@ -1379,6 +1413,10 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
   if (is_object($video_view)) {
     $variables['video'] = $video_view->buildRenderable('video', $args);
   }
+
+  // Set the cache tags for the issues taxonomy.
+  // Invalidation will occur on nys_senators_user_presave method.
+  $variables['#cache']['tags'][] = 'taxonomy_term_list:issues';
 }
 
 /**
@@ -2391,6 +2429,12 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
 
   $ol_base_url = \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov');
   $transcript_base_url = $ol_base_url . '/pdf/';
+  $transcript_type = $variables['content']['field_ol_transcript_type'][0]['#markup'] ?? '';
+  $is_hearing = NULL;
+  if ($transcript_type) {
+    $is_hearing = ($transcript_type === 'public_hearing');
+  }
+
   $is_hearing = ($variables['content']['field_ol_transcript_type'][0]['#markup'] === 'public_hearing');
   $pointer_type = (($is_hearing) ? 'hearings' : 'transcripts');
   $pointer = '';

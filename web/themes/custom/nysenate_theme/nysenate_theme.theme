@@ -10,7 +10,6 @@ use Drupal\Core\Link;
 use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
-use Drupal\media\MediaInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Component\Utility\Html;
 use Drupal\taxonomy\TermInterface;
@@ -517,24 +516,32 @@ function nysenate_theme_preprocess_block_content__text(&$variables) {
 function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_hero(&$variables) {
   $result = $variables["content"]["#view"]->result;
   foreach ($result as $node) {
-    if ($node->_entity->bundle() == 'session' && $node->_entity instanceof NodeInterface) {
+    $node = $node->_entity;
+    if ($node instanceof NodeInterface && $node->bundle() == 'session') {
       $date = NULL;
-      if (isset($node->_entity->field_date)) {
-        $date = new DateTime($node->_entity->field_date->value);
+      if (isset($node->field_date_range)) {
+        $date_range = $node->field_date_range;
+        if (!empty($date_range->start_date)) {
+          /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
+          $start_date = $date_range->start_date;
+          $date = \Drupal::service('date.formatter')->format(
+            $start_date->getTimestamp(), 'custom', 'F d, Y'
+          );
+        }
       }
 
-      if (!$node->_entity->field_session_calendars->isEmpty() && $node->_entity->field_session_calendars->entity instanceof NodeInterface) {
-        $url_calendar = $node->_entity->field_session_calendars->entity->toUrl()->toString();
+      if (!$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
+        $url_calendar = $node->field_session_calendars->entity->toUrl()->toString();
       }
 
-      if (!$node->_entity->field_ustream_url->isEmpty() && $node->_entity->field_ustream_url->entity instanceof MediaInterface) {
-        $media = $node->_entity->field_ustream_url->entity->field_media_oembed_ustream ?? [];
+      if (!$node->field_ustream->isEmpty()) {
+        $media_id = $node->field_ustream->value ?? [];
       }
 
       $variables['homepage_hero'] = [
-        'date' => !empty($date) ? $date->format('F d, Y') : '',
+        'date' => $date ?? '',
         'url_calendar' => $url_calendar ?? '#',
-        'media' => $media ?? [],
+        'media_id' => $media_id ?? [],
       ];
     }
   }
@@ -2423,6 +2430,12 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
 
   $ol_base_url = \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov');
   $transcript_base_url = $ol_base_url . '/pdf/';
+  $transcript_type = $variables['content']['field_ol_transcript_type'][0]['#markup'] ?? '';
+  $is_hearing = NULL;
+  if ($transcript_type) {
+    $is_hearing = ($transcript_type === 'public_hearing');
+  }
+
   $is_hearing = ($variables['content']['field_ol_transcript_type'][0]['#markup'] === 'public_hearing');
   $pointer_type = (($is_hearing) ? 'hearings' : 'transcripts');
   $pointer = '';

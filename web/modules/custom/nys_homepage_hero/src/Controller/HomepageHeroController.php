@@ -28,7 +28,7 @@ class HomepageHeroController extends ControllerBase {
   /**
    * Session has begun. Signal to polling clients to reload the page.
    */
-  public function homepageHeroAddItem() {
+  public static function homepageHeroAddItem() {
     \Drupal::state()->set('homepage_hero_session_in_progress', 1);
     \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
   }
@@ -36,7 +36,7 @@ class HomepageHeroController extends ControllerBase {
   /**
    * Session has ended. Reload the page causing the polling JS to be removed.
    */
-  public function homepageHeroRemoveItem() {
+  public static function homepageHeroRemoveItem() {
     \Drupal::state()->set('homepage_hero_add_polling_js', 0);
     \Drupal::state()->set('homepage_hero_session_in_progress', 0);
     \Drupal::service('cache_tags.invalidator')->invalidateTags([

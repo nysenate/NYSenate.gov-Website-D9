@@ -69,8 +69,11 @@
               </span>
             </p>
           {% endif %}
-          {% if bill.sponsor_name_only %}
-            <p class="c-bill-update--sponsor">{{ bill.sponsor_name_only }}</p>
+          {% if bill.ol_sponsor %}
+            <p class="c-bill-update--sponsor">
+              Sponsor
+              <a href={{ bill.ol_sponsor.url }}>{{ bill.ol_sponsor.text }}</a>
+            </p>
           {% endif %}
         </div>
         {% if bill.committee_link %}

@@ -16,7 +16,6 @@ dependencies:
     - block_content.type.microsite_contact_webform
     - block_content.type.microsite_district_block
     - block_content.type.microsite_hero
-    - block_content.type.promotional_banner
     - block_content.type.promotional_banners_list
     - block_content.type.quote
     - block_content.type.senator_microsite_menu
@@ -42,6 +41,7 @@ settings:
   handler_settings:
     target_bundles:
       accordion: accordion
+      microsite_district_block: microsite_district_block
       embed: embed
       featured_content: featured_content
       featured_issue: featured_issue
@@ -52,15 +52,13 @@ settings:
       map: map
       media: media
       microsite_contact: microsite_contact
-      microsite_contact_webform: microsite_contact_webform
-      microsite_district_block: microsite_district_block
-      promotional_banner: promotional_banner
       promotional_banners_list: promotional_banners_list
       quote: quote
       microsite_hero: microsite_hero
       senator_microsite_menu: senator_microsite_menu
       slider: slider
       text: text
+      microsite_contact_webform: microsite_contact_webform
     sort:
       field: _none
       direction: ASC

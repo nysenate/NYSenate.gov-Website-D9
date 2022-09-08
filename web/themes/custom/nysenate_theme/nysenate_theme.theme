@@ -2429,6 +2429,12 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
 
   $ol_base_url = \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov');
   $transcript_base_url = $ol_base_url . '/pdf/';
+  $transcript_type = $variables['content']['field_ol_transcript_type'][0]['#markup'] ?? '';
+  $is_hearing = NULL;
+  if ($transcript_type) {
+    $is_hearing = ($transcript_type === 'public_hearing');
+  }
+
   $is_hearing = ($variables['content']['field_ol_transcript_type'][0]['#markup'] === 'public_hearing');
   $pointer_type = (($is_hearing) ? 'hearings' : 'transcripts');
   $pointer = '';

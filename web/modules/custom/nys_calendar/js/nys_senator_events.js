@@ -19,7 +19,6 @@
         $real_min.val($first_day_of_month.val());
         $real_max.val($last_day_of_month.val());
         $submit.click();
-        $('#panel1').click();
       }
 
       $('html', context).once('submitDefaultValues').each(function(i) {

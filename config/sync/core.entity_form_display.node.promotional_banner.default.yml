@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.promotional_banner.field_link_type
     - field.field.node.promotional_banner.field_promotional_banner_image
     - field.field.node.promotional_banner.field_promotional_content
+    - field.field.node.promotional_banner.field_senator_multiref
     - node.type.promotional_banner
   module:
     - conditional_fields
@@ -119,6 +120,12 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_senator_multiref:
+    type: options_select
+    weight: 129
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   langcode:
     type: language_select
     weight: 2

@@ -174,7 +174,7 @@
 		margin: 0 auto;
 		text-align: center;
 		color: $color-white;
-		background: url("../images/sprite-up-to.png");
+		background: url('../images/sprite-up-to.png');
 		background-size: 100% auto;
 
 		&.c-illus__waiting {
@@ -205,6 +205,7 @@
 		}
 
 		.c-stats--highlight {
+			display: none;
 			opacity: 0;
 			top: 30px;
 			height: 200px;
@@ -236,11 +237,30 @@
 		}
 
 		.c-carousel--item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			position: relative;
-			height: 216px;
+			height: 130px;
 			width: 33.33%;
 			margin: 0;
 			padding: 0;
+
+			&:not(:first-child) {
+				border-left: 1px solid $color-white;
+			}
+
+			&.with-icon {
+				display: block;
+				height: 216px;
+				border-left: 0;
+			}
+		}
+
+		&.with-hover {
+			.c-stats--highlight {
+				display: block;
+			}
 		}
 	}
 

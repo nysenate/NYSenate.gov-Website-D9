@@ -1,0 +1,111 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.add-to-calendar {
+
+  &__container {
+    display: inline-block;
+    position: relative;
+    color: $color-black;
+    background-color: $color-white;
+    border: 1px solid;
+    border-color: $grey-line;
+    font-size: 15px;
+    line-height: 1;
+    text-decoration: none;
+    padding: 13px 12px 12px 43px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+  
+    &.active {
+      background-color: $greyLight;
+    }
+  }
+
+  &__icon {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    z-index: 1;
+    left: 12px;
+    top: 10px;
+    background-size: 18px 18px;
+  }
+
+  &__dropdown {
+    width: 200px;
+    position: absolute;
+    left: 0px;
+    top: 42px;
+    background-color: $color-white;
+    text-align: left;
+    display: none;
+    border: 1px solid;
+    border-color: $grey-line;
+    margin-top: -2px;
+    margin-left: -1px;
+    border-radius: 2px;
+    box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.15);
+    padding: 0;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  &__dropdown-item {
+    display: block;
+    background-color: $color-white;
+    padding: 9px 10px 9px 40px;
+    background-repeat: no-repeat;
+    background-position: 13px 50%;
+
+    &:hover {
+      background-color: $greyLight;
+    }
+
+    a {
+      @include font-stack-secondary;
+      font-size: 14px;
+      color: $color-black;
+      line-height: 100%;
+      text-decoration: none;
+    }
+
+    &.apple-cal {
+      background-image: url('../images/apple.png');
+    }
+
+    &.google {
+      background-image: url('../images/google.png');
+    }
+
+    &.outlook,
+    &.outlookcom {
+      background-image: url('../images/windows.png');
+    }
+
+    &.yahoo {
+      background-image: url('../images/yahoo.png');
+    }
+  }
+}
+
+.c-event-block--featured .add-to-calendar,
+.c-event-block--featured-image .add-to-calendar {
+  margin-top: 20px;
+    
+  @include breakpoint($bp-sm) {
+    float: right;
+    clear: right;
+    width: 300px;
+  }
+}
+
+.c-event-block--featured .add-to-calendar {
+  @include breakpoint($bp-sm) {
+    clear: right;
+    margin-right: 400px;
+  }
+}

@@ -198,6 +198,12 @@ class UsersHelper {
           return $user_district_senator_info[$uid] = $result;
         }
       }
+
+      // For anonymous users, return NULL
+      // if there's no senator.
+      else {
+        return NULL;
+      }
     }
 
     return $user_district_senator_info[$uid];

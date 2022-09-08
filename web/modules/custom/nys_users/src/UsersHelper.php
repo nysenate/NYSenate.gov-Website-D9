@@ -197,6 +197,11 @@ class UsersHelper {
         if (!empty($result)) {
           return $user_district_senator_info[$uid] = $result;
         }
+        // If a senator does not belong to a district,
+        // return NULL.
+        else {
+          return NULL;
+        }
       }
 
       // For anonymous users, return NULL

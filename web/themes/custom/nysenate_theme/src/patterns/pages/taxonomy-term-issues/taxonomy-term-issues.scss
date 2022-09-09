@@ -5,141 +5,113 @@
 ** They were temporarily added because the component
 ** style are still from the default rain theme and no go signal to change */
 
-.taxonomy-issues{
-    &__header {
+.taxonomy-issues {
+  &__header {
+    margin-bottom: 20px;
+
+    @include breakpoint($bp-sm) {
+      margin-bottom: 30px;
+    }
+  }
+
+  &__header-cta {
+    display: flex;
+    flex-direction: column;
+
+    @include breakpoint($bp-sm) {
+      display: block;
+    }
+
+    .header-meta {
+      @include breakpoint($bp-sm) {
+        position: relative;
+        width: 71%;
+        float: left;
+        margin-bottom: 60px;
+        padding-right: 40px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        @include font(16 24);
+        color: $grey03;
         margin-bottom: 20px;
 
         @include breakpoint($bp-sm) {
-            margin-bottom: 30px;
+          @include font(20 32);
         }
+      }
 
-        //TO DO: apply these styles on heading.scss
-        .heading { 
-            font-family: $font-serif-bold;
-            @include font(18 25.4);
-            margin-bottom: 0;
-            color: $grey08;
-
-            @include breakpoint($bp-sm) {
-                @include font(32 44.8);
-            }
-
-            &__subtitle {
-                margin: 0;
-                font-family: $font-sans;
-                @include font(14 21);
-                color: $grey04;
-                text-transform: uppercase;
-
-                @include breakpoint($bp-sm) {
-                    @include font(14 32);
-                }
-                
-                span {
-                    color: $grey08;
-                    margin-right: 5px;
-                }
-            }
-        }
-    }
-    &__header-cta {
+      .c-issue--contact-btn,
+      .button {
         display: flex;
-        flex-direction: column;
-        gap: 30px;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        height: 55px;
+        padding: 0 40px;
+        margin: 15px 0 30px;
+        background-color: $blue01;
+        font-family: $font-sans-bold;
+        text-transform: uppercase;
+        color: $color-white;
+        @include font(14 14 1.5);
+        border: none;
 
         @include breakpoint($bp-sm) {
-            justify-content: space-between;
-            align-items: stretch;
-            flex-direction: row;
-            gap: 30px;
-            max-width: 760px;
+          display: inline-flex;
+          height: 80px;
+          margin: 0;
         }
 
-        .header-meta {
-            .eyebrow { 
-                margin: 0;
-                @include font(16 24);
-                color: $grey03;
-                margin-bottom: 20px;
-
-                @include breakpoint($bp-sm) {
-                    @include font(20 32);
-                }
-            }
-
-            .button {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 55px;
-                padding: 0 40px;
-                background-color: $blue01;
-                font-family: $font-sans-bold;
-                @include font(14 14 1.5);
-                border: none;
-
-                @include breakpoint($bp-sm) {
-                    display: inline-flex;
-                    height: 80px;
-                }
-
-                &:hover {
-                    color: $color-white;
-                }
-
-                &.no-senator {
-                    @extend .icon-before__find-senator;
-                }
-            }
+        &:hover {
+          color: $color-white;
         }
 
-        .header-social {
-            @include breakpoint($bp-sm) {
-                border-left: 1px solid $grey05;
-                padding-left: 50px;
-            }
-
-            .heading {
-                font-family: $font-sans;
-                @include font(14 19.6 1.4);
-                color: $grey08;
-                text-transform: uppercase;
-                margin-bottom: 10px;
-
-                @include breakpoint($bp-sm) {
-                    @include font(16 22.4 1.6);
-                }
-            }
-
-            //TO DO: add modifier on social menu component
-            .site-footer__social {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 20px;
-
-                &-icon {
-                    fill: $color-white;
-                    width: 60px;
-                    height: 40px;
-                    background-color: $blue01;
-                    display: inline-flex;
-                    justify-content: center;
-                    align-items: center;
-
-                    @include breakpoint($bp-sm) {
-                        fill: $blue01;
-                        background-color: transparent;
-                        width: auto;
-                        height: auto;
-                    }
-    
-                    .icon {
-                        width: 20px;
-                        height: 20px;
-                    }
-                }
-            }
+        &::before {
+          display: flex;
+          align-items: center;
+          font-size: 1.8em;
         }
+
+        &.no-senator {
+          @extend .icon-before__find-senator;
+        }
+      }
     }
+
+    .header-social {
+      @include breakpoint($bp-sm) {
+        border-left: 1px solid $grey05;
+        padding-left: 0;
+      }
+
+      .c-detail--social-item.site-footer__social {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+
+        &-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          fill: $color-white;
+          background-color: $blue01;
+
+          @include breakpoint($bp-sm) {
+            fill: $blue01;
+            background-color: transparent;
+            justify-content: flex-end;
+          }
+
+          .icon {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
 }

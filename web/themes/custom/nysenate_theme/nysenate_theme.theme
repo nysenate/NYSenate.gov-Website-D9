@@ -1064,12 +1064,19 @@ function nysenate_theme_theme_suggestions_page_alter(array &$suggestions, array 
  */
 function nysenate_theme_theme_suggestions_views_view_alter(array &$suggestions, array $variables, $hook) {
   $view = $variables['view'];
-  $tid = $view->args[0];
-  $term = Term::load($tid);
+  $view_id = $view->id();
 
-  // Override the issues bundle.
-  if (!empty($term) && $term->bundle() == 'issues') {
-    $suggestions[] = $hook . '__' . $view->id() . '__issues';
+  // Add theme hook suggestions for taxonomy_term page.
+  if ($view_id == 'taxonomy_term') {
+    if (isset($view->args) && !empty($view->args)) {
+      $tid = $view->args[0];
+      $term = Term::load($tid);
+
+      // Override the issues bundle.
+      if (!empty($term) && $term->bundle() == 'issues') {
+        $suggestions[] = $hook . '__' . $view_id . '__' . $term->bundle();
+      }
+    }
   }
 }
 

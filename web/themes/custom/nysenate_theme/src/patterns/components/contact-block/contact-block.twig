@@ -1,7 +1,7 @@
 {{ attach_library('nysenate_theme/contact-block') }}
 {% if contact_type is not empty %}
   <h2 class="nys-title contact-block__title">
-    Contact Senator {{ title }} Office
+    {{ 'Contact Senator ' ~ title ~ ' Office'|t }}
   </h2>
 
   <div class="c-block c-block--senator-office">
@@ -43,7 +43,7 @@
 
               {% if location.email %}
                 <div class="email">
-                  <abbr class="type" title="email">Email address:</abbr>
+                  <abbr class="type" title="email">{{ 'Email address:'|t }}</abbr>
                   <span>
                     <a href="mailto:{{ location.email }}" itemprop="email">
                       {{ location.email }}
@@ -80,7 +80,7 @@
 
       <div class="c-block--senator-email">
         <h3 class="c-office-info--title">
-          Email Address:
+          {{ 'Email Address:'|t }}
         </h3>
         <div class="field-content">
           <a href="mailto:{{ email }}">{{ email }}</a>
@@ -90,7 +90,7 @@
       {% if office_contacts %}
         <div class="c-block--senator-office-contacts">
           <h3 class="c-office-info--title">
-            Office Contacts:
+            {{ 'Office Contacts:'|t }}
           </h3>
           {% for contact in office_contacts %}
             <div class="c-office-info--office-contact vcard">
@@ -117,7 +117,7 @@
         {{ name }}
         </br>
         {% if email %}
-          <span>Email: </span><a href="mailto:{{ email }}">{{
+          <span>{{ 'Email:'|t }} </span><a href="mailto:{{ email }}">{{
               email
             }}</a>
         {% endif %}

@@ -1326,9 +1326,13 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
 function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variables) {
   $term = $variables['term'];
   $district = get_senator_district($term->id());
-  $variables['party'] = t('(%party) %district Senate District',
+  $party = $term->field_party->getValue();
+  $parties = implode(', ', array_map(function ($item) {
+    return $item['value'];
+  }, $party));
+  $variables['party'] = t('%party %district Senate District',
     [
-      '%party' => $term->field_party->value,
+      '%party' => $parties ? '(' . $parties . ')' : '',
       '%district' => $district,
     ]
   );
@@ -1696,11 +1700,8 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $node = $variables['node'];
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
-    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-      if (!is_numeric($key)) {
-        continue;
-      }
-      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+    foreach ($variables['content']['field_issues'][0]['#items'] as $issue) {
+      $url = Link::fromTextAndUrl($issue['#title'], $issue['#url']);
       $issues[] = $url;
     }
     $variables['issues'] = $issues;

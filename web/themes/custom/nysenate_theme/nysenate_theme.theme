@@ -118,6 +118,13 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
     return FALSE;
   }
 
+  $contact_type = '';
+  $block = $variables['elements']['#block_content'];
+  if ($block->hasField('field_contact_type') && !$block->get('field_contact_type')->isEmpty()) {
+    $contact_type = $block->field_contact_type->value;
+    $variables['contact_type'] = $contact_type;
+  }
+
   $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
     ->load($id);
 
@@ -125,81 +132,100 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
     $variables['title'] = $senator->name->value . '\'s';
   }
 
-  if ($senator->hasField('field_email') && !$senator->get('field_email')->isEmpty()) {
-    $variables['email'] = $senator->field_email->value;
-  }
-
-  if ($senator->hasField('field_offices') && !$senator->get('field_offices')->isEmpty()) {
-    $offices = [];
-    foreach ($senator->field_offices as $field_office) {
-      $office = $field_office->entity;
-      if ($office->hasField('field_office_address') && !$office->get('field_office_address')->isEmpty()) {
-        $address = $office->field_office_address;
-        $loc = '';
-        if (!empty($address->organization)) {
-          $name = $address->organization;
-        }
-
-        if (!empty($address->address_line1)) {
-          $street = $address->address_line1;
-          $loc = $street . ', ';
-        }
-
-        if (!empty($address->locality)) {
-          $city = $address->locality;
-          $loc .= $city . ', ';
-        }
-
-        if (!empty($address->administrative_area)) {
-          $province = $address->administrative_area;
-          $loc .= $province . ', ';
-        }
-
-        if (!empty($address->postal_code)) {
-          $postal_code = $address->postal_code;
-          $loc .= $postal_code;
-        }
-      }
-
-      // Phone number.
-      if ($office->hasField('field_office_contact_phone') && !$office->get('field_office_contact_phone')->isEmpty()) {
-        $phone = $office->field_office_contact_phone->value;
-      }
-
-      // Fax.
-      if ($office->hasField('field_fax') && !$office->get('field_fax')->isEmpty()) {
-        $fax = $office->field_fax->value;
-      }
-
-      $offices[] = [
-        'name' => $name ?? '',
-        'street' => $street ?? '',
-        'city' => $city ?? '',
-        'province' => $province ?? '',
-        'postal_code' => $postal_code ?? '',
-        'phone' => $phone ?? '',
-        'fax' => $fax ?? '',
-        'loc' => !empty($loc) ? urlencode($loc) : '',
-      ];
+  if ($contact_type == 'full') {
+    if ($senator->hasField('field_email') && !$senator->get('field_email')->isEmpty()) {
+      $variables['email'] = $senator->field_email->value;
     }
 
-    $variables['office_locations'] = $offices;
-  }
+    if ($senator->hasField('field_offices') && !$senator->get('field_offices')->isEmpty()) {
+      $offices = [];
+      foreach ($senator->field_offices as $field_office) {
+        $office = $field_office->entity;
+        if ($office->hasField('field_office_address') && !$office->get('field_office_address')->isEmpty()) {
+          $address = $office->field_office_address;
+          $loc = '';
+          if (!empty($address->organization)) {
+            $name = $address->organization;
+          }
 
-  if ($senator->hasField('field_office_contacts') && !$senator->get('field_office_contacts')->isEmpty()) {
-    $contacts = [];
-    foreach ($senator->field_office_contacts as $office_contact) {
-      $contact = $office_contact->entity;
+          if (!empty($address->address_line1)) {
+            $street = $address->address_line1;
+            $loc = $street . ', ';
+          }
 
-      $contacts[] = [
-        'name' => $contact->field_office_contact_name->value ?? '',
-        'title' => $contact->field_office_contact_title->value ?? '',
-        'phone' => $contact->field_office_contact_phone->value ?? '',
-        'email' => $contact->field_office_contact_email->value ?? '',
-      ];
+          if (!empty($address->locality)) {
+            $city = $address->locality;
+            $loc .= $city . ', ';
+          }
+
+          if (!empty($address->administrative_area)) {
+            $province = $address->administrative_area;
+            $loc .= $province . ', ';
+          }
+
+          if (!empty($address->postal_code)) {
+            $postal_code = $address->postal_code;
+            $loc .= $postal_code;
+          }
+        }
+
+        // Phone number.
+        if ($office->hasField('field_office_contact_phone') && !$office->get('field_office_contact_phone')->isEmpty()) {
+          $phone = $office->field_office_contact_phone->value;
+        }
+
+        // Fax.
+        if ($office->hasField('field_fax') && !$office->get('field_fax')->isEmpty()) {
+          $fax = $office->field_fax->value;
+        }
+
+        $offices[] = [
+          'name' => $name ?? '',
+          'street' => $street ?? '',
+          'city' => $city ?? '',
+          'province' => $province ?? '',
+          'postal_code' => $postal_code ?? '',
+          'phone' => $phone ?? '',
+          'fax' => $fax ?? '',
+          'loc' => !empty($loc) ? urlencode($loc) : '',
+        ];
+      }
+
+      $variables['office_locations'] = $offices;
     }
 
-    $variables['office_contacts'] = $contacts;
+    if ($senator->hasField('field_office_contacts') && !$senator->get('field_office_contacts')->isEmpty()) {
+      $contacts = [];
+      foreach ($senator->field_office_contacts as $office_contact) {
+        $contact = $office_contact->entity;
+
+        $contacts[] = [
+          'name' => $contact->field_office_contact_name->value ?? '',
+          'title' => $contact->field_office_contact_title->value ?? '',
+          'phone' => $contact->field_office_contact_phone->value ?? '',
+          'email' => $contact->field_office_contact_email->value ?? '',
+        ];
+      }
+
+      $variables['office_contacts'] = $contacts;
+    }
+  }
+  elseif ($contact_type == 'media_inquiries') {
+    if ($senator->hasField('field_media_contact') && !$senator->get('field_media_contact')->isEmpty()) {
+      $variables['name'] = $senator->field_media_contact->value;
+    }
+
+    if ($senator->hasField('field_media_email') && !$senator->get('field_media_email')->isEmpty()) {
+      $variables['email'] = $senator->field_media_email->value;
+    }
+
+    if ($senator->hasField('field_media_phone') && !$senator->get('field_media_phone')->isEmpty()) {
+      $variables['phone'] = $senator->field_media_phone->value;
+    }
+
+    if ($senator->hasField('field_media_fax') && !$senator->get('field_media_fax')->isEmpty()) {
+      $variables['fax'] = $senator->field_media_fax->value;
+    }
   }
 }
 
@@ -712,7 +738,8 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'street_1' => $node->_entity->field_location[0]->address_line1,
           'street_2' => $node->_entity->field_location[0]->locality . ', '
           . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code,
-          'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
+          'time_start' => $date->format('g:i A'),
+          'time_end' => $date_end->format('g:i A'),
         ];
       }
     }
@@ -1064,12 +1091,19 @@ function nysenate_theme_theme_suggestions_page_alter(array &$suggestions, array 
  */
 function nysenate_theme_theme_suggestions_views_view_alter(array &$suggestions, array $variables, $hook) {
   $view = $variables['view'];
-  $tid = $view->args[0];
-  $term = Term::load($tid);
+  $view_id = $view->id();
 
-  // Override the issues bundle.
-  if (!empty($term) && $term->bundle() == 'issues') {
-    $suggestions[] = $hook . '__' . $view->id() . '__issues';
+  // Add theme hook suggestions for taxonomy_term page.
+  if ($view_id == 'taxonomy_term') {
+    if (isset($view->args) && !empty($view->args)) {
+      $tid = $view->args[0];
+      $term = Term::load($tid);
+
+      // Override the issues bundle.
+      if (!empty($term) && $term->bundle() == 'issues') {
+        $suggestions[] = $hook . '__' . $view_id . '__' . $term->bundle();
+      }
+    }
   }
 }
 
@@ -1292,9 +1326,13 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
 function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variables) {
   $term = $variables['term'];
   $district = get_senator_district($term->id());
-  $variables['party'] = t('(%party) %district Senate District',
+  $party = $term->field_party->getValue();
+  $parties = implode(', ', array_map(function ($item) {
+    return $item['value'];
+  }, $party));
+  $variables['party'] = t('%party %district Senate District',
     [
-      '%party' => $term->field_party->value,
+      '%party' => $parties ? '(' . $parties . ')' : '',
       '%district' => $district,
     ]
   );
@@ -1662,11 +1700,8 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $node = $variables['node'];
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
-    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-      if (!is_numeric($key)) {
-        continue;
-      }
-      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+    foreach ($variables['content']['field_issues'][0]['#items'] as $issue) {
+      $url = Link::fromTextAndUrl($issue['#title'], $issue['#url']);
       $issues[] = $url;
     }
     $variables['issues'] = $issues;

@@ -3,11 +3,8 @@
   Drupal.behaviors.nys_senator_events = {
     attach: function (context, settings) {
       let $submit = $('#views-exposed-form-senator-events-upcoming-events input[type="submit"]');
-      let $current_month_year = $('input[name="current_month_year"]');
       let $first_day_of_month = $('input[name="first_day_of_month"]');
       let $last_day_of_month = $('input[name="last_day_of_month"]');
-      let $next_month = $('input[name="next_month"]');
-      let $previous_month = $('input[name="previous_month"]');
 
       $submit.closest('.form-actions').hide();
       $('#views-exposed-form-senator-events-upcoming-events fieldset', context).hide();

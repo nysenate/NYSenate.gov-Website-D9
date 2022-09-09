@@ -15,6 +15,7 @@ dependencies:
     - node.type.video
   module:
     - datetime
+    - nys_list_formatter
     - text
     - user
 id: node.video.default
@@ -67,10 +68,21 @@ content:
     weight: 109
     region: content
   field_issues:
-    type: entity_reference_label
+    type: list_formatter
     label: above
     settings:
-      link: true
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
     third_party_settings: {  }
     weight: 107
     region: content

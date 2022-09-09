@@ -1,112 +1,134 @@
 {{ attach_library('nysenate_theme/contact-block') }}
+{% if contact_type is not empty %}
+  <h2 class="nys-title contact-block__title">
+    {{ 'Contact Senator ' ~ title ~ ' Office'|t }}
+  </h2>
 
-<h2 class="nys-title contact-block__title">
-  Contact Senator {{ title }} Office
-</h2>
-
-<div class="c-block c-block--senator-office">
-  <div class="field-content">
-    {% for location in office_locations %}
-      <div class="location vcard"
-        itemscope
-        itemtype="http://schema.org/PostalAddress">
-        <div class="adr">
-          {% if location.name %}
-            <span class="fn" itemprop="name">{{ location.name }}</span>
-          {% endif %}
-          {% if location.street %}
-            <div class="street-address">
-              <span itemprop="streetAddress">{{ location.street }}</span>
-              {% if location.additional %}
-                <span class="additional" itemprop="streetAddress">
-                  {{ location.additional }}
+  <div class="c-block c-block--senator-office">
+    {% if contact_type == 'full' %}
+      <div class="field-content">
+        {% for location in office_locations %}
+          <div class="location vcard"
+            itemscope
+            itemtype="http://schema.org/PostalAddress">
+            <div class="adr">
+              {% if location.name %}
+                <span class="fn" itemprop="name">{{ location.name }}</span>
+              {% endif %}
+              {% if location.street %}
+                <div class="street-address">
+                  <span itemprop="streetAddress">{{ location.street }}</span>
+                  {% if location.additional %}
+                    <span class="additional" itemprop="streetAddress">
+                      {{ location.additional }}
+                    </span>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if location.city %}
+                <span class="locality" itemprop="addressLocality">
+                  {{ location.city }},&nbsp;
                 </span>
               {% endif %}
-            </div>
-          {% endif %}
-          {% if location.city %}
-            <span class="locality" itemprop="addressLocality">
-              {{ location.city }},&nbsp;
-            </span>
-          {% endif %}
-          {% if location.province %}
-            <span class="region" itemprop="addressRegion">
-              {{ location.province }}
-            </span>
-          {% endif %}
-          {% if location.postal_code %}
-            <span class="postal-code" itemprop="postalCode">
-              {{ location.postal_code }}
-            </span>
-          {% endif %}
+              {% if location.province %}
+                <span class="region" itemprop="addressRegion">
+                  {{ location.province }}
+                </span>
+              {% endif %}
+              {% if location.postal_code %}
+                <span class="postal-code" itemprop="postalCode">
+                  {{ location.postal_code }}
+                </span>
+              {% endif %}
 
-          {% if location.email %}
-            <div class="email">
-              <abbr class="type" title="email">Email address:</abbr>
-              <span>
-                <a href="mailto:{{ location.email }}" itemprop="email">
-                  {{ location.email }}
+              {% if location.email %}
+                <div class="email">
+                  <abbr class="type" title="email">{{ 'Email address:'|t }}</abbr>
+                  <span>
+                    <a href="mailto:{{ location.email }}" itemprop="email">
+                      {{ location.email }}
+                    </a>
+                  </span>
+                </div>
+              {% endif %}
+              {% if location.phone %}
+                <div class="tel value" itemprop="telephone">
+                  <span>Phone: </span>{{ location.phone }}
+                </div>
+              {% endif %}
+              {% if location.fax %}
+                <div class="tel" itemprop="faxNumber">
+                  <span>Fax: </span>{{ location.fax }}
+                </div>
+              {% endif %}
+              {% if location.contact_name %}
+                <div class="tel fn" itemprop="openingHours">
+                  <span>Office Hours:</span>{{ location.contact_name }}
+                </div>
+              {% endif %}
+              {% if location.loc %}
+                <a class="c-office-location-link"
+                  href="https://www.google.com/maps/place/{{ location.loc }}"
+                  target="_blank">
+                  map
                 </a>
-              </span>
+              {% endif %}
             </div>
-          {% endif %}
-          {% if location.phone %}
-            <div class="tel value" itemprop="telephone">
-              <span>Phone: </span>{{ location.phone }}
-            </div>
-          {% endif %}
-          {% if location.fax %}
-            <div class="tel" itemprop="faxNumber">
-              <span>Fax: </span>{{ location.fax }}
-            </div>
-          {% endif %}
-          {% if location.contact_name %}
-            <div class="tel fn" itemprop="openingHours">
-              <span>Office Hours:</span>{{ location.contact_name }}
-            </div>
-          {% endif %}
-          {% if location.loc %}
-            <a class="c-office-location-link"
-              href="https://www.google.com/maps/place/{{ location.loc }}"
-              target="_blank">
-              map
-            </a>
-          {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="c-block--senator-email">
+        <h3 class="c-office-info--title">
+          {{ 'Email Address:'|t }}
+        </h3>
+        <div class="field-content">
+          <a href="mailto:{{ email }}">{{ email }}</a>
         </div>
       </div>
-    {% endfor %}
-  </div>
 
-  <div class="c-block--senator-email">
-    <h3 class="c-office-info--title">
-      Email Address:
-    </h3>
-    <div class="field-content">
-      <a href="mailto:{{ email }}">{{ email }}</a>
-    </div>
-  </div>
-
-  {% if office_contacts %}
-    <div class="c-block--senator-office-contacts">
-      <h3 class="c-office-info--title">
-        Office Contacts:
-      </h3>
-      {% for contact in office_contacts %}
-        <div class="c-office-info--office-contact vcard">
-          {{ contact.name }}
-          </br>
-          {{ contact.title }}
-          </br>
-          {% if contact.phone %}
-            <span>Phone: </span>{{ contact.phone }}<br />
-          {% endif %}
-          {% if contact.email %}
-            <span>Email: </span><a href="mailto:{{ contact.email }}">{{
-                contact.email
-              }}</a>
-          {% endif %}
+      {% if office_contacts %}
+        <div class="c-block--senator-office-contacts">
+          <h3 class="c-office-info--title">
+            {{ 'Office Contacts:'|t }}
+          </h3>
+          {% for contact in office_contacts %}
+            <div class="c-office-info--office-contact vcard">
+              {{ contact.name }}
+              </br>
+              {{ contact.title }}
+              </br>
+              {% if contact.phone %}
+                <span>Phone: </span>{{ contact.phone }}<br />
+              {% endif %}
+              {% if contact.email %}
+                <span>Email: </span><a href="mailto:{{ contact.email }}">{{
+                    contact.email
+                  }}</a>
+              {% endif %}
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-</div>
+      {% endif %}
+    {% elseif contact_type == 'media_inquiries' %}
+      <div class="c-office-info--office-contact vcard">
+        <span class="fn" itemprop="name">{{ 'Media Inquiries'|t }}</span>
+        </br>
+        {{ name }}
+        </br>
+        {% if email %}
+          <span>{{ 'Email:'|t }} </span><a href="mailto:{{ email }}">{{
+              email
+            }}</a>
+        {% endif %}
+        </br>
+        {% if phone %}
+          <span>Phone: </span>{{ phone }}<br />
+        {% endif %}
+        {% if fax %}
+          <span>Fax: </span>{{ fax }}<br />
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

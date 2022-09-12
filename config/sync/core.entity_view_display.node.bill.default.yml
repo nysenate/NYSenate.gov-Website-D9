@@ -49,6 +49,7 @@ dependencies:
     - node.type.bill
   module:
     - comment
+    - nys_list_formatter
     - options
     - user
 id: node.bill.default
@@ -66,10 +67,21 @@ content:
     weight: 12
     region: content
   field_issues:
-    type: entity_reference_label
+    type: list_formatter
     label: hidden
     settings:
-      link: true
+      type: ul
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
     third_party_settings: {  }
     weight: 8
     region: content

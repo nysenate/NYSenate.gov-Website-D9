@@ -26,22 +26,13 @@
     %}
   </div>
   {% if social %}
-    <div class="header-social">
-      {%
-        include '@nysenate_theme/heading/heading.twig' with {
-          heading: {
-            title: "Raise Awareness",
-            heading_level: heading_level|default('3'),
-            attributes: title_attributes,
-            modifier: modifier,
-          }
-        }
-      %}
-      
+    <div class="c-detail--social header-social">
+      <h3 class="c-detail--subhead">raise awareness</h3>
         {%
           include '@nysenate_theme/social-menu/_social-menu.twig' with
             {
-              items: social
+              items: social,
+              link_modifier: 'c-detail--social-item'
             }
         %}
     </div>

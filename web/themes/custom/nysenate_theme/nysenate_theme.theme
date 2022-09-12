@@ -2459,6 +2459,39 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
       if ($name === 'Events') {
         $variables['is_events'] = TRUE;
       }
+
+      elseif ($name === 'About') {
+        $variables['microsite_type'] = strtolower($name);
+        $variables['title'] = $node->getTitle();
+        if ($node->hasField('field_short_title') && !$node->get('field_short_title')->isEmpty()) {
+          $variables['short_title'] = $node->field_short_title->value;
+        }
+
+        if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+          $senator = $node->field_senator_multiref->first()->entity;
+
+          if ($senator->hasField('field_party') && !$senator->get('field_party')->isEmpty()) {
+            $party_values = $senator->field_party->getSetting('allowed_values');
+            $party = $senator->field_party->value;
+            $variables['party'] = $party_values[$party];
+          }
+
+          $district_name = '';
+          $query = \Drupal::database()->select('taxonomy_term__field_senator', 's');
+          $query->condition('s.field_senator_target_id', $senator->id());
+          $query->fields('s', ['entity_id']);
+          $result = $query->execute()->fetchAssoc();
+          if (!empty($id = $result['entity_id'])) {
+            $district = Term::load($id);
+            $district_name = $district->label();
+            if (strpos($district_name, 'NY Senate') !== FALSE) {
+              $district_name = trim(str_replace('NY Senate', '', $district_name));
+            }
+
+            $variables['district_name'] = $district_name;
+          }
+        }
+      }
     }
   }
 }

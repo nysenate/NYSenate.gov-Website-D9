@@ -1698,7 +1698,7 @@ function nysenate_theme_preprocess_nysenate_senators_talking_about_this_issue(&$
  */
 function nysenate_theme_preprocess_node__bill(&$variables) {
   $node = $variables['node'];
-  if (isset($variables['content']['field_issues'][0])) {
+  if (isset($variables['content']['field_issues'][0]) && $variables['view_mode'] == 'full') {
     $issues = [];
     foreach ($variables['content']['field_issues'][0]['#items'] as $issue) {
       $url = Link::fromTextAndUrl($issue['#title'], $issue['#url']);

@@ -188,7 +188,7 @@ function nys_senators_update_9009() {
   $con->query($query);
 
   // Taxonomy term revision table.
-  $query = "ALTER TABLE {taxonomy_term_data_revision} AUTO_INCREMENT = $taxonomy_term_start_value";
+  $query = "ALTER TABLE {taxonomy_term_revision} AUTO_INCREMENT = $taxonomy_term_start_value";
   $con->query($query);
 
   // Users table.

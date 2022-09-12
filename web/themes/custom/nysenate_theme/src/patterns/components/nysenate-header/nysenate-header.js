@@ -211,11 +211,11 @@
         }
       }
 
-      mobileNavToggle.on('click touch', function() {
+      mobileNavToggle.once('nySenateHeaderMobile').on('click touch', function() {
         self.toggleMobileNav(menu);
       });
 
-      searchToggle.on('click touch', function(e) {
+      searchToggle.once('nySenateHeader').on('click touch', function(e) {
         self.toggleSearchBar(userScroll, e);
       });
     },

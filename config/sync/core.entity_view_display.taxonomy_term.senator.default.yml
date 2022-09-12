@@ -35,6 +35,7 @@ dependencies:
   module:
     - entity_reference_revisions
     - name
+    - nys_list_formatter
     - options
     - telephone
 id: taxonomy_term.senator.default
@@ -61,9 +62,20 @@ content:
     weight: 19
     region: content
   field_conference:
-    type: list_default
+    type: list_formatter
     label: above
-    settings: {  }
+    settings:
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+      list_formatter_contrib: {  }
     third_party_settings: {  }
     weight: 3
     region: content

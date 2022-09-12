@@ -1,0 +1,5 @@
+services:
+  nys_bill.bills_helper:
+    class: Drupal\nys_bills\BillsHelper
+    arguments:
+      - '@database'

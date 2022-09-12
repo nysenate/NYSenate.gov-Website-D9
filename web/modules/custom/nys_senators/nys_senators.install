@@ -6,6 +6,7 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Database\Database;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -162,9 +163,43 @@ function nys_senators_update_9008() {
 }
 
 /**
- * Re-creates Microsite Page Type terms.
+ * Alters AUTO_INCREMENT values of relevant entity database tables.
  */
 function nys_senators_update_9009() {
+  // Database connection.
+  $con = Database::getConnection();
+
+  // Entity start values.
+  // Increase to provide plenty of room for more D7 content to be created.
+  $node_start_value = 12000000;
+  $taxonomy_term_start_value = 200000;
+  $users_start_value = 3000000;
+
+  // Node table.
+  $query = "ALTER TABLE {node} AUTO_INCREMENT = $node_start_value";
+  $con->query($query);
+
+  // Node revision table.
+  $query = "ALTER TABLE {node_revision} AUTO_INCREMENT = $node_start_value";
+  $con->query($query);
+
+  // Taxonomy term table.
+  $query = "ALTER TABLE {taxonomy_term_data} AUTO_INCREMENT = $taxonomy_term_start_value";
+  $con->query($query);
+
+  // Taxonomy term revision table.
+  $query = "ALTER TABLE {taxonomy_term_data_revision} AUTO_INCREMENT = $taxonomy_term_start_value";
+  $con->query($query);
+
+  // Users table.
+  $query = "ALTER TABLE {users} AUTO_INCREMENT = $users_start_value";
+  $con->query($query);
+}
+
+/**
+ * Re-creates Microsite Page Type terms.
+ */
+function nys_senators_update_9010() {
   print "Creating Microsite Page Type terms:\n";
   // About term.
   $about = Term::create([
@@ -240,7 +275,7 @@ function nys_senators_update_9009() {
 /**
  * Adds Senator microsite pages for existing terms.
  */
-function nys_senators_update_9010() {
+function nys_senators_update_9011() {
   // Queries all senator terms that are published and active.
   $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
     'vid' => 'senator',

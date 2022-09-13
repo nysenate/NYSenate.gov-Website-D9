@@ -1,0 +1,22 @@
+{{ attach_library('nysenate_theme/committee') }}
+
+<div class="l-row c-listing-block">
+  <h3 class="c-listing-block__title">
+    {{ title }}
+  </h3>
+  <ul class="c-listing-block__wrapper">
+    {% set old_val = committees[0].role %}
+
+    {% for committee in committees %}
+      {% if old_val != committee.role %}
+        {% set old_val = committee.role %}
+        <br/>
+      {% endif %}
+
+      <li class="c-listing-block__item">
+        <a class="c-listing-block__item-link lgt-text" href="{{ committee.link }}">{{ committee.text }}</a>
+        <span class="c-listing-block__role">{{ committee.role }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

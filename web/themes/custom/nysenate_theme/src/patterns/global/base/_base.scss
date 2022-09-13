@@ -196,11 +196,13 @@ h3 {
   padding: 0 20px;
   max-width: 100%;
 }
+
 .l-row--hero {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
 }
+
 .l-row--main {
   position: relative;
   z-index: 3;
@@ -211,35 +213,49 @@ h3 {
   padding: 0 20px;
   max-width: 440px;
 }
+
 .page-node-dashboard {
   .l-row--main {
     max-width: 100%;
   }
+
   .row {
     margin: 0;
   }
 }
-.l-row--footer { max-width: 1040px; }
+
+.l-row--footer {
+  max-width: 1040px;
+}
 
 @include breakpoint($bp-sm) {
   .l-row--nav {
     padding: 0 9%;
     max-width: 1500px;
   }
-  .l-row--hero { max-width: 1500px; }
+
+  .l-row--hero {
+    max-width: 1500px;
+  }
+
   .l-row--main {
     padding: 0 40px;
     max-width: 840px;
   }
-    .page-node-dashboard {
-      .l-row--main {
-          max-width: 100%;
-      }
-      .row {
-          margin: 0;
-      }
+
+  .page-node-dashboard {
+    .l-row--main {
+      max-width: 100%;
     }
-  .l-row--footer { max-width: 1040px; }
+
+    .row {
+      margin: 0;
+    }
+  }
+
+  .l-row--footer {
+    max-width: 1040px;
+  }
 }
 
 @include breakpoint($bp-md) {
@@ -247,35 +263,61 @@ h3 {
     padding: 0 9%;
     max-width: 1500px;
   }
-  .l-row--hero { max-width: 1500px; }
-  .l-row--main { max-width: 840px; }
-    .page-node-dashboard {
-      .l-row--main {
-          max-width: 100%;
-      }
-      .row {
-          margin: 0;
-      }
+
+  .l-row--hero {
+    max-width: 1500px;
+  }
+
+  .l-row--main {
+    max-width: 840px;
+  }
+
+  .page-node-dashboard {
+
+    .l-row--main {
+      max-width: 100%;
     }
+
+    .row {
+      margin: 0;
+    }
+  }
 }
 
 @include breakpoint($bp-lg) {
-
   .l-row--nav {
     padding: 0 9%;
     max-width: 1500px;
   }
-  .l-row--hero { max-width: 1500px; }
-  .l-row--main { max-width: 840px; }
-    .page-node-dashboard {
-      .l-row--main {
-          max-width: 100%;
-      }
-      .row {
-          margin: 0;
-      }
+
+  .l-row--hero {
+    max-width: 1500px;
+  }
+
+  .l-row--main {
+    max-width: 840px;
+  }
+
+  .page-node-dashboard {
+
+    .l-row--main {
+      max-width: 100%;
     }
+
+    .row {
+      margin: 0;
+    }
+  }
 }
+
+main.l-row--main {
+  padding-top: 40px;
+
+  @include breakpoint($bp-sm) {
+    padding-top: 80px;
+  }
+}
+
 
 /*-------------------------------------
 /
@@ -592,97 +634,97 @@ h3 {
 /-------------------------------------*/
 
 h2.c-subpage-header--title {
-	margin: 0;
-	font-family: $font-serif-bold;
-	line-height: 1em;
-	font-size: 18px;
-	margin-bottom: 10px;
+  margin: 0;
+  font-family: $font-serif-bold;
+  line-height: 1em;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 .c-subpage-header--title02 {
-	margin: 0;
-	font-family: $font-serif-bold;
-	line-height: 1em;
-	font-size: 18px;
-	margin-bottom: 5px;
+  margin: 0;
+  font-family: $font-serif-bold;
+  line-height: 1em;
+  font-size: 18px;
+  margin-bottom: 5px;
 }
 
 .c-subpage-header--title03 {
-	margin: 0;
-	font-family: $font-serif-bold;
-	line-height: 1em;
-	font-size: 18px;
-	margin: 20px 0;
+  margin: 0;
+  font-family: $font-serif-bold;
+  line-height: 1em;
+  font-size: 18px;
+  margin: 20px 0;
 }
 
 .c-subpage-header--subtitle01 {
-	margin: 0;
-	color: $grey08;
-	font-family: $font-sans;
-	font-size: 14px;
+  margin: 0;
+  color: $grey08;
+  font-family: $font-sans;
+  font-size: 14px;
 }
 
 .c-subpage-header--subtitle02 {
-	margin: 0;
-	//color defined on element
-	font-family: $font-sans-bold;
-	text-transform: uppercase;
-	font-size: 12px;
+  margin: 0;
+  //color defined on element
+  font-family: $font-sans-bold;
+  text-transform: uppercase;
+  font-size: 12px;
 }
 
 .c-subpage-header--subtitle03 {
-	margin: 0 0 25px 0;
-	color: $grey04;
-	font-family: $font-sans;
-	text-transform: uppercase;
-	font-size: 12px;
+  margin: 0 0 25px 0;
+  color: $grey04;
+  font-family: $font-sans;
+  text-transform: uppercase;
+  font-size: 12px;
 }
 
 .c-subpage-header--subtitle04 {
-	margin: 0;
-	font-family: $font-serif-bold;
-	line-height: 1em;
-	font-size: 18px;
-	margin-bottom: 5px;
+  margin: 0;
+  font-family: $font-serif-bold;
+  line-height: 1em;
+  font-size: 18px;
+  margin-bottom: 5px;
 }
 
-.c-subpage-header--subtitle05{
-	display: inline-block;
-	text-transform: uppercase;
-	font-family: $font-sans;
+.c-subpage-header--subtitle05 {
+  display: inline-block;
+  text-transform: uppercase;
+  font-family: $font-sans;
   font-weight: $font-weight-normal;
-	font-size: 12px;
-	line-height: 1em;
-	letter-spacing: 0.05em;
-	margin-bottom: 20px;
+  font-size: 12px;
+  line-height: 1em;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
 }
 
 @include breakpoint($bp-sm) {
-	h2.c-subpage-header--title {
-		font-size: 32px;
-	}
+  h2.c-subpage-header--title {
+    font-size: 32px;
+  }
 
-	.c-subpage-header--title02 {
-		font-size: 32px;
-	}
+  .c-subpage-header--title02 {
+    font-size: 32px;
+  }
 
-	.c-subpage-header--title03 {
-		font-size: 24px;
-	}
+  .c-subpage-header--title03 {
+    font-size: 24px;
+  }
 
-	.c-subpage-header--subtitle01 {
-		font-size: 16px;
-	}
+  .c-subpage-header--subtitle01 {
+    font-size: 16px;
+  }
 
-	.c-subpage-header--subtitle02 {
-		font-size: 14px;
-	}
+  .c-subpage-header--subtitle02 {
+    font-size: 14px;
+  }
 
-	.c-subpage-header--subtitle03 {
-		font-size: 14px;
-		margin-bottom: 20px;
-		margin-bottom: 40px;
-	}
+  .c-subpage-header--subtitle03 {
+    font-size: 14px;
+    margin-bottom: 20px;
+    margin-bottom: 40px;
+  }
 }
 
 .nys-associated-topics {
@@ -711,7 +753,7 @@ h2.c-subpage-header--title {
 
   a {
     color: $trad_blue_lgt;
-		text-decoration: none;
+    text-decoration: none;
     &:hover {
       text-decoration: underline;
     }

@@ -1283,6 +1283,12 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__video(&$var
  */
 function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
   $node = $variables['node'];
+
+  if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+    $term = $node->field_microsite_page_type->entity;
+    $variables['title'] = $term->label();
+  }
+
   if ($node->hasField('field_block') && !$node->get('field_block')->isEmpty()) {
     $block_types = [
       'microsite_hero',

@@ -24,7 +24,7 @@ dependencies:
     - field.field.node.event.field_social_teaser
     - field.field.node.event.field_teleconference_id_number
     - field.field.node.event.field_teleconference_number
-    - field.field.node.event.field_ustream_url
+    - field.field.node.event.field_ustream
     - field.field.node.event.field_video_status
     - field.field.node.event.field_yt
     - node.type.event
@@ -94,7 +94,7 @@ content:
     label: above
     settings:
       timezone_override: ''
-      format_type: medium
+      format_type: html_datetime
       separator: '-'
     third_party_settings: {  }
     weight: 1
@@ -207,15 +207,6 @@ content:
     third_party_settings: {  }
     weight: 18
     region: content
-  field_ustream_url:
-    type: entity_reference_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    weight: 21
-    region: content
   field_video_status:
     type: list_default
     label: above
@@ -239,5 +230,6 @@ content:
     region: content
 hidden:
   field_senator_multiref: true
+  field_ustream: true
   langcode: true
   search_api_excerpt: true

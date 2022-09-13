@@ -1,0 +1,22 @@
+uuid: 15c13df3-4616-404d-8f0f-ab7da872ca6b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: video
+label: Video
+type: 'canonical_entities:node'
+pattern: 'video/[node:field_senator_multiref:0:entity:name]/[node:title]'
+selection_criteria:
+  1ed834b8-c86d-4885-923c-ee6daa688f21:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 1ed834b8-c86d-4885-923c-ee6daa688f21
+    context_mapping:
+      node: node
+    bundles:
+      video: video
+selection_logic: and
+weight: -5
+relationships: {  }

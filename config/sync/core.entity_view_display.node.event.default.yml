@@ -23,7 +23,7 @@ dependencies:
     - field.field.node.event.field_social_teaser
     - field.field.node.event.field_teleconference_id_number
     - field.field.node.event.field_teleconference_number
-    - field.field.node.event.field_ustream_url
+    - field.field.node.event.field_ustream
     - field.field.node.event.field_video_status
     - field.field.node.event.field_yt
     - node.type.event
@@ -201,14 +201,12 @@ content:
     third_party_settings: {  }
     weight: 18
     region: content
-  field_ustream_url:
-    type: entity_reference_entity_view
+  field_ustream:
+    type: list_key
     label: above
-    settings:
-      view_mode: default
-      link: false
+    settings: {  }
     third_party_settings: {  }
-    weight: 21
+    weight: 24
     region: content
   field_video_status:
     type: list_default

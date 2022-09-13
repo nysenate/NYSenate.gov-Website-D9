@@ -11,7 +11,8 @@ use Drupal\migrate\MigrateExecutableInterface;
  * The process plugin for getting the senator name.
  *
  * @MigrateProcessPlugin(
- *   id = "senator_name"
+ *   id = "senator_name",
+ *   source_module = "nys_migrate"
  * )
  */
 class SenatorName extends ProcessPluginBase {

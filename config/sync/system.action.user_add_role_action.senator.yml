@@ -1,0 +1,14 @@
+uuid: e09cd105-97e0-49fc-aed0-ab40da6d96f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.senator
+  module:
+    - user
+id: user_add_role_action.senator
+label: 'Add the Senator role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: senator

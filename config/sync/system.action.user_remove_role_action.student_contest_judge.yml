@@ -1,0 +1,14 @@
+uuid: ac46e7ec-703b-4318-bac4-e50a4b05f0aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.student_contest_judge
+  module:
+    - user
+id: user_remove_role_action.student_contest_judge
+label: 'Remove the Student Contest Judge role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: student_contest_judge

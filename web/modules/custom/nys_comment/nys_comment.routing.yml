@@ -1,0 +1,10 @@
+comment.ban_user:
+  path: '/comment/{comment}/ban_user'
+  defaults:
+    _title: 'Ban User'
+    _controller: '\Drupal\nys_comment\Controller\CommentController::banUser'
+    entity_type: 'comment'
+  requirements:
+    _permission: 'administer users'
+    _csrf_token: 'TRUE'
+    comment: \d+

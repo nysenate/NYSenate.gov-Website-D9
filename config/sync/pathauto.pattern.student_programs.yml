@@ -1,0 +1,22 @@
+uuid: e35f8563-a13a-4ad3-9d89-838914c1d366
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: student_programs
+label: 'Student Programs'
+type: 'canonical_entities:node'
+pattern: 'student-programs/[node:title]'
+selection_criteria:
+  3dd36fd8-269a-4482-a382-5318b75a5fec:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 3dd36fd8-269a-4482-a382-5318b75a5fec
+    context_mapping:
+      node: node
+    bundles:
+      student_program: student_program
+selection_logic: and
+weight: -5
+relationships: {  }

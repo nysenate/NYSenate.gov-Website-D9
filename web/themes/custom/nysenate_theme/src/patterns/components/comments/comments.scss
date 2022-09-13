@@ -1,0 +1,66 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.comments,
+.comment__replies {
+  list-style: none;
+}
+
+.comments {
+  padding: 0;
+
+  &__wrapper {
+    margin-bottom: 40px;
+  }
+}
+
+.comment {
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .bullet {
+      color: $grey15;
+    }
+  }
+
+  &__author {
+    margin: 0;
+    font-family: $font-serif-semibold;
+  }
+
+  &__time {
+    color: $grey03;
+  }
+
+  &__replies {
+    padding-left: 40px;
+    margin-top: 40px;
+  }
+
+  &__body {
+
+    .button {
+      cursor: pointer;
+      font-family: $font-sans-bold;
+    }
+  }
+
+  &__reply-form {
+
+    &.hidden {
+      display: none;
+    }
+
+    textarea {
+      margin-top: 20px;
+      padding: 15px;
+      min-height: 130px;
+    }
+  }
+}
+
+
+

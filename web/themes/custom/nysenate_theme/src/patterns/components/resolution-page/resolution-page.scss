@@ -51,27 +51,30 @@
   }
 }
 
-.c-detail--section-title {
-  overflow: hidden;
-  padding-bottom: 10px;
-  border-bottom: 1px solid $grey05;
-  margin-bottom: 20px;
-  line-height: 1;
-
-  &.c-detail--subhead {
-    // display: inline-block;
-    margin-bottom: 0;
-    color: $grey08;
-    font-weight: 400;
-  }
-}
-
 .c-detail--related {
   list-style: none;
   line-height: 1.3em;
 
   .field--name-field-issues {
     padding-bottom: 10px;
+
+    .list-formatter-list {
+      display: inline-block;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 10px 0 0;
+        font-family: $font-sans-bold;
+        font-size: 12px;
+        line-height: 2.5em;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+    }
   }
 }
 

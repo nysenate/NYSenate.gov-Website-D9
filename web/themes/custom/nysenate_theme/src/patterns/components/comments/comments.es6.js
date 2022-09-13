@@ -24,7 +24,7 @@
           let target = event.target;
           let replyForm;
 
-          if (target.matches('[data-toggle=\'reply-form\']')) {
+          if ($(target).data('toggle') === 'reply-form') {
             let formId = target.getAttribute('data-target');
 
             replyForm = commentsBlock.find(`#${formId}`);

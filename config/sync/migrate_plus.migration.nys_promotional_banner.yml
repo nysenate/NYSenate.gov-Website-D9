@@ -62,7 +62,7 @@ process:
     -
       plugin: get
       source: body
-  field_senator:
+  field_senator_multiref:
     -
       plugin: senator_migrate_map_lookup
       migration: nys_senate_gov_taxonomy_term_senator

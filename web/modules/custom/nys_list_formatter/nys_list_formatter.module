@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Provide a field formatter to render values as HTML or comma-separated lists.
+ */
+
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_help().
+ */
+function nys_list_formatter_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#nys_list_formatter':
+      $output = '<p>' . t("The text formatter module provides a new display formatter that can
+        be used on any text, number, list, or taxonomy fields.") . '</p>';
+      $output .= '<p>' . t("Go to 'Manage display' for your entity field display settings and
+        select 'List' as the formatter. Various options will then be available to either format
+        your field values as an html list or comma separated list.") . '</p>';
+      $output .= '<p>' . t("This would be mostly implemented with multi value fields.
+        E.g. A text field could be created with unlimited values. Each value will then be added to
+        the same html list. Taxonomy terms will work with comma separated auto complete lists too,
+        to give the same result. The only exceptions are textarea field, lists can be created based
+        on each line of the input.") . '</p>';
+
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function nys_list_formatter_field_formatter_info_alter(&$info) {
+  $list_formatter_info = \Drupal::service('plugin.manager.list_formatter')->fieldListInfo();
+  $info['list_formatter']['field_types'] = $list_formatter_info['field_types'];
+  $info['list_formatter']['settings']['contrib'] = $list_formatter_info['settings'];
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_list_formatter_theme($existing, $type, $theme, $path) {
+  return [
+    'list_formatter_comma' => [
+      'variables' => [
+        'items' => NULL,
+        'settings' => [],
+        'attributes' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for the list_formatter_comma.html.twig template.
+ */
+function template_preprocess_list_formatter_comma(&$variables) {
+  $settings = $variables['settings'];
+
+  // Default comma separator.
+  $separator = ', ';
+  // Override if we need to.
+  if ($settings['comma_override']) {
+    $separator = $settings['separator_custom'];
+  }
+  if ($sep_tag = $settings['separator_custom_tag']) {
+    $sep_attributes = new Attribute([
+      'class' => [$settings['separator_custom_class'] ?: ''],
+    ]);
+    $separator = "<$sep_tag$sep_attributes>$separator</$sep_tag>";
+  }
+  $variables['separator'] = $separator;
+
+  // Check if we should prepend the last item with 'and'.
+  $variables['comma_and'] = $settings['comma_and'];
+
+  // Optionally append a period to the end of the list.
+  $variables['period'] = $settings['comma_full_stop'] ? '.' : '';
+
+  // Optionally wrap the list in an HTML tag.
+  $variables['tag'] = $settings['comma_tag'];
+}

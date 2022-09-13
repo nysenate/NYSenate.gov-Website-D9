@@ -1,0 +1,39 @@
+id: d7_file_plain_type
+label: Media types from plain files
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\media_migration\Plugin\migrate\D7FileConfigDeriver
+idMap:
+  plugin: smart_sql
+source:
+  plugin: d7_file_plain_type
+  constants:
+    status: true
+process:
+  id: bundle
+  label: bundle_label
+  status: constants/status
+  source: source_plugin_id
+  source_configuration/source_field:
+    -
+      plugin: migration_lookup
+      source:
+        - mimes
+        - schemes
+      migration: d7_file_plain_source_field
+      no_stub: true
+    -
+      plugin: default_value
+      default_value:
+        - NULL
+        - NULL
+    -
+      plugin: extract
+      index:
+        - 1
+destination:
+  plugin: entity:media_type
+migration_dependencies:
+  required:
+    - d7_file_plain_source_field

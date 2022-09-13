@@ -1,0 +1,4 @@
+services:
+  video_embed_field_migrate.migrate:
+    class: Drupal\video_embed_field_migrate\VideoEmbedFieldMigrate
+    arguments: ['@config.factory', '@entity_type.manager', '@entity_display.repository']

@@ -21,7 +21,7 @@ class NameNodeTokenReplaceTest extends NameTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'filter', 'token'];
+  protected static $modules = ['node', 'filter', 'token'];
 
   /**
    * The name formatter.
@@ -40,7 +40,7 @@ class NameNodeTokenReplaceTest extends NameTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->interfaceLanguage = \Drupal::languageManager()->getCurrentLanguage();

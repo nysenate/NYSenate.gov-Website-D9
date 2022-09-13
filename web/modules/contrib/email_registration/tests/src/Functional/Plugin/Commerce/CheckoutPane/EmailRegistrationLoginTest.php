@@ -24,7 +24,7 @@ class EmailRegistrationLoginTest extends CommerceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_product',
     'commerce_order',
     'commerce_cart',
@@ -35,7 +35,7 @@ class EmailRegistrationLoginTest extends CommerceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Place commerce blocks.

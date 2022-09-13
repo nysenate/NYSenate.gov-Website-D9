@@ -5,7 +5,6 @@ dependencies:
   config:
     - core.entity_form_mode.media.inline_entity
     - field.field.node.meeting.body
-    - field.field.node.meeting.field_agenda_bills
     - field.field.node.meeting.field_bill
     - field.field.node.meeting.field_committee
     - field.field.node.meeting.field_committee_featured
@@ -17,9 +16,8 @@ dependencies:
     - field.field.node.meeting.field_meeting_location
     - field.field.node.meeting.field_meeting_status
     - field.field.node.meeting.field_off_the_floor
-    - field.field.node.meeting.field_paragraphs
     - field.field.node.meeting.field_transcript
-    - field.field.node.meeting.field_ustream_url
+    - field.field.node.meeting.field_ustream
     - field.field.node.meeting.field_video_redirect
     - field.field.node.meeting.field_video_status
     - field.field.node.meeting.field_yt
@@ -30,8 +28,6 @@ dependencies:
     - field_group
     - inline_entity_form
     - link
-    - media_library
-    - paragraphs
     - path
     - scheduler
     - text
@@ -74,9 +70,9 @@ third_party_settings:
     group_video:
       children:
         - field_video_redirect
-        - field_ustream_url
         - field_meeting_status
         - field_video_status
+        - field_ustream
         - field_yt
         - field_transcript
       label: Video
@@ -122,19 +118,9 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_agenda_bills:
-    type: entity_reference_autocomplete
-    weight: 11
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 100
-      placeholder: ''
     third_party_settings: {  }
   field_bill:
     type: entity_reference_autocomplete
@@ -227,7 +213,7 @@ content:
     third_party_settings: {  }
   field_meeting_status:
     type: options_select
-    weight: 9
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -238,27 +224,9 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_paragraphs:
-    type: paragraphs
-    weight: 6
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
   field_transcript:
     type: entity_reference_autocomplete_tags
-    weight: 12
+    weight: 11
     region: content
     settings:
       match_operator: CONTAINS
@@ -266,12 +234,11 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_ustream_url:
-    type: media_library_widget
-    weight: 7
+  field_ustream:
+    type: options_select
+    weight: 9
     region: content
-    settings:
-      media_types: {  }
+    settings: {  }
     third_party_settings: {  }
   field_video_redirect:
     type: string_textfield
@@ -283,13 +250,13 @@ content:
     third_party_settings: {  }
   field_video_status:
     type: options_select
-    weight: 10
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   field_yt:
     type: inline_entity_form_simple
-    weight: 11
+    weight: 10
     region: content
     settings:
       form_mode: inline_entity
@@ -302,19 +269,24 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
     weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 14
+    weight: 16
     region: content
     settings:
       display_label: true
@@ -329,7 +301,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -339,12 +311,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 12
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 13
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }

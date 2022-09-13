@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal, once) {
 
   "use strict";
 
@@ -39,7 +39,7 @@
 
   Drupal.behaviors.environmentIndicatorTinycon = {
     attach: function (context, settings) {
-      $('html').once('env-ind-tinycon').each(function() {
+      $(once('env-ind-tinycon', 'html', context)).each(function() {
         if (typeof(settings.environmentIndicator) != 'undefined' &&
           typeof(settings.environmentIndicator.addFavicon) != 'undefined' &&
           settings.environmentIndicator.addFavicon) {
@@ -54,4 +54,4 @@
     }
   }
 
-})(jQuery);
+})(jQuery, Drupal, once);

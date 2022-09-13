@@ -17,7 +17,7 @@ class NameFieldTest extends NameTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'field_ui',
     'node',
@@ -28,7 +28,7 @@ class NameFieldTest extends NameTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Create content-type: page.
@@ -50,10 +50,12 @@ class NameFieldTest extends NameTestBase {
       'field_name' => 'name_test',
       'new_storage_type' => 'name',
     ];
+    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
 
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/add-field', $new_name_field, t('Save and continue'));
+    $this->submitForm($new_name_field, t('Save and continue'));
     $storage_settings = [];
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/storage', $storage_settings, t('Save field settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test/storage');
+    $this->submitForm($storage_settings, t('Save field settings'));
     $this->resetAll();
 
     // Required test.
@@ -64,8 +66,9 @@ class NameFieldTest extends NameTestBase {
     foreach ($this->nameGetFieldStorageSettingsCheckboxes() as $key => $value) {
       $field_settings[$key] = FALSE;
     }
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
 
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->submitForm($field_settings, t('Save settings'));
 
     $n = _name_translations();
     $required_messages = [
@@ -92,7 +95,7 @@ class NameFieldTest extends NameTestBase {
       ]),
     ];
     foreach ($required_messages as $message) {
-      $this->assertText($message);
+      $this->assertSession()->pageTextContains($message);
     }
     $field_settings = [
       'settings[components][title]' => FALSE,
@@ -120,7 +123,8 @@ class NameFieldTest extends NameTestBase {
       'settings[generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
     ];
     $this->resetAll();
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
 
     $required_messages = [
       t('@field must be higher than or equal to 1.', ['@field' => $n['title']]),
@@ -141,7 +145,7 @@ class NameFieldTest extends NameTestBase {
       ]),
     ];
     foreach ($required_messages as $message) {
-      $this->assertText($message);
+      $this->assertSession()->pageTextContains($message);
     }
 
     // Make sure option lengths do not exceed the title lengths.
@@ -152,7 +156,8 @@ class NameFieldTest extends NameTestBase {
       'settings[generational_options]' => "AAAA\n-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\nBBBB",
     ];
     $this->resetAll();
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
     $required_messages = [
       t('The following options exceed the maximum allowed @field length: Aaaaa., Bbbbbbbb, Ccccc.', [
         '@field' => t('@title options', ['@title' => $n['title']]),
@@ -163,7 +168,7 @@ class NameFieldTest extends NameTestBase {
     ];
 
     foreach ($required_messages as $message) {
-      $this->assertText($message);
+      $this->assertSession()->pageTextContains($message);
     }
 
     // Make sure option have at least one valid option.
@@ -172,13 +177,14 @@ class NameFieldTest extends NameTestBase {
       'settings[generational_options]' => " \n-- --\n ",
     ];
     $this->resetAll();
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
     $required_messages = [
       t('@field are required.', ['@field' => t('@title options', ['@title' => $n['title']])]),
       t('@field are required.', ['@field' => t('@generational options', ['@generational' => $n['generational']])]),
     ];
     foreach ($required_messages as $message) {
-      $this->assertText($message);
+      $this->assertSession()->pageTextContains($message);
     }
 
     // Make sure option have at least one valid only have one default value.
@@ -187,7 +193,8 @@ class NameFieldTest extends NameTestBase {
       'settings[generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\n--",
     ];
     $this->resetAll();
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
     $required_messages = [
       t('@field can only have one blank value assigned to it.', [
         '@field' => t('@title options', [
@@ -201,14 +208,15 @@ class NameFieldTest extends NameTestBase {
       ]),
     ];
     foreach ($required_messages as $message) {
-      $this->assertText($message);
+      $this->assertSession()->pageTextContains($message);
     }
 
     // Save the field again with the default values.
     $this->resetAll();
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $this->nameGetFieldStorageSettings(), t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($this->nameGetFieldStorageSettings(), t('Save settings'));
 
-    $this->assertText(t('Saved Test name configuration.'));
+    $this->assertSession()->pageTextContains(t('Saved Test name configuration.'));
 
     // First, check that field validation is working.
     $field_settings = [
@@ -238,7 +246,8 @@ class NameFieldTest extends NameTestBase {
 
     ];
     $this->resetAll();
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
 
     $required_messages = [
       t('Maximum length for @field must be higher than or equal to 1.', ['@field' => $n['title']]),
@@ -261,7 +270,7 @@ class NameFieldTest extends NameTestBase {
       ]),
     ];
     foreach ($required_messages as $message) {
-      $this->assertText($message);
+      $this->assertSession()->pageTextContains($message);
     }
 
     $field_settings = [
@@ -285,7 +294,7 @@ class NameFieldTest extends NameTestBase {
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
 
     foreach ($field_settings as $name => $value) {
-      $this->assertFieldByName($name, $value);
+      $this->assertSession()->fieldValueEquals($name, $value);
     }
 
     // Check help text display.
@@ -293,32 +302,32 @@ class NameFieldTest extends NameTestBase {
     $edit = [
       'description' => 'This is a description.',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->submitForm($edit, t('Save settings'));
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test/storage');
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
+    $this->submitForm($edit, t('Save field settings'));
     $this->drupalGet('node/add/page');
-    $this->assertUniqueText('This is a description.', 'Field description is shown once when field cardinality is 1.');
+    $this->assertSession()->pageTextContainsOnce('This is a description.');
 
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test/storage');
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
+    $this->submitForm($edit, t('Save field settings'));
     $this->drupalGet('node/add/page');
-    $this->assertUniqueText('This is a description.', 'Field description is shown once when field cardinality is 3.');
+    $this->assertSession()->pageTextContainsOnce('This is a description.');
 
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test/storage');
     $edit = [
       'cardinality' => '-1',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
+    $this->submitForm($edit, t('Save field settings'));
     $this->drupalGet('node/add/page');
-    $this->assertUniqueText('This is a description.', 'Field description is shown once when field cardinality is unlimited.');
+    $this->assertSession()->pageTextContainsOnce('This is a description.');
   }
 
   /**

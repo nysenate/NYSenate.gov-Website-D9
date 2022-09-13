@@ -122,19 +122,21 @@ function email_registration_cleanup_username($name) {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function email_registration_form_user_form_alter(&$form, FormStateInterface $form_state) {
-  $account = \Drupal::currentUser();
-  // Allow users to edit their own username or admins to do it if appropriate.
-  if (!$account->hasPermission('change own username') &&
-    !$account->hasPermission('administer users')) {
-    $form['account']['name']['#type'] = 'value';
-  }
+  if (!\Drupal::config('email_registration.settings')->get('require_username_on_registration')) {
+    $account = \Drupal::currentUser();
+    // Allow users to edit their own username or admins to do it if appropriate.
+    if (!$account->hasPermission('change own username') &&
+      !$account->hasPermission('administer users')) {
+      $form['account']['name']['#type'] = 'value';
+    }
 
-  // Provide a random user name only if we are creating a new user, i.e. this
-  // is a registration.
-  /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
-  $form_object = $form_state->getFormObject();
-  if ($form_object->getEntity()->isNew()) {
-    $form['account']['name']['#value'] = 'email_registration_' . user_password();
+    // Provide a random user name only if we are creating a new user, i.e. this
+    // is a registration.
+    /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
+    $form_object = $form_state->getFormObject();
+    if ($form_object->getEntity()->isNew()) {
+      $form['account']['name']['#default_value'] = 'email_registration_' . \Drupal::service('password_generator')->generate();
+    }
   }
   $form['account']['mail']['#title'] = t('Email');
 }
@@ -203,6 +205,12 @@ function email_registration_form_user_admin_settings_alter(&$form, FormStateInte
     '#description' => t('Allow users to log in with either their email address or their username.'),
     '#default_value' => $config->get('login_with_username'),
   ];
+  $form['registration_cancellation']['require_username_on_registration'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Require the user name on user registration form'),
+    '#description' => t('If checked, a text entry field will be displayed on the new user registration form to allow users to enter their desired user name.'),
+    '#default_value' => $config->get('require_username_on_registration'),
+  ];
   $form['#submit'][] = 'email_registration_form_user_admin_settings_submit';
 }
 
@@ -212,6 +220,8 @@ function email_registration_form_user_admin_settings_alter(&$form, FormStateInte
  * @see email_registration_form_user_admin_settings_alter()
  */
 function email_registration_form_user_admin_settings_submit(array &$form, FormStateInterface $form_state) {
-  $config = \Drupal::configFactory()->getEditable('email_registration.settings');
-  $config->set('login_with_username', $form_state->getValue('login_with_username'))->save();
+  \Drupal::configFactory()->getEditable('email_registration.settings')
+    ->set('login_with_username', $form_state->getValue('login_with_username'))
+    ->set('require_username_on_registration', $form_state->getValue('require_username_on_registration'))
+    ->save();
 }

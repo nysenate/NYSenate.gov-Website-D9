@@ -1370,6 +1370,7 @@ strong {
       letter-spacing: 0;
       text-align: center; }
     .c-stats--container .c-stats--highlight {
+      display: none;
       opacity: 0;
       top: 30px;
       height: 200px;
@@ -1387,11 +1388,22 @@ strong {
       width: 90%;
       margin: 0 auto; }
     .c-stats--container .c-carousel--item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
-      height: 216px;
+      height: 130px;
       width: 33.33%;
       margin: 0;
       padding: 0; }
+      .c-stats--container .c-carousel--item:not(:first-child) {
+        border-left: 1px solid #fff; }
+      .c-stats--container .c-carousel--item.with-icon {
+        display: block;
+        height: 216px;
+        border-left: 0; }
+    .c-stats--container.with-hover .c-stats--highlight {
+      display: block; }
   .c-stats--item .c-stat {
     font-size: 60px; }
   .c-stats--item .c-stat--illus {

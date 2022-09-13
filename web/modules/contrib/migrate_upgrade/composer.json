@@ -1,0 +1,33 @@
+{
+    "name": "drupal/migrate_upgrade",
+    "description": "Drush support for direct upgrades from older Drupal versions.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Mike Ryan",
+            "homepage":"https://www.drupal.org/u/mikeryan",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Lucas Hedding",
+            "homepage": "https://www.drupal.org/u/heddn",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/migrate_upgrade",
+        "slack": "#migrate",
+        "source": "https://git.drupalcode.org/project/migrate_upgrade"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": false,
+    "config": {
+        "preferred-install": "dist"
+    },
+    "require": {
+        "php": ">7.3",
+        "drupal/migrate_plus": ">=5",
+        "drush/drush": ">=9"
+    }
+}

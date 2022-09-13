@@ -153,6 +153,13 @@
         {{ end_date|date("g:i A") }}
       {% endif %}
     </div>
+
+    {% if calendar_links %}
+      {% include "@nysenate_theme/add-to-calendar/add-to-calendar.twig" with {
+        calendar_links: calendar_links
+      } only %}
+    {% endif %}
+    
   </div>
 
   {% if field_issues or field_majority_issue_tag %}
@@ -181,9 +188,9 @@
         } only
       %}
     </div>
-  {% elseif content.field_video_status[0]['#value'] == "streaming_live_now" and content.field_ustream_url[0] %}
+  {% elseif node.field_video_status.0.value == "streaming_live_now" and content.field_ustream[0]  %}
     <div class="c-block">
-      {{ field_ustream_url }}
+      {{ content.field_ustream }}
     </div>
   {% endif %}
 

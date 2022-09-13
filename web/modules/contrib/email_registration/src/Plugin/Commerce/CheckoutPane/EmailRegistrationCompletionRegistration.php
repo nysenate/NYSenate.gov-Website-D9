@@ -26,7 +26,7 @@ class EmailRegistrationCompletionRegistration extends CompletionRegister {
     // Set the name as per email_registration_form_user_register_form_alter().
     $pane_form['name'] = [
       '#type' => 'hidden',
-      '#value' => 'email_registration_' . user_password(),
+      '#value' => 'email_registration_' . \Drupal::service('password_generator')->generate(),
     ];
 
     // Try and help password managers.

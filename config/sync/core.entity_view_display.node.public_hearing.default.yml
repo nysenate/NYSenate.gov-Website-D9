@@ -14,7 +14,7 @@ dependencies:
     - field.field.node.public_hearing.field_location
     - field.field.node.public_hearing.field_meeting_location
     - field.field.node.public_hearing.field_transcript
-    - field.field.node.public_hearing.field_ustream_url
+    - field.field.node.public_hearing.field_ustream
     - field.field.node.public_hearing.field_video_redirect
     - field.field.node.public_hearing.field_video_status
     - field.field.node.public_hearing.field_yt
@@ -124,13 +124,12 @@ content:
     third_party_settings: {  }
     weight: 109
     region: content
-  field_ustream_url:
-    type: entity_reference_label
+  field_ustream:
+    type: list_key
     label: above
-    settings:
-      link: true
+    settings: {  }
     third_party_settings: {  }
-    weight: 113
+    weight: 116
     region: content
   field_video_redirect:
     type: string

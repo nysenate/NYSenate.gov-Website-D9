@@ -14,6 +14,13 @@ use Drupal\name\NameOptionsProvider;
 trait NameFormSettingsHelperTrait {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['fieldSettingsFormPreRender'];
+  }
+
+  /**
    * Themes up the field settings into a table.
    */
   public function fieldSettingsFormPreRender($form) {

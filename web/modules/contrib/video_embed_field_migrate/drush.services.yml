@@ -1,0 +1,6 @@
+services:
+  video_embed_field_migrate.commands:
+    class: \Drupal\video_embed_field_migrate\Commands\VideoEmbedFieldMigrateCommands
+    arguments: ['@video_embed_field_migrate.migrate']
+    tags:
+      - { name: drush.command }

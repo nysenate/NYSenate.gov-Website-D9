@@ -1,0 +1,21 @@
+uuid: ac509060-5d81-43d0-88ed-94f4b0ea0593
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ustream
+    - node.type.meeting
+  module:
+    - options
+id: node.meeting.field_ustream
+field_name: field_ustream
+entity_type: node
+bundle: meeting
+label: 'Ustream Channel'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

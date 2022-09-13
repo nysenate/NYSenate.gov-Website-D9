@@ -1,0 +1,32 @@
+id: d7_embed_button_media
+label: Embed media button
+migration_tags:
+  - Drupal 7
+  - Configuration
+  # Should follow \Drupal\media_migration\MediaMigration::MIGRATION_TAG_MAIN
+  - Media Migration
+  # Should follow \Drupal\media_migration\MediaMigration::MIGRATION_TAG_CONFIG
+  - Media Configuration
+source:
+  plugin: empty
+  constants:
+    status: true
+    label: Media
+    id: media
+    type_id: entity
+    type_settings:
+      entity_type: media
+      bundles: {  }
+      display_plugins: {  }
+      entity_browser: ''
+      entity_browser_settings: {  }
+    icon: {  }
+process:
+  status: constants/status
+  label: constants/label
+  id: constants/id
+  type_id: constants/type_id
+  type_settings: constants/type_settings
+  icon: constants/icon
+destination:
+  plugin: entity:embed_button

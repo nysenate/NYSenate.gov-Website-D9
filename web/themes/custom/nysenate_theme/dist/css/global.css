@@ -1304,11 +1304,13 @@ body .node__body {
   body .node__body ul {
     list-style-position: outside;
     margin-bottom: 20px;
-    margin-top: 20px; }
+    margin-top: 20px;
+    padding: 0; }
   body .block-content--type-text ol,
   body .node__body ol {
     margin-bottom: 20px;
-    margin-top: 20px; }
+    margin-top: 20px;
+    padding: 0; }
 
 body .block-content--type-embed,
 body .block-content--type-form,
@@ -1385,6 +1387,17 @@ body .block-content--type-gallery {
       .c-block p {
         font-size: 20px;
         line-height: 32px; } }
+
+.c-block .c-img--caption {
+  margin: 0;
+  padding: 10px 20px 10px;
+  background: #eeeeee;
+  color: #444444;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 12px;
+  line-height: 18px; }
+  .c-block .c-img--caption:last-child {
+    margin: 0; }
 
 .c-block-legislation {
   position: relative;
@@ -1622,6 +1635,22 @@ h3.c-container--title {
         font-size: 23px;
         line-height: 1em; } }
 
+.c-block p {
+  font-family: "Adelle Light", serif;
+  line-height: 1.5em;
+  color: #666666;
+  font-size: 16px; }
+
+.c-detail--section-title {
+  overflow: hidden;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #aaaaaa;
+  margin-bottom: 20px;
+  line-height: 1; }
+  .c-detail--section-title.c-detail--subhead {
+    color: #444444;
+    font-weight: 400; }
+
 .c-detail--download {
   display: block;
   margin-bottom: 20px;
@@ -1691,18 +1720,6 @@ h3.c-container--title {
     left: -0.2em;
     font-size: 2.7em; }
 
-/*----------------------------------------
-/ IMAGE
-/----------------------------------------*/
-.c-img--caption {
-  margin: 0;
-  padding: 10px 20px 10px;
-  background: #eeeeee;
-  color: #444444;
-  font-family: "Proxima Nova Regular", "Arial", sans-serif;
-  font-size: 12px;
-  line-height: 18px; }
-
 /*-------------------------------------
 /
 / LAYOUT - ROWS
@@ -1715,7 +1732,7 @@ h3.c-container--title {
   margin: 0 auto;
   width: 100%; }
   .l-row::after {
-    content: "";
+    content: '';
     display: table;
     clear: both; }
 
@@ -1786,6 +1803,12 @@ h3.c-container--title {
     max-width: 100%; }
   .page-node-dashboard .row {
     margin: 0; } }
+
+main.l-row--main {
+  padding-top: 40px; }
+  @media screen and (min-width: 768px) {
+    main.l-row--main {
+      padding-top: 80px; } }
 
 /*-------------------------------------
 /

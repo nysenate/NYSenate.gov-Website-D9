@@ -7,11 +7,12 @@ dependencies:
     - field.storage.node.field_image_hero
     - field.storage.node.field_ol_publish_date
     - field.storage.node.field_session_calendars
-    - field.storage.node.field_ustream_url
+    - field.storage.node.field_ustream
   module:
     - datetime
     - entityqueue
     - node
+    - options
     - taxonomy
     - user
 id: homepage_hero
@@ -197,10 +198,10 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_ustream_url:
-          id: field_ustream_url
-          table: node__field_ustream_url
-          field: field_ustream_url
+        field_ustream:
+          id: field_ustream
+          table: node__field_ustream
+          field: field_ustream
           relationship: none
           group_type: group
           admin_label: ''
@@ -246,11 +247,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: true
-          group_column: target_id
+          click_sort_column: value
+          type: list_key
+          settings: {  }
+          group_column: value
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -689,7 +689,7 @@ display:
         - 'config:field.storage.node.field_image_hero'
         - 'config:field.storage.node.field_ol_publish_date'
         - 'config:field.storage.node.field_session_calendars'
-        - 'config:field.storage.node.field_ustream_url'
+        - 'config:field.storage.node.field_ustream'
         - entity_field_info
         - views_data
   homepage_hero:
@@ -699,7 +699,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      block_category: ''
+      block_category: 'Lists (Views)'
     cache_metadata:
       max-age: -1
       contexts:
@@ -712,6 +712,6 @@ display:
         - 'config:field.storage.node.field_image_hero'
         - 'config:field.storage.node.field_ol_publish_date'
         - 'config:field.storage.node.field_session_calendars'
-        - 'config:field.storage.node.field_ustream_url'
+        - 'config:field.storage.node.field_ustream'
         - entity_field_info
         - views_data

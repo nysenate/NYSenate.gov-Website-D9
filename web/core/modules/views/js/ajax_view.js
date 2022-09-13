@@ -11,8 +11,10 @@
   Drupal.behaviors.ViewsAjaxView.attach = function (context, settings) {
     if (settings && settings.views && settings.views.ajaxViews) {
       var ajaxViews = settings.views.ajaxViews;
-      Object.keys(ajaxViews || {}).forEach(function (i) {
-        Drupal.views.instances[i] = new Drupal.views.ajaxView(ajaxViews[i]);
+      Drupal.views.sortByNestingLevel(ajaxViews).forEach(function (_ref) {
+        var key = _ref.key,
+            value = _ref.value;
+        Drupal.views.instances[key] = new Drupal.views.ajaxView(value);
       });
     }
   };
@@ -36,8 +38,22 @@
   Drupal.views = {};
   Drupal.views.instances = {};
 
+  Drupal.views.sortByNestingLevel = function (ajaxViews) {
+    var ajaxViewsArray = Object.keys(ajaxViews || {}).map(function (key) {
+      ajaxViews[key].selector = ".js-view-dom-id-".concat(ajaxViews[key].view_dom_id);
+      return {
+        key: key,
+        value: ajaxViews[key],
+        nestingLevel: $(ajaxViews[key].selector).parents('.view').length
+      };
+    });
+    return ajaxViewsArray.sort(function (a, b) {
+      return b.nestingLevel - a.nestingLevel;
+    });
+  };
+
   Drupal.views.ajaxView = function (settings) {
-    var selector = ".js-view-dom-id-".concat(settings.view_dom_id);
+    var selector = settings.selector;
     this.$view = $(selector);
     var ajaxPath = drupalSettings.views.ajax_path;
 
@@ -68,33 +84,35 @@
     this.settings = settings;
     this.$exposed_form = $("form#views-exposed-form-".concat(settings.view_name.replace(/_/g, '-'), "-").concat(settings.view_display_id.replace(/_/g, '-')));
     once('exposed-form', this.$exposed_form).forEach($.proxy(this.attachExposedFormAjax, this));
-    once('ajax-pager', this.$view.filter($.proxy(this.filterNestedViews, this))).forEach($.proxy(this.attachPagerAjax, this));
+
+    if (this.$view.find('.views-infinite-scroll-content-wrapper').length) {
+      this.$pager_links = this.$view.find('ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a');
+      this.$pager_links.once('ajax-pager').each($.proxy(this.attachPagerLinkAjax, this));
+    } else {
+      once('ajax-pager', this.$view.filter($.proxy(this.filterNestedViews, this))).forEach($.proxy(this.attachPagerAjax, this));
+    }
+
     var selfSettings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
       base: this.selector,
       element: this.$view.get(0)
     });
+    delete selfSettings.selector;
     this.refreshViewAjax = Drupal.ajax(selfSettings);
   };
 
-  Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
-    var that = this;
+  Drupal.views.ajaxView.prototype.attachExposedFormAjax = function (form) {
+    var _this = this;
+
     this.exposedFormAjax = [];
-    $('input[type=submit], button[type=submit], input[type=image]', this.$exposed_form).not('[data-drupal-selector=edit-reset]').each(function (index) {
-      var selfSettings = $.extend({}, that.element_settings, {
-        base: $(this).attr('id'),
-        element: this
+    $('input[type=submit], button[type=submit], input[type=image]', form).not('[data-drupal-selector=edit-reset]').each(function (index, element) {
+      var selfSettings = $.extend({}, _this.element_settings, {
+        base: $(element).attr('id'),
+        element: element
       });
-      that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
+      delete selfSettings.selector;
+      _this.exposedFormAjax[index] = Drupal.ajax(selfSettings);
     });
-  };
-
-  Drupal.views.ajaxView.prototype.filterNestedViews = function () {
-    return !this.$view.parents('.view').length;
-  };
-
-  Drupal.views.ajaxView.prototype.attachPagerAjax = function () {
-    this.$view.find('ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a').each($.proxy(this.attachPagerLinkAjax, this));
   };
 
   Drupal.views.ajaxView.prototype.attachPagerLinkAjax = function (id, link) {
@@ -107,6 +125,7 @@
       base: false,
       element: link
     });
+    delete selfSettings.selector;
     this.pagerAjax = Drupal.ajax(selfSettings);
   };
 

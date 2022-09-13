@@ -189,9 +189,9 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
   public function buildOptionsForm(array &$form, FormStateInterface $form_state, array $options_parents, $is_exposed = FALSE) {
 
     $form['origin_address'] = [
-      '#title' => t('Origin'),
+      '#title' => $this->t('Origin'),
       '#type' => 'textfield',
-      '#description' => t('Address, City, Zip-Code, Country, ...'),
+      '#description' => $this->t('Address, City, Zip-Code, Country, ...'),
       '#default_value' => $this->originAddress,
       '#attributes' => [
         'class' => ['address-input'],
@@ -199,8 +199,8 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
     ];
 
     if (!$is_exposed) {
-      $form['origin_address']['#title'] = t('Default Origin');
-      $form['origin_address']['#description'] = t('Address, City, Zip-Code, Country that would be set as Default Geocoded Address in the Exposed Filter');
+      $form['origin_address']['#title'] = $this->t('Default Origin');
+      $form['origin_address']['#description'] = $this->t('Address, City, Zip-Code, Country that would be set as Default Geocoded Address in the Exposed Filter');
 
       // Attach Geofield Map Library.
       $form['#attached']['library'] = [
@@ -289,10 +289,10 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
       ];
 
       $form['settings']['autocomplete']['address_format'] = [
-        '#title' => t('Address Format'),
+        '#title' => $this->t('Address Format'),
         '#type' => 'select',
         '#options' => $this->formatterPluginManager->getPluginsAsOptions(),
-        '#description' => t('The address formatter plugin, used for autocomplete suggestions'),
+        '#description' => $this->t('The address formatter plugin, used for autocomplete suggestions'),
         '#default_value' => $this->addressFormat,
         '#attributes' => [
           'class' => ['address-format'],

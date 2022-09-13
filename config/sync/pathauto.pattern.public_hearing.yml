@@ -1,0 +1,22 @@
+uuid: 5c4c9fb1-e710-44ce-9a36-f82214725db6
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: public_hearing
+label: 'Public Hearing'
+type: 'canonical_entities:node'
+pattern: 'calendar/public_hearings/[node:field_date_range:start_date:custom:F-d-Y]/[node:title]'
+selection_criteria:
+  0e815d02-6b2a-422f-aab1-8901dcd9ad9e:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 0e815d02-6b2a-422f-aab1-8901dcd9ad9e
+    context_mapping:
+      node: node
+    bundles:
+      public_hearing: public_hearing
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -55,7 +55,7 @@ New geocoder handlers are easy to define. Simply create a new ctools plugin of t
 
 Find detailed documentation in the README.md file.
 
-<h2>Geocoder 2.x (Drupal 8)</h2>
+<h2><del>Geocoder 2.x (Drupal 8 - deprecated)</del></h2>
 
 This is a complete rewrite of the Geocoder module, based on the <a href="http://geocoder-php.org/" target="blank">Geocoder PHP library</a> - <a href="https://github.com/geocoder-php/Geocoder/tree/3.x" target="blank">Version 3.x</a>.
 
@@ -70,42 +70,21 @@ This is a complete rewrite of the Geocoder module, based on the <a href="http://
   <li>Caching results capabilities, enabled by default;</li>
 </ul>
 
-<h3>Requirements for D8/D9</h3>
-<ul>
-  <li><a href="https://getcomposer.org" target="blank">Composer</a>, to add the module to your codebase (for more info refer to <a href="https://www.drupal.org/node/2718229" target="blank">Using Composer to manage Drupal site dependencies)</a></li>
-  <li><a href="http://drush.org" target="blank">Drush</a>, to enable the module (and its dependencies) from the shell;</li>
-  <li>No other external requirements for the main geocoder Module: the <a href="http://geocoder-php.org" target="blank">Geocoder PHP library</a> will be downloaded automatically via composer;</li>
-  <li>The embedded "Geocoder Geofield" submodule requires the <a href="https://www.drupal.org/project/geofield" target="blank">Geofield Module</a>;</li>
-  <li>The embedded "Geocoder Address" submodule requires the <a href="https://www.drupal.org/project/address" target="blank">Address Module</a>;</li>
-</ul>
-
-<h3>Installation for D8/D9</h3>
-
-<ol>
-  <li>Download the module running the following shell command from you project root (at the composer.json file level):
-    <b>$ composer require "drupal/geocoder"</b>
-    <u>Note:</u> this will also download the Geocoder PHP library as vendor/willdurand/geocoder</li>
-  <li>Enable the module via Drush
-    <b>$ drush en geocoder</b>
-    or the website back-end/administration interface;</li>
-  <li>Eventually enable also the submodules: geocoder_field, geocoder_geofield, geocoder_address;</li>
-</ol>
-
-<h3>Detailed Documentation and APIs</h3>
-Find detailed documentation, also on its APIs in the README.md file.
-
 <h2>Geocoder 3.x (Drupal 8/9)</h2>
 
-This is an evolution of the Geocoder 2.x module, based on the <a href="https://github.com/geocoder-php/Geocoder" target="blank">Geocoder PHP library - Version 4.x</a>.
+This is an evolution of the Geocoder 2.x module (deprecated), based on the <a href="https://github.com/geocoder-php/Geocoder" target="blank">Geocoder PHP library - Version 4.x</a>.
 Starting with this version the Geocoder providers are config entities, whereas in earlier versions the provider settings were stored in simple configuration. An upgrade path is provided but any code that was relying on the old simple config will need to be updated to use the config entities instead.
 An upgrade path is provided but any code that was relying on the 2.x simple config will need to be updated to use the config entities instead.
+
+<h3>Features</h3>
+<ul>
+  <li>See Geocoder 2.x Features (above)</a></li>
+</ul>
 
 <h3>Installation the Geocoder 8.x-3.x version for D8/D9</h3>
 
 <ol>
-  <li>Download the module running the following shell command from you project root (at the composer.json file level):
-    <b>$ composer require "drupal/geocoder:^3.0@beta"</b>
-    <u>Note:</u> this will also download the Geocoder PHP library as willdurand/geocoder": "^4.0" library</li>
+  <li>Download the module running requiring it via composer. This will also download the Geocoder PHP library as willdurand/geocoder library</li>
   <li>Enable the module (and its sub-modules) via Drush</li>
   <li>Choose the <a href="https://packagist.org/providers/geocoder-php/provider-implementation" target="blank">Geocoder Provider</a> you want to use and also add it as a required dependency to your project. For
     example if you want to use Google Maps as your provider:
@@ -126,3 +105,7 @@ When upgrading to the new Geocoder 8.x-3.x branch you would need to:
 </ul>
 
 Further Detailed Documentation and APIs provided in the Geocoder 3.x Readme.md file.
+
+<h2>Geocoder 4.x (Drupal 9/10)</h2>
+This branch is a parallel copy of the Geocoder 3.x branch requiring the php-http/guzzle7-adapter, thus compatible with Guzzle 7 (that is a possible dependency since Drupal 9.4 and a requirement for Drupal 10).
+At the moment this branch still have incompatibilities with packages locked to php-http/guzzle6-adapter dependency (see issue #3283651).

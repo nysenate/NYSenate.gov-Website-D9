@@ -1,0 +1,22 @@
+uuid: 57d63a1e-e5f2-4ef0-a817-2fc77c6b9e7c
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: honorees
+label: Honorees
+type: 'canonical_entities:node'
+pattern: 'profiles/[node:field_date:date:html_year]/[node:field_senator_multiref:0:entity:name]/[node:title]'
+selection_criteria:
+  b7ae1340-6476-45e4-b264-39e875deaefc:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: b7ae1340-6476-45e4-b264-39e875deaefc
+    context_mapping:
+      node: node
+    bundles:
+      honoree: honoree
+selection_logic: and
+weight: -5
+relationships: {  }

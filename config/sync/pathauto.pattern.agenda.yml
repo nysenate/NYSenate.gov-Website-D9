@@ -1,0 +1,22 @@
+uuid: 9aa9fa62-ee7a-4b03-8601-6b41b0da608b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: agenda
+label: Agenda
+type: 'canonical_entities:node'
+pattern: 'agendas/[node:title]'
+selection_criteria:
+  b508d5a1-7242-44c4-b6a5-ba46043d7b1c:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: b508d5a1-7242-44c4-b6a5-ba46043d7b1c
+    context_mapping:
+      node: node
+    bundles:
+      agenda: agenda
+selection_logic: and
+weight: -5
+relationships: {  }

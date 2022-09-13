@@ -54,6 +54,8 @@ class EnvironmentIndicatorForm extends EntityForm {
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Save your config entity.
    *
    * There will eventually be default code to rely on here, but it doesn't exist

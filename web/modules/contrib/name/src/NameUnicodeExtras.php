@@ -22,7 +22,7 @@ class NameUnicodeExtras extends Unicode {
    */
   public static function explode($text) {
     $regex = '/(^|[' . static::PREG_CLASS_WORD_BOUNDARY . '])/u';
-    $words = preg_split($regex, $text, NULL, PREG_SPLIT_NO_EMPTY);
+    $words = preg_split($regex, $text, -1, PREG_SPLIT_NO_EMPTY);
     return $words;
   }
 

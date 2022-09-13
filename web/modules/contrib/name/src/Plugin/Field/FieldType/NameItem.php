@@ -54,13 +54,6 @@ class NameItem extends FieldItemBase implements TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks() {
-    return ['fieldSettingsFormPreRender'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $columns = [];
     foreach (static::$components as $key) {

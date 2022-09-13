@@ -470,7 +470,7 @@ function name_element_render_component(array $components, $component_key, array 
 
   $show_component_required_marker = $core
     && !empty($base_element['#show_component_required_marker'])
-    && !in_array('default_value_input', $base_element['#field_parents']);
+    && !in_array('default_value_input', $base_element['#field_parents'], TRUE);
 
   // Enable the title options.
   $title_display = isset($component['title_display']) ? $component['title_display'] : 'description';
@@ -482,7 +482,7 @@ function name_element_render_component(array $components, $component_key, array 
         '#required' => $show_component_required_marker,
         '#title_display' => 'before',
       ];
-      $element['#title'] = render($label);
+      $element['#title'] = \Drupal::service('renderer')->render($label);
       break;
 
     case 'placeholder':

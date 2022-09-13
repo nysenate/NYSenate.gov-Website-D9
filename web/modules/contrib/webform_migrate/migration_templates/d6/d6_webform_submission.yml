@@ -1,0 +1,34 @@
+id: upgrade_d6_webform_submission
+label: 'Webform Form Submission'
+migration_tags:
+  - 'Drupal 6'
+migration_group: migrate_drupal_6
+source:
+  plugin: d6_webform_submission
+process:
+  sid: sid
+  webform_id: webform_id
+  uri: Webform_uri
+  created: submitted
+  completed: submitted
+  changed: submitted
+  in_draft: is_draft
+  current_page: {}
+  remote_addr: remote_addr
+  uid: uid
+  langcode:
+    plugin: default_value
+    default_value: 'en'    
+  entity_type:
+    plugin: default_value
+    default_value: 'node'    
+  entity_id: nid
+  sticky: {}
+  notes: {}
+  serial: {}
+  data: webform_data
+destination:
+  plugin: 'entity:webform_submission'
+migration_dependencies:
+  required:
+    - upgrade_d6_webform 

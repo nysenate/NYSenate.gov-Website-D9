@@ -43,7 +43,6 @@
  * @see html.html.twig
  */
 #}
-{{ attach_library('nysenate_theme/page-layout') }}
 {{ attach_library('nysenate_theme/nysenate-footer') }}
 {{ attach_library('nysenate_theme/nysenate-header') }}
 
@@ -91,6 +90,8 @@
   <main role="main" class="container l-row l-row--main l-main">
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
     <div {{ attributes.addClass(layout_classes) }}>
+      <h2 class="nys-title--events nys-title">{{ title }}</h2>
+
       {{ page.content }}
 
       {% if page.sidebar_right %}

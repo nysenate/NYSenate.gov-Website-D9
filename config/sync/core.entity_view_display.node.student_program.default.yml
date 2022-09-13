@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.student_program.body
+    - field.field.node.student_program.field_accordion
     - field.field.node.student_program.field_article_author
     - field.field.node.student_program.field_attachment
     - field.field.node.student_program.field_date
@@ -15,6 +16,7 @@ dependencies:
     - node.type.student_program
   module:
     - datetime
+    - entity_reference_revisions
     - text
     - user
 id: node.student_program.default
@@ -28,6 +30,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 101
+    region: content
+  field_accordion:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 110
     region: content
   field_article_author:
     type: string

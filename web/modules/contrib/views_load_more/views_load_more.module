@@ -1,0 +1,76 @@
+<?php
+
+use Drupal\Core\Url;
+
+/**
+ * @file views_load_more.module
+ *
+ * A Views pager module to allow new content to be appended to the bottom
+ * of a view instead of replacing it.
+ */
+
+// We need to implement our own tpls for items being return via the load-more pager.
+
+/**
+ * Implements hook_theme().
+ */
+function views_load_more_theme() {
+
+  return array(
+    'views_load_more_pager' => array(
+      'variables' => array(
+        'element' => 0,
+        'parameters' => array(),
+        'more_button_text' => '',
+        'end_text' => '',
+      ),
+      'pattern' => 'views_load_more_pager__',
+    ),
+  );
+}
+
+/**
+ * Preprocess function for views_load_more_pager theme hook.
+ */
+function template_preprocess_views_load_more_pager(&$variables) {
+  $element = $variables['element'];
+  $parameters = $variables['parameters'];
+  
+  /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
+  $pager_manager = \Drupal::service('pager.manager');
+  $pager = $pager_manager->getPager($element);
+
+  if (!$pager) {
+    return;
+  }
+
+  // Calculate various markers within this pager piece:
+  // Max is the maximum page number
+  $pager_max = $pager->getTotalPages();
+  $current = $pager->getCurrentPage();
+
+  // Nothing to do if there is only one page.
+  if ($pager_max <= 1) {
+    return;
+  }
+
+  // Create the "next" link if we are not on the last page.
+  if ($current < ($pager_max - 1)) {
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current + 1),
+    ];
+    $variables['next_url'] = Url::fromRoute('<current>', [], $options)->toString();
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ *
+ * @param \Drupal\views\ViewExecutable $view
+ */
+function views_load_more_views_pre_render($view) {
+
+  if ($view->ajaxEnabled() && $view->getPager()->getPluginId() === 'load_more') {
+    $view->element['#attached']['library'][] = 'views_load_more/views_load_more';
+  }
+}

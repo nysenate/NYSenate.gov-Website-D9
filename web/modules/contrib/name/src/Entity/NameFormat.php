@@ -69,7 +69,7 @@ class NameFormat extends ConfigEntityBase implements NameFormatInterface {
   /**
    * The name format pattern.
    *
-   * @var array
+   * @var string
    */
   public $pattern;
 

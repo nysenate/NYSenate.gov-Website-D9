@@ -1,0 +1,58 @@
+id: d7_file_entity_formatter
+label: File Entity media source field formatter
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\media_migration\Plugin\migrate\D7FileEntityConfigDeriver
+idMap:
+  plugin: smart_sql
+source:
+  plugin: d7_file_entity_field_formatter
+  constants:
+    entity_type_id: media
+    view_mode: default
+process:
+  entity_type: 'constants/entity_type_id'
+  bundle: bundle
+  view_mode: 'constants/view_mode'
+  # If the field name is the raw source field name, we need the actually
+  # migrated field name (because it might be shortened by the
+  # make_unique_entity_field process plugin in the source field storage
+  # migration).
+  final_source_field_name:
+    -
+      plugin: migmag_compare
+      source:
+        - field_name
+        - source_field_name
+    -
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      source:
+        - types
+        - schemes
+      migration: d7_file_entity_source_field
+      no_stub: true
+    -
+      plugin: default_value
+      default_value:
+        - NULL
+        - NULL
+    -
+      plugin: extract
+      index:
+        - 1
+  field_name:
+    plugin: null_coalesce
+    source:
+      - '@final_source_field_name'
+      - field_name
+  hidden: hidden
+  options: options
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - d7_file_entity_source_field_config

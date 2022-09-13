@@ -17,7 +17,7 @@ class NameOptionsProviderTest extends NameTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'name',
     'taxonomy',
@@ -43,7 +43,7 @@ class NameOptionsProviderTest extends NameTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->entityListener = \Drupal::service('entity_type.listener');

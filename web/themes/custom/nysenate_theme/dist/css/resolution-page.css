@@ -1260,22 +1260,25 @@ strong {
   .c-bill--amended .c-bill--flag a {
     color: #fff; }
 
-.c-detail--section-title {
-  overflow: hidden;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #aaaaaa;
-  margin-bottom: 20px;
-  line-height: 1; }
-  .c-detail--section-title.c-detail--subhead {
-    margin-bottom: 0;
-    color: #444444;
-    font-weight: 400; }
-
 .c-detail--related {
   list-style: none;
   line-height: 1.3em; }
   .c-detail--related .field--name-field-issues {
     padding-bottom: 10px; }
+    .c-detail--related .field--name-field-issues .list-formatter-list {
+      display: inline-block;
+      list-style: none;
+      padding: 0;
+      margin: 0; }
+      .c-detail--related .field--name-field-issues .list-formatter-list li {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 10px 0 0;
+        font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+        font-size: 12px;
+        line-height: 2.5em;
+        font-weight: 400;
+        text-transform: uppercase; }
 
 .c-detail--related-item {
   display: inline-block;

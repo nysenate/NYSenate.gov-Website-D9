@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for Media Migration.
+ */
+
+use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\media_migration\MediaMigration;
+
+/**
+ * Implements hook_schema().
+ */
+function media_migration_schema() {
+  $schema[MediaMigration::MEDIA_UUID_PROPHECY_TABLE] = [
+    'description' => 'Stores the foretold UUID of the not-yet-migrated media entities.',
+    'fields' => [
+      MediaMigration::MEDIA_UUID_PROPHECY_SOURCEID_COL => [
+        'description' => 'The ID of the media entity from the source datatbase.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ],
+      MediaMigration::MEDIA_UUID_PROPHECY_UUID_COL => [
+        'description' => 'The foretold (on-the-fly generated) UUID.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ],
+    ],
+    'indexes' => [],
+    'primary key' => [MediaMigration::MEDIA_UUID_PROPHECY_SOURCEID_COL],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function media_migration_requirements($phase) {
+  $requirements = [];
+  if (!in_array($phase, ['install', 'runtime'], TRUE)) {
+    return $requirements;
+  }
+
+  if ($phase === 'install') {
+    require_once __DIR__ . '/src/MediaMigration.php';
+  }
+
+  $plugin_requirement_fulfilled = FALSE;
+  $active_filter_plugin_id = MediaMigration::getEmbedTokenDestinationFilterPlugin();
+  $destination_filter_info = t("The embed token transformation's destination filter plugin is invalid. Valid destination plugins are: entity_embed, media_embed. The current value is @filter_plugin_id.", [
+    '@filter_plugin_id' => $active_filter_plugin_id,
+  ]);
+  $required_modules_info = '';
+
+  if (MediaMigration::embedTokenDestinationFilterPluginIsValid($active_filter_plugin_id)) {
+    $destination_filter_info = t("The configured embed token transformation's destination filter plugin @filter_plugin_id is valid.", [
+      '@filter_plugin_id' => $active_filter_plugin_id,
+    ]);
+    $plugin_requirement_fulfilled = TRUE;
+  }
+
+  $module_requirement_fulfilled = FALSE;
+  if ($plugin_requirement_fulfilled) {
+    $required_modules = MediaMigration::MEDIA_TOKEN_DESTINATION_FILTER_REQUIREMENTS[$active_filter_plugin_id];
+    $missing_modules = [];
+    if (!empty($required_modules)) {
+      foreach ($required_modules as $required_module) {
+        if (\Drupal::moduleHandler()->moduleExists($required_module)) {
+          continue;
+        }
+        $missing_modules[] = $required_module;
+      }
+    }
+    if (!empty($missing_modules)) {
+      $required_modules_info = new PluralTranslatableMarkup(count($missing_modules), 'The following module is missing: @module.', 'The following modules are missing: @module.', [
+        '@module' => implode(', ', $missing_modules),
+      ]);
+    }
+    else {
+      $required_modules_info = t('Every requirement is fulfilled.');
+      $module_requirement_fulfilled = TRUE;
+    }
+  }
+
+  $requirements['media_migration.filter_destination'] = [
+    'title' => t('Media Migration'),
+    'value' => t('Embed media token transform destination'),
+    'description' => $destination_filter_info . '<br>' . $required_modules_info,
+    'severity' => $plugin_requirement_fulfilled && $module_requirement_fulfilled ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+  ];
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function media_migration_install() {
+  $module_handler = \Drupal::moduleHandler();
+  if ($module_handler->moduleExists('migrate_tools')) {
+    $module_installer = \Drupal::service('module_installer');
+    assert($module_installer instanceof ModuleInstallerInterface);
+    $module_installer->install(['media_migration_tools']);
+  }
+}

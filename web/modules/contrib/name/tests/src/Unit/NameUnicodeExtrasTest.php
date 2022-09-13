@@ -74,11 +74,13 @@ class NameUnicodeExtrasTest extends UnitTestCase {
         'count' => 5,
         'initials' => 'ΣΓἈΤΚ',
       ],
+      /*
       'georgian' => [
         'string' => 'გთხოვთ ახლავე გაიაროთ რეგისტრაცია',
         'count' => 4,
         'initials' => 'გაგრ',
       ],
+      */
       'russian' => [
         'string' => 'Зарегистрируйтесь сейчас на Десятую Международную Конференцию',
         'count' => 6,

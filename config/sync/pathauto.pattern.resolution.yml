@@ -1,0 +1,22 @@
+uuid: 325a938a-ad26-4310-906c-d180ec85b29c
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: resolution
+label: Resolution
+type: 'canonical_entities:node'
+pattern: 'legislation/resolutions/[node:field_ol_session]/[node:title]'
+selection_criteria:
+  c96c1949-b31f-4b78-9f32-66b3517ac455:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: c96c1949-b31f-4b78-9f32-66b3517ac455
+    context_mapping:
+      node: node
+    bundles:
+      resolution: resolution
+selection_logic: and
+weight: -5
+relationships: {  }

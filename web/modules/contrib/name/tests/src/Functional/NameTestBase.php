@@ -19,7 +19,7 @@ abstract class NameTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'field_ui',
     'node',
@@ -43,7 +43,7 @@ abstract class NameTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->webUser = $this->drupalCreateUser([]);
     $this->adminUser = $this->drupalCreateUser([
@@ -52,6 +52,7 @@ abstract class NameTestBase extends BrowserTestBase {
       'access content',
       'access administration pages',
       'administer node fields',
+      'bypass node access'
     ]);
   }
 
@@ -96,7 +97,7 @@ abstract class NameTestBase extends BrowserTestBase {
   protected function assertNameFormats($name_components, $type, $object, array $names, array $options = []) {
     foreach ($names as $format => $expected) {
       $value = \Drupal::service('name.format_parser')->parse($name_components, $format);
-      $this->assertIdentical($value, $expected, t("Name value for '@name' was '@actual', expected value '@expected'. Components were: %components", [
+      $this->assertSame($value, $expected, t("Name value for '@name' was '@actual', expected value '@expected'. Components were: %components", [
         '@name' => $format,
         '@actual' => $value,
         '@expected' => $expected,

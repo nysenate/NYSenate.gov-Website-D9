@@ -1371,6 +1371,9 @@ strong {
   margin-right: 5px;
   line-height: 20px; }
 
+.c-event-time .date-display-single .date-display-range {
+  font-size: 62.5%; }
+
 .c-event-block--featured {
   margin: 0;
   padding-top: 16px;
@@ -1436,7 +1439,7 @@ strong {
 .c-event-block--featured-image {
   margin: 0;
   padding-top: 16px;
-  padding-bottom: 40px;
+  padding-bottom: 20px;
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
   .c-event-block--featured-image::after {
     content: '';
@@ -1466,7 +1469,7 @@ strong {
   .c-event-block--featured-image .c-event-date SPAN:last-of-type::after {
     content: ''; }
   .c-event-block--featured-image .c-event-name {
-    font-family: "Adelle SemiBold", serif;
+    font-family: "Adelle Light", serif;
     font-size: 24px;
     margin: 18px 0 18px 0;
     line-height: 120%;
@@ -1474,15 +1477,20 @@ strong {
   .c-event-block--featured-image .c-event-location {
     font-size: 20px;
     color: #888888;
-    line-height: 140%; }
+    line-height: 140%;
+    margin-bottom: 10px; }
     .c-event-block--featured-image .c-event-location span {
       margin-right: 7px;
       font-size: 18px; }
   .c-event-block--featured-image .c-event-address {
-    margin-top: 0;
     color: #888888;
     font-size: 20px;
-    line-height: 140%; }
+    line-height: 140%;
+    margin-top: 15px;
+    -webkit-margin-after: 0px;
+    margin-block-end: 0px;
+    -webkit-margin-before: 5px;
+    margin-block-start: 5px; }
   .c-event-block--featured-image .c-event-time {
     margin-top: 10px;
     font-size: 20px;

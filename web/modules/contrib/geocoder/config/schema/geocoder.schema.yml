@@ -160,6 +160,11 @@ geocoder_provider.configuration.mapbox:
       label: 'Countries'
       description: 'Limit results to one or more countries. Permitted values are <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="blank">ISO 3166 alpha 2</a> country codes separated by commas.'
       nullable: true
+    geocodingMode:
+      type: string
+      label: 'Geocoding Mode'
+      description: 'Sets the endpoint by passing the mode. Use "mapbox.places" for temporary geocoding. To permanently store the data, use "mapbox.places-permanent" and contact Mapbox to enable this setting on your access token.</br>Check <a href="https://docs.mapbox.com/api/search/geocoding/#endpoints" target="_blank">Mapbox Endpoints documentation</a> for more info.'
+      nullable: true
     location_type:
       type: string
       label: 'Location type'

@@ -32,11 +32,13 @@ body {
 			list-style-position: outside;
 			margin-bottom: 20px;
 			margin-top: 20px;
+      padding: 0;
 		}
 	
 		ol {
 			margin-bottom: 20px;
 			margin-top: 20px;
+      padding: 0;
 		}
   }
 
@@ -124,6 +126,19 @@ body {
       line-height: 32px;
     }
 	}
+}
+
+.c-block .c-img--caption {
+  margin: 0;
+  padding: 10px 20px 10px;
+  background: $grey06;
+  color: $grey08;
+  font-family: $font-sans;
+  @include font(12 18);
+
+  &:last-child {
+    margin: 0;
+  }
 }
 
 .c-block-legislation {

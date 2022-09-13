@@ -1,0 +1,14 @@
+uuid: 785ea4f2-ffea-4256-a87d-44fc863fae4e
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.constituent
+  module:
+    - user
+id: user_remove_role_action.constituent
+label: 'Remove the Constituent role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: constituent

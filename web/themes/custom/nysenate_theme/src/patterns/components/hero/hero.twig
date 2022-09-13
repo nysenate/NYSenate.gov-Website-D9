@@ -1,4 +1,5 @@
 {{ attach_library('nysenate_theme/hero') }}
+{{ attach_library('rain_theme/media') }}
 
 <section class="hero {% if type == "senator" %} hero--senator {% else %} hero--homepage {% endif %}">
 {# is_collapsed variable is only for patternlab view #}
@@ -79,12 +80,11 @@
       <div class="l-header-region l-row c-hero">
         <div class="c-hero-livestream-wrapper">
           <div class="c-hero-livestream-video">
-            {% if video %}
-              {%
-                include '@rain_theme/media/media.twig' with {
-                  video: video
-                } only
-              %}
+            {% if video_id %}
+              <div class="media-item__responsive-video">
+                <iframe width='100%' height='315' id="UstreamIframe" src="https://www.ustream.tv/embed/{{ video_id }}" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+              </div>
             {% endif %}
           </div>
           <div class="c-hero-livestream-data">

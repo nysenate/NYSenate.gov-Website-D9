@@ -1,0 +1,22 @@
+uuid: cbc82bd8-edd6-49bd-a6f9-dfaf6b3e9cf3
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: districts
+label: Districts
+type: 'canonical_entities:taxonomy_term'
+pattern: 'district/[term:field_district_number]'
+selection_criteria:
+  cbfdb7bf-d4b4-468c-8f26-53f37026efca:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: cbfdb7bf-d4b4-468c-8f26-53f37026efca
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      districts: districts
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -179,7 +179,7 @@ class NameFormatParser {
 
         default:
           if (array_key_exists($char, $tokens)) {
-            $char = $tokens[$char];
+            $char = is_string($tokens[$char]) ? $tokens[$char] : '';
           }
           $pieces[] = $this->addComponent($char, $modifiers, $conditions);
           break;
@@ -279,7 +279,7 @@ class NameFormatParser {
    *   The processed string.
    */
   protected function applyModifiers($string, $modifiers) {
-    if (!is_null($string) || strlen($string)) {
+    if (strlen($string)) {
       if ($modifiers) {
         $prefix = '';
         $suffix = '';

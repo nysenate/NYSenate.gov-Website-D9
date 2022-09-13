@@ -100,21 +100,22 @@ class NameAdminTest extends NameTestBase {
       'name_settings[sep3]' => '',
     ];
     foreach ($default_values as $name => $value) {
-      $this->assertField($name, $value);
+      $this->assertSession()->fieldValueEquals($name, $value);
     }
     // ID example.
-    $this->assertFieldById('edit-name-settings-sep1', ' ', t('Sep 1 default value.'));
+    $this->assertSession()->fieldValueEquals('edit-name-settings-sep1', ' ');
 
     $test_values = [
       'name_settings[sep1]' => '~',
       'name_settings[sep2]' => '^',
       'name_settings[sep3]' => '-',
     ];
-    $this->drupalPostForm('admin/config/regional/name/settings', $test_values, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->drupalGet('admin/config/regional/name/settings');
+    $this->submitForm($test_values, t('Save configuration'));
+    $this->assertSession()->pageTextContains(t('The configuration options have been saved.'));
 
     foreach ($test_values as $name => $value) {
-      $this->assertField($name, $value);
+      $this->assertSession()->fieldValueEquals($name, $value);
     }
 
     // Delete all existing formats.
@@ -126,32 +127,37 @@ class NameAdminTest extends NameTestBase {
     });
 
     $this->drupalGet('admin/config/regional/name/add');
-    $this->assertRaw('Format string help', 'Testing the help fieldgroup');
+    $this->assertSession()->responseContains('Format string help');
     $values = ['label' => '', 'id' => '', 'pattern' => ''];
-    $this->drupalPostForm('admin/config/regional/name/add', $values, t('Save format'));
+    $this->drupalGet('admin/config/regional/name/add');
+    $this->submitForm($values, t('Save format'));
     foreach ([t('Name'), t('Machine-readable name'), t('Format')] as $title) {
-      $this->assertText(t('@field field is required', ['@field' => $title]));
+      $this->assertSession()->pageTextContains(t('@field field is required', ['@field' => $title]));
     }
     $values = [
       'label' => 'given',
       'id' => '1234567890abcdefghijklmnopqrstuvwxyz_',
       'pattern' => 'a',
     ];
-    $this->drupalPostForm('admin/config/regional/name/add', $values, t('Save format'));
-    $this->assertNoText(t('@field field is required', ['@field' => t('Format')]));
-    $this->assertNoText(t('@field field is required', ['@field' => t('Machine-readable name')]));
+    $this->drupalGet('admin/config/regional/name/add');
+    $this->submitForm($values, t('Save format'));
+    $this->assertSession()->pageTextNotContains(t('@field field is required', ['@field' => t('Format')]));
+    $this->assertSession()->pageTextNotContains(t('@field field is required', ['@field' => t('Machine-readable name')]));
 
     $values = ['label' => 'given', 'id' => '%&*(', 'pattern' => 'a'];
-    $this->drupalPostForm('admin/config/regional/name/add', $values, t('Save format'));
-    $this->assertText(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+    $this->drupalGet('admin/config/regional/name/add');
+    $this->submitForm($values, t('Save format'));
+    $this->assertSession()->pageTextContains(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
 
     $values = ['label' => 'default', 'id' => 'default', 'pattern' => 'a'];
-    $this->drupalPostForm('admin/config/regional/name/add', $values, t('Save format'));
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->drupalGet('admin/config/regional/name/add');
+    $this->submitForm($values, t('Save format'));
+    $this->assertSession()->pageTextContains(t('The machine-readable name is already in use. It must be unique.'));
 
     $values = ['label' => 'Test', 'id' => 'test', 'pattern' => '\a\bc'];
-    $this->drupalPostForm('admin/config/regional/name/add', $values, t('Save format'));
-    $this->assertText(t('Name format Test added.'));
+    $this->drupalGet('admin/config/regional/name/add');
+    $this->submitForm($values, t('Save format'));
+    $this->assertSession()->pageTextContains(t('Name format Test added.'));
 
     $row = [
       'title' => 'Test',
@@ -164,8 +170,9 @@ class NameAdminTest extends NameTestBase {
     $this->assertRow($row, $row_template, 3);
 
     $values = ['label' => 'new name', 'pattern' => 'f+g'];
-    $this->drupalPostForm('admin/config/regional/name/manage/test', $values, t('Save format'));
-    $this->assertText(t('Name format new name has been updated.'));
+    $this->drupalGet('admin/config/regional/name/manage/test');
+    $this->submitForm($values, t('Save format'));
+    $this->assertSession()->pageTextContains(t('Name format new name has been updated.'));
 
     $row = [
       'label' => $values['label'],
@@ -175,16 +182,16 @@ class NameAdminTest extends NameTestBase {
     $this->assertRow($row, $row_template, 3);
 
     $this->drupalGet('admin/config/regional/name/manage/60');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/config/regional/name/manage/60/delete');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/config/regional/name/manage/test/delete');
-    $this->assertText(t('Are you sure you want to delete the custom format @title?', ['@title' => $values['label']]));
+    $this->assertSession()->pageTextContains(t('Are you sure you want to delete the custom format @title?', ['@title' => $values['label']]));
 
-    $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertText(t('The name format @title has been deleted.', ['@title' => $values['label']]));
+    $this->submitForm([], t('Delete'));
+    $this->assertSession()->pageTextContains(t('The name format @title has been deleted.', ['@title' => $values['label']]));
   }
 
   /**
@@ -236,13 +243,14 @@ class NameAdminTest extends NameTestBase {
       // Integers 1 through 20.
       // 'el_al_first' => '',
     ];
-    $this->drupalPostForm('admin/config/regional/name/list/add', $values, t('Save list format'));
+    $this->drupalGet('admin/config/regional/name/list/add');
+    $this->submitForm($values, t('Save list format'));
     $labels = [
       t('Name'),
       t('Machine-readable name'),
     ];
     foreach ($labels as $title) {
-      $this->assertText(t('@field field is required', ['@field' => $title]));
+      $this->assertSession()->pageTextContains(t('@field field is required', ['@field' => $title]));
     }
     $values = [
       'label' => 'comma',
@@ -253,17 +261,20 @@ class NameAdminTest extends NameTestBase {
       'el_al_min' => '14',
       'el_al_first' => '5',
     ];
-    $this->drupalPostForm('admin/config/regional/name/list/add', $values, t('Save list format'));
-    $this->assertNoText(t('@field field is required', ['@field' => t('Last delimiter type')]));
-    $this->assertNoText(t('@field field is required', ['@field' => t('Machine-readable name')]));
+    $this->drupalGet('admin/config/regional/name/list/add');
+    $this->submitForm($values, t('Save list format'));
+    $this->assertSession()->pageTextNotContains(t('@field field is required', ['@field' => t('Last delimiter type')]));
+    $this->assertSession()->pageTextNotContains(t('@field field is required', ['@field' => t('Machine-readable name')]));
 
     $values['id'] = '%&*(';
-    $this->drupalPostForm('admin/config/regional/name/list/add', $values, t('Save list format'));
-    $this->assertText(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+    $this->drupalGet('admin/config/regional/name/list/add');
+    $this->submitForm($values, t('Save list format'));
+    $this->assertSession()->pageTextContains(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
 
     $values = ['label' => 'default', 'id' => 'default', 'delimiter' => 'a'];
-    $this->drupalPostForm('admin/config/regional/name/list/add', $values, t('Save list format'));
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->drupalGet('admin/config/regional/name/list/add');
+    $this->submitForm($values, t('Save list format'));
+    $this->assertSession()->pageTextContains(t('The machine-readable name is already in use. It must be unique.'));
 
     $values = [
       'label' => 'Test label',
@@ -274,8 +285,9 @@ class NameAdminTest extends NameTestBase {
       'el_al_min' => '3',
       'el_al_first' => '1',
     ];
-    $this->drupalPostForm('admin/config/regional/name/list/add', $values, t('Save list format'));
-    $this->assertText(t('Name list format Test label added.'));
+    $this->drupalGet('admin/config/regional/name/list/add');
+    $this->submitForm($values, t('Save list format'));
+    $this->assertSession()->pageTextContains(t('Name list format Test label added.'));
 
     $row = [
       'title' => 'Test label',
@@ -293,16 +305,16 @@ class NameAdminTest extends NameTestBase {
     $this->assertRowContains(['settings' => $summary_text], $row_template, 3);
 
     $this->drupalGet('admin/config/regional/name/list/manage/60');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/config/regional/name/list/manage/60/delete');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/config/regional/name/list/manage/test/delete');
-    $this->assertText(t('Are you sure you want to delete the custom list format @title?', ['@title' => $values['label']]));
+    $this->assertSession()->pageTextContains(t('Are you sure you want to delete the custom list format @title?', ['@title' => $values['label']]));
 
-    $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertText(t('The name list format @title has been deleted.', ['@title' => $values['label']]));
+    $this->submitForm([], t('Delete'));
+    $this->assertSession()->pageTextContains(t('The name list format @title has been deleted.', ['@title' => $values['label']]));
   }
 
   /**
@@ -323,12 +335,10 @@ class NameAdminTest extends NameTestBase {
 
         // Check URLs with or without the ?destination= query parameter.
         if (strpos($row_template[$cell_code], '/a/@href')) {
-          $results = isset($elements[0]) ? $elements[0]->getHtml() : '';
+          $results = isset($elements[0]) ? $elements[0]->getParent()->getAttribute('href') : '';
           $message = "Testing {$cell_code} on row {$id} using '{$xpath}' and expecting '" . Html::escape($value) . "', got '" . Html::escape($results) . "'.";
           if ($results == $value || strpos($results, $value . '?destination=') === 0) {
-            $this->pass($message);
-          }
-          else {
+          } else {
             $this->fail($message);
           }
         }

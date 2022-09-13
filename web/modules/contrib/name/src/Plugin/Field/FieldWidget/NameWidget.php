@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\name\NameOptionsProvider;
 use Drupal\name\Traits\NameFormDisplaySettingsTrait;
 use Drupal\name\Traits\NameFormSettingsHelperTrait;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Plugin implementation of the 'name' widget.
@@ -25,7 +26,7 @@ use Drupal\name\Traits\NameFormSettingsHelperTrait;
  *   }
  * )
  */
-class NameWidget extends WidgetBase implements ContainerFactoryPluginInterface {
+class NameWidget extends WidgetBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   use NameFormDisplaySettingsTrait;
   use NameFormSettingsHelperTrait;
@@ -76,7 +77,6 @@ class NameWidget extends WidgetBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    module_load_include('inc', 'name', 'includes/name.content');
     $widget_settings = $this->getSettings();
     $field_settings = $this->getFieldSettings();
     if (!empty($widget_settings['override_field_settings'])

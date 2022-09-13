@@ -18,7 +18,7 @@ class NameWidgetTest extends NameTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'field_ui',
     'node',
@@ -29,7 +29,7 @@ class NameWidgetTest extends NameTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Create content-type: page.
@@ -51,10 +51,12 @@ class NameWidgetTest extends NameTestBase {
       'field_name' => 'name_test',
       'new_storage_type' => 'name',
     ];
+    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
 
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/add-field', $new_name_field, t('Save and continue'));
+    $this->submitForm($new_name_field, t('Save and continue'));
     $storage_settings = [];
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/storage', $storage_settings, t('Save field settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test/storage');
+    $this->submitForm($storage_settings, t('Save field settings'));
     $this->resetAll();
 
     // Set up a field of each label display and test it shows.
@@ -120,8 +122,9 @@ class NameWidgetTest extends NameTestBase {
 
       'settings[component_layout]' => 'default',
     ];
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
 
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->submitForm($field_settings, t('Save settings'));
 
     $this->drupalGet('node/add/page');
 
@@ -140,32 +143,36 @@ class NameWidgetTest extends NameTestBase {
     $this->assertFieldSettings($field_settings);
 
     // Test the language layouts.
-    $this->verbose('Testing asian');
+    dump('Testing asian');
     $field_settings['settings[component_layout]'] = 'asian';
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
     $this->drupalGet('node/add/page');
     $this->assertFieldSettings($field_settings);
 
-    $this->verbose('Testing eastern');
+    dump('Testing eastern');
     $field_settings['settings[component_layout]'] = 'eastern';
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
     $this->drupalGet('node/add/page');
     $this->assertFieldSettings($field_settings);
 
-    $this->verbose('Testing german');
+    dump('Testing german');
     $field_settings['settings[component_layout]'] = 'german';
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
     $this->drupalGet('node/add/page');
     $this->assertFieldSettings($field_settings);
 
-    $this->verbose('Testing show_component_required_marker unchecked.');
+    dump('Testing show_component_required_marker unchecked.');
     $field_settings = [
       'settings[show_component_required_marker]' => FALSE,
       'settings[component_layout]' => 'default',
       // 'settings[credentials_inline]' => TRUE,
       // 'settings[component_layout]' => 'default',
     ] + $field_settings;
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test', $field_settings, t('Save settings'));
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
+    $this->submitForm($field_settings, t('Save settings'));
     $this->drupalGet('node/add/page');
     foreach (_name_component_keys() as $component) {
       $this->assertComponentSettings($component, $field_settings);
@@ -189,8 +196,8 @@ class NameWidgetTest extends NameTestBase {
       $content .= str_replace(["\n", "\r"], " ", $element->getHtml());
     }
 
-    $this->verbose(Html::escape($content));
-    $this->verbose($settings["settings[component_layout]"]);
+    dump(Html::escape($content));
+    dump($settings["settings[component_layout]"]);
     switch ($settings["settings[component_layout]"]) {
       case 'asian':
         $regexp = '/name-family-wrapper.*name-middle-wrapper.*name-given-wrapper.*name-title-wrapper.*name-credentials-wrapper.*/';
@@ -231,7 +238,7 @@ class NameWidgetTest extends NameTestBase {
    */
   protected function assertComponentSettings($key, array $settings) {
     $xpath = '//div[contains(@class,:value)]';
-    $elements = $this->xpath($this->buildXPathQuery($xpath, [':value' => "name-{$key}-wrapper"]));
+    $elements = $this->xpath($this->assertSession()->buildXPathQuery($xpath, [':value' => "name-{$key}-wrapper"]));
     $this->assertNotEmpty($elements, "Component $key field found.");
     $object = reset($elements);
 
@@ -362,7 +369,7 @@ class NameWidgetTest extends NameTestBase {
    */
   protected function constructFieldXpathByTypeAndAttribute($type, $attribute, $value) {
     $xpath = '//' . $type . '[@' . $attribute . '=:value]';
-    return $this->buildXPathQuery($xpath, [':value' => $value]);
+    return $this->assertSession()->buildXPathQuery($xpath, [':value' => $value]);
   }
 
 }

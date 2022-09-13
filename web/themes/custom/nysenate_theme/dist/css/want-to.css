@@ -1237,7 +1237,7 @@ strong {
     padding-bottom: 15px; }
   .c-block.c-container--want-to .c-container--title {
     font-family: "Adelle SemiBold", serif;
-    color: #7d7c7c;
+    color: #444444;
     text-transform: none;
     font-size: 32px;
     letter-spacing: normal; }
@@ -1249,21 +1249,27 @@ strong {
       margin: 35px 0 20px;
       padding-right: 50px;
       font-family: "Adelle Light", serif;
-      font-size: 16px; }
+      font-size: 16px;
+      width: 100%; }
     .c-block.c-container--want-to .c-want-to--item .c-block--btn {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
       width: 100%;
       background: #f1af58;
       height: 70px;
-      line-height: 70px;
+      line-height: 1;
       text-align: center;
       font-size: 13px;
+      letter-spacing: 2.6px;
       padding-left: 20px;
       text-align: left;
       transition: background-color 0.2s ease; }
       .c-block.c-container--want-to .c-want-to--item .c-block--btn:hover {
         background: #cb8d37; }
+      .c-block.c-container--want-to .c-want-to--item .c-block--btn::before {
+        height: auto; }
     .c-block.c-container--want-to .c-want-to--item .nys-senator--thumb {
       height: 45px;
       width: 46px;
@@ -1309,11 +1315,6 @@ strong {
           bottom: 0;
           left: 0;
           padding-left: 0;
-          font-size: 11px;
           text-align: center; }
           .c-block.c-container--want-to .c-want-to--item .c-block--btn.loggedin {
             text-align: left; } }
-
-@media screen and (min-width: 1024px) {
-  .c-want-to--item .c-block--btn {
-    font-size: 13px; } }

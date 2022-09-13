@@ -1,0 +1,48 @@
+uuid: e5514912-0a2f-4e31-aeeb-0f0d25eb452a
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: Tvgk7m4z0i4Q0UUxRnXs4iQ5nN7cJE0TuD3cHHAH0H0
+id: nys_pg_fc_accordion
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Field Collection Content'
+migration_group: nys_general
+label: 'Field Collections (Pg fc accordion)'
+source:
+  plugin: d7_field_collection_item
+  field_name: field_pg_fc_accordion
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  parent_id:
+    -
+      plugin: get
+      source: parent_id
+  parent_type:
+    -
+      plugin: get
+      source: parent_type
+  parent_field_name:
+    -
+      plugin: get
+      source: field_name
+  field_body:
+    -
+      plugin: get
+      source: field_pg_accordion_body
+  field_title:
+    -
+      plugin: get
+      source: field_pg_accordion_title
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: accordion_item
+migration_dependencies: null

@@ -17,7 +17,7 @@ class NameUserTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'name',
     'user',
@@ -34,7 +34,7 @@ class NameUserTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(self::$modules);
     $this->installSchema('system', ['sequences']);
@@ -58,7 +58,7 @@ class NameUserTest extends KernelTestBase {
       'entity_type' => 'user',
       'bundle' => 'user',
     ])->save();
-    $this->assertIdentical('', \Drupal::config('name.settings')->get('user_preferred'));
+    $this->assertSame('', \Drupal::config('name.settings')->get('user_preferred'));
 
     FieldStorageConfig::create([
       'field_name' => 'field_name_test',

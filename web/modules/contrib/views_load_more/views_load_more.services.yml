@@ -1,0 +1,5 @@
+services:
+  views_load_more.event_subscriber:
+    class: Drupal\views_load_more\EventSubscriber\VLMEventSubscriber
+    tags:
+      - { name: event_subscriber }

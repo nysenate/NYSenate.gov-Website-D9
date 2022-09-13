@@ -1,0 +1,36 @@
+id: d7_file_plain
+label: Plain file to media
+audit: true
+migration_tags:
+  - Drupal 7
+  - Content
+deriver: Drupal\media_migration\Plugin\migrate\D7FileDeriver
+idMap:
+  plugin: smart_sql
+source:
+  plugin: d7_file_plain
+process:
+  uuid:
+    plugin: media_migrate_uuid
+    source: fid
+  mid: fid
+  uid:
+    -
+      plugin: migration_lookup
+      migration: d7_user
+      source: uid
+    -
+      plugin: default_value
+      default_value: 1
+  name: filename
+  bundle: bundle
+  created: timestamp
+  status: status
+destination:
+  plugin: entity:media
+migration_dependencies:
+  required:
+    - d7_file_plain_type
+    - d7_file_plain_source_field_config
+  optional:
+    - d7_user

@@ -49,6 +49,34 @@
 
 /**
  * @file
+ * Behaviors for the Add to Calendar.
+ */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Add to Calendar behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.addToCalendar = {
+    attach: function attach() {
+      var dropdownToggle = $('.add-to-calendar__container');
+      dropdownToggle.on('click', function () {
+        var dropdownContent = $(this).find('.add-to-calendar__dropdown');
+        $(this).toggleClass('active');
+        dropdownContent.attr('aria-expanded', function (index, attr) {
+          return attr === 'true' ? 'false' : 'true';
+        });
+        dropdownContent.toggleClass('active');
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=add-to-calendar.es6.js.map
+
+/**
+ * @file
  * Attach behaviors for the alert.
  */
 !function (document, Drupal, $) {
@@ -196,6 +224,61 @@
   };
 }(document, Drupal, jQuery);
 //# sourceMappingURL=carousel.es6.js.map
+
+/**
+ * @file
+ * Behaviors for the Comments.
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Comments behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.comments = {
+    attach: function attach(context) {
+      var commentsBlock = $('.comments', context);
+      var replyBtn = $('.reply-btn');
+      replyBtn.on('click', function (event) {
+        event.preventDefault();
+        var target = event.target;
+        var replyForm;
+
+        if ($(target).data('toggle') === 'reply-form') {
+          var formId = target.getAttribute('data-target');
+          replyForm = commentsBlock.find("#".concat(formId));
+          replyForm.toggleClass('hidden');
+        }
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=comments.es6.js.map
+
+/**
+ * @file
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Carousel behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.contactBlock = {
+    attach: function attach() {
+      $('.contact-form__title').slice(1).hide();
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=contact-block.es6.js.map
 
 /**
  * @file
@@ -3050,10 +3133,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }
       }
 
-      mobileNavToggle.on('click touch', function () {
+      mobileNavToggle.once('nySenateHeaderMobile').on('click touch', function () {
         self.toggleMobileNav(menu);
       });
-      searchToggle.on('click touch', function (e) {
+      searchToggle.once('nySenateHeader').on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
     },
@@ -3203,21 +3286,31 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
   Drupal.behaviors.nysenateTabs = {
     attach: function attach() {
-      var tab = $('.c-tab');
       var tabContainer = $('.l-tab-bar');
-      var tabInput = tab.find('input');
       var tabLink = $('.c-tab .c-tab-link');
-      tabInput.each(function () {
-        if ($(this).attr('checked') === 'checked') {
-          $(this).parent().addClass('active');
-        }
-      });
       tabContainer.each(function () {
         var tabArrowDown = $(this).find('.c-tab--arrow');
+        var tabInput = $(this).find('input.form-radio');
 
         if (tabArrowDown.length < 1) {
           $(this).append('<div class="c-tab--arrow u-mobile-only"></div>');
         }
+
+        tabInput.each(function () {
+          if ($(this).is(':checked')) {
+            $(this).parent().addClass('active');
+          }
+        });
+        tabInput.on('click', function () {
+          var tabInputContainer = tabInput.parent();
+          var tabContent = tabInputContainer.parent().parent().find('.tabs-content');
+          tabInput.removeAttr('checked');
+          tabInputContainer.removeClass('active');
+          $(this).attr('checked', 'checked');
+          $(this).parent().addClass('active');
+          tabContent.find('.active').removeClass('active');
+          tabContent.find($(this).val()).addClass('active');
+        });
       });
       tabLink.on('click', this.toggleTabDropdown);
     },
@@ -3360,22 +3453,27 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
     },
     highlightUpTo: function highlightUpTo() {
-      var item = $('.c-stats--container .c-stats--item');
-      var highlight = $('.c-stats--container .c-stats--highlight');
+      $('.c-stats--container').each(function () {
+        var item = $(this).find('.c-stats--item');
+        var highlight = $(this).find('.c-stats--highlight');
 
-      if ($(window).innerWidth() > 760) {
-        $(item).on('mouseenter', function () {
-          var elem = $(this).children('.c-stat--illus');
+        if ($(window).innerWidth() > 760 && $(this).hasClass('with-hover')) {
+          $(item).on('mouseenter', function () {
+            var elem = $(this).children('.c-stat--illus');
 
-          if (elem.hasClass('c-illus__signed')) {
-            highlight.attr('class', 'c-stats--highlight highlight-first');
-          } else if (elem.hasClass('c-illus__waiting')) {
-            highlight.attr('class', 'c-stats--highlight highlight-second');
-          } else if (elem.hasClass('c-illus__vetoed')) {
-            highlight.attr('class', 'c-stats--highlight highlight-third');
-          }
-        });
-      }
+            if (elem.hasClass('c-illus__signed')) {
+              highlight.removeClass('highlight-second highlight-third');
+              highlight.addClass('highlight-first');
+            } else if (elem.hasClass('c-illus__waiting')) {
+              highlight.removeClass('highlight-first highlight-third');
+              highlight.addClass('highlight-second');
+            } else if (elem.hasClass('c-illus__vetoed')) {
+              highlight.removeClass('highlight-first highlight-second');
+              highlight.addClass('highlight-third');
+            }
+          });
+        }
+      });
     }
   };
 }(document, Drupal, jQuery);

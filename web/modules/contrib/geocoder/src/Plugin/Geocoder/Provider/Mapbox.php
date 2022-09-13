@@ -18,6 +18,7 @@ use Geocoder\Provider\Mapbox\Mapbox as MapboxProvider;
  *   arguments = {
  *     "accessToken" = "",
  *     "country" = "",
+ *     "geocodingMode" = "mapbox.places",
  *   }
  * )
  */

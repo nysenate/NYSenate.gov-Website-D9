@@ -21,7 +21,7 @@ class NameAutocompleteTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'name',
     'field',
     'entity_test',
@@ -46,7 +46,7 @@ class NameAutocompleteTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(self::$modules);
 

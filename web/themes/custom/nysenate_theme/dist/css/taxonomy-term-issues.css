@@ -518,6 +518,7 @@ strong {
 [class*=' icon-before']::before,
 .icon-before__quotes::before,
 .icon-before__find-senator::before,
+.taxonomy-issues__header-cta .header-meta .c-issue--contact-btn.no-senator::before,
 .taxonomy-issues__header-cta .header-meta .button.no-senator::before,
 .icon-before__recruit-friends::before,
 .icon-before__left::before,
@@ -626,6 +627,7 @@ strong {
 
 
 .icon-before__find-senator::before,
+.taxonomy-issues__header-cta .header-meta .c-issue--contact-btn.no-senator::before,
 .taxonomy-issues__header-cta .header-meta .button.no-senator::before {
   content: '\24'; }
 
@@ -1225,42 +1227,20 @@ strong {
   @media screen and (min-width: 768px) {
     .taxonomy-issues__header {
       margin-bottom: 30px; } }
-  .taxonomy-issues__header .heading {
-    font-family: "Adelle Bold", serif;
-    font-size: 18px;
-    line-height: 25.4px;
-    margin-bottom: 0;
-    color: #444444; }
-    @media screen and (min-width: 768px) {
-      .taxonomy-issues__header .heading {
-        font-size: 32px;
-        line-height: 44.8px; } }
-    .taxonomy-issues__header .heading__subtitle {
-      margin: 0;
-      font-family: "Proxima Nova Regular", "Arial", sans-serif;
-      font-size: 14px;
-      line-height: 21px;
-      color: #888888;
-      text-transform: uppercase; }
-      @media screen and (min-width: 768px) {
-        .taxonomy-issues__header .heading__subtitle {
-          font-size: 14px;
-          line-height: 32px; } }
-      .taxonomy-issues__header .heading__subtitle span {
-        color: #444444;
-        margin-right: 5px; }
 
 .taxonomy-issues__header-cta {
   display: flex;
-  flex-direction: column;
-  gap: 30px; }
+  flex-direction: column; }
   @media screen and (min-width: 768px) {
     .taxonomy-issues__header-cta {
-      justify-content: space-between;
-      align-items: stretch;
-      flex-direction: row;
-      gap: 30px;
-      max-width: 760px; } }
+      display: block; } }
+  @media screen and (min-width: 768px) {
+    .taxonomy-issues__header-cta .header-meta {
+      position: relative;
+      width: 71%;
+      float: left;
+      margin-bottom: 60px;
+      padding-right: 40px; } }
   .taxonomy-issues__header-cta .header-meta .eyebrow {
     margin: 0;
     font-size: 16px;
@@ -1271,60 +1251,62 @@ strong {
       .taxonomy-issues__header-cta .header-meta .eyebrow {
         font-size: 20px;
         line-height: 32px; } }
+  .taxonomy-issues__header-cta .header-meta .c-issue--contact-btn,
   .taxonomy-issues__header-cta .header-meta .button {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    width: 100%;
     height: 55px;
     padding: 0 40px;
+    margin: 15px 0 30px;
     background-color: #2b6990;
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    text-transform: uppercase;
+    color: #fff;
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 1.5px;
     border: none; }
     @media screen and (min-width: 768px) {
+      .taxonomy-issues__header-cta .header-meta .c-issue--contact-btn,
       .taxonomy-issues__header-cta .header-meta .button {
         display: inline-flex;
-        height: 80px; } }
+        height: 80px;
+        margin: 0;
+        width: auto; } }
+    .taxonomy-issues__header-cta .header-meta .c-issue--contact-btn span,
+    .taxonomy-issues__header-cta .header-meta .button span {
+      width: 100%; }
+    .taxonomy-issues__header-cta .header-meta .c-issue--contact-btn:hover,
     .taxonomy-issues__header-cta .header-meta .button:hover {
       color: #fff; }
+    .taxonomy-issues__header-cta .header-meta .c-issue--contact-btn::before,
+    .taxonomy-issues__header-cta .header-meta .button::before {
+      height: auto;
+      font-size: 1.8em; }
   @media screen and (min-width: 768px) {
     .taxonomy-issues__header-cta .header-social {
       border-left: 1px solid #aaaaaa;
-      padding-left: 50px; } }
-  .taxonomy-issues__header-cta .header-social .heading {
-    font-family: "Proxima Nova Regular", "Arial", sans-serif;
-    font-size: 14px;
-    line-height: 19.6px;
-    letter-spacing: 1.4px;
-    color: #444444;
-    text-transform: uppercase;
-    margin-bottom: 10px; }
-    @media screen and (min-width: 768px) {
-      .taxonomy-issues__header-cta .header-social .heading {
-        font-size: 16px;
-        line-height: 22.4px;
-        letter-spacing: 1.6px; } }
-  .taxonomy-issues__header-cta .header-social .site-footer__social {
+      padding-left: 0; } }
+  .taxonomy-issues__header-cta .header-social .c-detail--social-item.site-footer__social {
+    list-style-type: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px; }
-    .taxonomy-issues__header-cta .header-social .site-footer__social-icon {
-      fill: #fff;
-      width: 60px;
-      height: 40px;
-      background-color: #2b6990;
-      display: inline-flex;
+    .taxonomy-issues__header-cta .header-social .c-detail--social-item.site-footer__social-icon {
+      display: flex;
+      align-items: center;
       justify-content: center;
-      align-items: center; }
+      fill: #fff;
+      background-color: #2b6990; }
       @media screen and (min-width: 768px) {
-        .taxonomy-issues__header-cta .header-social .site-footer__social-icon {
+        .taxonomy-issues__header-cta .header-social .c-detail--social-item.site-footer__social-icon {
           fill: #2b6990;
           background-color: transparent;
-          width: auto;
-          height: auto; } }
-      .taxonomy-issues__header-cta .header-social .site-footer__social-icon .icon {
+          justify-content: flex-end; } }
+      .taxonomy-issues__header-cta .header-social .c-detail--social-item.site-footer__social-icon .icon {
         width: 20px;
         height: 20px; }

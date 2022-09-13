@@ -28,8 +28,6 @@ class NameSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    module_load_include('inc', 'name', 'name.admin');
-
     $config = $this->configFactory->get('name.settings');
 
     $form['name_settings'] = ['#tree' => TRUE];

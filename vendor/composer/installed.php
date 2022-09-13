@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '846a529ba0fbd5c4c222a61d0396c0d1246ec3d6',
+        'reference' => 'f7cb4853f6ee20f64b9da1c5afe98c38390a268c',
         'name' => 'mediacurrent/drupal-project',
         'dev' => false,
     ),
@@ -1873,7 +1873,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '846a529ba0fbd5c4c222a61d0396c0d1246ec3d6',
+            'reference' => 'f7cb4853f6ee20f64b9da1c5afe98c38390a268c',
             'dev_requirement' => false,
         ),
         'mediacurrent/mis_profile' => array(

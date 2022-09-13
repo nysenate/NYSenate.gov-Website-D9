@@ -1,0 +1,22 @@
+uuid: 3361c337-f952-4f06-b13d-af163378fd05
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: calendar
+label: Calendar
+type: 'canonical_entities:node'
+pattern: 'session-calendars/[node:title]'
+selection_criteria:
+  bb41c13a-4867-46ab-9560-94553881b15f:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: bb41c13a-4867-46ab-9560-94553881b15f
+    context_mapping:
+      node: node
+    bundles:
+      calendar: calendar
+selection_logic: and
+weight: -5
+relationships: {  }

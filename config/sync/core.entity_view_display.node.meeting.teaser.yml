@@ -5,7 +5,6 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.meeting.body
-    - field.field.node.meeting.field_agenda_bills
     - field.field.node.meeting.field_bill
     - field.field.node.meeting.field_committee
     - field.field.node.meeting.field_committee_featured
@@ -17,7 +16,6 @@ dependencies:
     - field.field.node.meeting.field_meeting_location
     - field.field.node.meeting.field_meeting_status
     - field.field.node.meeting.field_off_the_floor
-    - field.field.node.meeting.field_paragraphs
     - field.field.node.meeting.field_transcript
     - field.field.node.meeting.field_ustream
     - field.field.node.meeting.field_video_redirect
@@ -46,7 +44,6 @@ content:
     weight: 100
     region: content
 hidden:
-  field_agenda_bills: true
   field_bill: true
   field_committee: true
   field_committee_featured: true
@@ -58,7 +55,6 @@ hidden:
   field_meeting_location: true
   field_meeting_status: true
   field_off_the_floor: true
-  field_paragraphs: true
   field_transcript: true
   field_ustream: true
   field_video_redirect: true

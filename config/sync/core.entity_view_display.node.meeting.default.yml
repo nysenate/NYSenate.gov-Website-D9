@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.meeting.body
-    - field.field.node.meeting.field_agenda_bills
     - field.field.node.meeting.field_bill
     - field.field.node.meeting.field_committee
     - field.field.node.meeting.field_committee_featured
@@ -16,7 +15,6 @@ dependencies:
     - field.field.node.meeting.field_meeting_location
     - field.field.node.meeting.field_meeting_status
     - field.field.node.meeting.field_off_the_floor
-    - field.field.node.meeting.field_paragraphs
     - field.field.node.meeting.field_transcript
     - field.field.node.meeting.field_ustream
     - field.field.node.meeting.field_video_redirect
@@ -25,7 +23,6 @@ dependencies:
     - node.type.meeting
   module:
     - datetime
-    - entity_reference_revisions
     - link
     - nys_list_formatter
     - options
@@ -42,14 +39,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 101
-    region: content
-  field_agenda_bills:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 106
     region: content
   field_bill:
     type: entity_reference_label
@@ -156,15 +145,6 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 104
-    region: content
-  field_paragraphs:
-    type: entity_reference_revisions_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    weight: 119
     region: content
   field_transcript:
     type: entity_reference_label

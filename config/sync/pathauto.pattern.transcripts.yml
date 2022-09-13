@@ -1,0 +1,22 @@
+uuid: 6167a88a-a7ab-4b84-84b4-fa4dc9a50808
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: transcripts
+label: Transcripts
+type: 'canonical_entities:node'
+pattern: 'transcripts/[node:title]'
+selection_criteria:
+  0e1813bd-6160-4633-818f-63b891e6e05b:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 0e1813bd-6160-4633-818f-63b891e6e05b
+    context_mapping:
+      node: node
+    bundles:
+      transcript: transcript
+selection_logic: and
+weight: -5
+relationships: {  }

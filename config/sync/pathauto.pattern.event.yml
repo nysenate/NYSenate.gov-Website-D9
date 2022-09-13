@@ -1,0 +1,22 @@
+uuid: ae510a2f-2dde-4fd8-adbb-6de6dd235aa4
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: event
+label: Event
+type: 'canonical_entities:node'
+pattern: 'calendar/events/[node:field_committee:entity:name]/[node:field_senator_multiref:0:entity:name]/[node:field_date_range:start_date:custom:F-d-Y]/[node:title]'
+selection_criteria:
+  7f6aa4c6-c4ad-45da-9e93-a1d24203acd2:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 7f6aa4c6-c4ad-45da-9e93-a1d24203acd2
+    context_mapping:
+      node: node
+    bundles:
+      event: event
+selection_logic: and
+weight: -5
+relationships: {  }

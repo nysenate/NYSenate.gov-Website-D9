@@ -1,0 +1,14 @@
+uuid: 6284b136-2b9c-44e9-b9cb-ca73185b79cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.student_programs
+  module:
+    - user
+id: user_add_role_action.student_programs
+label: 'Add the Student Programs role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: student_programs

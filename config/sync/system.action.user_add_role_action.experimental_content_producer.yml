@@ -1,0 +1,14 @@
+uuid: 686f6391-b482-42c1-b797-daa3f32415c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.experimental_content_producer
+  module:
+    - user
+id: user_add_role_action.experimental_content_producer
+label: 'Add the Experimental Content Producer role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: experimental_content_producer

@@ -1,0 +1,14 @@
+uuid: e54af8d9-e000-4a29-beb0-2389194877b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.frontpage_editor
+  module:
+    - user
+id: user_add_role_action.frontpage_editor
+label: 'Add the Frontpage Editor role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: frontpage_editor

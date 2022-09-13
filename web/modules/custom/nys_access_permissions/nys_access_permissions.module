@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\node\NodeInterface;
@@ -24,11 +23,11 @@ use Drupal\user\Entity\User;
  *   Returns true if user is microsite producer of given senator nid.
  */
 function _nys_access_permissions_user_is_senators_microsite_producer($senator_tid, $uid) {
-  $query = \Drupal::database()->select('user__field_senator_management', 'fdf_sm');
+  $query = \Drupal::database()->select('user__field_senator_multiref', 'fdf_sm');
   $query->join('user__roles', 'ur', 'fdf_sm.entity_id = ur.entity_id');
-  $query->addField('fdf_sm', 'field_senator_management_target_id', 'tid');
+  $query->addField('fdf_sm', 'field_senator_multiref_target_id', 'tid');
   $query->condition('fdf_sm.bundle', 'user')
-    ->condition('fdf_sm.field_senator_management_target_id', $senator_tid)
+    ->condition('fdf_sm.field_senator_multiref_target_id', $senator_tid)
     ->condition('fdf_sm.entity_id', $uid)
     ->condition('ur.roles_target_id', 'microsite_content_producer');
   $result = $query->execute()->fetchField();
@@ -52,21 +51,6 @@ function nys_access_permissions_entity_create_access(AccountInterface $account, 
     return AccessResult::forbidden();
   }
   return AccessResult::neutral();
-}
-
-/**
- * Implements hook_entity_access().
- */
-function nys_access_permissions_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  $is_mcp = in_array('microsite_content_producer', $account->getRoles());
-  if ($is_mcp && $operation == 'update' && $entity->bundle() == 'senator') {
-    if (_nys_access_permissions_user_is_senators_microsite_producer($entity->id(), $account->id())) {
-      return AccessResult::allowed();
-    }
-    else {
-      return AccessResult::forbidden();
-    }
-  }
 }
 
 /**
@@ -194,9 +178,9 @@ function _nys_access_permissions_get_allowed_senators_dropdown(AccountProxy $che
     // If we have a good user ID, build the list of associated senators.
     if ($check_user_id) {
       // Build the base query.
-      $query = \Drupal::database()->select('user__field_senator_management', 'fdf_sm');
-      $query->join('taxonomy_term_field_data', 't', 'fdf_sm.field_senator_management_target_id = t.tid');
-      $query->addField('fdf_sm', 'field_senator_management_target_id', 'tid');
+      $query = \Drupal::database()->select('user__field_senator_multiref', 'fdf_sm');
+      $query->join('taxonomy_term_field_data', 't', 'fdf_sm.field_senator_multiref_target_id = t.tid');
+      $query->addField('fdf_sm', 'field_senator_multiref_target_id', 'tid');
       $query->addField('t', 'name');
 
       // If the user is not exempt from filtering,

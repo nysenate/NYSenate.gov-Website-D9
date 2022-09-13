@@ -35,25 +35,16 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
-    region: content
-  field_add_honoree_list:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 11
+    weight: 7
     region: content
   field_attachment:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: hidden
     settings:
+      view_mode: default
       link: true
     third_party_settings: {  }
-    weight: 7
+    weight: 4
     region: content
   field_date:
     type: datetime_default
@@ -62,32 +53,14 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 8
-    region: content
-  field_featured:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 10
+    weight: 1
     region: content
   field_honoree_military_branch:
     type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 4
-    region: content
-  field_honoree_name:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 3
+    weight: 5
     region: content
   field_honoree_rank:
     type: string
@@ -95,32 +68,25 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 5
-    region: content
-  field_honoree_type:
-    type: list_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
+    weight: 6
     region: content
   field_honoree_video:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
-      view_mode: default
+      view_mode: teaser
       link: false
     third_party_settings: {  }
-    weight: 117
+    weight: 8
     region: content
   field_image_main:
     type: entity_reference_entity_view
     label: hidden
     settings:
       view_mode: default
-      link: true
+      link: false
     third_party_settings: {  }
-    weight: 6
+    weight: 3
     region: content
   field_issues:
     type: entity_reference_label
@@ -128,14 +94,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 9
-    region: content
-  field_profile_status:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 116
+    weight: 2
     region: content
   field_senator:
     type: entity_reference_label
@@ -145,21 +104,19 @@ content:
     third_party_settings: {  }
     weight: 115
     region: content
-  field_senator_multiref:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 12
-    region: content
   links:
     settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
 hidden:
+  field_add_honoree_list: true
+  field_featured: true
   field_honoree_contact_email: true
   field_honoree_contact_name: true
+  field_honoree_name: true
+  field_honoree_type: true
+  field_profile_status: true
+  field_senator_multiref: true
   langcode: true
   search_api_excerpt: true

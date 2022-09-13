@@ -6,6 +6,7 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Database\Database;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -131,4 +132,170 @@ function nys_senators_update_9006() {
     'vid' => 'microsite_page_type',
   ]);
   $term->save();
+}
+
+/**
+ * Deletes all Microsite Pages nodes.
+ */
+function nys_senators_update_9007() {
+  $storage_handler = \Drupal::entityTypeManager()->getStorage("node");
+  $entities = $storage_handler->loadByProperties([
+    'type' => 'microsite_page',
+  ]);
+  $storage_handler->delete($entities);
+}
+
+/**
+ * Updates Microsite Page Type terms VID value.
+ */
+function nys_senators_update_9008() {
+  // Queries all microsite page type terms that are published.
+  $terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'microsite_page_type',
+    'status' => 1,
+  ]);
+
+  foreach ($terms as $term) {
+    print "Updating VID on term {$term->id()} - {$term->label()}\n";
+    $term->set('vid', 'issues');
+    $term->save();
+  }
+}
+
+/**
+ * Alters AUTO_INCREMENT values of relevant entity database tables.
+ */
+function nys_senators_update_9009() {
+  // Database connection.
+  $con = Database::getConnection();
+
+  // Entity start values.
+  // Increase to provide plenty of room for more D7 content to be created.
+  $node_start_value = 12000000;
+  $taxonomy_term_start_value = 200000;
+  $users_start_value = 3000000;
+
+  // Node table.
+  $query = "ALTER TABLE {node} AUTO_INCREMENT = $node_start_value";
+  $con->query($query);
+
+  // Node revision table.
+  $query = "ALTER TABLE {node_revision} AUTO_INCREMENT = $node_start_value";
+  $con->query($query);
+
+  // Taxonomy term table.
+  $query = "ALTER TABLE {taxonomy_term_data} AUTO_INCREMENT = $taxonomy_term_start_value";
+  $con->query($query);
+
+  // Taxonomy term revision table.
+  $query = "ALTER TABLE {taxonomy_term_revision} AUTO_INCREMENT = $taxonomy_term_start_value";
+  $con->query($query);
+
+  // Users table.
+  $query = "ALTER TABLE {users} AUTO_INCREMENT = $users_start_value";
+  $con->query($query);
+}
+
+/**
+ * Re-creates Microsite Page Type terms.
+ */
+function nys_senators_update_9010() {
+  print "Creating Microsite Page Type terms:\n";
+  // About term.
+  $about = Term::create([
+    'name' => 'About',
+    'vid' => 'microsite_page_type',
+  ]);
+  $about->set('field_microsite_menu_weight', 0);
+  $about->save();
+  print "TID: {$about->id()} - NAME: {$about->label()}\n";
+
+  // Our District term.
+  $our_district = Term::create([
+    'name' => 'Our District',
+    'vid' => 'microsite_page_type',
+  ]);
+  $our_district->set('field_microsite_menu_weight', 1);
+  $our_district->save();
+  print "TID: {$our_district->id()} - NAME: {$our_district->label()}\n";
+
+  // Newsroom term.
+  $news_room = Term::create([
+    'name' => 'Newsroom',
+    'vid' => 'microsite_page_type',
+  ]);
+  $news_room->set('field_microsite_menu_weight', 2);
+  $news_room->save();
+  print "TID: {$news_room->id()} - NAME: {$news_room->label()}\n";
+
+  // Legislation term.
+  $legislation = Term::create([
+    'name' => 'Legislation',
+    'vid' => 'microsite_page_type',
+  ]);
+  $legislation->set('field_microsite_menu_weight', 3);
+  $legislation->save();
+  print "TID: {$legislation->id()} - NAME: {$legislation->label()}\n";
+
+  // Events term.
+  $events = Term::create([
+    'name' => 'Events',
+    'vid' => 'microsite_page_type',
+  ]);
+  $events->set('field_microsite_menu_weight', 4);
+  $events->save();
+  print "TID: {$events->id()} - NAME: {$events->label()}\n";
+
+  // Landing term.
+  $landing = Term::create([
+    'name' => 'Landing',
+    'vid' => 'microsite_page_type',
+  ]);
+  $landing->save();
+  print "TID: {$landing->id()} - NAME: {$landing->label()}\n";
+
+  // Contact term.
+  $contact = Term::create([
+    'name' => 'Contact',
+    'vid' => 'microsite_page_type',
+  ]);
+  $contact->set('field_microsite_menu_weight', 5);
+  $contact->save();
+  print "TID: {$contact->id()} - NAME: {$contact->label()}\n";
+
+  // Inactive term.
+  $inactive = Term::create([
+    'name' => 'Inactive',
+    'vid' => 'microsite_page_type',
+  ]);
+  $inactive->save();
+  print "TID: {$inactive->id()} - NAME: {$inactive->label()}\n";
+}
+
+/**
+ * Adds Senator microsite pages for existing terms.
+ */
+function nys_senators_update_9011() {
+  // Queries all senator terms that are published and active.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+    'status' => 1,
+    'field_active_senator' => TRUE,
+  ]);
+
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    // Queries looking for microsite pages that reference the term in senator
+    // multiref field.
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->execute();
+
+    // Creates the senator microsites pages if the query return empty.
+    if (empty($query)) {
+      _nys_senators_create_senator_microsites($senator_term);
+    }
+  }
 }

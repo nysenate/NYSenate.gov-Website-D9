@@ -1,28 +1,43 @@
-uuid: bf9502c3-4059-4441-85af-4ce42e69477e
+uuid: 588ca55c-dc53-4de3-a98b-812ff79dd69e
 langcode: en
 status: true
 dependencies:
   config:
+    - block_content.type.accordion
+    - block_content.type.featured_bill
+    - block_content.type.featured_image
+    - block_content.type.file_uploads
+    - block_content.type.media
+    - block_content.type.slider
+    - block_content.type.text
     - field.storage.node.field_layout_components
     - node.type.article
   module:
-    - block_field
+    - entity_reference_revisions
 id: node.article.field_layout_components
 field_name: field_layout_components
 entity_type: node
 bundle: article
 label: 'Layout Components'
-description: 'Choose from selection of layout components to customize the layout of your page.'
+description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  selection: blocks
-  selection_settings:
-    plugin_ids:
-      'inline_block:accordion': 'inline_block:accordion'
-      'inline_block:featured_bill': 'inline_block:featured_bill'
-      'inline_block:slider': 'inline_block:slider'
-      'inline_block:text': 'inline_block:text'
-field_type: block_field
+  handler: 'default:block_content'
+  handler_settings:
+    target_bundles:
+      accordion: accordion
+      featured_bill: featured_bill
+      featured_image: featured_image
+      file_uploads: file_uploads
+      media: media
+      slider: slider
+      text: text
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: accordion
+field_type: entity_reference_revisions

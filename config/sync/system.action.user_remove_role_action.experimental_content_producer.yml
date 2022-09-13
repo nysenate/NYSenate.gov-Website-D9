@@ -1,0 +1,14 @@
+uuid: 3b2c335b-6ea2-4ce9-afe0-fff242399217
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.experimental_content_producer
+  module:
+    - user
+id: user_remove_role_action.experimental_content_producer
+label: 'Remove the Experimental Content Producer role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: experimental_content_producer

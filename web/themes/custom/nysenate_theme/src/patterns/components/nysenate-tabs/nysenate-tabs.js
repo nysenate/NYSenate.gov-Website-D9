@@ -14,7 +14,7 @@
         }
 
         tabInput.each(function () {
-          if ($(this).attr('checked') === 'checked') {
+          if ($(this).is(':checked')) {
             $(this).parent().addClass('active');
           }
         });

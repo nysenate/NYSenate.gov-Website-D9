@@ -5,13 +5,16 @@ dependencies:
   config:
     - filter.format.basic_html
     - filter.format.full_html
+    - node.type.honoree
     - node.type.video
   module:
     - captcha
     - field_permissions
     - filter
     - node
+    - nys_access_permissions
     - system
+    - toolbar
     - views_send
 id: senate_services
 label: 'Senate Services'
@@ -21,7 +24,9 @@ permissions:
   - 'Access Admin Link in Dashboard'
   - 'access administration menu'
   - 'access administration pages'
+  - 'access content overview'
   - 'access dashboard'
+  - 'access toolbar'
   - 'attachments with views_send'
   - 'create field_add_honoree_list'
   - 'create field_featured'
@@ -39,10 +44,12 @@ permissions:
   - 'create field_school_show_student'
   - 'create field_year'
   - 'create files'
+  - 'create honoree content'
   - 'create initiative content'
   - 'create video content'
   - 'download any image files'
   - 'edit any entityform'
+  - 'edit any honoree content'
   - 'edit any initiative content'
   - 'edit field_add_honoree_list'
   - 'edit field_featured'
@@ -113,4 +120,5 @@ permissions:
   - 'view own field_profile_status'
   - 'view own field_school_show_student'
   - 'view own field_year'
+  - 'view own unpublished content'
   - 'view the administration theme'

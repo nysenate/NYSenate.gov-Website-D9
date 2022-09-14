@@ -5,6 +5,7 @@ dependencies:
   module:
     - node
     - user
+    - views_autocomplete_filters
 _core:
   default_config_hash: vBKWYGGDoAX-tFd1JErB8tZLSxx3lJ0foouVsgpcbB4
 id: content
@@ -261,7 +262,8 @@ display:
         options:
           perm: 'access content overview'
       cache:
-        type: tag
+        type: none
+        options: {  }
       empty:
         area_text_custom:
           id: area_text_custom

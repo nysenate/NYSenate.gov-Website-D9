@@ -7,10 +7,12 @@ dependencies:
     - filter.format.full_html
     - node.type.article
     - node.type.event
+    - node.type.honoree
     - node.type.in_the_news
     - node.type.petition
     - node.type.promotional_banner
     - node.type.video
+    - node.type.webform
   module:
     - field_permissions
     - filter
@@ -58,6 +60,7 @@ permissions:
   - 'edit own chapter content'
   - 'edit own event content'
   - 'edit own field_district'
+  - 'edit own honoree content'
   - 'edit own in_the_news content'
   - 'edit own initiative content'
   - 'edit own petition content'
@@ -66,6 +69,7 @@ permissions:
   - 'edit own promotional_banner content'
   - 'edit own questionnaire content'
   - 'edit own video content'
+  - 'edit own webform content'
   - 'edit own webform submissions'
   - 'flag bookmarks'
   - 'flag follow_issue'

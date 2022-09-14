@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_html
     - filter.format.full_html
     - node.type.article
     - node.type.event
@@ -113,6 +114,7 @@ permissions:
   - 'unflag sign_petition'
   - 'use advanced search'
   - 'use media wysiwyg'
+  - 'use text format basic_html'
   - 'use text format full_html'
   - 'view disqus comments'
   - 'view field_chair'

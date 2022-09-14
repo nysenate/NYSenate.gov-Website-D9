@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_html
     - filter.format.full_html
     - node.type.article
     - node.type.event
@@ -80,6 +81,7 @@ permissions:
   - 'merge prev_ver terms'
   - 'merge terms'
   - 'skip CAPTCHA'
+  - 'use text format basic_html'
   - 'use text format full_html'
   - 'use text format source_html'
   - 'view disqus comments'

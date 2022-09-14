@@ -1,8 +1,9 @@
-uuid: cc7c5d1e-fd92-4f58-b9fb-8d03d6c248c7
+uuid: e3f87845-68ce-42a0-81a0-ac6414b307a2
 langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - node.type.article
     - node.type.event
     - node.type.honoree
@@ -12,17 +13,73 @@ dependencies:
     - node.type.video
     - node.type.webform
   module:
+    - field_permissions
+    - filter
     - node
+    - system
 id: senator
 label: Senator
-weight: 5
+weight: 4
 is_admin: null
 permissions:
+  - 'Access Admin Link in Dashboard'
+  - 'access administration pages'
+  - 'access dashboard'
+  - 'administer nodes'
+  - 'allow disabling privatemsg'
+  - 'create article content'
+  - 'create chapter content'
+  - 'create event content'
+  - 'create in_the_news content'
+  - 'create initiative content'
+  - 'create petition content'
+  - 'create photo content'
+  - 'create press_release content'
+  - 'create promotional_banner content'
+  - 'create questionnaire content'
+  - 'create video content'
+  - 'dashboard inbox check all'
+  - 'dashboard inbox forward messages'
+  - 'dashboard inbox search bills'
+  - 'dashboard inbox search issues'
+  - 'dashboard inbox search names'
+  - 'delete own article content'
+  - 'delete own chapter content'
+  - 'delete own in_the_news content'
+  - 'delete own initiative content'
+  - 'delete own petition content'
+  - 'delete own photo content'
+  - 'delete own press_release content'
+  - 'delete own promotional_banner content'
+  - 'delete own questionnaire content'
+  - 'delete own video content'
+  - 'delete own webform submissions'
+  - 'delete privatemsg'
   - 'edit own article content'
+  - 'edit own chapter content'
   - 'edit own event content'
+  - 'edit own field_district'
   - 'edit own honoree content'
   - 'edit own in_the_news content'
+  - 'edit own initiative content'
   - 'edit own petition content'
+  - 'edit own photo content'
+  - 'edit own press_release content'
   - 'edit own promotional_banner content'
+  - 'edit own questionnaire content'
   - 'edit own video content'
   - 'edit own webform content'
+  - 'edit own webform submissions'
+  - 'flag bookmarks'
+  - 'flag follow_issue'
+  - 'flag sign_petition'
+  - 'read privatemsg'
+  - 'unflag bookmarks'
+  - 'unflag follow_issue'
+  - 'use text format full_html'
+  - 'view field_district'
+  - 'view field_members'
+  - 'view own field_district'
+  - 'view own field_members'
+  - 'view the administration theme'
+  - 'write privatemsg'

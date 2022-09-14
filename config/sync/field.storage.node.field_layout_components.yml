@@ -1,9 +1,10 @@
-uuid: 2394f466-c1f0-49f5-a86b-38fb05ed51f1
+uuid: 1885e9d8-a0c7-4c2a-ade9-9412a8544fa4
 langcode: en
 status: true
 dependencies:
   module:
-    - block_field
+    - block_content
+    - entity_reference_revisions
     - field_permissions
     - node
 third_party_settings:
@@ -12,9 +13,10 @@ third_party_settings:
 id: node.field_layout_components
 field_name: field_layout_components
 entity_type: node
-type: block_field
-settings: {  }
-module: block_field
+type: entity_reference_revisions
+settings:
+  target_type: block_content
+module: entity_reference_revisions
 locked: false
 cardinality: -1
 translatable: true

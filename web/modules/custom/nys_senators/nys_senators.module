@@ -218,6 +218,11 @@ function nys_senators_user_presave(UserInterface $user) {
       $user->set('field_senator_multiref', 0);
     }
   }
+
+  // The contact your senator component relies on field_address
+  // of the user entity. Invalidate the issues taxonomy
+  // term when updating the users.
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['taxonomy_term_list:issues']);
 }
 
 /**
@@ -347,11 +352,19 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           break;
 
         case 'About':
-        case 'Newsroom':
-        case 'Legislation':
-        case 'Events':
-          // @todo Add extra title logic if needed.
           $nodeValues['title'] = 'About ' . $senator_name;
+          break;
+
+        case 'Newsroom':
+          $nodeValues['title'] = 'Newsroom';
+          break;
+
+        case 'Legislation':
+          $nodeValues['title'] = 'Legislation';
+          break;
+
+        case 'Events':
+          $nodeValues['title'] = 'Events ';
           break;
 
         case 'Our District':
@@ -359,7 +372,7 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           break;
 
         case 'Contact':
-          $nodeValues['title'] = 'About ' . $senator_name;
+          $nodeValues['title'] = 'Contact ' . $senator_name . "'s office";
           $senatorContactBlock = \Drupal::service('entity_type.manager')->getStorage('block_content')->loadByProperties([
             'type' => 'microsite_contact_webform',
             'status' => 1,

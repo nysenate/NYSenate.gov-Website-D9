@@ -1,0 +1,22 @@
+uuid: 54a96e83-5ca1-4fdf-aa5b-559d1ac4887e
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: petition
+label: Petition
+type: 'canonical_entities:node'
+pattern: 'petitions/[node:field_date:date:html_year]/[node:field_senator_multiref:0:entity:name]/[node:title]'
+selection_criteria:
+  f85d5768-58ab-435c-ad71-2d4d26e48172:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: f85d5768-58ab-435c-ad71-2d4d26e48172
+    context_mapping:
+      node: node
+    bundles:
+      petition: petition
+selection_logic: and
+weight: -5
+relationships: {  }

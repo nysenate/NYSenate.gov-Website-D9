@@ -12,7 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (!empty($form['#id']) && $form['#id'] == 'views-exposed-form-senator-events-upcoming-events') {
-    $form['#attached']['library'][] = 'nys_calendar/senator_events';
     $current_time = time();
     $first_day_of_month = new Datetime(date('m/d/Y', strtotime('first day of this month')));
     $last_day_of_month = new Datetime(date('m/d/Y', strtotime('last day of this month')));

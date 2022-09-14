@@ -1,40 +1,106 @@
-uuid: f44fd256-ef1e-473c-870d-1e5336eb4e9a
+uuid: 4a40baf7-6b43-4ccf-869d-d15782842841
 langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - node.type.article
     - node.type.event
     - node.type.landing
     - node.type.promotional_banner
     - node.type.public_hearing
   module:
+    - captcha
+    - field_permissions
+    - filter
     - node
     - nys_access_permissions
     - system
     - toolbar
 id: frontpage_editor
 label: 'Frontpage Editor'
-weight: 2
+weight: 4
 is_admin: null
 permissions:
+  - 'Access Admin Link in Dashboard'
+  - 'access administration menu'
+  - 'access administration pages'
   - 'access content'
   - 'access content overview'
+  - 'access dashboard'
+  - 'access media browser'
+  - 'access site-wide contact form'
   - 'access toolbar'
+  - 'access user contact forms'
   - 'administer hero images'
   - 'administer nodes'
   - 'administer nys access permissions settings'
+  - 'create advpoll content'
   - 'create article content'
   - 'create event content'
+  - 'create field_accessible_sitewide'
+  - 'create field_associated_senator'
+  - 'create field_majority_issue_tag'
+  - 'create files'
   - 'create landing content'
+  - 'create page_content content'
+  - 'create press_release content'
   - 'delete any event content'
+  - 'delete any home_page_hero files'
+  - 'delete own advpoll content'
   - 'delete own event content'
+  - 'delete own home_page_hero files'
+  - 'delete own page_content content'
+  - 'delete own press_release content'
+  - 'download any home_page_hero files'
+  - 'download own home_page_hero files'
   - 'edit any event content'
+  - 'edit any home_page_hero files'
   - 'edit any promotional_banner content'
   - 'edit any public_hearing content'
+  - 'edit field_accessible_sitewide'
+  - 'edit field_associated_senator'
+  - 'edit field_majority_issue_tag'
+  - 'edit own advpoll content'
   - 'edit own article content'
   - 'edit own event content'
+  - 'edit own field_accessible_sitewide'
+  - 'edit own field_associated_senator'
+  - 'edit own field_majority_issue_tag'
+  - 'edit own home_page_hero files'
   - 'edit own landing content'
+  - 'edit own page_content content'
+  - 'edit own press_release content'
   - 'edit same role'
+  - 'execute nodequeue_add_action'
+  - 'execute nodequeue_remove_action'
+  - 'execute nys_utils_set_accessible_sitewide'
+  - 'execute nys_utils_unset_accessible_sitewide'
+  - 'execute term merge actions'
+  - 'manage term merge actions'
+  - 'manipulate all queues'
+  - 'manipulate queues'
+  - 'merge committees terms'
+  - 'merge content_experiments terms'
+  - 'merge districts terms'
+  - 'merge issues terms'
+  - 'merge majority_issues terms'
+  - 'merge nys_counties terms'
+  - 'merge participatory_budgeting_categories terms'
+  - 'merge prev_ver terms'
+  - 'merge terms'
+  - 'skip CAPTCHA'
+  - 'use text format full_html'
+  - 'use text format source_html'
+  - 'view disqus comments'
+  - 'view field_accessible_sitewide'
+  - 'view field_associated_senator'
+  - 'view field_majority_issue_tag'
+  - 'view field_members'
+  - 'view hidden fields'
+  - 'view own field_accessible_sitewide'
+  - 'view own field_associated_senator'
+  - 'view own field_majority_issue_tag'
+  - 'view own field_members'
   - 'view own unpublished content'
   - 'view the administration theme'

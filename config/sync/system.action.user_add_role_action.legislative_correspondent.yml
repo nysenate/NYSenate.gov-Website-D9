@@ -1,0 +1,14 @@
+uuid: ec4a2385-0ac8-45ec-b5ec-5ea1e33d36b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.legislative_correspondent
+  module:
+    - user
+id: user_add_role_action.legislative_correspondent
+label: 'Add the Legislative Correspondent role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: legislative_correspondent

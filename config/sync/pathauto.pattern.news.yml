@@ -1,0 +1,22 @@
+uuid: d8f62e70-6a55-48a4-883b-0d4e0042b935
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: news
+label: News
+type: 'canonical_entities:node'
+pattern: 'newsroom/[node:field_category]s/[node:field_date:date:html_year]/[node:field_senator_multiref:0:entity:name]/[node:title]'
+selection_criteria:
+  97bf4020-782a-49b3-b56d-7c5f338256f7:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 97bf4020-782a-49b3-b56d-7c5f338256f7
+    context_mapping:
+      node: node
+    bundles:
+      article: article
+selection_logic: and
+weight: -5
+relationships: {  }

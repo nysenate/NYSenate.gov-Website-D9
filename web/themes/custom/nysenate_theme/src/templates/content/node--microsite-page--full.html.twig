@@ -81,11 +81,22 @@
 <article{{ attributes.addClass(classes) }}>
 
   {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
+  {% if microsite_type == 'about' %}
+    {% if title %}
+      <h2 class="c-subpage-header--title">
+        {{ title }}
+      </h2>
+    {% endif %}
+
+    <p class="c-subpage-header--subtitle01">{{ short_title }}</p>
+    <p class="c-subpage-header--subtitle02 lgt-text">
+      <span class="u-mobile-only">{{ party }}</span>
+      <span class="u-tablet-plus">{{ party }}</span>
+    </p>
+    <p class="c-subpage-header--subtitle013">{{ district_name }}</p>
+
   {% endif %}
+  
   {{ title_suffix }}
 
   <div{{ content_attributes.addClass('node__body', 'container') }}>
@@ -104,8 +115,8 @@
 
   {% if is_events %}
     <div{{ content_attributes.addClass('node__content') }}>
-      {{ drupal_view('senator_events', 'senator_today_events',content.field_senator_multiref['#items'].0.target_id) }}
       {{ drupal_view('senator_events', 'featured_event',content.field_senator_multiref['#items'].0.target_id) }}
+      {{ drupal_view('senator_events', 'senator_today_events',content.field_senator_multiref['#items'].0.target_id) }}
       {{ drupal_view('senator_events', 'upcoming_events',content.field_senator_multiref['#items'].0.target_id) }}
     </div>
   {% endif %}

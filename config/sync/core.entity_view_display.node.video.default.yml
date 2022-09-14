@@ -15,6 +15,7 @@ dependencies:
     - node.type.video
   module:
     - datetime
+    - nys_list_formatter
     - text
     - user
 id: node.video.default
@@ -27,7 +28,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 101
+    weight: 2
     region: content
   field_accessible_sitewide:
     type: boolean
@@ -37,7 +38,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 108
+    weight: 8
     region: content
   field_committee:
     type: entity_reference_label
@@ -45,7 +46,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 106
+    weight: 6
     region: content
   field_date:
     type: datetime_default
@@ -54,7 +55,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 103
+    weight: 3
     region: content
   field_hide_feed:
     type: boolean
@@ -64,15 +65,26 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 109
+    weight: 9
     region: content
   field_issues:
-    type: entity_reference_label
+    type: list_formatter
     label: above
     settings:
-      link: true
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
     third_party_settings: {  }
-    weight: 107
+    weight: 7
     region: content
   field_recorded_date:
     type: datetime_default
@@ -81,7 +93,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 104
+    weight: 4
     region: content
   field_senator_multiref:
     type: entity_reference_label
@@ -89,7 +101,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 105
+    weight: 5
     region: content
   field_yt:
     type: entity_reference_entity_view
@@ -98,12 +110,12 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 102
+    weight: 1
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 0
     region: content
 hidden:
   langcode: true

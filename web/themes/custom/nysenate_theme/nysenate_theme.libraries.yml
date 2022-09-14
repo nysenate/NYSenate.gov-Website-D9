@@ -38,6 +38,18 @@ accordion:
   js:
     dist/js/accordion.es6.js: {}
 
+add-to-calendar:
+  css:
+    component:
+      dist/css/add-to-calendar.css: {}
+  js:
+    dist/js/add-to-calendar.es6.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
 alert-box:
   css:
     component:
@@ -127,10 +139,26 @@ columns:
     component:
       dist/css/columns.css: {}
 
+comments:
+  css:
+    component:
+      dist/css/comments.css: {}
+  js:
+    dist/js/comments.es6.js: {}
+  dependencies:
+    - nysenate_theme/button
+
+committee-listing:
+  css:
+    component:
+      dist/css/committee-listing.css: {}
+
 contact-block:
   css:
     component:
       dist/css/contact-block.css: {}
+  js:
+    dist/js/contact-block.es6.js: {}
 
 contact-form:
   css:

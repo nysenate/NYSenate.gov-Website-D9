@@ -9,13 +9,17 @@ dependencies:
     - node.type.bill
     - node.type.calendar
     - node.type.event
+    - node.type.honoree
     - node.type.in_the_news
+    - node.type.landing
     - node.type.meeting
+    - node.type.microsite_page
     - node.type.open_data
     - node.type.petition
     - node.type.promotional_banner
     - node.type.public_hearing
     - node.type.resolution
+    - node.type.school
     - node.type.session
     - node.type.student_program
     - node.type.transcript
@@ -26,6 +30,7 @@ dependencies:
     - field_permissions
     - filter
     - node
+    - nys_access_permissions
     - path
     - system
     - taxonomy
@@ -185,9 +190,12 @@ permissions:
   - 'edit any calendar content'
   - 'edit any chapter content'
   - 'edit any event content'
+  - 'edit any honoree content'
   - 'edit any in_the_news content'
   - 'edit any initiative content'
+  - 'edit any landing content'
   - 'edit any meeting content'
+  - 'edit any microsite_page content'
   - 'edit any open_data content'
   - 'edit any page_content content'
   - 'edit any petition content'
@@ -257,9 +265,12 @@ permissions:
   - 'edit own field_senator_management'
   - 'edit own field_shortname'
   - 'edit own field_user_account'
+  - 'edit own honoree content'
   - 'edit own in_the_news content'
   - 'edit own initiative content'
+  - 'edit own landing content'
   - 'edit own meeting content'
+  - 'edit own microsite_page content'
   - 'edit own open_data content'
   - 'edit own page_content content'
   - 'edit own petition content'
@@ -269,6 +280,7 @@ permissions:
   - 'edit own public_hearing content'
   - 'edit own questionnaire content'
   - 'edit own resolution content'
+  - 'edit own school content'
   - 'edit own senator content'
   - 'edit own session content'
   - 'edit own student_program content'

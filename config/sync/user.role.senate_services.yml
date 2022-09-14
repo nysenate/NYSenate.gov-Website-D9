@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_html
     - filter.format.full_html
     - node.type.honoree
     - node.type.video
@@ -87,6 +88,7 @@ permissions:
   - 'mass mailing with views_send'
   - 'senator dropdown exempt'
   - 'skip CAPTCHA'
+  - 'use text format basic_html'
   - 'use text format full_html'
   - 'view any entityform'
   - 'view field_add_honoree_list'

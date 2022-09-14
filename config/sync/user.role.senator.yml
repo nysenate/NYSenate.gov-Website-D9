@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_html
     - filter.format.full_html
     - node.type.article
     - node.type.event
@@ -76,6 +77,7 @@ permissions:
   - 'read privatemsg'
   - 'unflag bookmarks'
   - 'unflag follow_issue'
+  - 'use text format basic_html'
   - 'use text format full_html'
   - 'view field_district'
   - 'view field_members'

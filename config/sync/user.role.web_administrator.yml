@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_html
     - filter.format.full_html
     - node.type.agenda
     - node.type.article
@@ -335,6 +336,7 @@ permissions:
   - 'unflag sign_petition'
   - 'use advanced search'
   - 'use media wysiwyg'
+  - 'use text format basic_html'
   - 'use text format full_html'
   - 'use tokens in privatemsg'
   - 'view disqus comments'

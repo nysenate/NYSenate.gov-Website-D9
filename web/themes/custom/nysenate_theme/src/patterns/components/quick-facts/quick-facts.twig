@@ -15,7 +15,7 @@
   <ul id="js-carousel-about-stats" class="js-carousel c-carousel">
     {% for fact in facts %}
       <li class="c-carousel--item c-stats--item {% if fact.status %} with-icon {% endif %}">
-        <a href="{{ fact.link }}">
+        <a href="#" class="c-senate-quick-facts__button" data-tab="{{ fact.panel_id }}">
           <h4 class="c-stat">{{ fact.statistic }}</h4>
           <p class="c-stat--descript">{{ fact.description }}</p>
         </a>

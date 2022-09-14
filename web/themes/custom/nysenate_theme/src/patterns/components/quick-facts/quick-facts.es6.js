@@ -7,6 +7,8 @@
 !((document, Drupal, $) => {
   'use strict';
 
+  let carouselAnimating = false;
+
   /**
    * Setup and attach the Quick Facts behaviors.
    *
@@ -15,20 +17,38 @@
   Drupal.behaviors.quickFacts = {
     attach: function() {
       const self = this;
-      let carouselAnimating = false;
       const carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
+      const theViewportWidth = $(window).width();
+      const headingCurrentPosition = $('#issuesUpdatesHeader').offset().top;
 
       self.highlightUpTo();
 
       $('#js-carousel-about-stats').hammer().on('swipe', function(event) {
-        self.carouselAdvance(event, carouselAnimating, self, $(this));
+        self.carouselAdvance(event, self, $(this));
       });
 
       carouselNavBtn.on('click', function (event) {
-        self.carouselAdvance(event, carouselAnimating, self, $(this));
+        self.carouselAdvance(event, self, $(this));
       });
+
+      $('.c-senate-quick-facts__button').click(function(event) {
+        event.preventDefault();
+
+        const tabNumber = '#tab' + $(this).data('tab');
+        const pageBody = $('html, body');
+
+        if (theViewportWidth > 769) {
+          $('input[value=\''+tabNumber+'\']').click();
+          pageBody.animate({scrollTop:headingCurrentPosition - 220}, '1000', 'swing');
+        }
+        else {
+          $(tabNumber).click();
+          pageBody.animate({scrollTop:headingCurrentPosition - 110}, '1000', 'swing');
+        }
+      });
+
     },
-    carouselAdvance: function(e, carouselAnimating, self, item) {
+    carouselAdvance: function(e, self, item) {
       if(carouselAnimating) {
         return;
       }

@@ -1642,17 +1642,17 @@ function nysenate_theme_preprocess_nysenate_issue_quick_facts(&$variables) {
 
   $variables['facts'] = [
     [
-      'link' => '#',
+      'panel_id' => '2',
       'statistic' => $bills_facts_count,
       'description' => "Bills and Resolutions",
     ],
     [
-      'link' => '#',
+      'panel_id' => '1',
       'statistic' => $news_stories_facts_count,
       'description' => "News Stories",
     ],
     [
-      'link' => '#',
+      'panel_id' => '3',
       'statistic' => $meetings_facts_count,
       'description' => "Meetings or Public Hearings",
     ],

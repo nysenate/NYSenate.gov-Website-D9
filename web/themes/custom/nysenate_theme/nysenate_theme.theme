@@ -734,7 +734,6 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           . $node->_entity->field_location[0]->administrative_area . '%2C+'
           . $node->_entity->field_location[0]->locality . '%2C+'
           . $node->_entity->field_location[0]->postal_code,
-          'image' => $node->_entity->field_feature_image[0]->entity->field_image,
           'location' => $node->_entity->field_location[0]->organization,
           'meeting_location' => $node->_entity->field_meeting_location->value ?? '',
           'street_1' => $node->_entity->field_location[0]->address_line1,
@@ -743,6 +742,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'time_start' => $date->format('g:i A'),
           'time_end' => $date_end->format('g:i A'),
         ];
+
+        if (!empty($node->_entity->field_feature_image->getValue())) {
+          $variables['item_featured']['image'] = $node->_entity->field_feature_image[0]->entity->field_image;
+        }
       }
     }
   }

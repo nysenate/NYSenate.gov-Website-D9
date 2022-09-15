@@ -8,9 +8,14 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\nys_subscriptions\Event\GetSubscribersEvent;
+use Drupal\nys_subscriptions\Events;
 use Drupal\nys_subscriptions\Exception\InvalidSubscriptionEntity;
+use Drupal\nys_subscriptions\Subscriber;
 use Drupal\nys_subscriptions\SubscriptionInterface;
 use Drupal\user\UserInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines the subscription entity class.
@@ -51,6 +56,8 @@ use Drupal\user\UserInterface;
  */
 class Subscription extends ContentEntityBase implements SubscriptionInterface {
 
+  use LoggerChannelTrait;
+
   /**
    * Drupal's Entity Type Manager service.
    *
@@ -73,6 +80,13 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
   protected ?EntityInterface $source = NULL;
 
   /**
+   * Drupal's Event Dispatcher service.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected EventDispatcherInterface $dispatcher;
+
+  /**
    * {@inheritDoc}
    *
    * When creating a subscription:
@@ -80,9 +94,9 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    *    for `subscribe_to_type` and `subscribe_to_id`.  Either 'target' must be
    *    a valid entity, or type and id must allow one to be loaded.
    *  - passing an entity in $values['source'] will override any passed values
-   *    for `subscribe_from_type` and `subscribe_to_id`.  If a valid entity can
-   *    not be found from either 'source' or the `subscribe_from_` values, the
-   *    fields will be set to NULL.
+   *    for `subscribe_from_type` and `subscribe_from_id`.  If a valid entity
+   *    can not be found from either 'source' or the `subscribe_from_*` values,
+   *    the fields will be set to NULL.
    *  - passing a valid user ID in $values['uid'] will ensure the `email`
    *    field is set to that user's email of record.  If 'uid' is not passed
    *    at all (i.e., the key is not present), then the current session's
@@ -93,6 +107,7 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
     parent::__construct($values, $entity_type, $bundle, $translations);
     $this->entityTypeManager = \Drupal::entityTypeManager();
+    $this->dispatcher = \Drupal::service('event_dispatcher');
   }
 
   /**
@@ -148,11 +163,11 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
         (string) $this->get('subscribe_to_type')->value,
         (int) $this->get('subscribe_to_id')->value
       );
+    }
 
-      // If a target entity could not be loaded, stop here.
-      if (is_null($target)) {
-        throw new InvalidSubscriptionEntity('Could not resolve subscription target');
-      }
+    // If a target entity could not be loaded, stop here.
+    if (is_null($target)) {
+      throw new InvalidSubscriptionEntity('Could not resolve subscription target');
     }
 
     return $target;
@@ -169,11 +184,13 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    * @throws \Drupal\nys_subscriptions\Exception\InvalidSubscriptionEntity
    */
   protected function initEntities($refresh = FALSE) {
+    // If a refresh is requested, clear any target/source passed during create.
     if ($refresh) {
       unset($this->values['target']);
       unset($this->values['source']);
     }
 
+    // Throws an exception if a target entity cannot be resolved.
     $this->setTarget($this->resolveTarget($refresh));
 
     if ($refresh || (!isset($this->source))) {
@@ -549,6 +566,70 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
+  }
+
+  /**
+   * Gets all active subscribers for an entity, specified by type and id.
+   *
+   * @param string $type
+   *   The entity type of the subscription target.
+   * @param string $id
+   *   The id of the subscription target.
+   * @param bool $chunked
+   *   Indicates if the result should be chunked per the Sendgrid max
+   *   recipient limit.
+   *
+   * @return array
+   *   An array of Subscriber objects representing all subscriptions which
+   *   are confirmed and not canceled, and subscribed to the target identified
+   *   by $type and $id.  If any error occurs, an empty array is returned.  If
+   *   $chunked is TRUE, the return is an array of arrays, per array_chunk().
+   */
+  public static function getActiveSubscribers(string $type, string $id, bool $chunked = TRUE): array {
+    try {
+      $entity = \Drupal::entityTypeManager()
+        ->getStorage($type)
+        ->load($id);
+
+      // Have to do our own query, since loadByProperties does only allows
+      // tests "=" and "IN".
+      $sub_storage = \Drupal::entityTypeManager()->getStorage('subscription');
+      $subs = $sub_storage->getQuery()
+        ->condition('subscribe_to_type', $type)
+        ->condition('subscribe_to_id', $id)
+        ->condition('confirmed', 0, '>')
+        ->condition('canceled', 0)
+        ->execute();
+      $subscriptions = $sub_storage->loadMultiple($subs);
+    }
+    catch (\Throwable $e) {
+      $subscriptions = [];
+      $entity = NULL;
+    }
+
+    $ret = [];
+    foreach ($subscriptions as $subscriber) {
+      try {
+        $ret[] = Subscriber::createFromSubscription($subscriber);
+      }
+      catch (\Throwable $e) {
+        \Drupal::logger('nys_subscriptions')
+          ->error("Failed to generate subscriber for subscription @id", ['@id' => $subscriber->id()]);
+      }
+    }
+
+    // Allow for other code to alter the found subscribers.
+    \Drupal::service('event_dispatcher')
+      ->dispatch(new GetSubscribersEvent($entity, $ret), Events::GET_SUBSCRIBERS);
+
+    // Chunk the results, if requested.
+    if ($chunked) {
+      $max = \Drupal::config('nys_subscriptions.settings')
+        ->get('max_recipients');
+      $ret = array_chunk($ret, $max ?? 1000);
+    }
+
+    return $ret;
   }
 
 }

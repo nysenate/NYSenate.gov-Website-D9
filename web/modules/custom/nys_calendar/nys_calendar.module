@@ -87,3 +87,13 @@ function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $
     ];
   }
 }
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nys_calendar_preprocess_page(&$variables) {
+  $entity_queue = \Drupal::routeMatch()->getParameter('entity_queue');
+  if (isset($entity_queue) && !empty($entity_queue)) {
+    $variables['#attached']['library'][] = 'nys_calendar/nys-admin-theme';
+  }
+}

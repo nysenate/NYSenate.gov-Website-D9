@@ -113,13 +113,14 @@ function nysenate_theme_preprocess_node__article(&$variables) {
  * Implements hook_preprocess_block_content__ID().
  */
 function nysenate_theme_preprocess_block_content__microsite_contact(&$variables) {
-  $id = $variables['content']['field_senator'][0]['#plain_text'];
-  if (empty($id)) {
-    return FALSE;
+  $block = $variables['elements']['#block_content'];
+
+  $id = NULL;
+  if ($block->hasField('field_senator') && !$block->get('field_senator')->isEmpty()) {
+    $id = $block->field_senator->target_id;
   }
 
   $contact_type = '';
-  $block = $variables['elements']['#block_content'];
   if ($block->hasField('field_contact_type') && !$block->get('field_contact_type')->isEmpty()) {
     $contact_type = $block->field_contact_type->value;
     $variables['contact_type'] = $contact_type;

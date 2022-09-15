@@ -8,6 +8,7 @@
         <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>
         <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
         <a class="c-event-location" href=""> <span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
+        <div class="c-event-address">{{ item.meeting_location }}</div>
         <div class="c-event-address">{{ item.street_1 }}</div>
         <div class="c-event-address">{{ item.street_2 }}</div>
       </div>
@@ -20,6 +21,7 @@
           <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
           {# add location link #}
           <a class="c-event-location" href="" target="_blank"><span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
+          <div class="c-event-address">{{ item.meeting_location }}</div>
           <div class="c-event-address">{{ item.street_1 }}</div>
           <div class="c-event-address">{{ item.street_2 }}</div>
           <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>

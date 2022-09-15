@@ -585,3 +585,30 @@ h4.c-bill-topic {
     height: 45px;
   }
 }
+
+.page-node-type-bill .sponsor-list {
+  margin: 30px 0 10px;
+
+  .nys-senator--name,
+  .nys-senator--district {
+    margin: 0;
+    line-height: 1.2em;
+  }
+
+  .nys-senator--district {
+    font-size: 12px;
+
+    .nys-senator--party {
+      font-weight: 400;
+      line-height: 1.2em;
+      text-transform: uppercase;
+      color: $blue01;
+      font-family: $font-sans-bold;
+
+      span {
+        color: $grey03;
+        font-family: $font-sans;
+      }
+    }
+  }
+}

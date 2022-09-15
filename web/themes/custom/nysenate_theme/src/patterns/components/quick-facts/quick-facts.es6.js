@@ -34,11 +34,11 @@
       $('.c-senate-quick-facts__button').click(function(event) {
         event.preventDefault();
 
-        const tabNumber = '#tab' + $(this).data('tab');
+        const tabNumber = `#tab${$(this).data('tab')}`;
         const pageBody = $('html, body');
 
         if (theViewportWidth > 769) {
-          $('input[value=\''+tabNumber+'\']').click();
+          $(`input[value="${tabNumber}"]`).click();
           pageBody.animate({scrollTop:headingCurrentPosition - 220}, '1000', 'swing');
         }
         else {

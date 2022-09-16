@@ -757,6 +757,53 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
  */
 function nysenate_theme_preprocess_views_view__senator_microsite_content(&$variables) {
   $variables['attributes']['class'][] = 'newsroom-content';
+
+  $view = $variables['view'];
+  $display_id = $view->getDisplay();
+  $display_id = $display_id->display['id'];
+  if ($display_id == 'microsite_legislation_content') {
+    $tid = $view->args[0];
+    $filter_input = $view->exposed_raw_input;
+    $filter_input = $filter_input['type'];
+    $session = nysenate_current_legislative_session();
+
+    $title = '';
+    $args = [];
+    $url_string = '/search/legislation';
+    $options = [
+      'query' => [
+        'searched' => 'true',
+      ],
+      'attributes' => [
+        'class' => [
+          'c-container--link',
+        ],
+      ],
+    ];
+    // Type 1 stands for Bills filter, 2 for Resolution.
+    if ($filter_input == '1') {
+      $title = 'View All Bills';
+      $args = [
+        'type' => 'f_bill',
+        'bill_session_year' => $session,
+        'bill_sponsor' => $tid,
+      ];
+    }
+    elseif ($filter_input == '2') {
+      $title = 'View All Resolutions';
+      $args = [
+        'type' => 'f_resolution',
+        'resolution_session_year' => $session,
+        'resolution_sponsor' => $tid,
+      ];
+    }
+    $options['query'] = array_merge($options['query'], $args);
+    $url = Url::fromUserInput($url_string, ['query' => $args]);
+    // Override the More Link in views using the constructed url.
+    $variables['more'] = Link::fromTextAndUrl($title, $url)->toRenderable();
+    $variables['more']['#prefix'] = '<div class="more-link">';
+    $variables['more']['#suffix'] = '</div>';
+  }
 }
 
 /**
@@ -1110,6 +1157,14 @@ function nysenate_theme_theme_suggestions_views_view_alter(array &$suggestions, 
         $suggestions[] = $hook . '__' . $view_id . '__' . $term->bundle();
       }
     }
+  }
+
+  // Add theme hook suggestions for Microsite content.
+  if ($view_id == 'senator_microsite_content') {
+    // kint($view->id()); exit;.
+    $display_id = $view->getDisplay();
+    $display_id = $display_id->display['id'];
+    $suggestions[] = $hook . '__' . $view_id . '__' . $display_id;
   }
 }
 
@@ -2002,6 +2057,17 @@ function nysenate_bill_positions($node) {
     ];
   }
   return $positions;
+}
+
+/**
+ * Calculates current legislative session, e.g. 2015.
+ */
+function nysenate_current_legislative_session() {
+  $year = date('Y');
+  if ($year % 2 == 0) {
+    $year--;
+  }
+  return $year;
 }
 
 /**

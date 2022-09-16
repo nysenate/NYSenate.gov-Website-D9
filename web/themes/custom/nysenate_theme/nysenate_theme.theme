@@ -113,13 +113,14 @@ function nysenate_theme_preprocess_node__article(&$variables) {
  * Implements hook_preprocess_block_content__ID().
  */
 function nysenate_theme_preprocess_block_content__microsite_contact(&$variables) {
-  $id = $variables['content']['field_senator'][0]['#plain_text'];
-  if (empty($id)) {
-    return FALSE;
+  $block = $variables['elements']['#block_content'];
+
+  $id = NULL;
+  if ($block->hasField('field_senator') && !$block->get('field_senator')->isEmpty()) {
+    $id = $block->field_senator->target_id;
   }
 
   $contact_type = '';
-  $block = $variables['elements']['#block_content'];
   if ($block->hasField('field_contact_type') && !$block->get('field_contact_type')->isEmpty()) {
     $contact_type = $block->field_contact_type->value;
     $variables['contact_type'] = $contact_type;
@@ -734,7 +735,6 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           . $node->_entity->field_location[0]->administrative_area . '%2C+'
           . $node->_entity->field_location[0]->locality . '%2C+'
           . $node->_entity->field_location[0]->postal_code,
-          'image' => $node->_entity->field_feature_image[0]->entity->field_image,
           'location' => $node->_entity->field_location[0]->organization,
           'meeting_location' => $node->_entity->field_meeting_location->value ?? '',
           'street_1' => $node->_entity->field_location[0]->address_line1,
@@ -743,6 +743,10 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'time_start' => $date->format('g:i A'),
           'time_end' => $date_end->format('g:i A'),
         ];
+
+        if (!empty($node->_entity->field_feature_image->getValue())) {
+          $variables['item_featured']['image'] = $node->_entity->field_feature_image[0]->entity->field_image;
+        }
       }
     }
   }
@@ -1644,17 +1648,17 @@ function nysenate_theme_preprocess_nysenate_issue_quick_facts(&$variables) {
 
   $variables['facts'] = [
     [
-      'link' => '#',
+      'panel_id' => '2',
       'statistic' => $bills_facts_count,
       'description' => "Bills and Resolutions",
     ],
     [
-      'link' => '#',
+      'panel_id' => '1',
       'statistic' => $news_stories_facts_count,
       'description' => "News Stories",
     ],
     [
-      'link' => '#',
+      'panel_id' => '3',
       'statistic' => $meetings_facts_count,
       'description' => "Meetings or Public Hearings",
     ],

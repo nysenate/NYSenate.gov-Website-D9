@@ -951,17 +951,15 @@ display:
           field: area_text_custom
           plugin_id: text_custom
       sorts:
-        created:
-          id: created
-          table: node_field_data
-          field: created
+        field_date_range_value:
+          id: field_date_range_value
+          table: node__field_date_range
+          field: field_date_range_value
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: node
-          entity_field: created
-          plugin_id: date
-          order: DESC
+          plugin_id: datetime
+          order: ASC
           expose:
             label: ''
             field_identifier: ''

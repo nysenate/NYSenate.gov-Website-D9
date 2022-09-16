@@ -55,12 +55,13 @@
       if ($tabFilters && $tabFilters.length > 0) {
         $tabFilters.forEach(function (element) {
           $(element).on('mousedown', function (e) {
-            if (!$(this).parents('.l-tab-bar').hasClass('open')
+            let field_event_place = $('select[name="field_event_place_value"]');
+            if ((!$(this).parents('.l-tab-bar').hasClass('open') || $(this).data('value') === field_event_place.val())
               && $(window).innerWidth() < 760) {
               $(this).parents('.l-tab-bar').toggleClass('open');
             }
             else {
-              $('select[name="field_event_place_value"]').val($(this).data('value'));
+              field_event_place.val($(this).data('value'));
               $submit.click();
             }
           })

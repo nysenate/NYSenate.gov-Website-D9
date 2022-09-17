@@ -2,216 +2,93 @@
 
 namespace Drupal\nys_users;
 
-use Drupal\Core\Session\AccountProxy;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
 
 /**
- * Helper class for nys_users module.
+ * Utility functions for NYS User objects.
+ *
+ * @todo This needs to be a wrapper around the User object, like a Drupal user
+ *   object with added functionality.  For now, limit to static functions which
+ *   consume a User object as the first parameter.  If an instance is required,
+ *   a User object must be resolved during construction (see resolveUser()),
+ *   and any non-static functions must act in the context of that object.
  */
 class UsersHelper {
 
   /**
-   * Default object for current_user service.
+   * Simple wrapper to identify the User entity on which to work.
    *
-   * @var \Drupal\Core\Session\AccountProxy
+   * @param mixed|null $user
+   *   Can be a user entity, a numeric user ID, or NULL.
+   *
+   * @return \Drupal\user\Entity\User
+   *   If $user was NULL, Drupal's currentUser() is used.
    */
-  protected $currentUser;
+  protected static function resolveUser(mixed $user = NULL): User {
+    if (is_null($user)) {
+      $user = \Drupal::currentUser()->id();
+    }
+    if (is_numeric($user)) {
+      $user = User::load($user);
+    }
+    if (!($user instanceof User)) {
+      throw new \InvalidArgumentException("resolveUser() requires a User entity, a numeric UID, or NULL as the first parameter");
+    }
+    return $user;
+  }
 
   /**
-   * Default object for database service.
+   * Builds the "display name" portion of an RFC5322-compliant email address.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  protected $connection;
+  public static function getMailName(mixed $user = NULL): string {
+    $user = static::resolveUser($user);
+    $ufn = $user->field_first_name->value;
+    $uln = $user->field_last_name->value;
+    return ($ufn && $uln) ? "$ufn $uln" : $user->getEmail();
+  }
 
   /**
-   * Default object for entity_type.manager service.
+   * Gets the Senator (taxonomy_term) assigned to this user's district.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  protected $entityTypeManagerInterface;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(AccountProxy $current_user, Connection $connection, EntityTypeManagerInterface $entityTypeManagerInterface) {
-    $this->currentUser = $current_user;
-    $this->connection = $connection;
-    $this->entityTypeManagerInterface = $entityTypeManagerInterface;
+  public static function getSenator(mixed $user = NULL): ?Term {
+    $user = static::resolveUser($user);
+    return $user->field_district->entity->field_senator->entity;
   }
 
   /**
    * Check if a user is out of state.
    *
-   * @param mixed $user
-   *   User object or user id.
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
    *
-   * @return bool
-   *   whether given user is an out of state user.
+   * @todo this could be replaced by "isConstituent()", based on that role.
    */
-  public function isOutOfState($user) {
-    $uid = '';
-    if (is_object($user)) {
-      $uid = $user->id();
+  public static function isOutOfState(mixed $user = NULL): bool {
+    $user = static::resolveUser($user);
+    $district = $user->field_district->entity;
+    $ret = !($district && $district->id());
+    if (!$ret) {
+      $state = $user->field_address->value[0]['administrative_area'] ?? '';
+      $ret = !($state == 'NY');
     }
-    elseif (is_numeric($user)) {
-      $uid = $user;
-    }
-    elseif (empty($user->uid)) {
-      $uid = $this->currentUser->id();
-    }
-
-    $district_tid = $this->getDistrictTid($uid);
-
-    if (empty($district_tid)) {
-      return TRUE;
-    }
-    else {
-      // Check if user's address is out of state.
-      $user = $this->entityTypeManagerInterface->getStorage('user')
-        ->load($uid);
-
-      if ($user->hasField('field_address') && !$user->get('field_address')->isEmpty()) {
-        $address = $user->get('field_address')->getValue();
-        return $address[0]['administrative_area'] != 'NY' ? TRUE : FALSE;
-      }
-    }
-
-    return FALSE;
+    return $ret;
   }
 
   /**
-   * Check if user is a senator.
+   * Check if a user is also a senator.
    *
-   * @param object|int $user
-   *   User object or user id.
-   *
-   * @return bool
-   *   Whether given user refers to a user who is a Senator.
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public function isSenator($user) {
-    $uid = '';
-    if (is_object($user)) {
-      $uid = $user->uid;
-    }
-    elseif (is_numeric($user)) {
-      $uid = $user;
-    }
-    elseif (empty($user->uid)) {
-      $uid = $this->currentUser->id();
-    }
-
-    if (!is_object($user)) {
-      $user = $this->entityTypeManagerInterface->getStorage('user')
-        ->load($uid);
-    }
-    if ($user->hasRole('senator')) {
-      return TRUE;
-    }
-
-    return FALSE;
-  }
-
-  /**
-   * Given a $user object or $uid, return that user's district's tid.
-   *
-   * @param int|object $user
-   *   User object or user id.
-   *
-   * @return int
-   *   District taxonomy term id attached to the user object
-   */
-  public function getDistrictTid($user) {
-
-    $data = $this->getDistrictSenatorDataArray($user);
-
-    if (!empty($data['district_tid'])) {
-      return $data['district_tid'];
-    }
-    return NULL;
-  }
-
-  /**
-   * Get user's district and senator identifiers.
-   *
-   * Given a $user object or $uid, return that user's district
-   * and that district's senator's identifiers, used
-   * by other utility functions in this module,
-   * as not to repeat code.
-   *
-   * @todo This function is inappropriately named.
-   * It does not actually load the district info from the user,
-   * but rather loads the user's senator, then loads
-   * the district from the senator object. This causes a
-   * failure if the district does not have an assigned senator (e.g., an
-   * empty seat).  We are leaving this in place for now because it is already
-   * in wide usage.  See user_get_district_data() to load the district info
-   * properly from the user information.
-   *
-   * @param object|int $user
-   *   Object or $uid, if $uid will convert to $user object.
-   *
-   * @return array
-   *   An array containing senator_uid, senator_nid and district_tid.
-   */
-  public function getDistrictSenatorDataArray($user) {
-    $user_district_senator_info = &drupal_static(__FUNCTION__);
-    $uid = '';
-    if (is_object($user)) {
-      $uid = $user->uid;
-    }
-    elseif (is_numeric($user)) {
-      $uid = $user;
-    }
-    elseif (empty($user->uid)) {
-      $uid = $this->currentUser->id();
-    }
-
-    $senator = NULL;
-    $user = $this->entityTypeManagerInterface->getStorage('user')
-      ->load($uid);
-
-    if (!isset($user_district_senator_info[$uid])) {
-      if ($this->isSenator($uid)) {
-        // Assign the current user as the senator.
-        $senator = $user;
-      }
-      else {
-        if ($user->hasField('field_senator_multiref') && !$user->get('field_senator_multiref')->isEmpty()) {
-          $tid = $user->get('field_senator_multiref')->first()->getString() ?? '';
-          if (!empty($tid)) {
-            $senator = $this->entityTypeManagerInterface->getStorage('taxonomy_term')
-              ->load($tid);
-          }
-        }
-      }
-
-      if (!empty($senator)) {
-        $query = "SELECT fs.entity_id as district_tid FROM taxonomy_term__field_senator fs WHERE fs.field_senator_target_id = :sid AND fs.bundle = :bundle";
-        $result = $this->connection->query($query, [
-          ':sid' => $senator->id(),
-          ':bundle' => 'districts',
-        ])->fetchAssoc();
-
-        if (!empty($result)) {
-          return $user_district_senator_info[$uid] = $result;
-        }
-        // If a senator does not belong to a district,
-        // return NULL.
-        else {
-          return NULL;
-        }
-      }
-
-      // For anonymous users, return NULL
-      // if there's no senator.
-      else {
-        return NULL;
-      }
-    }
-
-    return $user_district_senator_info[$uid];
+  public static function isSenator(mixed $user): bool {
+    return static::resolveUser($user)->hasRole('senator');
   }
 
 }

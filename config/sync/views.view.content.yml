@@ -2,9 +2,13 @@ uuid: 2dc5d187-c26a-4b42-ae6d-a249e8bf53e3
 langcode: en
 status: true
 dependencies:
+  config:
+    - taxonomy.vocabulary.senator
   module:
     - node
+    - taxonomy
     - user
+    - views_autocomplete_filters
 _core:
   default_config_hash: vBKWYGGDoAX-tFd1JErB8tZLSxx3lJ0foouVsgpcbB4
 id: content
@@ -165,28 +169,140 @@ display:
             format: custom
             format_custom_false: Unpublished
             format_custom_true: Published
-        changed:
-          id: changed
+        created:
+          id: created
           table: node_field_data
-          field: changed
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
           entity_type: node
-          entity_field: changed
+          entity_field: created
           plugin_id: field
-          label: Updated
+          label: 'Authored on'
           exclude: false
           alter:
             alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
           element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
           element_default_classes: true
           empty: ''
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          click_sort_column: value
           type: timestamp
           settings:
             date_format: short
             custom_date_format: ''
             timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        changed:
+          id: changed
+          table: node_field_data
+          field: changed
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: changed
+          plugin_id: field
+          label: Updated
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         operations:
           id: operations
           table: node
@@ -261,7 +377,8 @@ display:
         options:
           perm: 'access content overview'
       cache:
-        type: tag
+        type: none
+        options: {  }
       empty:
         area_text_custom:
           id: area_text_custom
@@ -270,7 +387,23 @@ display:
           plugin_id: text_custom
           empty: true
           content: 'No content available.'
-      sorts: {  }
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
       arguments: {  }
       filters:
         title:
@@ -406,29 +539,39 @@ display:
                 title: Unpublished
                 operator: '='
                 value: '0'
-        langcode:
-          id: langcode
+        status_extra:
+          id: status_extra
           table: node_field_data
-          field: langcode
+          field: status_extra
+          entity_type: node
+          plugin_id: node_status
+          operator: '='
+          value: false
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_senator_multiref_target_id:
+          id: field_senator_multiref_target_id
+          table: node__field_senator_multiref
+          field: field_senator_multiref_target_id
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: node
-          entity_field: langcode
-          plugin_id: language
-          operator: in
+          plugin_id: taxonomy_index_tid
+          operator: or
           value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: langcode_op
-            label: Language
+            operator_id: field_senator_multiref_target_id_op
+            label: Senator
             description: ''
             use_operator: false
-            operator: langcode_op
+            operator: field_senator_multiref_target_id_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: langcode
+            identifier: senator
             required: false
             remember: false
             multiple: false
@@ -436,6 +579,16 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -449,18 +602,62 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        status_extra:
-          id: status_extra
-          table: node_field_data
-          field: status_extra
-          entity_type: node
-          plugin_id: node_status
+          reduce_duplicates: false
+          vid: senator
+          type: textfield
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_active_senator_value:
+          id: field_active_senator_value
+          table: taxonomy_term__field_active_senator
+          field: field_active_senator_value
+          relationship: field_senator_multiref
+          group_type: group
+          admin_label: ''
+          plugin_id: boolean
           operator: '='
-          value: false
+          value: All
           group: 1
+          exposed: true
           expose:
+            operator_id: ''
+            label: 'Active Senator'
+            description: ''
+            use_operator: false
+            operator: field_active_senator_value_op
             operator_limit_selection: false
             operator_list: {  }
+            identifier: field_active_senator_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
@@ -570,6 +767,15 @@ display:
           admin_label: author
           plugin_id: standard
           required: true
+        field_senator_multiref:
+          id: field_senator_multiref
+          table: node__field_senator_multiref
+          field: field_senator_multiref
+          relationship: none
+          group_type: group
+          admin_label: 'field_senator_multiref: Taxonomy term'
+          plugin_id: standard
+          required: false
       show_admin_links: false
       display_extenders: {  }
     cache_metadata:

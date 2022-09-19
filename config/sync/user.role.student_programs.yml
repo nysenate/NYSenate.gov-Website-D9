@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_html
     - filter.format.full_html
     - node.type.student_program
   module:
@@ -45,6 +46,7 @@ permissions:
   - 'execute views_bulk_operations_modify_action'
   - 'skip CAPTCHA'
   - 'use media wysiwyg'
+  - 'use text format basic_html'
   - 'use text format full_html'
   - 'view disqus comments'
   - 'view own field_featured'

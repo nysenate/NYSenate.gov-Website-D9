@@ -113,13 +113,14 @@ function nysenate_theme_preprocess_node__article(&$variables) {
  * Implements hook_preprocess_block_content__ID().
  */
 function nysenate_theme_preprocess_block_content__microsite_contact(&$variables) {
-  $id = $variables['content']['field_senator'][0]['#plain_text'];
-  if (empty($id)) {
-    return FALSE;
+  $block = $variables['elements']['#block_content'];
+
+  $id = NULL;
+  if ($block->hasField('field_senator') && !$block->get('field_senator')->isEmpty()) {
+    $id = $block->field_senator->target_id;
   }
 
   $contact_type = '';
-  $block = $variables['elements']['#block_content'];
   if ($block->hasField('field_contact_type') && !$block->get('field_contact_type')->isEmpty()) {
     $contact_type = $block->field_contact_type->value;
     $variables['contact_type'] = $contact_type;
@@ -705,6 +706,7 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
             'title' => $node->_entity->label(),
             'url' => $node->_entity->toUrl()->toString(),
             'location' => $node->_entity->field_location[0]->organization ?? '',
+            'meeting_location' => $node->_entity->field_meeting_location->value ?? '',
             'street_1' => $node->_entity->field_location[0]->address_line1 ?? '',
             'street_2' => $node->_entity->field_location[0]->locality . ', '
             . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code ?? '',
@@ -733,14 +735,18 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           . $node->_entity->field_location[0]->administrative_area . '%2C+'
           . $node->_entity->field_location[0]->locality . '%2C+'
           . $node->_entity->field_location[0]->postal_code,
-          'image' => $node->_entity->field_feature_image[0]->entity->field_image,
           'location' => $node->_entity->field_location[0]->organization,
+          'meeting_location' => $node->_entity->field_meeting_location->value ?? '',
           'street_1' => $node->_entity->field_location[0]->address_line1,
           'street_2' => $node->_entity->field_location[0]->locality . ', '
           . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code,
           'time_start' => $date->format('g:i A'),
           'time_end' => $date_end->format('g:i A'),
         ];
+
+        if (!empty($node->_entity->field_feature_image->getValue())) {
+          $variables['item_featured']['image'] = $node->_entity->field_feature_image[0]->entity->field_image;
+        }
       }
     }
   }
@@ -751,6 +757,53 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
  */
 function nysenate_theme_preprocess_views_view__senator_microsite_content(&$variables) {
   $variables['attributes']['class'][] = 'newsroom-content';
+
+  $view = $variables['view'];
+  $display_id = $view->getDisplay();
+  $display_id = $display_id->display['id'];
+  if ($display_id == 'microsite_legislation_content') {
+    $tid = $view->args[0];
+    $filter_input = $view->exposed_raw_input;
+    $filter_input = $filter_input['type'];
+    $session = nysenate_current_legislative_session();
+
+    $title = '';
+    $args = [];
+    $url_string = '/search/legislation';
+    $options = [
+      'query' => [
+        'searched' => 'true',
+      ],
+      'attributes' => [
+        'class' => [
+          'c-container--link',
+        ],
+      ],
+    ];
+    // Type 1 stands for Bills filter, 2 for Resolution.
+    if ($filter_input == '1') {
+      $title = 'View All Bills';
+      $args = [
+        'type' => 'f_bill',
+        'bill_session_year' => $session,
+        'bill_sponsor' => $tid,
+      ];
+    }
+    elseif ($filter_input == '2') {
+      $title = 'View All Resolutions';
+      $args = [
+        'type' => 'f_resolution',
+        'resolution_session_year' => $session,
+        'resolution_sponsor' => $tid,
+      ];
+    }
+    $options['query'] = array_merge($options['query'], $args);
+    $url = Url::fromUserInput($url_string, ['query' => $args]);
+    // Override the More Link in views using the constructed url.
+    $variables['more'] = Link::fromTextAndUrl($title, $url)->toRenderable();
+    $variables['more']['#prefix'] = '<div class="more-link">';
+    $variables['more']['#suffix'] = '</div>';
+  }
 }
 
 /**
@@ -1105,6 +1158,14 @@ function nysenate_theme_theme_suggestions_views_view_alter(array &$suggestions, 
       }
     }
   }
+
+  // Add theme hook suggestions for Microsite content.
+  if ($view_id == 'senator_microsite_content') {
+    // kint($view->id()); exit;.
+    $display_id = $view->getDisplay();
+    $display_id = $display_id->display['id'];
+    $suggestions[] = $hook . '__' . $view_id . '__' . $display_id;
+  }
 }
 
 /**
@@ -1336,10 +1397,10 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
   $parties = implode(', ', array_map(function ($item) {
     return $item['value'];
   }, $party));
-  $variables['party'] = t('%party %district Senate District',
+  $variables['party'] = t('@party @district <span>Senate District</span>',
     [
-      '%party' => $parties ? '(' . $parties . ')' : '',
-      '%district' => $district,
+      '@party' => $parties ? '(' . $parties . ')' : '',
+      '@district' => $district,
     ]
   );
 }
@@ -1642,17 +1703,17 @@ function nysenate_theme_preprocess_nysenate_issue_quick_facts(&$variables) {
 
   $variables['facts'] = [
     [
-      'link' => '#',
+      'panel_id' => '2',
       'statistic' => $bills_facts_count,
       'description' => "Bills and Resolutions",
     ],
     [
-      'link' => '#',
+      'panel_id' => '1',
       'statistic' => $news_stories_facts_count,
       'description' => "News Stories",
     ],
     [
-      'link' => '#',
+      'panel_id' => '3',
       'statistic' => $meetings_facts_count,
       'description' => "Meetings or Public Hearings",
     ],
@@ -1999,6 +2060,17 @@ function nysenate_bill_positions($node) {
 }
 
 /**
+ * Calculates current legislative session, e.g. 2015.
+ */
+function nysenate_current_legislative_session() {
+  $year = date('Y');
+  if ($year % 2 == 0) {
+    $year--;
+  }
+  return $year;
+}
+
+/**
  * Implements hook_preprocess_media().
  */
 function nysenate_theme_preprocess_media(&$variables) {
@@ -2259,6 +2331,7 @@ function nysenate_theme_preprocess_node(&$variables) {
         'day' => $date->format('d'),
         'month' => $date->format('M'),
         'location' => $node->field_location[0]->organization,
+        'meeting_location' => $node->field_meeting_location->value ?? '',
         'street_1' => $node->field_location[0]->address_line1,
         'street_2' => $node->field_location[0]->locality . ', '
         . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,

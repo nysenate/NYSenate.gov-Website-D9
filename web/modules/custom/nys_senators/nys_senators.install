@@ -299,3 +299,29 @@ function nys_senators_update_9011() {
     }
   }
 }
+
+/**
+ * Remove the old microsite hero and headers that are not referenced.
+ */
+function nys_senators_update_9012() {
+  // Retrieve all the hero and menu block contents.
+  $block_contents = "SELECT bc.id FROM block_content_field_data bc WHERE bc.type IN ('microsite_hero', 'senator_microsite_menu') AND bc.status = '1'";
+  $result = \Drupal::database()->query($block_contents)->fetchAll();
+
+  foreach ($result as $block) {
+    // Query if the block content is referenced in a microsite page.
+    $field_block = \Drupal::database()->query(
+      "SELECT b.entity_id FROM node__field_block b WHERE b.field_block_target_id = :block_id AND b.bundle = 'microsite_page'",
+      [':block_id' => $block->id]
+    );
+    $result = $field_block->fetchAll();
+
+    // If the block is not referenced, delete the block.
+    if (empty($result)) {
+      \Drupal::logger('nys_senators')->notice('Deleting block content %id', ['%id' => $block->id]);
+      $block = \Drupal::entityTypeManager()->getStorage('block_content')
+        ->load($block->id);
+      $block->delete();
+    }
+  }
+}

@@ -2535,11 +2535,7 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
     $term = $node->field_microsite_page_type->entity ?? [];
     if ($term instanceof TermInterface) {
       $name = $term->name->value ?? '';
-      if ($name === 'Events') {
-        $variables['is_events'] = TRUE;
-      }
-
-      elseif ($name === 'About') {
+      if ($name === 'About') {
         $variables['microsite_type'] = strtolower($name);
         $variables['title'] = $node->getTitle();
         if ($node->hasField('field_short_title') && !$node->get('field_short_title')->isEmpty()) {

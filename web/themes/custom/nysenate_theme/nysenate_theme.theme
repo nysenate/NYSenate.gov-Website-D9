@@ -701,6 +701,8 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
         $end_date = new \Datetime($node->_entity->field_date_range->end_value, new DateTimeZone('UTC'));
         $end_date->setTimezone(new DateTimeZone('America/New_York'));
         $now = new \Datetime();
+        $street_2 = !empty($node->_entity->field_location[0]->locality) ? $node->_entity->field_location[0]->locality . ', '
+        . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code : '';
         if ($date->format('d:M:Y') === $now->format('d:M:Y')) {
           $variables['items_today'][] = [
             'title' => $node->_entity->label(),
@@ -708,8 +710,7 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
             'location' => $node->_entity->field_location[0]->organization ?? '',
             'meeting_location' => $node->_entity->field_meeting_location->value ?? '',
             'street_1' => $node->_entity->field_location[0]->address_line1 ?? '',
-            'street_2' => $node->_entity->field_location[0]->locality . ', '
-            . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code ?? '',
+            'street_2' => $street_2,
             'time' => $date->format('g:i A') . ' to ' . $end_date->format('g:i A'),
           ];
           $variables['now'] = $date->format('M jS');
@@ -725,6 +726,8 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
         $date->setTimezone(new DateTimeZone('America/New_York'));
         $date_end = new \Datetime($node->_entity->field_date_range->end_value, new DateTimeZone('UTC'));
         $date_end->setTimezone(new DateTimeZone('America/New_York'));
+        $street_2 = !empty($node->_entity->field_location[0]->locality) ? $node->_entity->field_location[0]->locality . ', '
+        . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code : '';
         $variables['item_featured'] = [
           'title' => $node->_entity->label(),
           'url' => $node->_entity->toUrl()->toString(),
@@ -738,8 +741,7 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'location' => $node->_entity->field_location[0]->organization,
           'meeting_location' => $node->_entity->field_meeting_location->value ?? '',
           'street_1' => $node->_entity->field_location[0]->address_line1,
-          'street_2' => $node->_entity->field_location[0]->locality . ', '
-          . $node->_entity->field_location[0]->administrative_area . ' ' . $node->_entity->field_location[0]->postal_code,
+          'street_2' => $street_2,
           'time_start' => $date->format('g:i A'),
           'time_end' => $date_end->format('g:i A'),
         ];
@@ -2325,6 +2327,8 @@ function nysenate_theme_preprocess_node(&$variables) {
       $date->setTimezone(new DateTimeZone('America/New_York'));
       $date_end = new \Datetime($node->field_date_range->end_value, new DateTimeZone('UTC'));
       $date_end->setTimezone(new DateTimeZone('America/New_York'));
+      $street_2 = !empty($node->field_location[0]->locality) ? $node->field_location[0]->locality . ', '
+        . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code : '';
       $variables['item'] = [
         'title' => $node->label(),
         'url' => $node->toUrl()->toString(),
@@ -2333,8 +2337,7 @@ function nysenate_theme_preprocess_node(&$variables) {
         'location' => $node->field_location[0]->organization,
         'meeting_location' => $node->field_meeting_location->value ?? '',
         'street_1' => $node->field_location[0]->address_line1,
-        'street_2' => $node->field_location[0]->locality . ', '
-        . $node->field_location[0]->administrative_area . ' ' . $node->field_location[0]->postal_code,
+        'street_2' => $street_2,
         'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
       ];
     }

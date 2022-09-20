@@ -378,11 +378,13 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
             'status' => 1,
             'info' => 'Senator contact form - Microsite Contact block',
           ]);
-          $senatorContactBlock = reset($senatorContactBlock);
-          $nodeValues['field_block'][] = [
-            'target_id' => $senatorContactBlock->id(),
-            'target_revision_id' => $senatorContactBlock->getRevisionId(),
-          ];
+          if (!empty($senatorContactBlock)) {
+            $senatorContactBlock = reset($senatorContactBlock);
+            $nodeValues['field_block'][] = [
+              'target_id' => $senatorContactBlock->id(),
+              'target_revision_id' => $senatorContactBlock->getRevisionId(),
+            ];
+          }
           break;
 
       }

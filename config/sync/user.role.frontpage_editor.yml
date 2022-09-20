@@ -3,14 +3,19 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_html
     - filter.format.full_html
     - node.type.article
     - node.type.event
+    - node.type.landing
+    - node.type.promotional_banner
+    - node.type.public_hearing
   module:
     - captcha
     - field_permissions
     - filter
     - node
+    - nys_access_permissions
     - system
     - toolbar
 id: frontpage_editor
@@ -21,6 +26,8 @@ permissions:
   - 'Access Admin Link in Dashboard'
   - 'access administration menu'
   - 'access administration pages'
+  - 'access content'
+  - 'access content overview'
   - 'access dashboard'
   - 'access media browser'
   - 'access site-wide contact form'
@@ -36,6 +43,7 @@ permissions:
   - 'create field_associated_senator'
   - 'create field_majority_issue_tag'
   - 'create files'
+  - 'create landing content'
   - 'create page_content content'
   - 'create press_release content'
   - 'delete any event content'
@@ -49,6 +57,8 @@ permissions:
   - 'download own home_page_hero files'
   - 'edit any event content'
   - 'edit any home_page_hero files'
+  - 'edit any promotional_banner content'
+  - 'edit any public_hearing content'
   - 'edit field_accessible_sitewide'
   - 'edit field_associated_senator'
   - 'edit field_majority_issue_tag'
@@ -59,6 +69,7 @@ permissions:
   - 'edit own field_associated_senator'
   - 'edit own field_majority_issue_tag'
   - 'edit own home_page_hero files'
+  - 'edit own landing content'
   - 'edit own page_content content'
   - 'edit own press_release content'
   - 'edit same role'
@@ -80,6 +91,7 @@ permissions:
   - 'merge prev_ver terms'
   - 'merge terms'
   - 'skip CAPTCHA'
+  - 'use text format basic_html'
   - 'use text format full_html'
   - 'use text format source_html'
   - 'view disqus comments'

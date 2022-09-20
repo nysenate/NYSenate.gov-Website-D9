@@ -1,0 +1,22 @@
+uuid: c86a03bc-84f3-4499-b9cd-0573632ca8b7
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: session
+label: Session
+type: 'canonical_entities:node'
+pattern: 'calendar/sessions/[node:field_date_range:start_date:custom:F-d-Y]/[node:title]'
+selection_criteria:
+  b451c2c6-5eeb-4b11-baae-86146ab8fcb2:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: b451c2c6-5eeb-4b11-baae-86146ab8fcb2
+    context_mapping:
+      node: node
+    bundles:
+      session: session
+selection_logic: and
+weight: -5
+relationships: {  }

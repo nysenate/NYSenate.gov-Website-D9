@@ -94,10 +94,14 @@
           </h3>
           {% for contact in office_contacts %}
             <div class="c-office-info--office-contact vcard">
-              {{ contact.name }}
-              </br>
-              {{ contact.title }}
-              </br>
+              {% if contact.name %}
+                {{ contact.name }}
+                </br>
+              {% endif %}
+              {% if condition %}
+                {{ contact.title }}
+                </br>
+              {% endif %}
               {% if contact.phone %}
                 <span>Phone: </span>{{ contact.phone }}<br />
               {% endif %}
@@ -117,9 +121,7 @@
         {{ name }}
         </br>
         {% if email %}
-          <span>{{ 'Email:'|t }} </span><a href="mailto:{{ email }}">{{
-              email
-            }}</a>
+          <a href="mailto:{{ email }}">{{ email }}</a>
         {% endif %}
         </br>
         {% if phone %}

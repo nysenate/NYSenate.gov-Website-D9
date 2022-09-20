@@ -8,8 +8,17 @@
         <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>
         <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
         <a class="c-event-location" href=""> <span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
-        <div class="c-event-address">{{ item.street_1 }}</div>
-        <div class="c-event-address">{{ item.street_2 }}</div>
+        {% if item.meeting_location %}
+          <div class="c-event-address">{{ item.meeting_location }}</div>
+        {% endif %}
+
+        {% if item.street_1 %}
+          <div class="c-event-address">{{ item.street_1 }}</div>
+        {% endif %}
+
+        {% if item.street_2 %}
+          <div class="c-event-address">{{ item.street_2 }}</div>
+        {% endif %}
       </div>
     {% endfor %}
   {% else %}
@@ -20,8 +29,17 @@
           <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
           {# add location link #}
           <a class="c-event-location" href="" target="_blank"><span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
+        {% if item.meeting_location %}
+          <div class="c-event-address">{{ item.meeting_location }}</div>
+        {% endif %}
+
+        {% if item.street_1 %}
           <div class="c-event-address">{{ item.street_1 }}</div>
+        {% endif %}
+
+        {% if item.street_2 %}
           <div class="c-event-address">{{ item.street_2 }}</div>
+        {% endif %}
           <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>
         </div>
       </article>

@@ -1,0 +1,206 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Access Permissions.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxy;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
+
+/**
+ * Validates given user is designated on senator's list of editors.
+ *
+ * @param string $senator_tid
+ *   The senator tid.
+ * @param int $uid
+ *   User ID.
+ *
+ * @return bool
+ *   Returns true if user is microsite producer of given senator nid.
+ */
+function _nys_access_permissions_user_is_senators_microsite_producer($senator_tid, $uid) {
+  $query = \Drupal::database()->select('user__field_senator_multiref', 'fdf_sm');
+  $query->join('user__roles', 'ur', 'fdf_sm.entity_id = ur.entity_id');
+  $query->addField('fdf_sm', 'field_senator_multiref_target_id', 'tid');
+  $query->condition('fdf_sm.bundle', 'user')
+    ->condition('fdf_sm.field_senator_multiref_target_id', $senator_tid)
+    ->condition('fdf_sm.entity_id', $uid)
+    ->condition('ur.roles_target_id', 'microsite_content_producer');
+  $result = $query->execute()->fetchField();
+  return !empty($result);
+}
+
+/**
+ * Implements hook_entity_create_access().
+ */
+function nys_access_permissions_entity_create_access(AccountInterface $account, array $context, $entity_bundle) {
+  // MCPs without a Senator should not have any access to create content since
+  // they do not have permission to create site-wide content.
+  $is_mcp = in_array('microsite_content_producer', $account->getRoles());
+  $edit_any = $account->hasPermission('edit any content');
+
+  $senators_array = _nys_access_permissions_get_allowed_senators_dropdown($account);
+  // Remove the 'none' option from the list.
+  array_shift($senators_array);
+  $has_senators = $senators_array;
+  if ($is_mcp && !$edit_any && empty($has_senators)) {
+    return AccessResult::forbidden();
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * Grant access to content on unique content basis.
+ */
+function nys_access_permissions_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+  $is_mcp = in_array('microsite_content_producer', $account->getRoles());
+  if (is_object($node) && is_object($account)) {
+    $edit_own = 'edit own ' . $node->bundle() . ' content';
+    // If user has access to edit own content.
+    if ($node->uid->target_id == $account->id() && $account->hasPermission($edit_own)) {
+      return AccessResult::neutral();
+    }
+
+    // Check if users have same role and permissions to update
+    // each other's content.
+    if (!empty($node->uid->target_id) && $operation == 'update' && $account->hasPermission('edit same role')) {
+      $author = User::load($node->uid->target_id);
+      if (array_intersect($account->getRoles(), $author->getRoles())) {
+        $edit_same_roles = user_roles(TRUE, 'edit same role');
+        foreach ($author->getRoles() as $role) {
+          if (in_array($role, $account->getRoles()) && in_array($role, array_keys($edit_same_roles))) {
+            return AccessResult::allowed();
+          }
+        }
+      }
+    }
+
+    if ($is_mcp && $operation == 'update') {
+      if ($node->hasField('field_committee') && !empty($node->field_committee->getValue())) {
+        $committee = $node->field_committee->entity;
+        if (isset($committee->field_chair) && !empty($committee->field_chair->target_id)) {
+          if (_nys_access_permissions_user_is_senators_microsite_producer($committee->field_chair->target_id, $account->id())) {
+            return AccessResult::allowed();
+          }
+        }
+      }
+      elseif (in_array($node->bundle(), _nys_access_permissions_microsite_content_producer_node_types())) {
+        if ($node->hasField('field_senator_multiref') && $target_ids = $node->field_senator_multiref->getValue()) {
+          foreach ($target_ids as $target_id) {
+            if (_nys_access_permissions_user_is_senators_microsite_producer($target_id, $account->id())) {
+              return AccessResult::allowed();
+            }
+          }
+        }
+        elseif ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
+          if (_nys_access_permissions_user_is_senators_microsite_producer($node->field_ol_sponsor->target_id, $account->id())) {
+            return AccessResult::allowed();
+          }
+        }
+      }
+      return AccessResult::forbidden();
+    }
+
+    // Allow access to bulk operation's manipulation
+    // of data from "/admin/accessible-sitewide".
+    $current_path = \Drupal::service('path.current')->getPath();
+    $args = explode('/', $current_path);
+    if (in_array('frontpage_editor', $account->getRoles()) && $operation == 'update' && !empty($args[0]) && $args[0] == 'batch') {
+      return AccessResult::allowed();
+    }
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Function _nys_access_permissions_microsite_content_producer_node_types().
+ */
+function _nys_access_permissions_microsite_content_producer_node_types() {
+  return [
+    // These content types are no longer present in D9 CTs.
+    // 'advpoll',
+    // 'chapter',
+    // 'initiative',
+    // 'press_release',
+    // 'questionnaire',
+    // .
+    'article',
+    'event',
+    'in_the_news',
+    'petition',
+    'video',
+    'bill',
+    'resolution',
+    // CT is in D9 but doesn't have any senator reference field.
+    // 'promotional_banner',
+    // .
+    'meeting',
+    'public_hearing',
+    'webform',
+
+    // Content type added in D9.
+    'microsite_page',
+  ];
+}
+
+/**
+ * Get allowed senators dropdown options.
+ *
+ * @param \Drupal\Core\Session\AccountProxy $check_user
+ *   A user account object.
+ * @param bool $rebuild
+ *   Indicates if the static cache should be rebuilt for this user.
+ *
+ * @return array
+ *   An array of all available associated senator options indexed by the
+ *   senator's node ID.
+ */
+function _nys_access_permissions_get_allowed_senators_dropdown(AccountProxy $check_user, $rebuild = FALSE) {
+  // Keep a static return per user.
+  $select_options = &drupal_static(__FUNCTION__);
+
+  // If a user ID or user object was passed, use it.
+  // Otherwise, use global $user.
+  $check_user_id = $check_user->id();
+
+  // If there is no static response yet,
+  // or if rebuild is requested, build it.
+  if (!isset($select_options[$check_user_id]) || $rebuild) {
+    // Set the default option.
+    $select_options[$check_user_id] = ['_none' => t('- None -')];
+
+    // If we have a good user ID, build the list of associated senators.
+    if ($check_user_id) {
+      // Build the base query.
+      $query = \Drupal::database()->select('user__field_senator_multiref', 'fdf_sm');
+      $query->join('taxonomy_term_field_data', 't', 'fdf_sm.field_senator_multiref_target_id = t.tid');
+      $query->addField('fdf_sm', 'field_senator_multiref_target_id', 'tid');
+      $query->addField('t', 'name');
+
+      // If the user is not exempt from filtering,
+      // filter by the user's allowance.
+      if (!$check_user->hasPermission('senator dropdown exempt')) {
+        $query->condition('fdf_sm.bundle', 'user')
+          ->condition('fdf_sm.entity_id', $check_user_id);
+      }
+
+      // Execute.
+      $result = $query->execute();
+
+      // Add the query results to the static cache for this user ID.  Use the
+      // senator node ID (management target ID) as the index.
+      foreach ($result as $r) {
+        $select_options[$check_user_id][$r->tid] = $r->name;
+      }
+    }
+  }
+
+  // Return the static cache.
+  return $select_options[$check_user_id];
+}

@@ -549,6 +549,24 @@
     }
   }
 
+  .view-display-id-upcoming_events {
+
+    .c-event-name {
+      font-weight: 400;
+    }
+
+    .c-event-name,
+    .c-event-location,
+    .c-event-address,
+    .c-event-time,
+    .c-event-name,
+    .c-event-location,
+    .c-event-address,
+    .c-event-time {
+      margin-right: 120px;
+    }
+  }
+
   .view-previous-sessions {
     .c-event-block--list {
       .c-event-name {
@@ -733,7 +751,7 @@
 
       @include breakpoint($bp-sm) {
         position: relative !important;
-        padding: 0 0 0 10px;
+        padding: 0 0 0 10px !important;
         font-size: 16px;
         line-height: 47px;
       }

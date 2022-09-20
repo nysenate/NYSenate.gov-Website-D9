@@ -4,3 +4,26 @@
  * @file
  * Install, update and uninstall hooks for the mcprofile install profile.
  */
+
+/**
+ * NYSD9-372: Set the label of List Views block content type.
+ */
+function nysenate_update_9001() {
+  $bcid = \Drupal::entityQuery('block_content')
+    ->condition('type', 'views')->execute();
+
+  if (!empty($bcid)) {
+    $list_views = \Drupal::entityTypeManager()
+      ->getStorage('block_content')
+      ->loadMultiple($bcid);
+
+    foreach ($list_views as $view) {
+      if ($view->hasField('field_title') && !$view->get('field_title')->isEmpty()) {
+        $title = $view->field_title->value;
+        $label_field = $view->getEntityType()->getKey('label');
+        $view->set($label_field, 'Views: ' . $title);
+        $view->save();
+      }
+    }
+  }
+}

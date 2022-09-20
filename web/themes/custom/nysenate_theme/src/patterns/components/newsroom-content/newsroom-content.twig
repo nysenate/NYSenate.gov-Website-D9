@@ -16,7 +16,7 @@
     <div class="c-tab--arrow u-mobile-only"></div>
     {% for panel in panels %}
       <div class="c-tab {% if loop.first %}active{% endif %}">
-        <input type="radio" name="language" value="#panel{{ loop.index }}"  {% if loop.first %}checked="checked"{% endif %}>
+        <input type="radio" name="language" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
         <label class="c-tab-link">{{ panel.tab_text }}</label>
       </div>
     {% endfor %}
@@ -102,8 +102,9 @@
                           <span class="icon-before__circle-pin"></span>
                           <span>{{ content.location.name }}</span>
                         </a>
-                        <div class="c-event-address">{{ content.address|raw }}
-                        </div>
+                        {% if content.address %}
+                          <div class="c-event-address">{{ content.address|raw }}</div>
+                        {% endif %}
                         <div class="c-event-time">
                           <span class="date-display-single">
                             <span class="date-display-range">
@@ -134,22 +135,30 @@
 
 
               <div class="view-content">
-                {% for content in panel.contents %}
-                  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
+                {% if panel.content %}
+                  {% for content in panel.contents %}
+                    <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
 
-                    {% include "@nysenate_theme/bill-item/bill-item.twig" with {
+                      {% include "@nysenate_theme/bill-item/bill-item.twig" with {
                         bill: content.bill
                       } only %}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="view-empty">
+                    No content found at this time
                   </div>
-                {% endfor %}
+                {% endif %}
               </div>
 
 
-              <div class="c-container--header link">
-                <a href="{{ panel.view_all_link }}" class="c-container--link">
-                  {{ panel.view_all_text }}
-                </a>
-              </div>
+              {% if panel.content %}
+                <div class="c-container--header link">
+                  <a href="{{ panel.view_all_link }}" class="c-container--link">
+                    {{ panel.view_all_text }}
+                  </a>
+                </div>
+              {% endif %}
             </div>
           </div>
 

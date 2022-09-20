@@ -131,11 +131,11 @@
         <span class="icon-before__circle-pin"></span>
         {{ content.field_location[0]['organization']['#value'] }}
       </a>
-      <div class="c-event-address">
-        {% if content.field_meeting_location[0]['#context']['value'] %}
+      {% if content.field_meeting_location[0]['#context']['value'] %}
+        <div class="c-event-address">
           <br>{{ content.field_meeting_location[0]['#context']['value'] }}
-        {% endif %}
-      </div>
+        </div>
+      {% endif %}
     {% endif %}
 
 

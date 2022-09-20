@@ -57,9 +57,11 @@
                 {{ item.event_location_name }}
               </a>
 
-              <div class="c-event-address">
-                {{ item.event_address|raw }}
-              </div>
+              {% if item.event_address %}
+                <div class="c-event-address">
+                  {{ item.event_address|raw }}
+                </div>
+              {% endif %}
 
               <div class="c-event-time">
                 <span class="date-display-single">

@@ -16,8 +16,13 @@
   <a class="c-event-location" href="{{ url_location }}" target="_blank">
     <span class="icon-before__circle-pin"></span>{{ location }}
   </a>
-  <div class="c-event-address">{{ meeting_location }}</div>
-  <div class="c-event-address">{{ street_1 }}<br>{{ street_2 }}</div>
+  {% if meeting_location %}
+    <div class="c-event-address">{{ meeting_location }}</div>
+  {% endif %}
+
+  {% if street_1 or street_2 %}
+    <div class="c-event-address">{% if street_1 %}{{ street_1 }}<br>{% endif %}{{ street_2 }}</div>
+  {% endif %}
 
 </div>
 <div class="c-event-time">

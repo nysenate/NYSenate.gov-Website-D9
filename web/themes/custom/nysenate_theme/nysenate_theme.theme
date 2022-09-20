@@ -11,6 +11,7 @@ use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\views\ViewExecutable;
 use Drupal\Component\Utility\Html;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -2453,6 +2454,35 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
 
     if ($form['#id'] == 'views-exposed-form-senator-microsite-content-microsite-legislation-content') {
       unset($form['type']['#options']['All']);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function nysenate_theme_views_pre_render(ViewExecutable $view) {
+  if ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content') {
+    // Retrieve the filter inputs.
+    $filter = $view->exposed_raw_input;
+    $filter = $filter['type_1'];
+    // 1 stands for Press Release.
+    if ($filter == '1') {
+      $results = $view->result;
+      $filteredResults = [];
+      foreach ($results as $result) {
+        // Get all the press_release category nodes.
+        /** @var \Drupal\node\Entity\Node $node */
+        $node = $result->_entity;
+        if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+          if ($node->field_category->value == 'press_release') {
+            $filteredResults[] = $result;
+          }
+        }
+      }
+      // Override the views results.
+      $view->result = $filteredResults;
+      $view->total_rows = count($filteredResults);
     }
   }
 }

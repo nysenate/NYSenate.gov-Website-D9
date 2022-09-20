@@ -34,6 +34,16 @@
 
   &--with-bg {
     background: $grey06;
+
+    .text-layout__container {
+      padding: 0 20px;
+      padding-top: 40px;
+  
+      @include breakpoint($bp-sm) {
+        padding: 0 40px;
+        padding-top: 60px;
+      }
+    }
   }
 
   &--full-bleed {
@@ -54,14 +64,10 @@
   }
 
   &__container {
-    padding: 0 20px;
-    padding-top: 40px;
     max-width: 440px;
     margin: 0 auto;
 
     @include breakpoint($bp-sm) {
-      padding: 0 40px;
-      padding-top: 60px;
       max-width: 840px;
     }
   }

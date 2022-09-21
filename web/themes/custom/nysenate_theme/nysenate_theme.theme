@@ -11,6 +11,7 @@ use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\views\ViewExecutable;
 use Drupal\Component\Utility\Html;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -762,47 +763,51 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
   $display_id = $view->getDisplay();
   $display_id = $display_id->display['id'];
   if ($display_id == 'microsite_legislation_content') {
-    $tid = $view->args[0];
-    $filter_input = $view->exposed_raw_input;
-    $filter_input = $filter_input['type'];
-    $session = nysenate_current_legislative_session();
+    $result = $view->result;
 
-    $title = '';
-    $args = [];
-    $url_string = '/search/legislation';
-    $options = [
-      'query' => [
-        'searched' => 'true',
-      ],
-      'attributes' => [
-        'class' => [
-          'c-container--link',
+    if (!empty($result)) {
+      $tid = $view->args[0];
+      $filter_input = $view->exposed_raw_input;
+      $filter_input = $filter_input['type'];
+      $session = nysenate_current_legislative_session();
+
+      $title = '';
+      $args = [];
+      $url_string = '/search/legislation';
+      $options = [
+        'query' => [
+          'searched' => 'true',
         ],
-      ],
-    ];
-    // Type 1 stands for Bills filter, 2 for Resolution.
-    if ($filter_input == '1') {
-      $title = 'View All Bills';
-      $args = [
-        'type' => 'f_bill',
-        'bill_session_year' => $session,
-        'bill_sponsor' => $tid,
+        'attributes' => [
+          'class' => [
+            'c-container--link',
+          ],
+        ],
       ];
+      // Type 1 stands for Bills filter, 2 for Resolution.
+      if ($filter_input == '1') {
+        $title = 'View All Bills';
+        $args = [
+          'type' => 'f_bill',
+          'bill_session_year' => $session,
+          'bill_sponsor' => $tid,
+        ];
+      }
+      elseif ($filter_input == '2') {
+        $title = 'View All Resolutions';
+        $args = [
+          'type' => 'f_resolution',
+          'resolution_session_year' => $session,
+          'resolution_sponsor' => $tid,
+        ];
+      }
+      $options['query'] = array_merge($options['query'], $args);
+      $url = Url::fromUserInput($url_string, ['query' => $args]);
+      // Override the More Link in views using the constructed url.
+      $variables['more'] = Link::fromTextAndUrl($title, $url)->toRenderable();
+      $variables['more']['#prefix'] = '<div class="more-link">';
+      $variables['more']['#suffix'] = '</div>';
     }
-    elseif ($filter_input == '2') {
-      $title = 'View All Resolutions';
-      $args = [
-        'type' => 'f_resolution',
-        'resolution_session_year' => $session,
-        'resolution_sponsor' => $tid,
-      ];
-    }
-    $options['query'] = array_merge($options['query'], $args);
-    $url = Url::fromUserInput($url_string, ['query' => $args]);
-    // Override the More Link in views using the constructed url.
-    $variables['more'] = Link::fromTextAndUrl($title, $url)->toRenderable();
-    $variables['more']['#prefix'] = '<div class="more-link">';
-    $variables['more']['#suffix'] = '</div>';
   }
 }
 
@@ -987,7 +992,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $contents[] = [
-        'title' => $bundle,
+        'title' => ($bundle == 'video') ? ucfirst($bundle) : $bundle,
         'topics' => $issues,
         'description' => [
           'text' => $node->label(),
@@ -1426,14 +1431,17 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     $variables['senator'] = $senator;
 
     // Senator name.
-    if (!empty($senator) && isset($senator->name->value) && !empty($senator->name->value)) {
-      $senator_name = $senator->name->value;
+    if (!empty($senator)) {
+      if (isset($senator->name->value) && !empty($senator->name->value)) {
+        $senator_name = $senator->name->value;
+      }
+
+      // Senator image.
+      if ($senator->hasField('field_image_headshot') && !$senator->get('field_image_headshot')->isEmpty()) {
+        $senator_image = $senator->field_member_headshot->entity;
+      }
     }
 
-    // Senator image.
-    if ($senator->hasField('field_image_headshot') && !$senator->get('field_image_headshot')->isEmpty()) {
-      $senator_image = $senator->field_member_headshot->entity;
-    }
   }
 
   // Generate the contact your senator variables.
@@ -2441,6 +2449,35 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
 
     if ($form['#id'] == 'views-exposed-form-senator-microsite-content-microsite-legislation-content') {
       unset($form['type']['#options']['All']);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function nysenate_theme_views_pre_render(ViewExecutable $view) {
+  if ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content') {
+    // Retrieve the filter inputs.
+    $filter = $view->exposed_raw_input;
+    $filter = $filter['type_1'];
+    // 1 stands for Press Release.
+    if ($filter == '1') {
+      $results = $view->result;
+      $filteredResults = [];
+      foreach ($results as $result) {
+        // Get all the press_release category nodes.
+        /** @var \Drupal\node\Entity\Node $node */
+        $node = $result->_entity;
+        if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+          if ($node->field_category->value == 'press_release') {
+            $filteredResults[] = $result;
+          }
+        }
+      }
+      // Override the views results.
+      $view->result = $filteredResults;
+      $view->total_rows = count($filteredResults);
     }
   }
 }

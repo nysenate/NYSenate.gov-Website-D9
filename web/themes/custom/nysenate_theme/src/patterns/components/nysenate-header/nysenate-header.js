@@ -20,30 +20,21 @@
       let topbarDropdown;
 
       const $adminToolbar = $('#toolbar-bar');
+      const $adminTray = $('#toolbar-item-administration-tray.toolbar-tray');
 
-      let adminHeight =
-        $adminToolbar.length > 0
-          ? $adminToolbar.outerHeight()
-          : 0;
-      let headerHeight =
-        nav.length > 0
-          ? nav.outerHeight()
-          : 0; // Create empty variables to use later for calculating heights.
+      if ($adminToolbar.length > 0) {
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function() {
+            nav.prependTo('.layout-container').css({
+              'z-index': '100',
+              'margin-top': $('body').css('padding-top')
+            });
+          });
+        });
 
-      let $combinedHeights = 0;
-
-      if ($('.layout-container').length > 0) {
-        adminHeight =
-        $adminToolbar.length > 0
-          ? $adminToolbar.outerHeight()
-          : 0;
-        headerHeight = nav.length > 0 ? nav.outerHeight() : 0;
-
-        $combinedHeights = headerHeight + adminHeight;
-
-        nav.prependTo('.layout-container').css({
-          'z-index': '100',
-          'margin-top': ''.concat($combinedHeights, 'px')
+        observer.observe($adminTray[0], {
+          attributes: true,
+          attributeFilter: ['class']
         });
       }
 

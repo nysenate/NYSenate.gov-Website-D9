@@ -46,6 +46,14 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_issues:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }
@@ -64,7 +72,6 @@ hidden:
   field_date: true
   field_image_caption: true
   field_image_hero: true
-  field_issues: true
   field_layout_components: true
   field_majority_issue_tag: true
   field_senator_multiref: true

@@ -69,11 +69,16 @@
 
   .tel {
     clear: left;
+
     span {
       @extend .contrast_text;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
+    }
+
+    a {
+      @extend .lgt-text;
     }
   }
 

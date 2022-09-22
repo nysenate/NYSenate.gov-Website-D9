@@ -648,7 +648,6 @@
 .c-upcoming--header {
   position: relative;
   height: 42px;
-  margin-bottom: 30px;
 
   @include breakpoint($bp-sm) {
     height: auto;
@@ -767,13 +766,10 @@
       display: none;
     }
   }
-  > .view-content {
-    > div {
-      &.first {
-        .c-event-block--list {
-          border-top: 2px solid $grey05;
-        }
-      }
+
+  .views-infinite-scroll-content-wrapper .views-row:first-child {
+    .c-event-block--list {
+      border-top: 2px solid $grey05;
     }
   }
 }

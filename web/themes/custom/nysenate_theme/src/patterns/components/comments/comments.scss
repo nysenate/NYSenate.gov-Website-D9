@@ -26,13 +26,19 @@
     }
   }
 
-  &__author {
+  &__author,
+  &__author a {
+    @include font(13 13);
     margin: 0;
-    font-family: $font-serif-semibold;
+    font-family: 'Helvetica Nueue', 'Arial', sans-serif;
+    font-weight: $font-weight-bold;
+    color: $color-nys-blue;
   }
 
   &__time {
+    @include font(12 12);
     color: $grey03;
+    font-family: 'Helvetica Nueue', 'Arial', sans-serif;
   }
 
   &__replies {
@@ -41,6 +47,17 @@
   }
 
   &__body {
+
+    p, a {
+      @include font(15 21);
+      font-weight: $font-weight-normal;
+      font-family: 'Helvetica Nueue', 'Arial', sans-serif;
+      color: $grey00;
+    }
+
+    a {
+      color: $color-nys-blue;
+    }
 
     .button {
       cursor: pointer;

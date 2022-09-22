@@ -13,9 +13,12 @@
   <a href="{{ url }}">
     <h3 class="c-event-name">{{ title }}</h3>
   </a>
-  <a class="c-event-location" href="{{ url_location }}" target="_blank">
-    <span class="icon-before__circle-pin"></span>{{ location }}
-  </a>
+  {% if location %}
+    <a class="c-event-location" href="{{ url_location }}" target="_blank">
+      <span class="icon-before__circle-pin"></span>{{ location }}
+    </a>
+  {% endif %}
+
   {% if meeting_location %}
     <div class="c-event-address">{{ meeting_location }}</div>
   {% endif %}

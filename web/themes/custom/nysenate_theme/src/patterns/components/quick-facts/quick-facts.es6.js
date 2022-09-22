@@ -37,8 +37,9 @@
         const tabNumber = `#tab${$(this).data('tab')}`;
         const pageBody = $('html, body');
 
+        $(`input[value="${tabNumber}"]`).click();
+
         if (theViewportWidth > 769) {
-          $(`input[value="${tabNumber}"]`).click();
           pageBody.animate({scrollTop:headingCurrentPosition - 220}, '1000', 'swing');
         }
         else {

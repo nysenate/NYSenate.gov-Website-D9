@@ -2173,6 +2173,28 @@ function nysenate_theme_preprocess_node__event(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__honoree(&$variables) {
+  $variables['vet_archive_list'] = views_embed_view('honoree_profiles', 'vets_senator');
+  $variables['women_archive_list'] = views_embed_view('honoree_profiles', 'block_3');
+
+  $variables['title'] = $variables['label'][0]['#context']['value'];
+
+  $issues = [];
+  if (!empty($variables['content']['field_issues'])) {
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
+    }
+  }
+  $variables['issues'] = $issues;
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function nysenate_theme_preprocess_node__session(&$variables) {

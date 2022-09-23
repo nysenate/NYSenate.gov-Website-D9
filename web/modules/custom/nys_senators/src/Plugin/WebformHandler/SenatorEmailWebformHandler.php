@@ -56,22 +56,19 @@ class SenatorEmailWebformHandler extends EmailWebformHandler {
     if ($senator_term instanceof TermInterface
         && $senator_term->bundle() === 'senator') {
 
+      // Set the general inquiry email as the default value.
+      if (!$senator_term->get('field_email')->isEmpty()
+        && $senator_term->hasField('field_email')) {
+        $message['to_mail'] = $senator_term->field_email->value;
+      }
+
       $inquiry_type = $webform_submission->getData()['inquiry_type'];
-
-      switch ($inquiry_type) {
-        case 'general_inquiry':
-          if (!$senator_term->get('field_email')->isEmpty()
-            && $senator_term->hasField('field_email')) {
-            $message['to_mail'] = $senator_term->field_email->value;
-          }
-          break;
-
-        case 'press_inquiry':
-          if (!$senator_term->get('field_press_inquiries')->isEmpty()
-            && $senator_term->hasField('field_press_inquiries')) {
-            $message['to_mail'] = $senator_term->field_press_inquiries->value;
-          }
-          break;
+      // Only override the value if the inquiry type is press_inquiry.
+      if ($inquiry_type == 'press_inquiry') {
+        if (!$senator_term->get('field_press_inquiries')->isEmpty()
+          && $senator_term->hasField('field_press_inquiries')) {
+          $message['to_mail'] = $senator_term->field_press_inquiries->value;
+        }
       }
     }
 

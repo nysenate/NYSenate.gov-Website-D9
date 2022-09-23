@@ -2367,6 +2367,20 @@ function nysenate_theme_preprocess_node(&$variables) {
       ];
     }
   }
+
+  $variables['title'] = $variables['label'][0]['#context']['value'];
+
+  $issues = [];
+  if (!empty($variables['content']['field_issues'])) {
+    foreach ($variables['content']['field_issues'] as $key => $field_issues) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+      $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);
+      $issues[] = $url;
+    }
+  }
+  $variables['issues'] = $issues;
 }
 
 /**

@@ -1,3 +1,6 @@
-<div class="c-initiative--video">
-    {{ content }}
+<div class="c-block">
+    {% include '@nysenate_theme/video-embed/video-embed.twig' with {
+        video: content.field_yt
+    } only
+    %}
 </div>

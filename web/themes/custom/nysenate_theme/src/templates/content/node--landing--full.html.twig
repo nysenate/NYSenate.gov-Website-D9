@@ -73,13 +73,12 @@
 
 
 {{ attach_library('nysenate_theme/article-page') }}
-<article id="node-{{ node.id }}" class="honoree-node {{ classes }}" {{ attributes }}>
+<article id="node-{{ node.id }}" class="landing-node {{ classes }}" {{ attributes }}>
   {{ title_prefix }}
 
   {% if page %}
   <header class="c-news--head">
     <h1 class="nys-article-title">{{ title }}</h1>
-    <h2 class="c-initiative--subtitle">Honoree Profile</h2>
     <div class="c-news--head-meta">
 
       {% if content.field_date %}
@@ -99,47 +98,12 @@
     </div>
   </header>
     <div class="c-news--body">
-      {% if content.field_image_main %}
-        <div class="c-block c-block--img">
-          {{ content.field_image_main }}
-        </div>
-      {% endif %}
-
-      {% if content.field_honoree_military_branch %}
-        <div class="c-news--subtitle">
-          {{ content.field_honoree_military_branch }}
-        </div>
-      {% endif %}
-
-      {% if content.field_attachment[0] %}
-        {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
-          title: title,
-          attachment: content.field_attachment,
-        } only %}
-      {% endif %}
 
       <div class="c-block">
-        {{ content.body }}
+        {{ content|without('field_issues', 'field_date')}}
       </div>
     </div>
 
-    <div class="c-block">
-      <div class="c-initiative c-container--header__top-border">
-        <h2 class="c-container--title">Honoree Video</h2>
-      </div>
-      {% include '@nysenate_theme/video-embed/video-embed.twig' with {
-        video: content.field_honoree_video
-      } only
-      %}
-    </div>
-
-  <div class="c-block--honorees">
-    {% if content.field_honoree_type[0]['#markup'] == 'veterans' %}
-      {{ vet_archive_list }}
-    {% elseif content.field_honoree_type.value[0]['#markup']  == 'women' %}
-      {{ women_archive_list }}
-    {% endif %}
-  </div>
 
 {% endif %}
 </article>

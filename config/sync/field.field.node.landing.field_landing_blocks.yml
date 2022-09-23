@@ -1,27 +1,27 @@
-uuid: 52ac7793-8809-443d-a9bf-64878e12ceaf
+uuid: e7cde33a-cb7a-432d-b910-dc439d5487dd
 langcode: en
 status: true
 dependencies:
   config:
     - block_content.type.accordion
     - block_content.type.embed
-    - block_content.type.form
-    - block_content.type.hero
-    - block_content.type.map
+    - block_content.type.featured_bill
+    - block_content.type.featured_content
+    - block_content.type.featured_image
+    - block_content.type.file_uploads
     - block_content.type.media
-    - block_content.type.promotional_banner
+    - block_content.type.microsite_contact_webform
     - block_content.type.quote
     - block_content.type.slider
     - block_content.type.text
+    - block_content.type.video
     - block_content.type.views
-    - field.storage.node.field_block
+    - field.storage.node.field_landing_blocks
     - node.type.landing
   module:
     - entity_reference_revisions
-_core:
-  default_config_hash: tD3nnsDyRJf2HyH1921_Nip5WiW9__Lykp35iCCr-o8
-id: node.landing.field_block
-field_name: field_block
+id: node.landing.field_landing_blocks
+field_name: field_landing_blocks
 entity_type: node
 bundle: landing
 label: Blocks
@@ -36,18 +36,20 @@ settings:
     target_bundles:
       accordion: accordion
       embed: embed
-      form: form
-      hero: hero
+      featured_bill: featured_bill
+      featured_content: featured_content
+      featured_image: featured_image
+      file_uploads: file_uploads
       views: views
-      map: map
       media: media
-      promotional_banner: promotional_banner
       quote: quote
       slider: slider
       text: text
+      video: video
+      microsite_contact_webform: microsite_contact_webform
     sort:
       field: _none
       direction: ASC
     auto_create: false
-    auto_create_bundle: slider
+    auto_create_bundle: accordion
 field_type: entity_reference_revisions

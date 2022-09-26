@@ -47,11 +47,11 @@ content:
     weight: 4
     region: content
   field_date:
-    type: datetime_default
+    type: datetime_custom
     label: hidden
     settings:
       timezone_override: ''
-      format_type: medium
+      date_format: 'F j, Y'
     third_party_settings: {  }
     weight: 1
     region: content
@@ -69,6 +69,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 6
+    region: content
+  field_honoree_type:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 9
     region: content
   field_honoree_video:
     type: entity_reference_entity_view
@@ -115,7 +122,6 @@ hidden:
   field_honoree_contact_email: true
   field_honoree_contact_name: true
   field_honoree_name: true
-  field_honoree_type: true
   field_profile_status: true
   field_senator_multiref: true
   langcode: true

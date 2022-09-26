@@ -206,7 +206,7 @@ settings:
   draft_loaded_message: ''
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
-  confirmation_type: page
+  confirmation_type: message
   confirmation_url: ''
   confirmation_title: ''
   confirmation_message: ''
@@ -307,7 +307,7 @@ handlers:
       from_options: {  }
       from_name: _default
       subject: '[webform_submission:values:subject]'
-      body: "Sen. [current-page:senator-name],<br />\r\nYou have received a general inquiry from your contact form at&nbsp; [webform_submission:source-url:absolute]:<br />\r\n<br />\r\n[webform_submission:values:email_body]<br />\r\n<br />\r\nName:&nbsp;[webform_submission:values:first_name]&nbsp;[webform_submission:values:last_name]<br />\r\nPhone: [webform_submission:values:phone]<br />\r\nEmail: [webform_submission:values:from_email]<br />\r\nStreet: [webform_submission:values:address]<br />\r\nCity:&nbsp;[webform_submission:values:city]<br />\r\nZip:&nbsp;[webform_submission:values:zip]<br />\r\nSD for postal address: [sd-placeholder]"
+      body: "Sen. [current-page:senator-name],<br />\r\nYou have received a [webform_submission:values:inquiry_type] from your contact form at&nbsp; [webform_submission:source-url:absolute]:<br />\r\n<br />\r\n[webform_submission:values:email_body]<br />\r\n<br />\r\nName:&nbsp;[webform_submission:values:first_name]&nbsp;[webform_submission:values:last_name]<br />\r\nPhone: [webform_submission:values:phone]<br />\r\nEmail: [webform_submission:values:from_email]<br />\r\nStreet: [webform_submission:values:address]<br />\r\nCity:&nbsp;[webform_submission:values:city]<br />\r\nZip:&nbsp;[webform_submission:values:zip]<br />\r\nSD for postal address: [sd-placeholder]"
       excluded_elements: {  }
       ignore_access: 0
       exclude_empty: true

@@ -3,13 +3,14 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.landing.field_block
+    - field.field.node.landing.field_date
+    - field.field.node.landing.field_issues
+    - field.field.node.landing.field_landing_blocks
     - field.field.node.landing.field_meta_tags
-    - field.field.node.landing.field_short_title
     - field.field.node.landing.field_summary
-    - field.field.node.landing.field_thumbnail
     - node.type.landing
   module:
+    - datetime
     - entity_reference_revisions
     - user
 _core:
@@ -19,20 +20,35 @@ targetEntityType: node
 bundle: landing
 mode: default
 content:
-  field_block:
+  field_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F j, Y'
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_landing_blocks:
     type: entity_reference_revisions_entity_view
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
 hidden:
   field_meta_tags: true
-  field_short_title: true
   field_summary: true
-  field_thumbnail: true
   langcode: true
   links: true
   search_api_excerpt: true

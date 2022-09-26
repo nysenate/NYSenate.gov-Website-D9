@@ -65,59 +65,45 @@
  *
  * @see template_preprocess_node()
  *
+ * @todo Remove the id attribute (or make it a class), because if that gets
+ *   rendered twice on a page this is invalid CSS for example: two lists
+ *   in different view modes.
  */
 #}
-{%
-  set classes = [
-    'node',
-    'node--type-' ~ node.bundle|clean_class,
-    node.isPromoted() ? 'node--promoted',
-    node.isSticky() ? 'node--sticky',
-    not node.isPublished() ? 'node--unpublished',
-    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
 
-  ]
-%}
-{{ attach_library('nysenate_theme/nysenate-senators-events') }}
-<article{{ attributes.addClass(classes) }}>
 
+{{ attach_library('nysenate_theme/article-page') }}
+<article id="node-{{ node.id }}" class="landing-node {{ classes }}" {{ attributes }}>
   {{ title_prefix }}
 
-  {{ title_suffix }}
+  {% if page %}
+  <header class="c-news--head">
+    <h1 class="nys-article-title">{{ title }}</h1>
+    <div class="c-news--head-meta">
 
-  {% if display_submitted %}
-    <footer class="node__meta">
-      {{ author_picture }}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-        {{ metadata }}
+      {% if content.field_date %}
+        <p class="c-news--pub-date">
+          <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
+        </p>
+      {% endif %}
+
+      {% if issues %}
+        <ul class="nys-associated-topics">
+          <div class="nys-associated-topics--label">issue:</div>
+          {% for issue in issues %}
+            <li>{{ issue }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </header>
+    <div class="c-news--body">
+
+      <div class="c-block">
+        {{ content|without('field_issues', 'field_date')}}
       </div>
-    </footer>
-  {% endif %}
+    </div>
 
-  <div{{ content_attributes.addClass('node__content') }}>
-    <article class="c-event-block c-event-block--list">
-      <div class="c-event-date"><span>{{ item.day }}</span> {{ item.month }}</div>
-      <div class="event-details">
-        <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
-        {# add location link #}
-        {% if item.location %}
-          <a class="c-event-location" href="" target="_blank"><span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
-        {% endif %}
-        {% if item.meeting_location %}
-          <div class="c-event-address">{{ item.meeting_location }}</div>
-        {% endif %}
 
-        {% if item.street_1 %}
-          <div class="c-event-address">{{ item.street_1 }}</div>
-        {% endif %}
-
-        {% if item.street_2 %}
-          <div class="c-event-address">{{ item.street_2 }}</div>
-        {% endif %}
-        <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>
-      </div>
-    </article>
-  </div>
-
+{% endif %}
 </article>

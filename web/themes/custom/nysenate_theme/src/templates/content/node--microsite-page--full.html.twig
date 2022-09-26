@@ -93,7 +93,7 @@
       <span class="u-mobile-only">{{ party }}</span>
       <span class="u-tablet-plus">{{ party }}</span>
     </p>
-    <p class="c-subpage-header--subtitle013">{{ district_name }}</p>
+    <p class="c-subpage-header--subtitle03">{{ district_name }}</p>
 
   {% endif %}
   
@@ -113,11 +113,4 @@
     </footer>
   {% endif %}
 
-  {% if is_events %}
-    <div{{ content_attributes.addClass('node__content') }}>
-      {{ drupal_view('senator_events', 'featured_event',content.field_senator_multiref['#items'].0.target_id) }}
-      {{ drupal_view('senator_events', 'senator_today_events',content.field_senator_multiref['#items'].0.target_id) }}
-      {{ drupal_view('senator_events', 'upcoming_events',content.field_senator_multiref['#items'].0.target_id) }}
-    </div>
-  {% endif %}
 </article>

@@ -26,7 +26,7 @@
 .contrast_text {
   color: #000; }
 
-.lgt-text {
+.lgt-text, .c-listing-block__item-link {
   color: #2b6a90; }
 
 .lgt-bg {
@@ -64,7 +64,7 @@
 .trad_blue .contrast_text {
   color: #fff; }
 
-.trad_blue .lgt-text {
+.trad_blue .lgt-text, .trad_blue .c-listing-block__item-link {
   color: #1b5187; }
 
 .trad_blue .lgt-bg {
@@ -96,7 +96,7 @@
 .cont_blue .contrast_text {
   color: #000; }
 
-.cont_blue .lgt-text {
+.cont_blue .lgt-text, .cont_blue .c-listing-block__item-link {
   color: #04a9c5; }
 
 .cont_blue .lgt-bg {
@@ -128,7 +128,7 @@
 .purple .contrast_text {
   color: #000; }
 
-.purple .lgt-text {
+.purple .lgt-text, .purple .c-listing-block__item-link {
   color: #90668f; }
 
 .purple .lgt-bg {
@@ -163,7 +163,7 @@
 .trad_red .contrast_text {
   color: #fff; }
 
-.trad_red .lgt-text {
+.trad_red .lgt-text, .trad_red .c-listing-block__item-link {
   color: #87002f; }
 
 .trad_red .lgt-bg {
@@ -198,7 +198,7 @@
 .cont_red .contrast_text {
   color: #fff; }
 
-.cont_red .lgt-text {
+.cont_red .lgt-text, .cont_red .c-listing-block__item-link {
   color: #c62526; }
 
 .cont_red .lgt-bg {
@@ -233,7 +233,7 @@
 .orange .contrast_text {
   color: #000; }
 
-.orange .lgt-text {
+.orange .lgt-text, .orange .c-listing-block__item-link {
   color: #f0673d; }
 
 .orange .lgt-bg {
@@ -268,7 +268,7 @@
 .trad_green .contrast_text {
   color: #000; }
 
-.trad_green .lgt-text {
+.trad_green .lgt-text, .trad_green .c-listing-block__item-link {
   color: #60a35f; }
 
 .trad_green .lgt-bg {
@@ -303,7 +303,7 @@
 .cont_green .contrast_text {
   color: #000; }
 
-.cont_green .lgt-text {
+.cont_green .lgt-text, .cont_green .c-listing-block__item-link {
   color: #65c5b6; }
 
 .cont_green .lgt-bg {
@@ -338,7 +338,7 @@
 .inactive-pallette .contrast_text {
   color: #000; }
 
-.inactive-pallette .lgt-text {
+.inactive-pallette .lgt-text, .inactive-pallette .c-listing-block__item-link {
   color: #1b5187; }
 
 .inactive-pallette .lgt-bg {
@@ -1219,6 +1219,8 @@ strong {
   margin-bottom: 20px; }
   .c-listing-block__title {
     font-family: "Adelle SemiBold", serif;
+    font-weight: 400;
+    color: #444444;
     font-size: 16px;
     line-height: 1;
     margin: 24px 0 20px; }
@@ -1229,6 +1231,7 @@ strong {
   .c-listing-block__item-link {
     display: block;
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    font-weight: 400;
     font-size: 14px;
     line-height: 1.3; }
   .c-listing-block__role {
@@ -1238,7 +1241,8 @@ strong {
     color: #444444;
     text-transform: uppercase;
     font-size: 12px;
-    line-height: 1; }
+    line-height: 1;
+    font-weight: 400; }
   .c-listing-block__item {
     margin-bottom: 18px; }
 

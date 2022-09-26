@@ -31,9 +31,9 @@
         event.preventDefault();
         var tabNumber = "#tab".concat($(this).data('tab'));
         var pageBody = $('html, body');
+        $("input[value=\"".concat(tabNumber, "\"]")).click();
 
         if (theViewportWidth > 769) {
-          $("input[value=\"".concat(tabNumber, "\"]")).click();
           pageBody.animate({
             scrollTop: headingCurrentPosition - 220
           }, '1000', 'swing');

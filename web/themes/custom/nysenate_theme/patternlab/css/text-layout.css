@@ -1237,6 +1237,13 @@ strong {
 
 .text-layout--with-bg {
   background: #eeeeee; }
+  .text-layout--with-bg .text-layout__container {
+    padding: 0 20px;
+    padding-top: 40px; }
+    @media screen and (min-width: 768px) {
+      .text-layout--with-bg .text-layout__container {
+        padding: 0 40px;
+        padding-top: 60px; } }
 
 .text-layout--full-bleed {
   max-width: unset; }
@@ -1253,14 +1260,10 @@ strong {
       font-size: 26px; } }
 
 .text-layout__container {
-  padding: 0 20px;
-  padding-top: 40px;
   max-width: 440px;
   margin: 0 auto; }
   @media screen and (min-width: 768px) {
     .text-layout__container {
-      padding: 0 40px;
-      padding-top: 60px;
       max-width: 840px; } }
 
 .text-layout__body h2, .text-layout__body h3, .text-layout__body h4 {

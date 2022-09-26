@@ -3175,7 +3175,8 @@
                     "2949017 - There is no way to delete or update file entities of other users": "https://www.drupal.org/files/issues/2021-12-01/2949017-85.patch",
                     "763380 - Do not use \\Drupal\\taxonomy\\TermStorageInterface::loadTree() in \\Drupal\\taxonomy\\Form\\OverviewTerms::buildForm()": "https://www.drupal.org/files/issues/2021-05-26/763380-73.patch",
                     "1671190 - Use <button /> form element type instead of <input type='submit'/>": "https://www.drupal.org/files/issues/2022-01-07/1671190-92.patch",
-                    "2858890 - Drupal.views.ajaxView is not initializing pagers in nested views": "https://www.drupal.org/files/issues/2022-05-30/2858890-87.patch"
+                    "2858890 - Drupal.views.ajaxView is not initializing pagers in nested views": "https://www.drupal.org/files/issues/2022-05-30/2858890-87.patch",
+                    "2868014 - [PP-1] Views Date Filter Datetime Granularity Option": "https://www.drupal.org/files/issues/2021-04-26/2868014-110.patch"
                 }
             },
             "installation-source": "dist",
@@ -9862,6 +9863,64 @@
                 "issues": "https://www.drupal.org/project/issues/views_autocomplete_filters"
             },
             "install-path": "../../web/modules/contrib/views_autocomplete_filters"
+        },
+        {
+            "name": "drupal/views_bulk_edit",
+            "version": "2.6.0",
+            "version_normalized": "2.6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_bulk_edit.git",
+                "reference": "8.x-2.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_bulk_edit-8.x-2.6.zip",
+                "reference": "8.x-2.6",
+                "shasum": "0e0f1dab2fa0903cbe2656e754b0d9ed3a935fbb"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/views_bulk_operations": "~3.0"
+            },
+            "suggest": {
+                "drupal/views_bulk_operations": "Get VBO for all the views benefits like batching, ability to select all view results or persistent selection across pages"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.6",
+                    "datestamp": "1623748025",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Marcin Grabias",
+                    "homepage": "https://www.drupal.org/u/graber"
+                },
+                {
+                    "name": "benjy",
+                    "homepage": "https://www.drupal.org/user/1852732"
+                }
+            ],
+            "description": "Allows bulk edition of entity field values.",
+            "homepage": "https://www.drupal.org/project/views_bulk_edit",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_bulk_edit",
+                "issues": "https://www.drupal.org/project/issues/views_bulk_edit?version=8.x"
+            },
+            "install-path": "../../web/modules/contrib/views_bulk_edit"
         },
         {
             "name": "drupal/views_bulk_operations",

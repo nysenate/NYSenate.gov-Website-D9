@@ -18,18 +18,20 @@
       var searchToggle;
       var topbarDropdown;
       var $adminToolbar = $('#toolbar-bar');
-      var adminHeight = $adminToolbar.length > 0 ? $adminToolbar.outerHeight() : 0;
-      var headerHeight = nav.length > 0 ? nav.outerHeight() : 0; // Create empty variables to use later for calculating heights.
+      var $adminTray = $('#toolbar-item-administration-tray.toolbar-tray');
 
-      var $combinedHeights = 0;
-
-      if ($('.layout-container').length > 0) {
-        adminHeight = $adminToolbar.length > 0 ? $adminToolbar.outerHeight() : 0;
-        headerHeight = nav.length > 0 ? nav.outerHeight() : 0;
-        $combinedHeights = headerHeight + adminHeight;
-        nav.prependTo('.layout-container').css({
-          'z-index': '100',
-          'margin-top': ''.concat($combinedHeights, 'px')
+      if ($adminToolbar.length > 0) {
+        var observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function () {
+            nav.prependTo('.layout-container').css({
+              'z-index': '100',
+              'margin-top': $('body').css('padding-top')
+            });
+          });
+        });
+        observer.observe($adminTray[0], {
+          attributes: true,
+          attributeFilter: ['class']
         });
       }
 

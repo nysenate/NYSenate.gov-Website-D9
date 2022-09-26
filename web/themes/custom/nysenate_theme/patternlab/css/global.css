@@ -2028,6 +2028,7 @@ main.l-row--main {
 /	Subpage Header styles
 /-------------------------------------*/
 h2.c-subpage-header--title {
+  color: #444444;
   margin: 0;
   font-family: "Adelle Bold", serif;
   line-height: 1em;
@@ -2035,6 +2036,7 @@ h2.c-subpage-header--title {
   margin-bottom: 10px; }
 
 .c-subpage-header--title02 {
+  color: #444444;
   margin: 0;
   font-family: "Adelle Bold", serif;
   line-height: 1em;
@@ -2042,6 +2044,7 @@ h2.c-subpage-header--title {
   margin-bottom: 5px; }
 
 .c-subpage-header--title03 {
+  color: #444444;
   margin: 0;
   font-family: "Adelle Bold", serif;
   line-height: 1em;
@@ -2543,12 +2546,25 @@ textarea[name="email_body"] {
   padding: 10px;
   height: auto; }
 
-.page-node-type-video .field--name-field-issues a {
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 32px; }
+.page-node-type-video .field--name-field-issues .list-formatter-list {
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  white-space: normal;
+  text-align: left; }
+  .page-node-type-video .field--name-field-issues .list-formatter-list a {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 32px; }
+    .page-node-type-video .field--name-field-issues .list-formatter-list a:hover {
+      text-decoration: underline; }
 
 .page-node-type-meeting .field--name-field-issues a {
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 12px;
   font-weight: 400;
-  line-height: 30px; }
+  line-height: 30px;
+  text-align: left; }
+  .page-node-type-meeting .field--name-field-issues a:hover {
+    text-decoration: underline; }

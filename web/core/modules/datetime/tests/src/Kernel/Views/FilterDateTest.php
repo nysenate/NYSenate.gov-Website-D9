@@ -110,7 +110,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
         ['nid' => $this->nodes[0]->id()],
         ['nid' => $this->nodes[1]->id()],
       ];
-      $this->assertIdenticalResultset($view, $expected_result, $this->map);
+      $this->assertIdenticalResultset($view, $expected_result, $this->map, "Unexpected result set for $timezone");
       $view->destroy();
 
       // Only dates in the past.
@@ -123,7 +123,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
       $expected_result = [
         ['nid' => $this->nodes[2]->id()],
       ];
-      $this->assertIdenticalResultset($view, $expected_result, $this->map);
+      $this->assertIdenticalResultset($view, $expected_result, $this->map, "Unexpected result set for $timezone");
       $view->destroy();
 
       // Test offset for between operator. Only 'tomorrow' node should appear.
@@ -137,7 +137,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
       $expected_result = [
         ['nid' => $this->nodes[0]->id()],
       ];
-      $this->assertIdenticalResultset($view, $expected_result, $this->map);
+      $this->assertIdenticalResultset($view, $expected_result, $this->map, "Unexpected result set for $timezone");
       $view->destroy();
 
       // Test the empty operator.
@@ -148,7 +148,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
       $expected_result = [
         ['nid' => $this->nodes[3]->id()],
       ];
-      $this->assertIdenticalResultset($view, $expected_result, $this->map);
+      $this->assertIdenticalResultset($view, $expected_result, $this->map, "Unexpected result set for $timezone");
       $view->destroy();
 
       // Test the not empty operator.
@@ -161,7 +161,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
         ['nid' => $this->nodes[1]->id()],
         ['nid' => $this->nodes[2]->id()],
       ];
-      $this->assertIdenticalResultset($view, $expected_result, $this->map);
+      $this->assertIdenticalResultset($view, $expected_result, $this->map, "Unexpected result set for $timezone");
       $view->destroy();
     }
   }

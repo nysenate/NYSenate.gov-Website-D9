@@ -187,6 +187,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
     $view->filter[$field]->operator = '=';
     $view->filter[$field]->value['min'] = '';
     $view->filter[$field]->value['max'] = '';
+    $view->filter[$field]->options['granularity'] = 'second';
     // Use the date from node 3. Use the site timezone (mimics a value entered
     // through the UI).
     $view->filter[$field]->value['value'] = \Drupal::service('date.formatter')->format(static::$date, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, static::$timezone);

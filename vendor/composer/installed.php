@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '33b545a2f735f921f0a2ce87ebd460f5568674ba',
+        'reference' => 'b0e25d1e8dbd3fb3bcd15709e8dc98a1c6f488c4',
         'name' => 'mediacurrent/drupal-project',
         'dev' => false,
     ),
@@ -1510,6 +1510,15 @@
             'reference' => '8.x-1.3',
             'dev_requirement' => false,
         ),
+        'drupal/views_bulk_edit' => array(
+            'pretty_version' => '2.6.0',
+            'version' => '2.6.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/views_bulk_edit',
+            'aliases' => array(),
+            'reference' => '8.x-2.6',
+            'dev_requirement' => false,
+        ),
         'drupal/views_bulk_operations' => array(
             'pretty_version' => '4.1.4',
             'version' => '4.1.4.0',
@@ -1873,7 +1882,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '33b545a2f735f921f0a2ce87ebd460f5568674ba',
+            'reference' => 'b0e25d1e8dbd3fb3bcd15709e8dc98a1c6f488c4',
             'dev_requirement' => false,
         ),
         'mediacurrent/mis_profile' => array(

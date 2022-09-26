@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Allows modification of field values of entities selected in a view.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function views_bulk_edit_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.views_bulk_edit':
+      $filepath = dirname(__FILE__) . '/README.txt';
+      if (file_exists($filepath)) {
+        $readme = file_get_contents($filepath);
+        $output = '<pre>' . $readme . '</pre>';
+
+        return $output;
+      }
+  }
+}

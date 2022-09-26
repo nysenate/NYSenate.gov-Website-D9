@@ -1229,16 +1229,34 @@ strong {
   .comment__heading .bullet {
     color: #cccccc; }
 
-.comment__author {
+.comment__author,
+.comment__author a {
+  font-size: 13px;
+  line-height: 13px;
   margin: 0;
-  font-family: "Adelle SemiBold", serif; }
+  font-family: 'Helvetica Nueue', 'Arial', sans-serif;
+  font-weight: 700;
+  color: #008cba; }
 
 .comment__time {
-  color: #666666; }
+  font-size: 12px;
+  line-height: 12px;
+  color: #666666;
+  font-family: 'Helvetica Nueue', 'Arial', sans-serif; }
 
 .comment__replies {
   padding-left: 40px;
   margin-top: 40px; }
+
+.comment__body p, .comment__body a {
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 400;
+  font-family: 'Helvetica Nueue', 'Arial', sans-serif;
+  color: #2a2e2e; }
+
+.comment__body a {
+  color: #008cba; }
 
 .comment__body .button {
   cursor: pointer;

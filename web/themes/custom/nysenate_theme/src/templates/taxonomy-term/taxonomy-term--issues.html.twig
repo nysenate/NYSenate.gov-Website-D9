@@ -88,19 +88,19 @@
         <div class="newsroom-content l-row">
           <h2 class="c-tab-block--title"
               id="issuesUpdatesHeader">{{ name[0]['#context']['value'] ~ ' Updates' }}</h2>
-          <dl class="l-tab-bar" data-tab>
+          <dl class="l-tab-bar">
               <div class="c-tab--arrow u-mobile-only"></div>
               <div class="c-tab active">
-                <input type="radio" name="language" value="#tab1" checked="checked">
-                <label class="c-tab-link">{{ 'News'|t }}</label>
+                <input class="form-radio" type="radio" name="news" value="#tab1" checked="checked">
+                <label class="c-tab-link" for="news">{{ 'News'|t }}</label>
               </div>
               <div class="c-tab">
-                <input type="radio" name="language" value="#tab2" checked="checked">
-                <label class="c-tab-link">{{ 'Legislation'|t }}</label>
+                <input class="form-radio" type="radio" name="legislation" value="#tab2">
+                <label class="c-tab-link" for="legislation">{{ 'Legislation'|t }}</label>
               </div>
               <div class="c-tab">
-                <input type="radio" name="language" value="#tab3" checked="checked">
-                <label class="c-tab-link">{{ 'Events'|t }}</label>
+                <input class="form-radio" type="radio" name="events" value="#tab3">
+                <label class="c-tab-link" for="events">{{ 'Events'|t }}</label>
               </div>
           </dl>
           <div class="tabs-content">

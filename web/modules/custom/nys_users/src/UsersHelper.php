@@ -8,11 +8,9 @@ use Drupal\user\Entity\User;
 /**
  * Utility functions for NYS User objects.
  *
- * @todo This needs to be a wrapper around the User object, like a Drupal user
- *   object with added functionality.  For now, limit to static functions which
- *   consume a User object as the first parameter.  If an instance is required,
- *   a User object must be resolved during construction (see resolveUser()),
- *   and any non-static functions must act in the context of that object.
+ * This is intended to be a wrapper around the User object.  For now, limit to
+ * static functions which consume a User object as the first parameter.  Can
+ * also be refactored as a service if an instance is required.
  */
 class UsersHelper {
 
@@ -46,8 +44,8 @@ class UsersHelper {
    */
   public static function getMailName(mixed $user = NULL): string {
     $user = static::resolveUser($user);
-    $ufn = $user->field_first_name->value;
-    $uln = $user->field_last_name->value;
+    $ufn = $user->field_first_name->value ?? '';
+    $uln = $user->field_last_name->value ?? '';
     return ($ufn && $uln) ? "$ufn $uln" : $user->getEmail();
   }
 
@@ -56,10 +54,16 @@ class UsersHelper {
    *
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
+   *
+   * @return \Drupal\taxonomy\Entity\Term|null
+   *   Returns NULL if there was any problem resolving the senator.
    */
   public static function getSenator(mixed $user = NULL): ?Term {
     $user = static::resolveUser($user);
-    return $user->field_district->entity->field_senator->entity;
+    $district = $user->field_district->entity ?? NULL;
+    return ($district instanceof Term)
+      ? ($district->field_senator->entity ?? NULL)
+      : NULL;
   }
 
   /**
@@ -72,7 +76,7 @@ class UsersHelper {
    */
   public static function isOutOfState(mixed $user = NULL): bool {
     $user = static::resolveUser($user);
-    $district = $user->field_district->entity;
+    $district = $user->field_district->entity ?? NULL;
     $ret = !($district && $district->id());
     if (!$ret) {
       $state = $user->field_address->value[0]['administrative_area'] ?? '';

@@ -61,8 +61,8 @@ class BillHelper {
       try {
         $query = \Drupal::entityQuery('taxonomy_term');
         $group = $query->orConditionGroup()
-          ->condition('field_member_id', $member_ids, 'IN')
-          ->condition('field_member_shortname', $shortnames, 'IN');
+          ->condition('field_ol_member_id', $member_ids, 'IN')
+          ->condition('field_ol_shortname', $shortnames, 'IN');
         $ret = $query->condition($group)->execute();
       }
       catch (\Throwable $e) {

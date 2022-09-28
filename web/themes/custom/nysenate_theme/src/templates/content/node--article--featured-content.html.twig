@@ -75,9 +75,6 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    'c-block',
-    'c-block--initiative',
-    content.field_image_main.0 ? 'c-block--initiative__has-img',
   ]
 %}
 {{ attach_library('classy/node') }}
@@ -97,10 +94,13 @@
   {% endif %}
 
   <div{{ content_attributes.addClass('node__content') }}>
-    {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
-      image: content.field_image_main.0,
-      title: label,
-      cta: item_cta
+    {% include "@nysenate_theme/featured-story/featured-story.twig" with {
+      image: image_main,
+      title: {
+        url: url,
+        text: label
+      },
+      tags: tags
     } only %}
   </div>
 

@@ -143,6 +143,12 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
       $offices = [];
       foreach ($senator->field_offices as $field_office) {
         $office = $field_office->entity;
+        $name = '';
+        $street = '';
+        $additional = '';
+        $city = '';
+        $province = '';
+        $postal_code = '';
         if ($office->hasField('field_office_address') && !$office->get('field_office_address')->isEmpty()) {
           $address = $office->field_office_address;
           $loc = '';
@@ -153,6 +159,11 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
           if (!empty($address->address_line1)) {
             $street = $address->address_line1;
             $loc = $street . ', ';
+          }
+
+          if (!empty($address->address_line2)) {
+            $additional = $address->address_line2;
+            $loc = $additional . ', ';
           }
 
           if (!empty($address->locality)) {
@@ -171,24 +182,34 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
           }
         }
 
+        // Office hours.
+        $office_hours = '';
+        if ($office->hasField('field_office_hours') && !$office->get('field_office_hours')->isEmpty()) {
+          $office_hours = $office->field_office_hours->value;
+        }
+
         // Phone number.
+        $phone = '';
         if ($office->hasField('field_office_contact_phone') && !$office->get('field_office_contact_phone')->isEmpty()) {
           $phone = $office->field_office_contact_phone->value;
         }
 
         // Fax.
+        $fax = '';
         if ($office->hasField('field_fax') && !$office->get('field_fax')->isEmpty()) {
           $fax = $office->field_fax->value;
         }
 
         $offices[] = [
-          'name' => $name ?? '',
-          'street' => $street ?? '',
-          'city' => $city ?? '',
-          'province' => $province ?? '',
-          'postal_code' => $postal_code ?? '',
-          'phone' => $phone ?? '',
-          'fax' => $fax ?? '',
+          'name' => $name,
+          'street' => $street,
+          'additional' => $additional,
+          'city' => $city,
+          'province' => $province,
+          'postal_code' => $postal_code,
+          'office_hours' => $office_hours,
+          'phone' => $phone,
+          'fax' => $fax,
           'loc' => !empty($loc) ? urlencode($loc) : '',
         ];
       }

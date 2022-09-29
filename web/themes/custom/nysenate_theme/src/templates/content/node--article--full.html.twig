@@ -95,9 +95,11 @@
     <!-- Featured Legislations -->
     {{ content.field_featured_legislation_commi }}
 
-
-    {% if content.social_buttons %}
-      {{ content.social_buttons }}
-    {% endif %}
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta,
+    } only
+    %}
   </div>
 </article>

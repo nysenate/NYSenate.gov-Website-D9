@@ -2139,18 +2139,20 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
 function nysenate_theme_preprocess_node__event(&$variables) {
   $start_date = NULL;
   $end_date = NULL;
+  $node = $variables['node'];
   // If the start and end date is the same,
   // set then end_date same as the start_date.
-  if (isset($variables['content']['field_date_range'][0]['#text'])) {
-    $start_date = new DateTime($variables['content']['field_date_range'][0]['#text']);
+  if ($node instanceof NodeInterface && $node->hasField('field_date_range') && !empty($node->get('field_date_range')->value)) {
+    $start_date = new DateTime($node->get('field_date_range')->value, new DateTimeZone('UTC'));
+    $start_date->setTimezone(new DateTimeZone('America/New_York'));
     $end_date = $start_date;
-  }
 
-  // If there's a start_date key, probably there's
-  // end_date key also.
-  if (isset($variables['content']['field_date_range'][0]['start_date']['#text'])) {
-    $start_date = new DateTime($variables['content']['field_date_range'][0]['start_date']['#text']);
-    $end_date = new DateTime($variables['content']['field_date_range'][0]['end_date']['#text']);
+    // If there's a start_date key, probably there's
+    // end_date key also.
+    if (isset($node->get('field_date_range')->end_value)) {
+      $end_date = new DateTime($node->get('field_date_range')->end_value, new DateTimeZone('UTC'));
+      $end_date->setTimezone(new DateTimeZone('America/New_York'));
+    }
   }
 
   // Set up reference variables indicating if this event spans multiple days.
@@ -2160,8 +2162,8 @@ function nysenate_theme_preprocess_node__event(&$variables) {
   }
 
   $variables['is_multiday'] = $is_multiday;
-  $variables['start_date'] = $start_date;
-  $variables['end_date'] = $end_date;
+  $variables['start_date'] = $start_date ?? '';
+  $variables['end_date'] = $end_date ?? '';
 
   $address = '';
   if (isset($variables['content']['field_location'][0])) {

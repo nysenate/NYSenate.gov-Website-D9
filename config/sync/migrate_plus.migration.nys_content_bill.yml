@@ -24,8 +24,11 @@ process:
       source: tnid
   title:
     -
-      plugin: get
-      source: title
+      plugin: concat
+      source:
+        - field_ol_session/0/value
+        - title
+      delimiter: '-'
   uid:
     -
       plugin: get
@@ -64,6 +67,15 @@ process:
       source: field_majority_issue_tag
       process:
         target_id: tid
+  field_ol_session:
+    - plugin: get
+      source: field_ol_session
+  field_ol_print_no:
+    - plugin: get
+      source: field_ol_print_no
+  field_ol_base_print_no:
+    - plugin: get
+      source: field_ol_base_print_no
 destination:
   plugin: 'entity:node'
   default_bundle: bill

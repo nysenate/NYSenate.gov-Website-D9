@@ -6,11 +6,17 @@
  */
 
 use Drupal\Core\Render\Element;
+use Drupal\nys_sendgrid\Helper;
+use Drupal\nys_subscriptions\SubscriptionQueue;
+use Drupal\nys_subscriptions\SubscriptionQueueItem;
+use SendGrid\Mail\From;
+use SendGrid\Mail\Mail;
+use SendGrid\Mail\Personalization;
 
 /**
  * Implements hook_theme().
  */
-function nys_subscriptions_theme() {
+function nys_subscriptions_theme(): array {
   return [
     'subscription' => [
       'render element' => 'elements',
@@ -29,8 +35,171 @@ function nys_subscriptions_theme() {
  *     and any fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_subscription(array &$variables) {
+function template_preprocess_subscription(array &$variables): void {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * This function builds the mail content for requests using the mail key
+ * 'nys_subscriptions_queueitem'.  It will be expecting a 'queue_item'
+ * key in $params, which must contain an SubscriptionQueueItem object.
+ * If it is not found, the message is flagged to be cancelled.
+ *
+ * This function's primary role is to create the custom Sendgrid\Mail
+ * object, and populate it with all recipient and personalization
+ * information included in the SubscriptionQueueItem.  The From, Reply-To,
+ * and Bcc properties are pulled from config.  Additional properties to
+ * be populated include:
+ *  - To/Cc
+ *  - Subject
+ *  - Template ID
+ *
+ * Additionally, this function adds categories for tracking.
+ *
+ * Other modules can hook into this process through hook_mail_alter(),
+ * and limiting application of changes by detecting the module and key
+ * in $params.
+ *
+ * Strictly for debugging purposes, the SendGrid templates refer to the
+ * token %subscriber_debug%.  Dump information into that token for
+ * real-time debugging of substitutions or other items in the SG API.
+ *
+ * Example, where $val is a Personalization:
+ *   $val->addSubstitution('%subscriber_debug%', var_export($val, 1));
+ *
+ * @see _nys_subscriptions_generate_mail_object()
+ * @see \Drupal\Core\Mail\MailManager
+ * @see \Drupal\nys_subscriptions\SubscriptionQueueItem
+ */
+function nys_subscriptions_mail(string $mail_key, array &$message, array $params): void {
+  // Verify availability of a queue item object.  If not, cancel and return.
+  /** @var \Drupal\nys_subscriptions\SubscriptionQueueItem $item */
+  $item = $message['params']['queue_item'] ?? NULL;
+  if (!($item instanceof SubscriptionQueueItem)) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Construct the base email object, or cancel the send.
+  if (!($mail = _nys_subscriptions_generate_mail_object())) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Reset the module and key to reflect the queue.
+  $message['module'] = $item->mailModule;
+  $message['id'] = $item->mailModule . '_' . $item->mailKey;
+
+  // Collect the subject, if it is already defined.
+  $subject = $item->substitutions['subject'] ?? (
+      \Drupal::config('nys_subscriptions.settings')->get('subject')
+      ?? SubscriptionQueue::DEFAULT_SUBJECT
+    );
+
+  // Create the mail object.  Passing the initial From prevents a NULL person.
+  // No need to report to slack on any of these conditions, but they will be
+  // logged to watchdog, just in case.
+  $logger = \Drupal::logger($item->mailModule);
+  try {
+    // Set up the subject and categories.
+    $mail->setGlobalSubject($subject);
+    $mail->addCategories(array_merge(
+      ['Automated Email Alerts', $item->mailKey],
+      $item->references['categories']
+    ));
+
+    // Set the template ID, if available.
+    if (isset($item->substitutions['template_id'])) {
+      $mail->setTemplateId($item->substitutions['template_id']);
+    }
+  }
+  catch (Throwable $e) {
+    $logger->error('Configuration of the Mail object failed', ['@message' => $e->getMessage()]);
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Add the subscriber personalizations.
+  try {
+    foreach (($item->substitutions['subscribers'] ?? []) as $val) {
+      if ($val instanceof Personalization) {
+        $mail->addPersonalization($val);
+      }
+    }
+  }
+  catch (Throwable $e) {
+    $logger->error('Failed to set subscribers/personalizations', ['@message' => $e->getMessage()]);
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Add the section tokens, if present.
+  foreach (($item->substitutions['section'] ?? []) as $key => $val) {
+    $mail->addSection($key, $val);
+  }
+
+  // Set the Mail object and other incidental properties in $params.
+  $message['params']['sendgrid_mail'] = $mail;
+  $message['params']['subject'] = $subject;
+
+  // GA_CampaignContent should be set by the module in hook_mail_alter().
+  $message['params']['GA_CampaignName'] = 'subscriptions';
+}
+
+/**
+ * Generates the base Mail object used by subscriptions.
+ *
+ * Will instantiate a Mail object and populate it with From, ReplyTo, and BCC
+ * addresses as indicated in nys_subscriptions.settings.  Any failure will
+ * result in a NULL being returned.
+ *
+ * @returns ?\SendGrid\Mail\Mail
+ *
+ * @todo This does not feel like it belongs here.
+ */
+function _nys_subscriptions_generate_mail_object(): ?Mail {
+  // Load From, ReplyTo, and BCC configuration.
+  $config = Drupal::config('nys_subscriptions');
+  $from_addr = $config->get('from_address');
+  $from_name = $config->get('from_name') ?? $from_addr;
+  $reply_addr = $config->get('reply_address') ?? '';
+  $reply_name = $config->get('reply_name') ?? $reply_addr;
+  $bcc_address = $config->get('bcc_address') ?? '';
+
+  // Try to create the objects.  Report on failure.
+  try {
+    // Create the From object.  Note that $from_addr *must* be a valid email.
+    $from = new From($from_addr, $from_name);
+
+    // Create the Mail object.
+    $mail = new Mail($from);
+
+    // Set the Reply-To, if configured.
+    if ($reply_name && $reply_addr) {
+      $mail->SetReplyTo($reply_addr, $reply_name);
+    }
+
+    // Set BCC configuration, if configured and conditions require it.
+    if ($bcc_address && !Helper::detectMailRerouting()) {
+      $mail->setBccSettings(TRUE, $bcc_address);
+    }
+  }
+  catch (Throwable $e) {
+    // Something went wrong.  Report, and set return to NULL.
+    $msg = 'Failed to generate Mail object (invalid/poorly-formed addressing information). Check nys_subscriptions configuration.';
+    Drupal::logger('nys_subscriptions')
+      ->error($msg, ['@message' => $e->getMessage()]);
+    Drupal::service('slack_messaging')
+      ->setTitle('Failed to Generate Subscription Email')
+      ->setMessage($msg)
+      ->addAttachment("message\n" . $e->getMessage())
+      ->send();
+    $mail = NULL;
+  }
+
+  return $mail;
 }

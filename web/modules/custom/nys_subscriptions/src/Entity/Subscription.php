@@ -14,6 +14,7 @@ use Drupal\nys_subscriptions\Events;
 use Drupal\nys_subscriptions\Exception\InvalidSubscriptionEntity;
 use Drupal\nys_subscriptions\Subscriber;
 use Drupal\nys_subscriptions\SubscriptionInterface;
+use Drupal\nys_subscriptions\SubscriptionQueue;
 use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -57,6 +58,14 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class Subscription extends ContentEntityBase implements SubscriptionInterface {
 
   use LoggerChannelTrait;
+
+  const SUBSCRIBERS_ALL = 0;
+
+  const SUBSCRIBERS_ACTIVE_ONLY = 1;
+
+  const SUBSCRIBERS_UNCONFIRMED_ONLY = 2;
+
+  const SUBSCRIBERS_CANCELED_ONLY = 4;
 
   /**
    * Drupal's Entity Type Manager service.
@@ -132,7 +141,7 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
       try {
         $entity = $this->entityTypeManager->getStorage($type)->load($id);
       }
-      catch (\Throwable $e) {
+      catch (\Throwable) {
         $entity = NULL;
       }
     }
@@ -569,23 +578,22 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
   }
 
   /**
-   * Gets all active subscribers for an entity, specified by type and id.
+   * Gets all subscribers for an entity, specified by type and id.
    *
    * @param string $type
    *   The entity type of the subscription target.
    * @param string $id
    *   The id of the subscription target.
-   * @param bool $chunked
-   *   Indicates if the result should be chunked per the Sendgrid max
-   *   recipient limit.
+   * @param int $flags
+   *   A bit-flag value indicating a selection type.  See the class constants.
    *
    * @return array
-   *   An array of Subscriber objects representing all subscriptions which
-   *   are confirmed and not canceled, and subscribed to the target identified
-   *   by $type and $id.  If any error occurs, an empty array is returned.  If
-   *   $chunked is TRUE, the return is an array of arrays, per array_chunk().
+   *   An array of Subscriber objects for the entity identified by $type and
+   *   $id, filtered by the passed $flag value, and chunked by the configured
+   *   maximum recipients (defaults to 1000).  If any error occurs, an empty
+   *   array is returned.
    */
-  public static function getActiveSubscribers(string $type, string $id, bool $chunked = TRUE): array {
+  public static function getSubscribers(string $type, string $id, int $flags = self::SUBSCRIBERS_ACTIVE_ONLY): array {
     try {
       $entity = \Drupal::entityTypeManager()
         ->getStorage($type)
@@ -596,17 +604,32 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
       $sub_storage = \Drupal::entityTypeManager()->getStorage('subscription');
       $subs = $sub_storage->getQuery()
         ->condition('subscribe_to_type', $type)
-        ->condition('subscribe_to_id', $id)
-        ->condition('confirmed', 0, '>')
-        ->condition('canceled', 0)
-        ->execute();
-      $subscriptions = $sub_storage->loadMultiple($subs);
+        ->condition('subscribe_to_id', $id);
+
+      // Handle the flags.
+      switch ($flags) {
+        case static::SUBSCRIBERS_ACTIVE_ONLY:
+          $subs->condition('confirmed', 0, '>')->condition('canceled', 0);
+          break;
+
+        case static::SUBSCRIBERS_UNCONFIRMED_ONLY:
+          $subs->condition('confirmed', 0);
+          break;
+
+        case static::SUBSCRIBERS_CANCELED_ONLY:
+          $subs->condition('canceled', 0, '>');
+          break;
+      }
+
+      // Execute and load all the entities.
+      $subscriptions = $sub_storage->loadMultiple($subs->execute());
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $subscriptions = [];
       $entity = NULL;
     }
 
+    // Create the subscriber objects from the results.
     $ret = [];
     foreach ($subscriptions as $subscriber) {
       try {
@@ -614,22 +637,20 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
       }
       catch (\Throwable $e) {
         \Drupal::logger('nys_subscriptions')
-          ->error("Failed to generate subscriber for subscription @id", ['@id' => $subscriber->id()]);
+          ->error("Failed to generate subscriber for subscription @id", [
+            '@id' => $subscriber->id(),
+            '@message' => $e->getMessage(),
+          ]);
       }
     }
 
     // Allow for other code to alter the found subscribers.
     \Drupal::service('event_dispatcher')
-      ->dispatch(new GetSubscribersEvent($entity, $ret), Events::GET_SUBSCRIBERS);
+      ->dispatch(new GetSubscribersEvent($entity, $ret, $flags), Events::GET_SUBSCRIBERS);
 
-    // Chunk the results, if requested.
-    if ($chunked) {
-      $max = \Drupal::config('nys_subscriptions.settings')
-        ->get('max_recipients');
-      $ret = array_chunk($ret, $max ?? 1000);
-    }
-
-    return $ret;
+    // Chunk the results and return.
+    $max = \Drupal::config('nys_subscriptions.settings')->get('max_recipients');
+    return array_chunk($ret, $max ?? SubscriptionQueue::MAX_RECIPIENTS_DEFAULT);
   }
 
 }

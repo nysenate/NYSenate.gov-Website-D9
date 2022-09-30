@@ -1,0 +1,6 @@
+services:
+  nys_subscriptions.commands:
+    class: \Drupal\nys_subscriptions\Commands\NysSubscriptionsCommands
+    arguments: ['@nys_subscriptions.queue_manager']
+    tags:
+      - { name: drush.command }

@@ -1,0 +1,22 @@
+services:
+  logger.channel.bill_notifications:
+    parent: logger.channel_base
+    arguments: ['nys_bill_notifications']
+  bill_notifications.processor:
+    class: Drupal\nys_bill_notifications\Service\UpdatesProcessor
+    arguments: ['@logger.channel.bill_notifications', '@config.factory', '@manager.openleg_api', '@entity_type.manager', '@bill_notifications.test_manager', '@nys_subscriptions.queue_manager']
+  bill_notifications.test_manager:
+    class: Drupal\nys_bill_notifications\Service\BillTestManager
+    parent: default_plugin_manager
+    arguments: ['@logger.channel.bill_notifications']
+  bill_notifications.queue:
+    class: Drupal\nys_subscriptions\SubscriptionQueue
+    factory: ['@nys_subscriptions.queue_manager', 'queueFactory']
+    arguments: ['bill_notifications', 'Changes registered on a subscribed bill']
+    tags:
+      - { name: subscription_queue }
+  bill_notifications.event_subscriber:
+    class: Drupal\nys_bill_notifications\EventSubscriber\NysSubscriptionsEventSubscriber
+    arguments: ['@config.factory', '@slack_messaging', '@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

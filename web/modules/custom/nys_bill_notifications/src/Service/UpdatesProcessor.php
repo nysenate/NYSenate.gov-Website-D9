@@ -153,7 +153,7 @@ class UpdatesProcessor {
       $nodes = $this->entityTypeManager
         ->getStorage('node')
         ->loadByProperties(['title' => $print_num]);
-      $ret = count($nodes) == 1 ? current($nodes) : NULL;
+      $ret = (count($nodes) == 1) ? current($nodes) : NULL;
     }
     catch (\Throwable $e) {
       $ret = NULL;

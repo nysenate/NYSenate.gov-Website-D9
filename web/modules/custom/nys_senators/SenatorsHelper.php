@@ -52,7 +52,7 @@ class SenatorsHelper {
    *   'short_name' and 'full_name'.
    */
   public static function getNameMapping(bool $refresh = FALSE): array {
-    $mapping = static::getCached('name_map');
+    $mapping = static::getCache('name_map');
     if ($refresh || !$mapping) {
       $senators = static::getStorage()
         ->loadByProperties(['field_active_senator' => 1]);

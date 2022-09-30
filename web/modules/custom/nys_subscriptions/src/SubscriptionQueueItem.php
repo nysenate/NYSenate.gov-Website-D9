@@ -137,7 +137,7 @@ class SubscriptionQueueItem {
           [
             '@id' => $this->queueItem->item_id,
             '@message' => $e->getMessage(),
-            '@subscriber' => $subscriber,
+            '@subscriber' => $subscriber ?? 'No Subscriber available',
             '@count' => count($this->queueItem->data['recipients']),
           ]
         );

@@ -47,7 +47,7 @@ abstract class BillTestBase implements BillTestInterface, ContainerFactoryPlugin
    *
    * @param object $item
    *   A JSON-decoded bill update item from OpenLeg, or any sub-object.
-   * @param array|null $test_array
+   * @param array $test_array
    *   An individual test item.  Defaults to this test's $pattern.
    *
    * @return bool

@@ -4,6 +4,7 @@ namespace Drupal\nys_subscriptions\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 
 /**
  * Form controller for the subscription entity edit forms.
@@ -24,7 +25,7 @@ class SubscriptionForm extends ContentEntityForm {
     $link = $entity->toLink($this->t('View'))->toRenderable();
 
     $message_arguments = ['%label' => $this->entity->label()];
-    $logger_arguments = $message_arguments + ['link' => render($link)];
+    $logger_arguments = $message_arguments + ['link' => RendererInterface::render($link)];
 
     if ($result == SAVED_NEW) {
       $this->messenger()

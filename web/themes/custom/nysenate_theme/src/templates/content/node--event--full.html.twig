@@ -202,9 +202,11 @@
     {{ content.body }}
   </div>
 
-  {% if social_buttons %}
-    {{ social_buttons }}
-  {% endif %}
-
+  {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+    title: node.type.entity.label,
+    node_url: url,
+    cta: cta,
+  } only
+  %}
 </article>
 

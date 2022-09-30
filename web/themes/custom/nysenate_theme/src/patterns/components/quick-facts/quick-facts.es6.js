@@ -34,7 +34,7 @@
       $('.c-senate-quick-facts__button').click(function(event) {
         event.preventDefault();
 
-        const tabNumber = `#tab${$(this).data('tab')}`;
+        const tabNumber = `#panel${$(this).data('tab')}`;
         const pageBody = $('html, body');
 
         $(`input[value="${tabNumber}"]`).click();

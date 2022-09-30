@@ -6,6 +6,7 @@ dependencies:
     - field.field.paragraph.office_locations.field_fax
     - field.field.paragraph.office_locations.field_office_address
     - field.field.paragraph.office_locations.field_office_contact_phone
+    - field.field.paragraph.office_locations.field_office_hours
     - paragraphs.paragraphs_type.office_locations
   module:
     - address
@@ -37,6 +38,14 @@ content:
       title: ''
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_office_hours:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
     region: content
 hidden:
   search_api_excerpt: true

@@ -1,7 +1,7 @@
-entity.subscription.settings:
-  path: 'admin/structure/subscriptions'
+nys_subscription.settings:
+  path: '/admin/config/nys_subscriptions'
   defaults:
     _form: '\Drupal\nys_subscriptions\Form\SubscriptionSettingsForm'
-    _title: 'Subscription'
+    _title: 'NYS Subscriptions Configuration'
   requirements:
-    _permission: 'administer subscriptions'
+    _permission: 'administer site configuration'

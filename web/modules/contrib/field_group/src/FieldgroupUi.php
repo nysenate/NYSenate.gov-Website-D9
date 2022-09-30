@@ -55,7 +55,7 @@ class FieldgroupUi {
   /**
    * Get the field group delete route for a given group.
    *
-   * @param \stdClass $group
+   * @param object $group
    *   The group to delete.
    *
    * @return \Drupal\Core\Url

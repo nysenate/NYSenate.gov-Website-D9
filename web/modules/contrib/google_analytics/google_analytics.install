@@ -147,3 +147,14 @@ function google_analytics_update_8400() {
   // Save the settings
   $config->save();
 }
+
+/**
+ * Drop obsolete config items "ua_legacy" and "premium" from active config.
+ */
+function google_analytics_update_8401() {
+  \Drupal::configFactory()
+    ->getEditable('google_analytics.settings')
+    ->clear('premium')
+    ->clear('ua_legacy')
+    ->save();
+}

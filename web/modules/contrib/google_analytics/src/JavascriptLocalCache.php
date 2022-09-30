@@ -5,6 +5,7 @@ namespace Drupal\google_analytics;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\State\StateInterface;
 use GuzzleHttp\ClientInterface;
@@ -42,12 +43,18 @@ class JavascriptLocalCache {
    */
   protected $state;
 
-  public function __construct(ClientInterface $http_client, FileSystemInterface $file_system, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, StateInterface $state) {
+  /**
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  public function __construct(ClientInterface $http_client, FileSystemInterface $file_system, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, StateInterface $state, FileUrlGeneratorInterface $file_url_generator) {
     $this->httpClient = $http_client;
     $this->fileSystem = $file_system;
     $this->configFactory = $config_factory;
     $this->state = $state;
     $this->logger = $logger_factory->get('google_analytics');
+    $this->fileUrlGenerator = $file_url_generator;
   }
   /**
    * Download/Synchronize/Cache tracking code file locally.
@@ -117,7 +124,7 @@ class JavascriptLocalCache {
     }
     // Return the local JS file path.
     $query_string = '?' . (\Drupal::state()->get('system.css_js_query_string') ?: '0');
-    return file_url_transform_relative(file_create_url($file_destination)) . $query_string;
+    return $this->fileUrlGenerator->generateString($file_destination) . $query_string;
   }
 
   /**

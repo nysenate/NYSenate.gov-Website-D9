@@ -61,9 +61,9 @@
                   <span>Fax: </span>{{ location.fax }}
                 </div>
               {% endif %}
-              {% if location.contact_name %}
+              {% if location.office_hours %}
                 <div class="tel fn" itemprop="openingHours">
-                  <span>Office Hours:</span>{{ location.contact_name }}
+                  <span>Office Hours: </span>{{ location.office_hours }}
                 </div>
               {% endif %}
               {% if location.loc %}
@@ -78,14 +78,16 @@
         {% endfor %}
       </div>
 
-      <div class="c-block--senator-email">
-        <h3 class="c-office-info--title">
-          {{ 'Email Address:'|t }}
-        </h3>
-        <div class="field-content">
-          <a href="mailto:{{ email }}">{{ email }}</a>
+      {% if email %}
+        <div class="c-block--senator-email">
+          <h3 class="c-office-info--title">
+            {{ 'Email Address:'|t }}
+          </h3>
+          <div class="field-content">
+            <a href="mailto:{{ email }}">{{ email }}</a>
+          </div>
         </div>
-      </div>
+      {% endif %}
 
       {% if office_contacts %}
         <div class="c-block--senator-office-contacts">
@@ -98,7 +100,7 @@
                 {{ contact.name }}
                 </br>
               {% endif %}
-              {% if condition %}
+              {% if contact.title %}
                 {{ contact.title }}
                 </br>
               {% endif %}

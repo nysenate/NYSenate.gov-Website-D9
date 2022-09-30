@@ -1,8 +1,10 @@
 <?php
 
-namespace Drupal\Tests\views_bulk_operations\FunctionalJavaScript;
+namespace Drupal\Tests\views_bulk_operations\FunctionalJavascript;
 
+use Behat\Mink\Element\DocumentElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\WebAssert;
 use Drupal\views_bulk_operations\Form\ViewsBulkOperationsFormTrait;
 
 /**
@@ -13,29 +15,25 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
 
   use ViewsBulkOperationsFormTrait;
 
-  const TEST_NODE_COUNT = 15;
+  private const TEST_NODE_COUNT = 15;
 
-  const TEST_VIEW_ID = 'views_bulk_operations_test';
+  private const TEST_VIEW_ID = 'views_bulk_operations_test';
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stable9';
 
 
   /**
    * The assert session.
-   *
-   * @var \Drupal\Tests\WebAssert
    */
-  protected $assertSession;
+  protected WebAssert $assertSession;
 
   /**
    * The page element.
-   *
-   * @var \Behat\Mink\Element\DocumentElement
    */
-  protected $page;
+  protected DocumentElement $page;
 
 
   /**
@@ -43,21 +41,21 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
    *
    * @var array
    */
-  protected $selectedIndexes = [];
+  protected array $selectedIndexes = [];
 
   /**
    * Test nodes.
    *
    * @var \Drupal\node\NodeInterface[]
    */
-  protected $testNodes = [];
+  protected array $testNodes = [];
 
   /**
    * Test view parameters as in the config.
    *
    * @var array
    */
-  protected $testViewParams;
+  protected array $testViewParams;
 
   /**
    * Modules to install.
@@ -80,9 +78,10 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
     // Create some nodes for testing.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i <= self::TEST_NODE_COUNT; $i++) {
-      $this->drupalCreateNode([
+      $this->testNodes[] = $this->drupalCreateNode([
         'type' => 'page',
         'title' => 'Title ' . $i,
+        'created' => 1000 + self::TEST_NODE_COUNT - $i,
       ]);
     }
     $admin_user = $this->drupalCreateUser(
@@ -116,7 +115,7 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
   /**
    * Tests the VBO bulk form without dynamic insertion.
    */
-  public function testViewsBulkOperationsAjaxUi() {
+  public function testViewsBulkOperationsAjaxUi(): void {
     // Make sure a checkbox appears on all rows and the button exists.
     $this->assertSession->buttonExists('Simple test action');
     for ($i = 0; $i < $this->testViewParams['items_per_page']; $i++) {
@@ -144,14 +143,14 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
 
     // Assert if only the selected nodes were processed.
     foreach ($this->testNodes as $delta => $node) {
-      if (in_array($delta, $this->selectedIndexes, TRUE)) {
-        $this->assertSession->pageTextContains(sprintf('Test action (preconfig: Test setting, label: %s)', $node->label()));
+      if (\in_array($delta, $this->selectedIndexes, TRUE)) {
+        $this->assertSession->pageTextContains(\sprintf('Test action (label: %s)', $node->label()));
       }
       else {
-        $this->assertSession->pageTextNotContains(sprintf('Test action (preconfig: Test setting, label: %s)', $node->label()));
+        $this->assertSession->pageTextNotContains(\sprintf('Test action (label: %s)', $node->label()));
       }
     }
-    $this->assertSession->pageTextContains(sprintf('Action processing results: Test (%s)', count($this->selectedIndexes)));
+    $this->assertSession->pageTextContains(\sprintf('Action processing results: Test (%s)', \count($this->selectedIndexes)));
 
   }
 
@@ -160,7 +159,7 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
    *
    * Nodes inserted right after selecting targeted row(s) of the view.
    */
-  public function testViewsBulkOperationsWithDynamicInsertion() {
+  public function testViewsBulkOperationsWithDynamicInsertion(): void {
 
     $this->selectedIndexes = [0, 1, 3];
 
@@ -168,21 +167,27 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
       $this->page->checkField('views_bulk_operations_bulk_form[' . $selected_index . ']');
     }
 
-    // Insert nodes.
-    $nodes = [];
-    for ($i = 100; $i < 100 + self::TEST_NODE_COUNT; $i++) {
-      $nodes[] = $this->drupalCreateNode([
+    // Insert nodes that .
+    for ($i = 0; $i < self::TEST_NODE_COUNT; $i++) {
+      $this->drupalCreateNode([
         'type' => 'page',
-        'title' => 'Title ' . $i,
+        'title' => 'Title added ' . $i,
+        'created' => 2000 + self::TEST_NODE_COUNT - $i,
       ]);
     }
 
     $this->page->pressButton('Simple test action');
 
     foreach ($this->selectedIndexes as $index) {
-      $this->assertSession->pageTextContains(sprintf('Test action (preconfig: Test setting, label: Title %s)', self::TEST_NODE_COUNT - $index));
+      $this->assertSession->pageTextContains(\sprintf('Test action (label: Title %s)', $index));
     }
-    $this->assertSession->pageTextContains(sprintf('Action processing results: Test (%s)', count($this->selectedIndexes)));
+    $this->assertSession->pageTextContains(\sprintf('Action processing results: Test (%s)', \count($this->selectedIndexes)));
+
+    // Check that the view now actually contains the new nodes in place of the
+    // previously displayed ones.
+    for ($i = 0; $i < $this->testViewParams['items_per_page']; $i++) {
+      $this->assertSession->pageTextContains(\sprintf('Title added %s', $i));
+    }
   }
 
 }

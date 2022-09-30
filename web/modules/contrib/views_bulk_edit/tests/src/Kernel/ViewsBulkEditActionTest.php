@@ -21,7 +21,7 @@ class ViewsBulkEditActionTest extends ViewsBulkOperationsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->createTestNodes([

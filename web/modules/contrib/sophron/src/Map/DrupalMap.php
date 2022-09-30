@@ -14,7 +14,7 @@ class DrupalMap extends AbstractMap {
   /**
    * Singleton instance.
    *
-   * @var \FileEye\MimeMap\Map\AbstractMap
+   * @var \FileEye\MimeMap\Map\MapInterface
    */
   protected static $instance;
 
@@ -24,7 +24,7 @@ class DrupalMap extends AbstractMap {
    * @return string
    *   The full file path of this file.
    */
-  public function getFileName() {
+  public function getFileName(): string {
     return __FILE__;
   }
 

@@ -42,9 +42,8 @@ class SophronApiTest extends KernelTestBase {
     $this->assertEquals(DrupalMap::class, $manager->getMapClass());
     $this->assertContains('atomsrv', $manager->listExtensions());
     $this->assertEquals('application/atomserv+xml', $manager->getExtension('atomsrv')->getDefaultType());
-    $manager->setMapClass(DefaultMap::class);
-    $this->assertEquals('application/octet-stream', $manager->getExtension('atomsrv')->getDefaultType(FALSE));
     // No type for extension.
+    $manager->setMapClass(DefaultMap::class);
     $this->expectException(MappingException::class);
     $manager->getExtension('atomsrv')->getDefaultType();
   }

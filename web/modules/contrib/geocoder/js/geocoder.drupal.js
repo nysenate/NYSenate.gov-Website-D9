@@ -25,11 +25,14 @@
           delay: settings.geocode_origin_autocomplete.delay || 800,
           // This bit uses the geocoder to fetch address values.
           source: function (request, response) {
+            let thisElement = this.element;
+            thisElement.addClass('ui-autocomplete-loading');
             // Execute the geocoder.
             $.when(geocode(request.term, providers, address_format).then(
               // On Resolve/Success.
               function (results) {
                 response($.map(results, function (item) {
+                  thisElement.removeClass('ui-autocomplete-loading');
                   return {
                     // the value property is needed to be passed to the select.
                     value: item.formatted_address,
@@ -43,7 +46,7 @@
                 });
               }));
           }
-        });
+        }).addClass('form-autocomplete');
       });
     }
   };

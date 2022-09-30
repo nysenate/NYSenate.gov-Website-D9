@@ -2,9 +2,8 @@
 
 namespace Drupal\google_analytics\Event;
 
+use Drupal\Component\EventDispatcher\Event;
 use Drupal\google_analytics\GaAccount;
-use Drupal\google_analytics\Helpers\GoogleAnalyticsAccounts;
-use Symfony\Component\EventDispatcher\Event;
 use Drupal\google_analytics\GaJavascriptObject;
 
 /**
@@ -57,7 +56,7 @@ class GoogleAnalyticsConfigEvent extends Event {
   /**
    * Get the specific Google Analytics account associated with this config.
    *
-   * @return \Drupal\google_analytics\Helpers\GoogleAnalyticsAccounts
+   * @return \Drupal\google_analytics\GaAccount
    */
   public function getGaAccount() {
     return $this->gaAccount;

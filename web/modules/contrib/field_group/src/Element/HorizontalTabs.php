@@ -65,8 +65,8 @@ class HorizontalTabs extends RenderElement {
       elseif (!empty($element['#group_details'])) {
         // Intentionally empty to clarify the flow; we simply return $element.
       }
-      // Otherwise, this element belongs to a group and the group exists, so we do
-      // not render it.
+      // Otherwise, this element belongs to a group and the group exists, so we
+      // do not render it.
       elseif (Element::children($element['#groups'][$group])) {
         $element['#printed'] = TRUE;
       }

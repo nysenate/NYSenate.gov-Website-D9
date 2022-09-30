@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\google_analytics\Functional;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\search\SearchIndexInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -15,13 +14,13 @@ use Drupal\Tests\BrowserTestBase;
 class GoogleAnalyticsSearchTest extends BrowserTestBase {
 
   use StringTranslationTrait;
-  
+
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['google_analytics', 'search', 'node'];
+  protected static $modules = ['google_analytics', 'search', 'node'];
 
   /**
    * Admin user.
@@ -40,7 +39,7 @@ class GoogleAnalyticsSearchTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);

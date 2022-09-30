@@ -61,6 +61,8 @@ class FieldGroupFormatter extends Plugin {
   public $format_types = [];
 
   /**
+   * Formatter weight.
+   *
    * An integer to determine the weight of this formatter relative to other
    * formatter in the Field UI when selecting a formatter for a given group.
    *

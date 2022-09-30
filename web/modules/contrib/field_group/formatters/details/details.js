@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Provides the processing logic for details element.
+ */
+
 (function ($) {
 
   'use strict';

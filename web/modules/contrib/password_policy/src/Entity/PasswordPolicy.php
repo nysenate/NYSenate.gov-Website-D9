@@ -2,6 +2,7 @@
 
 namespace Drupal\password_policy\Entity;
 
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\password_policy\PasswordPolicyInterface;
 
@@ -20,11 +21,9 @@ use Drupal\password_policy\PasswordPolicyInterface;
  *   handlers = {
  *     "list_builder" = "Drupal\password_policy\Controller\PasswordPolicyListBuilder",
  *     "form" = {
- *       "delete" = "Drupal\password_policy\Form\PasswordPolicyDeleteForm"
- *     },
- *     "wizard" = {
- *       "add" = "Drupal\password_policy\Wizard\PasswordPolicyWizard",
- *       "edit" = "Drupal\password_policy\Wizard\PasswordPolicyWizard"
+ *       "add" = "Drupal\password_policy\Form\PasswordPolicyFormAdd",
+ *       "delete" = "Drupal\password_policy\Form\PasswordPolicyDeleteForm",
+ *       "edit" = "Drupal\password_policy\Form\PasswordPolicyFormEdit"
  *     }
  *   },
  *   config_prefix = "password_policy",
@@ -34,7 +33,8 @@ use Drupal\password_policy\PasswordPolicyInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "edit-form" = "/admin/config/security/password-policy/{machine_name}/{step}",
+ *     "add-form" = "/admin/config/security/password-policy/add",
+ *     "edit-form" = "/admin/config/security/password-policy/{machine_name}",
  *     "delete-form" = "/admin/config/security/password-policy/policy/delete/{password_policy}",
  *     "collection" = "/admin/config/security/password-policy"
  *   },
@@ -46,6 +46,7 @@ use Drupal\password_policy\PasswordPolicyInterface;
  *     "send_reset_email",
  *     "send_pending_email",
  *     "roles",
+ *     "show_policy_table",
  *   }
  * )
  */
@@ -101,6 +102,20 @@ class PasswordPolicy extends ConfigEntityBase implements PasswordPolicyInterface
   protected $roles = [];
 
   /**
+   * The constraints as a collection.
+   *
+   * @var \Drupal\Core\Plugin\DefaultLazyPluginCollection
+   */
+  protected $constraintsCollection;
+
+  /**
+   * Indicate whether the policy table should get displayed.
+   *
+   * @var bool
+   */
+  protected $show_policy_table = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -115,20 +130,14 @@ class PasswordPolicy extends ConfigEntityBase implements PasswordPolicyInterface
   }
 
   /**
-   * Return the constraints from the policy.
-   *
-   * @return array
-   *   The policies constraints.
+   * {@inheritdoc}
    */
   public function getConstraints() {
     return $this->policy_constraints;
   }
 
   /**
-   * Return a specific constraint from the policy.
-   *
-   * @return \Drupal\password_policy\PasswordConstraintInterface
-   *   A specific constraint in the policy.
+   * {@inheritdoc}
    */
   public function getConstraint($key) {
     if (!isset($this->policy_constraints[$key])) {
@@ -138,13 +147,24 @@ class PasswordPolicy extends ConfigEntityBase implements PasswordPolicyInterface
   }
 
   /**
-   * Return the password reset setting from the policy.
-   *
-   * @return int
-   *   The number of days between password resets.
+   * {@inheritdoc}
    */
   public function getPasswordReset() {
     return $this->password_reset;
+  }
+
+  /**
+   * Get the plugin collections used by this entity.
+   *
+   * @return Drupal\Core\Plugin\DefaultLazyPluginCollection
+   *   An array of plugin collections, keyed by the property name they use to
+   *   store their configuration.
+   */
+  public function getConstraintsCollection() {
+    if (!isset($this->constraintsCollection)) {
+      $this->constraintsCollection = new DefaultLazyPluginCollection(\Drupal::service('plugin.manager.password_policy.password_constraint'), $this->getConstraints());
+    }
+    return $this->constraintsCollection;
   }
 
   /**
@@ -168,13 +188,35 @@ class PasswordPolicy extends ConfigEntityBase implements PasswordPolicyInterface
   }
 
   /**
-   * Return the user roles for the policy.
-   *
-   * @return array
-   *   The user roles assigned to the policy.
+   * {@inheritdoc}
    */
   public function getRoles() {
     return $this->roles;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $constraints_collection = $this->getConstraintsCollection();
+    if (empty($constraints_collection)) {
+      return $this;
+    }
+    $constraint_plugin_ids = $constraints_collection->getInstanceIds();
+    foreach ($constraint_plugin_ids as $constraint_plugin_id) {
+      $constraint_plugin = $constraints_collection->get($constraint_plugin_id);
+      $constraint_plugin_dependencies = $this->getPluginDependencies($constraint_plugin);
+      $this->addDependencies($constraint_plugin_dependencies);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPolicyTableShown() {
+    return $this->show_policy_table;
   }
 
 }

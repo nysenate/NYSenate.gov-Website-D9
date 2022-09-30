@@ -13,24 +13,25 @@
   Drupal.behaviors.environmentIndicatorToolbar = {
     attach: function (context, settings) {
       if (typeof(settings.environmentIndicator) != 'undefined') {
+        const $body = $('body');
 
-        // Only apply text and background color color if not using gin_toolbar
-        if (!$('body').hasClass('gin--vertical-toolbar') && !$('body').hasClass('gin--horizontal-toolbar')) {
+        // Only apply text and background color if not using gin_toolbar
+        if (!$body.hasClass('gin--vertical-toolbar') && !$body.hasClass('gin--horizontal-toolbar')) {
           $('#toolbar-bar', context).css('background-color', settings.environmentIndicator.bgColor);
           $('#toolbar-bar .toolbar-item, #toolbar-bar .toolbar-item a', context).css('color', settings.environmentIndicator.fgColor);
         }
 
         // Set environment color for gin_toolbar vertical toolbar.
-        if ($('body').hasClass('gin--vertical-toolbar')) {
-          $('.toolbar-menu-administration', context).css({'border-color': settings.environmentIndicator.bgColor, 'border-left-width': '6px'});
+        if ($body.hasClass('gin--vertical-toolbar')) {
+          $('.toolbar-menu-administration', context).css({'border-left-color': settings.environmentIndicator.bgColor, 'border-left-width': '6px'});
           $('.toolbar-tray-horizontal .toolbar-menu li.menu-item', context).css({'margin-left': '-3px'});
         }
         // Set environment color for gin_toolbar horizontal toolbar.
-        if ($('body').hasClass('gin--horizontal-toolbar')) {
-          $('#toolbar-item-administration-tray').css({'border-color': settings.environmentIndicator.bgColor, 'border-top-width': '6px'});
+        if ($body.hasClass('gin--horizontal-toolbar')) {
+          $('#toolbar-item-administration-tray').css({'border-top-color': settings.environmentIndicator.bgColor, 'border-top-width': '6px'});
         }
         // Set environment color on the icon of the gin_toolbar
-        if($('body').hasClass('gin--horizontal-toolbar') || $('body').hasClass('gin--vertical-toolbar')) {
+        if($body.hasClass('gin--horizontal-toolbar') || $body.hasClass('gin--vertical-toolbar')) {
           $('head', context).append("<style>.toolbar .toolbar-bar #toolbar-item-administration-tray a.toolbar-icon-admin-toolbar-tools-help.toolbar-icon-default::before{ background-color: " + settings.environmentIndicator.bgColor + " }</style>");
         }
       }

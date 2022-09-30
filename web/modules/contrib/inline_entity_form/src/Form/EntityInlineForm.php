@@ -237,6 +237,7 @@ class EntityInlineForm implements InlineFormInterface {
         $entity_form[$child]['#group'] = implode('][', $entity_form[$entity_form[$child]['#group']]['#parents']);
       }
     }
+    $entity_form['#attached']['library'][] = 'core/drupal.form';
 
     return $entity_form;
   }

@@ -2,12 +2,12 @@
 
 namespace Drupal\views_bulk_operations\Form;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionManager;
 use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionProcessorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Action configuration form.
@@ -18,24 +18,18 @@ class ConfigureAction extends FormBase {
 
   /**
    * The tempstore service.
-   *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
-  protected $tempStoreFactory;
+  protected PrivateTempStoreFactory $tempStoreFactory;
 
   /**
    * Views Bulk Operations action manager.
-   *
-   * @var \Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionManager
    */
-  protected $actionManager;
+  protected ViewsBulkOperationsActionManager $actionManager;
 
   /**
    * Views Bulk Operations action processor.
-   *
-   * @var \Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionProcessorInterface
    */
-  protected $actionProcessor;
+  protected ViewsBulkOperationsActionProcessorInterface $actionProcessor;
 
   /**
    * Constructor.
@@ -94,7 +88,10 @@ class ConfigureAction extends FormBase {
 
     // :D Make sure the submit button is at the bottom of the form
     // and is editable from the action buildConfigurationForm method.
-    $form['actions']['#weight'] = 666;
+    $form['actions'] = [
+      '#type' => 'actions',
+      '#weight' => 666,
+    ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
@@ -106,7 +103,7 @@ class ConfigureAction extends FormBase {
 
     $action = $this->actionManager->createInstance($form_data['action_id']);
 
-    if (method_exists($action, 'setContext')) {
+    if (\method_exists($action, 'setContext')) {
       $action->setContext($form_data);
     }
 
@@ -123,7 +120,7 @@ class ConfigureAction extends FormBase {
     $form_data = $form_state->get('views_bulk_operations');
 
     $action = $this->actionManager->createInstance($form_data['action_id']);
-    if (method_exists($action, 'validateConfigurationForm')) {
+    if (\method_exists($action, 'validateConfigurationForm')) {
       $action->validateConfigurationForm($form, $form_state);
     }
   }
@@ -135,7 +132,7 @@ class ConfigureAction extends FormBase {
     $form_data = $form_state->get('views_bulk_operations');
 
     $action = $this->actionManager->createInstance($form_data['action_id']);
-    if (method_exists($action, 'submitConfigurationForm')) {
+    if (\method_exists($action, 'submitConfigurationForm')) {
       $action->submitConfigurationForm($form, $form_state);
       $form_data['configuration'] = $action->getConfiguration();
     }

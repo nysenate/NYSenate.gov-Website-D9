@@ -7,7 +7,6 @@ source:
   plugin: variable
   variables:
     - googleanalytics_account
-    - googleanalytics_premium
     - googleanalytics_cache
     - googleanalytics_codesnippet_after
     - googleanalytics_codesnippet_before
@@ -38,14 +37,16 @@ source:
   source_module: googleanalytics    
 process:
   account: googleanalytics_account
-  premium: googleanalytics_premium
   cache: googleanalytics_cache
   'codesnippet/after': googleanalytics_codesnippet_after
   'codesnippet/before': googleanalytics_codesnippet_before
   'codesnippet/create': googleanalytics_codesnippet_create
   cross_domains: googleanalytics_cross_domains
-  'custom/dimension': googleanalytics_custom_dimension
-  'custom/metric': googleanalytics_custom_metric
+  'custom/parameters':
+    plugin: google_analytics_parameter_pages
+    source:
+      - googleanalytics_custom_dimension
+      - googleanalytics_custom_metric
   domain_mode: googleanalytics_domain_mode
   'privacy/anonymizeip': googleanalytics_tracker_anonymizeip
   'track/adsense': googleanalytics_trackadsense

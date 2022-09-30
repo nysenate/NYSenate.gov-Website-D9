@@ -63,7 +63,10 @@ class PasswordLength extends PasswordConstraintBase {
     $form['character_operation'] = [
       '#type' => 'select',
       '#title' => $this->t('Operation'),
-      '#options' => ['minimum' => $this->t('Minimum length'), 'maximum' => $this->t('Maximum length')],
+      '#options' => [
+        'minimum' => $this->t('Minimum length'),
+        'maximum' => $this->t('Maximum length'),
+      ],
       '#default_value' => $this->getConfiguration()['character_operation'],
     ];
     return $form;

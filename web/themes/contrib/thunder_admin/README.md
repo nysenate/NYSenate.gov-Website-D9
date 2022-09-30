@@ -65,7 +65,7 @@ or only watch changes in sass files
 * JS linting (folder: js)
 
 #### Visual Regression Tests
-Travis will check the theme for changes with a visual regression test.
+Github actions will check the theme for changes with a visual regression test.
 If you changed some styling, please provide new reference images.
 
 You can use the continous integration infrastructure to update the visual regression reference images by adding [UPDATE_SCREENSHOTS] to your commit message

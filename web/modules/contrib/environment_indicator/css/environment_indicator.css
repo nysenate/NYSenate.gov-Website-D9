@@ -91,3 +91,11 @@
   border-top: 3px solid;
   border-bottom: 0;
 }
+
+[dir="ltr"] .gin--vertical-toolbar .toolbar-menu-administration > .toolbar-menu > .menu-item .toolbar-menu {
+  margin-left: calc(var(--ginToolbarWidthCollapsed) - 4px);
+}
+
+[dir="rtl"] .gin--vertical-toolbar .toolbar-menu-administration > .toolbar-menu > .menu-item .toolbar-menu {
+  margin-right: calc(var(--ginToolbarWidthCollapsed) - 4px);
+}

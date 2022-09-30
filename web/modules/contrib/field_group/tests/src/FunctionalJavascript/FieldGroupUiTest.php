@@ -24,7 +24,7 @@ class FieldGroupUiTest extends WebDriverTestBase {
   public static $modules = ['node', 'field_ui', 'field_group'];
 
   /**
-   * The current tested node type
+   * The current tested node type.
    *
    * @var string
    */

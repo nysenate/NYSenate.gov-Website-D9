@@ -55,7 +55,7 @@ class AccordionItem extends FieldGroupFormatterBase {
     }
 
     if ($this->getSetting('formatter') == 'open') {
-        $element['#open'] = TRUE;
+      $element['#open'] = TRUE;
     }
 
     foreach ($element as $key => $value) {

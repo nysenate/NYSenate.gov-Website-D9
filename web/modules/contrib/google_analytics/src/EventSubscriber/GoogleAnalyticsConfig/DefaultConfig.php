@@ -18,7 +18,7 @@ class DefaultConfig implements EventSubscriberInterface {
   /**
    * Drupal Config Factory
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected $config;
 
@@ -78,12 +78,12 @@ class DefaultConfig implements EventSubscriberInterface {
 
     // Domain tracking type.
     global $cookie_domain;
-    $domain_mode = $this->config->get('domain_mode');
+    $domain_mode = (int)($this->config->get('domain_mode') ? $this->config->get('domain_mode') : 0);
 
     // Per RFC 2109, cookie domains must contain at least one dot other than the
     // first. For hosts such as 'localhost' or IP Addresses we don't set a
     // cookie domain.
-    if ($domain_mode == 1 && count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
+    if (!empty($cookie_domain) && $domain_mode == 1 && count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
       $arguments = array_merge($arguments, ['cookie_domain' => $cookie_domain]);
       $javascript->setAdsenseScript($cookie_domain);
     }
@@ -109,7 +109,7 @@ class DefaultConfig implements EventSubscriberInterface {
     $page_path = new PagePathEvent();
     // Get the event_dispatcher service and dispatch the event.
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch(GoogleAnalyticsEvents::PAGE_PATH, $page_path);
+    $event_dispatcher->dispatch($page_path, GoogleAnalyticsEvents::PAGE_PATH);
 
     $path_type = $ga_account->isUniversalAnalyticsAccount() ? 'page_path' : 'page_location';
     $arguments['page_placeholder'] = 'PLACEHOLDER_' . $path_type;

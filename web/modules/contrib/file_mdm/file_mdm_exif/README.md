@@ -1,6 +1,6 @@
 # File metadata EXIF
 
-A Drupal 8 module providing a file metadata plugin for the EXIF protocol.
+A Drupal module providing a file metadata plugin for the EXIF protocol.
 
 
 ## Features:

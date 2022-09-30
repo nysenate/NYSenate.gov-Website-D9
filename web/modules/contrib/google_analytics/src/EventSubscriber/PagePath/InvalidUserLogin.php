@@ -2,11 +2,11 @@
 
 namespace Drupal\google_analytics\EventSubscriber\PagePath;
 
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\google_analytics\Event\PagePathEvent;
 use Drupal\google_analytics\Constants\GoogleAnalyticsEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Adds Content Translation to custom URL
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class InvalidUserLogin implements EventSubscriberInterface {
 
   /**
-   * @var \GuzzleHttp\Psr7\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $request;
 
@@ -24,13 +24,15 @@ class InvalidUserLogin implements EventSubscriberInterface {
   protected $currentRoute;
 
   /**
-   * DrupalMessage constructor.
+   * Invalid User Login Path
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   Config Factory for Google Analytics Settings.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request
+   *   The current request stack.
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route
+   *   The current route.
    */
   public function __construct(RequestStack $request, CurrentRouteMatch $current_route) {
-    $this->request = $request->getCurrentRequest();
+    $this->request = $request;
     $this->currentRoute = $current_route;
   }
 
@@ -60,7 +62,8 @@ class InvalidUserLogin implements EventSubscriberInterface {
     // - user/password?name=username
     // - user/password?name=foo@example.com
     $base_path = base_path();
-    if ($this->currentRoute->getRouteName() == 'user.pass' && $this->request->query->has('name')) {
+    $request = $this->request->getCurrentRequest();
+    if ($this->currentRoute->getRouteName() == 'user.pass' && $request->query->has('name')) {
       $event->setPagePath('"' . $base_path . 'user/password"');
       $event->stopPropagation();
     }

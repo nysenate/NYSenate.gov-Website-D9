@@ -40,7 +40,7 @@ class ConfigEntityTrackingTest extends EntityUsageJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     /** @var \Drupal\user\RoleInterface $role */

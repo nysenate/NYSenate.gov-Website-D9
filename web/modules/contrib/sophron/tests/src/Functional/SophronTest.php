@@ -4,6 +4,7 @@ namespace Drupal\Tests\sophron\Functional;
 
 use Drupal\sophron\MimeMapManagerInterface;
 use Drupal\Tests\BrowserTestBase;
+use FileEye\MimeMap\MappingException;
 
 /**
  * Tests Sophron functionality.
@@ -64,7 +65,13 @@ class SophronTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save configuration');
 
-    $this->assertEquals('application/octet-stream', \Drupal::service('sophron.mime_map.manager')->getExtension('quxqux')->getDefaultType(FALSE));
+    try {
+      $this->assertEquals('application/octet-stream', \Drupal::service('sophron.mime_map.manager')->getExtension('quxqux')->getDefaultType());
+      $this->fail('MappingException was expected.');
+    }
+    catch (MappingException $e) {
+      // Expected.
+    }
     $this->assertSession()->fieldExists('map_commands');
     $edit = [
       'map_commands' => '- [addTypeExtensionMapping, [foo/bar, quxqux]]',

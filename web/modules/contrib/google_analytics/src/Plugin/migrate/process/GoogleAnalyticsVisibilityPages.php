@@ -70,7 +70,7 @@ class GoogleAnalyticsVisibilityPages extends ProcessPluginBase implements Contai
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($old_visibility, $pages) = $value;
+    [$old_visibility, $pages] = $value;
 
     $request_path_pages = '';
 

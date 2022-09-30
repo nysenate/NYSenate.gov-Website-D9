@@ -137,7 +137,7 @@ class ModifyEntityValues extends ViewsBulkOperationsActionBase implements Contai
   /**
    * {@inheritdoc}
    */
-  public function buildPreConfigurationForm(array $form, array $values, FormStateInterface $form_state) {
+  public function buildPreConfigurationForm(array $form, array $values, FormStateInterface $form_state): array {
     $form['get_bundles_from_results'] = [
       '#title' => $this->t('Get entity bundles from results'),
       '#type' => 'checkbox',

@@ -28,13 +28,23 @@ class MigrationHelper {
       /** @var \Drupal\migrate\Plugin\MigrateSourcePluginManager $source_plugin_manager */
       $source_plugin_manager = \Drupal::service('plugin.manager.migrate.source');
       $source = NULL;
+      if (!empty($migration['migration_group'])) {
+        // Integrate shared group configuration into the migration, in order to
+        // have full migration definitions in place.
+        $this->getMigrationWithSharedConfiguration($migration);
+      }
       if (isset($migration['source']['plugin'])) {
         $source = $source_plugin_manager->getDefinition($migration['source']['plugin']);
       }
       if (isset($source['class'])) {
         // Field instance.
         if ($source['class'] === FieldInstance::class) {
-          $settings[] = $migration['process']['settings'];
+          $settings = $migration['process']['settings'];
+          if (isset($settings['plugin'])) {
+            // Prepare for multiple plugins,
+            // as there was only one before:
+            $settings = [$settings];
+          }
           $addition = [
             'inline_entity_form' => [
               'plugin' => 'inline_entity_form_field_instance_settings',
@@ -44,12 +54,13 @@ class MigrationHelper {
           $migration['process']['settings'] = $settings;
         }
         if (is_a($source['class'], FieldInstancePerFormDisplay::class, TRUE)) {
-          $addition = [
-            'inline_entity_form_single' => 'inline_entity_form_simple',
-            'inline_entity_form' => 'inline_entity_form_complex',
-          ];
-          if (isset($migration['process']['options/type']['type']['map']) && is_array($migration['process']['options/type']['type']['map'])) {
-            $migration['process']['options/type']['type']['map'] = array_merge($migration['process']['options/type']['type']['map'], $addition);
+          // Ensure the map exists and is an array:
+          if (!empty($migration['process']['options/type']['type']['map']) && is_array($migration['process']['options/type']['type']['map'])) {
+            $map_addition = [
+              'inline_entity_form_single' => 'inline_entity_form_simple',
+              'inline_entity_form' => 'inline_entity_form_complex',
+            ];
+            $migration['process']['options/type']['type']['map'] = array_merge($migration['process']['options/type']['type']['map'], $map_addition);
           }
         }
       }
@@ -130,6 +141,38 @@ class MigrationHelper {
       }
     }
     return $bundles;
+  }
+
+  /**
+   * Helper to get the full migration with shared configuration.
+   *
+   * @param array $migration
+   *   The migration to process.
+   */
+  protected function getMigrationWithSharedConfiguration(array &$migration) {
+    // Integrate shared group configuration into the migration.
+    if (!empty($migration['migration_group'])) {
+      $group = \Drupal\migrate_plus\Entity\MigrationGroup::load($migration['migration_group']);
+      $shared_configuration = !empty($group) ? $group->get('shared_configuration') : [];
+      if (!empty($shared_configuration)) {
+        foreach ($shared_configuration as $key => $group_value) {
+          $migration_value = $migration[$key] ?? NULL;
+          // Where both the migration and the group provide arrays, replace
+          // recursively (so each key collision is resolved in favor of the
+          // migration).
+          if (is_array($migration_value) && is_array($group_value)) {
+            $merged_values = array_replace_recursive($group_value, $migration_value);
+            $migration[$key] = $merged_values;
+          }
+          // Where the group provides a value the migration doesn't, use the group
+          // value.
+          elseif (is_null($migration_value)) {
+            $migration[$key] = $group_value;
+          }
+          // Otherwise, the existing migration value overrides the group value.
+        }
+      }
+    }
   }
 
 }

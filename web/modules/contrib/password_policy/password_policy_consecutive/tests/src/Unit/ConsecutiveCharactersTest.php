@@ -19,7 +19,7 @@ class ConsecutiveCharactersTest extends UnitTestCase {
   public function testConsecutiveCharacters($count, $password, $result) {
     $characters = $this->getMockBuilder('Drupal\password_policy_consecutive\Plugin\PasswordConstraint\ConsecutiveCharacters')
       ->disableOriginalConstructor()
-      ->setMethods(['getConfiguration', 't'])
+      ->onlyMethods(['getConfiguration', 't'])
       ->getMock();
     $characters
       ->method('getConfiguration')

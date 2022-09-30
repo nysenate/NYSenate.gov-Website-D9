@@ -3,10 +3,10 @@
 namespace Drupal\google_analytics\EventSubscriber\PagePath;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\google_analytics\Event\PagePathEvent;
 use Drupal\google_analytics\Constants\GoogleAnalyticsEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Adds Content Translation to custom URL
@@ -21,7 +21,7 @@ class HttpStatus implements EventSubscriberInterface {
   protected $config;
 
   /**
-   * @var \GuzzleHttp\Psr7\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $request;
 
@@ -33,7 +33,7 @@ class HttpStatus implements EventSubscriberInterface {
    */
   public function __construct(ConfigFactoryInterface $config_factory, RequestStack $request) {
     $this->config = $config_factory->get('google_analytics.settings');
-    $this->request = $request->getCurrentRequest();
+    $this->request = $request;
   }
 
   /**
@@ -55,7 +55,8 @@ class HttpStatus implements EventSubscriberInterface {
   public function onPagePath(PagePathEvent $event) {
     // Get page http status code for visibility filtering.
     $status = NULL;
-    if ($exception = $this->request->attributes->get('exception')) {
+    $request = $this->request->getCurrentRequest();
+    if ($exception = $request->attributes->get('exception')) {
       $status = $exception->getStatusCode();
     }
     // TODO: Make configurable

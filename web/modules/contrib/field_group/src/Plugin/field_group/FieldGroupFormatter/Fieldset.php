@@ -30,6 +30,7 @@ class Fieldset extends FieldGroupFormatterBase {
       '#title' => $this->getLabel(),
       '#attributes' => [],
       '#description' => $this->getSetting('description'),
+      '#description_display' => 'after',
       // Prevent \Drupal\content_translation\ContentTranslationHandler::addTranslatabilityClue()
       // from adding an incorrect suffix to the field group title.
       '#multilingual' => TRUE,

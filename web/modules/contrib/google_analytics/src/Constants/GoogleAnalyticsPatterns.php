@@ -15,12 +15,12 @@ final class GoogleAnalyticsPatterns {
   /**
    * Define the Acceptable GA ID Patterns
    */
-  const GOOGLE_ANALYTICS_GTAG_MATCH = '/(?:UA|G|AW|DC)-[0-9a-zA-Z]{5,}(?:-[0-9]{1,})?/';
+  const GOOGLE_ANALYTICS_GTAG_MATCH = '/(?:GT|UA|G|AW|DC)-[0-9a-zA-Z]{5,}(?:-[0-9]{1,})?/';
 
   /**
    * Define the Acceptable tracking ID patterns
    */
-  const GOOGLE_ANALYTICS_TRACKING_MATCH = '/(?:UA|G)-[0-9a-zA-Z]{5,}(?:-[0-9]{1,})?/';
+  const GOOGLE_ANALYTICS_TRACKING_MATCH = '/(?:UA|G|GT)-[0-9a-zA-Z]{5,}(?:-[0-9]{1,})?/';
 
   /**
    * Define the pattern matching a universal analytics account.

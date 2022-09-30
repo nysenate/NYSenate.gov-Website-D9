@@ -51,3 +51,4 @@ for constraints and the constraint's policies
 to his/her user form upon expiration
 -  Password time-based expiration leverages cron for tagging accounts as
  expired
+- Externally authenticated users (via `externalauth` module) are excluded from validation and time-based expiration

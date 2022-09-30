@@ -18,7 +18,10 @@ class PasswordManualResetTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public static $modules = ['password_policy', 'node'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['password_policy', 'node'];
 
   /**
    * Test manual password reset.
@@ -85,7 +88,6 @@ class PasswordManualResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     // Verify page.
-    $this->verbose($this->getUrl());
     self::assertEquals($this->getUrl(), $this->getAbsoluteUrl('admin/config/security/password-policy'), 'User should have been redirected to password policy page');
 
     // Force reset users of new role without exclude.
@@ -97,7 +99,6 @@ class PasswordManualResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     // Verify page.
-    $this->verbose($this->getUrl());
     $this->assertSession()->pageTextContains('Access denied');
   }
 

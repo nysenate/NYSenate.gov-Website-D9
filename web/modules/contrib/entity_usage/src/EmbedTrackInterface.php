@@ -14,7 +14,7 @@ interface EmbedTrackInterface extends EntityUsageTrackInterface {
    *   The partial (X)HTML snippet to load. Invalid markup will be corrected on
    *   import.
    *
-   * @return array
+   * @return array<string, string>
    *   An array of all embedded entities found, where keys are the uuids and the
    *   values are the entity types.
    */

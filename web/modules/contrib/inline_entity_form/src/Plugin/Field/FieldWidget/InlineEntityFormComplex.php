@@ -226,7 +226,7 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
     $element = [
       '#type' => $this->getSetting('collapsible') ? 'details' : 'fieldset',
       '#tree' => TRUE,
-      '#description' => $this->fieldDefinition->getDescription(),
+      '#description' => $this->getFilteredDescription(),
       '#prefix' => '<div id="' . $wrapper . '">',
       '#suffix' => '</div>',
       '#ief_id' => $this->getIefId(),
@@ -454,7 +454,7 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
         $hide_cancel = TRUE;
       }
       elseif ($create_bundles_count == 1 && $allow_new && !$settings['allow_existing']) {
-        $bundle = reset($target_bundles);
+        $bundle = reset($create_bundles);
 
         // The parent entity type and bundle must not be the same as the inline
         // entity type and bundle, to prevent recursion.

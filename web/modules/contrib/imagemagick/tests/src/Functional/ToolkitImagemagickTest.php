@@ -55,10 +55,17 @@ class ToolkitImagemagickTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp(): void {
     parent::setUp();
+
+    $this->moduleList = \Drupal::service('extension.list.module');
 
     // Create an admin user.
     $admin_user = $this->drupalCreateUser([
@@ -505,11 +512,11 @@ class ToolkitImagemagickTest extends BrowserTestBase {
     $this->assertSame('', $image->getToolkit()->arguments()->getDestinationLocalPath());
 
     // Test retrieval of EXIF information.
-    $this->fileSystem->copy(drupal_get_path('module', 'imagemagick') . '/misc/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('imagemagick') . '/misc/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
     // The image files that will be tested.
     $image_files = [
       [
-        'path' => drupal_get_path('module', 'imagemagick') . '/misc/test-exif.jpeg',
+        'path' => $this->moduleList->getPath('imagemagick') . '/misc/test-exif.jpeg',
         'orientation' => 8,
       ],
       [
@@ -545,7 +552,7 @@ class ToolkitImagemagickTest extends BrowserTestBase {
     // Test multi-frame GIF image.
     $image_files = [
       [
-        'source' => drupal_get_path('module', 'imagemagick') . '/misc/test-multi-frame.gif',
+        'source' => $this->moduleList->getPath('imagemagick') . '/misc/test-multi-frame.gif',
         'destination' => $this->testDirectory . '/test-multi-frame.gif',
         'width' => 60,
         'height' => 29,
@@ -779,7 +786,7 @@ class ToolkitImagemagickTest extends BrowserTestBase {
     // Test multi-frame GIF image.
     $image_files = [
       [
-        'source' => drupal_get_path('module', 'imagemagick') . '/misc/test-multi-frame.gif',
+        'source' => $this->moduleList->getPath('imagemagick') . '/misc/test-multi-frame.gif',
         'destination' => $this->testDirectory . '/test-multi-frame.gif',
         'width' => 60,
         'height' => 29,

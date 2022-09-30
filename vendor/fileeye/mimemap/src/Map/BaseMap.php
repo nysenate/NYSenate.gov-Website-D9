@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap\Map;
 
@@ -7,21 +7,21 @@ use FileEye\MimeMap\MappingException;
 /**
  * Abstract base class for managing MimeMap maps.
  *
- * This class cannot be instantiated; extend from it to implement a map.
+ * This class cannot be instantiated.
  */
 abstract class BaseMap implements MapInterface
 {
     /**
      * Singleton instance.
      *
-     * @var BaseMap
+     * @var MapInterface|null
      */
     protected static $instance;
 
     /**
      * Mapping between file extensions and MIME types.
      *
-     * @var array
+     * @var array<string, array<int|string, array<string, array<int,string>>>>
      */
     protected static $map = [];
 
@@ -30,40 +30,28 @@ abstract class BaseMap implements MapInterface
      *
      * Used during the map update process.
      *
-     * @var array|null
+     * @var array<string, array<int|string, array<string, array<int,string>>>>|null
      */
     protected static $backupMap;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct()
     {
     }
 
-    /**
-     * Backs up the map array.
-     */
-    public function backup()
+    public function backup(): void
     {
         static::$backupMap = static::$map;
     }
 
-    /**
-     * Resets the map array to the backup.
-     */
-    public function reset()
+    public function reset(): void
     {
-        static::$map = static::$backupMap;
+        if (isset(static::$backupMap)) {
+            static::$map = static::$backupMap;
+        }
         static::$backupMap = null;
     }
 
-    /**
-     * Returns the singleton.
-     *
-     * @return BaseMap
-     */
-    public static function getInstance()
+    public static function getInstance(): MapInterface
     {
         if (static::$instance === null) {
             static::$instance = new static();
@@ -71,32 +59,17 @@ abstract class BaseMap implements MapInterface
         return static::$instance;
     }
 
-    /**
-     * Returns this file's full qualified filename.
-     *
-     * @return string
-     */
-    public function getFileName()
+    public function getFileName(): string
     {
         throw new \LogicException(__METHOD__ . ' is not implemented in ' . get_called_class());
     }
 
-    /**
-     * Gets the map array.
-     *
-     * @return array
-     */
-    public function getMapArray()
+    public function getMapArray(): array
     {
         return static::$map;
     }
 
-    /**
-     * Sorts the map.
-     *
-     * @return $this
-     */
-    public function sort()
+    public function sort(): MapInterface
     {
         foreach (array_keys(static::$map) as $k) {
             ksort(static::$map[$k]);
@@ -115,10 +88,10 @@ abstract class BaseMap implements MapInterface
      * @param string $match
      *   (Optional) a match wildcard to limit the list.
      *
-     * @return array
+     * @return array<int, int|string>
      *   The list of the entries.
      */
-    protected function listEntries($entry, $match = null)
+    protected function listEntries(string $entry, string $match = null): array
     {
         if (!isset(static::$map[$entry])) {
             return [];
@@ -131,7 +104,7 @@ abstract class BaseMap implements MapInterface
         } else {
             $re = strtr($match, ['/' => '\\/', '*' => '.*']);
             return array_filter($list, function ($v) use ($re) {
-                return preg_match("/$re/", $v) === 1;
+                return preg_match("/$re/", (string) $v) === 1;
             });
         }
     }
@@ -144,12 +117,12 @@ abstract class BaseMap implements MapInterface
      * @param string $entry_key
      *   The main entry value.
      *
-     * @return mixed|null
-     *   The value of the entry, or null if missing.
+     * @return array<string|int,array<string>>
+     *   The values of the entry, or empty array if missing.
      */
-    protected function getMapEntry($entry, $entry_key)
+    protected function getMapEntry(string $entry, string $entry_key): array
     {
-        return isset(static::$map[$entry][$entry_key]) ? static::$map[$entry][$entry_key] : null;
+        return isset(static::$map[$entry][$entry_key]) ? static::$map[$entry][$entry_key] : [];
     }
 
     /**
@@ -162,12 +135,12 @@ abstract class BaseMap implements MapInterface
      * @param string $sub_entry
      *   The sub entry.
      *
-     * @return mixed|null
-     *   The value of the entry, or null if missing.
+     * @return string[]
+     *   The values of the subentry, or empty array if missing.
      */
-    protected function getMapSubEntry($entry, $entry_key, $sub_entry)
+    protected function getMapSubEntry(string $entry, string $entry_key, string $sub_entry): array
     {
-        return isset(static::$map[$entry][$entry_key][$sub_entry]) ? static::$map[$entry][$entry_key][$sub_entry] : null;
+        return isset(static::$map[$entry][$entry_key][$sub_entry]) ? static::$map[$entry][$entry_key][$sub_entry] : [];
     }
 
     /**
@@ -186,7 +159,7 @@ abstract class BaseMap implements MapInterface
      *
      * @return $this
      */
-    protected function addMapSubEntry($entry, $entry_key, $sub_entry, $value)
+    protected function addMapSubEntry(string $entry, string $entry_key, string $sub_entry, string $value): MapInterface
     {
         if (!isset(static::$map[$entry][$entry_key][$sub_entry])) {
             static::$map[$entry][$entry_key][$sub_entry] = [$value];
@@ -213,7 +186,7 @@ abstract class BaseMap implements MapInterface
      * @return bool
      *   true if the entry was removed, false if the entry was not present.
      */
-    protected function removeMapSubEntry($entry, $entry_key, $sub_entry, $value)
+    protected function removeMapSubEntry(string $entry, string $entry_key, string $sub_entry, string $value): bool
     {
         // Return false if no entry.
         if (!isset(static::$map[$entry][$entry_key][$sub_entry])) {
@@ -265,7 +238,7 @@ abstract class BaseMap implements MapInterface
      *
      * @return $this
      */
-    protected function setValueAsDefault($entry, $entry_key, $sub_entry, $value)
+    protected function setValueAsDefault(string $entry, string $entry_key, string $sub_entry, string $value): MapInterface
     {
         // Throw exception if no entry.
         if (!isset(static::$map[$entry][$entry_key][$sub_entry])) {

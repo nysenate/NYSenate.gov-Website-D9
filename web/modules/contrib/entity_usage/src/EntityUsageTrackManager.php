@@ -8,6 +8,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages entity_usage track plugins.
+ *
+ * @method \Drupal\entity_usage\EntityUsageTrackInterface createInstance($plugin_id, array $configuration = [])
  */
 class EntityUsageTrackManager extends DefaultPluginManager {
 

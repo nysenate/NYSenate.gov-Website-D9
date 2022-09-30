@@ -2,12 +2,12 @@
 
 namespace Drupal\views_bulk_operations\Form;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionManager;
 use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionProcessorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default action execution confirmation form.
@@ -18,24 +18,18 @@ class ConfirmAction extends FormBase {
 
   /**
    * The tempstore service.
-   *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
-  protected $tempStoreFactory;
+  protected PrivateTempStoreFactory $tempStoreFactory;
 
   /**
    * Views Bulk Operations action manager.
-   *
-   * @var \Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionManager
    */
-  protected $actionManager;
+  protected ViewsBulkOperationsActionManager $actionManager;
 
   /**
    * Views Bulk Operations action processor.
-   *
-   * @var \Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionProcessorInterface
    */
-  protected $actionProcessor;
+  protected ViewsBulkOperationsActionProcessorInterface $actionProcessor;
 
   /**
    * Constructor.

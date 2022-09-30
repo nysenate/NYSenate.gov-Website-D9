@@ -142,7 +142,7 @@ class GoogleAnalyticsAdminSettingsForm extends ConfigFormBase {
       $form['general']['accounts'][$i]['#attributes']['class'][] = 'draggable';
       $form['general']['accounts'][$i]['#weight'] = $i;
       $form['general']['accounts'][$i]['value'] = [
-        '#default_value' => (string)$accounts[$i] ?? '',
+        '#default_value' => (string)($accounts[$i] ?? ''),
         '#maxlength' => 20,
         '#required' => ($i === 0),
         '#size' => 20,
@@ -152,7 +152,7 @@ class GoogleAnalyticsAdminSettingsForm extends ConfigFormBase {
 
       $form['general']['accounts'][$i]['weight'] = [
         '#type' => 'weight',
-        '#title' => $this->t('Weight for @title', ['@title' => (string)$accounts[$i]]),
+        '#title' => $this->t('Weight for @title', ['@title' => (string)($accounts[$i] ?? '')]),
         '#title_display' => 'invisible',
         '#delta' => 50,
         '#default_value' => $i,
@@ -208,7 +208,7 @@ class GoogleAnalyticsAdminSettingsForm extends ConfigFormBase {
     global $cookie_domain;
     $multiple_sub_domains = [];
     foreach (['www', 'app', 'shop'] as $subdomain) {
-      if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
+      if (!empty($cookie_domain) && count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
         $multiple_sub_domains[] = $subdomain . $cookie_domain;
       }
       // IP addresses or localhost.
@@ -792,7 +792,6 @@ class GoogleAnalyticsAdminSettingsForm extends ConfigFormBase {
 
     $config
       ->set('account', $accounts)
-      ->set('ua_legacy', $form_state->getValue('google_analytics_legacy'))
       ->set('cross_domains', $form_state->getValue('google_analytics_cross_domains'))
       ->set('codesnippet.create', $form_state->getValue('google_analytics_codesnippet_create'))
       ->set('codesnippet.before', $form_state->getValue('google_analytics_codesnippet_before'))

@@ -29,7 +29,7 @@
       });
       $('.c-senate-quick-facts__button').click(function (event) {
         event.preventDefault();
-        var tabNumber = "#tab".concat($(this).data('tab'));
+        var tabNumber = "#panel".concat($(this).data('tab'));
         var pageBody = $('html, body');
         $("input[value=\"".concat(tabNumber, "\"]")).click();
 

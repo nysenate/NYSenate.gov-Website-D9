@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap\Map;
 
@@ -10,18 +10,11 @@ namespace FileEye\MimeMap\Map;
 class DefaultMap extends AbstractMap
 {
     /**
-     * Singleton instance.
-     *
-     * @var DefaultMap
+     * @var MapInterface|null
      */
     protected static $instance;
 
-    /**
-     * Returns this file's fully qualified filename.
-     *
-     * @return string
-     */
-    public function getFileName()
+    public function getFileName(): string
     {
         return __FILE__;
     }
@@ -43,7 +36,7 @@ class DefaultMap extends AbstractMap
      *
      * @internal
      *
-     * @var array
+     * @var array<string, array<int|string, array<string, array<int,string>>>>
      */
     // phpcs:disable
     protected static $map = array (
@@ -378,24 +371,6 @@ class DefaultMap extends AbstractMap
       'e' =>
       array (
         0 => 'ser',
-      ),
-    ),
-    'application/javascript' =>
-    array (
-      'a' =>
-      array (
-        0 => 'application/x-javascript',
-        1 => 'text/javascript',
-      ),
-      'desc' =>
-      array (
-        0 => 'JavaScript program',
-      ),
-      'e' =>
-      array (
-        0 => 'js',
-        1 => 'jsm',
-        2 => 'mjs',
       ),
     ),
     'application/jrd+json' =>
@@ -4424,7 +4399,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Calc spreadsheet',
+        0 => 'LibreOffice Calc spreadsheet',
       ),
       'e' =>
       array (
@@ -4435,7 +4410,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Calc template',
+        0 => 'LibreOffice Calc template',
       ),
       'e' =>
       array (
@@ -4446,7 +4421,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Draw drawing',
+        0 => 'LibreOffice Draw drawing',
       ),
       'e' =>
       array (
@@ -4457,7 +4432,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Draw template',
+        0 => 'LibreOffice Draw template',
       ),
       'e' =>
       array (
@@ -4468,7 +4443,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Impress presentation',
+        0 => 'LibreOffice Impress presentation',
       ),
       'e' =>
       array (
@@ -4479,7 +4454,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Impress template',
+        0 => 'LibreOffice Impress template',
       ),
       'e' =>
       array (
@@ -4490,7 +4465,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Math formula',
+        0 => 'LibreOffice Math formula',
       ),
       'e' =>
       array (
@@ -4501,7 +4476,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Writer document',
+        0 => 'LibreOffice Writer document',
       ),
       'e' =>
       array (
@@ -4512,7 +4487,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Writer global document',
+        0 => 'LibreOffice Writer global document',
       ),
       'e' =>
       array (
@@ -4523,7 +4498,7 @@ class DefaultMap extends AbstractMap
     array (
       'desc' =>
       array (
-        0 => 'OpenOffice Writer template',
+        0 => 'LibreOffice Writer template',
       ),
       'e' =>
       array (
@@ -4841,17 +4816,6 @@ class DefaultMap extends AbstractMap
       'e' =>
       array (
         0 => 'cmp',
-      ),
-    ),
-    'application/vnd.youtube.yt' =>
-    array (
-      'desc' =>
-      array (
-        0 => 'YouTube media archive',
-      ),
-      'e' =>
-      array (
-        0 => 'yt',
       ),
     ),
     'application/vnd.zul' =>
@@ -9361,6 +9325,18 @@ class DefaultMap extends AbstractMap
         0 => 'stm',
       ),
     ),
+    'audio/x-tak' =>
+    array (
+      'desc' =>
+      array (
+        0 => 'TAK audio',
+        1 => 'TAK: Tom\'s lossless Audio Kompressor',
+      ),
+      'e' =>
+      array (
+        0 => 'tak',
+      ),
+    ),
     'audio/x-tta' =>
     array (
       'a' =>
@@ -11168,6 +11144,24 @@ class DefaultMap extends AbstractMap
       array (
         0 => 'html',
         1 => 'htm',
+      ),
+    ),
+    'text/javascript' =>
+    array (
+      'a' =>
+      array (
+        0 => 'application/x-javascript',
+        1 => 'application/javascript',
+      ),
+      'desc' =>
+      array (
+        0 => 'JavaScript program',
+      ),
+      'e' =>
+      array (
+        0 => 'js',
+        1 => 'mjs',
+        2 => 'jsm',
       ),
     ),
     'text/markdown' =>
@@ -13120,6 +13114,21 @@ class DefaultMap extends AbstractMap
       array (
         0 => 'viv',
         1 => 'vivo',
+      ),
+    ),
+    'video/vnd.youtube.yt' =>
+    array (
+      'a' =>
+      array (
+        0 => 'application/vnd.youtube.yt',
+      ),
+      'desc' =>
+      array (
+        0 => 'YouTube media archive',
+      ),
+      'e' =>
+      array (
+        0 => 'yt',
       ),
     ),
     'video/webm' =>
@@ -17643,14 +17652,14 @@ class DefaultMap extends AbstractMap
     array (
       't' =>
       array (
-        0 => 'application/javascript',
+        0 => 'text/javascript',
       ),
     ),
     'jsm' =>
     array (
       't' =>
       array (
-        0 => 'application/javascript',
+        0 => 'text/javascript',
       ),
     ),
     'json' =>
@@ -18706,7 +18715,7 @@ class DefaultMap extends AbstractMap
     array (
       't' =>
       array (
-        0 => 'application/javascript',
+        0 => 'text/javascript',
       ),
     ),
     'mk' =>
@@ -22526,6 +22535,13 @@ class DefaultMap extends AbstractMap
         0 => 'application/vnd.mynfc',
       ),
     ),
+    'tak' =>
+    array (
+      't' =>
+      array (
+        0 => 'audio/x-tak',
+      ),
+    ),
     'tao' =>
     array (
       't' =>
@@ -24709,7 +24725,7 @@ class DefaultMap extends AbstractMap
     array (
       't' =>
       array (
-        0 => 'application/vnd.youtube.yt',
+        0 => 'video/vnd.youtube.yt',
       ),
     ),
     'z' =>
@@ -25009,6 +25025,13 @@ class DefaultMap extends AbstractMap
         0 => 'application/x-java',
       ),
     ),
+    'application/javascript' =>
+    array (
+      't' =>
+      array (
+        0 => 'text/javascript',
+      ),
+    ),
     'application/lotus123' =>
     array (
       't' =>
@@ -25210,6 +25233,13 @@ class DefaultMap extends AbstractMap
       't' =>
       array (
         0 => 'application/vnd.flatpak',
+      ),
+    ),
+    'application/vnd.youtube.yt' =>
+    array (
+      't' =>
+      array (
+        0 => 'video/vnd.youtube.yt',
       ),
     ),
     'application/wk1' =>
@@ -25482,7 +25512,7 @@ class DefaultMap extends AbstractMap
     array (
       't' =>
       array (
-        0 => 'application/javascript',
+        0 => 'text/javascript',
       ),
     ),
     'application/x-kexiproject-sqlite' =>
@@ -26533,13 +26563,6 @@ class DefaultMap extends AbstractMap
       't' =>
       array (
         0 => 'image/vnd.microsoft.icon',
-      ),
-    ),
-    'text/javascript' =>
-    array (
-      't' =>
-      array (
-        0 => 'application/javascript',
       ),
     ),
     'text/mathml' =>

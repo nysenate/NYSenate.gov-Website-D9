@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap\Map;
 
@@ -11,9 +11,7 @@ namespace FileEye\MimeMap\Map;
 class EmptyMap extends AbstractMap
 {
     /**
-     * Singleton instance.
-     *
-     * @var EmptyMap
+     * @var MapInterface|null
      */
     protected static $instance;
 }

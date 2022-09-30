@@ -12,7 +12,7 @@ namespace Drupal\sophron_guesser\ProxyClass {
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class SophronMimeTypeGuesser implements \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+    class SophronMimeTypeGuesser implements \Symfony\Component\Mime\MimeTypeGuesserInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -80,7 +80,7 @@ namespace Drupal\sophron_guesser\ProxyClass {
          */
         public function guess($path)
         {
-            return $this->lazyLoadItself()->guess($path);
+            return $this->lazyLoadItself()->guessMimeType($path);
         }
 
         /**

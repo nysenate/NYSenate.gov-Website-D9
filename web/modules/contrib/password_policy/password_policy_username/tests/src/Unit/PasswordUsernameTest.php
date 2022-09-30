@@ -20,7 +20,7 @@ class PasswordUsernameTest extends UnitTestCase {
   public function testPasswordUsername($disallow_username, UserInterface $user, $password, $result) {
     $username_test = $this->getMockBuilder('Drupal\password_policy_username\Plugin\PasswordConstraint\PasswordUsername')
       ->disableOriginalConstructor()
-      ->setMethods(['getConfiguration', 't'])
+      ->onlyMethods(['getConfiguration', 't'])
       ->getMock();
 
     $username_test

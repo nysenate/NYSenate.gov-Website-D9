@@ -168,7 +168,11 @@ class FileMetadata implements FileMetadataInterface {
       }
     }
     catch (\Exception $e) {
-      $this->logger->error($e->getMessage());
+      $this->logger->error('Error getting supported keys for @metadata metadata for @uri. Message: @message', [
+        '@metadata' => $metadata_id ?? '',
+        '@uri' => $this->uri ?? '',
+        '@message' => $e->getMessage() ?? '',
+      ]);
       $keys = NULL;
     }
     return $keys;
@@ -187,7 +191,12 @@ class FileMetadata implements FileMetadataInterface {
       }
     }
     catch (\Exception $e) {
-      $this->logger->error($e->getMessage());
+      $this->logger->error('Error getting @metadata_id@key metadata for @uri. Message: @message', [
+        '@metadata_id' => $metadata_id ?? '',
+        '@key' => $key ? ' ('. var_export($key, TRUE) . ')' : '',
+        '@uri' => $this->uri ?? '',
+        '@message' => $e->getMessage() ?? '',
+      ]);
       $metadata = NULL;
     }
     return $metadata;
@@ -203,7 +212,12 @@ class FileMetadata implements FileMetadataInterface {
       }
     }
     catch (\Exception $e) {
-      $this->logger->error($e->getMessage());
+      $this->logger->error('Error deleting @key from @metadata_id metadata for @uri. Message: @message', [
+        '@metadata_id' => $metadata_id ?? '',
+        '@key' => $key ? var_export($key, TRUE) : '',
+        '@uri' => $this->uri ?? '',
+        '@message' => $e->getMessage() ?? '',
+      ]);
     }
     return FALSE;
   }
@@ -218,7 +232,12 @@ class FileMetadata implements FileMetadataInterface {
       }
     }
     catch (\Exception $e) {
-      $this->logger->error($e->getMessage());
+      $this->logger->error('Error setting @metadata_id@key metadata for @uri. Message: @message', [
+        '@metadata_id' => $metadata_id ?? '',
+        '@key' => $key ? ' (' . var_export($key, TRUE) . ')' : '',
+        '@uri' => $this->uri ?? '',
+        '@message' => $e->getMessage() ?? '',
+      ]);
     }
     return FALSE;
   }

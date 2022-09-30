@@ -10,21 +10,15 @@
  */
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\google_analytics\Event\BuildGaJavascriptEvent;
 use Drupal\google_analytics\Event\GoogleAnalyticsConfigEvent;
 use Drupal\google_analytics\Event\GoogleAnalyticsEventsEvent;
-use Drupal\google_analytics\Event\PagePathEvent;
 use Drupal\google_analytics\GaJavascriptObject;
 use Drupal\google_analytics\Constants\GoogleAnalyticsEvents;
-use Drupal\node\NodeInterface;
-use GuzzleHttp\Exception\RequestException;
 use Drupal\google_analytics\Component\Render\GoogleAnalyticsJavaScriptSnippet;
-use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Advertise the supported google analytics api details.
@@ -99,7 +93,7 @@ function google_analytics_page_attachments(array &$page) {
     $javascript = new GaJavascriptObject($default_id);
 
     // Add link tracking.
-    $link_settings = ['account' => $default_id];
+    $link_settings = ['account' => (string) $default_id];
     if ($track_outbound = $config->get('track.outbound')) {
       $link_settings['trackOutbound'] = $track_outbound;
     }
@@ -126,20 +120,18 @@ function google_analytics_page_attachments(array &$page) {
       $link_settings['trackUrlFragments'] = $track_url_fragments;
     }
 
-    if (!empty($link_settings)) {
-      $page['#attached']['drupalSettings']['google_analytics'] = $link_settings;
+    $page['#attached']['drupalSettings']['google_analytics'] = $link_settings;
 
-      // Add debugging code.
-      if ($debug) {
-        $page['#attached']['library'][] = 'google_analytics/google_analytics.debug';
-        // phpcs:disable
-        // Add the JS test in development to the page.
-        // $page['#attached']['library'][] = 'google_analytics/google_analytics.test';
-        // phpcs:enable
-      }
-      else {
-        $page['#attached']['library'][] = 'google_analytics/google_analytics';
-      }
+    // Add debugging code.
+    if ($debug) {
+      $page['#attached']['library'][] = 'google_analytics/google_analytics.debug';
+      // phpcs:disable
+      // Add the JS test in development to the page.
+      // $page['#attached']['library'][] = 'google_analytics/google_analytics.test';
+      // phpcs:enable
+    }
+    else {
+      $page['#attached']['library'][] = 'google_analytics/google_analytics';
     }
 
     if ($config->get('track.adsense')) {
@@ -170,7 +162,7 @@ function google_analytics_page_attachments(array &$page) {
 
       // Get the event_dispatcher service and dispatch the event.
       $event_dispatcher = \Drupal::service('event_dispatcher');
-      $event_dispatcher->dispatch(GoogleAnalyticsEvents::ADD_CONFIG, $ga_config);
+      $event_dispatcher->dispatch($ga_config, GoogleAnalyticsEvents::ADD_CONFIG);
 
       // Json::encode() cannot convert custom URLs properly.
       $config_array = $ga_config->getConfig();
@@ -195,7 +187,7 @@ function google_analytics_page_attachments(array &$page) {
 
     // Get the event_dispatcher service and dispatch the event.
     $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch(GoogleAnalyticsEvents::ADD_EVENT, $ga_events);
+    $event_dispatcher->dispatch($ga_events, GoogleAnalyticsEvents::ADD_EVENT);
 
     if (!empty($ga_events->getEvents())) {
       foreach ($ga_events->getEvents() as $event) {

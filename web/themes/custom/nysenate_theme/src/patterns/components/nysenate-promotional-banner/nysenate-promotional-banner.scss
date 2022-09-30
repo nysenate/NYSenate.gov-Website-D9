@@ -3,8 +3,11 @@
 .c-block--initiative {
 	position: relative;
 	padding: 0;
-	margin: 0;
 	@extend .lgt-bg;
+
+	.node__content .c-block{
+		margin: 0;
+	}
 
 	.c-block--btn {
 		display: flex;
@@ -98,6 +101,29 @@
 
 		.c-block--btn {
 			left: 280px;
+		}
+	}
+
+	.c-block--initiative__no-img {
+		width: 47%;
+		float: left;
+		clear: none;
+		height: 345px;
+
+		&.c-block--even {
+			margin-right: 6%;
+		}
+
+		.node__content {
+			height: 100%;
+
+			.c-block.c-block--initiative {
+				height: 100%;
+			}
+
+			.c-initiative--content h4 {
+				margin: 0;
+			}
 		}
 	}
 

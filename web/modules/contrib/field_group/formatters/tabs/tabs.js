@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Provides the processing logic for tabs.
+ */
+
 (function ($) {
 
   'use strict';
@@ -13,7 +18,7 @@
 
       if (group_info.context === 'form') {
 
-        // Add required fields mark to any element containing required fields
+        // Add required fields mark to any element containing required fields.
         var direction = group_info.settings.direction;
         $(context).find('[data-' + direction + '-tabs-panes]').each(function () {
           var errorFocussed = false;

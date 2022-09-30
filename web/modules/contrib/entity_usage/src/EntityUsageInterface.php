@@ -140,8 +140,11 @@ interface EntityUsageInterface {
    * @param bool $nest_results
    *   (optional) Whether the results should be returned in a nested structure.
    *   Defaults to TRUE.
+   * @param int $limit
+   *   (optional) Limit number of results returned. Defaults to 0, which
+   *   will return all sources.
    *
-   * @return array
+   * @return ($nest_results is true ? array<string, array<string, array<array{source_langcode: string, source_vid: string, method: string, field_name: string, count: string}>>> : array<array{source_type: string, source_id: string, source_langcode: string, source_vid: string, method: string, field_name: string, count: string}>)
    *   A nested array with usage data. The first level is keyed by the type of
    *   the source entities, the second by the source id. The value of the second
    *   level contains all other information like the method used by the source
@@ -149,7 +152,7 @@ interface EntityUsageInterface {
    *   $nest_results is FALSE, the returned array will be an indexed array where
    *   values are arrays containing all DB columns for the records.
    */
-  public function listSources(EntityInterface $target_entity, $nest_results = TRUE);
+  public function listSources(EntityInterface $target_entity, $nest_results = TRUE, int $limit = 0);
 
   /**
    * Provide a list of all referenced target entities for a source entity.
@@ -159,7 +162,7 @@ interface EntityUsageInterface {
    * @param int $vid
    *   The revision id to return the references for. Defaults to all revisions.
    *
-   * @return array
+   * @return array<string, array<int, array<array{method: string, field_name: string, count: string}>>>
    *   A nested array with usage data. The first level is keyed by the type of
    *   the target entities, the second by the target id. The value of the second
    *   level contains all other information like the method used by the source
@@ -183,7 +186,7 @@ interface EntityUsageInterface {
    *   (optional) Whether the results must be wrapped into an additional array
    *   level, by the reference method. Defaults to FALSE.
    *
-   * @return array
+   * @return array<string, array<int, int>>
    *   A nested array with usage data.The first level is keyed by the type of
    *   the source entity, the second by the referencing objects ID. The value of
    *   the second level contains the usage count, which will be summed for all
@@ -207,7 +210,7 @@ interface EntityUsageInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   A source entity.
    *
-   * @return array
+   * @return array<string, array<int, int>>
    *   A nested array with usage data.The first level is keyed by the type of
    *   the target entity, the second by the referencing objects ID. The value of
    *   the second level contains the usage count, which will be summed for all

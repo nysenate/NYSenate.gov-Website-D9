@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\entity_usage\EntityUpdateManager;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -38,28 +39,36 @@ function entity_usage_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function entity_usage_entity_update(EntityInterface $entity) {
-  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnEdition($entity);
+  $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
+  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  $entity_usage_update_manager->trackUpdateOnEdition($entity);
 }
 
 /**
  * Implements hook_entity_predelete().
  */
 function entity_usage_entity_predelete(EntityInterface $entity) {
-  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnDeletion($entity);
+  $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
+  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  $entity_usage_update_manager->trackUpdateOnDeletion($entity);
 }
 
 /**
  * Implements hook_entity_translation_delete().
  */
 function entity_usage_entity_translation_delete(EntityInterface $translation) {
-  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnDeletion($translation, 'translation');
+  $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
+  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  $entity_usage_update_manager->trackUpdateOnDeletion($translation, 'translation');
 }
 
 /**
  * Implements hook_entity_revision_delete().
  */
 function entity_usage_entity_revision_delete(EntityInterface $entity) {
-  \Drupal::service('entity_usage.entity_update_manager')->trackUpdateOnDeletion($entity, 'revision');
+  $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
+  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  $entity_usage_update_manager->trackUpdateOnDeletion($entity, 'revision');
 }
 
 /**

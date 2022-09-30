@@ -151,6 +151,7 @@ class LayoutBuilder extends EntityUsageTrackBase {
 
     /** @var \Drupal\block_content\BlockContentInterface[] $blockContent */
     $ids = $blockContentStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition($blockContentStorage->getEntityType()->getKey('revision'), $blockContentRevisionIds, 'IN')
       ->execute();
 

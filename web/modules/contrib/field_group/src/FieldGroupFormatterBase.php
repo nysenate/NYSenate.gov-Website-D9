@@ -54,7 +54,7 @@ abstract class FieldGroupFormatterBase extends PluginSettingsBase implements Fie
    *   The plugin_id for the formatter.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \stdClass $group
+   * @param object $group
    *   The group object.
    * @param array $settings
    *   The formatter settings.

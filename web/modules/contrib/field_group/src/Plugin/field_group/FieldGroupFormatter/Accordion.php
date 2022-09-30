@@ -2,9 +2,9 @@
 
 namespace Drupal\field_group\Plugin\field_group\FieldGroupFormatter;
 
-use Drupal\field_group\Element\Accordion as AccordionElement;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormState;
+use Drupal\field_group\Element\Accordion as AccordionElement;
 use Drupal\field_group\FieldGroupFormatterBase;
 
 /**
@@ -66,7 +66,10 @@ class Accordion extends FieldGroupFormatterBase {
     $form['effect'] = [
       '#title' => $this->t('Effect'),
       '#type' => 'select',
-      '#options' => ['none' => $this->t('None'), 'bounceslide' => $this->t('Bounce slide')],
+      '#options' => [
+        'none' => $this->t('None'),
+        'bounceslide' => $this->t('Bounce slide'),
+      ],
       '#default_value' => $this->getSetting('effect'),
       '#weight' => 2,
     ];

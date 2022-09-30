@@ -39,8 +39,8 @@ class ViewsBulkEditActionTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']) {
+    parent::setUp($import_test_views, $modules);
     $this->createContentType(['type' => 'page', 'name' => 'Page']);
     $this->createContentType(['type' => 'article', 'name' => 'Article']);
     $admin = $this->createUser([
@@ -119,7 +119,10 @@ class ViewsBulkEditActionTest extends NodeTestBase {
     // Assert property and field is changed.
     $storage = $this->container->get('entity_type.manager')->getStorage('node');
     $storage->resetCache();
-    $nodes = array_values($storage->loadMultiple([$page1->id(), $article1->id()]));
+    $nodes = array_values($storage->loadMultiple([
+      $page1->id(),
+      $article1->id(),
+    ]));
     $this->assertEquals($random_title, $nodes[0]->getTitle());
     $this->assertEquals($random_title, $nodes[1]->getTitle());
   }
@@ -302,7 +305,10 @@ class ViewsBulkEditActionTest extends NodeTestBase {
     $storage->resetCache();
     $page1 = $storage->load($page1->id());
     $this->assertEquals($page_title . ' ' . $random_title, $page1->getTitle());
-    $this->assertEquals([['target_id' => $article1->id()], ['target_id' => $article2->id()]], $page1->field_reference->getValue());
+    $this->assertEquals([
+      ['target_id' => $article1->id()],
+      ['target_id' => $article2->id()]
+    ], $page1->field_reference->getValue());
   }
 
 }

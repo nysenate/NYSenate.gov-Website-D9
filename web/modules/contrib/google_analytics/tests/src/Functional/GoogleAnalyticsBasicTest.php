@@ -36,7 +36,7 @@ class GoogleAnalyticsBasicTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'google_analytics',
     'help',
@@ -101,9 +101,9 @@ class GoogleAnalyticsBasicTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('google_analytics_codesnippet_create');
     $this->assertSession()->fieldExists('google_analytics_codesnippet_before');
     $this->assertSession()->fieldExists('google_analytics_codesnippet_after');
-    $this->assertNoFieldByXPath("//textarea[@name='google_analytics_codesnippet_create' and @disabled='disabled']", NULL, '"Parameters" field is enabled.');
-    $this->assertNoFieldByXPath("//textarea[@name='google_analytics_codesnippet_before' and @disabled='disabled']", NULL, '"Code snippet (before)" is enabled.');
-    $this->assertNoFieldByXPath("//textarea[@name='google_analytics_codesnippet_after' and @disabled='disabled']", NULL, '"Code snippet (after)" is enabled.');
+    $this->assertEmpty($this->xpath("//textarea[@name='google_analytics_codesnippet_create' and @disabled='disabled']"), '"Parameters" field is enabled.');
+    $this->assertEmpty($this->xpath("//textarea[@name='google_analytics_codesnippet_before' and @disabled='disabled']"), '"Code snippet (before)" is enabled.');
+    $this->assertEmpty($this->xpath("//textarea[@name='google_analytics_codesnippet_after' and @disabled='disabled']"), '"Code snippet (after)" is enabled.');
 
     // Login as user without JS permissions.
     $this->drupalLogin($this->noSnippetUser);
@@ -113,9 +113,9 @@ class GoogleAnalyticsBasicTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('google_analytics_codesnippet_create');
     $this->assertSession()->fieldExists('google_analytics_codesnippet_before');
     $this->assertSession()->fieldExists('google_analytics_codesnippet_after');
-    $this->assertNoFieldByXPath("//textarea[@name='google_analytics_codesnippet_create' and @disabled='disabled']", NULL, '"Parameters" field is enabled.');
-    $this->assertFieldByXPath("//textarea[@name='google_analytics_codesnippet_before' and @disabled='disabled']", NULL, '"Code snippet (before)" is disabled.');
-    $this->assertFieldByXPath("//textarea[@name='google_analytics_codesnippet_after' and @disabled='disabled']", NULL, '"Code snippet (after)" is disabled.');
+    $this->assertEmpty($this->xpath("//textarea[@name='google_analytics_codesnippet_create' and @disabled='disabled']"), '"Parameters" field is enabled.');
+    $this->assertNotEmpty($this->xpath("//textarea[@name='google_analytics_codesnippet_before' and @disabled='disabled']"), '"Code snippet (before)" is disabled.');
+    $this->assertNotEmpty($this->xpath("//textarea[@name='google_analytics_codesnippet_after' and @disabled='disabled']"), '"Code snippet (after)" is disabled.');
   }
 
   /**

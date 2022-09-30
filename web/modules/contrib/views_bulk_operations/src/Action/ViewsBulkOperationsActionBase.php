@@ -5,8 +5,8 @@ namespace Drupal\views_bulk_operations\Action;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewExecutable;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Views Bulk Operations action plugin base.
@@ -24,14 +24,12 @@ abstract class ViewsBulkOperationsActionBase extends ActionBase implements Views
    * @var array
    *   Contains view data and optionally batch operation context.
    */
-  protected $context;
+  protected array $context;
 
   /**
    * The processed view.
-   *
-   * @var \Drupal\views\ViewExecutable
    */
-  protected $view;
+  protected ViewExecutable $view;
 
   /**
    * Configuration array.
@@ -43,7 +41,7 @@ abstract class ViewsBulkOperationsActionBase extends ActionBase implements Views
   /**
    * {@inheritdoc}
    */
-  public function setContext(array &$context) {
+  public function setContext(array &$context): void {
     $this->context['sandbox'] = &$context['sandbox'];
     foreach ($context as $key => $item) {
       if ($key === 'sandbox') {
@@ -56,7 +54,7 @@ abstract class ViewsBulkOperationsActionBase extends ActionBase implements Views
   /**
    * {@inheritdoc}
    */
-  public function setView(ViewExecutable $view) {
+  public function setView(ViewExecutable $view): void {
     $this->view = $view;
   }
 
@@ -137,7 +135,7 @@ abstract class ViewsBulkOperationsActionBase extends ActionBase implements Views
    * @return bool
    *   Has access.
    */
-  public static function customAccess(AccountInterface $account, ViewExecutable $view) {
+  public static function customAccess(AccountInterface $account, ViewExecutable $view): bool {
     return TRUE;
   }
 

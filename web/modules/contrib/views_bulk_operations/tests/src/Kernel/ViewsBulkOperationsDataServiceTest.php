@@ -29,7 +29,7 @@ class ViewsBulkOperationsDataServiceTest extends ViewsBulkOperationsKernelTestBa
    *
    * @covers ::getEntityDefault
    */
-  public function testViewsbulkOperationsViewDataEntityGetter() {
+  public function testViewsbulkOperationsViewDataEntityGetter(): void {
     // Initialize and execute the test view with all items displayed.
     $view = Views::getView('views_bulk_operations_test');
     $view->setDisplay('page_1');

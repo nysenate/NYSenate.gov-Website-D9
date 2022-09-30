@@ -19,7 +19,7 @@ function field_group_requirements($phase) {
           'title' => t('Field Group'),
           'value' => t('jQuery UI Accordion not enabled'),
           'description' => t('If you want to use the Field Group accordion formatter, you will need to install the <a href=":link" target="_blank">jQuery UI Accordion</a> module.', [':link' => 'https://www.drupal.org/project/jquery_ui_accordion']),
-          'severity' => REQUIREMENT_WARNING,
+          'severity' => REQUIREMENT_INFO,
         ];
       }
       else {
@@ -56,8 +56,7 @@ function field_group_update_8302() {
     }
   }
   catch (\Exception $e) {
-    return
-      t('If you want to use the Field Group accordion formatter, you will need to install the <a href=":link" target="_blank">jQuery UI Accordion</a> module.',
+    return t('If you want to use the Field Group accordion formatter, you will need to install the <a href=":link" target="_blank">jQuery UI Accordion</a> module.',
         [':link' => 'https://www.drupal.org/project/jquery_ui_accordion']);
   }
 }

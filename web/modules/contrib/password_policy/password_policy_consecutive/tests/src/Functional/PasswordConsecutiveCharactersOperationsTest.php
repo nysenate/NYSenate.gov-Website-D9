@@ -23,7 +23,7 @@ class PasswordConsecutiveCharactersOperationsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'password_policy_consecutive',
     'password_policy',
   ];
@@ -38,7 +38,7 @@ class PasswordConsecutiveCharactersOperationsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
   }
@@ -51,13 +51,14 @@ class PasswordConsecutiveCharactersOperationsTest extends BrowserTestBase {
 
     // Create a policy and add a "consecutive" constraint.
     $this->drupalGet('admin/config/security/password-policy/add');
-    $this->submitForm(['label' => 'Test policy', 'id' => 'test_policy'], 'Next');
+    $this->submitForm(['label' => 'Test policy', 'id' => 'test_policy'], 'Save');
     $this->drupalGet('admin/config/system/password_policy/constraint/add/test_policy/consecutive');
-    $web_assert->pageTextContains('Maximum consecutive identical characters');
+    $web_assert->pageTextContains('Consecutive identical characters fewer than');
 
     $this->drupalGet('admin/config/system/password_policy/constraint/add/test_policy/consecutive');
     $this->submitForm(['max_consecutive_characters' => 2], 'Save');
-    $web_assert->pageTextContains('Maximum consecutive identical characters: 2');
+    $this->drupalGet('/admin/config/security/password-policy/test_policy');
+    $web_assert->pageTextContains('No consecutive identical characters are allowed.');
   }
 
 }

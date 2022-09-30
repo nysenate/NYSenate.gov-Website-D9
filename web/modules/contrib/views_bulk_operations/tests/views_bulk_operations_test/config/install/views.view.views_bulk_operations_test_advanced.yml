@@ -169,19 +169,20 @@ display:
           clear_on_exposed: true
           force_selection_info: false
           selected_actions:
-            0:
+            -
               action_id: views_bulk_operations_simple_test_action
               preconfiguration:
                 label_override: 'Simple test action'
                 add_confirmation: false
-                preconfig: 'Test setting'
-            1:
+            -
               action_id: views_bulk_operations_advanced_test_action
               preconfiguration:
                 add_confirmation: false
                 test_preconfig: 'Test setting'
-            2:
+            -
               action_id: views_bulk_operations_passing_test_action
+            -
+              action_id: views_bulk_operations_test_action_v2
           plugin_id: views_bulk_operations_bulk_form
       filters:
         status:

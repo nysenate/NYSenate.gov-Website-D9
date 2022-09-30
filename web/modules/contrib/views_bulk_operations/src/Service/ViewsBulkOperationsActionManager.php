@@ -18,28 +18,24 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ViewsBulkOperationsActionManager extends ActionManager {
 
-  const ALTER_ACTIONS_EVENT = 'views_bulk_operations.action_definitions';
+  public const ALTER_ACTIONS_EVENT = 'views_bulk_operations.action_definitions';
 
   /**
    * Event dispatcher service.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $eventDispatcher;
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Additional parameters passed to alter event.
    *
    * @var array
    */
-  protected $alterParameters;
+  protected array $alterParameters;
 
   /**
    * Service constructor.
@@ -99,7 +95,7 @@ class ViewsBulkOperationsActionManager extends ActionManager {
       // shouldn't be the case in core. Luckily, core also has useful actions
       // without the workaround, like node_assign_owner_action or
       // comment_unpublish_by_keyword_action.
-      if (!in_array('Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionInterface', class_implements($definition['class']))) {
+      if (!\in_array('Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionInterface', \class_implements($definition['class']))) {
         if (
           !empty($definition['confirm_form_route_name']) ||
           empty($definition['type'])
@@ -114,14 +110,14 @@ class ViewsBulkOperationsActionManager extends ActionManager {
     foreach ($definitions as $plugin_id => $plugin_definition) {
       // If the plugin definition is an object, attempt to convert it to an
       // array, if that is not possible, skip further processing.
-      if (is_object($plugin_definition) && !($plugin_definition = (array) $plugin_definition)) {
+      if (\is_object($plugin_definition) && !($plugin_definition = (array) $plugin_definition)) {
         continue;
       }
       // If this plugin was provided by a module that does not exist, remove the
       // plugin definition.
       if (
         isset($plugin_definition['provider']) &&
-        !in_array($plugin_definition['provider'], ['core', 'component']) &&
+        !\in_array($plugin_definition['provider'], ['core', 'component']) &&
         !$this->providerExists($plugin_definition['provider'])
       ) {
         unset($definitions[$plugin_id]);
@@ -178,7 +174,7 @@ class ViewsBulkOperationsActionManager extends ActionManager {
       return NULL;
     }
 
-    throw new PluginNotFoundException($plugin_id, sprintf('The "%s" plugin does not exist.', $plugin_id));
+    throw new PluginNotFoundException($plugin_id, \sprintf('The "%s" plugin does not exist.', $plugin_id));
   }
 
   /**
@@ -186,11 +182,11 @@ class ViewsBulkOperationsActionManager extends ActionManager {
    */
   public function processDefinition(&$definition, $plugin_id) {
     // Only arrays can be operated on.
-    if (!is_array($definition)) {
+    if (!\is_array($definition)) {
       return;
     }
 
-    if (!empty($this->defaults) && is_array($this->defaults)) {
+    if (!empty($this->defaults) && \is_array($this->defaults)) {
       $definition = NestedArray::mergeDeep($this->defaults, $definition);
     }
 
@@ -217,7 +213,7 @@ class ViewsBulkOperationsActionManager extends ActionManager {
     $event->alterParameters = $this->alterParameters;
     $event->definitions = &$definitions;
 
-    $this->eventDispatcher->dispatch($event, static::ALTER_ACTIONS_EVENT);
+    $this->eventDispatcher->dispatch($event, self::ALTER_ACTIONS_EVENT);
 
     // Include the expected behaviour (hook system) to avoid security issues.
     parent::alterDefinitions($definitions);

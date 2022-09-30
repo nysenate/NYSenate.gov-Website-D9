@@ -18,7 +18,10 @@ class PasswordPolicyInterfaceTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'password_policy',
     'password_policy_length',
     'password_policy_character_types',
@@ -55,8 +58,7 @@ class PasswordPolicyInterfaceTest extends BrowserTestBase {
       'label' => 'test',
       'password_reset' => '1',
     ];
-    // Set reset and policy info.
-    $this->submitForm($edit, 'Next');
+    $this->submitForm($edit, 'Save');
     // Fill out length constraint for test policy.
     $edit = [
       'character_length' => '5',
@@ -65,13 +67,12 @@ class PasswordPolicyInterfaceTest extends BrowserTestBase {
     // @todo convert this to using the button on the form.
     $this->drupalGet('admin/config/system/password_policy/constraint/add/test/password_length');
     $this->submitForm($edit, 'Save');
-    // Go to the next page.
-    $this->submitForm([], 'Next');
     // Set the roles for the policy.
     $edit = [
       'roles[' . $rid . ']' => $rid,
     ];
-    $this->submitForm($edit, 'Finish');
+    $this->drupalGet('admin/config/security/password-policy/test');
+    $this->submitForm($edit, 'Save');
 
     // Try failing password on form submit.
     $edit = [];

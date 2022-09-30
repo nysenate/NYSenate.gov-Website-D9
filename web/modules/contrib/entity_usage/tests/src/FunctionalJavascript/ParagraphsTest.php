@@ -24,7 +24,7 @@ class ParagraphsTest extends EntityUsageJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'file',
     'image',
     'media',

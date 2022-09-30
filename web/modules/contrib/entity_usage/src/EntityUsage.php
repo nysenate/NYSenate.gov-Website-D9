@@ -138,7 +138,7 @@ class EntityUsage implements EntityUsageInterface {
     }
 
     $event = new EntityUsageEvent($target_id, $target_type, $source_id, $source_type, $source_langcode, $source_vid, $method, $field_name, $count);
-    $this->eventDispatcher->dispatch(Events::USAGE_REGISTER, $event);
+    $this->eventDispatcher->dispatch($event, Events::USAGE_REGISTER);
   }
 
   /**
@@ -150,7 +150,7 @@ class EntityUsage implements EntityUsageInterface {
     $query->execute();
 
     $event = new EntityUsageEvent(NULL, $target_type, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-    $this->eventDispatcher->dispatch(Events::BULK_DELETE_DESTINATIONS, $event);
+    $this->eventDispatcher->dispatch($event, Events::BULK_DELETE_DESTINATIONS);
   }
 
   /**
@@ -162,7 +162,7 @@ class EntityUsage implements EntityUsageInterface {
     $query->execute();
 
     $event = new EntityUsageEvent(NULL, NULL, NULL, $source_type, NULL, NULL, NULL, NULL, NULL);
-    $this->eventDispatcher->dispatch(Events::BULK_DELETE_SOURCES, $event);
+    $this->eventDispatcher->dispatch($event, Events::BULK_DELETE_SOURCES);
   }
 
   /**
@@ -175,7 +175,7 @@ class EntityUsage implements EntityUsageInterface {
     $query->execute();
 
     $event = new EntityUsageEvent(NULL, NULL, NULL, $source_type, NULL, NULL, NULL, $field_name, NULL);
-    $this->eventDispatcher->dispatch(Events::DELETE_BY_FIELD, $event);
+    $this->eventDispatcher->dispatch($event, Events::DELETE_BY_FIELD);
   }
 
   /**
@@ -198,7 +198,7 @@ class EntityUsage implements EntityUsageInterface {
     $query->execute();
 
     $event = new EntityUsageEvent(NULL, NULL, $source_id, $source_type, $source_langcode, $source_vid, NULL, NULL, NULL);
-    $this->eventDispatcher->dispatch(Events::DELETE_BY_SOURCE_ENTITY, $event);
+    $this->eventDispatcher->dispatch($event, Events::DELETE_BY_SOURCE_ENTITY);
   }
 
   /**
@@ -215,17 +215,17 @@ class EntityUsage implements EntityUsageInterface {
     $query->execute();
 
     $event = new EntityUsageEvent($target_id, $target_type, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-    $this->eventDispatcher->dispatch(Events::DELETE_BY_TARGET_ENTITY, $event);
+    $this->eventDispatcher->dispatch($event, Events::DELETE_BY_TARGET_ENTITY);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function listSources(EntityInterface $target_entity, $nest_results = TRUE) {
+  public function listSources(EntityInterface $target_entity, $nest_results = TRUE, int $limit = 0) {
     // Entities can have string IDs. We support that by using different columns
     // on each case.
     $target_id_column = $this->isInt($target_entity->id()) ? 'target_id' : 'target_id_string';
-    $result = $this->connection->select($this->tableName, 'e')
+    $query = $this->connection->select($this->tableName, 'e')
       ->fields('e', [
         'source_id',
         'source_id_string',
@@ -242,8 +242,13 @@ class EntityUsage implements EntityUsageInterface {
       ->orderBy('source_type')
       ->orderBy('source_id', 'DESC')
       ->orderBy('source_vid', 'DESC')
-      ->orderBy('source_langcode')
-      ->execute();
+      ->orderBy('source_langcode');
+
+    if ($limit > 0) {
+      $query->range(0, $limit);
+    }
+
+    $result = $query->execute();
 
     $references = [];
     foreach ($result as $usage) {

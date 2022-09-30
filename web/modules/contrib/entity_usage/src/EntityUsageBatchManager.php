@@ -79,12 +79,12 @@ class EntityUsageBatchManager implements ContainerInjectionInterface {
   /**
    * Create a batch to process the entity types in bulk.
    *
-   * @return array
+   * @return array{operations: array<array{callable-string, array}>, finished: callable-string, title: \Drupal\Core\StringTranslation\TranslatableMarkup, progress_message: \Drupal\Core\StringTranslation\TranslatableMarkup, error_message: \Drupal\Core\StringTranslation\TranslatableMarkup}
    *   The batch array.
    */
   public function generateBatch() {
     $operations = [];
-    $to_track = $to_track = $this->config->get('track_enabled_source_entity_types');
+    $to_track = $this->config->get('track_enabled_source_entity_types');
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       // Only look for entities enabled for tracking on the settings form.
       $track_this_entity_type = FALSE;
@@ -119,7 +119,7 @@ class EntityUsageBatchManager implements ContainerInjectionInterface {
    *
    * @param string $entity_type_id
    *   The entity type id, for example 'node'.
-   * @param mixed $context
+   * @param array{sandbox: array{progress?: int, total?: int, current_item?: int}, results: string[], finished: int, message: string} $context
    *   Batch context.
    */
   public static function updateSourcesBatchWorker($entity_type_id, &$context) {
@@ -158,7 +158,7 @@ class EntityUsageBatchManager implements ContainerInjectionInterface {
       ->execute();
     $entity_id = reset($entity_ids);
 
-    if ($entity_id && $entity = $entity_storage->load($entity_id)) {
+    if (isset($entity_id) && $entity = $entity_storage->load($entity_id)) {
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       try {
         if ($entity->getEntityType()->isRevisionable()) {

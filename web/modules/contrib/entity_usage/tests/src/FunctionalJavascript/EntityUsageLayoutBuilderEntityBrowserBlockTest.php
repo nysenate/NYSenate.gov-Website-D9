@@ -40,7 +40,7 @@ class EntityUsageLayoutBuilderEntityBrowserBlockTest extends EntityUsageJavascri
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $node_type = NodeType::create([
@@ -166,6 +166,9 @@ class EntityUsageLayoutBuilderEntityBrowserBlockTest extends EntityUsageJavascri
     $page->pressButton('Save node');
     $assert_session->assertWaitOnAjaxRequest();
     $this->saveHtmlOutput();
+    $this->getSession()->switchToIFrame();
+    // wait for the table to finish loading.
+    $assert_session->waitForElement('css', '#drupal-off-canvas table .entity-browser-block-delta-order');
     // Verify we have selected in the block config the node that was created.
     $assert_session->elementTextContains('css', '#drupal-off-canvas table', 'First target node');
     // Insert the block in LB.
@@ -223,6 +226,9 @@ class EntityUsageLayoutBuilderEntityBrowserBlockTest extends EntityUsageJavascri
     $page->pressButton('Save node');
     $assert_session->assertWaitOnAjaxRequest();
     $this->saveHtmlOutput();
+    $this->getSession()->switchToIFrame();
+    // wait for the table to finish loading.
+    $assert_session->waitForElement('css', '#drupal-off-canvas table .entity-browser-block-delta-order');
     $assert_session->elementTextContains('css', '#drupal-off-canvas table', 'Second target node');
     $add_block_button = $assert_session->elementExists('css', '#drupal-off-canvas input[value="Add block"]');
     $add_block_button->press();

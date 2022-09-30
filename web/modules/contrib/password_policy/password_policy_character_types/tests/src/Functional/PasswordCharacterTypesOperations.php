@@ -23,7 +23,7 @@ class PasswordCharacterTypesOperations extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'password_policy_character_types',
     'password_policy',
   ];
@@ -38,7 +38,7 @@ class PasswordCharacterTypesOperations extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($this->adminUser);
@@ -50,19 +50,22 @@ class PasswordCharacterTypesOperations extends BrowserTestBase {
   public function testPasswordCharacterTypesManagement() {
     // Create a policy and add a "character_types" constraint.
     $this->drupalGet('admin/config/security/password-policy/add');
-    $this->submitForm(['label' => 'Test policy', 'id' => 'test_policy'], 'Next');
+    $this->submitForm(['label' => 'Test policy', 'id' => 'test_policy'], 'Save');
     $this->drupalGet('admin/config/system/password_policy/constraint/add/test_policy/character_types');
     $this->assertSession()->pageTextContains('Minimum number of character types');
 
     $this->submitForm(['character_types' => 2], 'Save');
+    $this->drupalGet('/admin/config/security/password-policy/test_policy');
     $this->assertSession()->pageTextContains('Minimum password character types: 2');
 
     $this->drupalGet('admin/config/system/password_policy/constraint/add/test_policy/character_types');
     $this->submitForm(['character_types' => 3], 'Save');
+    $this->drupalGet('/admin/config/security/password-policy/test_policy');
     $this->assertSession()->pageTextContains('Minimum password character types: 3');
 
     $this->drupalGet('admin/config/system/password_policy/constraint/add/test_policy/character_types');
     $this->submitForm(['character_types' => 4], 'Save');
+    $this->drupalGet('/admin/config/security/password-policy/test_policy');
     $this->assertSession()->pageTextContains('Minimum password character types: 4');
   }
 

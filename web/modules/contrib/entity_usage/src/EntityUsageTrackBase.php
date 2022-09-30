@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -147,7 +148,7 @@ abstract class EntityUsageTrackBase extends PluginBase implements EntityUsageTra
           // need to add a tracking record.
           $target_entities = $this->getTargetEntities($field_item);
           foreach ($target_entities as $target_entity) {
-            list($target_type, $target_id) = explode("|", $target_entity);
+            [$target_type, $target_id] = explode("|", $target_entity);
             $source_vid = ($source_entity instanceof RevisionableInterface && $source_entity->getRevisionId()) ? $source_entity->getRevisionId() : 0;
             $this->usageService->registerUsage($target_id, $target_type, $source_entity->id(), $source_entity->getEntityTypeId(), $source_entity->language()->getId(), $source_vid, $this->pluginId, $field_name);
           }
@@ -160,6 +161,10 @@ abstract class EntityUsageTrackBase extends PluginBase implements EntityUsageTra
    * {@inheritdoc}
    */
   public function trackOnEntityUpdate(EntityInterface $source_entity) {
+    // We depend on $source_entity->original to do anything useful here.
+    if (empty($source_entity->original)) {
+      return;
+    }
     $trackable_field_types = $this->getApplicableFieldTypes();
     $fields = array_keys($this->getReferencingFields($source_entity, $trackable_field_types));
     foreach ($fields as $field_name) {
@@ -202,12 +207,12 @@ abstract class EntityUsageTrackBase extends PluginBase implements EntityUsageTra
       $removed_ids = array_diff($original_targets, $current_targets);
 
       foreach ($added_ids as $added_entity) {
-        list($target_type, $target_id) = explode('|', $added_entity);
+        [$target_type, $target_id] = explode('|', $added_entity);
         $source_vid = ($source_entity instanceof RevisionableInterface && $source_entity->getRevisionId()) ? $source_entity->getRevisionId() : 0;
         $this->usageService->registerUsage($target_id, $target_type, $source_entity->id(), $source_entity->getEntityTypeId(), $source_entity->language()->getId(), $source_vid, $this->pluginId, $field_name);
       }
       foreach ($removed_ids as $removed_entity) {
-        list($target_type, $target_id) = explode('|', $removed_entity);
+        [$target_type, $target_id] = explode('|', $removed_entity);
         $source_vid = ($source_entity instanceof RevisionableInterface && $source_entity->getRevisionId()) ? $source_entity->getRevisionId() : 0;
         $this->usageService->registerUsage($target_id, $target_type, $source_entity->id(), $source_entity->getEntityTypeId(), $source_entity->language()->getId(), $source_vid, $this->pluginId, $field_name, 0);
       }
@@ -218,11 +223,13 @@ abstract class EntityUsageTrackBase extends PluginBase implements EntityUsageTra
    * {@inheritdoc}
    */
   public function getReferencingFields(EntityInterface $source_entity, array $field_types) {
-    $source_entity_type_id = $source_entity->getEntityTypeId();
-
-    $all_fields_on_bundle = $this->entityFieldManager->getFieldDefinitions($source_entity_type_id, $source_entity->bundle());
-
     $referencing_fields_on_bundle = [];
+    if (!($source_entity instanceof FieldableEntityInterface)) {
+      return $referencing_fields_on_bundle;
+    }
+
+    $source_entity_type_id = $source_entity->getEntityTypeId();
+    $all_fields_on_bundle = $this->entityFieldManager->getFieldDefinitions($source_entity_type_id, $source_entity->bundle());
     foreach ($all_fields_on_bundle as $field_name => $field) {
       if (in_array($field->getType(), $field_types)) {
         $referencing_fields_on_bundle[$field_name] = $field;

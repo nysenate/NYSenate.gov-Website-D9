@@ -24,12 +24,11 @@ class InitialInstallBehaviorsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
     'dblog',
-    'ctools',
     'config',
     'field',
     'datetime',

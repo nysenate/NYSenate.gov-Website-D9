@@ -34,7 +34,7 @@ abstract class EntityUsageJavascriptTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $account = $this->drupalCreateUser([

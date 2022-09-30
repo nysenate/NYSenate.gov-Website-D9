@@ -18,11 +18,17 @@ abstract class FileMetadataManagerTestBase extends KernelTestBase {
   protected $fileSystem;
 
   /**
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp(): void {
     parent::setUp();
     $this->fileSystem = \Drupal::service('file_system');
+    $this->moduleList = \Drupal::service('extension.list.module');
     $this->installConfig(['file_mdm']);
   }
 

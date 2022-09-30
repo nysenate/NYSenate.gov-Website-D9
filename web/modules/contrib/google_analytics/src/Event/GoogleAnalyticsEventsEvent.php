@@ -2,7 +2,7 @@
 
 namespace Drupal\google_analytics\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 use Drupal\google_analytics\GaJavascriptObject;
 
 /**

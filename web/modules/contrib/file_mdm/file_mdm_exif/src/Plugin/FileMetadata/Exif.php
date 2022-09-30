@@ -8,7 +8,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file_mdm\Plugin\FileMetadata\FileMetadataPluginBase;
 use Drupal\file_mdm_exif\ExifTagMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use lsolesen\pel\PelEntry;
 use lsolesen\pel\PelExif;
 use lsolesen\pel\PelIfd;
@@ -29,7 +29,7 @@ class Exif extends FileMetadataPluginBase {
   /**
    * The MIME type guessing service.
    *
-   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
    */
   protected $mimeTypeGuesser;
 
@@ -60,7 +60,7 @@ class Exif extends FileMetadataPluginBase {
    *   The cache service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
    *   The MIME type mapping service.
    * @param \Drupal\file_mdm_exif\ExifTagMapperInterface $tag_mapper
    *   The EXIF tag mapping service.

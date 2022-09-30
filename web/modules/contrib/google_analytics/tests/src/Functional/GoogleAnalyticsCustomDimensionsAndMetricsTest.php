@@ -22,7 +22,7 @@ class GoogleAnalyticsCustomDimensionsAndMetricsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['google_analytics', 'token', 'node'];
+  protected static $modules = ['google_analytics', 'token', 'node'];
 
   /**
    * Default theme.
@@ -41,7 +41,7 @@ class GoogleAnalyticsCustomDimensionsAndMetricsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $permissions = [
@@ -160,7 +160,7 @@ class GoogleAnalyticsCustomDimensionsAndMetricsTest extends BrowserTestBase {
       ],
     ];
     $this->config('google_analytics.settings')->set('custom.parameters', $google_analytics_custom_dimension)->save();
-    $this->verbose('<pre>' . print_r($google_analytics_custom_dimension, TRUE) . '</pre>');
+    dump('<pre>' . print_r($google_analytics_custom_dimension, TRUE) . '</pre>');
 
     // Test on frontpage.
     $this->drupalGet('');

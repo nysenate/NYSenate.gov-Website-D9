@@ -2,17 +2,17 @@
 
 namespace Drupal\views_bulk_operations\Controller;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\views_bulk_operations\Form\ViewsBulkOperationsFormTrait;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionProcessorInterface;
-use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Ajax\AjaxResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Defines VBO controller class.
@@ -23,24 +23,18 @@ class ViewsBulkOperationsController extends ControllerBase implements ContainerI
 
   /**
    * The tempstore service.
-   *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
-  protected $tempStoreFactory;
+  protected PrivateTempStoreFactory $tempStoreFactory;
 
   /**
    * Views Bulk Operations action processor.
-   *
-   * @var \Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionProcessorInterface
    */
-  protected $actionProcessor;
+  protected ViewsBulkOperationsActionProcessorInterface $actionProcessor;
 
   /**
    * The Renderer service object.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  protected RendererInterface $renderer;
 
   /**
    * Constructs a new controller object.
@@ -90,7 +84,7 @@ class ViewsBulkOperationsController extends ControllerBase implements ContainerI
 
     $this->actionProcessor->executeProcessing($view_data);
     if ($view_data['batch']) {
-      return batch_process($view_data['redirect_url']);
+      return \batch_process($view_data['redirect_url']);
     }
     else {
       return new RedirectResponse($view_data['redirect_url']->setAbsolute()->toString());
@@ -114,22 +108,22 @@ class ViewsBulkOperationsController extends ControllerBase implements ContainerI
       throw new NotFoundHttpException();
     }
 
-    $list = $request->request->get('list');
+    //$list = json_decode($request->request->get('list'));
+    $parameters = $request->request->all();
 
-    $op = $request->request->get('op', 'check');
     // Reverse operation when in exclude mode.
     if (!empty($tempstore_data['exclude_mode'])) {
-      if ($op === 'add') {
-        $op = 'remove';
+      if ($parameters['op'] === 'add') {
+        $parameters['op'] = 'remove';
       }
-      elseif ($op === 'remove') {
-        $op = 'add';
+      elseif ($parameters['op'] === 'remove') {
+        $parameters['op'] = 'add';
       }
     }
 
-    switch ($op) {
+    switch ($parameters['op']) {
       case 'add':
-        foreach ($list as $bulkFormKey) {
+        foreach ($parameters['list'] as $bulkFormKey) {
           if (!isset($tempstore_data['list'][$bulkFormKey])) {
             $tempstore_data['list'][$bulkFormKey] = $this->getListItem($bulkFormKey);
           }
@@ -137,7 +131,7 @@ class ViewsBulkOperationsController extends ControllerBase implements ContainerI
         break;
 
       case 'remove':
-        foreach ($list as $bulkFormKey) {
+        foreach ($parameters['list'] as $bulkFormKey) {
           if (isset($tempstore_data['list'][$bulkFormKey])) {
             unset($tempstore_data['list'][$bulkFormKey]);
           }
@@ -157,7 +151,7 @@ class ViewsBulkOperationsController extends ControllerBase implements ContainerI
 
     $this->setTempstoreData($tempstore_data);
 
-    $count = empty($tempstore_data['exclude_mode']) ? count($tempstore_data['list']) : $tempstore_data['total_results'] - count($tempstore_data['list']);
+    $count = empty($tempstore_data['exclude_mode']) ? \count($tempstore_data['list']) : $tempstore_data['total_results'] - \count($tempstore_data['list']);
 
     $selection_info_renderable = $this->getMultipageList($tempstore_data);
     $response_data = [

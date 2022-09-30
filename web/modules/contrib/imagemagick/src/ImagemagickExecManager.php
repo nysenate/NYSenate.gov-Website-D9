@@ -333,8 +333,8 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
     $process->setTimeout($this->timeout);
     try {
       $process->run();
-      $output = utf8_encode($process->getOutput());
-      $error = utf8_encode($process->getErrorOutput());
+      $output = $process->getOutput();
+      $error = $process->getErrorOutput();
       $return_code = $process->getExitCode();
     }
     catch (\Exception $e) {

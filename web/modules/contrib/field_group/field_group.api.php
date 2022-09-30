@@ -38,7 +38,10 @@ function hook_field_group_pre_render(array &$element, &$group, &$rendering_objec
   $manager = Drupal::service('plugin.manager.field_group.formatters');
   $plugin = $manager->getInstance([
     'format_type' => $group->format_type,
-    'configuration' => ['label' => $group->label, 'settings' => $group->format_settings],
+    'configuration' => [
+      'label' => $group->label,
+      'settings' => $group->format_settings,
+    ],
     'group' => $group,
   ]);
   $plugin->preRender($element, $rendering_object);
@@ -79,9 +82,9 @@ function hook_field_group_build_pre_render_alter(array &$element) {
  *
  * @param array $element
  *   The element being processed.
- * @param $group
+ * @param object $group
  *   The group info.
- * @param $complete_form
+ * @param object $complete_form
  *   The complete form.
  */
 function hook_field_group_form_process(array &$element, &$group, &$complete_form) {
@@ -97,9 +100,9 @@ function hook_field_group_form_process(array &$element, &$group, &$complete_form
  *
  * @param array $element
  *   The element being processed.
- * @param $group
+ * @param object $group
  *   The group info.
- * @param $complete_form
+ * @param object $complete_form
  *   The complete form.
  */
 function hook_field_group_form_process_alter(array &$element, &$group, &$complete_form) {
@@ -116,8 +119,8 @@ function hook_field_group_form_process_alter(array &$element, &$group, &$complet
  * @param array $element
  *   The element being processed.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state
- * @param $complete_form
+ *   The form state.
+ * @param object $complete_form
  *   The complete form.
  */
 function hook_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
@@ -131,13 +134,12 @@ function hook_field_group_form_process_build_alter(array &$element, FormStateInt
 /**
  * Hook into the deletion event of a fieldgroup.
  *
- * @param $group
+ * @param object $group
  *   The deleted group.
  */
 function hook_field_group_delete_field_group($group) {
   // Extra cleanup code.
 }
-
 
 /**
  * @} End of "addtogroup hooks".

@@ -8,7 +8,7 @@
     "node": ">= 16.0"
   },
   "scripts": {
-    "build": "yarn build:css & yarn build:js & yarn build:ckeditor5",
+    "build": "yarn build:css & yarn build:js & yarn build:ckeditor5 & yarn vendor-update",
     "watch": "yarn watch:css & yarn watch:js & yarn watch:ckeditor5",
     "build:css": "node ./scripts/css/postcss-build.js",
     "watch:css": "node ./scripts/css/postcss-watch.js",
@@ -59,6 +59,7 @@
     "@ckeditor/ckeditor5-remove-format": "35.0.x",
     "@ckeditor/ckeditor5-source-editing": "35.0.x",
     "@ckeditor/ckeditor5-special-characters": "35.0.x",
+    "@ckeditor/ckeditor5-style": "35.0.x",
     "@ckeditor/ckeditor5-table": "35.0.x",
     "@drupal/once": "1.0.x",
     "@popperjs/core": "2.11.x",
@@ -68,6 +69,7 @@
     "chokidar": "^3.3.1",
     "chromedriver": "^98.0.1",
     "ckeditor5": "35.0.x",
+    "cross-env": "^7.0.2",
     "cross-env": "^7.0.2",
     "cspell": "^5.0.0",
     "css.escape": "1.5.x",
@@ -111,8 +113,8 @@
     "stylelint-config-standard": "^23.0.0",
     "stylelint-order": "^5.0.0",
     "tabbable": "5.3.x",
-    "terser": "^5.3.4",
-    "terser-webpack-plugin": "^5.2.0",
+    "terser": "^5.14.2",
+    "terser-webpack-plugin": "^5.3.3",
     "underscore": "1.13.x",
     "webpack": "^5.51.1",
     "webpack-cli": "^4.4.0"

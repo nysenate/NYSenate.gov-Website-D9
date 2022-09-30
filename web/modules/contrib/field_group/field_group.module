@@ -5,8 +5,6 @@
  * Allows administrators to attach field groups.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\ds\Ds;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -15,6 +13,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\ConfirmFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\ds\Ds;
 use Drupal\field_group\Element\VerticalTabs;
 use Drupal\field_group\FormatterHelper;
 
@@ -34,6 +34,20 @@ function field_group_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function field_group_module_implements_alter(&$implementations, $hook) {
+  switch ($hook) {
+    // Move our hook_form_alter() implementation to the end of the list.
+    case 'form_alter':
+      $group = $implementations['field_group'];
+      unset($implementations['field_group']);
+      $implementations['field_group'] = $group;
+      break;
+  }
+}
+
+/**
  * Implements hook_library_info_alter().
  */
 function field_group_library_info_alter(&$libraries, $extension) {
@@ -44,7 +58,7 @@ function field_group_library_info_alter(&$libraries, $extension) {
     if (\Drupal::moduleHandler()->moduleExists('jquery_ui_accordion')) {
       $libraries['formatter.accordion']['dependencies'] = ['jquery_ui_accordion/accordion'];
     }
-    elseif (version_compare(\Drupal::VERSION, 9) > 0 ) {
+    elseif (version_compare(\Drupal::VERSION, 9) > 0) {
       $libraries['formatter.accordion']['js'] = [];
       $libraries['formatter.accordion']['dependencies'] = [];
     }
@@ -178,14 +192,19 @@ function field_group_element_info_alter(array &$info) {
       $info['vertical_tabs']['#pre_render'] = [];
     }
 
-    $info['vertical_tabs']['#process'][] = [VerticalTabs::class, 'processGroup'];
-    $info['vertical_tabs']['#pre_render'][] = [VerticalTabs::class, 'preRenderGroup'];
+    $info['vertical_tabs']['#process'][] = [
+      VerticalTabs::class,
+      'processGroup',
+    ];
+    $info['vertical_tabs']['#pre_render'][] = [
+      VerticalTabs::class,
+      'preRenderGroup',
+    ];
   }
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
- * Using hook_form_field_ui_form_display_overview_form_alter.
  */
 function field_group_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state) {
   $form_state->loadInclude('field_group', 'inc', 'includes/field_ui');
@@ -194,7 +213,6 @@ function field_group_form_entity_form_display_edit_form_alter(&$form, FormStateI
 
 /**
  * Implements hook_form_FORM_ID_alter().
- * Using hook_form_field_ui_display_overview_form_alter.
  */
 function field_group_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state) {
   $form_state->loadInclude('field_group', 'inc', 'includes/field_ui');
@@ -207,7 +225,7 @@ function field_group_form_entity_view_display_edit_form_alter(&$form, FormStateI
 function field_group_field_info_max_weight($entity_type, $bundle, $context, $context_mode) {
   // Prevent recursion.
   // @see https://www.drupal.org/project/drupal/issues/2966137
-  static $recursion_tracker = [];
+  $recursion_tracker = &drupal_static(__FUNCTION__, []);
 
   // Track the entity display.
   $key = $entity_type . ':' . $bundle . ':' . $context . ':' . $context_mode;
@@ -259,6 +277,7 @@ function field_group_form_alter(array &$form, FormStateInterface $form_state) {
 
       field_group_attach_groups($form, $context);
       $form['#process'][] = [FormatterHelper::class, 'formProcess'];
+      $form['#pre_render'][] = [FormatterHelper::class, 'formGroupPreRender'];
     }
   }
 
@@ -301,7 +320,10 @@ function field_group_form_media_library_add_form_upload_alter(&$form, FormStateI
       ];
 
       field_group_attach_groups($form['media'][$delta]['fields'], $context);
-      $form['media'][$delta]['fields']['#process'][] = [FormatterHelper::class, 'formProcess'];
+      $form['media'][$delta]['fields']['#process'][] = [
+        FormatterHelper::class,
+        'formProcess',
+      ];
     }
   }
 
@@ -325,7 +347,10 @@ function field_group_form_layout_builder_update_block_alter(&$form, FormStateInt
   ];
 
   field_group_attach_groups($form['settings']['block_form'], $context);
-  $form['settings']['block_form']['#process'][] = [FormatterHelper::class, 'formProcess'];
+  $form['settings']['block_form']['#process'][] = [
+    FormatterHelper::class,
+    'formProcess',
+  ];
 }
 
 /**
@@ -363,7 +388,7 @@ function field_group_entity_view_alter(&$build, EntityInterface $entity, EntityD
       }
     }
 
-    // If DS is enabled, no pre render is needed (DS adds fieldgroup preprocessing).
+    // If DS is enabled, no pre render is needed (preprocessing included in DS).
     if (!$ds_enabled) {
       $build['#pre_render'][] = [FormatterHelper::class, 'entityViewPrender'];
     }
@@ -400,12 +425,17 @@ function field_group_conditional_fields_children($entity_type, $bundle_name) {
  * @param array $element
  *   Form that is being rendered.
  *
- * @deprecated Use field_group_form_process instead.
- *
  * @return array
+ *   Prerendered form.
+ *
+ * @deprecated in field_group:3.1.0 and is removed from field_group:4.0.0.
+ *   Use field_group_form_process() instead.
+ *
+ * @see https://www.drupal.org/project/field_group/issues/3147495
  */
 function field_group_form_pre_render(array $element) {
-  return field_group_form_process($element);
+  $element = field_group_form_process($element);
+  return FormatterHelper::formGroupPreRender($element);
 }
 
 /**
@@ -419,6 +449,7 @@ function field_group_form_pre_render(array $element) {
  *   The complete form structure.
  *
  * @return array
+ *   Processed form.
  */
 function field_group_form_process(array &$element, FormStateInterface $form_state = NULL, array &$form = []) {
   return FormatterHelper::formProcess($element, $form_state, $form);
@@ -443,7 +474,10 @@ function field_group_field_group_form_process(array &$element, &$group, &$comple
   $manager = Drupal::service('plugin.manager.field_group.formatters');
   $plugin = $manager->getInstance([
     'format_type' => $group->format_type,
-    'configuration' => ['label' => $group->label, 'settings' => $group->format_settings],
+    'configuration' => [
+      'label' => $group->label,
+      'settings' => $group->format_settings,
+    ],
     'group' => $group,
   ]);
   if ($plugin) {
@@ -453,15 +487,8 @@ function field_group_field_group_form_process(array &$element, &$group, &$comple
 
 /**
  * Implements hook_field_group_pre_render().
- *
- * @param array $element
- *   Group beïng rendered.
- * @param object $group
- *   The Field group info.
- * @param $rendering_object
- *   The entity / form beïng rendered
  */
-function field_group_field_group_pre_render(&$element, &$group, &$rendering_object) {
+function field_group_field_group_pre_render(array &$element, &$group, &$rendering_object) {
   // Add all field_group format types to the js settings.
   $element['#attached']['drupalSettings']['field_group'] = [
     $group->format_type => [
@@ -490,25 +517,16 @@ function field_group_field_group_pre_render(&$element, &$group, &$rendering_obje
 
 /**
  * Implements hook_field_group_form_process_build_alter().
- *
- * @param array $element
- *   Element being processed.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current state of the form.
- * @param array $form
- *   The complete form structure.
  */
-function field_group_field_group_form_process_build_alter(array &$element, $form_state = NULL, &$form = []) {
+function field_group_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state = NULL, array &$form = []) {
   $groups = array_keys($element['#fieldgroups']);
   field_group_remove_empty_form_groups($element, $groups, $element['#entity_type']);
 }
 
 /**
  * Implements hook_field_group_build_pre_render_alter().
- *
- * @param array $element
  */
-function field_group_field_group_build_pre_render_alter(&$element) {
+function field_group_field_group_build_pre_render_alter(array &$element) {
   // Someone is doing a node view, in a node view. Reset content.
   if (isset($element['#node']->content) && count($element['#node']->content) > 0) {
     $element['#node']->content = [];
@@ -531,11 +549,11 @@ function field_group_field_group_build_pre_render_alter(&$element) {
  * Attach groups to the (form) build.
  *
  * @param array $element
- *   The part of the form.
+ *   The current element.
  * @param array $context
  *   The contextual information.
  */
-function field_group_attach_groups(&$element, $context) {
+function field_group_attach_groups(array &$element, array $context) {
 
   if ($context['mode'] == '_custom') {
     return;
@@ -564,9 +582,9 @@ function field_group_attach_groups(&$element, $context) {
 /**
  * Pre-render callback for entity views.
  *
- * @param preprocess $vars
+ * @param array $vars
  *   Variables.
- * @param $context
+ * @param string $context
  *   The display context (entity type, form or view).
  *
  * @return array
@@ -644,15 +662,15 @@ function field_group_build_entity_groups(array &$vars, $context = 'view') {
  *   The current element to analyse for grouping.
  * @param array $vars
  *   Rendering vars from the entity being viewed.
- * @param array $context
+ * @param string $context
  *   The display context (entity type, form or view).
  */
-function field_group_fields_nest(&$element, &$vars = NULL, $context = NULL) {
+function field_group_fields_nest(array &$element, array &$vars = NULL, $context = NULL) {
 
   // Create all groups and keep a flat list of references to these groups.
   $group_references = [];
   foreach ($element['#fieldgroups'] as $group_name => $group) {
-    // Construct own weight, as some fields (for example preprocess fields) don't have weight set.
+    // Set own weight, as some fields (e.g. preprocess fields) don't set it.
     if (!isset($element[$group_name])) {
       $element[$group_name] = [];
     }
@@ -683,7 +701,7 @@ function field_group_fields_nest(&$element, &$vars = NULL, $context = NULL) {
       $key = field_group_get_content_element_key($context);
       if (!isset($element['#fieldgroups'][$child_name]) && isset($vars[$key][$child_name])) {
 
-        // ECK marks his default properties as printed, while it is not printed yet.
+        // ECK marks default properties as printed, while not printed yet.
         if ($context === 'eck_entity' && !empty($vars[$key][$child_name]['#printed'])) {
           $vars[$key][$child_name]['#printed'] = FALSE;
         }
@@ -701,8 +719,8 @@ function field_group_fields_nest(&$element, &$vars = NULL, $context = NULL) {
     // Form being viewed.
     else {
       // Block denied fields (#access) before they are put in groups.
-      // Fields (not groups) that don't have children (like field_permissions) are removed
-      // in field_group_field_group_build_pre_render_alter.
+      // Fields (not groups) that don't have children (like field_permissions)
+      // are removed in field_group_field_group_build_pre_render_alter.
       if (isset($element[$child_name]) && (!isset($element[$child_name]['#access']) || $element[$child_name]['#access'])) {
         // If this is a group, we have to use a reference to keep the reference
         // list intact (but if it is a field we don't mind).
@@ -715,7 +733,7 @@ function field_group_fields_nest(&$element, &$vars = NULL, $context = NULL) {
         $group_references[$parent_name]['#weight'] = $element['#fieldgroups'][$parent_name]->weight;
       }
 
-      // The child has been copied to its parent: remove it from the root element.
+      // The child has been copied to parent: remove it from the root element.
       unset($element[$child_name]);
     }
 
@@ -734,10 +752,13 @@ function field_group_fields_nest(&$element, &$vars = NULL, $context = NULL) {
  * Ror entity display elements managed by field layout.
  *
  * @param array $element
- * @param $vars
- * @param $context
+ *   The part of the form.
+ * @param array $vars
+ *   Rendering vars from the entity being viewed.
+ * @param string $context
+ *   The display context (entity type, form or view).
  */
-function field_group_field_layout_fields_nest(array &$element, &$vars = NULL, $context = NULL) {
+function field_group_field_layout_fields_nest(array &$element, array &$vars = NULL, $context = NULL) {
   // Create all groups and keep a flat list of references to these groups.
   $group_references = [];
   foreach ($element['#fieldgroups'] as $group_name => $group) {
@@ -775,7 +796,7 @@ function field_group_field_layout_fields_nest(array &$element, &$vars = NULL, $c
     $key = field_group_get_content_element_key($context);
     if (!isset($element['#fieldgroups'][$child_name]) && isset($vars[$key]['_field_layout'][$region][$child_name])) {
 
-      // ECK marks his default properties as printed, while it is not printed yet.
+      // ECK marks default properties as printed, while not printed yet.
       if ($context === 'eck_entity' && !empty($vars[$key]['_field_layout'][$region][$child_name]['#printed'])) {
         $vars[$key]['_field_layout'][$region][$child_name]['#printed'] = FALSE;
       }
@@ -801,16 +822,16 @@ function field_group_field_layout_fields_nest(array &$element, &$vars = NULL, $c
 /**
  * Function to pre render the field group element.
  *
- * @see field_group_fields_nest()
- *
- * @param $element
+ * @param array $element
  *   Render array of group element that needs to be created.
- * @param $group
+ * @param object $group
  *   Object with the group information.
- * @param $rendering_object
- *   The entity / form beïng rendered.
+ * @param object $rendering_object
+ *   The entity / form being rendered.
+ *
+ * @see field_group_fields_nest()
  */
-function field_group_pre_render(& $element, $group, & $rendering_object) {
+function field_group_pre_render(array &$element, $group, &$rendering_object) {
 
   // Only run the pre_render function if the group has elements.
   // $group->group_name.
@@ -839,10 +860,11 @@ function field_group_pre_render(& $element, $group, & $rendering_object) {
  * This allows entity modules to specify their content element for field group
  * support, or other modules to add entity module support.
  *
- * @param $context
+ * @param string $context
  *   The display context (entity type, form or view).
  *
  * @return string
+ *   Content element key.
  */
 function field_group_get_content_element_key($context = 'default') {
   $keys = &drupal_static('field_group_content_elements');
@@ -864,7 +886,7 @@ function field_group_get_content_element_key($context = 'default') {
 /**
  * Saves a group definition.
  *
- * @param \stdClass $group
+ * @param object $group
  *   A group definition.
  * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $display
  *   The display to update if known.
@@ -874,7 +896,7 @@ function field_group_get_content_element_key($context = 'default') {
  *
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
-function field_group_group_save($group, $display = NULL) {
+function field_group_group_save($group, EntityDisplayInterface $display = NULL) {
   if ($display === NULL) {
     if ($group->context == 'form') {
       $display = EntityFormDisplay::load($group->entity_type . '.' . $group->bundle . '.' . $group->mode);
@@ -919,7 +941,7 @@ function field_group_group_save($group, $display = NULL) {
 /**
  * Delete a field group.
  *
- * @param $group
+ * @param object $group
  *   A group definition.
  *
  * @throws \Drupal\Core\Entity\EntityStorageException
@@ -933,7 +955,7 @@ function field_group_delete_field_group($group) {
   }
 
   /**
-   * @var $display \Drupal\Core\Entity\Display\EntityDisplayInterface
+   * @var \Drupal\Core\Entity\Display\EntityDisplayInterface $display
    */
   if (isset($display)) {
     $display->unsetThirdPartySetting('field_group', $group->group_name);
@@ -946,16 +968,17 @@ function field_group_delete_field_group($group) {
 /**
  * Get all groups.
  *
- * @param $entity_type
+ * @param string $entity_type
  *   The name of the entity.
- * @param $bundle
+ * @param string $bundle
  *   The name of the bundle.
- * @param $context
+ * @param string $context
  *   The context of the view mode (form or view)
- * @param $mode
+ * @param string $mode
  *   The view mode.
  *
  * @return array
+ *   Info array.
  */
 function field_group_info_groups($entity_type, $bundle, $context, $mode) {
   if ($context == 'form') {
@@ -991,18 +1014,19 @@ function field_group_info_groups($entity_type, $bundle, $context, $mode) {
 /**
  * Loads a group definition.
  *
- * @param $group_name
+ * @param string $group_name
  *   The name of the group.
- * @param $entity_type
+ * @param string $entity_type
  *   The name of the entity.
- * @param $bundle
+ * @param string $bundle
  *   The name of the bundle.
- * @param $context
+ * @param string $context
  *   The context of the view mode (form or view)
- * @param $mode
+ * @param string $mode
  *   The view mode to load.
  *
  * @return mixed
+ *   Field group.
  */
 function field_group_load_field_group($group_name, $entity_type, $bundle, $context, $mode) {
   $groups = field_group_info_groups($entity_type, $bundle, $context, $mode);
@@ -1020,12 +1044,13 @@ function field_group_load_field_group($group_name, $entity_type, $bundle, $conte
  *   The name of the entity.
  * @param string $bundle
  *   The bundle for the entity.
- * @param $context
+ * @param string $context
  *   The context of the view mode (form or view)
  * @param string $mode
  *   The view mode context the group will be rendered.
  *
  * @return bool
+ *   TRUE if group exists.
  */
 function field_group_exists($group_name, $entity_type, $bundle, $context, $mode) {
   return (bool) field_group_load_field_group($group_name, $entity_type, $bundle, $context, $mode);
@@ -1041,7 +1066,7 @@ function field_group_exists($group_name, $entity_type, $bundle, $context, $mode)
  * @param string $entity_type
  *   The entity type.
  */
-function field_group_remove_empty_form_groups(&$element, $groups, $entity_type) {
+function field_group_remove_empty_form_groups(array &$element, array $groups, $entity_type) {
   $exceptions = ['user__account', 'comment__author'];
 
   $children = Element::getVisibleChildren($element);
@@ -1071,6 +1096,22 @@ function field_group_remove_empty_form_groups(&$element, $groups, $entity_type) 
   foreach (array_keys($empty_groups) as $group_name) {
     $element[$group_name]['#access'] = FALSE;
   }
+
+  // Check access on translations.
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $is_add_translation_route = $route_name === 'entity.node.content_translation_add';
+  if ($is_add_translation_route) {
+    foreach ($groups as $group_name) {
+      if ($element[$group_name]['#type'] == 'details' && isset($element[$group_name]['#group'])) {
+        if (isset($element['advanced']) && isset($element['advanced']['#access']) && !$element['advanced']['#access']) {
+          $element['advanced']['#access'] = TRUE;
+          // Show meta element as well.
+          $element['meta']['#access'] = TRUE;
+        }
+      }
+    }
+  }
+
 }
 
 /**
@@ -1082,8 +1123,9 @@ function field_group_remove_empty_form_groups(&$element, $groups, $entity_type) 
  *   Array of group objects.
  *
  * @return bool
+ *   TRUE if group is empty.
  */
-function field_group_remove_empty_display_groups(& $element, $groups) {
+function field_group_remove_empty_display_groups(array &$element, array $groups) {
 
   $empty_child = TRUE;
   $empty_group = TRUE;

@@ -27,7 +27,6 @@ class FileMetadataExifTest extends FileMetadataManagerTestBase {
     'file_mdm',
     'file_mdm_exif',
     'file_test',
-    'image_effects',
   ];
 
   /**
@@ -45,13 +44,13 @@ class FileMetadataExifTest extends FileMetadataManagerTestBase {
     // Prepare a copy of test files.
     $this->fileSystem->copy('core/tests/fixtures/files/image-test.jpg', 'public://', FileSystemInterface::EXISTS_REPLACE);
     $this->fileSystem->copy('core/tests/fixtures/files/image-test.png', 'public://', FileSystemInterface::EXISTS_REPLACE);
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg', 'temporary://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg', 'temporary://', FileSystemInterface::EXISTS_REPLACE);
     // The image files that will be tested.
     $image_files = [
       [
         // Pass a path instead of the URI.
-        'uri' => drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg',
+        'uri' => $this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg',
         'count_keys' => 47,
         'test_keys' => [
           ['Orientation', 8],
@@ -86,7 +85,7 @@ class FileMetadataExifTest extends FileMetadataManagerTestBase {
       ],
       [
         // JPEG Image with GPS data.
-        'uri' => drupal_get_path('module', 'file_mdm') . '/tests/files/1024-2006_1011_093752.jpg',
+        'uri' => $this->moduleList->getPath('file_mdm') . '/tests/files/1024-2006_1011_093752.jpg',
         'count_keys' => 59,
         'test_keys' => [
           ['Orientation', 1],
@@ -105,7 +104,7 @@ class FileMetadataExifTest extends FileMetadataManagerTestBase {
       ],
       [
         // TIFF image.
-        'uri' => drupal_get_path('module', 'file_mdm') . '/tests/files/sample-1.tiff',
+        'uri' => $this->moduleList->getPath('file_mdm') . '/tests/files/sample-1.tiff',
         'count_keys' => 15,
         'test_keys' => [
           ['Orientation', 1],
@@ -171,7 +170,7 @@ class FileMetadataExifTest extends FileMetadataManagerTestBase {
     $fmdm = $this->container->get('file_metadata_manager');
 
     // Copy test file to public://.
-    $this->fileSystem->copy(drupal_get_path('module', 'image_effects') . '/tests/images/portrait-painting.jpg', 'public://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/portrait-painting.jpg', 'public://', FileSystemInterface::EXISTS_REPLACE);
     $file_uri = 'public://portrait-painting.jpg';
     $file_metadata = $fmdm->uri($file_uri);
 
@@ -341,7 +340,7 @@ class FileMetadataExifTest extends FileMetadataManagerTestBase {
     $fmdm = $this->container->get('file_metadata_manager');
 
     // Copy test file to public://.
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/sample-1.tiff', 'public://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/sample-1.tiff', 'public://', FileSystemInterface::EXISTS_REPLACE);
     $file_uri = 'public://sample-1.tiff';
     $file_metadata = $fmdm->uri($file_uri);
 

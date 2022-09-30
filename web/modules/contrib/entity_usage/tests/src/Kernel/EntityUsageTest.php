@@ -22,7 +22,7 @@ class EntityUsageTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'entity_usage'];
+  protected static $modules = ['entity_test', 'entity_usage'];
 
   /**
    * The entity type used in this test.
@@ -69,7 +69,7 @@ class EntityUsageTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->injectedDatabase = $this->container->get('database');
@@ -104,6 +104,11 @@ class EntityUsageTest extends EntityKernelTestBase {
    * @covers \Drupal\entity_usage\EntityUsage::listTargets
    */
   public function testlistSources() {
+    // Add additional entity to test with more than 1 source.
+    $entity_3 = EntityTest::create(['name' => $this->randomMachineName()]);
+    $entity_3->save();
+    $this->testEntities[] = $entity_3;
+
     /** @var \Drupal\Core\Entity\EntityInterface $target_entity */
     $target_entity = $this->testEntities[0];
     /** @var \Drupal\Core\Entity\EntityInterface $source_entity */
@@ -111,6 +116,9 @@ class EntityUsageTest extends EntityKernelTestBase {
     $source_vid = ($source_entity instanceof RevisionableInterface && $source_entity->getRevisionId()) ? $source_entity->getRevisionId() : 0;
     $field_name = 'body';
     $this->insertEntityUsage($source_entity, $target_entity, $field_name);
+
+    // Add second source.
+    $this->insertEntityUsage($this->testEntities[2], $target_entity, $field_name);
 
     /** @var \Drupal\entity_usage\EntityUsage $entity_usage */
     $entity_usage = $this->container->get('entity_usage.usage');
@@ -126,8 +134,22 @@ class EntityUsageTest extends EntityKernelTestBase {
             'count' => 1,
           ],
         ],
+        (string) $entity_3->id() => [
+          0 => [
+            'source_langcode' => $entity_3->language()->getId(),
+            'source_vid' => $entity_3->getRevisionId() ?: 0,
+            'method' => 'entity_reference',
+            'field_name' => $field_name,
+            'count' => 1,
+          ],
+        ],
       ],
     ];
+    $this->assertEquals($expected_source_list, $real_source_list);
+
+    // Test the limit parameter.
+    unset($expected_source_list[$source_entity->getEntityTypeId()][2]);
+    $real_source_list = $entity_usage->listSources($target_entity, TRUE, 1);
     $this->assertEquals($expected_source_list, $real_source_list);
 
     $real_target_list = $entity_usage->listTargets($source_entity);

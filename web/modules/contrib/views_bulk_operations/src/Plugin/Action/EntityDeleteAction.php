@@ -2,9 +2,9 @@
 
 namespace Drupal\views_bulk_operations\Plugin\Action;
 
-use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
 
 /**
  * Delete entity action with default confirmation form.
@@ -37,7 +37,7 @@ class EntityDeleteAction extends ViewsBulkOperationsActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     return $object->access('delete', $account, $return_as_object);
   }
 

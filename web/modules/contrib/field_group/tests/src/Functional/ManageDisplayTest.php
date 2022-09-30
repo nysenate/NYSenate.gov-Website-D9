@@ -49,7 +49,10 @@ class ManageDisplayTest extends BrowserTestBase {
 
     // Create content type, with underscores.
     $type_name = 'll4ma_test';
-    $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
+    $type = $this->drupalCreateContentType([
+      'name' => $type_name,
+      'type' => $type_name,
+    ]);
     $this->type = $type->id();
 
   }
@@ -117,7 +120,10 @@ class ManageDisplayTest extends BrowserTestBase {
 
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/form-display/' . $group->group_name . '/delete');
     $this->submitForm([], 'Delete');
-    $this->assertSession()->responseContains(t('The group %label has been deleted from the %type content type.', ['%label' => $group->label, '%type' => $this->type]));
+    $this->assertSession()->responseContains(t('The group %label has been deleted from the %type content type.', [
+      '%label' => $group->label,
+      '%type' => $this->type,
+    ]));
 
     // Test that group is not in the $groups array.
     \Drupal::entityTypeManager()
@@ -135,7 +141,10 @@ class ManageDisplayTest extends BrowserTestBase {
 
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/' . $group->group_name . '/delete');
     $this->submitForm([], 'Delete');
-    $this->assertSession()->responseContains(t('The group %label has been deleted from the %type content type.', ['%label' => $group->label, '%type' => $this->type]));
+    $this->assertSession()->responseContains(t('The group %label has been deleted from the %type content type.', [
+      '%label' => $group->label,
+      '%type' => $this->type,
+    ]));
 
     // Test that group is not in the $groups array.
     \Drupal::entityTypeManager()

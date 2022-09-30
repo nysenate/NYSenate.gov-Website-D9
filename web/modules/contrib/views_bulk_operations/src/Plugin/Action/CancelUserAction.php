@@ -2,14 +2,15 @@
 
 namespace Drupal\views_bulk_operations\Plugin\Action;
 
-use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Cancels a user account.
@@ -24,24 +25,18 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
 
   /**
    * The current user.
-   *
-   * @var Drupal\Core\Session\AccountInterface
    */
-  protected $currentUser;
+  protected AccountInterface $currentUser;
 
   /**
    * User module config.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $userConfig;
+  protected ImmutableConfig $userConfig;
 
   /**
    * Module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Object constructor.
@@ -52,8 +47,7 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
    *   The plugin Id.
    * @param mixed $plugin_definition
    *   Plugin definition.
-   * @param Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
+   * @param \Drupal\views_bulk_operations\Plugin\Action\Drupal\Core\Session\AccountInterface $currentUser The current user.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory object.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
@@ -91,10 +85,10 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
    * {@inheritdoc}
    */
   public function execute($account = NULL) {
-    if ($account->id() === $this->currentUser->id() && (empty($this->context['list']) || count($this->context['list'] > 1))) {
+    if ($account->id() === $this->currentUser->id() && (empty($this->context['list']) || \count($this->context['list'] > 1))) {
       $this->messenger()->addError($this->t('The current user account cannot be canceled in a batch operation. Select your account only or cancel it from your account page.'));
     }
-    elseif (intval($account->id()) === 1) {
+    elseif (\intval($account->id()) === 1) {
       $this->messenger()->addError($this->t('The user 1 account (%label) cannot be canceled.', [
         '%label' => $account->label(),
       ]));
@@ -110,11 +104,11 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
       }
 
       // Cancel the account.
-      _user_cancel($this->configuration, $account, $this->configuration['user_cancel_method']);
+      \_user_cancel($this->configuration, $account, $this->configuration['user_cancel_method']);
 
       // If current user was cancelled, logout.
       if ($account->id() == $this->currentUser->id()) {
-        _user_cancel_session_regenerate();
+        \_user_cancel_session_regenerate();
       }
     }
   }
@@ -128,7 +122,7 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
       '#title' => $this->t('When cancelling these accounts'),
     ];
 
-    $form['user_cancel_method'] += user_cancel_methods();
+    $form['user_cancel_method'] += \user_cancel_methods();
 
     // Allow to send the account cancellation confirmation mail.
     $form['user_cancel_confirm'] = [
@@ -152,7 +146,7 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\user\UserInterface $object */
     return $object->access('delete', $account, $return_as_object);
   }

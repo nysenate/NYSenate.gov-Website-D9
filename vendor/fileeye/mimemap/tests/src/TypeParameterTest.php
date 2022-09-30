@@ -1,13 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap\Test;
 
 use FileEye\MimeMap\Type;
 use FileEye\MimeMap\TypeParameter;
+use FileEye\MimeMap\UndefinedException;
 
 class TypeParameterTest extends MimeMapTestBase
 {
-    public function testHasComment()
+    public function testHasComment(): void
     {
         $mt = new Type('image/png; a="parameter" (with a comment)');
         $this->assertSame('a', $mt->getParameter('a')->getName());
@@ -21,7 +22,7 @@ class TypeParameterTest extends MimeMapTestBase
         $this->assertSame('with a comment', $mt->getParameter('param')->getComment());
     }
 
-    public function testHasCommentNegative()
+    public function testHasCommentNegative(): void
     {
         $mt = new Type('image/png; a="parameter"');
         $this->assertSame('a', $mt->getParameter('a')->getName());
@@ -31,5 +32,8 @@ class TypeParameterTest extends MimeMapTestBase
         $this->assertSame('foo', $mt->getParameter('foo')->getName());
         $this->assertSame('bar', $mt->getParameter('foo')->getValue());
         $this->assertFalse($mt->getParameter('foo')->hasComment());
+        $this->expectException(UndefinedException::class);
+        $this->expectExceptionMessage('Parameter comment is not defined');
+        $comment = $mt->getParameter('foo')->getComment();
     }
 }

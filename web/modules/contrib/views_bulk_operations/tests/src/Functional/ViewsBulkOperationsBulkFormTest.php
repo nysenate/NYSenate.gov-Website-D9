@@ -8,10 +8,12 @@ namespace Drupal\Tests\views_bulk_operations\Functional;
  */
 class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestBase {
 
+  private const TEST_NODE_COUNT = 15;
+
   /**
    * Tests the VBO bulk form with simple test action.
    */
-  public function testViewsBulkOperationsBulkFormSimple() {
+  public function testViewsBulkOperationsBulkFormSimple(): void {
 
     $assertSession = $this->assertSession();
 
@@ -29,7 +31,7 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
     }
 
     // The advanced action should not be shown on the form - no permission.
-    $this->assertEmpty($this->cssSelect('input[value=views_bulk_operations_advanced_test_action]'), t('Advanced action is not selectable.'));
+    $this->assertEmpty($this->cssSelect('input[value=views_bulk_operations_advanced_test_action]'), 'Advanced action is not selectable.');
 
     // Log in as a user with 'edit any page content' permission
     // to have access to perform the test operation.
@@ -38,15 +40,10 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
 
     // Execute the simple test action.
     $selected = [0, 2, 3];
-    $this->executeAction('views-bulk-operations-test', t('Simple test action'), $selected);
-
-    $testViewConfig = \Drupal::service('config.factory')->get('views.view.views_bulk_operations_test');
-    $configData = $testViewConfig->getRawData();
-    $preconfig_setting = $configData['display']['default']['display_options']['fields']['views_bulk_operations_bulk_form']['selected_actions'][0]['preconfiguration']['preconfig'];
+    $this->executeAction('views-bulk-operations-test', 'Simple test action', $selected);
 
     foreach ($selected as $index) {
-      $assertSession->pageTextContains(sprintf('Test action (preconfig: %s, label: %s)',
-        $preconfig_setting,
+      $assertSession->pageTextContains(\sprintf('Test action (label: %s)',
         $this->testNodes[$index]->label()
       ));
     }
@@ -57,9 +54,9 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
     // this is handled by JS.
     $selected = [0, 1, 2, 3];
     $data = ['select_all' => 1];
-    $this->executeAction(NULL, t('Simple test action'), $selected, $data);
+    $this->executeAction(NULL, 'Simple test action', $selected, $data);
 
-    $assertSession->pageTextContains(sprintf('Action processing results: Test (%d).', self::TEST_NODE_COUNT));
+    $assertSession->pageTextContains(\sprintf('Action processing results: Test (%d).', self::TEST_NODE_COUNT));
 
   }
 
@@ -68,7 +65,7 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
    *
    * Uses the ViewsBulkOperationsAdvancedTestAction.
    */
-  public function testViewsBulkOperationsBulkFormAdvanced() {
+  public function testViewsBulkOperationsBulkFormAdvanced(): void {
 
     $assertSession = $this->assertSession();
 
@@ -84,14 +81,14 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
     // the ViewsBulkOperationsController class.
     $selected = [0, 2];
     $data = ['action' => 0];
-    $this->executeAction('views-bulk-operations-test-advanced', t('Apply to selected items'), $selected, $data);
+    $this->executeAction('views-bulk-operations-test-advanced', 'Apply to selected items', $selected, $data);
 
-    $assertSession->pageTextContains(sprintf('Action processing results: Test (%d).', count($selected)));
+    $assertSession->pageTextContains(\sprintf('Action processing results: Test (%d).', \count($selected)));
 
     // Execute the advanced test action.
     $selected = [0, 1, 3];
     $data = ['action' => 1];
-    $this->executeAction('views-bulk-operations-test-advanced', t('Apply to selected items'), $selected, $data);
+    $this->executeAction('views-bulk-operations-test-advanced', 'Apply to selected items', $selected, $data);
 
     // Check if the configuration form is open and contains the
     // test_config field.
@@ -108,11 +105,11 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
     $edit = [
       'test_config' => $config_value,
     ];
-    $this->submitForm($edit, t('Apply'));
+    $this->submitForm($edit, 'Apply');
 
     // Execute action by posting the confirmation form
     // (also tests if the submit button exists on the page).
-    $this->submitForm([], t('Execute action'));
+    $this->submitForm([], 'Execute action');
 
     // If all went well and Batch API did its job,
     // the next page should display results.
@@ -123,7 +120,7 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
     // NOTE: The view pager has an offset set on this view, so checkbox
     // indexes are not equal to test nodes array keys. Hence the $index + 1.
     foreach ($selected as $index) {
-      $assertSession->pageTextContains(sprintf('Test action (preconfig: %s, config: %s, label: %s)',
+      $assertSession->pageTextContains(\sprintf('Test action (preconfig: %s, config: %s, label: %s)',
         $preconfig_setting,
         $config_value,
         $this->testNodes[$index + 1]->label()
@@ -140,15 +137,15 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
     foreach ([0, 2] as $index) {
       $edit["views_bulk_operations_bulk_form[$index]"] = TRUE;
     }
-    $this->submitForm($edit, t('Apply to selected items'));
-    $this->submitForm(['test_config' => 'unpublish'], t('Apply'));
-    $this->submitForm([], t('Execute action'));
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->submitForm(['test_config' => 'unpublish'], 'Apply');
+    $this->submitForm([], 'Execute action');
     // Again, take offset into account (-1), also take 2 excluded
     // rows into account (-2).
     // Also, check if the custom completed message appears.
-    $assertSession->pageTextContains(sprintf('Custom processing message: Test (%d).', (count($this->testNodes) - 3)));
+    $assertSession->pageTextContains(\sprintf('Custom processing message: Test (%d).', \count($this->testNodes) - 3));
 
-    $this->assertNotEmpty((count($this->cssSelect('table.vbo-table tbody tr')) === 2), "The view shows only excluded results.");
+    $this->assertNotEmpty((\count($this->cssSelect('table.vbo-table tbody tr')) === 2), "The view shows only excluded results.");
   }
 
   /**
@@ -156,7 +153,7 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
    *
    * Uses the ViewsBulkOperationsPassTestAction.
    */
-  public function testViewsBulkOperationsBulkFormPassing() {
+  public function testViewsBulkOperationsBulkFormPassing(): void {
 
     $assertSession = $this->assertSession();
 
@@ -219,22 +216,22 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
       }
 
       $this->drupalGet('views-bulk-operations-test-advanced', $options);
-      $this->submitForm($edit, t('Apply to selected items'));
+      $this->submitForm($edit, 'Apply to selected items');
 
       // On batch-enabled processes check if provided context data is correct.
       if ($case['batch']) {
         if ($case['selection']) {
-          $total = count($selected);
+          $total = \count($selected);
         }
         else {
           // Again, include offset.
-          $total = count($this->testNodes) - 1;
+          $total = \count($this->testNodes) - 1;
         }
-        $n_batches = ceil($total / $case['batch_size']);
+        $n_batches = \ceil($total / $case['batch_size']);
 
         for ($i = 0; $i < $n_batches; $i++) {
           $processed = $i * $case['batch_size'];
-          $assertSession->pageTextContains(sprintf(
+          $assertSession->pageTextContains(\sprintf(
             'Processed %s of %s.',
             $processed,
             $total
@@ -251,7 +248,7 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
   /**
    * Test core action - specific configuration.
    */
-  public function testActionCorePreconfig() {
+  public function testActionCorePreconfig(): void {
     $assertSession = $this->assertSession();
 
     $testViewConfig = \Drupal::service('config.factory')->getEditable('views.view.views_bulk_operations_test');
@@ -272,8 +269,8 @@ class ViewsBulkOperationsBulkFormTest extends ViewsBulkOperationsFunctionalTestB
     // is displayed.
     $selection = [0, 2, 3];
     $label = $preconfig['label_override'];
-    $this->executeAction('views-bulk-operations-test', t('Simple test action'), $selection);
-    $assertSession->pageTextContains(sprintf('Are you sure you wish to perform "%s" action on %d entities?', $label, count($selection)));
+    $this->executeAction('views-bulk-operations-test', 'Simple test action', $selection);
+    $assertSession->pageTextContains(\sprintf('Are you sure you wish to perform "%s" action on %d entities?', $label, \count($selection)));
   }
 
 }

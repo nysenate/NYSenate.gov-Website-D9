@@ -26,19 +26,17 @@ class PasswordResetBehaviorsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
     'dblog',
-    'ctools',
     'config',
     'field',
     'datetime',
     'file',
     'image',
     'options',
-    'entity_reference',
     'text',
     'field_ui',
     'password_policy',
@@ -52,7 +50,7 @@ class PasswordResetBehaviorsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Set module install date far in the past so it does not affect regular
@@ -126,14 +124,12 @@ class PasswordResetBehaviorsTest extends BrowserTestBase {
       'password_reset' => '1',
     ];
     // Set reset and policy info.
-    $this->submitForm($edit, 'Next');
-    // No constraints needed for reset, continue.
-    $this->submitForm([], 'Next');
+    $this->submitForm($edit, 'Save');
     // Set the roles for the policy.
     $edit = [
       'roles[' . $rid . ']' => $rid,
     ];
-    $this->submitForm($edit, 'Finish');
+    $this->submitForm($edit, 'Save');
 
     // Time to kick this popsicle stand.
     $this->drupalLogout();
@@ -144,7 +140,7 @@ class PasswordResetBehaviorsTest extends BrowserTestBase {
     // User should be redirected to the user entity edit page after login.
     $this->drupalGet('user/login');
     $this->submitForm(['name' => 'testuser1', 'pass' => 'pass'], 'Log in');
-    $this->assertUrl($user2->toUrl('edit-form'), [], 'User should be sent to their account form after expiration');
+    $this->assertSession()->addressEquals($user2->toUrl('edit-form'));
     $this->drupalLogout();
 
     // Create a new node type.

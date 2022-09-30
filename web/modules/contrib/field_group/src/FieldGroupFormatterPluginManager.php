@@ -100,6 +100,7 @@ class FieldGroupFormatterPluginManager extends DefaultPluginManager {
    *   The context to prepare configuration for.
    * @param array $configuration
    *   The configuration of the group.
+   *
    * @return array
    *   The display properties with defaults added.
    */

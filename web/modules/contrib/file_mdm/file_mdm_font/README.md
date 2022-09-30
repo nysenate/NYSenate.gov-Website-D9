@@ -1,6 +1,6 @@
 # File metadata Font
 
-A Drupal 8 module providing a file metadata plugin to retrieve information from
+A Drupal module providing a file metadata plugin to retrieve information from
 font files.
 
 

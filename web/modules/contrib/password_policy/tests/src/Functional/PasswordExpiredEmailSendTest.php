@@ -38,7 +38,6 @@ class PasswordExpiredEmailSendTest extends BrowserTestBase {
    */
   protected static $modules = [
     'system',
-    'ctools',
     'password_policy',
     'mail_html_test',
   ];
@@ -118,14 +117,13 @@ class PasswordExpiredEmailSendTest extends BrowserTestBase {
       'send_pending_email' => '1,5',
     ];
     // Set reset and policy info.
-    $this->submitForm($edit, 'Next');
-    // No constraints needed for reset, continue.
-    $this->submitForm([], 'Next');
+    $this->submitForm($edit, 'Save');
     // Set the roles for the policy.
     $edit = [
       'roles[' . $rid . ']' => $rid,
     ];
-    $this->submitForm($edit, 'Finish');
+    $this->drupalGet('admin/config/security/password-policy/test');
+    $this->submitForm($edit, 'Save');
 
     // Time to kick this popsicle stand.
     $this->drupalLogout();

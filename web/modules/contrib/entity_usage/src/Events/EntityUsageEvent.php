@@ -2,7 +2,7 @@
 
 namespace Drupal\entity_usage\Events;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Implementation of Entity Usage events.

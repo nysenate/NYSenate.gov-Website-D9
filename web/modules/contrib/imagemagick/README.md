@@ -10,7 +10,7 @@ To submit bug reports and feature suggestions, or to track changes: https://drup
 * The module **must** be downloaded or updated using Composer, see [Download contributed modules and themes using Composer](https://www.drupal.org/node/2718229#adding-modules).
 This ensures the all dependency modules get downloaded as well.
 
-* Drupal 9.2.x and higher
+* Drupal 9.3.x and higher or 10.0.x and higher
 
 * Either ImageMagick (http://www.imagemagick.org) or GraphicsMagick
   (http://www.graphicsmagick.org) need to be installed on your server and the
@@ -211,4 +211,9 @@ Current maintainers:
   only.
 
 Past maintainers:
-* Daniel F. Kudwien 'sun' - https://www.drupal.org/u/sun
+* Daniel F. Kudwien (sun) - https://www.drupal.org/u/sun
+* James Walker (walkah) - http://drupal.org/user/1531
+* Darrel O'Pry (dopry) - http://drupal.org/user/22202
+* Andrew Morton (drewish) - http://drupal.org/user/34869
+* Dan Morrison (dman) - http://drupal.org/user/33240
+* Nathan Haug (quicksketch) - http://drupal.org/user/35821

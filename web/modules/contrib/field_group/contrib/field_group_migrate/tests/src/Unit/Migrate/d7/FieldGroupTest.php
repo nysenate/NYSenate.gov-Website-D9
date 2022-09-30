@@ -13,6 +13,9 @@ class FieldGroupTest extends MigrateSqlSourceTestBase {
 
   const PLUGIN_CLASS = 'Drupal\field_group_migrate\Plugin\migrate\source\d7\FieldGroup';
 
+  /**
+   * {@inheritdoc}
+   */
   protected $migrationConfiguration = [
     'id' => 'test',
     'source' => [
@@ -20,6 +23,9 @@ class FieldGroupTest extends MigrateSqlSourceTestBase {
     ],
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected $expectedResults = [
     [
       'id' => '1',
@@ -95,7 +101,7 @@ class FieldGroupTest extends MigrateSqlSourceTestBase {
    * {@inheritdoc}
    */
   public function providerSource() {
-    // @TODO FIX.
+    // @todo Fix source.
     return [];
   }
 

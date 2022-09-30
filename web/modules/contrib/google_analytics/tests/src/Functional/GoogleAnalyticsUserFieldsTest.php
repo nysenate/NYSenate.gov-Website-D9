@@ -19,7 +19,7 @@ class GoogleAnalyticsUserFieldsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['google_analytics', 'field_ui'];
+  protected static $modules = ['google_analytics', 'field_ui'];
 
   /**
    * Default theme.
@@ -38,7 +38,7 @@ class GoogleAnalyticsUserFieldsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $permissions = [

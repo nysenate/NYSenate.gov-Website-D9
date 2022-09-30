@@ -3,27 +3,34 @@
 namespace Drupal\password_policy\Form;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Editing a constraint within the policy wizard form.
+ * Editing a constraint within the policy form.
  */
 class ConstraintEdit extends FormBase {
 
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
 
   /**
-   * Adding a tempstore for the multiple steps of the wizard form.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\TempStore\SharedTempStoreFactory
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $tempstore;
+  protected $entityTypeManager;
 
   /**
    * Plugin manager of the password constraints.
@@ -33,11 +40,11 @@ class ConstraintEdit extends FormBase {
   protected $manager;
 
   /**
-   * Identifier of the wizard's tempstore.
+   * The Password Policy entity.
    *
-   * @var string
+   * @var \Drupal\password_policy\Entity\PasswordPolicy
    */
-  protected $tempstoreId = 'password_policy.password_policy';
+  protected $passwordPolicy;
 
   /**
    * Machine name of the form step.
@@ -50,20 +57,28 @@ class ConstraintEdit extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('tempstore.shared'), $container->get('plugin.manager.password_policy.password_constraint'));
+    return new static(
+      $container->get('plugin.manager.password_policy.password_constraint'),
+      $container->get('current_route_match'),
+      $container->get('entity_type.manager')
+    );
   }
 
   /**
-   * Overriding the constructor to load in the plugin manager and tempstore.
+   * Overriding the constructor to load in the plugin manager.
    *
-   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempstore
-   *   The tempstore of the wizard form.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The plugin manager for the password constraints.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   *   The plugin manager for the password constraints.
    */
-  public function __construct(SharedTempStoreFactory $tempstore, PluginManagerInterface $manager) {
-    $this->tempstore = $tempstore;
+  public function __construct(PluginManagerInterface $manager, RouteMatchInterface $route_match, EntityTypeManagerInterface $entity_type_manager) {
     $this->manager = $manager;
+    $this->routeMatch = $route_match;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -87,18 +102,25 @@ class ConstraintEdit extends FormBase {
    *   Plugin ID of the constraint.
    * @param string $machine_name
    *   Machine name of this form step.
+   * @param string $password_policy_id
+   *   ID of the password_policy entity.
    *
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $constraint_id = NULL, $machine_name = NULL) {
-    $this->machineName = $machine_name;
-    $cached_values = $this->tempstore->get($this->tempstoreId)->get($this->machineName);
-    /** @var \Drupal\password_policy\Entity\PasswordPolicy $policy */
-    $policy = $cached_values['password_policy'];
+  public function buildForm(array $form, FormStateInterface $form_state, $constraint_id = NULL, $machine_name = NULL, $password_policy_id = NULL) {
+    // Set the password_policy entity.
+    if (!isset($password_policy_id)) {
+      $password_policy_id = $machine_name;
+    }
+    else {
+      $password_policy_id = $this->routeMatch->getParameter('password_policy_id');
+      $this->machineName = $machine_name;
+    }
+    $this->passwordPolicy = $this->entityTypeManager->getStorage('password_policy')->loadByProperties(['id' => $password_policy_id])[$password_policy_id];
     if (is_numeric($constraint_id)) {
       $id = $constraint_id;
-      $constraint_id = $policy->getConstraint($id);
+      $constraint_id = $this->passwordPolicy->getConstraint($id);
       $instance = $this->manager->createInstance($constraint_id['id'], $constraint_id);
     }
     else {
@@ -139,10 +161,7 @@ class ConstraintEdit extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $cached_values = $this->tempstore->get($this->tempstoreId)->get($this->machineName);
-    /** @var \Drupal\password_policy\Entity\PasswordPolicy $policy */
-    $policy = $cached_values['password_policy'];
-    $constraints = $policy->getConstraints();
+    $constraints = $this->passwordPolicy->getConstraints();
     /** @var \Drupal\password_policy\PasswordConstraintInterface $instance */
     $instance = $form_state->getValue('instance');
     $instance->submitConfigurationForm($form, $form_state);
@@ -152,9 +171,8 @@ class ConstraintEdit extends FormBase {
     else {
       $constraints[] = $instance->getConfiguration();
     }
-    $policy->set('policy_constraints', $constraints);
-    $this->tempstore->get($this->tempstoreId)->set($this->machineName, $cached_values);
-    $form_state->setRedirect('entity.password_policy.wizard.edit', ['machine_name' => $this->machineName, 'step' => 'constraint']);
+    $this->passwordPolicy->set('policy_constraints', $constraints);
+    $this->passwordPolicy->save();
   }
 
   /**
@@ -162,7 +180,7 @@ class ConstraintEdit extends FormBase {
    */
   public function ajaxSave(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $url = Url::fromRoute('entity.password_policy.wizard.edit', ['machine_name' => $this->machineName, 'step' => 'constraint']);
+    $url = Url::fromRoute('entity.password_policy.edit_form', ['password_policy' => $this->passwordPolicy->id()]);
     $response->addCommand(new RedirectCommand($url->toString()));
     $response->addCommand(new CloseModalDialogCommand());
     return $response;

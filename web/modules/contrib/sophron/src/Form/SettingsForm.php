@@ -212,7 +212,7 @@ class SettingsForm extends ConfigFormBase {
           $i++,
           $type_string,
           implode(', ', $type->getExtensions()),
-          $type->getDescription(),
+          $type->hasDescription() ? $type->getDescription() : '',
           implode(', ', $type->getAliases()),
         ];
       }
@@ -241,11 +241,12 @@ class SettingsForm extends ConfigFormBase {
     $i = 1;
     foreach ($this->mimeMapManager->listExtensions() as $extension_string) {
       if ($extension = $this->mimeMapManager->getExtension($extension_string)) {
+        $defaultExtensionType = $this->mimeMapManager->getType($extension->getDefaultType());
         $rows[] = [
           $i++,
           $extension_string,
           implode(', ', $extension->getTypes()),
-          $this->mimeMapManager->getType($extension->getDefaultType())->getDescription(),
+          $defaultExtensionType->hasDescription() ? $defaultExtensionType->getDescription() : '',
         ];
       }
     }

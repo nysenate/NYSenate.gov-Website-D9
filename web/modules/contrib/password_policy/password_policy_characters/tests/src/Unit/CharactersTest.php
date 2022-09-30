@@ -19,7 +19,7 @@ class CharactersTest extends UnitTestCase {
   public function testCharacters($count, $type, $password, $result) {
     $characters = $this->getMockBuilder('Drupal\password_policy_characters\Plugin\PasswordConstraint\PasswordCharacter')
       ->disableOriginalConstructor()
-      ->setMethods(['getConfiguration', 'formatPlural'])
+      ->onlyMethods(['getConfiguration', 'formatPlural'])
       ->getMock();
     $characters
       ->method('getConfiguration')

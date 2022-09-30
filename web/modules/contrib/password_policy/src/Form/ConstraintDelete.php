@@ -2,31 +2,33 @@
 
 namespace Drupal\password_policy\Form;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\ConfirmFormHelper;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Deleting a constraint from a policy within the wizard.
+ * Deleting a constraint from a policy.
  */
 class ConstraintDelete extends ConfirmFormBase {
 
   /**
-   * Temp store to maintain state between steps of the wizard.
+   * The current route match.
    *
-   * @var \Drupal\Core\TempStore\SharedTempStoreFactory
+   * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $tempstore;
+  protected $routeMatch;
 
   /**
-   * ID of the tempstore to maintain state for the form wizard.
+   * The entity type manager.
    *
-   * @var string
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $tempstoreId = 'password_policy.password_policy';
+  protected $entityTypeManager;
 
   /**
    * The machine name of the form step.
@@ -43,20 +45,44 @@ class ConstraintDelete extends ConfirmFormBase {
   protected $id;
 
   /**
+   * The Password Policy entity.
+   *
+   * @var \Drupal\password_policy\Entity\PasswordPolicy
+   */
+  protected $passwordPolicy;
+
+  /**
+   * Plugin manager of the password constraints.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $manager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('tempstore.shared'));
+    return new static(
+      $container->get('plugin.manager.password_policy.password_constraint'),
+      $container->get('current_route_match'),
+      $container->get('entity_type.manager')
+    );
   }
 
   /**
-   * Constructor that adds the tempstore from the container for wizard.
+   * Constructor.
    *
-   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempstore
-   *   The tempstore of the wizard form.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
+   *   Plugin manager of the password constraints.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(SharedTempStoreFactory $tempstore) {
-    $this->tempstore = $tempstore;
+  public function __construct(PluginManagerInterface $manager, RouteMatchInterface $route_match, EntityTypeManagerInterface $entity_type_manager) {
+    $this->manager = $manager;
+    $this->routeMatch = $route_match;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -85,11 +111,12 @@ class ConstraintDelete extends ConfirmFormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $machine_name = NULL, $id = NULL) {
+    $policy_id = $this->routeMatch->getParameter('password_policy_id');
+    $this->passwordPolicy = $this->entityTypeManager->getStorage('password_policy')->loadByProperties(['id' => $policy_id])[$policy_id];
     $this->machineName = $machine_name;
     $this->id = $id;
 
-    $cached_values = $this->tempstore->get($this->tempstoreId)->get($this->machineName);
-    $form['#title'] = $this->getQuestion($id, $cached_values);
+    $form['#title'] = $this->getQuestion();
 
     $form['#attributes']['class'][] = 'confirmation';
     $form['description'] = ['#markup' => $this->getDescription()];
@@ -108,23 +135,18 @@ class ConstraintDelete extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $cached_values = $this->tempstore->get($this->tempstoreId)->get($this->machineName);
-    /** @var \Drupal\password_policy\Entity\PasswordPolicy $policy */
-    $policy = $cached_values['password_policy'];
-    $constraints = $policy->getConstraints();
+    $constraints = $this->passwordPolicy->getConstraints();
     unset($constraints[$this->id]);
-    $policy->set('policy_constraints', $constraints);
-    $this->tempstore->get($this->tempstoreId)->set($this->machineName, $cached_values);
-    $form_state->setRedirect('entity.password_policy.wizard.edit', ['machine_name' => $this->machineName, 'step' => 'constraint']);
+    $this->passwordPolicy->set('policy_constraints', $constraints);
+    $this->passwordPolicy->save();
+    $form_state->setRedirect('entity.password_policy.edit_form', ['password_policy' => $this->passwordPolicy->id()]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getQuestion($id = NULL, $cached_values = NULL) {
-    /** @var \Drupal\password_policy\Entity\PasswordPolicy $password_policy */
-    $password_policy = $cached_values['password_policy'];
-    $context = $password_policy->getConstraint($id);
+  public function getQuestion() {
+    $context = $this->passwordPolicy->getConstraint($this->id);
     return $this->t('Are you sure you want to delete the @label constraint?', [
       '@label' => $context['id'],
     ]);
@@ -137,7 +159,7 @@ class ConstraintDelete extends ConfirmFormBase {
    *   A URL object.
    */
   public function getCancelUrl() {
-    return new Url('entity.password_policy.wizard.edit', ['machine_name' => $this->machineName, 'step' => 'constraint']);
+    return new Url('entity.password_policy.collection');
   }
 
   /**

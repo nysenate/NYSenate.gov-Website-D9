@@ -12,23 +12,29 @@ class TestViewsBulkOperationsBatch extends ViewsBulkOperationsBatch {
   /**
    * Override t method.
    */
-  public static function translate($string, array $args = [], array $options = []) {
-    return strtr($string, $args);
+  public static function translate($string, array $args = [], array $options = []): string {
+    return \strtr($string, $args);
   }
 
   /**
    * Override message method.
    */
-  public static function message($message = NULL, $type = 'status', $repeat = TRUE) {
+  public static function message($message = NULL, $type = 'status', $repeat = TRUE): ?string {
     static $storage;
-    if (isset($storage)) {
+    if ($message === NULL) {
       $output = $storage;
       $storage = NULL;
       return $output;
     }
     else {
-      $storage = (string) $message;
+      if (isset($storage)) {
+        $storage .= ' | ' . (string) $message;
+      }
+      else {
+        $storage = (string) $message;
+      }
     }
+    return NULL;
   }
 
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap\Command;
 
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
-use FileEye\MimeMap\Map\AbstractMap;
+use FileEye\MimeMap\Map\MimeMapInterface;
 use FileEye\MimeMap\MapHandler;
 use FileEye\MimeMap\MapUpdater;
 
@@ -24,7 +24,7 @@ class UpdateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('update')
@@ -61,19 +61,50 @@ class UpdateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $updater = new MapUpdater();
         $updater->selectBaseMap(MapUpdater::DEFAULT_BASE_MAP_CLASS);
 
+        $scriptFile = $input->getOption('script');
+        if (!is_string($scriptFile)) {
+            $io->error('Invalid value for --script option.');
+            return (2);
+        }
+
+        $mapClass = $input->getOption('class');
+        if (!is_string($mapClass)) {
+            $io->error('Invalid value for --class option.');
+            return (2);
+        }
+
+        $diff = $input->getOption('diff');
+        assert(is_bool($diff));
+        $failOnDiff = $input->getOption('fail-on-diff');
+        assert(is_bool($failOnDiff));
+
         // Executes on the base map the script commands.
-        $commands = Yaml::parse(file_get_contents($input->getOption('script')));
+        $contents = file_get_contents($scriptFile);
+        if ($contents === false) {
+            $io->error('Failed loading update script file ' . $scriptFile);
+            return (2);
+        }
+
+        $commands = Yaml::parse($contents);
+        if (!is_array($commands)) {
+            $io->error('Invalid update script file ' . $scriptFile);
+            return (2);
+        }
+
         foreach ($commands as $command) {
             $output->writeln("<info>{$command[0]} ...</info>");
             try {
-                $errors = call_user_func_array([$updater, $command[1]], $command[2]);
+                $callable = [$updater, $command[1]];
+                assert(is_callable($callable));
+                $errors = call_user_func_array($callable, $command[2]);
+                assert(is_array($errors));
                 if (!empty($errors)) {
                     foreach ($errors as $error) {
                         $output->writeln("<comment>$error.</comment>");
@@ -86,12 +117,12 @@ class UpdateCommand extends Command
         }
 
         // Load the map to be changed.
-        MapHandler::setDefaultMapClass($input->getOption('class'));
+        MapHandler::setDefaultMapClass($mapClass);
         $current_map = MapHandler::map();
 
         // Check if anything got changed.
         $write = true;
-        if ($input->getOption('diff')) {
+        if ($diff) {
             $write = false;
             foreach ([
                 't' => 'MIME types',
@@ -110,15 +141,20 @@ class UpdateCommand extends Command
         }
 
         // Fail on diff if required.
-        if ($write && $input->getOption('diff') && $input->getOption('fail-on-diff')) {
+        if ($write && $diff && $failOnDiff) {
             $io->error('Changes to mapping detected and --fail-on-diff requested, aborting.');
             return(2);
         }
 
         // If changed, save the new map to the PHP file.
         if ($write) {
-            $updater->writeMapToPhpClassFile($current_map->getFileName());
-            $output->writeln('<comment>Code updated.</comment>');
+            try {
+                $updater->writeMapToPhpClassFile($current_map->getFileName());
+                $output->writeln('<comment>Code updated.</comment>');
+            } catch (\RuntimeException $e) {
+                $io->error($e->getMessage() .  '.');
+                return(2);
+            }
         } else {
             $output->writeln('<info>No changes to mapping.</info>');
         }
@@ -132,9 +168,9 @@ class UpdateCommand extends Command
     /**
      * Compares two type-to-extension maps by section.
      *
-     * @param AbstractMap $old_map
+     * @param MimeMapInterface $old_map
      *   The first map to compare.
-     * @param AbstractMap $new_map
+     * @param MimeMapInterface $new_map
      *   The second map to compare.
      * @param string $section
      *   The first-level array key to compare: 't' or 'e' or 'a'.
@@ -144,7 +180,7 @@ class UpdateCommand extends Command
      * @return bool
      *   True if the maps are equal.
      */
-    protected function compareMaps(AbstractMap $old_map, AbstractMap $new_map, $section)
+    protected function compareMaps(MimeMapInterface $old_map, MimeMapInterface $new_map, string $section): bool
     {
         $old_map->sort();
         $new_map->sort();

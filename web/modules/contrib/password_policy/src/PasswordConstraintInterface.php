@@ -17,7 +17,7 @@ interface PasswordConstraintInterface extends PluginInspectionInterface, Configu
    *
    * @param string $password
    *   The password entered by the end user.
-   * @param \Drupal\user\UserInterface
+   * @param \Drupal\user\UserInterface $user
    *   The user which password is changed.
    *
    * @return PasswordPolicyValidation

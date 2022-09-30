@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Provides the fieldgroup behaviors for field UI.
+ */
+
 (function ($) {
 
   'use strict';
@@ -54,7 +59,6 @@
       });
     }
   };
-
 
   /**
    * Row handlers for the 'Manage display' screen.

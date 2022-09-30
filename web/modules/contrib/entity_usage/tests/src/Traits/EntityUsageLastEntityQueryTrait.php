@@ -27,6 +27,7 @@ trait EntityUsageLastEntityQueryTrait {
     $query_result = \Drupal::entityQuery($entity_type_id)
       ->sort('created', 'DESC')
       ->range(0, 1)
+      ->accessCheck(TRUE)
       ->execute();
     $entity_id = reset($query_result);
     if (empty($entity_id)) {

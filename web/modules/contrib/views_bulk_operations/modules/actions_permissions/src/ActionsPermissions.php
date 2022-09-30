@@ -3,10 +3,10 @@
 namespace Drupal\actions_permissions;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Create permissions for existing actions.
@@ -17,17 +17,13 @@ class ActionsPermissions implements ContainerInjectionInterface {
 
   /**
    * VBO Action manager service.
-   *
-   * @var \Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionManager
    */
-  protected $actionManager;
+  protected ViewsBulkOperationsActionManager $actionManager;
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructor.
@@ -58,7 +54,7 @@ class ActionsPermissions implements ContainerInjectionInterface {
    * @return array
    *   Permissions array.
    */
-  public function permissions() {
+  public function permissions(): array {
     $permissions = [];
     $entity_type_definitions = $this->entityTypeManager->getDefinitions();
 

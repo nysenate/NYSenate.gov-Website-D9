@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap\Test;
 
@@ -6,13 +6,16 @@ use FileEye\MimeMap\MalformedTypeException;
 use FileEye\MimeMap\MappingException;
 use FileEye\MimeMap\Type;
 use FileEye\MimeMap\TypeParameter;
+use FileEye\MimeMap\UndefinedException;
 
 class TypeTest extends MimeMapTestBase
 {
     /**
      * Data provider for testParse.
+     *
+     * @return array<string,mixed>
      */
-    public function parseProvider()
+    public function parseProvider(): array
     {
         return [
             'application/ogg;description=Hello there!;asd=fgh' => [
@@ -22,12 +25,12 @@ class TypeTest extends MimeMapTestBase
                   'application/ogg; description="Hello there!"; asd="fgh"',
                   'application/ogg; description="Hello there!"; asd="fgh"',
                 ],
-                ['application', null],
-                ['ogg', null],
+                ['application'],
+                ['ogg'],
                 true,
                 [
-                  'description' => ['Hello there!', null],
-                  'asd' => ['fgh', null],
+                  'description' => ['Hello there!'],
+                  'asd' => ['fgh'],
                 ],
             ],
             'text/plain' => [
@@ -37,8 +40,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain',
                   'text/plain',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 false,
                 [],
             ],
@@ -49,11 +52,11 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; a="b"',
                   'text/plain; a="b"',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
-                  'a' => ['b', null],
+                  'a' => ['b'],
                 ],
             ],
             'application/ogg' => [
@@ -63,8 +66,8 @@ class TypeTest extends MimeMapTestBase
                   'application/ogg',
                   'application/ogg',
                 ],
-                ['application', null],
-                ['ogg', null],
+                ['application'],
+                ['ogg'],
                 false,
                 [],
             ],
@@ -75,8 +78,8 @@ class TypeTest extends MimeMapTestBase
                   '*/*',
                   '*/*',
                 ],
-                ['*', null],
-                ['*', null],
+                ['*'],
+                ['*'],
                 false,
                 [],
             ],
@@ -87,8 +90,8 @@ class TypeTest extends MimeMapTestBase
                   'n/n',
                   'n/n',
                 ],
-                ['n', null],
-                ['n', null],
+                ['n'],
+                ['n'],
                 false,
                 [],
             ],
@@ -100,10 +103,10 @@ class TypeTest extends MimeMapTestBase
                   'text (UTF-8 Plain Text)/plain; charset="utf-8"',
                 ],
                 ['text', 'UTF-8 Plain Text'],
-                ['plain', null],
+                ['plain'],
                 true,
                 [
-                  'charset' => ['utf-8', null],
+                  'charset' => ['utf-8'],
                 ],
             ],
             'text (Text) / plain ; charset = utf-8' => [
@@ -114,10 +117,10 @@ class TypeTest extends MimeMapTestBase
                   'text (Text)/plain; charset="utf-8"',
                 ],
                 ['text', 'Text'],
-                ['plain', null],
+                ['plain'],
                 true,
                 [
-                  'charset' => ['utf-8', null],
+                  'charset' => ['utf-8'],
                 ],
             ],
             'text / (Plain) plain ; charset = utf-8' => [
@@ -127,11 +130,11 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; charset="utf-8"',
                   'text/plain (Plain); charset="utf-8"',
                 ],
-                ['text', null],
+                ['text'],
                 ['plain', 'Plain'],
                 true,
                 [
-                  'charset' => ['utf-8', null],
+                  'charset' => ['utf-8'],
                 ],
             ],
             'text / plain (Plain Text) ; charset = utf-8' => [
@@ -141,11 +144,11 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; charset="utf-8"',
                   'text/plain (Plain Text); charset="utf-8"',
                 ],
-                ['text', null],
+                ['text'],
                 ['plain', 'Plain Text'],
                 true,
                 [
-                  'charset' => ['utf-8', null],
+                  'charset' => ['utf-8'],
                 ],
             ],
             'text / plain ; (Charset=utf-8) charset = utf-8' => [
@@ -155,8 +158,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; charset="utf-8"',
                   'text/plain; charset="utf-8" (Charset=utf-8)',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'charset' => ['utf-8', 'Charset=utf-8'],
@@ -169,8 +172,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; charset="utf-8"',
                   'text/plain; charset="utf-8" (Charset)',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'charset' => ['utf-8', 'Charset'],
@@ -183,8 +186,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; charset="utf-8"',
                   'text/plain; charset="utf-8" (UTF8)',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'charset' => ['utf-8', 'UTF8'],
@@ -197,8 +200,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; charset="utf-8"',
                   'text/plain; charset="utf-8" (UTF-8 Plain Text)',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'charset' => ['utf-8', 'UTF-8 Plain Text'],
@@ -211,11 +214,11 @@ class TypeTest extends MimeMapTestBase
                   'application/x-foobar; description="bbgh(kdur"',
                   'application/x-foobar; description="bbgh(kdur"',
                 ],
-                ['application', null],
-                ['x-foobar', null],
+                ['application'],
+                ['x-foobar'],
                 true,
                 [
-                  'description' => ['bbgh(kdur', null],
+                  'description' => ['bbgh(kdur'],
                 ],
             ],
             'application/x-foobar;description="a \"quoted string\""' => [
@@ -225,11 +228,11 @@ class TypeTest extends MimeMapTestBase
                   'application/x-foobar; description="a \"quoted string\""',
                   'application/x-foobar; description="a \"quoted string\""',
                 ],
-                ['application', null],
-                ['x-foobar', null],
+                ['application'],
+                ['x-foobar'],
                 true,
                 [
-                  'description' => ['a "quoted string"', null],
+                  'description' => ['a "quoted string"'],
                 ],
             ],
             'text/xml;description=test' => [
@@ -239,11 +242,11 @@ class TypeTest extends MimeMapTestBase
                   'text/xml; description="test"',
                   'text/xml; description="test"',
                 ],
-                ['text', null],
-                ['xml', null],
+                ['text'],
+                ['xml'],
                 true,
                 [
-                  'description' => ['test', null],
+                  'description' => ['test'],
                 ],
             ],
             'text/xml;one=test;two=three' => [
@@ -253,12 +256,12 @@ class TypeTest extends MimeMapTestBase
                   'text/xml; one="test"; two="three"',
                   'text/xml; one="test"; two="three"',
                 ],
-                ['text', null],
-                ['xml', null],
+                ['text'],
+                ['xml'],
                 true,
                 [
-                  'one' => ['test', null],
-                  'two' => ['three', null],
+                  'one' => ['test'],
+                  'two' => ['three'],
                 ],
             ],
             'text/xml;one="test";two="three"' => [
@@ -268,12 +271,12 @@ class TypeTest extends MimeMapTestBase
                   'text/xml; one="test"; two="three"',
                   'text/xml; one="test"; two="three"',
                 ],
-                ['text', null],
-                ['xml', null],
+                ['text'],
+                ['xml'],
                 true,
                 [
-                  'one' => ['test', null],
-                  'two' => ['three', null],
+                  'one' => ['test'],
+                  'two' => ['three'],
                 ],
             ],
             'text/xml; this="is"; a="parameter" (with a comment)' => [
@@ -283,27 +286,15 @@ class TypeTest extends MimeMapTestBase
                   'text/xml; this="is"; a="parameter"',
                   'text/xml; this="is"; a="parameter" (with a comment)',
                 ],
-                ['text', null],
-                ['xml', null],
+                ['text'],
+                ['xml'],
                 true,
                 [
-                  'this' => ['is', null],
+                  'this' => ['is'],
                   'a' => ['parameter', 'with a comment'],
                 ],
             ],
             // Various edge cases.
-            'null' => [
-                null,
-                [
-                  null,
-                  null,
-                  null,
-                ],
-                [null, null],
-                [null, null],
-                false,
-                [],
-            ],
             'text/plain; charset="utf-8" (UTF/8)' => [
                 'text/plain; charset="utf-8" (UTF/8)',
                 [
@@ -311,8 +302,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; charset="utf-8"',
                   'text/plain; charset="utf-8" (UTF/8)',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'charset' => ['utf-8', 'UTF/8'],
@@ -325,15 +316,15 @@ class TypeTest extends MimeMapTestBase
                   'appf/xml; a="b"; b="parameter"; c="d"; e="f"; g="h"',
                   'appf/xml; a="b"; b="parameter" (with; a comment); c="d"; e="f" (;); g="h"',
                 ],
-                ['appf', null],
-                ['xml', null],
+                ['appf'],
+                ['xml'],
                 true,
                 [
-                  'a' => ['b', null],
+                  'a' => ['b'],
                   'b' => ['parameter', 'with; a comment'],
-                  'c' => ['d', null],
+                  'c' => ['d'],
                   'e' => ['f', ';'],
-                  'g' => ['h', null],
+                  'g' => ['h'],
                 ],
             ],
             'text/(abc)def(ghi)' => [
@@ -343,7 +334,7 @@ class TypeTest extends MimeMapTestBase
                   'text/def',
                   'text/def (abc ghi)',
                 ],
-                ['text', null],
+                ['text'],
                 ['def', 'abc ghi'],
                 false,
                 [],
@@ -355,7 +346,7 @@ class TypeTest extends MimeMapTestBase
                   'text/def',
                   'text/def (abc)',
                 ],
-                ['text', null],
+                ['text'],
                 ['def', 'abc'],
                 false,
                 [],
@@ -367,7 +358,7 @@ class TypeTest extends MimeMapTestBase
                   'text/def',
                   'text/def (ghi)',
                 ],
-                ['text', null],
+                ['text'],
                 ['def', 'ghi'],
                 false,
                 [],
@@ -379,8 +370,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; a="def"',
                   'text/plain; a="def" (\)abc \()',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'a' => ['def', '\)abc \('],
@@ -393,8 +384,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; a="foo"',
                   'text/plain; a="foo" (abc)',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'a' => ['foo', 'abc'],
@@ -407,8 +398,8 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; a="def"',
                   'text/plain; a="def" (a"bc\)def")',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
                   'a' => ['def', 'a"bc\)def"'],
@@ -421,11 +412,11 @@ class TypeTest extends MimeMapTestBase
                   'text/plain; a="(abc)def"',
                   'text/plain; a="(abc)def"',
                 ],
-                ['text', null],
-                ['plain', null],
+                ['text'],
+                ['plain'],
                 true,
                 [
-                  'a' => ['(abc)def', null],
+                  'a' => ['(abc)def'],
                 ],
             ],
         ];
@@ -433,22 +424,46 @@ class TypeTest extends MimeMapTestBase
 
     /**
      * @dataProvider parseProvider
+     *
+     * @param string $type
+     * @param string[] $expectedToString
+     * @param string[] $expectedMedia
+     * @param string[] $expectedSubType
+     * @param bool $expectedHasParameters
+     * @param string[] $expectedParameters
      */
-    public function testParse($type, array $expectedToString, array $expectedMedia, array $expectedSubType, $expectedHasParameters, array $expectedParameters)
+    public function testParse(string $type, array $expectedToString, array $expectedMedia, array $expectedSubType, bool $expectedHasParameters, array $expectedParameters): void
     {
         $mt = new Type($type);
         $this->assertSame($expectedMedia[0], $mt->getMedia());
-        $this->assertSame($expectedMedia[1], $mt->getMediaComment());
+        if (isset($expectedMedia[1])) {
+            $this->assertTrue($mt->hasMediaComment());
+            $this->assertSame($expectedMedia[1], $mt->getMediaComment());
+        } else {
+            $this->assertFalse($mt->hasMediaComment());
+        }
         $this->assertSame($expectedSubType[0], $mt->getSubType());
-        $this->assertSame($expectedSubType[1], $mt->getSubTypeComment());
+        if (isset($expectedSubType[1])) {
+            $this->assertTrue($mt->hasSubTypeComment());
+            $this->assertSame($expectedSubType[1], $mt->getSubTypeComment());
+        } else {
+            $this->assertFalse($mt->hasSubTypeComment());
+        }
         $this->assertSame($expectedHasParameters, $mt->hasParameters());
-        $this->assertSame(count($expectedParameters), count($mt->getParameters()));
+        if ($expectedHasParameters) {
+            $this->assertSameSize($expectedParameters, $mt->getParameters());
+        }
         foreach ($expectedParameters as $name => $param) {
             $this->assertTrue(isset($mt->getParameters()[$name]));
             $this->assertInstanceOf(TypeParameter::class, $mt->getParameter($name));
             $this->assertSame($name, $mt->getParameter($name)->getName());
             $this->assertSame($param[0], $mt->getParameter($name)->getValue());
-            $this->assertSame($param[1], $mt->getParameter($name)->getComment());
+            if (isset($param[1])) {
+                $this->assertTrue($mt->getParameter($name)->hasComment());
+                $this->assertSame($param[1], $mt->getParameter($name)->getComment());
+            } else {
+                $this->assertFalse($mt->getParameter($name)->hasComment());
+            }
         }
         $this->assertSame($expectedToString[0], $mt->toString(Type::SHORT_TEXT));
         $this->assertSame($expectedToString[1], $mt->toString(Type::FULL_TEXT));
@@ -457,8 +472,10 @@ class TypeTest extends MimeMapTestBase
 
     /**
      * Data provider for testParseMalformed.
+     *
+     * @return array<string,array<string>>
      */
-    public function parseMalformedProvider()
+    public function parseMalformedProvider(): array
     {
         return [
             'empty string' => [''],
@@ -473,13 +490,13 @@ class TypeTest extends MimeMapTestBase
     /**
      * @dataProvider parseMalformedProvider
      */
-    public function testParseMalformed($type)
+    public function testParseMalformed(string $type): void
     {
         $this->expectException(MalformedTypeException::class);
         new Type($type);
     }
 
-    public function testParseAgain()
+    public function testParseAgain(): void
     {
         $mt = new Type('application/ogg;description=Hello there!;asd=fgh');
         $this->assertSame(2, count($mt->getParameters()));
@@ -488,12 +505,8 @@ class TypeTest extends MimeMapTestBase
         $this->assertSame(1, count($mt->getParameters()));
     }
 
-    public function testGetDescription()
+    public function testGetDescription(): void
     {
-        $this->assertNull((new Type('*/*'))->getDescription());
-        $this->assertNull((new Type('image/*'))->getDescription());
-        $this->assertNull((new Type('application/java*'))->getDescription());
-        $this->assertNull((new Type('application/x-t3vm-image'))->getDescription());
         $this->assertSame('HTML document', (new Type('text/html'))->getDescription());
         $this->assertSame('HTML document, HTML: HyperText Markup Language', (new Type('text/html'))->getDescription(true));
 
@@ -505,34 +518,97 @@ class TypeTest extends MimeMapTestBase
         $this->assertSame('GPX geographic data, GPX: GPS Exchange Format', (new Type('application/x-gpx'))->getDescription(true));
     }
 
-    public function testSetComment()
+    /**
+     * Data provider for testMissingDescription.
+     *
+     * @return array<array<string>>
+     */
+    public function missingDescriptionProvider(): array
+    {
+        return [
+            ['*/*'],
+            ['image/*'],
+            ['application/java*'],
+            ['application/x-t3vm-image'],
+        ];
+    }
+
+    /**
+     * @dataProvider missingDescriptionProvider
+     */
+    public function testMissingDescription(string $type): void
+    {
+        $t = new Type($type);
+        $this->assertFalse($t->hasDescription());
+        $this->expectException(MappingException::class);
+        $this->expectExceptionMessage('No description available for type: ' . $type);
+        $desc = $t->getDescription();
+    }
+
+    public function testMissingMediaComment(): void
+    {
+        $t = new Type('text/plain');
+        $this->assertFalse($t->hasMediaComment());
+        $this->expectException(UndefinedException::class);
+        $this->expectExceptionMessage('Media comment is not defined');
+        $comment = $t->getMediaComment();
+    }
+
+    public function testMissingSubTypeComment(): void
+    {
+        $t = new Type('text/plain');
+        $this->assertFalse($t->hasSubTypeComment());
+        $this->expectException(UndefinedException::class);
+        $this->expectExceptionMessage('Subtype comment is not defined');
+        $comment = $t->getSubTypeComment();
+    }
+
+    public function testMissingParameters(): void
+    {
+        $t = new Type('text/plain');
+        $this->assertFalse($t->hasParameters());
+        $this->expectException(UndefinedException::class);
+        $this->expectExceptionMessage('No parameters defined');
+        $parameters = $t->getParameters();
+    }
+
+    public function testMissingParameter(): void
+    {
+        $t = new Type('text/plain');
+        $this->assertFalse($t->hasParameter('foo'));
+        $this->expectException(UndefinedException::class);
+        $this->expectExceptionMessage('Parameter foo is not defined');
+        $parameters = $t->getParameter('foo');
+    }
+
+    public function testSetComment(): void
     {
         $type = new Type('text/x-test');
         $type->setMediaComment('media comment');
         $this->assertSame('text (media comment)/x-test', $type->toString(Type::FULL_TEXT_WITH_COMMENTS));
         $type->setSubTypeComment('subtype comment');
         $this->assertSame('text (media comment)/x-test (subtype comment)', $type->toString(Type::FULL_TEXT_WITH_COMMENTS));
-        $type->setMediaComment(null);
+        $type->setMediaComment();
         $this->assertSame('text/x-test (subtype comment)', $type->toString(Type::FULL_TEXT_WITH_COMMENTS));
-        $type->setSubTypeComment(null);
+        $type->setSubTypeComment();
         $this->assertSame('text/x-test', $type->toString(Type::FULL_TEXT_WITH_COMMENTS));
     }
 
-    public function testIsExperimental()
+    public function testIsExperimental(): void
     {
         $this->assertTrue((new Type('text/x-test'))->isExperimental());
         $this->assertTrue((new Type('image/X-test'))->isExperimental());
         $this->assertFalse((new Type('text/plain'))->isExperimental());
     }
 
-    public function testIsVendor()
+    public function testIsVendor(): void
     {
         $this->assertTrue((new Type('application/vnd.openoffice'))->isVendor());
         $this->assertFalse((new Type('application/vendor.openoffice'))->isVendor());
         $this->assertFalse((new Type('vnd/fsck'))->isVendor());
     }
 
-    public function testIsWildcard()
+    public function testIsWildcard(): void
     {
         $this->assertTrue((new Type('*/*'))->isWildcard());
         $this->assertTrue((new Type('image/*'))->isWildcard());
@@ -542,7 +618,7 @@ class TypeTest extends MimeMapTestBase
         $this->assertTrue((new Type('application/java-*'))->isWildcard());
     }
 
-    public function testIsAlias()
+    public function testIsAlias(): void
     {
         $this->assertFalse((new Type('*/*'))->isAlias());
         $this->assertFalse((new Type('image/*'))->isAlias());
@@ -551,7 +627,7 @@ class TypeTest extends MimeMapTestBase
         $this->assertTrue((new Type('text/x-markdown'))->isAlias());
     }
 
-    public function testWildcardMatch()
+    public function testWildcardMatch(): void
     {
         $this->assertTrue((new Type('image/png'))->wildcardMatch('*/*'));
         $this->assertTrue((new Type('image/png'))->wildcardMatch('image/*'));
@@ -563,7 +639,7 @@ class TypeTest extends MimeMapTestBase
         $this->assertFalse((new Type('application/javascript'))->wildcardMatch('application/java-*'));
     }
 
-    public function testAddParameter()
+    public function testAddParameter(): void
     {
         $mt = new Type('image/png; foo=bar');
         $mt->addParameter('baz', 'val', 'this is a comment');
@@ -576,7 +652,7 @@ class TypeTest extends MimeMapTestBase
         $this->assertSame('image/png; foo="bar"; baz="val" (this is a comment)', $res);
     }
 
-    public function testRemoveParameter()
+    public function testRemoveParameter(): void
     {
         $mt = new Type('image/png; foo=bar;baz=val(this is a comment)');
         $mt->removeParameter('foo');
@@ -587,44 +663,43 @@ class TypeTest extends MimeMapTestBase
         $this->assertSame('image/png; baz="val" (this is a comment)', $res);
     }
 
-    public function testGetAliases()
+    public function testGetAliases(): void
     {
         $this->assertSame(['image/x-wmf', 'image/x-win-metafile', 'application/x-wmf', 'application/wmf', 'application/x-msmetafile'], (new Type('image/wmf'))->getAliases());
-        $this->assertSame([], (new Type('foo/bar'))->getAliases(false));
-        $this->assertSame([], (new Type('image/x-wmf'))->getAliases(false));
     }
 
-    public function testGetAliasesOnAliasStrict()
+    public function testGetAliasesOnAlias(): void
     {
-        $this->bcSetExpectedException(MappingException::class, "Cannot get aliases for 'image/x-wmf', it is an alias itself");
+        $this->expectException(MappingException::class);
+        $this->expectExceptionMessage("Cannot get aliases for 'image/x-wmf', it is an alias itself");
         $this->assertSame([], (new Type('image/x-wmf'))->getAliases());
     }
 
-    public function testGetAliasesOnMissingTypeStrict()
+    public function testGetAliasesOnMissingType(): void
     {
-        $this->bcSetExpectedException(MappingException::class, "No MIME type found for foo/bar in map");
+        $this->expectException(MappingException::class);
+        $this->expectExceptionMessage("No MIME type found for foo/bar in map");
         $this->assertSame([], (new Type('foo/bar'))->getAliases());
     }
 
-    public function testGetExtensions()
+    public function testGetExtensions(): void
     {
         $this->assertEquals(['atom'], (new Type('application/atom+xml'))->getExtensions());
-        $this->assertEquals(['ser', 'js', 'jsm', 'mjs'], (new Type('application/java*'))->getExtensions());
-        $this->assertEquals(['ser'], (new Type('application/java-*'))->getExtensions());
-        $this->assertEquals([], (new Type('application/a000'))->getExtensions(false));
-        $this->assertEquals([], (new Type('application/a000-*'))->getExtensions(false));
+        $this->assertEquals(['pgp', 'gpg', 'asc', 'skr', 'pkr', 'key', 'sig'], (new Type('application/pgp*'))->getExtensions());
+        $this->assertEquals(['asc', 'sig', 'pgp', 'gpg'], (new Type('application/pgp-s*'))->getExtensions());
 
         $this->assertSame(['smi', 'smil', 'sml', 'kino'], (new Type('application/smil+xml'))->getExtensions());
         $this->assertSame(['smi', 'smil', 'sml', 'kino'], (new Type('application/smil'))->getExtensions());
     }
 
-    public function testGetExtensionsFail()
+    public function testGetExtensionsFail(): void
     {
         $this->expectException(MappingException::class);
-        $this->assertEquals([], (new Type('application/a000'))->getExtensions());
+        $this->expectExceptionMessage("No MIME type found for application/a000 in map");
+        $extensions = (new Type('application/a000'))->getExtensions();
     }
 
-    public function testGetDefaultExtension()
+    public function testGetDefaultExtension(): void
     {
         $this->assertEquals('atom', (new Type('application/atom+xml'))->getDefaultExtension());
         $this->assertEquals('csv', (new Type('text/csv'))->getDefaultExtension());
@@ -635,6 +710,8 @@ class TypeTest extends MimeMapTestBase
 
     /**
      * Data provider for testGetDefaultExtensionFail.
+     *
+     * @return array<array<string>>
      */
     public function getDefaultExtensionFailProvider()
     {
@@ -642,14 +719,14 @@ class TypeTest extends MimeMapTestBase
             ['*/*'],
             ['n/n'],
             ['image/*'],
-            ['application/java*'],
+            ['application/pgp*'],
         ];
     }
 
     /**
      * @dataProvider getDefaultExtensionFailProvider
      */
-    public function testGetDefaultExtensionFail($type)
+    public function testGetDefaultExtensionFail(string $type): void
     {
         $this->expectException(MappingException::class);
         $this->assertNull((new Type($type))->getDefaultExtension());

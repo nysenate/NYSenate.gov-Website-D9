@@ -4,7 +4,9 @@ namespace Drupal\password_policy;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Password\PasswordInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\UserInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Manipulates Password Policy Validator.
@@ -12,6 +14,7 @@ use Drupal\user\UserInterface;
  * @package Drupal\password_policy
  */
 class PasswordPolicyValidator implements PasswordPolicyValidatorInterface {
+  use StringTranslationTrait;
 
   /**
    * The password constraint plugin manager.
@@ -28,19 +31,29 @@ class PasswordPolicyValidator implements PasswordPolicyValidatorInterface {
   protected $passwordPolicyStorage;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * PasswordPolicyValidator constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The password policy storage.
    * @param \Drupal\password_policy\PasswordConstraintPluginManager $passwordConstraintPluginManager
    *   The password constraint plugin manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler service.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, PasswordConstraintPluginManager $passwordConstraintPluginManager) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, PasswordConstraintPluginManager $passwordConstraintPluginManager, ModuleHandlerInterface $moduleHandler) {
     $this->passwordConstraintPluginManager = $passwordConstraintPluginManager;
     $this->passwordPolicyStorage = $entityTypeManager->getStorage('password_policy');
+    $this->moduleHandler = $moduleHandler;
   }
 
   /**
@@ -111,7 +124,7 @@ class PasswordPolicyValidator implements PasswordPolicyValidatorInterface {
     $original_roles = array_combine($original_roles, $original_roles);
 
     $force_failure = FALSE;
-    if ($edited_user_roles !== $original_roles && $password === '' && !empty($applicable_policies)) {
+    if ($edited_user_roles !== $original_roles && $password === '' && !empty($applicable_policies) && !isset($original_roles['anonymous'])) {
       // New role has been added and applicable policies are available.
       $force_failure = TRUE;
     }
@@ -128,16 +141,16 @@ class PasswordPolicyValidator implements PasswordPolicyValidatorInterface {
         // Execute validation.
         $validation = $plugin_object->validate($password, $user);
         if (!$force_failure && $validation->isValid()) {
-          $status = t('Pass');
+          $status = $this->t('Pass');
         }
         else {
           $message = $validation->getErrorMessage();
           if (empty($message)) {
-            $message = t('New role was added or existing password policy changed. Please update your password.');
+            $message = $this->t('New role was added or existing password policy changed. Please update your password.');
           }
-          $status = t('Fail - @message', ['@message' => $message]);
+          $status = $this->t('Fail - @message', ['@message' => $message]);
         }
-        $status_class = 'password-policy-constraint-' . ($validation->isValid() ? 'passed' : 'failed');
+        $status_class = 'password-policy-constraint-' . ($validation->isValid() && !$force_failure ? 'passed' : 'failed');
         $table_row = [
           'data' => [
             'policy' => $policy->label(),
@@ -149,6 +162,11 @@ class PasswordPolicyValidator implements PasswordPolicyValidatorInterface {
         $policies_table_rows[] = $table_row;
       }
     }
+
+    $this->moduleHandler->alter(
+      'password_policy_constraints_table_rows',
+      $policies_table_rows
+    );
 
     return $policies_table_rows;
   }

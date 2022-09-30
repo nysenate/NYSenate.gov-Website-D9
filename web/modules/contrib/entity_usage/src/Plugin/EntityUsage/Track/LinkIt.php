@@ -5,7 +5,7 @@ namespace Drupal\entity_usage\Plugin\EntityUsage\Track;
 use Drupal\Component\Utility\Html;
 
 /**
- * Tracks usage of entities related in entity_reference fields.
+ * Tracks usage of entities embedded into text fields using Linkit module.
  *
  * @EntityUsageTrack(
  *   id = "linkit",

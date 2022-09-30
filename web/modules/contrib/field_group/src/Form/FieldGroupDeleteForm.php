@@ -2,11 +2,11 @@
 
 namespace Drupal\field_group\Form;
 
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\field_group\FieldgroupUi;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -95,7 +95,10 @@ class FieldGroupDeleteForm extends ConfirmFormBase {
 
     field_group_delete_field_group($this->fieldGroup);
 
-    $this->messenger->addMessage($this->t('The group %group has been deleted from the %type content type.', ['%group' => $this->fieldGroup->label, '%type' => $bundle_label]));
+    $this->messenger->addMessage($this->t('The group %group has been deleted from the %type content type.', [
+      '%group' => $this->fieldGroup->label,
+      '%type' => $bundle_label,
+    ]));
 
     // Redirect.
     $form_state->setRedirectUrl($this->getCancelUrl());

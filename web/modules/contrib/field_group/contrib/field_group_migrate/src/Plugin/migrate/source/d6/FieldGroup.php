@@ -58,7 +58,7 @@ class FieldGroup extends DrupalSqlBase {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   protected function transformEntityFormDisplaySettings(Row $row) {
     $row->setSourceProperty('extracted_settings', $row->getSourceProperty('settings/form'));
@@ -102,11 +102,15 @@ class FieldGroup extends DrupalSqlBase {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   protected function transformEntityViewDisplaySettings(Row $row) {
     $row->setSourceProperty('extracted_settings', $row->getSourceProperty('settings/display'));
-    $view_modes = array_diff(array_keys($row->getSourceProperty('extracted_settings')), ['label', 'description', 'weight']);
+    $view_modes = array_diff(array_keys($row->getSourceProperty('extracted_settings')), [
+      'label',
+      'description',
+      'weight',
+    ]);
     $view_modes = array_filter($view_modes, function ($value) {
       return !is_numeric($value);
     });
@@ -151,9 +155,6 @@ class FieldGroup extends DrupalSqlBase {
           break;
       }
 
-      /**
-       * @todo: ?
-       */
       if ($view_mode == 'full') {
         $view_mode = 'default';
       }

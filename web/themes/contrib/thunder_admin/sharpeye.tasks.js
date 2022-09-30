@@ -17,7 +17,9 @@ module.exports = [
   ], actions: [
     {$: '#view-title-table-column a', waitBefore: 1000}
   ]},
-  {path: '/admin/content/scheduled', fullPage: true},
+  {path: '/admin/content/scheduled', fullPage: true, actions: [
+    {$: 'h1.page-title'},
+  ]},
   {name: 'Files', path: '/admin/content/files', fullPage: true, replace: [
     {$: '.views-field-filesize', value: '99.9 KB'},
     {$: '.views-field-created, .views-field-changed', value: 'Mon, 07/08/2019 - 08:27'}
@@ -35,37 +37,31 @@ module.exports = [
   {name: 'Add paragraphs modal', path: '/node/add/article', fullPage: true, replace: [
     {$: '//*[@id="edit-author"]/summary/span/text()', value: ' (Authored on xxxx-xx-xx)'}
   ], actions: [
-    {$: '#field-paragraphs-values > tbody > tr > td > div > ul > li > button'}
-  ]
-  },
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="..."]', wait: '.paragraphs-add-dialog.ui-dialog-content '},
+    {$: '.ui-dialog .ui-dialog-titlebar'}
+  ]},
   {name: 'Paragraphs', path: '/node/add/article', fullPage: true, replace: [
     {$: '//*[@id="edit-author"]/summary/span/text()', value: ' (Authored on xxxx-xx-xx)'}
   ], actions: [
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
-    {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_text_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-0-subform"]'},
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="+ Text"]', wait: '[data-drupal-selector="edit-field-paragraphs-0-subform"]'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="..."]', wait: '.paragraphs-add-dialog.ui-dialog-content '},
     {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_quote_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-1-subform"]'},
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="..."]', wait: '.paragraphs-add-dialog.ui-dialog-content '},
     {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_link_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-2-subform"]'},
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="..."]', wait: '.paragraphs-add-dialog.ui-dialog-content '},
     {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_twitter_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-3-subform"]'},
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
-    {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_gallery_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-4-subform"]'},
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
-    {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_image_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-5-subform"]'},
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="+ Gallery"]', wait: '[data-drupal-selector="edit-field-paragraphs-4-subform"]'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="+ Image"]', wait: '[data-drupal-selector="edit-field-paragraphs-5-subform"]'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="..."]', wait: '.paragraphs-add-dialog.ui-dialog-content '},
     {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_video_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-6-subform"]'}
-  ]
-  },
+  ]},
   {name: 'Linkit dialog', path: '/node/add/article', fullPage: true, replace: [
     {$: '//*[@id="edit-author"]/summary/span/text()', value: ' (Authored on xxxx-xx-xx)'}
   ], actions: [
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
-    {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_text_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-0-subform"]'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="+ Text"]', wait: '[data-drupal-selector="edit-field-paragraphs-0-subform"]'},
     {$: '//*[contains(@class, "cke_button__drupallink")]/span[1]'},
     {$: '.ui-dialog-buttonpane'}
-  ]
-  },
+  ]},
   {name: 'Paragraphs modified content message', path: '/edit/node/36b2e2b2-3df0-43eb-a282-d792b0999c07', fullPage: true, replace: [
     {$: '//*[@id="edit-meta-changed"]/text()', value: ' 01/01/2018 - 00:00'}
   ], actions: [
@@ -100,22 +96,21 @@ module.exports = [
   {name: 'Nested table sort', path: '/edit/node/36b2e2b2-3df0-43eb-a282-d792b0999c07', fullPage: true, replace: [
     {$: '//*[@id="edit-meta-changed"]/text()', value: ' 01/01/2018 - 00:00'}
   ], actions: [
-    {$: '//*[@id="field-paragraphs-values"]/tbody/tr[7]/td/div/ul/li/button'},
-    {$: '//div[contains(@class, "paragraphs-add-dialog") and contains(@class, "ui-dialog-content")]/ul/li/input[@name="field_paragraphs_link_add_more"]'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[7]//button[text()="..."]', wait: '.paragraphs-add-dialog.ui-dialog-content '},
+    {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_link_add_more"]'},
     {fill: [
-      {$: '//input[@data-drupal-selector="edit-field-paragraphs-5-subform-field-link-0-uri"]', value: 'http://example.com/1'}
+      {$: '//input[@data-drupal-selector="edit-field-paragraphs-7-subform-field-link-0-uri"]', value: 'http://example.com/1'}
     ]},
-    {$: '//input[@data-drupal-selector="edit-field-paragraphs-5-subform-field-link-add-more"]'},
+    {$: '//input[@data-drupal-selector="edit-field-paragraphs-7-subform-field-link-add-more"]'},
     {fill: [
-      {$: '//input[@data-drupal-selector="edit-field-paragraphs-5-subform-field-link-1-uri"]', value: 'http://example.com/2'}
+      {$: '//input[@data-drupal-selector="edit-field-paragraphs-7-subform-field-link-1-uri"]', value: 'http://example.com/2'}
     ]},
-    {$: '//*[@data-drupal-selector="edit-field-paragraphs-5-subform-field-link-wrapper"]/div/div/table/thead/tr[2]/th/button'},
-    {$: '//*[@data-drupal-selector="edit-field-paragraphs-5-subform-field-link-wrapper"]/div/div/table/tbody/tr[4]/td[1]/input'},
-    {$: '//*[@data-drupal-selector="edit-field-paragraphs-5-subform-field-link-wrapper"]/div/div/table/tbody/tr[1]/td/a'}
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs-7-subform-field-link-wrapper"]/div/div/table/thead/tr[2]/th/button'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs-7-subform-field-link-wrapper"]/div/div/table/tbody/tr[4]/td[1]/input'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs-7-subform-field-link-wrapper"]/div/div/table/tbody/tr[1]/td/a'}
   ]},
   {name: 'Modals in paragraphs', path: '/node/add/article', fullPage: true, actions: [
-    {$: '.field-multiple-table--paragraphs > tbody > tr:last-of-type .paragraphs-features__add-in-between__button', wait: '.paragraphs-add-dialog.ui-dialog-content '},
-    {$: '.paragraphs-add-dialog.ui-dialog-content [name="field_paragraphs_image_add_more"]', wait: '[data-drupal-selector="edit-field-paragraphs-0-subform"]'},
+    {$: '//*[@data-drupal-selector="edit-field-paragraphs"]//tbody/tr[last()]//button[text()="+ Image"]', wait: '[data-drupal-selector="edit-field-paragraphs-0-subform"]'},
     {$: '[name="field_paragraphs_0_subform_field_image_entity_browser_entity_browser"]'},
     {switchToFrame: 'iframe[name="entity_browser_iframe_image_browser"]', wait: '#entity-browser-image-browser-form'},
     {$: '#entity-browser-image-browser-form .view-content > div:nth-child(1)'},
@@ -133,8 +128,7 @@ module.exports = [
     {$: '//*[@id="edit-author"]/summary/span/text()', value: ' (Authored on xxxx-xx-xx)'}
   ], actions: [
     {moveto: {$: '#block-thunder-admin-page-title'}}
-  ]
-  },
+  ]},
   {name: 'Media type image edit form', path: '/edit/media/17965877-27b2-428f-8b8c-7dccba9786e5', fullPage: true, replace: [
     {$: '//*[@id="edit-author"]/summary/span/text()', value: ' (Authored on xxxx-xx-xx)'}
   ]},
@@ -143,8 +137,7 @@ module.exports = [
   ]},
   {name: 'Media type video add form', path: '/media/add/video', fullPage: true, replace: [
     {$: '//*[@id="media-video-add-form"]/div[2]/div/ul/li[2]/a/span', value: 'Authored on xxxx-xx-xx'}
-  ]
-  },
+  ]},
   {name: 'Status page', path: '/admin/reports/status', fullPage: true, remove: ['#block-thunder-admin-content > div.system-status-report > div:nth-child(2) > details:nth-of-type(1):not(:only-of-type)'], replace: [
     {$: '//*[@id="block-thunder-admin-content"]/div[1]/div[1]/span/span[2]/span[1]', value: 'X Errors'},
     {$: '//*[@id="block-thunder-admin-content"]/div[1]/div[2]/span/span[2]/span[1]', value: 'X Warnings'},
@@ -164,7 +157,7 @@ module.exports = [
   {name: 'Place block modal', path: '/admin/structure/block', element: '.ui-dialog', actions: [
     {$: 'a#edit-blocks-region-header-title', wait: '.ui-dialog'}
   ]},
-  {path: '/admin/structure/block/manage/thunder_base_branding'},
+  {path: '/admin/structure/block/manage/olivero_site_branding'},
   {name: 'Taxonomy term ordering', path: '/admin/structure/taxonomy/manage/channel/overview', actions: [
     {dragAndDrop: '//tr[contains(@class, "draggable")][2]/td/a[@class="tabledrag-handle"]', offsetx: 150},
     {$: '//div[contains(@class, "tabledrag-changed-warning messages")]', waitBefore: 1000}
@@ -193,7 +186,7 @@ module.exports = [
     {$: '//*[@id="edit-site-404"]/@value', value: 'node/404'}
   ]},
   {name: 'Input format Basic HTML', path: '/admin/config/content/formats/manage/basic_html', fullPage: true, actions: [
-    {wait: '#editor-settings-wrapper li.vertical-tabs__menu-item.first span.vertical-tabs__menu-item-summary'}
+    {$: '#editor-settings-wrapper li.vertical-tabs__menu-item.first span.vertical-tabs__menu-item-summary'}
   ]},
   {name: 'Install page', path: '/core/install.php', hide: ['.site-version']},
   {name: 'Select2 dropdown', path: '/edit/node/36b2e2b2-3df0-43eb-a282-d792b0999c07', fullPage: true, hide: [

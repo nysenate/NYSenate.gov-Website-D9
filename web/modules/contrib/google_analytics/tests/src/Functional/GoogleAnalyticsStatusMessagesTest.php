@@ -19,7 +19,7 @@ class GoogleAnalyticsStatusMessagesTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['google_analytics', 'google_analytics_test'];
+  protected static $modules = ['google_analytics', 'google_analytics_test'];
 
   /**
    * Default theme.
@@ -38,7 +38,7 @@ class GoogleAnalyticsStatusMessagesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $permissions = [

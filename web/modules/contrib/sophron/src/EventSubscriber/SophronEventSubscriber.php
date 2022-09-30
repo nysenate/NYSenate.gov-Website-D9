@@ -58,11 +58,11 @@ class SophronEventSubscriber implements EventSubscriberInterface {
    *   Sophron's map event.
    */
   public function initializeMap(MapEvent $event) {
-    $map_commands = $this->sophronSettings->get('map_commands');
+    $map_commands = $this->sophronSettings->get('map_commands') ?? [];
     $map = MapHandler::map($event->getMapClass());
     foreach ($map_commands as $command) {
-      $method = isset($command[0]) ? $command[0] : '';
-      $args = isset($command[1]) ? $command[1] : [];
+      $method = $command[0] ?? '';
+      $args = $command[1] ?? [];
       try {
         if (!is_callable([$map, $method])) {
           throw new \InvalidArgumentException("Non-existing mapping method '{$method}'");

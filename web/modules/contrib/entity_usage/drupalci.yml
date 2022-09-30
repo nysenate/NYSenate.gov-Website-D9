@@ -1,0 +1,10 @@
+build:
+  assessment:
+    testing:
+      run_tests:
+        # Run all tests together with high concurrency.
+        types: 'PHPUnit-Unit,PHPUnit-Kernel,PHPUnit-Functional,PHPUnit-FunctionalJavascript'
+        testgroups: '--all'
+        suppress-deprecations: true
+        halt-on-fail: false
+        concurrency: 15

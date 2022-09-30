@@ -88,7 +88,7 @@ class EntityUsageQueueBatchManager implements ContainerInjectionInterface {
    *   (Optional) The batch size to use when executing the batch process to
    *   populate the queue. Defaults to static::BATCH_SIZE.
    *
-   * @return array
+   * @return array{operations: array<array{callable-string, array}>, finished: callable-string, title: \Drupal\Core\StringTranslation\TranslatableMarkup, progress_message: \Drupal\Core\StringTranslation\TranslatableMarkup, error_message: \Drupal\Core\StringTranslation\TranslatableMarkup}
    *   The batch array.
    */
   public function generateBatch($batch_size = 0) {
@@ -134,8 +134,9 @@ class EntityUsageQueueBatchManager implements ContainerInjectionInterface {
    *   The entity type id, for example 'node'.
    * @param int $batch_size
    *   The batch size.
-   * @param mixed $context
-   *   Batch context.
+   * @param array{sandbox: array{progress?: int, total?: int, current_item?: int}, results: string[], finished: int, message: string} $context
+   *   Batch context. May be an array, or implementing \ArrayObject in the case
+   *   of Drush.
    */
   public static function queueSourcesBatchWorker($entity_type_id, $batch_size, &$context) {
     $queue = \Drupal::queue('entity_usage_regenerate_queue');

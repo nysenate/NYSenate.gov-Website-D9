@@ -30,7 +30,12 @@ class ConsecutiveCharacters extends PasswordConstraintBase {
     }
     $pattern = '/(.)\1{' . ($max - 1) . '}/';
     if (preg_match($pattern, $password)) {
-      $validation->setErrorMessage($this->t('Password must have fewer than @max consecutive identical characters. This is case sensitive.', ['@max' => $max]));
+      if ($max == 2) {
+        $validation->setErrorMessage($this->t('No consecutive identical characters are allowed.'));
+      }
+      else {
+        $validation->setErrorMessage($this->t('Password must have fewer than @max consecutive identical characters. This is case sensitive.', ['@max' => $max]));
+      }
     }
     return $validation;
   }
@@ -48,7 +53,11 @@ class ConsecutiveCharacters extends PasswordConstraintBase {
    * {@inheritdoc}
    */
   public function getSummary() {
-    return $this->t('Maximum consecutive identical characters: @max', ['@max' => $this->getConfiguration()['max_consecutive_characters']]);
+    $max = $this->getConfiguration()['max_consecutive_characters'];
+    if ($max == 2) {
+      return $this->t('No consecutive identical characters are allowed.');
+    }
+    return $this->t('Consecutive identical characters fewer than: @max', ['@max' => $max]);
   }
 
   /**
@@ -59,8 +68,8 @@ class ConsecutiveCharacters extends PasswordConstraintBase {
     $form['max_consecutive_characters'] = [
       '#type' => 'select',
       '#options' => array_combine(array_values($range), $range),
-      '#title' => $this->t('Maximum consecutive identical characters'),
-      '#description' => $this->t('Select the maximum number of consecutive identical characters allowed in the password.'),
+      '#title' => $this->t('Consecutive identical characters fewer than'),
+      '#description' => $this->t('This many or more consecutive identical characters will not be allowed in the password.'),
       '#default_value' => $this->getConfiguration()['max_consecutive_characters'],
     ];
     return $form;

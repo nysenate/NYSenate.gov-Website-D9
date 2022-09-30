@@ -69,7 +69,7 @@ class GoogleAnalyticsVisibilityRoles extends ProcessPluginBase implements Contai
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($roles) = $value;
+    [$roles] = $value;
 
     // Remove role IDs disabled in D6/D7.
     $roles = array_filter($roles);

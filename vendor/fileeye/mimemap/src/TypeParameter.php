@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap;
 
@@ -35,39 +35,35 @@ class TypeParameter
      * @param string $value   Parameter value.
      * @param string $comment Comment for this parameter.
      */
-    public function __construct($name, $value, $comment = null)
+    public function __construct(string $name, string $value, string $comment = null)
     {
         $this->name = $name;
         $this->value = $value;
-        $this->comment = $comment;
+        if ($comment !== null) {
+            $this->comment = $comment;
+        }
     }
 
     /**
      * Gets the parameter name.
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
      * Gets the parameter value.
-     *
-     * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
     /**
      * Does this parameter have a comment?
-     *
-     * @return boolean true if param has a comment, false otherwise.
      */
-    public function hasComment()
+    public function hasComment(): bool
     {
         return (bool) $this->comment;
     }
@@ -75,25 +71,26 @@ class TypeParameter
     /**
      * Gets the parameter comment.
      *
-     * @return string
+     * @throws UndefinedException
      */
-    public function getComment()
+    public function getComment(): string
     {
-        return $this->comment;
+        if ($this->hasComment()) {
+            return $this->comment;
+        }
+        throw new UndefinedException('Parameter comment is not defined');
     }
 
     /**
      * Gets a string representation of this parameter.
      *
      * @param int $format The format of the output string.
-     *
-     * @return string String representation of parameter.
      */
-    public function toString($format = Type::FULL_TEXT)
+    public function toString(int $format = Type::FULL_TEXT): string
     {
         $val = $this->name . '="' . str_replace('"', '\\"', $this->value) . '"';
-        if ($format > Type::FULL_TEXT && $this->comment) {
-            $val .= ' (' . $this->comment . ')';
+        if ($format > Type::FULL_TEXT && $this->hasComment()) {
+            $val .= ' (' . $this->getComment() . ')';
         }
         return $val;
     }

@@ -1,0 +1,45 @@
+uuid: 3cd9a57b-e7d6-4c01-aab3-32e47b792f24
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.promotional_banner
+    - field.field.media.image.field_image
+    - image.style.280_x_280
+    - media.type.image
+  module:
+    - layout_builder
+    - svg_image
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: Pyq580AsIX5NVdYP57-DmtQq09IcAVP3GFVYBX_ydZY
+id: media.image.promotional_banner
+targetEntityType: media
+bundle: image
+mode: promotional_banner
+content:
+  field_image:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: 280_x_280
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

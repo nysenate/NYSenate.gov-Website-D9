@@ -24,10 +24,17 @@ class ToolkitImagemagickFormTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp(): void {
     parent::setUp();
+
+    $this->moduleList = \Drupal::service('extension.list.module');
 
     // Create an admin user.
     $admin_user = $this->drupalCreateUser([

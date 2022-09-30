@@ -40,11 +40,10 @@ class EntityUsageLayoutBuilderTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installSchema('entity_usage', ['entity_usage']);
-    $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('block_content');
 

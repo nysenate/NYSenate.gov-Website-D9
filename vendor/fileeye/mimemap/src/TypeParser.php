@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace FileEye\MimeMap;
 
@@ -16,33 +16,31 @@ class TypeParser
      *   The Type object to receive the components.
      *
      * @throws MalformedTypeException when $type_string is malformed.
-     *
-     * @return void
      */
-    public static function parse($type_string, Type $type)
+    public static function parse(string $type_string, Type $type): void
     {
         // Media and SubType are separated by a slash '/'.
         $media = static::parseStringPart($type_string, 0, '/');
-
         if (!$media['string']) {
             throw new MalformedTypeException('Media type not found');
         }
         if (!$media['delimiter_matched']) {
             throw new MalformedTypeException('Slash \'/\' to separate media type and subtype not found');
         }
-
-        $type->setMedia(strtolower((string) $media['string']));
-        $type->setMediaComment($media['comment']);
+        $type->setMedia(strtolower($media['string']));
+        if ($media['comment'] !== null) {
+            $type->setMediaComment($media['comment']);
+        }
 
         // SubType and Parameters are separated by semicolons ';'.
         $sub = static::parseStringPart($type_string, $media['end_offset'] + 1, ';');
-
         if (!$sub['string']) {
             throw new MalformedTypeException('Media subtype not found');
         }
-
-        $type->setSubType(strtolower((string) $sub['string']));
-        $type->setSubTypeComment($sub['comment']);
+        $type->setSubType(strtolower($sub['string']));
+        if ($sub['comment'] !== null) {
+            $type->setSubTypeComment($sub['comment']);
+        }
 
         // Loops through the parameter.
         while ($sub['delimiter_matched']) {
@@ -67,7 +65,7 @@ class TypeParser
      * @param string $delimiter
      *   Stop parsing when delimiter found.
      *
-     * @return array
+     * @return array{'string': string, 'comment': string|null, 'delimiter_matched': bool, 'end_offset': int}
      *   An array with the following keys:
      *   'string' - the uncommented part of $string
      *   'comment' - the comment part of $string
@@ -75,7 +73,7 @@ class TypeParser
      *                         otherwise
      *   'end_offset' - the last position parsed in $string.
      */
-    public static function parseStringPart($string, $offset, $delimiter)
+    public static function parseStringPart(string $string, int $offset, string $delimiter): array
     {
         $inquote   = false;
         $escaped   = false;
@@ -145,7 +143,7 @@ class TypeParser
         }
 
         return [
-          'string' => empty($newstring) ? null : trim($newstring),
+          'string' => trim($newstring),
           'comment' => empty($comment) ? null : trim($comment),
           'delimiter_matched' => isset($string[$n]) ? ($string[$n] === $delimiter) : false,
           'end_offset' => $n,

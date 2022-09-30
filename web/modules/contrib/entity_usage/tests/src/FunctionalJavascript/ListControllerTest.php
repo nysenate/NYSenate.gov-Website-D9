@@ -29,7 +29,7 @@ class ListControllerTest extends EntityUsageJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Grant the logged-in user permission to see the statistics page.

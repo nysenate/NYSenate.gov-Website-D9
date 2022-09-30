@@ -2,20 +2,20 @@
 
 namespace Drupal\Tests\views_bulk_operations\Functional;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Base class for VBO browser tests.
  */
 abstract class ViewsBulkOperationsFunctionalTestBase extends BrowserTestBase {
 
-  const TEST_NODE_COUNT = 15;
+  private const TEST_NODE_COUNT = 15;
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stable9';
 
   /**
    * Modules to install.
@@ -40,7 +40,7 @@ abstract class ViewsBulkOperationsFunctionalTestBase extends BrowserTestBase {
 
     $this->testNodes = [];
     $time = $this->container->get('datetime.time')->getRequestTime();
-    for ($i = 0; $i < static::TEST_NODE_COUNT; $i++) {
+    for ($i = 0; $i < self::TEST_NODE_COUNT; $i++) {
       // Ensure nodes are sorted in the same order they are inserted in the
       // array.
       $time -= $i;
@@ -60,14 +60,14 @@ abstract class ViewsBulkOperationsFunctionalTestBase extends BrowserTestBase {
    *
    * @param string|null $path
    *   The path of the View page that includes VBO.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $button_text
+   * @param string $button_text
    *   The form submit button text.
    * @param int[] $selection
    *   The selected items' indexes.
    * @param array $data
    *   Additional parameters for the submitted form.
    */
-  protected function executeAction($path, TranslatableMarkup $button_text, array $selection = [], array $data = []) {
+  protected function executeAction($path, string $button_text, array $selection = [], array $data = []): void {
     foreach ($selection as $index) {
       $data["views_bulk_operations_bulk_form[$index]"] = TRUE;
     }

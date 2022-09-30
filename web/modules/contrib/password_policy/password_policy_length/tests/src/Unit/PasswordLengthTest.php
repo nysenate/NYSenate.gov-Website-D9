@@ -19,11 +19,14 @@ class PasswordLengthTest extends UnitTestCase {
   public function testLength($length, $operation, $password, $result) {
     $characters = $this->getMockBuilder('Drupal\password_policy_length\Plugin\PasswordConstraint\PasswordLength')
       ->disableOriginalConstructor()
-      ->setMethods(['getConfiguration', 'formatPlural'])
+      ->onlyMethods(['getConfiguration', 'formatPlural'])
       ->getMock();
     $characters
       ->method('getConfiguration')
-      ->willReturn(['character_length' => $length, 'character_operation' => $operation]);
+      ->willReturn([
+        'character_length' => $length,
+        'character_operation' => $operation,
+      ]);
     $user = $this->getMockBuilder('Drupal\user\Entity\User')->disableOriginalConstructor()->getMock();
     $this->assertEquals($characters->validate($password, $user)->isValid(), $result);
   }

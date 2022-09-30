@@ -97,8 +97,7 @@ function captcha_point_load($id) {
  * Implements hook_theme().
  */
 function captcha_theme() {
-  // @phpstan-ignore-next-line
-  $path = Drupal::hasService('extension.list.module') ? Drupal::service('extension.list.module')->getPath('captcha') : drupal_get_path('module', 'captcha');
+  $path = \Drupal::service('extension.list.module')->getPath('captcha');
   return [
     'captcha' => [
       'render element' => 'element',
@@ -724,7 +723,10 @@ function captcha_whitelist_ips_parse_values($whitelist_ips_value) {
     CAPTCHA_WHITELIST_IP_ADDRESS => [],
   ];
 
-  if (empty(trim($whitelist_ips_value))) {
+  // Ensure the IPs value is trimmed before moving onward.
+  $whitelist_ips_value = trim($whitelist_ips_value ?? "");
+
+  if (empty($whitelist_ips_value)) {
     return $whitelist_ips;
   }
 

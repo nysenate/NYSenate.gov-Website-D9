@@ -12,33 +12,40 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 interface FieldGroupFormatterInterface extends PluginInspectionInterface {
 
   /**
-   * Allows the field group formatter to manipulate the field group array and attach the formatters elements.
-   * The process method is called in the #process part of theme layer, and is currently used for forms.
-   * The preRender method is called in the #pre_render part of the theme layer, and is currently used for entity displays.
+   * Field formatter process function.
+   *
+   * Allows the field group formatter to manipulate the field group array and
+   * attach the formatters elements. The process method is called in the
+   * #process part of theme layer, and is currently used for forms. The
+   * preRender method is called in the #pre_render part of the theme layer,
+   * and is currently used for entity displays.
    *
    * @param array $element
    *   The field group render array.
    * @param object $processed_object
    *   The object / entity beïng processed.
    */
-  public function process(&$element, $processed_object);
+  public function process(array &$element, $processed_object);
 
   /**
-   * Allows the field group formatter to manipulate the field group array and attach the formatters rendering element.
+   * Field formatter prerender function.
+   *
+   * Allows the field group formatter to manipulate the field group array and
+   * attach the formatters rendering element.
    *
    * @param array $element
    *   The field group render array.
    * @param object $rendering_object
    *   The object / entity beïng rendered.
    */
-  public function preRender(&$element, $rendering_object);
+  public function preRender(array &$element, $rendering_object);
 
   /**
    * Returns a form to configure settings for the formatter.
    *
    * Invoked in field_group_field_ui_display_form_alter to allow
-   * administrators to configure the formatter. The field_group module takes care
-   * of handling submitted form values.
+   * administrators to configure the formatter. The field_group module takes
+   * care of handling submitted form values.
    *
    * @return array
    *   The form elements for the formatter settings.

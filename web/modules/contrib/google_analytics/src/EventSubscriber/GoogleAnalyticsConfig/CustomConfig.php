@@ -8,7 +8,6 @@ use Drupal\Core\Utility\Token;
 use Drupal\google_analytics\Event\GoogleAnalyticsConfigEvent;
 use Drupal\google_analytics\Event\GoogleAnalyticsEventsEvent;
 use Drupal\google_analytics\Constants\GoogleAnalyticsEvents;
-use Drupal\google_analytics\Helpers\GoogleAnalyticsAccounts;
 use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -21,7 +20,7 @@ class CustomConfig implements EventSubscriberInterface {
   /**
    * Drupal Config Factory
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected $config;
 
@@ -38,7 +37,7 @@ class CustomConfig implements EventSubscriberInterface {
   protected $token;
 
   /**
-   * @var \Symfony\Component\HttpFoundation\Request|null
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $request;
 
@@ -64,7 +63,7 @@ class CustomConfig implements EventSubscriberInterface {
   public function __construct(ConfigFactoryInterface $config_factory, AccountProxyInterface $account, RequestStack $request, Token $token) {
     $this->config = $config_factory->get('google_analytics.settings');
     $this->currentAccount = $account;
-    $this->request = $request->getCurrentRequest();
+    $this->request = $request;
     $this->token = $token;
 
     // Populate custom map/vars
@@ -110,14 +109,15 @@ class CustomConfig implements EventSubscriberInterface {
 
   protected function populateCustomConfig() {
     // Add custom dimensions and metrics.
-    $custom_parameters = $this->config->get('custom.parameters');
+    $request = $this->request->getCurrentRequest();
+    $custom_parameters = $this->config->get('custom.parameters') ? $this->config->get('custom.parameters') : [];
     if (!empty($custom_parameters)) {
       // Add all the configured variables to the content.
     foreach ($custom_parameters as $index => $custom_parameter) {
       // Replace tokens in values.
       $types = [];
-      if ($this->request->attributes->has('node')) {
-        $node = $this->request->attributes->get('node');
+      if ($request->attributes->has('node')) {
+        $node = $request->attributes->get('node');
         if ($node instanceof NodeInterface) {
           $types += ['node' => $node];
         }

@@ -42,14 +42,22 @@ class EntityUsageCommands extends DrushCommands {
   protected $entityUsageConfig;
 
   /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(EntityUsageBatchManager $batch_manager, EntityUsageQueueBatchManager $queue_batch_manager, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityUsageBatchManager $batch_manager, EntityUsageQueueBatchManager $queue_batch_manager, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, $database) {
     parent::__construct();
     $this->batchManager = $batch_manager;
     $this->queueBatchManager = $queue_batch_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityUsageConfig = $config_factory->get('entity_usage.settings');
+    $this->database = $database;
   }
 
   /**
@@ -71,6 +79,9 @@ class EntityUsageCommands extends DrushCommands {
       $this->output()->writeln(t('The --batch-size option can only be used when the --use-queue flag is specified. Aborting.'));
       return;
     }
+
+    $this->database->delete('queue')->condition('name', 'entity_usage_regenerate_queue')->execute();
+
     if (!empty($options['use-queue'])) {
       $this->queueBatchManager->populateQueue($options['batch-size']);
       drush_backend_batch_process();

@@ -9,6 +9,7 @@ use Drupal\Component\Utility\DiffArray;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\Filter\FilterHtml;
 use Drupal\filter\Plugin\FilterInterface;
+use Masterminds\HTML5\Elements;
 
 /**
  * Represents a set of HTML restrictions.
@@ -69,6 +70,7 @@ final class HTMLRestrictions {
    * @var string[]
    */
   private const WILDCARD_ELEMENT_METHODS = [
+    '$any-html5-element' => 'getHtml5ElementList',
     '$text-container' => 'getTextContainerElementList',
   ];
 
@@ -766,8 +768,11 @@ final class HTMLRestrictions {
     }
     // Make sure the order of the union array matches the order of the keys in
     // the arrays provided.
-    $keys_order = array_merge($array1_keys, $array2_keys);
-    return array_merge(array_flip($keys_order), $union);
+    $ordered = [];
+    foreach (array_merge($array1_keys, $array2_keys) as $key) {
+      $ordered[$key] = $union[$key];
+    }
+    return $ordered;
   }
 
   /**
@@ -1195,6 +1200,16 @@ final class HTMLRestrictions {
     return [
       'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre',
     ];
+  }
+
+  /**
+   * Gets a list of all known HTML5 elements.
+   *
+   * @return string[]
+   *   An array of HTML5 element tags.
+   */
+  private static function getHtml5ElementList(): array {
+    return array_keys(Elements::$html5);
   }
 
   /**

@@ -19,7 +19,7 @@ class GoogleAnalyticsUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['google_analytics'];
+  protected static $modules = ['google_analytics'];
 
   /**
    * Default theme.
@@ -38,7 +38,7 @@ class GoogleAnalyticsUninstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $permissions = [

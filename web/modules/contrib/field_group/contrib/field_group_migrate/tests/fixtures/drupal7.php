@@ -103,7 +103,7 @@ $connection->insert('field_group')
     'bundle' => 'user',
     'mode' => 'default',
     'parent_name' => '',
-    'data' => 'a:5:{s:5:"label";s:17:"User group parent";s:6:"weight";i:1;s:8:"children";a:0:{}s:11:"format_type";s:3:"div";s:15:"format_settings";a:1:{s:17:"instance_settings";a:0:{}}}',
+    'data' => 'a:5:{s:5:"label";s:17:"User group parent";s:6:"weight";i:1;s:8:"children";a:1:{i:0;s:16:"group_user_child";}s:11:"format_type";s:3:"div";s:15:"format_settings";a:1:{s:17:"instance_settings";a:0:{}}}',
   ])
   ->values([
     'id' => '3',
@@ -113,7 +113,7 @@ $connection->insert('field_group')
     'bundle' => 'user',
     'mode' => 'default',
     'parent_name' => 'group_user',
-    'data' => 'a:5:{s:5:"label";s:16:"User group child";s:6:"weight";i:99;s:8:"children";a:1:{i:0;s:12:"user_picture";}s:11:"format_type";s:4:"tabs";s:15:"format_settings";a:2:{s:5:"label";s:16:"User group child";s:17:"instance_settings";a:2:{s:7:"classes";s:16:"user-group-child";s:2:"id";s:33:"group_article_node_article_teaser";}}}',
+    'data' => 'a:5:{s:5:"label";s:16:"User group child";s:6:"weight";s:2:"99";s:8:"children";a:2:{i:0;s:15:"group_user_tab1";i:1;s:15:"group_user_tab2";}s:11:"format_type";s:4:"tabs";s:15:"format_settings";a:2:{s:5:"label";s:16:"User group child";s:17:"instance_settings";a:2:{s:2:"id";s:33:"group_article_node_article_teaser";s:7:"classes";s:16:"user-group-child";}}}',
   ])
   ->values([
     'id' => '4',
@@ -122,8 +122,8 @@ $connection->insert('field_group')
     'entity_type' => 'node',
     'bundle' => 'article',
     'mode' => 'teaser',
-    'parent_name' => '',
-    'data' => 'a:5:{s:5:"label";s:10:"htab group";s:6:"weight";i:2;s:8:"children";a:1:{i:0;s:11:"field_image";}s:11:"format_type";s:4:"htab";s:15:"format_settings";a:1:{s:17:"instance_settings";a:1:{s:7:"classes";s:10:"htab-group";}}}',
+    'parent_name' => 'group_article_htabs',
+    'data' => 'a:5:{s:5:"label";s:10:"htab group";s:6:"weight";s:1:"2";s:8:"children";a:1:{i:0;s:11:"field_image";}s:11:"format_type";s:4:"htab";s:15:"format_settings";a:1:{s:17:"instance_settings";a:1:{s:7:"classes";s:10:"htab-group";}}}',
   ])
   ->values([
     'id' => '5',
@@ -133,7 +133,7 @@ $connection->insert('field_group')
     'bundle' => 'page',
     'mode' => 'form',
     'parent_name' => '',
-    'data' => 'a:5:{s:5:"label";s:15:"Node form group";s:6:"weight";i:0;s:8:"children";a:0:{}s:11:"format_type";s:5:"htabs";s:15:"format_settings";a:1:{s:17:"instance_settings";a:0:{}}}',
+    'data' => 'a:5:{s:5:"label";s:15:"Node form group";s:6:"weight";s:1:"0";s:8:"children";a:1:{i:0;s:14:"group_page_tab";}s:11:"format_type";s:5:"htabs";s:15:"format_settings";a:1:{s:17:"instance_settings";a:0:{}}}',
   ])
   ->values([
     'id' => '6',
@@ -142,8 +142,58 @@ $connection->insert('field_group')
     'entity_type' => 'node',
     'bundle' => 'article',
     'mode' => 'form',
+    'parent_name' => 'group_article_htabs',
+    'data' => 'a:5:{s:5:"label";s:15:"htab form group";s:6:"weight";s:1:"2";s:8:"children";a:1:{i:0;s:11:"field_image";}s:11:"format_type";s:4:"htab";s:15:"format_settings";a:1:{s:17:"instance_settings";a:0:{}}}',
+  ])
+  ->values([
+    'id' => '7',
+    'identifier' => 'group_user_tab1|user|user|default',
+    'group_name' => 'group_user_tab1',
+    'entity_type' => 'user',
+    'bundle' => 'user',
+    'mode' => 'default',
+    'parent_name' => 'group_user_child',
+    'data' => 'a:5:{s:5:"label";s:10:"User tab 1";s:6:"weight";s:2:"99";s:8:"children";a:1:{i:0;s:10:"field_file";}s:11:"format_type";s:3:"tab";s:15:"format_settings";a:3:{s:5:"label";s:10:"User tab 1";s:17:"instance_settings";a:2:{s:7:"classes";s:15:"vtab vtab--open";s:11:"description";s:0:"";}s:9:"formatter";s:4:"open";}}',
+  ])
+  ->values([
+    'id' => '8',
+    'identifier' => 'group_user_tab2|user|user|default',
+    'group_name' => 'group_user_tab2',
+    'entity_type' => 'user',
+    'bundle' => 'user',
+    'mode' => 'default',
+    'parent_name' => 'group_user_child',
+    'data' => 'a:5:{s:5:"label";s:10:"User tab 2";s:6:"weight";s:3:"100";s:8:"children";a:1:{i:0;s:13:"field_integer";}s:11:"format_type";s:3:"tab";s:15:"format_settings";a:3:{s:5:"label";s:10:"User tab 2";s:17:"instance_settings";a:2:{s:7:"classes";s:17:"vtab vtab--closed";s:11:"description";s:0:"";}s:9:"formatter";s:6:"closed";}}',
+  ])
+  ->values([
+    'id' => '9',
+    'identifier' => 'group_article_htabs|node|article|form',
+    'group_name' => 'group_article_htabs',
+    'entity_type' => 'node',
+    'bundle' => 'article',
+    'mode' => 'form',
     'parent_name' => '',
-    'data' => 'a:5:{s:5:"label";s:15:"htab form group";s:6:"weight";i:2;s:8:"children";a:1:{i:0;s:11:"field_image";}s:11:"format_type";s:4:"htab";s:15:"format_settings";a:1:{s:17:"instance_settings";a:0:{}}}',
+    'data' => 'a:5:{s:5:"label";s:15:"Horizontal tabs";s:6:"weight";s:1:"1";s:8:"children";a:1:{i:0;s:13:"group_article";}s:11:"format_type";s:5:"htabs";s:15:"format_settings";a:2:{s:9:"formatter";s:0:"";s:17:"instance_settings";a:2:{s:7:"classes";s:37:"group-article-htabs field-group-htabs";s:2:"id";s:0:"";}}}',
+  ])
+  ->values([
+    'id' => '10',
+    'identifier' => 'group_article_htabs|node|article|teaser',
+    'group_name' => 'group_article_htabs',
+    'entity_type' => 'node',
+    'bundle' => 'article',
+    'mode' => 'teaser',
+    'parent_name' => '',
+    'data' => 'a:5:{s:5:"label";s:15:"Horizontal tabs";s:6:"weight";s:1:"1";s:8:"children";a:1:{i:0;s:13:"group_article";}s:11:"format_type";s:5:"htabs";s:15:"format_settings";a:2:{s:5:"label";s:15:"Horizontal tabs";s:17:"instance_settings";a:2:{s:2:"id";s:0:"";s:7:"classes";s:0:"";}}}',
+  ])
+  ->values([
+    'id' => '11',
+    'identifier' => 'group_page_tab|node|page|form',
+    'group_name' => 'group_page_tab',
+    'entity_type' => 'node',
+    'bundle' => 'page',
+    'mode' => 'form',
+    'parent_name' => 'group_page',
+    'data' => 'a:5:{s:5:"label";s:14:"Horizontal tab";s:6:"weight";s:2:"17";s:8:"children";a:1:{i:0;s:16:"field_text_plain";}s:11:"format_type";s:4:"htab";s:15:"format_settings";a:3:{s:5:"label";s:14:"Horizontal tab";s:17:"instance_settings";a:3:{s:15:"required_fields";i:1;s:7:"classes";s:31:"group-page-tab field-group-htab";s:11:"description";s:0:"";}s:9:"formatter";s:4:"open";}}',
   ])
   ->execute();
 

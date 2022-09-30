@@ -25,12 +25,12 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
   public function testFileMetadata() {
     // Prepare a copy of test files.
     $this->fileSystem->copy('core/tests/fixtures/files/image-test.png', 'public://', FileSystemInterface::EXISTS_REPLACE);
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
     // The image files that will be tested.
     $image_files = [
       [
         // Pass a path instead of the URI.
-        'uri' => drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg',
+        'uri' => $this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg',
         'count_keys' => 7,
         'test_keys' => [
           [0, 100],
@@ -69,7 +69,7 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
       ],
       [
         // JPEG Image with GPS data.
-        'uri' => drupal_get_path('module', 'file_mdm') . '/tests/files/1024-2006_1011_093752.jpg',
+        'uri' => $this->moduleList->getPath('file_mdm') . '/tests/files/1024-2006_1011_093752.jpg',
         'count_keys' => 7,
         'test_keys' => [
           [0, 1024],
@@ -82,7 +82,7 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
       ],
       [
         // TIFF image.
-        'uri' => drupal_get_path('module', 'file_mdm') . '/tests/files/sample-1.tiff',
+        'uri' => $this->moduleList->getPath('file_mdm') . '/tests/files/sample-1.tiff',
         'count_keys' => 5,
         'test_keys' => [
           [0, 174],
@@ -171,7 +171,7 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
    */
   public function testFileMetadataCaching() {
     // Prepare a copy of test files.
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
     $this->fileSystem->copy('core/tests/fixtures/files/image-test.gif', 'public://', FileSystemInterface::EXISTS_REPLACE);
     $this->fileSystem->copy('core/tests/fixtures/files/image-test.png', 'public://', FileSystemInterface::EXISTS_REPLACE);
 
@@ -192,7 +192,7 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
       ],
       [
         // Pass a path instead of the URI.
-        'uri' => drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg',
+        'uri' => $this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg',
         'cache' => FALSE,
         'delete' => FALSE,
         'count_keys' => 7,
@@ -315,7 +315,7 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
     $fmdm = $this->container->get('file_metadata_manager');
 
     // Copy the test file to a temp location.
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg', 'temporary://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg', 'temporary://', FileSystemInterface::EXISTS_REPLACE);
 
     // Test setting local temp path explicitly. The files should be parsed
     // even if not available on the URI.
@@ -371,7 +371,7 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
     $file_system = $this->container->get('file_system');
 
     // Copy the test file to dummy-remote wrapper.
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg', 'dummy-remote://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg', 'dummy-remote://', FileSystemInterface::EXISTS_REPLACE);
 
     foreach ($image_files as $image_file) {
       $file_metadata = $fmdm->uri($image_file['uri']);
@@ -407,7 +407,7 @@ class FileMetadataManagerTest extends FileMetadataManagerTestBase {
     // Copy a test file to test directory.
     $test_directory = 'public://test-images/';
     $this->fileSystem->prepareDirectory($test_directory, FileSystemInterface::CREATE_DIRECTORY);
-    $this->fileSystem->copy(drupal_get_path('module', 'file_mdm') . '/tests/files/test-exif.jpeg', $test_directory, FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('file_mdm') . '/tests/files/test-exif.jpeg', $test_directory, FileSystemInterface::EXISTS_REPLACE);
 
     // Get file metadata object.
     $file_metadata = $fmdm->uri('public://test-images/test-exif.jpeg');

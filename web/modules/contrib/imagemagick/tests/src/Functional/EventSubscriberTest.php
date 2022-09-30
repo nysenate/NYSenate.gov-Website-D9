@@ -29,6 +29,19 @@ class EventSubscriberTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(): void {
+    parent::setUp();
+    $this->moduleList = \Drupal::service('extension.list.module');
+  }
+
+  /**
    * Test module's event subscriber.
    *
    * @param string $toolkit_id
@@ -133,7 +146,7 @@ class EventSubscriberTest extends BrowserTestBase {
     $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
     $this->prepareImageFileHandling();
 
-    $image_uri = drupal_get_path('module', 'imagemagick') . '/misc/test-multi-frame.gif';
+    $image_uri = $this->moduleList->getPath('imagemagick') . '/misc/test-multi-frame.gif';
 
     // By default, no coalesce of animated GIFs.
     $image = $this->imageFactory->get($image_uri);

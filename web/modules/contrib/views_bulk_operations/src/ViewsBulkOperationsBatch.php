@@ -22,13 +22,13 @@ class ViewsBulkOperationsBatch {
    * @param array $context
    *   Batch context.
    */
-  public static function getList(array $data, array &$context) {
+  public static function getList(array $data, array &$context): void {
     // Initialize batch.
     if (empty($context['sandbox'])) {
       $context['sandbox']['processed'] = 0;
       $context['sandbox']['page'] = 0;
-      $context['sandbox']['total'] = $data['exclude_mode'] ? $data['total_results'] - count($data['exclude_list']) : $data['total_results'];
-      $context['sandbox']['npages'] = ceil($data['total_results'] / $data['batch_size']);
+      $context['sandbox']['total'] = $data['exclude_mode'] ? $data['total_results'] - \count($data['exclude_list']) : $data['total_results'];
+      $context['sandbox']['npages'] = \ceil($data['total_results'] / $data['batch_size']);
       $context['results'] = $data;
     }
 
@@ -37,7 +37,7 @@ class ViewsBulkOperationsBatch {
 
     // Populate queue.
     $list = $actionProcessor->getPageList($context['sandbox']['page']);
-    $count = count($list);
+    $count = \count($list);
 
     foreach ($list as $item) {
       $context['results']['list'][] = $item;
@@ -67,7 +67,7 @@ class ViewsBulkOperationsBatch {
    * @param array $operations
    *   Performed operations array.
    */
-  public static function saveList($success, array $results, array $operations) {
+  public static function saveList($success, array $results, array $operations): void {
     if ($success) {
       $results['redirect_url'] = $results['redirect_after_processing'];
       unset($results['redirect_after_processing']);
@@ -87,13 +87,13 @@ class ViewsBulkOperationsBatch {
    * @param array $context
    *   Batch context.
    */
-  public static function operation(array $data, array &$context) {
+  public static function operation(array $data, array &$context): void {
     // Initialize batch.
     if (empty($context['sandbox'])) {
       $context['sandbox']['processed'] = 0;
       $context['results']['operations'] = [];
       $context['sandbox']['page'] = 0;
-      $context['sandbox']['npages'] = ceil($data['total_results'] / $data['batch_size']);
+      $context['sandbox']['npages'] = \ceil($data['total_results'] / $data['batch_size']);
     }
 
     // Get entities to process.
@@ -104,13 +104,8 @@ class ViewsBulkOperationsBatch {
     $count = $actionProcessor->populateQueue($data, $context);
 
     $batch_results = $actionProcessor->process();
-    if (!empty($batch_results)) {
-      // Convert translatable markup to strings in order to allow
-      // correct operation of array_count_values function.
-      foreach ($batch_results as $result) {
-        $context['results']['operations'][] = (string) $result;
-      }
-    }
+    $context['results'] = $actionProcessor->processResults($batch_results, $context['results']);
+
     $context['sandbox']['processed'] += $count;
     $context['sandbox']['page']++;
 
@@ -130,9 +125,12 @@ class ViewsBulkOperationsBatch {
    *
    * @param array $view_data
    *   Processed view data.
+   *
+   * @return mixed[]
+   *   Batch API batch definition.
    */
-  public static function getBatch(array &$view_data) {
-    $current_class = get_called_class();
+  public static function getBatch(array &$view_data): array {
+    $current_class = static::class;
 
     // Prepopulate results.
     if (empty($view_data['list'])) {

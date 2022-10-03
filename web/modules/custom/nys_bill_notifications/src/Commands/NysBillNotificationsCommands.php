@@ -106,6 +106,7 @@ class NysBillNotificationsCommands extends DrushCommands {
     $this->releaseLock();
 
     $this->setState('last_run', $ts);
+    /* @phpstan-ignore-next-line */
     $this->logger()->success(dt('Update processing complete.'));
     return DRUSH_SUCCESS;
   }

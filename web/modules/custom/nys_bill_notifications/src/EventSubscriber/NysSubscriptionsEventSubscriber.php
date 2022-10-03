@@ -145,7 +145,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
     }
     else {
       $event->item->readyToSend = FALSE;
-      $this->logger->warning('Failed to load bill for queue item @id', ['@id' => $event->item->item_id]);
+      $this->logger->warning('Failed to load bill for queue item @id', ['@id' => $event->item->item_id ?? '<no id>']);
     }
   }
 
@@ -170,8 +170,8 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       if (!($template = $this->getTemplateByName($primary_name))) {
         $this->slack
           ->init()
-          ->addAttachment("Event ID:\n" . $item->data['item_id'])
-          ->addAttachment("Bill ID:\n" . $item->data['print_num'])
+          ->addAttachment("Event ID:\n" . ($item->data['item_id'] ?? '<no id>'))
+          ->addAttachment("Bill ID:\n" . ($item->data['print_num'] ?? '<no print>'))
           ->addAttachment("Event:\n" . $primary_name)
           ->setTitle("Blank Template Detected")
           ->send("A queued event could not be matched to a SendGrid template.");
@@ -186,7 +186,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       }
 
       // Ensure we have a bill Node.
-      if (!($entity = Node::load($item->data['bill_nid']))) {
+      if (!($entity = Node::load($item->data['bill_nid'] ?? 0))) {
         throw new InvalidSubscriptionEntity('Item tokens could not find a source/target entity');
       }
 
@@ -265,7 +265,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
 
       // Populate the "other events" HTML.
       $extra = '';
-      foreach ($item->data['events'] as $val) {
+      foreach (($item->data['events'] ?? []) as $val) {
         $extra .= '<li>' . $val['text'] . '</li>';
       }
       $subs['%other_events%'] = $extra;

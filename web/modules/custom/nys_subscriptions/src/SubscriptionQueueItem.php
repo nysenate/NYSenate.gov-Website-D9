@@ -87,6 +87,7 @@ class SubscriptionQueueItem {
     $this->substitutions['subject'] = $this->queue->getSubject();
 
     // Dispatch the event to populate references needed for this item.
+    /* @phpstan-ignore-next-line */
     $this->queue->dispatcher()
       ->dispatch(new QueueItemReferences($this), Events::QUEUEITEM_REFERENCES);
   }
@@ -109,6 +110,7 @@ class SubscriptionQueueItem {
     // cancel the send and report.
     if ($this->readyToSend) {
       try {
+        /* @phpstan-ignore-next-line */
         $this->queue->dispatcher()
           ->dispatch(new QueueItemTokens($this), Events::QUEUEITEM_TOKENS);
       }
@@ -126,6 +128,7 @@ class SubscriptionQueueItem {
     if ($this->readyToSend) {
       try {
         foreach ($this->queueItem->data['recipients'] as $subscriber) {
+          /* @phpstan-ignore-next-line */
           $this->queue->dispatcher()
             ->dispatch(new QueueItemSubscribers($this, $subscriber), Events::QUEUEITEM_SUBSCRIBERS);
         }

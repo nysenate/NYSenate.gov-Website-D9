@@ -149,10 +149,10 @@ class UpdatesProcessor {
    */
   protected function loadBillNode(string $print_num): ?Node {
     try {
-      /** @var \Drupal\node\Entity\Node $ret */
       $nodes = $this->entityTypeManager
         ->getStorage('node')
         ->loadByProperties(['title' => $print_num]);
+      /** @var \Drupal\node\Entity\Node|null $ret */
       $ret = (count($nodes) == 1) ? current($nodes) : NULL;
     }
     catch (\Throwable $e) {

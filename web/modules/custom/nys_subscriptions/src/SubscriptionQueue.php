@@ -119,7 +119,7 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
    * @throws \Exception
    */
   public function createItem($data): int {
-    $item = ($data instanceof SubscriptionQueueItem) ? $data->item : $data;
+    $item = ($data instanceof SubscriptionQueueItem) ? $data->queueItem : $data;
     return parent::createItem($item);
   }
 
@@ -159,7 +159,7 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
         $one_result = NULL;
         $this->logger
           ->warning("Exception while processing item @id", [
-            '@id' => $item->item_id,
+            '@id' => $item->item_id ?? 'No ID found',
             '@msg' => $e->getMessage(),
           ]);
       }

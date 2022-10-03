@@ -25,6 +25,7 @@ class SubscriptionForm extends ContentEntityForm {
     $link = $entity->toLink($this->t('View'))->toRenderable();
 
     $message_arguments = ['%label' => $this->entity->label()];
+    /* @phpstan-ignore-next-line */
     $logger_arguments = $message_arguments + ['link' => RendererInterface::render($link)];
 
     if ($result == SAVED_NEW) {
@@ -41,6 +42,8 @@ class SubscriptionForm extends ContentEntityForm {
     }
 
     $form_state->setRedirect('entity.subscription.canonical', ['subscription' => $entity->id()]);
+
+    return $result;
   }
 
 }

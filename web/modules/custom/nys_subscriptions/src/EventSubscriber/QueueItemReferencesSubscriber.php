@@ -48,12 +48,12 @@ class QueueItemReferencesSubscriber implements EventSubscriberInterface {
    */
   public function populateReferences(QueueItemReferences $event) {
     $refs = &$event->item->references;
-    $data = $event->item->data;
+    $data = $event->item->data ?? [];
 
     // Set the target.
     $refs['target_entity'] = $this->manager
-      ->getStorage($data['target_type'])
-      ->load($data['target_id']);
+      ->getStorage($data['target_type'] ?? '')
+      ->load($data['target_id'] ?? 0);
 
     // If a source exists, set it.
     $type = $data['source_type'] ?? '';

@@ -58,10 +58,14 @@ class SenatorsHelper {
         ->loadByProperties(['field_active_senator' => 1]);
       $mapping = [];
       foreach ($senators as $tid => $entity) {
-        $mapping[$tid] = [
-          'short_name' => $entity->field_short_name->value,
-          'full_name' => $entity->field_senator_name->value,
-        ];
+        $short_name = $entity->field_short_name->value ?? '';
+        $full_name = $entity->field_senator_name->value ?? '';
+        if ($short_name && $full_name) {
+          $mapping[$tid] = [
+            'short_name' => $short_name,
+            'full_name' => $full_name,
+          ];
+        }
       }
       static::setCache('name_map', $mapping);
     }

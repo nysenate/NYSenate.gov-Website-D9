@@ -132,7 +132,7 @@ class Bills extends ImportProcessorBase {
       if ($milestone = end($result->milestones->items)) {
         $values['field_ol_latest_status_committee'] = $milestone->committeeName;
         if ($milestone->actionDate) {
-          $values['field_ol_last_status_date'] = $milestone->actionDate;
+          $values['field_ol_last_status_date'] = strtotime($milestone->actionDate);
         }
       }
 

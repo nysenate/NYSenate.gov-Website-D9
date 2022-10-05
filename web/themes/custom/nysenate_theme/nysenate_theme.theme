@@ -249,6 +249,10 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
     if ($senator->hasField('field_media_fax') && !$senator->get('field_media_fax')->isEmpty()) {
       $variables['fax'] = $senator->field_media_fax->value;
     }
+    if ($senator->hasField('field_press_kit') && !$senator->get('field_press_kit')->isEmpty()) {
+      $file = File::load($senator->field_press_kit->target_id);
+      $variables['press_kit'] = \Drupal::service('file_system')->realpath($file->get('uri')->value);
+    }
   }
 }
 

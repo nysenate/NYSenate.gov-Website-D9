@@ -18,6 +18,18 @@
     border: none;
   }
 
+  .inquiries-title {
+    margin-bottom: 0;
+
+    .c-download-contact--name {
+      font-family: $font-serif-regular;
+      font-size: 16px;
+      color: $grey08;
+      font-weight: normal;
+    }
+
+  }
+
   .fn[itemprop="name"],
   .c-office-info--title {
     display: block;
@@ -27,6 +39,16 @@
     text-transform: uppercase;
     font-size: 14px;
     font-weight: normal;
+  }
+
+  hr {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    height: 3px;
+    width: 100%;
+    border: none;
   }
 
   abbr[title] { border: none; }
@@ -132,10 +154,25 @@
     font-family:$font-sans;
     font-size:16px;
     line-height: 1.2em;
-    @extend .lgt-text;
+    //@extend .lgt-text;
 
     strong {
       font-family:$font-sans;
+    }
+
+    .c-block--btn {
+      padding-left: 20px;
+      @include breakpoint($bp-sm) {
+        padding-left: 40px;
+      }
+
+      @extend .lgt-bg;
+      @extend .icon-before__presskit;
+      color: $color-white;
+
+      &:hover {
+        @extend .drk-bg;
+      }
     }
 
     &.vcard {
@@ -152,7 +189,6 @@
 
     a {
       text-decoration: none;
-      @extend .lgt-text;
     }
   }
 
@@ -167,7 +203,7 @@
 }
 
 .c-block--senator-office {
-  padding: 40px 20px 15px;
+  padding: 40px 20px 80px;
 
   .l-col {
     clear: left;

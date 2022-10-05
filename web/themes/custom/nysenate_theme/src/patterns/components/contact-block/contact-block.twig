@@ -121,29 +121,27 @@
         <hr class="lgt-bg">
       <div class="c-office-info--office-contact vcard">
         <span class="fn" itemprop="name">{{ 'Media Inquiries'|t }}</span>
-
-          {% if title %}
+          {% if name %}
             <div class="c-office-info--office-contact vcard inquiries-title">
               <h3 class="c-download-contact--name">{{ title }}</h3>
             </div>
           {% endif %}
           <div class="c-office-info--office-contact vcard">
-
               {% if name %}
                 {{ name }}
+                <br>
               {% endif %}
-            <br>
               {% if email %}
-              <a href="mailto:{{ email }}">{{ email }}</a>
-            {% endif %}
-            <br>
+                <a href="mailto:{{ email }}">{{ email }}</a>
+                <br>
+              {% endif %}
               {% if phone %}
-              <span>Phone: </span>{{ phone }}
-            {% endif %}
-            <br>
-            {% if fax %}
-              <span>Fax: </span>{{ fax }}<br />
-            {% endif %}
+                <span>Phone: </span>{{ phone }}
+              {% endif %}
+              {% if fax %}
+                <br>
+                <span>Fax: </span>{{ fax }}<br>
+              {% endif %}
           </div>
       </div>
       {% if press_kit %}

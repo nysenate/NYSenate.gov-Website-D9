@@ -12,6 +12,10 @@
   .bef-exposed-form .form--inline > .form-item {
     margin: 0;
     width: 100%;
+
+    @include breakpoint($bp-sm) {
+      width: auto;
+    }
   }
 
   .item-list .pager {

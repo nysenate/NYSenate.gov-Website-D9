@@ -251,7 +251,7 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
     }
     if ($senator->hasField('field_press_kit') && !$senator->get('field_press_kit')->isEmpty()) {
       $file = File::load($senator->field_press_kit->target_id);
-      $variables['press_kit'] = \Drupal::service('file_system')->realpath($file->get('uri')->value);
+      $variables['press_kit'] = \Drupal::service('file_url_generator')->generate($file->get('uri')->value);
     }
   }
 }

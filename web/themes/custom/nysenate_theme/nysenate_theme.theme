@@ -2520,8 +2520,12 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     }, $party));
     $variables['senator_name'] = $senator->getName();
     $variables['senator_link'] = $senator->toUrl()->toString();
-    $variables['senator_image'] = $senator->field_member_headshot->view('full')[0];
     $variables['party'] = '(' . $parties . ')';
+
+    if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
+      $variables['senator_image'] = $senator->field_member_headshot->view('full')[0];
+    }
+
   }
 
   $node = $variables['node'];
@@ -2549,7 +2553,7 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     'number' => $node->getTitle(),
     'description_position' => 'bottom',
     'description' => !empty($node->field_ol_name->value) ? $node->field_ol_name->value : '',
-    'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format(strtotime($published_date), '', 'F d, Y') : '',
+    'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
     'update_location' => $last_status,
     'positions' => nysenate_bill_positions($node),
   ];

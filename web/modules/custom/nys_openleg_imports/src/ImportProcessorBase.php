@@ -121,14 +121,20 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
    * exceptions can be thrown from the entity manager when creating a node.  In
    * that event, processing cannot continue, so we let it break.
    *
+   * The 'type' key in $params is normally set per the processor plugin
+   * definition.  It is allowed to be overridden by the caller due to bills
+   * and resolutions using the same OL call, but requiring different bundles.
+   *
    * @param array $params
    *   Additional properties used to filter the search.
    *
-   * @return \Drupal\node\Entity\Node
+   * @return \Drupal\node\Entity\Node|null
    *   The resolved or created node.
+   *
+   * @todo Separate resolutions into its own processor.
    */
   protected function resolveNode(array $params = []): ?Node {
-    $search = ['type' => $this->definition['bundle']] + $this->constructSearchArray($params);
+    $search = $this->constructSearchArray($params) + ['type' => $this->definition['bundle']];
     $key = serialize($search);
     if (!($this->nodes[$key] ?? FALSE)) {
       try {

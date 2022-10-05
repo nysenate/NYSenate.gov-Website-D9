@@ -3,6 +3,7 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImportProcessor;
 
 use Drupal\node\Entity\Node;
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\BillHelper;
 use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem;
 use Drupal\nys_openleg_imports\ImportProcessorBase;
@@ -55,7 +56,8 @@ class Bills extends ImportProcessorBase {
     foreach ($result->amendmentVersions->items as $version) {
       $title = $base_title . $version;
       $item = ($result->amendments->items->{$version}) ?? NULL;
-      $node = $this->resolveNode(['title' => $base_title . $version]);
+      $type = $result->billType->resolution ? 'resolution' : 'bill';
+      $node = $this->resolveNode(['title' => $title, 'type' => $type]);
       $ret &= ($item && $node && $this->transcribeToNode($item, $node));
       // At first hint of failure, report and leave.
       if (!$ret) {
@@ -100,21 +102,19 @@ class Bills extends ImportProcessorBase {
     // Most of the fields, in alphabetical order.
     $values = [
       'field_ol_active_version' => $result->activeVersion,
-      'field_ol_all_actions' => json_encode($is_resolution ? NULL : $result->actions),
       'field_ol_all_statuses' => json_encode($is_resolution ? $result->actions : $result->milestones),
       'field_ol_amendments' => json_encode($result->amendments->items),
       'field_ol_base_print_no' => $item->basePrintNo,
       'field_ol_chamber' => strtolower($result->billType->chamber),
       'field_ol_full_text' => $item->fullText,
       'field_ol_has_same_as' => (int) ($item->sameAs->size > 0),
-      'field_ol_is_active_version' => (int) ($item->version == $result->activeVersion),
       'field_ol_is_amended' => (int) $this->item->isAmended(),
       'field_ol_law_section' => $item->lawSection,
       'field_ol_memo' => $item->memo,
       'field_ol_name' => $result->title,
       'field_ol_previous_versions' => json_encode($result->previousVersions->items),
       'field_ol_print_no' => $item->printNo,
-      'field_ol_publish_date' => strtotime($result->publishedDateTime),
+      'field_ol_publish_date' => date(Request::OPENLEG_TIME_FORMAT, strtotime($result->publishedDateTime)),
       'field_ol_same_as' => json_encode($item->sameAs->items),
       'field_ol_session' => $item->session,
       'field_ol_sponsor' => BillHelper::findSenatorFromMember($sponsor),
@@ -124,25 +124,30 @@ class Bills extends ImportProcessorBase {
 
     // For bills only.
     if (!$is_resolution) {
+      $values['field_ol_is_active_version'] = (int) ($item->version == $result->activeVersion);
+      $values['field_ol_all_actions'] = json_encode($result->actions);
       $values['field_ol_law_code'] = $item->lawCode;
       $values['field_ol_last_status'] = $result->status->statusType;
+
+      // Add last status from milestones.
       if ($milestone = end($result->milestones->items)) {
         $values['field_ol_latest_status_committee'] = $milestone->committeeName;
         if ($milestone->actionDate) {
           $values['field_ol_last_status_date'] = $milestone->actionDate;
         }
       }
-    }
 
-    // Add the substitution, if it exists.
-    if ($subbed_by = ($item->substitutedBy->basePrintNo ?? '')) {
-      $values['field_ol_substituted_by'] = $subbed_by;
-    }
+      // Add the substitution, if it exists.
+      if ($subbed_by = ($item->substitutedBy->basePrintNo ?? '')) {
+        $values['field_ol_substituted_by'] = $subbed_by;
+      }
 
-    // Add program info, if it exists.
-    if (!empty($result->programInfo)) {
-      $values['field_ol_program_info'] = $result->programInfo->name;
-      $values['field_ol_program_info_seq'] = $result->programInfo->sequenceNo;
+      // Add program info, if it exists.
+      if (!empty($result->programInfo)) {
+        $values['field_ol_program_info'] = $result->programInfo->name;
+        $values['field_ol_program_info_seq'] = $result->programInfo->sequenceNo;
+      }
+
     }
 
     // Compile and add the extra sponsor information.
@@ -168,7 +173,9 @@ class Bills extends ImportProcessorBase {
       foreach ($values as $field => $val) {
         $node->set($field, $val);
       }
-      $this->populateVotes($node);
+      if (!$is_resolution) {
+        $this->populateVotes($node);
+      }
     }
     catch (\Throwable $e) {
       $success = FALSE;

@@ -100,6 +100,8 @@ elements: |-
     '#type': hidden
     '#title': tid
     '#default_value': '[current-page:senator-tid]'
+  captcha:
+    '#type': captcha
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
@@ -206,7 +208,7 @@ settings:
   draft_loaded_message: ''
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
-  confirmation_type: page
+  confirmation_type: message
   confirmation_url: ''
   confirmation_title: ''
   confirmation_message: ''

@@ -14,4 +14,25 @@
       grid-column: 1 / span 2;
     }
   }
+
+  &__single-item {
+
+    .c-block--initiative,
+    .node--type-promotional-banner,
+    .node--type-event,
+    .node--type-article,
+    .node--type-bill {
+      grid-column: 1 / span 2;
+    }
+
+    @include breakpoint($bp-sm) {
+      .c-block--initiative__no-img {
+        width: 100%;
+  
+        &.c-block--even {
+          margin-right: 0;
+        }
+      }
+    }
+  }
 }

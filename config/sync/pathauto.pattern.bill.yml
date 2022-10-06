@@ -1,22 +1,22 @@
-uuid: 54a96e83-5ca1-4fdf-aa5b-559d1ac4887e
+uuid: 954349c5-b0ce-4df9-afed-c7be32958c3a
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: petition
-label: Petition
+id: bill
+label: Bill
 type: 'canonical_entities:node'
-pattern: 'petitions/[node:field_senator_multiref:0:entity:name]/[node:title]'
+pattern: 'legislation/bills/[node:field_ol_session]/[node:title]'
 selection_criteria:
-  1e93bb38-22a1-4262-8d7b-7e1424ddcf55:
+  c0b37763-46d6-449d-bc9f-38aae58cb8e5:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 1e93bb38-22a1-4262-8d7b-7e1424ddcf55
+    uuid: c0b37763-46d6-449d-bc9f-38aae58cb8e5
     context_mapping:
       node: node
     bundles:
-      petition: petition
+      bill: bill
 selection_logic: and
 weight: -5
 relationships: {  }

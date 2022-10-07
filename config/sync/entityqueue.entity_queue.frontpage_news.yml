@@ -1,0 +1,28 @@
+uuid: f2cd3f30-5cd7-48d9-b88f-52f49260c214
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: frontpage_news
+label: 'Frontpage News'
+handler: simple
+handler_configuration: {  }
+entity_settings:
+  target_type: node
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+      in_the_news: in_the_news
+      video: video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: article
+queue_settings:
+  min_size: 0
+  max_size: 4
+  act_as_queue: false
+  reverse: false

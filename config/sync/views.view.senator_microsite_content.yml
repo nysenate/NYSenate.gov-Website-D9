@@ -2038,6 +2038,21 @@ display:
           empty: true
           content: 'No contents found.'
           tokenize: false
+      sorts:
+        field_ol_publish_date_value:
+          id: field_ol_publish_date_value
+          table: node__field_ol_publish_date
+          field: field_ol_publish_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: datetime
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
       arguments:
         field_ol_sponsor_target_id:
           id: field_ol_sponsor_target_id
@@ -2198,6 +2213,7 @@ display:
         link_display: false
         link_url: false
         fields: false
+        sorts: false
         arguments: false
         filters: false
         filter_groups: false
@@ -3105,6 +3121,21 @@ display:
                 select_all_none: false
                 select_all_none_nested: false
                 display_inline: true
+      sorts:
+        field_date_value:
+          id: field_date_value
+          table: node__field_date
+          field: field_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: datetime
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
       arguments:
         field_senator_multiref_target_id:
           id: field_senator_multiref_target_id
@@ -3266,7 +3297,7 @@ display:
                   transcript: '0'
                   video: '0'
               2:
-                title: Video
+                title: Videos
                 operator: in
                 value:
                   video: video
@@ -3304,6 +3335,7 @@ display:
         use_more_text: false
         exposed_form: false
         fields: false
+        sorts: false
         arguments: false
         filters: false
         filter_groups: false

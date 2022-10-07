@@ -3,6 +3,7 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImportProcessor;
 
 use Drupal\node\Entity\Node;
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\BillHelper;
 use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem;
 use Drupal\nys_openleg_imports\ImportProcessorBase;
@@ -113,7 +114,7 @@ class Bills extends ImportProcessorBase {
       'field_ol_name' => $result->title,
       'field_ol_previous_versions' => json_encode($result->previousVersions->items),
       'field_ol_print_no' => $item->printNo,
-      'field_ol_publish_date' => strtotime($result->publishedDateTime),
+      'field_ol_publish_date' => date(Request::OPENLEG_TIME_FORMAT, strtotime($result->publishedDateTime)),
       'field_ol_same_as' => json_encode($item->sameAs->items),
       'field_ol_session' => $item->session,
       'field_ol_sponsor' => BillHelper::findSenatorFromMember($sponsor),

@@ -1,0 +1,28 @@
+uuid: 0577d9e8-490a-4f7d-b195-1b2def2df657
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: homepage_featured_story
+label: 'Homepage Featured Story'
+handler: simple
+handler_configuration: {  }
+entity_settings:
+  target_type: node
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+      in_the_news: in_the_news
+      video: video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: article
+queue_settings:
+  min_size: 0
+  max_size: 2
+  act_as_queue: false
+  reverse: false

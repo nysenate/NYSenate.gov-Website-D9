@@ -113,10 +113,11 @@ abstract class RequestPluginBase implements RequestPluginInterface {
    *   A response object.
    */
   public function retrieveUpdates($time_from = 0, $time_to = 0, array $params = []): ResponseUpdate {
-    // Limit parameters to 'offset' and 'limit'.  The limit defaults to '0'.
+    // Only accept 'offset', 'limit', and 'detail' as parameters.
+    // Default the limit parameter to '0'.
     $params = array_intersect_key(
       $this->prepParams($params) + ['limit' => '0'],
-      ['offset' => '', 'limit' => '']
+      ['offset' => '', 'limit' => '', 'detail' => '']
     );
 
     // If no end time was passed, set it to now.

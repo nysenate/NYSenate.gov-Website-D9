@@ -3,6 +3,7 @@
 namespace Drupal\nys_bills;
 
 use Drupal\Core\Database\Connection;
+use Drupal\node\Entity\Node;
 
 /**
  * Helper class for nys_bills module.
@@ -65,6 +66,30 @@ class BillsHelper {
     // Cache data based on cache ID that was set above.
     \Drupal::cache()->set($cid, $results);
     return $results;
+  }
+
+  /**
+   * Loads a bill Node by print number (title).
+   *
+   * @param string $print_num
+   *   A bill print number, such as '2021-S123B'.
+   *
+   * @return \Drupal\node\Entity\Node|null
+   *   If multiple or no bills are found, NULL is returned.
+   */
+  public static function loadBillByPrint(string $print_num): ?Node {
+    try {
+      $nodes = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties(['type' => 'bill', 'title' => $print_num]);
+      /** @var \Drupal\node\Entity\Node|NULL $ret */
+      $ret = count($nodes) == 1 ? current($nodes) : NULL;
+    }
+    catch (\Throwable $e) {
+      $ret = NULL;
+    }
+    return $ret;
+
   }
 
 }

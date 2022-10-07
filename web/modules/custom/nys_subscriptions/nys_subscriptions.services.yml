@@ -1,0 +1,12 @@
+services:
+  nys_subscriptions.queue_manager:
+    class: Drupal\nys_subscriptions\SubscriptionQueueManager
+    parent: queue.database
+    arguments: ['@event_dispatcher', '@plugin.manager.mail', '@language_manager']
+    tags:
+      - { name: service_collector, tag: subscription_queue, call: addQueue }
+  nys_subscriptions.subscriber.queueitem.references:
+    class: Drupal\nys_subscriptions\EventSubscriber\QueueItemReferencesSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

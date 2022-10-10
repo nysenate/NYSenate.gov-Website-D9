@@ -150,8 +150,13 @@
 }
 
 .node--type-promotional-banner.node--view-mode-card-list {
-	.node__content,
-	.c-block--initiative {
-		height: 100%;
+	.c-initiative--content {
+		height: 345px;
+
+		@include breakpoint($bp-md) {
+			.c-initiative-content {
+				padding-bottom: 0;
+			}
+		}
 	}
 }

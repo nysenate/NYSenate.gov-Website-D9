@@ -2539,6 +2539,11 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     $published_date = $node->field_ol_publish_date->value;
   }
 
+  // If published_date is not timestamp, use strtotime().
+  if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
+    $published_date = strtotime($published_date);
+  }
+
   $last_status = '';
   if ($node->hasField('field_ol_last_status') && !$node->get('field_ol_last_status')->isEmpty()) {
     $last_status = $allowed_values[$node->field_ol_last_status->value];

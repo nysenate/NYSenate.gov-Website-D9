@@ -451,7 +451,7 @@ function nysenate_theme_preprocess_block_content__quick_facts(&$variables) {
       'bill_status' => $bill_status,
       'page' => 1,
     ];
-    $link = Url::fromUserInput('/legislation/laws', ['query' => $params])->toString();
+    $link = Url::fromUserInput('/search/legislation', ['query' => $params])->toString();
     $facts[$key]['link'] = $link;
   }
 
@@ -828,7 +828,7 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
 
       $title = '';
       $args = [];
-      $url_string = '/search/legislation';
+      $url_string = '/legislation/laws';
       $options = [
         'query' => [
           'searched' => 'true',

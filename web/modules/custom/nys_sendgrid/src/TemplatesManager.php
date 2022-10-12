@@ -41,7 +41,7 @@ abstract class TemplatesManager {
   /**
    * Gets a template by ID.
    */
-  public static function getTemplate(string $id) {
+  public static function getTemplate(string $id): ?Template {
     $all_templates = static::getTemplates();
     if ($id && ($all_templates[$id] ?? FALSE)) {
       return $all_templates[$id];
@@ -49,6 +49,19 @@ abstract class TemplatesManager {
     else {
       return NULL;
     }
+  }
+
+  /**
+   * Gets a template by name.
+   */
+  public static function getTemplateByName(string $name): ?Template {
+    $search = array_filter(
+      static::getTemplates(),
+      function ($v) use ($name) {
+        return $v->getName() == $name;
+      }
+    );
+    return current($search) ?: NULL;
   }
 
   /**

@@ -1,0 +1,22 @@
+uuid: 954349c5-b0ce-4df9-afed-c7be32958c3a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: bill
+label: Bill
+type: 'canonical_entities:node'
+pattern: 'legislation/bills/[node:field_ol_session]/[node:title]'
+selection_criteria:
+  c0b37763-46d6-449d-bc9f-38aae58cb8e5:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: c0b37763-46d6-449d-bc9f-38aae58cb8e5
+    context_mapping:
+      node: node
+    bundles:
+      bill: bill
+selection_logic: and
+weight: -5
+relationships: {  }

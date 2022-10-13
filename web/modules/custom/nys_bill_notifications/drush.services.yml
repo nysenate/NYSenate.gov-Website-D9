@@ -1,0 +1,6 @@
+services:
+  nys_bill_notifications.commands:
+    class: \Drupal\nys_bill_notifications\Commands\NysBillNotificationsCommands
+    arguments: ['@state', '@bill_notifications.processor']
+    tags:
+      - { name: drush.command }

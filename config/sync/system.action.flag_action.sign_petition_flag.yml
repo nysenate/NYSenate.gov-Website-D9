@@ -1,0 +1,15 @@
+uuid: 6f44329c-e793-4bab-bc73-773702bf6baa
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.sign_petition
+  module:
+    - flag
+id: flag_action.sign_petition_flag
+label: 'Sign The Petition'
+type: node
+plugin: 'flag_action:sign_petition_flag'
+configuration:
+  flag_id: sign_petition
+  flag_action: flag

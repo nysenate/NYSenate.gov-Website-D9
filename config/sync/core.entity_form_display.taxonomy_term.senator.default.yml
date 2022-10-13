@@ -25,6 +25,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_ol_shortname
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_press_kit
     - field.field.taxonomy_term.senator.field_senator_name
     - field.field.taxonomy_term.senator.field_store_settings
     - field.field.taxonomy_term.senator.field_top_issue
@@ -34,9 +35,11 @@ dependencies:
     - taxonomy.vocabulary.senator
   module:
     - field_group
+    - file
     - inline_entity_form
     - media_library
     - name
+    - paragraphs
     - paragraphs_features
     - telephone
 third_party_settings:
@@ -176,6 +179,7 @@ third_party_settings:
         - field_media_email
         - field_media_phone
         - field_media_fax
+        - field_press_kit
       label: 'Media Inquiries'
       region: content
       parent_name: ''
@@ -370,6 +374,13 @@ content:
     settings:
       placeholder: ''
       size: 60
+    third_party_settings: {  }
+  field_press_kit:
+    type: file_generic
+    weight: 35
+    region: content
+    settings:
+      progress_indicator: throbber
     third_party_settings: {  }
   field_senator_name:
     type: name_default

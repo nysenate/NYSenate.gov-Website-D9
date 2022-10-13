@@ -1,0 +1,15 @@
+uuid: c9bcd074-b64f-4889-880c-70951aead880
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_committee
+  module:
+    - flag
+id: flag_action.follow_committee_flag
+label: 'Follow this committee'
+type: taxonomy_term
+plugin: 'flag_action:follow_committee_flag'
+configuration:
+  flag_id: follow_committee
+  flag_action: flag

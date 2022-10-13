@@ -1,0 +1,42 @@
+uuid: 902a7c9c-c344-4722-af44-a6e119a13886
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: follow_this_bill
+label: 'Follow Bills'
+bundles:
+  - bill
+entity_type: node
+global: false
+flag_short: 'Follow This Bill'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unfollow this bill'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:node'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+    teaser: teaser
+    rss: '0'
+    search_index: '0'
+    search_result: '0'
+    diff_standard: '0'
+    node_embed: '0'
+    token: '0'
+    sponsor_list: '0'
+    revision: '0'
+  show_as_field: false
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions: {  }
+  access_author: ''
+linkTypeConfig:
+  flag_confirmation: null
+  unflag_confirmation: null

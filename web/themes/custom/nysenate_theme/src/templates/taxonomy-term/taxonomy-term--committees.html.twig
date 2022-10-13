@@ -42,50 +42,17 @@
   <div class="content">
     <div class="c-block c-detail--header">
         <h2 class="nys-title">{{ name }}</h2>
-
-        {{ content.flag_follow_issue }}
-        {% if flag_count %}
-          <p class="c-issue--followers">
-            <span>{{ flag_count }}</span> {{ 'followers'|t }}
-          </p>
-        {% endif %}
-
+        <div class="c-event-featured-story c-committee">
+            {{ drupal_view('committee_content', 'featured_story') }}
+        </div>
         <div class="taxonomy-issues__header-cta">
           <div class="c-detail--header-meta header-meta">
               <!-- Check login state for action url -->
-            {% if not is_senator %}
-              {% include "@nysenate_theme/contact-your-senator/contact-your-senator.twig" with {
-                logged_in: contact_your_senator.logged_in,
-                title: contact_your_senator.title,
-                link: contact_your_senator.link,
-                senator_image: contact_your_senator.senator_image,
-              } only %}
-            {% endif %}
-          </div>
 
-          <div class="c-detail--social header-social">
-            <h3 class="c-detail--subhead">{{ 'raise awareness'|t }}</h3>
-            <ul>
-              <li><a target="_blank"
-                    href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url }}"
-                    class="c-detail--social-item facebook"></a></li>
-              <li><a target="_blank"
-                    href="https://twitter.com/intent/tweet?text={{ name[0]['#context']['value'] }} Via: @nysenate: {{ absolute_url }}"
-                    class="c-detail--social-item twitter"></a></li>
-              <li>
-                  <a href="mailto:?&subject=From NYSenate.gov: {{ name[0]['#context']['value'] }}&body=Check out this issue: {{ name[0]['#context']['value'] }}: < {{ absolute_url }} >."
-                    class="c-detail--social-item email"></a></li>
-            </ul>
           </div>
         </div>
 
-        <div class="l-row c-block c-top-content-wrapper">
-          {{ quick_facts }}
 
-          {{ senators_talking_about_this_issue }}
-
-          {{ petitions }}
-        </div>
 
         <div class="newsroom-content l-row">
           <h2 class="c-tab-block--title"
@@ -97,34 +64,24 @@
                 <label class="c-tab-link" for="news">{{ 'News'|t }}</label>
               </div>
               <div class="c-tab">
-                <input class="form-radio" type="radio" name="legislation" value="#panel2">
-                <label class="c-tab-link" for="legislation">{{ 'Legislation'|t }}</label>
-              </div>
-              <div class="c-tab">
-                <input class="form-radio" type="radio" name="events" value="#panel3">
-                <label class="c-tab-link" for="events">{{ 'Events'|t }}</label>
+                <input class="form-radio" type="radio" name="meetings" value="#panel2">
+                <label class="c-tab-link" for="events">{{ 'Events Archives'|t }}</label>
               </div>
           </dl>
           <div class="tabs-content">
             <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1">
-              {{ news }}
+                {{ drupal_view('committee_content', 'news') }}
             </div>
 
             <div class="panel-pane pane-views pane-news-by-issue content" id="panel2">
-              {{ news_by_bill }}
+                {{ drupal_view('committee_content', 'meetings') }}
             </div>
 
-            <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
-              {{ meeting_by_issue }}
-            </div>
+
           </div>
         </div>
 
-        <div class="c-block l-row c-latest-issue-video">
-          <div class="panel-pane pane-views pane-news-by-issue content">
-            {{ video }}
-          </div>
-        </div>
+
     </div>
   </div>
 </div>

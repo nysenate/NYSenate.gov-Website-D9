@@ -1,0 +1,15 @@
+uuid: 569acb39-4c41-438c-b91f-442b59455eb2
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_issue
+  module:
+    - flag
+id: flag_action.follow_issue_unflag
+label: 'Unfollow This Issue'
+type: taxonomy_term
+plugin: 'flag_action:follow_issue_unflag'
+configuration:
+  flag_id: follow_issue
+  flag_action: unflag

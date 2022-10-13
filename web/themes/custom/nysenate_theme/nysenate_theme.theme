@@ -1014,15 +1014,16 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   }
 
   // Newsroom.
-  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content') {
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content' ||
+    $view->id() == 'committee_content' && $view->current_display == 'news') {
     $contents = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
       $bundle = $node->bundle();
       if ($bundle == 'article' && $node->hasField('field_category')
         && !$node->get('field_category')->isEmpty()) {
-        $bundle = $node->field_category->getSetting('allowed_values');
-        $bundle = $bundle[$node->field_category->value];
+        $allowed_values = $node->field_category->getSetting('allowed_values');
+        $variables['title'] = $allowed_values[$node->field_category->value];
       }
 
       $issues = [];
@@ -1236,6 +1237,23 @@ function nysenate_theme_theme_suggestions_semanticviews_row_alter(array &$sugges
   $display_id = $view->getDisplay();
   $display_id = $display_id->display['id'];
   $suggestions[] = $hook . '__' . $view->id() . '__' . $display_id;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_row__committee_content__news(&$variables) {
+  $node = $variables['row']->_entity;
+
+  if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+    $media = \Drupal::entityTypeManager()->getStorage('media')->load($node->field_image_main->target_id);
+    if (!empty($media)) {
+      $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+      if (!empty($file)) {
+        $variables['img_src'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      }
+    }
+  }
 }
 
 /**

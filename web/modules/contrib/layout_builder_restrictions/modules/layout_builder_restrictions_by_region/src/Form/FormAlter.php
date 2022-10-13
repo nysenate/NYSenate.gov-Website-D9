@@ -282,7 +282,7 @@ class FormAlter implements ContainerInjectionInterface {
                   'region-label',
                 ],
                 'data' => [
-                  '#markup' => $region['label']->render(),
+                  '#markup' => is_object($region['label']) ? $region['label']->render() : $region['label'],
                 ],
               ],
               'status' => [

@@ -207,8 +207,12 @@ trait PluginHelperTrait {
   protected function getSortedDefinitions(array $definitions = NULL, $label_key = 'label') {
     uasort($definitions, function ($a, $b) use ($label_key) {
       if ($a['category'] != $b['category']) {
+        $a['category'] = $a['category'] ?? '';
+        $b['category'] = $b['category'] ?? '';
         return strnatcasecmp($a['category'], $b['category']);
       }
+      $a[$label_key] = $a[$label_key] ?? '';
+      $b[$label_key] = $b[$label_key] ?? '';
       return strnatcasecmp($a[$label_key], $b[$label_key]);
     });
     return $definitions;

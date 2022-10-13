@@ -2,8 +2,8 @@
 
 namespace Drupal\simple_sitemap_views\EventSubscriber;
 
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Drupal\simple_sitemap_views\SimpleSitemapViews;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -62,10 +62,10 @@ class ArgumentCollector implements EventSubscriberInterface {
   /**
    * Collect information about views arguments.
    *
-   * @param \Symfony\Component\HttpKernel\Event\PostResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
    *   Object of event after a response was sent.
    */
-  public function onTerminate(PostResponseEvent $event) {
+  public function onTerminate(TerminateEvent $event) {
     // Only successful requests are interesting.
     // Collect information about arguments only if views support is enabled.
     if (!$event->getResponse()->isSuccessful() || !$this->sitemapViews->isEnabled()) {

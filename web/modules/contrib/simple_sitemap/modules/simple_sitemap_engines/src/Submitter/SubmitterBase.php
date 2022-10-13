@@ -7,7 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\simple_sitemap\Logger;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 
 /**
  * Base class for submitter services.
@@ -100,7 +100,7 @@ abstract class SubmitterBase {
       $this->onSuccess();
       return TRUE;
     }
-    catch (RequestException $e) {
+    catch (TransferException $e) {
       watchdog_exception('simple_sitemap_engines', $e);
       $this->onFailure();
       return FALSE;

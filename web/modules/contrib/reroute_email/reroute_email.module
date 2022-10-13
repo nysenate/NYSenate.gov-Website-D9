@@ -156,6 +156,8 @@ function reroute_email_mail_alter(&$message) {
   }
 
   // Extensive params keys cause OOM error in var_export().
+  // But we need to keep 'params' (e.g. attachments).
+  $params = $message['params'];
   unset($message['params']);
 
   // Simplify subject to avoid OOM error in var_export().
@@ -169,6 +171,9 @@ function reroute_email_mail_alter(&$message) {
       '%message_id' => $message['id'],
       '@message' => var_export($message, TRUE),
     ]);
+
+  // Re-add 'params'.
+  $message['params'] = $params;
 }
 
 /**

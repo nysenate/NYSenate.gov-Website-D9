@@ -5,7 +5,6 @@
  * Main module file containing hooks.
  */
 
-use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -16,10 +15,20 @@ use Drupal\language\ConfigurableLanguageInterface;
 /**
  * Implements hook_help().
  */
-function simple_sitemap_help($route_name, RouteMatchInterface $route_match): ?MarkupInterface {
-  return $route_name === 'help.page.simple_sitemap'
-    ? check_markup(file_get_contents(__DIR__ . '/README.md'))
-    : NULL;
+function simple_sitemap_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.simple_sitemap':
+      return check_markup(file_get_contents(__DIR__ . '/README.md'));
+
+    case 'simple_sitemap.entities':
+      return '<p>' . t('Simple XML Sitemap settings will be added only to entity forms of entity types enabled here. Settings for specific entity bundles (e.g. <em>page</em>) can be adjusted here or on the bundle pages.') . '</p>';
+
+    case 'simple_sitemap.custom':
+      return '<p>' . t('Add custom internal drupal paths to the XML sitemap.') . '</p>';
+
+    default:
+      return NULL;
+  }
 }
 
 /**

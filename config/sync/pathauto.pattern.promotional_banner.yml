@@ -7,12 +7,12 @@ dependencies:
 id: promotional_banner
 label: 'Promotional Banner'
 type: 'canonical_entities:node'
-pattern: 'promotional_banners/[node:title]'
+pattern: 'promotional_banners/[node:field_senator_multiref:0:entity:name]/[node:title]'
 selection_criteria:
-  9263dcb4-e087-47b6-96e4-e9d5f7551afc:
+  5c07f7cd-89c9-4187-afc9-146c658346ae:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 9263dcb4-e087-47b6-96e4-e9d5f7551afc
+    uuid: 5c07f7cd-89c9-4187-afc9-146c658346ae
     context_mapping:
       node: node
     bundles:

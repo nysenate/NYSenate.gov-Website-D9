@@ -464,6 +464,7 @@ return array(
     'Doctrine\\Common\\Collections\\Expr\\ExpressionVisitor' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/Expr/ExpressionVisitor.php',
     'Doctrine\\Common\\Collections\\Expr\\Value' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/Expr/Value.php',
     'Doctrine\\Common\\Collections\\ExpressionBuilder' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/ExpressionBuilder.php',
+    'Doctrine\\Common\\Collections\\ReadableCollection' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/ReadableCollection.php',
     'Doctrine\\Common\\Collections\\Selectable' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/Selectable.php',
     'Doctrine\\Common\\Lexer\\AbstractLexer' => $vendorDir . '/doctrine/lexer/lib/Doctrine/Common/Lexer/AbstractLexer.php',
     'Doctrine\\Common\\Reflection\\ClassFinderInterface' => $vendorDir . '/doctrine/reflection/lib/Doctrine/Common/Reflection/ClassFinderInterface.php',

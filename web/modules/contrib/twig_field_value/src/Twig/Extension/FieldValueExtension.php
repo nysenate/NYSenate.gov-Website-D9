@@ -2,13 +2,49 @@
 
 namespace Drupal\twig_field_value\Twig\Extension;
 
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderCallbackInterface;
+use Drupal\Core\Security\DoTrustedCallbackTrait;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Provides field value filters for Twig templates.
  */
 class FieldValueExtension extends \Twig_Extension {
+
+  use DoTrustedCallbackTrait;
+
+  /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $controllerResolver;
+
+  /**
+   * The twig_field_value logger channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $loggerChannel;
+
+  /**
+   * Constructs a FieldValueExtension.
+   *
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
+   *   The controller resolver.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
+   *   The logger channel factory.
+   */
+  public function __construct(ControllerResolverInterface $controllerResolver, LoggerChannelFactoryInterface $loggerFactory) {
+    $this->controllerResolver = $controllerResolver;
+    $this->loggerChannel = $loggerFactory->get('twig_field_value');
+  }
 
   /**
    * {@inheritdoc}
@@ -38,7 +74,11 @@ class FieldValueExtension extends \Twig_Extension {
       return NULL;
     }
 
-    return isset($build['#title']) ? $build['#title'] : NULL;
+    if (!$this->accessAllowed($build)) {
+      return NULL;
+    }
+
+    return $build['#title'] ?? NULL;
   }
 
   /**
@@ -57,14 +97,14 @@ class FieldValueExtension extends \Twig_Extension {
       return NULL;
     }
 
-    $elements = Element::children($build);
-    if (empty($elements)) {
+    $children = $this->getVisibleChildren($build);
+    if (empty($children)) {
       return NULL;
     }
 
     $items = [];
-    foreach ($elements as $delta) {
-      $items[$delta] = $build[$delta];
+    foreach ($children as $delta => $child) {
+      $items[$delta] = $child;
     }
 
     return $items;
@@ -87,11 +127,8 @@ class FieldValueExtension extends \Twig_Extension {
     if (!$this->isFieldRenderArray($build)) {
       return NULL;
     }
-    if (!isset($build['#items']) || !($build['#items'] instanceof TypedDataInterface)) {
-      return NULL;
-    }
 
-    $item_values = $build['#items']->getValue();
+    $item_values = $this->getVisibleItemValues($build);
     if (empty($item_values)) {
       return NULL;
     }
@@ -99,11 +136,12 @@ class FieldValueExtension extends \Twig_Extension {
     $raw_values = [];
     foreach ($item_values as $delta => $values) {
       if ($key) {
-        $raw_values[$delta] = isset($values[$key]) ? $values[$key] : NULL;
+        $raw_value = $values[$key] ?? NULL;
       }
       else {
-        $raw_values[$delta] = $values;
+        $raw_value = $values;
       }
+      $raw_values[$delta] = $raw_value;
     }
 
     return count($raw_values) > 1 ? $raw_values : reset($raw_values);
@@ -126,6 +164,12 @@ class FieldValueExtension extends \Twig_Extension {
     if (!$this->isFieldRenderArray($build)) {
       return NULL;
     }
+
+    $visibleChildren = $this->getVisibleChildren($build);
+    if (empty($visibleChildren)) {
+      return NULL;
+    }
+
     if (!isset($build['#field_name'])) {
       return NULL;
     }
@@ -135,19 +179,138 @@ class FieldValueExtension extends \Twig_Extension {
       return NULL;
     }
 
-    // Use the parent object to load the target entity of the field.
+    // Use the parent object to load the target entity(s) of the field.
     /** @var \Drupal\Core\Entity\ContentEntityInterface $parent */
     $parent = $build[$parent_key];
 
     $entities = [];
-    /** @var \Drupal\Core\Field\FieldItemInterface $field */
-    foreach ($parent->get($build['#field_name']) as $item) {
-      if (isset($item->entity)) {
-        $entities[] = $item->entity;
+    /** @var \Drupal\Core\Field\FieldItemInterface $fieldItems */
+    $fieldItems = $parent->get($build['#field_name']);
+    foreach ($fieldItems as $delta => $item) {
+      if (isset($item->entity) && $item->entity->access('view')) {
+        $entities[$delta] = $item->entity;
       }
     }
 
+    // Access control at field item level is not supported.
+    // The render array allows access restriction at field item level
+    // (i.e. #access = FALSE) but does not provide the data to determine which
+    // referenced entity should be blocked.
+    if (count($entities) != count($visibleChildren)) {
+      $this->loggerChannel->alert('The field_target_entity twig filter does not support access control at field item level. See README.txt for more information. Entity type: %entity_type, bundle: %bundle, field: %field_name', [
+        '%entity_type' => $parent->getEntityType()->id(),
+        '%bundle' => $parent->bundle(),
+        '%field_name' => $fieldItems->getName(),
+      ]);
+      return NULL;
+    }
+
     return count($entities) > 1 ? $entities : reset($entities);
+  }
+
+  /**
+   * Check if access is allowed to the render array.
+   *
+   * Access checks are based on \Drupal\Core\Render\Renderer::doRender.
+   *
+   * @param array $elements
+   *   Render array elements.
+   *
+   * @return bool
+   *   True if access is granted or no access restrictions in place.
+   *
+   * @see \Drupal\Core\Render\Renderer::doRender
+   */
+  protected function accessAllowed(array $elements) {
+    if (!isset($elements['#access']) && isset($elements['#access_callback'])) {
+      $elements['#access'] = $this->doCallback('#access_callback', $elements['#access_callback'], [$elements]);
+    }
+
+    if (isset($elements['#access'])) {
+      if ($elements['#access'] instanceof AccessResultInterface) {
+        if (!$elements['#access']->isAllowed()) {
+          return FALSE;
+        }
+      }
+      elseif ($elements['#access'] === FALSE) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
+
+  /**
+   * Returns the children that are accessible.
+   *
+   * @param array $build
+   *   Render array.
+   *
+   * @return array
+   *   Visible children.
+   */
+  protected function getVisibleChildren(array $build) {
+
+    if (!$this->accessAllowed($build)) {
+      return [];
+    }
+
+    $elements = Element::children($build);
+    if (empty($elements)) {
+      return [];
+    }
+
+    $children = [];
+    foreach ($elements as $delta) {
+      if (Element::isVisibleElement($build[$delta])) {
+        $children[$delta] = $build[$delta];
+      }
+    }
+
+    return $children;
+  }
+
+  /**
+   * Returns item values of visible elements.
+   *
+   * @param array $build
+   *   Render array.
+   *
+   * @return array
+   *   Array of values per child.
+   */
+  protected function getVisibleItemValues(array $build) {
+
+    $visibleChildren = $this->getVisibleChildren($build);
+
+    if (!isset($build['#items']) || !($build['#items'] instanceof TypedDataInterface)) {
+      return [];
+    }
+
+    $values = $build['#items']->getValue();
+
+    if (empty($values) || empty($visibleChildren)) {
+      return [];
+    }
+
+    // Access control at field item level is not supported for entity reference
+    // fields. The render array allows access restriction at field item level
+    // (i.e. #access = FALSE) but does not provide the data to determine which
+    // referenced entity should be blocked.
+    if (count($values) != count($visibleChildren)
+      && $build['#items'] instanceof EntityReferenceFieldItemListInterface
+    ) {
+      $this->loggerChannel->alert('The field_raw twig filter does not support access control at field item level for entity reference fields. See README.txt for more information.');
+      return [];
+    }
+
+    $itemValues = [];
+    foreach (array_keys($visibleChildren) as $delta) {
+      if (isset($values[$delta])) {
+        $itemValues[$delta] = $values[$delta];
+      }
+    }
+
+    return $itemValues;
   }
 
   /**
@@ -162,6 +325,38 @@ class FieldValueExtension extends \Twig_Extension {
   protected function isFieldRenderArray($build) {
 
     return isset($build['#theme']) && $build['#theme'] == 'field';
+  }
+
+  /**
+   * Performs a callback.
+   *
+   * Based on Renderer::doCallback().
+   *
+   * @param string $callback_type
+   *   The type of the callback. For example, '#post_render'.
+   * @param string|callable $callback
+   *   The callback to perform.
+   * @param array $args
+   *   The arguments to pass to the callback.
+   *
+   * @return mixed
+   *   The callback's return value.
+   *
+   * @see \Drupal\Core\Security\TrustedCallbackInterface
+   * @see \Drupal\Core\Render\Renderer::doCallback
+   */
+  protected function doCallback($callback_type, $callback, array $args) {
+    if (is_string($callback)) {
+      $double_colon = strpos($callback, '::');
+      if ($double_colon === FALSE) {
+        $callback = $this->controllerResolver->getControllerFromDefinition($callback);
+      }
+      elseif ($double_colon > 0) {
+        $callback = explode('::', $callback, 2);
+      }
+    }
+    $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/2966725', $callback_type, '%s');
+    return $this->doTrustedCallback($callback, $args, $message, TrustedCallbackInterface::THROW_EXCEPTION, RenderCallbackInterface::class);
   }
 
   /**

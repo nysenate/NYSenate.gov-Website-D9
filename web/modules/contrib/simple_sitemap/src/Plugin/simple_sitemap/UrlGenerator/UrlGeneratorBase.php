@@ -2,8 +2,6 @@
 
 namespace Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator;
 
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Url;
 use Drupal\simple_sitemap\Exception\SkipElementException;
 use Drupal\simple_sitemap\Plugin\simple_sitemap\SimpleSitemapPluginBase;
 use Drupal\simple_sitemap\Entity\SimpleSitemapInterface;

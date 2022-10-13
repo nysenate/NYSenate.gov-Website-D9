@@ -1,9 +1,10 @@
 {{ attach_library('nysenate_theme/contact-block') }}
 {% if contact_type is not empty %}
-  <h2 class="nys-title contact-block__title contact-form__title">
-    {{ 'Contact Senator ' ~ title ~ ' Office'|t }}
-  </h2>
-
+  {% if  contact_type == 'full' %}
+    <h2 class="nys-title contact-block__title contact-form__title">
+      {{ 'Contact Senator ' ~ title ~ ' Office'|t }}
+    </h2>
+  {% endif %}
   <div class="c-block c-block--senator-office">
     {% if contact_type == 'full' %}
       <div class="field-content">
@@ -117,22 +118,39 @@
         </div>
       {% endif %}
     {% elseif contact_type == 'media_inquiries' %}
+        <hr class="lgt-bg">
       <div class="c-office-info--office-contact vcard">
         <span class="fn" itemprop="name">{{ 'Media Inquiries'|t }}</span>
-        </br>
-        {{ name }}
-        </br>
-        {% if email %}
-          <a href="mailto:{{ email }}">{{ email }}</a>
-        {% endif %}
-        </br>
-        {% if phone %}
-          <span>Phone: </span>{{ phone }}<br />
-        {% endif %}
-        {% if fax %}
-          <span>Fax: </span>{{ fax }}<br />
-        {% endif %}
+          {% if name %}
+            <div class="c-office-info--office-contact vcard inquiries-title">
+              <h3 class="c-download-contact--name">{{ title }}</h3>
+            </div>
+          {% endif %}
+          <div class="c-office-info--office-contact vcard">
+              {% if name %}
+                {{ name }}
+                <br>
+              {% endif %}
+              {% if email %}
+                <a href="mailto:{{ email }}">{{ email }}</a>
+                <br>
+              {% endif %}
+              {% if phone %}
+                <span>Phone: </span>{{ phone }}
+              {% endif %}
+              {% if fax %}
+                <br>
+                <span>Fax: </span>{{ fax }}<br>
+              {% endif %}
+          </div>
       </div>
+      {% if press_kit %}
+        <div class="c-office-info--office-contact">
+            <a class="c-block--btn" href="{{ press_kit }}" target="_blank">download press kit</a>
+        </div>
+        <hr>
+      {% endif %}
+
     {% endif %}
   </div>
 {% endif %}

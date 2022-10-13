@@ -3,6 +3,7 @@
 namespace Drupal\simple_sitemap\Entity;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Component\Uuid\UuidInterface;
@@ -205,6 +206,11 @@ class SimpleSitemapStorage extends ConfigEntityStorage {
     if (!$entity->isEnabled() && $entity->fromPublishedAndUnpublished()->getChunkCount()) {
       $this->deleteContent($entity);
     }
+    // We need the else since we don't want to thrash cache invalidation and
+    // deleting content already invalidates cache.
+    else {
+      $this->invalidateCache([$entity->id()]);
+    }
 
     return parent::doSave($id, $entity);
   }
@@ -256,6 +262,7 @@ class SimpleSitemapStorage extends ConfigEntityStorage {
         ':type' => $entity->id(),
         ':status' => self::SITEMAP_PUBLISHED,
       ]);
+      $this->invalidateCache([$entity->id()]);
     }
   }
 
@@ -299,6 +306,7 @@ class SimpleSitemapStorage extends ConfigEntityStorage {
       'status' => 0,
       'link_count' => $link_count,
     ])->execute();
+    $this->invalidateCache([$entity->id()]);
   }
 
   /**
@@ -330,6 +338,7 @@ class SimpleSitemapStorage extends ConfigEntityStorage {
         'sitemap_created' => $this->time->getRequestTime(),
       ])
       ->execute();
+    $this->invalidateCache([$entity->id()]);
   }
 
   /**
@@ -564,6 +573,19 @@ class SimpleSitemapStorage extends ConfigEntityStorage {
       $query->condition('type', $variants, 'IN');
     }
     $query->execute();
+    $this->invalidateCache($variants);
+  }
+
+  /**
+   * Invalidates cache for all or specified sitemaps.
+   *
+   * @param array|null $variants
+   *   An array of sitemap IDs, or NULL for all sitemaps.
+   */
+  public function invalidateCache(?array $variants = NULL): void {
+    $variants = $variants ?? array_keys(SimpleSitemap::loadMultiple());
+    $tags = Cache::buildTags('simple_sitemap', (array) $variants);
+    Cache::invalidateTags($tags);
   }
 
 }

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\views_data_export\Functional;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
-use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests views data export views.
@@ -15,7 +14,7 @@ class ViewsDataExportTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'rest',
     'views_data_export',
@@ -32,10 +31,13 @@ class ViewsDataExportTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
-    ViewTestData::createTestViews(static::class, ['views_data_export_test']);
+  protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, ['views_data_export_test']);
     $account = $this->drupalCreateUser(['access content']);
     $this->drupalLogin($account);
   }

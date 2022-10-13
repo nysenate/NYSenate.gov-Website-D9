@@ -40,7 +40,7 @@ class SitemapIndexUrlGenerator extends UrlGeneratorBase {
       $url_object = $sitemap->toUrl()->setAbsolute();
 
       return [
-        'loc' => $url_object->toString(),
+        'url' => $url_object->toString(),
         'lastmod' => date('c', $sitemap->fromPublished()->getCreated()),
 
         // Additional info useful in hooks.

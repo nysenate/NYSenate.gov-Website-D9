@@ -37,7 +37,7 @@ class ReCaptchaBasicTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['recaptcha', 'captcha'];
+  protected static $modules = ['recaptcha', 'captcha', 'node'];
 
   /**
    * {@inheritdoc}
@@ -47,9 +47,9 @@ class ReCaptchaBasicTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-    module_load_include('inc', 'captcha');
+    \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
 
     // Create a normal user.
     $permissions = [
@@ -74,7 +74,7 @@ class ReCaptchaBasicTest extends BrowserTestBase {
   public function testReCaptchaAdminAccess() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/people/captcha/recaptcha');
-    $this->assertSession()->pageTextNotContains($this->t('Access denied'), 'Admin users should be able to access the reCAPTCHA admin page', 'reCAPTCHA');
+    $this->assertSession()->pageTextNotContains($this->t('Access denied'));
     $this->drupalLogout();
   }
 
@@ -90,21 +90,23 @@ class ReCaptchaBasicTest extends BrowserTestBase {
     // Check form validation.
     $edit['recaptcha_site_key'] = '';
     $edit['recaptcha_secret_key'] = '';
-    $this->drupalPostForm('admin/config/people/captcha/recaptcha', $edit, $this->t('Save configuration'));
+    $this->drupalGet('admin/config/people/captcha/recaptcha');
+    $this->submitForm($edit, $this->t('Save configuration'));
 
-    $this->assertSession()->responseContains($this->t('Site key field is required.'), '[testReCaptchaConfiguration]: Empty site key detected.');
-    $this->assertSession()->responseContains($this->t('Secret key field is required.'), '[testReCaptchaConfiguration]: Empty secret key detected.');
+    $this->assertSession()->responseContains($this->t('Site key field is required.'));
+    $this->assertSession()->responseContains($this->t('Secret key field is required.'));
 
     // Save form with valid values.
     $edit['recaptcha_site_key'] = $site_key;
     $edit['recaptcha_secret_key'] = $secret_key;
     $edit['recaptcha_tabindex'] = 0;
-    $this->drupalPostForm('admin/config/people/captcha/recaptcha', $edit, $this->t('Save configuration'));
-    $this->assertSession()->responseContains($this->t('The configuration options have been saved.'), '[testReCaptchaConfiguration]: The configuration options have been saved.');
+    $this->drupalGet('admin/config/people/captcha/recaptcha');
+    $this->submitForm($edit, $this->t('Save configuration'));
+    $this->assertSession()->responseContains($this->t('The configuration options have been saved.'));
 
-    $this->assertSession()->responseNotContains($this->t('Site key field is required.'), '[testReCaptchaConfiguration]: Site key was not empty.');
-    $this->assertSession()->responseNotContains($this->t('Secret key field is required.'), '[testReCaptchaConfiguration]: Secret key was not empty.');
-    $this->assertSession()->responseNotContains($this->t('The tabindex must be an integer.'), '[testReCaptchaConfiguration]: Tab index had a valid input.');
+    $this->assertSession()->responseNotContains($this->t('Site key field is required.'));
+    $this->assertSession()->responseNotContains($this->t('Secret key field is required.'));
+    $this->assertSession()->responseNotContains($this->t('The tabindex must be an integer.'));
 
     $this->drupalLogout();
   }
@@ -122,25 +124,25 @@ class ReCaptchaBasicTest extends BrowserTestBase {
     $this->drupalLogout();
 
     $this->drupalGet('user/login');
-    $this->assertSession()->responseNotContains($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is not shown on form.');
+    $this->assertSession()->responseNotContains($grecaptcha);
 
     // Enable 'captcha/Math' CAPTCHA on login form.
     captcha_set_form_id_setting('user_login_form', 'captcha/Math');
 
     $this->drupalGet('user/login');
-    $this->assertSession()->responseNotContains($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is not shown on form.');
+    $this->assertSession()->responseNotContains($grecaptcha);
 
     // Enable 'recaptcha/reCAPTCHA' on login form.
     captcha_set_form_id_setting('user_login_form', 'recaptcha/reCAPTCHA');
     $result = captcha_get_form_id_setting('user_login_form');
-    $this->assertNotNull($result, 'A configuration has been found for CAPTCHA point: user_login_form', 'reCAPTCHA');
+    $this->assertNotNull($result, 'A configuration has been found for CAPTCHA point: user_login_form');
     $this->assertEquals($result->getCaptchaType(), 'recaptcha/reCAPTCHA', 'reCAPTCHA type has been configured for CAPTCHA point: user_login_form');
 
     // Check if a Math CAPTCHA is still shown on the login form. The site key
     // and security key have not yet configured for reCAPTCHA. The module need
     // to fall back to math captcha.
     $this->drupalGet('user/login');
-    $this->assertSession()->responseContains($this->t('Math question'), '[testReCaptchaOnLoginForm]: Math CAPTCHA is shown on form.');
+    $this->assertSession()->responseContains($this->t('Math question'));
 
     // Configure site key and security key to show reCAPTCHA and no fall back.
     $this->config('recaptcha.settings')->set('site_key', $site_key)->save();
@@ -148,15 +150,15 @@ class ReCaptchaBasicTest extends BrowserTestBase {
 
     // Check if there is a reCAPTCHA on the login form.
     $this->drupalGet('user/login');
-    $this->assertSession()->responseContains($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is shown on form.');
-    $this->assertSession()->responseContains('<script src="' . Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString() . '" async defer></script>', '[testReCaptchaOnLoginForm]: reCAPTCHA is shown on form.');
-    $this->assertSession()->responseNotContains($grecaptcha . '<noscript>', '[testReCaptchaOnLoginForm]: NoScript code is not enabled for the reCAPTCHA.');
+    $this->assertSession()->responseContains($grecaptcha);
+    $this->assertSession()->responseContains('<script src="' . Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString() . '" async defer></script>');
+    $this->assertSession()->responseNotContains($grecaptcha . '<noscript>');
 
     // Test if the fall back url is properly build and noscript code added.
     $this->config('recaptcha.settings')->set('widget.noscript', 1)->save();
 
     $this->drupalGet('user/login');
-    $this->assertSession()->responseContains($grecaptcha . "\n" . '<noscript>', '[testReCaptchaOnLoginForm]: NoScript for reCAPTCHA is shown on form.');
+    $this->assertSession()->responseContains($grecaptcha . "\n" . '<noscript>');
     $options = [
       'query' => [
         'k' => $site_key,
@@ -164,37 +166,37 @@ class ReCaptchaBasicTest extends BrowserTestBase {
       ],
       'absolute' => TRUE,
     ];
-    $this->assertSession()->responseContains(Html::escape(Url::fromUri('https://www.google.com/recaptcha/api/fallback', $options)->toString()), '[testReCaptchaOnLoginForm]: Fallback URL with IFRAME has been found.');
+    $this->assertSession()->responseContains(Html::escape(Url::fromUri('https://www.google.com/recaptcha/api/fallback', $options)->toString()));
 
     // Check if there is a reCAPTCHA with global url on the login form.
     $this->config('recaptcha.settings')->set('use_globally', TRUE)->save();
     $this->drupalGet('user/login');
-    $this->assertSession()->responseContains('<script src="' . Url::fromUri('https://www.recaptcha.net/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString() . '" async defer></script>', '[testReCaptchaOnLoginForm]: Global reCAPTCHA is shown on form.');
-    $this->assertSession()->responseContains(Html::escape(Url::fromUri('https://www.recaptcha.net/recaptcha/api/fallback', $options)->toString()), '[testReCaptchaOnLoginForm]: Global fallback URL with IFRAME has been found.');
+    $this->assertSession()->responseContains('<script src="' . Url::fromUri('https://www.recaptcha.net/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString() . '" async defer></script>');
+    $this->assertSession()->responseContains(Html::escape(Url::fromUri('https://www.recaptcha.net/recaptcha/api/fallback', $options)->toString()));
 
     // Check that data-size attribute does not exists.
     $this->config('recaptcha.settings')->set('widget.size', '')->save();
     $this->drupalGet('user/login');
     $element = $this->xpath('//div[@class=:class and @data-size=:size]', [':class' => 'g-recaptcha', ':size' => 'small']);
-    $this->assertFalse(!empty($element), 'Tag contains no data-size attribute.');
+    $this->assertEmpty($element, 'Tag contains no data-size attribute.');
 
     // Check that data-size attribute exists.
     $this->config('recaptcha.settings')->set('widget.size', 'small')->save();
     $this->drupalGet('user/login');
     $element = $this->xpath('//div[@class=:class and @data-size=:size]', [':class' => 'g-recaptcha', ':size' => 'small']);
-    $this->assertTrue(!empty($element), 'Tag contains data-size attribute and value.');
+    $this->assertNotEmpty($element, 'Tag contains data-size attribute and value.');
 
     // Check that data-tabindex attribute does not exists.
     $this->config('recaptcha.settings')->set('widget.tabindex', 0)->save();
     $this->drupalGet('user/login');
     $element = $this->xpath('//div[@class=:class and @data-tabindex=:index]', [':class' => 'g-recaptcha', ':index' => 0]);
-    $this->assertFalse(!empty($element), 'Tag contains no data-tabindex attribute.');
+    $this->assertEmpty($element, 'Tag contains no data-tabindex attribute.');
 
     // Check that data-tabindex attribute exists.
     $this->config('recaptcha.settings')->set('widget.tabindex', 5)->save();
     $this->drupalGet('user/login');
     $element = $this->xpath('//div[@class=:class and @data-tabindex=:index]', [':class' => 'g-recaptcha', ':index' => 5]);
-    $this->assertTrue(!empty($element), 'Tag contains data-tabindex attribute and value.');
+    $this->assertNotEmpty($element, 'Tag contains data-tabindex attribute and value.');
 
     // Try to log in, which should fail.
     $edit['name'] = $this->normalUser->getAccountName();
@@ -204,9 +206,10 @@ class ReCaptchaBasicTest extends BrowserTestBase {
       ->hiddenFieldExists('captcha_response')
       ->setValue('?');
 
-    $this->drupalPostForm('user/login', $edit, $this->t('Log in'));
+    $this->drupalGet('user/login');
+    $this->submitForm($edit, $this->t('Log in'));
     // Check for error message.
-    $this->assertSession()->pageTextContains($this->t('The answer you entered for the CAPTCHA was not correct.'), 'CAPTCHA should block user login form', 'reCAPTCHA');
+    $this->assertSession()->pageTextContains($this->t('The answer you entered for the CAPTCHA was not correct.'));
 
     // And make sure that user is not logged in: check for name and password
     // fields on "?q=user".

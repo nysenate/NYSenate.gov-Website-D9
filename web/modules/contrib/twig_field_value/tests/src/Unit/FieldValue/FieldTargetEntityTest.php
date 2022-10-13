@@ -18,14 +18,28 @@ class FieldTargetEntityTest extends UnitTestCase {
    */
   protected $extension;
 
-  protected function setUp() {
-    $this->extension = new FieldValueExtension();
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+
+    /** @var \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver */
+    $controllerResolver = $this->getMockBuilder('\Drupal\Core\Controller\ControllerResolver')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $loggerFactory = $this->getMockBuilder('\Drupal\Core\Logger\LoggerChannelFactory')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->extension = new FieldValueExtension($controllerResolver, $loggerFactory);
   }
 
   /**
    * Returns a mock Content Entity object.
    *
    * @param array $referenced_entities
+   *   The referenced entities.
    *
    * @return \Drupal\Core\Field\FieldItemBase
    *   The entity object.
@@ -54,11 +68,13 @@ class FieldTargetEntityTest extends UnitTestCase {
   /**
    * Asserts the twig field_target_entity filter.
    *
+   * @param mixed $expected_result
+   *   The expected result.
+   * @param mixed $render_array
+   *   The render array.
+   *
    * @dataProvider providerTestTargetEntity
    * @covers ::getTargetEntity
-   *
-   * @param $expected_result
-   * @param $render_array
    */
   public function testTargetEntity($expected_result, $render_array) {
 
@@ -68,6 +84,9 @@ class FieldTargetEntityTest extends UnitTestCase {
 
   /**
    * Provides data and expected results for the test method.
+   *
+   * This only tests invalid render arrays formats. Valid render arrays are
+   * covered by functional tests.
    *
    * @return array
    *   Data and expected results.
@@ -84,44 +103,6 @@ class FieldTargetEntityTest extends UnitTestCase {
       [
         NULL,
         ['#theme' => 'field', '#field_name' => ['reference_field']],
-      ],
-      [
-        'foo',
-        [
-          '#theme' => 'field',
-          '#field_name' => ['reference_field'],
-          '#object' => $this->mockContentEntity(['foo']),
-        ],
-      ],
-      [
-        [
-          'entity_1',
-          'entity_2',
-          'entity_3',
-        ],
-        [
-          '#theme' => 'field',
-          '#field_name' => ['reference_field'],
-          '#object' => $this->mockContentEntity([
-            'entity_1',
-            'entity_2',
-            'entity_3',
-          ]),
-        ],
-      ],
-      [
-        [
-          'entity_1',
-          'entity_2',
-        ],
-        [
-          '#theme' => 'field',
-          '#field_name' => ['reference_field'],
-          '#field_collection_item' => $this->mockContentEntity([
-            'entity_1',
-            'entity_2',
-          ]),
-        ],
       ],
     ];
   }

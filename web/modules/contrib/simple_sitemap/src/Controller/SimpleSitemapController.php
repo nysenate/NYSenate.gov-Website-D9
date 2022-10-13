@@ -3,6 +3,8 @@
 namespace Drupal\simple_sitemap\Controller;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,15 +57,20 @@ class SimpleSitemapController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function getSitemap(Request $request, ?string $variant = NULL): Response {
+    $variant = $variant ?? $this->generator->getDefaultVariant();
     $output = $this->generator->setVariants($variant)->getContent($request->query->get('page'));
     if ($output === NULL) {
       throw new NotFoundHttpException();
     }
 
-    return new Response($output, Response::HTTP_OK, [
+    $response = new CacheableResponse($output, Response::HTTP_OK, [
       'Content-type' => 'application/xml; charset=utf-8',
       'X-Robots-Tag' => 'noindex, follow',
     ]);
+    $response->getCacheableMetadata()
+      ->addCacheTags(Cache::buildTags('simple_sitemap', (array) $variant))
+      ->addCacheContexts(['url.query_args']);
+    return $response;
   }
 
   /**

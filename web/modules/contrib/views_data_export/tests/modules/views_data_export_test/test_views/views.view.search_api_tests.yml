@@ -33,13 +33,11 @@ display:
         type: tag
         options: {  }
       query:
-        type: views_query
+        type: search_api_query
         options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
+          bypass_access: false
+          skip_access: false
+          preserve_facet_query_args: false
       exposed_form:
         type: basic
         options:

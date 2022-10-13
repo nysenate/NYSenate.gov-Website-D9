@@ -81,8 +81,8 @@ class FormHelper extends BaseFormHelper {
       return;
     }
 
-    $table = &$form['sitemap_entities']['entity_types'];
-    $offset = array_search('bundles', array_keys($table['#header'])) + 1;
+    $table = &$form['entity_types'];
+    $offset = array_search('bundles', array_keys($table['#header']), TRUE) + 1;
     array_splice($table['#header'], $offset, 0, ['index_now' => $this->t('IndexNow')]);
 
     // Add column with IndexNow status.

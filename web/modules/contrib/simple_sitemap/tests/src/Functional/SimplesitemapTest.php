@@ -85,6 +85,25 @@ class SimplesitemapTest extends SimplesitemapTestBase {
   }
 
   /**
+   * Test cached sitemap.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function testCachedSitemap() {
+    $this->generator->customLinkManager()->add(
+      '/node/' . $this->node->id(),
+      ['priority' => 0.2, 'changefreq' => 'monthly']
+    );
+    $this->generator->generate(QueueWorker::GENERATE_TYPE_BACKEND);
+
+    $this->drupalGet($this->defaultSitemapUrl);
+    $assert = $this->assertSession();
+    $assert->statusCodeEquals(200);
+    $assert->responseHeaderContains('X-Drupal-Cache-Tags', 'sitemap');
+  }
+
+  /**
    * Test custom link.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException

@@ -1233,7 +1233,11 @@ strong {
     margin: 0;
     max-width: unset; }
   .newsroom-content .bef-exposed-form .form--inline > .form-item {
-    margin: 0; }
+    margin: 0;
+    width: 100%; }
+    @media screen and (min-width: 768px) {
+      .newsroom-content .bef-exposed-form .form--inline > .form-item {
+        width: auto; } }
   .newsroom-content .item-list .pager.pager-load-more.newsroom-content {
     list-style: none; }
   .newsroom-content .c-upcoming--header .c-month-title {

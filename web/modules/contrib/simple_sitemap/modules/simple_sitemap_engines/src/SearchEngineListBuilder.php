@@ -81,7 +81,6 @@ class SearchEngineListBuilder extends ConfigEntityListBuilder {
    */
   public function render(): array {
     return [
-      '#prefix' => FormHelper::getDonationText(),
       'sitemap_submission_engines' => $this->renderSitemapSubmissionEngines(),
       'index_now_engines' => $this->renderIndexNowEngines(),
     ];

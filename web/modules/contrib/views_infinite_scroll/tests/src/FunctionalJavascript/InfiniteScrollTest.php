@@ -35,7 +35,7 @@ class InfiniteScrollTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->createContentType([
       'type' => 'page',

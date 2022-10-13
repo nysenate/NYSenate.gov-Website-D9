@@ -122,7 +122,7 @@ final class SmartDefaultSettings {
       // Overwrite the Editor config entity object's $filterFormat property, to
       // prevent calls to Editor::hasAssociatedFilterFormat() and
       // Editor::getFilterFormat() from loading the FilterFormat from storage.
-      // @todo Remove in https://www.drupal.org/project/ckeditor5/issues/3218985.
+      // @todo Remove in https://www.drupal.org/project/drupal/issues/3231347.
       $reflector = new \ReflectionObject($text_editor);
       $property = $reflector->getProperty('filterFormat');
       $property->setAccessible(TRUE);
@@ -150,10 +150,13 @@ final class SmartDefaultSettings {
     // if it exists.
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
     $old_editor_restrictions = $old_editor ? HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()) : HTMLRestrictions::emptySet();
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3245351
+    if ($old_editor) {
+      $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
+    }
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
       [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
       $editor->setSettings($upgraded_settings);
-      $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
       // *Before* determining which elements are still needed for this text
       // format, ensure that all already enabled plugins that are configurable
       // have valid settings.
@@ -926,14 +929,15 @@ final class SmartDefaultSettings {
     });
 
     foreach ($configurable_definitions as $plugin_name => $definition) {
-      // Skip image upload as its configuration is stored in a discrete
-      // property of the $editor object, not its settings. Also skip any plugin
+      $default_plugin_configuration = $this->pluginManager->getPlugin($plugin_name, NULL)->defaultConfiguration();
+      // Skip plugins with an empty default configuration, the plugin
+      // configuration is most likely stored elsewhere. Also skip any plugin
       // that already has configuration data as default values are not needed.
-      if ($plugin_name === 'ckeditor5_imageUpload' || isset($settings['plugins'][$plugin_name])) {
+      if ($default_plugin_configuration === [] || isset($settings['plugins'][$plugin_name])) {
         continue;
       }
       $update_settings = TRUE;
-      $settings['plugins'][$plugin_name] = $this->pluginManager->getPlugin($plugin_name, NULL)->defaultConfiguration();
+      $settings['plugins'][$plugin_name] = $default_plugin_configuration;
     }
 
     if ($update_settings) {

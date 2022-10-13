@@ -23,7 +23,7 @@ class ViewsDataExportBatchTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'csv_serialization',
     'node',
     'file',
@@ -51,8 +51,13 @@ class ViewsDataExportBatchTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']):void {
+    parent::setUp($import_test_views, ['views_data_export_test']);
     $this->createContentType([
       'type' => 'page',
     ]);
@@ -69,7 +74,6 @@ class ViewsDataExportBatchTest extends ViewTestBase {
         'category' => 'item_category',
       ]);
     }
-    ViewTestData::createTestViews(static::class, ['views_data_export_test']);
     $account = $this->drupalCreateUser(['access content', 'view test entity']);
     $this->drupalLogin($account);
   }
@@ -102,7 +106,9 @@ class ViewsDataExportBatchTest extends ViewTestBase {
     $path_to_file = parse_url($path_to_file, PHP_URL_PATH);
     $path_to_file = str_replace($_SERVER['REQUEST_URI'] . 'system/files', 'private:/', $path_to_file);
     $res3 = $this->readCsv(file_get_contents($path_to_file));
-    $this->assertEquals(3, count($res3), 'Count of exported nodes is wrong.');
+    // The first line always contains the header, expect one extra row.
+    $this->assertEquals(4, count($res3), 'Count of exported nodes is wrong.');
+    $this->assertEquals([0 => 'title'], $res3[0]);
 
     // Testing search api index's view.
     $this->indexItems('database_search_index');
@@ -113,7 +119,9 @@ class ViewsDataExportBatchTest extends ViewTestBase {
     $path_to_file = parse_url($path_to_file, PHP_URL_PATH);
     $path_to_file = str_replace($_SERVER['REQUEST_URI'] . 'system/files', 'private:/', $path_to_file);
     $res4 = $this->readCsv(file_get_contents($path_to_file));
-    $this->assertEquals(8, count($res4), 'Count of exported test entities is wrong.');
+    // The first line always contains the header, expect one extra row.
+    $this->assertEquals(9, count($res4), 'Count of exported test entities is wrong.');
+    $this->assertEquals([0 => 'id'], $res4[0]);
   }
 
   /**

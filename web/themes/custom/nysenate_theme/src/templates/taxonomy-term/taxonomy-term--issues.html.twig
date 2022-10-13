@@ -42,6 +42,8 @@
   <div class="content">
     <div class="c-block c-detail--header">
         <h2 class="nys-title">{{ name }}</h2>
+
+        {{ content.flag_follow_issue }}
         {% if flag_count %}
           <p class="c-issue--followers">
             <span>{{ flag_count }}</span> {{ 'followers'|t }}
@@ -60,7 +62,7 @@
               } only %}
             {% endif %}
           </div>
-  
+
           <div class="c-detail--social header-social">
             <h3 class="c-detail--subhead">{{ 'raise awareness'|t }}</h3>
             <ul>

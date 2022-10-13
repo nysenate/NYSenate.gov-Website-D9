@@ -35,10 +35,10 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
   /**
    * Renders the ajax commands right before preparing the result.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event, which contains the possible AjaxResponse object.
    */
-  public function onResponse(FilterResponseEvent $event) {
+  public function onResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $event) {
     $response = $event->getResponse();
 
     // Only alter views ajax responses.

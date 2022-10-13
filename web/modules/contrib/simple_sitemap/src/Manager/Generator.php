@@ -103,6 +103,28 @@ class Generator {
   }
 
   /**
+   * Gets the default variant from the currently set variants.
+   *
+   * @return string|null
+   *   The default variant or NULL if there are no variants.
+   */
+  public function getDefaultVariant(): ?string {
+    if (empty($variants = $this->getVariants())) {
+      return NULL;
+    }
+
+    if (count($variants) > 1) {
+      $variant = $this->getSetting('default_variant');
+
+      if ($variant && in_array($variant, $variants)) {
+        return $variant;
+      }
+    }
+
+    return reset($variants);
+  }
+
+  /**
    * Returns a sitemap variant, its index, or its requested chunk.
    *
    * @param int|null $delta
@@ -115,17 +137,10 @@ class Generator {
    *   Returns null if the content is not retrievable from the database.
    */
   public function getContent(?int $delta = NULL): ?string {
+    $variant = $this->getDefaultVariant();
+
     /** @var \Drupal\simple_sitemap\Entity\SimpleSitemapInterface $sitemap */
-    if (empty($variants = $this->getVariants())) {
-      return NULL;
-    }
-
-    $variant = count($variants) > 1
-    && !empty($default_variant = $this->getSetting('default_variant', ''))
-      ? $default_variant
-      : reset($variants);
-
-    if (($sitemap = SimpleSitemap::load($variant)) && $sitemap->isEnabled()
+    if ($variant && ($sitemap = SimpleSitemap::load($variant)) && $sitemap->isEnabled()
       && ($sitemap_string = $sitemap->fromPublished()->toString($delta))) {
       return $sitemap_string;
     }

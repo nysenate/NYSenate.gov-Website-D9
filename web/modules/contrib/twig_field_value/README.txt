@@ -17,16 +17,32 @@ USAGE
 -----
 
 To print the label and value of a field:
-  <strong>{{ content.field_name|field_label }}</strong>: {{ content.field_name|field_value }}
+  <strong>{{ content.field_name|field_label }}</strong>:
+      {{ content.field_name|field_value }}
 
 To print the label and values of a field with multiple values:
-  <strong>{{ content.field_name|field_label }}</strong>: {{ content.field_name|field_value|safe_join(', ') }}
+  <strong>{{ content.field_name|field_label }}</strong>:
+      {{ content.field_name|field_value|safe_join(', ') }}
 
 To print image link and the alt text of an image:
-  <img src={{ file_url(content.field_image|field_target_entity.uri.value) }} alt={{ content.field_image|field_raw('alt') }} />
+  <img src={{ file_url(content.field_image|field_target_entity.uri.value) }}
+    alt={{ content.field_image|field_raw('alt') }} />
 
 The above examples assume that 'content.field_example' is the render array of
 the of a field, as for example in a node template.
+
+KNOW RESTRICTIONS
+-----------------
+
+The field_raw twig filter does not support access control at field item level
+for entity reference fields. The render array allows access control to
+individual field items by using #access = FALSE. But the filter can not apply
+this restriction to individual referenced entities.
+
+The field_target_entity twig filter does not support access control at field
+item level. The render array allows access control to individual field items
+by using #access = FALSE. But the field_target_entity filter can not apply this
+restriction to individual referenced entities.
 
 AUTHOR
 ------

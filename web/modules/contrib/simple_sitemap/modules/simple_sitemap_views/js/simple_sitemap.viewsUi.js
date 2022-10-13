@@ -8,11 +8,11 @@
 
   Drupal.behaviors.simpleSitemapViewsUiArguments = {
     attach: function attach() {
-      var $arguments = $('.indexed-arguments').once('simple-sitemap-views-ui-arguments');
+      let $arguments = $('.indexed-arguments').once('simple-sitemap-views-ui-arguments');
 
       if ($arguments.length) {
         $arguments.each(function () {
-          var $checkboxes = $(this).find('input[type="checkbox"]');
+          let $checkboxes = $(this).find('input[type="checkbox"]');
 
           if ($checkboxes.length) {
             new Drupal.simpleSitemapViewsUi.Arguments($checkboxes);
@@ -28,7 +28,7 @@
   };
 
   Drupal.simpleSitemapViewsUi.Arguments.prototype.changeHandler = function (e) {
-    var $checkbox = $(e.target), index = this.$checkboxes.index($checkbox);
+    let $checkbox = $(e.target), index = this.$checkboxes.index($checkbox);
     $checkbox.prop('checked') ? this.check(index) : this.uncheck(index);
   };
 

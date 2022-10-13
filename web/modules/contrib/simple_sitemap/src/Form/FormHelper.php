@@ -413,14 +413,4 @@ class FormHelper {
     return [0 => t('On every cron run')] + $intervals;
   }
 
-  /**
-   * Gets the donation text.
-   *
-   * @return string
-   *   The donation text.
-   */
-  public static function getDonationText(): string {
-    return '<div class="description">' . t('If you would like to say thanks and support the development of this module, a <a target="_blank" href="@url">donation</a> will be much appreciated.', ['@url' => 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5AFYRSBLGSC3W']) . '</div>';
-  }
-
 }

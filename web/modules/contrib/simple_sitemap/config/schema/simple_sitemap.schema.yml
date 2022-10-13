@@ -13,14 +13,14 @@ simple_sitemap.settings:
     generate_duration:
       label: 'Generation duration'
       type: integer
+    entities_per_queue_item:
+      label: 'Entities per queue item'
+      type: integer
     remove_duplicates:
       label: 'Remove duplicates'
       type: boolean
     skip_untranslated:
       label: 'Skip untranslated'
-      type: boolean
-    disable_language_hreflang:
-      label: 'Disable language hreflang'
       type: boolean
     xsl:
       label: 'Include a stylesheet in the sitemaps for humans'
@@ -34,6 +34,12 @@ simple_sitemap.settings:
     custom_links_include_images:
       label: 'Include images of custom links'
       type: boolean
+    disable_language_hreflang:
+      label: 'Disable language hreflang'
+      type: boolean
+    hide_branding:
+      label: 'Hide branding'
+      type: boolean
     excluded_languages:
       label: 'Excluded languages'
       type: sequence
@@ -44,9 +50,6 @@ simple_sitemap.settings:
       type: sequence
       sequence:
         type: string
-    entities_per_queue_item:
-      label: 'Entities per queue item'
-      type: integer
 
 simple_sitemap.bundle_settings.*.*.*:
   label: 'Entity bundle settings'

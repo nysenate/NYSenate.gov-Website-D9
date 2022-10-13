@@ -21,20 +21,32 @@ class FieldValueTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->extension = new FieldValueExtension();
+  protected function setUp(): void {
+
+    /** @var \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver */
+    $controllerResolver = $this->getMockBuilder('\Drupal\Core\Controller\ControllerResolver')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $loggerFactory = $this->getMockBuilder('\Drupal\Core\Logger\LoggerChannelFactory')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->extension = new FieldValueExtension($controllerResolver, $loggerFactory);
   }
 
   /**
    * Asserts the twig field_label filter.
    *
+   * @param mixed $expected_result
+   *   The expected result.
+   * @param array $render_array
+   *   The render array.
+   *
    * @dataProvider providerTestFieldLabel
    * @covers ::getFieldLabel
-   *
-   * @param $expected_result
-   * @param $render_array
    */
-  public function testFieldLabel($expected_result, $render_array) {
+  public function testFieldLabel($expected_result, array $render_array) {
     $result = $this->extension->getFieldLabel($render_array);
     $this->assertSame($expected_result, $result);
   }
@@ -58,11 +70,13 @@ class FieldValueTest extends UnitTestCase {
   /**
    * Asserts the twig field_value filter.
    *
+   * @param mixed $expected_result
+   *   The expected result.
+   * @param mixed $render_array
+   *   The render array.
+   *
    * @dataProvider providerTestFieldValue
    * @covers ::getFieldValue
-   *
-   * @param $expected_result
-   * @param $render_array
    */
   public function testFieldValue($expected_result, $render_array) {
     $result = $this->extension->getFieldValue($render_array);

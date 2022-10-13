@@ -113,7 +113,6 @@ class SimplesitemapEnginesForm extends ConfigFormBase {
     $form['settings'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Sitemap submission settings'),
-      '#prefix' => FormHelper::getDonationText(),
     ];
 
     $form['settings']['enabled'] = [

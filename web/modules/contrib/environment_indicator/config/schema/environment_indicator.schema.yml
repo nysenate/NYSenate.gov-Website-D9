@@ -13,6 +13,9 @@ environment_indicator.switcher.*:
     name:
       type: string
       label: 'Name'
+    weight:
+      type: string
+      label: 'Name'
     url:
       type: uri
       label: 'URL'
@@ -36,3 +39,17 @@ environment_indicator.settings:
     favicon:
       type: boolean
       label: 'Show a colored favicon for environment'
+
+environment_indicator.indicator:
+    type: config_object
+    label: 'Environment indicator local environment'
+    mapping:
+      name:
+        type: string
+        label: 'Evironment name'
+      fg_color:
+        type: string
+        label: 'Foreground color'
+      bg_color:
+        type: string
+        label: 'Background color'

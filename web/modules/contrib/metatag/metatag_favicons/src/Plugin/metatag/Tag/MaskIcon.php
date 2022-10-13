@@ -29,7 +29,7 @@ class MaskIcon extends LinkRelBase {
     $form['#tree'] = TRUE;
 
     // Backwards compatibility.
-    $defaults = $this->value();
+    $defaults = $this->value;
     if (is_string($defaults)) {
       $defaults = [
         'href' => $defaults,
@@ -77,18 +77,24 @@ class MaskIcon extends LinkRelBase {
     }
 
     // Build the output.
-    $element['#tag'] = 'link';
-    $element['#attributes'] = [
-      'rel' => $this->name(),
-      'href' => $this->tidy($values['href']),
-    ];
+    $href = $this->tidy($values['href']);
+    if ($href != '') {
+      $this->tidy($values['href']);
+      $element['#tag'] = 'link';
+      $element['#attributes'] = [
+        'rel' => $this->name(),
+        'href' => $href,
+      ];
 
-    // Add the 'color' element.
-    if (!empty($values['color'])) {
-      $element['#attributes']['color'] = $this->tidy($values['color']);
+      // Add the 'color' element.
+      if (!empty($values['color'])) {
+        $element['#attributes']['color'] = $this->tidy($values['color']);
+      }
+
+      return $element;
     }
 
-    return $element;
+    return '';
   }
 
   /**
@@ -96,7 +102,12 @@ class MaskIcon extends LinkRelBase {
    */
   public function setValue($value) {
     // Do not store array with empty values.
-    $this->value = is_array($value) && empty(array_filter($value)) ? NULL : $value;
+    if (is_array($value) && empty(array_filter($value))) {
+      $this->value = [];
+    }
+    else {
+      $this->value = $value;
+    }
   }
 
 }

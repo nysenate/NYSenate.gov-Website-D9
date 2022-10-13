@@ -746,7 +746,7 @@ class DataExport extends RestExport {
         $fileSystem = \Drupal::service('file_system');
         $fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
         $destination = $directory . $filename;
-        $file = file_save_data('', $destination, FileSystemInterface::EXISTS_REPLACE);
+        $file = \Drupal::service('file.repository')->writeData('', $destination, FileSystemInterface::EXISTS_REPLACE);
         if (!$file) {
           // Failed to create the file, abort the batch.
           unset($context['sandbox']);
@@ -897,7 +897,7 @@ class DataExport extends RestExport {
         // Create a web server accessible URL for the private file.
         // Permissions for accessing this URL will be inherited from the View
         // display's configuration.
-        $url = file_create_url($results['vde_file']);
+        $url = \Drupal::service('file_url_generator')->generateAbsoluteString($results['vde_file']);
         $message = t('Export complete. Download the file <a download href=":download_url"  data-download-enabled="false" id="vde-automatic-download">here</a>.', [':download_url' => $url]);
         // If the user specified instant download than redirect to the file.
         if ($results['automatic_download']) {

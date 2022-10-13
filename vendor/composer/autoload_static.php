@@ -1198,6 +1198,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'Doctrine\\Common\\Collections\\Expr\\ExpressionVisitor' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/Expr/ExpressionVisitor.php',
         'Doctrine\\Common\\Collections\\Expr\\Value' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/Expr/Value.php',
         'Doctrine\\Common\\Collections\\ExpressionBuilder' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/ExpressionBuilder.php',
+        'Doctrine\\Common\\Collections\\ReadableCollection' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/ReadableCollection.php',
         'Doctrine\\Common\\Collections\\Selectable' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/Selectable.php',
         'Doctrine\\Common\\Lexer\\AbstractLexer' => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer/AbstractLexer.php',
         'Doctrine\\Common\\Reflection\\ClassFinderInterface' => __DIR__ . '/..' . '/doctrine/reflection/lib/Doctrine/Common/Reflection/ClassFinderInterface.php',

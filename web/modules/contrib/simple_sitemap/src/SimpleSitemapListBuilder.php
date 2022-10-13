@@ -94,7 +94,6 @@ class SimpleSitemapListBuilder extends DraggableListBuilder {
     $form['entities']['#empty'] = $this->t('No sitemaps have been defined yet. <a href="@url">Add a new one</a>.', [
       '@url' => Url::fromRoute('simple_sitemap.add')->toString(),
     ]);
-    $form['#prefix'] = FormHelper::getDonationText();
 
     return $form;
   }

@@ -1224,5 +1224,14 @@ strong {
   .nysenate-promotional-banner-list .c-block--initiative__has-img {
     grid-column: 1 / span 2; }
   .nysenate-promotional-banner-list__single-item .c-block--initiative,
-  .nysenate-promotional-banner-list__single-item .node--type-promotional-banner {
+  .nysenate-promotional-banner-list__single-item .node--type-promotional-banner,
+  .nysenate-promotional-banner-list__single-item .node--type-event,
+  .nysenate-promotional-banner-list__single-item .node--type-article,
+  .nysenate-promotional-banner-list__single-item .node--type-bill {
     grid-column: 1 / span 2; }
+  @media screen and (min-width: 768px) {
+    .nysenate-promotional-banner-list__single-item .c-block--initiative__no-img {
+      width: 100%;
+      min-height: 240px; }
+      .nysenate-promotional-banner-list__single-item .c-block--initiative__no-img.c-block--even {
+        margin-right: 0; } }

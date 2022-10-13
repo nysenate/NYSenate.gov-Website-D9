@@ -88,6 +88,7 @@ function environment_indicator_page_top(array &$page_top) {
   // Only add the environment indicator switcher if there are environments to
   // switch to.
   if ($items = _environment_indicator_switcher_links()) {
+    uasort($items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
     $page_top['indicator']['switcher'] = [
       '#theme' => 'links',
       '#links' => $items,
@@ -269,6 +270,7 @@ function _environment_indicator_switcher_toolbar_links() {
   if (!$items = _environment_indicator_switcher_links()) {
     return [];
   };
+  uasort($items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
   $menu = [
     '#theme' => 'links__toolbar_shortcuts',
     '#links' => $items,
@@ -307,6 +309,7 @@ function _environment_indicator_switcher_links() {
         'title' => t('Open in: @label', ['@label' => $entity->label()]),
         'url' => Url::fromUri($entity->getUrl() . $current_path),
         'type' => 'link',
+        'weight' => $entity->getWeight(),
       ];
     },
     array_filter(

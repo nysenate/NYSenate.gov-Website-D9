@@ -39,6 +39,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  *     "description",
  *     "name",
  *     "url",
+ *     "weight",
  *     "fg_color",
  *     "bg_color",
  *   }
@@ -66,6 +67,13 @@ class EnvironmentIndicator extends ConfigEntityBase implements ConfigEntityInter
    * @var string
    */
   public $url;
+
+  /**
+   * The switchers link weight.
+   *
+   * @var string
+   */
+  public $weight;
 
   /**
    * The color code for the indicator.
@@ -106,6 +114,16 @@ class EnvironmentIndicator extends ConfigEntityBase implements ConfigEntityInter
   }
 
   /**
+   * Gets the weight.
+   *
+   * @return string
+   *   The weight of switcher environment.
+   */
+  public function getWeight() {
+    return $this->get('weight');
+  }
+
+  /**
    * Gets the foreground color.
    *
    * @return string
@@ -143,6 +161,16 @@ class EnvironmentIndicator extends ConfigEntityBase implements ConfigEntityInter
    */
   public function setName($name) {
     $this->set('name', $name);
+  }
+
+  /**
+   * Sets the weight.
+   *
+   * @param string $weight
+   *   The environment link weight.
+   */
+  public function setWeight($weight) {
+    $this->set('weight', $weight);
   }
 
   /**

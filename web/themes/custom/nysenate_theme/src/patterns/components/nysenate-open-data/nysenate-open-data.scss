@@ -211,7 +211,7 @@
   }
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
   .open-data-page {
     .view-display-id-page_1 {
       .view-filters {
@@ -250,6 +250,23 @@
             }
           }
         }
+      }
+    }
+  }
+}
+
+.open-data-section {
+  .c-block {
+    margin-bottom: 0;
+
+    .field__label {
+      display: none;
+    }
+
+    @include breakpoint($bp-sm) {
+      .field__item p {
+        font-size: 20px;
+        line-height: 32px;
       }
     }
   }

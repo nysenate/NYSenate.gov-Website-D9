@@ -1,0 +1,44 @@
+uuid: 9edfa409-8f74-4d92-afbd-4dd4034add23
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: sign_petition
+label: 'Sign Petition'
+bundles:
+  - petition
+entity_type: node
+global: false
+flag_short: 'Sign The Petition'
+flag_long: 'Click here to sign this petition'
+flag_message: 'Thank you for signing! Please share this page to raise awareness for this cause.'
+unflag_short: 'Unsign the petition'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: 'Thank you for your support.'
+weight: 0
+flag_type: 'entity:node'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+    teaser: teaser
+    rss: '0'
+    search_index: '0'
+    search_result: '0'
+    diff_standard: '0'
+    node_embed: '0'
+    token: '0'
+    bill_list_item: '0'
+    sponsor_list: '0'
+    sponsor_list_bill_detail: '0'
+    revision: '0'
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions: {  }
+  access_author: ''
+linkTypeConfig:
+  flag_confirmation: null
+  unflag_confirmation: null

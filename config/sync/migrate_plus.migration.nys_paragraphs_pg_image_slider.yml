@@ -19,10 +19,6 @@ source:
   bundle: pg_image_slider
   key: migrate
 process:
-  type:
-    -
-      plugin: get
-      source: bundle
   field_title:
     -
       plugin: get
@@ -30,11 +26,11 @@ process:
   field_slider_item:
     -
       plugin: sub_process
-      source: field_pg_feature_image
+      source: field_pg_slider_images
       process:
         target_id:
           plugin: migration_lookup
-          migration: nys_media_image_slider
+          migration: nys_media_image_pgslider
           source: fid
           no_stub: true
 destination:

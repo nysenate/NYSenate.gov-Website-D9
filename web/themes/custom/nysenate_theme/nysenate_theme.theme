@@ -274,6 +274,23 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $senator_name = trim($senator_name);
   }
 
+  // Image hero.
+  if ($senator->hasField('field_image_hero') && !$senator->get('field_image_hero')->isEmpty()) {
+    $microsite_hero_id = $senator->field_image_hero->target_id;
+    $microsite_hero = \Drupal::entityTypeManager()->getStorage('media')
+      ->load($microsite_hero_id);
+
+    $variables['image_hero'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($microsite_hero, 'senator_microsite_hero');
+  }
+
+  if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
+    $headshot_id = $senator->field_member_headshot->target_id;
+    $headshot = \Drupal::entityTypeManager()->getStorage('media')
+      ->load($headshot_id);
+
+    $variables['senator_headshot'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'senator_microsite_hero');
+  }
+
   // Party Affiliation.
   $party_affiliation = $senator->get('field_party')->getValue();
   $arr_party = [];
@@ -331,7 +348,6 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     ];
   }
 
-  $variables['is_collapsed'] = strtolower($variables['content']['field_collapsed'][0]['#markup']) == 'on' ? TRUE : FALSE;
   $variables['senator_name'] = $senator_name;
   $variables['senator_party'] = '( ' . $party . ' )';
   $variables['current_duties'] = $senator->field_current_duties->value;

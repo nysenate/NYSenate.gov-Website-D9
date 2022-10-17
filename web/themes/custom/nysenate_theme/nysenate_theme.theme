@@ -1039,7 +1039,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($bundle == 'article' && $node->hasField('field_category')
         && !$node->get('field_category')->isEmpty()) {
         $allowed_values = $node->field_category->getSetting('allowed_values');
-        $variables['title'] = $allowed_values[$node->field_category->value];
+        $bundle = $allowed_values[$node->field_category->value];
       }
 
       $issues = [];
@@ -1064,7 +1064,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $contents[] = [
-        'title' => ($bundle == 'video') ? ucfirst($bundle) : $bundle,
+        'title' => ucwords($bundle),
         'topics' => $issues,
         'description' => [
           'text' => $node->label(),

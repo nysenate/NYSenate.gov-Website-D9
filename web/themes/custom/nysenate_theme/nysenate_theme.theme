@@ -288,7 +288,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $headshot = \Drupal::entityTypeManager()->getStorage('media')
       ->load($headshot_id);
 
-    $variables['senator_headshot'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'senator_microsite_hero');
+    $variables['senator_headshot'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'thumbnail');
   }
 
   // Party Affiliation.

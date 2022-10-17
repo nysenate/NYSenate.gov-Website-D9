@@ -20,10 +20,12 @@ source:
   key: migrate
 process:
   field_body_left/value:
-    - plugin: get
+    -
+      plugin: get
       source: field_pg_text/0/value
   field_body_left/format:
-    - plugin: default_value
+    -
+      plugin: default_value
       default_value: basic_html
 destination:
   plugin: 'entity:block_content'

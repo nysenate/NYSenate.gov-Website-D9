@@ -172,8 +172,7 @@ class BillsHelper {
   public function resolveAmendmentSponsors($amendment, $chamber) {
     $ret = [];
     $cycle = ['co', 'multi'];
-    // @todo This method comes from nys_utils module.
-    // $senators = get_senator_name_mapping();
+    $senators = $this->getSenatorNameMapping();
     foreach ($cycle as $type) {
       $ret[$type] = [];
       $propname = "field_ol_{$type}_sponsor_names";
@@ -182,15 +181,12 @@ class BillsHelper {
       foreach ($sponsors as $one_sponsor) {
         switch ($chamber) {
           case 'senate':
-            // @todo This method comes from nys_utils module.
-            // @todo Uncomment the code after porting the nys_utils module.
-            // $nodeid = nys_utils_get_senator_nid_from_member_id
-            // ($one_sponsor->memberId);
-            // $ret[$type][] = (object) [
-            // 'memberId' => $one_sponsor->memberId,
-            // 'nodeId' => $nodeid,
-            // 'fullName' => $senators[$nodeid]['full_name'],
-            // ];.
+            $termid = $this->getSenatorTidFromMemberId($one_sponsor->memberId);
+            $ret[$type][] = (object) [
+              'memberId' => $one_sponsor->memberId,
+              'nodeId' => $termid,
+              'fullName' => $senators[$termid]['full_name'],
+            ];
             break;
 
           case 'assembly':
@@ -236,6 +232,62 @@ class BillsHelper {
       }
     }
     return $ret;
+  }
+
+  /**
+   * Returns a cached mapping of senator names, keyed by the nid.
+   *
+   * @see https://bitbucket.org/mediacurrent/nys_nysenate/src/develop/sites/all/modules/custom/nys_utils/nys_utils.module
+   * function get_senator_name_mapping() from D7
+   */
+  public function getSenatorNameMapping() {
+    $cache_service = \Drupal::cache();
+    $cache_key = 'nys_utils_get_senator_name_mapping';
+    $cache = $cache_service->get($cache_key);
+    if (!$cache) {
+
+      $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+        'vid' => 'senator',
+      ]);
+
+      $senator_mappings = [];
+      foreach ($senator_terms as &$term) {
+        $senator_mappings[$term->tid->value] = [
+          'short_name' => $term->get('field_senator_name')[0]->given ?? '',
+          'full_name' => $term->get('field_senator_name')[0]->title ?? '',
+        ];
+      }
+      $cache_service->set($cache_key, $senator_mappings);
+      // If data is cached, return cached data.
+      if ($cache = \Drupal::cache()->get($cache_key)) {
+        return $cache->data;
+      }
+    }
+  }
+
+  /**
+   * Retrieves the senator node id associated with an OpenLeg member id.
+   *
+   * @param int $member_id
+   *   Member id.
+   *
+   * @return int
+   *   node_id
+   *
+   * @see https://bitbucket.org/mediacurrent/nys_nysenate/src/develop/sites/all/modules/custom/nys_utils/nys_utils.module
+   * function nys_utils_get_senator_nid_from_member_id from D7
+   */
+  public function getSenatorTidFromMemberId($member_id) {
+    $preloaded = &drupal_static(__FUNCTION__, []);
+
+    if (!array_key_exists($member_id, $preloaded)) {
+      $query = "SELECT entity_id FROM taxonomy_term__field_ol_member_id WHERE field_ol_member_id_value = :memberid";
+      $queryargs = [
+        ':memberid' => $member_id,
+      ];
+      $preloaded[$member_id] = $this->connection->query($query, $queryargs)->fetchField();
+    }
+    return $preloaded[$member_id];
   }
 
 }

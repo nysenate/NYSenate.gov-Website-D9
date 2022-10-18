@@ -2,8 +2,7 @@
 {{ attach_library('rain_theme/media') }}
 
 <section class="hero {% if type == "senator" %} hero--senator {% else %} hero--homepage {% endif %}">
-{# is_collapsed variable is only for patternlab view #}
-  <div class="{% if is_collapsed %} l-header__collapsed {% endif %}">
+  <div>
     {% if type == "senator" %}
       {# start of senator hero #}
       <div class="l-header-region l-row l-row--hero c-senator-hero">
@@ -16,6 +15,9 @@
             {% else %}
               <img src="{{ default_image }}">
             {% endif %}
+          </div>
+          <div id="smallShotImage">
+            {{ senator_headshot }}
           </div>
         {% if senator_microsite_link %}
           </a>

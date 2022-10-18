@@ -18,10 +18,10 @@
 %}
 
 {% include "@nysenate_theme/hero/hero.twig" with {
-  is_collapsed: is_collapsed,
   type: 'senator',
   senator_microsite_link: "",
-  image_hero: content.field_microsite_hero_image[0],
+  image_hero: image_hero,
+  senator_headshot: senator_headshot,
   default_image: "",
   is_active: is_active,
   senator_name: senator_name,

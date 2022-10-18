@@ -91,6 +91,7 @@
         "drupal/twitter_block": "^3.0@alpha",
         "drupal/video_embed_field_migrate": "1.0.x-dev",
         "drupal/views_autocomplete_filters": "^1.3",
+        "drupal/views_bulk_edit": "^2.6",
         "drupal/views_bulk_operations": "^4.1",
         "drupal/views_data_export": "^1.1",
         "drupal/views_exclude_previous": "dev-3128475-drupal-9-readiness",
@@ -208,7 +209,8 @@
                 "2949017 - There is no way to delete or update file entities of other users": "https://www.drupal.org/files/issues/2021-12-01/2949017-85.patch",
                 "763380 - Do not use \\Drupal\\taxonomy\\TermStorageInterface::loadTree() in \\Drupal\\taxonomy\\Form\\OverviewTerms::buildForm()": "https://www.drupal.org/files/issues/2021-05-26/763380-73.patch",
                 "1671190 - Use <button /> form element type instead of <input type='submit'/>": "https://www.drupal.org/files/issues/2022-01-07/1671190-92.patch",
-                "2858890 - Drupal.views.ajaxView is not initializing pagers in nested views": "https://www.drupal.org/files/issues/2022-05-30/2858890-87.patch"
+                "2858890 - Drupal.views.ajaxView is not initializing pagers in nested views": "https://www.drupal.org/files/issues/2022-05-30/2858890-87.patch",
+                "2868014 - [PP-1] Views Date Filter Datetime Granularity Option": "https://www.drupal.org/files/issues/2021-04-26/2868014-110.patch"
             },
             "drupal/email_registration": {
                 "2843505 - Add support for Behat tests": "https://www.drupal.org/files/issues/2020-10-21/2843505-39.patch"
@@ -217,7 +219,6 @@
                 "2989756 - HTMLPurifier Serializer caches into vendor directory by default": "https://www.drupal.org/files/issues/2021-09-24/serializer-caches-into-vendor-d9-2989756-14.patch"
             },
             "drupal/inline_entity_form": {
-                "3208818 - Migration Error: Cannot use string offset as an array in MigrationHelper.php on line 53": "https://www.drupal.org/files/issues/2021-12-23/3208818-7.patch",
                 "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2021-07-19/inline_entity_form-required_fields_optional_ief-3099844-24.patch"
             },
             "drupal/location_migration": {
@@ -229,6 +230,12 @@
             },
             "drupal/eva": {
                 "#3111965-2: Rendering empty text in a table causes empty text to be rendered twice": "https://www.drupal.org/files/issues/2020-02-07/eva-empty-text-3111965-2.patch"
+            },
+            "drupal/reroute_email": {
+                "3254772-14: Attachments and message parameters removed by mail alter hook": "https://www.drupal.org/files/issues/2021-12-16/reroute_email-3254772-attachments-d9.patch"
+            },
+            "drupal/flag": {
+                "Implement Migration Paths for Flag 7.x": "https://www.drupal.org/files/issues/2019-04-25/2409901_flag_migration_paths_52.patch"
             }
         }
     }

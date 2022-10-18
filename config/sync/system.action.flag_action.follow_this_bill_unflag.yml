@@ -1,0 +1,15 @@
+uuid: 1bbc0065-4d7f-4435-b721-f62fc07e5853
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_this_bill
+  module:
+    - flag
+id: flag_action.follow_this_bill_unflag
+label: 'Unfollow this bill'
+type: node
+plugin: 'flag_action:follow_this_bill_unflag'
+configuration:
+  flag_id: follow_this_bill
+  flag_action: unflag

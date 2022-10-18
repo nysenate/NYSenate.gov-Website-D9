@@ -75,9 +75,6 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    'c-block',
-    'c-block--initiative',
-    image_main ? 'c-block--initiative__has-img',
   ]
 %}
 {{ attach_library('classy/node') }}
@@ -86,12 +83,20 @@
   {{ title_prefix }}
   {{ title_suffix }}
 
-  <div{{ content_attributes.addClass('node__content') }}>
-    {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
-      image: image_main,
-      title: label,
-      cta: item_cta
-    } only %}
-  </div>
+  {% include "@nysenate_theme/nysenate-featured-event/nysenate-featured-event.twig" with {
+    title: label,
+    url: url,
+    day: start_date|date('d'),
+    month: start_date|date('M'),
+    year: start_date|date('Y'),
+    image: image_main,
+    location: location,
+    meeting_location: meeting_location,
+    url_location: 'http://maps.google.com/?q=' ~ location_url,
+    street_1: street_1,
+    street_2: street_2,
+    time_start: start_date|date('g:i A'),
+    time_end: end_date|date('g:i A'),
+  } only %}
 
 </article>

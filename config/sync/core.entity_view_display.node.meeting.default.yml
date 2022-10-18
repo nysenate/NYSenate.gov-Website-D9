@@ -7,7 +7,7 @@ dependencies:
     - field.field.node.meeting.field_bill
     - field.field.node.meeting.field_committee
     - field.field.node.meeting.field_committee_featured
-    - field.field.node.meeting.field_date
+    - field.field.node.meeting.field_date_range
     - field.field.node.meeting.field_event_online_link
     - field.field.node.meeting.field_event_place
     - field.field.node.meeting.field_issues
@@ -22,7 +22,7 @@ dependencies:
     - field.field.node.meeting.field_yt
     - node.type.meeting
   module:
-    - datetime
+    - datetime_range
     - link
     - nys_list_formatter
     - options
@@ -66,14 +66,15 @@ content:
     third_party_settings: {  }
     weight: 116
     region: content
-  field_date:
-    type: datetime_default
+  field_date_range:
+    type: daterange_default
     label: above
     settings:
       timezone_override: ''
       format_type: medium
+      separator: '-'
     third_party_settings: {  }
-    weight: 118
+    weight: 121
     region: content
   field_event_online_link:
     type: link

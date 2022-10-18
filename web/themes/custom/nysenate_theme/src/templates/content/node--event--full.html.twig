@@ -145,7 +145,8 @@
 
     {% if content.field_location[0]['address_line1']['#value'] %}
       <p class="c-event-address">
-        {{ content.field_location[0]['address_line1']['#value'] }}<br/>{{ content.field_location[0]['locality']['#value'] }},
+        {{ content.field_location[0]['address_line1']['#value'] }} {{ content.field_location[0]['address_line2']['#value'] }}
+        <br/>{{ content.field_location[0]['locality']['#value'] }},
         {{ content.field_location[0]['administrative_area']['#value'] }}
         {{ content.field_location[0]['postal_code']['#value'] }}</p>
     {% endif %}
@@ -202,9 +203,11 @@
     {{ content.body }}
   </div>
 
-  {% if social_buttons %}
-    {{ social_buttons }}
-  {% endif %}
-
+  {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+    title: node.type.entity.label,
+    node_url: url,
+    cta: cta,
+  } only
+  %}
 </article>
 

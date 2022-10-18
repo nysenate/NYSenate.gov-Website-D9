@@ -25,6 +25,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_ol_shortname
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_press_kit
     - field.field.taxonomy_term.senator.field_senator_name
     - field.field.taxonomy_term.senator.field_store_settings
     - field.field.taxonomy_term.senator.field_top_issue
@@ -59,7 +60,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 19
+    weight: 18
     region: content
   field_conference:
     type: list_formatter
@@ -100,7 +101,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 18
+    weight: 17
     region: content
   field_facebook_url:
     type: string
@@ -111,10 +112,11 @@ content:
     weight: 11
     region: content
   field_image_hero:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: above
     settings:
-      link: true
+      view_mode: hero
+      link: false
     third_party_settings: {  }
     weight: 9
     region: content
@@ -132,14 +134,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 24
+    weight: 23
     region: content
   field_media_email:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 25
+    weight: 24
     region: content
   field_media_fax:
     type: telephone_link
@@ -147,7 +149,7 @@ content:
     settings:
       title: ''
     third_party_settings: {  }
-    weight: 27
+    weight: 26
     region: content
   field_media_phone:
     type: telephone_link
@@ -155,7 +157,7 @@ content:
     settings:
       title: ''
     third_party_settings: {  }
-    weight: 26
+    weight: 25
     region: content
   field_member_headshot:
     type: entity_reference_entity_view
@@ -164,14 +166,14 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 22
+    weight: 21
     region: content
   field_message_notification_email:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 20
+    weight: 19
     region: content
   field_microsite_theme:
     type: list_default
@@ -196,7 +198,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 28
+    weight: 27
     region: content
   field_ol_member_id:
     type: number_integer
@@ -227,7 +229,7 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 23
+    weight: 22
     region: content
   field_senator_name:
     type: name_default
@@ -252,7 +254,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 21
+    weight: 20
     region: content
   field_top_issue:
     type: entity_reference_label
@@ -276,7 +278,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 17
+    weight: 16
     region: content
   field_youtube_url:
     type: string
@@ -292,5 +294,6 @@ hidden:
   admin_microsite_legislation_senator_admin_legislation_eva: true
   admin_microsite_legislation_senator_admin_legislation_eva_form: true
   description: true
+  field_press_kit: true
   langcode: true
   search_api_excerpt: true

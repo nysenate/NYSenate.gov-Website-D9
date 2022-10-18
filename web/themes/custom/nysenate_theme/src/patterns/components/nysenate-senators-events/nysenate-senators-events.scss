@@ -138,6 +138,15 @@
   background: $grey06;
   padding: 20px;
   margin: 20px 0 40px 0;
+
+  p {
+    margin-bottom: 0;
+    margin-top: 0;
+    font-family: $font-serif-semibold;
+    font-size: 20px;
+    line-height: 32px;
+    color: $grey08;
+  }
 }
 
 .tabs-content {
@@ -703,6 +712,7 @@
   &::before {
     @include breakpoint($bp-sm) {
       padding: 0 10px 0 0;
+      margin-top: -0.15em;
       font-size: 16px;
       line-height: 47px;
     }
@@ -753,6 +763,7 @@
         padding: 0 0 0 10px !important;
         font-size: 16px;
         line-height: 47px;
+        margin-top: -0.15em;
       }
     }
   }

@@ -1,7 +1,6 @@
-<div class="c-initiative c-container--header__top-border">
-    <h2 class="c-container--title">Honoree Video</h2>
-</div>
-
-<div class="c-initiative--video">
-    {{ content }}
+<div class="c-block">
+    {% include '@nysenate_theme/video-embed/video-embed.twig' with {
+        video: content.field_yt
+    } only
+    %}
 </div>

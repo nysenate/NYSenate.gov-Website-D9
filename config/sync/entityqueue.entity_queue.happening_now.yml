@@ -1,0 +1,26 @@
+uuid: 47af5abd-2dbf-4ace-8aa9-bdc18dd94dcf
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: happening_now
+label: 'Happening Now'
+handler: simple
+handler_configuration: {  }
+entity_settings:
+  target_type: node
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+queue_settings:
+  min_size: 0
+  max_size: 0
+  act_as_queue: false
+  reverse: false

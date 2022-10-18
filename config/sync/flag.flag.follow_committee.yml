@@ -1,0 +1,36 @@
+uuid: 7dab5274-e64f-4b16-9a69-d0c8a48bd2a9
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: follow_committee
+label: 'Follow Committee'
+bundles:
+  - committees
+entity_type: taxonomy_term
+global: false
+flag_short: 'Follow this committee'
+flag_long: 'Follow this committee'
+flag_message: 'Following this committee'
+unflag_short: 'Unfollow this committee'
+unflag_long: 'Unfollow this committee'
+unflag_message: 'Not following this committee'
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:taxonomy_term'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+    diff_standard: '0'
+    token: '0'
+    search_index: '0'
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions: {  }
+  access_author: ''
+linkTypeConfig:
+  flag_confirmation: null
+  unflag_confirmation: null

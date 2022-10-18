@@ -26,8 +26,8 @@ process:
   field_pg_video:
     -
       plugin: get
-      source: field_pg_video
+      source: field_video
 destination:
   plugin: 'entity:block_content'
-  default_bundle: pg_video
+  default_bundle: video
 migration_dependencies: null

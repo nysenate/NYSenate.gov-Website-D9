@@ -1,0 +1,18 @@
+nys_subscription.settings:
+  title: Subscriptions (Global)
+  route_name: nys_subscription.settings
+  base_route: nys_subscription.settings
+entity.subscription.view:
+  title: View
+  route_name: entity.subscription.canonical
+  base_route: entity.subscription.canonical
+entity.subscription.delete_form:
+  title: Delete
+  route_name: entity.subscription.delete_form
+  base_route: entity.subscription.canonical
+  weight: 10
+entity.subscription.collection:
+  title: Subscription
+  route_name: entity.subscription.collection
+  base_route: system.admin_content
+  weight: 10

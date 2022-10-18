@@ -6,6 +6,7 @@ dependencies:
     - field.field.paragraph.office_locations.field_fax
     - field.field.paragraph.office_locations.field_office_address
     - field.field.paragraph.office_locations.field_office_contact_phone
+    - field.field.paragraph.office_locations.field_office_hours
     - paragraphs.paragraphs_type.office_locations
   module:
     - address
@@ -17,7 +18,7 @@ mode: default
 content:
   field_fax:
     type: string_textfield
-    weight: 2
+    weight: 3
     region: content
     settings:
       size: 60
@@ -31,9 +32,17 @@ content:
     third_party_settings: {  }
   field_office_contact_phone:
     type: telephone_default
+    weight: 2
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_office_hours:
+    type: string_textfield
     weight: 1
     region: content
     settings:
+      size: 60
       placeholder: ''
     third_party_settings: {  }
 hidden:

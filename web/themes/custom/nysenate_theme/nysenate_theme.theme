@@ -2622,7 +2622,7 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
     $banner_cta_value = $variables['node']->field_call_to_action->value;
     $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
     $variables['item_cta'] = [
-      'url' => $variables['node']->field_link->uri ?? '',
+      'url' => $variables['node']->field_link->uri ?? $variables['url'],
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];
@@ -2748,7 +2748,7 @@ function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variabl
     $banner_cta_value = $variables['node']->field_call_to_action->value;
     $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
     $variables['item_cta'] = [
-      'url' => $variables['node']->field_link->uri ?? '',
+      'url' => $variables['node']->field_link->uri ?? $variables['url'],
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];

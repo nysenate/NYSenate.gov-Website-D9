@@ -2,15 +2,23 @@
 
 namespace Drupal\nys_messaging\Form;
 
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\private_message\Entity\PrivateMessage;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\private_message\Service\PrivateMessageThreadManagerInterface;
 
+/**
+ * Form for sending private message to a senator.
+ */
 class SenatorMessageForm extends FormBase {
 
   use StringTranslationTrait;
@@ -37,26 +45,68 @@ class SenatorMessageForm extends FormBase {
   protected $messenger;
 
   /**
+   * Default object for current.path service.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
+   * Default object for entity_type.manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Default object for private_message.thread_manager service.
+   *
+   * @var \Drupal\private_message\Service\PrivateMessageThreadManagerInterface
+   */
+  protected $privateMessageThreadManager;
+
+  /**
    * The constructor for Senator Message Form.
    *
    * @param \Drupal\Core\Routing\CurrentRouteMatch $routematch
    *   The current route match object.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user object.
-   * @param \Drupal\Core\Messenger\MessengerInterface
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger object.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The path.current object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity_type.manager object.
+   * @param \Drupal\private_message\Service\PrivateMessageThreadManagerInterface $private_message_thread_manager
+   *   The private_message.thread_manager object.
    */
-  public function __construct(CurrentRouteMatch $routematch, AccountProxyInterface $current_user, MessengerInterface $messenger) {
+  public function __construct(
+    CurrentRouteMatch $routematch,
+    AccountProxyInterface $current_user,
+    MessengerInterface $messenger,
+    CurrentPathStack $current_path,
+    EntityTypeManagerInterface $entity_type_manager,
+    PrivateMessageThreadManagerInterface $private_message_thread_manager) {
     $this->routeMatch = $routematch;
     $this->currentUser = $current_user;
     $this->messenger = $messenger;
+    $this->currentPath = $current_path;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->privateMessageThreadManager = $private_message_thread_manager;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('current_route_match'),
       $container->get('current_user'),
       $container->get('messenger'),
+      $container->get('path.current'),
+      $container->get('entity_type.manager'),
+      $container->get('private_message.thread_manager'),
     );
   }
 
@@ -91,14 +141,16 @@ class SenatorMessageForm extends FormBase {
       return $form;
     }
 
-    if (!$this->currentUser->isAuthenticated()) {
+    if ($this->currentUser->isAnonymous()) {
       $query = [
         'query' => [
           'senator' => $senator->id(),
         ],
       ];
-      $url = Url::fromUserInput('registration/nojs/form/start/message-senator', $query);
-      $response = new RedirectResponse();
+      $url = Url::fromUserInput('/registration/nojs/form/start/message-senator', $query)->toString();
+      $response = new RedirectResponse($url);
+      $response->send();
+      return;
     }
 
     $form = [];
@@ -112,42 +164,41 @@ class SenatorMessageForm extends FormBase {
       '#disabled' => TRUE,
       '#weight' => -10,
     ];
-  
+
     $form['recipient_uid'] = [
       '#type' => 'hidden',
       '#value' => $senator_user_id,
-      '#weight' => -9
+      '#weight' => -9,
     ];
-    
+
     $form['context'] = [
       '#type'  => 'hidden',
       '#value' => 'nys_messaging_senator_message_form',
     ];
-    
+
     $form['subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
       '#default_value' => '',
-      '#weight' => -8
+      '#weight' => -8,
     ];
-    
+
     $form['message'] = [
       '#title' => $this->t('Message'),
       '#type' => 'textarea',
       '#rows' => 5,
       '#default_value' => '',
-      '#weight'=> -7
+      '#weight' => -7,
     ];
-    
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Send Message'),
       '#weight' => -6,
     ];
-  
-    $form['#submit'] = ['nys_inbox_message_form_submit'];
+
     $form['#attached']['library'][] = 'nys_messaging/nys-messaging';
-  
+
     return $form;
   }
 
@@ -170,135 +221,144 @@ class SenatorMessageForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
+    $user_storage = $this->entityTypeManager->getStorage('user');
 
-    if (!empty($values['message']) && empty($values['body']['value'])) {
-      $values['body']['value'] = $values['message'];
+    $subject = '';
+    $message = '';
+    if (!empty($values['subject'])) {
+      $subject = $values['subject'];
     }
-  
-  
-    if(arg(0) == 'user') {
-      $user = user_load(arg(1)); // send message from this person's new message form
+
+    if (!empty($values['message'])) {
+      $message = $values['message'];
     }
-    else {
-      // This is looking for "message senator" form.  May not need to be specific.
-      //if(arg(0) == 'node' && arg(2) == 'message')
-      global $user;
+
+    $current_path = $this->currentPath->getPath();
+    $current_path = explode('/', $current_path);
+
+    if ($current_path[1] == 'user') {
+      // Send message from this person's new message form.
+      $user = $user_storage->load($current_path[2]);
     }
-  
-    if (!$user->uid) {
-      drupal_goto('/registration/nojs/form/start/message-senator');
+
+    if (!$this->currentUser->id()) {
+      $url = Url::formUserInput('registration/nojs/form/start/message-senator');
+      $response = new RedirectResponse($url);
+      $response->send();
+      return;
     }
-  
-    $dashboard_link = substr(url('user/' . $user->uid . '/dashboard'),1);
-  
+
+    $dashboard_link = Url::fromUserInput('/user/%userid/dashboard', ['%userid' => $this->currentUser->id()])->toString();
     if ($values['recipient_uid'] == 'query') {
-  
-      $form_state['redirect'] = array(
+      $form_state['redirect'] = [
         $dashboard_link . '/inbox',
-        array(
-          'query' => array()
-        ),
-      );
-  
-  
-      $_SESSION['http_request_count'] = 0; // reset counter for debug information.
-  
+        [
+          'query' => [],
+        ],
+      ];
+
+      // Reset counter for debug information.
+      $_SESSION['http_request_count'] = 0;
       $_SESSION['bulk_message_filters'] = $_GET;
       $_SESSION['author_uid'] = $user->uid;
-  
+
       // Execute the function named batch_example_1 or batch_example_2.
+      // @todo This comes from the nys_inbox module.
       $batch = nys_inbox_bulk_message_by_query();
       batch_set($batch);
       return;
-  
     }
-  
+
     if (!is_array($values['recipient_uid'])) {
-      $values['recipient_uid'] = array($values['recipient_uid']);
+      $values['recipient_uid'] = [$values['recipient_uid']];
     }
-    $recipients = user_load_multiple($values['recipient_uid']);
-  
-    $options = array(
-      'author' => $user,
-    );
-  
-  
-  
-    $message = privatemsg_new_thread($recipients, $values['subject'], $values['body']['value'], $options);
-  
-    // Associate the issue to the message while saving
-    if(!empty($values['issue_id'])) {
-  
-      $mid = $message['message']->mid;
-      $loaded_message = privatemsg_message_load($mid);
-      $loaded_message->field_issues['und'][]['tid'] = $values['issue_id'];
-      field_attach_update('privatemsg_message', $loaded_message);
+
+    // Create the private message entity.
+    $message = PrivateMessage::create([
+      'message' => $message,
+      'field_subject' => $subject,
+    ]);
+    $message->save();
+
+    $recipients = $user_storage->loadMultiple($values['recipient_uid']);
+    // Add it to the thread with the senator user.
+    $this->privateMessageThreadManager->saveThread(PrivateMessage::load($message->id()), $recipients);
+
+    // Associate the issue to the message while saving.
+    if (!empty($values['issue_id'])) {
+      $loaded_message = PrivateMessage::load($message->id());
+      $loaded_message->field_issue->target_id = $values['issue_id'];
+      $loaded_message->save();
     }
-  
-  
-    if(empty($_GET['bill_ids']) && !empty($_GET['bill_id'])) {
-      $_GET['bill_ids'] = array($_GET['bill_id']);
+
+    if (empty($_GET['bill_ids']) && !empty($_GET['bill_id'])) {
+      $_GET['bill_ids'] = [$_GET['bill_id']];
     }
-  
-    // Associate the bill(s) to the message while saving
-    if(isset($_GET['bill_ids'])) {
-      $mid = $message['message']->mid;
-      $loaded_message = privatemsg_message_load($mid);
-      foreach($_GET['bill_ids'] as $bill_id) {
-        $loaded_message->field_featured_bill['und'][]['target_id'] = $bill_id;
-      field_attach_update('privatemsg_message', $loaded_message);
+
+    // Associate the bill(s) to the message while saving.
+    if (isset($_GET['bill_ids'])) {
+      $loaded_message = PrivateMessage::load($message->id());
+      foreach ($_GET['bill_ids'] as $bill_id) {
+        $bills[] = $bill_id;
       }
+      $loaded_message->field_bill = $bills;
+      $loaded_message->save();
     }
-  
-    // Associate the issue to the message while saving
-    if(isset($_GET['petition_id'])) {
-      $mid = $message['message']->mid;
-      $loaded_message = privatemsg_message_load($mid);
-  
-      $loaded_message->field_petitions_questionnaires['und'][]['target_id'] = $_GET['petition_id'];
-      field_attach_update('privatemsg_message', $loaded_message);
+
+    // Associate the issue to the message while saving.
+    if (isset($_GET['petition_id'])) {
+      $loaded_message = PrivateMessage::load($message->id());
+      $loaded_message->field_petition->target_id = $_GET['petition_id'];
+      $loaded_message->save();
     }
-  
-    if (isset($message) && $message['success'] == 1) {
-      drupal_set_message(t("Your message has been sent!"), 'status');
+
+    if (isset($message) && !empty($message->id())) {
+      $this->messenger->addStatus($this->t('Your message has been sent!'));
     }
-  
-    // Set the right redirect URL based on the context
-  
-    if(empty($_GET['context']) && !empty($values['context'])) {
+
+    // Set the right redirect URL based on the context.
+    if (empty($_GET['context']) && !empty($values['context'])) {
       $_GET['context'] = $values['context'];
     }
-  
-    switch($_GET['context']) {
-      case 'senators_constituents_tab' : $redirect_url = $dashboard_link . '/constituents'; break;
-      case 'senators_petitions_tab' : $redirect_url = $dashboard_link; break;
-      case 'senators_questionnaires_tab' : $redirect_url = $dashboard_link . '/questionnaires'; break;
-      case 'senators_issues_tab' : $redirect_url = $dashboard_link . '/issues'; break;
-      case 'senators_bills_tab' : $redirect_url = $dashboard_link . '/bills'; break;
-      case 'bill_vote' : $redirect_url = 'node/' . $values['bill_id']; break;
-      case 'following_bill' : $redirect_url = 'node/' . $values['bill_id']; break;
-      case 'issue' : $redirect_url = 'taxonomy/term/' . $values['issue_id']; break;
-      case 'following_committee' : $redirect_url = 'taxonomy/term/' . $values['committee_id']; break;
-      case 'nys_messaging_senator_message_form' :
-        $redirect_url = 'node/' . arg(1);
-      break;
+
+    switch ($_GET['context']) {
+      case 'senators_constituents_tab': $redirect_url = $dashboard_link . '/constituents';
+        break;
+
+      case 'senators_petitions_tab': $redirect_url = $dashboard_link;
+        break;
+
+      case 'senators_questionnaires_tab': $redirect_url = $dashboard_link . '/questionnaires';
+        break;
+
+      case 'senators_issues_tab': $redirect_url = $dashboard_link . '/issues';
+        break;
+
+      case 'senators_bills_tab': $redirect_url = $dashboard_link . '/bills';
+        break;
+
+      case 'bill_vote': $redirect_url = 'node/' . $values['bill_id'];
+        break;
+
+      case 'following_bill': $redirect_url = 'node/' . $values['bill_id'];
+        break;
+
+      case 'issue': $redirect_url = 'taxonomy/term/' . $values['issue_id'];
+        break;
+
+      case 'following_committee': $redirect_url = 'taxonomy/term/' . $values['committee_id'];
+        break;
+
+      case 'nys_messaging_senator_message_form':
+        $redirect_url = 'node/' . $current_path[2];
+        break;
+
       default: $redirect_url = $dashboard_link . '/inbox';
     }
-  
-    $form_state['redirect'] = array(
-      $redirect_url,
-      array(
-        'query' => array()
-      ),
-    );
-  
-    foreach (module_implements('nys_inbox_new_message_sent') as $module) {
-      $function = $module . '_nys_inbox_new_message_sent';
-      // will call all modules implementing hook_hook_name
-      // and can pass each argument as reference determined
-      // by the function declaration
-      $function($values, $message);
-    }
+
+    $url = Url::fromUserInput('/' . $redirect_url)->toString();
+    $response = new RedirectResponse($url);
+    $response->send();
   }
 
 }

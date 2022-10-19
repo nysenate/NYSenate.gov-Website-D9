@@ -46,4 +46,5 @@ class SenatorMessageFormBlock extends BlockBase implements ContainerFactoryPlugi
       'form' => $this->formBuilder->getForm('Drupal\nys_messaging\Form\SenatorMessageForm'),
     ];
   }
+
 }

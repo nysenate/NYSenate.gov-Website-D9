@@ -1,0 +1,71 @@
+uuid: 53c49557-9a6b-4306-a6dc-5b10494b5120
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.private_message.private_message.field_bill
+    - field.field.private_message.private_message.field_issue
+    - field.field.private_message.private_message.field_petition
+    - field.field.private_message.private_message.field_subject
+  module:
+    - private_message
+    - text
+_core:
+  default_config_hash: NgKTJ48tKixxHdgcHn2dYtLGAjd05npp8pylrqvU0lE
+id: private_message.private_message.default
+targetEntityType: private_message
+bundle: private_message
+mode: default
+content:
+  field_bill:
+    type: entity_reference_autocomplete
+    weight: -97
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_issue:
+    type: entity_reference_autocomplete
+    weight: -98
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_petition:
+    type: entity_reference_autocomplete
+    weight: -96
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_subject:
+    type: string_textfield
+    weight: -99
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  members:
+    weight: -100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  message:
+    type: text_textarea
+    weight: null
+    region: content
+    settings:
+      rows: 5
+      placeholder: Message
+    third_party_settings: {  }
+hidden: {  }

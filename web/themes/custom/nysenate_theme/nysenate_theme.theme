@@ -1382,33 +1382,31 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__news_by_bil
 function nysenate_theme_preprocess_semanticviews_row__news_by_issue__meeting_by_issue(&$variables) {
   $node = $variables['row']->_entity;
 
-  if ($node->bundle() == 'public_hearing') {
-    if ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
-      $variables['date'] = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'd');
-      $variables['month'] = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'M');
+  if ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
+    $variables['date'] = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'd');
+    $variables['month'] = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'M');
+  }
+
+  $address = '';
+  if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
+    if (isset($node->field_location[0]->address_line1) && !empty($node->field_location[0]->address_line1)) {
+      $address = $node->field_location[0]->address_line1;
     }
 
-    $address = '';
-    if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
-      if (isset($node->field_location[0]->address_line1) && !empty($node->field_location[0]->address_line1)) {
-        $address = $node->field_location[0]->address_line1;
-      }
+    if (isset($node->field_location[0]->locality) && !empty($node->field_location[0]->locality)) {
+      $address .= $node->field_location[0]->locality . ', ';
+    }
 
-      if (isset($node->field_location[0]->locality) && !empty($node->field_location[0]->locality)) {
-        $address .= $node->field_location[0]->locality . ', ';
-      }
+    if (isset($node->field_location[0]->administrative_area) && !empty($node->field_location[0]->administrative_area)) {
+      $address .= $node->field_location[0]->administrative_area . ', ';
+    }
 
-      if (isset($node->field_location[0]->administrative_area) && !empty($node->field_location[0]->administrative_area)) {
-        $address .= $node->field_location[0]->administrative_area . ', ';
-      }
+    if (isset($node->field_location[0]->postal_code) && !empty($node->field_location[0]->postal_code)) {
+      $address .= $node->field_location[0]->postal_code . ', ';
+    }
 
-      if (isset($node->field_location[0]->postal_code) && !empty($node->field_location[0]->postal_code)) {
-        $address .= $node->field_location[0]->postal_code . ', ';
-      }
-
-      if (!empty($address)) {
-        $variables['location']['link'] = 'http://maps.google.com/?q=' . urlencode($address);
-      }
+    if (!empty($address)) {
+      $variables['location']['link'] = 'http://maps.google.com/?q=' . urlencode($address);
     }
   }
 
@@ -2621,8 +2619,13 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
   if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
     $banner_cta_value = $variables['node']->field_call_to_action->value;
     $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+
+    $url = $variables['node']->field_link->uri;
+    if ($variables['node']->field_link_type->value === 'internal') {
+      $url = $variables['url'];
+    }
     $variables['item_cta'] = [
-      'url' => $variables['node']->field_link->uri ?? '',
+      'url' => $url,
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];
@@ -2747,8 +2750,13 @@ function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variabl
   if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
     $banner_cta_value = $variables['node']->field_call_to_action->value;
     $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+
+    $url = $variables['node']->field_link->uri;
+    if ($variables['node']->field_link_type->value === 'internal') {
+      $url = $variables['url'];
+    }
     $variables['item_cta'] = [
-      'url' => $variables['node']->field_link->uri ?? '',
+      'url' => $url,
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
     ];
@@ -2766,8 +2774,8 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
     $term = $node->field_microsite_page_type->entity ?? [];
     if ($term instanceof TermInterface) {
       $name = $term->name->value ?? '';
+      $variables['microsite_type'] = strtolower($name);
       if ($name === 'About') {
-        $variables['microsite_type'] = strtolower($name);
         $variables['title'] = $node->getTitle();
         if ($node->hasField('field_short_title') && !$node->get('field_short_title')->isEmpty()) {
           $variables['short_title'] = $node->field_short_title->value;

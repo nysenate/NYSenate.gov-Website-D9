@@ -293,8 +293,8 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
   $microsite_home = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
     'type' => 'microsite_page',
-    // About page.
-    'field_microsite_page_type' => '200000',
+    // Landing page.
+    'field_microsite_page_type' => '200005',
     'field_senator_multiref' => $senator->id(),
   ]);
 

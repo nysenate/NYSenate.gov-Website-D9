@@ -19,6 +19,10 @@ source:
   bundle: pg_featured_bills
   key: migrate
 process:
+  type:
+    -
+      plugin: get
+      source: bundle
   field_bills:
     -
       plugin: get

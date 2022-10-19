@@ -19,6 +19,10 @@ source:
   bundle: pg_video
   key: migrate
 process:
+  type:
+    -
+      plugin: get
+      source: bundle
   field_pg_video:
     -
       plugin: get

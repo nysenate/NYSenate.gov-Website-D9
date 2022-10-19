@@ -19,6 +19,10 @@ source:
   bundle: pg_file_uploads
   key: migrate
 process:
+  type:
+    -
+      plugin: get
+      source: bundle
   field_pdf:
     -
       plugin: sub_process

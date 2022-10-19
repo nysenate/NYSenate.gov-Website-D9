@@ -19,6 +19,10 @@ source:
   bundle: feature_image
   key: migrate
 process:
+  type:
+    -
+      plugin: get
+      source: bundle
   field_pg_feature_image:
     -
       plugin: sub_process

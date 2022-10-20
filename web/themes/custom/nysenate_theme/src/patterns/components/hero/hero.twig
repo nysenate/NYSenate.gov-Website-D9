@@ -58,18 +58,10 @@
             </div>
           </div>
         </div>
-        {% if user_id == 0 %}
-          {% if is_active %}
-            <a href="/registration/nojs/form/start/message-senator?senator=4518811" class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg">message senator</a>
-          {% else %}
-            <a href="/user/login/find-my-senator" class="c-block--btn c-senator-hero--contact-btn icon-before__find-senator med-bg">find your senator</a>
-          {% endif %}
+        {% if is_active %}
+          <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
         {% else %}
-          {% if is_active %}
-            <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
-          {% else %}
-            <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
-          {% endif %}
+          <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
         {% endif %}
       </div>
       {# end of senator hero #}

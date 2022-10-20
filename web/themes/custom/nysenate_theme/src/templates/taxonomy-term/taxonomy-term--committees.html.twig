@@ -34,54 +34,46 @@
   ]
 %}
 <div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
-  {{ title_prefix }}
-  {% if name and not page %}
-    <h2><a href="{{ url }}">{{ name }}</a></h2>
-  {% endif %}
-  {{ title_suffix }}
   <div class="content">
-    <div class="c-block c-detail--header">
+    <div class="c-committee-header">
         <h2 class="nys-title">{{ name }}</h2>
+        <div class="c-committee-type">
+            <a href="/senators-committees" title="Senators & Committees">{{ content.field_committee_types }}</a>
+        </div>
         <div class="c-event-featured-story c-committee">
             {{ drupal_view('committee_content', 'featured_story') }}
         </div>
-        <div class="taxonomy-issues__header-cta">
-          <div class="c-detail--header-meta header-meta">
-              <!-- Check login state for action url -->
+    </div>
 
+    <div class="newsroom-content l-row">
+      <h2 class="c-tab-block--title"
+          id="issuesUpdatesHeader">{{ name[0]['#context']['value'] ~ ' Updates' }}</h2>
+      <dl class="l-tab-bar">
+          <div class="c-tab--arrow u-mobile-only"></div>
+          <div class="c-tab active">
+            <input class="form-radio" type="radio" name="news" value="#panel1" checked="checked">
+            <label class="c-tab-link" for="news">{{ 'All Updates'|t }}</label>
           </div>
-        </div>
-
-
-
-        <div class="newsroom-content l-row">
-          <h2 class="c-tab-block--title"
-              id="issuesUpdatesHeader">{{ name[0]['#context']['value'] ~ ' Updates' }}</h2>
-          <dl class="l-tab-bar">
-              <div class="c-tab--arrow u-mobile-only"></div>
-              <div class="c-tab active">
-                <input class="form-radio" type="radio" name="news" value="#panel1" checked="checked">
-                <label class="c-tab-link" for="news">{{ 'News'|t }}</label>
-              </div>
-              <div class="c-tab">
-                <input class="form-radio" type="radio" name="meetings" value="#panel2">
-                <label class="c-tab-link" for="events">{{ 'Events Archives'|t }}</label>
-              </div>
-          </dl>
-          <div class="tabs-content">
-            <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1">
-                {{ drupal_view('committee_content', 'news') }}
-            </div>
-
-            <div class="panel-pane pane-views pane-news-by-issue content" id="panel2">
-                {{ drupal_view('committee_content', 'meetings') }}
-            </div>
-
-
+          <div class="c-tab">
+            <input class="form-radio" type="radio" name="meetings" value="#panel2">
+            <label class="c-tab-link" for="events">{{ 'News'|t }}</label>
           </div>
+          <div class="c-tab">
+            <input class="form-radio" type="radio" name="meetings" value="#panel3">
+            <label class="c-tab-link" for="events">{{ 'Events Archives'|t }}</label>
+          </div>
+      </dl>
+      <div class="tabs-content">
+        <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1">
+            {{ drupal_view('committee_content', 'all_updates') }}
         </div>
-
-
+        <div class="panel-pane pane-views pane-news-by-issue content active" id="panel2">
+            {{ drupal_view('committee_content', 'news') }}
+        </div>
+        <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
+            {{ drupal_view('committee_content', 'meetings') }}
+        </div>
+      </div>
     </div>
   </div>
 </div>

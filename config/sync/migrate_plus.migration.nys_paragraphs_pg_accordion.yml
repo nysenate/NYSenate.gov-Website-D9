@@ -19,11 +19,7 @@ source:
   bundle: pg_accordion
   key: migrate
 process:
-  type:
-    -
-      plugin: get
-      source: bundle
-  field_pg_fc_accordion:
+  field_accordion_item:
     -
       plugin: sub_process
       source: field_pg_fc_accordion

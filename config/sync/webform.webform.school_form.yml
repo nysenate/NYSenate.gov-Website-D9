@@ -1,7 +1,9 @@
 uuid: e4caeb10-d52b-43f3-a947-b302f83d2e00
 langcode: en
 status: open
-dependencies: {  }
+dependencies:
+  module:
+    - nys_school_forms
 weight: 0
 open: null
 close: null
@@ -54,27 +56,38 @@ elements: |-
       12: '12th Grade'
       Homeschool: Homeschool
     '#required': true
-  submission:
-    '#type': managed_file
+  attach_your_submission:
+    '#type': webform_custom_composite
     '#title': 'Attach your submission'
-    '#multiple': true
-    '#description': |-
-      <ul>
-      	<li>If possible, please submit 1 item per file</li>
-      	<li>File type must be a .jpg, .png, .pdf, .txt, .doc, or .docx</li>
-      	<li>Maximum file size is 10mb</li>
-      </ul>
-    '#required': true
-    '#unique': true
-    '#file_preview': file
-    '#file_extensions': 'jpg, png pdf txt doc docx'
-    '#sanitize': true
-    '#button': true
-    '#button__title': 'Selected files to add'
-  show_student:
-    '#type': checkbox
-    '#title': 'Show Student'
-    '#private': true
+    '#multiple': 50
+    '#element':
+      student_name:
+        '#type': textfield
+        '#required': true
+        '#title': 'Student''s Name'
+        '#placeholder': 'Student''s Name'
+        '#description': 'Student''s Name'
+        '#help': 'Student''s Name'
+      submission_type:
+        '#type': radios
+        '#options':
+          - 'A WORK OF ART'
+          - 'AN ESSAY'
+          - 'A POEM'
+        '#required': true
+        '#title': 'Submission Type'
+      student_submission:
+        '#type': managed_file
+        '#required': true
+        '#title': 'Student Submission'
+        '#file_extensions': 'jpg, png pdf txt doc docx'
+        '#sanitize': true
+        '#button': true
+        '#button__title': 'Select file to add'
+      show_student:
+        '#type': checkbox
+        '#title': 'Show Student?'
+        '#private': true
 css: ''
 javascript: ''
 settings:
@@ -256,5 +269,14 @@ access:
     roles: {  }
     users: {  }
     permissions: {  }
-handlers: {  }
+handlers:
+  multiple_submission_handler:
+    id: multiple_submissions
+    handler_id: multiple_submission_handler
+    label: 'Multiple Submission Handler'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings: {  }
 variants: {  }

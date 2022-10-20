@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.school_forms.field_form_summary
     - field.field.node.school_forms.field_form_title
     - field.field.node.school_forms.field_school_form
+    - field.field.node.school_forms.field_school_form_type
     - node.type.school_forms
   module:
     - datetime
@@ -58,6 +59,14 @@ content:
       source_entity: true
     third_party_settings: {  }
     weight: 105
+    region: content
+  field_school_form_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 106
     region: content
   links:
     settings: {  }

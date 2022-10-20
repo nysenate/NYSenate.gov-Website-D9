@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Custom functionality for the nys_school_forms module.
+ */
+
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_pre_render().
+ * This is needed for a bug in views where duplicate rows are added on composite results.
+ */
+function nys_school_forms_views_pre_render(ViewExecutable $view) {
+  if (in_array('webform_submission', array_keys($view->getBaseTables()))) {
+    $submission_ids = [];
+    $newResult = [];
+    foreach ($view->result as $key => $result) {
+      $title_value =  $result->_entity;
+      var_dump($title_value);
+      $submission_id = $result->sid;
+      if (!$submission_id) {
+        continue;
+      }
+      if (!in_array($submission_id, $submission_ids)) {
+        $newResult[] = $view->result[$submission_id];
+        $submission_ids[$key] = $submission_id;
+      }
+    }
+    $view->result = $newResult;
+  }
+}

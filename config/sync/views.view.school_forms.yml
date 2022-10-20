@@ -1,0 +1,588 @@
+uuid: 93ae19a1-a901-4ed8-b5b9-bc0b273596b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_school_address
+    - taxonomy.vocabulary.school_form_type
+    - taxonomy.vocabulary.senator
+    - user.role.administrator
+  module:
+    - address
+    - node
+    - taxonomy
+    - user
+    - webform
+    - webform_views
+id: school_forms
+label: 'School Forms'
+module: views
+description: ''
+tag: ''
+base_table: webform_submission
+base_field: sid
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: 'School Forms'
+      fields:
+        field_school_address:
+          id: field_school_address
+          table: node__field_school_address
+          field: field_school_address
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'School Address'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: langcode
+          type: address_default
+          settings: {  }
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        webform_submission_value:
+          id: webform_submission_value
+          table: webform_submission_field_school_form_school_name
+          field: webform_submission_value
+          relationship: webform_submission_reverse_reference__school_form__school_name
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'School Name'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: link
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_1:
+          id: webform_submission_value_1
+          table: webform_submission_field_school_form_contact_name
+          field: webform_submission_value
+          relationship: webform_submission_reverse_reference__school_form__school_name
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Contact Name'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_2:
+          id: webform_submission_value_2
+          table: webform_submission_field_school_form_contact_email
+          field: webform_submission_value
+          relationship: webform_submission_reverse_reference__school_form__school_name
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Contact Email'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: link
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_3:
+          id: webform_submission_value_3
+          table: webform_submission_field_school_form_attach_your_submission__student_submission
+          field: webform_submission_value
+          relationship: webform_submission_reverse_reference__school_form__school_name
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_composite_field
+          label: Submission
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: '1'
+          webform_multiple_delta: '0'
+          webform_check_access: 1
+      pager:
+        type: mini
+        options:
+          offset: 0
+          items_per_page: 50
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
+      cache:
+        type: none
+        options: {  }
+      empty: {  }
+      sorts: {  }
+      arguments: {  }
+      filters:
+        field_senator_target_id:
+          id: field_senator_target_id
+          table: taxonomy_term__field_senator
+          field: field_senator_target_id
+          relationship: field_district
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_senator_target_id_op
+            label: Senator
+            description: ''
+            use_operator: false
+            operator: field_senator_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_senator_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: senator
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_school_form_type_target_id:
+          id: field_school_form_type_target_id
+          table: node__field_school_form_type
+          field: field_school_form_type_target_id
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_school_form_type_target_id_op
+            label: 'School Form Type'
+            description: ''
+            use_operator: false
+            operator: field_school_form_type_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_school_form_type_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: school_form_type
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            field_school_address: field_school_address
+            webform_submission_value: webform_submission_value
+            webform_submission_value_1: webform_submission_value_1
+            webform_submission_value_2: webform_submission_value_2
+            webform_submission_value_3: webform_submission_value_3
+          default: '-1'
+          info:
+            field_school_address:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value_1:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value_2:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value_3:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
+      relationships:
+        webform_submission_value:
+          id: webform_submission_value
+          table: webform_submission_field_school_form_school_name
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: Content
+          plugin_id: standard
+          required: true
+        field_district:
+          id: field_district
+          table: node__field_district
+          field: field_district
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: 'field_district: Taxonomy term'
+          plugin_id: standard
+          required: true
+        webform_submission_reverse_reference__school_form__school_name:
+          id: webform_submission_reverse_reference__school_form__school_name
+          table: node_field_data
+          field: webform_submission_reverse_reference__school_form__school_name
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: 'Webform submission'
+          entity_type: node
+          plugin_id: webform_views_entity_reverse
+          required: true
+      group_by: false
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - user.roles
+      tags:
+        - 'config:field.storage.node.field_school_address'
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: admin/school-forms
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - user.roles
+      tags:
+        - 'config:field.storage.node.field_school_address'

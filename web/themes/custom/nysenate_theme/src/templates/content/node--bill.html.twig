@@ -1,5 +1,8 @@
 {{ attach_library('nysenate_theme/bill') }}
-{{ attach_library('nysenate_theme/bill-item') }}
+{{ attach_library('nysenate_theme/nysenate-accordion') }}
+{{ attach_library('nysenate_theme/resolution-page') }}
+
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 
 {% set classes = ['node--bill'] %}
 <!-- BILL TEMPLATE -->
@@ -21,7 +24,7 @@
     </div>
 
     <div class="c-detail--header-meta" style="margin-bottom: 20px">
-      <div class="c-detail--descript">
+      <p class="c-detail--descript">
         {{ content.field_ol_name[0]['#context']['value'] }}
         {% if issues %}
           <div class="c-meeting-detail--related">
@@ -37,7 +40,7 @@
             </ul>
           </div>
         {% endif %}
-      </div>
+      </p>
     </div>
     <!-- Bill Pdf Link -->
     <a href="{{ pdf_link }}" class="c-detail--download" target="_blank">
@@ -51,17 +54,9 @@
       Share this bill
     </h3>
     <ul>
-      <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{
-                                  active_amend_url
-                                  }}" class="c-detail--social-item facebook">Facebook</a></li>
-      <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{
-                                  content.field_ol_base_print_no[0]['#context']['value']
-                                  }} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
-      <li><a href="mailto:?&subject=From NYSenate.gov: {{
-                                  content.field_ol_base_print_no[0]['#context']['value']
-                                  }}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{
-                                  active_amend_url
-                                  }} >." class="c-detail--social-item email">Email</a></li>
+      <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item facebook">Facebook</a></li>
+      <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{content.field_ol_base_print_no[0]['#context']['value']}} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
+      <li><a href="mailto:?&subject=From NYSenate.gov: {{content.field_ol_base_print_no[0]['#context']['value']}}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{active_amend_url}} >." class="c-detail--social-item email">Email</a></li>
     </ul>
   </div>
 
@@ -108,7 +103,9 @@
         {{ sub_bill_base_print_no }}
       {% endif %}
       -
-      {{ content.field_ol_last_status[0]['#markup'] }}
+      <span>
+        {{ content.field_ol_last_status[0]['#markup'] }}
+      </span>
     </h3>
     <!-- Bill Graph Output -->
     <ul class="nys-bill-status">
@@ -141,62 +138,67 @@
   <!-- Bill Vote Widget -->
   <div class="c-bill--vote-widget">
     {{ content.vote_widget }}
-    {# {% include '@nysenate_theme/bill-vote-widget/bill-vote-widget.twig' with {
-      bills: bills,
-      has_sub: true
-    } only %} #}
   </div>
 
   <!-- Bill Message Form -->
   <div class="c-bill--message-form clearfix">
     {# todo: This variable comes from nys_bills custom module. #}
     {# Need to confirm if we need to port this module. #}
-    {{ registration_form }}
+  {{ registration_form }}
   </div>
 
   <!-- Bill Actions -->
-  <div class="c-block c-bill-section">
-    <h3 class="c-detail--subhead c-detail--section-title">Actions</h3>
-    <dl style="margin-bottom:10px" class="c-block accordion" data-accordion>
-      <dd class="accordion-navigation">
+  <div class="c-block c-bill-section"> 
+    <section class="nysenate-accordion__wrapper nysenate-accordion__wrapper--bills">
+      <div class="nysenate-accordion__wrapper-title">Actions</div>
 
-        <a href="#accordion-actions" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide actions {{ actions_count }}" data-closed-text="view actions {{ actions_count }}">
-          view actions
-          {{ actions_count }}
-        </a>
+      <div>
+        {% block accordion_items %}
+          <article class="nysenate-accordion">
+            <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion--bills__content-1" aria-expanded="false" id="nysenate-accordion--bills__toggle-1" aria-selected="false">
+              <span class="nysenate-accordion__heading">
+                <span class="indicator">View
+                </span>Actions
+              </span>
+              {{ icons.get('accordion__arrow'|lower) }}
+            </button>
 
-        <div id="accordion-actions" class="content">
-          <div class="content" id="panel-actions">
-            <div>
-              <table width="100%" class="table c-bill--actions-table">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th class="c-bill--actions-table-header">Assembly Actions -
-                      <strong>Lowercase</strong><br/>Senate Actions -
-                      <strong>UPPERCASE</strong>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for versions, base_print_no in grouped_actions %}
-                    {% for dates, version in base_print_no %}
-                      {% for key, items in version %}
-                        <tr class="cbill--actions-table--row">
-                          <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
-                          <td class="c-bill--actions-table-col2">
-                            <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
-                        </tr>
+            <div class="nysenate-accordion__content" id="nysenate-accordion--bills__content-1" aria-hidden="true" aria-labelledby="nysenate-accordion--bills__content-1">
+              {% block accordion_content %}
+                <div>
+                  <table width="100%" class="table c-bill--actions-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th class="c-bill--actions-table-header">
+                          Assembly Actions -
+                          <strong>Lowercase</strong>
+                          Senate Actions -
+                          <strong>UPPERCASE</strong>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for versions, base_print_no in grouped_actions %}
+                        {% for dates, version in base_print_no %}
+                          {% for key, items in version %}
+                            <tr class="c-bill--actions-table--row">
+                              <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
+                              <td class="c-bill--actions-table-col2">
+                                <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
+                            </tr>
+                          {% endfor %}
+                        {% endfor %}
                       {% endfor %}
-                    {% endfor %}
-                  {% endfor %}
-                </tbody>
-              </table>
+                    </tbody>
+                  </table>
+                </div>
+              {% endblock %}
             </div>
-          </div>
-        </div>
-      </dd>
-    </dl>
+          </article>
+        {% endblock %}
+      </div>
+    </section>
   </div>
 
   {% if votes_block %}
@@ -229,15 +231,86 @@
   {{ amendments_block }}
 
   <div class="content c-bill-section" id="panel-comments">
-    {% if disqus %}
-      <div class="c-block c-detail--summary">
-        <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>
-        <p>Open Legislation is a forum for New York State legislation. All comments are subject to review and community moderation is encouraged.</p>
-        <p>
-          Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity, hate or toxic speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Attempts to intimidate and silence contributors or deliberately deceive the public, including excessive or extraneous posting/posts, or coordinated activity, are prohibited and may result in the temporary or permanent banning of the user. Comment moderation is generally performed Monday through Friday. By contributing or voting you agree to the Terms of Participation and verify you are over 13.</p>
-        {{ disqus }}
-      </div>
-    {% endif %}
+    <div class="c-block c-detail--summary">
+      <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>
+      <p>Open Legislation is a forum for New York State legislation. All comments are subject to review and community moderation is encouraged.</p>
+      <p>
+        Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity, hate or toxic speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Attempts to intimidate and silence contributors or deliberately deceive the public, including excessive or extraneous posting/posts, or coordinated activity, are prohibited and may result in the temporary or permanent banning of the user. Comment moderation is generally performed Monday through Friday. By contributing or voting you agree to the Terms of Participation and verify you are over 13.</p>
+      {# to do: replace with dynamic data / integrate with comments block #}
+      {% include "@nysenate_theme/comments/comments.twig" with {
+            user_permission: "allowed",
+            comment_items: [
+              {
+                username: "UserName1",
+                username_url: "#",
+                comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                relative_date: "4 days ago",
+                date: "Sunday, July 3, 2022 12:58 AM",
+                reply_form_id: "comment-reply-1",
+                replies: [
+                  {
+                    relative_date: "4 days ago",
+                    date: "Sunday, July 3, 2022 12:58 AM",
+                    comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                    username: "ReplyUserName11",
+                    username_url: "#",
+                    reply_form_id: "reply-11"
+                  },
+                  {
+                    relative_date: "4 days ago",
+                    date: "Sunday, July 3, 2022 12:58 AM",
+                    comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                    username: "ReplyUserName12",
+                    username_url: "#",
+                    reply_form_id: "reply-12"
+                  },
+                  {
+                    relative_date: "4 days ago",
+                    date: "Sunday, July 3, 2022 12:58 AM",
+                    comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                    username: "ReplyUserName13",
+                    username_url: "#",
+                    reply_form_id: "reply-13"
+                  }
+                ]
+              },
+              {
+                username: "UserName2",
+                username_url: "#",
+                comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                relative_date: "4 days ago",
+                date: "Sunday, July 3, 2022 12:58 AM",
+                reply_form_id: "comment-reply-2",
+                replies: [
+                  {
+                    relative_date: "4 days ago",
+                    date: "Sunday, July 3, 2022 12:58 AM",
+                    comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                    username: "ReplyUserName21",
+                    username_url: "#",
+                    reply_form_id: "reply-21"
+                  },
+                  {
+                    relative_date: "4 days ago",
+                    date: "Sunday, July 3, 2022 12:58 AM",
+                    comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                    username: "ReplyUserName22",
+                    username_url: "#",
+                    reply_form_id: "reply-22"
+                  },
+                  {
+                    relative_date: "4 days ago",
+                    date: "Sunday, July 3, 2022 12:58 AM",
+                    comment_body: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac mollis odio. Donec iaculis, elit sit amet mattis iaculis, urna dolor iaculis odio, in imperdiet ante ante sed elit. Nulla hendrerit, orci vitae vulputate accumsan, est ipsum commodo velit, varius malesuada dui libero at nibh. Phasellus feugiat felis eu turpis facilisis pulvinar. Integer odio nibh, maximus sed porta at, sollicitudin quis leo. Mauris a quam diam. Ut sit amet euismod urna. Donec metus velit, aliquam sit amet laoreet non, tristique id justo. Mauris congue, ex et dapibus posuere, felis metus accumsan turpis, ut tincidunt massa augue eget elit. Mauris at.</p>",
+                    username: "ReplyUserName23",
+                    username_url: "#",
+                    reply_form_id: "reply-23"
+                  }
+                ]
+              }
+            ]
+          } only %}
+    </div>
   </div>
 
   <!-- Related Bills Content -->
@@ -279,5 +352,5 @@
   {% if content.field_comments %}
     {{ content.field_comments }}
   {% endif %}
-  
+
 </div>

@@ -1,11 +1,10 @@
-@import '../../global/utils/init';
+@import "../../global/utils/init";
 
 .c-detail--header__bill .c-bill--flag {
   @media screen and (min-width: 760px) {
     margin-left: 20px;
     margin-top: 5px;
   }
-  margin-bottom: 10px;
 }
 
 .c-detail--header.c-detail--header__bill {
@@ -14,6 +13,13 @@
   @media screen and (min-width: 760px) {
     margin-bottom: 20px;
   }
+}
+
+// Bill page subheader style override
+.c-detail--subhead.c-detail--section-title.c-bill-detail--subhead {
+  border-bottom: 1px solid $color-alto;
+  padding-bottom: 8px;
+  width: 100%;
 }
 
 .c-bill--heading-block > .nys-title.c-bill-title {
@@ -26,19 +32,6 @@
     margin-top: 5px;
   }
   margin-bottom: 10px;
-}
-
-.cbill--actions-table--row {
-  padding:18px 0px;
-  border-bottom: 1px solid #bbbbbb;
-  TD {
-    line-height:26px;
-    background-color:white;
-  }
-}
-
-.cbill--actions-table--row:last-of-type {
-  border-bottom: 0;
 }
 
 .c-bill-topic {
@@ -63,6 +56,13 @@ h4.c-bill-topic {
   }
 }
 
+.c-bill--session-year {
+  font-size: 14px;
+  color: $grey08;
+  font-family: $font-sans-bold;
+  margin-bottom: 15px;
+}
+
 // bill detail page widget
 .c-bill--vote-widget {
   position: relative;
@@ -75,6 +75,7 @@ h4.c-bill-topic {
   .form-item {
     margin: 0;
   }
+
   .c-block--btn {
     position: relative;
     display: block;
@@ -89,14 +90,19 @@ h4.c-bill-topic {
     line-height: 45px;
     @extend .drk-bg;
 
-		&.nys-bill-vote-yes { @extend .icon-before__check; }
-		&.nys-bill-vote-no { @extend .icon-before__x; }
-    
+    &.nys-bill-vote-yes {
+      @extend .icon-before__check;
+    }
+
+    &.nys-bill-vote-no {
+      @extend .icon-before__x;
+    }
+
     &.nys-subscribe-button {
       border-top-width: 1px;
       border-bottom-width: 1px;
     }
-    
+
     &::before {
       position: relative;
     }
@@ -314,7 +320,8 @@ h4.c-bill-topic {
 }
 
 #your-voice {
-  display: none;
+  display: block;
+  margin-top: 0px;
 }
 
 .c-bill-amendment-toggle {
@@ -432,8 +439,8 @@ h4.c-bill-topic {
     padding: 0 30px;
 
     &::before {
-      font-family: 'senate_icons';
-      content: '\70';
+      font-family: "senate_icons";
+      content: "\70";
       font-size: 32px;
       margin-right: 25px;
       font-size: 28px;
@@ -441,6 +448,87 @@ h4.c-bill-topic {
       align-items: center;
       text-transform: none;
       padding-right: 3px;
+    }
+  }
+}
+
+.c-bill--action-line-senate {
+  text-transform: uppercase;
+}
+
+.c-bill--action-line-assembly {
+  text-transform: capitalize;
+}
+
+.c-bill--action-line-senate,
+.c-bill--action-line-assembly {
+
+  &.stricken,
+  &.amended,
+  &.substituted {
+    color: $color-white;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-family: $font-sans-bold;
+  }
+
+  &.stricken {
+    background-color: $cont_red_drk;
+  }
+
+  &.amended {
+    background-color: $blue01;
+  }
+
+  &.substituted {
+    background-color: $yellow01;
+  }
+}
+
+.c-bill--actions-table {
+  border: none;
+  color: $grey03;
+
+  thead {
+    border-bottom: 4px solid $grey15;
+  }
+
+  &--row {
+    padding: 18px 0px;
+    border-bottom: 1px solid $color-silver;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  &-col1,
+  &-col2,
+  &-header {
+    padding: 0.5rem 0.625rem 0.625rem;
+    font-size: 0.875rem;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.625rem;
+  }
+
+  &-col1 {
+    width: 30%;
+  }
+
+  &-col2 {
+    width: 70%;
+  }
+
+  &-header {
+    text-align: right;
+    line-height: 1.125rem;
+    font-weight: bold;
+    color: $grey10;
+
+    strong {
+      font-family: $font-sans;
+      display: block;
     }
   }
 }
@@ -528,12 +616,11 @@ h4.c-bill-topic {
   .c-bill--actions-table-col1 {
     width: 15%;
   }
-  
+
   .c-bill--actions-table-col2 {
     width: 85%;
-  }  
+  }
 }
-
 
 @include breakpoint($bp-md) {
   .c-bill--vote-widget {

@@ -260,6 +260,14 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
  * Implements hook_preprocess_block_content_ID().
  */
 function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node->bundle() == 'microsite_page') {
+    $current_path = \Drupal::request()->getRequestUri();
+    $arr_path = explode('/', $current_path);
+    $variables['message_senator_link'] = '/senators/' . $arr_path[2] . '/message';
+  }
+
   $sid = $variables['content']['field_senator'][0]['#plain_text'];
   $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
     ->load($sid);
@@ -348,6 +356,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     ];
   }
 
+  $variables['user_id'] = \Drupal::currentUser()->id();
   $variables['senator_name'] = $senator_name;
   $variables['senator_party'] = '( ' . $party . ' )';
   $variables['current_duties'] = $senator->field_current_duties->value;
@@ -1467,6 +1476,21 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
           $node->get('field_block')[$key] = [];
         }
       }
+    }
+  }
+
+  if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+    $term = $node->field_microsite_page_type->entity ?? [];
+    if ($term instanceof TermInterface) {
+      $name = $term->name->value ?? '';
+
+      // Display only the form block if the page type is message.
+      if ($name == 'Message') {
+        $block_manager = \Drupal::service('plugin.manager.block');
+        $plugin_block = $block_manager->createInstance('nys_messaging_senator_message_form_block');
+        $variables['message_senator'] = $plugin_block->build();
+      }
+
     }
   }
 

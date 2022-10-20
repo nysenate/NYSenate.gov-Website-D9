@@ -278,6 +278,7 @@ class SenatorMessageForm extends FormBase {
       'message' => $message,
       'field_subject' => $subject,
     ]);
+    $message->field_to = $values['recipient_uid'];
     $message->save();
 
     $recipients = $user_storage->loadMultiple($values['recipient_uid']);

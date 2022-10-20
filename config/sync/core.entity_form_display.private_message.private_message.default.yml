@@ -7,6 +7,7 @@ dependencies:
     - field.field.private_message.private_message.field_issue
     - field.field.private_message.private_message.field_petition
     - field.field.private_message.private_message.field_subject
+    - field.field.private_message.private_message.field_to
   module:
     - private_message
     - text
@@ -52,6 +53,16 @@ content:
     weight: -99
     region: content
     settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_to:
+    type: entity_reference_autocomplete
+    weight: -95
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }

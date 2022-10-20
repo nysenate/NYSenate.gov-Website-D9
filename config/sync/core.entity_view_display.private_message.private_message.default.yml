@@ -7,6 +7,7 @@ dependencies:
     - field.field.private_message.private_message.field_issue
     - field.field.private_message.private_message.field_petition
     - field.field.private_message.private_message.field_subject
+    - field.field.private_message.private_message.field_to
   module:
     - private_message
     - text
@@ -58,6 +59,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_to:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
     region: content
   message:
     type: text_default

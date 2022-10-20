@@ -1,20 +1,18 @@
-uuid: 5d1ae448-87da-4ecc-9d9e-4457a4df25f8
+uuid: a26fb6ba-98bf-40b5-b41a-657d825d0f5c
 langcode: en
 status: true
 dependencies:
   module:
-    - block_content
     - field_permissions
-    - media
+    - node
 third_party_settings:
   field_permissions:
     permission_type: public
-id: block_content.field_microsite_hero_image
-field_name: field_microsite_hero_image
-entity_type: block_content
-type: entity_reference
-settings:
-  target_type: media
+id: node.field_show_date
+field_name: field_show_date
+entity_type: node
+type: boolean
+settings: {  }
 module: core
 locked: false
 cardinality: 1

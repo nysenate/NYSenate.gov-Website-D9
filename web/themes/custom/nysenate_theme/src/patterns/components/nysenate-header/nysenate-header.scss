@@ -121,6 +121,14 @@
           }
         }
       }
+
+      .c-header--connect {
+        height: 40px;
+      }
+
+      .c-header--btn {
+        line-height: 40px;
+      }
     }
   }
 
@@ -455,6 +463,10 @@
   }
 }
 
+#smallShotImage {
+  display: none;
+}
+
 .messages-number {
   display: block;
   font-size: 15px;
@@ -708,12 +720,8 @@ a.c-header--btn.c-header--btn__taking_action {
 
 a:hover.c-header--btn.c-header--btn__primary,
 a:hover.c-header--btn.c-header--btn__taking_action {
-  background-color: $gen_blue_med;
-  color: $color-white;
-
-  &::after {
-    background-color: $gen_blue_med;
-  }
+  color: #fff;
+  @extend .lgt-bg;
 }
 
 .c-nav--list li {

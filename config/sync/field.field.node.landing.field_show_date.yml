@@ -1,0 +1,23 @@
+uuid: e226d753-e679-4d3b-960e-fbafb888fbc7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_show_date
+    - node.type.landing
+id: node.landing.field_show_date
+field_name: field_show_date
+entity_type: node
+bundle: landing
+label: 'Show date'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

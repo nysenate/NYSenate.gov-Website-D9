@@ -291,6 +291,18 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $variables['senator_headshot'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'thumbnail');
   }
 
+  $microsite_home = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+    'type' => 'microsite_page',
+    // Landing page.
+    'field_microsite_page_type' => '200005',
+    'field_senator_multiref' => $senator->id(),
+  ]);
+
+  if (!empty($microsite_home)) {
+    $home = reset($microsite_home);
+    $variables['senator_microsite_link'] = $home->toUrl()->toString();
+  }
+
   // Party Affiliation.
   $party_affiliation = $senator->get('field_party')->getValue();
   $arr_party = [];

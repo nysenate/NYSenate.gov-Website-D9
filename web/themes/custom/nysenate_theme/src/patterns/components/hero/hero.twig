@@ -27,7 +27,11 @@
             <h2 class="c-senator-hero--title">
               {% if not is_active %}former
               {% endif %}new york state senator<br>
-              <span class="c-senator-hero--name">{{ senator_name }}</span>
+              {% if senator_microsite_link %}
+                <a href="{{ senator_microsite_link }}" class="c-senator-hero--name">{{ senator_name }}</a>
+              {% else %}
+                <span class="c-senator-hero--name">{{ senator_name }}</span>
+              {% endif %}
             </h2>
             <div class="c-senator-hero--info-secondary">
               <p class="c-senator-hero--roles">
@@ -76,8 +80,7 @@
           <div class="c-hero-livestream-video">
             {% if video_id %}
               <div class="media-item__responsive-video">
-                <iframe width='100%' height='315' id="UstreamIframe" src="https://www.ustream.tv/embed/{{ video_id }}" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
+                <iframe width='100%' height='315' id="UstreamIframe" src="https://www.ustream.tv/embed/{{ video_id }}" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade"></iframe>
               </div>
             {% endif %}
           </div>

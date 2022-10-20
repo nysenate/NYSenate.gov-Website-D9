@@ -891,7 +891,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $aliased_path = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $media_storage = \Drupal::entityTypeManager()->getStorage('media');
-
+  $bundle_info = \Drupal::service("entity_type.bundle.info")->getAllBundleInfo();
   // Newsroom Landing.
   if ($view->id() == 'senator_microsite_content' && $view->current_display == 'block_1') {
     $items = [];
@@ -920,7 +920,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $items[] = [
-        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : '',
+        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'],
         'news_url' => $node->toUrl()->toString(),
         'news_image' => $news_image,
         'news_name' => $node->getTitle(),

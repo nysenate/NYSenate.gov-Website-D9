@@ -1,0 +1,97 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+<article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
+
+  {{ title_prefix }}
+
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">{{ title }}</h1>
+      <div class="c-news--head-meta">
+        {% if field_article_author %}
+          <p class="c-news--author">{{ field_article_author }}</p>
+        {% endif %}
+        {% if field_date %}
+          <p class="c-news--pub-date">
+            {{ field_date }}
+          </p>
+        {% endif %}
+
+        {% if field_issues %}
+          <ul class="nys-associated-topics">
+            ISSUE:
+            {% for issue in field_issues %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if field_committee %}
+          <ul class="nys-associated-topics">
+            COMMITTEE:
+            {% for committee in field_committee %}
+              <li>{{ committee }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+
+  {{ title_suffix }}
+
+  <div class="c-news--body c-in-the-news--body">
+    {% if field_publication_title and field_publication_source_link %}
+      <div class="c-news--body-title">Originally published in
+        <a href="{{ field_publication_source_link }}" title="{{ field_publication_title }}" target="_blank">
+          {{ field_publication_title }}
+        </a>
+        {% if field_itn_publication_date %}
+          on
+          {{ field_itn_publication_date }}.
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if field_image_main %}
+      <div class="c-block c-block--img">
+        {% if field_image_main.uri %}
+          {{ field_image_main }}
+        {% endif %}
+        {% if field_image_main.title %}
+          <p class="c-img--caption">
+            {{ field_image_main.title }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="c-block c-block-quoted-body">
+      {% if field_subheading %}
+        <p class="c-news--subtitle">
+          {{ field_subheading }}
+        </p>
+      {% endif %}
+
+      {{ body }}
+    </div>
+
+    {% if field_chapters %}
+      <section class="c-block">
+        {{ field_chapters }}
+      </section>
+    {% endif %}
+
+    {% field_attachment %}
+    <div class="c-block c-news--download">
+      <h2 class="c-initiative--subtitle">More Information:</h2>
+      {{ field_attachment }}
+    </div>
+  {% endif %}
+
+  {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+    title: node.type.entity.label,
+    node_url: url,
+    cta: cta,
+  } only %}
+</article>

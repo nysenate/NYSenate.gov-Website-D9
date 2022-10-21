@@ -1,0 +1,39 @@
+uuid: b851ca68-d5d6-4e07-b299-f8e390f49ad5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.senator_committees
+    - field.field.block_content.senator_committees.field_senator_committees
+  module:
+    - block_field
+id: block_content.senator_committees.default
+targetEntityType: block_content
+bundle: senator_committees
+mode: default
+content:
+  field_senator_committees:
+    type: block_field_default
+    weight: 26
+    region: content
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

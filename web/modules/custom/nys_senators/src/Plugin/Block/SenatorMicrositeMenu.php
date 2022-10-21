@@ -108,15 +108,15 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         if ($term instanceof TermInterface) {
           $menu_title = $term->getName() ?? '';
           if (!$term->get('field_microsite_menu_weight')->isEmpty()) {
-            $menu_weight = $term->get('field_microsite_menu_weight')->getValue();
-            $weight_value = $menu_weight[0]['value'];
+            $menu_weight = $term->get('field_microsite_menu_weight')->value;
             // Get the url alias for each 'Microsite Page' and populate
             // links for menu block.
-            $menu_links[$weight_value]['menu_url'] = $node->toUrl()->toString();
-            $menu_links[$weight_value]['menu_title'] = $menu_title;
+            $menu_links[$menu_weight]['menu_url'] = $node->toUrl()->toString();
+            $menu_links[$menu_weight]['menu_title'] = $menu_title;
           }
         }
       }
+      ksort($menu_links);
       return [
         '#theme' => 'senator_microsite_menu_block',
         '#menu_links' => $menu_links,

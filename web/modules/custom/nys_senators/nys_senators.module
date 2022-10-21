@@ -671,3 +671,18 @@ function nys_senators_tokens($type, $tokens, array $data, array $options, Bubble
 
   return $replacements;
 }
+
+/**
+ * Alter replacement values for placeholder tokens.
+ */
+function nys_senators_tokens_alter(array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata) {
+  if ($context['type'] == 'node' && !empty($context['data']['node']) && !empty($replacements['[node:field_microsite_page_type:entity:name]'])) {
+    $node = $context['data']['node'];
+
+    $page_type = $node->field_microsite_page_type->entity;
+    // Set the token to null if page type is landing.
+    if (!empty($page_type) && $page_type->label() === 'Landing') {
+      $replacements['[node:field_microsite_page_type:entity:name]'] = '';
+    }
+  }
+}

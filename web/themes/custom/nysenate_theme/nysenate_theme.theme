@@ -2703,6 +2703,34 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
       $view->total_rows = count($filteredResults);
     }
   }
+
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+function nysenate_theme_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  if ($variables['view']->id() == 'private_message_inbox') {
+    if (isset($variables['result']) && !empty($variables['result'])) {
+      foreach ($variables['result'] as $key => $result) {
+        $row_id = $result->_entity->id();
+        $field_to = $result->_entity->field_to->target_id;
+        $subject = $result->_entity->field_subject->value;
+        $url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/reply/' . $row_id);
+        $link = Link::fromTextAndUrl($subject, $url);
+        $variables['rows'][$key]['columns']['field_subject']['content'][0]['field_output']['#markup'] = $link->toString();
+
+        $reply_link = Link::fromTextAndUrl(t('Reply'), $url)->toString();
+        $forward_url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/forward/' . $row_id);
+        $forward_link = Link::fromTextAndUrl(t('Forward'), $forward_url)->toString();
+
+        $variables['rows'][$key]['columns']['actions']['content'][0]['field_output']['#markup'] = '<p>' . $forward_link . '</p><p>' . $reply_link . '</p>';
+
+      }
+    }
+  }
 }
 
 /**

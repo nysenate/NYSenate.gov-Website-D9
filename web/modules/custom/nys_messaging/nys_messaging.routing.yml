@@ -1,0 +1,13 @@
+nys_messaging.reply:
+  path: '/users/{user_id}/dashboard/inbox/reply/{private_message_id}'
+  defaults:
+    _controller: '\Drupal\nys_messaging\Controller\MessageController::reply'
+  requirements:
+    _permission: 'access content'
+
+nys_messaging.forward:
+  path: '/users/{user_id}/dashboard/inbox/forward/{private_message_id}'
+  defaults:
+    _controller: '\Drupal\nys_messaging\Controller\MessageController::forward'
+  requirements:
+    _permission: 'access content'

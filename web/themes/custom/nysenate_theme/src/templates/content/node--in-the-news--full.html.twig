@@ -8,28 +8,28 @@
     <header class="c-news--head">
       <h1 class="nys-article-title">{{ title }}</h1>
       <div class="c-news--head-meta">
-        {% if field_article_author %}
-          <p class="c-news--author">{{ field_article_author }}</p>
+        {% if content.field_article_author.0 %}
+          <p class="c-news--author">{{ content.field_article_author.0 }}</p>
         {% endif %}
-        {% if field_date %}
+        {% if content.field_date %}
           <p class="c-news--pub-date">
-            {{ field_date }}
+            {{ content.field_date.0 }}
           </p>
         {% endif %}
 
-        {% if field_issues %}
+        {% if content.field_issues %}
           <ul class="nys-associated-topics">
             ISSUE:
-            {% for issue in field_issues %}
+            {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
               <li>{{ issue }}</li>
             {% endfor %}
           </ul>
         {% endif %}
 
-        {% if field_committee %}
+        {% if content.field_committee.0 %}
           <ul class="nys-associated-topics">
             COMMITTEE:
-            {% for committee in field_committee %}
+            {% for key,committee in content.field_committee if key matches '/^\\d+$/' %}
               <li>{{ committee }}</li>
             {% endfor %}
           </ul>
@@ -41,51 +41,53 @@
   {{ title_suffix }}
 
   <div class="c-news--body c-in-the-news--body">
-    {% if field_publication_title and field_publication_source_link %}
+  {# {{ kint(content) }} #}
+    {% if content.field_publication_title.0 and content.field_publication_source_url.0 %}
       <div class="c-news--body-title">Originally published in
-        <a href="{{ field_publication_source_link }}" title="{{ field_publication_title }}" target="_blank">
-          {{ field_publication_title }}
+        <a href="{{ content.field_publication_source_url.0['#title'] }}" title="{{ content.field_publication_title.0 }}" target="_blank">
+          {{ content.field_publication_title.0 }}
         </a>
-        {% if field_itn_publication_date %}
+        {% if content.field_publication_source_date.0 %}
           on
-          {{ field_itn_publication_date }}.
+          {{ content.field_publication_source_date.0 }}.
         {% endif %}
       </div>
     {% endif %}
 
-    {% if field_image_main %}
-      <div class="c-block c-block--img">
-        {% if field_image_main.uri %}
-          {{ field_image_main }}
+    {% if content.field_image_main.0 %}
+      {{ content.field_image_main.0 }}
+      {# <div class="c-block c-block--img">
+        {% if content.field_image_main.0 %}
+
         {% endif %}
-        {% if field_image_main.title %}
+        {% if content.field_image_main.0.title %}
           <p class="c-img--caption">
-            {{ field_image_main.title }}
+            {{ content.field_image_main.0.title }}
           </p>
         {% endif %}
-      </div>
+      </div> #}
     {% endif %}
 
     <div class="c-block c-block-quoted-body">
-      {% if field_subheading %}
+      {% if content.field_subhead.0 %}
         <p class="c-news--subtitle">
-          {{ field_subheading }}
+          {{ content.field_subhead.0 }}
         </p>
       {% endif %}
 
-      {{ body }}
+      {{ content.body }}
     </div>
 
-    {% if field_chapters %}
+    {% if content.field_chapters.0 %}
       <section class="c-block">
-        {{ field_chapters }}
+        {{ content.field_chapters.0 }}
       </section>
     {% endif %}
 
-    {% field_attachment %}
+    {% if content.field_attachment.0 %}
     <div class="c-block c-news--download">
       <h2 class="c-initiative--subtitle">More Information:</h2>
-      {{ field_attachment }}
+      {{ content.field_attachment.0 }}
     </div>
   {% endif %}
 

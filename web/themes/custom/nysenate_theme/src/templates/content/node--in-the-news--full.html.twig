@@ -41,7 +41,6 @@
   {{ title_suffix }}
 
   <div class="c-news--body c-in-the-news--body">
-  {# {{ kint(content) }} #}
     {% if content.field_publication_title.0 and content.field_publication_source_url.0 %}
       <div class="c-news--body-title">Originally published in
         <a href="{{ content.field_publication_source_url.0['#title'] }}" title="{{ content.field_publication_title.0 }}" target="_blank">

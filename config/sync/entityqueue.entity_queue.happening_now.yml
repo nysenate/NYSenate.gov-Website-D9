@@ -10,17 +10,14 @@ handler: simple
 handler_configuration: {  }
 entity_settings:
   target_type: node
-  handler: 'default:node'
+  handler: views
   handler_settings:
-    target_bundles:
-      article: article
-    sort:
-      field: _none
-      direction: ASC
-    auto_create: false
-    auto_create_bundle: ''
+    view:
+      view_name: homepage_news
+      display_name: entity_reference_1
+      arguments: {  }
 queue_settings:
   min_size: 0
-  max_size: 0
+  max_size: 2
   act_as_queue: false
   reverse: false

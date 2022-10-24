@@ -507,6 +507,10 @@
 
   .nys-senator--info {
     max-width: 80%;
+
+    @include breakpoint($bp-sm) {
+      display: inline-block;
+    }
   }
 
   .nys-senator--party {
@@ -555,7 +559,7 @@
   .nys-senator.sponsor-list {
     float: none;
   }
-  
+
   .nys-senator.sponsor-list .nys-senator--party span {
     color: $grey04;
   }

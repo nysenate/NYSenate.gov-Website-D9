@@ -159,7 +159,6 @@ class SenatorMessageForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('To'),
       '#default_value' => $this->t('Senator %title', ['%title' => $senator->label()]),
-      '#weight' => -10,
       '#size' => 50,
       '#disabled' => TRUE,
       '#weight' => -10,
@@ -242,7 +241,7 @@ class SenatorMessageForm extends FormBase {
     }
 
     if (!$this->currentUser->id()) {
-      $url = Url::formUserInput('registration/nojs/form/start/message-senator');
+      $url = Url::fromUserInput('registration/nojs/form/start/message-senator');
       $response = new RedirectResponse($url);
       $response->send();
       return;
@@ -260,10 +259,11 @@ class SenatorMessageForm extends FormBase {
       // Reset counter for debug information.
       $_SESSION['http_request_count'] = 0;
       $_SESSION['bulk_message_filters'] = $_GET;
-      $_SESSION['author_uid'] = $user->uid;
+      $_SESSION['author_uid'] = $this->currentUser->id();
 
       // Execute the function named batch_example_1 or batch_example_2.
       // @todo This comes from the nys_inbox module.
+      // @phpstan-ignore-next-line
       $batch = nys_inbox_bulk_message_by_query();
       batch_set($batch);
       return;
@@ -302,8 +302,11 @@ class SenatorMessageForm extends FormBase {
       foreach ($_GET['bill_ids'] as $bill_id) {
         $bills[] = $bill_id;
       }
-      $loaded_message->field_bill = $bills;
-      $loaded_message->save();
+
+      if (!empty($bills)) {
+        $loaded_message->field_bill = $bills;
+        $loaded_message->save();
+      }
     }
 
     // Associate the issue to the message while saving.
@@ -313,7 +316,7 @@ class SenatorMessageForm extends FormBase {
       $loaded_message->save();
     }
 
-    if (isset($message) && !empty($message->id())) {
+    if (!empty($message->id())) {
       $this->messenger->addStatus($this->t('Your message has been sent!'));
     }
 

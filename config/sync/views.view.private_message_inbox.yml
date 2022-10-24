@@ -5,10 +5,14 @@ dependencies:
   config:
     - field.storage.private_message.field_subject
     - taxonomy.vocabulary.issues
+    - user.role.constituent
+    - user.role.legislative_correspondent
+    - user.role.senator
   module:
     - node
     - private_message
     - taxonomy
+    - user
     - views_autocomplete_filters
     - views_bulk_operations
 id: private_message_inbox
@@ -376,8 +380,12 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: role
+        options:
+          role:
+            senator: senator
+            legislative_correspondent: legislative_correspondent
+            constituent: constituent
       cache:
         type: tag
         options: {  }
@@ -743,6 +751,7 @@ display:
         - url
         - url.query_args
         - user
+        - user.roles
       tags:
         - 'config:field.storage.private_message.field_subject'
   inbox:
@@ -765,6 +774,7 @@ display:
         - url
         - url.query_args
         - user
+        - user.roles
       tags:
         - 'config:field.storage.private_message.field_subject'
   sent:
@@ -823,5 +833,6 @@ display:
         - url
         - url.query_args
         - user
+        - user.roles
       tags:
         - 'config:field.storage.private_message.field_subject'

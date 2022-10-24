@@ -30,6 +30,8 @@ dependencies:
     - node.type.event
   module:
     - address
+    - datetime_range
+    - options
     - user
 id: node.event.search_index
 targetEntityType: node
@@ -42,7 +44,24 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 4
+    weight: 1
+    region: content
+  field_date_range:
+    type: daterange_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: '-'
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_event_place:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_issues:
     type: entity_reference_label
@@ -50,29 +69,34 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 5
+    weight: 2
     region: content
   field_location:
     type: address_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 0
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
     region: content
 hidden:
   body: true
   field_accessible_sitewide: true
   field_attachment: true
   field_committee_featured: true
-  field_date_range: true
   field_event_online_link: true
-  field_event_place: true
   field_event_type: true
   field_feature_image: true
   field_featured: true
   field_image_main: true
   field_meeting_location: true
-  field_senator_multiref: true
   field_social_image: true
   field_social_teaser: true
   field_teleconference_id_number: true

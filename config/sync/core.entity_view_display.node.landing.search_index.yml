@@ -1,0 +1,64 @@
+uuid: 223109ad-8028-4064-9dc0-e02a07ec30a9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.landing.field_date
+    - field.field.node.landing.field_issues
+    - field.field.node.landing.field_landing_blocks
+    - field.field.node.landing.field_meta_tags
+    - field.field.node.landing.field_show_date
+    - field.field.node.landing.field_show_issues
+    - field.field.node.landing.field_summary
+    - node.type.landing
+  module:
+    - datetime
+    - entity_reference_revisions
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: 1L1W7cJHlAQPI83VzLLgMVMJYEXYsqwEUoV7CWUWdy4
+id: node.landing.search_index
+targetEntityType: node
+bundle: landing
+mode: search_index
+content:
+  field_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F j, Y'
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_landing_blocks:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_meta_tags: true
+  field_show_date: true
+  field_show_issues: true
+  field_summary: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

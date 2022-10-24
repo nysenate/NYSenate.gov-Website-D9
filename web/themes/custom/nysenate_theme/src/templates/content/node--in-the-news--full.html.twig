@@ -19,7 +19,7 @@
 
         {% if content.field_issues %}
           <ul class="nys-associated-topics">
-            ISSUE:
+            {{ 'ISSUE:'|t }}
             {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
               <li>{{ issue }}</li>
             {% endfor %}
@@ -28,7 +28,7 @@
 
         {% if content.field_committee.0 %}
           <ul class="nys-associated-topics">
-            COMMITTEE:
+            {{ 'COMMITTEE:'|t }}
             {% for key,committee in content.field_committee if key matches '/^\\d+$/' %}
               <li>{{ committee }}</li>
             {% endfor %}

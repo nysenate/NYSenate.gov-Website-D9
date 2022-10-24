@@ -7,7 +7,6 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\user\Entity\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -40,23 +39,6 @@ function nys_bills_entity_insert(EntityInterface $entity) {
   // and 'previous versions'cache.
   if ($entity->bundle() == 'bill') {
     \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($entity);
-  }
-
-  // This hook will update nys_bills_anon records for the current session
-  // with the id of the flag being inserted.  It will only act if the
-  // entity being inserted is of type "flagging" and the flag name is
-  // "follow_this_bill".
-  if ($entity->getEntityType() == 'flagging' && $entity->getEntityTypeId() == 'follow_this_bill') {
-    // Add the flagging id to the petition signature of the same session.
-    // $flagging_id = $entity->flag_id->value;
-    // $query = Drupal::database();
-    // @todo Add the nys_bills_anon schema
-    // $query->update('nys_bills_anon')
-    // ->fields(['fid' => $flagging_id])
-    // ->condition('session_id', $entity->sid)
-    // ->condition('fid', 0)
-    // ->condition('bid', $entity->entity_id)
-    // ->execute();
   }
 }
 
@@ -94,94 +76,5 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
       'type' => 'setting',
       'data' => $js_settings,
     ];
-  }
-}
-
-/**
- * Implements hook_user_login().
- *
- * This hook converts flagging and vote entries from being owned
- * by an anonymous user to being owned by the current user.  It
- * will reset the user ID associated with the respective records
- * in flagging and voting api_vote, and delete the old records
- * from nys_bills_anon.
- */
-function nys_bills_user_login($account) {
-
-  // This should only act on a user's first login, determined
-  // by $account->access==0.
-  if (!((boolean) $account->access)) {
-
-    // Load the full user.
-    $this_user = User::load($account->uid);
-    $query = Drupal::database();
-    if ($this_user) {
-      // Set any outstanding subscriptions to confirmed.
-      $query->update('nys_subscriptions')
-        ->fields(['confirmed' => time()])
-        ->condition('uid', $account->uid)
-        ->execute();
-
-      // Grab any anonymous user records from nys_bills_anon
-      // matching the current user's email address.  We need
-      // fid (flagging PK) and vote_id (votingapi_vote PK).
-      // @todo Add the nys_bills_anon schema
-      $bills_records = $query->select('nys_bills_anon')
-        ->fields('nys_bills_anon', ['sid', 'fid', 'vote_id'])
-        ->condition('email', $this_user->mail)
-        ->orderBy('sid', 'DESC')
-        ->range(0, 1)
-        ->execute();
-
-      // For each bills record returned, update the flagging
-      // and votingapi_vote tables to reflect the new user id.
-      // Optionally, trigger an accumulator event.
-      if ($bills_records->rowCount()) {
-
-        // Fetch the rows, and initialize the references.
-        $bill_results = $bills_records->fetchAllAssoc('fid', PDO::FETCH_ASSOC);
-        $change_ids = [
-          'flag' => [],
-          'vote' => [],
-          'anon' => [],
-        ];
-
-        foreach ($bill_results as $rec) {
-          $change_ids['flag'][] = $rec['fid'];
-          $change_ids['vote'][] = $rec['vote_id'];
-          $change_ids['anon'][] = $rec['sid'];
-        }
-
-        // Update the flagging table.
-        $query->update('flagging')
-          ->fields(['uid' => $this_user->id(), 'sid' => 0])
-          ->condition('flagging_id', $change_ids['flag'])
-          ->execute();
-
-        // Update the votingapi_vote table.
-        $query->update('votingapi_vote')
-          ->fields(['user_id' => $this_user->id()])
-          ->condition('vote_id', $change_ids['vote'])
-          ->execute();
-
-        // Remove the anonymous user records.
-        // @todo Add the nys_bills_anon schema
-        // $query->delete('nys_bills_anon')
-        // ->condition('sid', $change_ids['anon'])
-        // ->execute();
-      }
-    }
-
-    // If a direct message was sent during registration, update the author
-    // record with the new uid.
-    // @todo Updated the logic after create pm_message .
-    // if (isset($_SESSION['reg_msg_id']) &&
-    // is_numeric($_SESSION['reg_msg_id'])) {
-    // $mid = $_SESSION['reg_msg_id'];
-    // $query->update('pm_message')
-    // ->fields(['author' => $account->uid])
-    // ->condition('mid', $mid)
-    // ->execute();
-    // }
   }
 }

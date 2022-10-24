@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Theme override to display a media item.
+ *
+ * Available variables:
+ * - name: Name of the media.
+ * - content: Media content.
+ *
+ * @see template_preprocess_media()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'media',
+    'media--type-' ~ media.bundle()|clean_class,
+    not media.isPublished() ? 'media--unpublished',
+    view_mode ? 'media--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+
+<div class="c-block c-block--img">
+  {% if content.field_image.0 %}
+    {{ content.field_image.0 }}
+  {% endif %}
+  {% if (content.field_image.0['#item'].title or content.field_image.0['#item'].title) %}
+    <p class="c-img--caption">
+      {{ content.field_image.0['#item'].title ?: content.field_image.0['#item'].title }}
+    </p>
+  {% endif %}
+</div>

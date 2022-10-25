@@ -84,6 +84,7 @@ bill:
   dependencies:
     - nysenate_theme/registration-form
     - nysenate_theme/votes
+    - nysenate_theme/bill-item
 
 bill-vote-widget:
   css:
@@ -413,7 +414,7 @@ nysenate-accordion:
     component:
       dist/css/nysenate-accordion.css: {}
   js:
-    dist/js/nysenate-accordion.js: {}
+    dist/js/nysenate-accordion.es6.js: {}
   dependencies:
     - core/jquery
     - core/jquery.once
@@ -513,6 +514,11 @@ nysenate-promotional-banner:
   css:
     component:
       dist/css/nysenate-promotional-banner.css: {}
+
+nysenate_sponsor_list:
+  css:
+    component:
+      dist/css/nysenate-sponser-list.css: {}
 
 nysenate-promotional-banner-list:
   css:

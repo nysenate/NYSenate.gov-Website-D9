@@ -1713,6 +1713,7 @@ function nysenate_theme_theme($existing, $type, $theme, $path) {
     'nysenate_sponsor' => [
       'variables' => [
         'bill' => NULL,
+        'parent_type' => NULL,
       ],
       'path' => $path . '/src/templates',
     ],
@@ -1747,7 +1748,7 @@ function nysenate_theme_preprocess_nysenate_sponsor(&$variables) {
   }
 
   // Sponsor name.
-  if ($variables['bill']->field_ol_sponsor_name->value) {
+  if ($variables['bill']->field_ol_sponsor_name->value && $variables['parent_type'] !== 'bill_default') {
     $variables['ol_sponsor_name'] = $variables['bill']->field_ol_sponsor_name->value;
   }
 
@@ -1899,6 +1900,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['sponsored_by'] = [
     '#theme' => 'nysenate_sponsor',
     '#bill' => $node,
+    '#parent_type' => 'bill_default',
   ];
 
   // In D7, this value is being set in a form.
@@ -1995,6 +1997,10 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
       $variables['grouped_actions'] = $grouped_actions;
     }
   }
+
+  // Create the HTML for the bill's session.
+  $variables['legislative_session'] = '<div class="c-bill--session-year">' .
+  $bill_session_year . '-' . ($bill_session_year + 1) . ' Legislative Session</div>';
 }
 
 /**
@@ -2138,11 +2144,11 @@ function nysenate_bill_positions($node) {
       ],
       [
         'text' => t('In Committee'),
-        'is_passed' => ($comm_sen && $comm_assembly),
+        'is_passed' => ($comm_sen || $comm_assembly),
       ],
       [
         'text' => t('On Floor Calendar'),
-        'is_passed' => ($floor_sen && $floor_assembly),
+        'is_passed' => ($floor_sen || $floor_assembly),
       ],
       [
         'is_grouped' => TRUE,

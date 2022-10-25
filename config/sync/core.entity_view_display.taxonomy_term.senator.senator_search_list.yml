@@ -1,9 +1,9 @@
-uuid: 940b3935-4fa8-4b4b-85b5-75a005c2ccd1
+uuid: 61f62a47-db0b-415a-ae8d-98813f2d128f
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.taxonomy_term.sponsor_list
+    - core.entity_view_mode.taxonomy_term.senator_search_list
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
@@ -42,21 +42,12 @@ third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-id: taxonomy_term.senator.sponsor_list
+id: taxonomy_term.senator.senator_search_list
 targetEntityType: taxonomy_term
 bundle: senator
-mode: sponsor_list
+mode: senator_search_list
 content:
-  field_member_headshot:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: promotional_banner
-      link: false
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_party:
+  field_conference:
     type: list_formatter
     label: hidden
     settings:
@@ -72,7 +63,34 @@ content:
       term_plain: 0
       list_formatter_contrib: {  }
     third_party_settings: {  }
+    weight: 2
+    region: content
+  field_member_headshot:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
     weight: 1
+    region: content
+  field_party:
+    type: list_formatter
+    label: hidden
+    settings:
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: list-formatter-separator
+      comma_tag: div
+      class: list-formatter-list
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+      list_formatter_contrib: {  }
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_senator_name:
     type: name_default
@@ -97,7 +115,6 @@ hidden:
   description: true
   field_active_senator: true
   field_autoreply_text: true
-  field_conference: true
   field_current_duties: true
   field_email: true
   field_email_autoreply_text: true

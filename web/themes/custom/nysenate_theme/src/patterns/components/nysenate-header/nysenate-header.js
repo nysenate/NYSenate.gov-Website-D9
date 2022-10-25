@@ -298,7 +298,7 @@
         else if (currentTop >= heroHeight) {
           jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
           actionBar.removeClass('hidden');
-          headerBar.removeClass('collapsed');
+          headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
         }
       }

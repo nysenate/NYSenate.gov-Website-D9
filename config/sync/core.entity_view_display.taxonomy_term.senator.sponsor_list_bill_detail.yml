@@ -1,9 +1,9 @@
-uuid: 940b3935-4fa8-4b4b-85b5-75a005c2ccd1
+uuid: 734b2940-5ede-4096-8555-865cedb02f3b
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.taxonomy_term.sponsor_list
+    - core.entity_view_mode.taxonomy_term.sponsor_list_bill_detail
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
@@ -37,42 +37,38 @@ dependencies:
   module:
     - layout_builder
     - name
-    - nys_list_formatter
+    - options
 third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-id: taxonomy_term.senator.sponsor_list
+id: taxonomy_term.senator.sponsor_list_bill_detail
 targetEntityType: taxonomy_term
 bundle: senator
-mode: sponsor_list
+mode: sponsor_list_bill_detail
 content:
+  field_conference:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_member_headshot:
     type: entity_reference_entity_view
     label: hidden
     settings:
-      view_mode: promotional_banner
+      view_mode: thumbnail
       link: false
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
   field_party:
-    type: list_formatter
-    label: hidden
-    settings:
-      type: comma
-      separator_custom: ''
-      separator_custom_tag: span
-      separator_custom_class: ''
-      comma_tag: div
-      class: list-formatter-list
-      comma_and: 0
-      comma_full_stop: 0
-      comma_override: 0
-      term_plain: 0
-      list_formatter_contrib: {  }
+    type: list_key
+    label: above
+    settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 0
     region: content
   field_senator_name:
     type: name_default
@@ -87,7 +83,7 @@ content:
       alternative_field_reference: ''
       alternative_field_reference_separator: ', '
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
 hidden:
   admin_microsite_content_senator_admin_content_eva: true
@@ -97,7 +93,6 @@ hidden:
   description: true
   field_active_senator: true
   field_autoreply_text: true
-  field_conference: true
   field_current_duties: true
   field_email: true
   field_email_autoreply_text: true

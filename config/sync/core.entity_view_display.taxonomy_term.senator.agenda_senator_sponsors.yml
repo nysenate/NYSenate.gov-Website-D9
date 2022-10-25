@@ -1,9 +1,9 @@
-uuid: 940b3935-4fa8-4b4b-85b5-75a005c2ccd1
+uuid: 85f9806b-9ab5-46fa-957c-0b5fce264027
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.taxonomy_term.sponsor_list
+    - core.entity_view_mode.taxonomy_term.agenda_senator_sponsors
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
@@ -37,40 +37,21 @@ dependencies:
   module:
     - layout_builder
     - name
-    - nys_list_formatter
 third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-id: taxonomy_term.senator.sponsor_list
+id: taxonomy_term.senator.agenda_senator_sponsors
 targetEntityType: taxonomy_term
 bundle: senator
-mode: sponsor_list
+mode: agenda_senator_sponsors
 content:
   field_member_headshot:
     type: entity_reference_entity_view
     label: hidden
     settings:
-      view_mode: promotional_banner
+      view_mode: thumbnail
       link: false
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_party:
-    type: list_formatter
-    label: hidden
-    settings:
-      type: comma
-      separator_custom: ''
-      separator_custom_tag: span
-      separator_custom_class: ''
-      comma_tag: div
-      class: list-formatter-list
-      comma_and: 0
-      comma_full_stop: 0
-      comma_override: 0
-      term_plain: 0
-      list_formatter_contrib: {  }
     third_party_settings: {  }
     weight: 1
     region: content
@@ -114,6 +95,7 @@ hidden:
   field_offices: true
   field_ol_member_id: true
   field_ol_shortname: true
+  field_party: true
   field_press_inquiries: true
   field_press_kit: true
   field_store_settings: true

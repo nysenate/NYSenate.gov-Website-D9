@@ -1,8 +1,9 @@
-uuid: 0263f7f7-d609-4b50-836c-8332b47e9022
+uuid: 8239c4af-c38d-4aa1-9e0b-959f090e590b
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.search_index
     - field.field.node.petition.body
     - field.field.node.petition.field_article_author
     - field.field.node.petition.field_date
@@ -17,62 +18,41 @@ dependencies:
     - node.type.petition
   module:
     - datetime
+    - layout_builder
     - text
     - user
-id: node.petition.default
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.petition.search_index
 targetEntityType: node
 bundle: petition
-mode: default
+mode: search_index
 content:
   body:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 7
-    region: content
-  field_article_author:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
     weight: 3
     region: content
   field_date:
     type: datetime_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
-  field_featured:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 5
-    region: content
-  field_image_main:
+  field_issues:
     type: entity_reference_label
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 6
-    region: content
-  field_issues:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 4
+    weight: 2
     region: content
   field_senator_multiref:
     type: entity_reference_label
@@ -80,28 +60,12 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 8
-    region: content
-  field_subhead:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 10
-    region: content
-  field_title_stub:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 9
+    weight: 4
     region: content
   flag_sign_petition:
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 5
     region: content
   links:
     settings: {  }
@@ -109,7 +73,12 @@ content:
     weight: 0
     region: content
 hidden:
+  field_article_author: true
   field_expiration_date: true
+  field_featured: true
+  field_image_main: true
   field_last_notified: true
+  field_subhead: true
+  field_title_stub: true
   langcode: true
   search_api_excerpt: true

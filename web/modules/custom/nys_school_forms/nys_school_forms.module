@@ -9,24 +9,39 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_views_pre_render().
- * This is needed for a bug in views where duplicate rows are added on composite results.
+ * Re-rewrite the view submission results to make it look like each student is its own row.
  */
 function nys_school_forms_views_pre_render(ViewExecutable $view) {
   if (in_array('webform_submission', array_keys($view->getBaseTables()))) {
+
     $submission_ids = [];
-    $newResult = [];
+    $index = 0;
     foreach ($view->result as $key => $result) {
-      $title_value =  $result->_entity;
-      var_dump($title_value);
       $submission_id = $result->sid;
       if (!$submission_id) {
         continue;
       }
-      if (!in_array($submission_id, $submission_ids)) {
-        $newResult[] = $view->result[$submission_id];
-        $submission_ids[$key] = $submission_id;
+      if(!empty($view->result[$key]->_entity->getData()['attach_your_submission'])) {
+        $composite = $view->result[$key]->_entity->getData()['attach_your_submission'];
+        if (in_array($submission_id, $submission_ids) || $key === 0) {
+          $submission_ids[] = $submission_id;
+          $whitelist = [$index];
+          $student = array_intersect_key($composite, array_flip($whitelist));
+          //dpm($view->result);
+          //$view->result[$key]->_entity->setData()['attach_your_submission'] = $student;
+
+        }
+        else if (!in_array($submission_id, $submission_ids) && $key !== 0) {
+          unset($index);
+          $index = 0;
+          $whitelist = [$index];
+          unset($view->result[$key]->_entity->getData()['attach_your_submission']);
+          $student = array_intersect_key($composite, array_flip($whitelist));
+         unset($submission_ids);
+          //$view->result[$key]->_entity->setData()['attach_your_submission'] = $student
+        }
+      $index ++;
       }
     }
-    $view->result = $newResult;
   }
 }

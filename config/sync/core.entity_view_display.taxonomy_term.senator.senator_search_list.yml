@@ -1,0 +1,142 @@
+uuid: 61f62a47-db0b-415a-ae8d-98813f2d128f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.senator_search_list
+    - field.field.taxonomy_term.senator.field_active_senator
+    - field.field.taxonomy_term.senator.field_autoreply_text
+    - field.field.taxonomy_term.senator.field_conference
+    - field.field.taxonomy_term.senator.field_current_duties
+    - field.field.taxonomy_term.senator.field_email
+    - field.field.taxonomy_term.senator.field_email_autoreply_text
+    - field.field.taxonomy_term.senator.field_facebook_url
+    - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_instagram_url
+    - field.field.taxonomy_term.senator.field_media_contact
+    - field.field.taxonomy_term.senator.field_media_email
+    - field.field.taxonomy_term.senator.field_media_fax
+    - field.field.taxonomy_term.senator.field_media_phone
+    - field.field.taxonomy_term.senator.field_member_headshot
+    - field.field.taxonomy_term.senator.field_message_notification_email
+    - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_office_contacts
+    - field.field.taxonomy_term.senator.field_offices
+    - field.field.taxonomy_term.senator.field_ol_member_id
+    - field.field.taxonomy_term.senator.field_ol_shortname
+    - field.field.taxonomy_term.senator.field_party
+    - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_press_kit
+    - field.field.taxonomy_term.senator.field_senator_name
+    - field.field.taxonomy_term.senator.field_store_settings
+    - field.field.taxonomy_term.senator.field_top_issue
+    - field.field.taxonomy_term.senator.field_twitter_url
+    - field.field.taxonomy_term.senator.field_user_account
+    - field.field.taxonomy_term.senator.field_youtube_url
+    - taxonomy.vocabulary.senator
+  module:
+    - layout_builder
+    - name
+    - nys_list_formatter
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.senator.senator_search_list
+targetEntityType: taxonomy_term
+bundle: senator
+mode: senator_search_list
+content:
+  field_conference:
+    type: list_formatter
+    label: hidden
+    settings:
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+      list_formatter_contrib: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_member_headshot:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_party:
+    type: list_formatter
+    label: hidden
+    settings:
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: list-formatter-separator
+      comma_tag: div
+      class: list-formatter-list
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+      list_formatter_contrib: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_senator_name:
+    type: name_default
+    label: hidden
+    settings:
+      format: default
+      markup: none
+      list_format: ''
+      link_target: ''
+      preferred_field_reference: ''
+      preferred_field_reference_separator: ', '
+      alternative_field_reference: ''
+      alternative_field_reference_separator: ', '
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  admin_microsite_content_senator_admin_content_eva: true
+  admin_microsite_content_senator_admin_content_eva_form: true
+  admin_microsite_legislation_senator_admin_legislation_eva: true
+  admin_microsite_legislation_senator_admin_legislation_eva_form: true
+  description: true
+  field_active_senator: true
+  field_autoreply_text: true
+  field_current_duties: true
+  field_email: true
+  field_email_autoreply_text: true
+  field_facebook_url: true
+  field_image_hero: true
+  field_instagram_url: true
+  field_media_contact: true
+  field_media_email: true
+  field_media_fax: true
+  field_media_phone: true
+  field_message_notification_email: true
+  field_microsite_theme: true
+  field_office_contacts: true
+  field_offices: true
+  field_ol_member_id: true
+  field_ol_shortname: true
+  field_press_inquiries: true
+  field_press_kit: true
+  field_store_settings: true
+  field_top_issue: true
+  field_twitter_url: true
+  field_user_account: true
+  field_youtube_url: true
+  langcode: true
+  search_api_excerpt: true

@@ -83,10 +83,10 @@ content:
     region: content
   field_date:
     type: datetime_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
-      format_type: medium
+      format_type: publish_date
     third_party_settings: {  }
     weight: 104
     region: content
@@ -109,10 +109,11 @@ content:
     weight: 112
     region: content
   field_image_main:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: above
     settings:
-      link: true
+      view_mode: with_caption
+      link: false
     third_party_settings: {  }
     weight: 108
     region: content
@@ -129,7 +130,7 @@ content:
     label: above
     settings:
       timezone_override: ''
-      format_type: medium
+      format_type: publish_date
     third_party_settings: {  }
     weight: 118
     region: content

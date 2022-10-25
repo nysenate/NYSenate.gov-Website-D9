@@ -373,6 +373,13 @@
         font-size: 20px;
         line-height: 26px;
         margin-bottom: 15px;
+        font-weight: normal;
+
+        @include breakpoint($bp-md) {
+          font-size: 15px;
+          line-height: 19px;
+          margin-bottom: 3px;
+        }
 
         a {
           color: $color-white;
@@ -411,7 +418,7 @@
     }
 
     .c-hero-livestream-links {
-      margin: 20px 0 20px 16px;
+      margin: 20px 0 20px 0;
       padding: 0;
       width: 90%;
 
@@ -437,7 +444,7 @@
       color: $color-white;
       text-transform: uppercase;
       display: block;
-      margin: 10px 0 0;
+      margin: 10px 0 0 0;
     }
 
     .c-hero-livestream-sched {
@@ -714,7 +721,7 @@
   }
 
   .c-senator-hero--title {
-    margin: 0 0 3px;
+    margin: 0 0 3px 0;
     font-family: $font-sans;
     text-transform: uppercase;
     line-height: 1em;
@@ -729,7 +736,7 @@
     line-height: 1.2em;
     letter-spacing: 0.05em;
     font-size: 26px;
-    margin: 0 0 15px;
+    margin: 0 0 15px 0;
     text-transform: capitalize;
 
     a {
@@ -748,7 +755,7 @@
   }
 
   .c-senator-hero--district {
-    margin: 0 0 15px;
+    margin: 0 0 15px 0;
     text-transform: uppercase;
     font-family: $font-sans;
     font-size: 12px;
@@ -777,6 +784,7 @@
 
     &::before {
       display: flex;
+      align-items: center;
     }
   }
 
@@ -987,6 +995,7 @@
     height: 100px;
     padding-left: 20px;
     margin-top: 0;
+    transition: margin 0.25s ease-in 0s;
 
     &::before {
       content: '';
@@ -1003,6 +1012,7 @@
   }
 
   .c-senator-hero--img {
+    position: relative;
     display: inline-block;
     vertical-align: middle;
     height: 35px;

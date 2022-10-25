@@ -1,0 +1,98 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+<article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
+
+  {{ title_prefix }}
+
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">{{ title }}</h1>
+      <div class="c-news--head-meta">
+        {% if content.field_article_author.0 %}
+          <p class="c-news--author">{{ content.field_article_author.0 }}</p>
+        {% endif %}
+        {% if content.field_date %}
+          <p class="c-news--pub-date">
+            {{ content.field_date.0 }}
+          </p>
+        {% endif %}
+
+        {% if content.field_issues %}
+          <ul class="nys-associated-topics">
+            {{ 'ISSUE:'|t }}
+            {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if content.field_committee.0 %}
+          <ul class="nys-associated-topics">
+            {{ 'COMMITTEE:'|t }}
+            {% for key,committee in content.field_committee if key matches '/^\\d+$/' %}
+              <li>{{ committee }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+
+  {{ title_suffix }}
+
+  <div class="c-news--body c-in-the-news--body">
+    {% if content.field_publication_title.0 and content.field_publication_source_url.0 %}
+      <div class="c-news--body-title">Originally published in
+        <a href="{{ content.field_publication_source_url.0['#title'] }}" title="{{ content.field_publication_title.0 }}" target="_blank">
+          {{ content.field_publication_title.0 }}
+        </a>
+        {% if content.field_publication_source_date.0 %}
+          on
+          {{ content.field_publication_source_date.0 }}.
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if content.field_image_main.0 %}
+      {{ content.field_image_main.0 }}
+      {# <div class="c-block c-block--img">
+        {% if content.field_image_main.0 %}
+
+        {% endif %}
+        {% if content.field_image_main.0.title %}
+          <p class="c-img--caption">
+            {{ content.field_image_main.0.title }}
+          </p>
+        {% endif %}
+      </div> #}
+    {% endif %}
+
+    <div class="c-block c-block-quoted-body">
+      {% if content.field_subhead.0 %}
+        <p class="c-news--subtitle">
+          {{ content.field_subhead.0 }}
+        </p>
+      {% endif %}
+
+      {{ content.body }}
+    </div>
+
+    {% if content.field_chapters.0 %}
+      <section class="c-block">
+        {{ content.field_chapters.0 }}
+      </section>
+    {% endif %}
+
+    {% if content.field_attachment.0 %}
+    <div class="c-block c-news--download">
+      <h2 class="c-initiative--subtitle">More Information:</h2>
+      {{ content.field_attachment.0 }}
+    </div>
+  {% endif %}
+
+  {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+    title: node.type.entity.label,
+    node_url: url,
+    cta: cta,
+  } only %}
+</article>

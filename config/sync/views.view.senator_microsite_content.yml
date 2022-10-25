@@ -17,6 +17,8 @@ dependencies:
     - node.type.article
     - node.type.bill
     - node.type.event
+    - node.type.honoree
+    - node.type.petition
     - node.type.resolution
     - node.type.video
   module:
@@ -587,6 +589,8 @@ display:
           operator: in
           value:
             article: article
+            honoree: honoree
+            petition: petition
             video: video
           group: 1
           exposed: false

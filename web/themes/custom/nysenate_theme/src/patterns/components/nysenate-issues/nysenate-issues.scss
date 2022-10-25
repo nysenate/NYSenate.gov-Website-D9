@@ -116,7 +116,7 @@
 				font-size: 16px;
 			}
 		}
-		.flag-action {
+		a[title^="Follow"] {
 			background-color: $yellow02;
 			@extend .icon-before__plus;
 
@@ -124,7 +124,7 @@
 				background-color: $yellow03;
 			}
 		}
-		.unflag-action {
+		a[title^="Unfollow"] {
 			background-color: $yellow03;
 			@extend .icon-before__x;
 		}

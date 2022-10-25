@@ -973,57 +973,7 @@
 /*---------------------------
 /	ISSUES SPECIFIC
 /---------------------------*/
-.c-issue--followers {
-  color: $grey04;
-  text-transform: uppercase;
-  font-family: $font-sans;
-  font-size: 14px;
 
-  > span {
-    color: $grey08;
-    margin-right: 5px;
-  }
-}
-
-.c-issue--contact-btn {
-  position: relative;
-  display: inline-block;
-  height: 55px;
-  width: 100%;
-  padding: 0;
-  margin: 15px 0 30px;
-  background: $blue01;
-  color: $color-white;
-  text-transform: uppercase;
-  text-align: center;
-  font-family: $font-sans-bold;
-  font-size: 14px;
-  letter-spacing: 0.1em;
-
-  &::before {
-    content: '';
-    display: inline-block;
-    vertical-align: middle;
-    height: 100%;
-  }
-
-  &:hover,
-  &:focus {
-    color: $color-white;
-  }
-
-  .nys-senator--thumb {
-    display: none;
-  }
-
-  a {
-    color: $color-white;
-  }
-
-  &.no-senator {
-    @extend .icon-before__find-senator;
-  }
-}
 
 .c-issue--mentions {
   padding-bottom: 20px;
@@ -1053,25 +1003,7 @@
 /	tablet and above
 /---------------------------*/
 @include breakpoint($bp-sm) {
-  .c-issue--contact-btn {
-    height: 80px;
-    width: auto;
-    padding: 0 80px 0 30px;
-    margin: 20px 0 0;
-    text-align: left;
 
-    .nys-senator--thumb {
-      display: inline-block;
-    }
-
-    &.no-senator {
-      padding-right: 40px;
-
-      &::before {
-        margin-top: 0;
-      }
-    }
-  }
   .c-issue--mentions {
     padding-bottom: 0;
     margin-bottom: 30px;

@@ -1,9 +1,13 @@
+{{ attach_library('nysenate_theme/contact-your-senator') }}
+
 {% if logged_in %}
   <p class="eyebrow">{{ title }}</p>
-  <a class="c-issue--contact-btn" href="{{ link.url }}">
-    <div class="nys-senator--thumb">
-      {{ senator_image }}
-    </div>
+  <a class="c-issue--contact-btn {% if senator_image is empty %} no-senator {% endif %}" href="{{ link.url }}">
+    {% if senator_image %}
+      <div class="nys-senator--thumb">
+        {{ senator_image }}
+      </div>
+    {% endif %}
     <span>{{ link.text }}</span>
   </a>
 {% else %}

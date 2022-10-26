@@ -1,0 +1,40 @@
+uuid: 43a9db81-99d7-4dac-913e-c00ef1c6b0e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.private_message_thread.inbox
+  module:
+    - private_message
+_core:
+  default_config_hash: LjDdWYVuAO2Ol4kBXw959K6UO6mNKN1rdd5kIGVkcVo
+id: private_message_thread.private_message_thread.inbox
+targetEntityType: private_message_thread
+bundle: private_message_thread
+mode: inbox
+content:
+  clear_history_link:
+    weight: -100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  last_message:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  members:
+    label: hidden
+    type: private_message_thread_member_formatter
+    weight: 0
+    region: content
+    settings:
+      display_type: label
+      entity_display_mode: private_message_author
+    third_party_settings: {  }
+hidden:
+  delete_link: true
+  no_active_users: true
+  private_message_form: true
+  private_messages: true
+  search_api_excerpt: true

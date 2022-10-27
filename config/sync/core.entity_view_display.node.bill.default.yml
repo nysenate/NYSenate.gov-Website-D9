@@ -131,6 +131,14 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
+  field_ol_latest_status_committee:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+    weight: 14
+    region: content
   field_ol_name:
     type: basic_string
     label: hidden
@@ -172,7 +180,7 @@ content:
   vote_widget:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 13
     region: content
 hidden:
   field_bill_multi_session_root: true
@@ -190,7 +198,6 @@ hidden:
   field_ol_is_amended: true
   field_ol_last_status_date: true
   field_ol_latest_status: true
-  field_ol_latest_status_committee: true
   field_ol_law_code: true
   field_ol_law_section: true
   field_ol_memo: true

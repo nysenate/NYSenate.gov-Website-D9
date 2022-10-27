@@ -1,0 +1,57 @@
+uuid: c6cff46b-a42f-405e-85b2-60fec9ec7c34
+langcode: en
+status: true
+dependencies:
+  module:
+    - private_message
+_core:
+  default_config_hash: UW70Shyu4Z_hAePqer7HsVOLh52E0vjLlb8dJaPT3hg
+id: private_message_thread.private_message_thread.default
+targetEntityType: private_message_thread
+bundle: private_message_thread
+mode: default
+content:
+  clear_history_link:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -100
+    region: content
+  delete_link:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -100
+    region: content
+  members:
+    type: private_message_thread_member_formatter
+    label: above
+    settings:
+      display_type: entity
+      entity_display_mode: private_message_author
+      members_prefix: You
+      separator: ', '
+      prefix_separator: true
+      display_current_user: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  private_message_form:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  private_messages:
+    type: private_message_thread_message_formatter
+    label: above
+    settings:
+      message_count: 7
+      ajax_previous_load_count: 5
+      message_order: desc
+      ajax_refresh_rate: 20
+      view_mode: default
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  last_message: true
+  no_active_users: true
+  search_api_excerpt: true

@@ -1092,7 +1092,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $video->enforceMetadataUpdate();
           $media_storage->save($video);
         }
-        $image_uri = $video->get('thumbnail')->entity->getFileUri();
+        $image_file = File::load($video->thumbnail->target_id);
+        $image_uri = $image_file->uri->value;
         $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri);
       }
 

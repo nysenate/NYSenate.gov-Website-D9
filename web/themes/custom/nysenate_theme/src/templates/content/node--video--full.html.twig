@@ -1,0 +1,88 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      <div class="c-news--head-meta">
+        {% if field_article_author %}
+          <p class="c-news--author">
+            {{ field_article_author }}
+          </p>
+        {% elseif field_senator %}
+          <p class="c-news--author">
+            {{ field_senator }}
+          </p>
+        {% endif %}
+        <p class="c-news--pub-date">
+          {{ field_date }}
+        </p>
+
+        {% if field_issues %}
+          <ul class="nys-associated-topics">
+            {% for issue in field_issues %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+  {{ title_suffix }}
+
+  <section class="c-news--body">
+    {% if field_yt %}
+      <div class="flex-video widescreen">
+        {{ field_yt }}
+      </div>
+    {% endif %}
+
+    {% if field_subtitle %}
+      <div class="c-news--subtitle">
+        {{ field_subtitle }}
+      </div>
+    {% endif %}
+
+    {% if body %}
+      <div class="c-block">
+        {{ body }}
+      </div>
+    {% endif %}
+
+    {% if field_bills %}
+      <aside>
+        <div class="c-container--header__top-border">
+          <h2 class="c-container--title">related legislation</h2>
+        </div>
+        {{ field_bills }}
+      </aside>
+    {% endif %}
+
+    {% if field_chapters %}
+      <section class="c-block">
+        {{ field_chapters }}
+      </section>
+    {% endif %}
+
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta,
+    } only %}
+
+  </section>
+</article>

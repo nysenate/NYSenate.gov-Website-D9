@@ -28,30 +28,8 @@
 .c-news--head,
 .c-questionnaire--head {
 	margin-bottom: 20px;
-
-	ul.links {
-
-		display: block;
-		list-style: none;
-		line-height: 25px;
-
-		li {
-			display: inline-block;
-			margin-right: 10px;
-			text-transform: uppercase;
-			font-family: $font-sans-bold;
-			white-space: nowrap;
-		}
-
-		a {
-			font-size: 12px;
-			line-height: 1em;
-			@extend .lgt-text;
-		}
-
-	}
-	.field-name-field-issues { padding: 0; }
 }
+
 .c-news--title {
 	margin-bottom: 15px;
 	font-family: $font-serif-regular;
@@ -157,6 +135,17 @@
 /*------------------------------------
 / 'IN THE NEWS' elements
 /------------------------------------*/
+.c-news--body .c-block {
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	&:only-child {
+		margin: 0;
+	}
+}
+
 .c-news--body-title {
 	border-top: 1px solid $grey05;
 	padding: 10px 0 20px;

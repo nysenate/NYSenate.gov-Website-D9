@@ -1,0 +1,25 @@
+uuid: 990831e9-bbe7-4944-8c03-49f9c398c733
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - field_permissions
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: block_content.field_tab_names
+field_name: field_tab_names
+entity_type: block_content
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 4
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

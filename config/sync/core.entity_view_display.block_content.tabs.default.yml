@@ -1,0 +1,44 @@
+uuid: 12e0da37-05be-4aeb-88e1-2a1b74787efb
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.tabs
+    - field.field.block_content.tabs.field_block_views
+    - field.field.block_content.tabs.field_tab_names
+    - field.field.block_content.tabs.field_tabs_no
+  module:
+    - options
+    - viewsreference
+id: block_content.tabs.default
+targetEntityType: block_content
+bundle: tabs
+mode: default
+content:
+  field_block_views:
+    type: viewsreference_formatter
+    label: hidden
+    settings:
+      plugin_types:
+        - block
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_tab_names:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_tabs_no:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

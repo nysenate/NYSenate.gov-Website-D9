@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b39ba3f8415f3ebcca7ed7f30c7e687",
+    "content-hash": "52bae91005ea7e3c456b05ab54588e0c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3683,6 +3683,54 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/email_registration",
                 "issues": "http://drupal.org/project/issues/email_registration"
+            }
+        },
+        {
+            "name": "drupal/email_tfa",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/email_tfa.git",
+                "reference": "1.0.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/email_tfa-1.0.5.zip",
+                "reference": "1.0.5",
+                "shasum": "d9d80d95102436a8534e3c53cf64782111b01900"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.5",
+                    "datestamp": "1663619228",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "3ssom",
+                    "homepage": "https://www.drupal.org/user/758014"
+                },
+                {
+                    "name": "abdulaziz zaid",
+                    "homepage": "https://www.drupal.org/user/3585656"
+                }
+            ],
+            "description": "Provide An Email TFA for users after login.",
+            "homepage": "https://www.drupal.org/project/email_tfa",
+            "support": {
+                "source": "https://git.drupalcode.org/project/email_tfa"
             }
         },
         {
@@ -23781,5 +23829,5 @@
     "platform-overrides": {
         "php": "8.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

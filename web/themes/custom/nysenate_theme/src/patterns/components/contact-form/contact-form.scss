@@ -49,7 +49,7 @@
 			border: 0;
 			@extend .med-bg;
 
-			&::hover {
+			&:hover {
 				color: $color-white;
 			}
 		}
@@ -129,6 +129,10 @@
 		line-height: 40px;
 		margin-top: 0;
 		@extend .med-bg;
+
+		&:hover {
+			color: $color-white;
+		}
 	}
 
 	.ajax-progress-throbber {

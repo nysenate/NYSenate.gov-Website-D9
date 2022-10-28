@@ -105,7 +105,6 @@
 	}
 
 	.c-block--initiative__no-img {
-		width: 47%;
 		float: left;
 		clear: none;
 		height: 345px;
@@ -150,8 +149,15 @@
 }
 
 .node--type-promotional-banner.node--view-mode-card-list {
-	.node__content,
-	.c-block--initiative {
-		height: 100%;
+	.c-block.c-block--initiative {
+		margin-bottom: 0;
+	}
+	.c-initiative--content {
+
+		@include breakpoint($bp-md) {
+			.c-initiative-content {
+				padding-bottom: 0;
+			}
+		}
 	}
 }

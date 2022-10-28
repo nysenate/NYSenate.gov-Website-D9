@@ -29,6 +29,7 @@
   z-index: 10;
   overflow: hidden;
   position: relative;
+  transition: height 0.3s ease 0s;
 }
 
 .c-topbar {
@@ -83,6 +84,7 @@
     .c-senate-status {
       max-width: 1500px;
       padding: 0 9%;
+      transition: margin 0.25s ease-in 0s;
 
       &.hidden {
         margin-top: -100px;
@@ -120,6 +122,14 @@
             background-size: cover;
           }
         }
+      }
+
+      .c-header--connect {
+        height: 40px;
+      }
+
+      .c-header--btn {
+        line-height: 40px;
       }
     }
   }
@@ -167,7 +177,7 @@
 
 /* Navigation */
 .c-nav--wrap {
-  position: absolute;
+  position: fixed;
   background: $color-white;
   top: -110vh;
   left: 0;
@@ -242,7 +252,7 @@
 }
 
 .nav-open .c-nav--wrap {
-  top: 0;
+  top: 99px;
 }
 
 // class added to .c-nav--wrap through js
@@ -367,7 +377,6 @@
 
   .button--menu {
     position: absolute;
-    top: auto;
   }
 }
 
@@ -379,15 +388,14 @@
   cursor: pointer;
   position: absolute;
   z-index: 10;
-  top: 50%;
+  top: 0;
   right: 0;
   left: auto;
-  height: 40px;
+  height: 60px;
   width: 40px;
   background: $color-white;
   border: 0;
   padding: 0;
-  transform: translateY(-50%);
 	@extend .icon-replace__hamburger;
 
   @include breakpoint($bp-sm) {
@@ -453,6 +461,10 @@
   .node-type-senator &.messages-open {
     top: 87px;
   }
+}
+
+#smallShotImage {
+  display: none;
 }
 
 .messages-number {
@@ -708,12 +720,8 @@ a.c-header--btn.c-header--btn__taking_action {
 
 a:hover.c-header--btn.c-header--btn__primary,
 a:hover.c-header--btn.c-header--btn__taking_action {
-  background-color: $gen_blue_med;
-  color: $color-white;
-
-  &::after {
-    background-color: $gen_blue_med;
-  }
+  color: #fff;
+  @extend .lgt-bg;
 }
 
 .c-nav--list li {

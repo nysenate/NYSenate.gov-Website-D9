@@ -1,0 +1,19 @@
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+{% if content %}
+  <div{{ attributes.addClass(classes) }}>
+    {{ title_prefix }}
+    {{ title_suffix }}
+    {% block content %}
+      {% include '@nysenate_theme/committee-listing/committee-listing.twig' with {
+        'title': 'Committees'|t,
+        'committees': content,
+      } only %}
+    {% endblock %}
+  </div>
+{% endif %}

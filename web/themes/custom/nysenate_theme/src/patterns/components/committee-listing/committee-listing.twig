@@ -1,4 +1,4 @@
-{{ attach_library('nysenate_theme/committee') }}
+{{ attach_library('nysenate_theme/committee-listing') }}
 
 <div class="l-row c-listing-block">
   <h3 class="c-listing-block__title">
@@ -8,8 +8,8 @@
     {% set old_val = committees[0].role %}
 
     {% for committee in committees %}
-      {% if old_val != committee.role %}
-        {% set old_val = committee.role %}
+      {% if old_val != committee.role|render %}
+        {% set old_val = committee.role|render %}
         <br/>
       {% endif %}
 

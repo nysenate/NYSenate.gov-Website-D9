@@ -1,0 +1,15 @@
+uuid: 85f2530b-45a8-4181-a5b1-544a0cd21a38
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_issue
+  module:
+    - flag
+id: flag_action.follow_issue_flag
+label: 'Follow This Issue'
+type: taxonomy_term
+plugin: 'flag_action:follow_issue_flag'
+configuration:
+  flag_id: follow_issue
+  flag_action: flag

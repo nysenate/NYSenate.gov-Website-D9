@@ -48,7 +48,7 @@ process:
       source: field_committee
       process:
         target_id: tid
-  field_date:
+  field_date_range:
     -
       plugin: sub_process
       source: field_date
@@ -58,6 +58,11 @@ process:
           from_format: U
           to_format: 'Y-m-d\TH:i:s'
           source: value
+        end_value:
+          plugin: format_date
+          from_format: U
+          to_format: 'Y-m-d\TH:i:s'
+          source: value2
   field_meeting_agenda:
     -
       plugin: get

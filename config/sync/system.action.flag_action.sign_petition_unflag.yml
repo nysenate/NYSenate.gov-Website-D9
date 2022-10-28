@@ -1,0 +1,15 @@
+uuid: 66f66f46-8361-46e3-b1d0-ace11e9de1d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.sign_petition
+  module:
+    - flag
+id: flag_action.sign_petition_unflag
+label: 'Unsign the petition'
+type: node
+plugin: 'flag_action:sign_petition_unflag'
+configuration:
+  flag_id: sign_petition
+  flag_action: unflag

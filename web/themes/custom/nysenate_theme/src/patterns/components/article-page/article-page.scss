@@ -1,5 +1,5 @@
 // Import site utilities.
-@import '../../global/utils/init';
+@import "../../global/utils/init";
 
 .article-node {
 
@@ -14,11 +14,11 @@
 }
 
 .nys-article-title {
-  margin: 0 0 20px 0;
-  color: $grey08;
-  font-family: $font-serif;
-  @include font(22 57.6);
-  font-weight: 400;
+	margin: 0 0 20px 0;
+	color: $grey08;
+	font-family: $font-serif;
+	@include font(22 57.6);
+	font-weight: 400;
 }
 
 /*------------------------------------
@@ -70,7 +70,7 @@
 	@include font(12 18);
 	color: $grey04;
 
-	@include breakpoint($bp-sm) {	
+	@include breakpoint($bp-sm) {
 		@include font(15 18);
 	}
 
@@ -83,13 +83,15 @@
 	display: block;
 	flex-basis: 100%;
 
-	img { display: none; }
+	img {
+		display: none;
+	}
 
 	// download styles
 	.file {
 		background: none;
 		padding-left: 0;
-	
+
 		& > a {
 			display: block;
 			margin-top: 15px;
@@ -102,6 +104,7 @@
 		}
 	}
 }
+
 .c-news--head .c-news--download {
 	margin-bottom: 0;
 }
@@ -114,13 +117,13 @@
 		margin-bottom: 0;
 	}
 	.nys-associated-topics {
-    display: inline;
-    margin-top: 0;
+		display: inline;
+		margin-top: 0;
 
-    li {
-      margin-top: 0;
-    }
-  }
+		li {
+			margin-top: 0;
+		}
+	}
 }
 
 .c-block-quoted-body {
@@ -135,7 +138,7 @@
 /*------------------------------------
 / 'IN THE NEWS' elements
 /------------------------------------*/
-.c-news--body .c-block {
+.c-news--body .c-block p {
 
 	&:last-child {
 		margin-bottom: 0;
@@ -156,6 +159,7 @@
 		@extend .lgt-text;
 	}
 }
+
 .c-in-the-news--body {
 
 	.body {
@@ -165,11 +169,10 @@
 }
 
 @include breakpoint($bp-sm) {
-
 	.nys-article-title {
-    margin: 0 0 30px;
-    font-size: 48px;
-  }
+		margin: 0 0 30px;
+		font-size: 48px;
+	}
 
 	.c-news--head {
 		margin-bottom: 30px;
@@ -234,11 +237,11 @@
 
 .node-type-webform {
 	.form-item {
-	  margin-right: 1em;
-	  input[type="text"],
-	  input[type="email"] {
-	  	height: 55px;
-	  }
+		margin-right: 1em;
+		input[type="text"],
+		input[type="email"] {
+			height: 55px;
+		}
 	}
 	button[type="submit"] {
 		background-color: $blue01;

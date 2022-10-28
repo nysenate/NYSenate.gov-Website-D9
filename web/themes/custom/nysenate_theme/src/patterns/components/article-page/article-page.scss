@@ -43,7 +43,7 @@
   @include font(18 25.2);
 
   @include breakpoint($bp-sm) {
-  @include font(18 36.4);
+    @include font(18 36.4);
   }
 }
 
@@ -52,12 +52,12 @@
   color: $grey04;
 
   @include breakpoint($bp-sm) {
-  @include font(15 18);
+    @include font(15 18);
   }
 
   & > p:not(:first-child) {
-  border-left: 1px solid $grey04;
-  padding-left: 14px;
+    border-left: 1px solid $grey04;
+    padding-left: 14px;
   }
 }
 
@@ -71,11 +71,11 @@
   color: $grey04;
 
   @include breakpoint($bp-sm) {
-  @include font(15 18);
+    @include font(15 18);
   }
 
   &:empty {
-  display: none;
+    display: none;
   }
 }
 
@@ -122,9 +122,9 @@
     display: inline;
     margin-top: 0;
 
-  li {
-    margin-top: 0;
-  }
+    li {
+      margin-top: 0;
+    }
   }
 }
 
@@ -213,10 +213,10 @@
 
   .c-in-the-news--body {
 
-  .body {
-    border-left: 10px solid $grey06;
-    padding-left: 30px;
-  }
+    .body {
+      border-left: 10px solid $grey06;
+      padding-left: 30px;
+    }
   }
 }
 

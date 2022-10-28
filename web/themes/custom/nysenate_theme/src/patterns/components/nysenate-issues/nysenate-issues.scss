@@ -21,6 +21,7 @@
 		margin: 0;
 	}
 }
+
 .c-block--explore-issues{
 	width: 100%;
 	text-align: right;
@@ -31,16 +32,17 @@
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
 
-	a{
+	a {
 		color: $orange01;
 		@extend .icon-after__right;
 
-		&:after {
+		&::after {
 			margin-top: -3px;
 			font-size: 18px;
 		}
 	}
 }
+
 .c-block--issue {
 	position: relative;
 	width: 100%;
@@ -69,7 +71,7 @@
 			height: 100%;
 			width: 100%;
 			padding: 20px 20px 35px 20px;
-			color: #fff;
+			$color-white
 			background: $yellow01;
 			transition: background-color 0.2s ease;
 
@@ -100,7 +102,7 @@
 		a {
 			display: block;
 			width: 100%;
-			color: #fff;
+			$color-white
 			font-size: 10px;
 			line-height: 35px;
 			padding: 0 10px 0 20px;
@@ -112,7 +114,7 @@
 				background: $grey05;
 			}
 
-			&:before {
+			&::before {
 				font-size: 16px;
 			}
 		}
@@ -144,7 +146,7 @@
 		.message-text p {
 			position: relative;
 			padding-top: 15px;
-			color: #fff;
+			$color-white
 			@include font-stack-secondary;
 			text-transform: uppercase;
 			font-size: 14px;
@@ -172,7 +174,7 @@
 			background-color: $yellow02;
 			z-index: 1;
 
-			&:after {
+			&::after {
 				position: absolute;
 				top: 5px;
 				right: 15px;
@@ -238,7 +240,7 @@
 			width: 103%;
 			margin-left: 0%;
 
-			&:after {
+			&::after {
 				content: "";
 				display: table;
 				clear: both;

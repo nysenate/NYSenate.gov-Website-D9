@@ -1,0 +1,180 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if page %}
+    <header class="c-questionnaire--head c-news--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      <div class="c-news--head-meta">
+          <p class="c-news--author">
+            {{ field_article_author }}
+            Article Author 
+          </p>
+          <p class="c-news--author">
+            Senator
+          </p>
+        <p class="c-news--pub-date">
+          August 10, 2021
+        </p>
+        <ul class="nys-associated-topics">
+          <li><a href="#">issue 1</a></li>
+          <li><a href="#">issue 2</a></li>
+          <li><a href="#">issue 3</a></li>
+          <li><a href="#">issue 4</a></li>
+        </ul>
+      </div>
+    </header>
+  {% endif %}
+
+  {{ title_suffix }}
+
+  <div class="c-questionnaire--body c-news--body">
+    {% if field_image_main %}
+      <div class="c-block c-block--img">
+        {{ field_image_main }}
+
+        {% if field_image_main_title %}
+          <p class="c-img--caption">{{ field_image_main_title }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="c-news--subtitle">
+      Byline
+    </div>
+
+<div class="c-block">
+
+		<p><span><span>With voter protections under assault around the country, New York has an opportunity to become a national leader in improving our elections and protecting voting rights. Senator Myrie and the Senate Elections Committee want to hear from voters in every corner of New York State about your experiences with registration and voting, and their suggestions for improvements to our elections. Your statements will be reviewed and considered by the Senate Elections Committee.</span></span></p>
+<p><span><span>You may upload your testimony directly by using this form or email it to <a href="mailto:jacquet@nysenate.gov">jacquet@nysenate.gov</a>.</span></span></p>
+
+
+    </div>
+
+<section class="c-block">
+      <!-- theme template:  -->
+		<section id="node-8351862" class="node node-webform node-promoted node-teaser">
+        <div class="c-news--body">
+    <form class="webform-client-form webform-client-form-8351862 has-nys-captcha" enctype="multipart/form-data" action="/questionnaires/zellnor-myrie/new-york-voters-we-want-hear-you" method="post" id="webform-client-form-8351862" accept-charset="UTF-8"><div><div class="webform-progressbar">
+      <div class="webform-progressbar-outer">
+      <div class="webform-progressbar-inner" style="width: 0%">&nbsp;</div>
+              <span class="webform-progressbar-page current" style="left: 0%">
+          <span class="webform-progressbar-page-number">1</span>
+                    <span class="webform-progressbar-page-label">
+            Start          </span>
+                  </span>
+              <span class="webform-progressbar-page" style="left: 100%">
+          <span class="webform-progressbar-page-number">2</span>
+                    <span class="webform-progressbar-page-label">
+            Complete          </span>
+                  </span>
+          </div>
+  
+
+  
+  </div>
+<div class="form-item webform-component webform-component-textarea webform-component--i-will-address-my-remarks">
+  <label for="edit-submitted-i-will-address-my-remarks">My testimony concerns the following subject(s) <span class="form-required" title="This field is required.">*</span></label>
+ <div class="form-textarea-wrapper resizable textarea-processed resizable-textarea"><textarea required="required" id="edit-submitted-i-will-address-my-remarks" name="submitted[i_will_address_my_remarks]" cols="60" rows="5" class="form-textarea required"></textarea><div class="grippie"></div></div>
+</div>
+<div id="edit-submitted-testimony-upload-ajax-wrapper"><div class="form-item webform-component webform-component-file webform-component--testimony-upload">
+  <label for="edit-submitted-testimony-upload-upload">Testimony Upload <span class="form-required" title="This field is required.">*</span></label>
+ <div class="form-managed-file"><input type="file" id="edit-submitted-testimony-upload-upload" name="files[submitted_testimony_upload]" size="22" class="form-file"><button id="edit-submitted-testimony-upload-upload-button" name="submitted_testimony_upload_upload_button" value="Upload" type="submit" class="ajax-processed">Upload</button>
+<input type="hidden" name="submitted[testimony_upload][fid]" value="0">
+</div>
+ <div class="description">Files must be less than <strong>2 MB</strong>.<br>Allowed file types: <strong>pdf docx</strong>.</div>
+</div>
+</div><div class="form-item webform-component webform-component-radios webform-component--i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports">
+  <label for="edit-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports">I would like to be added to the Committee mailing list for notices and reports. </label>
+ <div id="edit-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports" class="form-radios"><div class="form-item form-type-radio form-item-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports">
+ <input type="radio" id="edit-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports-1" name="submitted[i_would_like_to_be_added_to_the_committee_mailing_list_for_notices_and_reports]" value="Yes " class="form-radio">  <label class="option" for="edit-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports-1"> Yes </label>
+
+</div>
+<div class="form-item form-type-radio form-item-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports">
+ <input type="radio" id="edit-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports-2" name="submitted[i_would_like_to_be_added_to_the_committee_mailing_list_for_notices_and_reports]" value="No " class="form-radio">  <label class="option" for="edit-submitted-i-would-like-to-be-added-to-the-committee-mailing-list-for-notices-and-reports-2"> No </label>
+
+</div>
+</div>
+</div>
+<fieldset class="webform-component-fieldset webform-component--all-information-below-must-be-completed form-wrapper"><legend><span class="fieldset-legend">ALL INFORMATION BELOW MUST BE COMPLETED</span></legend><div class="fieldset-wrapper"></div></fieldset>
+<div class="form-item webform-component webform-component-textfield webform-component--name">
+  <label for="edit-submitted-name">NAME <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" type="text" id="edit-submitted-name" name="submitted[name]" value="" size="60" maxlength="128" class="form-text required">
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--title">
+  <label for="edit-submitted-title">TITLE:  </label>
+ <input type="text" id="edit-submitted-title" name="submitted[title]" value="" size="60" maxlength="128" class="form-text">
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--organization">
+  <label for="edit-submitted-organization">ORGANIZATION: </label>
+ <input type="text" id="edit-submitted-organization" name="submitted[organization]" value="" size="60" maxlength="128" class="form-text">
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--address">
+  <label for="edit-submitted-address">ADDRESS: <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" type="text" id="edit-submitted-address" name="submitted[address]" value="" size="60" maxlength="128" class="form-text required">
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--city">
+  <label for="edit-submitted-city">CITY <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" type="text" id="edit-submitted-city" name="submitted[city]" value="" size="60" maxlength="128" class="form-text required">
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--state">
+  <label for="edit-submitted-state">STATE <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" type="text" id="edit-submitted-state" name="submitted[state]" value="New York" size="60" maxlength="128" class="form-text required">
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--zip">
+  <label for="edit-submitted-zip">ZIP <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" type="text" id="edit-submitted-zip" name="submitted[zip]" value="" size="60" maxlength="128" class="form-text required">
+</div>
+<div class="form-item webform-component webform-component-email webform-component--e-mail">
+  <label for="edit-submitted-e-mail">E-MAIL: <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" class="email form-text form-email required" type="email" id="edit-submitted-e-mail" name="submitted[e_mail]" size="60">
+</div>
+<div class="form-item webform-component webform-component-textfield webform-component--telephone">
+  <label for="edit-submitted-telephone">TELEPHONE:  <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" type="text" id="edit-submitted-telephone" name="submitted[telephone]" value="" size="60" maxlength="128" class="form-text required">
+</div>
+<input type="hidden" name="questionnaire_source_id" value="8351884">
+<input type="hidden" name="details[sid]">
+<input type="hidden" name="details[page_num]" value="1">
+<input type="hidden" name="details[page_count]" value="1">
+<input type="hidden" name="details[finished]" value="0">
+<input type="hidden" name="form_build_id" value="form-Qms5tEJA3LA2KnEt8TINWuHKXgqq4WpqYHbq9CeIis8">
+<input type="hidden" name="form_id" value="webform_client_form_8351862">
+<input type="hidden" name="honeypot_time" value="1666946873|LlP6sgkyAy4h1bjzVvVu30fwYeXirpwQGl5wjtXZz6k">
+<div class="middle_name-textfield"><div class="form-item form-type-textfield form-item-middle-name">
+  <label for="edit-middle-name">Leave this field blank </label>
+ <input autocomplete="off" type="text" id="edit-middle-name" name="middle_name" value="" size="20" maxlength="128" class="form-text">
+</div>
+</div><fieldset class="captcha form-wrapper"><legend><span class="fieldset-legend">CAPTCHA</span></legend><div class="fieldset-wrapper"><div class="fieldset-description">This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.</div><input type="hidden" name="captcha_sid" value="11536856">
+<input type="hidden" name="captcha_token" value="2115033281e8ec7cba9cffb0fd51c576">
+<input type="hidden" name="captcha_response" value="Google no captcha">
+<div class="g-recaptcha" data-sitekey="6Ldj_AsTAAAAADpyOsbmP8_Y03cY-iTOe63Tw7GY" data-theme="light" data-type="image"><div style="width: 304px; height: 78px;"><div><iframe title="reCAPTCHA" src="https://www.google.com/recaptcha/api2/anchor?ar=2&amp;k=6Ldj_AsTAAAAADpyOsbmP8_Y03cY-iTOe63Tw7GY&amp;co=aHR0cHM6Ly9kZXYtbnktc2VuYXRlLnBhbnRoZW9uc2l0ZS5pbzo0NDM.&amp;hl=en&amp;type=image&amp;v=NJPGLzpIZgjszqyOymHUP0XR&amp;theme=light&amp;size=normal&amp;cb=ie04uugqf0cg" width="304" height="78" role="presentation" name="a-ijohwn393n0r" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div></div></fieldset>
+<button class="webform-submit button-primary" name="op" value="Submit" type="submit">Submit</button>
+</div></form>   </div>
+
+  
+</section>
+
+
+    </section>
+
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta,
+    } only %}
+
+  </div>
+</article>

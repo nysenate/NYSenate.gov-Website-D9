@@ -1,0 +1,254 @@
+.webform-client-form {
+  @include font-stack-primary;
+  cursor: default;
+  border-top: 1px solid $grey15;
+  margin-top: 36px;
+  font-size: 20px;
+  text-transform: none;
+  color: $grey08;
+
+  .form-item {
+    clear: both;
+    margin-top: 1.5em;
+  }
+
+  label {
+    cursor: default;
+    font-family: $font-sans-bold;
+    font-size: 20px;
+    text-transform: none;
+    color: $grey08;
+    line-height: 1.3;
+    margin-bottom: 0.75em;
+
+    .form-required {
+      color: $trad_red_lgt;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  .form-item .description {
+    font-size: 14px;
+    text-transform: none;
+    color: $grey03;
+    font-family: $font-sans-bold;
+    margin-bottom: 15px;
+  }
+
+  .webform-component-textfield,
+  .webform-component-email,
+  .webform-component-textarea {
+    label {
+      margin-bottom: 0.15em;
+    }
+  }
+
+  .webform-component-select {
+    position: relative;
+
+    label:first-child,
+    .webform-component-radios label:first-child,
+    .webform-component-checkboxes label:first-child {
+      clear: both;
+      padding: 30px 0 6px;
+    }
+
+    select {
+      @extend .med-text;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      padding: 10px 40px 10px 20px;
+      background: none;
+      background-image: none;
+      text-transform: uppercase;
+      min-height: 45px;
+      border: 1px solid $grey15;
+    }
+
+    &::after {
+      @extend .med-text;
+      cursor: pointer;
+      content: "\65";
+      position: absolute;
+      right: 10px;
+      bottom: 20px;
+      font-size: 25px;
+      pointer-events: none;
+      font-family: "senate_icons";
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+      -webkit-font-smoothing: antialiased;
+    }
+  }
+
+  fieldset {
+    border: none;
+    margin: 36px 0 -24px;
+    padding: 0 0 9px 0;
+
+    legend {
+      width: 100%;
+      padding-bottom: 6px;
+      margin-left: 0;
+      border-bottom: 1px solid $grey05;
+
+      .fieldset-legend {
+        @include font-stack-secondary;
+        @extend .drk-text;
+        font-size: 18px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .webform-component-email label:first-child {
+    padding: 0;
+  }
+
+  .form-radios {
+    .form-type-radio {
+      margin: 0.3em 0 0 14px;
+      clear: both;
+      padding: 6px 12px;
+
+      label.option {
+        @include font-stack-secondary;
+        cursor: pointer;
+        font-size: 18px;
+        color: $grey08;
+        margin: 1.5px 0 0 24px;
+        float: left;
+        display: block;
+      }
+
+      input[type="radio"] {
+        float: left;
+        margin-left: -12px;
+        margin-right: -7px;
+        margin-top: 3.5px;
+      }
+
+      &:last-child {
+        margin-bottom: 56px;
+      }
+    }
+  }
+
+  .form-checkboxes .form-type-checkbox {
+    padding: 0 12px;
+    margin: 0 0 0 14px;
+
+    input[type="checkbox"] + label {
+      @include font-stack-secondary;
+      font-size: 18px;
+      color: $grey08;
+    }
+  }
+
+  .webform-grid-question,
+  th.checkbox.webform-grid-option {
+    @include font-stack-secondary;
+    @extend .drk-text;
+    font-size: 16px;
+  }
+
+  .webform-component-grid {
+    margin-top: 30px;
+
+    .form-type-radio input[type="radio"] {
+      float: none;
+      margin: 0;
+    }
+  }
+
+  .webform-submit {
+    @extend .lgt-bg;
+    appearance: none;
+    border: 0;
+    padding: 1rem 2rem 1.0625rem;
+    text-align: left;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: $color-white
+    font-family: $font-sans-bold;
+    letter-spacing: 0.2em;
+    margin-bottom: 60px;
+    transition: background-color 0.25s ease;
+
+    &::before {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      height: 100%;
+      margin-right: 0.1em;
+      font-size: 32px;
+    }
+
+    span {
+      vertical-align: middle;
+      width: 80%;
+      line-height: 1.5em;
+
+      a {
+        color: $color-white
+        vertical-align: middle;
+        display: inline-block;
+      }
+    }
+
+    &:hover {
+      @extend .drk-bg;
+      color: $color-white
+    }
+  }
+}
+
+.webform-datepicker,
+.webform-component-time {
+  .form-select {
+    width: 10%;
+  }
+
+  .form-radios .form-type-radio input[type="radio"] {
+    float: none;
+    margin: 0.9rem 0 1rem 0;
+  }
+
+  .form-radios .form-type-radio {
+    padding: 0;
+  }
+
+  .form-radios .form-type-radio label.option {
+    float: none;
+    display: inline;
+    margin: 1.5px 0 0 6px;
+  }
+}
+
+.webform-client-form {
+  .l-row & {
+    .columns {
+      padding-left: 0;
+      padding-right: 15px;
+    }
+  }
+
+  .webform-submit {
+    float: left;
+    margin: 40px 0 60px 0;
+  }
+
+  .webform-component-fieldset {
+    clear: both;
+  }
+}

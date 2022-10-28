@@ -125,6 +125,7 @@ class BillsHelper {
         Cache::invalidateTags($tags);
       }
     }
+    \Drupal::logger('NYS Bills')->notice('Clear and invalidate the cache tag for the Bill');
   }
 
   /**

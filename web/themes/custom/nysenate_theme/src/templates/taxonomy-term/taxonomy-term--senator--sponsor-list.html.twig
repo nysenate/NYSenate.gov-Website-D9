@@ -30,6 +30,7 @@
   ]
 %}
 
+{{ attach_library('nysenate_theme/nysenate_sponsor_list') }}
 {% include "@nysenate_theme/nysenate-sponsor/nysenate-sponsor-list.twig" with {
   url: url,
   name: content.field_senator_name[0]['#markup'],

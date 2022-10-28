@@ -1085,6 +1085,17 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $file = File::load($media->field_image->target_id);
         $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
       }
+      elseif ($node->bundle() === 'video') {
+        $video_id = $node->field_yt->target_id;
+        $video = $media_storage->load($video_id);
+        if ($video) {
+          $video->enforceMetadataUpdate();
+          $media_storage->save($video);
+        }
+        $image_file = File::load($video->thumbnail->target_id);
+        $image_uri = $image_file->uri->value;
+        $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri);
+      }
 
       $contents[] = [
         'title' => ucwords($bundle),

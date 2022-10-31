@@ -183,7 +183,7 @@ display:
         type: some
         options:
           offset: 0
-          items_per_page: 4
+          items_per_page: 1
       exposed_form:
         type: basic
         options:
@@ -1756,17 +1756,34 @@ display:
         use_more: false
         use_more_always: false
         use_more_text: false
+        link_display: false
+        link_url: false
         style: false
         row: false
         fields: false
         arguments: false
         filters: false
         filter_groups: false
+        footer: false
       use_ajax: true
       display_description: ''
       use_more: false
       use_more_always: true
       use_more_text: 'Load more'
+      link_display: '0'
+      link_url: ''
+      footer:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: ''
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1

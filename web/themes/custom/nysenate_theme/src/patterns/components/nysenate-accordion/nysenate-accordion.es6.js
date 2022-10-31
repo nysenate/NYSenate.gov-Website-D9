@@ -12,7 +12,7 @@
    *
    * @type {Drupal~behavior}
    */
-  Drupal.behaviors.accordion = {
+  Drupal.behaviors.nysenateAccordion = {
     attach: function(context) {
 
       const self = this;

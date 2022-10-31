@@ -5,6 +5,8 @@
  * Install, update and uninstall hooks for the mcprofile install profile.
  */
 
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * NYSD9-372: Set the label of List Views block content type.
  */
@@ -53,4 +55,14 @@ function nysenate_update_9002() {
       }
     }
   }
+}
+
+/**
+ * Add Message term in microsite pages vocabulary.
+ */
+function nysenate_update_9003() {
+  Term::create([
+    'name' => 'Message',
+    'vid' => 'microsite_page_type',
+  ])->save();
 }

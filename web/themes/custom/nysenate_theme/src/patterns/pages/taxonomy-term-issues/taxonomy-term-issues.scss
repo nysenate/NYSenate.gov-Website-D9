@@ -1,122 +1,45 @@
 @import '../../global/utils/init';
 
-/* TO DO: apply the correct styling on the component level and remove
-** the explicit style of the components here. (e.g heading, button, eyebrow) 
-** They were temporarily added because the component
-** style are still from the default rain theme and no go signal to change */
+.taxonomy-term {
 
-.taxonomy-issues {
-  &__header {
-    margin-bottom: 20px;
-
-    @include breakpoint($bp-sm) {
-      margin-bottom: 30px;
-    }
-  }
-
-  &__header-cta {
-    display: flex;
-    flex-direction: column;
-
-    @include breakpoint($bp-sm) {
-      display: block;
-    }
-
-    .header-meta {
-      @include breakpoint($bp-sm) {
-        position: relative;
-        width: 71%;
-        float: left;
-        margin-bottom: 60px;
-        padding-right: 40px;
-      }
-
-      .eyebrow {
-        margin: 0;
-        @include font(16 24);
-        color: $grey03;
-        margin-bottom: 20px;
-
-        @include breakpoint($bp-sm) {
-          @include font(20 32);
-        }
-      }
-
-      .c-issue--contact-btn,
-      .button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        width: 100%;
-        height: 55px;
-        padding: 0 40px;
-        margin: 15px 0 30px;
-        background-color: $blue01;
-        font-family: $font-sans-bold;
-        text-transform: uppercase;
-        color: $color-white;
-        @include font(14 14 1.5);
-        border: none;
-
-        @include breakpoint($bp-sm) {
-          display: inline-flex;
-          height: 80px;
-          margin: 0;
-          width: auto;
-        }
-
-        span {
-          width: 100%;
-        }
-
-        &:hover {
-          color: $color-white;
-        }
-
-        &::before {
-          height: auto;
-          font-size: 1.8em;
-        }
-
-        &.no-senator {
-          @extend .icon-before__find-senator;
-        }
+  .c-block {
+    .c-issue--followers {
+      color: $grey04;
+      text-transform: uppercase;
+      font-family: $font-sans;
+      font-size: 14px;
+    
+      > span {
+        color: $grey08;
+        margin-right: 5px;
       }
     }
-
-    .header-social {
-      @include breakpoint($bp-sm) {
-        border-left: 1px solid $grey05;
-        padding-left: 0;
-      }
-
-      .c-detail--social-item.site-footer__social {
-        list-style-type: none;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-
-        &-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          fill: $color-white;
-          background-color: $blue01;
-
-          @include breakpoint($bp-sm) {
-            fill: $blue01;
-            background-color: transparent;
-            justify-content: flex-end;
-          }
-
-          .icon {
-            width: 20px;
-            height: 20px;
-          }
-        }
+  
+    .js-pager__items.pager {
+      padding: 0;
+      margin: 0;
+  
+      .pager__item {
+        padding: 0;
       }
     }
   }
+  
+  .c-detail--header-meta {
+    position: relative;
+    width: 71%;
+    float: left;
+    margin-bottom: 60px;
+    padding-right: 40px;
+  
+    .eyebrow {
+      margin: 0;
+      @include font(16 24);
+      color: $grey03;
+  
+      @include breakpoint($bp-sm) {
+        @include font(20 32);
+      }
+    }
+  }  
 }

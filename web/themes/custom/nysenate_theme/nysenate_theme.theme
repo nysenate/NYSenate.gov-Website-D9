@@ -1054,7 +1054,9 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   elseif (($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content' ||
     $view->id() == 'committee_content' && $view->current_display == 'news' ||
     $view->id() == 'newsroom' && $view->current_display == 'all_news' ||
-    $view->id() == 'newsroom' && $view->current_display == 'press_releases')) {
+    $view->id() == 'newsroom' && $view->current_display == 'press_releases' ||
+    $view->id() == 'committee_content' && $view->current_display == 'news_meetings' ||
+    $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer')) {
     $contents = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;

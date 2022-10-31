@@ -26,22 +26,13 @@
           </ul>
         {% endif %}
 
-        {% if content.field_committee[0] is not empty %}
+        {% if content.field_committee.0 %}
           <ul class="nys-associated-topics">
-            COMMITTEE:
-            {% for key, committee in content.field_certifications %}
-                {##
-                # Only keep items with a numerical key, which points to field values rather
-                # than meta data.
-                #}
-                {% if key matches '/^\\d+$/' %}
-                  <li>{{ committee }}</li>
-                {% endif %}
-            {% endfor %}
+            {{ 'COMMITTEE:'|t }} <li>{{ content.field_committee.0 }} </li>
           </ul>
         {% endif %}
 
-        {% if content.field_attachment %}
+        {% if content.field_attachment.0 %}
           <div class="c-news--download">
             {{ content.field_attachment }}
           </div>
@@ -53,7 +44,7 @@
   {{ title_suffix }}
 
   <div class="c-news--body">
-    {% if content.field_image_main %}
+    {% if content.field_image_main.0 %}
       <div class="c-block c-block--img">
         {{ content.field_image_main }}
         {% if image_caption %}
@@ -62,7 +53,7 @@
       </div>
     {% endif %}
 
-    {% if content.field_subtitle %}
+    {% if content.field_subtitle.0 %}
       <div class="c-news--subtitle">
         {{ content.field_subtitle }}
       </div>
@@ -73,9 +64,9 @@
     </div>
 
     <!-- Field Paragraphs -->
-    {% if content.field_paragraphs %}
-      <div class="c-block-paragraph">
-        {{ content.field_paragraphs }}
+    {% if content.field_layout_components.0 %}
+      <div class="c-block">
+        {{ content.field_layout_components }}
       </div>
     {% endif %}
 
@@ -85,15 +76,11 @@
       </section>
     {% endif %}
 
-
     {% if content.field_bills %}
       <aside>
         {{ content.field_bills }}
       </aside>
     {% endif %}
-
-    <!-- Featured Legislations -->
-    {{ content.field_featured_legislation_commi }}
 
     {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
       title: node.type.entity.label,
@@ -102,4 +89,6 @@
     } only
     %}
   </div>
+
+  {{ drupal_view('senator_microsite_content', 'article_footer') }}
 </article>

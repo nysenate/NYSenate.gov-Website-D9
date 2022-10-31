@@ -66,6 +66,18 @@
     .button {
       cursor: pointer;
       font-family: $font-sans-bold;
+
+      &:first-child {
+        margin-right: 15px;
+      }
+
+      a {
+        color: $color-white;
+      }
+
+      &:hover a {
+        color: $color-blue;
+      }
     }
   }
 
@@ -83,5 +95,17 @@
   }
 }
 
+.comment-wrapper {
+  margin-bottom: 40px;
 
+  .indented {
+    padding-left: 40px;
+  }
 
+  .form-actions .button {
+    cursor: pointer;
+    font-family: $font-sans-bold;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}

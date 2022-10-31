@@ -2961,3 +2961,11 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
   }
   $variables['transcript_title'] = $tx_type_field . ' - ' . $title_date;
 }
+
+/**
+ * Implements hook_preprocess_comment().
+ */
+function nysenate_theme_preprocess_comment(&$variables) {
+  $date = $variables['comment']->getCreatedTime();
+  $variables['created_relative'] = \Drupal::service('date.formatter')->formatTimeDiffSince($date, ['granularity' => 1]);
+}

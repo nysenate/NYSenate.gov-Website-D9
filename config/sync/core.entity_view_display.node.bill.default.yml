@@ -45,6 +45,7 @@ dependencies:
     - field.field.node.bill.field_ol_sponsor_name
     - field.field.node.bill.field_ol_substituted_by
     - field.field.node.bill.field_ol_summary
+    - field.field.node.bill.field_ol_version
     - field.field.node.bill.field_ol_votes
     - node.type.bill
   module:
@@ -172,6 +173,14 @@ content:
     third_party_settings: {  }
     weight: 7
     region: content
+  field_ol_version:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 15
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }
@@ -213,4 +222,5 @@ hidden:
   field_ol_summary: true
   field_ol_votes: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

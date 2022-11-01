@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Bills.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+/**
+ * Implements hook_entity_update().
+ */
+function nys_bills_entity_update(EntityInterface $entity) {
+  // When a new bill is updated, invalidate the 'bill versions'
+  // and 'previous versions' cache.
+  if ($entity->bundle() == 'bill') {
+    \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function nys_bills_entity_delete(EntityInterface $entity) {
+  // When a new bill is deleted, invalidate the 'bill versions'
+  // and 'previous versions'cache.
+  if ($entity->bundle() == 'bill') {
+    \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function nys_bills_entity_insert(EntityInterface $entity) {
+  // When a new bill is inserted, invalidate the 'bill versions'
+  // and 'previous versions'cache.
+  if ($entity->bundle() == 'bill') {
+    \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($entity);
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($entity->bundle() == 'bill' && $view_mode == 'full') {
+    // If there's no alias for this bill node, redirect to 404.
+    $current_path = \Drupal::service('path.current')->getPath();
+    $alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+    if ($current_path === $alias) {
+      throw new NotFoundHttpException();
+    }
+
+    // Add settings to javascript that will help with processing vote from
+    // Javascript.
+    $nys_vote_service = \Drupal::service('nys_bill_vote.bill_vote');
+    $vote_options = $nys_vote_service->getOptions();
+    $vote_label_options = [];
+    foreach (array_keys($vote_options) as $vote_value) {
+      $vote_label_options[$vote_value] = $nys_vote_service->getVotedLabel($vote_value);
+    }
+    $nys_bill_service = \Drupal::service('nys_bill.bills_helper');
+    $js_settings = [
+      'bill_vote' => [
+        'bill_entity_id' => $entity->id(),
+        'bill_name' => $nys_bill_service->getFullBillName($entity),
+        'vote_options' => $vote_label_options,
+      ],
+    ];
+
+    $attached = [];
+    $attached['#attached']['js'][] = [
+      'type' => 'setting',
+      'data' => $js_settings,
+    ];
+  }
+}

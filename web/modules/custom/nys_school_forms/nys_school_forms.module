@@ -9,38 +9,39 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_views_pre_render().
- * Re-rewrite the view submission results to make it look like each student is its own row.
+ * Re-rewrite the view submission results to make it look like each student submission.
  */
 function nys_school_forms_views_pre_render(ViewExecutable $view) {
   if (in_array('webform_submission', array_keys($view->getBaseTables()))) {
-
     $submission_ids = [];
     $index = 0;
+
     foreach ($view->result as $key => $result) {
       $submission_id = $result->sid;
       if (!$submission_id) {
         continue;
       }
-      if(!empty($view->result[$key]->_entity->getData()['attach_your_submission'])) {
+      if (!empty($view->result[$key]->_entity->getData()['attach_your_submission'])) {
         $composite = $view->result[$key]->_entity->getData()['attach_your_submission'];
+        // If the composite is part of the same group reset the composite as a single submission.
         if (in_array($submission_id, $submission_ids) || $key === 0) {
           $submission_ids[] = $submission_id;
           $whitelist = [$index];
           $student = array_intersect_key($composite, array_flip($whitelist));
-          //dpm($view->result);
-          //$view->result[$key]->_entity->setData()['attach_your_submission'] = $student;
-
+          // $view->result[$key]->_entity->setData(['attach_your_submission'], $student);
         }
-        else if (!in_array($submission_id, $submission_ids) && $key !== 0) {
+        // If this is a new submission ID start over.
+        if (!in_array($submission_id, $submission_ids) && $key !== 0) {
           unset($index);
           $index = 0;
           $whitelist = [$index];
           unset($view->result[$key]->_entity->getData()['attach_your_submission']);
           $student = array_intersect_key($composite, array_flip($whitelist));
-         unset($submission_ids);
-          //$view->result[$key]->_entity->setData()['attach_your_submission'] = $student
+          unset($submission_ids);
+          $submission_ids[] = $submission_id;
+          // $view->result[$key]->_entity->setData(['attach_your_submission'], $student);
         }
-      $index ++;
+        $index++;
       }
     }
   }

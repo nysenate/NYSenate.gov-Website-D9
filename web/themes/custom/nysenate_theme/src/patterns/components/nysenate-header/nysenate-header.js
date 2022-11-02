@@ -260,7 +260,7 @@
         headerBar.outerHeight() -
         nav.outerHeight();
 
-      if ($(window).width() < 760) {
+      if ($(window).width() < 769) {
         if (
           this.isMovingDown(currentTop, previousTop) &&
           currentTop >= origNav.outerHeight()

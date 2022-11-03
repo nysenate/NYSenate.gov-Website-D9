@@ -19,11 +19,7 @@ settings:
           items:
             - Bold
             - Italic
-            - Strike
-            - Superscript
-            - Subscript
             - '-'
-            - RemoveFormat
         -
           name: Linking
           items:
@@ -34,24 +30,28 @@ settings:
           items:
             - BulletedList
             - NumberedList
+            - Outdent
         -
           name: Media
           items:
-            - Blockquote
             - DrupalImage
             - DrupalMediaLibrary
-            - Table
-            - HorizontalRule
         -
           name: 'Block Formatting'
           items:
             - Format
-            - Styles
         -
           name: Tools
           items:
+            - Table
+            - HorizontalRule
             - ShowBlocks
             - Source
+        -
+          name: Styles
+          items:
+            - Blockquote
+            - Styles
   plugins:
     drupallink:
       linkit_enabled: true

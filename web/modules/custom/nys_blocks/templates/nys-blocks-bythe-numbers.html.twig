@@ -1,0 +1,55 @@
+
+
+{#
+// Calculate which date range to display for the title, and session year to use
+// in our search URLs.
+// TODO: Add to preprocess function?
+$current_year = date('Y');
+if ($current_year % 2 == 0) {
+    $session_year = $current_year - 1;
+    $first_year   = $session_year;
+    $second_year  = substr($current_year,-2);
+}
+else {
+    $session_year = $current_year;
+    $first_year   = $current_year;
+    $second_year  = substr($current_year + 1, -2);
+}
+#}
+
+<div class="c-block c-container c-stats--container">
+        <div class="c-container--header">
+                <h3 class="c-container--title">2021-22, by the numbers</h3>
+        </div>
+
+        <div class="c-carousel--nav u-mobile-only">
+                <button class="c-carousel--btn prev hidden">prev</button>
+                <button class="c-carousel--btn next">next</button>
+        </div>
+
+        <span class="c-stats--highlight"></span>
+
+        <div id="js-carousel-up-to" class="js-carousel c-carousel">
+                <div href="" title="" class="c-carousel--item c-stats--item">
+                        <a href="/search/legislation?searched=true&type=f_bill&bill_session_year=<?php echo $session_year; ?>&bill_status=SIGNED_BY_GOV&page=1">
+                                <h4 class="c-stat">1412</h4>
+                                <p class="c-stat--descript">Bills Signed into Law</p>
+                        </a>
+                        <span class="c-stat--illus c-illus__signed"></span>
+                </div>
+                <div href="" title="" class="c-carousel--item c-stats--item">
+                        <a href="/search/legislation?searched=true&type=f_bill&bill_session_year=<?php echo $session_year; ?>&bill_status=DELIVERED_TO_GOV&page=1">
+                                <h4 class="c-stat">3</h4>
+                                <p class="c-stat--descript">BILLS AWAITING THE GOVERNOR’S SIGNATURE</p>
+                        </a>
+                        <span class="c-stat--illus c-illus__waiting"></span>
+                </div>
+                <div href="" title="" class="c-carousel--item c-stats--item">
+                        <a href="/search/legislation?searched=true&type=f_bill&bill_session_year=2021&bill_status=VETOED&page=1">
+                                <h4 class="c-stat">55</h4>
+                                <p class="c-stat--descript">BILLS VETOED BY THE GOVERNOR</p>
+                        </a>
+                        <span class="c-stat--illus c-illus__vetoed"></span>
+                </div>
+        </div>
+</div>

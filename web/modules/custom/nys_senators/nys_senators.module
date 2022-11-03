@@ -700,4 +700,12 @@ function nys_senators_views_data_alter(array &$data) {
       'id' => 'senator_committee_filter',
     ],
   ];
+  $data['taxonomy_term_data']['senator_district'] = [
+    'title' => t("Senator's District"),
+    'field' => [
+      'title' => t("Senator's District"),
+      'help' => t('Shows District information of the senator.'),
+      'id' => 'senator_district',
+    ],
+  ];
 }

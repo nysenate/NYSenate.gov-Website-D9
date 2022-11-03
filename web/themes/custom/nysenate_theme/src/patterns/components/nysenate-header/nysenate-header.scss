@@ -88,7 +88,7 @@
 
       &.hidden {
         margin-top: -100px;
-        display: none;
+        display: block;
       }
 
       .c-actionbar--cta {
@@ -252,7 +252,7 @@
 }
 
 .nav-open .c-nav--wrap {
-  top: 99px;
+  top: 60px;
 }
 
 // class added to .c-nav--wrap through js
@@ -455,7 +455,9 @@
 /-------------------------------*/
 .l-header__collapsed {
   top: 0;
+  left: 0;
   width: 100%;
+  transition: top 0.25s ease-in 0s;
 
   // Senator variant
   .node-type-senator &.messages-open {

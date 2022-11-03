@@ -1,0 +1,25 @@
+uuid: 17117d48-3dfa-4fb7-a060-f1a59a5ea2e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_promotional_banners
+    - taxonomy.vocabulary.senator
+id: taxonomy_term.senator.field_promotional_banners
+field_name: field_promotional_banners
+entity_type: taxonomy_term
+bundle: senator
+label: 'Manage Promotional Banners'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: featured_content_entref
+      display_name: entity_reference_2
+      arguments: {  }
+field_type: entity_reference

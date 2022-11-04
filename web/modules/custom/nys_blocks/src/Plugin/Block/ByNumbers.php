@@ -18,11 +18,50 @@ class ByNumbers extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    $build = [];
-    $build['nys_blocks_bythe_numbers']['#markup'] = 'Implement Senate By the Numbers Block.';
-    $build['nys_blocks_bythe_numbers']['#theme'] = 'nys_blocks_bythe_numbers';
+    $facts = [];
+    $current_year = date('Y');
+    if ($current_year % 2 == 0) {
+      $session_year = $current_year - 1;
+      $first_year   = $session_year;
+      $second_year  = substr($current_year, -2);
+    }
+    else {
+      $session_year = $current_year;
+      $first_year   = $current_year;
+      $second_year  = substr($current_year + 1, -2);
+    }
 
-    return $build;
+    // Set static status for the facts.
+    $facts[0]['status'] = 'signed';
+    $facts[1]['status'] = 'waiting';
+    $facts[2]['status'] = 'vetoed';
+
+    $bill_status = '';
+    foreach ($facts as $key => $fact) {
+      switch ($fact['status']) {
+        case 'signed':
+          $bill_status = 'SIGNED_BY_GOV';
+          break;
+
+        case 'waiting':
+          $bill_status = 'DELIVERED_TO_GOV';
+          break;
+
+        case 'vetoed':
+          $bill_status = 'VETOED';
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    return [
+      '#theme' => 'nys_blocks_bythe_numbers',
+      '#session_year' => $session_year,
+      '#first_year' => $first_year,
+      '#second_year' => $second_year,
+    ];
   }
 
 }

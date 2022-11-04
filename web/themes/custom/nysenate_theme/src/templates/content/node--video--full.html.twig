@@ -19,22 +19,22 @@
         {{ title }}
       </h1>
       <div class="c-news--head-meta">
-        {% if field_article_author %}
+        {% if content.field_article_author.0 %}
           <p class="c-news--author">
-            {{ field_article_author }}
+            {{ content.field_article_author.0 }}
           </p>
-        {% elseif field_senator %}
+        {% elseif content.field_senator_multiref.0 %}
           <p class="c-news--author">
-            {{ field_senator }}
+            {{ content.field_senator_multiref.0 }}
           </p>
         {% endif %}
         <p class="c-news--pub-date">
-          {{ field_date }}
+          {{ content.field_date.0 }}
         </p>
 
-        {% if field_issues %}
+        {% if content.field_issues.0 %}
           <ul class="nys-associated-topics">
-            {% for issue in field_issues %}
+            {% for key,issue in content.field_issues if key matches '/^\\d+$/'  %}
               <li>{{ issue }}</li>
             {% endfor %}
           </ul>
@@ -45,36 +45,36 @@
   {{ title_suffix }}
 
   <section class="c-news--body">
-    {% if field_yt %}
+    {% if content.field_yt.0 %}
       <div class="flex-video widescreen">
-        {{ field_yt }}
+        {{ content.field_yt.0 }}
       </div>
     {% endif %}
 
-    {% if field_subtitle %}
+    {% if content.field_subtitle.0 %}
       <div class="c-news--subtitle">
-        {{ field_subtitle }}
+        {{ content.field_subtitle.0 }}
       </div>
     {% endif %}
 
-    {% if body %}
+    {% if content.body.0 %}
       <div class="c-block">
-        {{ body }}
+        {{ content.body.0 }}
       </div>
     {% endif %}
 
-    {% if field_bills %}
+    {% if content.field_bills.0 %}
       <aside>
         <div class="c-container--header__top-border">
           <h2 class="c-container--title">related legislation</h2>
         </div>
-        {{ field_bills }}
+        {{ content.field_bills.0 }}
       </aside>
     {% endif %}
 
-    {% if field_chapters %}
+    {% if content.field_chapters.0 %}
       <section class="c-block">
-        {{ field_chapters }}
+        {{ content.field_chapters.0 }}
       </section>
     {% endif %}
 

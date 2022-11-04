@@ -23,6 +23,7 @@ function nys_bills_node_presave(Node $node): void {
   switch ($node->bundle()) {
     case 'resolution':
     case 'bill':
+      /* @phpstan-ignore-next-line */
       $node->path->pathauto = PathautoState::SKIP;
       break;
 

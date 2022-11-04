@@ -305,7 +305,7 @@ class UpdatesProcessor {
     // results.  Each result is a collection of tests which matched the update.
     foreach ($matches as $print_num => $results) {
       // If a bill cannot be loaded, report and skip this update.
-      if (!$bill = BillsHelper::loadBillByPrint($print_num)) {
+      if (!$bill = BillsHelper::loadBillByTitle($print_num)) {
         $this->logger->error(
           'Could not load bill @print_num while processing updates',
           ['@print_num' => $print_num]

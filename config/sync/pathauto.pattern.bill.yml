@@ -7,12 +7,12 @@ dependencies:
 id: bill
 label: Bill
 type: 'canonical_entities:node'
-pattern: 'legislation/bills/[node:field_ol_session]/[node:title]'
+pattern: 'legislation/bills/[node:field_ol_session]/[node:field_ol_base_print_no]'
 selection_criteria:
-  c0b37763-46d6-449d-bc9f-38aae58cb8e5:
+  03ca16b0-676a-4de2-9214-723ee8f002cb:
     id: 'entity_bundle:node'
     negate: false
-    uuid: c0b37763-46d6-449d-bc9f-38aae58cb8e5
+    uuid: 03ca16b0-676a-4de2-9214-723ee8f002cb
     context_mapping:
       node: node
     bundles:

@@ -1,16 +1,16 @@
 // Import site utilities.
-@import '../../global/utils/init';
+@import "../../global/utils/init";
 
 .article-node {
 
-	.nys-bill-status {
-		height: 25px;
-		margin-top: 15px;
-	}
+  .nys-bill-status {
+    height: 25px;
+    margin-top: 15px;
+  }
 
-	.nys-bill-status hr {
-		top: 2px;
-	}
+  .nys-bill-status hr {
+    top: 2px;
+  }
 }
 
 .nys-article-title {
@@ -22,121 +22,104 @@
 }
 
 /*------------------------------------
-/	NEWS:
+/  NEWS:
 /-------------------------------------*/
 // NEWS HEADER AREA
 .c-news--head,
 .c-questionnaire--head {
-	margin-bottom: 20px;
-
-	ul.links {
-
-		display: block;
-		list-style: none;
-		line-height: 25px;
-
-		li {
-			display: inline-block;
-			margin-right: 10px;
-			text-transform: uppercase;
-			font-family: $font-sans-bold;
-			white-space: nowrap;
-		}
-
-		a {
-			font-size: 12px;
-			line-height: 1em;
-			@extend .lgt-text;
-		}
-
-	}
-	.field-name-field-issues { padding: 0; }
+  margin-bottom: 20px;
 }
+
 .c-news--title {
-	margin-bottom: 15px;
-	font-family: $font-serif-regular;
-	@include font(22 62.4);
+  margin-bottom: 15px;
+  font-family: $font-serif-regular;
+  @include font(22 62.4);
 }
 
 .c-news--subtitle {
-	margin-bottom: 20px;
-	color: $grey08;
-	font-family: $font-serif-semibold;
-	@include font(18 25.2);
+  margin-bottom: 20px;
+  color: $grey08;
+  font-family: $font-serif-semibold;
+  @include font(18 25.2);
 
-	@include breakpoint($bp-sm) {
-		@include font(18 36.4);
-	}
+  @include breakpoint($bp-sm) {
+    @include font(18 36.4);
+  }
 }
 
 .c-news--head-meta {
-	@include font(12 18);
-	color: $grey04;
+  @include font(12 18);
+  color: $grey04;
 
-	@include breakpoint($bp-sm) {
-		@include font(15 18);
-	}
+  @include breakpoint($bp-sm) {
+    @include font(15 18);
+  }
 
-	& > p:not(:first-child) {
-		border-left: 1px solid $grey04;
-		padding-left: 14px;
-	}
+  & > p:not(:first-child) {
+    border-left: 1px solid $grey04;
+    padding-left: 14px;
+  }
 }
 
 .c-news--author,
 .c-news--pub-date {
-	display: inline-block;
-	margin: 0 10px 0 0;
-	text-transform: capitalize;
-	font-family: $font-sans;
-	@include font(12 18);
-	color: $grey04;
+  display: inline-block;
+  margin: 0 10px 0 0;
+  text-transform: capitalize;
+  font-family: $font-sans;
+  @include font(12 18);
+  color: $grey04;
 
-	@include breakpoint($bp-sm) {	
-		@include font(15 18);
-	}
+  @include breakpoint($bp-sm) {
+    @include font(15 18);
+  }
 
-	&:empty {
-		display: none;
-	}
+  &:empty {
+    display: none;
+  }
 }
 
 .c-news--download {
-	display: block;
-	flex-basis: 100%;
+  display: block;
+  flex-basis: 100%;
 
-	img { display: none; }
+  img {
+    display: none;
+  }
 
-	// download styles
-	.file {
-		background: none;
-		padding-left: 0;
-	
-		& > a {
-			display: block;
-			margin-top: 15px;
-			//text-transform: uppercase;
-			font-size: 12px;
-			font-family: $font-sans-bold;
-			text-decoration: none;
-			@extend .lgt-text;
-			@extend .icon-before__presskit;
-		}
-	}
+  // download styles
+  .file {
+    background: none;
+    padding-left: 0;
+
+  & > a {
+    display: block;
+    margin-top: 15px;
+    //text-transform: uppercase;
+    font-size: 12px;
+    font-family: $font-sans-bold;
+    text-decoration: none;
+    @extend .lgt-text;
+    @extend .icon-before__presskit;
+    }
+  }
 }
+
 .c-news--head .c-news--download {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 @include breakpoint($bp-sm) {
-	.c-news-download {
-		margin-bottom: 30px;
-	}
-	.c-news--head .c-news--download {
-		margin-bottom: 0;
-	}
-	.nys-associated-topics {
-    display: inline;
+  .c-news-download {
+    margin-bottom: 30px;
+  }
+
+  .c-news--head .c-news--download {
+    margin-bottom: 0;
+  }
+
+  .nys-associated-topics {
+    display: inline-flex;
     margin-top: 0;
 
     li {
@@ -146,113 +129,109 @@
 }
 
 .c-block-quoted-body {
-	padding-left: 40px;
-	border-left: 5px solid #eee;
+  padding-left: 40px;
+  border-left: 5px solid #eee;
 
-	a {
-		@extend .lgt-text;
-	}
+  a {
+    @extend .lgt-text;
+  }
 }
 
 /*------------------------------------
 / 'IN THE NEWS' elements
 /------------------------------------*/
-.c-news--body-title {
-	border-top: 1px solid $grey05;
-	padding: 10px 0 20px;
-	font-family: $font-serif;
-	font-size: 18px;
+.c-news--body .c-block p {
 
-	a {
-		@extend .lgt-text;
-	}
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:only-child {
+    margin: 0;
+  }
 }
+
+.c-news--body-title {
+  border-top: 1px solid $grey05;
+  padding: 10px 0 20px;
+  font-family: $font-serif;
+  font-size: 18px;
+
+  a {
+    @extend .lgt-text;
+  }
+}
+
 .c-in-the-news--body {
 
-	.body {
-		border-left: 5px solid $grey06;
-		padding-left: 10px;
-	}
+  .body {
+    border-left: 5px solid $grey06;
+    padding-left: 10px;
+  }
 }
 
 @include breakpoint($bp-sm) {
-
-	.nys-article-title {
+  .nys-article-title {
     margin: 0 0 30px;
     font-size: 48px;
   }
 
-	.c-news--head {
-		margin-bottom: 30px;
+  .c-news--head {
+    margin-bottom: 30px;
 
-		ul.links {
-			display: inline;
-		}
-		.field-name-field-issues {
-			display: inline-block;
-		}
-	}
-	.c-news--title {
-		font-size: 48px;
-		margin-bottom: 30px;
-	}
-	.c-news--author,
-	.c-news--pub-date,
-	.c-news--committees {
-		font-size: 15px;
-		line-height: 1.2em;
-	}
+    ul.links {
+      display: inline;
+    }
 
-	.c-news--subtitle {
-		font-size: 26px;
-	}
-	// "in the news"
-	.c-news--body-title {
-		padding: 20px 0 30px;
-		font-family: $font-serif;
-		font-size: 24px;
-	}
-	.c-in-the-news--body {
+    .field-name-field-issues {
+      display: inline-block;
+    }
+  }
 
-		.body {
-			border-left: 10px solid $grey06;
-			padding-left: 30px;
-		}
-	}
+  .c-news--title {
+    font-size: 48px;
+    margin-bottom: 30px;
+  }
+
+  .c-news--author,
+  .c-news--pub-date,
+  .c-news--committees {
+    font-size: 15px;
+    line-height: 1.2em;
+  }
+
+  .c-news--subtitle {
+    font-size: 26px;
+  }
+
+  // "in the news"
+  .c-news--body-title {
+    padding: 20px 0 30px;
+    font-family: $font-serif;
+    font-size: 24px;
+  }
+
+  .c-in-the-news--body {
+
+    .body {
+      border-left: 10px solid $grey06;
+      padding-left: 30px;
+    }
+  }
 }
 
-//About Senator Embedded Video
-// .page-node-about {
-// 	article {
-// 		.media-element {
-// 			width: 100%;
-// 			display: block;
-// 			position: relative;
-// 			padding-bottom: 52.25%;
-// 			padding-top: 59px;
-// 			height: 0;
-// 			margin-bottom: 2.2em;
-// 			iframe {
-// 				position: absolute;
-// 				top: 0;
-// 				left: 0;
-// 				width: 100% !important;
-// 				height: 100% !important;
-// 			}
-// 		}
-// 	}
-// }
-
 .node-type-webform {
-	.form-item {
-	  margin-right: 1em;
-	  input[type="text"],
-	  input[type="email"] {
-	  	height: 55px;
-	  }
-	}
-	button[type="submit"] {
-		background-color: $blue01;
-		margin: 15px 0 40px 0;
-	}
+  .form-item {
+    margin-right: 1em;
+
+    input[type="text"],
+    input[type="email"] {
+      height: 55px;
+    }
+  }
+
+  button[type="submit"] {
+    background-color: $blue01;
+    margin: 15px 0 40px 0;
+  }
 }

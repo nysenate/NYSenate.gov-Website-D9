@@ -3,10 +3,12 @@
 namespace Drupal\nys_bills;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Database\Connection;
 use Drupal\node\Entity\Node;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Helper class for nys_bills module.
@@ -21,13 +23,33 @@ class BillsHelper {
   protected $connection;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The CacheBackend Interface.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
    * Constructor class for Bills Helper.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The backend cache.
    */
-  public function __construct(Connection $connection) {
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend) {
     $this->connection = $connection;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->cache = $cache_backend;
   }
 
   /**
@@ -40,7 +62,7 @@ class BillsHelper {
       str_replace(' ', '', $bill_base_print_no);
 
     // If data is cached, return cached data.
-    if ($cache = \Drupal::cache()->get($cid)) {
+    if ($cache = $this->cache->get($cid)) {
       return $cache->data;
     }
 
@@ -67,7 +89,7 @@ class BillsHelper {
     }
 
     // Cache data based on cache ID that was set above.
-    \Drupal::cache()->set($cid, $results);
+    $this->cache->set($cid, $results);
     return $results;
   }
 
@@ -177,24 +199,24 @@ class BillsHelper {
     foreach ($cycle as $type) {
       $ret[$type] = [];
       $propname = "field_ol_{$type}_sponsor_names";
-      $language_none = LanguageInterface::LANGCODE_NOT_SPECIFIED;
-      $sponsors = json_decode($amendment->{$propname}[$language_none][0]['value']);
+
+      $sponsors = json_decode($amendment->{$propname}->value);
       foreach ($sponsors as $one_sponsor) {
         switch ($chamber) {
           case 'senate':
             $termid = $this->getSenatorTidFromMemberId($one_sponsor->memberId);
-            $ret[$type][] = (object) [
-              'memberId' => $one_sponsor->memberId,
-              'nodeId' => $termid,
-              'fullName' => $senators[$termid]['full_name'],
-            ];
+            if (!empty($termid)) {
+              $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($termid);
+              $ret[$type][] = $this->entityTypeManager->getStorage('taxonomy_term')->view($term, 'sponsor_list_bill_detail');
+            }
             break;
 
           case 'assembly':
-            $ret[$type][] = (object) [
-              'memberId' => NULL,
-              'nodeId' => NULL,
-              'fullName' => $one_sponsor->fullName,
+            $ret[$type][] = [
+              '#theme' => 'bill_sponsor_assembly',
+              '#content' => [
+                'fullName' => $one_sponsor->fullName,
+              ],
             ];
             break;
         }
@@ -242,9 +264,8 @@ class BillsHelper {
    * function get_senator_name_mapping() from D7
    */
   public function getSenatorNameMapping() {
-    $cache_service = \Drupal::cache();
     $cache_key = 'nys_utils_get_senator_name_mapping';
-    $cache = $cache_service->get($cache_key);
+    $cache = $this->cache->get($cache_key);
     if (!$cache) {
 
       $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
@@ -258,11 +279,10 @@ class BillsHelper {
           'full_name' => $term->get('field_senator_name')[0]->title ?? '',
         ];
       }
-      $cache_service->set($cache_key, $senator_mappings);
-      // If data is cached, return cached data.
-      if ($cache = \Drupal::cache()->get($cache_key)) {
-        return $cache->data;
-      }
+      $this->cache->set($cache_key, $senator_mappings);
+    }
+    else {
+      return $cache->data;
     }
   }
 
@@ -289,6 +309,148 @@ class BillsHelper {
       $preloaded[$member_id] = $this->connection->query($query, $queryargs)->fetchField();
     }
     return $preloaded[$member_id];
+  }
+
+  /**
+   * Loads identifying metadata from bill nodes specified by provided
+   * node IDs.  Identifying data consists of nid, title, session, print
+   * number, and base print number.
+   *
+   * @param int|array $nids
+   *   Node IDs to load.
+   *
+   * @return array An array of query result rows.
+   */
+  public function getBillMetadata(array $nids) {
+    $ret = [];
+
+    if (is_numeric($nids)) {
+      $nids = [$nids];
+    }
+
+    if (count($nids)) {
+      $query = $this->connection->select('node_field_data', 'n');
+      $query->leftJoin('node__field_ol_session', 'sess', 'n.nid=sess.entity_id');
+      $query->leftJoin('node__field_ol_print_no', 'pn', 'n.nid=pn.entity_id');
+      $query->leftJoin('node__field_ol_base_print_no', 'bpn', 'n.nid=bpn.entity_id');
+      $query->addField('n', 'nid');
+      $query->addField('n', 'title');
+      $query->addField('sess', 'field_ol_session_value', 'session');
+      $query->addField('pn', 'field_ol_print_no_value', 'print_num');
+      $query->addField('bpn', 'field_ol_base_print_no_value', 'base_print_num');
+      $query->condition('n.type', 'bill');
+      $query->condition('n.nid', $nids, 'IN');
+
+
+      $ret = $query->execute()->fetchAllAssoc('nid');
+    }
+    return $ret;
+  }
+
+  /**
+   * Discovers bill nodes which have been assigned a specific taxonomy
+   * term ID for their multi-session root.
+   *
+   * @param $tid int The tid of the taxonomy term.
+   *
+   * @return array An array of node IDs (empty array if none found).
+   */
+  public function loadBillsFromTid($tid) {
+    $query = $this->entityTypeManager->getStorage('node')
+      ->getQuery()
+      ->condition('type', 'bill')
+      ->condition('field_bill_multi_session_root', [$tid], 'IN');
+    $result = $query->execute();
+
+
+    return $result;
+  }
+
+
+  /**
+   * Helper function to return previous versions of a bill.
+   *
+   * @param string $prev_vers_session
+   *   OL Session.
+   * @param string $prev_vers_printno
+   *   Print Number.
+   *
+   * @return array
+   *   Array of query results.
+   */
+  public function getPrevVersions($prev_vers_session, $prev_vers_print_no) {
+    // We're using drupal_html_class() ensure that parameters have no spaces in
+    // them.
+    $cid = 'nysenate_bill_prev_versions_' .
+      str_replace(' ', '', $prev_vers_session) . '-' .
+      str_replace(' ', '', $prev_vers_print_no);
+    if ($cache = $this->cache->get($cid)) {
+      return $cache->data;
+    }
+
+    $query = $this->entityTypeManager->getStorage('node')
+      ->getQuery()
+      ->condition('type', 'bill')
+      ->condition('field_ol_session.value', $prev_vers_session)
+      ->condition('field_ol_print_no.value', $prev_vers_print_no)
+      ->range(0, 1);
+    $prev_vers_result = $query->execute();
+
+    // Cache data for later use.
+    $this->cache->set($cid, $prev_vers_result);
+
+    return $prev_vers_result;
+  }
+
+  /**
+   * Query the database for previous versions of opposite chamber bills.
+   *
+   * @param int $nid
+   *   The Node id.
+   */
+  public function getOppositeChamberPrevVersions($nid) {
+    $related_metadata = [];
+
+    // Get the multi-session root TID for the "same as" bill.
+    $query = $this->connection->select('node__field_bill_multi_session_root', 'f');
+    $query->addField('f', 'field_bill_multi_session_root_target_id');
+    $query->condition('f.bundle', 'bill');
+    $query->condition('f.deleted', 0);
+    $query->condition('f.entity_id', $nid);
+    $query->range(0, 1);
+    $same_as_tid = $query->execute()->fetchField();
+
+    // If a TID is found, add all related bills to the metadata collection.
+    if ($same_as_tid) {
+      $related_bills = $this->loadBillsFromTid($same_as_tid);
+      $metadata = $this->getBillMetadata($related_bills);
+
+      // Load all bills associated with this bill's taxonomy root.
+      $related_metadata = array_filter($metadata, function($v) {
+        return $v->print_num === $v->base_print_num;
+      });
+    }
+
+    return $related_metadata;
+
+  }
+
+  /**
+   * Finds featured legislation quote, if it exists.
+   *
+   * @param array $amended_versions
+   *   The bill amended versions.
+   */
+  public function findsFeaturedLegislationQuote($amended_versions) {
+    $amendments = [];
+    // Loop over amendments, and finds featured legislation quote, if it exists.
+    foreach($amended_versions as $r) {
+      $node = $this->entityTypeManager->getStorage('node')->load($r['nid']);
+      $amendments[$r['title']]['node'] = $node;
+      // @todo Query for quotes.
+    }
+
+    return $amendments;
   }
 
 }

@@ -78,3 +78,16 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
     ];
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function nys_bill_theme($existing, $type, $theme, $path) {
+  return [
+    'bill_sponsor_assembly' => [
+      'variables' => [
+        'content' => NULL,
+      ],
+    ],
+  ];
+}

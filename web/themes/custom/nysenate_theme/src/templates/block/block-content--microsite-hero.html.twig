@@ -18,10 +18,10 @@
 %}
 
 {% include "@nysenate_theme/hero/hero.twig" with {
-  is_collapsed: is_collapsed,
   type: 'senator',
-  senator_microsite_link: "",
-  image_hero: content.field_microsite_hero_image[0],
+  senator_microsite_link: senator_microsite_link,
+  image_hero: image_hero,
+  senator_headshot: senator_headshot,
   default_image: "",
   is_active: is_active,
   senator_name: senator_name,
@@ -30,7 +30,7 @@
   senator_party: senator_party,
   district_number: district_number,
   socials: socials,
-  user_id: 0,
-  message_senator_link: "#",
+  user_id: user_id,
+  message_senator_link: message_senator_link,
   your_dashboard_link: "#"
 } only %}

@@ -52,6 +52,10 @@ class IconManagerService implements IconManagerServiceInterface {
             $iconPrefix = 'far';
             break;
 
+          case 'thin':
+            $iconPrefix = 'fat';
+            break;
+
           case 'duotone':
             $iconPrefix = 'fad';
             break;

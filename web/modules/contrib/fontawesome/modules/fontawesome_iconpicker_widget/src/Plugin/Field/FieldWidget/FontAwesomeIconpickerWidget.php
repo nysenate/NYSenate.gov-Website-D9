@@ -72,7 +72,6 @@ class FontAwesomeIconpickerWidget extends FontAwesomeIconWidget {
       $container->get('current_user'),
       $container->get('messenger'),
       $container->get('fontawesome_iconpicker_widget.icon_manager')
-
     );
   }
 
@@ -125,11 +124,12 @@ class FontAwesomeIconpickerWidget extends FontAwesomeIconWidget {
       '#default_value' => $icon_style_default_value,
     ];
     // Get current settings.
-    $iconSettings = unserialize($items[$delta]->get('settings')->getValue());
+    $settings = $items[$delta]->get('settings')->getValue() ?? '';
+    $iconSettings = unserialize($settings);
 
     $mask_icon = '';
     $mask_style = NULL;
-    if (isset($iconSettings['masking']['mask']) && isset($iconSettings['masking']['style'])) {
+    if ((isset($iconSettings['masking']['mask']) && $iconSettings['masking']['mask'] !== '') && (isset($iconSettings['masking']['style']) && $iconSettings['masking']['style'] !== '')) {
       $mask_style = $iconSettings['masking']['style'];
       $mask_icon = $mask_style . ' fa-' . $iconSettings['masking']['mask'];
     }
@@ -159,6 +159,7 @@ class FontAwesomeIconpickerWidget extends FontAwesomeIconWidget {
   public static function validateIconName($element, FormStateInterface $form_state) {
     $iconManager = \Drupal::service('fontawesome_iconpicker_widget.icon_manager');
     $fontAwesomeManager = \Drupal::service('fontawesome.font_awesome_manager');
+    $configuration_settings = \Drupal::config('fontawesome.settings');
     $value = $element['#value'];
     if (strlen($value) == 0) {
       $form_state->setValueForElement($element, '');
@@ -168,7 +169,7 @@ class FontAwesomeIconpickerWidget extends FontAwesomeIconWidget {
     $icon_base = $iconManager->getIconBaseNameFromClass($value);
     $iconData = $fontAwesomeManager->getIconMetadata($icon_base);
 
-    if (!isset($iconData['name'])) {
+    if (!isset($iconData['name']) && !$configuration_settings->get('bypass_validation')) {
       $form_state->setError($element, t("Invalid icon"));
     }
   }

@@ -14,12 +14,12 @@ class ViewsBulkEditModifyEntityValuesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'views',
     'views_bulk_operations',
@@ -30,7 +30,7 @@ class ViewsBulkEditModifyEntityValuesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create some nodes for testing.
@@ -115,12 +115,13 @@ class ViewsBulkEditModifyEntityValuesTest extends BrowserTestBase {
       'views_bulk_operations_bulk_form[1]' => TRUE,
       'views_bulk_operations_bulk_form[2]' => TRUE,
     ];
-    $this->drupalPostForm('views-bulk-operations-test-advanced', $edit, t('Apply to selected items'));
+    $this->drupalGet('views-bulk-operations-test-advanced');
+    $this->submitForm($edit, t('Apply to selected items'));
 
     // Post the configuration form: modify status and text value field on the
     // article content type.
     $expected_text_value = 'some text';
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'node[article][_field_selector][status]' => TRUE,
       'node[article][status][value]' => FALSE,
       'node[page][_field_selector][status]' => TRUE,

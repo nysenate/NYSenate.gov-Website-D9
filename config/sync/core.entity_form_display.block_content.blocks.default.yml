@@ -1,0 +1,33 @@
+uuid: 356de900-3a7b-432c-b56b-6f1fe630e281
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.blocks
+    - field.field.block_content.blocks.field_block
+  module:
+    - block_field
+id: block_content.blocks.default
+targetEntityType: block_content
+bundle: blocks
+mode: default
+content:
+  field_block:
+    type: block_field_default
+    weight: 1
+    region: content
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  langcode: true

@@ -1,0 +1,30 @@
+uuid: 0eae5fd2-1fb0-4df7-9164-72754abcc510
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.private_message.field_petition
+    - node.type.petition
+  module:
+    - private_message
+id: private_message.private_message.field_petition
+field_name: field_petition
+entity_type: private_message
+bundle: private_message
+label: Petition
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      petition: petition
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

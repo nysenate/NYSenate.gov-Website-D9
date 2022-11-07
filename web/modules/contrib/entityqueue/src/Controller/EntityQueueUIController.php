@@ -159,7 +159,7 @@ class EntityQueueUIController extends ControllerBase {
    */
   public function addForm(EntityQueueInterface $entity_queue) {
     $subqueue = $this->entityTypeManager()->getStorage('entity_subqueue')->create(['queue' => $entity_queue->id()]);
-    return $this->entityFormBuilder()->getForm($subqueue);
+    return $this->entityFormBuilder()->getForm($subqueue, 'add');
   }
 
   /**
@@ -273,4 +273,5 @@ class EntityQueueUIController extends ControllerBase {
 
     return AccessResult::forbidden();
   }
+
 }

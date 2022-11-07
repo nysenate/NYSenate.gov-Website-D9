@@ -5,11 +5,14 @@
  * Drupal integration with Font Awesome, the iconic font for use with Bootstrap.
  */
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
+use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Implements hook_help().
@@ -77,9 +80,7 @@ function fontawesome_library_info_alter(&$libraries, $extension) {
           $librarySettings = reset($values['js']);
           $librarySource = key($values['js']);
           // Font Awesome requires this script tag to enable pseudo elements.
-          $librarySettings['attributes'] = [
-            'data-search-pseudo-elements' => TRUE,
-          ];
+          $librarySettings['attributes']['data-search-pseudo-elements'] = TRUE;
           $values['js'][$librarySource] = $librarySettings;
         }
       }
@@ -299,6 +300,7 @@ function fontawesome_theme($existing, $type, $theme, $path) {
     'fontawesomeicon' => [
       'variables' => [
         'tag' => 'i',
+        'iconset' => '',
         'name' => NULL,
         'style' => NULL,
         'settings' => NULL,
@@ -330,7 +332,7 @@ function fontawesome_theme_registry_alter(&$theme_registry) {
    * By default, Drupal 8 does not include theme suggestions from inside the
    * module in which they were created, so we must add them manually here.
    */
-  $path = drupal_get_path('module', 'fontawesome');
+  $path = \Drupal::service('extension.list.module')->getPath('fontawesome');
   $fontawesome_templates = drupal_find_theme_templates($theme_registry, '.html.twig', $path);
   foreach ($fontawesome_templates as &$fontawesome_template) {
     $fontawesome_template['type'] = 'module';
@@ -473,4 +475,41 @@ function fontawesome_editor_js_settings_alter(array &$settings) {
 
   // Attach the list of allowed empty tags.
   $settings['editor']['fontawesome']['allowedEmptyTags'] = ['i', 'span'];
+}
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function fontawesome_migration_plugins_alter(array &$migrations) {
+  // Check if the module is enabled on source site.
+  try {
+    $variable_source = \Drupal::service('plugin.manager.migration')
+      ->createStubMigration([
+        'id' => 'foo',
+        'idMap' => ['plugin' => 'null'],
+        'source' => [
+          'plugin' => 'variable',
+          'ignore_map' => TRUE,
+        ],
+        'destination' => ['plugin' => 'null'],
+      ])
+      ->getSourcePlugin();
+    if (!$variable_source instanceof DrupalSqlBase) {
+      return;
+    }
+    $variable_source->checkRequirements();
+  }
+  catch (PluginException $e) {
+    // The 'variable' source plugin isn't available because Migrate Drupal
+    // isn't enabled. There is nothing we can do.
+    return;
+  }
+  catch (RequirementsException $e) {
+    // The source database is not a Drupal 7 database.
+    return;
+  }
+  $system_data = $variable_source->getSystemData();
+  if (empty($system_data['module']['fontawesome']['status'])) {
+    unset($migrations['fontawesome_settings']);
+  }
 }

@@ -13,6 +13,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionInterface;
 use Drupal\views_bulk_operations\ViewsBulkOperationsBatch;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Defines VBO action processor.
@@ -399,7 +400,7 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
    * @param array $context
    *   The context to be set.
    */
-  protected function setActionContext(array $context): void {
+  protected function setActionContext(array &$context): void {
     if (isset($this->action) && \method_exists($this->action, 'setContext')) {
       $this->action->setContext($context);
     }
@@ -500,7 +501,7 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
           ];
         }
         if (!\array_key_exists('message', $result)) {
-          throw new \Exception(\sprintf('Result message not provided by the %s action.', $this->action->pluginId()));
+          throw new \Exception(\sprintf('Result message not provided by the %s action.', $this->action->getPluginId()));
         }
         $result['message'] = (string) $result['message'];
       }
@@ -558,7 +559,7 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
   /**
    * {@inheritdoc}
    */
-  public function executeProcessing(array &$data, $view = NULL): void {
+  public function executeProcessing(array &$data, $view = NULL): RedirectResponse {
     if (empty($data['prepopulated']) && $data['exclude_mode'] && empty($data['exclude_list'])) {
       $data['exclude_list'] = $data['list'];
       $data['list'] = [];
@@ -577,10 +578,19 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
     if ($data['batch']) {
       $batch = ViewsBulkOperationsBatch::getBatch($data);
       \batch_set($batch);
+      $redirect_response = \batch_process($data['redirect_url']);
     }
     else {
-      // Populate and process queue.
       $this->initialize($data, $view);
+
+      // Ensure compatibility with a Batch API process.
+      $context = [
+        'sandbox' => [],
+        'results' => [],
+      ];
+      $this->setActionContext($context);
+
+      // Populate and process queue.
       if (empty($data['list'])) {
         $data['list'] = $this->getPageList(0);
       }
@@ -589,9 +599,14 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
         $batch_results = $this->process();
       }
 
-      $results = $this->processResults($batch_results);
-      $data['finished_callback'](TRUE, $results, []);
+      $results = $this->processResults($batch_results, $context['results']);
+      $redirect_response = $data['finished_callback'](TRUE, $results, []);
+      if ($redirect_response === NULL) {
+        $redirect_response = new RedirectResponse($data['redirect_url']->setAbsolute()->toString());
+      }
     }
+
+    return $redirect_response;
   }
 
 }

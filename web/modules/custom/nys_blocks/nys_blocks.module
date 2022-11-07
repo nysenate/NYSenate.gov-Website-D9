@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains custom blocks.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nys_blocks_theme($existing, $type, $theme, $path):array {
+  return [
+    'nys_blocks_senate_works' => [
+      'variables' => [
+        'display_name' => NULL,
+      ],
+    ],
+    'nys_blocks_bythe_numbers' => [
+      'variables' => [
+        'display_name' => NULL,
+        'first_year' => NULL,
+        'second_year' => NULL,
+        'session_year' => NULL,
+      ],
+    ],
+  ];
+}

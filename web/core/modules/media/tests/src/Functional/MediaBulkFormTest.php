@@ -72,12 +72,14 @@ class MediaBulkFormTest extends MediaFunctionalTestBase {
 
     // Check the operations are accessible to the logged in user.
     $this->drupalGet('test-media-bulk-form');
-    // Current available actions: Delete, Save, Publish, Unpublish.
+    // Current available actions: Delete, Save, Publish, Unpublish, Update
+    // Metadata.
     $available_actions = [
       'media_delete_action',
       'media_publish_action',
       'media_save_action',
       'media_unpublish_action',
+      'media_update_metadata',
     ];
     foreach ($available_actions as $action_name) {
       $assert_session->optionExists('action', $action_name);

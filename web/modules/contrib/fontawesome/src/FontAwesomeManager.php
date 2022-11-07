@@ -2,6 +2,7 @@
 
 namespace Drupal\fontawesome;
 
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
@@ -43,6 +44,13 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
   protected $fileSystem;
 
   /**
+   * Module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
    * Constructs a FontAwesomeManager object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $data_cache
@@ -54,11 +62,12 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system helper.
    */
-  public function __construct(CacheBackendInterface $data_cache, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, FileSystemInterface $file_system) {
+  public function __construct(CacheBackendInterface $data_cache, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, FileSystemInterface $file_system, ModuleExtensionList $module_extension_list) {
     $this->dataCache = $data_cache;
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
     $this->fileSystem = $file_system;
+    $this->moduleExtensionList = $module_extension_list;
   }
 
   /**
@@ -249,7 +258,7 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
     $metadataFile = $this->fileSystem->realpath(DRUPAL_ROOT . '/libraries/fontawesome/metadata/categories.yml');
     // If we can't load the local file, use the included module icons file.
     if (!file_exists($metadataFile)) {
-      $metadataFile = drupal_get_path('module', 'fontawesome') . '/metadata/categories.yml';
+      $metadataFile = $this->moduleExtensionList->getPath('fontawesome') . '/metadata/categories.yml';
     }
     return $metadataFile;
   }

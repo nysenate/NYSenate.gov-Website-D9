@@ -17,12 +17,12 @@ class EntityQueueCrudTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['entityqueue', 'system', 'user', 'node'];
+  protected static $modules = ['entityqueue', 'system', 'user', 'node'];
 
   /**
    * {@inheritdoc}
    */
-  public function setup() {
+  public function setup(): void {
     parent::setUp();
     $this->installEntitySchema('entity_subqueue');
   }

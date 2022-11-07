@@ -12,7 +12,7 @@
    * @type {Drupal~behavior}
    */
 
-  Drupal.behaviors.accordion = {
+  Drupal.behaviors.nysenateAccordion = {
     attach: function attach(context) {
       var self = this;
       var $accordions = $('.nysenate-accordion', context);

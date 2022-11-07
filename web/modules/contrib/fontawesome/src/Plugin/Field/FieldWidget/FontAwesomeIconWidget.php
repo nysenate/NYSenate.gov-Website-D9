@@ -153,6 +153,17 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       '#default_value' => $items[$delta]->get('style')->getValue() ?? array_keys($style_options)[0],
     ];
 
+    // Allow user to determine icon set.
+    $element['settings']['iconset'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Icon Set'),
+      '#description' => $this->t('Choose the Font Awesome icon set'),
+      '#options' => [
+        '' => $this->t('Classic'),
+        'fa-sharp' => $this->t('Sharp'),
+      ],
+      '#default_value' => isset($iconSettings['iconset']) ? $iconSettings['iconset'] : '',
+    ];
     // Allow user to determine size.
     $element['settings']['size'] = [
       '#type' => 'select',

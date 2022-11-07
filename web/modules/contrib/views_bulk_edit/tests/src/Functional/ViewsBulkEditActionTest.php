@@ -27,7 +27,7 @@ class ViewsBulkEditActionTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['views_bulk_edit', 'node_test_views'];
+  protected static $modules = ['views_bulk_edit', 'node_test_views'];
 
   /**
    * Views used by this test.
@@ -39,7 +39,7 @@ class ViewsBulkEditActionTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']) {
+  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']): void {
     parent::setUp($import_test_views, $modules);
     $this->createContentType(['type' => 'page', 'name' => 'Page']);
     $this->createContentType(['type' => 'article', 'name' => 'Article']);

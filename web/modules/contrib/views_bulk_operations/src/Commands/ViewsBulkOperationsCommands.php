@@ -80,9 +80,6 @@ class ViewsBulkOperationsCommands extends DrushCommands {
    * @param array $options
    *   (optional) An array of options.
    *
-   * @return string
-   *   The summary message.
-   *
    * @command views:bulk-operations:execute
    *
    * @option display-id
@@ -291,9 +288,9 @@ class ViewsBulkOperationsCommands extends DrushCommands {
    * @return mixed
    *   NULL or value of a specific timer if set.
    */
-  protected function timer($debug = TRUE, $id = NULL) {
+  protected function timer($debug = TRUE, $id = NULL): ?float {
     if (!$debug) {
-      return;
+      return NULL;
     }
 
     static $timers = [];
@@ -317,6 +314,8 @@ class ViewsBulkOperationsCommands extends DrushCommands {
         $timers[$id] = \microtime(TRUE);
       }
     }
+
+    return NULL;
   }
 
   /**
@@ -339,7 +338,7 @@ class ViewsBulkOperationsCommands extends DrushCommands {
    *
    * Overrides the one from the trait and uses Drush logger.
    */
-  public static function message($message = NULL, $type = 'status', $repeat = TRUE) {
+  public static function message($message = NULL, $type = 'status', $repeat = TRUE): void {
     // Status type no longer exists, mapping required.
     if ($type === 'status') {
       $type = LogLevel::INFO;

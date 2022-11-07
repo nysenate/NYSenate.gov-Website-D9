@@ -102,7 +102,7 @@
     // Get the current body of text.
     let htmlBody = thisEditor.editor.getData();
     // Turn the SVGs back into their original icons.
-    htmlBody = htmlBody.replace(/<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<(span|i).*?<\/(span|i)>).*s?-->/g, '$1');
+    htmlBody = htmlBody.replace(/<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<(span|i).*?<\/(span|i)>).*?s?-->/g, '$1');
     // Set the body to the new value.
     thisEditor.editor.setData(htmlBody);
   };

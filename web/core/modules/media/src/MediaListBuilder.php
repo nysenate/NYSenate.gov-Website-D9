@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a listing of media items.
@@ -157,6 +158,23 @@ class MediaListBuilder extends EntityListBuilder {
       $query->pager($this->limit);
     }
     return $query->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+    if ($entity->access('update')) {
+      $operations['update_metadata'] = [
+        'title' => t('Update metadata'),
+        'url' => $this->ensureDestination(new Url('media.update_metadata', [
+          'media' => $entity->id(),
+        ])),
+        'weight' => 150,
+      ];
+    }
+    return $operations;
   }
 
 }

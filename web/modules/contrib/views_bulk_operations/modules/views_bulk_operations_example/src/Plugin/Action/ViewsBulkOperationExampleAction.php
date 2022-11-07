@@ -72,14 +72,15 @@ class ViewsBulkOperationExampleAction extends ViewsBulkOperationsActionBase impl
    *
    * @param array $form
    *   Form array.
-   * @param \Drupal\views_bulk_operations_example\Plugin\Action\Drupal\Core\Form\FormStateInterface $form_state The form state object.
+   * @param \Drupal\views_bulk_operations_example\Plugin\Action\Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state object.
    *
    * @return array
    *   The configuration form.
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form['example_config_setting'] = [
-      '#title' => \t('Example setting pre-execute'),
+      '#title' => $this->t('Example setting pre-execute'),
       '#type' => 'textfield',
       '#default_value' => $form_state->getValue('example_config_setting'),
     ];
@@ -94,7 +95,8 @@ class ViewsBulkOperationExampleAction extends ViewsBulkOperationsActionBase impl
    *
    * @param array $form
    *   Form array.
-   * @param \Drupal\views_bulk_operations_example\Plugin\Action\Drupal\Core\Form\FormStateInterface $form_state The form state object.
+   * @param \Drupal\views_bulk_operations_example\Plugin\Action\Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state object.
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     // This is not required here, when this method is not defined,
@@ -107,8 +109,8 @@ class ViewsBulkOperationExampleAction extends ViewsBulkOperationsActionBase impl
    * {@inheritdoc}
    */
   public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
-    // If certain fields are updated, access should be checked against them as well.
-    // @see Drupal\Core\Field\FieldUpdateActionBase::access().
+    // If certain fields are updated, access should be checked against them
+    // as well. @see Drupal\Core\Field\FieldUpdateActionBase::access().
     return $object->access('update', $account, $return_as_object);
   }
 

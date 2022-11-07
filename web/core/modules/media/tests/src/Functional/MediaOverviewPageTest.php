@@ -139,6 +139,9 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $delete_link1 = $assert_session->elementExists('css', 'td.views-field-operations li.delete a', $row1);
     $this->assertSame('Delete', $delete_link1->getText());
     $assert_session->linkByHrefExists('/media/' . $media1->id() . '/delete');
+    $update_metadata_link1 = $assert_session->elementExists('css', 'td.views-field-operations li.update-metadata a', $row1);
+    $this->assertSame('Update metadata', $update_metadata_link1->getText());
+    $assert_session->linkByHrefExists('/media/' . $media1->id() . '/update-metadata');
 
     // Make the user the owner of the unpublished media item and assert the
     // media item is only visible with the 'view own unpublished media'

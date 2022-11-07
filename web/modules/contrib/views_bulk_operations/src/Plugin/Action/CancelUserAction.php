@@ -47,7 +47,8 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
    *   The plugin Id.
    * @param mixed $plugin_definition
    *   Plugin definition.
-   * @param \Drupal\views_bulk_operations\Plugin\Action\Drupal\Core\Session\AccountInterface $currentUser The current user.
+   * @param \Drupal\views_bulk_operations\Plugin\Action\Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory object.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
@@ -103,13 +104,29 @@ class CancelUserAction extends ViewsBulkOperationsActionBase implements Containe
         ]);
       }
 
-      // Cancel the account.
-      \_user_cancel($this->configuration, $account, $this->configuration['user_cancel_method']);
+      // Finish the batch and actually cancel the account.
+      $batch = [
+        'title' => $this->t('Cancelling user account'),
+        'operations' => [
+          [
+            '_user_cancel',
+            [
+              $this->configuration,
+              $account,
+              $this->configuration['user_cancel_method'],
+            ],
+          ],
+        ],
+      ];
 
-      // If current user was cancelled, logout.
-      if ($account->id() == $this->currentUser->id()) {
-        \_user_cancel_session_regenerate();
+      // After cancelling account, ensure that user is logged out.
+      if ($account->id() == \Drupal::currentUser()->id()) {
+        // Batch API stores data in the session, so use the finished operation
+        // to manipulate the current user's session id.
+        $batch['finished'] = '_user_cancel_session_regenerate';
       }
+
+      \batch_set($batch);
     }
   }
 

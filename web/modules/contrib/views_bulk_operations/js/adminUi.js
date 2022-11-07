@@ -18,6 +18,8 @@
 
   /**
    * Callback used in {@link Drupal.behaviors.views_bulk_operations}.
+   *
+   * @param {object} $element
    */
   Drupal.viewsBulkOperationsUi = function (element) {
     var $uiElement = $(element);

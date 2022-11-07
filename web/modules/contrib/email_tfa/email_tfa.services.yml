@@ -1,0 +1,6 @@
+services:
+    tfa_event_subscriber:
+        class: Drupal\email_tfa\EventSubscriber\EmailTfaSubscriber
+        arguments: ['@current_user', '@config.factory', '@current_route_match' ,'@tempstore.private' , '@messenger' , '@request_stack' ,'@plugin.manager.mail' ,'@language_manager' ,'@module_handler']
+        tags:
+            - {name: event_subscriber}

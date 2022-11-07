@@ -53,6 +53,18 @@ entityqueue_handler_configuration:
 entityqueue_handler_configuration.*:
   type: entityqueue_handler_configuration
 
+# Schema for the dragtable widget.
+field.widget.settings.entityqueue_dragtable:
+  type: field.widget.settings.entity_reference_autocomplete
+  label: 'Entityqueue dragtable widget'
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to entity'
+    link_to_edit_form:
+      type: boolean
+      label: 'Link to edit form'
+
 views.relationship.entity_queue:
   type: views_relationship
   label: 'Entity queue'

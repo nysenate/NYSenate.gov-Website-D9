@@ -5,6 +5,7 @@
  *
  * Available variables:
  * - tag: the HTML tag being used to create the icon.
+ * - iconset: the name of the iconset being used. Blank for classic.
  * - icon: the name of the icon being used for templating.
  * - style: the Font Awesome style for the icon.
  * - settings: the additional Font Awesome style settings.
@@ -15,6 +16,14 @@
  * @ingroup themeable
  */
 #}
+{%
+  set classes = [
+    iconset,
+    style,
+    name,
+    settings,
+  ]
+%}
 <div class="fontawesome-icon">
-  <{{tag }} class="{{ style }} {{ name }} {{ settings }}" data-fa-transform="{{ transforms }}" data-fa-mask="{{ mask }}" style="{{ css }}"></{{ tag }}>
+  <{{tag }}{{ attributes.addClass(classes) }} data-fa-transform="{{ transforms }}" data-fa-mask="{{ mask }}" style="{{ css }}"></{{ tag }}>
 </div>

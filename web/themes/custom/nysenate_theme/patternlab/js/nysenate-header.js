@@ -93,7 +93,7 @@
         } else {
           $(window).scroll(function () {
             currentTop = $(this).scrollTop();
-            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar);
+            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, 'hide-actionbar');
             previousTop = $(document).scrollTop();
           });
         }
@@ -102,6 +102,15 @@
         nav.prependTo('.page').css({
           'z-index': '100'
         });
+
+        if (self.isOpenData()) {
+          origActionBar = nav.find('.c-actionbar');
+          actionBar = origActionBar.clone();
+          actionBar.appendTo(nav);
+          origActionBar.css('visibility', 'hidden');
+          actionBar.appendTo(nav).removeClass('hidden');
+        }
+
         menu = nav.find('.c-nav--wrap');
         headerBar = nav.find('.c-header-bar');
         mobileNavToggle = nav.find('.js-mobile-nav--btn');
@@ -123,7 +132,7 @@
         } else {
           $(window).scroll(function () {
             currentTop = $(this).scrollTop();
-            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar);
+            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, self.isOpenData() ? 'show-actionbar' : 'hide-action-bar');
             previousTop = $(document).scrollTop();
           });
         }
@@ -140,17 +149,16 @@
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
       this.checkMenuState(menu, currentTop, previousTop);
     },
-    basicScroll: function basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar) {
-      // homepage NOT in session has different actionbar behavior
-      // if(this.isHomepage() && !this.isInSession()) {
+    basicScroll: function basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, toggleActionBar) {
       if (origActionBar) {
         if (this.isMovingDown(currentTop, previousTop) && currentTop + nav.outerHeight() >= origActionBar.offset().top) {
           actionBar.removeClass('hidden');
         } else if (this.isMovingUp(currentTop, previousTop) && currentTop <= origActionBar.offset().top) {
-          actionBar.addClass('hidden');
+          if (toggleActionBar !== 'show-actionbar') {
+            actionBar.addClass('hidden');
+          }
         }
-      } // }
-
+      }
 
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
       this.checkMenuState(menu, currentTop, previousTop);
@@ -163,7 +171,7 @@
 
       var heroHeight = origNav.outerHeight() - menu.outerHeight() - $('.c-senator-hero--contact-btn').outerHeight() - headerBar.outerHeight() - nav.outerHeight();
 
-      if ($(window).width() < 760) {
+      if ($(window).width() < 769) {
         if (this.isMovingDown(currentTop, previousTop) && currentTop >= origNav.outerHeight()) {
           actionBar.removeClass('hidden');
           this.checkTopBarState(currentTop, previousTop, headerBar, nav);
@@ -186,7 +194,7 @@
         } else if (currentTop >= heroHeight) {
           jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
           actionBar.removeClass('hidden');
-          headerBar.removeClass('collapsed');
+          headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
         }
       }
@@ -272,6 +280,9 @@
     },
     isSenatorLanding: function isSenatorLanding(origNav) {
       return this.isMicroSitePage() && !origNav.hasClass('l-header__collapsed');
+    },
+    isOpenData: function isOpenData() {
+      return $('.open-data-section').length > 0;
     }
   };
 }(document, Drupal, jQuery);

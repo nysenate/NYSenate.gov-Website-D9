@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
+use Drupal\system\Entity\Action;
 
 /**
  * Implements hook_removed_post_updates().
@@ -32,5 +33,20 @@ function media_post_update_modify_base_field_author_override() {
     ->execute();
   foreach (BaseFieldOverride::loadMultiple($uid_fields) as $base_field_override) {
     $base_field_override->setDefaultValueCallback('Drupal\media\Entity\Media::getDefaultEntityOwner')->save();
+  }
+}
+
+/**
+ * Install the 'Update metadata' action.
+ */
+function media_post_update_install_update_metadata_action() {
+  if (!Action::load('media_update_metadata')) {
+    Action::create([
+      'id' => 'media_update_metadata',
+      'label' => 'Update metadata',
+      'type' => 'media',
+      'plugin' => 'media_update_metadata',
+    ])
+      ->save();
   }
 }

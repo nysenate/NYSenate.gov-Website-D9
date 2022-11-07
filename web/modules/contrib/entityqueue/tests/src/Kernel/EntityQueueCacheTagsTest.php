@@ -20,12 +20,12 @@ class EntityQueueCacheTagsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field', 'filter', 'node', 'text', 'user', 'system', 'views', 'entityqueue', 'entityqueue_test'];
+  protected static $modules = ['field', 'filter', 'node', 'text', 'user', 'system', 'views', 'entityqueue', 'entityqueue_test'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installSchema('node', ['node_access']);

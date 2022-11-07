@@ -75,12 +75,14 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    microsite_type
   ]
 %}
 {{ attach_library('classy/node') }}
 <article{{ attributes.addClass(classes) }}>
 
   {{ title_prefix }}
+
   {% if microsite_type == 'about' %}
     {% if title %}
       <h2 class="c-subpage-header--title">
@@ -94,9 +96,14 @@
       <span class="u-tablet-plus">{{ party }}</span>
     </p>
     <p class="c-subpage-header--subtitle03">{{ district_name }}</p>
-
+  {% elseif microsite_type == 'events' or microsite_type == 'legislation' or microsite_type == 'newsroom' %}
+    {% if title %}
+      <h2 class="nys-title">
+        {{ title }}
+      </h2>
+    {% endif %}
   {% endif %}
-  
+
   {{ title_suffix }}
 
   <div{{ content_attributes.addClass('node__body', 'container') }}>
@@ -106,8 +113,11 @@
   {% if display_submitted %}
     <footer class="node__meta">
       {{ author_picture }}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+      <div{{author_attributes.addClass('node__submitted')}}>
+        {% trans %}Submitted by
+        {{ author_name }}
+        on
+        {{ date }}{% endtrans %}
         {{ metadata }}
       </div>
     </footer>

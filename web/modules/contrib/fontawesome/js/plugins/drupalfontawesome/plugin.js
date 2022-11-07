@@ -80,7 +80,7 @@
   Drupal.FontAwesome.svgToTags = function (thisEditor) {
     var htmlBody = thisEditor.editor.getData();
 
-    htmlBody = htmlBody.replace(/<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<(span|i).*?<\/(span|i)>).*\s?-->/g, '$1');
+    htmlBody = htmlBody.replace(/<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<(span|i).*?<\/(span|i)>).*?\s?-->/g, '$1');
 
     thisEditor.editor.setData(htmlBody);
   };

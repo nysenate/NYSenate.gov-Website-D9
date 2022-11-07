@@ -15,7 +15,7 @@ class ActionsPermissionsEventSubscriber implements EventSubscriberInterface {
 
   // Subscribe to the VBO event with low priority
   // to let other modules alter requirements first.
-  const PRIORITY = -999;
+  private const PRIORITY = -999;
 
   /**
    * {@inheritdoc}

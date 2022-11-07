@@ -76,7 +76,8 @@ class ViewsBulkOperationsAdvancedTestAction extends ViewsBulkOperationsActionBas
    *
    * @param array $form
    *   Form array.
-   * @param \Drupal\views_bulk_operations_test\Plugin\Action\Drupal\Core\Form\FormStateInterface $form_state The form state object.
+   * @param \Drupal\views_bulk_operations_test\Plugin\Action\Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state object.
    *
    * @return array
    *   The configuration form.

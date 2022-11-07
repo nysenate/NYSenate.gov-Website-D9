@@ -377,7 +377,7 @@ trait BulkEditFormTrait {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form_state object.
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $storage = $form_state->getStorage();
     $bundle_data = $storage['vbe_entity_bundles_data'];
 

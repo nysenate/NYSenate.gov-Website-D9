@@ -37,37 +37,31 @@ class ViewsBulkOperationsBulkForm extends FieldPluginBase implements CacheableDe
 
   /**
    * Object that gets the current view data.
-   *
    */
   protected ViewsbulkOperationsViewDataInterface $viewData;
 
   /**
    * Views Bulk Operations action manager.
-   *
    */
   protected ViewsBulkOperationsActionManager $actionManager;
 
   /**
    * Views Bulk Operations action processor.
-   *
    */
   protected ViewsBulkOperationsActionProcessorInterface $actionProcessor;
 
   /**
    * The tempstore service.
-   *
    */
   protected PrivateTempStoreFactory $tempStoreFactory;
 
   /**
    * The current user object.
-   *
    */
   protected AccountInterface $currentUser;
 
   /**
    * The request stack.
-   *
    */
   protected RequestStack $requestStack;
 
@@ -200,7 +194,7 @@ class ViewsBulkOperationsBulkForm extends FieldPluginBase implements CacheableDe
    * @param array $bulk_form_keys
    *   The calculated bulk form keys.
    */
-  protected function updateTempstoreData(?array $bulk_form_keys = NULL): void {
+  protected function updateTempstoreData(array $bulk_form_keys = NULL): void {
     // Initialize tempstore object and get data if available.
     $this->tempStoreData = $this->getTempstoreData($this->view->id(), $this->view->current_display);
 
@@ -825,7 +819,7 @@ class ViewsBulkOperationsBulkForm extends FieldPluginBase implements CacheableDe
    * Currently not used due to #2879310.
    *
    * @return mixed[]
-   *  Form element.
+   *   Form element.
    */
   public static function viewsFormAjax(array $form, FormStateInterface $form_state): array {
     $trigger = $form_state->getTriggeringElement();
@@ -960,8 +954,8 @@ class ViewsBulkOperationsBulkForm extends FieldPluginBase implements CacheableDe
       // Or process rows here and now.
       else {
         $this->deleteTempstoreData();
-        $this->actionProcessor->executeProcessing($this->tempStoreData, $this->view);
-        $form_state->setRedirectUrl($this->tempStoreData['redirect_url']);
+        $redirect_response = $this->actionProcessor->executeProcessing($this->tempStoreData, $this->view);
+        $form_state->setRedirectUrl($redirect_response->getTargetUrl());
       }
     }
   }

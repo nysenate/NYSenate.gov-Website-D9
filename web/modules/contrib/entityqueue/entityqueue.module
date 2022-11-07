@@ -100,11 +100,8 @@ function entityqueue_entity_delete(EntityInterface $entity) {
 
     // Check if the entity is referenced in a subqueue.
     foreach ($subqueues as $subqueue) {
-      $items = $subqueue->get('items')->getValue();
-      if (($item_key = array_search($entity->id(), array_column($items, 'target_id'))) !== FALSE) {
-        unset($items[$item_key]);
-        $subqueue->set('items', $items);
-        $subqueue->save();
+      if ($subqueue->hasItem($entity)) {
+        $subqueue->removeItem($entity)->save();
       }
     }
   }

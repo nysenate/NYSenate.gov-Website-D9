@@ -20,7 +20,7 @@ class DrupalFontAwesome extends CKEditorPluginBase {
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'fontawesome') . '/js/plugins/drupalfontawesome/plugin.js';
+    return \Drupal::service('extension.list.module')->getPath('fontawesome') . '/js/plugins/drupalfontawesome/plugin.js';
   }
 
   /**
@@ -48,7 +48,7 @@ class DrupalFontAwesome extends CKEditorPluginBase {
     return [
       'DrupalFontAwesome' => [
         'label' => $this->t('Font Awesome'),
-        'image' => drupal_get_path('module', 'fontawesome') . '/js/plugins/drupalfontawesome/icons/drupalfontawesome.png',
+        'image' => \Drupal::service('extension.list.module')->getPath('fontawesome') . '/js/plugins/drupalfontawesome/icons/drupalfontawesome.png',
       ],
     ];
   }

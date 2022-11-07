@@ -81,9 +81,14 @@ class EntityQueueForm extends BundleEntityFormBase {
     $form = parent::form($form, $form_state);
     $queue = $this->entity;
 
-    $form['#title'] = $this->t('Configure <em>@queue</em> entity queue', [
-      '@queue' => $queue->label(),
-    ]);
+    if ($this->operation === 'add') {
+      $form['#title'] = $this->t('Add entity queue');
+    }
+    else {
+      $form['#title'] = $this->t('Configure <em>@queue</em> entity queue', [
+        '@queue' => $queue->label(),
+      ]);
+    }
 
     // Default to nodes as the queue target entity type.
     $target_entity_type_id = $queue->getTargetEntityTypeId() ?: 'node';

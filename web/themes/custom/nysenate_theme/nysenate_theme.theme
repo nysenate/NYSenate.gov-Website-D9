@@ -2922,6 +2922,24 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__petition(&$variables) {
+  $variables['image_caption'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node->get('field_senator_multiref')->isEmpty()) {
+    $tid = $node->get('field_senator_multiref')->first()->getString() ?? '';
+    if (!empty($tid)) {
+      $senatorName = Term::load($tid)->get('name')->value;
+      $variables['field_senator'] = $senatorName;
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_node__TYPE().
  *
  * Create the variables needed for the Transcript content type.

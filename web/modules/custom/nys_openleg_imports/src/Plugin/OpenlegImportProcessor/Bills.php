@@ -120,6 +120,7 @@ class Bills extends ImportProcessorBase {
       'field_ol_sponsor' => BillHelper::findSenatorFromMember($sponsor),
       'field_ol_sponsor_name' => $sponsor->shortName ?? '',
       'field_ol_summary' => $result->summary,
+      'field_ol_version' => $item->version ?? '',
     ];
 
     // For bills only.

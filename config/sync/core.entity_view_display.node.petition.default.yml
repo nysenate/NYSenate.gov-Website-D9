@@ -44,7 +44,7 @@ content:
     label: above
     settings:
       timezone_override: ''
-      format_type: medium
+      format_type: publish_date
     third_party_settings: {  }
     weight: 2
     region: content
@@ -59,9 +59,10 @@ content:
     weight: 5
     region: content
   field_image_main:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: hidden
     settings:
+      view_mode: default
       link: true
     third_party_settings: {  }
     weight: 6
@@ -112,4 +113,5 @@ hidden:
   field_expiration_date: true
   field_last_notified: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

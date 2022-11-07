@@ -1,0 +1,79 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+
+<article{{attributes.addClass(classes)}}>
+  {{ title_prefix }}
+  {% if page %}
+    <header class="c-questionnaire--head c-news--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      <div class="c-news--head-meta">
+        {% if content.field_article_author.0 %}
+          <p class="c-news--author">
+            {{ content.field_article_author.0 }}
+          </p>
+        {% elseif content.field_senator.0 %}
+          <p class="c-news--author">
+            {{ content.field_senator.0 }}
+          </p>
+        {% endif %}
+        <p class="c-news--pub-date">
+          {{ content.field_date.0 }}
+        </p>
+        {% if content.field_issues.0 %}
+          <ul class="nys-associated-topics">
+            {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+
+  {{ title_suffix }}
+
+  <div class="c-questionnaire--body c-news--body">
+    {% if content.field_image_main.0 %}
+      <div class="c-block c-block--img">
+        {{ content.field_image_main.0 }}
+
+        {% if content.field_image_main_title.0 %}
+          <p class="c-img--caption">{{ content.field_image_main_title.0 }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if content.field_byline.0 %}
+      <div class="c-news--subtitle">
+        {{ content.field_byline.0 }}
+      </div>
+    {% endif %}
+
+    <div class="c-block">
+      {{ content.body }}
+    </div>
+
+    <section class="c-block">
+      {{ content.webform }}
+    </section>
+
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta,
+    } only %}
+
+  </div>
+</article>

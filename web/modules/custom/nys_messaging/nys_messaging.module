@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Events and their Microsite Content.
+ */
+
+/**
+ * Implements hook_mail().
+ */
+function nys_messaging_mail($key, &$message, $params) {
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+
+  switch ($key) {
+    case 'forward_message':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['body'][] = $params['message'];
+      break;
+  }
+}

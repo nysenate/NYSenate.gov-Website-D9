@@ -856,6 +856,9 @@ else {
     $config['environment_indicator.indicator']['bg_color'] = '#00294F';
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
   }
+
+  // Turn off TFA.
+  $config['email_tfa.settings']['status'] = FALSE;
 }
 
 // If a private settings file exists within the files directory, load it.

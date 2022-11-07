@@ -26,6 +26,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
     - field.field.taxonomy_term.senator.field_press_kit
+    - field.field.taxonomy_term.senator.field_promotional_banners
     - field.field.taxonomy_term.senator.field_senator_name
     - field.field.taxonomy_term.senator.field_store_settings
     - field.field.taxonomy_term.senator.field_top_issue
@@ -112,10 +113,11 @@ content:
     weight: 11
     region: content
   field_image_hero:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: above
     settings:
-      link: true
+      view_mode: hero
+      link: false
     third_party_settings: {  }
     weight: 9
     region: content
@@ -229,6 +231,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 22
+    region: content
+  field_promotional_banners:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 28
     region: content
   field_senator_name:
     type: name_default

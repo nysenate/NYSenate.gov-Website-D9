@@ -1,0 +1,25 @@
+uuid: 26fedd5c-391d-4bf7-9a19-be1cc7ad90c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.senator_committees
+    - field.storage.block_content.field_senator_committees
+  module:
+    - block_field
+id: block_content.senator_committees.field_senator_committees
+field_name: field_senator_committees
+entity_type: block_content
+bundle: senator_committees
+label: 'Senator Committees'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      nys_blocks_senator_committees: nys_blocks_senator_committees
+field_type: block_field

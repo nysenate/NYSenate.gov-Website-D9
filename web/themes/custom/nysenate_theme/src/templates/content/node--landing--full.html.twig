@@ -81,13 +81,13 @@
     <h1 class="nys-article-title">{{ title }}</h1>
     <div class="c-news--head-meta">
 
-      {% if content.field_date %}
+      {% if content.field_date and content.field_show_date[0]['#markup'] == 'On' %}
         <p class="c-news--pub-date">
           <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
         </p>
       {% endif %}
 
-      {% if issues %}
+      {% if issues and content.field_show_issues[0]['#markup'] == 'On' %}
         <ul class="nys-associated-topics">
           <div class="nys-associated-topics--label">issue:</div>
           {% for issue in issues %}
@@ -100,7 +100,7 @@
     <div class="c-news--body">
 
       <div class="c-block">
-        {{ content|without('field_issues', 'field_date')}}
+        {{ content|without('field_issues', 'field_date', 'field_show_date', 'field_show_issues')}}
       </div>
     </div>
 

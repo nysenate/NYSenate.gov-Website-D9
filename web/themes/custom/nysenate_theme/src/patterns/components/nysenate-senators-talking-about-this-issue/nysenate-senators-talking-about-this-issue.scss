@@ -1,0 +1,105 @@
+@import '../../global/utils/init';
+
+.c-block.c-issue--mentions {
+  padding-bottom: 20px;
+
+  @include breakpoint($bp-sm) {
+    padding-bottom: 0;
+    margin-bottom: 30px;
+
+    .c-detail--subhead {
+      margin-bottom: 30px;
+    }
+  }
+
+  .nys-btn-more {
+    margin-top: 30px;
+  }
+
+  .nys-senator {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    width: 100%;
+
+    & + .nys-senator {
+      margin-top: 20px;
+    }
+
+    @include breakpoint($bp-sm) {
+      float: left;
+      width: 33.3%;
+      margin-bottom: 30px;
+
+      & + .nys-senator {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .nys-senator--thumb {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    height: 46px;
+    width: 45px;
+    margin-right: 15px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    a {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .nys-senator--info {
+    display: inline-block;
+    vertical-align: middle;
+    list-style: none;
+
+    > span {
+      display: none;
+    }
+  }
+
+  .nys-senator--name {
+    @include font-stack-primary;
+    margin: 0;
+    color: $grey08;
+    text-transform: capitalize;
+    font-size: 16px;
+    line-height: 1.2em;
+
+    a {
+      color: $grey08;
+    }
+  }
+
+  .nys-senator--district {
+    @include font-stack-secondary;
+    color: $grey03;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    line-height: 1.2em;
+    margin: 0;
+  }
+
+  .nys-senator--party {
+    color: $grey04;
+    text-transform: capitalize;
+    font-family: $font-sans-bold;
+  }
+}

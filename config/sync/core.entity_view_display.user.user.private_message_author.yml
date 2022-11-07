@@ -1,0 +1,63 @@
+uuid: 26024165-7d0b-4086-9a57-46cf666f8812
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.private_message_author
+    - field.field.user.user.field_address
+    - field.field.user.user.field_agree_to_terms
+    - field.field.user.user.field_dateofbirth
+    - field.field.user.user.field_district
+    - field.field.user.user.field_first_name
+    - field.field.user.user.field_gender_user
+    - field.field.user.user.field_last_name
+    - field.field.user.user.field_last_password_reset
+    - field.field.user.user.field_ldap_username
+    - field.field.user.user.field_password_expiration
+    - field.field.user.user.field_pending_expire_sent
+    - field.field.user.user.field_senator_inbox_access
+    - field.field.user.user.field_senator_management
+    - field.field.user.user.field_senator_multiref
+    - field.field.user.user.field_top_issue
+    - field.field.user.user.field_user_banned_comments
+    - field.field.user.user.field_user_phone_no
+    - field.field.user.user.field_user_receive_emails
+    - field.field.user.user.field_voting_auto_subscribe
+  module:
+    - user
+_core:
+  default_config_hash: 5VkjdDDe_kM-giLC61z36ACn6Z2eMjaH63Rh6adWWpw
+id: user.user.private_message_author
+targetEntityType: user
+bundle: user
+mode: private_message_author
+content:
+  linked_username:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_address: true
+  field_agree_to_terms: true
+  field_dateofbirth: true
+  field_district: true
+  field_first_name: true
+  field_gender_user: true
+  field_last_name: true
+  field_last_password_reset: true
+  field_ldap_username: true
+  field_password_expiration: true
+  field_pending_expire_sent: true
+  field_senator_inbox_access: true
+  field_senator_management: true
+  field_senator_multiref: true
+  field_top_issue: true
+  field_user_banned_comments: true
+  field_user_phone_no: true
+  field_user_receive_emails: true
+  field_voting_auto_subscribe: true
+  langcode: true
+  member_for: true
+  private_message_link: true
+  search_api_excerpt: true

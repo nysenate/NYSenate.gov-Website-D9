@@ -69,7 +69,7 @@ content:
     label: above
     settings:
       timezone_override: ''
-      format_type: medium
+      format_type: html_datetime
       separator: '-'
     third_party_settings: {  }
     weight: 103
@@ -95,7 +95,7 @@ content:
     region: content
   field_issues:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -147,9 +147,10 @@ content:
     weight: 111
     region: content
   field_yt:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: above
     settings:
+      view_mode: default
       link: true
     third_party_settings: {  }
     weight: 112
@@ -161,4 +162,5 @@ content:
     region: content
 hidden:
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

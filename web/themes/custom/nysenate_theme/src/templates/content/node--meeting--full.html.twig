@@ -7,7 +7,7 @@
         {{ field_event_status.content }}
       </p>
     {% endif %}
-    {% if field_off_the_floor and field_off_the_floor == '1' %}
+    {% if content.field_off_the_floor[0]['#markup'] == '1' %}
       <p class="c-meeting-detail--floor-flag">
         off the floor
       </p>

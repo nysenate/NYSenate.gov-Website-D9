@@ -23,9 +23,9 @@
           <p class="c-news--author">
             {{ content.field_article_author.0 }}
           </p>
-        {% elseif content.field_senator.0 %}
+        {% elseif content.field_senator_multiref.0 %}
           <p class="c-news--author">
-            {{ content.field_senator.0 }}
+            {{ content.field_senator_multiref.0 }}
           </p>
         {% endif %}
         <p class="c-news--pub-date">

@@ -9,40 +9,41 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_views_pre_render().
- * Re-rewrite the view submission results to make it look like each student submission.
  */
-function nys_school_forms_views_pre_render(ViewExecutable $view) {
-  if (in_array('webform_submission', array_keys($view->getBaseTables()))) {
-    $submission_ids = [];
-    $index = 0;
-
+function nys_school_forms_views_post_execute(ViewExecutable $view) {
+  // Rewrite the view results to make it look like each student submission.
+  if ($view->id() == 'school_forms') {
+    $new_result_array = [];
     foreach ($view->result as $key => $result) {
       $submission_id = $result->sid;
       if (!$submission_id) {
         continue;
       }
-      if (!empty($view->result[$key]->_entity->getData()['attach_your_submission'])) {
-        $composite = $view->result[$key]->_entity->getData()['attach_your_submission'];
-        // If the composite is part of the same group reset the composite as a single submission.
-        if (in_array($submission_id, $submission_ids) || $key === 0) {
-          $submission_ids[] = $submission_id;
-          $whitelist = [$index];
-          $student = array_intersect_key($composite, array_flip($whitelist));
-          // $view->result[$key]->_entity->setData(['attach_your_submission'], $student);
+      // Check for the composite field.
+      if (!empty($result->_entity->getData()['attach_your_submission'])) {
+        $composite = $result->_entity->getData()['attach_your_submission'];
+        $relationship_data = [];
+        foreach ($composite as $student) {
+          // Create a new result for each student.
+          $new_result = new $result();
+          $new_result->index = $result->index;
+          // Duplicate the entity so we can alter it.
+          $entity = $result->_entity->createDuplicate();
+          $data = $result->_entity->getData();
+          // Set the data for composite field to one student's data.
+          $data['attach_your_submission'] = [$student];
+          $entity->setData($data);
+          // Add the new entity to our new result.
+          $new_result->_entity = $entity;
+          $relationship_data = $result->_relationship_entities;
+          $relationship_data['webform_submission_reverse_reference__school_form__school_name'] = $entity;
+          $new_result->_relationship_entities = $relationship_data;
+          // Add the result to the updated results array.
+          $new_result_array[] = $new_result;
         }
-        // If this is a new submission ID start over.
-        if (!in_array($submission_id, $submission_ids) && $key !== 0) {
-          unset($index);
-          $index = 0;
-          $whitelist = [$index];
-          unset($view->result[$key]->_entity->getData()['attach_your_submission']);
-          $student = array_intersect_key($composite, array_flip($whitelist));
-          unset($submission_ids);
-          $submission_ids[] = $submission_id;
-          // $view->result[$key]->_entity->setData(['attach_your_submission'], $student);
-        }
-        $index++;
       }
     }
+    // Replace view results with our computed ones.
+    $view->result = $new_result_array;
   }
 }

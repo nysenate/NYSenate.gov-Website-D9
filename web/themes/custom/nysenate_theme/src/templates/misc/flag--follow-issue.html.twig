@@ -14,40 +14,38 @@
  * - flaggable: The flaggable entity.
  */
 #}
- {#
+
 {% spaceless %}
- Attach the flag CSS library.
-{{ attach_library('flag/flag.link') }}
-#}
-{# Depending on the flag action, set the appropriate action class.
-{% if action == 'unflag' %}
-    {% set action_class = 'action-unflag' %}
-{% else %}
-    {% set action_class = 'action-flag' %}
-{% endif %}
-#}
+    {# Attach the flag CSS library.#}
+    {{ attach_library('flag/flag.link') }}
 
+    {# Depending on the flag action, set the appropriate action class. #}
+    {% if action == 'unflag' %}
+        {% set action_class = 'action-unflag' %}
+    {% else %}
+        {% set action_class = 'action-flag' %}
+    {% endif %}
 
-{# Set the remaining Flag CSS classes.
-{%
-  set classes = [
-    'flag',
-    'flag-' ~ flag.id()|clean_class,
-    'js-flag-' ~ flag.id()|clean_class ~ '-' ~ flaggable.id(),
-    action_class
-  ]
-%}
-#}
-{# Set nofollow to prevent search bots from crawling anonymous flag links
-{% set attributes = attributes.setAttribute('rel', 'nofollow') %}
+    {# Set the remaining Flag CSS classes. #}
+    {%
+        set classes = [
+        'flag',
+        'flag-' ~ flag.id()|clean_class,
+        'js-flag-' ~ flag.id()|clean_class ~ '-' ~ flaggable.id(),
+        action_class
+    ]
+    %}
 
-<div class="{{classes|join(' ')}}"><a{{ attributes }}>{{ title }}</a></div>
+    {# Set nofollow to prevent search bots from crawling anonymous flag links #}
+    {% set attributes = attributes.setAttribute('rel', 'nofollow') %}
+
+    <div class="{{classes|join(' ')}}"><a{{ attributes }}>{{ title }}</a></div>
 {% endspaceless %}
-#}
 
-{# Attach flag count. #}
+{# Attach flag count.
 {% set count = flagcount(flag, flaggable) %}
 
 <p class="c-issue--followers">
     <span>{{ count }}</span> {{ 'Followers'|t }}
 </p>
+#}

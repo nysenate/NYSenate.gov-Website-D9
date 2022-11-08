@@ -50,6 +50,10 @@ process:
     -
       plugin: get
       source: body
+  field_layout_components:
+    -
+      plugin: map_article_block
+      source: field_paragraphs
   field_featured:
     -
       plugin: get

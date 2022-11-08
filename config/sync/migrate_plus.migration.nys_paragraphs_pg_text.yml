@@ -19,14 +19,14 @@ source:
   bundle: pg_text
   key: migrate
 process:
-  type:
+  field_body_left/value:
     -
       plugin: get
-      source: bundle
-  body:
+      source: field_pg_text/0/value
+  field_body_left/format:
     -
-      plugin: get
-      source: field_pg_text
+      plugin: default_value
+      default_value: basic_html
 destination:
   plugin: 'entity:block_content'
   default_bundle: text

@@ -7,12 +7,12 @@ dependencies:
 id: meeting
 label: Meeting
 type: 'canonical_entities:node'
-pattern: 'calendar/meetings/[node:field_committee:entity:name]/[node:field_date:date:custom:F-d-Y]/[node:title]'
+pattern: 'calendar/meetings/[node:field_committee:entity:name]/[node:field_date_range:start_date:custom:F-d-Y]/[node:title]'
 selection_criteria:
-  a9646d5a-fec2-4177-952f-4575dd4921cf:
+  eddff367-2d71-4af7-9bbb-24c9ef72c7d2:
     id: 'entity_bundle:node'
     negate: false
-    uuid: a9646d5a-fec2-4177-952f-4575dd4921cf
+    uuid: eddff367-2d71-4af7-9bbb-24c9ef72c7d2
     context_mapping:
       node: node
     bundles:

@@ -260,7 +260,7 @@
         headerBar.outerHeight() -
         nav.outerHeight();
 
-      if ($(window).width() < 760) {
+      if ($(window).width() < 769) {
         if (
           this.isMovingDown(currentTop, previousTop) &&
           currentTop >= origNav.outerHeight()
@@ -298,7 +298,7 @@
         else if (currentTop >= heroHeight) {
           jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
           actionBar.removeClass('hidden');
-          headerBar.removeClass('collapsed');
+          headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
         }
       }

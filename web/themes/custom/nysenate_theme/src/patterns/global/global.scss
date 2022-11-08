@@ -17,6 +17,9 @@
 // Import base styles.
 @import 'base/base';
 
+// Import base styles.
+@import 'ckeditor/ckeditor';
+
 // Base
 //
 // Plain html element styling. Shouldn't require
@@ -507,9 +510,19 @@ label {
   &.facebook {
     @extend .icon-replace__facebook;
   }
+
   &.twitter {
     @extend .icon-replace__twitter;
   }
+
+  &.youtube {
+    @extend .icon-replace__youtube;
+  }
+
+  &.instagram {
+    @extend .icon-replace__instagram;
+  }
+
   &.email {
     @extend .icon-replace__mail;
   }
@@ -581,9 +594,14 @@ label {
   }
 }
 
-textarea[name="email_body"] {
+textarea[name="email_body"],
+textarea[name="message"] {
   padding: 10px;
   height: auto;
+}
+
+.page {
+  overflow: hidden;
 }
 
 .page-node-type-video .field--name-field-issues .list-formatter-list {

@@ -6,7 +6,26 @@ dependencies:
     - field.storage.media.field_image
     - media.type.image
   module:
+    - filefield_paths
     - image
+third_party_settings:
+  filefield_paths:
+    enabled: true
+    file_path:
+      value: '[current-date:custom:Y]/[current-date:custom:m]/[current-date:custom:d]'
+      options:
+        slashes: false
+        pathauto: false
+        transliterate: false
+    file_name:
+      value: '[file:ffp-name-only-original].[file:ffp-extension-original]'
+      options:
+        slashes: false
+        pathauto: false
+        transliterate: false
+    redirect: false
+    retroactive_update: false
+    active_updating: false
 _core:
   default_config_hash: K5NOxYxkl6o_8T_sY2953Cl2FRj8eMIgLRTKKQDThmo
 id: media.image.field_image
@@ -29,7 +48,7 @@ settings:
   min_resolution: ''
   alt_field: true
   alt_field_required: true
-  title_field: false
+  title_field: true
   title_field_required: false
   default_image:
     uuid: ''

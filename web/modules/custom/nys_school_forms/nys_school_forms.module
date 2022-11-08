@@ -8,28 +8,26 @@
 use Drupal\views\ViewExecutable;
 
 /**
- * Implements hook_views_post_exscute().
+ * Implements hook_views_post_execute().
  */
 function nys_school_forms_views_post_execute(ViewExecutable $view) {
   // Rewrite the view results to make it look like each student submission.
   if ($view->id() == 'school_forms') {
     $new_result_array = [];
     foreach ($view->result as $key => $result) {
-      $submission_id = $result->sid;
-      if (!$submission_id) {
-        continue;
-      }
       // Check for the composite field.
-      if (!empty($result->_entity->getData()['attach_your_submission'])) {
-        $composite = $result->_entity->getData()['attach_your_submission'];
+      /** @var \Drupal\webform\Entity\WebformSubmission $original_entity */
+      $original_entity = $result->_entity;
+      if (!empty($original_entity->getData()['attach_your_submission'])) {
+        $composite = $original_entity->getData()['attach_your_submission'];
         $relationship_data = [];
         foreach ($composite as $student) {
           // Create a new result for each student.
           $new_result = new $result();
           $new_result->index = $result->index;
           // Duplicate the entity so we can alter it.
-          $entity = $result->_entity->createDuplicate();
-          $data = $result->_entity->getData();
+          $entity = $original_entity->createDuplicate();
+          $data = $original_entity->getData();
           // Set the data for composite field to one student's data.
           $data['attach_your_submission'] = [$student];
           $entity->setData($data);

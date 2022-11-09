@@ -5,7 +5,6 @@ namespace Drupal\nys_bills\Plugin\Block;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,7 +37,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
   protected $routeMatch;
 
   /**
-   * Bills Helper
+   * Bills Helper.
    *
    * @var \Drupal\nys_bills\BillsHelper
    */
@@ -73,11 +72,12 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       // A few immediate references for the bill object.
       $bill_session_year = $node->field_ol_session->value;
       $print_no = $node->field_ol_base_print_no->value;
-      $amended_versions_result = $this->billsHelper->getBillVersions($node->bundle(), $print_no, $bill_session_year);
+      $amended_versions_result = $this->billsHelper->getBillVersions($node);
 
       $amendents = $this->billsHelper->findsFeaturedLegislationQuote($amended_versions_result);
+
       foreach ($amendents as $key => $item) {
-        $amendents[$key]['sponsors_array'] = $this->billsHelper->resolveAmendmentSponsors($item['node'], $node);
+        $amendents[$key]['sponsors_array'] = $this->billsHelper->resolveAmendmentSponsors($item['node'], $node->field_ol_chamber->value);
       }
 
       // Check for values in the Same As field for opposite chamber versions.
@@ -91,12 +91,12 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       // Wrap Committee in a link if it is a Senate committee.
       if ($last_status === 'IN_SENATE_COMM') {
         $committee_bill_details = 'Senate ' . $last_status_comm;
-        $target = '/committees/' . $last_status_comm;
+        $target = Url::fromUserInput('/committees/' . $last_status_comm, []);
         $comm_status_pre = Link::fromTextAndUrl($committee_bill_details, $target);
       }
       if ($last_status === 'IN_ASSEMBLY_COMM') {
         $committee_bill_details = 'Assembly ' . $last_status_comm;
-        $comm_status_pre = t($committee_bill_details);
+        $comm_status_pre = $committee_bill_details;
       }
 
       // Load all bills associated with this bill's taxonomy root.
@@ -107,7 +107,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $metadata = $this->billsHelper->getBillMetadata($related_bills);
 
       // Load all bills associated with this bill's taxonomy root.
-      $related_metadata = array_filter($metadata, function($v) {
+      $related_metadata = array_filter($metadata, function ($v) {
         return $v->print_num === $v->base_print_num;
       });
 
@@ -118,6 +118,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
         foreach ($same_as as &$billid) {
           $billid = (object) $billid;
           $bill_prev_versions = $this->billsHelper->getPrevVersions($billid->session, $billid->printNo);
+
           if (!empty($bill_prev_versions)) {
             $billid->nid = reset($bill_prev_versions);
           }
@@ -130,7 +131,8 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
         }
       }
 
-      // Format display items for previous versions.  They need to be categorized
+      // Format display items for previous versions.
+      // They need to be categorized
       // by legislative session.
       foreach ($related_metadata as $key => $val) {
         if (!empty($val->session) && ($val->session === $bill_session_year)) {
@@ -150,7 +152,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
         $prev_vers[$index] = (implode(', ', $prev_leg));
       }
 
-      // Add the prefix text for previous versions
+      // Add the prefix text for previous versions.
       $prev_vers_pre = '';
       if (count($prev_vers) > 1) {
         $prev_vers_pre = $this->t('Versions Introduced in Other Legislative Sessions:');
@@ -167,18 +169,16 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
         'session_year' => $bill_session_year,
         'amended_versions' => $amended_versions_result,
         'active_version' => $session_root_id,
-        'comm_status_pre' => $comm_status_pre,
+        'comm_status_pre' => $comm_status_pre->toString(),
         'same_as' => $same_as,
         'prev_vers' => $prev_vers,
         'prev_vers_pre' => $prev_vers_pre,
         'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov'),
         'version' => '',
       ];
-
       return $build;
     }
-
     return [];
-
   }
+
 }

@@ -7,7 +7,6 @@
     <div id="amendment-details"></div>
     <h3 class="c-detail--subhead c-detail--section-title">Bill Amendments</h3>
 
-
     {#
       There are different sections here for mobile and tablet-plus (desktop), because
       we want mobile only to be overridden with special actions.  Pay attention to what section you are working on.
@@ -15,15 +14,15 @@
     #}
     {# BEGIN DESKTOP SECTION #}
     <dl class="l-tab-bar u-tablet-plus">
-      {% for amendment_id in content.amended_versions %}
-        {% set version = amendment_id.title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
+      {% for title,amendment_id in content.amended_versions %}
+        {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
         {% set is_active_version = (version == content.active_version) %}
-        {% set is_active_tab = content.bill_wrapper.label() == amendment_id.title %}
+        {% set is_active_tab = content.bill_wrapper.label() == title %}
 
         <dd class="c-tab  {{ is_active_tab ? 'active' : '' }}">
           <a class="c-tab-link bill-version-tab"
-             data-version="{{ amendment_id.title }}"
-             data-target="/node/{{ amendment_id.nid }}">
+             data-version="{{ title }}"
+             data-target="/node/{{ amendment_id }}">
 
             {{ version is empty ? "Original" : version }}
             {{ is_active_version ? " (Active) " : "" }}
@@ -36,14 +35,14 @@
     {# BEGIN MOBILE SECTION #}
     <dl class="l-tab-bar u-mobile-only" id="mobile-bill-tab">
       <div class="c-tab--arrow u-mobile-only" id="mobile-bill-arrow"></div>
-      {% for amendment_id in content.amended_versions %}
-        {% set version = amendment_id.title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
+      {% for title,amendment_id in content.amended_versions %}
+        {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
         {% set is_active_version = (version == content.active_version) %}
-        {% set is_active_tab = content.bill_wrapper.label() == amendment_id.title %}
+        {% set is_active_tab = content.bill_wrapper.label() == title %}
         <dd class="c-tab  {{ is_active_tab ? 'active' : 'inactive' }}">
           <a class="c-tab-link bill-version-tab"
-            data-version="{{ amendment_id.title }}"
-            data-target="/node/{{ amendment_id.nid }}">
+            data-version="{{ title }}"
+            data-target="/node/{{ amendment_id }}">
 
             {{ version is empty ? "Original" : version }}
             {{ is_active_version ? " (Active) " : "" }}
@@ -56,17 +55,17 @@
 
 <div class="tabs-content">
   {% for amendment in content.amendents %}
-    {% set node = amendment.node %}
-    {% set is_active_version = node.field_ol_is_active_version.value %}
-    <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node.label() ? ' active' : '' }}" data-version="{{ amendment_id.title }}">
+    {% set node_wrapper = amendment.node %}
+    {% set is_active_version = node_wrapper.field_ol_is_active_version.value %}
+    <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node_wrapper.label() ? ' active' : '' }}" data-version="{{ amendment_id.title }}">
       <!-- Amendment Details -->
       <!-- Quote Block -->
       {# @todo Quote block #}
 
       <!-- Bill Co/Multi Sponsors -->
       <div class="c-block c-detail--sponsors c-bill-section">
-        {% if amendment.sponsors_array.co|length > 1 or amendment.sponsors_array.multi|length > 1 %}
-          {% for key,list in amendment.sponsors_array %}
+        {% if amendment.sponsors_array.co|length > 0 or amendment.sponsors_array.multi|length > 0 %}
+          {% for key,list in amendment.sponsors_array if list|length > 0 %}
             <div class="c-{{ key }}-sponsors c-sponsors-detail">
               <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
               <div class="initial_{{ key }}-sponsors">
@@ -95,11 +94,11 @@
 
       <!-- Bill Amendment Details -->
       <div class="c-block c-bill-section c-bill--details">
-        <h3 class="c-detail--subhead c-detail--section-title">{{ node.title() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Details</h3>
+        <h3 class="c-detail--subhead c-detail--section-title">{{ node_wrapper.title() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Details</h3>
         <dl>
 
           {% if content.same_as %}
-            {% if content.same_as|count > 1 %}
+            {% if content.same_as|length > 0 %}
               <dt>{{ "See other versions of this Bill:"|t }}</dt>
             {% elseif content.same_as.printNo.0|upper == 'S' %}
               <dt>{{ "See Senate Version of this Bill:"|t }}</dt>
@@ -111,218 +110,109 @@
 
 
             {% for bill_id in content.same_as %}
+              {# todo: nid migth not available. #}
               <dd>
                 <a href="/node/{{ bill_id.nid }}">
                   {{ bill_id.basePrintNo }}
-                </a>{{ loop.index !== 0 ? ',' : '' }}
+                </a>{{ loop.index != 0 and loop.length > 1 ? ',' : '' }}
               </dd>
             {% endfor %}
           {% endif %}
 
-          {# if ($bill_wrapper->field_ol_latest_status_committee->value()) :
-            $term = taxonomy_get_term_by_name($bill_wrapper->field_ol_latest_status_committee->value(), 'committees');
-            $path = '';
-            if (!empty($term)) {
-              $path = drupal_get_path_alias('taxonomy/term/' . reset($term)->tid);
-            }
-            ?>
-            <?php if (isset($comm_status_pre) && !empty($path)): ?>
+          {% if content.comm_status_pre %}
             <dt>Current Committee:</dt>
-            <dd><?php print $comm_status_pre; ?></dd>
-          <?php
-          endif;
-          endif;
+            <dd> {{ content.comm_status_pre }}</dd>
+          {% endif %}
 
-          if ($bill_wrapper->field_ol_law_section->value()):
-            ?>
+          {% if not content.bill_wrapper.field_ol_law_section.isEmpty() %}
             <dt>Law Section:</dt>
-            <dd><?php print $bill_wrapper->field_ol_law_section->value(); ?></dd>
-          <?php
-          endif;
+            <dd> {{ content.bill_wrapper.field_ol_law_section.value }}</dd>
+          {% endif %}
 
-          if ($bill_wrapper->field_ol_law_code->value()) :
-            ?>
+          {% if not content.bill_wrapper.field_ol_law_code.isEmpty() %}
             <dt>Laws Affected:</dt>
-            <dd><?php print $bill_wrapper->field_ol_law_code->value(); ?></dd>
-          <?php
-          endif;
+            <dd>{{ content.bill_wrapper.field_ol_law_code.value }}</dd>
+          {% endif %}
 
-          if (!empty($prev_vers)):
-            ?>
-            <dt><?php print $prev_vers_pre; ?></dt>
+          {% if content.prev_vers %}
+
+            <dt>{{ content.prev_vers_pre }}</dt>
             <dd>
-              <?php
-              $multiyear = count($prev_vers) > 1;
-              foreach ($prev_vers as $leg_session => $prev_bills):
-                if ($multiyear):
-                  print $leg_session . ': ';
-                endif;
-                print $prev_bills . '<br />';
-              endforeach;
-              ?>
+              {% for leg_session,prev_bills in content.prev_vers %}
+
+                {% if content.prev_vers|length > 1 %}
+                  {{ leg_session}}:
+                {% endif %}
+                {{ prev_bills|raw }} <br />
+              {% endfor %}
             </dd>
-          <?php
-          endif;
-          ?> #}
+          {% endif %}
         </dl>
-      </div>
-  {% endfor %}
-  </div>
-  {#}
-
-
-
-
-
-
-
       </div>
 
       <!-- Bill Texts -->
       <div class="c-block c-bill-section" id="panel-text">
         <!-- Summary -->
-        <?php
-        if ($amendment->field_ol_summary[LANGUAGE_NONE][0]['value'] != ''):
-          $summary_show_expander = preg_match_all('/;/', $amendment->field_ol_summary[LANGUAGE_NONE][0]['value']) > 3 ? TRUE : FALSE;
-          if ($summary_show_expander) {
-            $amendment_text = str_split_at_nth($amendment->field_ol_summary[LANGUAGE_NONE][0]['value'], ';', 3);
-          }
-          else {
-            $amendment_text['part_1'] = $amendment->field_ol_summary[LANGUAGE_NONE][0]['value'];
-            $amendment_text['part_2'] = '';
-          }
-          ?>
+        {% if node_wrapper.field_ol_summary.value %}
           <div class="c-bill-text__summary">
             <a name="summary-text-top"></a>
-            <h3 class="c-detail--subhead c-detail--section-title"><?php print render($amendment->title); ?> <?php print $is_active_version ? ' (ACTIVE)' : '' ?>
-              - Summary</h3>
-            <div id="summary-<?php print $bill_wrapper->label(); ?>">
+            <h3 class="c-detail--subhead c-detail--section-title">
+              {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Summary
+            </h3>
+            <div id="summary-{{ content.bill_wrapper.label() }}">
               <div class="c-block c-detail--summary c-bill-section">
                 <p>
-                  <?php
-                  print trim($amendment_text['part_1']);
-                  if ($summary_show_expander) {
-                    echo '<span class="u-inline-expand-ellipsis">&hellip;</span>';
-                    echo '&nbsp;<a style="cursor:pointer;" class="u-text-expander--inline">(view more)</a>';
-                    echo '<span class="u-text-expander--inline__more-text">' . $amendment_text['part_2'] . '</span>';
-                  }
-                  ?>
+                  {# todo: handle see more ';' #}
+                  {{ node_wrapper.field_ol_summary.value }}
                 </p>
               </div>
             </div>
           </div>
-        <?php endif; ?>
+        {% endif %}
       </div>
 
       <!-- Sponsor Memo -->
-      <?php
-      if ($amendment->field_ol_memo[LANGUAGE_NONE][0]['value'] != ''):
-        $sponsor_memo_show_expander = preg_match_all('/\n/', $amendment->field_ol_memo[LANGUAGE_NONE][0]['value']) > 25 ? TRUE : FALSE;
-        if ($sponsor_memo_show_expander) {
-          $amendment_text = str_split_at_nth($amendment->field_ol_memo[LANGUAGE_NONE][0]['value'], chr(10), 25);
-        }
-        else {
-          $amendment_text['part_1'] = $amendment->field_ol_memo[LANGUAGE_NONE][0]['value'];
-          $amendment_text['part_2'] = '';
-        }
-        ?>
-        <div class="c-bill-text__memo" style="clear:both;">
+      {% if node_wrapper.field_ol_memo.value %}
+        <div class="c-bill-text__memo">
           <a name="memo-text-top"></a>
           <h3 class="c-detail--subhead c-detail--section-title">
-            <?php
-            print render($amendment->title);
-            print $is_active_version ? ' (ACTIVE)' : ''
-            ?> - Sponsor Memo</h3>
-          <div id="sponsor-memo-<?php print $bill_wrapper->label(); ?>"
+            {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Sponsor Memo
+          </h3>
+          <div id="sponsor-memo-{{ content.bill_wrapper.label() }}"
                class="c-text--preformatted">
             <div class="c-detail--memo">
-            <pre
-                class="c-bill-fulltext"><?php print $amendment_text['part_1']; ?></pre>
+            <pre class="c-bill-fulltext">
+              {# todo: handle see more ';' #}
+              {{ node_wrapper.field_ol_memo.value }}
+            </pre>
             </div>
-            <?php
-            if ($sponsor_memo_show_expander) {
-              ?>
-              <div id="memo-expand-<?php print $amendment->title; ?>"
-                   style="display:none;" data-linecount="<?php
-              print number_format($amendment_text['extra_line_count']); ?>"
-                   class="c-detail--memo test">
-              <pre
-                  class="c-bill-fulltext"><?php print $amendment_text['part_2']; ?></pre>
-              </div>
-              <div class="item-list">
-                <ul class="pager pager-load-more">
-                  <li class="pager-next first last">
-                    <a class="text-expander">View More
-                      (<?php echo number_format($amendment_text['extra_line_count']); ?>
-                      Lines)</a>
-                  </li>
-                </ul>
-              </div>
-            <?php } ?>
           </div>
         </div>
-      <?php endif; ?>
+      {% endif %}
 
       <!-- Full Text -->
-      <?php
-      $bill_text_show_expander = FALSE;
-      if (!empty($amendment->field_ol_full_text)) {
-        $bill_text_show_expander = preg_match_all('/\n/', $amendment->field_ol_full_text[LANGUAGE_NONE][0]['value']) > 50;
-        if ($bill_text_show_expander) {
-          $amendment_text = str_split_at_nth($amendment->field_ol_full_text[LANGUAGE_NONE][0]['value'], chr(10), 50);
-        }
-        else {
-          $amendment_text['part_1'] = $amendment->field_ol_full_text[LANGUAGE_NONE][0]['value'];
-          $amendment_text['part_2'] = '';
-          $amendment_text['extra_line_count'] = 0;
-        }
-      }
-      ?>
       <div class="c-bill-text__bill" style="clear:both;">
         <a name="bill-text-top"></a>
-        <h3 class="c-detail--subhead c-detail--section-title"><?php
-          print render($amendment->title);
-          print $is_active_version ? ' (ACTIVE)' : ''
-          ?> - Bill Text
+        <h3 class="c-detail--subhead c-detail--section-title">
+          {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Bill Text
           <span style="float:right;">
-            <a href="<?php print $ol_base_url; ?>/pdf/bills/<?php print $bill_wrapper->field_ol_session->value(); ?>/<?php print strtolower($amendment->title); ?>"
-               class="c-detail--download" target="_blank">download pdf</a>
+            <a href="{{ content.ol_base_url }}/pdf/bills/{{ content.bill_wrapper.field_ol_session.value}}/{{ node_wrapper.title()|lower }}"
+              class="c-detail--download" target="_blank">download pdf</a>
           </span>
         </h3>
-        <?php
-        if (!empty($amendment->field_ol_full_text)):
-          ?>
-          <div id="full-text-<?php print $bill_wrapper->label(); ?>"
-               class="c-text--preformatted">
+        {% if node_wrapper.field_ol_full_text.value %}
+          <div id="full-text-{{ content.bill_wrapper.label() }}"
+              class="c-text--preformatted">
             <div class="c-detail--memo">
-            <pre
-                class="c-bill-fulltext"><?php print $amendment_text['part_1']; ?></pre>
+            <pre class="c-bill-fulltext">
+              {{  node_wrapper.field_ol_full_text.value }}
+            </pre>
             </div>
-            <?php
-            if ($bill_text_show_expander) {
-              ?>
-              <div id="expand-<?php print $amendment->title; ?>"
-                   style="display:none;" data-linecount="<?php
-              print number_format($amendment_text['extra_line_count']); ?>"
-                   class="c-detail--memo">
-              <pre
-                  class="c-bill-fulltext"><?php print $amendment_text['part_2']; ?></pre>
-              </div>
-              <div class="item-list">
-                <ul class="pager pager-load-more">
-                  <li class="pager-next first last">
-                    <a class="text-expander">View More (<?php
-                      print number_format($amendment_text['extra_line_count']); ?>
-                      Lines)</a>
-                  </li>
-                </ul>
-              </div>
-            <?php } ?>
           </div>
-        <?php else: ?>
+        {% else %}
           <div class="c-bill-fulltext">The Bill text is not available.</div>
-        <?php endif; ?>
+        {% endif %}
       </div>
     </div>
-  <?php endforeach; ?>
-</div> #}
+  {% endfor %}
+</div>

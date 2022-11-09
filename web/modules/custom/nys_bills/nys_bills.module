@@ -8,7 +8,6 @@
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
-use Drupal\nys_bills\BillsHelper;
 use Drupal\pathauto\PathautoState;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -43,8 +42,8 @@ function nys_bills_node_update(Node $node): void {
   switch ($node->bundle()) {
     case 'resolution':
     case 'bill':
-      BillsHelper::validateAliases($node);
-      BillsHelper::clearBillVersionsCache($node);
+      \Drupal::service('nys_bill.bills_helper')->validateAliases($node);
+      \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($node);
       break;
 
     default:
@@ -63,8 +62,8 @@ function nys_bills_node_insert(Node $node): void {
   switch ($node->bundle()) {
     case 'resolution':
     case 'bill':
-      BillsHelper::validateAliases($node);
-      BillsHelper::clearBillVersionsCache($node);
+      \Drupal::service('nys_bill.bills_helper')->validateAliases($node);
+      \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($node);
       break;
 
     default:
@@ -81,7 +80,7 @@ function nys_bills_node_delete(Node $node): void {
   switch ($node->bundle()) {
     case 'resolution':
     case 'bill':
-      BillsHelper::clearBillVersionsCache($node);
+      \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($node);
       break;
 
     default:
@@ -95,8 +94,8 @@ function nys_bills_node_delete(Node $node): void {
 function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
   if ($entity->bundle() == 'bill' && $view_mode == 'full') {
     // If there's no alias for this bill node, redirect to 404.
-    $current_path = Drupal::service('path.current')->getPath();
-    $alias = Drupal::service('path_alias.manager')
+    $current_path = \Drupal::service('path.current')->getPath();
+    $alias = \Drupal::service('path_alias.manager')
       ->getAliasByPath($current_path);
     if ($current_path === $alias) {
       throw new NotFoundHttpException();
@@ -104,7 +103,7 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
 
     // Add settings to javascript that will help with processing vote from
     // Javascript.
-    $nys_vote_service = Drupal::service('nys_bill_vote.bill_vote');
+    $nys_vote_service = \Drupal::service('nys_bill_vote.bill_vote');
     $vote_options = $nys_vote_service->getOptions();
     $vote_label_options = [];
     foreach (array_keys($vote_options) as $vote_value) {
@@ -113,7 +112,7 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
     $js_settings = [
       'bill_vote' => [
         'bill_entity_id' => $entity->id(),
-        'bill_name' => BillsHelper::formatTitle($entity),
+        'bill_name' => \Drupal::service('nys_bill.bills_helper')->formatTitle($entity),
         'vote_options' => $vote_label_options,
       ],
     ];

@@ -86,7 +86,7 @@ class BillsHelper {
   /**
    * Validates that a node is a bill or resolution.
    */
-  protected function isBill(NodeInterface $node): bool {
+  public function isBill(NodeInterface $node): bool {
     return in_array($node->bundle(), ['bill', 'resolution']);
   }
 
@@ -158,7 +158,7 @@ class BillsHelper {
    *
    * Note that the returned key lacks the static::CACHE_BIN_PREFIX.
    */
-  public function generateBillVersionCacheKey(Node $node): string {
+  public function generateBillVersionCacheKey(NodeInterface $node): string {
     if (!$this->isBill($node)) {
       throw new \InvalidArgumentException('Node must be a bill or resolution');
     }
@@ -189,7 +189,7 @@ class BillsHelper {
    *   is indicative of an error condition; the return should include (at
    *   least) the passed node's information.
    */
-  public function getBillVersions(Node $node): array {
+  public function getBillVersions(NodeInterface $node): array {
     try {
       $cid = $this->generateBillVersionCacheKey($node);
       $ret = $this->getCache($cid)->data ?? NULL;
@@ -292,12 +292,12 @@ class BillsHelper {
    *
    * @see formatTitleParts()
    */
-  public function formatTitle(NodeInteface $node, string $version = '', string $separator = '-'): string {
-    return !$this->sBill($node)
+  public function formatTitle(NodeInterface $node, string $version = '', string $separator = '-'): string {
+    return !$this->isBill($node)
       ? ''
       : $this->formatTitleParts(
-        $node->field_ol_session,
-        $node->field_ol_base_print_no,
+        $node->field_ol_session->value,
+        $node->field_ol_base_print_no->value,
         $version,
         $separator
       );
@@ -321,7 +321,7 @@ class BillsHelper {
             $termid = $this->getSenatorTidFromMemberId($one_sponsor->memberId);
             if (!empty($termid)) {
               $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($termid);
-              $ret[$type][] = $this->entityTypeManager->getStorage('taxonomy_term')->view($term, 'sponsor_list_bill_detail');
+              $ret[$type][] = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($term, 'sponsor_list_bill_detail');
             }
             break;
 
@@ -336,6 +336,34 @@ class BillsHelper {
         }
       }
     }
+
+    return $ret;
+
+  }
+
+  /**
+   * Retrieves the senator node id associated with an OpenLeg member id.
+   *
+   * @param int $member_id
+   *   Member id.
+   *
+   * @return int
+   *   node_id
+   *
+   * @see https://bitbucket.org/mediacurrent/nys_nysenate/src/develop/sites/all/modules/custom/nys_utils/nys_utils.module
+   * function nys_utils_get_senator_nid_from_member_id from D7
+   */
+  public function getSenatorTidFromMemberId($member_id) {
+    $preloaded = &drupal_static(__FUNCTION__, []);
+
+    if (!array_key_exists($member_id, $preloaded)) {
+      $query = "SELECT entity_id FROM taxonomy_term__field_ol_member_id WHERE field_ol_member_id_value = :memberid";
+      $queryargs = [
+        ':memberid' => $member_id,
+      ];
+      $preloaded[$member_id] = $this->connection->query($query, $queryargs)->fetchField();
+    }
+    return $preloaded[$member_id];
   }
 
   /**
@@ -465,12 +493,27 @@ class BillsHelper {
   }
 
   /**
-   * Get Senator Name Mapping.
+   * Returns a cached mapping of senator names, keyed by the nid.
+   *
+   * @see https://bitbucket.org/mediacurrent/nys_nysenate/src/develop/sites/all/modules/custom/nys_utils/nys_utils.module
+   * function get_senator_name_mapping() from D7
    */
   public function getSenatorNameMapping() {
     $cache_key = 'nys_utils_get_senator_name_mapping';
     $cache = $this->cache->get($cache_key);
     if (!$cache) {
+
+      $senator_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties([
+        'vid' => 'senator',
+      ]);
+
+      $senator_mappings = [];
+      foreach ($senator_terms as &$term) {
+        $senator_mappings[$term->id()] = [
+          'short_name' => $term->get('field_senator_name')[0]->given ?? '',
+          'full_name' => $term->get('field_senator_name')[0]->title ?? '',
+        ];
+      }
       $this->cache->set($cache_key, $senator_mappings);
     }
     else {
@@ -591,7 +634,7 @@ class BillsHelper {
 
     $query = $this->entityTypeManager->getStorage('node')
       ->getQuery()
-      ->condition('type', 'bill')
+      ->condition('type', ['bill', 'resolution'], 'IN')
       ->condition('field_ol_session.value', $prev_vers_session)
       ->condition('field_ol_print_no.value', $prev_vers_print_no)
       ->range(0, 1);
@@ -645,9 +688,9 @@ class BillsHelper {
   public function findsFeaturedLegislationQuote(array $amended_versions) {
     $amendments = [];
     // Loop over amendments, and finds featured legislation quote, if it exists.
-    foreach ($amended_versions as $r) {
-      $node = $this->entityTypeManager->getStorage('node')->load($r['nid']);
-      $amendments[$r['title']]['node'] = $node;
+    foreach ($amended_versions as $title => $nid) {
+      $node = $this->entityTypeManager->getStorage('node')->load($nid);
+      $amendments[$title]['node'] = $node;
       // @todo Query for quotes.
     }
 

@@ -7,7 +7,6 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\node\Entity\Node;
-use Drupal\nys_bills\BillsHelper;
 use Drupal\nys_openleg\Api\ResponsePluginBase;
 use Drupal\nys_openleg\Service\ApiManager;
 use Drupal\nys_subscriptions\Entity\Subscription;
@@ -305,7 +304,7 @@ class UpdatesProcessor {
     // results.  Each result is a collection of tests which matched the update.
     foreach ($matches as $print_num => $results) {
       // If a bill cannot be loaded, report and skip this update.
-      if (!$bill = BillsHelper::loadBillByTitle($print_num)) {
+      if (!$bill = \Drupal::service('nys_bill.bills_helper')->loadBillByTitle($print_num)) {
         $this->logger->error(
           'Could not load bill @print_num while processing updates',
           ['@print_num' => $print_num]

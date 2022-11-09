@@ -2701,6 +2701,10 @@ h2.c-subpage-header--title {
     font-size: 15px;
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
     white-space: normal; }
+    .nys-associated-topics li:after {
+      content: ','; }
+    .nys-associated-topics li:last-child::after {
+      content: ''; }
   .nys-associated-topics a {
     color: #1b5187;
     text-decoration: none; }

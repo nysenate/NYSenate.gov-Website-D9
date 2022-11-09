@@ -19,15 +19,15 @@
   {% if page %}
     <header class="c-petition--head">
       <h1 class="nys-title">{{ title }}</h1>
-      {% if field_senator %}
-        <p class="c-news--author">
-          {{ field_senator }}
-        </p>
-      {% elseif content.field_article_author.0 %}
-        <p class="c-news--author">
-          {{ content.field_article_author.0 }}
-        </p>
-      {% endif %}
+        {% if content.field_article_author.0 %}
+          <p class="c-news--author">
+            {{ content.field_article_author.0 }}
+          </p>
+        {% elseif content.field_senator_multiref.0 %}
+          <p class="c-news--author">
+            {{ content.field_senator_multiref.0 }}
+          </p>
+        {% endif %}
 
       {% if content.field_date.0 %}
         <p class="c-news--pub-date">

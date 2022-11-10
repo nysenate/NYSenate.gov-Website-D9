@@ -124,7 +124,7 @@ content:
     region: content
   field_meeting_location:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -178,9 +178,10 @@ content:
     weight: 113
     region: content
   field_yt:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: above
     settings:
+      view_mode: default
       link: true
     third_party_settings: {  }
     weight: 114

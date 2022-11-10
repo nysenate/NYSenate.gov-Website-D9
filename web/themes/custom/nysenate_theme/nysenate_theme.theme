@@ -2408,7 +2408,6 @@ function nysenate_theme_preprocess_node__public_hearing(&$variables) {
 function nysenate_theme_preprocess_node__meeting(&$variables) {
   $date_value = get_date_range_values($variables);
   $video_status = get_video_status_values($variables);
-  $location = get_location_values($variables);
 
   // Only generate the calendar invite
   // if there's start_date.
@@ -2417,13 +2416,29 @@ function nysenate_theme_preprocess_node__meeting(&$variables) {
     // Set up reference variables indicating if this event spans multiple days.
     $is_multiday = !($date_value['start_date_raw']->format('Ymd') == $date_value['end_date_raw']->format('Ymd'));
     $description = $variables['content']['body'][0]['#text'] ?? '';
-    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $date_value['start_date_raw'], $date_value['end_date_raw'], $is_multiday, $description, $location['address']);
+    $meeting_location = $variables['content']['field_meeting_location'][0] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $date_value['start_date_raw'], $date_value['end_date_raw'], $is_multiday, $description, $meeting_location);
   }
 
-  $variables['location_url'] = !empty($location['location_url']) ? urlencode($location['location_url']) : urlencode($location['address']);
+  $event_status = [];
+  if (isset($variables['content']['field_meeting_status'][0])) {
+    $event_status['key'] = $variables['content']['field_meeting_status']['#items']->value;
+    $event_status['value'] = $variables['content']['field_meeting_status'][0]['#markup'];
+  }
+
+  $event_place = '';
+  if (isset($variables['content']['field_event_place']['#items'])) {
+    $event_place = $variables['content']['field_event_place']['#items']->value;
+  }
+
+  if (isset($variables['content']['field_event_online_link'][0])) {
+    $variables['event_online_link'] = $variables['content']['field_event_online_link'][0]['#url']->toString();
+  }
+
   $variables['date_value'] = $date_value;
   $variables['video_status'] = $video_status;
-  $variables['location'] = $location['address'];
+  $variables['event_status'] = $event_status;
+  $variables['event_place'] = $event_place;
 }
 
 /**

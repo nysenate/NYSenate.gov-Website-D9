@@ -747,6 +747,14 @@ h2.c-subpage-header--title {
     font-size: 15px;
     font-family: $font-sans-bold;
     white-space: normal;
+
+    &:after {
+      content: ',';
+    }
+
+    &:last-child::after {
+      content: '';
+    }
   }
 
   a {

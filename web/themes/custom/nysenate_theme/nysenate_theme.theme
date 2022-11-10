@@ -2058,6 +2058,10 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   // Create the HTML for the bill's session.
   $variables['legislative_session'] = '<div class="c-bill--session-year">' .
   $bill_session_year . '-' . ($bill_session_year + 1) . ' Legislative Session</div>';
+
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $amendments_block = $block_manager->createInstance('nys_bills_amendment_block', []);
+  $variables['amendments_block'] = $amendments_block->build();
 }
 
 /**

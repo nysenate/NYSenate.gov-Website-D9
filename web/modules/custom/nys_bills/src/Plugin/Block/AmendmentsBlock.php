@@ -74,10 +74,10 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $print_no = $node->field_ol_base_print_no->value;
       $amended_versions_result = $this->billsHelper->getBillVersions($node);
 
-      $amendents = $this->billsHelper->findsFeaturedLegislationQuote($amended_versions_result);
+      $amendments = $this->billsHelper->findsFeaturedLegislationQuote($amended_versions_result);
 
-      foreach ($amendents as $key => $item) {
-        $amendents[$key]['sponsors_array'] = $this->billsHelper->resolveAmendmentSponsors($item['node'], $node->field_ol_chamber->value);
+      foreach ($amendments as $key => $item) {
+        $amendments[$key]['sponsors_array'] = $this->billsHelper->resolveAmendmentSponsors($item['node'], $node->field_ol_chamber->value);
       }
 
       // Check for values in the Same As field for opposite chamber versions.
@@ -163,18 +163,21 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       }
 
       $build = [
-        'amendents' => $amendents,
-        'bill_wrapper' => $node,
-        'base_print_no' => $node->field_ol_base_print_no->value,
-        'session_year' => $bill_session_year,
-        'amended_versions' => $amended_versions_result,
-        'active_version' => $session_root_id,
-        'comm_status_pre' => $comm_status_pre->toString(),
-        'same_as' => $same_as,
-        'prev_vers' => $prev_vers,
-        'prev_vers_pre' => $prev_vers_pre,
-        'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov'),
-        'version' => '',
+        '#theme' => 'nys_bills__amendments_block',
+        '#content' => [
+          'amendments' => $amendments,
+          'bill_wrapper' => $node,
+          'base_print_no' => $node->field_ol_base_print_no->value,
+          'session_year' => $bill_session_year,
+          'amended_versions' => $amended_versions_result,
+          'active_version' => $session_root_id,
+          'comm_status_pre' => $comm_status_pre->toString(),
+          'same_as' => $same_as,
+          'prev_vers' => $prev_vers,
+          'prev_vers_pre' => $prev_vers_pre,
+          'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov'),
+          'version' => '',
+        ],
       ];
       return $build;
     }

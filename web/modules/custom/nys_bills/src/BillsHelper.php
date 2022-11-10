@@ -327,6 +327,7 @@ class BillsHelper {
 
           case 'assembly':
             $ret[$type][] = [
+              // @todo Needs integration.
               '#theme' => 'bill_sponsor_assembly',
               '#content' => [
                 'fullName' => $one_sponsor->fullName,

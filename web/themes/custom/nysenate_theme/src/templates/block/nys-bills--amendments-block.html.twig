@@ -1,8 +1,7 @@
 {{ kint(content) }}
 
-
 <!-- Amendment Tabs -->
-{% if content.amendents|length > 1 %}
+{% if content.amendments|length > 1 %}
   <div class="c-bill--amendment-details c-bill-section">
     <div id="amendment-details"></div>
     <h3 class="c-detail--subhead c-detail--section-title">Bill Amendments</h3>
@@ -54,7 +53,7 @@
 {% endif %}
 
 <div class="tabs-content">
-  {% for amendment in content.amendents %}
+  {% for amendment in content.amendments %}
     {% set node_wrapper = amendment.node %}
     {% set is_active_version = node_wrapper.field_ol_is_active_version.value %}
     <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node_wrapper.label() ? ' active' : '' }}" data-version="{{ amendment_id.title }}">

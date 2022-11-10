@@ -134,10 +134,12 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       // Format display items for previous versions.
       // They need to be categorized
       // by legislative session.
+      $previous_versions = [];
       foreach ($related_metadata as $key => $val) {
         if (!empty($val->session) && ($val->session === $bill_session_year)) {
           $t_sess = $this->billsHelper->standardizeSession((int) $val->session);
           $t_year = substr($t_sess, 0, 4);
+          /* @phpstan-ignore-next-line */
           $t_pnum = strtoupper($val->base_print_num);
           $t_link = Url::fromUserInput('/legislation/bills/' . $t_year . '/' . $t_pnum);
           $previous_versions[$t_sess][$t_pnum] = Link::fromTextAndUrl($t_pnum, $t_link)->toString();

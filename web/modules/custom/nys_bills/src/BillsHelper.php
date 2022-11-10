@@ -23,6 +23,13 @@ class BillsHelper {
   const CACHE_BIN_PREFIX = 'nys_bills';
 
   /**
+   * Default object for database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -206,7 +213,7 @@ class BillsHelper {
         $base_print = $node->field_ol_base_print_no->value;
         $session = $node->field_ol_session->value;
 
-        /** @var \Drupal\node\Entity\NodeInterface $bill */
+        /** @var \Drupal\node\NodeInterface $bill */
         foreach ($this->loadBillVersions($base_print, $session) as $bill) {
           $ret[$bill->getTitle()] = $bill->id();
         }
@@ -229,9 +236,6 @@ class BillsHelper {
    *
    * @param string $print_num
    *   A bill print number, such as '2021-S123B'.
-   *
-   * @return \Drupal\node\Entity\NodeInterface|null
-   *   If multiple or no bills are found, NULL is returned.
    */
   public function loadBillByTitle(string $print_num): NodeInterface {
     try {
@@ -251,7 +255,7 @@ class BillsHelper {
   /**
    * Clears caches for all amendments under a bill's base print number.
    *
-   * @param \Drupal\node\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A bill or resolution node.
    */
   public function clearBillVersionsCache(NodeInterface $node): void {
@@ -278,7 +282,7 @@ class BillsHelper {
   /**
    * Formats the "press finish" title for a bill.
    *
-   * @param \Drupal\node\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   Full bill node object.
    *
    * @return string
@@ -390,28 +394,6 @@ class BillsHelper {
   }
 
   /**
-   * Given a bill/resolution node, returns the node of the active amendment.
-   *
-   * @return \Drupal\node\Entity\Node|null
-   *   Returns NULL if multiple or no bills were found.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function loadActiveVersion(NodeInterface $node): ? NodeInterface {
-    $title = $this->buildAliasformatTitle($node, $node->field_ol_active_version->value);
-    if ($node->getTitle() == $title) {
-      $ret = $node;
-    }
-    else {
-      $result = $this->getStorage()
-        ->loadByProperties(['title' => $title, 'type' => $node->bundle()]);
-      $ret = current($result) ?: NULL;
-    }
-    return $ret;
-  }
-
-  /**
    * Standardizes the session year string for display.
    *
    * The odd-numbered year needs to be the first year in the legislative cycle
@@ -449,11 +431,11 @@ class BillsHelper {
    * or redirection response.  In we detect a case like this, we set the
    * canonical URL back to "original", per F.S., 2022-10-27.
    *
-   * @param \Drupal\node\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The node being saved.
    */
   public function validateAliases(NodeInterface $node): void {
-    if ($this->clearBillVersionsCacheisBill($node)) {
+    if ($this->isBill($node)) {
       // Get the session year, base print, and version.
       $session = $node->field_ol_session->value ?? '';
       $base_print = $node->field_ol_base_print_no->value ?? '';

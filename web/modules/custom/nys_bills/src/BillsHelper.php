@@ -243,7 +243,7 @@ class BillsHelper {
         'type' => 'bill',
         'title' => $print_num,
       ]);
-      /** @var \Drupal\node\Entity\Node|NULL $ret */
+      /** @var \Drupal\node\NodeInterface|NULL $ret */
       $ret = current($nodes) ?: NULL;
     }
     catch (\Throwable) {
@@ -391,6 +391,28 @@ class BillsHelper {
    */
   public function formatTitleParts(int $session, string $base_print, string $version = '', string $separator = '-'): string {
     return $session . $separator . strtoupper($base_print) . strtoupper($version);
+  }
+
+  /**
+   * Given a bill/resolution node, returns the node of the active amendment.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   *   Returns NULL if multiple or no bills were found.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function loadActiveVersion(NodeInterface $node): ? NodeInterface {
+    $title = $this->formatTitle($node, $node->field_ol_active_version->value);
+    if ($node->getTitle() == $title) {
+      $ret = $node;
+    }
+    else {
+      $result = $this->getStorage()
+        ->loadByProperties(['title' => $title, 'type' => $node->bundle()]);
+      $ret = current($result) ?: NULL;
+    }
+    return $ret;
   }
 
   /**

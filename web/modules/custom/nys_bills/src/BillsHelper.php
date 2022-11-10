@@ -129,13 +129,13 @@ class BillsHelper {
    *
    * @param string $base_print
    *   The base print number (i.e., no version marker) of a bill or resolution.
-   * @param string $session
+   * @param int $session
    *   A session year.
    *
    * @return array
    *   An empty array of failure, otherwise as returned from loadMultiple().
    */
-  public function loadBillVersions(string $base_print, string $session): array {
+  public function loadBillVersions(string $base_print, int $session): array {
     try {
       $storage = $this->getStorage();
       $results = $storage->getQuery()
@@ -201,13 +201,17 @@ class BillsHelper {
 
     if (is_null($ret) && $cid) {
       $ret = [];
-      $base_print = $node->field_ol_base_print_no->value;
-      $session = $node->field_ol_session->value;
-      /** @var \Drupal\node\Entity\Node $bill */
-      foreach ($this->loadBillVersions($base_print, $session) as $bill) {
-        $ret[$bill->getTitle()] = $bill->id();
+      if (($node->hasField('field_ol_base_print_no') && !$node->get('field_ol_base_print_no')->isEmpty()) &&
+        ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty())) {
+        $base_print = $node->field_ol_base_print_no->value;
+        $session = $node->field_ol_session->value;
+
+        /** @var \Drupal\node\Entity\NodeInterface $bill */
+        foreach ($this->loadBillVersions($base_print, $session) as $bill) {
+          $ret[$bill->getTitle()] = $bill->id();
+        }
+        $this->setCache($cid, $ret);
       }
-      $this->setCache($cid, $ret);
     }
 
     return $ret;
@@ -216,8 +220,8 @@ class BillsHelper {
   /**
    * Wrapper to allow for loading by session and base print number.
    */
-  public function loadBillBySessionPrint(string $session, string $base_print, string $version = ''): ? NodeInterface {
-    return $this->loadBillByTitle($this->formatTitleParts($session, $base_print, $version));
+  public function loadBillBySessionPrint(int $session, string $base_print, string $version = ''): ? NodeInterface {
+    return $this->loadBillByTitle(static::formatTitleParts($session, $base_print, $version));
   }
 
   /**
@@ -293,14 +297,16 @@ class BillsHelper {
    * @see formatTitleParts()
    */
   public function formatTitle(NodeInterface $node, string $version = '', string $separator = '-'): string {
-    return !$this->isBill($node)
-      ? ''
-      : $this->formatTitleParts(
+    if (($node->hasField('field_ol_base_print_no') && !$node->get('field_ol_base_print_no')->isEmpty()) &&
+      ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty())) {
+      $title = $this->formatTitleParts(
         $node->field_ol_session->value,
         $node->field_ol_base_print_no->value,
         $version,
         $separator
       );
+    }
+    return $title ?? '';
   }
 
   /**
@@ -370,7 +376,7 @@ class BillsHelper {
   /**
    * Generates the standard-format title, given a print number and session.
    *
-   * @param string $session
+   * @param int $session
    *   The bill's session year.
    * @param string $base_print
    *   The bill's base print number (i.e., no version marker).
@@ -379,7 +385,7 @@ class BillsHelper {
    * @param string $separator
    *   Defaults to '-'.
    */
-  public function formatTitleParts(string $session, string $base_print, string $version = '', string $separator = '-'): string {
+  public function formatTitleParts(int $session, string $base_print, string $version = '', string $separator = '-'): string {
     return $session . $separator . strtoupper($base_print) . strtoupper($version);
   }
 

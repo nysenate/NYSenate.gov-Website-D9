@@ -4,6 +4,7 @@ namespace Drupal\nys_bills;
 
 use Drupal\node\NodeInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\nys_senators\SenatorsHelper;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -44,6 +45,13 @@ class BillsHelper {
   protected $cache;
 
   /**
+   * The Senators Helper.
+   *
+   * @var \Drupal\nys_senators\SenatorsHelper
+   */
+  protected $senatorsHelper;
+
+  /**
    * Constructor class for Bills Helper.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -52,11 +60,14 @@ class BillsHelper {
    *   The entity type manager service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The backend cache.
+   * @param \Drupal\nys_senators\SenatorsHelper $senators_helper
+   *   The senators helper.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend) {
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper) {
     $this->connection = $connection;
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
+    $this->senatorsHelper = $senators_helper;
   }
 
   /**
@@ -319,7 +330,7 @@ class BillsHelper {
   public function resolveAmendmentSponsors($amendment, $chamber) {
     $ret = [];
     $cycle = ['co', 'multi'];
-    $senators = $this->getSenatorNameMapping();
+    $senators = $this->senatorsHelper->getNameMapping();
     foreach ($cycle as $type) {
       $ret[$type] = [];
       $propname = "field_ol_{$type}_sponsor_names";
@@ -328,9 +339,8 @@ class BillsHelper {
       foreach ($sponsors as $one_sponsor) {
         switch ($chamber) {
           case 'senate':
-            $termid = $this->getSenatorTidFromMemberId($one_sponsor->memberId);
-            if (!empty($termid)) {
-              $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($termid);
+            $term = $this->senatorsHelper->getSenatorTidFromMemberId($one_sponsor->memberId);
+            if (!empty($term)) {
               $ret[$type][] = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($term, 'sponsor_list_bill_detail');
             }
             break;
@@ -350,31 +360,6 @@ class BillsHelper {
 
     return $ret;
 
-  }
-
-  /**
-   * Retrieves the senator node id associated with an OpenLeg member id.
-   *
-   * @param int $member_id
-   *   Member id.
-   *
-   * @return int
-   *   node_id
-   *
-   * @see https://bitbucket.org/mediacurrent/nys_nysenate/src/develop/sites/all/modules/custom/nys_utils/nys_utils.module
-   * function nys_utils_get_senator_nid_from_member_id from D7
-   */
-  public function getSenatorTidFromMemberId($member_id) {
-    $preloaded = &drupal_static(__FUNCTION__, []);
-
-    if (!array_key_exists($member_id, $preloaded)) {
-      $query = "SELECT entity_id FROM taxonomy_term__field_ol_member_id WHERE field_ol_member_id_value = :memberid";
-      $queryargs = [
-        ':memberid' => $member_id,
-      ];
-      $preloaded[$member_id] = $this->connection->query($query, $queryargs)->fetchField();
-    }
-    return $preloaded[$member_id];
   }
 
   /**
@@ -500,35 +485,6 @@ class BillsHelper {
         \Drupal::logger('nys_bills')
           ->error('BillsHelper was unable to create or update an alias', ['message' => $e->getMessage()]);
       }
-    }
-  }
-
-  /**
-   * Returns a cached mapping of senator names, keyed by the nid.
-   *
-   * @see https://bitbucket.org/mediacurrent/nys_nysenate/src/develop/sites/all/modules/custom/nys_utils/nys_utils.module
-   * function get_senator_name_mapping() from D7
-   */
-  public function getSenatorNameMapping() {
-    $cache_key = 'nys_utils_get_senator_name_mapping';
-    $cache = $this->cache->get($cache_key);
-    if (!$cache) {
-
-      $senator_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties([
-        'vid' => 'senator',
-      ]);
-
-      $senator_mappings = [];
-      foreach ($senator_terms as &$term) {
-        $senator_mappings[$term->id()] = [
-          'short_name' => $term->get('field_senator_name')[0]->given ?? '',
-          'full_name' => $term->get('field_senator_name')[0]->title ?? '',
-        ];
-      }
-      $this->cache->set($cache_key, $senator_mappings);
-    }
-    else {
-      return $cache->data;
     }
   }
 

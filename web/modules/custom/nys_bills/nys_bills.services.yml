@@ -5,6 +5,7 @@ services:
       - '@database'
       - '@entity_type.manager'
       - '@cache.default'
+      - '@nys_senators.senators_helper'
   nys_bill_vote.bill_vote:
     class: Drupal\nys_bill_vote\BillVoteHelper
     arguments:

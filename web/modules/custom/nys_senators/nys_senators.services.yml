@@ -1,0 +1,6 @@
+services:
+  nys_senators.senators_helper:
+    class: Drupal\nys_senators\SenatorsHelper
+    arguments:
+      - '@entity_type.manager'
+      - '@cache.default'

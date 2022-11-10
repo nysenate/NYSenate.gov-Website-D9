@@ -44,7 +44,8 @@ function nys_bill_notifications_entity_presave(EntityInterface $entity): void {
  * Implements hook_mail_alter().
  */
 function nys_bill_notifications_mail_alter(&$message): void {
-  if ($queue_item = $message['params']['queue_item']) {
+  if (isset($message['params']['queue_item'])) {
+    $queue_item = $message['params']['queue_item'];
     $message['params']['GA_CampaignContent'] = $queue_item->mailKey ?? '';
   }
 }

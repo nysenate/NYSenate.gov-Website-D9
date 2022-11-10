@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Theme override to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
+ * - view: The view object.
+ * - default_row_class: A flag indicating whether default classes should be
+ *   used on rows.
+ *
+ * @see template_preprocess_views_view_unformatted()
+ */
+#}
+
+{{ attach_library('nysenate_theme/session') }}
+
+{% for content in past_meetings %}
+  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+    <div class="l-col l-col-1-of-2">
+      <p class="c-meeting-detail--date">
+        <span class="c-meeting-date--num">{{ content.event_date }}</span>
+        <span class="c-meeting-date--month">{{ content.event_month }}</span>
+      </p>
+    </div>
+
+    <div class="l-col l-col-2-of-2">
+      <h3 class="c-meeting-detail--title">
+        <a href="{{ content.cta.url }}">{{ content.title }}</a>
+      </h3>
+      <div class="c-meeting-detail--related">
+        <ul>
+          {% for key,issue in content.issues if key matches '/^\\d+$/' %}
+            <li>
+              <a href="{{ issue.url }}">{{ issue.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >NYS Capitol Building</a>
+      <p class="c-meeting-detail--location">
+        {{ content.meeting_location }}
+      </p>
+      <p class="c-meeting-detail--time">
+        {{ content.event_time_start }}
+      </p>
+    </div>
+  </div>
+{% endfor %}

@@ -119,4 +119,15 @@
       } only %}
     </div>
   {% endif %}
+
+  {{ meeting_agenda }}
 </article>
+
+{% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+  title: node.type.entity.label,
+  node_url: url,
+  cta: cta,
+} only
+%}
+
+{{ committee_events }}

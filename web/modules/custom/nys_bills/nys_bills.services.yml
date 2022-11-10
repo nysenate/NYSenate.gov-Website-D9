@@ -13,3 +13,7 @@ services:
       - '@current_route_match'
       - '@logger.factory'
       - '@entity_type.manager'
+  nys_bills.twig.filters:
+    class: Drupal\nys_bills\CustomTwig
+    tags:
+      - { name: twig.extension }

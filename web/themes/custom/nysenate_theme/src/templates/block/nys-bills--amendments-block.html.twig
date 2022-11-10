@@ -1,5 +1,3 @@
-{{ kint(content) }}
-
 <!-- Amendment Tabs -->
 {% if content.amendments|length > 1 %}
   <div class="c-bill--amendment-details c-bill-section">
@@ -161,8 +159,11 @@
             <div id="summary-{{ content.bill_wrapper.label() }}">
               <div class="c-block c-detail--summary c-bill-section">
                 <p>
-                  {# todo: handle see more ';' #}
-                  {{ node_wrapper.field_ol_summary.value }}
+                  {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_summary.value, ';', 3) %}
+                  {{ read_more_parts.part_1 }}
+                  {% if show_expander %}
+                    <span class="u-inline-expand-ellipsis">&hellip;</span>&nbsp;<a style="cursor:pointer;" class="u-text-expander--inline">(view more)</a><span class="u-text-expander--inline__more-text">{{ read_more_parts.part_2 }}</span>
+                  {% endif %}
                 </p>
               </div>
             </div>
@@ -180,11 +181,27 @@
           <div id="sponsor-memo-{{ content.bill_wrapper.label() }}"
                class="c-text--preformatted">
             <div class="c-detail--memo">
-            <pre class="c-bill-fulltext">
-              {# todo: handle see more ';' #}
-              {{ node_wrapper.field_ol_memo.value }}
-            </pre>
+              <pre class="c-bill-fulltext">
+                {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
+                {{ read_more_parts.part_1 }}
+              </pre>
             </div>
+            {% if read_more_parts.show_expander %}
+              <div id="memo-expand-{{ node_wrapper.label() }}"
+                   style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}"
+                   class="c-detail--memo">
+                <pre class="c-bill-fulltext">{{ read_more_parts.part_2 }}</pre>
+              </div>
+              <div class="item-list">
+                <ul class="pager pager-load-more">
+                  <li class="pager-next first last">
+                    <a class="text-expander">View More
+                      ({{ read_more_parts.extra_line_count }}
+                      Lines)</a>
+                  </li>
+                </ul>
+              </div>
+            {% endif %}
           </div>
         </div>
       {% endif %}
@@ -204,9 +221,26 @@
               class="c-text--preformatted">
             <div class="c-detail--memo">
             <pre class="c-bill-fulltext">
-              {{  node_wrapper.field_ol_full_text.value }}
-            </pre>
+              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}
+              {{ read_more_parts.part_1 }}
+              </pre>
             </div>
+            {% if read_more_parts.show_expander %}
+              <div id="expand-{{ node_wrapper.label() }}"
+                   style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}"
+                   class="c-detail--memo">
+                <pre class="c-bill-fulltext">{{ read_more_parts.part_2 }}</pre>
+              </div>
+              <div class="item-list">
+                <ul class="pager pager-load-more">
+                  <li class="pager-next first last">
+                    <a class="text-expander">View More
+                      ({{ read_more_parts.extra_line_count }}
+                      Lines)</a>
+                  </li>
+                </ul>
+              </div>
+            {% endif %}
           </div>
         {% else %}
           <div class="c-bill-fulltext">The Bill text is not available.</div>

@@ -12,12 +12,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 * Custom Queue Worker.
 *
 * @QueueWorker(
-*   id = "custom_queue",
-*   title = @Translation("Custom Queue"),
+*   id = "nys_sunset_expired_queue",
+*   title = @Translation("Sunset Policy Expired Queue"),
 *   cron = {"time" = 60}
 * )
 */
-final class SunsetQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
+final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
   /**
    * The entity type manager.
    *
@@ -92,6 +92,23 @@ final class SunsetQueue extends QueueWorkerBase implements ContainerFactoryPlugi
     $update = $data->update;
 
     // Processing of queue items logic goes here.
+    $mailManager = \Drupal::service('plugin.manager.mail');
+    $params = $data;
+    $mailManager->mail('learning', 'email_queue', $data['email'], 'en', $params , $send = TRUE);
   }
 
+ /**
+   * Add expired item in the queue.
+   *
+   * @param mixed $data
+   *   The queue item data.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Exception
+   */
+  public function createExpiredItem() {
+
+  }
 }

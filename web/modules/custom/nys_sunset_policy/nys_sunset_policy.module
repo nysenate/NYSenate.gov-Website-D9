@@ -1,6 +1,77 @@
 <?php
 
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueInterface;
+
 /**
  * @file
  * Contains custom code for sunset policy.
  */
+
+/**
+ * Implements hook_cron.
+ */
+function nys_sunset_policy_cron() {
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $expiring_queue = $queue_factory->get('nys_sunset_expiring_queue');
+  foreach (nys_sunset_policy_get_expiring() as $nid) {
+    $expiring_queue->createExpiredItem($nid);
+  }
+  /** @var QueueInterface $queue */
+  $expired_queue = $queue_factory->get('nys_sunset_expired_queue');
+  foreach (nys_sunset_policy_get_expired() as $nid) {
+    $expired_queue->createExpiredItem($nid);
+  }
+}
+
+/**
+ * @return array
+ * Petition and questionnaire node ids that have expired and need processing.
+ */
+function nys_sunset_policy_get_expired() {
+  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+  $results = $query
+    ->condition('type', ['petition', 'questionnaire'], 'IN')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->condition('field_expiration_date', REQUEST_TIME, '<=')
+    ->execute();
+  $node_ids = [];
+  if (isset($results)) {
+    foreach ($results as $nid) {
+      /** @var \Drupal\node\Entity\NodeInterface */
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      if ($node->field_last_notified->getValue() < $node->field_expiration_date->getValue()) {
+        $node_ids[] = $nid;
+      }
+    }
+  }
+  return $node_ids;
+}
+
+/**
+ * @return array
+ * Petition and questionnaire node ids that have expired and need processing.
+ */
+function nys_sunset_policy_get_expiring() {
+  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+  $results = $query
+    ->condition('type', ['petition', 'questionnaire'], 'IN')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->condition('field_expiration_date', REQUEST_TIME, '>')
+    ->condition('field_expiration_date', strtotime('+2 days', REQUEST_TIME), '<')
+    ->execute();
+  $node_ids = [];
+  if (isset($results)) {
+    foreach ($results as $nid) {
+      /** @var \Drupal\node\Entity\NodeInterface */
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      if (strtotime('+2 days', $node->field_last_notified->getValue()) < $node->field_expiration_date->getValue()) {
+        $node_ids[] = $nid;
+      }
+    }
+  }
+  return $node_ids;
+}

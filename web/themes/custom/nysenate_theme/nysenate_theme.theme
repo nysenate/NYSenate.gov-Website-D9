@@ -2469,7 +2469,7 @@ function nysenate_theme_preprocess_node__public_hearing(&$variables) {
  * Implements hook_preprocess_node__NODE_TYPE().
  */
 function nysenate_theme_preprocess_node__meeting(&$variables) {
-  $variables['meeting_agenda'] = views_embed_view('committee_meetings', 'block_3');
+  $variables['meeting_agenda'] = views_embed_view('committee_meetings', 'meeting_agenda');
   $variables['committee_events'] = views_embed_view('committee_meetings', 'past_meetings');
 
   $date_value = get_date_range_values($variables);

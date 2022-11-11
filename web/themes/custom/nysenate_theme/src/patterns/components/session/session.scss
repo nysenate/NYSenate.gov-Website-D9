@@ -952,3 +952,37 @@
     font-size: 14px;
   }
 }
+
+.l-panel-col {
+  display: block;
+  float: left;
+
+  & + .l-panel-col {
+    margin: 0;
+  }
+}
+.l-panel-col--lft {
+  width: 24%;
+  max-width: 180px
+}
+
+.l-panel-col--ctr {
+  width: 56%;
+  padding-right: 2%;
+  max-width: 440px;
+
+  .c-press-release--descript {
+    font-size: 18px;
+    line-height: 22px;
+    color: $grey02;
+  }
+}
+
+.l-panel-col--rgt {
+  width: 20%;
+  max-width: 140px;
+
+  &.l-panel-padded {
+    padding-left: 10%;
+  }
+}

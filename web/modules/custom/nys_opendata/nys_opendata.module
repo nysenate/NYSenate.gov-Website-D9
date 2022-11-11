@@ -30,7 +30,7 @@ function nys_opendata_preprocess_node(&$variables) {
       $open_data_items = $variables['content']['field_open_data_file']['#items'];
 
       // Iterate through the associated file.
-      foreach (($open_data_items ?? []) as $one_file) {
+      foreach ($open_data_items as $one_file) {
         // Check if file is displayed.
         if ($one_file->isDisplayed()) {
           // Get the data.

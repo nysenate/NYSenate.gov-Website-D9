@@ -79,7 +79,7 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
   /**
    * Processes an item in the queue.
    *
-   * @param mixed $data
+   * @param mixed $nid
    *   The queue item data.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
@@ -87,17 +87,16 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Exception
    */
-  public function processItem($data) {
-    $nid = $data->nid;
-    $update = $data->update;
-
-    // Processing of queue items logic goes here.
-    $mailManager = \Drupal::service('plugin.manager.mail');
-    $params = $data;
-    $mailManager->mail('learning', 'email_queue', $data['email'], 'en', $params , $send = TRUE);
+  public function processItem($nid) {
+    sunsetExpiringMail($nid);
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+    if (!empty($node)) {
+      // Update last notified field so we don't resend the email.
+      $node->set('field_last_notified', REQUEST_TIME);
+    }
   }
 
- /**
+  /**
    * Add expired item in the queue.
    *
    * @param mixed $data
@@ -108,7 +107,26 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Exception
    */
-  public function createExpiringItem() {
+  public function createExpiringItem($data) {
 
   }
+
+  /**
+   * Send email of expiring item.
+   *
+   * @param mixed $nid
+   *   The node id.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Exception
+   */
+  public function sunsetExpiringMail($nid) {
+    // Processing of queue items logic goes here.
+    $mailManager = \Drupal::service('plugin.manager.mail');
+    $params = $data;
+    $mailManager->mail('learning', 'email_queue', $data['email'], 'en', $params, $send = TRUE);
+  }
+
 }

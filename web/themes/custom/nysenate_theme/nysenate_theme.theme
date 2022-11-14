@@ -2613,8 +2613,8 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
     $publication_date = new \Datetime($node->field_publication_date->value);
     $variables['date'] = $date->format('F d, Y');
     $variables['end_date'] = $end_date->format('F d, Y');
-    $variables['open_date_type'] = $node->field_open_date_type
-      ->getSetting('allowed_values')[$node->field_open_date_type->value];
+    $variables['open_date_type'] = $node->field_open_date_type->value ? $node->field_open_date_type
+      ->getSetting('allowed_values')[$node->field_open_date_type->value] : "";
     $variables['published_on'] = $publication_date->format('F d, Y');
     $variables['body'] = $node->body->view();
     $variables['title'] = $node->getTitle();

@@ -1609,6 +1609,14 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__senator__agenda_senator_sponsors(&$variables) {
+  $term = $variables['term'];
+  $variables['district'] = get_senator_district($term->id());
+}
+
+/**
  * Implements hook_theme_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variables) {

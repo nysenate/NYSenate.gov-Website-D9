@@ -1539,6 +1539,15 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     }
   }
 
+  if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+    $tid = $node->get('field_senator_multiref')->first()->getString() ?? '';
+    $senator = NULL;
+    if (!empty($tid)) {
+      $senator = Term::load($tid);
+      $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
+    }
+  }
+
   // Override the main content.
   // Display the microsite node with altered contents.
   $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()->getViewBuilder('node')

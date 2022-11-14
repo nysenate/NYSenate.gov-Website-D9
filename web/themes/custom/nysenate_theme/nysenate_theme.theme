@@ -1539,6 +1539,15 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     }
   }
 
+  if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+    $tid = $node->get('field_senator_multiref')->first()->getString() ?? '';
+    $senator = NULL;
+    if (!empty($tid)) {
+      $senator = Term::load($tid);
+      $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
+    }
+  }
+
   // Override the main content.
   // Display the microsite node with altered contents.
   $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()->getViewBuilder('node')
@@ -1975,7 +1984,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['is_substituted'] = FALSE;
   $state_node = NULL;
   if ($bill_sub_by) {
-    $sub_temp = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node->bundle(), $bill_sub_by, $bill_session_year);
+    $sub_temp = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node);
     $subst_versions = array_combine(
         array_map(function ($v) {
           return $v['title'];
@@ -2058,6 +2067,10 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   // Create the HTML for the bill's session.
   $variables['legislative_session'] = '<div class="c-bill--session-year">' .
   $bill_session_year . '-' . ($bill_session_year + 1) . ' Legislative Session</div>';
+
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $amendments_block = $block_manager->createInstance('nys_bills_amendment_block', []);
+  $variables['amendments_block'] = $amendments_block->build();
 }
 
 /**
@@ -2127,7 +2140,7 @@ function nysenate_bill_positions($node) {
     if ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty()) {
       $ol_session = $node->field_ol_session->value;
     }
-    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node->bundle(), $sub_bill_base_print_no, $ol_session);
+    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node);
     if (!empty($sub_bill_versions)) {
       $node = \Drupal::entityTypeManager()->getStorage('node')
         ->load(end($sub_bill_versions)['nid']);
@@ -2358,9 +2371,58 @@ function nysenate_theme_preprocess_node__honoree(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function nysenate_theme_preprocess_node__session(&$variables) {
+  $date_value = get_date_range_values($variables);
+  $video_status = get_video_status_values($variables);
+  $location = get_location_values($variables);
+
+  // Only generate the calendar invite
+  // if there's start_date.
+  if (isset($date_value['start_date_raw'])) {
+    $title = $variables['node']->getTitle();
+    // Set up reference variables indicating if this event spans multiple days.
+    $is_multiday = !($date_value['start_date_raw']->format('Ymd') == $date_value['end_date_raw']->format('Ymd'));
+    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $date_value['start_date_raw'], $date_value['end_date_raw'], $is_multiday, $description, $location['address']);
+  }
+
+  $variables['location_url'] = !empty($location['location_url']) ? urlencode($location['location_url']) : urlencode($location['address']);
+  $variables['date_value'] = $date_value;
+  $variables['video_status'] = $video_status;
+  $variables['location'] = $location['address'];
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__public_hearing(&$variables) {
+  $date_value = get_date_range_values($variables);
+  $video_status = get_video_status_values($variables);
+  $location = get_location_values($variables);
+
+  // Only generate the calendar invite
+  // if there's start_date.
+  if (isset($date_value['start_date_raw'])) {
+    $title = $variables['node']->getTitle();
+    // Set up reference variables indicating if this event spans multiple days.
+    $is_multiday = !($date_value['start_date_raw']->format('Ymd') == $date_value['end_date_raw']->format('Ymd'));
+    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $date_value['start_date_raw'], $date_value['end_date_raw'], $is_multiday, $description, $location['address']);
+  }
+
+  $variables['location_url'] = !empty($location['location_url']) ? urlencode($location['location_url']) : urlencode($location['address']);
+  $variables['date_value'] = $date_value;
+  $variables['video_status'] = $video_status;
+  $variables['location'] = $location['address'];
+}
+
+/**
+ * Method for fetching date range values.
+ */
+function get_date_range_values($variables) {
   $date_value = [];
   $start_date = NULL;
   $end_date = NULL;
+
   if (isset($variables['content']['field_date_range'][0])) {
     // If date range has same values.
     if (isset($variables['content']['field_date_range'][0]['#text'])) {
@@ -2379,18 +2441,34 @@ function nysenate_theme_preprocess_node__session(&$variables) {
       $date_value['year'] = date_format($start_date, "Y");
       $date_value['from_time'] = date_format($start_date, "h:i A");
       $date_value['to_time'] = date_format($end_date, "h:i A");
+      $date_value['start_date_raw'] = $start_date;
+      $date_value['end_date_raw'] = $end_date;
       $date_value['start_date'] = date_format($start_date, "m/d/Y h:i A");
       $date_value['end_date'] = date_format($end_date, "m/d/Y h:i A");
     }
 
   }
 
+  return $date_value;
+}
+
+/**
+ * Method for fetching video status values.
+ */
+function get_video_status_values($variables) {
   $video_status = [];
   if (isset($variables['content']['field_video_status'][0])) {
     $video_status['key'] = $variables['content']['field_video_status']['#items']->value;
     $video_status['value'] = $variables['content']['field_video_status'][0]['#markup'];
   }
 
+  return $video_status;
+}
+
+/**
+ * Method for fetching location values.
+ */
+function get_location_values($variables) {
   $address = '';
   if (isset($variables['content']['field_location'][0])) {
     if (!empty($variables['content']['field_location'][0]['address_line1']['#value'])) {
@@ -2415,20 +2493,10 @@ function nysenate_theme_preprocess_node__session(&$variables) {
     $location_url = $variables['content']['field_location'][0]['organization']['#value'] . ', ' . $address;
   }
 
-  // Only generate the calendar invite
-  // if there's start_date.
-  if (isset($start_date)) {
-    $title = $variables['node']->getTitle();
-    // Set up reference variables indicating if this event spans multiple days.
-    $is_multiday = !($start_date->format('Ymd') == $end_date->format('Ymd'));
-    $description = $variables['content']['body'][0]['#text'] ?? '';
-    $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
-  }
-
-  $variables['location_url'] = !empty($location_url) ? urlencode($location_url) : urlencode($address);
-  $variables['date_value'] = $date_value;
-  $variables['video_status'] = $video_status;
-  $variables['location'] = $address;
+  return [
+    'address' => $address,
+    'location_url' => $location_url,
+  ];
 }
 
 /**
@@ -2554,8 +2622,8 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
     $publication_date = new \Datetime($node->field_publication_date->value);
     $variables['date'] = $date->format('F d, Y');
     $variables['end_date'] = $end_date->format('F d, Y');
-    $variables['open_date_type'] = $node->field_open_date_type
-      ->getSetting('allowed_values')[$node->field_open_date_type->value];
+    $variables['open_date_type'] = $node->field_open_date_type->value ? $node->field_open_date_type
+      ->getSetting('allowed_values')[$node->field_open_date_type->value] : "";
     $variables['published_on'] = $publication_date->format('F d, Y');
     $variables['body'] = $node->body->view();
     $variables['title'] = $node->getTitle();
@@ -2917,6 +2985,24 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
           }
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__petition(&$variables) {
+  $variables['image_caption'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node->get('field_senator_multiref')->isEmpty()) {
+    $tid = $node->get('field_senator_multiref')->first()->getString() ?? '';
+    if (!empty($tid)) {
+      $senatorName = Term::load($tid)->get('name')->value;
+      $variables['field_senator'] = $senatorName;
     }
   }
 }

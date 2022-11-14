@@ -124,6 +124,7 @@ class Bills extends ImportProcessorBase {
 
     // For bills only.
     if (!$is_resolution) {
+      $values['field_ol_version'] = $item->version ?? '';
       $values['field_ol_is_active_version'] = (int) ($item->version == $result->activeVersion);
       $values['field_ol_all_actions'] = json_encode($result->actions);
       $values['field_ol_law_code'] = $item->lawCode;

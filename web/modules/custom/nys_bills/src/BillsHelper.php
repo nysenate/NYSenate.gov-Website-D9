@@ -350,7 +350,7 @@ class BillsHelper {
               // @todo Needs integration.
               '#theme' => 'bill_sponsor_assembly',
               '#content' => [
-                'fullName' => $one_sponsor->fullName,
+                'full_name' => $one_sponsor->fullName,
               ],
             ];
             break;

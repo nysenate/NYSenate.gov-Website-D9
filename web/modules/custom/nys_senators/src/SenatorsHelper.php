@@ -138,4 +138,38 @@ class SenatorsHelper {
     return current($ret) ?: NULL;
   }
 
+  /**
+   * Get the Senator Sponsors of node.
+   */
+  public function getSenatorSponsors($node, $parent_type = NULL) {
+
+    $senator = $node->field_ol_sponsor->entity;
+    if (!empty($senator)) {
+      $variables['ol_sponsor'] = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($senator, 'sponsor_list');
+    }
+
+    // Sponsor name.
+    if (!empty($node->field_ol_sponsor_name->value) && $parent_type !== 'bill_default') {
+      $variables['ol_sponsor_name'] = $node->field_ol_sponsor_name->value;
+    }
+
+    // Additional sponsor.
+    if (!empty($ol_add_sponsors = $node->field_ol_add_sponsors->referencedEntities())) {
+      $ol_add_sponsors = $view_builder->view($ol_add_sponsors, 'sponsor_list');
+      $variables['ol_add_sponsors'] = $ol_add_sponsors;
+    }
+
+    // Additional Sponsor Names.
+    if (!empty($node->field_ol_add_sponsor_names->value)) {
+      $sponsor_names = [];
+      $ol_add_sponsor_names = json_decode($node->field_ol_add_sponsor_names->value);
+      foreach ($ol_add_sponsor_names as $key => $sponsor) {
+        $sponsor_names[] = $sponsor->fullName;
+      }
+
+      $variables['sponsor_names'] = implode(', ', $sponsor_names);
+    }
+    return $variables;
+  }
+
 }

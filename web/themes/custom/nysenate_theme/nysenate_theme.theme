@@ -1769,8 +1769,7 @@ function nysenate_theme_theme($existing, $type, $theme, $path) {
   return [
     'nysenate_sponsor' => [
       'variables' => [
-        'bill' => NULL,
-        'parent_type' => NULL,
+        'content' => NULL,
       ],
       'path' => $path . '/src/templates',
     ],
@@ -1787,46 +1786,6 @@ function nysenate_theme_theme($existing, $type, $theme, $path) {
       'path' => $path . '/src/templates',
     ],
   ];
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function nysenate_theme_preprocess_nysenate_sponsor(&$variables) {
-  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term');
-  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-
-  // Sponsor.
-  if ($variables['bill']->field_ol_sponsor->target_id) {
-    $ol_sponsor = $storage->load($variables['bill']->field_ol_sponsor->target_id);
-    $ol_sponsor = $view_builder->view($ol_sponsor, 'sponsor_list');
-
-    $variables['ol_sponsor'] = $ol_sponsor;
-  }
-
-  // Sponsor name.
-  if ($variables['bill']->field_ol_sponsor_name->value && $variables['parent_type'] !== 'bill_default') {
-    $variables['ol_sponsor_name'] = $variables['bill']->field_ol_sponsor_name->value;
-  }
-
-  // Additional sponsor.
-  if ($variables['bill']->field_ol_add_sponsors->target_id) {
-    $ol_add_sponsors = $storage->load($variables['bill']->field_ol_add_sponsors->target_id);
-    $ol_add_sponsors = $view_builder->view($ol_add_sponsors, 'sponsor_list');
-
-    $variables['ol_add_sponsors'] = $ol_add_sponsors;
-  }
-
-  // Additional Sponsor Names.
-  if ($variables['bill']->field_ol_add_sponsor_names->value) {
-    $sponsor_names = [];
-    $ol_add_sponsor_names = json_decode($variables['bill']->field_ol_add_sponsor_names->value);
-    foreach ($ol_add_sponsor_names as $key => $sponsor) {
-      $sponsor_names[] = $sponsor->fullName;
-    }
-
-    $variables['sponsor_names'] = implode(', ', $sponsor_names);
-  }
 }
 
 /**
@@ -1956,8 +1915,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
 
   $variables['sponsored_by'] = [
     '#theme' => 'nysenate_sponsor',
-    '#bill' => $node,
-    '#parent_type' => 'bill_default',
+    '#content' => \Drupal::service('nys_senators.senators_helper')->getSenatorSponsors($node),
   ];
 
   // In D7, this value is being set in a form.
@@ -2035,6 +1993,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
       // and group by base print no -> version -> date.
       $actions = array_reverse($actions);
       $variables['actions_count'] = count($actions);
+
       foreach ($actions as &$action) {
         $basePrintNo = $action['billId']['basePrintNo'];
         $version = $action['billId']['version'];
@@ -2050,7 +2009,6 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
         }
         array_push($grouped_actions[$basePrintNo][$version][$date], $action);
       }
-
       $variables['grouped_actions'] = $grouped_actions;
     }
   }
@@ -2062,6 +2020,21 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $block_manager = \Drupal::service('plugin.manager.block');
   $amendments_block = $block_manager->createInstance('nys_bills_amendment_block', []);
   $variables['amendments_block'] = $amendments_block->build();
+
+  // Detect signed/vetoed status.
+  switch ($node->field_ol_last_status->value) {
+    case 'SIGNED_BY_GOV':
+      $variables['signed_veto_status'] = '<span class="c-bill--flag">Signed By Governor</span>';
+      break;
+
+    case 'VETOED':
+      $variables['signed_veto_status'] = '<span class="c-bill--flag">Vetoed By Governor</span>';
+      break;
+
+    default:
+      $variables['signed_veto_status'] = '';
+      break;
+  }
 }
 
 /**
@@ -2259,7 +2232,7 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
 
   $variables['sponsored_by'] = [
     '#theme' => 'nysenate_sponsor',
-    '#bill' => $node,
+    '#content' => \Drupal::service('nys_senators.senators_helper')->getSenatorSponsors($node),
   ];
 
   $variables['sponsor_block'] = $node->field_ol_co_sponsor_names->value;

@@ -16,7 +16,7 @@
           Bill
           {{ label }}
         </h2>
-        <span class="c-bill--flag">{{ content.field_ol_last_status[0]['#markup'] }}</span>
+        {{ signed_veto_status|raw }}
         <div class="clearfix"></div>
         <div class="c-bill--session-year">
           {{ legislative_session|raw }}
@@ -182,11 +182,24 @@
                     <tbody>
                       {% for versions, base_print_no in grouped_actions %}
                         {% for dates, version in base_print_no %}
-                          {% for key, items in version %}
+                          {% for key,items in version %}
                             <tr class="c-bill--actions-table--row">
                               <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
                               <td class="c-bill--actions-table-col2">
-                                <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
+                                {% for item in items %}
+                                  {% set text_class = 'c-bill--action-line-' ~ item.chamber|lower %}
+                                  {% if 'substituted by' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' substituted' %}
+                                  {% endif %}
+                                  {% if 'amended' in item.text|lower or 'print number' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' substituted' %}
+                                  {% endif %}
+                                  {% if 'stricken' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' stricken' %}
+                                  {% endif %}
+                                  <span class="{{ text_class }}">{{ item.text }}</span><br>
+                                {% endfor %}
+                                </td>
                             </tr>
                           {% endfor %}
                         {% endfor %}
@@ -227,7 +240,9 @@
       </dl>
     </div>
   {% endif %}
+
   {{ amendments_block }}
+
   <div class="content c-bill-section" id="panel-comments">
     <div class="c-block c-detail--summary">
       <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>

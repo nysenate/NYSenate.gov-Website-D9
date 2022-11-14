@@ -133,20 +133,22 @@
   </div>
 
   <!-- Your Voice -->
-  <div class="c-block c-bill-section" id="your-voice">
-    <h3 class="c-detail--subhead c-detail--section-title">Your Voice</h3>
-  </div>
-  <!-- Bill Vote Widget -->
-  <div class="c-bill--vote-widget">
-    {{ content.vote_widget }}
-  </div>
+  {% if registration_form or content.vote_widget %}
+    <div class="c-block c-bill-section" id="your-voice">
+      <h3 class="c-detail--subhead c-detail--section-title">Your Voice</h3>
+    </div>
+    <!-- Bill Vote Widget -->
+    <div class="c-bill--vote-widget">
+      {{ content.vote_widget }}
+    </div>
 
-  <!-- Bill Message Form -->
-  <div class="c-bill--message-form clearfix">
-    {# todo: This variable comes from nys_bills custom module. #}
-    {# Need to confirm if we need to port this module. #}
-  {{ registration_form }}
-  </div>
+    <!-- Bill Message Form -->
+    <div class="c-bill--message-form clearfix">
+      {# todo: This variable comes from nys_bills custom module. #}
+      {# Need to confirm if we need to port this module. #}
+    {{ registration_form }}
+    </div>
+  {% endif %}
 
   <!-- Bill Actions -->
   <div class="c-block c-bill-section">
@@ -227,7 +229,9 @@
       </dl>
     </div>
   {% endif %}
+
   {{ amendments_block }}
+
   <div class="content c-bill-section" id="panel-comments">
     <div class="c-block c-detail--summary">
       <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>

@@ -204,6 +204,10 @@ h4.c-bill-topic {
 .c-block.c-bill-section {
   margin-top: 30px;
   margin-bottom: 0;
+
+  @include breakpoint($bp-sm) {
+    margin-bottom: 30px;
+  }
 }
 
 .c-bill-fulltext {

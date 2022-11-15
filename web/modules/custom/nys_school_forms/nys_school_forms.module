@@ -38,11 +38,26 @@ function nys_school_forms_views_post_execute(ViewExecutable $view) {
           $relationship_data['webform_submission_reverse_reference__school_form__school_name'] = $entity;
           $new_result->_relationship_entities = $relationship_data;
           // Add the result to the updated results array.
-          $new_result_array[] = $new_result;
+          // Add the student as the key for sorting.
+          $new_result_array[strtoupper($student['student_name'])] = $new_result;
         }
       }
     }
-    // Replace view results with our computed ones.
-    $view->result = $new_result_array;
+    // If sort by student name is used sort the array.
+    if (array_key_exists('sort_by', $view->getExposedInput()) && $view->getExposedInput()['sort_by'] == 'student_name') {
+      ksort($new_result_array, SORT_NATURAL);
+      $new_result_array = array_values($new_result_array);
+      if (array_key_exists('sort_order', $view->getExposedInput()) && $view->getExposedInput()['sort_order'] == 'DESC') {
+        // Reverse the array if sort is descending.
+        $view->result = array_reverse($new_result_array);
+      }
+      else {
+        $view->result = $new_result_array;
+      }
+    }
+    else {
+      // Replace view results with our computed ones.
+      $view->result = array_values($new_result_array);
+    }
   }
 }

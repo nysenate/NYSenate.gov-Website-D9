@@ -701,6 +701,19 @@ display:
             field_identifier: date
           exposed: true
           granularity: second
+        webform_submission_value:
+          id: webform_submission_value
+          table: webform_submission_field_school_form_attach_your_submission__student_name
+          field: webform_submission_value
+          relationship: webform_submission_reverse_reference__school_form__school_name
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field_sort
+          order: ASC
+          expose:
+            label: 'Student Name'
+            field_identifier: student_name
+          exposed: true
       arguments: {  }
       filters:
         field_senator_target_id:

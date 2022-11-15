@@ -13,6 +13,7 @@ dependencies:
     - node
     - taxonomy
     - user
+    - views_autocomplete_filters
     - webform
     - webform_views
 id: school_forms
@@ -773,6 +774,117 @@ display:
           hierarchy: false
           limit: true
           error_message: true
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: views_autocomplete_filters_string
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: School
+            description: ''
+            use_operator: false
+            operator: title_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: school
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            placeholder: ''
+            autocomplete_filter: 0
+            autocomplete_min_chars: '3'
+            autocomplete_items: '10'
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        webform_submission_value:
+          id: webform_submission_value
+          table: webform_submission_field_school_form_contact_name
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field_filter
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: webform_submission_value_op
+            label: 'Teacher Name'
+            description: ''
+            use_operator: false
+            operator: webform_submission_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: teacher_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
         field_school_form_type_target_id:
           id: field_school_form_type_target_id
           table: node__field_school_form_type
@@ -830,57 +942,10 @@ display:
           hierarchy: false
           limit: true
           error_message: true
-        webform_submission_value:
-          id: webform_submission_value
-          table: webform_submission_field_school_form_contact_name
-          field: webform_submission_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: webform_submission_field_filter
-          operator: contains
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: webform_submission_value_op
-            label: 'Teacher Name'
-            description: ''
-            use_operator: false
-            operator: webform_submission_value_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: teacher_name
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: table
         options:

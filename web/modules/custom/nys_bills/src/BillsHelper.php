@@ -2,9 +2,13 @@
 
 namespace Drupal\nys_bills;
 
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\nys_senators\SenatorsHelper;
 use Drupal\path_alias\Entity\PathAlias;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Helper class for nys_bills module.
@@ -20,24 +24,71 @@ class BillsHelper {
   const CACHE_BIN_PREFIX = 'nys_bills';
 
   /**
-   * Retrieves a value from the nys_bills cache.
+   * Default object for database service.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
-  protected static function getCache(string $name): bool|object {
-    return \Drupal::cache()->get(static::CACHE_BIN_PREFIX . ':' . $name);
+  protected $connection;
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The CacheBackend Interface.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * The Senators Helper.
+   *
+   * @var \Drupal\nys_senators\SenatorsHelper
+   */
+  protected $senatorsHelper;
+
+  /**
+   * Constructor class for Bills Helper.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The backend cache.
+   * @param \Drupal\nys_senators\SenatorsHelper $senators_helper
+   *   The senators helper.
+   */
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper) {
+    $this->connection = $connection;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->cache = $cache_backend;
+    $this->senatorsHelper = $senators_helper;
+  }
+
+  /**
+   * Get the Cache.
+   */
+  protected function getCache(string $name): bool|object {
+    return $this->cache->get(static::CACHE_BIN_PREFIX . ':' . $name);
   }
 
   /**
    * Sets a value in the nys_bills cache.
    */
-  protected static function setCache(string $name, $value): void {
-    \Drupal::cache()->set(static::CACHE_BIN_PREFIX . ':' . $name, $value);
+  protected function setCache(string $name, $value): void {
+    $this->cache->set(static::CACHE_BIN_PREFIX . ':' . $name, $value);
   }
 
   /**
    * Removes a value from the nys_bills cache.
    */
-  protected static function removeCache(string $name): void {
-    \Drupal::cache()->delete(static::CACHE_BIN_PREFIX . ':' . $name);
+  protected function removeCache(string $name): void {
+    $this->cache->delete(static::CACHE_BIN_PREFIX . ':' . $name);
   }
 
   /**
@@ -46,14 +97,14 @@ class BillsHelper {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected static function getStorage(): EntityStorageInterface {
-    return \Drupal::entityTypeManager()->getStorage('node');
+  protected function getStorage(): EntityStorageInterface {
+    return $this->entityTypeManager->getStorage('node');
   }
 
   /**
    * Validates that a node is a bill or resolution.
    */
-  protected static function isBill(Node $node): bool {
+  public function isBill(NodeInterface $node): bool {
     return in_array($node->bundle(), ['bill', 'resolution']);
   }
 
@@ -64,9 +115,9 @@ class BillsHelper {
    *   '/legislation/bills/<session>/<base_print>', with no version.
    *   Returns an empty string if $node is not a bill node.
    */
-  public static function buildActiveAlias(Node $node): string {
+  public function buildActiveAlias(NodeInterface $node): string {
     $ret = '';
-    if (static::isBill($node)) {
+    if ($this->isBill($node)) {
       $session = $node->field_ol_session->value ?? '';
       $base = strtoupper($node->field_ol_base_print_no->value ?? '');
       if ($session && $base) {
@@ -84,10 +135,10 @@ class BillsHelper {
    *   version could be the word 'original', or a single letter.  Returns an
    *   empty string if $node is not a bill node.
    */
-  public static function buildAlias(Node $node): string {
+  public function buildAlias(NodeInterface $node): string {
     $version = strtoupper($node->field_ol_version->value ?? '') ?: 'original';
-    return static::isBill($node)
-      ? static::buildActiveAlias($node) . '/amendment/' . $version
+    return $this->isBill($node)
+      ? $this->buildActiveAlias($node) . '/amendment/' . $version
       : '';
   }
 
@@ -102,9 +153,9 @@ class BillsHelper {
    * @return array
    *   An empty array of failure, otherwise as returned from loadMultiple().
    */
-  public static function loadBillVersions(string $base_print, int $session): array {
+  public function loadBillVersions(string $base_print, int $session): array {
     try {
-      $storage = static::getStorage();
+      $storage = $this->getStorage();
       $results = $storage->getQuery()
         ->condition('type', ['bill', 'resolution'], 'IN')
         ->condition('field_ol_base_print_no', $base_print)
@@ -125,8 +176,8 @@ class BillsHelper {
    *
    * Note that the returned key lacks the static::CACHE_BIN_PREFIX.
    */
-  public static function generateBillVersionCacheKey(Node $node): string {
-    if (!static::isBill($node)) {
+  public function generateBillVersionCacheKey(NodeInterface $node): string {
+    if (!$this->isBill($node)) {
       throw new \InvalidArgumentException('Node must be a bill or resolution');
     }
     $node_type = $node->bundle();
@@ -156,10 +207,10 @@ class BillsHelper {
    *   is indicative of an error condition; the return should include (at
    *   least) the passed node's information.
    */
-  public static function getBillVersions(Node $node): array {
+  public function getBillVersions(NodeInterface $node): array {
     try {
-      $cid = static::generateBillVersionCacheKey($node);
-      $ret = static::getCache($cid)->data ?? NULL;
+      $cid = $this->generateBillVersionCacheKey($node);
+      $ret = $this->getCache($cid)->data ?? NULL;
     }
     catch (\Throwable) {
       $ret = [];
@@ -168,17 +219,16 @@ class BillsHelper {
 
     if (is_null($ret) && $cid) {
       $ret = [];
-
       if (($node->hasField('field_ol_base_print_no') && !$node->get('field_ol_base_print_no')->isEmpty()) &&
         ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty())) {
         $base_print = $node->field_ol_base_print_no->value;
         $session = $node->field_ol_session->value;
 
-        /** @var \Drupal\node\Entity\Node $bill */
-        foreach (static::loadBillVersions($base_print, $session) as $bill) {
+        /** @var \Drupal\node\NodeInterface $bill */
+        foreach ($this->loadBillVersions($base_print, $session) as $bill) {
           $ret[$bill->getTitle()] = $bill->id();
         }
-        static::setCache($cid, $ret);
+        $this->setCache($cid, $ret);
       }
     }
 
@@ -188,8 +238,8 @@ class BillsHelper {
   /**
    * Wrapper to allow for loading by session and base print number.
    */
-  public static function loadBillBySessionPrint(int $session, string $base_print, string $version = ''): ?Node {
-    return static::loadBillByTitle(static::formatTitleParts($session, $base_print, $version));
+  public function loadBillBySessionPrint(int $session, string $base_print, string $version = ''): ? NodeInterface {
+    return $this->loadBillByTitle(static::formatTitleParts($session, $base_print, $version));
   }
 
   /**
@@ -197,17 +247,14 @@ class BillsHelper {
    *
    * @param string $print_num
    *   A bill print number, such as '2021-S123B'.
-   *
-   * @return \Drupal\node\Entity\Node|null
-   *   If multiple or no bills are found, NULL is returned.
    */
-  public static function loadBillByTitle(string $print_num): ?Node {
+  public function loadBillByTitle(string $print_num): NodeInterface {
     try {
-      $nodes = static::getStorage()->loadByProperties([
+      $nodes = $this->getStorage()->loadByProperties([
         'type' => 'bill',
         'title' => $print_num,
       ]);
-      /** @var \Drupal\node\Entity\Node|NULL $ret */
+      /** @var \Drupal\node\NodeInterface|NULL $ret */
       $ret = current($nodes) ?: NULL;
     }
     catch (\Throwable) {
@@ -219,14 +266,14 @@ class BillsHelper {
   /**
    * Clears caches for all amendments under a bill's base print number.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param \Drupal\node\NodeInterface $node
    *   A bill or resolution node.
    */
-  public static function clearBillVersionsCache(Node $node): void {
-    if (static::isBill($node)) {
+  public function clearBillVersionsCache(NodeInterface $node): void {
+    if ($this->isBill($node)) {
 
       // Clear the version lookup cache.
-      static::removeCache(static::generateBillVersionCacheKey($node));
+      $this->removeCache($this->generateBillVersionCacheKey($node));
 
       // Clear the node cache for all versions.
       // E.g., if S100B gets updated, S100 and S100A are also invalidated.
@@ -234,10 +281,10 @@ class BillsHelper {
         function ($nid) {
           return "node:$nid";
         },
-        array_keys(static::getBillVersions($node))
+        array_keys($this->getBillVersions($node))
       );
       if (count($tags)) {
-        \Drupal::cache()->invalidateMultiple($tags);
+        $this->cache->invalidateMultiple($tags);
       }
 
     }
@@ -246,15 +293,15 @@ class BillsHelper {
   /**
    * Formats the "press finish" title for a bill.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param \Drupal\node\NodeInterface $node
    *   Full bill node object.
    *
    * @return string
    *   Returns a full bill name with Chamber + Bundle + BillName, or an empty
    *   string if $node is not a bill or resolution.
    */
-  public static function formatFullBillTitle(Node $node): string {
-    return self::isBill($node)
+  public function formatFullBillTitle(NodeInterface $node): string {
+    return $this->isBill($node)
       ? ucfirst($node->field_ol_chamber->value) . ' ' . ucfirst($node->bundle()) . ' ' . $node->label()
       : '';
   }
@@ -262,12 +309,12 @@ class BillsHelper {
   /**
    * Generates the standard-format title for a bill node.
    *
-   * @see static::formatTitleParts()
+   * @see formatTitleParts()
    */
-  public static function formatTitle(Node $node, string $version = '', string $separator = '-'): string {
+  public function formatTitle(NodeInterface $node, string $version = '', string $separator = '-'): string {
     if (($node->hasField('field_ol_base_print_no') && !$node->get('field_ol_base_print_no')->isEmpty()) &&
       ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty())) {
-      $title = static::formatTitleParts(
+      $title = $this->formatTitleParts(
         $node->field_ol_session->value,
         $node->field_ol_base_print_no->value,
         $version,
@@ -278,37 +325,75 @@ class BillsHelper {
   }
 
   /**
+   * Resolve Amendment Sponsors.
+   */
+  public function resolveAmendmentSponsors($amendment, $chamber) {
+    $ret = [];
+    $cycle = ['co', 'multi'];
+    $senators = $this->senatorsHelper->getNameMapping();
+    foreach ($cycle as $type) {
+      $ret[$type] = [];
+      $propname = "field_ol_{$type}_sponsor_names";
+
+      $sponsors = json_decode($amendment->{$propname}->value);
+      foreach ($sponsors as $one_sponsor) {
+        switch ($chamber) {
+          case 'senate':
+            $term = $this->senatorsHelper->getSenatorTidFromMemberId($one_sponsor->memberId);
+            if (!empty($term)) {
+              $ret[$type][] = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($term, 'sponsor_list_bill_detail');
+            }
+            break;
+
+          case 'assembly':
+            $ret[$type][] = [
+              // @todo Needs integration.
+              '#theme' => 'bill_sponsor_assembly',
+              '#content' => [
+                'fullName' => $one_sponsor->fullName,
+              ],
+            ];
+            break;
+        }
+      }
+    }
+
+    return $ret;
+
+  }
+
+  /**
    * Generates the standard-format title, given a print number and session.
    *
    * @param int $session
    *   The bill's session year.
    * @param string $base_print
-   *   The bill's base print number (i.e., no version marker)
+   *   The bill's base print number (i.e., no version marker).
    * @param string $version
-   *   An optional version marker.  For the base print, leave blank.
+   *   An optional version marker. For the base print, leave blank.
    * @param string $separator
    *   Defaults to '-'.
    */
-  public static function formatTitleParts(int $session, string $base_print, string $version = '', string $separator = '-'): string {
+  public function formatTitleParts(int $session, string $base_print, string $version = '', string $separator = '-'): string {
     return $session . $separator . strtoupper($base_print) . strtoupper($version);
   }
 
   /**
    * Given a bill/resolution node, returns the node of the active amendment.
    *
-   * @return \Drupal\node\Entity\Node|null
+   * @return \Drupal\node\NodeInterface|null
    *   Returns NULL if multiple or no bills were found.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public static function loadActiveVersion(Node $node): ?Node {
-    $title = static::formatTitle($node, $node->field_ol_active_version->value);
+  public function loadActiveVersion(NodeInterface $node): ? NodeInterface {
+    $title = $this->formatTitle($node, $node->field_ol_active_version->value);
     if ($node->getTitle() == $title) {
       $ret = $node;
     }
     else {
-      $result = static::getStorage()
+      $result = $this->getStorage()
         ->loadByProperties(['title' => $title, 'type' => $node->bundle()]);
       $ret = current($result) ?: NULL;
     }
@@ -353,11 +438,11 @@ class BillsHelper {
    * or redirection response.  In we detect a case like this, we set the
    * canonical URL back to "original", per F.S., 2022-10-27.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param \Drupal\node\NodeInterface $node
    *   The node being saved.
    */
-  public static function validateAliases(Node $node): void {
-    if (static::isBill($node)) {
+  public function validateAliases(NodeInterface $node): void {
+    if ($this->isBill($node)) {
       // Get the session year, base print, and version.
       $session = $node->field_ol_session->value ?? '';
       $base_print = $node->field_ol_base_print_no->value ?? '';
@@ -365,10 +450,10 @@ class BillsHelper {
       $active = $node->field_ol_active_version->value ?? '';
 
       // The alias to the specific amendment (i.e., .../amendment/original)
-      $alias = static::buildAlias($node);
+      $alias = $this->buildAlias($node);
 
       // The alias to the active amendment (/legislation/bills/2021/S100)
-      $canon = static::buildActiveAlias($node);
+      $canon = $this->buildActiveAlias($node);
 
       // The actual internal path, e.g., '/node/1234'.
       // The 'alias' option turns off AliasPathProcessor.  Yes, it is very
@@ -388,11 +473,11 @@ class BillsHelper {
 
       try {
         // Insert/update the specific alias ($path points to $alias)
-        static::getPathAlias(['path' => $int_path, 'alias' => $alias])->save();
+        $this->getPathAlias(['path' => $int_path, 'alias' => $alias])->save();
 
         // If this is the active version, set canonical also: $path -> $canon.
         if ($active == $version) {
-          $existing = static::getPathAlias(['alias' => $canon]);
+          $existing = $this->getPathAlias(['alias' => $canon]);
           $existing->setPath($int_path)->save();
         }
       }
@@ -416,10 +501,10 @@ class BillsHelper {
    *   found, a new PathAlias is created (but not saved) from those values.  If
    *   a matching alias is found, it is returned as loaded.   *
    */
-  protected static function getPathAlias(array $values = []): ?PathAlias {
+  protected function getPathAlias(array $values = []): ? PathAlias {
     try {
       /** @var \Drupal\path_alias\PathAliasStorage $storage */
-      $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+      $storage = $this->entityTypeManager->getStorage('path_alias');
     }
     catch (\Throwable) {
       return NULL;
@@ -440,6 +525,143 @@ class BillsHelper {
     else {
       return current($entities);
     }
+  }
+
+  /**
+   * Get the Bill metadata.
+   *
+   * Loads identifying metadata from bill nodes specified by provided
+   * node IDs.  Identifying data consists of nid, title, session, print
+   * number, and base print number.
+   *
+   * @param int|array $nids
+   *   Node IDs to load.
+   */
+  public function getBillMetadata($nids) {
+    $ret = [];
+
+    if (is_numeric($nids)) {
+      $nids = [$nids];
+    }
+
+    if (count($nids)) {
+      $query = $this->connection->select('node_field_data', 'n');
+      $query->leftJoin('node__field_ol_session', 'sess', 'n.nid=sess.entity_id');
+      $query->leftJoin('node__field_ol_print_no', 'pn', 'n.nid=pn.entity_id');
+      $query->leftJoin('node__field_ol_base_print_no', 'bpn', 'n.nid=bpn.entity_id');
+      $query->addField('n', 'nid');
+      $query->addField('n', 'title');
+      $query->addField('sess', 'field_ol_session_value', 'session');
+      $query->addField('pn', 'field_ol_print_no_value', 'print_num');
+      $query->addField('bpn', 'field_ol_base_print_no_value', 'base_print_num');
+      $query->condition('n.type', 'bill');
+      $query->condition('n.nid', $nids, 'IN');
+
+      $ret = $query->execute()->fetchAllAssoc('nid');
+    }
+    return $ret;
+  }
+
+  /**
+   * Discovers bill for their multi-session root.
+   *
+   * @param int $tid
+   *   The tid of the taxonomy term.
+   */
+  public function loadBillsFromTid($tid) {
+    $query = $this->entityTypeManager->getStorage('node')
+      ->getQuery()
+      ->condition('type', 'bill')
+      ->condition('field_bill_multi_session_root', [$tid], 'IN');
+    $result = $query->execute();
+
+    return $result;
+  }
+
+  /**
+   * Helper function to return previous versions of a bill.
+   *
+   * @param string $prev_vers_session
+   *   OL Session.
+   * @param string $prev_vers_print_no
+   *   Print Number.
+   *
+   * @return array
+   *   Array of query results.
+   */
+  public function getPrevVersions($prev_vers_session, $prev_vers_print_no) {
+    // We're using drupal_html_class() ensure that parameters have no spaces in
+    // them.
+    $cid = 'nysenate_bill_prev_versions_' .
+      str_replace(' ', '', $prev_vers_session) . '-' .
+      str_replace(' ', '', $prev_vers_print_no);
+    if ($cache = $this->cache->get($cid)) {
+      return $cache->data;
+    }
+
+    $query = $this->entityTypeManager->getStorage('node')
+      ->getQuery()
+      ->condition('type', ['bill', 'resolution'], 'IN')
+      ->condition('field_ol_session.value', $prev_vers_session)
+      ->condition('field_ol_print_no.value', $prev_vers_print_no)
+      ->range(0, 1);
+    $prev_vers_result = $query->execute();
+
+    // Cache data for later use.
+    $this->cache->set($cid, $prev_vers_result);
+
+    return $prev_vers_result;
+  }
+
+  /**
+   * Query the database for previous versions of opposite chamber bills.
+   *
+   * @param int $nid
+   *   The Node id.
+   */
+  public function getOppositeChamberPrevVersions($nid) {
+    $related_metadata = [];
+
+    // Get the multi-session root TID for the "same as" bill.
+    $query = $this->connection->select('node__field_bill_multi_session_root', 'f');
+    $query->addField('f', 'field_bill_multi_session_root_target_id');
+    $query->condition('f.bundle', 'bill');
+    $query->condition('f.deleted', 0);
+    $query->condition('f.entity_id', $nid);
+    $query->range(0, 1);
+    $same_as_tid = $query->execute()->fetchField();
+
+    // If a TID is found, add all related bills to the metadata collection.
+    if ($same_as_tid) {
+      $related_bills = $this->loadBillsFromTid($same_as_tid);
+      $metadata = $this->getBillMetadata($related_bills);
+
+      // Load all bills associated with this bill's taxonomy root.
+      $related_metadata = array_filter($metadata, function ($v) {
+        return $v->print_num === $v->base_print_num;
+      });
+    }
+
+    return $related_metadata;
+
+  }
+
+  /**
+   * Finds featured legislation quote, if it exists.
+   *
+   * @param array $amended_versions
+   *   The bill amended versions.
+   */
+  public function findsFeaturedLegislationQuote(array $amended_versions) {
+    $amendments = [];
+    // Loop over amendments, and finds featured legislation quote, if it exists.
+    foreach ($amended_versions as $title => $nid) {
+      $node = $this->entityTypeManager->getStorage('node')->load($nid);
+      $amendments[$title]['node'] = $node;
+      // @todo Query for quotes.
+    }
+
+    return $amendments;
   }
 
 }

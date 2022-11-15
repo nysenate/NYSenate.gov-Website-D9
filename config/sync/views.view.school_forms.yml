@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_school_address
+    - field.storage.taxonomy_term.field_senator
     - taxonomy.vocabulary.school_form_type
     - taxonomy.vocabulary.senator
     - user.role.administrator
@@ -39,7 +40,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: 'School Address'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -100,7 +101,60 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: 'School Name'
+          label: School
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{{ webform_submission_value }}<br>\r\n{{ field_school_address }}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: label
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        field_senator:
+          id: field_senator
+          table: taxonomy_term__field_senator
+          field: field_senator
+          relationship: field_district
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Senator
           exclude: false
           alter:
             alter_text: false
@@ -141,10 +195,20 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          webform_element_format: link
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         webform_submission_value_1:
           id: webform_submission_value_1
           table: webform_submission_field_school_form_contact_name
@@ -154,7 +218,60 @@ display:
           admin_label: ''
           plugin_id: webform_submission_field
           label: 'Contact Name'
-          exclude: false
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_6:
+          id: webform_submission_value_6
+          table: webform_submission_field_school_form_grade
+          field: webform_submission_value
+          relationship: webform_submission_reverse_reference__school_form__school_name
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: Grade
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -206,11 +323,11 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: 'Contact Email'
+          label: 'Contact Information'
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ webform_submission_value_1 }}<br>\r\n{{ webform_submission_value_2 }}<br>\r\n{{ webform_submission_value_6 }}"
             make_link: false
             path: ''
             absolute: false
@@ -260,7 +377,7 @@ display:
           admin_label: ''
           plugin_id: webform_submission_composite_field
           label: 'Student Submission'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -313,7 +430,60 @@ display:
           admin_label: ''
           plugin_id: webform_submission_composite_field
           label: 'Student''s Name'
-          exclude: false
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: '1'
+          webform_multiple_delta: '0'
+          webform_check_access: 1
+        webform_submission_value_7:
+          id: webform_submission_value_7
+          table: webform_submission_field_school_form_attach_your_submission__show_student
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_composite_field
+          label: 'Attach your submission: Show Student?'
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -365,11 +535,11 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_composite_field
-          label: 'Submission Type'
+          label: Submission
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "<strong>{{ webform_submission_value_4 }}</strong><br>\r\n{{ webform_submission_value_5 }}<br>\r\n{{ webform_submission_value_3 }}<br>\r\n{{ 'Show status: ' ~ webform_submission_value_7|striptags }}<br>"
             make_link: false
             path: ''
             absolute: false
@@ -390,9 +560,9 @@ display:
             more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: false
+            strip_tags: true
             trim: false
-            preserve_tags: ''
+            preserve_tags: '<strong> <br> <a>'
             html: false
           element_type: ''
           element_class: ''
@@ -579,6 +749,57 @@ display:
           hierarchy: false
           limit: true
           error_message: true
+        webform_submission_value:
+          id: webform_submission_value
+          table: webform_submission_field_school_form_contact_name
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field_filter
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: webform_submission_value_op
+            label: 'Teacher Name'
+            description: ''
+            use_operator: false
+            operator: webform_submission_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: teacher_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       style:
         type: table
         options:
@@ -688,6 +909,7 @@ display:
         - user.roles
       tags:
         - 'config:field.storage.node.field_school_address'
+        - 'config:field.storage.taxonomy_term.field_senator'
   page_1:
     id: page_1
     display_title: Page
@@ -707,3 +929,4 @@ display:
         - user.roles
       tags:
         - 'config:field.storage.node.field_school_address'
+        - 'config:field.storage.taxonomy_term.field_senator'

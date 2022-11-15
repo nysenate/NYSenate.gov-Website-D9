@@ -657,6 +657,36 @@ nav ul.c-nav--list {
   content: '\66';
 }
 
+.inactive-pallette {
+  .c-header--btn {
+    &.c-header--btn__primary,
+    &.c-header--btn__taking_action {
+      &:after {
+        background: $gen_blue_lgt;
+      }
+    }
+  }
+
+  .c-login--list {
+    &:hover {
+      .c-header--btn__primary,
+      .c-header--btn__taking_action {
+        background: $gen_blue_lgt;
+
+        &:hover {
+          background: $gen_blue_lgt;
+        }
+      }
+
+      li + li {
+        a:hover {
+          background: $gen_blue_drk;
+        }
+      }
+    }
+  }
+}
+
 .c-header--btn {
   display: block;
   float: left;

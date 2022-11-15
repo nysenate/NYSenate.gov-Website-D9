@@ -1,4 +1,4 @@
-uuid: b9195fa8-756b-4a2c-ba2b-b4ac64f190eb
+uuid: f8b5f6f8-9c42-4d7a-9f89-8142898be8cd
 langcode: en
 status: true
 dependencies:
@@ -16,12 +16,11 @@ dependencies:
     - name
     - nys_senators
     - options
-    - paragraphs
     - semanticviews
     - taxonomy
     - user
-id: senators
-label: 'Senator and Committee Lists'
+id: senator_and_committee_lists
+label: 'Duplicate of Senator and Committee Lists'
 module: views
 description: 'Lists for Senator and Committees page'
 tag: ''
@@ -356,7 +355,6 @@ display:
         type: none
         options:
           offset: 0
-          items_per_page: 0
       exposed_form:
         type: bef
         options:
@@ -381,7 +379,7 @@ display:
               secondary_open: false
               reset_button_always_show: false
             filter:
-              tid:
+              senator_committee_filter:
                 plugin_id: default
                 advanced:
                   sort_options: false
@@ -846,11 +844,11 @@ display:
     position: 1
     display_options:
       fields:
-        field_senator_name_1:
-          id: field_senator_name_1
+        field_senator_name_2:
+          id: field_senator_name_2
           table: taxonomy_term__field_senator_name
           field: field_senator_name
-          relationship: field_senator
+          relationship: none
           group_type: group
           admin_label: ''
           plugin_id: field
@@ -911,19 +909,20 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_senator_name:
-          id: field_senator_name
-          table: taxonomy_term__field_senator_name
-          field: field_senator_name
-          relationship: field_senator
+        view_taxonomy_term:
+          id: view_taxonomy_term
+          table: taxonomy_term_data
+          field: view_taxonomy_term
+          relationship: none
           group_type: group
-          admin_label: 'Senator Path URL'
-          plugin_id: field
+          admin_label: ''
+          entity_type: taxonomy_term
+          plugin_id: entity_link
           label: ''
           exclude: false
           alter:
-            alter_text: true
-            text: '/senators/{{ field_senator_name|lower|replace({'' '':''-'',''.'':''''}) }}'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -960,27 +959,14 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: title
-          type: name_default
-          settings:
-            format: default
-            markup: none
-            list_format: ''
-          group_column: ''
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_member_headshot:
-          id: field_member_headshot
+          text: view
+          output_url_as_text: true
+          absolute: false
+        field_member_headshot_1:
+          id: field_member_headshot_1
           table: taxonomy_term__field_member_headshot
           field: field_member_headshot
-          relationship: field_senator
+          relationship: none
           group_type: group
           admin_label: ''
           plugin_id: field
@@ -1101,11 +1087,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_party:
-          id: field_party
+        field_party_1:
+          id: field_party_1
           table: taxonomy_term__field_party
           field: field_party
-          relationship: field_senator
+          relationship: none
           group_type: group
           admin_label: ''
           plugin_id: field
@@ -1163,80 +1149,15 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_district_number:
-          id: field_district_number
-          table: taxonomy_term__field_district_number
-          field: field_district_number
-          relationship: reverse__taxonomy_term__field_senator
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: number_integer
-          settings:
-            thousand_separator: ''
-            prefix_suffix: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        name:
-          id: name
-          table: taxonomy_term_field_data
-          field: name
-          relationship: reverse__taxonomy_term__field_senator
+        senator_district:
+          id: senator_district
+          table: taxonomy_term_data
+          field: senator_district
+          relationship: none
           group_type: group
           admin_label: ''
           entity_type: taxonomy_term
-          entity_field: name
-          plugin_id: term_name
+          plugin_id: senator_district
           label: ''
           exclude: false
           alter:
@@ -1277,28 +1198,13 @@ display:
           empty: ''
           hide_empty: false
           empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          convert_spaces: false
+          hide_alter_empty: false
       sorts:
-        field_senator_name_family:
-          id: field_senator_name_family
+        field_senator_name_family_1:
+          id: field_senator_name_family_1
           table: taxonomy_term__field_senator_name
           field: field_senator_name_family
-          relationship: field_senator
+          relationship: none
           group_type: group
           admin_label: ''
           plugin_id: standard
@@ -1333,7 +1239,7 @@ display:
           plugin_id: bundle
           operator: in
           value:
-            committees: committees
+            senator: senator
           group: 1
           exposed: false
           expose:
@@ -1363,117 +1269,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        tid:
-          id: tid
-          table: taxonomy_term_field_data
-          field: tid
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: taxonomy_term
-          entity_field: tid
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: tid_op
-            label: ''
-            description: ''
-            use_operator: false
-            operator: tid_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: tid
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          vid: committees
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
-        field_party_value:
-          id: field_party_value
-          table: taxonomy_term__field_party
-          field: field_party_value
-          relationship: field_senator
-          group_type: group
-          admin_label: ''
-          plugin_id: list_field
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_party_value_op
-            label: ''
-            description: ''
-            use_operator: false
-            operator: field_party_value_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: field_party_value
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
         field_committee_types_value:
           id: field_committee_types_value
           table: taxonomy_term__field_committee_types
@@ -1567,6 +1362,96 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        field_party_value:
+          id: field_party_value
+          table: taxonomy_term__field_party
+          field: field_party_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_party_value_op
+            label: 'Party Affiliation'
+            description: ''
+            use_operator: false
+            operator: field_party_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_party_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+        field_active_senator_value:
+          id: field_active_senator_value
+          table: taxonomy_term__field_active_senator
+          field: field_active_senator_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
@@ -1589,35 +1474,7 @@ display:
         filters: false
         filter_groups: false
         header: false
-      relationships:
-        field_members:
-          id: field_members
-          table: taxonomy_term__field_members
-          field: field_members
-          relationship: none
-          group_type: group
-          admin_label: 'field_members: Paragraph'
-          plugin_id: standard
-          required: false
-        field_senator:
-          id: field_senator
-          table: paragraph__field_senator
-          field: field_senator
-          relationship: field_members
-          group_type: group
-          admin_label: 'field_senator: Taxonomy term'
-          plugin_id: standard
-          required: false
-        reverse__taxonomy_term__field_senator:
-          id: reverse__taxonomy_term__field_senator
-          table: taxonomy_term_field_data
-          field: reverse__taxonomy_term__field_senator
-          relationship: field_senator
-          group_type: group
-          admin_label: field_senator(district)
-          entity_type: taxonomy_term
-          plugin_id: entity_reverse
-          required: false
+      relationships: {  }
       group_by: false
       display_description: ''
       header: {  }
@@ -1628,11 +1485,9 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - user.permissions
       tags:
         - 'config:field.storage.taxonomy_term.field_conference'
-        - 'config:field.storage.taxonomy_term.field_district_number'
         - 'config:field.storage.taxonomy_term.field_member_headshot'
         - 'config:field.storage.taxonomy_term.field_party'
         - 'config:field.storage.taxonomy_term.field_senator_name'

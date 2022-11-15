@@ -6,6 +6,7 @@ dependencies:
     - taxonomy.vocabulary.senator
   module:
     - node
+    - options
     - taxonomy
     - user
     - views_autocomplete_filters
@@ -658,6 +659,58 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        field_category_value:
+          id: field_category_value
+          table: node__field_category
+          field: field_category_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_category_value_op
+            label: 'Type of Article'
+            description: ''
+            use_operator: false
+            operator: field_category_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_category_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
       filter_groups:
         operator: AND
         groups:

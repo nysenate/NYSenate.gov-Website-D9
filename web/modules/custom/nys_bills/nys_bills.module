@@ -7,49 +7,96 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+use Drupal\pathauto\PathautoState;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Implements hook_entity_update().
+ * Implements hook_ENTITY_TYPE_presave().
+ *
+ * For bills, prevent path_auto from acting.
+ *
+ * @see \Drupal\pathauto\PathautoGenerator::updateEntityAlias()
  */
-function nys_bills_entity_update(EntityInterface $entity) {
-  // When a new bill is updated, invalidate the 'bill versions'
-  // and 'previous versions' cache.
-  if ($entity->bundle() == 'bill') {
-    \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($entity);
+function nys_bills_node_presave(Node $node): void {
+  switch ($node->bundle()) {
+    case 'resolution':
+    case 'bill':
+      /* @phpstan-ignore-next-line */
+      $node->path->pathauto = PathautoState::SKIP;
+      break;
+
+    default:
+      break;
   }
 }
 
 /**
- * Implements hook_entity_delete().
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * For bill nodes:
+ *   - audit all relevant URL aliases,
+ *   - clear the versions caches.
  */
-function nys_bills_entity_delete(EntityInterface $entity) {
-  // When a new bill is deleted, invalidate the 'bill versions'
-  // and 'previous versions'cache.
-  if ($entity->bundle() == 'bill') {
-    \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($entity);
+function nys_bills_node_update(Node $node): void {
+  switch ($node->bundle()) {
+    case 'resolution':
+    case 'bill':
+      \Drupal::service('nys_bill.bills_helper')->validateAliases($node);
+      \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($node);
+      break;
+
+    default:
+      break;
   }
 }
 
 /**
- * Implements hook_entity_insert().
+ * Implements hook_ENTITY_TYPE_insert().
+ *
+ * For bill nodes:
+ *   - audit all relevant URL aliases,
+ *   - clear the versions caches.
  */
-function nys_bills_entity_insert(EntityInterface $entity) {
-  // When a new bill is inserted, invalidate the 'bill versions'
-  // and 'previous versions'cache.
-  if ($entity->bundle() == 'bill') {
-    \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($entity);
+function nys_bills_node_insert(Node $node): void {
+  switch ($node->bundle()) {
+    case 'resolution':
+    case 'bill':
+      \Drupal::service('nys_bill.bills_helper')->validateAliases($node);
+      \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($node);
+      break;
+
+    default:
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * For bill nodes, clear the versions caches.
+ */
+function nys_bills_node_delete(Node $node): void {
+  switch ($node->bundle()) {
+    case 'resolution':
+    case 'bill':
+      \Drupal::service('nys_bill.bills_helper')->clearBillVersionsCache($node);
+      break;
+
+    default:
+      break;
   }
 }
 
 /**
  * Implements hook_node_view().
  */
-function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
   if ($entity->bundle() == 'bill' && $view_mode == 'full') {
     // If there's no alias for this bill node, redirect to 404.
     $current_path = \Drupal::service('path.current')->getPath();
-    $alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+    $alias = \Drupal::service('path_alias.manager')
+      ->getAliasByPath($current_path);
     if ($current_path === $alias) {
       throw new NotFoundHttpException();
     }
@@ -62,11 +109,10 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
     foreach (array_keys($vote_options) as $vote_value) {
       $vote_label_options[$vote_value] = $nys_vote_service->getVotedLabel($vote_value);
     }
-    $nys_bill_service = \Drupal::service('nys_bill.bills_helper');
     $js_settings = [
       'bill_vote' => [
         'bill_entity_id' => $entity->id(),
-        'bill_name' => $nys_bill_service->getFullBillName($entity),
+        'bill_name' => \Drupal::service('nys_bill.bills_helper')->formatTitle($entity),
         'vote_options' => $vote_label_options,
       ],
     ];
@@ -77,4 +123,22 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
       'data' => $js_settings,
     ];
   }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_bills_theme($existing, $type, $theme, $path) {
+  return [
+    'bill_sponsor_assembly' => [
+      'variables' => [
+        'content' => NULL,
+      ],
+    ],
+    'nys_bills__amendments_block' => [
+      'variables' => [
+        'content' => NULL,
+      ],
+    ],
+  ];
 }

@@ -1602,6 +1602,15 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     }
   }
 
+  if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+    $tid = $node->get('field_senator_multiref')->first()->getString() ?? '';
+    $senator = NULL;
+    if (!empty($tid)) {
+      $senator = Term::load($tid);
+      $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
+    }
+  }
+
   // Override the main content.
   // Display the microsite node with altered contents.
   $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()->getViewBuilder('node')
@@ -2046,7 +2055,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['is_substituted'] = FALSE;
   $state_node = NULL;
   if ($bill_sub_by) {
-    $sub_temp = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node->bundle(), $bill_sub_by, $bill_session_year);
+    $sub_temp = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node);
     $subst_versions = array_combine(
         array_map(function ($v) {
           return $v['title'];
@@ -2129,6 +2138,10 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   // Create the HTML for the bill's session.
   $variables['legislative_session'] = '<div class="c-bill--session-year">' .
   $bill_session_year . '-' . ($bill_session_year + 1) . ' Legislative Session</div>';
+
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $amendments_block = $block_manager->createInstance('nys_bills_amendment_block', []);
+  $variables['amendments_block'] = $amendments_block->build();
 }
 
 /**
@@ -2198,7 +2211,7 @@ function nysenate_bill_positions($node) {
     if ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty()) {
       $ol_session = $node->field_ol_session->value;
     }
-    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node->bundle(), $sub_bill_base_print_no, $ol_session);
+    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node);
     if (!empty($sub_bill_versions)) {
       $node = \Drupal::entityTypeManager()->getStorage('node')
         ->load(end($sub_bill_versions)['nid']);

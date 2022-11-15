@@ -27,6 +27,7 @@ function nys_school_forms_views_post_execute(ViewExecutable $view) {
           $new_result->index = $result->index;
           // Duplicate the entity so we can alter it.
           $entity = $original_entity->createDuplicate();
+          $entity->setCompletedTime($original_entity->getCompletedTime());
           $data = $original_entity->getData();
           // Set the data for composite field to one student's data.
           $data['attach_your_submission'] = [$student];

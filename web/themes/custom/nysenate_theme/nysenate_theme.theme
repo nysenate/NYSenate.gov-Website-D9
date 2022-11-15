@@ -2526,6 +2526,38 @@ function nysenate_theme_preprocess_node__meeting(&$variables) {
   $variables['video_status'] = $video_status;
   $variables['event_status'] = $event_status;
   $variables['event_place'] = $event_place;
+
+  // How a Bill Becomes a law block data.
+  $variables['bill'] = [
+    'modifier' => 'law',
+    'title' => t('How a Bill Becomes Law'),
+    'cta' => [
+      'link' => '/how-bill-becomes-law',
+      'text' => t('Learn More'),
+    ],
+    'steps' => [
+      [
+        'title' => 'write',
+        'description' => t('Senator has new policy idea'),
+      ],
+      [
+        'title' => 'propose',
+        'description' => t('Idea is drafted into a Bill'),
+      ],
+      [
+        'title' => 'committee-votes',
+        'description' => t('Bill undergoes committee process'),
+      ],
+      [
+        'title' => 'floor-votes',
+        'description' => t('Senate and Assembly pass bill'),
+      ],
+      [
+        'title' => 'passed',
+        'description' => t('Bill is signed by Governor'),
+      ],
+    ],
+  ];
 }
 
 /**

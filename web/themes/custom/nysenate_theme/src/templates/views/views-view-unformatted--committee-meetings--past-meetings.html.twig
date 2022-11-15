@@ -19,7 +19,7 @@
 {{ attach_library('nysenate_theme/session') }}
 
 {% for content in past_meetings %}
-  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+  <div class="c-meeting-detail--past {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
     <div class="l-col l-col-1-of-2">
       <p class="c-meeting-detail--date">
         <span class="c-meeting-date--num">{{ content.event_date }}</span>

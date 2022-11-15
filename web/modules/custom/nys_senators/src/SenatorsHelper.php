@@ -142,7 +142,7 @@ class SenatorsHelper {
    * Get the Senator Sponsors of node.
    */
   public function getSenatorSponsors($node, $parent_type = NULL) {
-
+    $variables = [];
     $senator = $node->field_ol_sponsor->entity;
     if (!empty($senator)) {
       $variables['ol_sponsor'] = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($senator, 'sponsor_list');
@@ -155,7 +155,7 @@ class SenatorsHelper {
 
     // Additional sponsor.
     if (!empty($ol_add_sponsors = $node->field_ol_add_sponsors->referencedEntities())) {
-      $ol_add_sponsors = $view_builder->view($ol_add_sponsors, 'sponsor_list');
+      $ol_add_sponsors = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($ol_add_sponsors, 'sponsor_list');
       $variables['ol_add_sponsors'] = $ol_add_sponsors;
     }
 

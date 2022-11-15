@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_views_post_execute().
@@ -59,5 +60,25 @@ function nys_school_forms_views_post_execute(ViewExecutable $view) {
       // Replace view results with our computed ones.
       $view->result = array_values($new_result_array);
     }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_school_forms_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $view = $form_state->getStorage();
+  if ($form_id == 'views_exposed_form' && $view['view']->id() == 'school_forms') {
+    // Update filters to use autocomplete.
+    $form['teacher_name'] = [
+      '#type' => 'textfield',
+      '#title' => t('Teacher Name'),
+      '#autocomplete_route_name' => 'nys_school_forms.autocomplete.teacher',
+    ];
+    $form['school'] = [
+      '#type' => 'textfield',
+      '#title' => t('School'),
+      '#autocomplete_route_name' => 'nys_school_forms.autocomplete.school',
+    ];
   }
 }

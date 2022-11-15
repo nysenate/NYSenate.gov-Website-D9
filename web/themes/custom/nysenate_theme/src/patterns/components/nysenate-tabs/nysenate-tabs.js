@@ -44,18 +44,18 @@
       if (textExpander) {
         textExpander.click(function () {
           const link = $(this);
-          const expander = link.parent().parent().parent().prev();
+          const expander = link.closest('.item-list').prev();
           const lineCount = expander.data('linecount');
           const anchor = expander.prev();
 
+          expander.slideToggle(0);
+
           if (expander.is(':hidden')) {
-            expander.slideToggle(0);
             $('html,body').animate({ scrollTop: expander.offset().top - 180 });
             link.html('View Less');
             link.addClass('expanded');
           }
           else {
-            expander.slideToggle(0);
             $('html,body').animate({ scrollTop: anchor.offset().top - 180 });
             link.html('View More (' + lineCount + ' Lines)');
             link.removeClass('expanded');

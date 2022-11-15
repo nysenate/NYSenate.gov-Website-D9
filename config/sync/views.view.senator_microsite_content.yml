@@ -13,6 +13,7 @@ dependencies:
     - field.storage.node.field_ol_sponsor_name
     - field.storage.node.field_ol_summary
     - field.storage.node.field_publication_date
+    - field.storage.node.field_senator_multiref
     - field.storage.taxonomy_term.field_promotional_banners
     - node.type.article
     - node.type.bill
@@ -574,6 +575,69 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_senator_multiref:
+          id: field_senator_multiref
+          table: node__field_senator_multiref
+          field: field_senator_multiref
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<div class=\"c-container--header\">\r\n   <h2 class=\"c-container--title\">Newsroom</h2>\r\n   <a href=\"/senators/{{ field_senator_multiref|lower|replace({' ':'-','.':''}) }}/newsroom\" class=\"c-container--link\">Go to Newsroom</a>\r\n</div>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: false
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       pager:
         type: infinite_scroll
         options:
@@ -716,16 +780,11 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: true
+          specify_validation: false
           validate:
-            type: 'entity:taxonomy_term'
+            type: none
             fail: 'not found'
-          validate_options:
-            bundles:
-              senator: senator
-            access: false
-            operation: view
-            multiple: 0
+          validate_options: {  }
           break_phrase: false
           add_table: false
           require_value: false
@@ -799,16 +858,31 @@ display:
         use_more_always: false
         use_more_text: false
         exposed_form: false
+        relationships: false
         fields: false
         sorts: false
         arguments: false
         filters: false
         filter_groups: false
+        header: false
+      relationships: {  }
       use_ajax: true
       display_description: 'Footer for news articles'
       use_more: false
       use_more_always: false
       use_more_text: 'See More News'
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: '{{ field_senator_multiref }}'
+          tokenize: true
       display_extenders: {  }
       block_description: 'Microsite News Article Footer'
     cache_metadata:
@@ -826,6 +900,7 @@ display:
         - 'config:field.storage.node.field_issues'
         - 'config:field.storage.node.field_ol_summary'
         - 'config:field.storage.node.field_publication_date'
+        - 'config:field.storage.node.field_senator_multiref'
   block_1:
     id: block_1
     display_title: 'Newsroom Landing'

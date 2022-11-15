@@ -149,7 +149,10 @@ class BillLineageHelper {
 
     // Try to load that term.  If none is found, create one with that name.
     if (!($term = static::loadRootByName($root_name))) {
-      $term = static::createRoot($bill->field_ol_session->value, $bill->field_ol_print_no->value);
+      if (($bill->hasField('field_ol_base_print_no') && !$bill->get('field_ol_base_print_no')->isEmpty()) &&
+        ($bill->hasField('field_ol_session') && !$bill->get('field_ol_session')->isEmpty())) {
+        $term = static::createRoot($bill->field_ol_session->value, $bill->field_ol_print_no->value);
+      }
     }
 
     // If something went wrong, tell somebody.

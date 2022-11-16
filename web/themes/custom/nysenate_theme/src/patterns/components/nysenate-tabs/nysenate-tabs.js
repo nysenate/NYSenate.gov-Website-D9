@@ -51,14 +51,14 @@
           expander.slideToggle(0);
 
           if (expander.is(':hidden')) {
-            $('html,body').animate({ scrollTop: expander.offset().top - 180 });
-            link.html('View Less');
-            link.addClass('expanded');
-          }
-          else {
             $('html,body').animate({ scrollTop: anchor.offset().top - 180 });
             link.html('View More (' + lineCount + ' Lines)');
             link.removeClass('expanded');
+          }
+          else {
+            $('html,body').animate({ scrollTop: expander.offset().top - 180 });
+            link.html('View Less');
+            link.addClass('expanded');
           }
         });
       }

@@ -135,10 +135,4 @@
 
 {{ committee_events }}
 
-{% include '@nysenate_theme/how-senate-works/how-senate-works.twig' with {
-  modifier: bill.modifier,
-  title: bill.title,
-  cta: bill.cta,
-  steps: bill.steps,
-} only
-%}
+{{ bill }}

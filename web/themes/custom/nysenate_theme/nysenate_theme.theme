@@ -75,6 +75,45 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_block_ID().
+ */
+function nysenate_theme_preprocess_block__how_bill_becomes_law(&$variables) {
+  if (!empty($variables['content']['field_link'][0])) {
+    $variables['cta'] = [
+      'text' => $variables['content']['field_link'][0]['#title'],
+      'link' => $variables['content']['field_link'][0]['#url']->toString(),
+    ];
+  }
+
+  $steps = [];
+  foreach ($variables['content']['field_steps'] as $key => $items) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $title = '';
+    $description = '';
+
+    if ($items['#paragraph']->field_title->getValue()) {
+      $title = $items['#paragraph']->field_title->getValue();
+      $title = reset($title)['value'];
+    }
+
+    if ($items['#paragraph']->field_description->getValue()) {
+      $description = $items['#paragraph']->field_description->getValue();
+      $description = reset($description)['value'];
+    }
+
+    $steps[] = [
+      'title' => $title,
+      'description' => $description,
+    ];
+  }
+
+  $variables['steps'] = $steps;
+}
+
+/**
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
@@ -2528,36 +2567,20 @@ function nysenate_theme_preprocess_node__meeting(&$variables) {
   $variables['event_place'] = $event_place;
 
   // How a Bill Becomes a law block data.
-  $variables['bill'] = [
-    'modifier' => 'law',
-    'title' => t('How a Bill Becomes Law'),
-    'cta' => [
-      'link' => '/how-bill-becomes-law',
-      'text' => t('Learn More'),
-    ],
-    'steps' => [
-      [
-        'title' => 'write',
-        'description' => t('Senator has new policy idea'),
-      ],
-      [
-        'title' => 'propose',
-        'description' => t('Idea is drafted into a Bill'),
-      ],
-      [
-        'title' => 'committee-votes',
-        'description' => t('Bill undergoes committee process'),
-      ],
-      [
-        'title' => 'floor-votes',
-        'description' => t('Senate and Assembly pass bill'),
-      ],
-      [
-        'title' => 'passed',
-        'description' => t('Bill is signed by Governor'),
-      ],
-    ],
-  ];
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block')
+    ->load('how_bill_becomes_law');
+
+  if (!empty($block)) {
+    $block_content = \Drupal::entityTypeManager()
+      ->getViewBuilder('block')
+      ->view($block);
+
+    $bill = \Drupal::entityTypeManager()
+      ->getViewBuilder('block')
+      ->build($block_content);
+    $variables['bill'] = $bill;
+  }
 }
 
 /**

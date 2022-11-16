@@ -1,0 +1,33 @@
+uuid: 9fb0d115-baa3-41d0-bce3-9b0181e65989
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:how_senate_works:1b87771f-7d48-4cd2-ad8d-84483f68a704'
+  module:
+    - block_content
+    - node
+  theme:
+    - nysenate_theme
+id: how_bill_becomes_law
+theme: nysenate_theme
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:1b87771f-7d48-4cd2-ad8d-84483f68a704'
+settings:
+  id: 'block_content:1b87771f-7d48-4cd2-ad8d-84483f68a704'
+  label: 'How a Bill Becomes Law'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      meeting: meeting

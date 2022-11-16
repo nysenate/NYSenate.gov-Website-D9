@@ -57,6 +57,14 @@ class MapArticleBlock extends ProcessPluginBase {
           $lookup_tb = 'migrate_map_nys_paragraphs_pg_featured_bills';
           break;
 
+        case 'pg_file_uploads':
+          $lookup_tb = 'migrate_map_nys_paragraphs_pg_file_uploads';
+          break;
+
+        case 'feature_image':
+          $lookup_tb = 'migrate_map_nys_paragraphs_feature_image';
+          break;
+
         case 'pg_image_slider':
           $lookup_tb = 'migrate_map_nys_paragraphs_pg_image_slider';
           break;

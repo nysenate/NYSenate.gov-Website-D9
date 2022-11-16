@@ -2572,13 +2572,11 @@ function nysenate_theme_preprocess_node__meeting(&$variables) {
     ->load('how_bill_becomes_law');
 
   if (!empty($block)) {
-    $block_content = \Drupal::entityTypeManager()
-      ->getViewBuilder('block')
-      ->view($block);
+    /** @var \Drupal\block\BlockViewBuilder $view_builder */
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block');
+    $block_content = $view_builder->view($block);
 
-    $bill = \Drupal::entityTypeManager()
-      ->getViewBuilder('block')
-      ->build($block_content);
+    $bill = $view_builder->build($block_content);
     $variables['bill'] = $bill;
   }
 }

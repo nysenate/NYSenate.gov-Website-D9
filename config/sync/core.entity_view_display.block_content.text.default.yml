@@ -8,9 +8,12 @@ dependencies:
     - field.field.block_content.text.field_body_right
     - field.field.block_content.text.field_is_full_bleed
     - field.field.block_content.text.field_link
+    - field.field.block_content.text.field_show_title
     - field.field.block_content.text.field_title
+    - field.field.block_content.text.field_title_format
     - field.field.block_content.text.field_with_background
   module:
+    - options
     - text
 _core:
   default_config_hash: eGaHm6OUEVUhIGkUavARa1oTAjDLxw7PGmKddOyuR9I
@@ -24,19 +27,43 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   field_body_right:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 1
+    region: content
+  field_show_title:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
     weight: 0
+    region: content
+  field_title_format:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
     region: content
 hidden:
   field_is_full_bleed: true
   field_link: true
-  field_title: true
   field_with_background: true
   langcode: true
   search_api_excerpt: true

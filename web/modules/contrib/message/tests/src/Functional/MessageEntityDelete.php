@@ -6,6 +6,7 @@ use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
+use Drupal\message\MessageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -34,9 +35,8 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'message',
-    'entity_reference',
     'node',
     'taxonomy',
     'user',
@@ -45,7 +45,7 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     // Set config.
@@ -182,10 +182,10 @@ class MessageEntityDelete extends MessageTestBase {
 
     Node::load(1)->delete();
     $cron->run();
-    $this->assertTrue(Message::load($message->id()), 'Message exists after deleting one of two referenced nodes.');
+    $this->assertInstanceOf(MessageInterface::class, Message::load($message->id()), 'Message exists after deleting one of two referenced nodes.');
     Node::load(2)->delete();
     $cron->run();
-    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting all referenced nodes.');
+    $this->assertNull(Message::load($message->id()), 'Message deleted after deleting all referenced nodes.');
 
     // Test terms references.
     $message = Message::create(['template' => 'dummy_message']);
@@ -194,10 +194,10 @@ class MessageEntityDelete extends MessageTestBase {
 
     Term::load(1)->delete();
     $cron->run();
-    $this->assertTrue(Message::load($message->id()), 'Message exists after deleting one of two referenced terms.');
+    $this->assertInstanceOf(MessageInterface::class, Message::load($message->id()), 'Message exists after deleting one of two referenced terms.');
     Term::load(2)->delete();
     $cron->run();
-    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting all referenced terms.');
+    $this->assertNull(Message::load($message->id()), 'Message deleted after deleting all referenced terms.');
 
     // Test term references.
     $term = Term::load(3);
@@ -207,7 +207,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     $term->delete();
     $cron->run();
-    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced term.');
+    $this->assertNull(Message::load($message->id()), 'Message deleted after deleting single referenced term.');
 
     // Test node reference.
     $message = Message::create(['template' => 'dummy_message']);
@@ -216,7 +216,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     Node::load(3)->delete();
     $cron->run();
-    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced node.');
+    $this->assertNull(Message::load($message->id()), 'Message deleted after deleting single referenced node.');
 
     // Testing when a message referenced to terms and term.
     $message = Message::create(['template' => 'dummy_message']);
@@ -226,7 +226,7 @@ class MessageEntityDelete extends MessageTestBase {
     Term::load(4)->delete();
     $cron->run();
 
-    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
+    $this->assertNull(Message::load($message->id()), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
 
     // Test user reference.
     $account = $this->drupalCreateUser();
@@ -236,7 +236,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     $account->delete();
     $cron->run();
-    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced user.');
+    $this->assertNull(Message::load($message->id()), 'Message deleted after deleting single referenced user.');
 
     // Test that only messages with a reference to the correct TYPE of entity
     // get deleted.
@@ -248,8 +248,8 @@ class MessageEntityDelete extends MessageTestBase {
     $message_two->save();
     Node::load(5)->delete();
     $cron->run();
-    $this->assertFalse(Message::load($message_one->id()), 'Message with node deleted after deleting referenced node.');
-    $this->assertTrue(Message::load($message_two->id()), 'Message with term remains after deleting a node with the same ID.');
+    $this->assertNull(Message::load($message_one->id()), 'Message with node deleted after deleting referenced node.');
+    $this->assertInstanceOf(MessageInterface::class, Message::load($message_two->id()), 'Message with term remains after deleting a node with the same ID.');
   }
 
 }

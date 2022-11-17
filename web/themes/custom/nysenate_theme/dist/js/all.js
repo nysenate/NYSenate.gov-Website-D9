@@ -3301,6 +3301,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     attach: function attach() {
       var tabContainer = $('.l-tab-bar');
       var tabLink = $('.c-tab .c-tab-link');
+      var textExpander = $('.text-expander');
       tabContainer.each(function () {
         var tabArrowDown = $(this).find('.c-tab--arrow');
         var tabInput = $(this).find('input.form-radio');
@@ -3325,7 +3326,31 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           tabContent.find($(this).val()).addClass('active');
         });
       });
-      tabLink.on('click', this.toggleTabDropdown);
+      tabLink.on('click', this.toggleTabDropdown); // event for text expander
+
+      if (textExpander) {
+        textExpander.click(function () {
+          var link = $(this);
+          var expander = link.closest('.item-list').prev();
+          var lineCount = expander.data('linecount');
+          var anchor = expander.prev();
+          expander.slideToggle(0);
+
+          if (expander.is(':hidden')) {
+            $('html,body').animate({
+              scrollTop: anchor.offset().top - 180
+            });
+            link.html('View More (' + lineCount + ' Lines)');
+            link.removeClass('expanded');
+          } else {
+            $('html,body').animate({
+              scrollTop: expander.offset().top - 180
+            });
+            link.html('View Less');
+            link.addClass('expanded');
+          }
+        });
+      }
     },
     toggleTabDropdown: function toggleTabDropdown(e) {
       e.preventDefault();

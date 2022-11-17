@@ -268,6 +268,9 @@ class Sql extends QueryPluginBase {
     $options['distinct'] = [
       'default' => FALSE,
     ];
+    $options['disable_automatic_base_fields'] = [
+      'default' => FALSE,
+    ];
     $options['replica'] = [
       'default' => FALSE,
     ];
@@ -299,6 +302,12 @@ class Sql extends QueryPluginBase {
       '#title' => $this->t('Distinct'),
       '#description' => $this->t('This will make the view display only distinct items. If there are multiple identical items, each will be displayed only once. You can use this to try and remove duplicates from a view, though it does not always work. Note that this can slow queries down, so use it with caution.'),
       '#default_value' => !empty($this->options['distinct']),
+    ];
+    $form['disable_automatic_base_fields'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable automatic base field for relationships'),
+      '#description' => $this->t('By default view adds a field to the query for each relationship in the view. This can potentially break the "distinct" option.'),
+      '#default_value' => !empty($this->options['disable_automatic_base_fields']),
     ];
     $form['replica'] = [
       '#type' => 'checkbox',
@@ -1358,10 +1367,17 @@ class Sql extends QueryPluginBase {
         ];
       }
 
+      $disable_automatic_base_fields = $this->options['disable_automatic_base_fields'] ?? FALSE;
       foreach ($entity_information as $info) {
         $entity_type = \Drupal::entityTypeManager()->getDefinition($info['entity_type']);
         $base_field = !$info['revision'] ? $entity_type->getKey('id') : $entity_type->getKey('revision');
         $this->addField($info['alias'], $base_field, '', $params);
+        // The original base table is always added first, and the relationships
+        // after that, so if we want to skip base fields for relations we can
+        // just break here.
+        if ($disable_automatic_base_fields) {
+          break;
+        }
       }
     }
 

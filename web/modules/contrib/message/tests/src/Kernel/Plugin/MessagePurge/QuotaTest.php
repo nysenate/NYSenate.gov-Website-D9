@@ -18,7 +18,7 @@ class QuotaTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['message', 'user'];
+  protected static $modules = ['message', 'user'];
 
   /**
    * The plugin to test.
@@ -37,7 +37,7 @@ class QuotaTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $this->installEntitySchema('message');

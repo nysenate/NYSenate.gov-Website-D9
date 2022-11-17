@@ -40,7 +40,7 @@ class MessageTemplateCrudTest extends MessageTestBase {
     drupal_static_reset();
 
     $template = $this->loadMessageTemplate('dummy_message');
-    $this->assertEqual($template->getLabel(), 'New label', 'The message was updated successfully');
+    $this->assertEquals($template->getLabel(), 'New label', 'The message was updated successfully');
 
     // Delete the message any try to load it from the DB.
     $template->delete();
@@ -48,7 +48,7 @@ class MessageTemplateCrudTest extends MessageTestBase {
     // Reset any static cache.
     drupal_static_reset();
 
-    $this->assertFalse($this->loadMessageTemplate('dummy_message'), 'The message was not found in the DB');
+    $this->assertNull($this->loadMessageTemplate('dummy_message'), 'The message was not found in the DB');
   }
 
 }

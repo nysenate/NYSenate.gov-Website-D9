@@ -50,7 +50,7 @@ trait PluginHelperTrait {
     }
 
     // Allow filtering of available blocks by other parts of the system.
-    $definitions = $this->contextHandler()->filterPluginDefinitionsByContexts($this->getAvailableContexts($section_storage), $definitions);
+    $definitions = $this->contextHandler()->filterPluginDefinitionsByContexts($this->getPopulatedContexts($section_storage), $definitions);
     $grouped_definitions = $this->getDefinitionsByUntranslatedCategory($definitions);
     // Create a new category of block_content blocks that meet the context.
     foreach ($grouped_definitions as $category => $data) {

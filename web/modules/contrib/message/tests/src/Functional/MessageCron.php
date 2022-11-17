@@ -43,7 +43,7 @@ class MessageCron extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $this->purgeManager = $this->container->get('plugin.manager.message.purge');
@@ -75,7 +75,7 @@ class MessageCron extends MessageTestBase {
 
     // Make sure the purging data is actually saved.
     $message_template = MessageTemplate::load($message_template->id());
-    $this->assertEqual($message_template->getSetting('purge_methods'), $settings['purge_methods'], t('Purge settings are stored in message template.'));
+    $this->assertEquals($message_template->getSetting('purge_methods'), $settings['purge_methods'], 'Purge settings are stored in message template.');
 
     // Create a purgeable message template with max quota 1 and max days 2.
     $quota = $this->purgeManager->createInstance('quota', ['data' => ['quota' => 1]]);
@@ -131,14 +131,14 @@ class MessageCron extends MessageTestBase {
 
     // Four template1 messages were created. The first two should have been
     // deleted.
-    $this->assertFalse(array_diff(Message::queryByTemplate('template1'), [3, 4]), 'Two messages deleted due to quota definition.');
+    $this->assertEmpty(array_diff(Message::queryByTemplate('template1'), [3, 4]), 'Two messages deleted due to quota definition.');
 
     // All template2 messages should have been deleted.
-    $this->assertEqual(Message::queryByTemplate('template2'), [], 'Three messages deleted due to age definition.');
+    $this->assertEquals(Message::queryByTemplate('template2'), [], 'Three messages deleted due to age definition.');
 
     // template3 messages should not have been deleted.
     $remaining = [8, 9, 10];
-    $this->assertFalse(array_diff(Message::queryByTemplate('template3'), $remaining), 'Messages with disabled purging settings were not deleted.');
+    $this->assertEmpty(array_diff(Message::queryByTemplate('template3'), $remaining), 'Messages with disabled purging settings were not deleted.');
   }
 
   /**
@@ -184,8 +184,8 @@ class MessageCron extends MessageTestBase {
     // Trigger message's hook_cron() as well as the queue processing.
     $this->cron->run();
 
-    $this->assertEqual(count(Message::queryByTemplate('template1')), 0, t('All template1 messages deleted.'));
-    $this->assertEqual(count(Message::queryByTemplate('template2')), 2, t('Template2 messages were not deleted due to settings override.'));
+    $this->assertCount(0, Message::queryByTemplate('template1'), 'All template1 messages deleted.');
+    $this->assertCount(2, Message::queryByTemplate('template2'), 'Template2 messages were not deleted due to settings override.');
   }
 
 }

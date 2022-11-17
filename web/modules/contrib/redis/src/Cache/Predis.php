@@ -2,6 +2,7 @@
 
 namespace Drupal\redis\Cache;
 
+use Predis\Client;
 use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheTagsChecksumInterface;
@@ -26,7 +27,7 @@ class Predis extends CacheBase {
    * @param \Drupal\redis\Cache\SerializationInterface $serializer
    *   The serialization class to use.
    */
-  public function __construct($bin, \Predis\Client $client, CacheTagsChecksumInterface $checksum_provider, SerializationInterface $serializer) {
+  public function __construct($bin, Client $client, CacheTagsChecksumInterface $checksum_provider, SerializationInterface $serializer) {
     parent::__construct($bin, $serializer);
     $this->client = $client;
     $this->checksumProvider = $checksum_provider;

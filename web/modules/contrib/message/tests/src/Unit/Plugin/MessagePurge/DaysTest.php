@@ -8,6 +8,7 @@ use Drupal\message\MessagePurgeInterface;
 use Drupal\message\Plugin\MessagePurge\Days;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @group Message
  */
 class DaysTest extends UnitTestCase {
+
+  use ProphecyTrait;
 
   /**
    * Test processing zero message.

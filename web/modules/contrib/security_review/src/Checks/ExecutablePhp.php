@@ -78,39 +78,43 @@ class ExecutablePhp extends Check {
       @unlink('./' . $file_path);
     }
 
-    // Check for presence of the .htaccess file and if the contents are correct.
-    $htaccess_path = PublicStream::basePath() . '/.htaccess';
-    if (!file_exists($htaccess_path)) {
-      $result = CheckResult::FAIL;
-      $findings[] = 'missing_htaccess';
-    }
-    else {
-      // Check whether the contents of .htaccess are correct.
-      $contents = file_get_contents($htaccess_path);
-      $expected = FileSecurity::htaccessLines(FALSE);
-
-      // Trim each line separately then put them back together.
-      $contents = implode("\n", array_map('trim', explode("\n", trim($contents))));
-      $expected = implode("\n", array_map('trim', explode("\n", trim($expected))));
-
-      if ($contents !== $expected) {
+    // Only perform .htaccess checks if the webserver is Apache.
+    $str = isset($_SERVER['SERVER_SOFTWARE']) ? substr($_SERVER['SERVER_SOFTWARE'], 0, 6) : '';
+    if ($str == 'Apache') {
+      // Check for presence of the .htaccess file and if the contents are correct.
+      $htaccess_path = PublicStream::basePath() . '/.htaccess';
+      if (!file_exists($htaccess_path)) {
         $result = CheckResult::FAIL;
-        $findings[] = 'incorrect_htaccess';
-      }
-
-      // Check whether .htaccess is writable.
-      if (!$cli) {
-        $writable_htaccess = is_writable($htaccess_path);
+        $findings[] = 'missing_htaccess';
       }
       else {
-        $writable = $this->security()->findWritableFiles([$htaccess_path], TRUE);
-        $writable_htaccess = !empty($writable);
-      }
+        // Check whether the contents of .htaccess are correct.
+        $contents = file_get_contents($htaccess_path);
+        $expected = FileSecurity::htaccessLines(FALSE);
 
-      if ($writable_htaccess) {
-        $findings[] = 'writable_htaccess';
-        if ($result !== CheckResult::FAIL) {
-          $result = CheckResult::WARN;
+        // Trim each line separately then put them back together.
+        $contents = implode("\n", array_map('trim', explode("\n", trim($contents))));
+        $expected = implode("\n", array_map('trim', explode("\n", trim($expected))));
+
+        if ($contents !== $expected) {
+          $result = CheckResult::FAIL;
+          $findings[] = 'incorrect_htaccess';
+        }
+
+        // Check whether .htaccess is writable.
+        if (!$cli) {
+          $writable_htaccess = is_writable($htaccess_path);
+        }
+        else {
+          $writable = $this->security()->findWritableFiles([$htaccess_path], TRUE);
+          $writable_htaccess = !empty($writable);
+        }
+
+        if ($writable_htaccess) {
+          $findings[] = 'writable_htaccess';
+          if ($result !== CheckResult::FAIL) {
+            $result = CheckResult::WARN;
+          }
         }
       }
     }

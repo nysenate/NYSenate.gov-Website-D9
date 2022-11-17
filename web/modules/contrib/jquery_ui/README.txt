@@ -35,6 +35,11 @@ code, and instead to select a replacement solution as soon as possible.
   - [jQuery UI Spinner](https://www.drupal.org/project/jquery_ui_spinner)
   - [jQuery UI Tooltip](https://www.drupal.org/project/jquery_ui_tooltip)
 
+
+## Update assets.
+yarn install
+yarn build
+
 ## Current maintainers:
 * Jeff Robbins (jjeff)
 * Angela Byron (webchick)

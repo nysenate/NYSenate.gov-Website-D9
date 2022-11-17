@@ -30,6 +30,7 @@ class MoveBlockAllowlistTest extends WebDriverTestBase {
   protected static $modules = [
     'block',
     'contextual',
+    'field_ui',
     'node',
     'layout_builder',
     'layout_library',
@@ -42,7 +43,7 @@ class MoveBlockAllowlistTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}
@@ -72,7 +73,6 @@ class MoveBlockAllowlistTest extends WebDriverTestBase {
     // Enable Layout Builder.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $this->getSession()->resizeWindow(1200, 4000);
 
     // Enable entity_view_mode_restriction_by_region plugin.
     // Disable entity_view_mode_restriction plugin.
@@ -88,6 +88,7 @@ class MoveBlockAllowlistTest extends WebDriverTestBase {
     ];
     $config = \Drupal::service('config.factory')->getEditable('layout_builder_restrictions.plugins');
     $config->set('plugin_config', $layout_builder_restrictions_plugins)->save();
+    $this->getSession()->resizeWindow(900, 2000);
   }
 
   /**
@@ -182,7 +183,7 @@ class MoveBlockAllowlistTest extends WebDriverTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Body (current)',
-      ['Body (current)*', 'Links']
+      ['Body (current) *', 'Links']
     );
     $page->pressButton('Move');
     $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
@@ -239,7 +240,7 @@ class MoveBlockAllowlistTest extends WebDriverTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Body',
-      ['Body (current)*', 'Powered by Drupal']
+      ['Body (current) *', 'Powered by Drupal']
     );
     $page->pressButton('Move');
     $this->assertSession()->assertWaitOnAjaxRequest();

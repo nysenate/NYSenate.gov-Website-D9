@@ -16,7 +16,7 @@ class MessageTemplateUiTest extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'config_translation',
     'message',
@@ -40,7 +40,7 @@ class MessageTemplateUiTest extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
     $this->account = $this->drupalCreateUser([
       'administer message templates',
@@ -65,8 +65,9 @@ class MessageTemplateUiTest extends MessageTestBase {
       'text[0][value]' => '<p>This is a dummy message with some dummy text</p>',
       'text[0][format]' => 'filtered_html',
     ];
-    $this->drupalPostForm('admin/structure/message/template/add', $edit, t('Save message template'));
-    $this->assertText('The message template Dummy message created successfully.', 'The message template was created successfully');
+    $this->drupalGet('admin/structure/message/template/add');
+    $this->submitForm($edit, t('Save message template'));
+    $this->assertSession()->pageTextContains('The message template Dummy message created successfully.');
     $this->drupalGet('admin/structure/message/manage/dummy_message');
 
     $elements = [
@@ -82,7 +83,8 @@ class MessageTemplateUiTest extends MessageTestBase {
       'description' => 'This is a dummy text after editing',
       'text[0][value]' => '<p>This is a dummy message with some edited dummy text</p>',
     ];
-    $this->drupalPostForm('admin/structure/message/manage/dummy_message', $edit, t('Save message template'));
+    $this->drupalGet('admin/structure/message/manage/dummy_message');
+    $this->submitForm($edit, t('Save message template'));
 
     $this->drupalGet('admin/structure/message/manage/dummy_message');
 
@@ -102,7 +104,8 @@ class MessageTemplateUiTest extends MessageTestBase {
       'translation[config_names][message.template.dummy_message][description]' => 'This is a dummy text after translation to Hebrew',
       'translation[config_names][message.template.dummy_message][text][0][value]' => '<p>This is a dummy message with translated text to Hebrew</p>',
     ];
-    $this->drupalPostForm('admin/structure/message/manage/dummy_message/translate/he/add', $edit, t('Save translation'));
+    $this->drupalGet('admin/structure/message/manage/dummy_message/translate/he/add');
+    $this->submitForm($edit, t('Save translation'));
 
     // Go to the edit form and verify text.
     $this->drupalGet('admin/structure/message/manage/dummy_message/translate/he/edit');
@@ -149,9 +152,10 @@ class MessageTemplateUiTest extends MessageTestBase {
     $this->assertArrayNotHasKey('partial_0', $build, 'Nonexistent translation built empty.');
 
     // Delete message via the UI.
-    $this->drupalPostForm('admin/structure/message/delete/dummy_message', [], 'Delete');
-    $this->assertText(t('There are no message templates yet.'));
-    $this->assertFalse(MessageTemplate::load('dummy_message'), 'The message deleted via the UI successfully.');
+    $this->drupalGet('admin/structure/message/delete/dummy_message');
+    $this->submitForm([], 'Delete');
+    $this->assertSession()->pageTextContains('There are no message templates yet.');
+    $this->assertNull(MessageTemplate::load('dummy_message'), 'The message deleted via the UI successfully.');
   }
 
   /**
@@ -177,12 +181,7 @@ class MessageTemplateUiTest extends MessageTestBase {
       }
     }
 
-    if (empty($errors)) {
-      $this->pass('All elements were found.');
-    }
-    else {
-      $this->fail('The next errors were found: ' . implode("", $errors));
-    }
+    $this->assertEmpty($errors);
   }
 
 }

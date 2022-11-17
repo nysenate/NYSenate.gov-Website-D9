@@ -15,6 +15,11 @@ trait RedisTestInterfaceTrait {
     $redis_interface = self::getRedisInterfaceEnv();
     $settings = Settings::getAll();
     $settings['redis.connection']['interface'] = $redis_interface;
+
+    if ($host = getenv('REDIS_HOST')) {
+      $settings['redis.connection']['host'] = $host;
+    }
+
     new Settings($settings);
   }
 

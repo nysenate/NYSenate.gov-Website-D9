@@ -2,6 +2,7 @@
 
 namespace Drupal\security_review\Commands;
 
+use Consolidation\AnnotatedCommand\CommandResult;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\security_review\Checklist;
 use Drupal\security_review\CheckResult;
@@ -74,7 +75,7 @@ class SecurityReviewCommands extends DrushCommands {
    *   message: Message
    *   status: Status
    *
-   * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
+   * @return \Consolidation\AnnotatedCommand\CommandResult
    *   Row of results.
    */
   public function securityReview(
@@ -175,7 +176,16 @@ class SecurityReviewCommands extends DrushCommands {
       }
     }
 
-    return new RowsOfFields($this->formatResults($results, $short_titles, $show_findings));
+    $exitCode = self::EXIT_SUCCESS;
+    foreach ($results as $result) {
+      if ($result->result() == CheckResult::FAIL) {
+        // At least one check failed.
+        $exitCode = self::EXIT_FAILURE;
+        break;
+      }
+    }
+
+    return CommandResult::dataWithExitCode(new RowsOfFields($this->formatResults($results, $short_titles, $show_findings)), $exitCode);
   }
 
   /**

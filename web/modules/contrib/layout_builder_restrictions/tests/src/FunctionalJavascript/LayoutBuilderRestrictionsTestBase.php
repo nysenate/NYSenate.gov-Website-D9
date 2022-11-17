@@ -66,7 +66,7 @@ abstract class LayoutBuilderRestrictionsTestBase extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * Navigation helper.

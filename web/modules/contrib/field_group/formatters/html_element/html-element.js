@@ -16,7 +16,7 @@
   Drupal.FieldGroup.Effects.processHtml_element = {
     execute: function (context, settings, group_info) {
 
-      $('.field-group-html-element', context).once('fieldgroup-effects').each(function () {
+      $(once('fieldgroup-effects', '.field-group-html-element', context)).each(function () {
         var $wrapper = $(this);
 
         if ($wrapper.hasClass('fieldgroup-collapsible')) {

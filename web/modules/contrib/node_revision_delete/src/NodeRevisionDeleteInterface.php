@@ -2,10 +2,8 @@
 
 namespace Drupal\node_revision_delete;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 /**
- * Interface NodeRevisionDeleteInterface.
+ * The Node Revision Delete Interface.
  *
  * @package Drupal\node_revision_delete
  */

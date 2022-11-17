@@ -24,8 +24,30 @@ trait MoveBlockHelperTrait {
     $this->assertCount(count($block_tds), $expected_block_labels);
     /** @var \Behat\Mink\Element\NodeElement $block_td */
     foreach ($block_tds as $block_td) {
-      $this->assertSame(array_shift($expected_block_labels), trim($block_td->getText()));
+      $this->assertSame(array_shift($expected_block_labels), trim($this->normalizeThemeOutput($block_td->getText())));
     }
+  }
+
+  /**
+   * Reconciles minor rendering differences in theme output
+   *
+   * @param string $string
+   *   A string of text.
+   *
+   * @return string
+   *   The normalized string.
+   */
+  protected function normalizeThemeOutput($string) {
+    // Drupal 9.5 and 10 appear to have different output for in-progress moved
+    // blocks on Olivero theme. Normalize with a space before the asterisk.
+    // Before: 'Body (current)*'
+    // After: 'Body (current) *'
+    $string = str_replace(")*", ") *", $string);
+    // @todo: Make this more abstracted for other scenarios.
+    // Before: 'branding*'
+    // After: 'branding *'
+    $string = str_replace("branding*", "branding *", $string);
+    return $string;
   }
 
   /**

@@ -43,6 +43,13 @@ class ChecklistWebTest extends BrowserTestBase {
   protected $checklist;
 
   /**
+   * The default theme.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'claro';
+
+  /**
    * Sets up the testing environment.
    */
   protected function setUp() {

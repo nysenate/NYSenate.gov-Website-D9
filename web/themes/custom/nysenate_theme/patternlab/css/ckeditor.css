@@ -1406,6 +1406,11 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.field--name-field-landing-blocks > .field__item {
+  margin-bottom: 80px; }
+  .field--name-field-landing-blocks > .field__item .text-layout__container h2.c-container--h2-title {
+    margin-top: 40px; }
+
 .c-paragraph--more-link {
   clear: both;
   margin: 15px 0 30px;
@@ -1435,7 +1440,7 @@ strong {
   font-size: 18px;
   margin-top: -12px; }
 
-.nys-btn--gold {
+a.nys-btn--gold {
   transition: background-color 0.2s ease;
   position: relative;
   display: block;
@@ -1446,12 +1451,30 @@ strong {
   text-transform: uppercase;
   font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 14px;
-  letter-spacing: 0.1em; }
-  .nys-btn--gold:hover {
+  letter-spacing: 0.1em;
+  line-height: 24px; }
+  a.nys-btn--gold:hover {
     color: #fff;
     background: #cb8d37; }
 
-.c-btn--small-blue {
+a.nys-btn--blue {
+  transition: background-color 0.2s ease;
+  position: relative;
+  display: block;
+  padding: 20px 10px;
+  background: #04a9c5;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  line-height: 24px; }
+  a.nys-btn--blue:hover {
+    color: #fff;
+    background: #004c71; }
+
+a.c-btn--small-blue {
   position: relative;
   display: block;
   padding: 5px 20px;
@@ -1465,7 +1488,7 @@ strong {
   letter-spacing: 0.1em;
   font-size: 14px;
   line-height: 40px; }
-  .c-btn--small-blue:hover, .c-btn--small-blue:active, .c-btn--small-blue:focus {
+  a.c-btn--small-blue:hover, a.c-btn--small-blue:active, a.c-btn--small-blue:focus {
     outline: 0; }
 
 .c-pullquote--citation {
@@ -1475,6 +1498,10 @@ strong {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   text-transform: uppercase;
   font-size: 12px; }
+
+.c-block--background {
+  background-color: #eee;
+  padding: 40px; }
 
 ul.c-block--about-seal {
   list-style: none;

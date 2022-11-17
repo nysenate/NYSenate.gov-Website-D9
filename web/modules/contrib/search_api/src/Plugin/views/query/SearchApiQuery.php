@@ -51,13 +51,6 @@ class SearchApiQuery extends QueryPluginBase {
   protected $limit;
 
   /**
-   * Offset of first displayed result.
-   *
-   * @var int
-   */
-  public int $offset = 0;
-
-  /**
    * The index this view accesses.
    *
    * @var \Drupal\search_api\IndexInterface
@@ -122,6 +115,22 @@ class SearchApiQuery extends QueryPluginBase {
    * @var \Drupal\Core\Messenger\MessengerInterface|null
    */
   protected $messenger;
+
+  /**
+   * Constructs a new class instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->offset = 0;
+  }
 
   /**
    * {@inheritdoc}
@@ -1116,8 +1125,8 @@ class SearchApiQuery extends QueryPluginBase {
    * @return $this
    *
    * @see \Drupal\views\Plugin\views\query\Sql::addWhere()
-   * @see \Drupal\search_api\Plugin\views\query\SearchApiQuery::filter()
-   * @see \Drupal\search_api\Plugin\views\query\SearchApiQuery::condition()
+   * @see \Drupal\search_api\Plugin\views\query\SearchApiQuery::addConditionGroup()
+   * @see \Drupal\search_api\Plugin\views\query\SearchApiQuery::addCondition()
    */
   public function addWhere($group, $field, $value = NULL, $operator = NULL) {
     if ($this->shouldAbort()) {
@@ -1175,7 +1184,7 @@ class SearchApiQuery extends QueryPluginBase {
    *   The group type – "AND" or "OR".
    */
   public function getGroupType($group) {
-    return !empty($this->where[$group]) ? $this->where[$group] : 'AND';
+    return $this->where[$group]['type'] ?? 'AND';
   }
 
   /**

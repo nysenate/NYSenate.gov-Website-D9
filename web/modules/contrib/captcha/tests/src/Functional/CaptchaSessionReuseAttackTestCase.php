@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\captcha\Functional;
 
+use Drupal\captcha\Constants\CaptchaConstants;
+
 /**
  * Tests CAPTCHA session reusing.
  *
@@ -26,7 +28,7 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
     // Set Test CAPTCHA on comment form.
     captcha_set_form_id_setting(self::COMMENT_FORM_ID, 'captcha/Test');
     $this->config('captcha.settings')
-      ->set('persistence', CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE)
+      ->set('persistence', CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE)
       ->save();
 
     // Log in as normal user.
@@ -71,7 +73,7 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
     // Set CAPTCHA on page form.
     captcha_set_form_id_setting('node_page_form', 'captcha/Test');
     $this->config('captcha.settings')
-      ->set('persistence', CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE)
+      ->set('persistence', CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE)
       ->save();
 
     // Log in as normal user.
@@ -119,7 +121,7 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
     // Set CAPTCHA on login form.
     captcha_set_form_id_setting('user_login_form', 'captcha/Test');
     $this->config('captcha.settings')
-      ->set('persistence', CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE)
+      ->set('persistence', CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE)
       ->save();
 
     // Go to log in form.

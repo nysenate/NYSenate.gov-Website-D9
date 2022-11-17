@@ -33,14 +33,14 @@ class MessageTemplateDependenciesTest extends KernelTestBase {
     $config_factory = \Drupal::configFactory();
 
     // Create a fallback text format.
-    FilterFormat::create(['format' => 'fallback'])->save();
+    FilterFormat::create(['format' => 'fallback', 'name' => 'Filter format test'])->save();
     $config_factory
       ->getEditable('filter.settings')
       ->set('fallback_format', 'fallback')
       ->save();
 
-    FilterFormat::create(['format' => 'test_format1'])->save();
-    FilterFormat::create(['format' => 'test_format2'])->save();
+    FilterFormat::create(['format' => 'test_format1', 'name' => 'Filter format test 2'])->save();
+    FilterFormat::create(['format' => 'test_format2', 'name' => 'Filter format test 3'])->save();
     MessageTemplate::create([
       'template' => 'foo',
       'text' => [

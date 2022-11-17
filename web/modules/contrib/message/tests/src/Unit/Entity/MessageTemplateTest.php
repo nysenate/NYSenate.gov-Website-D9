@@ -8,6 +8,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\message\Entity\MessageTemplate;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -19,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class MessageTemplateTest extends UnitTestCase {
 
+  use ProphecyTrait;
+
   /**
    * A message template entity.
    *
@@ -29,7 +32,7 @@ class MessageTemplateTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
     $this->messageTemplate = new MessageTemplate(['template' => 'foo_template'], 'message_template');
   }
@@ -57,7 +60,7 @@ class MessageTemplateTest extends UnitTestCase {
     ];
 
     $this->messageTemplate->setSettings($settings);
-    $this->assertArrayEquals($settings, $this->messageTemplate->getSettings());
+    $this->assertEquals($settings, $this->messageTemplate->getSettings());
     $this->assertEquals($this->messageTemplate->getSetting('one'), $this->messageTemplate->getSetting('one'));
     $this->assertEquals('bar', $this->messageTemplate->getSetting('two'));
   }

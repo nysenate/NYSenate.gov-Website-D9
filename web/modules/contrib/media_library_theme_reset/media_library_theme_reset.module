@@ -278,7 +278,12 @@ function media_library_theme_reset_views_pre_render(ViewExecutable $view) {
         $add_classes($view->field['rendered_entity']->options['element_class'], ['media-library-item__content']);
       }
       if (array_key_exists('media_library_select_form', $view->field)) {
-        $add_classes($view->field['media_library_select_form']->options['element_wrapper_class'], ['media-library-item__click-to-select-checkbox']);
+        if ($view->style_plugin->getPluginId() === 'table') {
+          $add_classes($view->field['media_library_select_form']->options['element_class'], ['media-library-item__click-to-select-checkbox']);
+        }
+        else {
+          $add_classes($view->field['media_library_select_form']->options['element_wrapper_class'], ['media-library-item__click-to-select-checkbox']);
+        }
       }
 
       if ($view->display_handler->options['defaults']['css_class']) {

@@ -15,7 +15,7 @@
    */
   Drupal.FieldGroup.Effects.processAccordion = {
     execute: function (context, settings, group_info) {
-      $('div.field-group-accordion-wrapper', context).once('fieldgroup-effects').each(function () {
+      $(once('fieldgroup-effects', 'div.field-group-accordion-wrapper', context)).each(function () {
         var wrapper = $(this);
 
         // Get the index to set active.

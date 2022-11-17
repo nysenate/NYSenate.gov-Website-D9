@@ -35,7 +35,6 @@ class CaptchaCacheTest extends CaptchaWebTestBase {
    * Test the cache tags.
    */
   public function testCacheTags() {
-    global $base_path;
     // Check caching without captcha as anonymous user.
     $this->drupalGet('');
     $this->assertEquals($this->getSession()->getResponseHeader('x-drupal-cache'), 'MISS');

@@ -8,6 +8,7 @@
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Element;
+use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Helper function for adding/updating a CAPTCHA point.
@@ -76,7 +77,7 @@ function captcha_get_form_id_setting($form_id, $symbolic = FALSE) {
  * @return string
  *   The session ID of the new CAPTCHA session.
  */
-function _captcha_generate_captcha_session($form_id = NULL, $status = CAPTCHA_STATUS_UNSOLVED) {
+function _captcha_generate_captcha_session($form_id = NULL, $status = CaptchaConstants::CAPTCHA_STATUS_UNSOLVED) {
   $user = \Drupal::currentUser();
 
   // Initialize solution with random data.
@@ -129,7 +130,7 @@ function _captcha_required_for_user($captcha_sid, $form_id) {
     ->get('persistence');
 
   // First check: should we always add a CAPTCHA?
-  if ($captcha_persistence == CAPTCHA_PERSISTENCE_SHOW_ALWAYS) {
+  if ($captcha_persistence == CaptchaConstants::CAPTCHA_PERSISTENCE_SHOW_ALWAYS) {
     return TRUE;
   }
 
@@ -143,22 +144,22 @@ function _captcha_required_for_user($captcha_sid, $form_id) {
 
   // Second check: if the current session is already
   // solved: omit further CAPTCHAs.
-  if ($captcha_session_status == CAPTCHA_STATUS_SOLVED) {
+  if ($captcha_session_status == CaptchaConstants::CAPTCHA_STATUS_SOLVED) {
     return FALSE;
   }
 
   // Third check: look at the persistence level
   // (per form instance, per form or per user).
-  if ($captcha_persistence == CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE) {
+  if ($captcha_persistence == CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE) {
     return TRUE;
   }
   else {
     $captcha_success_form_ids = isset($_SESSION['captcha_success_form_ids']) ? (array) ($_SESSION['captcha_success_form_ids']) : [];
     switch ($captcha_persistence) {
-      case CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL:
+      case CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL:
         return (count($captcha_success_form_ids) == 0);
 
-      case CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_TYPE:
+      case CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_TYPE:
         return !isset($captcha_success_form_ids[$form_id]);
     }
   }

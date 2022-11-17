@@ -16,7 +16,7 @@
   Drupal.behaviors.fieldGroupFieldset = {
     attach: function (context) {
 
-      $(context).find('.field-group-fieldset').once('field-group-fieldset').each(function () {
+      $(once('field-group-fieldset', '.field-group-fieldset', context)).each(function () {
         var $this = $(this);
 
         if ($this.is('.required-fields') && ($this.find('[required]').length > 0 || $this.find('.form-required').length > 0)) {

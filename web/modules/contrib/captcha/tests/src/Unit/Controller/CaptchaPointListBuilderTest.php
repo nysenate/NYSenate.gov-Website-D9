@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CaptchaPointListBuilderTest extends UnitTestCase {
 
   use ProphecyTrait;
+
   /**
    * Set up.
    */
@@ -46,6 +47,7 @@ class CaptchaPointListBuilderTest extends UnitTestCase {
     $header = $this->listBuilder->buildHeader();
     $this->assertArrayHasKey('form_id', $header);
     $this->assertArrayHasKey('captcha_type', $header);
+    $this->assertArrayHasKey('captcha_status', $header);
     $this->assertArrayHasKey('operations', $header);
   }
 
@@ -57,6 +59,7 @@ class CaptchaPointListBuilderTest extends UnitTestCase {
     $mockEntity->access(Argument::any())->willReturn(FALSE);
     $mockEntity->id()->willReturn('target_form_id');
     $mockEntity->getCaptchaType()->willReturn('captcha_type');
+    $mockEntity->status()->willReturn('captcha_status');
     $mockEntity->hasLinkTemplate('edit-form')->willReturn(FALSE);
     $mockEntity->hasLinkTemplate('delete-form')->willReturn(FALSE);
 
@@ -67,6 +70,9 @@ class CaptchaPointListBuilderTest extends UnitTestCase {
 
     $this->assertArrayHasKey('captcha_type', $row);
     $this->assertEquals('captcha_type', $row['captcha_type']);
+
+    $this->assertArrayHasKey('captcha_status', $row);
+    $this->assertEquals('Enabled', $row['captcha_status']);
   }
 
 }

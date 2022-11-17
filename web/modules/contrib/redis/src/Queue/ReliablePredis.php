@@ -2,6 +2,7 @@
 
 namespace Drupal\redis\Queue;
 
+use Predis\Client;
 /**
  * Redis queue implementation using Predis library backend.
  *
@@ -26,7 +27,7 @@ class ReliablePredis extends ReliableQueueBase {
    * @param \Predis\Client $client
    *   The Predis client.
    */
-  public function __construct($name, array $settings, \Predis\Client $client) {
+  public function __construct($name, array $settings, Client $client) {
     parent::__construct($name, $settings);
     $this->client = $client;
   }

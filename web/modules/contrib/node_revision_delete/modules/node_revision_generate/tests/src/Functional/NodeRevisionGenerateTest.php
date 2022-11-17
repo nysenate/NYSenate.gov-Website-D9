@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\node_revision_generate\Functional;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node_revision_generate\Traits\NodeRevisionGenerateTestTrait;
 
 /**
@@ -111,7 +111,7 @@ class NodeRevisionGenerateTest extends BrowserTestBase {
     // Log in.
     $this->drupalLogin($account);
 
-    // @TODO Check the module local task.
+    // @todo Check the module local task.
     // Going to the config page.
     $this->drupalGet('admin/config/content/node_revision_delete/generate_revisions');
     // Checking that the request has succeeded.

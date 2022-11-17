@@ -31,6 +31,10 @@ class MessageTemplateDeleteConfirm extends EntityConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Check if any messages are using this template.
     $number_messages = $this->entityTypeManager->getStorage('message')->getQuery()
+      // No access check since the messages are not displayed. If an access
+      // check were made, a template might accidentally be deleted while
+      // messages were still using it.
+      ->accessCheck(FALSE)
       ->condition('template', $this->entity->id())
       ->count()
       ->execute();

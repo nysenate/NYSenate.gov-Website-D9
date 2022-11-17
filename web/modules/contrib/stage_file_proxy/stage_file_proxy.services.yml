@@ -12,3 +12,8 @@ services:
   logger.channel.stage_file_proxy:
     parent: logger.channel_base
     arguments: ['stage_file_proxy']
+
+  stage_file_proxy.image_download_controller:
+    class: Drupal\stage_file_proxy\EventSubscriber\ImageDownloadControllerSubscriber
+    tags:
+      - { name: event_subscriber }

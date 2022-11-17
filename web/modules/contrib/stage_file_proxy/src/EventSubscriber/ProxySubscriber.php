@@ -2,6 +2,7 @@
 
 namespace Drupal\stage_file_proxy\EventSubscriber;
 
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
@@ -12,7 +13,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -80,10 +80,10 @@ class ProxySubscriber implements EventSubscriberInterface {
   /**
    * Fetch the file from it's origin.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event to process.
    */
-  public function checkFileOrigin(GetResponseEvent $event) {
+  public function checkFileOrigin(RequestEvent $event) {
     $config = $this->configFactory->get('stage_file_proxy.settings');
 
     // Get the origin server.
@@ -118,8 +118,18 @@ class ProxySubscriber implements EventSubscriberInterface {
       return;
     }
 
+    // Quit if the extension is in the list of excluded extensions.
+    $excluded_extensions = array_map('trim', explode(',', $config->get('excluded_extensions')));
+
+    $path_info = pathinfo($request_path);
+    $ext = $path_info['extension'];
+
+    if (in_array($ext, $excluded_extensions)) {
+      return;
+    }
+
     $alter_excluded_paths_event = new AlterExcludedPathsEvent([]);
-    $this->eventDispatcher->dispatch('stage_file_proxy.alter_excluded_paths', $alter_excluded_paths_event);
+    $this->eventDispatcher->dispatch($alter_excluded_paths_event, 'stage_file_proxy.alter_excluded_paths');
     $excluded_paths = $alter_excluded_paths_event->getExcludedPaths();
     foreach ($excluded_paths as $excluded_path) {
       if (strpos($request_path, $excluded_path) !== FALSE) {
@@ -143,9 +153,8 @@ class ProxySubscriber implements EventSubscriberInterface {
 
     // Webp support.
     $is_webp = FALSE;
-    if (strpos($relative_path, '.webp')) {
+    if (str_ends_with($relative_path, '.webp')) {
       $paths[] = str_replace('.webp', '', $relative_path);
-      $is_webp = TRUE;
     }
 
     foreach ($paths as $relative_path) {
@@ -154,7 +163,7 @@ class ProxySubscriber implements EventSubscriberInterface {
       // Is this imagecache? Request the root file and let imagecache resize.
       // We check this first so locally added files have precedence.
       $original_path = $this->manager->styleOriginalPath($relative_path, TRUE);
-      if ($original_path && !$is_webp) {
+      if ($original_path) {
         if (file_exists($original_path)) {
           // Imagecache can generate it without our help.
           return;

@@ -500,10 +500,10 @@ function field_group_field_overview_submit(array $form, FormStateInterface $form
         $group->format_settings += $manager->getDefaultSettings($group->format_type, $context);
       }
 
-      /** @var EntityFormInterface $entity_form */
+      /** @var \Drupal\Core\Entity\EntityFormInterface $entity_form */
       $entity_form = $form_state->getFormObject();
 
-      /** @var EntityDisplayInterface $display */
+      /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $display */
       $display = $entity_form->getEntity();
 
       field_group_group_save($group, $display);
@@ -604,12 +604,7 @@ function field_group_format_settings_summary($group_name, $group) {
     'group' => $group,
   ]);
 
-  if ($plugin) {
-    $summary = $plugin->settingsSummary();
-  }
-  else {
-    $summary = '';
-  }
+ $summary = !empty($plugin) ? $plugin->settingsSummary() : [];
 
   return [
     '#markup' => '<div class="field-plugin-summary">' . implode('<br />', $summary) . '</div>',

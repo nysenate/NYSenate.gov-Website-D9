@@ -12,6 +12,11 @@ use Drupal\security_review\CheckResult;
  * Implements hook_install().
  */
 function security_review_install() {
+  // Don't do anything during config sync.
+  if (\Drupal::isConfigSyncing()) {
+    return;
+  }
+
   // Remind the user to set the permissions.
   \Drupal::messenger()->addMessage(
     t('Security Review module enabled. You should first set the module access permissions at <a href=":url">admin/people/permissions</a>. Be sure to grant permissions to trusted users only as this module can show sensitive site information.',

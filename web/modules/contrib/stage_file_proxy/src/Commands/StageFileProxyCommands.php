@@ -35,7 +35,7 @@ class StageFileProxyCommands extends DrushCommands {
    *
    * @var \Psr\Log\LoggerInterface
    */
-  protected $logger;
+  protected $logger = NULL;
 
   /**
    * The module config.

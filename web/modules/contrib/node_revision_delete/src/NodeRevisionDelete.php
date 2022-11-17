@@ -2,17 +2,16 @@
 
 namespace Drupal\node_revision_delete;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
- * Class NodeRevisionDelete.
+ * The Node Revision Delete service.
  *
  * @package Drupal\node_revision_delete
  */
@@ -238,7 +237,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
    * {@inheritdoc}
    */
   public function getPreviousRevisions(int $nid, int $currently_deleted_revision_id): array {
-    // @TODO check if the method can be improved.
+    // @todo check if the method can be improved.
     // Getting the node storage.
     $node_storage = $this->entityTypeManager->getStorage('node');
     // Getting the node.
@@ -311,7 +310,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
    * {@inheritdoc}
    */
   public function getCandidatesRevisions(string $content_type, int $number = PHP_INT_MAX): array {
-    // @TODO check if the method can be improved.
+    // @todo check if the method can be improved.
     if (!is_int($number) && $number < 0) {
       throw new \InvalidArgumentException("\$number parameter must be a positive integer");
     }
@@ -365,7 +364,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
    * {@inheritdoc}
    */
   public function getCandidatesRevisionsByNids(array $nids): array {
-    // @TODO check if the method can be improved.
+    // @todo check if the method can be improved.
     $candidate_revisions = [];
     // If we don't have nids returning an empty array.
     if (empty($nids)) {
@@ -465,7 +464,7 @@ class NodeRevisionDelete implements NodeRevisionDeleteInterface {
    * {@inheritdoc}
    */
   public function getCandidatesNodes(string $content_type): array {
-    // @TODO check if the method can be improved.
+    // @todo check if the method can be improved.
     $result = [];
     // Getting the content type config.
     $content_type_config = $this->getContentTypeConfigWithRelativeTime($content_type);

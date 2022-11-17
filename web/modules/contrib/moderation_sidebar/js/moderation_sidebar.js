@@ -3,14 +3,14 @@
  * Contains all javascript logic for moderation_sidebar.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, once) {
 
   Drupal.behaviors.moderation_sidebar = {
     attach: function (context, settings) {
       // Re-open the Moderation Sidebar when Quick Edit saves, as the Entity
       // object is stored in form state and we don't want to save something
       // that's outdated.
-      $('body').once('moderation-sidebar-init').each(function () {
+      $(once('moderation-sidebar-init', 'body')).each(function () {
         if (typeof Drupal.quickedit !== 'undefined' && Drupal.quickedit.collections.entities) {
           Drupal.quickedit.collections.entities.on('change:isCommitting', function (model) {
             if (model.get('isCommitting') === true && $('.moderation-sidebar-container').length) {
@@ -48,4 +48,4 @@
     });
   });
 
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);

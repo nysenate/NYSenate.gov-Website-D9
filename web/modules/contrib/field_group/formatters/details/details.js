@@ -15,7 +15,7 @@
    */
   Drupal.behaviors.fieldGroupDetails = {
     attach: function (context) {
-      $(context).find('.field-group-details').once('field-group-details').each(function () {
+      $(once('field-group-details', '.field-group-details', context)).each(function () {
         var $this = $(this);
 
         if ($this.is('.required-fields') && ($this.find('[required]').length > 0 || $this.find('.form-required').length > 0)) {

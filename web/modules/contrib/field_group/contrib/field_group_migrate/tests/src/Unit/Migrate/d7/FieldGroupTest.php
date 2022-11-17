@@ -92,7 +92,7 @@ class FieldGroupTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->databaseContents['field_group'] = $this->expectedResults;
     parent::setUp();
   }

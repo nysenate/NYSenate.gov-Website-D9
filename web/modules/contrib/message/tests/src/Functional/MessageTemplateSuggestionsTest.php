@@ -21,10 +21,10 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
-    $this->user = $this->drupalcreateuser();
+    $this->user = $this->drupalCreateUser();
   }
 
   /**

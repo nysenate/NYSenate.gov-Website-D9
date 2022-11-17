@@ -195,6 +195,7 @@ return array(
     'Consolidation\\AnnotatedCommand\\AnnotationData' => $vendorDir . '/consolidation/annotated-command/src/AnnotationData.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\Argument' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Argument.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\Command' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Command.php',
+    'Consolidation\\AnnotatedCommand\\Attributes\\Complete' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Complete.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\DefaultFields' => $vendorDir . '/consolidation/annotated-command/src/Attributes/DefaultFields.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\DefaultTableFields' => $vendorDir . '/consolidation/annotated-command/src/Attributes/DefaultTableFields.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\FieldLabels' => $vendorDir . '/consolidation/annotated-command/src/Attributes/FieldLabels.php',

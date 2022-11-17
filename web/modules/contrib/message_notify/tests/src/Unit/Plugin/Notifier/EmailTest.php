@@ -14,6 +14,7 @@ use Drupal\message_notify\Exception\MessageNotifyException;
 use Drupal\message_notify\Plugin\Notifier\Email;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\UserInterface;
+use Prophecy\Argument;
 
 /**
  * Unit tests for the Email notifier.
@@ -74,12 +75,14 @@ class EmailTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class)->reveal();
     $this->mailManager = $this->prophesize(MailManagerInterface::class)->reveal();
-    $this->renderer = $this->prophesize(RendererInterface::class)->reveal();
+    $renderer = $this->prophesize(RendererInterface::class);
+    $renderer->renderPlain(Argument::any())->willReturn('foo bar');
+    $this->renderer = $renderer->reveal();
     $this->pluginId = $this->randomMachineName();
     $this->pluginDefinition['title'] = $this->randomMachineName();
   }
@@ -101,16 +104,18 @@ class EmailTest extends UnitTestCase {
     $message->getOwnerId()->willReturn(42);
     $template = $this->prophesize(MessageTemplateInterface::class)->reveal();
     $message->getTemplate()->willReturn($template);
+    $message->save()->willReturn(1);
 
     // Mock view builder.
-    $view_builder = $this->prophesize(EntityViewBuilderInterface::class)->reveal();
+    $view_builder = $this->prophesize(EntityViewBuilderInterface::class);
+    $view_builder->view(Argument::cetera())->willReturn([]);
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $entity_type_manager->getViewBuilder('message')->willReturn($view_builder);
+    $entity_type_manager->getViewBuilder('message')->willReturn($view_builder->reveal());
     $this->entityTypeManager = $entity_type_manager->reveal();
 
     $notifier = $this->getNotifier();
     $notifier->setMessage($message->reveal());
-    $this->assertNull($notifier->send());
+    $this->assertFalse($notifier->send());
   }
 
   /**

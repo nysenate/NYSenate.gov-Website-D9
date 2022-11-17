@@ -35,6 +35,13 @@ class CheckWebTest extends BrowserTestBase {
   protected $checks;
 
   /**
+   * The default theme.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'claro';
+
+  /**
    * Sets up the testing environment, logs the user in, populates $check.
    */
   protected function setUp() {

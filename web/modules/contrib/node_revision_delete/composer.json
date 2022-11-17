@@ -1,10 +1,13 @@
 {
   "name": "drupal/node_revision_delete",
   "description": "Track and prune node revisions.",
-  "type": "drupal-module",
-  "keywords": ["Drupal", "Nodes", "Revisions"],
-  "homepage": "https://www.drupal.org/project/node_revision_delete",
   "license": "GPL-2.0-or-later",
+  "type": "drupal-module",
+  "keywords": [
+    "Drupal",
+    "Nodes",
+    "Revisions"
+  ],
   "authors": [
     {
       "name": "Adrian Cid Almaguer (adriancid)",
@@ -25,6 +28,7 @@
       "role": "Maintainer"
     }
   ],
+  "homepage": "https://www.drupal.org/project/node_revision_delete",
   "support": {
     "issues": "https://www.drupal.org/project/issues/node_revision_delete",
     "source": "http://cgit.drupalcode.org/node_revision_delete"
@@ -35,7 +39,7 @@
   "extra": {
     "drush": {
       "services": {
-        "drush.services.yml": "^9"
+        "drush.services.yml": "^9.0 || ^10 || ^11"
       }
     }
   }

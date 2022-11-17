@@ -5,13 +5,12 @@
  * Contains node_revision_delete.module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
-use Drupal\Component\Utility\Xss;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeTypeInterface;
-use Drupal\node_revision_delete\Utility\Donation;
 
 /**
  * Implements hook_help().
@@ -231,7 +230,10 @@ function node_revision_delete_form_node_revision_delete_confirm_alter(&$form, Fo
 
       // Build link to view revision.
       $date = $dateFormatter->format($revision->revision_timestamp->value, 'short');
-      $revision_url = new Url('entity.node.revision', ['node' => $revision->id(), 'node_revision' => $revision->getRevisionId()]);
+      $revision_url = new Url('entity.node.revision', [
+        'node' => $revision->id(),
+        'node_revision' => $revision->getRevisionId(),
+      ]);
       $revision_link = Link::fromTextAndUrl($date, $revision_url)->toRenderable();
 
       $revision_info = [
@@ -261,8 +263,6 @@ function node_revision_delete_form_node_revision_delete_confirm_alter(&$form, Fo
 
     // Custom submit handler to handle bulk revisions delete.
     $form['#submit'][] = '_node_revision_bulk_delete_submit';
-
-    $form['#prefix'] = Donation::getDonationText();
   }
 }
 

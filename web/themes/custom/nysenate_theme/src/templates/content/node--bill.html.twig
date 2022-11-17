@@ -1,5 +1,6 @@
 {{ attach_library('nysenate_theme/bill') }}
 {{ attach_library('nysenate_theme/nysenate-accordion') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
 {{ attach_library('nysenate_theme/resolution-page') }}
 
 {% import '@rain_theme/icons/_icons-macro.twig' as icons %}
@@ -16,7 +17,7 @@
           Bill
           {{ label }}
         </h2>
-        <span class="c-bill--flag">{{ content.field_ol_last_status[0]['#markup'] }}</span>
+        {{ signed_veto_status|raw }}
         <div class="clearfix"></div>
         <div class="c-bill--session-year">
           {{ legislative_session|raw }}
@@ -133,20 +134,22 @@
   </div>
 
   <!-- Your Voice -->
-  <div class="c-block c-bill-section" id="your-voice">
-    <h3 class="c-detail--subhead c-detail--section-title">Your Voice</h3>
-  </div>
-  <!-- Bill Vote Widget -->
-  <div class="c-bill--vote-widget">
-    {{ content.vote_widget }}
-  </div>
+  {% if registration_form or content.vote_widget %}
+    <div class="c-block c-bill-section" id="your-voice">
+      <h3 class="c-detail--subhead c-detail--section-title">Your Voice</h3>
+    </div>
+    <!-- Bill Vote Widget -->
+    <div class="c-bill--vote-widget">
+      {{ content.vote_widget }}
+    </div>
 
-  <!-- Bill Message Form -->
-  <div class="c-bill--message-form clearfix">
-    {# todo: This variable comes from nys_bills custom module. #}
-    {# Need to confirm if we need to port this module. #}
-  {{ registration_form }}
-  </div>
+    <!-- Bill Message Form -->
+    <div class="c-bill--message-form clearfix">
+      {# todo: This variable comes from nys_bills custom module. #}
+      {# Need to confirm if we need to port this module. #}
+    {{ registration_form }}
+    </div>
+  {% endif %}
 
   <!-- Bill Actions -->
   <div class="c-block c-bill-section">
@@ -182,11 +185,24 @@
                     <tbody>
                       {% for versions, base_print_no in grouped_actions %}
                         {% for dates, version in base_print_no %}
-                          {% for key, items in version %}
+                          {% for key,items in version %}
                             <tr class="c-bill--actions-table--row">
                               <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
                               <td class="c-bill--actions-table-col2">
-                                <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
+                                {% for item in items %}
+                                  {% set text_class = 'c-bill--action-line-' ~ item.chamber|lower %}
+                                  {% if 'substituted by' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' substituted' %}
+                                  {% endif %}
+                                  {% if 'amended' in item.text|lower or 'print number' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' substituted' %}
+                                  {% endif %}
+                                  {% if 'stricken' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' stricken' %}
+                                  {% endif %}
+                                  <span class="{{ text_class }}">{{ item.text }}</span><br>
+                                {% endfor %}
+                                </td>
                             </tr>
                           {% endfor %}
                         {% endfor %}
@@ -228,7 +244,6 @@
     </div>
   {% endif %}
 
-  {# todo: Need to port the nys_bill module to create this template. #}
   {{ amendments_block }}
 
   <div class="content c-bill-section" id="panel-comments">

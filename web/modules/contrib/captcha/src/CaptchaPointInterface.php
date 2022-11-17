@@ -15,6 +15,9 @@ interface CaptchaPointInterface extends ConfigEntityInterface {
 
   /**
    * Getter for form machine ID property.
+   *
+   * @return string
+   *   Machine name form id.
    */
   public function getFormId();
 
@@ -44,6 +47,9 @@ interface CaptchaPointInterface extends ConfigEntityInterface {
 
   /**
    * Getter for captcha type property.
+   *
+   * @return string
+   *   Captcha type.
    */
   public function getCaptchaType();
 

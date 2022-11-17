@@ -26,12 +26,12 @@ class MessageThemeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['message', 'user', 'system', 'filter'];
+  protected static $modules = ['message', 'user', 'system', 'filter'];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $this->installEntitySchema('message');

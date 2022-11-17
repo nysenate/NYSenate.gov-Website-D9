@@ -2,18 +2,17 @@
 
 namespace Drupal\node_revision_delete\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Link;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
 use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\node_revision_delete\Utility\Donation;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class NodeRevisionDeleteAdminSettingsForm.
+ * The Node Revision Delete Admin Settings Form.
  *
  * @package Drupal\node_revision_delete\Form
  */
@@ -261,6 +260,7 @@ class AdminSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Deleting node revisions is a database intensive task. Increase this value if you think that the server can handle more deletions per cron run.'),
       '#default_value' => $config->get('node_revision_delete_cron'),
       '#min' => 1,
+      '#required' => TRUE,
     ];
 
     // Available options for node_revision_delete_time variable.
@@ -271,6 +271,7 @@ class AdminSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Frequency of the scheduled mass revision deletion.'),
       '#options' => $options_node_revision_delete_time,
       '#default_value' => $config->get('node_revision_delete_time'),
+      '#required' => TRUE,
     ];
     // Time options.
     $allowed_time = [
@@ -291,6 +292,7 @@ class AdminSettingsForm extends ConfigFormBase {
       '#description' => $this->t('The maximum number in the "Minimum age of revision to delete" configuration in each content type edit page. If you change this number and the new value is smaller than the value defined for a content type in the "Minimum age of revision to delete" setting, the "Minimum age of revision to delete" setting for that content type will take it.'),
       '#default_value' => $config->get('node_revision_delete_minimum_age_to_delete_time')['max_number'],
       '#min' => 1,
+      '#required' => TRUE,
     ];
 
     $form['minimum_age_to_delete']['node_revision_delete_minimum_age_to_delete_time_time'] = [
@@ -300,6 +302,7 @@ class AdminSettingsForm extends ConfigFormBase {
       '#options' => $allowed_time,
       '#size' => 1,
       '#default_value' => $config->get('node_revision_delete_minimum_age_to_delete_time')['time'],
+      '#required' => TRUE,
     ];
 
     // Configuration for the node_revision_delete_when_to_delete_time variable.
@@ -314,6 +317,7 @@ class AdminSettingsForm extends ConfigFormBase {
       '#description' => $this->t('The maximum number allowed in the "When to delete" configuration in each content type edit page. If you change this number and the new value is smaller than the value defined for a content type in the "When to delete" setting, the "When to delete" setting for that content type will take it.'),
       '#default_value' => $config->get('node_revision_delete_when_to_delete_time')['max_number'],
       '#min' => 1,
+      '#required' => TRUE,
     ];
 
     $form['when_to_delete']['node_revision_delete_when_to_delete_time_time'] = [
@@ -323,6 +327,7 @@ class AdminSettingsForm extends ConfigFormBase {
       '#options' => $allowed_time,
       '#size' => 1,
       '#default_value' => $config->get('node_revision_delete_when_to_delete_time')['time'],
+      '#required' => TRUE,
     ];
 
     // Providing the option to run now the batch job.
@@ -357,9 +362,6 @@ class AdminSettingsForm extends ConfigFormBase {
         ],
       ],
     ];
-
-    // Adding donation text.
-    $form['#prefix'] = Donation::getDonationText();
 
     return parent::buildForm($form, $form_state);
   }

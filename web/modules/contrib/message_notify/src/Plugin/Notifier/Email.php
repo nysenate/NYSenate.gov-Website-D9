@@ -121,7 +121,7 @@ class Email extends MessageNotifierBase {
       $from
     );
 
-    return $result['result'];
+    return isset($result['result']);
   }
 
 }

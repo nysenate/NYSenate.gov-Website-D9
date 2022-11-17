@@ -14,12 +14,12 @@ use Drupal\user\Entity\User;
  */
 class MessageTokenTest extends KernelTestBase {
 
-  use \Drupal\Tests\message\Kernel\MessageTemplateCreateTrait;
+  use MessageTemplateCreateTrait;
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['message', 'user', 'system', 'filter'];
+  protected static $modules = ['message', 'user', 'system', 'filter'];
 
   /**
    * The user object.
@@ -38,7 +38,7 @@ class MessageTokenTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $this->installEntitySchema('message');

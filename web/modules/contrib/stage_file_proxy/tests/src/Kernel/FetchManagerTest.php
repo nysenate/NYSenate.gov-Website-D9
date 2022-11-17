@@ -20,7 +20,7 @@ class FetchManagerTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'file'];
+  protected static $modules = ['system', 'file'];
 
   /**
    * FetchManager object.
@@ -62,7 +62,7 @@ class FetchManagerTest extends KernelTestBase {
    *
    * Create new fetchManager object.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->fileSystem = $this->container->get('file_system');
@@ -88,7 +88,7 @@ class FetchManagerTest extends KernelTestBase {
    * Once test method has finished running, whether it succeeded or failed,
    * tearDown() will be invoked. Unset the $fetchManager object.
    */
-  public function tearDown() {
+  public function tearDown(): void {
     unset($this->fetchManager);
   }
 

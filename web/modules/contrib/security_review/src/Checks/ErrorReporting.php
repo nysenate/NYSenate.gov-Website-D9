@@ -34,7 +34,10 @@ class ErrorReporting extends Check {
       ->get('error_level');
 
     // Determine the result.
-    if (is_null($error_level) || $error_level != 'hide') {
+    if ($error_level == 'verbose') {
+        $result = CheckResult::INFO;
+      }
+    elseif (is_null($error_level) || $error_level != 'hide') {
       $result = CheckResult::FAIL;
     }
     else {
@@ -64,6 +67,14 @@ class ErrorReporting extends Check {
   public function evaluate(CheckResult $result) {
     if ($result->result() == CheckResult::SUCCESS) {
       return [];
+    }
+
+    if ($result->result() == CheckResult::INFO) {
+      return [
+        '#theme' => 'check_evaluation',
+        '#paragraphs' => $this->t('You are probably using error report settings overridden from settings.local.php file'),
+        '#items' => [],
+      ];
     }
 
     $paragraphs = [];
@@ -106,6 +117,9 @@ class ErrorReporting extends Check {
 
       case CheckResult::FAIL:
         return $this->t('Errors are written to the screen.');
+
+      case CheckResult::INFO:
+        return $this->t('Errors are managed in the "verbose" way from local settings overrides');
 
       default:
         return $this->t('Unexpected result.');

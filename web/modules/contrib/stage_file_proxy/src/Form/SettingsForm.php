@@ -34,7 +34,7 @@ class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('site.path')
+      $container->getParameter('site.path')
     );
   }
 
@@ -93,9 +93,9 @@ class SettingsForm extends ConfigFormBase {
 
     $form['use_imagecache_root'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Imagecache Root'),
+      '#title' => $this->t('Image style Root'),
       '#default_value' => $config->get('use_imagecache_root'),
-      '#description' => $this->t("When checked Stage File Proxy will look for /imagecache/ in the URL and determine the original file and request that rather than the processed file, then send a header to the browser to refresh the image and let imagecache handle it. This will speed up future imagecache requests for the same original file."),
+      '#description' => $this->t("When checked, Stage File Proxy will look for /styles/ in the URL, determine the original file, and request that rather than the processed file. It will then send a header to the browser to refresh the image and let the image module create the derived image. This will speed up future requests for other derived images for the same original file."),
       '#required' => FALSE,
     ];
 
@@ -104,6 +104,14 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Hotlink'),
       '#default_value' => $config->get('hotlink'),
       '#description' => $this->t("When checked Stage File Proxy will not transfer the remote file to the local machine, it will just serve a 301 to the remote file and let the origin webserver handle it."),
+      '#required' => FALSE,
+    ];
+
+    $form['excluded_extensions'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Excluded extensions.'),
+      '#default_value' => $config->get('excluded_extensions'),
+      '#description' => $this->t("A comma separated list of the extensions that will not be fetched by Stage File Proxy if Hotlinking is disabled. For example: 'mp3,ogg'"),
       '#required' => FALSE,
     ];
 
@@ -134,6 +142,7 @@ class SettingsForm extends ConfigFormBase {
       'use_imagecache_root',
       'hotlink',
       'verify',
+      'excluded_extensions',
     ];
     foreach ($keys as $key) {
       $value = $form_state->getValue($key);

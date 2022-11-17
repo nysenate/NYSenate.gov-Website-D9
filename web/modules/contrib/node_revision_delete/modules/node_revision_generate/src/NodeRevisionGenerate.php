@@ -2,14 +2,14 @@
 
 namespace Drupal\node_revision_generate;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
- * Class NodeRevisionGenerate.
+ * Methods for Node Revision Generate.
  *
  * @package Drupal\node_revision_generate
  */

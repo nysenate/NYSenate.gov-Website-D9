@@ -254,7 +254,7 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
   public function getRawText() {
     return $this->text;
   }
-  
+
   /**
    * {@inheritdoc}
    */

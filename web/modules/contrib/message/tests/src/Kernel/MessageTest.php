@@ -5,6 +5,7 @@ namespace Drupal\Tests\message\Kernel;
 use Drupal\Core\Language\Language;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
+use Drupal\message\MessageException;
 use Drupal\message\MessageInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
@@ -23,7 +24,7 @@ class MessageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter', 'message', 'user', 'system'];
+  protected static $modules = ['filter', 'message', 'user', 'system'];
 
   /**
    * Entity type manager service.
@@ -42,7 +43,7 @@ class MessageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
     $this->installConfig(['filter']);
     $this->installEntitySchema('message');
@@ -54,10 +55,9 @@ class MessageTest extends KernelTestBase {
 
   /**
    * Tests attempting to create a message without a template.
-   *
-   * @expectedException \Drupal\message\MessageException
    */
   public function testMissingTemplate() {
+    $this->expectException(MessageException::class);
     $message = Message::create(['template' => 'missing']);
     $message->save();
   }
@@ -148,6 +148,22 @@ class MessageTest extends KernelTestBase {
     $text = $message->getText();
     $this->assertEquals(1, count($text));
     $this->assertEquals('<p>foo [fake:token] and [message:author:name]</p>' . "\n", $text[0]);
+  }
+
+  /**
+   * Tests getting the language.
+   *
+   * @covers ::getLanguage
+   */
+  public function testGetLanguage() {
+    $message = Message::create(['template' => $this->messageTemplate->id()]);
+
+    // By default no specific language is set.
+    $this->assertEquals(Language::LANGCODE_NOT_SPECIFIED, $message->getLanguage());
+
+    // Set a specific language. It should then be returned.
+    $message->setLanguage('nl');
+    $this->assertEquals('nl', $message->getLanguage());
   }
 
   /**

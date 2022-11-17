@@ -24,7 +24,7 @@ class WebTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['redis', 'block'];
+  protected static $modules = ['redis', 'block'];
 
   /**
    * {@inheritdoc}
@@ -34,7 +34,7 @@ class WebTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('system_breadcrumb_block');
@@ -46,13 +46,18 @@ class WebTest extends BrowserTestBase {
     // Get REDIS_INTERFACE env variable.
     $redis_interface = self::getRedisInterfaceEnv();
     $settings['redis.connection']['interface'] = $redis_interface;
+
+    if ($host = getenv('REDIS_HOST')) {
+      $settings['redis.connection']['host'] = $host;
+    }
+
     $settings['redis_compress_length'] = 100;
 
     $settings['cache'] = [
       'default' => 'cache.backend.redis',
     ];
 
-    $settings['container_yamls'][] = drupal_get_path('module', 'redis') . '/example.services.yml';
+    $settings['container_yamls'][] = \Drupal::service('extension.list.module')->getPath('redis') . '/example.services.yml';
 
     $settings['bootstrap_container_definition'] = [
       'parameters' => [],
@@ -87,12 +92,16 @@ class WebTest extends BrowserTestBase {
     $contents = file_get_contents($filename);
 
     // Add the container_yaml and cache definition.
-    $contents .= "\n\n" . '$settings["container_yamls"][] = "' . drupal_get_path('module', 'redis') . '/example.services.yml";';
+    $contents .= "\n\n" . '$settings["container_yamls"][] = "' . \Drupal::service('extension.list.module')->getPath('redis') . '/example.services.yml";';
     $contents .= "\n\n" . '$settings["cache"] = ' . var_export($settings['cache'], TRUE) . ';';
     $contents .= "\n\n" . '$settings["redis_compress_length"] = 100;';
 
+    if ($host = getenv('REDIS_HOST')) {
+      $contents .= "\n\n" . '$settings["redis.connection"]["host"] = "' . $host . '";';
+    }
+
     // Add the classloader.
-    $contents .= "\n\n" . '$class_loader->addPsr4(\'Drupal\\\\redis\\\\\', \'' . drupal_get_path('module', 'redis') . '/src\');';
+    $contents .= "\n\n" . '$class_loader->addPsr4(\'Drupal\\\\redis\\\\\', \'' . \Drupal::service('extension.list.module')->getPath('redis') . '/src\');';
 
     // Add the bootstrap container definition.
     $contents .= "\n\n" . '$settings["bootstrap_container_definition"] = ' . var_export($settings['bootstrap_container_definition'], TRUE) . ';';
@@ -129,8 +138,9 @@ class WebTest extends BrowserTestBase {
     $edit["modules[views][enable]"] = TRUE;
     $edit["modules[field_ui][enable]"] = TRUE;
     $edit["modules[text][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
-    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, t('Install'));
+    $this->submitForm([], t('Continue'));
 
     $assert = $this->assertSession();
 
@@ -150,7 +160,8 @@ class WebTest extends BrowserTestBase {
       'name' => $this->randomString(),
       'type' => $node_type = mb_strtolower($this->randomMachineName()),
     ];
-    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
+    $this->drupalGet('admin/structure/types/add');
+    $this->submitForm($edit, t('Save and manage fields'));
     $field_name = mb_strtolower($this->randomMachineName());
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $node_type, $field_name, NULL, 'text');
 
@@ -160,7 +171,8 @@ class WebTest extends BrowserTestBase {
       'body[0][value]' => $this->randomMachineName(),
       'field_' . $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/' . $node_type, $edit, t('Save'));
+    $this->drupalGet('node/add/' . $node_type);
+    $this->submitForm($edit, t('Save'));
 
     // Test the output as anonymous user.
     $this->drupalLogout();
@@ -175,7 +187,7 @@ class WebTest extends BrowserTestBase {
     $update = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $update, t('Save'));
+    $this->submitForm($update, t('Save'));
     $this->assertSession()->responseContains($update['title[0][value]']);
     $this->drupalGet('node');
     $this->assertSession()->responseContains($update['title[0][value]']);

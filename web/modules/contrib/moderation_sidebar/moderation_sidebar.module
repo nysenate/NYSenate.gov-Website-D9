@@ -46,6 +46,10 @@ function moderation_sidebar_toolbar() {
     return $items;
   }
 
+  if ($entity->isNew()) {
+    return $items;
+  }
+
   $cacheability->addCacheableDependency($entity);
 
   /** @var \Drupal\content_moderation\ModerationInformation $moderation_information */

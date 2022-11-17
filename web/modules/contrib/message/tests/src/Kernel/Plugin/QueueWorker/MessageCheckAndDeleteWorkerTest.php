@@ -25,7 +25,7 @@ class MessageCheckAndDeleteWorkerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter', 'message', 'user', 'system', 'field', 'entity_reference', 'text', 'node'];
+  protected static $modules = ['filter', 'message', 'user', 'system', 'field', 'text', 'node'];
 
   /**
    * The queue worker to test.
@@ -37,7 +37,7 @@ class MessageCheckAndDeleteWorkerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $this->installEntitySchema('user');

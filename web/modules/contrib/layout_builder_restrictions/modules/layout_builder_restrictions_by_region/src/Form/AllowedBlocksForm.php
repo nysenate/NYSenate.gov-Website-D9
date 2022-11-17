@@ -404,7 +404,7 @@ class AllowedBlocksForm extends FormBase {
     $category_is_restricted = (!empty($this->allowedBlockCategories) && !in_array($category, $this->allowedBlockCategories));
     // Attempt to retrieve default value from tempStore, then from config
     // before settings to 'all'.
-    if (!is_null($temp_data[$category]['restriction_type'])) {
+    if (isset($temp_data) && isset($temp_data[$category]['restriction_type'])) {
       return $temp_data[$category]['restriction_type'];
     }
     else {

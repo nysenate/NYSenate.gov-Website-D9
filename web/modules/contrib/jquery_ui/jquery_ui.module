@@ -21,3 +21,31 @@ function jquery_ui_help($route_name, RouteMatchInterface $route_match) {
       return $output;
   }
 }
+
+/**
+ * Implements hook_library_info_alter().
+ *
+ * Declare libraries on behalf of sub-modules.
+ */
+function jquery_ui_library_info_alter(array &$libraries, string $module): void {
+  $data = &drupal_static(__FUNCTION__, []);
+  if (empty($data)) {
+    $data['libraries'] = json_decode(file_get_contents(__DIR__ . '/jquery_ui.libraries.data.json'), TRUE, 512, JSON_THROW_ON_ERROR);
+    $data['path'] = \Drupal::service('module_handler')->getModule('jquery_ui')->getPath();
+  }
+
+  if (array_key_exists($module, $data['libraries'])) {
+    $module_libraries = $data['libraries'][$module];
+    foreach ($module_libraries as $name => &$definition) {
+      foreach ($definition['css'] as $bem => $files) {
+        $definition['css'][$bem] = array_combine(array_map(function ($path) use ($data) {
+          return "/$data[path]/$path";
+        }, array_keys($files)), $files);
+      }
+      $definition['js'] = array_combine(array_map(function ($path) use ($data) {
+        return "/$data[path]/$path";
+      }, array_keys($definition['js'])), $definition['js']);
+    }
+    $libraries = array_merge($libraries, $module_libraries);
+  }
+}

@@ -32,7 +32,7 @@ moderation_sidebar.node.version_history:
     _controller: '\Drupal\moderation_sidebar\Controller\ModerationSidebarController::revisionOverview'
   requirements:
     _permission: 'use moderation sidebar'
-    _access_node_revision: 'view'
+    _entity_access: 'node.view all revisions'
     node: \d+
 
 moderation_sidebar.translate:

@@ -84,6 +84,7 @@ class NodeRevisionDeleteBatch {
   public static function finish(bool $success, array $results, array $operations): void {
     $messenger = \Drupal::messenger();
     $logger = \Drupal::logger('node_revision_delete');
+    $success_message = '';
 
     if ($success) {
       // If we are finishing the prior delete feature.
@@ -101,7 +102,7 @@ class NodeRevisionDeleteBatch {
           $variables
         );
       }
-      else {
+      elseif (isset($results['revisions'])) {
         $success_message = \Drupal::translation()->formatPlural(
           $results['revisions'],
           'One revision has been deleted.',
@@ -110,8 +111,10 @@ class NodeRevisionDeleteBatch {
         );
       }
 
-      $logger->notice($success_message);
-      $messenger->addMessage($success_message);
+      if (!empty($success_message)) {
+        $logger->notice($success_message);
+        $messenger->addMessage($success_message);
+      }
     }
     else {
       // An error occurred.

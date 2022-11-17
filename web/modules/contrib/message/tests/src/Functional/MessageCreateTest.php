@@ -22,7 +22,7 @@ class MessageCreateTest extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $this->user = $this->drupalcreateuser();
@@ -43,7 +43,7 @@ class MessageCreateTest extends MessageTestBase {
     $message->save();
 
     /* @var Message $message */
-    $this->assertEqual($this->user->id(), $message->getOwnerId(), 'The default value for uid was set correctly.');
+    $this->assertEquals($this->user->id(), $message->getOwnerId(), 'The default value for uid was set correctly.');
   }
 
 }

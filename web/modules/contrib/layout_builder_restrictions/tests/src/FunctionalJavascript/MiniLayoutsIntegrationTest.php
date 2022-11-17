@@ -7,7 +7,7 @@ namespace Drupal\Tests\layout_builder_restrictions\FunctionalJavascript;
  *
  * @group layout_builder_restrictions
  *
- * @requires mini_layouts
+ * @require module mini_layouts
  */
 class MiniLayoutsIntegrationTest extends LayoutBuilderRestrictionsTestBase {
 

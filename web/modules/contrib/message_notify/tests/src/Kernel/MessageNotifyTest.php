@@ -34,7 +34,7 @@ class MessageNotifyTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'message_notify_test',
     'message_notify',
     'message',
@@ -49,7 +49,7 @@ class MessageNotifyTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('user');
@@ -80,10 +80,10 @@ class MessageNotifyTest extends KernelTestBase {
     // The test notifier added the output to the message.
     $output = $message->output;
     $text = $message->getText();
-    $this->assertContains((string) $text[1], (string) $output['foo']);
-    $this->assertContains('another field', (string) $output['foo']);
-    $this->assertContains((string) $text[0], (string) $output['bar']);
-    $this->assertNotContains('another field', (string) $output['bar']);
+    $this->assertStringContainsString((string) $text[1], (string) $output['foo']);
+    $this->assertStringContainsString('another field', (string) $output['foo']);
+    $this->assertStringContainsString((string) $text[0], (string) $output['bar']);
+    $this->assertStringNotContainsString('another field', (string) $output['bar']);
   }
 
   /**
@@ -95,12 +95,12 @@ class MessageNotifyTest extends KernelTestBase {
     $message = Message::create(['template' => $this->messageTemplate->id(), 'uid' => $account->id()]);
     $message->fail = FALSE;
     $this->messageNotifier->send($message, [], 'test');
-    $this->assertTrue($message->id(), 'Message saved after successful delivery.');
+    $this->assertNotNull($message->id(), 'Message saved after successful delivery.');
 
     $message = Message::create(['template' => $this->messageTemplate->id(), 'uid' => $account->id()]);
     $message->fail = TRUE;
     $this->messageNotifier->send($message, [], 'test');
-    $this->assertFalse($message->id(), 'Message not saved after unsuccessful delivery.');
+    $this->assertNull($message->id(), 'Message not saved after unsuccessful delivery.');
 
     // Disable saving Message on delivery.
     $options = [
@@ -122,65 +122,79 @@ class MessageNotifyTest extends KernelTestBase {
 
   /**
    * Test populating the rednered output to fields.
+   *
+   * @dataProvider providerPostSendRenderedField
    */
-  public function testPostSendRenderedField() {
+  public function testPostSendRenderedField(array $options, bool $exception) {
     $this->attachRenderedFields();
 
-    // Test plain fields.
-    $options = [
-      'rendered fields' => [
-        'foo' => 'rendered_foo',
-        'bar' => 'rendered_bar',
-      ],
-    ];
-
     $message = Message::create(['template' => $this->messageTemplate->id()]);
+
+    if ($exception) {
+      $this->expectException(MessageNotifyException::class);
+    }
+
     $this->messageNotifier->send($message, $options, 'test');
-    $this->assertTrue($message->rendered_foo->value && $message->rendered_bar->value, 'Message is rendered to fields.');
 
-    // Test field with text-processing.
-    $options = [
-      'rendered fields' => [
-        'foo' => 'rendered_baz',
-        'bar' => 'rendered_bar',
+    if (!$exception) {
+      $this->assertArrayHasKey('rendered fields', $options);
+      $fields = array_values($options['rendered fields']);
+      $this->assertNotEmpty($fields);
+      foreach ($fields as $field) {
+        $this->assertNotEmpty($message->{$field}->value, 'The message field ' . $field . ' was not rendered.');
+      }
+    }
+  }
+
+  /**
+   * Data provider for ::testPostSendRenderedField.
+   *
+   * @return array
+   */
+  public function providerPostSendRenderedField():array {
+    $cases = [];
+
+    $cases['plain fields'] = [
+      [
+        'rendered fields' => [
+          'foo' => 'rendered_foo',
+          'bar' => 'rendered_bar',
+        ],
       ],
+      FALSE,
     ];
 
-    $message = Message::create(['template' => $this->messageTemplate->id()]);
-    $this->messageNotifier->send($message, $options, 'test');
-    $this->assertTrue($message->rendered_baz->value && $message->rendered_bar->value, 'Message is rendered to fields with text-processing.');
-
-    // Test missing view mode key in the rendered fields.
-    $options = [
-      'rendered fields' => [
-        'foo' => 'rendered_foo',
-        // No "bar" field.
+    $cases['field with text-processing'] = [
+      [
+        'rendered fields' => [
+          'foo' => 'rendered_baz',
+          'bar' => 'rendered_bar',
+        ],
       ],
+      FALSE,
     ];
-    $message = Message::create(['template' => $this->messageTemplate->id()]);
-    try {
-      $this->messageNotifier->send($message, $options, 'test');
-      $this->fail('Can save rendered message with missing view mode.');
-    }
-    catch (MessageNotifyException $e) {
-      $this->pass('Cannot save rendered message with missing view mode.');
-    }
 
-    // Test invalid field name.
-    $options = [
-      'rendered fields' => [
-        'foo' => 'wrong_field',
-        'bar' => 'rendered_bar',
+    $cases['missing view mode key in rendered fields'] = [
+      [
+        'rendered fields' => [
+          'foo' => 'rendered_foo',
+          // No "bar" field.
+        ],
       ],
+      TRUE,
     ];
-    $message = Message::create(['template' => $this->messageTemplate->id()]);
-    try {
-      $this->messageNotifier->send($message, $options, 'test');
-      $this->fail('Can save rendered message to non-existing field.');
-    }
-    catch (MessageNotifyException $e) {
-      $this->pass('Cannot save rendered message to non-existing field.');
-    }
+
+    $cases['invalid field name'] = [
+      [
+        'rendered fields' => [
+          'foo' => 'wrong_field',
+          'bar' => 'rendered_bar',
+        ],
+      ],
+      TRUE,
+    ];
+
+    return $cases;
   }
 
   /**

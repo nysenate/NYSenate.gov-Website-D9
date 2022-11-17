@@ -1,5 +1,17 @@
-Search API 1.x, dev (xxxx-xx-xx):
----------------------------------
+Search API 1.28 (2022-11-07):
+-----------------------------
+- #3317319 by drunken monkey, mkalkbrenner: Reverted the required PHP version
+  back to 7.3.
+- #3318187 by drunken monkey, mkalkbrenner, aspilicious, edykst: Fixed
+  regressions in Views filters.
+- #3313195 by nkoporec, drunken monkey: Fixed failing
+  ViewsTest::testViewSorts() test on Drupal 10.
+
+Search API 1.27 (2022-10-19):
+-----------------------------
+- Security issue SA-CONTRIB-2022-059 by mkalkbrenner, drunken monkey, borisson_,
+  DamienMcKenna, mlhess, Gerhard Killesreiter: Fixed “rendered in current
+  request” detection code for block views to take current theme into account.
 - #3311987 by tyler36, Arun Velusamy, sophiavs, drunken monkey: Fixed styling
   of checked checkboxes in Claro.
 

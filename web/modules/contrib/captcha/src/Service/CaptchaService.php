@@ -66,7 +66,7 @@ class CaptchaService {
     }
     else {
       // @phpstan-ignore-next-line
-      foreach (\Drupal::moduleHandler()->getImplementations('captcha') as $module) {
+      foreach ($this->moduleHandler->getImplementations('captcha') as $module) {
         $type = call_user_func_array($module . '_captcha', ['list']);
         if (!is_array($type)) {
           $types[$module] = [$type];

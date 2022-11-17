@@ -3,20 +3,19 @@
 namespace Drupal\node_revision_delete\Form;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
-use Drupal\node_revision_delete\Utility\Donation;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class CandidateRevisionsForm.
+ * The Candidate Revisions Form.
  *
  * @package Drupal\node_revision_delete\Form
  */
@@ -131,7 +130,10 @@ class CandidateRevisionsNodeForm extends FormBase {
 
       // Build link to view revision.
       $date = $this->dateFormatter->format($revision->revision_timestamp->value, 'short');
-      $revision_url = new Url('entity.node.revision', ['node' => $revision->id(), 'node_revision' => $revision->getRevisionId()]);
+      $revision_url = new Url('entity.node.revision', [
+        'node' => $revision->id(),
+        'node_revision' => $revision->getRevisionId(),
+      ]);
       $revision_link = Link::fromTextAndUrl($date, $revision_url)->toRenderable();
 
       $revision_info = [
@@ -186,7 +188,10 @@ class CandidateRevisionsNodeForm extends FormBase {
     }
 
     $node_url = $node->toUrl()->toString();
-    $caption = $this->t('Candidates revisions for node <a href=":url">%title</a>', [':url' => $node_url, '%title' => $node->getTitle()]);
+    $caption = $this->t('Candidates revisions for node <a href=":url">%title</a>', [
+      ':url' => $node_url,
+      '%title' => $node->getTitle(),
+    ]);
 
     $form['candidate_revisions'] = [
       '#type' => 'tableselect',
@@ -204,9 +209,6 @@ class CandidateRevisionsNodeForm extends FormBase {
       '#value' => $this->t('Delete revisions'),
       '#button_type' => 'primary',
     ];
-
-    // Adding donation text.
-    $form['#prefix'] = Donation::getDonationText();
 
     return $form;
   }

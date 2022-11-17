@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\node_revision_generate\Unit;
 
-use Drupal\node_revision_generate\NodeRevisionGenerateBatch;
-use Drupal\Tests\UnitTestCase;
 use Drupal\node_revision_generate\NodeRevisionGenerate;
+use Drupal\node_revision_generate\NodeRevisionGenerateBatch;
 use Drupal\Tests\node_revision_generate\Traits\NodeRevisionGenerateTestTrait;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the NodeRevisionGenerate class methods.

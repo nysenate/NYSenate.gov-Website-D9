@@ -88,7 +88,7 @@ class Field extends Check {
             foreach (array_keys($field_storage_definition->getSchema()['columns']) as $column) {
               $column_name = $field_name . $separator . $column;
               foreach ($tags as $vulnerability => $tag) {
-                if (strpos($row->{$column_name}, '<' . $tag) !== FALSE) {
+                if (strpos((string) $row->{$column_name}, '<' . $tag) !== FALSE) {
                   // Vulnerability found.
                   $findings[$entity_type_id][$row->{$id}][$field_name][] = $vulnerability;
                 }

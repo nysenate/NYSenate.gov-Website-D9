@@ -84,6 +84,7 @@ class ViewsAccess extends Check {
       return [];
     }
 
+    $views_ui_enabled = \Drupal::moduleHandler()->moduleExists('views_ui');
     $paragraphs = [];
     $paragraphs[] = $this->t('The following View displays do not check access.');
 
@@ -93,14 +94,17 @@ class ViewsAccess extends Check {
       /** @var View $view */
 
       foreach ($displays as $display) {
-        $items[] = Link::createFromRoute(
-          $view->label() . ': ' . $display,
-          'entity.view.edit_display_form',
-          [
-            'view' => $view_id,
-            'display_id' => $display,
-          ]
-        );
+        $label = $view->label() . ': ' . $display;
+        $items[] = $views_ui_enabled ?
+          Link::createFromRoute(
+            $label,
+            'entity.view.edit_display_form',
+            [
+              'view' => $view_id,
+              'display_id' => $display,
+            ]
+          ) :
+          $label;
       }
     }
 

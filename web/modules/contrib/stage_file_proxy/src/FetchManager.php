@@ -84,8 +84,8 @@ class FetchManager implements FetchManagerInterface {
 
       $destination = str_replace('///', '//', "$destination/") . $this->fileSystem->basename($relative_path);
 
-      $response_headers = $response->getHeaders();
-      $content_length = array_shift($response_headers['Content-Length']);
+      $content_length_headers = $response->getHeader('Content-Length');
+      $content_length = array_shift($content_length_headers);
       $response_data = $response->getBody()->getContents();
       if (isset($content_length) && strlen($response_data) != $content_length) {
         $this->logger->error('Incomplete download. Was expecting @content-length bytes, actually got @data-length.', [
@@ -170,7 +170,7 @@ class FetchManager implements FetchManagerInterface {
     // name. Preserves the mime type in different stream wrapper
     // implementations.
     $parts = pathinfo($destination);
-    $extension = '.' . $parts['extension'];
+    $extension = isset($parts['extension']) ? '.' . $parts['extension'] : '';
     if ($extension === '.gz') {
       $parts = pathinfo($parts['filename']);
       $extension = '.' . $parts['extension'] . $extension;
@@ -202,9 +202,9 @@ class FetchManager implements FetchManagerInterface {
       }
     }
 
-    // Final check; make sure file exists & is not empty.
+    // Final check; make sure file exists and is not empty.
     $result = FALSE;
-    if (file_exists($destination) & filesize($destination) != 0) {
+    if (file_exists($destination) && filesize($destination) > 0) {
       $result = TRUE;
     }
     return $result;

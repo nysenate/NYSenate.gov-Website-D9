@@ -93,11 +93,13 @@ class FormatterHelper implements TrustedCallbackInterface {
         $parents[] = $group_name;
         $element[$group_name]['#parents'] = $parents;
         $group_children_parent_group = implode('][', $parents);
-        foreach ($group->children as $child) {
-          if (!empty($element[$child]['#field_group_ignore'])) {
-            continue;
+        if (isset($group->children)) {
+          foreach ($group->children as $child) {
+            if (!empty($element[$child]['#field_group_ignore'])) {
+              continue;
+            }
+            $element[$child]['#group'] = $group_children_parent_group;
           }
-          $element[$child]['#group'] = $group_children_parent_group;
         }
       }
 
@@ -106,12 +108,21 @@ class FormatterHelper implements TrustedCallbackInterface {
 
         // Let modules define their wrapping element.
         // Note that the group element has no properties, only elements.
-        foreach (Drupal::moduleHandler()->getImplementations('field_group_form_process') as $module) {
-          // The intention here is to have the opportunity to alter the
-          // elements, as defined in hook_field_group_formatter_info.
-          // Note, implement $element by reference!
-          $function = $module . '_field_group_form_process';
-          $function($field_group_element, $group, $element);
+        // The intention here is to have the opportunity to alter the
+        // elements, as defined in hook_field_group_formatter_info.
+        // Note, implement $element by reference!
+        if (method_exists(Drupal::moduleHandler(), 'invokeAllWith')) {
+          // On Drupal >= 9.4 use the new method.
+          Drupal::moduleHandler()->invokeAllWith('field_group_form_process', function (callable $hook) use (&$field_group_element, &$group, &$element) {
+            $hook($field_group_element, $group, $element);
+          });
+        }
+        else {
+          // @phpstan-ignore-next-line
+          foreach (Drupal::moduleHandler()->getImplementations('field_group_form_process') as $module) {
+            $function = $module . '_field_group_form_process';
+            $function($field_group_element, $group, $element);
+          }
         }
 
         // Allow others to alter the pre_render.
@@ -141,7 +152,7 @@ class FormatterHelper implements TrustedCallbackInterface {
         $closed = isset($element[$fieldgroup->group_name]['#open']) && !$element[$fieldgroup->group_name]['#open'];
         if ($closed) {
           foreach ($fieldgroup->children as $child) {
-            if (static::groupElementsContainErrors($element[$child])) {
+            if (isset($element[$child]) && static::groupElementsContainErrors($element[$child])) {
               $element[$fieldgroup->group_name]['#open'] = TRUE;
               break;
             }

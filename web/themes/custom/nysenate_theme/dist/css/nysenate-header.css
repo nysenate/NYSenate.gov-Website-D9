@@ -1991,6 +1991,19 @@ nav ul.c-nav--list {
 .c-header--btn.c-header--btn__primary::after {
   content: '\66'; }
 
+.inactive-pallette .c-header--btn.c-header--btn__primary:after, .inactive-pallette .c-header--btn.c-header--btn__taking_action:after {
+  background: #2b6a90; }
+
+.inactive-pallette .c-login--list:hover .c-header--btn__primary,
+.inactive-pallette .c-login--list:hover .c-header--btn__taking_action {
+  background: #2b6a90; }
+  .inactive-pallette .c-login--list:hover .c-header--btn__primary:hover,
+  .inactive-pallette .c-login--list:hover .c-header--btn__taking_action:hover {
+    background: #2b6a90; }
+
+.inactive-pallette .c-login--list:hover li + li a:hover {
+  background: #004d71; }
+
 .c-header--btn {
   display: block;
   float: left;

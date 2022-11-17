@@ -54,6 +54,7 @@ class BlockPlacementAllowlistTest extends LayoutBuilderRestrictionsTestBase {
     ];
     $config = \Drupal::service('config.factory')->getEditable('layout_builder_restrictions.plugins');
     $config->set('plugin_config', $layout_builder_restrictions_plugins)->save();
+    $this->getSession()->resizeWindow(900, 2000);
   }
 
   /**

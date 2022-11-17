@@ -58,7 +58,7 @@ replace all supported backend services (that currently includes the cache tags
 checksum service and the lock backends, check the file for the current list)
 or copy the service definitions into a site specific services.yml.
 
-    $settings['container_yamls'][] = 'modules/redis/example.services.yml';
+    $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
 
 Note that for any of this, the redis module must be enabled. See next chapters
 for more information.

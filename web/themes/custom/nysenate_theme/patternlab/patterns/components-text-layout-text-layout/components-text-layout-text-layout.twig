@@ -2,8 +2,8 @@
 
 <div class="text-layout {% if contents|length > 1 %}text-layout--2-col{% endif %} {% if is_full_bleed %}text-layout--full-bleed{% endif %} {% if with_bg %}text-layout--with-bg{% endif %}">
   <div class="text-layout__container">
-    {% if title %}
-      <div class="text-layout__title">
+    {% if title and title_show == 'On' %}
+      <div class="text-layout__title {{ title_format }}">
         {{ title }}
       </div>
     {% endif %}

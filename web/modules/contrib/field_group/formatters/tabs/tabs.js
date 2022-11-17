@@ -22,7 +22,7 @@
         var direction = group_info.settings.direction;
         $(context).find('[data-' + direction + '-tabs-panes]').each(function () {
           var errorFocussed = false;
-          $(this).find('> details').once('fieldgroup-effects').each(function () {
+          $(once('fieldgroup-effects', $(this).find('> details'))).each(function () {
             var $this = $(this);
             if (typeof $this.data(direction + 'Tab') !== 'undefined') {
 

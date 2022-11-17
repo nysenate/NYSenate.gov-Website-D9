@@ -15,14 +15,14 @@ class MenuTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['message'];
+  protected static $modules = ['message'];
 
   /**
    * Default theme.
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'claro';
 
   /**
    * Test that the menu links are working properly.

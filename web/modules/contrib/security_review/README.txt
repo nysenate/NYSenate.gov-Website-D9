@@ -83,7 +83,7 @@ skipping any check the 'store' option will not allow that check to be run.
 
 Please use the issue queue at http://drupal.org/project/security_review for all
 module support. You can read more about securely configuring your site at
-http://drupal.org/security/secure-configuration and http://drupalscout.com
+http://drupal.org/security/secure-configuration.
 
 -- CREDIT --
 

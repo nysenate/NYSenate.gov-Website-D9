@@ -22,17 +22,6 @@ class SearchApiStandard extends ArgumentPluginBase {
   public $query;
 
   /**
-   * The operator to use for multiple arguments.
-   *
-   * Either "and" or "or".
-   *
-   * @var string
-   *
-   * @see \Drupal\views\Plugin\views\argument\ArgumentPluginBase::unpackArgumentValue()
-   */
-  public string $operator;
-
-  /**
    * {@inheritdoc}
    */
   public function defaultActions($which = NULL) {

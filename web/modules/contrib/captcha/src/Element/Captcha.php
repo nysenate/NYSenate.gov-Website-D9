@@ -8,6 +8,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element\FormElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Defines the CAPTCHA form element with default properties.
@@ -72,7 +73,7 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
     // Override the default CAPTCHA validation function for case
     // insensitive validation.
     // @todo shouldn't this be done somewhere else, e.g. in form_alter?
-    if (CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE == $this->configFactory->get('captcha.settings')
+    if (CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE == $this->configFactory->get('captcha.settings')
       ->get('default_validation')
     ) {
       $captcha_element['#captcha_validate'] = 'captcha_validate_case_insensitive_equality';
@@ -114,7 +115,7 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
     else {
       // Generate a new CAPTCHA session if we could
       // not reuse one from a posted form.
-      $captcha_sid = _captcha_generate_captcha_session($this_form_id, CAPTCHA_STATUS_UNSOLVED);
+      $captcha_sid = _captcha_generate_captcha_session($this_form_id, CaptchaConstants::CAPTCHA_STATUS_UNSOLVED);
       $captcha_token = Crypt::randomBytesBase64();
       \Drupal::database()->update('captcha_sessions')
         ->fields(['token' => $captcha_token])
@@ -163,7 +164,7 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
       'captcha_sid' => $captcha_sid,
       'module' => $captcha_type_module,
       'captcha_type' => $captcha_type_challenge,
-      'access' => $element['#access'] ?? CAPTCHA_FIELD_DEFAULT_ACCESS,
+      'access' => $element['#access'] ?? CaptchaConstants::CAPTCHA_FIELD_DEFAULT_ACCESS,
     ]);
     $element['#captcha_info'] = [
       'form_id' => $this_form_id,

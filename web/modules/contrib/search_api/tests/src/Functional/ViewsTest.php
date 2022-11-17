@@ -5,7 +5,6 @@ namespace Drupal\Tests\search_api\Functional;
 use Drupal\block\Entity\Block;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
@@ -15,6 +14,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Utility\Utility;
+use Drupal\search_api_test_views\EventListener;
 use Drupal\views\Entity\View;
 
 /**
@@ -70,6 +70,8 @@ class ViewsTest extends SearchApiBrowserTestBase {
 
   /**
    * Tests a view with exposed filters.
+   *
+   * @see views.view.search_api_test_view.yml
    */
   public function testSearchView() {
     $this->checkResults([], array_keys($this->entities), 'Unfiltered search');
@@ -113,21 +115,18 @@ class ViewsTest extends SearchApiBrowserTestBase {
     $this->assertSession()->pageTextNotContains('You must include at least one positive keyword with 3 characters or more');
 
     $this->checkResults(['id[value]' => 2], [2], 'Search with ID filter');
-
     $query = [
       'id[min]' => 2,
       'id[max]' => 4,
       'id_op' => 'between',
     ];
     $this->checkResults($query, [2, 3, 4], 'Search with ID "in between" filter');
-
     $query = [
       'id[min]' => 2,
       'id[max]' => 4,
       'id_op' => 'not between',
     ];
     $this->checkResults($query, [1, 5], 'Search with ID "not in between" filter');
-
     $query = [
       'id[value]' => 2,
       'id_op' => '>',
@@ -224,18 +223,31 @@ class ViewsTest extends SearchApiBrowserTestBase {
     ];
     $this->checkResults($query, [1, 2, 3, 4, 5], 'Search with Name "not empty" filter');
 
+    // To enable us to determine whether the language filters were correctly
+    // placed with setLanguages() instead of filters on "search_api_language",
+    // we activate printing of the query to the results page.
+    \Drupal::state()->set(EventListener::STATE_PRINT_QUERY, TRUE);
     $query = [
       'language' => ['***LANGUAGE_site_default***'],
     ];
     $this->checkResults($query, [1, 2, 3, 4, 5], 'Search with "Page content language" filter');
+    $this->assertSession()->pageTextContains('Searched languages: en');
+    $this->assertSession()->pageTextNotContains('search_api_language');
+    $this->assertSession()->pageTextContains('search_api_included_languages');
     $query = [
       'language' => ['en'],
     ];
     $this->checkResults($query, [1, 2, 3, 4, 5], 'Search with "English" language filter');
+    $this->assertSession()->pageTextContains('Searched languages: en');
+    $this->assertSession()->pageTextNotContains('search_api_language');
+    $this->assertSession()->pageTextContains('search_api_included_languages');
     $query = [
-      'language' => [Language::LANGCODE_NOT_SPECIFIED],
+      'language' => ['und'],
     ];
     $this->checkResults($query, [], 'Search with "Not specified" language filter');
+    $this->assertSession()->pageTextContains('Searched languages: und');
+    $this->assertSession()->pageTextNotContains('search_api_language');
+    $this->assertSession()->pageTextContains('search_api_included_languages');
     $query = [
       'language' => [
         '***LANGUAGE_language_interface***',
@@ -243,6 +255,10 @@ class ViewsTest extends SearchApiBrowserTestBase {
       ],
     ];
     $this->checkResults($query, [1, 2, 3, 4, 5], 'Search with multiple languages filter');
+    $this->assertSession()->pageTextContains('Searched languages: en, zxx');
+    $this->assertSession()->pageTextNotContains('search_api_language');
+    $this->assertSession()->pageTextContains('search_api_included_languages');
+    \Drupal::state()->delete(EventListener::STATE_PRINT_QUERY);
 
     $query = [
       'search_api_fulltext' => 'foo to test',
@@ -380,6 +396,7 @@ class ViewsTest extends SearchApiBrowserTestBase {
    * Contains regression tests for previous, fixed bugs.
    */
   protected function regressionTests() {
+    $this->regressionTest3318187();
     $this->regressionTest3187134();
     $this->regressionTest2869121();
     $this->regressionTest3031991();
@@ -632,6 +649,32 @@ class ViewsTest extends SearchApiBrowserTestBase {
       'strawberry',
       'search-api-test-3029582',
     );
+  }
+
+  /**
+   * Tests that filters with empty values are ignored.
+   *
+   * @see https://www.drupal.org/node/3318187
+   */
+  protected function regressionTest3318187() {
+    \Drupal::state()->set(EventListener::STATE_PRINT_QUERY, TRUE);
+    $this->checkResults(
+      [
+        'id[value]' => '',
+        'created[value]' => '',
+        'type[value]' => '',
+        'name[value]' => '',
+      ],
+      [1, 2, 3, 4, 5],
+      'Regression Test #3306204',
+    );
+    $this->assertSession()->pageTextContains('Index: database_search_index');
+    $this->assertSession()->pageTextNotContains("id = ''");
+    $this->assertSession()->pageTextNotContains("created = ''");
+    $this->assertSession()->pageTextNotContains("created = 0");
+    $this->assertSession()->pageTextNotContains("type = ''");
+    $this->assertSession()->pageTextNotContains("name = ''");
+    \Drupal::state()->delete(EventListener::STATE_PRINT_QUERY);
   }
 
   /**
@@ -1149,7 +1192,7 @@ class ViewsTest extends SearchApiBrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Sunshine');
     $this->drupalGet('admin/structure/views/nojs/display/search_api_test_view/page_1/query');
-    $this->submitForm(['query[options][query_tags]' => 'weather'], 'Apply');
+    $this->submitForm(['query[options][query_tags]' => ''], 'Apply');
     $this->submitForm([], 'Save');
     $this->assertSession()->statusCodeEquals(200);
 

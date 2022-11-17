@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Displays the captcha settings form.
@@ -99,7 +100,7 @@ class CaptchaSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('captcha.settings');
-    \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
+    $this->moduleHandler->loadInclude('captcha', 'inc');
 
     // Configuration of which forms to protect, with what challenge.
     $form['form_protection'] = [
@@ -208,8 +209,8 @@ class CaptchaSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Default CAPTCHA validation'),
       '#description' => $this->t('Define how the response should be processed by default. Note that the modules that provide the actual challenges can override or ignore this.'),
       '#options' => [
-        CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE => $this->t('Case sensitive validation: the response has to exactly match the solution.'),
-        CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE => $this->t('Case insensitive validation: lowercase/uppercase errors are ignored.'),
+        CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE => $this->t('Case sensitive validation: the response has to exactly match the solution.'),
+        CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE => $this->t('Case insensitive validation: lowercase/uppercase errors are ignored.'),
       ],
       '#default_value' => $config->get('default_validation'),
     ];
@@ -221,10 +222,10 @@ class CaptchaSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Persistence'),
       '#default_value' => $config->get('persistence'),
       '#options' => [
-        CAPTCHA_PERSISTENCE_SHOW_ALWAYS => $this->t('Always add a challenge.'),
-        CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE => $this->t('Omit challenges in a multi-step/preview workflow once the user successfully responds to a challenge.'),
-        CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_TYPE => $this->t('Omit challenges on a form type once the user successfully responds to a challenge on a form of that type.'),
-        CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL => $this->t('Omit challenges on all forms once the user successfully responds to any challenge on the site.'),
+        CaptchaConstants::CAPTCHA_PERSISTENCE_SHOW_ALWAYS => $this->t('Always add a challenge.'),
+        CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE => $this->t('Omit challenges in a multi-step/preview workflow once the user successfully responds to a challenge.'),
+        CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_TYPE => $this->t('Omit challenges on a form type once the user successfully responds to a challenge on a form of that type.'),
+        CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL => $this->t('Omit challenges on all forms once the user successfully responds to any challenge on the site.'),
       ],
       '#description' => $this->t('Define if challenges should be omitted during the rest of a session once the user successfully responds to a challenge.'),
     ];
@@ -274,22 +275,28 @@ class CaptchaSettingsForm extends ConfigFormBase {
       $whitelist_ips = captcha_whitelist_ips_parse_values($whitelist_ips_value);
 
       // Checking single ip addresses.
-      foreach ($whitelist_ips[CAPTCHA_WHITELIST_IP_ADDRESS] as $ip_address) {
+      foreach ($whitelist_ips[CaptchaConstants::CAPTCHA_WHITELIST_IP_ADDRESS] as $ip_address) {
         if (filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
           $form_state->setErrorByName('whitelist_ips', $this->t('IP address %ip_address is not valid.', ['%ip_address' => $ip_address]));
         }
       }
 
       // Checking ip ranges.
-      foreach ($whitelist_ips[CAPTCHA_WHITELIST_IP_RANGE] as $ip_range) {
-        list($ip_lower, $ip_upper) = explode('-', $ip_range, 2);
+      foreach ($whitelist_ips[CaptchaConstants::CAPTCHA_WHITELIST_IP_RANGE] as $ip_range) {
+        [$ip_lower, $ip_upper] = explode('-', $ip_range, 2);
 
         if (filter_var($ip_lower, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
-          $form_state->setErrorByName('whitelist_ips', $this->t('Lower IP address %ip_address in range %ip_range is not valid.', ['%ip_address' => $ip_lower, '%ip_range' => $ip_range]));
+          $form_state->setErrorByName('whitelist_ips', $this->t('Lower IP address %ip_address in range %ip_range is not valid.', [
+            '%ip_address' => $ip_lower,
+            '%ip_range' => $ip_range,
+          ]));
         }
 
         if (filter_var($ip_upper, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
-          $form_state->setErrorByName('whitelist_ips', $this->t('Upper IP address %ip_address in range %ip_range is not valid.', ['%ip_address' => $ip_upper, '%ip_range' => $ip_range]));
+          $form_state->setErrorByName('whitelist_ips', $this->t('Upper IP address %ip_address in range %ip_range is not valid.', [
+            '%ip_address' => $ip_upper,
+            '%ip_range' => $ip_range,
+          ]));
         }
 
         $ip_lower_dec = (float) sprintf("%u", ip2long($ip_lower));

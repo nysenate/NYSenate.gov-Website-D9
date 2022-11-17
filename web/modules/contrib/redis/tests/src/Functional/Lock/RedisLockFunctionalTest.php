@@ -22,12 +22,12 @@ class RedisLockFunctionalTest extends LockFunctionalTest {
    *
    * @var array
    */
-  public static $modules = ['redis'];
+  protected static $modules = ['redis'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Write the containers_yaml update by hand, since writeSettings() doesn't
@@ -36,11 +36,15 @@ class RedisLockFunctionalTest extends LockFunctionalTest {
     chmod($filename, 0666);
     $contents = file_get_contents($filename);
     $redis_interface = self::getRedisInterfaceEnv();
-    $module_path = drupal_get_path('module', 'redis');
+    $module_path = \Drupal::service('extension.list.module')->getPath('redis');
     $contents .= "\n\n" . "\$settings['container_yamls'][] = '$module_path/example.services.yml';";
     $contents .= "\n\n" . '$settings["redis.connection"]["interface"] = \'' . $redis_interface . '\';';
-    file_put_contents($filename, $contents);
     $settings = Settings::getAll();
+    if ($host = getenv('REDIS_HOST')) {
+      $contents .= "\n\n" . '$settings["redis.connection"]["host"] = "' . $host . '";';
+      $settings['redis.connection']['host'] = $host;
+    }
+    file_put_contents($filename, $contents);
     $settings['container_yamls'][] = $module_path . '/example.services.yml';
     $settings['redis.connection']['interface'] = $redis_interface;
     new Settings($settings);

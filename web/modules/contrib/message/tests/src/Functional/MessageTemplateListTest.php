@@ -24,7 +24,7 @@ class MessageTemplateListTest extends MessageTestBase {
     $this->drupalLogin($this->user);
 
     $this->drupalGet('admin/structure/message');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

@@ -51,14 +51,11 @@ function field_group_module_implements_alter(&$implementations, $hook) {
  * Implements hook_library_info_alter().
  */
 function field_group_library_info_alter(&$libraries, $extension) {
-  // Swap jQuery.ui library if available.
+  // Remove jquery_ui_accordion dependency if not available.
   // See https://www.drupal.org/project/field_group/issues/3109552 for more
   // background on the logic.
   if ($extension == 'field_group') {
-    if (\Drupal::moduleHandler()->moduleExists('jquery_ui_accordion')) {
-      $libraries['formatter.accordion']['dependencies'] = ['jquery_ui_accordion/accordion'];
-    }
-    elseif (version_compare(\Drupal::VERSION, 9) > 0) {
+    if (!\Drupal::moduleHandler()->moduleExists('jquery_ui_accordion')) {
       $libraries['formatter.accordion']['js'] = [];
       $libraries['formatter.accordion']['dependencies'] = [];
     }
@@ -841,12 +838,21 @@ function field_group_pre_render(array &$element, $group, &$rendering_object) {
 
   // Let modules define their wrapping element.
   // Note that the group element has no properties, only elements.
-  foreach (Drupal::moduleHandler()->getImplementations('field_group_pre_render') as $module) {
-    // The intention here is to have the opportunity to alter the
-    // elements, as defined in hook_field_group_formatter_info.
-    // Note, implement $element by reference!
-    $function = $module . '_field_group_pre_render';
-    $function($element, $group, $rendering_object);
+  // The intention here is to have the opportunity to alter the
+  // elements, as defined in hook_field_group_formatter_info.
+  // Note, implement $element by reference!
+  if (method_exists(Drupal::moduleHandler(), 'invokeAllWith')) {
+    // On Drupal >= 9.4 use the new method.
+    Drupal::moduleHandler()->invokeAllWith('field_group_pre_render', function (callable $hook) use (&$element, &$group, &$rendering_object) {
+      $hook($element, $group, $rendering_object);
+    });
+  }
+  else {
+    // @phpstan-ignore-next-line
+    foreach (Drupal::moduleHandler()->getImplementations('field_group_pre_render') as $module) {
+      $function = $module . '_field_group_pre_render';
+      $function($element, $group, $rendering_object);
+    }
   }
 
   // Allow others to alter the pre_render.

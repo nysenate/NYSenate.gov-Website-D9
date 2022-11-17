@@ -18,7 +18,7 @@ abstract class MessageTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['message', 'views'];
+  protected static $modules = ['message', 'views'];
 
   /**
    * The node access controller.
@@ -32,7 +32,7 @@ abstract class MessageTestBase extends BrowserTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'claro';
 
   /**
    * Load a message template easily.

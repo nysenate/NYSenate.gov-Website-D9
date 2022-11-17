@@ -64,7 +64,7 @@ class NodeRevisionDeleteAdminSettingsTest extends BrowserTestBase {
     $this->drupalGet('/admin/config/content');
     $this->assertSession()->linkByHrefExists('/admin/config/content/node_revision_delete');
 
-    // @TODO Check the module local task.
+    // @todo Check the module local task.
     // Going to the config page.
     $this->drupalGet('/admin/config/content/node_revision_delete');
     // Checking that the request has succeeded.

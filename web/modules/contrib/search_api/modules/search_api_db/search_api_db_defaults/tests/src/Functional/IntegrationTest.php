@@ -112,7 +112,9 @@ class IntegrationTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Please enter some keywords to search.');
     $this->assertSession()->pageTextNotContains($title);
     $this->assertSession()->responseNotContains('Error message');
-    // @todo This suddenly stopped working. Find out why and uncomment.
+    // @todo This suddenly stopped working due to #2568889. Figure out the new
+    //   optimal configuration for that form and then test for its behavior.
+    //   See #3313067.
     // $this->submitForm([], 'Search');
     // $this->assertSession()->pageTextNotContains($title);
     // $this->assertSession()->responseNotContains('Error message');

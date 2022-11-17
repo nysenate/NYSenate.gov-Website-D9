@@ -34,6 +34,21 @@ trait SearchApiFilterTrait {
   }
 
   /**
+   * Filters by a simple operator (=, !=, >, etc.).
+   *
+   * @param string $field
+   *   The views field.
+   */
+  protected function opSimple($field = NULL) {
+    // Since some of the filters using this trait have a nested "value" key and
+    // some don't, we need to take both variants into account.
+    if (($this->value['value'] ?? $this->value ?? '') === '') {
+      return;
+    }
+    parent::opSimple($field);
+  }
+
+  /**
    * Adds a filter to the search query.
    *
    * Overridden to avoid errors because of SQL-specific functionality being used

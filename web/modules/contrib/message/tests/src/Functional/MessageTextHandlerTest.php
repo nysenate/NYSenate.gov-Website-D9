@@ -21,12 +21,12 @@ class MessageTextHandlerTest extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter_test', 'message_test'];
+  protected static $modules = ['filter_test', 'message_test'];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp():void {
     parent::setUp();
 
     $this->account = $this->drupalCreateUser(['overview messages']);
@@ -44,10 +44,10 @@ class MessageTextHandlerTest extends MessageTestBase {
 
     $this->drupalLogin($this->account);
     $this->drupalGet('admin/content/messages');
-    $this->assertText('Dummy text message');
+    $this->assertSession()->pageTextContains('Dummy text message');
 
     $this->drupalGet('message-test');
-    $this->assertText('Dummy text message');
+    $this->assertSession()->pageTextContains('Dummy text message');
   }
 
   /**
@@ -62,7 +62,7 @@ class MessageTextHandlerTest extends MessageTestBase {
 
     $this->drupalLogin($this->account);
     $this->drupalGet('admin/content/message');
-    $this->assertText(htmlspecialchars('<p> Some HTML text</p>'));
+    $this->assertSession()->responseContains(htmlspecialchars('<p> Some HTML text</p>'));
   }
 
 }

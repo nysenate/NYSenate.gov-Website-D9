@@ -4,11 +4,11 @@ namespace Drupal\node_revision_delete\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Url;
-use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
-use Drupal\node\NodeTypeInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+use Drupal\node\NodeTypeInterface;
+use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a content type configuration deletion confirmation form.

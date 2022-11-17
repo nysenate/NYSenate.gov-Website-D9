@@ -61,6 +61,11 @@ function message_entity_delete(EntityInterface $entity) {
 
     $query = \Drupal::entityQuery('message');
     $results = $query
+      // No access check since this is to remove messages related to an entity
+      // that is being removed. Keeping the messages makes no sense in this
+      // context, regardless of whether the user deleting the parent entity
+      // has access to them or not.
+      ->accessCheck(FALSE)
       ->condition($field->getName(), $entity->id())
       ->execute();
 

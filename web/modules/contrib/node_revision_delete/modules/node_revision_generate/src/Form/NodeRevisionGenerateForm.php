@@ -2,12 +2,11 @@
 
 namespace Drupal\node_revision_generate\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node_revision_delete\Utility\Donation;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node_revision_generate\NodeRevisionGenerateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class NodeRevisionGenerate.
@@ -138,9 +137,6 @@ class NodeRevisionGenerateForm extends FormBase {
       '#value' => $this->t('Generate revisions'),
       '#button_type' => 'primary',
     ];
-
-    // Adding donation text.
-    $form['#prefix'] = Donation::getDonationText();
 
     return $form;
   }

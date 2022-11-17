@@ -34,7 +34,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}
@@ -88,7 +88,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $page->fillField('settings[label]', 'Powered by Drupal');
     $page->checkField('settings[label_display]');
     $page->pressButton('Add block');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-system-powered-by-block'));
+    $this->assertNotEmpty($assert_session->waitForText('Powered by Drupal'));
     $page->clickLink('Add block');
     $this->assertNotEmpty($assert_session->waitForText('Choose a block'));
     $page->clickLink('Site branding');
@@ -96,7 +96,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $page->fillField('settings[label]', 'Site branding');
     $page->checkField('settings[label_display]');
     $page->pressButton('Add block');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-system-branding-block'));
+    $this->assertNotEmpty($assert_session->waitForText('Site Branding'));
 
     $page->pressButton('Save layout');
 
@@ -117,7 +117,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Site branding',
-      ['Site branding*', 'Powered by Drupal (current)']
+      ['Site branding *', 'Powered by Drupal (current)']
     );
     $page->pressButton('Move');
     $this->assertSession()->assertWaitOnAjaxRequest();
@@ -199,7 +199,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Body (current)',
-      ['Body (current)*', 'Links']
+      ['Body (current) *', 'Links']
     );
     $page->pressButton('Move');
     $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
@@ -241,7 +241,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Body',
-      ['Body (current)*', 'Powered by Drupal']
+      ['Body (current) *', 'Powered by Drupal']
     );
     $page->pressButton('Move');
     $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
@@ -270,16 +270,19 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // Add Basic Block 1 to the 'first' region.
-    $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block')->click();
+    $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block .layout-builder__link--add')->click();
     $this->assertNotEmpty($assert_session->waitForText('Basic Block 1'));
     $page->clickLink('Basic Block 1');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add block');
+    $assert_session->assertWaitOnAjaxRequest();
     $this->waitForNoElement('#drupal-off-canvas');
 
     // Add Alternate Block 1 to the 'first' region.
-    $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block')->click();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Alternate Block 1")'));
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block .layout-builder__link--add')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText("Alternate Block 1"));
     $page->clickLink('Alternate Block 1');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add block');
@@ -317,7 +320,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Alternate Block 1',
-      ['Alternate Block 1 (current)*', 'Basic Block 1']
+      ['Alternate Block 1 (current) *', 'Basic Block 1']
     );
     $page->pressButton('Move');
     $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
@@ -366,7 +369,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Alternate Block 1',
-      ['Alternate Block 1 (current)*', 'Basic Block 1']
+      ['Alternate Block 1 (current) *', 'Basic Block 1']
     );
     $page->pressButton('Move');
     $this->assertSession()->assertWaitOnAjaxRequest();
@@ -382,7 +385,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Basic Block 1',
-      ['Basic Block 1 (current)*', 'Alternate Block 1']
+      ['Basic Block 1 (current) *', 'Alternate Block 1']
     );
     $page->pressButton('Move');
     $this->assertNotEmpty($assert_session->waitForText('Content cannot be placed'));
@@ -420,7 +423,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Basic Block 1',
-      ['Basic Block 1 (current)*', 'Alternate Block 1']
+      ['Basic Block 1 (current) *', 'Alternate Block 1']
     );
     $page->pressButton('Move');
     $this->assertSession()->assertWaitOnAjaxRequest();
@@ -439,7 +442,7 @@ class MoveBlockRestrictionTest extends LayoutBuilderRestrictionsTestBase {
     $this->moveBlockWithKeyboard(
       'up',
       'Alternate Block 1',
-      ['Alternate Block 1 (current)*', 'Basic Block 1']
+      ['Alternate Block 1 (current) *', 'Basic Block 1']
     );
     $page->pressButton('Move');
     $this->assertSession()->assertWaitOnAjaxRequest();

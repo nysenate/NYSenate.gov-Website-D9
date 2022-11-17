@@ -2,6 +2,7 @@
 
 namespace Drupal\redis\Controller;
 
+use Predis\Client;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Url;
@@ -64,6 +65,8 @@ class ReportController extends ControllerBase {
    */
   public function overview() {
 
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+
     $build['report'] = [
       '#type' => 'status_report',
       '#requirements' => [],
@@ -82,8 +85,6 @@ class ReportController extends ControllerBase {
 
       return $build;
     }
-
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
     $start = microtime(TRUE);
 
@@ -296,7 +297,7 @@ class ReportController extends ControllerBase {
         yield from $keys;
       }
     }
-    elseif ($this->redis instanceof \Predis\Client) {
+    elseif ($this->redis instanceof Client) {
       yield from new Keyspace($this->redis, $match, $count);
     }
   }

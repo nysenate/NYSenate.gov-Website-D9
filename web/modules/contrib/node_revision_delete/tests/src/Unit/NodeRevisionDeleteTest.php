@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\node_revision_delete\Unit;
 
-use Drupal\node_revision_delete\NodeRevisionDeleteBatch;
-use Drupal\Tests\UnitTestCase;
 use Drupal\node_revision_delete\NodeRevisionDelete;
+use Drupal\node_revision_delete\NodeRevisionDeleteBatch;
 use Drupal\Tests\node_revision_delete\Traits\NodeRevisionDeleteTestTrait;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the NodeRevisionDelete class methods.

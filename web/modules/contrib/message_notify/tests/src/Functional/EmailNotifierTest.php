@@ -21,7 +21,12 @@ class EmailNotifierTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['text', 'message_notify_test', 'filter_test'];
+  protected static $modules = ['text', 'message_notify_test', 'filter_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Testing message template.
@@ -40,7 +45,7 @@ class EmailNotifierTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->messageTemplate = MessageTemplate::load('message_notify_test');

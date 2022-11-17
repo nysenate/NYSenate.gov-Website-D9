@@ -121,13 +121,20 @@ abstract class MessageNotifierBase extends PluginBase implements MessageNotifier
    */
   public function postSend($result, array $output = []) {
     $save = FALSE;
-    if (!$result) {
+    // NULL means skip delivery. False signifies failure. Strict check.
+    if ($result === FALSE) {
       $this->logger->error('Could not send message using {title} to user ID {uid}.', ['{title}' => $this->pluginDefinition['title'], '{uid}' => $this->message->getOwnerId()]);
       if ($this->configuration['save on fail']) {
         $save = TRUE;
       }
     }
-    elseif ($result && $this->configuration['save on success']) {
+    // MailManager::doMail may set $message['result'] = NULL in case sending was
+    // canceled by one or more hook_mail_alter() implementations. This can
+    // happen for example with Mail queue module. In that case the Message was
+    // not really sent, on the other hand it didn't fail. As we won't know later
+    // if it indeed was sent successfully, we take an optimistic approach, and
+    // assume it will - thus saving the Message.
+    elseif ($result !== FALSE && $this->configuration['save on success']) {
       $save = TRUE;
     }
 

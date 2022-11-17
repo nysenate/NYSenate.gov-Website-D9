@@ -23,12 +23,12 @@ class AdminToolbarStateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['toolbar', 'moderation_sidebar', 'node'];
+  protected static $modules = ['toolbar', 'moderation_sidebar', 'node'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $node_type = $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);

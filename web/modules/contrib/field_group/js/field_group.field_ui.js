@@ -8,8 +8,8 @@
   'use strict';
   Drupal.behaviors.fieldUIFieldsOverview = {
     attach: function (context, settings) {
-      $('table#field-overview', context).once('field-field-overview', function () {
-        Drupal.fieldUIOverview.attach(this, settings.fieldUIRowsData, Drupal.fieldUIFieldOverview);
+      once('field-field-overview', 'table#field-overview', context).forEach(function (table) {
+        Drupal.fieldUIOverview.attach(table, settings.fieldUIRowsData, Drupal.fieldUIFieldOverview);
       });
     }
   };

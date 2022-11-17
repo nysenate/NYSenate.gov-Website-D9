@@ -2,18 +2,18 @@
 
 namespace Drupal\node_revision_delete\Commands;
 
+use Consolidation\AnnotatedCommand\CommandData;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
-use Drush\Commands\DrushCommands;
-use Consolidation\AnnotatedCommand\CommandData;
 use Drupal\node_revision_delete\Utility\Time;
-use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\State\StateInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drush\Commands\DrushCommands;
 
 /**
- * Class NodeRevisionDeleteCommands.
+ * The Node Revision Delete Commands.
  *
  * @package Drupal\node_revision_delete\Commands
  */
@@ -272,7 +272,10 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       // configuration if the new value is lower than the actual.
       $this->nodeRevisionDelete->updateTimeMaxNumberConfig('when_to_delete', $max_number);
 
-      $message = dt('<info>The maximum inactivity time was set to @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
+      $message = dt('<info>The maximum inactivity time was set to @max_number @time.</info>', [
+        '@max_number' => $max_number,
+        '@time' => $time,
+      ]);
       $this->writeln($message);
     }
     else {
@@ -281,7 +284,10 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       $max_number = $node_revision_delete_when_to_delete_time['max_number'];
       $time = $this->nodeRevisionDelete->getTimeNumberString($time) == 1 ? $time['singular'] : $time['plural'];
 
-      $message = dt('<info>The maximum inactivity time is: @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
+      $message = dt('<info>The maximum inactivity time is: @max_number @time.</info>', [
+        '@max_number' => $max_number,
+        '@time' => $time,
+      ]);
       $this->writeln($message);
     }
   }
@@ -324,7 +330,10 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       $time = $this->nodeRevisionDelete->getTimeNumberString($time) == 1 ? $time['singular'] : $time['plural'];
 
       // Is singular or plural?
-      $message = dt('<info>The maximum time for the minimum age was set to @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
+      $message = dt('<info>The maximum time for the minimum age was set to @max_number @time.</info>', [
+        '@max_number' => $max_number,
+        '@time' => $time,
+      ]);
       $this->writeln($message);
     }
     else {
@@ -334,7 +343,10 @@ class NodeRevisionDeleteCommands extends DrushCommands {
       $time = $this->nodeRevisionDelete->getTimeNumberString($time) == 1 ? $time['singular'] : $time['plural'];
 
       // Is singular or plural?
-      $message = dt('<info>The maximum time for the minimum age is: @max_number @time.</info>', ['@max_number' => $max_number, '@time' => $time]);
+      $message = dt('<info>The maximum time for the minimum age is: @max_number @time.</info>', [
+        '@max_number' => $max_number,
+        '@time' => $time,
+      ]);
       $this->writeln($message);
     }
   }
@@ -366,7 +378,10 @@ class NodeRevisionDeleteCommands extends DrushCommands {
 
     if ($this->io()->confirm(dt("Confirm deleting @count revision(s)?", ['@count' => count($previousRevisions)]))) {
       // Check if current revision should be deleted, too.
-      if ($this->io()->confirm(dt("Additionally, do you want to delete the revision @vid? @count revision(s) will be deleted.", ['@vid' => $vid, '@count' => count($previousRevisions) + 1]))) {
+      if ($this->io()->confirm(dt("Additionally, do you want to delete the revision @vid? @count revision(s) will be deleted.", [
+        '@vid' => $vid,
+        '@count' => count($previousRevisions) + 1,
+      ]))) {
         $this->entityTypeManager->getStorage('node')->deleteRevision($vid);
       }
 

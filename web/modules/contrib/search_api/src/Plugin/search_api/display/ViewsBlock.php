@@ -21,7 +21,7 @@ class ViewsBlock extends ViewsDisplayBase {
    *
    * @var \Drupal\Core\Theme\ThemeManagerInterface|null
    */
-  protected ?ThemeManagerInterface $themeManager;
+  protected $themeManager;
 
   /**
    * @inheritDoc

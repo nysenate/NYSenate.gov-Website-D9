@@ -30,6 +30,7 @@ class MoveBlockCategoryRestrictionTest extends WebDriverTestBase {
   protected static $modules = [
     'block',
     'contextual',
+    'field_ui',
     'node',
     'layout_builder',
     'layout_library',
@@ -42,7 +43,7 @@ class MoveBlockCategoryRestrictionTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}
@@ -178,7 +179,7 @@ class MoveBlockCategoryRestrictionTest extends WebDriverTestBase {
       'Body (current)',
     ]);
     $this->moveBlockWithKeyboard('up', 'Body (current)', [
-      'Body (current)*',
+      'Body (current) *',
       'Links',
     ]);
     $page->pressButton('Move');

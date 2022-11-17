@@ -929,6 +929,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'Consolidation\\AnnotatedCommand\\AnnotationData' => __DIR__ . '/..' . '/consolidation/annotated-command/src/AnnotationData.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\Argument' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Argument.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\Command' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Command.php',
+        'Consolidation\\AnnotatedCommand\\Attributes\\Complete' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Complete.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\DefaultFields' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/DefaultFields.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\DefaultTableFields' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/DefaultTableFields.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\FieldLabels' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/FieldLabels.php',

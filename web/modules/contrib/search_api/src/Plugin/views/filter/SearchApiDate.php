@@ -110,6 +110,9 @@ class SearchApiDate extends Date {
    *   The views field.
    */
   protected function opSimple($field) {
+    if (!isset($this->value['value']) || $this->value['value'] === '') {
+      return;
+    }
     $value = intval(strtotime($this->value['value'], 0));
     if (($this->value['type'] ?? '') == 'offset') {
       $time = $this->getTimeService()->getRequestTime();

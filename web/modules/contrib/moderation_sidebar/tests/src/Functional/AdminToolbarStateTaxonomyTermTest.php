@@ -22,7 +22,7 @@ class AdminToolbarStateTaxonomyTermTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['toolbar', 'moderation_sidebar', 'taxonomy'];
+  protected static $modules = ['toolbar', 'moderation_sidebar', 'taxonomy'];
 
   /**
    * Vocabulary to be used for tests.
@@ -39,7 +39,7 @@ class AdminToolbarStateTaxonomyTermTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->vocabulary = $this->createVocabulary();

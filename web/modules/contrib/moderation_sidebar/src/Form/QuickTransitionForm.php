@@ -7,6 +7,7 @@ use Drupal\content_moderation\StateTransitionValidationInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Form\FormBase;
@@ -41,6 +42,13 @@ class QuickTransitionForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * QuickDraftForm constructor.
    *
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
@@ -50,10 +58,11 @@ class QuickTransitionForm extends FormBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
     $this->moderationInformation = $moderation_info;
     $this->validation = $validation;
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -63,7 +72,8 @@ class QuickTransitionForm extends FormBase {
     return new static(
       $container->get('content_moderation.moderation_information'),
       $container->get('content_moderation.state_transition_validation'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity.repository')
     );
   }
 
@@ -175,9 +185,11 @@ class QuickTransitionForm extends FormBase {
   public function discardDraft(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->get('entity');
+    $langcode = $entity->language()->getId();
     $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
     $default_revision_id = $this->moderationInformation->getDefaultRevisionId($entity->getEntityTypeId(), $entity->id());
     $default_revision = $storage->loadRevision($default_revision_id);
+    $default_revision = $this->entityRepository->getTranslationFromContext($default_revision, $langcode);
     if ($form_state->getValue('revision_log_toggle')) {
       $revision_log = $form_state->getValue('revision_log');
     }

@@ -12,12 +12,14 @@ use Drupal\Tests\BrowserTestBase;
  */
 class SettingsFormTest extends BrowserTestBase {
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = ['stage_file_proxy'];
+  protected static $modules = ['stage_file_proxy'];
 
   /**
    * A user with the permissions to edit the stage file proxy settings.
@@ -29,7 +31,7 @@ class SettingsFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser(['administer stage_file_proxy settings']);
@@ -37,6 +39,8 @@ class SettingsFormTest extends BrowserTestBase {
 
   /**
    * Tests if the origin URL gets correctly trimmed.
+   *
+   * @throws \Behat\Mink\Exception\ResponseTextException
    */
   public function testOriginTrailingslashIsRemoved() {
     $settings_path = Url::fromRoute('stage_file_proxy.admin_form');
@@ -48,14 +52,15 @@ class SettingsFormTest extends BrowserTestBase {
       // Test with adding a slash.
       'origin' => $testOrigin . '/',
     ];
-    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+    $this->drupalGet($settings_path);
+    $this->submitForm($edit, 'Save configuration');
 
     // Test if the form was saved without error.
-    $this->assertText('Your settings have been saved.');
+    $this->assertSession()->pageTextContains('Your settings have been saved.');
 
     // Test if the stored value has the trailing slash removed.
     $newOrigin = $this->config('stage_file_proxy.settings')->get('origin');
-    $this->assertIdentical($newOrigin, $testOrigin);
+    $this->assertSame($newOrigin, $testOrigin);
   }
 
 }

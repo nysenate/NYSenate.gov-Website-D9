@@ -2,19 +2,18 @@
 
 namespace Drupal\node_revision_delete\Form;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
-use Drupal\node_revision_delete\Utility\Donation;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeTypeInterface;
+use Drupal\node_revision_delete\NodeRevisionDeleteInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class CandidateNodesForm.
+ * The Candidate Nodes Form.
  *
  * @package Drupal\node_revision_delete\Form
  */
@@ -171,7 +170,10 @@ class CandidateNodesForm extends FormBase {
     }
 
     $content_type_url = $node_type->toUrl()->toString();
-    $caption = $this->t('Candidates nodes for content type <a href=":url">%title</a>', [':url' => $content_type_url, '%title' => $node_type->label()]);
+    $caption = $this->t('Candidates nodes for content type <a href=":url">%title</a>', [
+      ':url' => $content_type_url,
+      '%title' => $node_type->label(),
+    ]);
 
     $form['candidate_nodes'] = [
       '#type' => 'tableselect',
@@ -189,9 +191,6 @@ class CandidateNodesForm extends FormBase {
       '#value' => $this->t('Delete revisions'),
       '#button_type' => 'primary',
     ];
-
-    // Adding donation text.
-    $form['#prefix'] = Donation::getDonationText();
 
     // Add all candidate revisions into form_state for use in
     // the submitForm() method.

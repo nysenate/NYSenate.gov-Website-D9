@@ -40,12 +40,7 @@ class BlockFieldSelectionTest extends KernelTestBase {
     // Create a plugin instance of 'categories'.
     $plugin = $this->setUpSelectionInstance('categories', ['categories' => ['core']]);
 
-    // Prophesize translations to force service properties.
-    $translation = $this->prophesize(TranslationInterface::class);
-    $translation->willImplement(\Serializable::class);
-    $translation->serialize()->willThrow(\Exception::class);
-    $translation_service = $translation->reveal();
-    $translation_service->_serviceId = 'string_translation';
+    $translation_service = \Drupal::service('string_translation');
     $plugin->setStringTranslation($translation_service);
 
     // Attempt to serialize and unserialize plugin.

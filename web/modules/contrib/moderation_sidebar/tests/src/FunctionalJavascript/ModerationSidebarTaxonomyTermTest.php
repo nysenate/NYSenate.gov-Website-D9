@@ -19,7 +19,7 @@ class ModerationSidebarTaxonomyTermTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'toolbar',
     'moderation_sidebar',
     'taxonomy_test',
@@ -43,7 +43,7 @@ class ModerationSidebarTaxonomyTermTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a Content Type with moderation enabled.
@@ -61,7 +61,8 @@ class ModerationSidebarTaxonomyTermTest extends WebDriverTestBase {
 
     // Enable admin theme for content forms.
     $edit = ['use_admin_theme' => TRUE];
-    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm($edit, 'Save configuration');
 
     drupal_flush_all_caches();
   }

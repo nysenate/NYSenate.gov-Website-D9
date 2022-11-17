@@ -3,7 +3,7 @@
 namespace Drupal\node_revision_generate;
 
 /**
- * Interface NodeRevisionGenerateInterface.
+ * The Node Revision Generate Interface.
  *
  * @package Drupal\node_revision_generate
  */

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\captcha\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Tests CAPTCHA main test case sensitivity.
@@ -155,7 +156,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->drupalLogin($this->normalUser);
 
     // Test case sensitive posting.
-    $config->set('default_validation', CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE);
+    $config->set('default_validation', CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE);
     $config->save();
 
     $this->assertCommentPosting('Test 123', TRUE, 'Case sensitive validation of right casing.');
@@ -163,7 +164,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->assertCommentPosting('TEST 123', FALSE, 'Case sensitive validation of wrong casing.');
 
     // Test case insensitive posting (the default).
-    $config->set('default_validation', CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE);
+    $config->set('default_validation', CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE);
     $config->save();
 
     $this->assertCommentPosting('Test 123', TRUE, 'Case insensitive validation of right casing.');

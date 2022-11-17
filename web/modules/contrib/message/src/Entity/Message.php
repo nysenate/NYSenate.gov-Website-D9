@@ -82,7 +82,12 @@ class Message extends ContentEntityBase implements MessageInterface {
    * {@inheritdoc}
    */
   public function getTemplate() {
-    return MessageTemplate::load($this->bundle());
+    // Normally config entities are automatically translated into the active
+    // config override language, but since we might be sending messages in other
+    // languages, we need to make sure we get the untranslated template.
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('message_template');
+    return $storage->loadOverrideFree($this->bundle());
   }
 
   /**
@@ -222,7 +227,7 @@ class Message extends ContentEntityBase implements MessageInterface {
     $token_options = $message_template->getSetting('token options', []);
     if (!empty($token_options['token replace'])) {
       // Token should be processed.
-      $output = $this->processTokens($output, !empty($token_options['clear']));
+      $output = $this->processTokens($output, !empty($token_options['clear']), $langcode);
     }
 
     return $output;
@@ -275,14 +280,16 @@ class Message extends ContentEntityBase implements MessageInterface {
    *   The templated text to be replaced.
    * @param bool $clear
    *   Determine if unused token should be cleared.
+   * @param bool $langcode
+   *   The language in which the message is being rendered.
    *
    * @return array
    *   The output with placeholders replaced with the token value,
    *   if there are indeed tokens.
    */
-  protected function processTokens(array $output, $clear) {
+  protected function processTokens(array $output, $clear, $langcode) {
     $options = [
-      'langcode' => $this->language,
+      'langcode' => $langcode,
       'clear' => $clear,
     ];
 
@@ -369,6 +376,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    */
   public static function queryByTemplate($template) {
     return \Drupal::entityQuery('message')
+      ->accessCheck(TRUE)
       ->condition('template', $template)
       ->execute();
   }
@@ -385,6 +393,13 @@ class Message extends ContentEntityBase implements MessageInterface {
    */
   public function setLanguage($language) {
     $this->language = $language;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLanguage() {
+    return $this->language;
   }
 
   /**

@@ -95,6 +95,9 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    */
   protected function baseQuery(MessageTemplateInterface $template) {
     return $this->messageQuery
+      // Access is not checked since this is simply called to remove messages,
+      // which typically happens during cron or queue processing.
+      ->accessCheck(FALSE)
       ->condition('template', $template->id())
       ->sort('created', 'DESC')
       ->sort('mid', 'DESC');

@@ -1,7 +1,8 @@
 <?php
 
-use Drupal\Core\Queue\QueueFactory;
-use Drupal\Core\Queue\QueueInterface;
+/**
+ * @file
+ */
 
 /**
  * @file
@@ -9,27 +10,41 @@ use Drupal\Core\Queue\QueueInterface;
  */
 
 /**
+ * Implements hook_theme().
+ */
+function nys_sunset_policy_theme() {
+  return [
+    'expiring_mail' => [
+      'render element' => 'elements',
+    ],
+    'expired_mail' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
  * Implements hook_cron.
  */
 function nys_sunset_policy_cron() {
   $queue_factory = \Drupal::service('queue');
-  /** @var QueueFactory $queue_factory */
+  /** @var \Drupal\Core\Queue\QueueFactory $queue_factory */
   $queue_factory = \Drupal::service('queue');
-  /** @var QueueInterface $queue */
+  /** @var \Drupal\Core\Queue\QueueInterface $queue */
   $expiring_queue = $queue_factory->get('nys_sunset_expiring_queue');
   foreach (nys_sunset_policy_get_expiring() as $nid) {
-    $expiring_queue->createExpiredItem($nid);
+    $expiring_queue->createItem($nid);
   }
-  /** @var QueueInterface $queue */
+  /** @var \Drupal\Core\Queue\QueueInterface $queue */
   $expired_queue = $queue_factory->get('nys_sunset_expired_queue');
   foreach (nys_sunset_policy_get_expired() as $nid) {
-    $expired_queue->createExpiredItem($nid);
+    $expired_queue->createItem($nid);
   }
 }
 
 /**
  * @return array
- * Petition and questionnaire node ids that have expired and need processing.
+ *   Petition and questionnaire node ids that have expired and need processing.
  */
 function nys_sunset_policy_get_expired() {
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
@@ -53,7 +68,7 @@ function nys_sunset_policy_get_expired() {
 
 /**
  * @return array
- * Petition and questionnaire node ids that have expired and need processing.
+ *   Petition and questionnaire node ids that have expired and need processing.
  */
 function nys_sunset_policy_get_expiring() {
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
@@ -74,4 +89,34 @@ function nys_sunset_policy_get_expiring() {
     }
   }
   return $node_ids;
+}
+
+/**
+ * Implements hook_mail().
+ */
+function nys_sunset_policy_mail($key, &$message, $params) {
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+  switch ($key) {
+    case 'expired_mail':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['title'];
+      $body_data = [
+        '#theme' => 'expired_mail',
+        '#message' => $params['message'],
+      ];
+      $message['body'][] = \Drupal::service('renderer')->render($body_data);
+      break;
+
+    case 'expiring_mail':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['title'];
+      $body_data = [
+        '#theme' => 'expired_mail',
+        '#message' => $params['message'],
+      ];
+      $message['body'][] = \Drupal::service('renderer')->render($body_data);
+      break;
+  }
 }

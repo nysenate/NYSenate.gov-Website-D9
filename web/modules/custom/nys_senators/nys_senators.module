@@ -686,3 +686,26 @@ function nys_senators_tokens_alter(array &$replacements, array $context, Bubblea
     }
   }
 }
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function nys_senators_views_data_alter(array &$data) {
+  $data['taxonomy_term_field_data']['senator_committee_filter'] = [
+    'title' => t('Committees'),
+    'filter' => [
+      'title' => t('Committees'),
+      'help' => t('Is this Committee linked to the senator.'),
+      'field' => 'tid',
+      'id' => 'senator_committee_filter',
+    ],
+  ];
+  $data['taxonomy_term_data']['senator_district'] = [
+    'title' => t("Senator's District"),
+    'field' => [
+      'title' => t("Senator's District"),
+      'help' => t('Shows District information of the senator.'),
+      'id' => 'senator_district',
+    ],
+  ];
+}

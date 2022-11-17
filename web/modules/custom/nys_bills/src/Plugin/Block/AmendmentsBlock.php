@@ -92,7 +92,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       if ($last_status === 'IN_SENATE_COMM') {
         $committee_bill_details = 'Senate ' . $last_status_comm;
         $target = Url::fromUserInput('/committees/' . $last_status_comm, []);
-        $comm_status_pre = Link::fromTextAndUrl($committee_bill_details, $target);
+        $comm_status_pre = Link::fromTextAndUrl($committee_bill_details, $target)->toString();
       }
       if ($last_status === 'IN_ASSEMBLY_COMM') {
         $committee_bill_details = 'Assembly ' . $last_status_comm;
@@ -173,7 +173,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
           'session_year' => $bill_session_year,
           'amended_versions' => $amended_versions_result,
           'active_version' => $session_root_id,
-          'comm_status_pre' => $comm_status_pre->toString(),
+          'comm_status_pre' => $comm_status_pre,
           'same_as' => $same_as,
           'prev_vers' => $prev_vers,
           'prev_vers_pre' => $prev_vers_pre,

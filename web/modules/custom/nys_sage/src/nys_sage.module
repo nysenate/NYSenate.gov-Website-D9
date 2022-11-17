@@ -9,5 +9,5 @@
  * Implements hook_cron().
  */
 function nys_sage_cron() {
-  Drupal::service('sage_logger')->cron();
+  \Drupal::service('sage_logger')->cron();
 }

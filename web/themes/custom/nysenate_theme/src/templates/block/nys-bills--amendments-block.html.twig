@@ -1,0 +1,255 @@
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+
+<!-- Amendment Tabs -->
+{% if content.amendments|length > 1 %}
+  <div class="c-bill--amendment-details c-bill-section">
+    <div id="amendment-details"></div>
+    <h3 class="c-detail--subhead c-detail--section-title">Bill Amendments</h3>
+
+    {#
+      There are different sections here for mobile and tablet-plus (desktop), because
+      we want mobile only to be overridden with special actions.  Pay attention to what section you are working on.
+      They are notated below.
+    #}
+    {# BEGIN DESKTOP SECTION #}
+    <dl class="l-tab-bar u-tablet-plus">
+      {% for title,amendment_id in content.amended_versions %}
+        {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
+        {% set is_active_version = (version == content.active_version) %}
+        {% set is_active_tab = content.bill_wrapper.label() == title %}
+
+        <dd class="c-tab  {{ is_active_tab ? 'active' : '' }}">
+          <a class="c-tab-link bill-version-tab"
+             data-version="{{ title }}"
+             data-target="/node/{{ amendment_id }}">
+
+            {{ version is empty ? "Original" : version }}
+            {{ is_active_version ? " (Active) " : "" }}
+          </a>
+        </dd>
+      {% endfor %}
+    </dl>
+    {# END DESKTOP SECTION #}
+
+    {# BEGIN MOBILE SECTION #}
+    <dl class="l-tab-bar u-mobile-only" id="mobile-bill-tab">
+      <div class="c-tab--arrow u-mobile-only" id="mobile-bill-arrow"></div>
+      {% for title,amendment_id in content.amended_versions %}
+        {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
+        {% set is_active_version = (version == content.active_version) %}
+        {% set is_active_tab = content.bill_wrapper.label() == title %}
+        <dd class="c-tab  {{ is_active_tab ? 'active' : 'inactive' }}">
+          <a class="c-tab-link bill-version-tab"
+            data-version="{{ title }}"
+            data-target="/node/{{ amendment_id }}">
+
+            {{ version is empty ? "Original" : version }}
+            {{ is_active_version ? " (Active) " : "" }}
+          </a>
+        </dd>
+      {% endfor %}
+    </dl>
+   </div>
+{% endif %}
+
+<div class="tabs-content">
+  {% for amendment in content.amendments %}
+    {% set node_wrapper = amendment.node %}
+    {% set is_active_version = node_wrapper.field_ol_is_active_version.value %}
+    <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node_wrapper.label() ? ' active' : '' }}" data-version="{{ amendment_id.title }}">
+      <!-- Amendment Details -->
+      <!-- Quote Block -->
+      {# @todo Quote block #}
+
+      <!-- Bill Co/Multi Sponsors -->
+      <div class="c-block c-detail--sponsors c-bill-section">
+        {% if amendment.sponsors_array.co|length > 0 or amendment.sponsors_array.multi|length > 0 %}
+          {% for key,list in amendment.sponsors_array if list|length > 0 %}
+            <div class="c-{{ key }}-sponsors c-sponsors-detail">
+              <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
+              <div class="initial_{{ key }}-sponsors">
+                {% for item in list[0:4] %}
+                  {{ item }}
+                {% endfor %}
+              </div>
+              {% if list[4:]|length > 1 %}
+                <div class="other_{{ key }}-sponsors">
+                  <dl class="c-block c-detail--actions accordion" data-accordion>
+                    <dd class="accordion-navigation">
+                      <a href="#accordion-{{ key }}-sponsors" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide additional {{ key }}-sponsors" data-closed-text="view additional {{ key }}-sponsors">
+                        view additional {{ key }}-sponsors
+                      </a>
+                      <div id="accordion-{{ key }}-sponsors" class="content">
+                        {% for item in list[4:] %}
+                          {{ item }}
+                        {% endfor %}
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Bill Amendment Details -->
+      <div class="c-block c-bill-section c-bill--details">
+        <h3 class="c-detail--subhead c-detail--section-title">{{ node_wrapper.title() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Details</h3>
+        <dl>
+
+          {% if content.same_as %}
+            {% if content.same_as|length > 0 %}
+              <dt>{{ "See other versions of this Bill:"|t }}</dt>
+            {% elseif content.same_as.printNo.0|upper == 'S' %}
+              <dt>{{ "See Senate Version of this Bill:"|t }}</dt>
+            {% elseif content.same_as.printNo.0|upper == 'A' %}
+              <dt>{{ "See Assembly Version of this Bill:"|t }}</dt>
+            {% else %}
+              <dt>{{ "See Version in other house:"|t }}</dt>
+            {% endif %}
+
+
+            {% for bill_id in content.same_as %}
+              {# todo: nid migth not available. #}
+              <dd>
+                <a href="/node/{{ bill_id.nid }}">
+                  {{ bill_id.basePrintNo }}
+                </a>{{ loop.index != 0 and loop.length > 1 ? ',' : '' }}
+              </dd>
+            {% endfor %}
+          {% endif %}
+
+          {% if content.comm_status_pre %}
+            <dt>Current Committee:</dt>
+            <dd> {{ content.comm_status_pre }}</dd>
+          {% endif %}
+
+          {% if not content.bill_wrapper.field_ol_law_section.isEmpty() %}
+            <dt>Law Section:</dt>
+            <dd> {{ content.bill_wrapper.field_ol_law_section.value }}</dd>
+          {% endif %}
+
+          {% if not content.bill_wrapper.field_ol_law_code.isEmpty() %}
+            <dt>Laws Affected:</dt>
+            <dd>{{ content.bill_wrapper.field_ol_law_code.value }}</dd>
+          {% endif %}
+
+          {% if content.prev_vers %}
+
+            <dt>{{ content.prev_vers_pre }}</dt>
+            <dd>
+              {% for leg_session,prev_bills in content.prev_vers %}
+
+                {% if content.prev_vers|length > 1 %}
+                  {{ leg_session}}:
+                {% endif %}
+                {{ prev_bills|raw }} <br />
+              {% endfor %}
+            </dd>
+          {% endif %}
+        </dl>
+      </div>
+
+      <!-- Bill Texts -->
+      <div class="c-block c-bill-section" id="panel-text">
+        <!-- Summary -->
+        {% if node_wrapper.field_ol_summary.value %}
+          <div class="c-bill-text__summary">
+            <a name="summary-text-top"></a>
+            <h3 class="c-detail--subhead c-detail--section-title">
+              {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Summary
+            </h3>
+            <div id="summary-{{ content.bill_wrapper.label() }}">
+              <div class="c-block c-detail--summary c-bill-section">
+                <p>
+                  {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_summary.value, ';', 3) %}
+                  {{ read_more_parts.part_1 }}
+                  {% if show_expander %}
+                    <span class="u-inline-expand-ellipsis">&hellip;</span>&nbsp;<a style="cursor:pointer;" class="u-text-expander--inline">(view more)</a><span class="u-text-expander--inline__more-text">{{ read_more_parts.part_2 }}</span>
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Sponsor Memo -->
+      {% if node_wrapper.field_ol_memo.value %}
+        <div class="c-bill-text__memo">
+          <a name="memo-text-top"></a>
+          <h3 class="c-detail--subhead c-detail--section-title">
+            {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Sponsor Memo
+          </h3>
+          <div id="sponsor-memo-{{ content.bill_wrapper.label() }}"
+               class="c-text--preformatted">
+            <div class="c-detail--memo">
+              <pre class="c-bill-fulltext">
+                {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
+                {{ read_more_parts.part_1 }}
+              </pre>
+            </div>
+            {% if read_more_parts.show_expander %}
+              <div id="memo-expand-{{ node_wrapper.label() }}"
+                   style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}"
+                   class="c-detail--memo">
+                <pre class="c-bill-fulltext">{{ read_more_parts.part_2 }}</pre>
+              </div>
+              <div class="item-list">
+                <ul class="pager pager-load-more">
+                  <li class="pager-next first last">
+                    <a class="text-expander">View More
+                      ({{ read_more_parts.extra_line_count }}
+                      Lines)</a>
+                  </li>
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Full Text -->
+      <div class="c-bill-text__bill" style="clear:both;">
+        <a name="bill-text-top"></a>
+        <h3 class="c-detail--subhead c-detail--section-title">
+          {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Bill Text
+          <span style="float:right;">
+            <a href="{{ content.ol_base_url }}/pdf/bills/{{ content.bill_wrapper.field_ol_session.value}}/{{ node_wrapper.title()|lower }}"
+              class="c-detail--download" target="_blank">download pdf</a>
+          </span>
+        </h3>
+        {% if node_wrapper.field_ol_full_text.value %}
+          <div id="full-text-{{ content.bill_wrapper.label() }}"
+              class="c-text--preformatted">
+            <div class="c-detail--memo">
+            <pre class="c-bill-fulltext">
+              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}
+              {{ read_more_parts.part_1 }}
+              </pre>
+            </div>
+            {% if read_more_parts.show_expander %}
+              <div id="expand-{{ node_wrapper.label() }}"
+                   style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}"
+                   class="c-detail--memo">
+                <pre class="c-bill-fulltext">{{ read_more_parts.part_2 }}</pre>
+              </div>
+              <div class="item-list">
+                <ul class="pager pager-load-more">
+                  <li class="pager-next first last">
+                    <a class="text-expander">View More
+                      ({{ read_more_parts.extra_line_count }}
+                      Lines)</a>
+                  </li>
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="c-bill-fulltext">The Bill text is not available.</div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>

@@ -38,6 +38,7 @@ dependencies:
   module:
     - layout_builder
     - name
+    - nys_list_formatter
     - options
 third_party_settings:
   layout_builder:
@@ -59,15 +60,26 @@ content:
     type: entity_reference_entity_view
     label: hidden
     settings:
-      view_mode: thumbnail
+      view_mode: promotional_banner
       link: false
     third_party_settings: {  }
     weight: 3
     region: content
   field_party:
-    type: list_key
+    type: list_formatter
     label: above
-    settings: {  }
+    settings:
+      type: ul
+      class: list-formatter-list
+      comma_full_stop: 0
+      comma_and: 0
+      comma_tag: div
+      term_plain: 0
+      comma_override: 0
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: list-formatter-separator
+      list_formatter_contrib: {  }
     third_party_settings: {  }
     weight: 0
     region: content

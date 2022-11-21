@@ -12,3 +12,12 @@ nys_school_forms.autocomplete.school:
     _format: json
   requirements:
     _permission: 'access content'
+nys_school_forms.school_forms:
+  path: '/admin/school-forms2'
+  defaults:
+    _title: 'School Form Search'
+    _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::view'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: 'TRUE'

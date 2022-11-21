@@ -82,3 +82,16 @@ function nys_school_forms_form_alter(&$form, FormStateInterface $form_state, $fo
     ];
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function nys_school_forms_theme() {
+  $theme['school_forms'] = [
+    'variables' => [
+      'search_form' => NULL,
+      'entity_update_form' => NULL,
+    ],
+  ];
+  return $theme;
+}

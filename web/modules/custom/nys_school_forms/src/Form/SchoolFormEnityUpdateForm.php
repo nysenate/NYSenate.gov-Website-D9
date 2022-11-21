@@ -220,10 +220,10 @@ class SchoolFormEnityUpdateForm extends FormBase {
     $query->condition('webform_id', 'school_form');
     if ($sort_by == 'date') {
       if ($order) {
-        $query->sortBy('completed', $order);
+        $query->sort('completed', $order);
       }
       else {
-        $query->sortBy('completed', 'DESC');
+        $query->sort('completed', 'DESC');
       }
     }
     $query_results = $query->execute();

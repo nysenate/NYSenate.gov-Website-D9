@@ -193,39 +193,4 @@ class SchoolFormsController extends ControllerBase {
     return $filtered_query ? $filtered_query : $query;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function exportCsv() {
-    $build = $this->adminPage();
-    $results = $build['#csv_results'];
-    $handle = fopen('php://temp', 'w+');
-    fputcsv($handle, [
-      'Date submitted',
-      'Students Name',
-      'Grade',
-      'Teacher',
-      'School Name',
-      'Street',
-      'City, State',
-      'Zip Code',
-      'School Phone',
-      'Senator',
-      'District Number',
-    ], ',');
-
-    foreach ($results as $line) {
-      $line['user'] = strip_tags($line['user']);
-      fputcsv($handle, $line, ',');
-    }
-    rewind($handle);
-    $csv_data = stream_get_contents($handle);
-    fclose($handle);
-    $response = new Response();
-    $response->headers->set('Content-Type', 'text/csv');
-    $response->headers->set('Content-Disposition', 'attachment; filename="user-revision-report.csv"');
-    $response->setContent($csv_data);
-    return $response;
-  }
-
 }

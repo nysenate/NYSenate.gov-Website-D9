@@ -31,7 +31,7 @@
     text-align: right;
     display: block;
   }
-  &:after {
+  &::after {
     margin-top: -2px;
     font-size: 17px;
     line-height: 12px;
@@ -145,7 +145,7 @@ a.c-btn--small-blue {
         margin-top: 20px;
       }
 
-      &:before {
+      &::before {
         border-radius: 50%;
         display: block;
         position: absolute;
@@ -164,7 +164,7 @@ a.c-btn--small-blue {
       }
 
       &:first-of-type {
-        &:before {
+        &::before {
           padding-left: 1px;
         }
       }

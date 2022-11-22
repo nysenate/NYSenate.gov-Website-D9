@@ -79,26 +79,6 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
   /**
    * Processes an item in the queue.
    *
-   * @param mixed $nid
-   *   The queue item data.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   * @throws \Exception
-   */
-  public function processItem($nid) {
-    sunsetExpiringMail($nid);
-    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-    if (!empty($node)) {
-      // Update last notified field so we don't resend the email.
-      $node->set('field_last_notified', REQUEST_TIME);
-    }
-  }
-
-  /**
-   * Add expired item in the queue.
-   *
    * @param mixed $data
    *   The queue item data.
    *
@@ -107,26 +87,25 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Exception
    */
-  public function createExpiringItem($data) {
+  public function processItem($data) {
+    $nid = $data->nid;
 
-  }
-
-  /**
-   * Send email of expiring item.
-   *
-   * @param mixed $nid
-   *   The node id.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   * @throws \Exception
-   */
-  public function sunsetExpiringMail($nid) {
     // Processing of queue items logic goes here.
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+    $subject = "Content will expire soon - " . $$node->getTitle();
     $mailManager = \Drupal::service('plugin.manager.mail');
     $params = $data;
-    $mailManager->mail('learning', 'email_queue', $data['email'], 'en', $params, $send = TRUE);
+    $expire_date = date('l M jS Y', $node->field_expiration_date->getValue());
+    $notice = "This item is set to be unpublished from the New York Senate web site on " . $expire_date;
+    $mailManager = \Drupal::service('plugin.manager.mail');
+    $senator_emails = $node->field_senator_multiref->getValue();
+    $params['message'] = $orderData;
+    $params['title'] = $subject;
+    // The email field can contain multiple values.
+    foreach ($senator_emails as $senator_email) {
+      $params = ['subject' => $subject, 'body' => $body];
+      $result = $mailManager->mail('nys_sunset_policy', 'expiring_mail', $senator_email, NULL, $params, NULL, TRUE);
+    }
   }
 
 }

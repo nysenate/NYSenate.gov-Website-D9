@@ -41,44 +41,92 @@
       if (self.isSenatorLanding(origNav)) {
         actionBar = nav.find('.c-senator-hero');
 
-        // place clone
-        nav
-          .prependTo('.page')
-          .css({
-            'z-index': '14'
+        if (self.isSenatorCollapsed()) {
+
+          $( document ).ready(function() {
+            jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
           })
-          .addClass('l-header__collapsed');
 
-        menu = nav.find('.c-nav--wrap');
-        headerBar = nav.find('.c-header-bar');
-        mobileNavToggle = nav.find('.js-mobile-nav--btn');
-        searchToggle = $('.js-search--toggle');
-        topbarDropdown = nav.find('.c-login--list');
+          // place origin Nav
+          nav
+              .prependTo('.page')
+              .css({
+                'z-index': '100'
+              })
+              .addClass('l-header__collapsed');
 
-        // collapse / hide nav
-        menu.addClass('closed');
-        actionBar.addClass('hidden');
+          origNav
+              .prependTo('.page')
+              .css({
+                'z-index': '100'
+              })
+              .addClass('l-header__collapsed')
+              .css('visibility', 'hidden');
 
-        // set headerBar to collapsed state
-        origNav.find('.c-header-bar').css('visibility', 'hidden');
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list');
 
-        // bind scrolling
-        $(window).scroll(function () {
-          currentTop = $(this).scrollTop();
+          // bind scrolling
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
 
-          self.senatorLandingScroll(
-            currentTop,
-            previousTop,
-            userScroll,
-            origNav,
-            menu,
-            headerBar,
-            nav,
-            actionBar
-          );
+            self.senatorLandingScroll(
+                currentTop,
+                previousTop,
+                userScroll,
+                origNav,
+                menu,
+                headerBar,
+                nav,
+                actionBar
+            );
 
-          previousTop = $(document).scrollTop();
-        });
+            previousTop = $(document).scrollTop();
+          });
+        } else {
+
+          // place clone
+          nav
+              .prependTo('.page')
+              .css({
+                'z-index': '14'
+              })
+              .addClass('l-header__collapsed');
+
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list');
+
+          // collapse / hide nav
+          menu.addClass('closed');
+          actionBar.addClass('hidden');
+
+          // set headerBar to collapsed state
+          origNav.find('.c-header-bar').css('visibility', 'hidden');
+
+          // bind scrolling
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+
+            self.senatorLandingScroll(
+                currentTop,
+                previousTop,
+                userScroll,
+                origNav,
+                menu,
+                headerBar,
+                nav,
+                actionBar
+            );
+
+            previousTop = $(document).scrollTop();
+          });
+        }
       }
       else if (self.isHomepage()) {
         // place clone
@@ -201,6 +249,10 @@
         self.toggleSearchBar(userScroll, e);
       });
     },
+
+
+
+
     microSiteScroll: function (currentTop, previousTop, headerBar, nav, menu) {
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
       this.checkMenuState(menu, currentTop, previousTop);
@@ -253,24 +305,34 @@
         this.closeSearch();
       }
 
+      var menuHeigth;
+
+      if (menu.length > 0) {
+        menuHeigth = menu.outerHeight();
+      } else {
+        menuHeigth = 0;
+      }
+
       var heroHeight =
-        origNav.outerHeight() -
-        menu.outerHeight() -
-        $('.c-senator-hero--contact-btn').outerHeight() -
-        headerBar.outerHeight() -
-        nav.outerHeight();
+          origNav.outerHeight() -
+          menuHeigth -
+          $('.c-senator-hero--contact-btn').outerHeight() -
+          headerBar.outerHeight() -
+          nav.outerHeight();
 
       if ($(window).width() < 769) {
         if (
           this.isMovingDown(currentTop, previousTop) &&
-          currentTop >= origNav.outerHeight()
+          currentTop >= origNav.outerHeight() &&
+            !this.isSenatorCollapsed()
         ) {
           actionBar.removeClass('hidden');
           this.checkTopBarState(currentTop, previousTop, headerBar, nav);
         }
         else if (
           this.isMovingUp(currentTop, previousTop) &&
-          currentTop < origNav.outerHeight()
+          currentTop < origNav.outerHeight() &&
+            !this.isSenatorCollapsed()
         ) {
           jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
           actionBar.addClass('hidden');
@@ -284,7 +346,11 @@
           this.isMovingUp(currentTop, previousTop) &&
           currentTop <= origNav.outerHeight() - 100 - 100
         ) {
-          menu.addClass('closed');
+          if (this.isSenatorCollapsed()) {
+            menu.removeClass('closed');
+          } else {
+            menu.addClass('closed');
+          }
 
           if (
             this.isMovingUp(currentTop, previousTop) &&
@@ -340,7 +406,9 @@
         nav.hasClass('l-header__collapsed')
       ) {
         headerBar.removeClass('collapsed');
-        nav.removeClass('l-header__collapsed');
+        if (!this.isSenatorCollapsed()) {
+          nav.removeClass('l-header__collapsed');
+        }
       }
     },
     isOutOfBounds: function (currentTop, previousTop) {
@@ -402,6 +470,9 @@
     },
     isOpenData: function () {
       return $('.open-data-section').length > 0;
+    },
+    isSenatorCollapsed: function () {
+      return $('.hero--senator-collapsed').length > 0;
     }
   };
 })(document, Drupal, jQuery);

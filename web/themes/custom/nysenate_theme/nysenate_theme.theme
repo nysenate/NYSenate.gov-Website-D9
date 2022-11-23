@@ -78,16 +78,16 @@ function nysenate_theme_preprocess_block__twitterblock(&$variables) {
 /**
  * Implements hook_preprocess_block_ID().
  */
-function nysenate_theme_preprocess_block__how_bill_becomes_law(&$variables) {
-  if (!empty($variables['content']['field_link'][0])) {
+function nysenate_theme_preprocess_block_content__how_senate_works(&$variables) {
+  if (!empty($variables['elements']['field_link'][0])) {
     $variables['cta'] = [
-      'text' => $variables['content']['field_link'][0]['#title'],
-      'link' => $variables['content']['field_link'][0]['#url']->toString(),
+      'text' => $variables['elements']['field_link'][0]['#title'],
+      'link' => $variables['elements']['field_link'][0]['#url']->toString(),
     ];
   }
 
   $steps = [];
-  foreach ($variables['content']['field_steps'] as $key => $items) {
+  foreach ($variables['elements']['field_steps'] as $key => $items) {
     if (!is_numeric($key)) {
       continue;
     }
@@ -2618,12 +2618,16 @@ function nysenate_theme_preprocess_node__meeting(&$variables) {
 
   // How a Bill Becomes a law block data.
   $block = \Drupal::entityTypeManager()
-    ->getStorage('block')
-    ->load('how_bill_becomes_law');
+    ->getStorage('block_content')
+    ->loadByProperties(['type' => 'how_senate_works']);
+
+  if (is_array($block)) {
+    $block = reset($block);
+  }
 
   if (!empty($block)) {
     /** @var \Drupal\block\BlockViewBuilder $view_builder */
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block');
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block_content');
     $block_content = $view_builder->view($block);
 
     $bill = $view_builder->build($block_content);

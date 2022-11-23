@@ -72,20 +72,22 @@
                   {{ item }}
                 {% endfor %}
               </div>
-              <div class="other_{{ key }}-sponsors">
-                <dl class="c-block c-detail--actions accordion" data-accordion>
-                  <dd class="accordion-navigation">
-                    <a href="#accordion-{{ key }}-sponsors" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide additional {{ key }}-sponsors" data-closed-text="view additional {{ key }}-sponsors">
-                      view additional {{ key }}-sponsors
-                    </a>
-                    <div id="accordion-{{ key }}-sponsors" class="content">
-                      {% for item in list[4:] %}
-                        {{ item }}
-                      {% endfor %}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+              {% if list[4:]|length > 1 %}
+                <div class="other_{{ key }}-sponsors">
+                  <dl class="c-block c-detail--actions accordion" data-accordion>
+                    <dd class="accordion-navigation">
+                      <a href="#accordion-{{ key }}-sponsors" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide additional {{ key }}-sponsors" data-closed-text="view additional {{ key }}-sponsors">
+                        view additional {{ key }}-sponsors
+                      </a>
+                      <div id="accordion-{{ key }}-sponsors" class="content">
+                        {% for item in list[4:] %}
+                          {{ item }}
+                        {% endfor %}
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              {% endif %}
             </div>
           {% endfor %}
         {% endif %}

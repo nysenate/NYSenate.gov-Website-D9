@@ -1,5 +1,18 @@
 @import "../../global/utils/init";
 
+.field--name-field-landing-blocks {
+  > .field__item {
+    margin-bottom: 80px;
+
+    .text-layout__container {
+      h2.c-container--h2-title {
+        margin-top: 40px;
+      }
+    }
+  }
+}
+
+
 .c-paragraph--more-link {
   clear: both;
   margin: 15px 0 30px;
@@ -18,7 +31,7 @@
     text-align: right;
     display: block;
   }
-  &:after {
+  &::after {
     margin-top: -2px;
     font-size: 17px;
     line-height: 12px;
@@ -38,18 +51,19 @@
   }
 }
 
-.nys-btn--gold {
+a.nys-btn--gold {
   transition: background-color 0.2s ease;
   position: relative;
   display: block;
   padding: 20px 10px;
   background: $yellow01;
-  color: #fff;
+  color: $color-white;
   text-align: center;
   text-transform: uppercase;
   font-family: $font-sans-bold;
   font-size: 14px;
   letter-spacing: 0.1em;
+  line-height: 24px;
 
   &:hover {
     color: #fff;
@@ -57,7 +71,27 @@
   }
 }
 
-.c-btn--small-blue {
+a.nys-btn--blue {
+  transition: background-color 0.2s ease;
+  position: relative;
+  display: block;
+  padding: 20px 10px;
+  background: $blue03;
+  color: $color-white;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  line-height: 24px;
+
+  &:hover {
+    color: #fff;
+    background: $blue02;
+  }
+}
+
+a.c-btn--small-blue {
   position: relative;
   display: block;
   padding: 5px 20px;
@@ -89,6 +123,11 @@
   font-size: 12px;
 }
 
+.c-block--background {
+  background-color: $color-light-gray;
+  padding: 40px;
+}
+
 
 // senate seal
 
@@ -106,7 +145,7 @@
         margin-top: 20px;
       }
 
-      &:before {
+      &::before {
         border-radius: 50%;
         display: block;
         position: absolute;
@@ -125,7 +164,7 @@
       }
 
       &:first-of-type {
-        &:before {
+        &::before {
           padding-left: 1px;
         }
       }

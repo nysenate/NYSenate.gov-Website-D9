@@ -5,6 +5,7 @@
 .c-block-legislation .c-block--btn-toggle {
   @extend .icon-replace__share;
   background: transparent;
+  border: none;
 }
 
 .c-legislation--quote {
@@ -250,5 +251,92 @@
   .c-block .c-sponsor--name {
     font-size: 16px;
     line-height: 1;
+  }
+}
+
+.c-block__collapsed {
+  .c-bill-descript,
+  .c-bill-polling,
+  .sponsors {
+    display: none;
+  }
+
+  .c-legislation {
+    padding-bottom: 20px
+  }
+
+  .c-legislation--quote {
+
+    .c-pullquote {
+      padding-top: 50px;
+      padding-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5em;
+
+      &::before {
+        font-size: 3em;
+        top: 0.35em;
+      }
+    }
+
+    .c-pullquote--citation {
+      margin-top: 7px;
+      font-size: 12px;
+    }
+  }
+
+  .c-quote--title {
+    display: none;
+  }
+
+  // temporary class for toggling citation
+  .c-pullquote--citation {
+
+    &.u-quote--has-img {
+      display: block;
+    }
+  }
+
+  .c-legislation--sponsor {
+    display: none;
+  }
+}
+
+.c-block__collapsed {
+  .c-block-legislation {
+    .c-legislation-info {
+      padding-bottom: 25px;
+      min-height: 0;
+    }
+  }
+
+}
+
+.c-block.c-block-legislation-featured.c-block__collapsed .c-block--btn-toggle,
+.c-block-legislation .c-block--btn-toggle {
+  @extend .icon-replace__plus;
+  position: absolute;
+  right: 0;
+  left: auto;
+}
+
+.c-block__collapsed {
+
+  .c-quote--content {
+    padding: 20px 40px;
+  }
+
+  .c-legislation--quote {
+
+    .c-pullquote {
+      padding-top: 15px;
+      padding-bottom: 12px;
+      padding-right: 20px;
+
+      &::before {
+        top: -0.2em;
+        left: -0.2em;
+      }
+    }
   }
 }

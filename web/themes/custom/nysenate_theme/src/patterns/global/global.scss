@@ -59,11 +59,6 @@ body {
   @include font-stack-secondary;
   margin: 0;
   color: $grey10;
-
-  &.nav-open {
-    position: fixed;
-    overflow: hidden;
-  }
 }
 
 // Render the `main` element consistently in IE.
@@ -412,6 +407,10 @@ label {
     vertical-align: top;
     width: 80%;
   }
+}
+
+.node--unpublished {
+  background-color: unset !important;
 }
 
 .u-mobile-only {

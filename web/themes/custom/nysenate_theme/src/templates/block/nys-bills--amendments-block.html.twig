@@ -15,7 +15,7 @@
     <dl class="l-tab-bar u-tablet-plus">
       {% for title,amendment_id in content.amended_versions %}
         {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
-        {% set is_active_version = (version == content.active_version) %}
+        {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
         {% set is_active_tab = content.bill_wrapper.label() == title %}
 
         <dd class="c-tab  {{ is_active_tab ? 'active' : '' }}">
@@ -36,7 +36,7 @@
       <div class="c-tab--arrow u-mobile-only" id="mobile-bill-arrow"></div>
       {% for title,amendment_id in content.amended_versions %}
         {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
-        {% set is_active_version = (version == content.active_version) %}
+        {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
         {% set is_active_tab = content.bill_wrapper.label() == title %}
         <dd class="c-tab  {{ is_active_tab ? 'active' : 'inactive' }}">
           <a class="c-tab-link bill-version-tab"
@@ -99,11 +99,12 @@
         <dl>
 
           {% if content.same_as %}
-            {% if content.same_as|length > 0 %}
+            {% set version = content.same_as.0.printNo|split('') %}
+            {% if content.same_as|length > 1 %}
               <dt>{{ "See other versions of this Bill:"|t }}</dt>
-            {% elseif content.same_as.printNo.0|upper == 'S' %}
+            {% elseif version.0 == 'S' %}
               <dt>{{ "See Senate Version of this Bill:"|t }}</dt>
-            {% elseif content.same_as.printNo.0|upper == 'A' %}
+            {% elseif version.0 == 'A' %}
               <dt>{{ "See Assembly Version of this Bill:"|t }}</dt>
             {% else %}
               <dt>{{ "See Version in other house:"|t }}</dt>

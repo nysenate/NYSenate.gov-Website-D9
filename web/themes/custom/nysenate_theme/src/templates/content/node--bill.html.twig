@@ -92,21 +92,27 @@
 
   <!-- Bill Status -->
 
+
   <div class="c-block c-detail--status c-bill-section">
     <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
       {% if current_session_year == content.field_ol_session[0]['#markup'] %}
         Current
-        {% else %}
-          Archive: Last
-        {% endif %}
-        Bill Status
-        {% if is_substituted %}
-          Via
+      {% else %}
+        Archive: Last
+      {% endif %}
+      Bill Status
+      {% if is_substituted %}
+        Via
         {{ sub_bill_base_print_no }}
       {% endif %}
         -
       <span>
-        {{ content.field_ol_latest_status_committee[0] }}
+        {{ status_display }}
+        {% if status_display == 'In Senate Committee' and committee %}
+          <a class="committee-link" href="{{ committee_link }}">
+            {{ committee }} Committee
+          </a>
+        {% endif %}
       </span>
     </h3>
     <!-- Bill Graph Output -->

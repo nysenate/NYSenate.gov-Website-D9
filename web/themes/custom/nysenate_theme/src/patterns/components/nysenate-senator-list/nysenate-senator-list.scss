@@ -1,0 +1,222 @@
+@import "../../global/utils/init";
+
+.c-senators-container {
+	overflow: hidden;
+
+	.js-form-type-select {
+		position: relative;
+		width: 100%;
+
+		&::after {
+			@extend .icon-after__see-more;
+			position: absolute;
+			right: 10px;
+			top: 5px;
+			font-size: 25px;
+			color: $blue01;
+			pointer-events: none;
+			cursor: pointer;
+		}
+	}
+
+	.view-filters {
+		margin-left: 0px;
+	
+		select {
+			color: $blue01;
+			font-family: $font-sans-bold;
+			font-size: 14px;
+			padding: 10px 40px 10px 20px;
+			background: none;
+			background-image: none;
+			text-transform: uppercase;
+			min-height: 45px;
+			width: 100%;
+		}
+	}
+}
+
+.c-senator-block {
+	background-color: $greyLight;
+	overflow: hidden;
+	margin-bottom: 20px;
+	position: relative;
+	min-height: 80px;
+	transition: background-color 0.2s ease;
+
+	.nys-senator--thumb {
+		border-radius: 0;
+		height: 80px;
+		width: 80px;
+		margin: 0 15px 0 0;
+		overflow: hidden;
+	}
+
+	.nys-senator--position {
+		text-transform: uppercase;
+		font-family: $font-sans;
+		font-size: 10px;
+		line-height: 18px;
+	}
+
+	.nys-senator--name {
+		font-size: 14px;
+		margin: 0 0 10px;
+	}
+
+	.nys-senator--district {
+		color: $grey04;
+		font-size: 10px;
+	}
+
+	.nys-senator--party {
+		color: $grey03;
+		margin-right: 0.5em;
+		text-transform: uppercase;
+	}
+
+	.c-position {
+		margin: 15px 0 0 15px;
+		font-family: $font-sans;
+		text-transform: uppercase;
+		color: $color-white;
+		font-size: 11px;
+		line-height: 1.3em;
+	}
+
+	.c-name {
+		font-family: $font-serif;
+		font-size: 17px;
+		line-height: 120%;
+		color: $grey02;
+		margin: 20px 0 0 100px;
+
+		a {
+			color: $grey02;
+		}
+	}
+  
+	.c-party-conf {
+		margin: 15px 0 0 15px;
+		font-family: $font-sans;
+		text-transform: uppercase;
+		font-size: 12px;
+		line-height: 1.3em;
+	}
+
+	.c-district {
+		text-transform: uppercase;
+		display: block;
+		font-size: 11px;
+		margin: 10px 0 0 100px;
+
+		a {
+			color: $grey05;
+		}
+	}
+
+	&:hover {
+		@extend .drk-bg;
+
+		.nys-senator--name,
+		.nys-senator--district,
+		.nys-senator--party {
+			color: $color-white;
+		}
+	}
+
+	// co-chair variation
+	&.co-chair {
+		@extend .lgt-bg;
+
+		.nys-senator--position,
+		.nys-senator--name,
+		.nys-senator--party,
+		.nys-senator--district {
+			color: $color-white;
+		}
+
+		.nys-senator--name {
+			margin-bottom: 5px;
+		}
+	}
+}
+
+@include breakpoint($bp-sm) {
+	.c-senators-container {
+		// uncomment on integration
+		// margin: 0 -2.5% 40px;
+		// for patternlab only, remove on integration
+		margin: 0 0 40px;
+		max-width: 760px;
+
+		.view-filters {
+			margin: 0 2.5%;
+		}
+
+		.js-form-type-select {
+			float: left;
+			width: 47.5%;
+			margin-right: 2.5%;
+
+			& + .js-form-type-select {
+				margin-right: 0;
+				margin-left: 2.5%;
+			}
+
+			select {
+				margin-bottom: 40px;
+			}
+		}
+	}
+
+	.c-senator-block {
+		float: left;
+		width: 20%;
+		margin: 0 2.5% 40px 2.5%;
+		height: 300px;
+
+		.nys-senator--thumb {
+			width: 160px;
+			height: 160px;
+		}
+
+		.nys-senator--info {
+			padding: 30px 20px 0;
+		}
+
+		.nys-senator--name {
+			font-size: 16px;
+			line-height: 20px;
+		}
+
+		.nys-senator--district {
+			font-size: 12px;
+		}
+
+		.nys-senator--party {
+			display: block;
+			margin-bottom: 0.4em;
+		}
+
+		.c-name {
+			margin: 20px 15px 20px 15px;
+		}
+
+		.c-district {
+			margin: 0 15px 20px 15px;
+		}
+
+		&.c-senator-block--committee {
+
+			.nys-senator--info {
+				padding: 15px 20px 0;
+			}
+      
+			.nys-senator--name {
+				font-size: 14px;
+				line-height: 18px;
+			}
+		}
+	}
+}

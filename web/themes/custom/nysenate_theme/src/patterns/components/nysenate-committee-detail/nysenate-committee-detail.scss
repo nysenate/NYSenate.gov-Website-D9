@@ -1,0 +1,88 @@
+@import "../../global/utils/init";
+
+.c-committees-container {
+	overflow: hidden;
+	margin-bottom: 30px;
+	width: 100%;
+
+	.c-container-title {
+		padding: 20px 0 0 0;
+		border-top: 1px solid $grey05;
+		color: $grey08;
+		font-family: $font-serif-semibold;
+		font-size: 18px;
+		margin: 0;
+	}
+
+	.c-group-title {
+		font-family: $font-serif-semibold;
+		color: $grey08;
+		font-size: 14px;
+		padding: 30px 0 0 0;
+	}
+
+	.c-committees-wrapper {
+		margin-bottom: 20px;
+	}
+
+	.c-category-title {
+		margin-top: 30px;
+		display: block;
+		width: 100%;
+		color: $grey08;
+		font-family: $font-serif-semibold;
+		font-size: 20px;
+	}
+
+	.c-committee-link {
+		display: block;
+		width: 100%;
+		padding: 10px 0;
+		border-bottom: 1px solid $grey17;
+		.c-committee-title {
+			@extend .lgt-text;
+			margin: 0px;
+			padding-bottom: 0px;
+			font-family: $font-sans;
+			font-size: 14px;
+			text-transform: capitalize;
+		}
+	}
+}
+
+@include breakpoint($bp-sm) {
+	.c-committees-container {
+
+		.c-container-title {
+			border-top: none;
+			border-bottom: 1px solid $grey05;
+			padding: 0 0 10px 0;
+			font-size: 26px;
+		}
+
+		.c-group-title {
+			font-size: 20px;
+			margin-bottom: 40px;
+		}
+
+		.c-committees-wrapper {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.c-category-title {
+			float: left;
+			clear: left;
+		}
+
+		.c-committee-link {
+			width: 100%;
+			padding: 20px 0;
+			float: left;
+
+			.c-committee-title {
+				font-size: 20px;
+			}
+		}
+	}
+}

@@ -1,0 +1,27 @@
+@import "../../global/utils/init";
+
+.c-senate-directory--container {
+  margin-bottom: 50px;
+
+  .c-container--title {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}
+
+.c-senate-directory {
+  max-width: 560px;
+  padding: 30px 20px;
+  background: $greyLight;
+  overflow: hidden;
+}
+
+.c-directory--section {
+  padding: 0 10px 20px;
+
+  & + .c-directory--section {
+    padding-top: 30px;
+    padding-bottom: 0;
+    border-top: 1px solid $grey05;
+  }
+}

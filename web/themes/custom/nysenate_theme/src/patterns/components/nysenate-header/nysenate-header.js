@@ -44,7 +44,7 @@
         if (self.isSenatorCollapsed()) {
 
           $( document ).ready(function() {
-            jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+            $('#senatorImage').html($('#smallShotImage').html());
           })
 
           // place origin Nav
@@ -249,10 +249,6 @@
         self.toggleSearchBar(userScroll, e);
       });
     },
-
-
-
-
     microSiteScroll: function (currentTop, previousTop, headerBar, nav, menu) {
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
       this.checkMenuState(menu, currentTop, previousTop);
@@ -306,7 +302,6 @@
       }
 
       var menuHeigth;
-
       if (menu.length > 0) {
         menuHeigth = menu.outerHeight();
       } else {
@@ -334,7 +329,7 @@
           currentTop < origNav.outerHeight() &&
             !this.isSenatorCollapsed()
         ) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.addClass('hidden');
           headerBar.removeClass('collapsed');
         }
@@ -351,18 +346,17 @@
           } else {
             menu.addClass('closed');
           }
-
           if (
             this.isMovingUp(currentTop, previousTop) &&
             currentTop <= origNav.outerHeight() - 100 - 100 - 40 - 100
           ) {
             actionBar.addClass('hidden');
-            jQuery('#largeHeadshot').addClass('hidden');
-            jQuery('#smallHeadshot').removeClass('hidden');
+            $('#largeHeadshot').addClass('hidden');
+            $('#smallHeadshot').removeClass('hidden');
           }
         }
         else if (currentTop >= heroHeight) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.removeClass('hidden');
           headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);

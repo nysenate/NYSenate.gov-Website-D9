@@ -422,76 +422,67 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $entity;
 
-  // Sets currentTid variable from the term.
-  $currentTid = $entity->id();
+  /** @var \Drupal\taxonomy\Entity\Term $originalSenator */
+  $originalSenator = $term->original;
+  $updatedValue = (string) $term->get('field_active_senator')->value;
+  $originalValue = $originalSenator->get('field_active_senator')->value;
 
-  // Looks for the Microsite pages that are referencing this senator.
-  $pages = \Drupal::entityQuery('node')
-    ->accessCheck(FALSE)
-    ->condition('type', 'microsite_page')
-    ->condition('field_senator_multiref', [$currentTid], 'IN')
-    ->execute();
+  // Checks if Senator status is being updated.
+  if ($term->get('status')->value !== TRUE) {
+    if ($originalValue !== $updatedValue) {
+      // Sets currentTid variable from the term.
+      $currentTid = $entity->id();
 
-  // Checks if there are results or not.
-  if (!empty($pages)) {
-    // Loads the microsite pages found.
-    $nodes = Node::loadMultiple($pages);
+      // Looks for the Microsite pages that are referencing this senator.
+      $pages = \Drupal::entityQuery('node')
+        ->accessCheck(FALSE)
+        ->condition('type', 'microsite_page')
+        ->condition('field_senator_multiref', [$currentTid], 'IN')
+        ->execute();
 
-    // Initialize aboutNode to store About page information.
-    $aboutNode = [];
+      // Checks if there are results or not.
+      if (!empty($pages)) {
+        // Loads the microsite pages found.
+        $nodes = Node::loadMultiple($pages);
 
-    foreach ($nodes as $node) {
-      // Acts on every new senator taxonomy term that's updated.
-      if ($term->bundle() === 'senator' &&
-        $term->get('field_active_senator')->value === 0) {
-        if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
-          $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
-          $micrositeTerm = Term::load($tid);
-          if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing') {
-            // Unpublished Landing microsite page.
-            if ($node->isPublished()) {
-              $node->set('status', NodeInterface::NOT_PUBLISHED);
+        // Initialize aboutNode to store About page information.
+        $aboutNode = [];
+
+        foreach ($nodes as $node) {
+          // Acts on every new senator taxonomy term that's updated.
+          if ($term->bundle() === 'senator') {
+            if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+              $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
+              $micrositeTerm = Term::load($tid);
+              if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing') {
+                // Unpublished Landing microsite page.
+                if ($node->isPublished()) {
+                  $node->set('status', (int) $term->get('field_active_senator')->value);
+                }
+              }
+              elseif ($term->get('field_active_senator')->value === 0 && $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About') {
+                /** @var \Drupal\node\Entity\Node $aboutNode */
+                $aboutNode = $node;
+              }
+              elseif ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
+                if (!$node->isPublished()) {
+                  // Published Inactive microsite page.
+                  $node->set('status', !(int) $term->get('field_active_senator')->value);
+                }
+              }
+              $node->save();
             }
           }
-          elseif ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About') {
-            /** @var \Drupal\node\Entity\Node $aboutNode */
-            $aboutNode = $node;
+        }
+
+        // Checks if the senator has an Inactive microsite page or not.
+        if ($updatedValue === '0') {
+          $hasInactivePage = \Drupal::service('nys_senators.senators_helper')->hasMicroSiteInactive($nodes);
+          if (!$hasInactivePage) {
+            _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
           }
-          elseif ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
-            if (!$node->isPublished()) {
-              // Published Inactive microsite page.
-              $node->set('status', NodeInterface::PUBLISHED);
-            }
-          }
-          $node->save();
         }
       }
-      elseif ($term->bundle() === 'senator' &&
-        $term->get('field_active_senator')->value === 1) {
-        if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
-          $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
-          $micrositeTerm = Term::load($tid);
-          if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing') {
-            if (!$node->isPublished()) {
-              // Published Landing microsite page.
-              $node->set('status', NodeInterface::PUBLISHED);
-            }
-          }
-          if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
-            if ($node->isPublished()) {
-              // Unpublished Inactive microsite page.
-              $node->set('status', NodeInterface::NOT_PUBLISHED);
-            }
-          }
-          $node->save();
-        }
-      }
-    }
-
-    // Checks if the senator has an Inactive microsite page or not.
-    $has_inactive = \Drupal::service('nys_senators.senators_helper')->hasMicroSiteInactive($nodes);
-    if (!$has_inactive) {
-      _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
     }
   }
 }
@@ -501,13 +492,12 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The original entity object.
- * @param \Drupal\Core\Entity\EntityInterface $aboutNode
+ * @param \Drupal\node\NodeInterface $aboutNode
  *   The entity About microsite.
  * @param string $currentTid
  *   The Tid variable from the term.
  */
-function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity, EntityInterface $aboutNode, string $currentTid) {
-
+function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity, NodeInterface $aboutNode, string $currentTid) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $entity;
 
@@ -629,28 +619,29 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
         switch ($term->getName()) {
           case 'Landing':
             if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
-              $stid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
-              $senator = Term::load($stid);
-              // Check if the senator isn't active.
+              $sid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
+              $senator = Term::load($sid);
+              // Checks if the senator isn't active.
               if ($senator->field_active_senator->value === '0') {
                 $replacements[] = 'landing';
               }
+              // Updates the inactive site state to prevent pathauto
+              // from replacing the old url with a new one.
               else {
-                // Update the inactive site state to prevent pathauto
-                // from replacing the old url with a new one.
-                $inactiveMicrosite = \Drupal::entityQuery('node')
+                // Queries looking for the Inactive microsite page.
+                $inactiveMicrosites = \Drupal::entityQuery('node')
                   ->accessCheck(FALSE)
                   ->condition('type', 'microsite_page')
                   ->condition('field_senator_multiref', [$senator->id()], 'IN')
                   ->condition('field_microsite_page_type.entity:taxonomy_term.name', 'Inactive')
                   ->execute();
 
-                // Check if the senator has an inactive page created.
-                if ($inactiveMicrosite) {
-                  $inactiveMicrosite = Node::loadMultiple($inactiveMicrosite);
-                  foreach ($inactiveMicrosite as $site) {
-                    $site->set('status', NodeInterface::PUBLISHED);
-                    $site->save();
+                // Checks if the senator has an inactive page created.
+                if ($inactiveMicrosites) {
+                  $inactiveMicrosites = Node::loadMultiple($inactiveMicrosites);
+                  foreach ($inactiveMicrosites as $inactiveMicrosite) {
+                    $inactiveMicrosite->set('status', NodeInterface::PUBLISHED);
+                    $inactiveMicrosite->save();
                   }
                 }
 
@@ -661,8 +652,8 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
 
           case 'Inactive':
             if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
-              $stid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
-              $senator = Term::load($stid);
+              $sid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
+              $senator = Term::load($sid);
               // Check if the senator is active.
               if ($senator->field_active_senator->value === '0') {
                 $replacements[] = '';

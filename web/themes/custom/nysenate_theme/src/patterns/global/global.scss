@@ -527,6 +527,19 @@ label {
   }
 }
 
+.c-block .c-view--link {
+  @extend .icon-before__presskit;
+	@extend .lgt-text;
+	margin: 0 0 20px;
+	text-transform: uppercase;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	&::before {
+		margin-top: -3px;
+		font-size: 20px;
+	}	
+}
+
 .c-detail--subhead {
   margin: 0 0 10px;
   color: $grey02;

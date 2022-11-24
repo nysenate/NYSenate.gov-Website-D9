@@ -9,7 +9,8 @@
 <!-- BILL TEMPLATE -->
 <div class="{{ classes|join(' ') }}" {{ attributes }}>
   <div class="node node-bill node-promoted view-mode-full clearfix">
-    <div class="c-block c-detail--header c-detail--header__bill">
+    <div
+      class="c-block c-detail--header c-detail--header__bill">
       <!-- Bill Title -->
       <div class="c-bill--heading-block">
         <h2 class="nys-title c-bill-title">
@@ -77,16 +78,19 @@
     </div>
 
     <div class="more_constituent_analytics">
-      <dl style="margin-bottom:0" class="c-block c-detail--actions accordion" data-accordion>
-        <dd class="accordion-navigation">
-          <a href="#accordion" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide additional analytics" data-closed-text="view more analytics">
-            view more constituent analytics
-          </a>
-          <div id="accordion" class="content">
+      <article class="nysenate-accordion">
+        <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-analytics" aria-expanded="false" id="nysenate-accordion__toggle-1-analytics" aria-selected="false">
+          <span class="nysenate-accordion__heading">
+            <span class="indicator">View
+            </span>
+            more constituent analytics
+          </span>
+          {{ icons.get('accordion__arrow'|lower) }}
+        </button>
+          <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-analytics" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-analytics">
             {{ looker_extended_iframe }}
           </div>
-        </dd>
-      </dl>
+      </article>
     </div>
   {% endif %}
 
@@ -105,12 +109,13 @@
         Via
         {{ sub_bill_base_print_no }}
       {% endif %}
-        -
+      -
       <span>
         {{ status_display }}
         {% if status_display == 'In Senate Committee' and committee %}
           <a class="committee-link" href="{{ committee_link }}">
-            {{ committee }} Committee
+            {{ committee }}
+            Committee
           </a>
         {% endif %}
       </span>
@@ -190,7 +195,7 @@
                                   {% endif %}
                                   <span class="{{ text_class }}">{{ item.text }}</span><br>
                                 {% endfor %}
-                                </td>
+                              </td>
                             </tr>
                           {% endfor %}
                         {% endfor %}

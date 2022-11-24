@@ -19,9 +19,7 @@
         {% set is_active_tab = content.bill_wrapper.label() == title %}
 
         <dd class="c-tab  {{ is_active_tab ? 'active' : '' }}">
-          <a class="c-tab-link bill-version-tab"
-             data-version="{{ title }}"
-             data-target="/node/{{ amendment_id }}">
+          <a class="c-tab-link bill-version-tab" data-version="{{ title }}" data-target="/node/{{ amendment_id }}">
 
             {{ version is empty ? "Original" : version }}
             {{ is_active_version ? " (Active) " : "" }}
@@ -39,9 +37,7 @@
         {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
         {% set is_active_tab = content.bill_wrapper.label() == title %}
         <dd class="c-tab  {{ is_active_tab ? 'active' : 'inactive' }}">
-          <a class="c-tab-link bill-version-tab"
-            data-version="{{ title }}"
-            data-target="/node/{{ amendment_id }}">
+          <a class="c-tab-link bill-version-tab" data-version="{{ title }}" data-target="/node/{{ amendment_id }}">
 
             {{ version is empty ? "Original" : version }}
             {{ is_active_version ? " (Active) " : "" }}
@@ -49,7 +45,7 @@
         </dd>
       {% endfor %}
     </dl>
-   </div>
+  </div>
 {% endif %}
 
 <div class="tabs-content">
@@ -62,8 +58,7 @@
       {# @todo Quote block #}
 
       <!-- Bill Co/Multi Sponsors -->
-      <div class="c-block c-detail--sponsors c-bill-section">
-        {% if amendment.sponsors_array.co|length > 0 or amendment.sponsors_array.multi|length > 0 %}
+        <div class="c-block c-detail--sponsors c-bill-section"> {% if amendment.sponsors_array.co|length > 0 or amendment.sponsors_array.multi|length > 0 %}
           {% for key,list in amendment.sponsors_array if list|length > 0 %}
             <div class="c-{{ key }}-sponsors c-sponsors-detail">
               <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
@@ -74,18 +69,21 @@
               </div>
               {% if list[4:]|length > 1 %}
                 <div class="other_{{ key }}-sponsors">
-                  <dl class="c-block c-detail--actions accordion" data-accordion>
-                    <dd class="accordion-navigation">
-                      <a href="#accordion-{{ key }}-sponsors" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide additional {{ key }}-sponsors" data-closed-text="view additional {{ key }}-sponsors">
-                        view additional {{ key }}-sponsors
-                      </a>
-                      <div id="accordion-{{ key }}-sponsors" class="content">
-                        {% for item in list[4:] %}
-                          {{ item }}
-                        {% endfor %}
+                  <article class="nysenate-accordion">
+                    <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-sponsors" aria-expanded="false" id="nysenate-accordion__toggle-1-sponsors" aria-selected="false">
+                      <span class="nysenate-accordion__heading">
+                        <span class="indicator">View
+                        </span>additional
+                        {{ key }}-sponsors
+                      </span>
+                      {{ icons.get('accordion__arrow'|lower) }}
+                    </button>
+                    {% for item in list[4:] %}
+                      <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-sponsors" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-sponsors">
+                        {{ item }}
                       </div>
-                    </dd>
-                  </dl>
+                    {% endfor %}
+                  </article>
                 </div>
               {% endif %}
             </div>
@@ -95,7 +93,9 @@
 
       <!-- Bill Amendment Details -->
       <div class="c-block c-bill-section c-bill--details">
-        <h3 class="c-detail--subhead c-detail--section-title">{{ node_wrapper.title() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Details</h3>
+        <h3 class="c-detail--subhead c-detail--section-title">{{ node_wrapper.title() }}
+          {{ is_active_version ? ' (ACTIVE)' : '' }}
+          - Details</h3>
         <dl>
 
           {% if content.same_as %}
@@ -116,19 +116,22 @@
               <dd>
                 <a href="/node/{{ bill_id.nid }}">
                   {{ bill_id.basePrintNo }}
-                </a>{{ loop.index != 0 and loop.length > 1 ? ',' : '' }}
+                </a>
+                {{ loop.index != 0 and loop.length > 1 ? ',' : '' }}
               </dd>
             {% endfor %}
           {% endif %}
 
           {% if content.comm_status_pre %}
             <dt>Current Committee:</dt>
-            <dd> {{ content.comm_status_pre }}</dd>
+            <dd>
+              {{ content.comm_status_pre }}</dd>
           {% endif %}
 
           {% if not content.bill_wrapper.field_ol_law_section.isEmpty() %}
             <dt>Law Section:</dt>
-            <dd> {{ content.bill_wrapper.field_ol_law_section.value }}</dd>
+            <dd>
+              {{ content.bill_wrapper.field_ol_law_section.value }}</dd>
           {% endif %}
 
           {% if not content.bill_wrapper.field_ol_law_code.isEmpty() %}
@@ -145,7 +148,8 @@
                 {% if content.prev_vers|length > 1 %}
                   {{ leg_session}}:
                 {% endif %}
-                {{ prev_bills|raw }} <br />
+                {{ prev_bills|raw }}
+                <br/>
               {% endfor %}
             </dd>
           {% endif %}
@@ -153,13 +157,16 @@
       </div>
 
       <!-- Bill Texts -->
-      <div class="c-block c-bill-section" id="panel-text">
+      <div
+        class="c-block c-bill-section" id="panel-text">
         <!-- Summary -->
         {% if node_wrapper.field_ol_summary.value %}
           <div class="c-bill-text__summary">
             <a name="summary-text-top"></a>
             <h3 class="c-detail--subhead c-detail--section-title">
-              {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Summary
+              {{ node_wrapper.label() }}
+              {{ is_active_version ? ' (ACTIVE)' : '' }}
+              - Summary
             </h3>
             <div id="summary-{{ content.bill_wrapper.label() }}">
               <div class="c-block c-detail--summary c-bill-section">
@@ -167,7 +174,8 @@
                   {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_summary.value, ';', 3) %}
                   {{ read_more_parts.part_1 }}
                   {% if show_expander %}
-                    <span class="u-inline-expand-ellipsis">&hellip;</span>&nbsp;<a style="cursor:pointer;" class="u-text-expander--inline">(view more)</a><span class="u-text-expander--inline__more-text">{{ read_more_parts.part_2 }}</span>
+                    <span class="u-inline-expand-ellipsis">&hellip;</span>&nbsp;<a style="cursor:pointer;" class="u-text-expander--inline">(view more)</a>
+                    <span class="u-text-expander--inline__more-text">{{ read_more_parts.part_2 }}</span>
                   {% endif %}
                 </p>
               </div>
@@ -181,20 +189,20 @@
         <div class="c-bill-text__memo">
           <a name="memo-text-top"></a>
           <h3 class="c-detail--subhead c-detail--section-title">
-            {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Sponsor Memo
+            {{ node_wrapper.label() }}
+            {{ is_active_version ? ' (ACTIVE)' : '' }}
+            - Sponsor Memo
           </h3>
-          <div id="sponsor-memo-{{ content.bill_wrapper.label() }}"
-               class="c-text--preformatted">
+          <div id="sponsor-memo-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
-                {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
+                
                 {{ read_more_parts.part_1 }}
               </pre>
+              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
             </div>
             {% if read_more_parts.show_expander %}
-              <div id="memo-expand-{{ node_wrapper.label() }}"
-                   style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}"
-                   class="c-detail--memo">
+              <div id="memo-expand-{{ node_wrapper.label() }}" style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}" class="c-detail--memo">
                 <pre class="c-bill-fulltext">{{ read_more_parts.part_2 }}</pre>
               </div>
               <div class="item-list">
@@ -215,25 +223,24 @@
       <div class="c-bill-text__bill" style="clear:both;">
         <a name="bill-text-top"></a>
         <h3 class="c-detail--subhead c-detail--section-title">
-          {{ node_wrapper.label() }} {{ is_active_version ? ' (ACTIVE)' : '' }} - Bill Text
+          {{ node_wrapper.label() }}
+          {{ is_active_version ? ' (ACTIVE)' : '' }}
+          - Bill Text
           <span style="float:right;">
-            <a href="{{ content.ol_base_url }}/pdf/bills/{{ content.bill_wrapper.field_ol_session.value}}/{{ node_wrapper.title()|lower }}"
-              class="c-detail--download" target="_blank">download pdf</a>
+            <a href="{{ content.ol_base_url }}/pdf/bills/{{ content.bill_wrapper.field_ol_session.value}}/{{ node_wrapper.title()|lower }}" class="c-detail--download" target="_blank">download pdf</a>
           </span>
         </h3>
         {% if node_wrapper.field_ol_full_text.value %}
-          <div id="full-text-{{ content.bill_wrapper.label() }}"
-              class="c-text--preformatted">
+          <div id="full-text-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
-            <pre class="c-bill-fulltext">
-              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}
+              <pre class="c-bill-fulltext">
+              
               {{ read_more_parts.part_1 }}
               </pre>
+              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}
             </div>
             {% if read_more_parts.show_expander %}
-              <div id="expand-{{ node_wrapper.label() }}"
-                   style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}"
-                   class="c-detail--memo">
+              <div id="expand-{{ node_wrapper.label() }}" style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}" class="c-detail--memo">
                 <pre class="c-bill-fulltext">{{ read_more_parts.part_2 }}</pre>
               </div>
               <div class="item-list">

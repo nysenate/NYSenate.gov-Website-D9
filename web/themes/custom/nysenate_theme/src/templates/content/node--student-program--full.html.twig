@@ -1,0 +1,74 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+<article id="node-{{ node_id }}" class="{{ classes }}" {{ attributes }}>
+  {{ title_prefix }}
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      <div class="c-news--head-meta">
+        <p class="c-news--pub-date">
+          <span class="date-display-single">
+            {{ content.field_date[0]['#markup'] }}
+          </span>
+        </p>
+        {% if content.field_article_author[0] %}
+          <p class="c-news--author">
+            {{ content.field_article_author[0] }}
+          </p>
+        {% endif %}
+
+        {% if content.field_issues[0] %}
+          <ul class="nys-associated-topics">
+            {% for key, issue in content.field_issues
+              if key matches '/^\\d+$/' %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div class="c-news--body">
+    {% if content.field_image_main[0] %}
+      <div class="c-block c-block--img">
+        {{ content.field_image_main[0] }}
+
+        {% if content.field_image_main_title[0] %}
+          <p class="c-img--caption">
+            {{ content.field_image_main_title[0] }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if content.field_subtitle[0] %}
+      <div class="c-news--subtitle">
+        {{ content.field_subtitle }}
+      </div>
+    {% endif %}
+
+    <div class="c-block">
+      {{ content.body }}
+    </div>
+
+    <div class="c-block">
+      {{ content.field_chapters }}
+    </div>
+
+    {% if content.webform %}
+      <div class="row">
+        {{ content.webform }}
+      </div>
+    {% endif %}
+
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta
+    } only %}
+  </div>
+</article>

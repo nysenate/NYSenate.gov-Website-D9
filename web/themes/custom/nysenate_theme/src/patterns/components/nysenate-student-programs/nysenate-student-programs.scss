@@ -1,0 +1,83 @@
+@import "../../global/utils/init";
+
+.c-block--about-student-programs {
+  padding-bottom: 20px;
+  margin-top: 60px;
+
+  .c-container--link {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+  }
+}
+
+.c-student-program-are-you {
+  .gen-wrapper {
+    width: 100%;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    h3 {
+      font-family: $font-serif-bold;
+      font-size: 18px;
+      line-height: 32px;
+      color: $grey03;
+      margin: 20px 0 10px 0;
+    }
+
+    a {
+      display: block;
+      width: 100%;
+      color: $color-white;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      line-height: 18px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .gen-col--height {
+      transition: background-color 0.25s ease;
+      height: 100px;
+      margin-bottom: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.yellow {
+        background: $yellow01;
+      }
+
+      &.yellow:hover {
+        background-color: $yellow02;
+      }
+
+      &.blue {
+        background: $blue03;
+      }
+
+      &.blue:hover {
+        background-color: $blue02;
+      }
+    }
+
+    &:first-of-type {
+      margin-right: 9%;
+    }
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .c-student-program-are-you {
+    .gen-wrapper {
+      grid-gap: 52px;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 36px;
+
+      .gen-col--height {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

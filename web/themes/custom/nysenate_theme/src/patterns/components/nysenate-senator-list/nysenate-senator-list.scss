@@ -17,6 +17,10 @@
 			pointer-events: none;
 			cursor: pointer;
 		}
+
+		select {
+			margin-bottom: 16px;
+		}
 	}
 
 	.view-filters {
@@ -37,6 +41,8 @@
 }
 
 .c-senator-block {
+	display: flex;
+	align-items: center;
 	background-color: $greyLight;
 	overflow: hidden;
 	margin-bottom: 20px;
@@ -73,6 +79,7 @@
 		color: $grey03;
 		margin-right: 0.5em;
 		text-transform: uppercase;
+		font-family: $font-sans-bold;
 	}
 
 	.c-position {
@@ -171,6 +178,7 @@
 	}
 
 	.c-senator-block {
+		flex-direction: column;
 		float: left;
 		width: 20%;
 		margin: 0 2.5% 40px 2.5%;

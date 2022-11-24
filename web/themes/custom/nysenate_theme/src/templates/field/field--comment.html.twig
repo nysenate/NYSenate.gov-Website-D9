@@ -40,6 +40,8 @@
     label_display == 'visually_hidden' ? 'visually-hidden',
   ]
 %}
+{{ attach_library('nysenate_theme/comments') }}
+
 <section{{ attributes.addClass(classes) }}>
   {% if comments and not label_hidden %}
     {{ title_prefix }}
@@ -48,7 +50,7 @@
   {% endif %}
 
   {% if not comment_form %}
-    <div class='comment-alert'>
+    <div class='comment__alert'>
       <span>Comments for this thread are now closed.</span    >
     </div>
   {% endif %}

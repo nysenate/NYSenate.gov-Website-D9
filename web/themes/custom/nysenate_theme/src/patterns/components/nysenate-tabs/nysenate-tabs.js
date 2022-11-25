@@ -66,8 +66,14 @@
     toggleTabDropdown: function (e) {
       e.preventDefault();
 
-      var tab = $(this).parent('.c-tab');
-      var tabBar = $(this).parents('.l-tab-bar');
+      const tab = $(this).parent('.c-tab');
+      const tabBar = $(this).parents('.l-tab-bar');
+      const billVersion = tab.data('version').split('-');
+      const newUrl = tab.data('target');
+
+      if (billVersion && newUrl) {
+        history.pushState({}, 'NY State Senate Bill ' + billVersion[1], newUrl);
+      }
 
       if (tab.hasClass('active') && !tabBar.hasClass('open')) {
         tabBar.addClass('open');

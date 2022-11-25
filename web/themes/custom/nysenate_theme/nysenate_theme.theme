@@ -1640,7 +1640,7 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
   $parties = implode(', ', array_map(function ($item) {
     return $item['value'];
   }, $party));
-  $variables['party'] = t('@party @district <span>Senate District</span>',
+  $variables['party'] = t('@party <span>@district Senate District</span>',
     [
       '@party' => $parties ? '(' . $parties . ')' : '',
       '@district' => $district,

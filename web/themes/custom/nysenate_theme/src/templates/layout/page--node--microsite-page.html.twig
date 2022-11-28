@@ -53,7 +53,7 @@
   ]
 %}
 
-<div class="layout-container page {{ theme }} {% if not is_active %} inactive-pallette {% endif %}">
+<div class="layout-container page {{ theme }} {% if not is_active %} inactive-pallette{% endif %}{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}">
 
   {%
     embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {

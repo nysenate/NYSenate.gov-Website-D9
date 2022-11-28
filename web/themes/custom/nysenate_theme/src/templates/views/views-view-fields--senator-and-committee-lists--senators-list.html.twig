@@ -38,7 +38,7 @@
       <h4 class="nys-senator--name">{{ fields.field_senator_name_2.content|render|striptags }}</h4>
       <span class="nys-senator--district">
         <span class="nys-senator--party">
-          {% if not fields.field_party_1.content is empty %}
+          {% if not fields.field_party_1.content|render|striptags|trim is empty %}
             ({{ fields.field_party_1.content|render|striptags|trim }})
           {% endif %}
         </span>

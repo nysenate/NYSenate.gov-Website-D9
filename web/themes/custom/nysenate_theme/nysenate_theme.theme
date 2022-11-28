@@ -1318,9 +1318,17 @@ function nysenate_theme_preprocess_views_view__news_by_issue__news(&$variables) 
 /**
  * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
  */
+function nysenate_theme_preprocess_views_view__senator_and_committee_lists__senators_list(&$variables) {
+  // Remove filter label.
+  $variables['exposed']['senator_committee_filter']['#title_display'] = 'visually_hidden';
+  $variables['exposed']['field_party_value']['#title_display'] = 'visually_hidden';
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
 function nysenate_theme_preprocess_views_view__senator_and_committee_lists__committee_list(&$variables) {
   $view = $variables['view'];
-  $view_result = $view->result;
 
   $variables['committee']['title'] = $view->header['area_text_custom']->options['content'];
 
@@ -1362,6 +1370,13 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
       $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees';
       $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees__' . $variables['elements']['#view_mode'];
     }
+  }
+
+  if ($hook == 'views_view_fields') {
+    $view = $variables['view'];
+    $display_id = $view->getDisplay();
+    $display_id = $display_id->display['id'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $display_id;
   }
 }
 

@@ -30,6 +30,8 @@
  * @see template_preprocess_views_view()
  */
 #}
+{{ attach_library('nysenate_theme/nysenate-senator-list') }}
+
 {%
   set classes = [
     'view',
@@ -37,15 +39,21 @@
     'view-id-' ~ id,
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
-    'container',
+    'c-senators-container',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
+  {% if exposed %}
+    <div class="view-filters">
+      {{ exposed }}
+    </div>
+  {% endif %}
 
-  {% include '@nysenate_theme/nysenate-committee-detail/nysenate-committee-detail.twig' with {
-    title: committee['title'],
-    groups: committee['groups'],
-  }only
-  %}
-
+  {% if rows %}
+    {{ rows }}
+  {% elseif empty %}
+    <div class="view-empty">
+      {{ empty }}
+    </div>
+  {% endif %}
 </div>

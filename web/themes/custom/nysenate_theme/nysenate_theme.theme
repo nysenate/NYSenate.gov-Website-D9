@@ -2192,6 +2192,42 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
       $variables['signed_veto_status'] = '';
       break;
   }
+
+  // Bill display status.
+  $status_to_values = [
+    'INTRODUCED' => 'Introduced',
+    'IN_ASSEMBLY_COMM' => 'In Assembly Committee',
+    'IN_SENATE_COMM' => 'In Senate Committee',
+    'ASSEMBLY_FLOOR' => 'On Floor Calendar',
+    'SENATE_FLOOR' => 'On Floor Calendar',
+    'PASSED_ASSEMBLY' => 'Passed Assembly',
+    'PASSED_SENATE' => 'Passed Senate',
+    'DELIVERED_TO_GOV' => 'Delivered to Governor',
+    'SIGNED_BY_GOV' => 'Signed by Governor',
+    'VETOED' => 'Vetoed by Governor',
+    'STRICKEN' => 'Stricken',
+    'LOST' => 'Lost',
+    'SUBSTITUTED' => 'Substituted',
+    'ADOPTED' => 'Adopted',
+  ];
+
+  $current_status_name = $node->field_ol_last_status->value;
+  $current_status = $status_to_values[$current_status_name];
+
+  $committee = $node->field_ol_latest_status_committee[0]->value;
+  $chamber = $node->field_ol_chamber[0]->value;
+
+  if (
+    ($current_status_name == 'PASSED_ASSEMBLY' && $chamber == 'senate') ||
+    ($current_status_name == 'PASSED_SENATE' && $chamber == 'assembly')
+  ) {
+    $current_status = 'Passed Senate &amp; Assembly';
+  }
+
+  $variables['status_display'] = $current_status;
+  $variables['committee'] = $committee;
+  $variables['committee_link'] = '/committees/' .
+    strtolower(str_replace([',', ' '], ['', '-'], $committee));
 }
 
 /**

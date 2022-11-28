@@ -60,7 +60,7 @@ class SageApi {
    * @param \Drupal\nys_sage\Sage\Request $request
    *   The response to cache.
    */
-  public static function setCachedRequest(string $cid, Request $request) {
+  public static function setCachedRequest(string $cid, Request $request): void {
     static::$cachedRequests[$cid] = $request;
   }
 
@@ -129,9 +129,26 @@ class SageApi {
   }
 
   /**
+   * Wrapper to call for a district assignment.
+   *
+   * @param array $params
+   *   An array of address parts, per SAGE API.
+   *
+   * @return string|null
+   *   The district number, or NULL on missing/error.
+   *
+   * @see http://sage.nysenate.gov:8080/docs/html/index.html
+   */
+  public function districtAssign(array $params): ?string {
+    // @todo Validate params, verify requirements, etc.
+    $response = $this->call('district', 'assign', $params);
+    return $response->districts->senate->district ?? NULL;
+  }
+
+  /**
    * Setter for the current request.
    */
-  public function setRequest(Request $request) {
+  public function setRequest(Request $request): void {
     $this->currentRequest = $request;
   }
 

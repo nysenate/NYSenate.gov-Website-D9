@@ -1,0 +1,5 @@
+services:
+  nys_registration.route_event_subscriber:
+    class: Drupal\nys_registration\EventSubscriber\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

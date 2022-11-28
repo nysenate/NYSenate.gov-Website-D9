@@ -23,10 +23,14 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 function nys_sunset_policy_theme() {
   return [
     'expiring_mail' => [
-      'render element' => 'elements',
+      'variables' => [
+        'message' => FALSE,
+      ],
     ],
     'expired_mail' => [
-      'render element' => 'elements',
+      'variables' => [
+        'message' => FALSE,
+      ],
     ],
   ];
 }
@@ -53,7 +57,6 @@ function nys_sunset_policy_cron() {
       foreach ($nids as $nid) {
         $item = new \stdClass();
         $item->nid = $nid;
-        $item->update = $update;
         $expired_queue->createItem($item);
       }
     }
@@ -128,19 +131,19 @@ function nys_sunset_policy_mail($key, &$message, $params) {
   switch ($key) {
     case 'expired_mail':
       $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = $params['title'];
+      $message['subject'] = $params['subject'];
       $body_data = [
         '#theme' => 'expired_mail',
-        '#message' => $params['message'],
+        '#message' => $params['body'],
       ];
       $message['body'][] = \Drupal::service('renderer')->render($body_data);
       break;
 
     case 'expiring_mail':
       $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = $params['title'];
+      $message['subject'] = $params['subject'];
       $body_data = [
-        '#theme' => 'expired_mail',
+        '#theme' => 'expiring_mail',
         '#message' => $params['message'],
       ];
       $message['body'][] = \Drupal::service('renderer')->render($body_data);

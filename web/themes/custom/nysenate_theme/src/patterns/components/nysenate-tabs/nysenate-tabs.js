@@ -72,7 +72,12 @@
       const newUrl = tab.data('target');
 
       if (billVersion && newUrl) {
+        const tabContent = tab.closest('.c-bill--amendment-details').parent().find('.tabs-content');
+
         history.pushState({}, 'NY State Senate Bill ' + billVersion[1], newUrl);
+
+        tabContent.find('.active').removeClass('active');
+        tabContent.find($(this).val()).addClass('active');
       }
 
       if (tab.hasClass('active') && !tabBar.hasClass('open')) {

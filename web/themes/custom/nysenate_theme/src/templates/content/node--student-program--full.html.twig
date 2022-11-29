@@ -10,7 +10,7 @@
       <div class="c-news--head-meta">
         <p class="c-news--pub-date">
           <span class="date-display-single">
-            {{ content.field_date[0]['#markup'] }}
+            {{ content.field_date[0]['#text'] }}
           </span>
         </p>
         {% if content.field_article_author[0] %}
@@ -37,9 +37,9 @@
       <div class="c-block c-block--img">
         {{ content.field_image_main[0] }}
 
-        {% if content.field_image_main_title[0] %}
+        {% if field_image_title %}
           <p class="c-img--caption">
-            {{ content.field_image_main_title[0] }}
+            {{ field_image_title }}
           </p>
         {% endif %}
       </div>
@@ -47,7 +47,7 @@
 
     {% if content.field_subtitle[0] %}
       <div class="c-news--subtitle">
-        {{ content.field_subtitle }}
+        {{ content.field_subtitle[0] }}
       </div>
     {% endif %}
 
@@ -55,9 +55,9 @@
       {{ content.body }}
     </div>
 
-    <div class="c-block">
-      {{ content.field_chapters }}
-    </div>
+    {% include '@nysenate_theme/nysenate-chapters/nysenate-chapters.twig' with {
+      chapters: chapters
+    } only %}
 
     {% if content.webform %}
       <div class="row">

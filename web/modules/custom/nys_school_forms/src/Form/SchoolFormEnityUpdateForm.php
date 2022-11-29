@@ -273,7 +273,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
     ];
     $offset = $num_per_page * $page;
     $num_results = 0;
-    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $sort_by, $order, $return_type = 'table');
+    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $sort_by, $order);
     $table_results = [];
     // Transform Results into Table.
     $i = 0;

@@ -14,7 +14,7 @@
         {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
         {% set is_active_tab = content.bill_wrapper.label() == title %}
 
-        <dd class="c-tab {{ is_active_tab ? 'active' : '' }}"  data-version="{{ title }}" data-target="node/{{ version is empty ? "original" : version }}">
+        <dd class="c-tab {{ is_active_tab ? 'active' : '' }}"  data-version="{{ title }}" data-target="/node/{{ amendment_id }}">
           <input class="c-tab-link form-radio" type="radio" name="{{ version is empty ? "Original" : version }}" value="#{{ version is empty ? "original" : version }}">
           <label class="c-tab-link" for="{{ version is empty ? "Original" : version }}">{{ version is empty ? "Original" : version }}
             {{ is_active_version ? " (Active) " : "" }}</label>
@@ -172,7 +172,7 @@
           <div id="sponsor-memo-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
-                
+
                 {{ read_more_parts.part_1 }}
               </pre>
               {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
@@ -210,7 +210,7 @@
           <div id="full-text-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
-              
+
               {{ read_more_parts.part_1 }}
               </pre>
               {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}

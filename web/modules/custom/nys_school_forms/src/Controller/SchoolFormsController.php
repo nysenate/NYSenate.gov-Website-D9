@@ -14,6 +14,8 @@ use Drupal\Core\Form\FormBuilder;
 use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\nys_school_forms\SchoolFormsService;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Route controller for School Form submissions.
@@ -91,6 +93,13 @@ class SchoolFormsController extends ControllerBase {
   protected $entityTypeManager;
 
   /**
+   * School Forms Service.
+   *
+   * @var \Drupal\nys_school_forms\SchoolFormsService
+   */
+  protected $schoolFormsService;
+
+  /**
    * Class constructor.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request
@@ -113,6 +122,8 @@ class SchoolFormsController extends ControllerBase {
    *   The StreamWrapperManager.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\nys_school_forms\SchoolFormsService $schoolFormsService
+   *   The School Forms Service.
    */
   public function __construct(
     RequestStack $request,
@@ -124,7 +135,8 @@ class SchoolFormsController extends ControllerBase {
     FormBuilder $form_builder,
     AliasManagerInterface $alias_manager,
     StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager) {
+    EntityTypeManager $entityTypeManager,
+    SchoolFormsService $schoolFormsService) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -135,6 +147,7 @@ class SchoolFormsController extends ControllerBase {
     $this->aliasManager = $alias_manager;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->entityTypeManager = $entityTypeManager;
+    $this->schoolFormsService = $schoolFormsService;
   }
 
   /**
@@ -151,7 +164,8 @@ class SchoolFormsController extends ControllerBase {
       $container->get('form_builder'),
       $container->get('path_alias.manager'),
       $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('nys_school_forms.school_forms')
     );
   }
 
@@ -172,9 +186,9 @@ class SchoolFormsController extends ControllerBase {
     $build = [];
     $build['#theme'] = 'school_forms';
 
-    $build["#search_form"] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($sort_by), urldecode($order));
-    $build["#entity_update_form"] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($sort_by), urldecode($order));
-
+    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($sort_by), urldecode($order));
+    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($sort_by), urldecode($order));
+    $build['#export_link'] = '/admin/school-forms2/export?senator=' . urldecode($senator) . '&form_type=' . urldecode($form_type) . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&sort_by=' . urldecode($sort_by) . '&order=' . urldecode($order);
     return $build;
   }
 
@@ -191,6 +205,60 @@ class SchoolFormsController extends ControllerBase {
     $query = trim($query);
     $filtered_query = filter_var($query, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     return $filtered_query ? $filtered_query : $query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function exportCsv() {
+    // Fetch, sanitize, and build the query from parameters.
+    $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
+    $form_type = $this->sanitizeQuery($this->request->getCurrentRequest()->get('form_type'));
+    $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
+    $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
+    $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
+    $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
+    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $sort_by, $order);
+    $handle = fopen('php://temp', 'w+');
+    fputcsv($handle, [
+      'Date submitted',
+      'Student\'s Name',
+      'Grade',
+      'Teacher',
+      'School Name',
+      'Street',
+      'City, State',
+      'Zip Code',
+      'School Phone',
+      'Senator',
+      'District Number',
+    ], ',');
+
+    foreach ($results as $result) {
+      $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
+      $line = [
+        date('F j, Y', $result['submission']->getCreatedTime()),
+        $result['student']['student_name'],
+        $result['submission']->getData()['grade'],
+        $result['submission']->getData()['contact_name'],
+        $result['school_node']->label(),
+        $school_address['address_line1'],
+        $school_address['locality'] . ',' . $school_address['administrative_area'],
+        $school_address['postal_code'],
+        $result['school_node']->get('field_school_ceo_phone')->getValue()[0]['value'],
+        $result['senator']->label(),
+        $result['school_node']->get('field_district')->entity->label(),
+      ];
+      fputcsv($handle, $line, ',');
+    }
+    rewind($handle);
+    $csv_data = stream_get_contents($handle);
+    fclose($handle);
+    $response = new Response();
+    $response->headers->set('Content-Type', 'text/csv');
+    $response->headers->set('Content-Disposition', 'attachment; filename="student-export.csv"');
+    $response->setContent($csv_data);
+    return $response;
   }
 
 }

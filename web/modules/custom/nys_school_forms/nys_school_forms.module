@@ -5,84 +5,6 @@
  * Custom functionality for the nys_school_forms module.
  */
 
-use Drupal\views\ViewExecutable;
-use Drupal\Core\Form\FormStateInterface;
-
-/**
- * Implements hook_views_post_execute().
- */
-function nys_school_forms_views_post_execute(ViewExecutable $view) {
-  // Rewrite the view results to make it look like each student submission.
-  if ($view->id() == 'school_forms') {
-    $new_result_array = [];
-    foreach ($view->result as $key => $result) {
-      // Check for the composite field.
-      /** @var \Drupal\webform\Entity\WebformSubmission $original_entity */
-      $original_entity = $result->_entity;
-      if (!empty($original_entity->getData()['attach_your_submission'])) {
-        $composite = $original_entity->getData()['attach_your_submission'];
-        $relationship_data = [];
-        foreach ($composite as $student) {
-          // Create a new result for each student.
-          $new_result = new $result();
-          $new_result->index = $result->index;
-          // Duplicate the entity so we can alter it.
-          $entity = $original_entity->createDuplicate();
-          $entity->setCompletedTime($original_entity->getCompletedTime());
-          $data = $original_entity->getData();
-          // Set the data for composite field to one student's data.
-          $data['attach_your_submission'] = [$student];
-          $entity->setData($data);
-          // Add the new entity to our new result.
-          $new_result->_entity = $entity;
-          $relationship_data = $result->_relationship_entities;
-          $relationship_data['webform_submission_reverse_reference__school_form__school_name'] = $entity;
-          $new_result->_relationship_entities = $relationship_data;
-          // Add the result to the updated results array.
-          // Add the student as the key for sorting.
-          $new_result_array[strtoupper($student['student_name'])] = $new_result;
-        }
-      }
-    }
-    // If sort by student name is used sort the array.
-    if (array_key_exists('sort_by', $view->getExposedInput()) && $view->getExposedInput()['sort_by'] == 'student_name') {
-      ksort($new_result_array, SORT_NATURAL);
-      $new_result_array = array_values($new_result_array);
-      if (array_key_exists('sort_order', $view->getExposedInput()) && $view->getExposedInput()['sort_order'] == 'DESC') {
-        // Reverse the array if sort is descending.
-        $view->result = array_reverse($new_result_array);
-      }
-      else {
-        $view->result = $new_result_array;
-      }
-    }
-    else {
-      // Replace view results with our computed ones.
-      $view->result = array_values($new_result_array);
-    }
-  }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function nys_school_forms_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $view = $form_state->getStorage();
-  if ($form_id == 'views_exposed_form' && $view['view']->id() == 'school_forms') {
-    // Update filters to use autocomplete.
-    $form['teacher_name'] = [
-      '#type' => 'textfield',
-      '#title' => t('Teacher Name'),
-      '#autocomplete_route_name' => 'nys_school_forms.autocomplete.teacher',
-    ];
-    $form['school'] = [
-      '#type' => 'textfield',
-      '#title' => t('School'),
-      '#autocomplete_route_name' => 'nys_school_forms.autocomplete.school',
-    ];
-  }
-}
-
 /**
  * Implements hook_theme().
  */
@@ -91,6 +13,7 @@ function nys_school_forms_theme() {
     'variables' => [
       'search_form' => NULL,
       'entity_update_form' => NULL,
+      'export_link' => NULL,
     ],
   ];
   return $theme;

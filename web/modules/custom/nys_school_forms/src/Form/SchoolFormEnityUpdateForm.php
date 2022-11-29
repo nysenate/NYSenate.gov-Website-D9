@@ -17,6 +17,12 @@ use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\File\FileUrlGenerator;
+use Drupal\file\FileInterface;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileSystem;
+use Drupal\file\FileRepository;
+use Drupal\nys_school_forms\SchoolFormsService;
 
 /**
  * Builds a Form for search school form submissions.
@@ -96,6 +102,34 @@ class SchoolFormEnityUpdateForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * School Forms Service.
+   *
+   * @var \Drupal\nys_school_forms\SchoolFormsService
+   */
+  protected $schoolFormsService;
+
+  /**
+   * File url generator service.
+   *
+   * @var \Drupal\Core\File\FileUrlGenerator
+   */
+  protected $fileUrlGenerator;
+
+  /**
+   * File system service.
+   *
+   * @var \Drupal\Core\File\FileSystem
+   */
+  protected $fileSystem;
+
+  /**
+   * File repository service.
+   *
+   * @var \Drupal\file\FileRepository
+   */
+  protected $fileRepository;
+
+  /**
    * Class constructor.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request
@@ -118,6 +152,14 @@ class SchoolFormEnityUpdateForm extends FormBase {
    *   The StreamWrapperManager.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\nys_school_forms\SchoolFormsService $schoolFormsService
+   *   The School Forms Service.
+   * @param \Drupal\Core\File\FileUrlGenerator $fileUrlGenerator
+   *   File url generator service.
+   * @param \Drupal\Core\File\FileSystem $fileSystem
+   *   File system service.
+   * @param \Drupal\file\FileRepository $fileRepository
+   *   File repository service.
    */
   public function __construct(
     RequestStack $request,
@@ -129,7 +171,11 @@ class SchoolFormEnityUpdateForm extends FormBase {
     FormBuilder $form_builder,
     AliasManagerInterface $alias_manager,
     StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager) {
+    EntityTypeManager $entityTypeManager,
+    SchoolFormsService $schoolFormsService,
+    FileUrlGenerator $fileUrlGenerator,
+    FileSystem $fileSystem,
+    FileRepository $fileRepository) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -140,6 +186,10 @@ class SchoolFormEnityUpdateForm extends FormBase {
     $this->aliasManager = $alias_manager;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->entityTypeManager = $entityTypeManager;
+    $this->schoolFormsService = $schoolFormsService;
+    $this->fileUrlGenerator = $fileUrlGenerator;
+    $this->fileSystem = $fileSystem;
+    $this->fileRepository = $fileRepository;
   }
 
   /**
@@ -156,7 +206,11 @@ class SchoolFormEnityUpdateForm extends FormBase {
       $container->get('form_builder'),
       $container->get('path_alias.manager'),
       $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('nys_school_forms.school_forms'),
+      $container->get('file_url_generator'),
+      $container->get('file_system'),
+      $container->get('file.repository')
     );
   }
 
@@ -171,14 +225,27 @@ class SchoolFormEnityUpdateForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $sort_by = NULL, string $order = NULL) {
-
-    $form['actions']['submit'] = [
+    $form['operations'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Operations'),
+      '#tree' => TRUE,
+    ];
+    $form['operations']['action_type'] = [
+      '#title' => $this->t('Operation'),
+      '#type' => 'select',
+      '#options' => [
+        '' => $this->t('- Choose an Operation -'),
+        'show_student' => $this->t('Show Student'),
+      ],
+      '#title_display' => FALSE,
+    ];
+    $form['operations']['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Execute'),
       '#name' => 'apply',
     ];
 
-    $form['table'] = $this->view();
+    $form['table'] = $this->getTable($senator, $form_type, $school, $teacher_name, $sort_by, $order);
     $form['pager'] = [
       '#type' => 'pager',
     ];
@@ -192,19 +259,11 @@ class SchoolFormEnityUpdateForm extends FormBase {
    * @return array
    *   The search form and search results build array.
    */
-  public function view() {
-    // Fetch, sanitize, and build the query from parameters.
-    $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
-    $form_type = $this->sanitizeQuery($this->request->getCurrentRequest()->get('form_type'));
-    $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
-    $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
-    $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
-    $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
-
+  public function getTable($senator, $form_type, $school, $teacher_name, $sort_by, $order) {
     // Initialize the pager.
     $page = $this->pagerParam->findPage();
     $num_per_page = 150;
-    $headers = [
+    $table_headers = [
       'school' => 'SCHOOL',
       'senator' => 'SENATOR',
       'contact_information' => 'CONTACT INFORMATION',
@@ -214,98 +273,62 @@ class SchoolFormEnityUpdateForm extends FormBase {
     ];
     $offset = $num_per_page * $page;
     $num_results = 0;
-    $results = [];
+    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $sort_by, $order, $return_type = 'table');
     $table_results = [];
-    $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
-    $query->condition('webform_id', 'school_form');
-    if ($sort_by == 'date') {
-      if ($order) {
-        $query->sort('completed', $order);
-      }
-      else {
-        $query->sort('completed', 'DESC');
-      }
-    }
-    $query_results = $query->execute();
-    foreach ($query_results as $query_result) {
-      $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
-      $parent_node = $submission->getSourceEntity();
-      if ($form_type && $form_type != $parent_node->get('field_school_form_type')->getValue()[0]['target_id']) {
-        continue;
-      }
-      $submission_data = $submission->getData();
-      $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);
-      if ($school && $school != $school_node->label()) {
-        continue;
-      }
-      $district = $school_node->get('field_district')->entity;
-      $school_senator = $district->get('field_senator')->entity;
-      if ($senator && $senator != $school_senator->id()) {
-        continue;
-      }
-      if ($teacher_name && $teacher_name != $submission_data['contact_name']) {
-        continue;
-      }
-
-      foreach ($submission_data['attach_your_submission'] as $student) {
-        $results[strtoupper($student['student_name'])] = [
-          'school' => $school_node->label(),
-          'school_node' => $school_node,
-          'senator' => $school_senator->label(),
-          'contact_information' => $submission_data['contact_name'],
-          'submission_data' => $submission_data,
-          'student' => $student,
-          'date_submitted' => "hello",
-          'school_form_type' => $parent_node->get('field_school_form_type')->entity->label(),
+    // Transform Results into Table.
+    $i = 0;
+    foreach ($results as $key => $result) {
+      if ($key >= $offset && $i < $num_per_page) {
+        $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
+        $school_name = $result['school_node']->label();
+        $file = $this->entityTypeManager->getStorage('file')->load($result['student']['student_submission']);
+        $file_uri = $file->getFileUri();
+        // Set show status based on file scheme.
+        $scheme = $this->streamWrapperManager->getScheme($file_uri);
+        if ($scheme == 'public') {
+          $show_status = 'yes';
+        }
+        else {
+          $show_status = 'no';
+        }
+        $file_url = $this->fileUrlGenerator->generateString($file_uri);
+        // Helper array to get submission type values.
+        $submission_types = [
+          0 => 'a work of art',
+          1 => 'an essay',
+          2 => 'a poem',
         ];
-      }
-      if ($sort_by == 'student') {
-        ksort($results, SORT_NATURAL);
-        $results = array_values($results);
-        if ($order == 'desc') {
-          // Reverse the array if sort is descending.
-          $results = array_reverse($results);
-        }
-      }
-      else {
-        $results = array_values($results);
-      }
-      // Transform Results into Table.
-      $i = 0;
-      foreach ($results as $key => $result) {
-        if ($key >= $offset && $i < $num_per_page) {
-          $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
-          $school_name = $result['school_node']->label();
-          $table_results[$result['student']['student_submission']] = [
-            'school' => new FormattableMarkup('@school_name <br> @street <br> @city, @state, @zipcode', [
-              '@school_name' => $school_name,
-              '@street' => $school_address['address_line1'],
-              '@city' => $school_address['locality'],
-              '@state' => $school_address['administrative_area'],
-              '@zipcode' => $school_address['postal_code'],
-            ]),
-            'senator' => $result['senator'],
-            'contact_information' => new FormattableMarkup('@contact_name <br> @contact_email', [
-              '@contact_name' => $result['submission_data']['contact_name'],
-              '@contact_email' => $result['submission_data']['contact_email'],
-            ]),
-            'submission' => new FormattableMarkup('@student_name <br> @type <br> @submission', [
-              '@student_name' => $result['student']['student_name'],
-              '@type' => $result['student']['submission_type'],
-              '@submission' => $result['student']['student_submission'],
-            ]),
-            'date_submitted' => "hello",
-            'school_form_type' => $result['school_form_type'],
-          ];
-          $i++;
-        }
+        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id() . '-' . $result['parent_node']->id()] = [
+          'school' => new FormattableMarkup('@school_name <br> @street <br> @city, @state, @zipcode', [
+            '@school_name' => $school_name,
+            '@street' => $school_address['address_line1'],
+            '@city' => $school_address['locality'],
+            '@state' => $school_address['administrative_area'],
+            '@zipcode' => $school_address['postal_code'],
+          ]),
+          'senator' => $result['senator']->label(),
+          'contact_information' => new FormattableMarkup('@contact_name <br> @contact_email', [
+            '@contact_name' => $result['submission']->getData()['contact_name'],
+            '@contact_email' => $result['submission']->getData()['contact_email'],
+          ]),
+          'submission' => new FormattableMarkup('<strong>@student_name</strong> <br> @type <br> <a href="@submission">@file_name</a> <br> Show status: @show_status', [
+            '@student_name' => $result['student']['student_name'],
+            '@type' => $submission_types[$result['student']['submission_type']],
+            '@submission' => $file_url,
+            '@file_name' => $file->getFilename(),
+            '@show_status' => $show_status,
+          ]),
+          'date_submitted' => date('F j, Y', $result['submission']->getCreatedTime()),
+          'school_form_type' => $result['parent_node']->get('field_school_form_type')->entity->label(),
+        ];
+        $i++;
       }
     }
     $num_results = count($results);
     $table = [
       '#type' => 'tableselect',
       '#title' => $this->t('Users'),
-      '#header' => $headers,
+      '#header' => $table_headers,
       '#options' => $table_results,
     ];
     $this->pagerManager->createPager($num_results, $num_per_page);
@@ -317,23 +340,30 @@ class SchoolFormEnityUpdateForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $operation = $form_state->getValue(['operations', 'action_type']);
+    if ($operation == 'show_student') {
+      $table = $form_state->getValue('table');
+      foreach ($table as $key => $value) {
+        if ($value) {
+          $parts = explode('-', $value);
+          $fid = $parts[0];
+          $sid = $parts[1];
+          $nid = $parts[2];
+          $file = $this->entityTypeManager->getStorage('file')->load($fid);
+          $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
+          $submission_timestamp = $submission->getCreatedTime();
+          $node = $this->entityTypeManager->getStorage('node')->load($nid);
+          if ($file instanceof FileInterface) {
+            $directory = 'public://' . $node->get('field_school_form_type')->entity->label() . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
+            $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+            $destination = $directory . $file->getFilename();
+            $this->fileRepository->move($file, $destination);
+          }
+        }
+      }
+    }
     $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
     $form_state->setRedirectUrl($url);
-  }
-
-  /**
-   * Sanitize query string.
-   *
-   * @param string $query
-   *   Raw query.
-   *
-   * @return string
-   *   Sanitized
-   */
-  protected function sanitizeQuery($query) {
-    $query = trim($query);
-    $filtered_query = filter_var($query, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    return $filtered_query ? $filtered_query : $query;
   }
 
 }

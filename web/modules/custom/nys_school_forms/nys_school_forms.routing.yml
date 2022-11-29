@@ -13,11 +13,20 @@ nys_school_forms.autocomplete.school:
   requirements:
     _permission: 'access content'
 nys_school_forms.school_forms:
-  path: '/admin/school-forms2'
+  path: '/admin/school-forms'
   defaults:
     _title: 'School Form Search'
     _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::view'
   requirements:
     _permission: 'access content'
   options:
-    no_cache: 'TRUE'
+    _admin_route: TRUE
+nys_school_forms.student_export:
+  path: "/admin/school-forms/export"
+  defaults:
+    _title: "Student Export"
+    _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::exportCsv'
+  requirements:
+    _permission: "access content"
+  options:
+    _admin_route: TRUE

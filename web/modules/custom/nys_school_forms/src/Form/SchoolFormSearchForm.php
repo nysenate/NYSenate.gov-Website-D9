@@ -174,7 +174,7 @@ class SchoolFormSearchForm extends FormBase {
     $senator_options = [];
     $senator_options[''] = '- Any -';
 
-    $senator_terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('senator');
+    $senator_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('senator');
     foreach ($senator_terms as $senator_term) {
       $senator_options[$senator_term->tid] = $senator_term->name;
     }
@@ -188,7 +188,7 @@ class SchoolFormSearchForm extends FormBase {
     $form_type_options = [];
     $form_type_options[''] = '- Any -';
 
-    $form_type_terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('school_form_type');
+    $form_type_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('school_form_type');
     foreach ($form_type_terms as $form_type_term) {
       $form_type_options[$form_type_term->tid] = $form_type_term->name;
     }
@@ -214,7 +214,7 @@ class SchoolFormSearchForm extends FormBase {
       '#title' => $this->t('Sort By'),
       '#type' => 'select',
       '#options' => [
-        'data' => $this->t('Sort by date submitted'),
+        'date' => $this->t('Sort by date submitted'),
         'student' => $this->t('Student Name'),
       ],
       '#default_value' => html_entity_decode($sort_by, ENT_QUOTES),
@@ -234,6 +234,8 @@ class SchoolFormSearchForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
       '#name' => 'apply',
+      '#prefix' => '<div data-drupal-selector="edit-actions" class="form-actions">',
+      '#suffix' => '</div>',
     ];
     $form['#suffix'] = '</div>';
 

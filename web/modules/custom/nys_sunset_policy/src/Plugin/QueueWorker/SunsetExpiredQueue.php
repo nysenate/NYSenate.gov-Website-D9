@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 * @QueueWorker(
 *   id = "nys_sunset_expired_queue",
 *   title = @Translation("Sunset Policy Expired Queue"),
-*   cron = {"time" = 5}
+*   cron = {"time" = 60}
 * )
 */
 final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
@@ -57,29 +57,31 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
   public function processItem($data) {
     $node = $this->nodeStorage->load($data->nid);
     $host = \Drupal::request()->getHost();
+    $params['message']['expired'] = date('l M jS Y', strtotime($node->field_expiration_date->getValue()[0]['value']));
     $params['message']['alias'] = $host . $node->toUrl()->toString();
     $params['message']['url'] = $host . '/node/' . $data->nid;
     $params['message']['title'] = $node->getTitle();
-    $subject = "Content will expire soon - " . $node->getTitle();
+    $subject = 'Content will expire soon - ' . $node->getTitle();
+    $params['title'] = $subject;
     $key = 'expired_mail';
     $module = 'nys_sunset_policy';
-    $expire_date = date('l M jS Y', strtotime($node->field_expiration_date->getValue()[0]['value']));
-    $subject = "This item is set to be unpublished from the New York Senate web site on " . $expire_date;
+    $params = ['subject' => $subject, 'body' => $params['message']];
     $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
     $senator_email = '';
     $langcode = \Drupal::currentUser()->getPreferredLangcode();
     foreach ($senator_terms as $senator_term) {
       $senator_email = $senator_term->get('field_email')->getValue()[0]['value'];
     }
-    $params['title'] = $subject;
-    $params = ['subject' => $subject, 'body' => $params['message']];
     $mailManager = \Drupal::service('plugin.manager.mail');
     try {
       $mailManager->mail($module, $key, $senator_email, $langcode, $params, NULL, TRUE);
+      $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
+      $node->setPublished(FALSE);
+      $node->save();
     }
     catch (\Throwable $e) {
       \Drupal::logger('nys_sunset_policy')
-        ->error('Unable to send expired mail for node' . $data->nid, ['message' => $e->getMessage()]);
+        ->error('Unable to send expired mail for node/' . $data->nid, ['message' => $e->getMessage()]);
     }
   }
 

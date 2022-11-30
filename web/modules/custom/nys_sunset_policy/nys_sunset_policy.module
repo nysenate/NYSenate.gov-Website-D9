@@ -2,20 +2,12 @@
 
 /**
  * @file
+ * Contains custom code for sunset policy.
  */
 
 use Drupal\node\NodeInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
-
-/**
- * @file
- */
-
-/**
- * @file
- * Contains custom code for sunset policy.
- */
 
 /**
  * Implements hook_theme().
@@ -63,7 +55,7 @@ function nys_sunset_policy_cron() {
   }
   catch (\Throwable $e) {
     \Drupal::logger('nys_sunset_policy')
-      ->error('Sunset policy queues not created.', ['message' => $e->getMessage()]);
+      ->error('Sunset policy queues not created.' . $nids, ['message' => $e->getMessage()]);
   }
 }
 
@@ -82,12 +74,19 @@ function nys_sunset_policy_get_expired() {
     ->condition('field_expiration_date', $date, '<=')
     ->execute();
   $node_ids = [];
-  if (isset($results)) {
+  if (!empty($results)) {
     foreach ($results as $nid) {
       /** @var \Drupal\node\Entity\NodeInterface */
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
       if ($node->field_last_notified->getValue() < $node->field_expiration_date->getValue()) {
-        $node_ids[] = $nid;
+        $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
+        $senator_active = [];
+        foreach ($senator_terms as $senator_term) {
+          $senator_active[] = $senator_term->get('field_active_senator')->getValue()[0]['value'];
+        }
+        if (in_array(FALSE, $senator_active, TRUE) === FALSE) {
+          $node_ids[] = $nid;
+        }
       }
     }
   }
@@ -109,15 +108,22 @@ function nys_sunset_policy_get_expiring() {
     ->condition('type', ['petition', 'questionnaire'], 'IN')
     ->condition('status', NodeInterface::PUBLISHED)
     ->condition('field_expiration_date', $date, '>=')
-    // ->condition('field_expiration_date', $future, '<=')
+    ->condition('field_expiration_date', $future, '<=')
     ->execute();
   $node_ids = [];
-  if (isset($results)) {
+  if (!empty($results)) {
     foreach ($results as $nid) {
       /** @var \Drupal\node\Entity\NodeInterface */
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
       if (strtotime('+2 days', $node->field_last_notified->getValue()) < $node->field_expiration_date->getValue()) {
-        $node_ids[] = $nid;
+        $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
+        $senator_active = [];
+        foreach ($senator_terms as $senator_term) {
+          $senator_active[] = $senator_term->get('field_active_senator')->getValue()[0]['value'];
+        }
+        if (in_array(FALSE, $senator_active, TRUE) === FALSE) {
+          $node_ids[] = $nid;
+        }
       }
     }
   }

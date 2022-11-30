@@ -6,6 +6,7 @@
  * Available variables:
  * - message: 'message.alias'.
  * - message: 'message.title'.
+ * - message: 'message.url'.
  *
  * @see nys_sunset_policy_mail()
  */
@@ -14,6 +15,7 @@
 Hello,
 
 This item has been unpublished from the New York Senate web site:
+
 
 {{ message.title|raw }} {{ message.alias }}
 

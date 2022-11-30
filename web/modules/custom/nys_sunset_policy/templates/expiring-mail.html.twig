@@ -4,8 +4,10 @@
  * Default theme implementation to present an expiring email for sunset policy.
  *
  * Available variables:
- * - title: 'content.title'.
- * - url: content url.
+ * - message: 'message.alias'.
+ * - message: 'message.title'.
+ * - message: 'message.url'.
+ * - message: 'message.expiring'.
  *
  * @see nys_sunset_policy_mail()
  */
@@ -13,13 +15,13 @@
 
 Hello,
 
-This item is set to be unpublished from the New York Senate web site on [expire date]
+This item is set to be unpublished from the New York Senate web site on {{ message.expiring }}
 
-[Node title] [Node url]
+{{ message.title|raw }} {{ message.alias }}
 
 You may edit the content to change the expiration date and keep it published
 
-[Node url]/edit
+{{ message.url }}/edit
 
 Thank you,
 

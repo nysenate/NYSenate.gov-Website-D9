@@ -1,11 +1,13 @@
 {{ attach_library('nysenate_theme/featured-legislation') }}
 
 <section class="c-legislation">
-  <div class="c-container--header__top-border">
-    <h3 class="c-container--title">Featured Legislation</h3>
-  </div>
+  {% if title %}
+    <div class="c-container--header__top-border">
+      <h3 class="c-container--title">{{ title }}</h3>
+    </div>
+  {% endif %}
 
-  <div class="c-block c-block-legislation c-block-legislation-featured featured-legislation">
+  <div class="c-block c-block-legislation c-block-legislation-featured featured-legislation{% if identifier %} {{ identifier }} {% endif %}">
     <button class="js-leg-toggle c-block--btn c-block--btn-toggle">close</button>
     <div class="c-social">
       <ul class="c-social--list">
@@ -29,8 +31,10 @@
           {{ quote }}
         </p>
         <span class="c-pullquote--citation icon-before__minus u-quote--has-img">
-          senator 
-          {{ senator_name }}>
+          Senator
+          <a href="{{ senator_link }}">
+            {{ senator_name }}
+          </a>
         </span>
 
         <div class="c-legislation--sponsor">

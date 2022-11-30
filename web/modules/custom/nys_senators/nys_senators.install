@@ -325,3 +325,13 @@ function nys_senators_update_9012() {
     }
   }
 }
+
+/**
+ * Remove the promotional_banner block content type.
+ */
+function nys_senators_update_9013() {
+  $promotional_banner = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties(['type' => 'promotional_banner']);
+  foreach ($promotional_banner as $item) {
+    $item->delete();
+  }
+}

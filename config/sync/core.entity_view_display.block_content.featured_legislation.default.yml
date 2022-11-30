@@ -1,0 +1,26 @@
+uuid: 4b806940-7e6e-46df-8aa2-7e1635697803
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_legislation
+    - field.field.block_content.featured_legislation.field_featured_legislation
+  module:
+    - entity_reference_revisions
+id: block_content.featured_legislation.default
+targetEntityType: block_content
+bundle: featured_legislation
+mode: default
+content:
+  field_featured_legislation:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

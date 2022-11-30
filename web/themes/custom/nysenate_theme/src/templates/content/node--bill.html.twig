@@ -9,7 +9,8 @@
 <!-- BILL TEMPLATE -->
 <div class="{{ classes|join(' ') }}" {{ attributes }}>
   <div class="node node-bill node-promoted view-mode-full clearfix">
-    <div class="c-block c-detail--header c-detail--header__bill">
+    <div
+      class="c-block c-detail--header c-detail--header__bill">
       <!-- Bill Title -->
       <div class="c-bill--heading-block">
         <h2 class="nys-title c-bill-title">
@@ -17,7 +18,7 @@
           Bill
           {{ label }}
         </h2>
-        <span class="c-bill--flag">{{ content.field_ol_last_status[0]['#markup'] }}</span>
+        {{ signed_veto_status|raw }}
         <div class="clearfix"></div>
         <div class="c-bill--session-year">
           {{ legislative_session|raw }}
@@ -77,36 +78,46 @@
     </div>
 
     <div class="more_constituent_analytics">
-      <dl style="margin-bottom:0" class="c-block c-detail--actions accordion" data-accordion>
-        <dd class="accordion-navigation">
-          <a href="#accordion" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide additional analytics" data-closed-text="view more analytics">
-            view more constituent analytics
-          </a>
-          <div id="accordion" class="content">
+      <article class="nysenate-accordion">
+        <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-analytics" aria-expanded="false" id="nysenate-accordion__toggle-1-analytics" aria-selected="false">
+          <span class="nysenate-accordion__heading">
+            <span class="indicator">View
+            </span>
+            more constituent analytics
+          </span>
+          {{ icons.get('accordion__arrow'|lower) }}
+        </button>
+          <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-analytics" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-analytics">
             {{ looker_extended_iframe }}
           </div>
-        </dd>
-      </dl>
+      </article>
     </div>
   {% endif %}
 
   <!-- Bill Status -->
 
+
   <div class="c-block c-detail--status c-bill-section">
     <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
-      <span>
       {% if current_session_year == content.field_ol_session[0]['#markup'] %}
         Current
-        {% else %}
-          Archive: Last
+      {% else %}
+        Archive: Last
+      {% endif %}
+      Bill Status
+      {% if is_substituted %}
+        Via
+        {{ sub_bill_base_print_no }}
+      {% endif %}
+      -
+      <span>
+        {{ status_display }}
+        {% if status_display == 'In Senate Committee' and committee %}
+          <a class="committee-link" href="{{ committee_link }}">
+            {{ committee }}
+            Committee
+          </a>
         {% endif %}
-        Bill Status
-        {% if is_substituted %}
-          Via
-          {{ sub_bill_base_print_no }}
-        {% endif %}
-        -
-        {{ content.field_ol_latest_status_committee[0] }}
       </span>
     </h3>
     <!-- Bill Graph Output -->
@@ -132,24 +143,6 @@
       <li class="spacer"></li>
     </ul>
   </div>
-
-  <!-- Your Voice -->
-  {% if registration_form or content.vote_widget %}
-    <div class="c-block c-bill-section" id="your-voice">
-      <h3 class="c-detail--subhead c-detail--section-title">Your Voice</h3>
-    </div>
-    <!-- Bill Vote Widget -->
-    <div class="c-bill--vote-widget">
-      {{ content.vote_widget }}
-    </div>
-
-    <!-- Bill Message Form -->
-    <div class="c-bill--message-form clearfix">
-      {# todo: This variable comes from nys_bills custom module. #}
-      {# Need to confirm if we need to port this module. #}
-    {{ registration_form }}
-    </div>
-  {% endif %}
 
   <!-- Bill Actions -->
   <div class="c-block c-bill-section">
@@ -185,11 +178,24 @@
                     <tbody>
                       {% for versions, base_print_no in grouped_actions %}
                         {% for dates, version in base_print_no %}
-                          {% for key, items in version %}
+                          {% for key,items in version %}
                             <tr class="c-bill--actions-table--row">
                               <td class="c-bill--actions-table-col1">{{ key|date('M d, Y') }}</td>
                               <td class="c-bill--actions-table-col2">
-                                <span class="c-bill--action-line-senate">{{ items.0.text }}</span><br></td>
+                                {% for item in items %}
+                                  {% set text_class = 'c-bill--action-line-' ~ item.chamber|lower %}
+                                  {% if 'substituted by' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' substituted' %}
+                                  {% endif %}
+                                  {% if 'amended' in item.text|lower or 'print number' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' substituted' %}
+                                  {% endif %}
+                                  {% if 'stricken' in item.text|lower %}
+                                    {% set text_class = text_class ~ ' stricken' %}
+                                  {% endif %}
+                                  <span class="{{ text_class }}">{{ item.text }}</span><br>
+                                {% endfor %}
+                              </td>
                             </tr>
                           {% endfor %}
                         {% endfor %}

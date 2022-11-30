@@ -6,6 +6,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Collects "helper" functions for Senator entities.
@@ -136,6 +138,62 @@ class SenatorsHelper {
       $ret = [];
     }
     return current($ret) ?: NULL;
+  }
+
+  /**
+   * Get the Senator Sponsors of node.
+   */
+  public function getSenatorSponsors($node, $parent_type = NULL) {
+    $variables = [];
+    $senator = $node->field_ol_sponsor->entity;
+    if (!empty($senator)) {
+      $variables['ol_sponsor'] = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($senator, 'sponsor_list');
+    }
+
+    // Sponsor name.
+    if (!empty($node->field_ol_sponsor_name->value) && $parent_type !== 'bill_default') {
+      $variables['ol_sponsor_name'] = $node->field_ol_sponsor_name->value;
+    }
+
+    // Additional sponsor.
+    if (!empty($ol_add_sponsors = $node->field_ol_add_sponsors->referencedEntities())) {
+      $ol_add_sponsors = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($ol_add_sponsors, 'sponsor_list');
+      $variables['ol_add_sponsors'] = $ol_add_sponsors;
+    }
+
+    // Additional Sponsor Names.
+    if (!empty($node->field_ol_add_sponsor_names->value)) {
+      $sponsor_names = [];
+      $ol_add_sponsor_names = json_decode($node->field_ol_add_sponsor_names->value);
+      foreach ($ol_add_sponsor_names as $key => $sponsor) {
+        $sponsor_names[] = $sponsor->fullName;
+      }
+
+      $variables['sponsor_names'] = implode(', ', $sponsor_names);
+    }
+    return $variables;
+  }
+
+  /**
+   * Validates that the senator has an Inactive microsite page.
+   *
+   * @param array $nodes
+   *   The microsites nodes.
+   *
+   * @return bool
+   *   Returns TRUE if it has an Inactive microsite page.
+   */
+  public function hasMicroSiteInactive(array $nodes) {
+    foreach ($nodes as $node) {
+      if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+        $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
+        $micrositeTerm = Term::load($tid);
+        if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
 }

@@ -1,0 +1,76 @@
+uuid: c589440a-eb8f-4807-aa58-da2b05472bab
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_legislation
+    - field.storage.block_content.field_featured_legislation
+    - paragraphs.paragraphs_type.featured_legislation
+  module:
+    - entity_reference_revisions
+id: block_content.featured_legislation.field_featured_legislation
+field_name: field_featured_legislation
+entity_type: block_content
+bundle: featured_legislation
+label: 'Featured Legislation'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      featured_legislation: featured_legislation
+    negate: 0
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 17
+        enabled: false
+      agenda_bills:
+        weight: 18
+        enabled: false
+      calendar:
+        weight: 19
+        enabled: false
+      card:
+        weight: 20
+        enabled: false
+      carousel:
+        weight: 21
+        enabled: false
+      committee_featured_legislation:
+        weight: 22
+        enabled: false
+      featured_legislation:
+        weight: 23
+        enabled: true
+      gallery_item:
+        weight: 24
+        enabled: false
+      members:
+        weight: 25
+        enabled: false
+      misc_legislative_group_members:
+        weight: 26
+        enabled: false
+      office_contacts:
+        weight: 27
+        enabled: false
+      office_locations:
+        weight: 28
+        enabled: false
+      quick_facts:
+        weight: 29
+        enabled: false
+      quote:
+        weight: 30
+        enabled: false
+      slider_item:
+        weight: 31
+        enabled: false
+      votes:
+        weight: 32
+        enabled: false
+field_type: entity_reference_revisions

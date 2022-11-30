@@ -251,8 +251,25 @@
   }
 }
 
-.nav-open .c-nav--wrap {
-  top: 60px;
+// nav-open - class added to body through js
+.nav-open {
+	max-height: 100vh;
+	overflow: hidden;
+
+  .c-nav--wrap {
+    top: 60px;
+  }
+
+	.c-nav--toggle {
+		position: absolute;
+		height: 40px;
+		width: 40px;
+		@extend .icon-replace__x;
+
+		&:after {
+			font-size: 24px;
+		}
+	}
 }
 
 // class added to .c-nav--wrap through js
@@ -276,6 +293,18 @@
 }
 
 @include breakpoint($bp-sm) {
+  // make sure not to ruin scroll
+	// on tablet and above
+	.nav-open {
+		height: auto;
+		overflow: scroll;
+
+		// and make sure the buttons doesn't show
+		.c-nav--toggle {
+			display: none;
+		}
+	}
+
   .c-nav--wrap {
     position: relative;
     top: 0;
@@ -661,7 +690,7 @@ nav ul.c-nav--list {
   .c-header--btn {
     &.c-header--btn__primary,
     &.c-header--btn__taking_action {
-      &:after {
+      &::after {
         background: $gen_blue_lgt;
       }
     }
@@ -684,6 +713,19 @@ nav ul.c-nav--list {
         }
       }
     }
+  }
+
+  .block-content--type-senator-microsite-menu {
+    .block-content__content {
+      display: none;
+    }
+  }
+}
+
+.hero--senator-collapsed {
+
+  #js-sticky {
+    visibility: hidden;
   }
 }
 

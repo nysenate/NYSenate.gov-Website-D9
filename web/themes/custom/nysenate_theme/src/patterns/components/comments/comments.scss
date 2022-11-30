@@ -93,6 +93,34 @@
       min-height: 130px;
     }
   }
+
+  &__alert {
+    max-width: 1500px;
+    background-color: $grey06;
+    letter-spacing: 0em;
+    line-height: 26px;
+    color: $grey02;
+    border: 0;
+    padding: 30px;
+    text-transform: none;
+    color: $grey02;
+    font-size: 16px;
+    font-family: $font-serif;
+    margin: 20px 0 20px 0;
+
+    &::before {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0;
+      font-size: 24px;
+      color: $blue01;
+      background-color: $grey06;
+  
+      @include breakpoint($bp-md) {
+        font-size: 46px;
+      }
+    }
+  }
 }
 
 .comment-wrapper {

@@ -300,6 +300,18 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $variables['senator_headshot'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'thumbnail');
   }
 
+  if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+    $term = $node->field_microsite_page_type->entity ?? [];
+    if ($term instanceof TermInterface) {
+      $name = $term->name->value ?? '';
+      $micrositeType = [
+        'Landing',
+        'Inactive',
+      ];
+      $variables['is_senator_landing'] = in_array($name, $micrositeType) ? TRUE : FALSE;
+    }
+  }
+
   $microsite_home = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
     'type' => 'microsite_page',
     // Landing page.
@@ -1624,6 +1636,18 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     }
   }
 
+  if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+    $term = $node->field_microsite_page_type->entity ?? [];
+    if ($term instanceof TermInterface) {
+      $name = $term->name->value ?? '';
+      $micrositeType = [
+        'Landing',
+        'Inactive',
+      ];
+      $variables['is_senator_landing'] = in_array($name, $micrositeType) ? TRUE : FALSE;
+    }
+  }
+
   // Override the main content.
   // Display the microsite node with altered contents.
   $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()->getViewBuilder('node')
@@ -1640,7 +1664,7 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
   $parties = implode(', ', array_map(function ($item) {
     return $item['value'];
   }, $party));
-  $variables['party'] = t('@party @district <span>Senate District</span>',
+  $variables['party'] = t('@party <span>@district Senate District</span>',
     [
       '@party' => $parties ? '(' . $parties . ')' : '',
       '@district' => $district,
@@ -2120,6 +2144,42 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
       $variables['signed_veto_status'] = '';
       break;
   }
+
+  // Bill display status.
+  $status_to_values = [
+    'INTRODUCED' => 'Introduced',
+    'IN_ASSEMBLY_COMM' => 'In Assembly Committee',
+    'IN_SENATE_COMM' => 'In Senate Committee',
+    'ASSEMBLY_FLOOR' => 'On Floor Calendar',
+    'SENATE_FLOOR' => 'On Floor Calendar',
+    'PASSED_ASSEMBLY' => 'Passed Assembly',
+    'PASSED_SENATE' => 'Passed Senate',
+    'DELIVERED_TO_GOV' => 'Delivered to Governor',
+    'SIGNED_BY_GOV' => 'Signed by Governor',
+    'VETOED' => 'Vetoed by Governor',
+    'STRICKEN' => 'Stricken',
+    'LOST' => 'Lost',
+    'SUBSTITUTED' => 'Substituted',
+    'ADOPTED' => 'Adopted',
+  ];
+
+  $current_status_name = $node->field_ol_last_status->value;
+  $current_status = $status_to_values[$current_status_name];
+
+  $committee = isset($node->field_ol_latest_status_committee[0]) ? $node->field_ol_latest_status_committee[0]->value : '';
+  $chamber = $node->field_ol_chamber[0]->value;
+
+  if (
+    ($current_status_name == 'PASSED_ASSEMBLY' && $chamber == 'senate') ||
+    ($current_status_name == 'PASSED_SENATE' && $chamber == 'assembly')
+  ) {
+    $current_status = 'Passed Senate & Assembly';
+  }
+
+  $variables['status_display'] = $current_status;
+  $variables['committee'] = $committee;
+  $variables['committee_link'] = '/committees/' .
+    strtolower(str_replace([',', ' '], ['', '-'], $committee));
 }
 
 /**
@@ -2816,13 +2876,18 @@ function nysenate_theme_preprocess_node__event__featured_content(&$variables) {
  */
 function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$variables) {
   $variables['banner_image'] = !empty($variables['content']['field_promotional_banner_image'][0]) ? $variables['content']['field_promotional_banner_image'][0] : [];
-  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
-    $banner_cta_value = $variables['node']->field_call_to_action->value;
-    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+  $node = $variables['node'];
+  if ($node->hasField('field_call_to_action') && !$node->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $node->field_call_to_action->value;
+    $allowed_values = $node->field_call_to_action->getSetting('allowed_values');
 
-    $url = $variables['node']->field_link->uri;
-    if ($variables['node']->field_link_type->value === 'internal') {
+    $url = $node->field_link->uri;
+    if ($node->field_link_type->value === 'internal') {
       $url = $variables['url'];
+      if (!$node->field_promotional_content->isEmpty()) {
+        $promo_content = $node->field_promotional_content->entity;
+        $url = $promo_content->toUrl()->toString();
+      }
     }
     $variables['item_cta'] = [
       'url' => $url,
@@ -2975,13 +3040,18 @@ function nysenate_theme_preprocess_page(&$variables) {
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {
-  if ($variables['node']->hasField('field_call_to_action') && !$variables['node']->field_call_to_action->isEmpty()) {
-    $banner_cta_value = $variables['node']->field_call_to_action->value;
-    $allowed_values = $variables['node']->field_call_to_action->getSetting('allowed_values');
+  $node = $variables['node'];
+  if ($node->hasField('field_call_to_action') && !$node->field_call_to_action->isEmpty()) {
+    $banner_cta_value = $node->field_call_to_action->value;
+    $allowed_values = $node->field_call_to_action->getSetting('allowed_values');
 
-    $url = $variables['node']->field_link->uri;
-    if ($variables['node']->field_link_type->value === 'internal') {
+    $url = $node->field_link->uri;
+    if ($node->field_link_type->value === 'internal') {
       $url = $variables['url'];
+      if (!$node->field_promotional_content->isEmpty()) {
+        $promo_content = $node->field_promotional_content->entity;
+        $url = $promo_content->toUrl()->toString();
+      }
     }
     $variables['item_cta'] = [
       'url' => $url,

@@ -20,6 +20,10 @@
   border-bottom: 1px solid $color-alto;
   padding-bottom: 8px;
   width: 100%;
+
+  a {
+    color: $color-nys-blue;
+  }
 }
 
 .c-bill--heading-block > .nys-title.c-bill-title {
@@ -123,7 +127,7 @@ h4.c-bill-topic {
       height: auto;
       padding: 0;
 
-      .closer:after {
+      .closer::after {
         margin-left: 10px;
       }
     }
@@ -207,6 +211,17 @@ h4.c-bill-topic {
 
   @include breakpoint($bp-sm) {
     margin-bottom: 30px;
+  }
+}
+
+.c-block .c-detail--summary {
+  @include breakpoint($bp-sm) {
+    margin-bottom: 0;
+  }
+
+  & p {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -644,7 +659,7 @@ th.c-bill--actions-table-header strong {
 
     .nys-bill-vote {
       .bill-vote-message-prompt {
-        .closer:after {
+        .closer::after {
           margin-left: 10px;
         }
       }

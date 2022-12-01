@@ -59,11 +59,6 @@ body {
   @include font-stack-secondary;
   margin: 0;
   color: $grey10;
-
-  &.nav-open {
-    position: fixed;
-    overflow: hidden;
-  }
 }
 
 // Render the `main` element consistently in IE.
@@ -82,6 +77,8 @@ hr {
 pre {
   font-family: monospace, monospace;
   font-size: 1em;
+  margin: 0;
+  white-space: pre-line;
 }
 
 // Text-level semantics.
@@ -412,6 +409,10 @@ label {
   }
 }
 
+.node--unpublished {
+  background-color: unset !important;
+}
+
 .u-mobile-only {
   display: block;
 }
@@ -528,9 +529,22 @@ label {
   }
 }
 
+.c-block .c-view--link {
+  @extend .icon-before__presskit;
+	@extend .lgt-text;
+	margin: 0 0 20px;
+	text-transform: uppercase;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	&::before {
+		margin-top: -3px;
+		font-size: 20px;
+	}	
+}
+
 .c-detail--subhead {
   margin: 0 0 10px;
-  color: $grey02;
+  color: $grey08;
   font-family: $font-sans;
   font-weight: $font-weight-normal;
   font-size: 14px;

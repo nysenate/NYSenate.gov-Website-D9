@@ -3204,6 +3204,62 @@ function nysenate_theme_preprocess_node__student_program(&$variables) {
 
   }
   $variables['chapters'] = $chapters;
+
+  // Get Student Programs Block.
+  /** @var \Drupal\block\BlockViewBuilder $view_builder */
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block_content');
+  $student_programs = [];
+  $student_program_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Overview Text',
+    ]);
+
+  if (is_array($student_program_block)) {
+    $student_program_block = reset($student_program_block);
+  }
+
+  if (!empty($student_program_block)) {
+    $block_content = $view_builder->view($student_program_block);
+    $student_programs = $view_builder->build($block_content);
+    $variables['student_programs'] = $student_programs;
+  }
+
+  $program_links_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Program Links',
+    ]);
+
+  if (is_array($program_links_block)) {
+    $program_links_block = reset($program_links_block);
+  }
+
+  if (!empty($program_links_block)) {
+    $block_content = $view_builder->view($program_links_block);
+    $program_links = $view_builder->build($block_content);
+    $variables['program_links'] = $program_links;
+  }
+
+  // Get Contact Us Block.
+  $contact_us_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Contact Us',
+    ]);
+
+  if (is_array($contact_us_block)) {
+    $contact_us_block = reset($contact_us_block);
+  }
+
+  if (!empty($contact_us_block)) {
+    $block_content = $view_builder->view($contact_us_block);
+    $contact_us = $view_builder->build($block_content);
+    $variables['contact_us'] = $contact_us;
+  }
 }
 
 /**

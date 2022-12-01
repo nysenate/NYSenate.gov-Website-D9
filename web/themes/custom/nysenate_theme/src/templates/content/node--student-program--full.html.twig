@@ -1,4 +1,5 @@
 {{ attach_library('nysenate_theme/article-page') }}
+{{ attach_library('nysenate_theme/nysenate-student-programs') }}
 
 <article id="node-{{ node_id }}" class="{{ classes }}" {{ attributes }}>
   {{ title_prefix }}
@@ -55,9 +56,11 @@
       {{ content.body }}
     </div>
 
-    {% include '@nysenate_theme/nysenate-chapters/nysenate-chapters.twig' with {
-      chapters: chapters
-    } only %}
+    {% if chapters %}
+      {% include '@nysenate_theme/nysenate-chapters/nysenate-chapters.twig' with {
+        chapters: chapters
+      } only %}
+    {% endif %}
 
     {% if content.webform %}
       <div class="row">
@@ -70,5 +73,21 @@
       node_url: url,
       cta: cta
     } only %}
+
+    <div class="c-block">
+      {% if student_programs %}
+        {{ student_programs }}
+      {% endif %}
+
+      {% if program_links %}
+      {{ program_links }}
+      {% endif %}
+    </div>
+
+    {% if contact_us %}
+      <div class="c-block">
+        {{ contact_us }}
+      </div>
+    {% endif %}
   </div>
 </article>

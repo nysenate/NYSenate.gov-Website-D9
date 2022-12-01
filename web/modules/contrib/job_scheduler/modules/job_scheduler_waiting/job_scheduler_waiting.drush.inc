@@ -43,7 +43,7 @@ function job_scheduler_waiting_perform_job($name) {
   set_time_limit(0);
 
   while (TRUE) {
-    $timer = microtime(true);
+    $timer = microtime(TRUE);
 
     $scheduler = \Drupal::service('job_scheduler.manager');
     $results = $scheduler->perform($name);
@@ -53,7 +53,7 @@ function job_scheduler_waiting_perform_job($name) {
       $kernel->rebuildContainer();
     }
 
-    $timer = round(microtime(true) - $timer);
+    $timer = round(microtime(TRUE) - $timer);
     if ($timer < 1) {
       sleep(1);
     }

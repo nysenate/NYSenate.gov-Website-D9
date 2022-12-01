@@ -3,6 +3,7 @@
 namespace Drupal\Tests\search_api_page\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Provides web tests for Search API Pages.
@@ -29,33 +30,34 @@ class IntegrationTest extends FunctionalTestBase {
       'id' => 'search',
       'index' => $this->index->id(),
     ];
-    $this->drupalPostForm('admin/config/search/search-api-pages/add', $step1, 'Next');
+    $this->drupalGet('admin/config/search/search-api-pages/add');
+    $this->submitForm($step1, 'Next');
 
     // Test whether a leading slash leads to a form error.
     $step2 = [
       'path' => '/search',
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
     $assert_session->responseContains('The path should not contain leading or trailing slashes.');
 
     // Test whether a trailing slash leads to a form error.
     $step2 = [
       'path' => 'search/',
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
     $assert_session->responseContains('The path should not contain leading or trailing slashes.');
 
     // Test whether both a leading slash and a trailing slash leads to a form error.
     $step2 = [
       'path' => '/search/',
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
     $assert_session->responseContains('The path should not contain leading or trailing slashes.');
 
     $step2 = [
       'path' => 'search',
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
 
     $assert_session->responseNotContains('The path should not contain leading or trailing slashes.');
 
@@ -82,8 +84,9 @@ class IntegrationTest extends FunctionalTestBase {
     $assert_session->pageTextContains('Your search yielded no results.');
     $this->drupalGet('search');
     $assert_session->pageTextNotContains('Your search yielded no results.');
+    $this->drupalGet('admin/config/search/search-api-pages/search');
 
-    $this->drupalPostForm('admin/config/search/search-api-pages/search', ['show_all_when_no_keys' => TRUE, 'show_search_form' => FALSE], 'Save');
+    $this->submitForm(['show_all_when_no_keys' => TRUE, 'show_search_form' => FALSE], 'Save');
     $this->drupalGet('search');
     $assert_session->pageTextNotContains('Your search yielded no results.');
     $assert_session->responseNotContains('Enter the terms you wish to search for.');
@@ -91,18 +94,52 @@ class IntegrationTest extends FunctionalTestBase {
 
     $this->drupalGet('search/number10');
     $assert_session->pageTextContains('1 result found');
+    $this->drupalGet('admin/config/search/search-api-pages/search');
 
-    $this->drupalPostForm('admin/config/search/search-api-pages/search', ['show_search_form' => TRUE], 'Save');
+    $this->submitForm(['show_search_form' => TRUE], 'Save');
 
     $this->drupalGet('search/number11');
     $assert_session->pageTextContains('1 result found');
     $assert_session->responseContains('name="keys" value="number11"');
 
-    // Cache should be cleared after the save.
-    // @todo Make this work.
-    // $this->drupalGet('search/number10');
-    // $assert_session->pageTextContains('1 result found');
-    // $assert_session->responseContains('name="keys" value="number10"');.
+    $this->drupalGet('search/number10');
+    $assert_session->pageTextContains('1 result found');
+    $assert_session->responseContains('name="keys" value="number10"');
+  }
+
+  /**
+   * Tests cacheability metadata.
+   */
+  public function testCacheability() {
+    $assert_session = $this->assertSession();
+    $this->drupalLogin($this->adminUser);
+    $this->setupSearchAPI();
+    $this->setUpPage($this->index);
+
+    $this->drupalGet('/search');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->submitForm(['keys' => 'Owls'], 'Search');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->pageTextContains('9 results found');
+    $assert_session->pageTextNotContains('49 results found');
+    $this->submitForm(['keys' => 'birds'], 'Search');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->pageTextContains('9 results found');
+    $assert_session->pageTextNotContains('49 results found');
+    $this->submitForm(['keys' => 'Strigiformes'], 'Search');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->pageTextContains('9 results found');
+    $assert_session->pageTextNotContains('49 results found');
+
+    $node = Node::load(3);
+    $node->setTitle('More Owls #3');
+    $node->save();
+    $this->indexItems($this->index->id());
+
+    $this->submitForm(['keys' => 'Owls'], 'Search');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->pageTextContains('10 results found');
   }
 
   /**
@@ -111,18 +148,7 @@ class IntegrationTest extends FunctionalTestBase {
   public function testFramework() {
     $this->drupalLogin($this->adminUser);
     $this->setupSearchAPI();
-
-    $this->drupalGet('admin/config/search/search-api-pages');
-    $step1 = [
-      'label' => 'Search',
-      'id' => 'search',
-      'index' => $this->index->id(),
-    ];
-    $this->drupalPostForm('admin/config/search/search-api-pages/add', $step1, 'Next');
-    $step2 = [
-      'path' => 'search',
-    ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->setUpPage($this->index);
 
     $this->drupalGet('/search');
     $this->assertSession()->statusCodeEquals(200);
@@ -143,15 +169,15 @@ class IntegrationTest extends FunctionalTestBase {
     $this->drupalGet('/search');
     $assert_session->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['keys' => 'Owls'], 'Search');
+    $this->submitForm(['keys' => 'Owls'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('9 results found');
 
-    $this->drupalPostForm(NULL, ['keys' => 'birds of prey'], 'Search');
+    $this->submitForm(['keys' => 'birds of prey'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('9 results found');
 
-    $this->drupalPostForm(NULL, ['keys' => 'prey birds'], 'Search');
+    $this->submitForm(['keys' => 'prey birds'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('9 results found');
   }
@@ -164,11 +190,11 @@ class IntegrationTest extends FunctionalTestBase {
     $this->drupalGet('/search');
     $assert_session->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['keys' => 'Owls '], 'Search');
+    $this->submitForm(['keys' => 'Owls '], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('9 results found');
 
-    $this->drupalPostForm(NULL, ['keys' => ' Owls'], 'Search');
+    $this->submitForm(['keys' => ' Owls'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('9 results found');
   }
@@ -188,7 +214,7 @@ class IntegrationTest extends FunctionalTestBase {
     $this->drupalGet('/search');
     $assert_session->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['keys' => 'foo/bar'], 'Search');
+    $this->submitForm(['keys' => 'foo/bar'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('1 result found');
   }
@@ -209,7 +235,7 @@ class IntegrationTest extends FunctionalTestBase {
     $this->drupalGet('/search');
     $assert_session->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['keys' => 'Undefined'], 'Search');
+    $this->submitForm(['keys' => 'Undefined'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('1 result found');
   }

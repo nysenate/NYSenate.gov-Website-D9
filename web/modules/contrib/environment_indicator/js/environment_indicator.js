@@ -12,7 +12,7 @@
 
   Drupal.behaviors.environmentIndicatorToolbar = {
     attach: function (context, settings) {
-      if (typeof(settings.environmentIndicator) != 'undefined') {
+      if (typeof(settings.environmentIndicator) != 'undefined' && settings.environmentIndicator.alterToolbar === true) {
         const $body = $('body');
 
         // Only apply text and background color if not using gin_toolbar

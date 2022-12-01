@@ -6,6 +6,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Collects "helper" functions for Senator entities.
@@ -170,6 +172,28 @@ class SenatorsHelper {
       $variables['sponsor_names'] = implode(', ', $sponsor_names);
     }
     return $variables;
+  }
+
+  /**
+   * Validates that the senator has an Inactive microsite page.
+   *
+   * @param array $nodes
+   *   The microsites nodes.
+   *
+   * @return bool
+   *   Returns TRUE if it has an Inactive microsite page.
+   */
+  public function hasMicroSiteInactive(array $nodes) {
+    foreach ($nodes as $node) {
+      if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+        $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
+        $micrositeTerm = Term::load($tid);
+        if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
 }

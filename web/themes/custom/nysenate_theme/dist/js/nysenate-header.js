@@ -36,27 +36,52 @@
       }
 
       if (self.isSenatorLanding(origNav)) {
-        actionBar = nav.find('.c-senator-hero'); // place clone
+        actionBar = nav.find('.c-senator-hero');
 
-        nav.prependTo('.page').css({
-          'z-index': '14'
-        }).addClass('l-header__collapsed');
-        menu = nav.find('.c-nav--wrap');
-        headerBar = nav.find('.c-header-bar');
-        mobileNavToggle = nav.find('.js-mobile-nav--btn');
-        searchToggle = $('.js-search--toggle');
-        topbarDropdown = nav.find('.c-login--list'); // collapse / hide nav
+        if (self.isSenatorCollapsed()) {
+          $(document).ready(function () {
+            $('#senatorImage').html($('#smallShotImage').html());
+          }); // place origin Nav
 
-        menu.addClass('closed');
-        actionBar.addClass('hidden'); // set headerBar to collapsed state
+          nav.prependTo('.page').css({
+            'z-index': '100'
+          }).addClass('l-header__collapsed');
+          origNav.prependTo('.page').css({
+            'z-index': '100'
+          }).addClass('l-header__collapsed').css('visibility', 'hidden');
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list'); // bind scrolling
 
-        origNav.find('.c-header-bar').css('visibility', 'hidden'); // bind scrolling
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+            self.senatorLandingScroll(currentTop, previousTop, userScroll, origNav, menu, headerBar, nav, actionBar);
+            previousTop = $(document).scrollTop();
+          });
+        } else {
+          // place clone
+          nav.prependTo('.page').css({
+            'z-index': '14'
+          }).addClass('l-header__collapsed');
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list'); // collapse / hide nav
 
-        $(window).scroll(function () {
-          currentTop = $(this).scrollTop();
-          self.senatorLandingScroll(currentTop, previousTop, userScroll, origNav, menu, headerBar, nav, actionBar);
-          previousTop = $(document).scrollTop();
-        });
+          menu.addClass('closed');
+          actionBar.addClass('hidden'); // set headerBar to collapsed state
+
+          origNav.find('.c-header-bar').css('visibility', 'hidden'); // bind scrolling
+
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+            self.senatorLandingScroll(currentTop, previousTop, userScroll, origNav, menu, headerBar, nav, actionBar);
+            previousTop = $(document).scrollTop();
+          });
+        }
       } else if (self.isHomepage()) {
         // place clone
         nav.prependTo('.page').css({
@@ -169,14 +194,22 @@
         this.closeSearch();
       }
 
-      var heroHeight = origNav.outerHeight() - menu.outerHeight() - $('.c-senator-hero--contact-btn').outerHeight() - headerBar.outerHeight() - nav.outerHeight();
+      var menuHeigth;
+
+      if (menu.length > 0) {
+        menuHeigth = menu.outerHeight();
+      } else {
+        menuHeigth = 0;
+      }
+
+      var heroHeight = origNav.outerHeight() - menuHeigth - $('.c-senator-hero--contact-btn').outerHeight() - headerBar.outerHeight() - nav.outerHeight();
 
       if ($(window).width() < 769) {
-        if (this.isMovingDown(currentTop, previousTop) && currentTop >= origNav.outerHeight()) {
+        if (this.isMovingDown(currentTop, previousTop) && currentTop >= origNav.outerHeight() && !this.isSenatorCollapsed()) {
           actionBar.removeClass('hidden');
           this.checkTopBarState(currentTop, previousTop, headerBar, nav);
-        } else if (this.isMovingUp(currentTop, previousTop) && currentTop < origNav.outerHeight()) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+        } else if (this.isMovingUp(currentTop, previousTop) && currentTop < origNav.outerHeight() && !this.isSenatorCollapsed()) {
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.addClass('hidden');
           headerBar.removeClass('collapsed');
         }
@@ -184,15 +217,19 @@
         this.checkTopBarState(currentTop, previousTop, headerBar, nav);
 
         if (this.isMovingUp(currentTop, previousTop) && currentTop <= origNav.outerHeight() - 100 - 100) {
-          menu.addClass('closed');
+          if (this.isSenatorCollapsed()) {
+            menu.removeClass('closed');
+          } else {
+            menu.addClass('closed');
+          }
 
           if (this.isMovingUp(currentTop, previousTop) && currentTop <= origNav.outerHeight() - 100 - 100 - 40 - 100) {
             actionBar.addClass('hidden');
-            jQuery('#largeHeadshot').addClass('hidden');
-            jQuery('#smallHeadshot').removeClass('hidden');
+            $('#largeHeadshot').addClass('hidden');
+            $('#smallHeadshot').removeClass('hidden');
           }
         } else if (currentTop >= heroHeight) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.removeClass('hidden');
           headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
@@ -226,7 +263,10 @@
         nav.addClass('l-header__collapsed');
       } else if (currentTop <= nav.outerHeight() && headerBar.hasClass('collapsed') && nav.hasClass('l-header__collapsed')) {
         headerBar.removeClass('collapsed');
-        nav.removeClass('l-header__collapsed');
+
+        if (!this.isSenatorCollapsed()) {
+          nav.removeClass('l-header__collapsed');
+        }
       }
     },
     isOutOfBounds: function isOutOfBounds(currentTop, previousTop) {
@@ -283,6 +323,9 @@
     },
     isOpenData: function isOpenData() {
       return $('.open-data-section').length > 0;
+    },
+    isSenatorCollapsed: function isSenatorCollapsed() {
+      return $('.hero--senator-collapsed').length > 0;
     }
   };
 }(document, Drupal, jQuery);

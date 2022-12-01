@@ -20,6 +20,11 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  */
 final class ImageStyleDownloadController implements ContainerInjectionInterface {
 
+  /**
+   * The decorated used to decorate the images.
+   *
+   * @var \Drupal\image\Controller\ImageStyleDownloadController
+   */
   private CoreImageStyleDownloadController $decorated;
 
   /**

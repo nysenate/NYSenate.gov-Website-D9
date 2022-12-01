@@ -1,0 +1,87 @@
+@import "../../global/utils/init";
+
+.c-senate-directory--container {
+  margin-bottom: 50px;
+
+  .c-container--title {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}
+
+.c-senate-directory {
+  max-width: 560px;
+  padding: 30px 20px;
+  background: $greyLight;
+  overflow: hidden;
+}
+
+.c-directory--section {
+  padding: 0 10px 20px;
+
+  & + .c-directory--section {
+    padding-top: 30px;
+    padding-bottom: 0;
+    border-top: 1px solid $grey05;
+  }
+}
+
+.c-directory--title {
+	color: $grey08;
+	font-family: $font-serif-bold;
+	font-size: 18px;
+}
+
+.c-directory--link {
+	display: block;
+	padding-top: 10px;
+	margin: 0;
+
+	&:before {
+		font-size: 25px;
+		margin-right: 10px;
+	}
+}
+
+.c-directory--link.c-ciew--link {
+  margin: 0;
+}
+
+@include breakpoint($bp-sm) {
+	.c-senate-directory--container {
+		margin-top: 40px;
+		margin-bottom: 70px;
+
+		.c-container--title {
+			font-size: 16px;
+		}
+	}
+
+	.c-senate-directory {
+		padding: 30px;
+	}
+
+	.c-directory--section {
+		padding: 0;
+
+		& + .c-directory--section {
+			padding-top: 0;
+			padding-left: 50px;
+			border-top: 0;
+			border-left: 1px solid $grey05;
+		}	
+	}
+
+	.c-directory--title {
+		font-size: 18px;
+		margin-bottom: 20px;
+	}
+
+	.c-directory--link {
+		padding-top: 0;
+	}
+
+  .c-directory--link.c-ciew--link {
+    margin: 0;
+  }
+}

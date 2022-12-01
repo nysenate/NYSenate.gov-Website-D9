@@ -31,42 +31,42 @@ class SettingsForm extends ConfigFormBase {
     $config = $this->config('job_scheduler.settings');
 
     $form['rebuild']['description'] = [
-      '#markup' => '<p>' . t('Rebuilds scheduled information.') . '</p>',
+      '#markup' => '<p>' . $this->t('Rebuilds scheduled information.') . '</p>',
     ];
 
     $form['rebuild']['run'] = [
       '#type' => 'submit',
-      '#value' => t('Rebuild'),
+      '#value' => $this->t('Rebuild'),
       '#submit' => ['::rebuild'],
     ];
 
     $form['settings'] = [
-      '#title' => t('Settings'),
+      '#title' => $this->t('Settings'),
       '#type' => 'details',
       '#open' => TRUE,
     ];
 
     $form['settings']['logging'] = [
       '#type' => 'checkbox',
-      '#title' => t('Detailed job scheduler logging'),
+      '#title' => $this->t('Detailed job scheduler logging'),
       '#default_value' => $config->get('logging'),
       '#description' => $this->t('Run time info of jobs will be written to watchdog.'),
     ];
 
     $form['settings']['limit'] = [
       '#type' => 'number',
-      '#title' => t('Jobs limit'),
+      '#title' => $this->t('Jobs limit'),
       '#min' => 1,
       '#default_value' => $config->get('limit'),
-      '#description' => t('The number of jobs to perform in one run. Defaults to 200'),
+      '#description' => $this->t('The number of jobs to perform in one run. Defaults to 200'),
     ];
 
     $form['settings']['time'] = [
       '#type' => 'number',
-      '#title' => t('Executing time'),
+      '#title' => $this->t('Executing time'),
       '#min' => 1,
       '#default_value' => $config->get('time'),
-      '#description' => t('How much time scheduler should spend on processing jobs in seconds. Defaults to 30'),
+      '#description' => $this->t('How much time scheduler should spend on processing jobs in seconds. Defaults to 30'),
     ];
 
     return parent::buildForm($form, $form_state);

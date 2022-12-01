@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Search API pages file.
+ * Search API pages module.
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
 use Drupal\user\EntityOwnerInterface;
 
 /**
@@ -111,22 +112,22 @@ function search_api_page_theme() {
  * Process variables for search-api-page-result.tpl.php.
  */
 function template_preprocess_search_api_page_result(&$variables) {
-  /* @var $entity \Drupal\Core\Entity\EntityInterface */
+  /** @var \Drupal\Core\Entity\EntityInterface $entity */
   $entity = $variables['entity'];
-  /* @var $item \Drupal\search_api\Item\ItemInterface */
+  /** @var \Drupal\search_api\Item\ItemInterface $item */
   $item = $variables['item'];
 
   $variables['snippet'] = ['#markup' => $item->getExcerpt()];
   $variables['title'] = $entity->label();
-  if ($entity instanceof \Drupal\file\Entity\File) {
+  if ($entity instanceof File) {
     $variables['url'] = $entity->createFileUrl();
   }
-  else {
+  elseif ($entity->hasLinkTemplate('canonical')) {
     $variables['url'] = $entity->toUrl()->toString();
   }
 
   $info = [];
-  if ($entity instanceof EntityOwnerInterface) {
+  if ($entity instanceof EntityOwnerInterface && $entity->getOwner()) {
     $info['user'] = $entity->getOwner()->label();
   }
   if (isset($entity->created)) {

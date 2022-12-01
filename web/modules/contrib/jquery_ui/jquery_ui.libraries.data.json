@@ -1,5 +1,21 @@
 {
   "jquery_ui": {
+    "internal.widget-css": {
+      "version": "1.13.2",
+      "license": {
+        "name": "Public Domain",
+        "url": "https://raw.githubusercontent.com/jquery/jquery-ui/1.13.2/LICENSE.txt",
+        "gpl-compatible": true
+      },
+      "css": {
+        "component": {
+          "assets/vendor/jquery.ui/themes/base/core.css": {}
+        },
+        "theme": {
+          "assets/vendor/jquery.ui/themes/base/theme.css": {}
+        }
+      }
+    },
     "core": {
       "version": "1.13.2",
       "license": {
@@ -24,7 +40,8 @@
         "jquery_ui/internal.scroll-parent",
         "jquery_ui/internal.tabbable",
         "jquery_ui/internal.unique-id",
-        "jquery_ui/internal.version"
+        "jquery_ui/internal.version",
+        "jquery_ui/internal.widget-css"
       ]
     },
     "internal.data": {
@@ -384,7 +401,8 @@
       },
       "dependencies": [
         "core/jquery",
-        "jquery_ui/internal.version"
+        "jquery_ui/internal.version",
+        "jquery_ui/internal.widget-css"
       ]
     },
     "mouse": {
@@ -404,16 +422,9 @@
         "core/jquery",
         "jquery_ui/internal.ie",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
-      ],
-      "css": {
-        "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
-        }
-      }
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
+      ]
     }
   },
   "jquery_ui_effects": {
@@ -729,15 +740,12 @@
         "jquery_ui/internal.version",
         "jquery_ui/internal.keycode",
         "jquery_ui/internal.unique-id",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/accordion.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -763,15 +771,12 @@
         "jquery_ui/position",
         "jquery_ui/internal.safe-active-element",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/autocomplete.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -795,15 +800,12 @@
         "jquery_ui_controlgroup/controlgroup",
         "jquery_ui_checkboxradio/checkboxradio",
         "jquery_ui/internal.keycode",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/button.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -826,15 +828,12 @@
         "core/jquery",
         "jquery_ui/internal.form-reset-mixin",
         "jquery_ui/internal.labels",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/checkboxradio.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -855,15 +854,12 @@
       },
       "dependencies": [
         "core/jquery",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/controlgroup.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -885,15 +881,12 @@
       "dependencies": [
         "core/jquery",
         "jquery_ui/internal.version",
-        "jquery_ui/internal.keycode"
+        "jquery_ui/internal.keycode",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/datepicker.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -926,15 +919,12 @@
         "jquery_ui/internal.tabbable",
         "jquery_ui/internal.unique-id",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/dialog.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -962,15 +952,12 @@
         "jquery_ui/internal.safe-blur",
         "jquery_ui/internal.scroll-parent",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/draggable.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -994,16 +981,9 @@
         "jquery_ui_draggable/draggable",
         "jquery_ui/mouse",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
-      ],
-      "css": {
-        "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
-        }
-      }
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
+      ]
     }
   },
   "jquery_ui_menu": {
@@ -1027,15 +1007,12 @@
         "jquery_ui/internal.safe-active-element",
         "jquery_ui/internal.unique-id",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/menu.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1057,15 +1034,12 @@
       "dependencies": [
         "core/jquery",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/progressbar.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1090,15 +1064,12 @@
         "jquery_ui/internal.disable-selection",
         "jquery_ui/internal.plugin",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/resizable.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1121,15 +1092,12 @@
         "core/jquery",
         "jquery_ui/mouse",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/selectable.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1157,15 +1125,12 @@
         "jquery_ui/position",
         "jquery_ui/internal.unique-id",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/selectmenu.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1189,15 +1154,12 @@
         "jquery_ui/mouse",
         "jquery_ui/internal.keycode",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/slider.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1223,15 +1185,12 @@
         "jquery_ui/internal.ie",
         "jquery_ui/internal.scroll-parent",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/sortable.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1256,15 +1215,12 @@
         "jquery_ui/internal.version",
         "jquery_ui/internal.keycode",
         "jquery_ui/internal.safe-active-element",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/spinner.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1289,15 +1245,12 @@
         "jquery_ui/internal.safe-active-element",
         "jquery_ui/internal.unique-id",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/tabs.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }
@@ -1322,15 +1275,12 @@
         "jquery_ui/position",
         "jquery_ui/internal.unique-id",
         "jquery_ui/internal.version",
-        "jquery_ui/widget"
+        "jquery_ui/widget",
+        "jquery_ui/internal.widget-css"
       ],
       "css": {
         "component": {
-          "assets/vendor/jquery.ui/themes/base/core.css": {},
           "assets/vendor/jquery.ui/themes/base/tooltip.css": {}
-        },
-        "theme": {
-          "assets/vendor/jquery.ui/themes/base/theme.css": {}
         }
       }
     }

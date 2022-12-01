@@ -997,6 +997,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'Consolidation\\AnnotatedCommand\\Parser\\Internal\\CommandDocBlockParserFactory' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Parser/Internal/CommandDocBlockParserFactory.php',
         'Consolidation\\AnnotatedCommand\\Parser\\Internal\\CsvUtils' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Parser/Internal/CsvUtils.php',
         'Consolidation\\AnnotatedCommand\\Parser\\Internal\\DefaultValueFromString' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Parser/Internal/DefaultValueFromString.php',
+        'Consolidation\\AnnotatedCommand\\Parser\\Internal\\DocBlockUtils' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Parser/Internal/DocBlockUtils.php',
         'Consolidation\\AnnotatedCommand\\Parser\\Internal\\DocblockTag' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Parser/Internal/DocblockTag.php',
         'Consolidation\\AnnotatedCommand\\Parser\\Internal\\FullyQualifiedClassCache' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Parser/Internal/FullyQualifiedClassCache.php',
         'Consolidation\\AnnotatedCommand\\Parser\\Internal\\TagFactory' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Parser/Internal/TagFactory.php',

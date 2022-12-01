@@ -12,7 +12,7 @@ class ParseModeTest extends FunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->adminUser);
@@ -31,11 +31,12 @@ class ParseModeTest extends FunctionalTestBase {
       'id' => 'search_page_test',
       'index' => $this->index->id(),
     ];
-    $this->drupalPostForm('admin/config/search/search-api-pages/add', $step1, 'Next');
+    $this->drupalGet('admin/config/search/search-api-pages/add');
+    $this->submitForm($step1, 'Next');
     $step2 = [
       'path' => 'search-page-test',
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
     $this->drupalGet('admin/config/search/search-api-pages');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('Search Page Test');
@@ -55,7 +56,8 @@ class ParseModeTest extends FunctionalTestBase {
     $edit = [
       'parse_mode' => 'terms',
     ];
-    $this->drupalPostForm('admin/config/search/search-api-pages/search_page_test', $edit, 'Save');
+    $this->drupalGet('admin/config/search/search-api-pages/search_page_test');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/search/search-api-pages/search_page_test');
     $assert_session->statusCodeEquals(200);
     $assert_session->responseContains('terms');

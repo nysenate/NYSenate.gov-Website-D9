@@ -6,9 +6,10 @@ use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\job_scheduler\Entity\JobSchedule;
 
 /**
- * Providing our own worker has the advantage that we can reschedule the job or
- * take care of cleanup. Note that as we run the execute() action, the job won't
- * be queued again this time.
+ * Providing worker to reschedule the job or take care of cleanup.
+ *
+ * Note that as we run the execute() action, the job won't be queued again this
+ * time.
  *
  * @QueueWorker(
  *   id = "job_scheduler_queue",

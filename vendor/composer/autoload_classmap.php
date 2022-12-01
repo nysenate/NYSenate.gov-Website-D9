@@ -263,6 +263,7 @@ return array(
     'Consolidation\\AnnotatedCommand\\Parser\\Internal\\CommandDocBlockParserFactory' => $vendorDir . '/consolidation/annotated-command/src/Parser/Internal/CommandDocBlockParserFactory.php',
     'Consolidation\\AnnotatedCommand\\Parser\\Internal\\CsvUtils' => $vendorDir . '/consolidation/annotated-command/src/Parser/Internal/CsvUtils.php',
     'Consolidation\\AnnotatedCommand\\Parser\\Internal\\DefaultValueFromString' => $vendorDir . '/consolidation/annotated-command/src/Parser/Internal/DefaultValueFromString.php',
+    'Consolidation\\AnnotatedCommand\\Parser\\Internal\\DocBlockUtils' => $vendorDir . '/consolidation/annotated-command/src/Parser/Internal/DocBlockUtils.php',
     'Consolidation\\AnnotatedCommand\\Parser\\Internal\\DocblockTag' => $vendorDir . '/consolidation/annotated-command/src/Parser/Internal/DocblockTag.php',
     'Consolidation\\AnnotatedCommand\\Parser\\Internal\\FullyQualifiedClassCache' => $vendorDir . '/consolidation/annotated-command/src/Parser/Internal/FullyQualifiedClassCache.php',
     'Consolidation\\AnnotatedCommand\\Parser\\Internal\\TagFactory' => $vendorDir . '/consolidation/annotated-command/src/Parser/Internal/TagFactory.php',

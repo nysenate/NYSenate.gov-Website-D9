@@ -151,6 +151,20 @@ const { moduleFolder, packageFolder, sourceFolder, filesToCopy } = require('./fi
     return acc;
   }, {});
 
+  // For widgets the CSS dependency is implicit, make it explicit for Drupal
+  // libraries.
+  libraries.jquery_ui['internal.widget-css'] = {
+    ...libraryMetadata,
+    css: {
+      component: {
+        'assets/vendor/jquery.ui/themes/base/core.css': {},
+      },
+      theme: {
+        'assets/vendor/jquery.ui/themes/base/theme.css': {},
+      },
+    }
+  }
+
   for (const file of jsFiles) {
     const asset = {
       ...libraryMetadata,
@@ -166,22 +180,21 @@ const { moduleFolder, packageFolder, sourceFolder, filesToCopy } = require('./fi
       asset.js = {};
     }
 
+    // All widgets have an implicit dependency on those css files.
+    if (file.startsWith('widgets/') || ['widget', 'core'].includes(file)) {
+      asset.dependencies.push('jquery_ui/internal.widget-css');
+    }
+
+    // Check if a CSS file specific to the widget exists.
     if (file.startsWith('widgets/')) {
-      // All widgets have an implicit dependency on those css files.
-      asset.css = {
-        component: {
-          'assets/vendor/jquery.ui/themes/base/core.css': {},
-        },
-        theme: {
-          'assets/vendor/jquery.ui/themes/base/theme.css': {},
-        },
-      };
-      // Check if a CSS file specific to the widget exists.
       const basename = path.basename(file);
       if (cssFiles.includes(basename)) {
-        asset.css.component[`assets/vendor/jquery.ui/themes/base/${basename}.css`] = {};
+        asset.css = Object.assign(asset.css || {}, {
+          component: {[`assets/vendor/jquery.ui/themes/base/${basename}.css`]: {} }
+        });
       }
     }
+
     libraries[assetModule(file)][libraryName(file)] = asset;
   }
 

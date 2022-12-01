@@ -3,6 +3,7 @@
 namespace Drupal\Tests\search_api_page\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\search_api_page\Entity\SearchApiPage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
@@ -26,7 +27,7 @@ abstract class FunctionalTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'search_api_page',
     'node',
     'search_api',
@@ -73,7 +74,7 @@ abstract class FunctionalTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Create the users used for the tests.
@@ -163,6 +164,26 @@ abstract class FunctionalTestBase extends BrowserTestBase {
     $task_manager = \Drupal::getContainer()->get('search_api.index_task_manager');
     $task_manager->addItemsAll(Index::load($this->index->id()));
     $this->indexItems($this->index->id());
+  }
+
+  /**
+   * Set up Search API Page entity.
+   *
+   * @param \Drupal\search_api\Entity\Index $index
+   *   The search index to create a page for.
+   * @param string $id
+   *   The machine name for the search page; defaults to "search".
+   * @param string $path
+   *   The path to use for the search page; defaults to "search".
+   */
+  protected function setUpPage($index, $id = 'search', $path = 'search') {
+    SearchApiPage::create([
+      'label' => ucfirst($id),
+      'id' => $id,
+      'path' => $path,
+      'index' => $index->id(),
+      'searched_fields' => $index->getFulltextFields(),
+    ])->save();
   }
 
 }

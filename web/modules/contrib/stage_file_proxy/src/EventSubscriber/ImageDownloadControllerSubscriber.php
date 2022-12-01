@@ -19,8 +19,6 @@ class ImageDownloadControllerSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Routing\RouteBuildEvent $event
    *   The event containing the route being built.
-   *
-   * @return void
    */
   public function onAlterDecorateController(RouteBuildEvent $event): void {
     $to_alter = [

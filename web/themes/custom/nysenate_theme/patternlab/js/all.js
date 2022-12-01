@@ -2946,7 +2946,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         var $accordion = $(this);
         var $heading = $accordion.find('.nysenate-accordion__heading');
         var $itemCount = $accordion.find('.nysenate-accordion__content', context).length;
-        $("<span>(".concat($itemCount, ")</span>")).appendTo($heading); // Attach click handler for accordion.
+        $("<span class=\"count\">(".concat($itemCount, ")</span>")).appendTo($heading); // Attach click handler for accordion.
 
         var $toggle = $accordion.find('.nysenate-accordion__toggle', context);
         $toggle.on('click', function () {
@@ -3042,27 +3042,52 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       if (self.isSenatorLanding(origNav)) {
-        actionBar = nav.find('.c-senator-hero'); // place clone
+        actionBar = nav.find('.c-senator-hero');
 
-        nav.prependTo('.page').css({
-          'z-index': '14'
-        }).addClass('l-header__collapsed');
-        menu = nav.find('.c-nav--wrap');
-        headerBar = nav.find('.c-header-bar');
-        mobileNavToggle = nav.find('.js-mobile-nav--btn');
-        searchToggle = $('.js-search--toggle');
-        topbarDropdown = nav.find('.c-login--list'); // collapse / hide nav
+        if (self.isSenatorCollapsed()) {
+          $(document).ready(function () {
+            $('#senatorImage').html($('#smallShotImage').html());
+          }); // place origin Nav
 
-        menu.addClass('closed');
-        actionBar.addClass('hidden'); // set headerBar to collapsed state
+          nav.prependTo('.page').css({
+            'z-index': '100'
+          }).addClass('l-header__collapsed');
+          origNav.prependTo('.page').css({
+            'z-index': '100'
+          }).addClass('l-header__collapsed').css('visibility', 'hidden');
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list'); // bind scrolling
 
-        origNav.find('.c-header-bar').css('visibility', 'hidden'); // bind scrolling
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+            self.senatorLandingScroll(currentTop, previousTop, userScroll, origNav, menu, headerBar, nav, actionBar);
+            previousTop = $(document).scrollTop();
+          });
+        } else {
+          // place clone
+          nav.prependTo('.page').css({
+            'z-index': '14'
+          }).addClass('l-header__collapsed');
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list'); // collapse / hide nav
 
-        $(window).scroll(function () {
-          currentTop = $(this).scrollTop();
-          self.senatorLandingScroll(currentTop, previousTop, userScroll, origNav, menu, headerBar, nav, actionBar);
-          previousTop = $(document).scrollTop();
-        });
+          menu.addClass('closed');
+          actionBar.addClass('hidden'); // set headerBar to collapsed state
+
+          origNav.find('.c-header-bar').css('visibility', 'hidden'); // bind scrolling
+
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+            self.senatorLandingScroll(currentTop, previousTop, userScroll, origNav, menu, headerBar, nav, actionBar);
+            previousTop = $(document).scrollTop();
+          });
+        }
       } else if (self.isHomepage()) {
         // place clone
         nav.prependTo('.page').css({
@@ -3175,14 +3200,22 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         this.closeSearch();
       }
 
-      var heroHeight = origNav.outerHeight() - menu.outerHeight() - $('.c-senator-hero--contact-btn').outerHeight() - headerBar.outerHeight() - nav.outerHeight();
+      var menuHeigth;
+
+      if (menu.length > 0) {
+        menuHeigth = menu.outerHeight();
+      } else {
+        menuHeigth = 0;
+      }
+
+      var heroHeight = origNav.outerHeight() - menuHeigth - $('.c-senator-hero--contact-btn').outerHeight() - headerBar.outerHeight() - nav.outerHeight();
 
       if ($(window).width() < 769) {
-        if (this.isMovingDown(currentTop, previousTop) && currentTop >= origNav.outerHeight()) {
+        if (this.isMovingDown(currentTop, previousTop) && currentTop >= origNav.outerHeight() && !this.isSenatorCollapsed()) {
           actionBar.removeClass('hidden');
           this.checkTopBarState(currentTop, previousTop, headerBar, nav);
-        } else if (this.isMovingUp(currentTop, previousTop) && currentTop < origNav.outerHeight()) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+        } else if (this.isMovingUp(currentTop, previousTop) && currentTop < origNav.outerHeight() && !this.isSenatorCollapsed()) {
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.addClass('hidden');
           headerBar.removeClass('collapsed');
         }
@@ -3190,15 +3223,19 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         this.checkTopBarState(currentTop, previousTop, headerBar, nav);
 
         if (this.isMovingUp(currentTop, previousTop) && currentTop <= origNav.outerHeight() - 100 - 100) {
-          menu.addClass('closed');
+          if (this.isSenatorCollapsed()) {
+            menu.removeClass('closed');
+          } else {
+            menu.addClass('closed');
+          }
 
           if (this.isMovingUp(currentTop, previousTop) && currentTop <= origNav.outerHeight() - 100 - 100 - 40 - 100) {
             actionBar.addClass('hidden');
-            jQuery('#largeHeadshot').addClass('hidden');
-            jQuery('#smallHeadshot').removeClass('hidden');
+            $('#largeHeadshot').addClass('hidden');
+            $('#smallHeadshot').removeClass('hidden');
           }
         } else if (currentTop >= heroHeight) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.removeClass('hidden');
           headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
@@ -3232,7 +3269,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         nav.addClass('l-header__collapsed');
       } else if (currentTop <= nav.outerHeight() && headerBar.hasClass('collapsed') && nav.hasClass('l-header__collapsed')) {
         headerBar.removeClass('collapsed');
-        nav.removeClass('l-header__collapsed');
+
+        if (!this.isSenatorCollapsed()) {
+          nav.removeClass('l-header__collapsed');
+        }
       }
     },
     isOutOfBounds: function isOutOfBounds(currentTop, previousTop) {
@@ -3289,10 +3329,42 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     },
     isOpenData: function isOpenData() {
       return $('.open-data-section').length > 0;
+    },
+    isSenatorCollapsed: function isSenatorCollapsed() {
+      return $('.hero--senator-collapsed').length > 0;
     }
   };
 }(document, Drupal, jQuery);
 //# sourceMappingURL=nysenate-header.js.map
+
+/**
+ * @file
+ * Behaviors for the Senator List.
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Senator List behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.senatorList = {
+    attach: function attach() {
+      var $committeeFilter = $('#edit-senator-committee-filter');
+      var $partyFilter = $('#edit-field-party-value');
+      $(document).ready(function () {
+        $committeeFilter.add($partyFilter).on('change', function () {
+          var $form = $(this).closest('form');
+          $form.find('input[type=submit]').click();
+        });
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=nysenate-senator-list.js.map
 
 !function (document, Drupal, $) {
   'use strict';
@@ -3356,6 +3428,15 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       e.preventDefault();
       var tab = $(this).parent('.c-tab');
       var tabBar = $(this).parents('.l-tab-bar');
+      var billVersion = tab.data('version').split('-');
+      var newUrl = tab.data('target');
+
+      if (billVersion && newUrl) {
+        var tabContent = tab.closest('.c-bill--amendment-details').parent().find('.tabs-content');
+        history.pushState({}, 'NY State Senate Bill ' + billVersion[1], newUrl);
+        tabContent.find('.active').removeClass('active');
+        tabContent.find($(this).val()).addClass('active');
+      }
 
       if (tab.hasClass('active') && !tabBar.hasClass('open')) {
         tabBar.addClass('open');

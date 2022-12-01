@@ -12,7 +12,7 @@ class BlockTest extends FunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->adminUser);
@@ -50,12 +50,13 @@ class BlockTest extends FunctionalTestBase {
       'id' => $id,
       'index' => $indexId,
     ];
-    $this->drupalPostForm('admin/config/search/search-api-pages/add', $step1, 'Next');
+    $this->drupalGet('admin/config/search/search-api-pages/add');
+    $this->submitForm($step1, 'Next');
 
     $step2 = [
       'path' => $path,
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
   }
 
   /**

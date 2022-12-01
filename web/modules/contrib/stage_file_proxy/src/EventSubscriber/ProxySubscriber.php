@@ -119,7 +119,8 @@ class ProxySubscriber implements EventSubscriberInterface {
     }
 
     // Quit if the extension is in the list of excluded extensions.
-    $excluded_extensions = array_map('trim', explode(',', $config->get('excluded_extensions')));
+    $excluded_extensions = $config->get('excluded_extensions') ?
+      array_map('trim', explode(',', $config->get('excluded_extensions'))) : [];
 
     $path_info = pathinfo($request_path);
     $ext = $path_info['extension'];
@@ -152,7 +153,6 @@ class ProxySubscriber implements EventSubscriberInterface {
     $paths = [$relative_path];
 
     // Webp support.
-    $is_webp = FALSE;
     if (str_ends_with($relative_path, '.webp')) {
       $paths[] = str_replace('.webp', '', $relative_path);
     }

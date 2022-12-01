@@ -140,16 +140,55 @@ class JobSchedulerCronTab implements JobSchedulerCronTabInterface {
         $replace = array_merge(
         // Tricky, tricky, we need sunday to be zero at the beginning of a
         // range, but 7 at the end.
-          ['-sunday' => '-7', '-sun' => '-7', 'sunday-' => '0-', 'sun-' => '0-'],
-          array_flip(['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']),
-          array_flip(['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'])
+          [
+            '-sunday' => '-7',
+            '-sun' => '-7',
+            'sunday-' => '0-',
+            'sun-' => '0-',
+          ],
+          array_flip([
+            'sunday', 'monday', 'tuesday', 'wednesday',
+            'thursday', 'friday', 'saturday',
+          ]),
+          array_flip([
+            'sun', 'mon', 'tue',
+            'wed', 'thu', 'fri', 'sat',
+          ])
         );
         break;
 
       case 'mon':
         $replace = array_merge(
-          array_flip(['nomonth1', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']),
-          array_flip(['nomonth2', 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']),
+          array_flip([
+            'nomonth1',
+            'january',
+            'february',
+            'march',
+            'april',
+            'may',
+            'june',
+            'july',
+            'august',
+            'september',
+            'october',
+            'november',
+            'december',
+          ]),
+          array_flip([
+            'nomonth2',
+            'jan',
+            'feb',
+            'mar',
+            'apr',
+            'may',
+            'jun',
+            'jul',
+            'aug',
+            'sep',
+            'oct',
+            'nov',
+            'dec',
+          ]),
           ['sept' => 9]
         );
         break;

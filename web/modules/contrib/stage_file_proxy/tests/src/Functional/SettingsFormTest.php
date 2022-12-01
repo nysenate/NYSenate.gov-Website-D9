@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
  */
 class SettingsFormTest extends BrowserTestBase {
 
+  /**
+   * Default Theme.
+   *
+   * @var string
+   */
   protected $defaultTheme = 'stark';
 
   /**

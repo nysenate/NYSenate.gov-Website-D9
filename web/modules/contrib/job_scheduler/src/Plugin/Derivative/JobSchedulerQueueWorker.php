@@ -3,11 +3,14 @@
 namespace Drupal\job_scheduler\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a JobSchedulerQueueWorker deriver.
  */
 class JobSchedulerQueueWorker extends DeriverBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -21,7 +24,7 @@ class JobSchedulerQueueWorker extends DeriverBase {
         $title = $info['title'];
       }
       else {
-        $title = t('Job Scheduler Queue: %name', ['%name' => $queue_name]);
+        $title = $this->t('Job Scheduler Queue: %name', ['%name' => $queue_name]);
       }
       $time = isset($info['time']) ? $info['time'] : $base_plugin_definition['cron']['time'];
       $this->derivatives[$queue_name] = $base_plugin_definition;

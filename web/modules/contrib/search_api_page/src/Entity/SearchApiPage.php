@@ -189,7 +189,7 @@ class SearchApiPage extends ConfigEntityBase implements SearchApiPageInterface {
       return [];
     }
 
-    /* @var  $index \Drupal\search_api\IndexInterface */
+    /** @var  \Drupal\search_api\IndexInterface $index */
     $index = Index::load($this->index);
 
     $fields = [];
@@ -212,7 +212,7 @@ class SearchApiPage extends ConfigEntityBase implements SearchApiPageInterface {
    * {@inheritdoc}
    */
   public function getViewModeConfiguration() {
-    /* @var $index \Drupal\search_api\IndexInterface */
+    /** @var \Drupal\search_api\IndexInterface $index */
     $index = Index::load($this->getIndex());
     if ($index === NULL) {
       return [];
@@ -277,6 +277,14 @@ class SearchApiPage extends ConfigEntityBase implements SearchApiPageInterface {
    */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
+    \Drupal::service('router.builder')->rebuild();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
     \Drupal::service('router.builder')->rebuild();
   }
 

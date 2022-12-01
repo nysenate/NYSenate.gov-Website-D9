@@ -30,7 +30,7 @@ class SearchApiPageController extends ControllerBase {
   /**
    * The parse mode pager manager.
    *
-   * @var Drupal\Core\Pager\PagerManagerInterface
+   * @var \Drupal\Core\Pager\PagerManagerInterface
    */
   protected $pagerManager;
 
@@ -39,7 +39,7 @@ class SearchApiPageController extends ControllerBase {
    *
    * @param \Drupal\search_api\ParseMode\ParseModePluginManager $parseModePluginManager
    *   The parse mode plugin manager.
-   * @param Drupal\Core\Pager\PagerManagerInterface $pagerManager
+   * @param \Drupal\Core\Pager\PagerManagerInterface $pagerManager
    *   The parse mode pager manager.
    */
   public function __construct(ParseModePluginManager $parseModePluginManager, PagerManagerInterface $pagerManager) {
@@ -76,7 +76,7 @@ class SearchApiPageController extends ControllerBase {
    * @throws \Drupal\search_api\SearchApiException
    */
   public function page(Request $request, $search_api_page_name, $keys = '') {
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     $search_api_page = $this->entityTypeManager()
       ->getStorage('search_api_page')
       ->load($search_api_page_name);
@@ -100,10 +100,18 @@ class SearchApiPageController extends ControllerBase {
       $query->keys($keys);
     }
 
-    $result = $query->execute();
-    /* @var $items \Drupal\search_api\Item\ItemInterface[] */
-    $items = $result->getResultItems();
-
+    $items = [];
+    try {
+      $result = $query->execute();
+      /** @var \Drupal\search_api\Item\ItemInterface[] $items */
+      $items = $result->getResultItems();
+    }
+    catch (\Exception $e) {
+      if (error_displayable()) {
+        $this->messenger()->addError($e->getMessage());
+      }
+      $this->getLogger('search_api_page')->error($e->getMessage());
+    }
     $results = [];
     foreach ($items as $item) {
       $rendered = $this->createItemRenderArray($item, $search_api_page);
@@ -114,7 +122,7 @@ class SearchApiPageController extends ControllerBase {
     }
 
     if (empty($results)) {
-      return $this->finishBuildWithoutResults($build, $search_api_page);
+      return $this->finishBuildWithoutResults($build, $result, $search_api_page);
     }
 
     return $this->finishBuildWithResults($build, $result, $results, $search_api_page);
@@ -214,8 +222,14 @@ class SearchApiPageController extends ControllerBase {
   protected function finishBuild(array $build, SearchApiPageInterface $searchApiPage, ResultSetInterface $result = NULL) {
     $this->moduleHandler()->alter('search_api_page', $build, $result, $searchApiPage);
 
-    // TODO caching dependencies.
-    // @see https://www.drupal.org/project/search_api_page/issues/2754411.
+    $build['#cache'] = [
+      'contexts' => [
+        'url',
+      ],
+      'tags' => [
+        'search_api_list:' . $searchApiPage->getIndex(),
+      ],
+    ];
     return $build;
   }
 
@@ -236,7 +250,7 @@ class SearchApiPageController extends ControllerBase {
    * @throws \Drupal\search_api\SearchApiException
    */
   protected function prepareQuery(Request $request, SearchApiPageInterface $search_api_page) {
-    /* @var $search_api_index \Drupal\search_api\IndexInterface */
+    /** @var \Drupal\search_api\IndexInterface $search_api_index */
     $search_api_index = $this->entityTypeManager()
       ->getStorage('search_api_index')
       ->load($search_api_page->getIndex());
@@ -269,13 +283,15 @@ class SearchApiPageController extends ControllerBase {
    *
    * @param array $build
    *   The build to finish.
+   * @param \Drupal\search_api\Query\ResultSetInterface $result
+   *   Search API result.
    * @param \Drupal\search_api_page\SearchApiPageInterface $searchApiPage
    *   The Search API page entity.
    *
    * @return array
    *   The finished build render array.
    */
-  protected function finishBuildWithoutResults(array $build, SearchApiPageInterface $searchApiPage) {
+  protected function finishBuildWithoutResults(array $build, ResultSetInterface $result, SearchApiPageInterface $searchApiPage) {
     $build['#no_results_found'] = [
       '#markup' => $this->t('Your search yielded no results.'),
     ];
@@ -287,7 +303,7 @@ class SearchApiPageController extends ControllerBase {
 <li>Consider loosening your query with <em>OR</em>. <em>bike OR shed</em> will often show more results than <em>bike shed</em>.</li>
 </ul>'),
     ];
-    return $this->finishBuild($build, $searchApiPage);
+    return $this->finishBuild($build, $searchApiPage, $result);
   }
 
   /**
@@ -343,7 +359,7 @@ class SearchApiPageController extends ControllerBase {
       return $this->t('Search');
     }
 
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     $search_api_page = SearchApiPage::load($search_api_page_name);
     return $search_api_page->label();
   }

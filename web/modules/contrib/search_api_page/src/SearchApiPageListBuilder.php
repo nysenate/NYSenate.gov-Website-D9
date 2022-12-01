@@ -5,7 +5,6 @@ namespace Drupal\search_api_page;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Url;
 
 /**
  * Provides a listing of Search page entities.
@@ -25,7 +24,7 @@ class SearchApiPageListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $entity */
     $row['label'] = $entity->label();
     $row['path'] = '';
 

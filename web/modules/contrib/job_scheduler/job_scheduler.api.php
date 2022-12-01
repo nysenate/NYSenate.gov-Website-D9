@@ -45,7 +45,7 @@ function hook_cron_job_scheduler_info() {
  * @see hook_cron_queue_info()
  * @see drupal_cron_run()
  */
-function hook_cron_job_scheduler_info_alter(&$info) {
+function hook_cron_job_scheduler_info_alter(array &$info) {
   // Replace the default callback 'example_cache_clear_worker'.
   $info['example_reset']['worker callback'] = 'my_custom_reset';
 }
@@ -76,7 +76,7 @@ function hook_cron_job_scheduler_queue_info() {
  *
  * @see job_scheduler_queue_info()
  */
-function hook_cron_job_scheduler_queue_info_alter(&$info) {
+function hook_cron_job_scheduler_queue_info_alter(array &$info) {
   // Replace the default time.
   $info['example_import_queue']['time'] = 120;
 }

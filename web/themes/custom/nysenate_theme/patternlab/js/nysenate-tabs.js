@@ -60,6 +60,15 @@
       e.preventDefault();
       var tab = $(this).parent('.c-tab');
       var tabBar = $(this).parents('.l-tab-bar');
+      var billVersion = tab.data('version').split('-');
+      var newUrl = tab.data('target');
+
+      if (billVersion && newUrl) {
+        var tabContent = tab.closest('.c-bill--amendment-details').parent().find('.tabs-content');
+        history.pushState({}, 'NY State Senate Bill ' + billVersion[1], newUrl);
+        tabContent.find('.active').removeClass('active');
+        tabContent.find($(this).val()).addClass('active');
+      }
 
       if (tab.hasClass('active') && !tabBar.hasClass('open')) {
         tabBar.addClass('open');

@@ -20,14 +20,14 @@ class FacetsIntegrationTest extends FunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'facets',
   ];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser([
@@ -79,11 +79,6 @@ class FacetsIntegrationTest extends FunctionalTestBase {
     ]);
     $page->save();
     $this->createFacet('Eurasian Eagle-Owl', 'eagle_owl', 'type', 'owl_display', 'search_api_page');
-
-    // Clear the caches because creating a search page is not picked up by the
-    // routing otherwise.
-    // @todo: Fix that.
-    $this->resetAll();
 
     $this->drupalGet('bird_owl');
     $this->assertFacetBlocksAppear();

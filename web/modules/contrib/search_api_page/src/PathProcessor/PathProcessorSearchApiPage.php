@@ -8,7 +8,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -68,9 +67,9 @@ class PathProcessorSearchApiPage implements InboundPathProcessorInterface, Outbo
     $is_multilingual = $this->languageManager->isMultilingual();
     $all_languages = $this->languageManager->getLanguages();
 
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     foreach ($this->entityTypeManager->getStorage('search_api_page')
-               ->loadMultiple() as $search_api_page) {
+      ->loadMultiple() as $search_api_page) {
       // Default path.
       $default_path = $search_api_page->getPath();
 
@@ -103,11 +102,11 @@ class PathProcessorSearchApiPage implements InboundPathProcessorInterface, Outbo
    * {@inheritdoc}
    */
   public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
-    if ($request === NULL) {
+    if ($request === NULL || $path === "/") {
       return $path;
     }
 
-    if (strpos($request->get('_route'), 'search_api_page.') !== 0) {
+    if (strpos($request->get('_route', ''), 'search_api_page.') !== 0) {
       return $path;
     }
 
@@ -133,8 +132,8 @@ class PathProcessorSearchApiPage implements InboundPathProcessorInterface, Outbo
       $path .= '/' . $request->get('keys');
     }
 
-    if (strpos($path, '/') !== 0) {
-      return '/'.$path;
+    if (strpos($path ?? '', '/') !== 0) {
+      return '/' . $path;
     }
 
     return $path;

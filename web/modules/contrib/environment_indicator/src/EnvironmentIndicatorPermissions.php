@@ -2,13 +2,16 @@
 
 namespace Drupal\environment_indicator;
 
+use Drupal\Core\Entity\BundlePermissionHandlerTrait;
+use Drupal\environment_indicator\Entity\EnvironmentIndicator;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Undocumented class.
+ * EnvironmentIndicatorPermissions class.
  */
 class EnvironmentIndicatorPermissions {
 
+  use BundlePermissionHandlerTrait;
   use StringTranslationTrait;
 
   /**
@@ -18,16 +21,25 @@ class EnvironmentIndicatorPermissions {
    *   The permissions configuration array.
    */
   public function permissions() {
-    $permissions = [];
-    // TODO: Learn how to inject the EntityConfig loader.
-    $environments = [];
-    foreach ($environments as $environment) {
-      $permissions['access environment indicator ' . $environment->machine] = [
-        'title' => $this->t('See environment indicator for %name', ['%name' => $environment->name]),
-        'description' => $this->t('See the environment indicator if the user is in the %name environment.', ['%name' => $environment->name]),
-      ];
-    }
-    return $permissions;
+    return $this->generatePermissions(EnvironmentIndicator::loadMultiple(), [$this, 'buildPermissions']);
   }
 
+  /**
+   * Returns a list of environment_indicator permissions for a given environment_indicator.
+   *
+   * @param \Drupal\environment_indicator\Entity\EnvironmentIndicator $environment
+   *
+   * @return array
+   *   An associative array of permission names and descriptions.
+   */
+  protected function buildPermissions(EnvironmentIndicator $environment): array {
+    $environment_id = $environment->id();
+    $environment_params = ['%environment_name' => $environment->label()];
+
+    return [
+      'access environment indicator ' . $environment_id => [
+        'title' => $this->t('See environment indicator for %environment_name', $environment_params)
+      ]
+    ];
+  }
 }

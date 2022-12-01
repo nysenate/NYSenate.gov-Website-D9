@@ -12,7 +12,7 @@ class ViewModeTest extends FunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Create blog content type and create one node of this type.
@@ -49,7 +49,7 @@ class ViewModeTest extends FunctionalTestBase {
     $edit = [
       'fields[body][region]' => 'hidden',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Create a Search API Page and verify that it exists.
     $step1 = [
@@ -57,11 +57,12 @@ class ViewModeTest extends FunctionalTestBase {
       'id' => 'search_page_test',
       'index' => $this->index->id(),
     ];
-    $this->drupalPostForm('admin/config/search/search-api-pages/add', $step1, 'Next');
+    $this->drupalGet('admin/config/search/search-api-pages/add');
+    $this->submitForm($step1, 'Next');
     $step2 = [
       'path' => 'search-page-test',
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
     $this->drupalGet('admin/config/search/search-api-pages');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('Search Page Test');
@@ -76,15 +77,15 @@ class ViewModeTest extends FunctionalTestBase {
       'view_mode_configuration[entity:node][default]' => 'default',
       'view_mode_configuration[entity:node][overrides][document]' => 'teaser',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Perform a few searches and check whether the outcome is as expected.
     $this->drupalGet('search-page-test');
     $assert_session->statusCodeEquals(200);
-    $this->drupalPostForm(NULL, ['keys' => 'blog number 1'], 'Search');
+    $this->submitForm(['keys' => 'blog number 1'], 'Search');
     $assert_session->pageTextContains('Title blog number 1');
     $assert_session->pageTextContains('This is the body text for blog number 1.');
-    $this->drupalPostForm(NULL, ['keys' => 'document number 1'], 'Search');
+    $this->submitForm(['keys' => 'document number 1'], 'Search');
     $assert_session->pageTextContains('Title document number 1');
     $assert_session->pageTextNotContains('This is the body text for document number 1.');
   }

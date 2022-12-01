@@ -19,7 +19,7 @@ abstract class EvaTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'eva',
     'eva_test',
     'node',
@@ -52,7 +52,7 @@ abstract class EvaTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->makeNodes();

@@ -27,7 +27,8 @@ module should not be used on production sites.
 Required.
 ```php
 // Origin - no trailing slash.
-$config['stage_file_proxy.settings']['origin'] = 'http://example.com';  // no trailing slash
+$config['stage_file_proxy.settings']['origin'] = 'http://example.com';
+// no trailing slash
 ```
 Drush variable set:
 ```bash
@@ -40,11 +41,13 @@ special characters.
 For example, setting a user name of "myusername" and password as, "letme&in" the
 configuration would be the following:
 ```php
-$config['stage_file_proxy.settings']['origin'] = 'http://myusername:letme%26in@example.com';
+$config['stage_file_proxy.settings']['origin'] =
+'http://myusername:letme%26in@example.com';
 ```
 Drush variable set:
 ```bash
-drush config-set stage_file_proxy.settings origin http://myusername:letme%26in@example.com
+drush config-set stage_file_proxy.settings origin
+http://myusername:letme%26in@example.com
 ```
 
 ### SSL verification

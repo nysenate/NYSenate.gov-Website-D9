@@ -15,21 +15,21 @@ class ViewDisplays {
   /**
    * The default cache bin.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $defaultCache;
 
   /**
    * The render cache bin.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $renderCache;
 
   /**
    * Handle module configuration.
    *
-   * @var [rupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 

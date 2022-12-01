@@ -16,12 +16,12 @@ class LanguageIntegrationTest extends FunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->adminUser);
@@ -57,12 +57,13 @@ class LanguageIntegrationTest extends FunctionalTestBase {
       'id' => 'search',
       'index' => $this->index->id(),
     ];
-    $this->drupalPostForm('admin/config/search/search-api-pages/add', $step1, 'Next');
+    $this->drupalGet('admin/config/search/search-api-pages/add');
+    $this->submitForm($step1, 'Next');
 
     $step2 = [
       'path' => 'search',
     ];
-    $this->drupalPostForm(NULL, $step2, 'Save');
+    $this->submitForm($step2, 'Save');
   }
 
   /**
@@ -72,14 +73,14 @@ class LanguageIntegrationTest extends FunctionalTestBase {
     $assert_session = $this->assertSession();
 
     $this->drupalGet('/search');
-    $this->drupalPostForm(NULL, ['keys' => 'bird'], 'Search');
+    $this->submitForm(['keys' => 'bird'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('1 result found');
     $assert_session->pageTextContains('Hawk');
     $assert_session->pageTextNotContains('Your search yielded no results.');
 
     $this->drupalGet('/nl/search');
-    $this->drupalPostForm(NULL, ['keys' => 'bird'], 'Search');
+    $this->submitForm(['keys' => 'bird'], 'Search');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('1 result found');
     $assert_session->pageTextContains('Havik');
@@ -130,7 +131,7 @@ class LanguageIntegrationTest extends FunctionalTestBase {
 
     // Test that keys are properly preserved when switching languages.
     $this->drupalGet('/search');
-    $this->drupalPostForm(NULL, ['keys' => 'bird'], 'Search');
+    $this->submitForm(['keys' => 'bird'], 'Search');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('1 result found');
     $this->assertSession()->pageTextContains('Hawk');

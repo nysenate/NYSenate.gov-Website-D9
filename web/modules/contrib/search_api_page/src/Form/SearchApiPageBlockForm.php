@@ -102,7 +102,7 @@ class SearchApiPageBlockForm extends FormBase implements BaseFormIdInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $args = []) {
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     $search_api_page = $this->pageStorage->load($this->pageId);
 
     $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();

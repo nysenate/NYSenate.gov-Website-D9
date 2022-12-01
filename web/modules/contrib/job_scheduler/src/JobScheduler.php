@@ -3,6 +3,7 @@
 namespace Drupal\job_scheduler;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\job_scheduler\Entity\JobSchedule;
 
 /**
@@ -25,16 +26,26 @@ class JobScheduler implements JobSchedulerInterface {
   protected $jobScheduleStorage;
 
   /**
+   * The queue object.
+   *
+   * @var \Drupal\Core\Queue\QueueFactory
+   */
+  protected $queue;
+
+  /**
    * Constructs a object.
    *
    * @param \Drupal\job_scheduler\JobSchedulerCronTabDecoratorInterface $crontab_decorator
    *   The job scheduler crontab decorator.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
+   * @param \Drupal\Core\Queue\QueueFactory $queue
+   *   The queue factory.
    */
-  public function __construct(JobSchedulerCronTabDecoratorInterface $crontab_decorator, EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(JobSchedulerCronTabDecoratorInterface $crontab_decorator, EntityTypeManagerInterface $entityTypeManager, QueueFactory $queue) {
     $this->crontabDecorator = $crontab_decorator;
     $this->jobScheduleStorage = $entityTypeManager->getStorage('job_schedule');
+    $this->queue = $queue;
   }
 
   /**
@@ -44,9 +55,7 @@ class JobScheduler implements JobSchedulerInterface {
     if ($info = job_scheduler_info($name)) {
       return $info;
     }
-    throw new JobSchedulerException(t('Could not find Job Scheduler cron information for @name.', [
-      '@name' => $name,
-    ]));
+    throw new JobSchedulerException('Could not find Job Scheduler cron information for ' . $name . '.');
   }
 
   /**
@@ -106,7 +115,7 @@ class JobScheduler implements JobSchedulerInterface {
     $info = $this->info($job->getName());
     if (!empty($info['queue name'])) {
       $queue_name = 'job_scheduler_queue:' . $info['queue name'];
-      if (\Drupal::queue($queue_name)->createItem($job->id())) {
+      if ($this->queue($queue_name)->createItem($job->id())) {
         $this->reserve($job);
       }
     }
@@ -134,9 +143,7 @@ class JobScheduler implements JobSchedulerInterface {
       call_user_func($info['worker callback'], $job);
     }
     else {
-      throw new JobSchedulerException(t('Could not find worker callback function: @function', [
-        '@function' => $info['worker callback'],
-      ]));
+      throw new JobSchedulerException('Could not find worker callback function: ' . $info['worker callback']);
     }
   }
 
@@ -180,7 +187,7 @@ class JobScheduler implements JobSchedulerInterface {
 
     // If existing, and changed period or crontab, reschedule the job.
     if ($entity_ids) {
-      /** @var JobSchedule $existing */
+      /** @var \Drupal\job_scheduler\Entity\JobSchedule $existing */
       $existing = $storage->load(reset($entity_ids));
       if ($job['period'] != $existing->getPeriod() || $job['crontab'] != $existing->getCrontab()) {
         $existing->setPeriod($job['period']);
@@ -281,7 +288,7 @@ class JobScheduler implements JobSchedulerInterface {
   /**
    * Reserves a job.
    *
-   * @param JobSchedule $job
+   * @param \Drupal\job_scheduler\Entity\JobSchedule $job
    *   The job to reserve.
    *
    * @see \Drupal\job_scheduler\JobScheduler::dispatch()

@@ -22,7 +22,7 @@
         var $accordion = $(this);
         var $heading = $accordion.find('.nysenate-accordion__heading');
         var $itemCount = $accordion.find('.nysenate-accordion__content', context).length;
-        $("<span>(".concat($itemCount, ")</span>")).appendTo($heading); // Attach click handler for accordion.
+        $("<span class=\"count\">(".concat($itemCount, ")</span>")).appendTo($heading); // Attach click handler for accordion.
 
         var $toggle = $accordion.find('.nysenate-accordion__toggle', context);
         $toggle.on('click', function () {

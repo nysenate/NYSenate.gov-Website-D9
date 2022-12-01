@@ -98,7 +98,11 @@ class FetchManager implements FetchManagerInterface {
       if ($this->writeFile($destination, $response_data)) {
         return TRUE;
       }
-      $this->logger->error('@remote could not be saved to @path.', ['@remote' => $url, '@path' => $destination]);
+      $this->logger->error('@remote could not be saved to @path.',
+        [
+          '@remote' => $url,
+          '@path' => $destination,
+        ]);
       return FALSE;
     }
     catch (GuzzleException $e) {

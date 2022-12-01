@@ -33,7 +33,8 @@ Add a job.
 
 Work off a job.
 
-  function example_unpublish_nodes(\Drupal\job_scheduler\Entity\JobSchedule $job) {
+  function example_unpublish_nodes(
+    \Drupal\job_scheduler\Entity\JobSchedule $job) {
     // Do stuff.
   }
 
@@ -47,29 +48,43 @@ Remove a job.
   $service = \Drupal::service('job_scheduler.manager');
   $service->remove($job);
 
-Optionally jobs can declared together with a schedule in a hook_cron_job_scheduler_info().
+Optionally jobs can declared together with a schedule in a
+hook_cron_job_scheduler_info().
 
   function example_cron_job_scheduler_info() {
     $schedulers = [];
     $schedulers['example_unpublish'] = [
       'worker callback' => 'example_unpublish_nodes',
       'jobs' => [
-         ['type' => 'story', 'id' => 12, 'period' => 3600, 'periodic' => TRUE],
+         [
+           'type' => 'story',
+           'id' => 12,
+           'period' => 3600,
+           'periodic' => TRUE,
+         ],
       ],
     ];
     return $schedulers;
   }
 
-Jobs can have a 'crontab' instead of a period. Crontab syntax are Unix-like formatted crontab lines.
+Jobs can have a 'crontab' instead of a period. Crontab syntax are Unix-like
+formatted crontab lines.
+
 Example of job with crontab.
 
-  // This will create a job that will be triggered from monday to friday, from january to july, every two hours
+  // This will create a job that will be triggered from monday to friday, from
+  // january to july, every two hours.
   function example_cron_job_scheduler_info() {
     $schedulers = [];
     $schedulers['example_unpublish'] = [
       'worker callback' => 'example_unpublish_nodes',
       'jobs' => [
-         ['type' => 'story', 'id' => 12, 'crontab' => '0 */2 * january-july mon-fri', 'periodic' => TRUE],
+         [
+           'type' => 'story',
+           'id' => 12,
+           'crontab' => '0 */2 * january-july mon-fri',
+           'periodic' => TRUE,
+         ],
       ],
     ];
     return $schedulers;
@@ -97,7 +112,8 @@ Declare a queue name and a worker callback.
     return $schedulers;
   }
 
-  function example_unpublish_nodes(\Drupal\job_scheduler\Entity\JobSchedule $job) {
+  function example_unpublish_nodes(
+    \Drupal\job_scheduler\Entity\JobSchedule $job) {
     // Do stuff.
   }
 

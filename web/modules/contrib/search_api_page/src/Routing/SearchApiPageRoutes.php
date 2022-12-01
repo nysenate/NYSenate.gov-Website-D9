@@ -65,7 +65,7 @@ class SearchApiPageRoutes implements ContainerInjectionInterface {
 
     $is_multilingual = $this->languageManager->isMultilingual();
 
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     foreach ($this->entityTypeManager->getStorage('search_api_page')->loadMultiple() as $search_api_page) {
 
       // Default path.

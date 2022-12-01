@@ -19,7 +19,7 @@ class SearchApiPageForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     $search_api_page = $this->entity;
 
     $form['label'] = [
@@ -50,7 +50,7 @@ class SearchApiPageForm extends EntityForm {
 
     $index_options = [];
     $search_api_indexes = $this->entityTypeManager->getStorage('search_api_index')->loadMultiple();
-    /* @var  $search_api_index \Drupal\search_api\IndexInterface */
+    /** @var  \Drupal\search_api\IndexInterface $search_api_index */
     foreach ($search_api_indexes as $search_api_index) {
       $index_options[$search_api_index->id()] = $search_api_index->label();
     }
@@ -199,7 +199,7 @@ class SearchApiPageForm extends EntityForm {
       ],
     ];
 
-    /* @var $index \Drupal\search_api\IndexInterface */
+    /** @var \Drupal\search_api\IndexInterface $index */
     $index = Index::load($search_api_page->getIndex());
     $viewModeConfig = $search_api_page->getViewModeConfig();
     foreach ($index->getDatasources() as $datasource_id => $datasource) {
@@ -260,7 +260,7 @@ class SearchApiPageForm extends EntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
 
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     $search_api_page = $this->entity;
     if ($search_api_page->isNew()) {
       $actions['submit']['#value'] = $this->t('Next');
@@ -296,7 +296,7 @@ class SearchApiPageForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
+    /** @var \Drupal\search_api_page\SearchApiPageInterface $search_api_page */
     $search_api_page = $this->entity;
 
     // Reset view mode configuration.

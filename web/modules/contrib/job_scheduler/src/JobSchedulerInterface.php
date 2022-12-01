@@ -28,7 +28,7 @@ interface JobSchedulerInterface {
   /**
    * Adds a job to the schedule, replace any existing job.
    *
-   * A job is uniquely identified by $job = array(type, id).
+   * A job is uniquely identified by $job = [type, id].
    *
    * @code
    * function worker_callback($job) {
@@ -55,7 +55,7 @@ interface JobSchedulerInterface {
   /**
    * Removes a job from the schedule, replace any existing job.
    *
-   * A job is uniquely identified by $job = array(type, id).
+   * A job is uniquely identified by $job = [type, id].
    *
    * @param array $job
    *   A job to remove.
@@ -84,7 +84,7 @@ interface JobSchedulerInterface {
    * Executes a worker callback or if schedule declares a queue name, queues a
    * job for execution.
    *
-   * @param JobSchedule $job
+   * @param \Drupal\job_scheduler\Entity\JobSchedule $job
    *   A $job entity as passed into set() or loaded.
    *
    * @throws \Exception
@@ -95,7 +95,7 @@ interface JobSchedulerInterface {
   /**
    * Executes a job.
    *
-   * @param JobSchedule $job
+   * @param \Drupal\job_scheduler\Entity\JobSchedule $job
    *   A $job array as passed into set() or loaded.
    *
    * @throws \Exception
@@ -108,7 +108,7 @@ interface JobSchedulerInterface {
    *
    * If cannot determine the next time, drop the job.
    *
-   * @param JobSchedule $job
+   * @param \Drupal\job_scheduler\Entity\JobSchedule $job
    *   The job to reschedule.
    *
    * @throws \Exception

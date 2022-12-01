@@ -1,0 +1,151 @@
+@import "../../global/utils/init";
+
+.c-login {
+  margin: 0;
+  padding: 40px 0 60px 0;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+
+  p {
+    font-family: "Proxima Nova Regular";
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    margin-top: 0;
+  }
+
+  .nys-title {
+    margin: 0 0 20px 0;
+    text-transform: none;
+  }
+
+  .nys-senator--thumb {
+    height: 60px;
+    width: 60px;
+    margin: 0 auto 15px auto;
+    overflow: hidden;
+    border-radius: 100%;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .c-login-left,
+  .c-login-right {
+    text-align: center;
+    padding: 0 20px;
+
+    li {
+      text-transform: capitalize;
+      color: $grey03;
+      font-size: 14px;
+    }
+
+    ul {
+      list-style: none;
+    }
+  }
+
+  .c-login-left {
+    margin-bottom: 30px;
+
+    li:first-child {
+      font-size: 16px;
+      font-family: "Adelle Light";
+    }
+
+    li:nth-child(2) {
+      text-transform: none;
+    }
+  }
+
+  .c-login-right {
+    padding-top: 30px;
+    border-top: 1px solid $grey05;
+
+    li:first-child {
+      color: $grey03;
+    }
+
+    li:nth-child(2) {
+      font-size: 16px;
+      font-family: "Adelle Light";
+    }
+
+    li:last-child {
+      color: $grey04;
+    }
+  }
+
+  .c-user--info,
+  .c-senator--info {
+    padding: 0;
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .c-login {
+    margin: 0;
+    padding-bottom: 80px;
+
+    p {
+      font-size: 16px;
+    }
+
+    .nys-title {
+      font-size: 22px;
+      margin: 0px 0 10px 0;
+    }
+
+    .nys-senator--thumb {
+      height: 80px;
+      width: 80px;
+      margin: 0;
+    }
+
+    .c-login-left,
+    .c-login-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-align: left;
+      float: left;
+      width: 50%;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-top: 10px;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .c-login-left {
+      li:first-child {
+        font-size: 18px;
+      }
+    }
+
+    .c-login-right {
+      border-top: none;
+      padding: 0 0 0 30px;
+
+      li:nth-child(2) {
+        font-size: 18px;
+      }
+    }
+
+    .c-user--info,
+    .c-senator--info {
+      display: inline-block;
+      vertical-align: middle;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

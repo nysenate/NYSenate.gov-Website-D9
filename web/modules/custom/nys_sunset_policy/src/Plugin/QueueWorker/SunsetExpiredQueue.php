@@ -61,23 +61,32 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
     $params['message']['alias'] = $host . $node->toUrl()->toString();
     $params['message']['url'] = $host . '/node/' . $data->nid;
     $params['message']['title'] = $node->getTitle();
-    $subject = 'Content will expire soon - ' . $node->getTitle();
+    $subject = 'Content has expired - ' . $node->getTitle();
     $params['title'] = $subject;
     $key = 'expired_mail';
     $module = 'nys_sunset_policy';
     $params = ['subject' => $subject, 'body' => $params['message']];
     $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
-    $senator_email = '';
+    $senator_emails = [];
     $langcode = \Drupal::currentUser()->getPreferredLangcode();
     foreach ($senator_terms as $senator_term) {
-      $senator_email = $senator_term->get('field_email')->getValue()[0]['value'];
+      if ($senator_term->get('field_active_senator')->getValue()[0]['value']) {
+        $senator_emails[] = $senator_term->get('field_email')->getValue()[0]['value'];
+      }
+      else {
+        $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
+        $node->setUnpublished();
+        $node->save();
+      }
     }
-    $mailManager = \Drupal::service('plugin.manager.mail');
     try {
-      $mailManager->mail($module, $key, $senator_email, $langcode, $params, NULL, TRUE);
-      $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
-      $node->setPublished(FALSE);
-      $node->save();
+      foreach ($senator_emails as $senator_email) {
+        $mailManager = \Drupal::service('plugin.manager.mail');
+        $mailManager->mail($module, $key, $senator_email, $langcode, $params, NULL, TRUE);
+        $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
+        $node->setUnpublished();
+        $node->save();
+      }
     }
     catch (\Throwable $e) {
       \Drupal::logger('nys_sunset_policy')

@@ -28,7 +28,7 @@ function nys_sunset_policy_theme() {
 }
 
 /**
- * Implements hook_cron.
+ * Implements hook_cron().
  */
 function nys_sunset_policy_cron() {
   try {
@@ -36,17 +36,23 @@ function nys_sunset_policy_cron() {
     $queue_factory = \Drupal::service('queue');
     /** @var \Drupal\Core\Queue\QueueInterface $queue */
     $expiring_queue = $queue_factory->get('nys_sunset_expiring_queue');
-    /*$nids = nys_sunset_policy_get_expiring();
-    if(!empty($nids)) {
-    foreach ($nids as $nid) {
-    $expiring_queue->createItem($nid);
+    // $expiring_nids = nys_sunset_policy_get_expiring();
+    if (!empty($expiring_nids)) {
+      foreach ($expiring_nids as $nid) {
+        $expiring_queue->createItem($nid);
+      }
     }
-    }*/
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('nys_sunset_policy')
+      ->error('Sunset policy expiring queue not created.', ['message' => $e->getMessage()]);
+  }
+  try {
     /** @var \Drupal\Core\Queue\QueueInterface $queue */
     $expired_queue = $queue_factory->get('nys_sunset_expired_queue');
-    $nids = nys_sunset_policy_get_expired();
-    if (!empty($nids)) {
-      foreach ($nids as $nid) {
+    $expired_nids = nys_sunset_policy_get_expired();
+    if (!empty($expired_nids)) {
+      foreach ($expired_nids as $nid) {
         $item = new \stdClass();
         $item->nid = $nid;
         $expired_queue->createItem($item);
@@ -55,13 +61,15 @@ function nys_sunset_policy_cron() {
   }
   catch (\Throwable $e) {
     \Drupal::logger('nys_sunset_policy')
-      ->error('Sunset policy queues not created.' . $nids, ['message' => $e->getMessage()]);
+      ->error('Sunset policy expired queue not created.', ['message' => $e->getMessage()]);
   }
 }
 
 /**
+ * Petition and questionnaire node ids that have expired and need processing.
+ *
  * @return array
- *   Petition and questionnaire node ids that have expired and need processing.
+ *   An array of nids.
  */
 function nys_sunset_policy_get_expired() {
   $date = new DrupalDateTime();
@@ -79,14 +87,7 @@ function nys_sunset_policy_get_expired() {
       /** @var \Drupal\node\Entity\NodeInterface */
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
       if ($node->field_last_notified->getValue() < $node->field_expiration_date->getValue()) {
-        $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
-        $senator_active = [];
-        foreach ($senator_terms as $senator_term) {
-          $senator_active[] = $senator_term->get('field_active_senator')->getValue()[0]['value'];
-        }
-        if (in_array(FALSE, $senator_active, TRUE) === FALSE) {
-          $node_ids[] = $nid;
-        }
+        $node_ids[] = $nid;
       }
     }
   }
@@ -94,15 +95,16 @@ function nys_sunset_policy_get_expired() {
 }
 
 /**
+ * Petition and questionnaire node ids that have expired and need processing.
+ *
  * @return array
- *   Petition and questionnaire node ids that have expired and need processing.
+ *   An array of nids.
  */
 function nys_sunset_policy_get_expiring() {
   $date = new DrupalDateTime();
   $date->setTimezone(new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
   $date = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
-  $future = date('Y-m-d', strtotime('+2 days', REQUEST_TIME));
-  $current = date('Y-m-d', REQUEST_TIME);
+  $future = date('Y-m-d', strtotime('+2 days', $date));
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
   $results = $query
     ->condition('type', ['petition', 'questionnaire'], 'IN')
@@ -116,14 +118,7 @@ function nys_sunset_policy_get_expiring() {
       /** @var \Drupal\node\Entity\NodeInterface */
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
       if (strtotime('+2 days', $node->field_last_notified->getValue()) < $node->field_expiration_date->getValue()) {
-        $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
-        $senator_active = [];
-        foreach ($senator_terms as $senator_term) {
-          $senator_active[] = $senator_term->get('field_active_senator')->getValue()[0]['value'];
-        }
-        if (in_array(FALSE, $senator_active, TRUE) === FALSE) {
-          $node_ids[] = $nid;
-        }
+        $node_ids[] = $nid;
       }
     }
   }

@@ -77,27 +77,27 @@
   {{ title_prefix }}
 
   {% if page %}
-  <header class="c-news--head">
-    <h1 class="nys-article-title">{{ title }}</h1>
-    <h2 class="c-initiative--subtitle">Honoree Profile</h2>
-    <div class="c-news--head-meta">
+    <header class="c-news--head">
+      <h1 class="nys-article-title">{{ title }}</h1>
+      <h2 class="c-initiative--subtitle">Honoree Profile</h2>
+      <div class="c-news--head-meta">
 
-      {% if content.field_date %}
-        <p class="c-news--pub-date">
-          <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
-        </p>
-      {% endif %}
+        {% if content.field_date %}
+          <p class="c-news--pub-date">
+            <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
+          </p>
+        {% endif %}
 
-      {% if issues %}
-        <ul class="nys-associated-topics">
-          <div class="nys-associated-topics--label">issue:</div>
-          {% for issue in issues %}
-            <li>{{ issue }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
-  </header>
+        {% if issues %}
+          <ul class="nys-associated-topics">
+            <div class="nys-associated-topics--label">issue:</div>
+            {% for issue in issues %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
     <div class="c-news--body">
       {% if content.field_image_main %}
         <div class="c-block c-block--img">
@@ -133,13 +133,17 @@
       %}
     </div>
 
-  <div class="c-block--honorees">
-    {% if content.field_honoree_type[0]['#markup'] == 'veterans' %}
-      {{ vet_archive_list }}
-    {% elseif content.field_honoree_type.value[0]['#markup']  == 'women' %}
-      {{ women_archive_list }}
-    {% endif %}
-  </div>
+    <div class="c-block--honorees">
+      {% if content.field_honoree_type[0]['#markup'] == 'veterans' %}
+        {{ vet_archive_list }}
+      {% elseif content.field_honoree_type.value[0]['#markup']  == 'women' %}
+        {{ women_archive_list }}
+      {% endif %}
+    </div>
 
-{% endif %}
+  {% endif %}
+
+  {% if content.field_senator_multiref['#items'] %}
+    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+  {% endif %}
 </article>

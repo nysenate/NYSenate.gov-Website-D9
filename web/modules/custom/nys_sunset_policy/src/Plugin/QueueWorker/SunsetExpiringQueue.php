@@ -5,6 +5,7 @@ namespace Drupal\nys_sunset_policy\Plugin\QueueWorker;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -55,27 +56,30 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
    * @throws \Exception
    */
   public function processItem($data) {
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $this->nodeStorage->load($data->nid);
-    $host = \Drupal::request()->getHost();
-    $params['message']['expired'] = date('l M jS Y', strtotime($node->field_expiration_date->getValue()[0]['value']));
-    $params['message']['alias'] = $host . $node->toUrl()->toString();
-    $params['message']['url'] = $host . '/node/' . $data->nid;
-    $params['message']['title'] = $node->getTitle();
-    $subject = 'Content will expire soon - ' . $node->getTitle();
-    $params['title'] = $subject;
-    $key = 'expiring_mail';
-    $module = 'nys_sunset_policy';
-    $params = ['subject' => $subject, 'body' => $params['message']];
-    $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
-    $senator_emails = [];
-    $langcode = \Drupal::currentUser()->getPreferredLangcode();
-    foreach ($senator_terms as $senator_term) {
-      if ($senator_term->get('field_active_senator')->getValue()[0]['value']) {
-        $senator_emails[] = $senator_term->get('field_email')->getValue()[0]['value'];
-      }
-      else {
-        $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
-        $node->save();
+    if ($node instanceof NodeInterface) {
+      $host = \Drupal::request()->getHost();
+      $params['message']['expired'] = date('l M jS Y', strtotime($node->field_expiration_date->getValue()[0]['value']));
+      $params['message']['alias'] = $host . $node->toUrl()->toString();
+      $params['message']['url'] = $host . '/node/' . $data->nid;
+      $params['message']['title'] = $node->getTitle();
+      $subject = 'Content will expire soon - ' . $node->getTitle();
+      $params['title'] = $subject;
+      $key = 'expiring_mail';
+      $module = 'nys_sunset_policy';
+      $params = ['subject' => $subject, 'body' => $params['message']];
+      $senator_terms = $node->get('field_senator_multiref')->referencedEntities();
+      $senator_emails = [];
+      $langcode = \Drupal::currentUser()->getPreferredLangcode();
+      foreach ($senator_terms as $senator_term) {
+        if ($senator_term->get('field_active_senator')->getValue()[0]['value']) {
+          $senator_emails[] = $senator_term->get('field_email')->getValue()[0]['value'];
+        }
+        else {
+          $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
+          $node->save();
+        }
       }
     }
     try {

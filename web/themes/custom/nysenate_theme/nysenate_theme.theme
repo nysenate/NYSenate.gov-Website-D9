@@ -1664,7 +1664,7 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
   $parties = implode(', ', array_map(function ($item) {
     return $item['value'];
   }, $party));
-  $variables['party'] = t('@party @district <span>Senate District</span>',
+  $variables['party'] = t('@party <span>@district Senate District</span>',
     [
       '@party' => $parties ? '(' . $parties . ')' : '',
       '@district' => $district,
@@ -2166,14 +2166,14 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $current_status_name = $node->field_ol_last_status->value;
   $current_status = $status_to_values[$current_status_name];
 
-  $committee = $node->field_ol_latest_status_committee[0]->value;
+  $committee = isset($node->field_ol_latest_status_committee[0]) ? $node->field_ol_latest_status_committee[0]->value : '';
   $chamber = $node->field_ol_chamber[0]->value;
 
   if (
     ($current_status_name == 'PASSED_ASSEMBLY' && $chamber == 'senate') ||
     ($current_status_name == 'PASSED_SENATE' && $chamber == 'assembly')
   ) {
-    $current_status = 'Passed Senate &amp; Assembly';
+    $current_status = 'Passed Senate & Assembly';
   }
 
   $variables['status_display'] = $current_status;

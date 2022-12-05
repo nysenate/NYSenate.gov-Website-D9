@@ -111,6 +111,14 @@ content:
     third_party_settings: {  }
     weight: 115
     region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 10
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }
@@ -123,6 +131,6 @@ hidden:
   field_honoree_contact_name: true
   field_honoree_name: true
   field_profile_status: true
-  field_senator_multiref: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

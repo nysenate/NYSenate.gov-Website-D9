@@ -75,10 +75,9 @@
       cta: cta,
     } only %}
 
-    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% if content.field_senator_multiref['#items'] %}
+      {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% endif %}
   </div>
 
-  {% if content.field_senator_multiref['#items'] %}
-    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
-  {% endif %}
 </article>

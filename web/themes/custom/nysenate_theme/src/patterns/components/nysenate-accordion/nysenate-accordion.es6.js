@@ -25,7 +25,7 @@
         const $heading = $accordion.find('.nysenate-accordion__heading');
         const $itemCount = $accordion.find('.nysenate-accordion__content', context).length;
 
-        $(`<span>(${$itemCount})</span>`).appendTo($heading);
+        $(`<span class="count">(${$itemCount})</span>`).appendTo($heading);
 
         // Attach click handler for accordion.
         const $toggle = $accordion.find('.nysenate-accordion__toggle', context);

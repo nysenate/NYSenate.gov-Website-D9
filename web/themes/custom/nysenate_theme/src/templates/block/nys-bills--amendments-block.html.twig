@@ -1,4 +1,6 @@
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/nysenate-accordion') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 
 <!-- Amendment Tabs -->
 {% if content.amendments|length > 1 %}
@@ -6,42 +8,16 @@
     <div id="amendment-details"></div>
     <h3 class="c-detail--subhead c-detail--section-title">Bill Amendments</h3>
 
-    {#
-      There are different sections here for mobile and tablet-plus (desktop), because
-      we want mobile only to be overridden with special actions.  Pay attention to what section you are working on.
-      They are notated below.
-    #}
-    {# BEGIN DESKTOP SECTION #}
-    <dl class="l-tab-bar u-tablet-plus">
-      {% for title,amendment_id in content.amended_versions %}
+    <dl class="l-tab-bar">
+      {% for title, amendment_id in content.amended_versions %}
         {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
         {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
         {% set is_active_tab = content.bill_wrapper.label() == title %}
 
-        <dd class="c-tab  {{ is_active_tab ? 'active' : '' }}">
-          <a class="c-tab-link bill-version-tab" data-version="{{ title }}" data-target="/node/{{ amendment_id }}">
-
-            {{ version is empty ? "Original" : version }}
-            {{ is_active_version ? " (Active) " : "" }}
-          </a>
-        </dd>
-      {% endfor %}
-    </dl>
-    {# END DESKTOP SECTION #}
-
-    {# BEGIN MOBILE SECTION #}
-    <dl class="l-tab-bar u-mobile-only" id="mobile-bill-tab">
-      <div class="c-tab--arrow u-mobile-only" id="mobile-bill-arrow"></div>
-      {% for title,amendment_id in content.amended_versions %}
-        {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
-        {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
-        {% set is_active_tab = content.bill_wrapper.label() == title %}
-        <dd class="c-tab  {{ is_active_tab ? 'active' : 'inactive' }}">
-          <a class="c-tab-link bill-version-tab" data-version="{{ title }}" data-target="/node/{{ amendment_id }}">
-
-            {{ version is empty ? "Original" : version }}
-            {{ is_active_version ? " (Active) " : "" }}
-          </a>
+        <dd class="c-tab {{ is_active_tab ? 'active' : '' }}"  data-version="{{ title }}" data-target="/node/{{ amendment_id }}">
+          <input class="c-tab-link form-radio" type="radio" name="{{ version is empty ? "Original" : version }}" value="#{{ title }}">
+          <label class="c-tab-link" for="{{ version is empty ? "Original" : version }}">{{ version is empty ? "Original" : version }}
+            {{ is_active_version ? " (Active) " : "" }}</label>
         </dd>
       {% endfor %}
     </dl>
@@ -52,7 +28,7 @@
   {% for amendment in content.amendments %}
     {% set node_wrapper = amendment.node %}
     {% set is_active_version = node_wrapper.field_ol_is_active_version.value %}
-    <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node_wrapper.label() ? ' active' : '' }}" data-version="{{ amendment_id.title }}">
+    <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node_wrapper.label() ? ' active' : '' }}" data-version="{{ node_wrapper.label() }}" id="{{ node_wrapper.label() }}">
       <!-- Amendment Details -->
       <!-- Quote Block -->
       {# @todo Quote block #}
@@ -71,18 +47,18 @@
                 <div class="other_{{ key }}-sponsors">
                   <article class="nysenate-accordion">
                     <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-sponsors" aria-expanded="false" id="nysenate-accordion__toggle-1-sponsors" aria-selected="false">
-                      <span class="nysenate-accordion__heading">
+                      <span class="nysenate-accordion__heading hide-number">
                         <span class="indicator">View
                         </span>additional
                         {{ key }}-sponsors
                       </span>
                       {{ icons.get('accordion__arrow'|lower) }}
                     </button>
-                    {% for item in list[4:] %}
-                      <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-sponsors" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-sponsors">
+                    <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-sponsors" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-sponsors">
+                      {% for item in list[4:] %}
                         {{ item }}
-                      </div>
-                    {% endfor %}
+                      {% endfor %}
+                    </div>
                   </article>
                 </div>
               {% endif %}
@@ -196,7 +172,7 @@
           <div id="sponsor-memo-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
-                
+
                 {{ read_more_parts.part_1 }}
               </pre>
               {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
@@ -234,7 +210,7 @@
           <div id="full-text-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
-              
+
               {{ read_more_parts.part_1 }}
               </pre>
               {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}

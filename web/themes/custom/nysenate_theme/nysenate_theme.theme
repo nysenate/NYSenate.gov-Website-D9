@@ -3246,32 +3246,31 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
  * Implements hook_preprocess_node__NODE_TYPE().
  */
 function nysenate_theme_preprocess_node__landing__senators_committees(&$variables) {
-  $node = $variables['elements']['#node'];
+  foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
+    if (!is_numeric($key)) {
+      continue;
+    }
 
-  if ($variables['content']['field_landing_blocks'][0]) {
-    $variables['header_text'] = $variables['content']['field_landing_blocks'][0]['field_body_left'][0];
+    if ($block['#block_content']->bundle() == 'text') {
+      if ($block['#block_content']->field_title->value != 'Senate Directories') {
+        $variables['header_text'] = $block['field_body_left'][0];
+      }
+      else {
+        $variables['directories'] = [
+          'title' => $block['#block_content']->field_title->value,
+          'content' => $block['#block_content']->field_body_left->value,
+        ];
+      }
+    }
+    elseif ($block['#block_content']->bundle() == 'views') {
+      if ($block['#block_content']->field_title->value == 'Senators List') {
+        $variables['senators'] = $block['field_views_ref'][0];
+      }
+      elseif ($block['#block_content']->field_title->value == 'Committees List') {
+        $variables['committees'] = $block['field_views_ref'][0];
+      }
+    }
   }
-
-  if ($variables['content']['field_landing_blocks'][2]) {
-    $variables['committees'] = $variables['content']['field_landing_blocks'][2]['field_views_ref'][0];
-  }
-
-  $variables['directories'] = [
-    [
-      'title' => t('Member Directory'),
-      'cta' => [
-        'url' => '/sites/default/files/pdfs/member-directory-12-30-21.pdf',
-        'text' => t('download pdf'),
-      ],
-    ],
-    [
-      'title' => 'Senate Leadership List',
-      'cta' => [
-        'url' => '/senate-leadership',
-        'text' => t('view list'),
-      ],
-    ],
-  ];
 }
 
 /**

@@ -93,14 +93,15 @@
     <div class="l-row">
       <div class="panel-pane pane-block pane-senators">
         <div class="pane-content">
-          {{ content.field_landing_blocks.1.field_views_ref.0 }}
+          {{ senators }}
         </div>
       </div>
       <div class="panel-pane pane-block pane-nys-blocks-senate-directories">
         <div class="pane-content">
           {% include '@nysenate_theme/nysenate-senate-directory/nysenate-senate-directory.twig' with {
-            title: 'Senate Directories',
-            directories: directories,
+            title: directories.title,
+            content: directories.content,
+            patternlab: false,
           } only %}
         </div>
       </div>

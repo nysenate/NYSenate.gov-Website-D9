@@ -1,0 +1,19 @@
+{{ attach_library('nysenate_theme/nysenate-almost-there') }}
+
+<section>
+  <header>
+    <h2 class="nys-article-title">
+      {{ title }}
+    </h2>
+    <div class="c-news--head-meta"></div>
+  </header>
+
+  <div class="c-news--body nysenate-almost-there__container">
+    <div class="image-wrapper">
+      {{ image }}
+    </div>
+    <div class="c-block">
+      {{ body|raw }}
+    </div>
+  </div>
+</section>

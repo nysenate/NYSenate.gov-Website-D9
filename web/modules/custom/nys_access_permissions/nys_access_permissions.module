@@ -91,9 +91,9 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
         }
       }
       elseif (in_array($node->bundle(), _nys_access_permissions_microsite_content_producer_node_types())) {
-        if ($node->hasField('field_senator_multiref') && $target_ids = $node->field_senator_multiref->getValue()) {
-          foreach ($target_ids as $target_id) {
-            if (_nys_access_permissions_user_is_senators_microsite_producer($target_id, $account->id())) {
+        if ($node->hasField('field_senator_multiref') && $senator_multirefs = $node->field_senator_multiref->getValue()) {
+          foreach ($senator_multirefs as $senator_multiref) {
+            if (_nys_access_permissions_user_is_senators_microsite_producer($senator_multiref['target_id'], $account->id())) {
               return AccessResult::allowed();
             }
           }

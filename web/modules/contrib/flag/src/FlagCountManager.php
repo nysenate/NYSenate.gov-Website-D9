@@ -243,7 +243,16 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
         $flaggings_count[$flag_id][$entity_id]++;
       }
 
-      $this->resetLoadedCounts($flagging->getFlaggable(), $flagging->getFlag());
+      $flaggable = $flagging->getFlaggable();
+
+      if (is_null($flaggable)) {
+        // The flaggable no longer exists. Past this point we are only dealing
+        // with IDs, so that should be fine.
+        continue;
+      }
+
+      $this->resetLoadedCounts($flaggable, $flagging->getFlag());
+
     }
 
     // Build a query that fetches the count for all flag and entity ID

@@ -36,7 +36,7 @@ class Request {
   /**
    * The timestamp format expected by OL in most queries.
    */
-  const OPENLEG_TIME_FORMAT = 'Y-m-d\TH:i:s';
+  const OPENLEG_TIME_FORMAT = 'Y-m-d\TH:i:s.u';
 
   /**
    * The date-only format expected by OL.
@@ -345,24 +345,6 @@ class Request {
       ->setVersion($options['version'] ?? static::DEFAULT_VERSION)
       ->setPathPrefix($options['path_prefix'] ?? static::DEFAULT_PATH_PREFIX);
     return $this;
-  }
-
-  /**
-   * Formats a timestamp as required by Openleg.
-   *
-   * @param mixed $timestamp
-   *   An epoch timestamp, or other valid string-format timestamp.
-   * @param string $format
-   *   Defaults to the class constant.
-   *
-   * @return string
-   *   The formatted timestamp.
-   */
-  public static function formatTimestamp($timestamp, string $format = ''): string {
-    if (!is_numeric($timestamp)) {
-      $timestamp = strtotime($timestamp);
-    }
-    return date($format ?: static::OPENLEG_TIME_FORMAT, $timestamp);
   }
 
 }

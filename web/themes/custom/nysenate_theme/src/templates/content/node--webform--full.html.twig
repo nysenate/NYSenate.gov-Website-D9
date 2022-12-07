@@ -2,13 +2,13 @@
 
 {%
   set classes = [
-    'node',
-    'node--type-' ~ node.bundle|clean_class,
-    node.isPromoted() ? 'node--promoted',
-    node.isSticky() ? 'node--sticky',
-    not node.isPublished() ? 'node--unpublished',
-    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-  ]
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
 %}
 
 <article{{attributes.addClass(classes)}}>
@@ -75,6 +75,9 @@
       cta: cta,
     } only %}
 
-    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% if content.field_senator_multiref['#items'] %}
+      {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% endif %}
   </div>
+
 </article>

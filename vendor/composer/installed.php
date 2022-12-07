@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'a04c73f1e17ffa5d27050f09a92676356832ea61',
+        'reference' => 'f2084b5a2b106cc80e017e23d7e6fdbf562a5d35',
         'name' => 'mediacurrent/drupal-project',
         'dev' => false,
     ),
@@ -1681,6 +1681,15 @@
             'reference' => NULL,
             'dev_requirement' => false,
         ),
+        'drupal/webform_views' => array(
+            'pretty_version' => '5.0.0',
+            'version' => '5.0.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/webform_views',
+            'aliases' => array(),
+            'reference' => '8.x-5.0',
+            'dev_requirement' => false,
+        ),
         'drupal/x_originating_ip' => array(
             'pretty_version' => '1.2.0',
             'version' => '1.2.0.0',
@@ -1927,7 +1936,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'a04c73f1e17ffa5d27050f09a92676356832ea61',
+            'reference' => 'f2084b5a2b106cc80e017e23d7e6fdbf562a5d35',
             'dev_requirement' => false,
         ),
         'mediacurrent/mis_profile' => array(

@@ -80,16 +80,20 @@
     {% endif %}
 
     {% if content.field_attachment.0 %}
-    <div class="c-block c-news--download">
-      <h2 class="c-initiative--subtitle">More Information:</h2>
-      {{ content.field_attachment.0 }}
-    </div>
+      <div class="c-block c-news--download">
+        <h2 class="c-initiative--subtitle">More Information:</h2>
+        {{ content.field_attachment.0 }}
+      </div>
+    {% endif %}
+
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta,
+    } only %}
+  </div>
+
+  {% if content.field_senator_multiref['#items'] %}
+    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
   {% endif %}
-
-  {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
-    title: node.type.entity.label,
-    node_url: url,
-    cta: cta,
-  } only %}
-
 </article>

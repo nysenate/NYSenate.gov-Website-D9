@@ -85,4 +85,8 @@
     } only %}
 
   </section>
+
+  {% if content.field_senator_multiref['#items'] %}
+    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+  {% endif %}
 </article>

@@ -57,12 +57,12 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
    */
   public function processItem($data) {
     /** @var \Drupal\node\NodeInterface $node */
-    $node = $this->nodeStorage->load($data->nid);
+    $node = $this->nodeStorage->load($data);
     if ($node instanceof NodeInterface) {
       $host = \Drupal::request()->getHost();
       $params['message']['expired'] = date('l M jS Y', strtotime($node->field_expiration_date->getValue()[0]['value']));
       $params['message']['alias'] = $host . $node->toUrl()->toString();
-      $params['message']['url'] = $host . '/node/' . $data->nid;
+      $params['message']['url'] = $host . '/node/' . $data;
       $params['message']['title'] = $node->getTitle();
       $subject = 'Content will expire soon - ' . $node->getTitle();
       $params['title'] = $subject;
@@ -83,16 +83,18 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
       }
     }
     try {
-      foreach ($senator_emails as $senator_email) {
-        $mailManager = \Drupal::service('plugin.manager.mail');
-        $mailManager->mail($module, $key, $senator_email, $langcode, $params, NULL, TRUE);
-        $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
-        $node->save();
+      if (!empty($senator_emails)) {
+        foreach ($senator_emails as $senator_email) {
+          $mailManager = \Drupal::service('plugin.manager.mail');
+          $mailManager->mail($module, $key, $senator_email, $langcode, $params, NULL, TRUE);
+          $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
+          $node->save();
+        }
       }
     }
     catch (\Throwable $e) {
       \Drupal::logger('nys_sunset_policy')
-        ->error('Unable to send expiring mail for node/' . $data->nid, ['message' => $e->getMessage()]);
+        ->error('Unable to send expiring mail for node/' . $data, ['message' => $e->getMessage()]);
     }
   }
 

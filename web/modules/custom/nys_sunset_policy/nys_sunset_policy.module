@@ -42,26 +42,18 @@ function nys_sunset_policy_cron() {
         $expiring_queue->createItem($nid);
       }
     }
-  }
-  catch (\Throwable $e) {
-    \Drupal::logger('nys_sunset_policy')
-      ->error('Sunset policy expiring queue not created.', ['message' => $e->getMessage()]);
-  }
-  try {
     /** @var \Drupal\Core\Queue\QueueInterface $expired_queue */
     $expired_queue = $queue_factory->get('nys_sunset_expired_queue');
     $expired_nids = nys_sunset_policy_get_expired();
     if (!empty($expired_nids)) {
       foreach ($expired_nids as $nid) {
-        $item = new \stdClass();
-        $item->nid = $nid;
-        $expired_queue->createItem($item);
+        $expired_queue->createItem($nid);
       }
     }
   }
   catch (\Throwable $e) {
     \Drupal::logger('nys_sunset_policy')
-      ->error('Sunset policy expired queue not created.', ['message' => $e->getMessage()]);
+      ->error('Sunset policy queues not created.', ['message' => $e->getMessage()]);
   }
 }
 
@@ -103,7 +95,9 @@ function nys_sunset_policy_get_expiring() {
   $date = new DrupalDateTime();
   $date->setTimezone(new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
   $date = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
-  $future = date('Y-m-d', strtotime('+2 days', $date));
+  $current = new DateTime($date);
+  $future = $current->modify('+2 day');
+  $future = $future->format('Y-m-d\TH:i:s');
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
   $results = $query
     ->condition('type', ['petition', 'questionnaire'], 'IN')
@@ -115,7 +109,8 @@ function nys_sunset_policy_get_expiring() {
   if (!empty($results)) {
     foreach ($results as $nid) {
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      if (strtotime('+2 days', $node->field_last_notified->getValue()) < $node->field_expiration_date->getValue()) {
+      $last_notified = $node->field_last_notified->getValue()[0]['value'];
+      if (strtotime('+2 days', intval($last_notified)) < $node->field_expiration_date->getValue()[0]['value']) {
         $node_ids[] = $nid;
       }
     }
@@ -143,7 +138,7 @@ function nys_sunset_policy_mail($key, &$message, $params) {
       $message['subject'] = $params['subject'];
       $body_data = [
         '#theme' => 'expiring_mail',
-        '#message' => $params['message'],
+        '#message' => $params['body'],
       ];
       $message['body'][] = \Drupal::service('renderer')->render($body_data);
       break;

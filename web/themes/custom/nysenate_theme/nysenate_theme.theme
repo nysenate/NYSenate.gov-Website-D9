@@ -3174,12 +3174,14 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__student_program(&$variables) {
-  $variables['field_image_title'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  if (isset($variables['content']['field_image_main'][0])) {
+    $variables['field_image_title'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  }
   $variables['node_id'] = $variables['node']->id();
 
   // Get Chapters/Accordion list.
   $chapters = [];
-  $accordion_items = $variables['content']['field_accordion'][0]['field_accordion_item'] ?? NULL;
+  $accordion_items = $variables['content']['field_accordion'][0]['field_accordion_item'] ?? [];
 
   foreach ($accordion_items as $key => $item) {
     if (!is_numeric($key)) {

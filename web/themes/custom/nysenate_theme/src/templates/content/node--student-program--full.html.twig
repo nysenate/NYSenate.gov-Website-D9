@@ -74,7 +74,9 @@
       cta: cta
     } only %}
 
-    {{ drupal_view('student_programs_news', 'main') }}
+    <div class="c-block pane-student-programs-news">
+      {{ drupal_view('student_programs_news', 'main') }}
+    </div>
 
     <div class="c-block">
       {% if student_programs %}

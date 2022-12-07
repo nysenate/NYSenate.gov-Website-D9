@@ -1311,6 +1311,43 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $variables['petitions'] = $petitions;
     }
   }
+
+  // Student Program News Main.
+  if ($view->id() == 'student_programs_news' && $view->current_display == 'main') {
+    $results = $view->result;
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+
+    $news = [];
+    foreach ($variables['rows'] as $row) {
+      $node = $row['content']['#row']->_entity;
+
+      $image = NULL;
+      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
+        if (!empty($media)) {
+          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+          if (!empty($file)) {
+            $image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
+        }
+      }
+
+      $date = '';
+      if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+        $field_date = $node->field_date->value;
+        $date = \Drupal::service('date.formatter')->format(strtotime($field_date), '', 'F j, Y');
+      }
+
+      $news[] = [
+        'title' => $node->getTitle(),
+        'url' => $node->toUrl()->toString(),
+        'image_src' => $image,
+        'date' => $date,
+      ];
+    }
+
+    $variables['title'] = $view->getTitle();
+  }
 }
 
 /**
@@ -1325,6 +1362,17 @@ function nysenate_theme_preprocess_views_view__news_by_issue__news(&$variables) 
   $variables['footer'] = [
     '#markup' => '<p>' . $link . '</p>',
   ];
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+
+  if ($hook == 'views_view_unformatted') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
 }
 
 /**

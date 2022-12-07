@@ -275,7 +275,7 @@ body {
 		width: 80%;
 		line-height: 1.5em;
 
-		a{
+		a {
 			color: $color-white;
 			vertical-align: middle;
 			display: inline-block;
@@ -330,13 +330,13 @@ body {
     background-color: #EAEAEA;
     //@extend .icon-before__arrow;
 
-    &:before {
+    &::before {
       font-size: 17px;
       margin-top: -2px;
       line-height: 12px;
     }
 
-    &:after {
+    &::after {
       display: none;
     }
   }
@@ -391,7 +391,7 @@ body {
   &.illustration--committee-votes {
     @extend .icon-before__committee-confirm;
 
-    &:before {
+    &::before {
       left: 0.3em;
       font-size: 42px;
     }
@@ -399,7 +399,7 @@ body {
   &.illustration--floor-votes {
     @extend .icon-before__home;
 
-    &:before {
+    &::before {
       left: 0.2em;
       font-size: 42px;
     }
@@ -407,7 +407,7 @@ body {
   &.illustration--passed {
     @extend .icon-before__check;
   }
-  &:before {
+  &::before {
     font-family: $senate-icons;
     position: absolute;
     top: 0;
@@ -428,6 +428,7 @@ body {
   @include font-stack-secondary;
   font-size: 13px;
   color: $grey02;
+  line-height: 16px !important;
 }
 
 
@@ -450,10 +451,10 @@ body {
       color: $orange01;
       background-color: transparent;
 
-      &:before {
+      &::before {
         display: none;
       }
-      &:after {
+      &::after {
         display: inline-block;
       }
     }
@@ -474,7 +475,7 @@ body {
         margin-right: 0;
 
         .c-senate-works--illustration {
-          &:after {
+          &::after {
             display: none;
           }
         }
@@ -486,11 +487,11 @@ body {
     height: 110px;
     overflow: visible;
 
-    &:before {
+    &::before {
       top: -0.1em;
     }
     // TRIANGLE!!
-    &:after {
+    &::after {
       content: "";
       display: block;
       position: absolute;

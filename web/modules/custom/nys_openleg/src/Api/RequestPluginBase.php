@@ -121,10 +121,13 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     );
 
     // If no end time was passed, set it to now.
-    $time_to = $time_to ?: time();
+    $time_to = $this->normalizeTimestamp($time_to ?: microtime(TRUE));
     $f_time_to = $this->formatTimestamp($time_to);
     // From time defaults to one day ago.
-    $f_time_from = $this->formatTimestamp($time_from ?: ($time_to - 86400));
+    $time_from = $time_from
+      ? $this->normalizeTimestamp($time_from)
+      : $time_to->sub(new \DateInterval('P1D'));
+    $f_time_from = $this->formatTimestamp($time_from);
     $resource = "updates/$f_time_from/$f_time_to";
 
     return $this->generateResponse(
@@ -167,21 +170,55 @@ abstract class RequestPluginBase implements RequestPluginInterface {
   /**
    * Formats a date for usage.
    *
-   * @param string $date
-   *   The date to format, acceptable for strtotime().
+   * @param mixed|null $dt
+   *   If this is not a \DateTime object, it will be normalized to one.
    * @param bool $include_time
    *   If the timestamp format should be used, versus the date-only format.
    *
    * @return string
    *   The formatted date, or a blank string.
    */
-  protected function formatTimestamp(string $date = '', bool $include_time = TRUE): string {
-    $format = $include_time ? $this->request::OPENLEG_TIME_FORMAT : $this->request::OPENLEG_DATE_FORMAT;
-    if (!$date) {
-      $date = $this->params['history'] ?? '';
+  protected function formatTimestamp(mixed $dt = NULL, bool $include_time = TRUE): string {
+    if (!($dt instanceof \DateTimeInterface)) {
+      $dt = $this->normalizeTimestamp($dt ?: ($this->params['history'] ?? ''));
     }
-    $time = is_numeric($date) ? $date : strtotime($date);
-    return $time ? (date($format, $time) ?: '') : '';
+    $format = $include_time ? $this->request::OPENLEG_TIME_FORMAT : $this->request::OPENLEG_DATE_FORMAT;
+    return $dt->format($format);
+  }
+
+  /**
+   * Coalesces possible timestamp formats into a DateTimeImmutable object.
+   *
+   * @param string $timestamp
+   *   A timestamp in any format parsable by strtotime().  If this is in the
+   *   standard OpenLeg format, or is an epoch timestamp with a decimal portion,
+   *   microseconds will be preserved.
+   */
+  protected function normalizeTimestamp(string $timestamp = ''): \DateTimeImmutable {
+    // If timestamp is numeric, avoid the "true zero" edge case.
+    if (is_numeric($timestamp)) {
+      $normalize = $timestamp . (str_contains($timestamp, '.') ? '' : '.000000');
+      $format = 'U.u';
+    }
+    // If not numeric, try the OpenLeg format first.
+    else {
+      $normalize = str_replace(' ', 'T', $timestamp);
+      $format = $this->request::OPENLEG_TIME_FORMAT;
+    }
+
+    try {
+      // Try to create using the detected format.  On failure, let DateTime
+      // try to figure it out (and lose microsecond precision).
+      $tz = new \DateTimeZone(date_default_timezone_get());
+      $dt = \DateTimeImmutable::createFromFormat($format, $normalize, $tz)
+        ?: new \DateTimeImmutable($timestamp, $tz);
+    }
+    catch (\Throwable $e) {
+      // No options left.  Everyone out of the pool.
+      throw new \InvalidArgumentException('Could not parse timestamp: ' . $timestamp);
+    }
+
+    return $dt;
   }
 
   /**

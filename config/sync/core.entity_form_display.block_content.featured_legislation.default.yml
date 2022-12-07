@@ -1,0 +1,49 @@
+uuid: a35d3f05-292b-4e4e-b536-349195de386d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_legislation
+    - field.field.block_content.featured_legislation.field_featured_legislation
+  module:
+    - paragraphs
+    - paragraphs_features
+id: block_content.featured_legislation.default
+targetEntityType: block_content
+bundle: featured_legislation
+mode: default
+content:
+  field_featured_legislation:
+    type: entity_reference_paragraphs
+    weight: 26
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: featured_legislation
+    third_party_settings:
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        split_text: false
+        show_drag_and_drop: true
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 3
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

@@ -1,136 +1,134 @@
 {{ attach_library('nysenate_theme/hero') }}
 {{ attach_library('rain_theme/media') }}
 
-<section class="hero {% if type == "senator" %} hero--senator {% else %} hero--homepage {% endif %}">
-  <div>
-    {% if type == "senator" %}
-      {# start of senator hero #}
-      <div class="l-header-region l-row l-row--hero c-senator-hero">
-        {% if senator_microsite_link %}
-          <a href="{{ senator_microsite_link }}">
-        {% endif %}
-          <div class="c-senator-hero--img" id="senatorImage">
-            {% if image_hero %}
-              {{ image_hero }}
+<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %}">
+  {% if type == "senator" %}
+    {# start of senator hero #}
+    <div class="l-header-region l-row l-row--hero c-senator-hero">
+      {% if senator_microsite_link %}
+        <a href="{{ senator_microsite_link }}">
+      {% endif %}
+        <div class="c-senator-hero--img" id="senatorImage">
+          {% if image_hero %}
+            {{ image_hero }}
+          {% else %}
+            <img src="{{ default_image }}">
+          {% endif %}
+        </div>
+        <div id="smallShotImage">
+          {{ senator_headshot }}
+        </div>
+      {% if senator_microsite_link %}
+        </a>
+      {% endif %}
+      <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
+        <div>
+          <h2 class="c-senator-hero--title">
+            {% if not is_active %}former
+            {% endif %}new york state senator<br>
+            {% if senator_microsite_link %}
+              <a href="{{ senator_microsite_link }}" class="c-senator-hero--name">{{ senator_name }}</a>
             {% else %}
-              <img src="{{ default_image }}">
+              <span class="c-senator-hero--name">{{ senator_name }}</span>
             {% endif %}
-          </div>
-          <div id="smallShotImage">
-            {{ senator_headshot }}
-          </div>
-        {% if senator_microsite_link %}
-          </a>
-        {% endif %}
-        <div class="c-senator-hero--info">
-          <div>
-            <h2 class="c-senator-hero--title">
-              {% if not is_active %}former
-              {% endif %}new york state senator<br>
-              {% if senator_microsite_link %}
-                <a href="{{ senator_microsite_link }}" class="c-senator-hero--name">{{ senator_name }}</a>
+          </h2>
+          <div class="c-senator-hero--info-secondary">
+            <p class="c-senator-hero--roles">
+              {% if not is_active %}
+                {{ inactive_senator_message }}
               {% else %}
-                <span class="c-senator-hero--name">{{ senator_name }}</span>
+                {{ current_duties }}
               {% endif %}
-            </h2>
-            <div class="c-senator-hero--info-secondary">
-              <p class="c-senator-hero--roles">
-                {% if not is_active %}
-                  {{ inactive_senator_message }}
-                {% else %}
-                  {{ current_duties }}
-                {% endif %}
-              </p>
-              <p class="c-senator-hero--district">
-                {% if senator_party %}
-                  <span class="c-senator-hero--party">
-                    {{ senator_party }}
-                  </span>
-                {% endif %}
-                {% if district_number %}
-                  <a href="{{ district_number.url }}">{{ district_number.text }}
-                    Senate District</a>
-                {% endif %}
-              </p>
-              <ul class="c-senator-hero--social">
-                {% for social in socials %}
-                  <li class="{% if loop.first %}first {% endif %}leaf c-senator-hero--social-item {{ social.name }}">
-                    <a href="{{ social.url }}" target="_blank" class="icon-replace__{{ social.name }}">{{ social.name }}</a>
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
+            </p>
+            <p class="c-senator-hero--district">
+              {% if senator_party %}
+                <span class="c-senator-hero--party">
+                  {{ senator_party }}
+                </span>
+              {% endif %}
+              {% if district_number %}
+                <a href="{{ district_number.url }}">{{ district_number.text }}
+                  Senate District</a>
+              {% endif %}
+            </p>
+            <ul class="c-senator-hero--social">
+              {% for social in socials %}
+                <li class="{% if loop.first %}first {% endif %}leaf c-senator-hero--social-item {{ social.name }}">
+                  <a href="{{ social.url }}" target="_blank" class="icon-replace__{{ social.name }}">{{ social.name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
           </div>
         </div>
-        {% if is_active %}
-          <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
-        {% else %}
-          <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
-        {% endif %}
       </div>
-      {# end of senator hero #}
-    {% else %}
-      {%
-        include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
-          is_logged: is_logged
-        } only
-      %}
-      <div class="l-header-region l-row c-hero">
-        <div class="c-hero-livestream-wrapper">
-          <div class="c-hero-livestream-video">
-            {% if video_id %}
-              <div class="media-item__responsive-video">
-                <iframe width='100%' height='315' id="UstreamIframe" src="https://www.ustream.tv/embed/{{ video_id }}" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade"></iframe>
-              </div>
-            {% endif %}
-          </div>
-          <div class="c-hero-livestream-data">
-            <div class="c-hero-livestream-meta">
-              <label>{{ 'Live Broadcast'|t }}</label>
-              <h3>
-                <a href="{{ url_calendar }}">{{ 'Session'|t }}</a>
-              </h3>
-              <div class="livestream-date">
-                <span class="date-display-single">{{ date }}</span>
-              </div>
+      {% if is_active %}
+        <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
+      {% else %}
+        <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
+      {% endif %}
+    </div>
+    {# end of senator hero #}
+  {% else %}
+    {%
+      include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
+        is_logged: is_logged
+      } only
+    %}
+    <div class="l-header-region l-row c-hero">
+      <div class="c-hero-livestream-wrapper">
+        <div class="c-hero-livestream-video">
+          {% if video_id %}
+            <div class="media-item__responsive-video">
+              <iframe width='100%' height='315' id="UstreamIframe" src="https://www.ustream.tv/embed/{{ video_id }}" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
-            <div class="c-hero-livestream-description">
-              <div>
-                {{ "Live floor proceedings of the New York State Senate,
-                          taking place at the NY State Capitol
-                          in Albany, NY."|t }}
-              </div>
-              <ul class="c-hero-livestream-links">
-                <li>
-                  <a href="{{ url_calendar }}">{{ "Review the active list, calendar, and other agenda items."|t }}</a>
-                </li>
-                <li>
-                  <a href="/rules">{{ "Review the senate rules."|t }}</a>
-                </li>
-                <li>
-                  <a href="https://twitter.com/nysenate">{{ "Follow along with session proceedings on Twitter."|t }}</a>
-                </li>
-                <li>
-                  <a href="/about">{{ "Learn more about the NY State Senate."|t }}</a>
-                </li>
-                <li>
-                  <a href="/citizen-guide/bill-alerts">
-                    <label class="news">{{ "NEW: "|t }}
-                    </label>
-                    {{ "Short on time? Get bill status alerts in your email inbox."|t }}
-                  </a>
-                </li>
-              </ul>
-              <div>
-                <a href="/taking-action">{{ "Learn more"|t }}</a>
-                {{ "about how you can participate in NY's legislative process with"|t }}
-                <a href="/register">
-                  {{ "NYSenate.gov."|t }}</a>
-              </div>
+          {% endif %}
+        </div>
+        <div class="c-hero-livestream-data">
+          <div class="c-hero-livestream-meta">
+            <label>{{ 'Live Broadcast'|t }}</label>
+            <h3>
+              <a href="{{ url_calendar }}">{{ 'Session'|t }}</a>
+            </h3>
+            <div class="livestream-date">
+              <span class="date-display-single">{{ date }}</span>
+            </div>
+          </div>
+          <div class="c-hero-livestream-description">
+            <div>
+              {{ "Live floor proceedings of the New York State Senate,
+                        taking place at the NY State Capitol
+                        in Albany, NY."|t }}
+            </div>
+            <ul class="c-hero-livestream-links">
+              <li>
+                <a href="{{ url_calendar }}">{{ "Review the active list, calendar, and other agenda items."|t }}</a>
+              </li>
+              <li>
+                <a href="/rules">{{ "Review the senate rules."|t }}</a>
+              </li>
+              <li>
+                <a href="https://twitter.com/nysenate">{{ "Follow along with session proceedings on Twitter."|t }}</a>
+              </li>
+              <li>
+                <a href="/about">{{ "Learn more about the NY State Senate."|t }}</a>
+              </li>
+              <li>
+                <a href="/citizen-guide/bill-alerts">
+                  <label class="news">{{ "NEW: "|t }}
+                  </label>
+                  {{ "Short on time? Get bill status alerts in your email inbox."|t }}
+                </a>
+              </li>
+            </ul>
+            <div>
+              <a href="/taking-action">{{ "Learn more"|t }}</a>
+              {{ "about how you can participate in NY's legislative process with"|t }}
+              <a href="/register">
+                {{ "NYSenate.gov."|t }}</a>
             </div>
           </div>
         </div>
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 </section>

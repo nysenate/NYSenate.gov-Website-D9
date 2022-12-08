@@ -77,8 +77,12 @@ function nys_sunset_policy_get_expired() {
   if (!empty($results)) {
     foreach ($results as $nid) {
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      if ($node->field_last_notified->getValue() < $node->field_expiration_date->getValue()) {
-        $node_ids[] = $nid;
+      if (!empty($node->field_expiration_date->getValue()[0]['value'])) {
+        if ($node->field_last_notified->getValue()[0]['value'] <
+            $node->field_expiration_date->getValue()[0]['value'] ||
+            empty($node->field_last_notified->getValue)) {
+          $node_ids[] = $nid;
+        }
       }
     }
   }
@@ -109,9 +113,13 @@ function nys_sunset_policy_get_expiring() {
   if (!empty($results)) {
     foreach ($results as $nid) {
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      $last_notified = $node->field_last_notified->getValue()[0]['value'];
-      if (strtotime('+2 days', intval($last_notified)) < $node->field_expiration_date->getValue()[0]['value']) {
-        $node_ids[] = $nid;
+      if (!empty($node->field_expiration_date->getValue()[0]['value'])) {
+        $last_notified = new DateTime($node->field_last_notified->getValue()[0]['value']);
+        $future_last_notified = $last_notified->modify('+2 day');
+        $future_last_notified = $future_last_notified->format('Y-m-d\TH:i:s');
+        if ($future_last_notified < $node->field_expiration_date->getValue()[0]['value']) {
+          $node_ids[] = $nid;
+        }
       }
     }
   }

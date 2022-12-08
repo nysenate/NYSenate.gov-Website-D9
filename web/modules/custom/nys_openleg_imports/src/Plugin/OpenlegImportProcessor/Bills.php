@@ -114,7 +114,7 @@ class Bills extends ImportProcessorBase {
       'field_ol_name' => $result->title,
       'field_ol_previous_versions' => json_encode($result->previousVersions->items),
       'field_ol_print_no' => $item->printNo,
-      'field_ol_publish_date' => date(Request::OPENLEG_TIME_FORMAT, strtotime($result->publishedDateTime)),
+      'field_ol_publish_date' => date(Request::OPENLEG_TIME_SIMPLE, strtotime($result->publishedDateTime)),
       'field_ol_same_as' => json_encode($item->sameAs->items),
       'field_ol_session' => $item->session,
       'field_ol_sponsor' => BillHelper::findSenatorFromMember($sponsor),

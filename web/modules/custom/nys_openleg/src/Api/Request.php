@@ -36,7 +36,12 @@ class Request {
   /**
    * The timestamp format expected by OL in most queries.
    */
-  const OPENLEG_TIME_FORMAT = 'Y-m-d\TH:i:s.u';
+  const OPENLEG_TIME_FULL = 'Y-m-d\TH:i:s.u';
+
+  /**
+   * The OL time format, sans microseconds.
+   */
+  const OPENLEG_TIME_SIMPLE = 'Y-m-d\TH:i:s';
 
   /**
    * The date-only format expected by OL.

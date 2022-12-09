@@ -3253,21 +3253,21 @@ function nysenate_theme_preprocess_node__landing__senators_committees(&$variable
 
     if ($block['#block_content']->bundle() == 'text') {
       if ($block['#block_content']->field_title->value != 'Senate Directories') {
-        $variables['header_text'] = $block['field_body_left'][0];
+        $variables['header_text'] = $block['field_body_left'][0] ?? NULL;
       }
       else {
         $variables['directories'] = [
-          'title' => $block['#block_content']->field_title->value,
-          'content' => $block['#block_content']->field_body_left->value,
+          'title' => $block['#block_content']->field_title->value ?? NULL,
+          'content' => $block['#block_content']->field_body_left->value ?? NULL,
         ];
       }
     }
     elseif ($block['#block_content']->bundle() == 'views') {
       if ($block['#block_content']->field_title->value == 'Senators List') {
-        $variables['senators'] = $block['field_views_ref'][0];
+        $variables['senators'] = $block['field_views_ref'][0] ?? NULL;
       }
       elseif ($block['#block_content']->field_title->value == 'Committees List') {
-        $variables['committees'] = $block['field_views_ref'][0];
+        $variables['committees'] = $block['field_views_ref'][0] ?? NULL;
       }
     }
   }

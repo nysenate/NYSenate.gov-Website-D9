@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install file for the nys_updates module.
+ * Install file for the nys_blocks module.
  */
 
 use Drupal\block_content\Entity\BlockContent;
@@ -10,7 +10,7 @@ use Drupal\block_content\Entity\BlockContent;
 /**
  * Implements hook_update_N().
  */
-function nys_updates_update_9002() {
+function nys_blocks_update_9001() {
   // Create Student Programs Overview Text block.
   $block = \Drupal::entityTypeManager()
     ->getStorage('block_content')

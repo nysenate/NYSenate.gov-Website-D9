@@ -17,13 +17,20 @@
 #}
 {{ attach_library('nysenate_theme/nysenate-student-programs') }}
 
-{% if title %}
-  <h2 class="pane-title">{{ title }}</h2>
-{% endif %}
 <div class="pane-content">
-  {% for row in rows %}
-    <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
-      {{- row.content -}}
+  {% for row in news %}
+    <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} odd {% else %} even {% endif %}">
+      {# {{- row.content -}} #}
+      <div class="main-image">
+        {% if row.image_src %}
+          <a href="{{ row.url }}">
+            <img src="{{ row.image_src }}" width="200" height="125" alt="">
+          </a>
+        {% endif %}
+      </div>
+      <div class="content-type">{{ row.type|striptags }}</div>
+      <div class="content-title">{{ row.title }}</div>
+      <span class="date-display-single">{{ row.date }}</span>
     </div>
   {% endfor %}
 </div>

@@ -12,6 +12,7 @@ dependencies:
     - node
     - text
     - user
+    - views_infinite_scroll
     - views_load_more
 id: student_programs_news
 label: 'Student Programs News'
@@ -988,28 +989,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: load_more
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 5
-          id: '0'
-          total_pages: ''
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
           expose:
-            items_per_page: 0
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: 0
+            offset: false
             offset_label: Offset
-          more_button_text: 'Load more'
-          end_text: ''
-          advanced:
-            content_selector: ''
-            pager_selector: ''
-          effects:
-            type: ''
-            speed: slow
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       defaults:
         pager: false
         fields: false

@@ -7,6 +7,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\webform\WebformInterface;
 
 /**
 * Custom Queue Worker.
@@ -80,6 +81,12 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
           $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
           $node->setUnpublished();
           $node->save();
+          if (!empty($node->get('webform'))) {
+            $webform_id = $node->get('webform')->getValue()[0]['target_id'];
+            $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($webform_id);
+            $webform->setStatus(WebformInterface::STATUS_CLOSED);
+            $webform->save();
+          }
         }
       }
     }
@@ -90,6 +97,12 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
         $node->set('field_last_notified', date('Y-m-d\TH:i:s', time()));
         $node->setUnpublished();
         $node->save();
+        if (!empty($node->get('webform'))) {
+          $webform_id = $node->get('webform')->getValue()[0]['target_id'];
+          $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($webform_id);
+          $webform->setStatus(WebformInterface::STATUS_CLOSED);
+          $webform->save();
+        }
       }
     }
     catch (\Throwable $e) {

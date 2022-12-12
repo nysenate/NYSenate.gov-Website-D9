@@ -1,7 +1,6 @@
 @import "../../global/utils/init";
 
 .c-container--const-pet-quest {
-
   article {
     display: flex;
     flex-direction: column;
@@ -16,7 +15,7 @@
       width: 100%;
       position: relative;
     }
-    
+
     .entry-title,
     .pet-type,
     .explore-link {
@@ -65,7 +64,6 @@
 
     .pet-facebook-share,
     .pet-twitter-share {
-
       &::after {
         font-size: 25px;
         color: $blue01;
@@ -74,6 +72,12 @@
 
     .pet-facebook-share {
       margin-left: -10px;
+    }
+  }
+
+  @include breakpoint($bp-sm) {
+    article {
+      padding: 20px 0;
     }
   }
 

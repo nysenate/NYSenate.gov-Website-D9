@@ -1,6 +1,16 @@
 @import "../../global/utils/init";
 
 .c-container--const-pet-quest {
+
+  .c-container--title {
+    text-transform: capitalize;
+    font-family: $font-serif-semibold;
+    font-size: 18px;
+    line-height: 32px;
+    letter-spacing: 0;
+    color: $grey08;
+  }
+
   article {
     display: flex;
     flex-direction: column;
@@ -22,9 +32,13 @@
       font-family: $font-sans-bold;
       font-size: 14px;
       line-height: 24px;
-      color: $blue01;
       text-transform: uppercase;
       margin-bottom: 0;
+    }
+
+    .entry-title,
+    .author a {
+      color: $color-nys-blue;
     }
 
     .pet-type a,
@@ -73,11 +87,23 @@
     .pet-facebook-share {
       margin-left: -10px;
     }
+
+    .l-tab-bar {
+      margin-top: 20px;
+    }
   }
 
   @include breakpoint($bp-sm) {
     article {
       padding: 20px 0;
+    }
+
+    .c-container--title {
+      font-size: 24px;
+    }
+
+    .l-tab-bar .c-tab {
+      width: 50%;
     }
   }
 
@@ -97,10 +123,8 @@
       .entry-title,
       .pet-type,
       .explore-link {
-        font-family: $font-sans-bold;
         font-size: 18px;
         line-height: 24px;
-        color: $blue01;
         text-transform: uppercase;
       }
 
@@ -108,7 +132,6 @@
       .explore-link {
         font-size: 12px;
         line-height: 18px;
-        color: $yellow03;
       }
 
       .explore-link {

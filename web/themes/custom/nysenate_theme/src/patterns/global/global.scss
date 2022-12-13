@@ -458,6 +458,19 @@ label {
   }
 }
 
+.nys-subtitle-title {
+  margin: 0 0 15px;
+  text-transform: capitalize;
+  font-family: $font-serif-regular;
+  font-size: 18px;
+  line-height: 1;
+
+  @include breakpoint($bp-sm) {
+    margin: 0 0 30px;
+    font-size: 26px;
+  }
+}
+
 // Override for bill page pie chart colors for committees section
 .node-type-bill {
   .c-bill--vote_2\27 {

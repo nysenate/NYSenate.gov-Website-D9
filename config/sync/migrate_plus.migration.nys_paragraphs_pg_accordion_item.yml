@@ -1,10 +1,8 @@
-uuid: e5514912-0a2f-4e31-aeeb-0f0d25eb452a
+uuid: 88a7549e-32fa-493b-b1f3-5b1f3f7cf94b
 langcode: en
 status: true
 dependencies: {  }
-_core:
-  default_config_hash: Tvgk7m4z0i4Q0UUxRnXs4iQ5nN7cJE0TuD3cHHAH0H0
-id: nys_pg_fc_accordion
+id: nys_paragraphs_pg_accordion_item
 class: null
 field_plugin_method: null
 cck_plugin_method: null
@@ -13,27 +11,11 @@ migration_tags:
   - Content
   - 'Field Collection Content'
 migration_group: nys_general
-label: 'Field Collections (Pg fc accordion)'
+label: 'Field Collections (Pg Accordion Items)'
 source:
   plugin: d7_field_collection_item
   field_name: field_pg_fc_accordion
 process:
-  type:
-    -
-      plugin: get
-      source: bundle
-  parent_id:
-    -
-      plugin: get
-      source: parent_id
-  parent_type:
-    -
-      plugin: get
-      source: parent_type
-  parent_field_name:
-    -
-      plugin: get
-      source: field_name
   field_body:
     -
       plugin: get

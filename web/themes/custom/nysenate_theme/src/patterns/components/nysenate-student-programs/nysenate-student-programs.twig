@@ -1,0 +1,18 @@
+{{ attach_library('nysenate_theme/nysenate-student-programs') }}
+
+<div class="pane-content">
+  <div class="c-block c-block--about-student-programs">
+    <h3 class="nys-subtitle-title">{{ title }}</h3>
+    <p class="l-row">{{ body }}</p>
+    <a href="{{ cta.url }}" class="c-container--link">{{ cta.text }}</a>
+  </div>
+  <section class="c-block c-student-program-are-you">
+    <div class="gen-wrapper">
+      {% for program in programs %}
+        <div class="gen-col--height {{ program.color }}">
+          <a href="{{ program.url }}">{{ program.text }}</a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>

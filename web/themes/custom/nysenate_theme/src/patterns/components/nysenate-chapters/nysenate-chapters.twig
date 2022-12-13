@@ -1,0 +1,16 @@
+{{ attach_library('nysenate_theme/nysenate-chapters') }}
+
+<div class="c-block">
+  {% for chapter in chapters %}
+    <div class="node-chapter c-chapter__collapsed">
+      <h2 class="node-title">
+        {{ chapter.title }}
+        <span class="c-chapter-cta">Read More</span>
+      </h2>
+
+      <div class="content clearfix">
+        {{ chapter.body|raw }}
+      </div>
+    </div>
+  {% endfor %}
+</div>

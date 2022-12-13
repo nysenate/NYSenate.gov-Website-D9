@@ -5,7 +5,7 @@
   <div class="view-content">
     {% for group in groups %}
       <h3 class="c-group-title">{{ group.title }}</h3>
-      
+
       <div class="c-committees-wrapper">
         {% for committee in group.committees %}
           <a href="{{ committee.url }}" hreflang="en" class="c-committee-link">

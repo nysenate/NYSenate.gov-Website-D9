@@ -1311,6 +1311,44 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $variables['petitions'] = $petitions;
     }
   }
+
+  // Student Program News Main.
+  if ($view->id() == 'student_programs_news' && $view->current_display == 'main') {
+    $results = $view->result;
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+
+    $news = [];
+    foreach ($variables['rows'] as $row) {
+      $node = $row['content']['#row']->_entity;
+
+      $image = NULL;
+      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
+        if (!empty($media)) {
+          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+          if (!empty($file)) {
+            $image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
+        }
+      }
+
+      $date = '';
+      if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+        $field_date = $node->field_date->value;
+        $date = \Drupal::service('date.formatter')->format(strtotime($field_date), '', 'F j, Y');
+      }
+
+      $news[] = [
+        'title' => $node->getTitle(),
+        'url' => $node->toUrl()->toString(),
+        'image_src' => $image,
+        'date' => $date,
+        'type' => $row['content']['#view']->field['type']->last_render,
+      ];
+    }
+
+    $variables['news'] = $news;
+  }
 }
 
 /**
@@ -1325,6 +1363,31 @@ function nysenate_theme_preprocess_views_view__news_by_issue__news(&$variables) 
   $variables['footer'] = [
     '#markup' => '<p>' . $link . '</p>',
   ];
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__student_programs_news__main(&$variables) {
+  $view = $variables['view'];
+  $variables['title'] = $view->getTitle();
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  // Add suggestion to views_view hook.
+  if ($hook == 'views_view') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
+
+  // Add suggestion to views_view_unformatted hook.
+  if ($hook == 'views_view_unformatted') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
 }
 
 /**
@@ -3168,6 +3231,100 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
     $title_date = date('F j, Y', $publish_date);
   }
   $variables['transcript_title'] = $tx_type_field . ' - ' . $title_date;
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__student_program(&$variables) {
+  if (isset($variables['content']['field_image_main'][0])) {
+    $variables['field_image_title'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  }
+  $variables['node_id'] = $variables['node']->id();
+
+  // Get Chapters/Accordion list.
+  $chapters = [];
+  $accordion_items = $variables['content']['field_accordion'][0]['field_accordion_item'] ?? [];
+
+  foreach ($accordion_items as $key => $item) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $title = '';
+    $body = '';
+
+    if ($item['#paragraph']->field_title->value) {
+      $title = $item['#paragraph']->field_title->value;
+    }
+
+    if ($item['#paragraph']->field_body->value) {
+      $body = $item['#paragraph']->field_body->value;
+    }
+
+    $chapters[] = [
+      'title' => $title,
+      'body' => $body,
+    ];
+
+  }
+  $variables['chapters'] = $chapters;
+
+  // Get Student Programs Block.
+  /** @var \Drupal\block\BlockViewBuilder $view_builder */
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block_content');
+  $student_programs = [];
+  $student_program_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Overview Text',
+    ]);
+
+  if (is_array($student_program_block)) {
+    $student_program_block = reset($student_program_block);
+  }
+
+  if (!empty($student_program_block)) {
+    $block_content = $view_builder->view($student_program_block);
+    $student_programs = $view_builder->build($block_content);
+    $variables['student_programs'] = $student_programs;
+  }
+
+  $program_links_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Program Links',
+    ]);
+
+  if (is_array($program_links_block)) {
+    $program_links_block = reset($program_links_block);
+  }
+
+  if (!empty($program_links_block)) {
+    $block_content = $view_builder->view($program_links_block);
+    $program_links = $view_builder->build($block_content);
+    $variables['program_links'] = $program_links;
+  }
+
+  // Get Contact Us Block.
+  $contact_us_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Contact Us',
+    ]);
+
+  if (is_array($contact_us_block)) {
+    $contact_us_block = reset($contact_us_block);
+  }
+
+  if (!empty($contact_us_block)) {
+    $block_content = $view_builder->view($contact_us_block);
+    $contact_us = $view_builder->build($block_content);
+    $variables['contact_us'] = $contact_us;
+  }
 }
 
 /**

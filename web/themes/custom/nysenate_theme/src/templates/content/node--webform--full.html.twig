@@ -14,20 +14,11 @@
 <article{{attributes.addClass(classes)}}>
   {{ title_prefix }}
   {% if page %}
-    <header class="c-questionnaire--head c-news--head">
+    <header class="c-questionnaire--head">
       <h1 class="nys-article-title">
         {{ title }}
       </h1>
       <div class="c-news--head-meta">
-        {% if content.field_article_author.0 %}
-          <p class="c-news--author">
-            {{ content.field_article_author.0 }}
-          </p>
-        {% elseif content.field_senator_multiref.0 %}
-          <p class="c-news--author">
-            {{ content.field_senator_multiref.0 }}
-          </p>
-        {% endif %}
         <p class="c-news--pub-date">
           {{ content.field_date.0 }}
         </p>

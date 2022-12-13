@@ -208,7 +208,7 @@
 
     &:hover {
       @extend .drk-bg;
-      color: $color-white
+      color: $color-white;
     }
   }
 }
@@ -250,5 +250,62 @@
 
   .webform-component-fieldset {
     clear: both;
+  }
+}
+
+.js-form-type-select {
+  position: relative;
+  width: 100%;
+
+  &::after {
+    @extend .icon-after__see-more;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 25px;
+    color: $blue01;
+    pointer-events: none;
+    cursor: pointer;
+  }
+
+  select {
+    margin-bottom: 16px;
+  }
+}
+
+.view-filters {
+  margin-left: 0px;
+
+  select {
+    color: $blue01;
+    font-family: $font-sans-bold;
+    font-size: 14px;
+    padding: 10px 40px 10px 20px;
+    background: none;
+    background-image: none;
+    text-transform: uppercase;
+    min-height: 45px;
+    width: 100%;
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .view-filters {
+    margin: 0 2.5%;
+  }
+
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%;
+
+    & + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%;
+    }
+
+    select {
+      margin-bottom: 40px;
+    }
   }
 }

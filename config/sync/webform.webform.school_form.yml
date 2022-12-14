@@ -1,9 +1,7 @@
 uuid: e4caeb10-d52b-43f3-a947-b302f83d2e00
 langcode: en
 status: open
-dependencies:
-  module:
-    - nys_school_forms
+dependencies: {  }
 weight: 0
 open: null
 close: null
@@ -56,38 +54,55 @@ elements: |-
       12: '12th Grade'
       Homeschool: Homeschool
     '#required': true
-  attach_your_submission:
-    '#type': webform_custom_composite
-    '#title': 'Attach your submission'
-    '#multiple': 50
-    '#element':
-      student_name:
-        '#type': textfield
-        '#required': true
-        '#title': 'Student''s Name'
-        '#placeholder': 'Student''s Name'
-        '#description': 'Student''s Name'
-        '#help': 'Student''s Name'
-      submission_type:
-        '#type': radios
-        '#options':
-          - 'A WORK OF ART'
-          - 'AN ESSAY'
-          - 'A POEM'
-        '#required': true
-        '#title': 'Submission Type'
-      student_submission:
-        '#type': managed_file
-        '#required': true
-        '#title': 'Student Submission'
-        '#file_extensions': 'jpg, png pdf txt doc docx'
-        '#sanitize': true
-        '#button': true
-        '#button__title': 'Select file to add'
-      show_student:
-        '#type': checkbox
-        '#title': 'Show Student?'
-        '#private': true
+    '#width': 100
+  submissions:
+    '#type': details
+    '#title': 'Student Submissions'
+    '#open': true
+    attach_your_submission:
+      '#type': webform_custom_composite
+      '#title': 'Attach your submission'
+      '#multiple': 50
+      '#multiple__header': false
+      '#multiple__sorting': false
+      '#multiple__add': false
+      '#multiple__add_more_input': false
+      '#format': list
+      '#format_items': ol
+      '#access_create_roles':
+        - authenticated
+      '#access_update_roles':
+        - authenticated
+      '#access_view_roles':
+        - authenticated
+      '#element':
+        student_name:
+          '#type': textfield
+          '#required': true
+          '#title': 'Student''s Name'
+          '#placeholder': 'Student''s Name'
+          '#description': 'Student''s Name'
+          '#help': 'Student''s Name'
+        submission_type:
+          '#type': radios
+          '#options':
+            - 'A WORK OF ART'
+            - 'AN ESSAY'
+            - 'A POEM'
+          '#required': true
+          '#title': 'Submission Type'
+        student_submission:
+          '#type': managed_file
+          '#required': true
+          '#title': 'Attach your submission'
+          '#file_extensions': 'jpg, png pdf txt doc docx'
+          '#sanitize': true
+          '#button': true
+          '#button__title': 'Select file to add'
+        show_student:
+          '#type': checkbox
+          '#title': 'Show Student?'
+          '#private': true
 css: ''
 javascript: ''
 settings:

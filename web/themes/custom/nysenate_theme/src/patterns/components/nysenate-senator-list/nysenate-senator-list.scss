@@ -1,5 +1,64 @@
 @import "../../global/utils/init";
 
+.c-senators-committees-header{
+	overflow: hidden;
+	position: relative;
+	padding-bottom: 60px;
+
+	p {
+		margin-bottom: 20px;
+	}
+
+	.c-container--link {
+		top: auto;
+		bottom: 0;
+		width: 50%;
+		padding-right: 20px;
+		text-align: right;
+		@extend .icon-after__down-arrow;
+
+		&:after {
+			position: absolute;
+			bottom: 3px;
+			right: 0;
+		}
+	}
+}
+.views-exposed-form .views-exposed-widget {
+	padding: 0;
+}
+
+@media #{$tablet} {
+	.c-senators-committees-header {
+		padding-bottom: 40px;
+
+		p {
+			margin-bottom: 40px;
+			line-height: 32px;
+		}
+
+		.c-container--link {
+			width: auto;
+			text-align: left;
+			padding-right: 0;
+
+			&:after {
+				position: relative;
+				bottom: auto;
+				font-size: 17px;
+				line-height: 17px;
+			}
+		}
+	}
+}
+
+/*-------------------------------------------------------
+/
+/ 	SENATE DIRECTORIES
+/	right below the senator list
+/
+/-------------------------------------------------------*/
+
 .c-senators-container {
 	overflow: hidden;
 
@@ -25,7 +84,7 @@
 
 	.view-filters {
 		margin-left: 0px;
-	
+
 		select {
 			color: $blue01;
 			font-family: $font-sans-bold;
@@ -102,7 +161,7 @@
 			color: $grey02;
 		}
 	}
-  
+
 	.c-party-conf {
 		margin: 15px 0 0 15px;
 		font-family: $font-sans;
@@ -156,25 +215,6 @@
 		// for patternlab only, remove on integration
 		margin: 0 0 40px;
 		max-width: 760px;
-
-		.view-filters {
-			margin: 0 2.5%;
-		}
-
-		.js-form-type-select {
-			float: left;
-			width: 47.5%;
-			margin-right: 2.5%;
-
-			& + .js-form-type-select {
-				margin-right: 0;
-				margin-left: 2.5%;
-			}
-
-			select {
-				margin-bottom: 40px;
-			}
-		}
 	}
 
 	.c-senator-block {
@@ -220,7 +260,7 @@
 			.nys-senator--info {
 				padding: 15px 20px 0;
 			}
-      
+
 			.nys-senator--name {
 				font-size: 14px;
 				line-height: 18px;

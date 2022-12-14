@@ -182,7 +182,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     if (!($dt instanceof \DateTimeInterface)) {
       $dt = $this->normalizeTimestamp($dt ?: ($this->params['history'] ?? ''));
     }
-    $format = $include_time ? $this->request::OPENLEG_TIME_FORMAT : $this->request::OPENLEG_DATE_FORMAT;
+    $format = $include_time ? $this->request::OPENLEG_TIME_FULL : $this->request::OPENLEG_DATE_FORMAT;
     return $dt->format($format);
   }
 
@@ -203,7 +203,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     // If not numeric, try the OpenLeg format first.
     else {
       $normalize = str_replace(' ', 'T', $timestamp);
-      $format = $this->request::OPENLEG_TIME_FORMAT;
+      $format = $this->request::OPENLEG_TIME_FULL;
     }
 
     try {

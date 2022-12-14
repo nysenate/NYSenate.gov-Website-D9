@@ -1,0 +1,97 @@
+{{ attach_library('nysenate_theme/article-page') }}
+{{ attach_library('nysenate_theme/nysenate-student-programs') }}
+
+<article id="node-{{ node_id }}" class="page-student-programs" {{ attributes }}>
+  {{ title_prefix }}
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      <div class="c-news--head-meta">
+        <p class="c-news--pub-date">
+          <span class="date-display-single">
+            {{ content.field_date[0]['#text'] }}
+          </span>
+        </p>
+        {% if content.field_article_author[0] %}
+          <p class="c-news--author">
+            {{ content.field_article_author[0] }}
+          </p>
+        {% endif %}
+
+        {% if content.field_issues[0] %}
+          <ul class="nys-associated-topics">
+            {% for key, issue in content.field_issues
+              if key matches '/^\\d+$/' %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div class="c-news--body">
+    {% if content.field_image_main[0] %}
+      <div class="c-block c-block--img">
+        {{ content.field_image_main[0] }}
+
+        {% if field_image_title %}
+          <p class="c-img--caption">
+            {{ field_image_title }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if content.field_subtitle[0] %}
+      <div class="c-news--subtitle">
+        {{ content.field_subtitle[0] }}
+      </div>
+    {% endif %}
+
+    <div class="c-block">
+      {{ content.body }}
+    </div>
+
+    {% if chapters %}
+      {% include '@nysenate_theme/nysenate-chapters/nysenate-chapters.twig' with {
+        chapters: chapters
+      } only %}
+    {% endif %}
+
+    {% if content.webform %}
+      <div class="row">
+        {{ content.webform }}
+      </div>
+    {% endif %}
+
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta
+    } only %}
+
+    <div class="c-block pane-student-programs-news">
+      {{ drupal_view('student_programs_news', 'main') }}
+    </div>
+
+    <div class="c-block">
+      {% if student_programs %}
+        {{ student_programs }}
+      {% endif %}
+
+      {% if program_links %}
+      {{ program_links }}
+      {% endif %}
+    </div>
+
+    {% if contact_us %}
+      <div class="c-block">
+        {{ contact_us }}
+      </div>
+    {% endif %}
+  </div>
+</article>

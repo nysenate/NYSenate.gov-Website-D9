@@ -1311,6 +1311,44 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $variables['petitions'] = $petitions;
     }
   }
+
+  // Student Program News Main.
+  if ($view->id() == 'student_programs_news' && $view->current_display == 'main') {
+    $results = $view->result;
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+
+    $news = [];
+    foreach ($variables['rows'] as $row) {
+      $node = $row['content']['#row']->_entity;
+
+      $image = NULL;
+      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
+        if (!empty($media)) {
+          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+          if (!empty($file)) {
+            $image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
+        }
+      }
+
+      $date = '';
+      if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+        $field_date = $node->field_date->value;
+        $date = \Drupal::service('date.formatter')->format(strtotime($field_date), '', 'F j, Y');
+      }
+
+      $news[] = [
+        'title' => $node->getTitle(),
+        'url' => $node->toUrl()->toString(),
+        'image_src' => $image,
+        'date' => $date,
+        'type' => $row['content']['#view']->field['type']->last_render,
+      ];
+    }
+
+    $variables['news'] = $news;
+  }
 }
 
 /**
@@ -1325,6 +1363,91 @@ function nysenate_theme_preprocess_views_view__news_by_issue__news(&$variables) 
   $variables['footer'] = [
     '#markup' => '<p>' . $link . '</p>',
   ];
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__senator_and_committee_lists__senators_list(&$variables) {
+  // Remove filter label.
+  $variables['exposed']['senator_committee_filter']['#title_display'] = 'visually_hidden';
+  $variables['exposed']['field_party_value']['#title_display'] = 'visually_hidden';
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__senator_and_committee_lists__committee_list(&$variables) {
+  $view = $variables['view'];
+
+  $variables['committee']['title'] = $view->header['area_text_custom']->options['content'];
+
+  $groups = [];
+  foreach ($variables['rows'] as $row) {
+    $committees = [];
+    $title = '';
+
+    foreach ($row['#rows'] as $key => $result) {
+      $term = $result['#row']->_entity;
+      $committee_type = $term->field_committee_types->value;
+      $types = $term->field_committee_types->getSetting('allowed_values');
+      $title = $types[$committee_type];
+
+      $committees[] = [
+        'url' => $term->toUrl()->toString(),
+        'title' => $term->name[0]->value,
+      ];
+    }
+
+    $groups[] = [
+      'title' => $title,
+      'committees' => $committees,
+    ];
+  }
+  $variables['committee']['groups'] = $groups;
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__student_programs_news__main(&$variables) {
+  $view = $variables['view'];
+  $variables['title'] = $view->getTitle();
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  if ($hook == 'node') {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $current_path = \Drupal::service('path.current')->getPath();
+    $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+    if ($path_alias == '/senators-committees') {
+      $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees';
+      $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees__' . $variables['elements']['#view_mode'];
+    }
+  }
+
+  if ($hook == 'views_view_fields') {
+    $view = $variables['view'];
+    $display_id = $view->getDisplay();
+    $display_id = $display_id->display['id'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $display_id;
+  }
+
+  // Add suggestion to views_view hook.
+  if ($hook == 'views_view') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
+
+  // Add suggestion to views_view_unformatted hook.
+  if ($hook == 'views_view_unformatted') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
 }
 
 /**
@@ -1383,6 +1506,13 @@ function nysenate_theme_theme_suggestions_views_view_alter(array &$suggestions, 
 
   // Add theme hook suggestions for News by Issue.
   if ($view_id == 'news_by_issue') {
+    $display_id = $view->getDisplay();
+    $display_id = $display_id->display['id'];
+    $suggestions[] = $hook . '__' . $view_id . '__' . $display_id;
+  }
+
+  // Add theme hook suggestions for Senators and Committees List.
+  if ($view_id == 'senator_and_committee_lists') {
     $display_id = $view->getDisplay();
     $display_id = $display_id->display['id'];
     $suggestions[] = $hook . '__' . $view_id . '__' . $display_id;
@@ -3168,6 +3298,131 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
     $title_date = date('F j, Y', $publish_date);
   }
   $variables['transcript_title'] = $tx_type_field . ' - ' . $title_date;
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__landing__senators_committees(&$variables) {
+  foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    if ($block['#block_content']->bundle() == 'text') {
+      if ($block['#block_content']->field_title->value != 'Senate Directories') {
+        $variables['header_text'] = $block['field_body_left'][0] ?? NULL;
+      }
+      else {
+        $variables['directories'] = [
+          'title' => $block['#block_content']->field_title->value ?? NULL,
+          'content' => $block['#block_content']->field_body_left->value ?? NULL,
+        ];
+      }
+    }
+    elseif ($block['#block_content']->bundle() == 'views') {
+      if ($block['#block_content']->field_title->value == 'Senators List') {
+        $variables['senators'] = $block['field_views_ref'][0] ?? NULL;
+      }
+      elseif ($block['#block_content']->field_title->value == 'Committees List') {
+        $variables['committees'] = $block['field_views_ref'][0] ?? NULL;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__student_program(&$variables) {
+  if (isset($variables['content']['field_image_main'][0])) {
+    $variables['field_image_title'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  }
+  $variables['node_id'] = $variables['node']->id();
+
+  // Get Chapters/Accordion list.
+  $chapters = [];
+  $accordion_items = $variables['content']['field_accordion'][0]['field_accordion_item'] ?? [];
+
+  foreach ($accordion_items as $key => $item) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $title = '';
+    $body = '';
+
+    if ($item['#paragraph']->field_title->value) {
+      $title = $item['#paragraph']->field_title->value;
+    }
+
+    if ($item['#paragraph']->field_body->value) {
+      $body = $item['#paragraph']->field_body->value;
+    }
+
+    $chapters[] = [
+      'title' => $title,
+      'body' => $body,
+    ];
+
+  }
+  $variables['chapters'] = $chapters;
+
+  // Get Student Programs Block.
+  /** @var \Drupal\block\BlockViewBuilder $view_builder */
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block_content');
+  $student_programs = [];
+  $student_program_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Overview Text',
+    ]);
+
+  if (is_array($student_program_block)) {
+    $student_program_block = reset($student_program_block);
+  }
+
+  if (!empty($student_program_block)) {
+    $block_content = $view_builder->view($student_program_block);
+    $student_programs = $view_builder->build($block_content);
+    $variables['student_programs'] = $student_programs;
+  }
+
+  $program_links_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Program Links',
+    ]);
+
+  if (is_array($program_links_block)) {
+    $program_links_block = reset($program_links_block);
+  }
+
+  if (!empty($program_links_block)) {
+    $block_content = $view_builder->view($program_links_block);
+    $program_links = $view_builder->build($block_content);
+    $variables['program_links'] = $program_links;
+  }
+
+  // Get Contact Us Block.
+  $contact_us_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Contact Us',
+    ]);
+
+  if (is_array($contact_us_block)) {
+    $contact_us_block = reset($contact_us_block);
+  }
+
+  if (!empty($contact_us_block)) {
+    $block_content = $view_builder->view($contact_us_block);
+    $contact_us = $view_builder->build($block_content);
+    $variables['contact_us'] = $contact_us;
+  }
 }
 
 /**

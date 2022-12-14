@@ -188,7 +188,7 @@ class SchoolFormsController extends ControllerBase {
 
     $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($sort_by), urldecode($order));
     $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($sort_by), urldecode($order));
-    $build['#export_link'] = '/admin/school-forms2/export?senator=' . urldecode($senator) . '&form_type=' . urldecode($form_type) . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&sort_by=' . urldecode($sort_by) . '&order=' . urldecode($order);
+    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . urldecode($form_type) . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&sort_by=' . urldecode($sort_by) . '&order=' . urldecode($order);
     return $build;
   }
 

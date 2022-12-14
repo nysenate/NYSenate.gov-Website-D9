@@ -185,6 +185,16 @@ content-carousel:
   dependencies:
     - rain_theme/slick
 
+dashboard-issues:
+  css:
+    component:
+      dist/css/dashboard-issues.css: {}
+
+dashboard-petitions-questionnaires:
+  css:
+    component:
+      dist/css/dashboard-petitions-questionnaires.css: {}
+
 district:
   css:
     component:
@@ -450,6 +460,17 @@ nysenate-issues:
   css:
     component:
       dist/css/nysenate-issues.css: {}
+  js:
+    dist/js/nysenate-issues.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+nysenate-press-release:
+  css:
+    component:
+      dist/css/nysenate-press-release.css: {}
 
 nysenate-senators-events:
   css:
@@ -568,6 +589,19 @@ nysenate-user-profile:
   css:
     component:
       dist/css/nysenate-user-profile.css: {}
+nysenate-chapters:
+  css:
+    component:
+      dist/css/nysenate-chapters.css: {}
+  js:
+    dist/js/nysenate-chapters.js: {}
+  dependencies:
+    - core/jquery
+
+nysenate-student-programs:
+  css:
+    component:
+      dist/css/nysenate-student-programs.css: {}
 
 page-layout:
   css:

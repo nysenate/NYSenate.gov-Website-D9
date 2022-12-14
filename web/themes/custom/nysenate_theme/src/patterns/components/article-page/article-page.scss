@@ -34,6 +34,12 @@
   margin-bottom: 20px;
 }
 
+.c-questionnaire--head .nys-article-title {
+  font-family: $font-serif;
+  font-size: 22px;
+  line-height: 1.2em;
+}
+
 .c-news--title {
   margin-bottom: 15px;
   font-family: $font-serif-regular;
@@ -174,6 +180,10 @@
   }
 }
 
+.c-questionnaire--body .c-block a {
+  @extend .lgt-text;
+}
+
 @include breakpoint($bp-sm) {
   .nys-article-title {
     margin: 0 0 30px;
@@ -182,6 +192,10 @@
 
   .c-news--head .nys-article-title {
     font-size: 32px;
+  }
+
+  .c-questionnaire--head .nys-article-title {
+    font-size: 48px;
   }
 
   .c-news--head {

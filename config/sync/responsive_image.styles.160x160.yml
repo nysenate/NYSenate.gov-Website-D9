@@ -1,0 +1,21 @@
+uuid: 10b932d6-b209-457b-b9cc-6b1b0aef8ac3
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.160x160
+    - image.style.thumbnail
+id: 160x160
+label: 160x160
+image_style_mappings:
+  -
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: 100vw
+      sizes_image_styles:
+        - 160x160
+        - thumbnail
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+breakpoint_group: responsive_image
+fallback_image_style: 160x160

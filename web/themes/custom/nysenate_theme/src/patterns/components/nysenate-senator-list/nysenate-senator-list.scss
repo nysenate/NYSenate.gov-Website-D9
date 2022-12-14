@@ -1,7 +1,102 @@
 @import "../../global/utils/init";
 
+.c-senators-committees-header{
+	overflow: hidden;
+	position: relative;
+	padding-bottom: 60px;
+
+	p {
+		margin-bottom: 20px;
+	}
+
+	.c-container--link {
+		top: auto;
+		bottom: 0;
+		width: 50%;
+		padding-right: 20px;
+		text-align: right;
+		@extend .icon-after__down-arrow;
+
+		&:after {
+			position: absolute;
+			bottom: 3px;
+			right: 0;
+		}
+	}
+}
+.views-exposed-form .views-exposed-widget {
+	padding: 0;
+}
+
+@media #{$tablet} {
+	.c-senators-committees-header {
+		padding-bottom: 40px;
+
+		p {
+			margin-bottom: 40px;
+			line-height: 32px;
+		}
+
+		.c-container--link {
+			width: auto;
+			text-align: left;
+			padding-right: 0;
+
+			&:after {
+				position: relative;
+				bottom: auto;
+				font-size: 17px;
+				line-height: 17px;
+			}
+		}
+	}
+}
+
+/*-------------------------------------------------------
+/
+/ 	SENATE DIRECTORIES
+/	right below the senator list
+/
+/-------------------------------------------------------*/
+
 .c-senators-container {
 	overflow: hidden;
+
+	.js-form-type-select {
+		position: relative;
+		width: 100%;
+
+		&::after {
+			@extend .icon-after__see-more;
+			position: absolute;
+			right: 10px;
+			top: 5px;
+			font-size: 25px;
+			color: $blue01;
+			pointer-events: none;
+			cursor: pointer;
+		}
+
+		select {
+			margin-bottom: 16px;
+		}
+	}
+
+	.view-filters {
+		margin-left: 0px;
+
+		select {
+			color: $blue01;
+			font-family: $font-sans-bold;
+			font-size: 14px;
+			padding: 10px 40px 10px 20px;
+			background: none;
+			background-image: none;
+			text-transform: uppercase;
+			min-height: 45px;
+			width: 100%;
+		}
+	}
 }
 
 .c-senator-block {
@@ -66,7 +161,7 @@
 			color: $grey02;
 		}
 	}
-  
+
 	.c-party-conf {
 		margin: 15px 0 0 15px;
 		font-family: $font-sans;
@@ -165,7 +260,7 @@
 			.nys-senator--info {
 				padding: 15px 20px 0;
 			}
-      
+
 			.nys-senator--name {
 				font-size: 14px;
 				line-height: 18px;

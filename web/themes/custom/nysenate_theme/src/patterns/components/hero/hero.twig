@@ -68,34 +68,7 @@
       {% endif %}
     </div>
     {# end of senator hero #}
-  {% elseif type == "default" %}
-
-    <div class="first last odd">
-
-      <div class="l-header-region l-row l-row--hero c-hero">
-        {{ image_hero }}
-        <div class="l-row c-hero--tout c-hero--featured">
-          <p class="c-hero--date">
-            <span class="date-display-single">{{ date }}</span>
-          </p>
-          <p class="c-hero--committee"></p>
-          <h3 class="c-hero--title">
-            {{ title }}
-          </h3>
-        </div>
-      </div>
-
-      <div class="l-row l-row--hero c-actionbar">
-        <div class="c-actionbar--info">
-          <p class="c-actionbar--cta">Find your Senator and share your views on important issues.</p>
-        </div>
-        <span class="c-block--btn">
-          <a href="{{ find_senator_link }}">find your senator</a>
-        </span>
-      </div>
-
-    </div>
-  {% else %}
+  {% elseif type == "session" %}
     {%
       include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
         is_logged: is_logged
@@ -156,6 +129,29 @@
           </div>
         </div>
       </div>
+    </div>
+  {% else %}
+    <div class="first last odd">
+
+      <div class="l-header-region l-row l-row--hero c-hero">
+        {{ image_hero|raw }}
+        <div class="l-row c-hero--tout c-hero--featured">
+          <p class="c-hero--date">
+            <span class="date-display-single">{{ date }}</span>
+          </p>
+          <p class="c-hero--committee">{{ committee }}</p>
+          <h3 class="c-hero--title">
+            {{ title }}
+          </h3>
+        </div>
+      </div>
+
+      {%
+        include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
+          is_logged: is_logged
+        } only
+      %}
+
     </div>
   {% endif %}
 </section>

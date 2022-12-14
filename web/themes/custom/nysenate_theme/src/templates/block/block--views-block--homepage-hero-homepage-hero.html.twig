@@ -38,10 +38,14 @@
     {{ title_suffix }}
     {% block content %}
       {% include '@nysenate_theme/hero/hero.twig' with {
+        type: homepage_hero.type,
         is_logged : logged_in,
         date: homepage_hero.date,
         video_id: homepage_hero.media_id,
-        url_calendar: homepage_hero.url_calendar
+        url_calendar: homepage_hero.url_calendar,
+        title: homepage_hero.title,
+        committee: homepage_hero.committee,
+        image_hero: homepage_hero.image_hero,
       } only %}
     {% endblock %}
   </div>

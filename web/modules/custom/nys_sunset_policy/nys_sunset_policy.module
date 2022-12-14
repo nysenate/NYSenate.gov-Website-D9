@@ -1,0 +1,154 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for sunset policy.
+ */
+
+use Drupal\node\NodeInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function nys_sunset_policy_theme() {
+  return [
+    'expiring_mail' => [
+      'variables' => [
+        'message' => FALSE,
+      ],
+    ],
+    'expired_mail' => [
+      'variables' => [
+        'message' => FALSE,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function nys_sunset_policy_cron() {
+  /** @var \Drupal\Core\Queue\QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  try {
+    /** @var \Drupal\Core\Queue\QueueInterface $expiring_queue */
+    $expiring_queue = $queue_factory->get('nys_sunset_expiring_queue');
+    $expiring_nids = nys_sunset_policy_get_expiring();
+    if (!empty($expiring_nids)) {
+      foreach ($expiring_nids as $nid) {
+        $expiring_queue->createItem($nid);
+      }
+    }
+    /** @var \Drupal\Core\Queue\QueueInterface $expired_queue */
+    $expired_queue = $queue_factory->get('nys_sunset_expired_queue');
+    $expired_nids = nys_sunset_policy_get_expired();
+    if (!empty($expired_nids)) {
+      foreach ($expired_nids as $nid) {
+        $expired_queue->createItem($nid);
+      }
+    }
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('nys_sunset_policy')
+      ->error('Sunset policy queues not created.', ['message' => $e->getMessage()]);
+  }
+}
+
+/**
+ * Petition and questionnaire node ids that have expired and need processing.
+ *
+ * @return array
+ *   An array of nids.
+ */
+function nys_sunset_policy_get_expired() {
+  $date = new DrupalDateTime();
+  $date->setTimezone(new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+  $date = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+  $results = $query
+    ->condition('type', ['petition', 'webform'], 'IN')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->condition('field_expiration_date', $date, '<=')
+    ->execute();
+  $node_ids = [];
+  if (!empty($results)) {
+    foreach ($results as $nid) {
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      if (!empty($node->field_expiration_date->getValue()[0]['value'])) {
+        if ($node->field_last_notified->getValue()[0]['value'] <
+            $node->field_expiration_date->getValue()[0]['value'] ||
+            empty($node->field_last_notified->getValue)) {
+          $node_ids[] = $nid;
+        }
+      }
+    }
+  }
+  return $node_ids;
+}
+
+/**
+ * Petition and questionnaire node ids that have expired and need processing.
+ *
+ * @return array
+ *   An array of nids.
+ */
+function nys_sunset_policy_get_expiring() {
+  $date = new DrupalDateTime();
+  $date->setTimezone(new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+  $date = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+  $current = new DateTime($date);
+  $future = $current->modify('+2 day');
+  $future = $future->format('Y-m-d\TH:i:s');
+  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+  $results = $query
+    ->condition('type', ['petition', 'webform'], 'IN')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->condition('field_expiration_date', $date, '>=')
+    ->condition('field_expiration_date', $future, '<=')
+    ->execute();
+  $node_ids = [];
+  if (!empty($results)) {
+    foreach ($results as $nid) {
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      if (!empty($node->field_expiration_date->getValue()[0]['value'])) {
+        $last_notified = new DateTime($node->field_last_notified->getValue()[0]['value']);
+        $future_last_notified = $last_notified->modify('+2 day');
+        $future_last_notified = $future_last_notified->format('Y-m-d\TH:i:s');
+        if ($future_last_notified < $node->field_expiration_date->getValue()[0]['value']) {
+          $node_ids[] = $nid;
+        }
+      }
+    }
+  }
+  return $node_ids;
+}
+
+/**
+ * Implements hook_mail().
+ */
+function nys_sunset_policy_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'expired_mail':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'];
+      $body_data = [
+        '#theme' => 'expired_mail',
+        '#message' => $params['body'],
+      ];
+      $message['body'][] = \Drupal::service('renderer')->render($body_data);
+      break;
+
+    case 'expiring_mail':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'];
+      $body_data = [
+        '#theme' => 'expiring_mail',
+        '#message' => $params['body'],
+      ];
+      $message['body'][] = \Drupal::service('renderer')->render($body_data);
+      break;
+  }
+}

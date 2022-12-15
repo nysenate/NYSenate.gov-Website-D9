@@ -75,6 +75,7 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
       ->execute();
 
     $committees = [];
+    $memberships = [];
     foreach ($committee_membership_ids as $mpid) {
       /** @var \Drupal\paragraphs\Entity\Paragraph $committee_membership */
       $committee_membership = $paragraph_storage->load($mpid);
@@ -83,29 +84,45 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
       switch ($committee_membership->field_committee_member_role->value) {
         case '0':
           $role = $this->t('Member');
+          $label = 'Member';
           break;
 
         case '1':
           $role = $this->t('Co-Chair');
+          $label = 'Co-Chair';
           break;
 
         case '1':
           $role = $this->t('Chair');
+          $label = 'Chair';
           break;
 
         case '3':
           $role = $committee_membership->field_other_member_role->value;
+          $label = $committee_membership->field_other_member_role->value;
           break;
 
         default:
           $role = '';
+          $label = '';
           break;
       };
-      $committees[] = [
+
+      $memberships[$label][] = [
+        'parent' => $parent->label(),
         'text' => ['#plain_text' => $parent->label()],
         'link' => ['#plain_text' => $parent->toUrl()->toString()],
         'role' => ['#plain_text' => $role],
       ];
+    }
+
+    // Sort based on parent label per role.
+    foreach ($memberships as $roles) {
+      asort($roles);
+      foreach ($roles as $sorted) {
+        unset($sorted['parent']);
+        $committees[] = $sorted;
+      }
     }
 
     return $committees;

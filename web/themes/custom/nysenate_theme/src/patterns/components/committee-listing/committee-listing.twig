@@ -10,7 +10,9 @@
     {% for committee in committees %}
       {% if old_val != committee.role|render %}
         {% set old_val = committee.role|render %}
-        <br/>
+        {% if not loop.first %}
+          <br/>
+        {% endif %}
       {% endif %}
 
       <li class="c-listing-block__item">

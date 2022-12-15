@@ -768,6 +768,16 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       if ($node->hasField('field_date')) {
         $date = $node->field_date->value ? \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y') : NULL;
       }
+      elseif ($node->hasField('field_date_range')) {
+        $date_range = $node->field_date_range;
+        if (!empty($date_range->start_date)) {
+          /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
+          $start_date = $date_range->start_date;
+          $date = \Drupal::service('date.formatter')->format(
+            $start_date->getTimestamp(), 'custom', 'F d, Y'
+          );
+        }
+      }
 
       $committee = NULL;
       if ($node->hasField('field_committee') && !empty($node->field_committee->getValue())) {

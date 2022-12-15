@@ -275,18 +275,19 @@
 
 .view-filters {
   margin-left: 0px;
+}
 
-  select {
-    color: $blue01;
-    font-family: $font-sans-bold;
-    font-size: 14px;
-    padding: 10px 40px 10px 20px;
-    background: none;
-    background-image: none;
-    text-transform: uppercase;
-    min-height: 45px;
-    width: 100%;
-  }
+.view-filters select,
+.js-form-type-select select {
+  color: $blue01;
+  font-family: $font-sans-bold;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%;
 }
 
 @include breakpoint($bp-sm) {

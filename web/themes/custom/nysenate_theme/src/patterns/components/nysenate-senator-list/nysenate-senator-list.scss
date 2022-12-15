@@ -62,40 +62,8 @@
 .c-senators-container {
 	overflow: hidden;
 
-	.js-form-type-select {
-		position: relative;
-		width: 100%;
-
-		&::after {
-			@extend .icon-after__see-more;
-			position: absolute;
-			right: 10px;
-			top: 5px;
-			font-size: 25px;
-			color: $blue01;
-			pointer-events: none;
-			cursor: pointer;
-		}
-
-		select {
-			margin-bottom: 16px;
-		}
-	}
-
 	.view-filters {
-		margin-left: 0px;
-
-		select {
-			color: $blue01;
-			font-family: $font-sans-bold;
-			font-size: 14px;
-			padding: 10px 40px 10px 20px;
-			background: none;
-			background-image: none;
-			text-transform: uppercase;
-			min-height: 45px;
-			width: 100%;
-		}
+		margin: 0;
 	}
 }
 
@@ -210,11 +178,12 @@
 
 @include breakpoint($bp-sm) {
 	.c-senators-container {
-		// uncomment on integration
-		// margin: 0 -2.5% 40px;
-		// for patternlab only, remove on integration
-		margin: 0 0 40px;
-		max-width: 760px;
+    margin: 0 0 40px;
+    max-width: 760px;
+
+		.view-filters {
+			margin: 0;
+		}
 	}
 
 	.c-senator-block {

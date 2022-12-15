@@ -844,6 +844,21 @@ function nysenate_theme_preprocess_block_content__promotional_banner(&$variables
 }
 
 /**
+ * Implements hook_preprocess_block_content_TYPE().
+ */
+function nysenate_theme_preprocess_block_content__media(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  // Remove field_title for Media Block Content
+  // on all Microsite Page.
+  if ($node->bundle() == 'microsite_page') {
+    if ($variables['content']['field_title']) {
+      $variables['content']['field_title'] = [];
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_paragraph__TYPE().
  */
 function nysenate_theme_preprocess_paragraph__promotional_banners(&$variables) {
@@ -3232,6 +3247,22 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
             }
 
             $variables['district_name'] = $district_name;
+          }
+        }
+      }
+    }
+  }
+
+  if ($node->hasField('field_block') && !$node->get('field_block')->isEmpty()) {
+    foreach ($node->get('field_block') as $key => $value) {
+      /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+      $block_content = $value->entity;
+
+      if ($block_content instanceof BlockContent) {
+        // Get short_title from Media title.
+        if ($block_content->bundle() == 'media') {
+          if ($block_content->hasField('field_title')) {
+            $variables['media_title'] = $block_content->field_title->value ?? NULL;
           }
         }
       }

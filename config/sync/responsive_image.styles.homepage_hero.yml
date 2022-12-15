@@ -1,0 +1,27 @@
+uuid: 2f35246e-2fae-4776-b68f-0dff8293839e
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.homepage_hero_lg
+    - image.style.homepage_hero_md
+    - image.style.homepage_hero_sm
+    - image.style.homepage_hero_xl
+    - image.style.homepage_hero_xs
+id: homepage_hero
+label: 'Homepage Hero'
+image_style_mappings:
+  -
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: 100vw
+      sizes_image_styles:
+        - homepage_hero_lg
+        - homepage_hero_md
+        - homepage_hero_sm
+        - homepage_hero_xl
+        - homepage_hero_xs
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+breakpoint_group: responsive_image
+fallback_image_style: homepage_hero_lg

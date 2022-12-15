@@ -760,7 +760,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'hero');
+          $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'homepage_hero');
         }
       }
 
@@ -773,7 +773,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       if ($node->hasField('field_committee') && !empty($node->field_committee->getValue())) {
         $field_committee = $node->field_committee[0]->target_id;
         $term = !empty($field_committee) ? $term_storage->load($field_committee) : NULL;
-        $committee = $term->toLink()->toRenderable();
+        $committee = $term->toLink()->toRenderable() ?? NULL;
       }
 
       $variables['homepage_hero'] = [
@@ -1349,7 +1349,6 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   // Student Program News Main.
   if ($view->id() == 'student_programs_news' && $view->current_display == 'main') {
     $results = $view->result;
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
 
     $news = [];
     foreach ($variables['rows'] as $row) {

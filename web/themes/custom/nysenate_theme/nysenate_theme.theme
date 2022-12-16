@@ -2309,16 +2309,25 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   ];
 
   $current_status_name = $node->field_ol_last_status->value;
-  $current_status = $status_to_values[$current_status_name];
+  $current_status = '';
+  $committee = '';
 
-  $committee = isset($node->field_ol_latest_status_committee[0]) ? $node->field_ol_latest_status_committee[0]->value : '';
-  $chamber = $node->field_ol_chamber[0]->value;
+  if ($current_status_name) {
+    $current_status = $status_to_values[$current_status_name];
 
-  if (
-    ($current_status_name == 'PASSED_ASSEMBLY' && $chamber == 'senate') ||
-    ($current_status_name == 'PASSED_SENATE' && $chamber == 'assembly')
-  ) {
-    $current_status = 'Passed Senate & Assembly';
+    $committee = isset($node->field_ol_latest_status_committee[0]) ? $node->field_ol_latest_status_committee[0]->value : '';
+    $chamber = '';
+    if (isset($node->field_ol_chamber[0]) && $node->field_ol_chamber[0]->value) {
+      $chamber = $node->field_ol_chamber[0]->value;
+    }
+
+    if (
+      ($current_status_name == 'PASSED_ASSEMBLY' && $chamber == 'senate') ||
+      ($current_status_name == 'PASSED_SENATE' && $chamber == 'assembly')
+    ) {
+      $current_status = 'Passed Senate & Assembly';
+    }
+
   }
 
   $variables['status_display'] = $current_status;

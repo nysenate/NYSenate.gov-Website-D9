@@ -1,4 +1,5 @@
 {{ attach_library('nysenate_theme/dashboard-lists') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
 
 <div class="c-block c-container c-container--const-issues-follow">
   <div class="c-container--body">
@@ -68,11 +69,11 @@
         {% endif %}
 
       {% endif %}
-      {% if articles|length > 5 %}
+      {% if article_items|length > 5 %}
         <div class="item-list">
           <ul class="pager pager-load-more">
             <li class="pager-next first last">
-              <a href="{{ panel.pagination_link }}">{{ panel.pagination_link_text }}</a>
+              <a href="{{ pagination_link }}">{{ pagination_link_text }}</a>
             </li>
           </ul>
         </div>
@@ -123,7 +124,7 @@
   <div class="item-list">
     <ul class="pager pager-load-more">
       <li class="pager-next first last">
-        <a href="{{ panel.pagination_link }}">{{ panel.pagination_link_text }}</a>
+        <a href="{{ pagination_link }}">{{ pagination_link_text }}</a>
       </li>
     </ul>
   </div>

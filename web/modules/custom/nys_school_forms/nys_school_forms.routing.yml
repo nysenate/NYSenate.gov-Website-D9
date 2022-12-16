@@ -30,3 +30,11 @@ nys_school_forms.student_export:
     _permission: "access all webform results"
   options:
     _admin_route: TRUE
+nys_school_forms.delete_submission:
+  path: '/admin/school-forms/delete'
+  defaults:
+    _form: 'Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm'
+    _title: 'Confirm Deletion'
+  requirements:
+    _permission: 'administer site configuration'
+    id: ^\d+$

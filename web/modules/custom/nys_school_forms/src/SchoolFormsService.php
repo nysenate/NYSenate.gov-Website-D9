@@ -94,6 +94,10 @@ class SchoolFormsService {
       }
 
       foreach ($submission_data['attach_your_submission'] as $student) {
+        $file = $this->entityTypeManager->getStorage('file')->load($student['student_submission']);
+        if (empty($file)) {
+          continue;
+        }
         $results[strtoupper($student['student_name'])] = [
           'school_node' => $school_node,
           'parent_node' => $parent_node,

@@ -2,7 +2,6 @@
 
 namespace Drupal\nys_school_forms\Form;
 
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Connection;
@@ -23,13 +22,14 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileSystem;
 use Drupal\file\FileRepository;
 use Drupal\nys_school_forms\SchoolFormsService;
+use Drupal\Core\Form\ConfirmFormBase;
 
 /**
  * Builds a Form for search school form submissions.
  *
  * @internal
  */
-class SchoolFormEnityUpdateForm extends FormBase {
+class SchoolFormEnityUpdateForm extends ConfirmFormBase {
 
   /**
    * Request stack.
@@ -224,6 +224,20 @@ class SchoolFormEnityUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  public function getCancelUrl() {
+    return new Url('nys_school_forms.school_forms');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQuestion() {
+    return $this->t('Are you sture you want to delele this submission?');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $sort_by = NULL, string $order = NULL) {
     $form['operations'] = [
       '#type' => 'fieldset',
@@ -236,6 +250,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
       '#options' => [
         '' => $this->t('- Choose an Operation -'),
         'show_student' => $this->t('Show Student'),
+        'delete_submission' => $this->t('Delete Submission'),
       ],
       '#title_display' => FALSE,
     ];
@@ -249,7 +264,6 @@ class SchoolFormEnityUpdateForm extends FormBase {
     $form['pager'] = [
       '#type' => 'pager',
     ];
-
     return $form;
   }
 
@@ -358,6 +372,19 @@ class SchoolFormEnityUpdateForm extends FormBase {
             $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
             $destination = $directory . $file->getFilename();
             $this->fileRepository->move($file, $destination);
+          }
+        }
+      }
+    }
+    if ($operation == 'delete_submission') {
+      $table = $form_state->getValue('table');
+      foreach ($table as $key => $value) {
+        if ($value) {
+          $parts = explode('-', $value);
+          $fid = $parts[0];
+          $file = $this->entityTypeManager->getStorage('file')->load($fid);
+          if (!empty($file)) {
+            $file->delete();
           }
         }
       }

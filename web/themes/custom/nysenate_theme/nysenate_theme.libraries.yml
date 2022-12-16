@@ -185,10 +185,10 @@ content-carousel:
   dependencies:
     - rain_theme/slick
 
-dashboard-issues:
+dashboard-lists:
   css:
     component:
-      dist/css/dashboard-issues.css: {}
+      dist/css/dashboard-lists.css: {}
 
 dashboard-petitions-questionnaires:
   css:
@@ -462,6 +462,17 @@ nysenate-issues:
       dist/css/nysenate-issues.css: {}
   js:
     dist/js/nysenate-issues.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+nysenate-committee-widget:
+  css:
+    component:
+      dist/css/nysenate-committee-widget.css: {}
+  js:
+    dist/js/nysenate-committee-widget.js: {}
   dependencies:
     - core/jquery
     - core/drupal

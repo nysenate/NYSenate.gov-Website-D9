@@ -1,15 +1,34 @@
 {
+  "title": "Updates On Committees You're Following",
   "pagination_link": "#",
   "pagination_link_text": "See more",
-  "explore_issues_url": "#",
-  "has_followed_issues": true,
-  "select_options": [
+  "empty_message": "<p>No Issues to show.<br/><a href='#' class='explore-link icon-after__right'>explore all issues</a></p>",
+  "card_list_title": "Committees You're Following",
+  "filter_items": [
     {
-      "value": "All",
-      "text": "- ANY -"
+      "label": "Type",
+      "select_options": [
+        {
+          "value": "All",
+          "text": "- ANY -"
+        }
+      ]
+    },
+    {
+      "label": "Committee",
+      "select_options": [
+        {
+          "value": "All",
+          "text": "- ANY -"
+        },
+        {
+          "value": "energy",
+          "text": "Energy and Telecommunnications"
+        }
+      ]
     }
   ],
-  "issue_articles": [
+  "article_items": [
     {
       "title": "Video",
       "topics": [
@@ -80,18 +99,19 @@
       "img_src": "https://source.unsplash.com/PhYq704ffdA/1400x787"
     }
   ],
-  "issue_cards": [
+  "page_type": "committee",
+  "committee_cards": [
     {
-      "issue_link": {
-        "text": "Education",
+      "committee_link": {
+        "text": "Energy and Telecommunnications",
         "url": "#"
       },
-      "issue_id": "12345",
+      "committee_id": "12345",
       "flag_link": {
         "unfollow_url": "#",
         "follow_url": "#"
       },
-      "is_followed": true
+      "is_followed": "true"
     }
   ]
 }

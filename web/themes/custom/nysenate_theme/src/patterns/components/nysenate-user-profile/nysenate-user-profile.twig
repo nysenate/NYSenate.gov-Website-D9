@@ -32,7 +32,9 @@
       <li>{{ senator.duties }}</li>
       <li>
         NY Senate District {{ senator.district_number }}
-        <a href="{{ senator.location }}">Map</a>
+        {% if senator.location %}
+          (<a href="{{ senator.location }}">Map</a>)
+        {% endif %}
       </li>
     </ul>
   </div>

@@ -1,0 +1,20 @@
+{{ attach_library('nysenate_theme/nysenate-committee-widget') }}
+
+<section class="comm-widget-wrapper">
+  {% for committee in committees %}
+    <div class="first last odd">
+
+      <div class="comm-follow-widget">
+        <h3 class="title">
+          <a href="{{ committee.committee_link.url }}">{{ committee.committee_link.text }}</a>
+        </h3>
+
+        <span class="flag-wrapper flag-follow-committee flag-follow-committee-{{ committee.committee_id }}">
+          <a data-unfollow-link={{ committee.flag_link.unfollow_url }} data-follow-link={{ committee.flag_link.follow_url }} class="flag {% if committee.is_followed %} unflag-action {% else %} flag-action {% endif %} flag-link-toggle flag-processed" rel="nofollow"></a>
+          <span class="flag-throbber">&nbsp;</span>
+        </span>
+
+      </div>
+    </div>
+  {% endfor %}
+</section>

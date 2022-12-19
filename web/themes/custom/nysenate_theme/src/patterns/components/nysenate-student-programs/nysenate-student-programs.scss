@@ -1,0 +1,605 @@
+@import "../../global/utils/init";
+
+.c-block--about-student-programs {
+  margin-top: 60px;
+	padding-bottom: 20px;
+
+  .c-container--link {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+		margin: 0;
+  }
+}
+
+.c-student-program-are-you {
+  .text-layout__body {
+    width: 100%;
+    margin-bottom: 48px;
+
+    h3 {
+      font-family: $font-serif-bold;
+      font-size: 18px;
+      line-height: 32px;
+      color: $grey03;
+      margin: 20px 0 10px 0;
+    }
+
+    a {
+      display: block;
+      width: 100%;
+      color: $color-white;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      line-height: 18px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .content {
+      transition: background-color 0.25s ease;
+      margin-bottom: 48px;
+
+      .nys-btn--gold {
+        background: $yellow01;
+      }
+
+      .nys-btn--gold:hover {
+        background-color: $yellow02;
+      }
+
+      .nys-btn--blue {
+        background: $blue03;
+      }
+
+      .nys-btn--blue:hover {
+        background-color: $blue02;
+      }
+
+			.nys-btn--blue,
+			.nys-btn--gold {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 100px;
+			}
+    }
+
+    &:first-of-type {
+      margin-right: 9%;
+    }
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .c-student-program-are-you {
+    .text-layout__body {
+      margin-bottom: 36px;
+
+      .content {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+/*------------------------------------
+/	Student Program and Alumni Testimonial
+/-------------------------------------*/
+.page-student-programs,
+.page-alumni-testimonial {
+	.large-12.columns {
+		padding: 0;
+	}
+
+	.view-student-programs-news {
+		.view-footer {
+			display: none;
+		}
+
+		.js-pager__items.pager {
+			padding-left: 0;
+
+			.pager__item {
+				padding: 0;
+			}
+		}
+	}
+
+	.explore-link {
+		font-family: $font-sans-bold;
+		font-size: 14px;
+		line-height: 18px;
+		text-transform: uppercase;
+		color: $yellow03;
+		display: block;
+		text-align: right;
+		margin: 40px 0;
+
+		&:after {
+			font-size: 20px;
+			margin-top: -4px;
+		}
+	}
+
+	.gen-wrapper {
+		.section-title {
+			font-family: $font-sans;
+			font-size: 16px;
+			line-height: 18px;
+			padding-bottom: 20px;
+			margin-bottom: 25px;
+			text-transform: uppercase;
+			color: $grey08;
+			border-bottom: 1px solid $grey05;
+		}
+	}
+
+	.pane-1 {
+		margin-bottom: 40px;
+	}
+
+	.pane-node {
+		.pane-title {
+			font-family: $font-serif-bold;
+			font-size: 32px;
+			line-height: 41px;
+			color: $grey08;
+			margin: 40px 0;
+		}
+
+		.c-news--body {
+			.c-block + .c-block,
+			.c-block--social {
+				display: none;
+			}
+
+			.c-block {
+				margin-bottom: 30px;
+			}
+		}
+	}
+
+	.pane-student-programs-news {
+		.pane-title {
+			font-family: $font-sans;
+			font-size: 16px;
+			line-height: 18px;
+			padding-bottom: 20px;
+			margin-bottom: 25px;
+			text-transform: uppercase;
+			color: $grey08;
+			border-bottom: 1px solid $grey08;
+		}
+
+		.view-student-programs-news {
+			.view-empty {
+				h2 {
+					font-family: $font-serif-bold;
+					font-size: 14px;
+					line-height: 18px;
+					color: $grey08;
+					margin-bottom: 40px;
+				}
+			}
+
+			.odd,
+			.even {
+				min-height: 100%;
+				position: relative;
+				border-bottom: 1px solid $grey05;
+				margin-bottom: 20px;
+				padding-bottom: 20px;
+
+				.content-type,
+				.content-title {
+					font-family: $font-serif-bold;
+					font-size: 18px;
+					line-height: 22px;
+				}
+
+				.content-type {
+					width: 100%;
+					position: relative;
+					top: inherit;
+					left: inherit;
+					color: $grey08;
+				}
+
+				.content-title {
+					font-family: $font-serif;
+					font-size: 24px;
+					line-height: 32px;
+					margin-left: 0;
+
+					a {
+						color: $grey08;
+					}
+				}
+				.published-date {
+					margin-left: 0;
+					font-family: $font-sans;
+					font-size: 14px;
+					line-height: 32px;
+					color: $grey04;
+				}
+
+				.main-image {
+					display: none;
+				}
+			}
+		}
+
+		.view-display-id-block_1 {
+			.views-field-field-image-main {
+				float: left;
+				width: 380px;
+				margin: 0 20px 20px 0;
+			}
+
+			.views-field-title {
+				font-family: $font-sans;
+				font-size: 16px;
+				line-height: 18px;
+				padding-bottom: 20px;
+				margin-bottom: 25px;
+				text-transform: uppercase;
+				color: $grey08;
+				border-bottom: 1px solid $grey05;
+
+				a {
+				  color: $grey08;
+				}
+			}
+
+			.view-content {
+				.odd,
+				.even {
+					.nys-arrow-link {
+						margin-top: 10px;
+						float: none;
+
+						a {
+							color: $yellow03;
+							font-size: 12px;
+							line-height: 14px;
+						}
+					}
+				}
+			}
+		}
+
+		.view-display-id-block_2 {
+			.view-content {
+				.odd,
+				.even {
+					.nys-arrow-link {
+						margin-top: 10px;
+
+						a {
+							color: $yellow03;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.c-student-program-contact {
+		margin-top: 40px;
+
+		.text-layout__body {
+			background-color: $grey06;
+
+			.content {
+				width: 100%;
+				display: block;
+				vertical-align: top;
+
+				p {
+					font-family: $font-sans;
+					font-size: 16px;
+					line-height: 25px;
+					color: $grey08;
+					margin: 0;
+
+					a {
+						color: $yellow03;
+					}
+				}
+
+				&:first-of-type {
+					margin-right: 0;
+				}
+
+				h3,
+				h4 {
+					font-family: $font-sans-bold;
+					font-size: 14px;
+					line-height: 18px;
+					text-transform: uppercase;
+					&.padded {
+						margin-top: 30px;
+					}
+				}
+
+				h4 {
+					text-transform: none;
+				}
+			}
+		}
+	}
+}
+
+.pane-student-programs-news {
+	.pane-title {
+		font-family: $font-sans;
+		font-size: 16px;
+		line-height: 18px;
+		padding-bottom: 20px;
+		margin-bottom: 25px;
+		text-transform: uppercase;
+		color: $grey08;
+		border-bottom: 1px solid $grey08;
+	}
+
+	.pager-load-more {
+		position: relative;
+		top: -22px;
+		border-top: 2px solid $color-white;
+		margin-top: 0;
+		z-index: 25;
+	}
+}
+
+.view-display-id-block_1 {
+	.nys-arrow-link {
+	  margin-bottom: 0;
+	}
+}
+
+.article-student-program {
+	.gen-wrapper {
+		.section-title {
+			font-family: $font-sans;
+			font-size: 16px;
+			line-height: 18px;
+			padding-bottom: 20px;
+			margin-bottom: 25px;
+			text-transform: uppercase;
+			color: $grey08;
+			border-bottom: 1px solid $grey05;
+		}
+	}
+
+	.block-title {
+		font-family: $font-sans;
+		font-size: 16px;
+		line-height: 18px;
+		padding-bottom: 20px;
+		margin-bottom: 25px;
+		text-transform: uppercase;
+		color: $grey08;
+		border-bottom: 1px solid $grey08;
+	}
+
+	.c-student-program-contact {
+		margin-top: 40px;
+
+		.text-layout__body {
+
+			.content {
+				width: 100%;
+				display: block;
+				vertical-align: top;
+
+				p {
+					font-family: $font-sans;
+					font-size: 16px;
+					line-height: 25px;
+					color: $grey08;
+
+					a {
+						color: $yellow03;
+					}
+				}
+
+				&:first-of-type {
+					margin-right: 0;
+				}
+
+				h3,
+				h4 {
+					font-family: $font-sans-bold;
+					font-size: 14px;
+					line-height: 18px;
+					text-transform: uppercase;
+
+					&.padded {
+						margin-top: 30px;
+					}
+				}
+
+				h4 {
+					text-transform: none;
+				}
+
+				.top-col-title {
+					margin-top: 40px;
+				}
+			}
+		}
+	}
+	.view-student-programs-news {
+		.view-empty {
+			h2 {
+				font-family: $font-serif-bold;
+				font-size: 14px;
+				line-height: 18px;
+				color: $grey08;
+				margin-bottom: 40px;
+			}
+		}
+
+		.odd,
+		.even {
+			min-height: 100%;
+			position: relative;
+			border-bottom: 1px solid $grey05;
+			margin-bottom: 20px;
+			padding-bottom: 20px;
+
+			.content-type,
+			.content-title {
+				font-family: $font-serif-bold;
+				font-size: 18px;
+				line-height: 22px;
+			}
+
+			.content-type {
+				width: 100%;
+				position: relative;
+				top: inherit;
+				left: inherit;
+				color: $grey08;
+			}
+
+			.content-title {
+				font-family: $font-serif;
+				font-size: 24px;
+				line-height: 32px;
+				margin-left: 0;
+
+				a {
+					color: $grey08;
+				}
+			}
+
+			.published-date {
+				margin-left: 0;
+				font-family: $font-sans;
+				font-size: 14px;
+				line-height: 32px;
+				color: $grey04;
+			}
+
+			.main-image {
+				display: none;
+			}
+		}
+	}
+}
+
+@include breakpoint($bp-sm) {
+	.page-student-programs,
+	.page-alumni-testimonial {
+
+		.c-student-program-contact {
+			.text-layout__body {
+				.content {
+					width: 45%;
+					display: inline-block;
+
+					&:first-of-type {
+						margin-right: 9%;
+					}
+
+					.top-col-title {
+						margin-top: 0;
+					}
+				}
+			}
+		}
+		.pane-student-programs-news {
+			.view-student-programs-news {
+				.odd,
+				.even {
+					min-height: 150px;
+
+					.content-type {
+						width: 20%;
+						position: absolute;
+						top: 0;
+						left: 0;
+					}
+
+					.content-title {
+						margin-left: 20%;
+					}
+
+					.published-date {
+						margin-left: 20%;
+					}
+
+					.main-image {
+						display: block;
+						float: right;
+						max-width: 220px;
+					}
+
+					.date-display-single {
+						margin-left: 0;
+						font-family: $font-sans;
+						font-size: 14px;
+						line-height: 32px;
+						color: $grey04;
+					}
+				}
+			}
+		}
+	}
+	.article-student-program {
+
+		.c-student-program-contact {
+			.text-layout__body {
+				.content {
+					width: 45%;
+					display: inline-block;
+
+					&:first-of-type {
+						margin-right: 9%;
+					}
+
+					.top-col-title {
+						margin-top: 0;
+					}
+				}
+			}
+		}
+		.view-student-programs-news {
+			.odd,
+			.even {
+				min-height: 150px;
+
+				.content-type {
+					width: 20%;
+					position: absolute;
+					top: 0;
+					left: 0;
+				}
+
+				.content-title {
+					margin-left: 20%;
+				}
+
+				.published-date {
+					margin-left: 20%;
+				}
+
+				.main-image {
+					display: block;
+					float: right;
+					max-width: 220px;
+				}
+
+				.date-display-single {
+					margin-left: 0;
+					font-family: $font-sans;
+					font-size: 14px;
+					line-height: 32px;
+					color: $grey04;
+				}
+			}
+		}
+	}
+}

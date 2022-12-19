@@ -18,11 +18,21 @@
     }
   }
 
-  .c-follow-issue--header {
+  .filter-wrapper {
+    display: flex;
+    gap: 20px;
+  }
+
+  .c-follow-issue--header,
+  .c-list--header {
     position: relative;
     margin-bottom: 20px;
     border-top: 1px solid $blue04;
     padding-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 
     .explore-link {
       font-family: $font-sans-bold;
@@ -43,6 +53,11 @@
       letter-spacing: 0;
       color: $grey08;
     }
+  }
+
+  .c-list--header {
+    border-top: 0;
+    padding-top: 0;
   }
 
   label {
@@ -75,15 +90,10 @@
       }
     }
 
-    .c-follow-issue--header {
+    .c-follow-issue--header,
+    .c-list--header {
       .c-container--title {
         font-size: 24px;
-      }
-
-      .explore-link {
-        position: absolute;
-        top: 35px;
-        right: 0;
       }
     }
   }

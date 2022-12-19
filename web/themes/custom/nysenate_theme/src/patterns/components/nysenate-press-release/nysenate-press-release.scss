@@ -48,6 +48,38 @@
 
   .c-press-release--body {
     position: relative;
+
+    .author {
+      align-items: center;
+      margin-bottom: 0;
+      font-size: 10px;
+
+      a {
+        font-family: $font-sans;
+        font-size: 14px;
+        line-height: 32px;
+        color: $grey03;
+      }
+    }
+
+    .event-location {
+      font-family: $font-sans;
+      font-size: 14px;
+      line-height: 38px;
+
+      &::before {
+        color: $blue01;
+        font-size: 23px;
+        margin-top: -3px;
+      }
+    }
+
+    .date-display-single {
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      line-height: 30px;
+      color: $grey08;
+    }
   }
 
   .c-press-release--body__has-img {
@@ -62,7 +94,7 @@
     font-family: $font-serif;
 
     a {
-      color: $grey02;
+      color: $grey08;
     }
   }
 
@@ -80,6 +112,19 @@
     color: $grey04;
     font-size: 12px;
     line-height: 1em;
+
+    .date-display-single {
+      color: $grey04;
+      line-height: 20px;
+    }
+
+    .issue-type {
+      color: $grey08;
+
+      a {
+        color: $contrast_drk;
+      }
+    }
   }
 
   .c-press-release--img {

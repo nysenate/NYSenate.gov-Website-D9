@@ -90,7 +90,7 @@
       </h2>
     {% endif %}
 
-    <p class="c-subpage-header--subtitle01">{{ short_title }}</p>
+    <p class="c-subpage-header--subtitle01">{{ (short_title) ? short_title : ((media_title) ? media_title : '') }}</p>
     <p class="c-subpage-header--subtitle02 lgt-text">
       <span class="u-mobile-only">{{ party }}</span>
       <span class="u-tablet-plus">{{ party }}</span>

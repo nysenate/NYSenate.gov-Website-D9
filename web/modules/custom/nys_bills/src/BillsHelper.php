@@ -335,7 +335,7 @@ class BillsHelper {
       $ret[$type] = [];
       $propname = "field_ol_{$type}_sponsor_names";
 
-      $sponsors = json_decode($amendment->{$propname}->value);
+      $sponsors = json_decode($amendment->{$propname}->value) ?? [];
       foreach ($sponsors as $one_sponsor) {
         switch ($chamber) {
           case 'senate':

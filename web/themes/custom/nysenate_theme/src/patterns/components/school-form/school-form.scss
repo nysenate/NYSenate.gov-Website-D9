@@ -11,12 +11,15 @@
   display: inline;
 }
 
-.js-form-type-select,
-.form-item-grade {
+.webform-submission-school-form-form .js-form-type-select {
   width: 100%;
+  margin-top: 0px;
 
   #edit-grade {
     width: 100%;
     margin-bottom: 0px;
+  }
+  &::after {
+    margin-top: 25px;
   }
 }

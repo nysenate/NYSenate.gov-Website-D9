@@ -1,7 +1,6 @@
-{{ attach_library('nysenate_theme/article-page') }}
 {{ attach_library('nysenate_theme/nysenate-student-programs') }}
 
-<article id="node-{{ node_id }}" class="page-student-programs" {{ attributes }}>
+<article id="node-{{ node_id }}" class="article-student-program page-student-programs" {{ attributes }}>
   {{ title_prefix }}
   {% if page %}
     <header class="c-news--head">
@@ -80,16 +79,20 @@
 
     <div class="c-block">
       {% if student_programs %}
+      <div class="c-block--about-student-programs">
         {{ student_programs }}
+        </div>
       {% endif %}
 
       {% if program_links %}
+      <div class="c-student-program-are-you">
       {{ program_links }}
+      </div>
       {% endif %}
     </div>
 
     {% if contact_us %}
-      <div class="c-block">
+      <div class="c-block c-student-program-contact">
         {{ contact_us }}
       </div>
     {% endif %}

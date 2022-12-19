@@ -424,6 +424,9 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
 
   /** @var \Drupal\taxonomy\Entity\Term $originalSenator */
   $originalSenator = $term->original;
+  if (!$entity->hasField('field_active_senator')) {
+    return;
+  }
   $updatedValue = (string) $term->get('field_active_senator')->value;
   $originalValue = $originalSenator->get('field_active_senator')->value;
 

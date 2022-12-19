@@ -3,6 +3,11 @@
 
 .hero {
   position: relative;
+  margin-top: -40px;
+
+  @include breakpoint($bp-sm) {
+    margin-top: -80px;
+  }
 }
 
 /*-----------------------------
@@ -23,6 +28,23 @@
     padding: 20px;
     max-width: 440px;
     background: $color-white;
+  }
+}
+
+.hero--homepage {
+  width: 100vw;
+  max-width: 1500px;
+  margin-bottom: 40px;
+
+  .l-row.l-row--hero {
+
+    &.c-hero {
+      padding: 0;
+    }
+
+    &.c-actionbar {
+      max-width: 420px;
+    }
   }
 }
 
@@ -125,6 +147,26 @@
       padding: 40px 70px 60px;
       max-width: 760px;
       background: $color-white;
+    }
+  }
+
+  .hero--homepage {
+    margin-bottom: 80px;
+  
+    .l-row.l-row--hero {
+
+      &.c-hero {
+        padding: 0;
+  
+        img {
+          width: 100%;
+        }
+      }
+
+      &.c-actionbar {
+        padding: 0 40px;
+        max-width: 760px;
+      }
     }
   }
 

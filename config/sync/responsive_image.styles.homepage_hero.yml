@@ -1,0 +1,23 @@
+uuid: 574312d5-5993-45d5-a569-aa889bb400c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.homepage_hero_lg
+    - image.style.homepage_hero_md
+    - image.style.homepage_hero_sm
+id: homepage_hero
+label: 'Homepage Hero'
+image_style_mappings:
+  -
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: 100vw
+      sizes_image_styles:
+        - homepage_hero_lg
+        - homepage_hero_md
+        - homepage_hero_sm
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+breakpoint_group: responsive_image
+fallback_image_style: homepage_hero_lg

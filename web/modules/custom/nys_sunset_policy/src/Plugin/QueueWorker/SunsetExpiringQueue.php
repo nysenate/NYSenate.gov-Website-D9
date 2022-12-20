@@ -60,10 +60,11 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
     $node = $this->nodeStorage->load($data);
     if ($node instanceof NodeInterface) {
       $host = \Drupal::request()->getHost();
-      $params['message']['expired'] = date('l M jS Y', strtotime($node->field_expiration_date->getValue()[0]['value']));
-      $params['message']['alias'] = $host . $node->toUrl()->toString();
-      $params['message']['url'] = $host . '/node/' . $data;
-      $params['message']['title'] = $node->getTitle();
+      $body['message']['expiring'] = date('l M jS Y', strtotime($node->field_expiration_date->getValue()[0]['value']));
+      $body['message']['alias'] = $host . $node->toUrl()->toString();
+      $body['message']['url'] = $host . '/node/' . $data;
+      $body['message']['title'] = $node->getTitle();
+      $params['message'] = $this->renderMailBodyExpiring($body);
       $subject = 'Content will expire soon - ' . $node->getTitle();
       $params['title'] = $subject;
       $key = 'expiring_mail';
@@ -96,6 +97,22 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
       \Drupal::logger('nys_sunset_policy')
         ->error('Unable to send expiring mail for node/' . $data, ['message' => $e->getMessage()]);
     }
+  }
+
+  /**
+   * Run the body through the expiring mail template.
+   *
+   * @param mixed $body
+   *   Array of body data.
+   */
+  public function renderMailBodyExpiring($body) {
+    $message = '';
+    $body_data = [
+      '#theme' => 'expiring_mail',
+      '#message' => $body['message'],
+    ];
+    $message = \Drupal::service('renderer')->render($body_data);
+    return (string) $message;
   }
 
 }

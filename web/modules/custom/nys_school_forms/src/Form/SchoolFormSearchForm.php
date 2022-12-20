@@ -169,7 +169,7 @@ class SchoolFormSearchForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $sort_by = NULL, string $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $from_date = NULL, string $to_date = NULL, string $sort_by = NULL, string $order = NULL) {
     $form['#prefix'] = '<div class="form--inline clearfix">';
     $senator_options = [];
     $senator_options[''] = '- Any -';
@@ -209,6 +209,16 @@ class SchoolFormSearchForm extends FormBase {
       '#title' => $this->t('Teacher Name'),
       '#autocomplete_route_name' => 'nys_school_forms.autocomplete.teacher',
       '#default_value' => html_entity_decode($teacher_name, ENT_QUOTES),
+    ];
+    $form['from_date'] = [
+      '#type' => 'date',
+      '#title' => $this->t('From'),
+      '#default_value' => html_entity_decode($from_date, ENT_QUOTES),
+    ];
+    $form['to_date'] = [
+      '#type' => 'date',
+      '#title' => $this->t('To'),
+      '#default_value' => html_entity_decode($to_date, ENT_QUOTES),
     ];
     $form['sort_by'] = [
       '#title' => $this->t('Sort By'),
@@ -252,13 +262,16 @@ class SchoolFormSearchForm extends FormBase {
     $teacher_name = $form_state->getValue('teacher_name');
     $sort_by = $form_state->getValue('sort_by');
     $order = $form_state->getValue('order');
-
+    $from_date = $form_state->getValue('from_date');
+    $to_date = $form_state->getValue('to_date');
     $url = Url::fromRoute('nys_school_forms.school_forms', [], [
       'query' => [
         'senator' => $senator,
         'form_type' => $form_type,
         'school' => $school,
         'teacher_name' => $teacher_name,
+        'from_date' => $from_date,
+        'to_date' => $to_date,
         'sort_by' => $sort_by,
         'order' => $order,
       ],

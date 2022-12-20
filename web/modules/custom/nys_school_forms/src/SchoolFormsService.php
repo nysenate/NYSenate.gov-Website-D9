@@ -57,10 +57,17 @@ class SchoolFormsService {
    * @return array
    *   The search form and search results build array.
    */
-  public function getResults($senator = '', $form_type = '', $school = '', $teacher_name = '', $sort_by = '', $order = '') {
+  public function getResults($senator = '', $form_type = '', $school = '', $teacher_name = '', $from_date = '', $to_date = '', $sort_by = '', $order = '') {
     $results = [];
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
     $query->condition('webform_id', 'school_form');
+    if ($from_date) {
+      $query->condition('completed', strtotime($from_date), '>');
+    }
+    if ($to_date) {
+      // Make to date filter inclusive of the day.
+      $query->condition('completed', strtotime($to_date) + 86399, '<');
+    }
     if ($sort_by == 'date' || empty($sort_by)) {
       if ($order) {
         $query->sort('completed', $order);

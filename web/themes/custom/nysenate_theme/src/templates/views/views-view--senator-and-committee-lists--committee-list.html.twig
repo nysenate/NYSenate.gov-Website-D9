@@ -43,6 +43,7 @@
 <div{{ attributes.addClass(classes) }}>
 
   {% include '@nysenate_theme/nysenate-committee-detail/nysenate-committee-detail.twig' with {
+    is_bulleted: false,
     title: committee['title'],
     groups: committee['groups'],
   }only

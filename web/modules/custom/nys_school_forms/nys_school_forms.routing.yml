@@ -33,7 +33,7 @@ nys_school_forms.student_export:
 nys_school_forms.delete_submission:
   path: '/admin/school-forms/delete'
   defaults:
-    _form: 'Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm'
+    _form: 'Drupal\nys_school_forms\Form\SchoolFormDeleteForm'
     _title: 'Confirm Deletion'
   requirements:
     _permission: 'administer site configuration'

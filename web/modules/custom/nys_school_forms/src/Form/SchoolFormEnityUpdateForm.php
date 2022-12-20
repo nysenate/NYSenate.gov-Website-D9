@@ -22,14 +22,16 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileSystem;
 use Drupal\file\FileRepository;
 use Drupal\nys_school_forms\SchoolFormsService;
-use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 
 /**
  * Builds a Form for search school form submissions.
  *
  * @internal
  */
-class SchoolFormEnityUpdateForm extends ConfirmFormBase {
+class SchoolFormEnityUpdateForm extends FormBase {
 
   /**
    * Request stack.
@@ -130,6 +132,20 @@ class SchoolFormEnityUpdateForm extends ConfirmFormBase {
   protected $fileRepository;
 
   /**
+   * The tempstore object.
+   *
+   * @var \Drupal\Core\TempStore\SharedTempStore
+   */
+  protected $privateTempStore;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Class constructor.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request
@@ -160,6 +176,10 @@ class SchoolFormEnityUpdateForm extends ConfirmFormBase {
    *   File system service.
    * @param \Drupal\file\FileRepository $fileRepository
    *   File repository service.
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   *   The tempstore factory.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
    */
   public function __construct(
     RequestStack $request,
@@ -175,7 +195,9 @@ class SchoolFormEnityUpdateForm extends ConfirmFormBase {
     SchoolFormsService $schoolFormsService,
     FileUrlGenerator $fileUrlGenerator,
     FileSystem $fileSystem,
-    FileRepository $fileRepository) {
+    FileRepository $fileRepository,
+    PrivateTempStoreFactory $temp_store_factory,
+    AccountInterface $current_user) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -190,6 +212,8 @@ class SchoolFormEnityUpdateForm extends ConfirmFormBase {
     $this->fileUrlGenerator = $fileUrlGenerator;
     $this->fileSystem = $fileSystem;
     $this->fileRepository = $fileRepository;
+    $this->currentUser = $current_user;
+    $this->privateTempStore = $temp_store_factory->get('school_form_multiple_delete_confirm');
   }
 
   /**
@@ -210,7 +234,9 @@ class SchoolFormEnityUpdateForm extends ConfirmFormBase {
       $container->get('nys_school_forms.school_forms'),
       $container->get('file_url_generator'),
       $container->get('file_system'),
-      $container->get('file.repository')
+      $container->get('file.repository'),
+      $container->get('tempstore.private'),
+      $container->get('current_user')
     );
   }
 
@@ -219,20 +245,6 @@ class SchoolFormEnityUpdateForm extends ConfirmFormBase {
    */
   public function getFormId() {
     return 'school_form_entity_update_form';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCancelUrl() {
-    return new Url('nys_school_forms.school_forms');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getQuestion() {
-    return $this->t('Are you sture you want to delele this submission?');
   }
 
   /**
@@ -375,22 +387,26 @@ class SchoolFormEnityUpdateForm extends ConfirmFormBase {
           }
         }
       }
+      $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
+      $form_state->setRedirectUrl($url);
     }
     if ($operation == 'delete_submission') {
       $table = $form_state->getValue('table');
+      $files = [];
       foreach ($table as $key => $value) {
         if ($value) {
           $parts = explode('-', $value);
           $fid = $parts[0];
           $file = $this->entityTypeManager->getStorage('file')->load($fid);
           if (!empty($file)) {
-            $file->delete();
+            $files[] = $file;
           }
         }
       }
+      $this->privateTempStore->set($this->currentUser->id(), $files);
+      $url = Url::fromRoute('nys_school_forms.delete_submission');
+      $form_state->setRedirectUrl($url);
     }
-    $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
-    $form_state->setRedirectUrl($url);
   }
 
 }

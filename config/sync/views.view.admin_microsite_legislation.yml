@@ -77,8 +77,10 @@ display:
           empty_zero: false
           hide_alter_empty: true
           action_title: Action
-          include_exclude: exclude
-          selected_actions: {  }
+          include_exclude: include
+          selected_actions:
+            - node_edit_action
+            - node_save_action
         title:
           id: title
           table: node_field_data

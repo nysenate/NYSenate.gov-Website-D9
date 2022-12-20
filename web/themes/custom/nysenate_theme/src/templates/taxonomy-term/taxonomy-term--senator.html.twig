@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * Theme override to display a taxonomy term.
+ *
+ * Available variables:
+ * - url: URL of the current term.
+ * - name: (optional) Name of the current term.
+ * - content: Items for the content of the term (fields and description).
+ *   Use 'content' to print them all, or print a subset such as
+ *   'content.description'. Use the following code to exclude the
+ *   printing of a given child element:
+ *   @code
+ *   {{ content|without('description') }}
+ *   @endcode
+ * - attributes: HTML attributes for the wrapper.
+ * - page: Flag for the full page state.
+ * - term: The taxonomy term entity, including:
+ *   - id: The ID of the taxonomy term.
+ *   - bundle: Machine name of the current vocabulary.
+ * - view_mode: View mode, e.g. 'full', 'teaser', etc.
+ *
+ * @see template_preprocess_taxonomy_term()
+ */
+#}
+<h1>Senator {{ content.field_senator_name[0]['#markup'] }}</h1>
+<p><a href="/senators/{{ content.field_senator_name[0]['#markup']|lower|replace({' ':'-'}) }}">Go to Senator {{ content.field_senator_name[0]['#markup']}}'s home page</a></p>
+
+<div>
+
+    <h2>Manage Content</h2>
+
+    <ul>
+        <li><a href="/admin/senator/content?title=&type=microsite_page&field_category_value=All&status=All">Microsite pages</a></li>
+        <li><a href="/admin/senator/content?title=&type=article&status=All&field_category_value=article">Articles</a></li>
+        <li><a href="/admin/senator/content??title=&type=article&field_category_value=press_release&status=All">Press Releases</a></li>
+        <li><a href="/admin/senator/content?title=&type=event&field_category_value=All&status=All">Events</a></li>
+        <li><a href="/admin/senator/content?title=&type=honoree&field_category_value=All&status=All">Honoree Profiles</a></li>
+        <li><a href="/admin/senator/content?title=&type=in_the_news&status=All&field_category_value=article">In the News</a></li>
+        <li><a href="/admin/senator/content?title=&type=petition&status=All&field_category_value=article">Petitions</a></li>
+        <li><a href="/admin/senator/content?title=&type=video&status=All&field_category_value=article">Videos</a></li>
+    </ul>
+    <h2>Manage Legislation</h2>
+    <ul>
+        <li><a href="/admin/senator/bills?title=&type=bill&status=All">Bills</a></li>
+        <li><a href="/admin/senator/bills?title=&type=resolution&status=All">Resolutions</a></li>
+    </ul>
+
+    <h2>Manage Questionnaires</h2>
+    <ul>
+        <li><a href="/admin/webform/add">Add new webform</a></li>
+        <li><a href="/admin/senator/content/questionnaires">View/Add Questionnaires</a></li>
+    </ul>
+
+</ul>
+

@@ -49,7 +49,7 @@
         "drupal/email_registration": "^1.1",
         "drupal/email_tfa": "^1.0",
         "drupal/entityqueue": "^1.2",
-        "drupal/eva": "^2.1",
+        "drupal/eva": "^3.0",
         "drupal/facets": "^2.0",
         "drupal/fancy_file_delete": "^2.0",
         "drupal/field_permissions": "^1.1",
@@ -67,7 +67,7 @@
         "drupal/image_style_quality": "^1.4",
         "drupal/imagemagick": "^3.3",
         "drupal/inline_entity_form": "^1.0@RC",
-        "drupal/job_scheduler": "^3.1",
+        "drupal/job_scheduler": "^4.0",
         "drupal/location_migration": "^1.0@beta",
         "drupal/login_history": "^1.1",
         "drupal/mailsystem": "^4.3",
@@ -83,6 +83,7 @@
         "drupal/permissions_filter": "^1.2",
         "drupal/prepopulate": "^2.3",
         "drupal/private_message": "^3.0@beta",
+        "drupal/queue_ui": "^2.2",
         "drupal/recaptcha": "^3.0",
         "drupal/redis": "^1.5",
         "drupal/reroute_email": "^2.1",
@@ -110,6 +111,7 @@
         "drupal/webform_content_creator": "^2.0",
         "drupal/webform_migrate": "^1.2",
         "drupal/webform_views_extras": "^2.0",
+        "drupal/webform_views": "^5.0",
         "drush/drush": "^10.3",
         "geocoder-php/google-maps-provider": "^4.6",
         "kint-php/kint": "^4.1",
@@ -244,10 +246,14 @@
                 "3254772-14: Attachments and message parameters removed by mail alter hook": "https://www.drupal.org/files/issues/2021-12-16/reroute_email-3254772-attachments-d9.patch"
             },
             "drupal/flag": {
-                "Implement Migration Paths for Flag 7.x": "https://www.drupal.org/files/issues/2019-04-25/2409901_flag_migration_paths_52.patch"
+                "Implement Migration Paths for Flag 7.x": "https://www.drupal.org/files/issues/2019-04-25/2409901_flag_migration_paths_52.patch",
+                "3207400-TypeError in FlagCountManager when flaggable no longer exists\n": "https://www.drupal.org/files/issues/2021-12-02/flag-3207400-3.patch"
             },
             "drupal/config_views": {
                 "3267485 - Memory issue": "https://www.drupal.org/files/issues/2022-09-17/exclude_facets.patch"
+            },
+            "drupal/webform": {
+                "3323334: Allow Disabling open/closed/scheduled on field widget": "https://www.drupal.org/files/issues/2022-11-25/3323334-allow-disabling-open-closed-scheduled-on-field-widget-6.2.x-with-schema-and-testing-coverage.patch"
             }
         }
     }

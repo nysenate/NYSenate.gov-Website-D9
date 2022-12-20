@@ -1,0 +1,71 @@
+@import "../../global/utils/init";
+
+.node-chapter {
+	border-top: 1px solid #b0b0b0;
+	overflow: hidden;
+
+	.node-title {
+		cursor: pointer;
+		position: relative;
+		z-index: 3;
+		padding: 15px 0 20px;
+		background: $color-white;
+		color: $grey08;
+		font-family: $font-serif;
+		font-size: 18px;
+		line-height: 1.3em;
+    margin: 0;
+	}
+
+	.content {
+		position: relative;
+		z-index: 1;
+	}
+
+	&:last-child {
+		margin-bottom: 20px;
+	}
+}
+
+.c-chapter-cta {
+	@extend .lgt-text;
+	@extend .icon-after__see-less;
+	display: block;
+	margin-top: 5px;
+	font-family: $font-sans;
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.c-chapter__collapsed {
+
+	.content {
+		display: none;
+	}
+
+	.c-chapter-cta {
+		@extend .icon-after__see-more;
+	}
+}
+
+@include breakpoint($bp-sm) {
+	.node-chapter {
+
+		.node-title {
+			font-size: 24px;
+			padding-right: 120px;
+		}
+
+		&:last-child {
+			margin-bottom: 40px;
+		}
+	}
+
+	.c-chapter-cta {
+		position: absolute;
+		top: 15px;
+		right: 0;
+		margin: 0;
+		font-size: 16px;
+	}
+}

@@ -2,32 +2,23 @@
 
 {%
   set classes = [
-    'node',
-    'node--type-' ~ node.bundle|clean_class,
-    node.isPromoted() ? 'node--promoted',
-    node.isSticky() ? 'node--sticky',
-    not node.isPublished() ? 'node--unpublished',
-    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-  ]
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
 %}
 
 <article{{attributes.addClass(classes)}}>
   {{ title_prefix }}
   {% if page %}
-    <header class="c-questionnaire--head c-news--head">
+    <header class="c-questionnaire--head">
       <h1 class="nys-article-title">
         {{ title }}
       </h1>
       <div class="c-news--head-meta">
-        {% if content.field_article_author.0 %}
-          <p class="c-news--author">
-            {{ content.field_article_author.0 }}
-          </p>
-        {% elseif content.field_senator_multiref.0 %}
-          <p class="c-news--author">
-            {{ content.field_senator_multiref.0 }}
-          </p>
-        {% endif %}
         <p class="c-news--pub-date">
           {{ content.field_date.0 }}
         </p>
@@ -44,7 +35,7 @@
 
   {{ title_suffix }}
 
-  <div class="c-questionnaire--body c-news--body">
+  <div class="c-questionnaire--body">
     {% if content.field_image_main.0 %}
       <div class="c-block c-block--img">
         {{ content.field_image_main.0 }}
@@ -75,6 +66,9 @@
       cta: cta,
     } only %}
 
-    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% if content.field_senator_multiref['#items'] %}
+      {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% endif %}
   </div>
+
 </article>

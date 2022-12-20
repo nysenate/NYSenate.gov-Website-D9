@@ -1,20 +1,21 @@
 @import "../../global/utils/init";
 
-
-.view-issues-listings{
+.view-issues-listings {
 	width: 100%;
 	margin-bottom: 50px;
 
-	.view-header{
+	.view-header {
 		overflow: hidden;
 
 		.nys-subtitle-title {
 			margin-top: 20px;
 		}
 	}
-	.c-explore-issues--descript{
+
+	.c-explore-issues--descript {
 		margin-bottom: 20px;
 	}
+
 	.view-content {
 		width: 100%;
 		overflow: hidden;
@@ -22,7 +23,7 @@
 	}
 }
 
-.c-block--explore-issues{
+.c-block--explore-issues {
 	width: 100%;
 	text-align: right;
 	@include font-stack-secondary;
@@ -118,7 +119,9 @@
 				font-size: 16px;
 			}
 		}
-		a[title^="Follow"] {
+
+		a[title^="Follow"],
+		.flag-action {
 			background-color: $yellow02;
 			@extend .icon-before__plus;
 
@@ -126,15 +129,19 @@
 				background-color: $yellow03;
 			}
 		}
-		a[title^="Unfollow"] {
+
+		a[title^="Unfollow"],
+		.unflag-action {
 			background-color: $yellow03;
 			@extend .icon-before__x;
 		}
+
 		.flag-wrapper {
 			position: relative;
 			display: block;
 			width: 100%;
 		}
+
 		.flag-success-message {
 			position: absolute;
 			top: -85px; // height of block (120) minus height of button (35)
@@ -143,6 +150,7 @@
 			width: 100%;
 			padding: 20px 20px 35px 20px;
 		}
+
 		.message-text p {
 			position: relative;
 			padding-top: 15px;
@@ -154,6 +162,7 @@
 			z-index: 2;
 			// allow clickthrough
 			pointer-events: none;
+			margin: 0;
 
 			span {
 				line-height: 1;
@@ -164,7 +173,9 @@
 				}
 			}
 		}
+
 		.close-message {
+			cursor: pointer;
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -173,17 +184,16 @@
 			@extend .icon-replace__x;
 			background-color: $yellow02;
 			z-index: 1;
+			transition: background-color 0.2s ease;
 
 			&::after {
 				position: absolute;
-				top: 5px;
-				right: 15px;
-				left: auto;
+				top: 5px !important;
+				right: 15px !important;
+				left: auto !important;
 				width: 20px;
 				font-size: 23px;
 			}
-
-			transition: background-color 0.2s ease;
 
 			&:hover {
 				background: $grey05;
@@ -263,6 +273,7 @@
 				top: -115px; // height of block (150) minus height of button (35)
 				height: 150px;
 			}
+
 			.message-text {
 				position: absolute;
 				top: 0;
@@ -274,25 +285,26 @@
 					width: 100%;
 				}
 			}
+
 			.flag-unflagged-message {
 				.message-text {
 					padding-right: 20px;
 				}
 			}
+
 			.flag-success-btn {
 				padding: 0 20px;
 				font-size: 12px;
 			}
-
 		}
 
 		/**
-         * This overrides the old margins.
-         * Old margins will be used in browsers that don't
-         * support nth-child in this way.
-         *
-         * All are set to 32% width.
-         */
+			* This overrides the old margins.
+			* Old margins will be used in browsers that don't
+			* support nth-child in this way.
+			*
+			* All are set to 32% width.
+			*/
 		&:nth-child(1),
 		&:nth-child(1n + 3),
 		&:nth-child(2),
@@ -301,19 +313,21 @@
 		&:nth-child(3n + 3) {
 			width: 30%;
 		}
+
 		&:nth-child(1),
 		&:nth-child(1n + 3),
 		&:nth-child(2),
 		&:nth-child(2n + 3) {
 			margin-right: 5%;
 		}
+
 		&:nth-child(3),
 		&:nth-child(3n + 3) {
 			margin-right: 0;
 		}
 	}
 
-	.c-block--explore-issues{
+	.c-block--explore-issues {
 		margin-top: 40px;
 		font-size: 16px;
 
@@ -322,7 +336,7 @@
 		}
 	}
 
-	.pane-news-by-issue{
+	.pane-news-by-issue {
 		margin-bottom: 60px;
 	}
 }

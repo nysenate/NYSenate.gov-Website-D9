@@ -95,17 +95,21 @@ class UpdatesProcessor {
   /**
    * Gets a list of bill updates from Openleg.
    *
+   * Timestamp ranges for Openleg are exclusive to inclusive: (from, to]
+   *
    * @param mixed $time_from
-   *   A timestamp, as epoch time, or parsable by strtotime()
+   *   A timestamp, preferably epoch time or OpenLeg standard format.
+   *   This value is exclusive.
    * @param mixed $time_to
-   *   A timestamp, as epoch time, or parsable by strtotime()
+   *   A timestamp, preferably epoch time or OpenLeg standard format.
+   *   This value is inclusive.
    * @param array $params
    *   Query string parameters to add to the API request.
    *
    * @return \Drupal\nys_openleg\Api\ResponsePluginBase
    *   The Response object from Openleg.
    */
-  protected function retrieveUpdates($time_from, $time_to, array $params = []): ResponsePluginBase {
+  protected function retrieveUpdates(mixed $time_from, mixed $time_to, array $params = []): ResponsePluginBase {
     return $this->apiManager->getRequest('bill')
       ->setParams(['detail' => 'true'] + $params)
       ->retrieveUpdates($time_from, $time_to);
@@ -268,10 +272,14 @@ class UpdatesProcessor {
   /**
    * Processes all bill updates from a time range, creating queue entries.
    *
+   * Timestamp ranges for Openleg are exclusive to inclusive: (from, to]
+   *
    * @param mixed $time_from
-   *   A timestamp, as epoch time, or parsable by strtotime()
+   *   A timestamp, preferably epoch time or OpenLeg standard format.
+   *   This value is exclusive.
    * @param mixed $time_to
-   *   A timestamp, as epoch time, or parsable by strtotime()
+   *   A timestamp, preferably epoch time or OpenLeg standard format.
+   *   This value is inclusive.
    * @param array $params
    *   An array of options to pass into the OpenLeg API.
    *

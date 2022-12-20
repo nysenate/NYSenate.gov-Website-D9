@@ -476,23 +476,24 @@ function nysenate_theme_preprocess_block_content__quick_facts(&$variables) {
 
   $bill_status = '';
   foreach ($facts as $key => $fact) {
-    switch ($fact['status']) {
-      case 'signed':
-        $bill_status = 'SIGNED_BY_GOV';
-        break;
+    if (!empty($facts['status'])) {
+      switch ($fact['status']) {
+        case 'signed':
+          $bill_status = 'SIGNED_BY_GOV';
+          break;
 
-      case 'waiting':
-        $bill_status = 'DELIVERED_TO_GOV';
-        break;
+        case 'waiting':
+          $bill_status = 'DELIVERED_TO_GOV';
+          break;
 
-      case 'vetoed':
-        $bill_status = 'VETOED';
-        break;
+        case 'vetoed':
+          $bill_status = 'VETOED';
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
-
     // Arrange array for url params.
     $params = [
       'searched' => 'true',

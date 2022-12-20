@@ -158,7 +158,7 @@ process:
     -
       plugin: get
       source: field_inactive_senator_message
-  field_active:
+  field_active_senator:
     -
       plugin: get
       source: field_active
@@ -190,6 +190,10 @@ process:
     -
       plugin: location_fax_to_telephone
       source: field_media_inquiries
+  field_promotional_banners:
+    -
+      plugin: get
+      source: field_promotional_banners
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: senator

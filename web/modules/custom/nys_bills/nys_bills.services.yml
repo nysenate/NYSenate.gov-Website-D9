@@ -3,3 +3,18 @@ services:
     class: Drupal\nys_bills\BillsHelper
     arguments:
       - '@database'
+      - '@entity_type.manager'
+      - '@cache.default'
+      - '@nys_senators.senators_helper'
+  nys_bill_vote.bill_vote:
+    class: Drupal\nys_bill_vote\BillVoteHelper
+    arguments:
+      - '@current_user'
+      - '@path.current'
+      - '@current_route_match'
+      - '@logger.factory'
+      - '@entity_type.manager'
+  nys_bills.twig.filters:
+    class: Drupal\nys_bills\CustomTwig
+    tags:
+      - { name: twig.extension }

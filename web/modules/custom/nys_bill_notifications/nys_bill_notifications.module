@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for NYS Bill Notifications module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\nys_bill_notifications\BillLineageHelper;
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Work summary:
+ *   - Bill Nodes: set the multi-session root to track bill lineage.
+ */
+function nys_bill_notifications_entity_presave(EntityInterface $entity): void {
+  // Act based on entity type and bundle.
+  $type = $entity->getEntityTypeId() . ':' . $entity->bundle();
+
+  switch ($type) {
+    // For bill nodes.
+    case 'node:bill':
+      /** @var \Drupal\node\Entity\Node $entity */
+      $current_tid = $entity->field_bill_multi_session_root->value ?? NULL;
+      $original_tid = $entity->original->field_bill_multi_session_root->value ?? NULL;
+      // If the current is empty, or does not match original, set the field.
+      if (!($current_tid && ($current_tid == $original_tid))) {
+        $term = BillLineageHelper::getLineageRoot($entity);
+        $entity->set('field_bill_multi_session_root', $term);
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function nys_bill_notifications_mail_alter(&$message): void {
+  if (isset($message['params']['queue_item'])) {
+    $queue_item = $message['params']['queue_item'];
+    $message['params']['GA_CampaignContent'] = $queue_item->mailKey ?? '';
+  }
+}

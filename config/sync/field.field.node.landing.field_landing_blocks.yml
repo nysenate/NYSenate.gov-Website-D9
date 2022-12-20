@@ -1,0 +1,65 @@
+uuid: e7cde33a-cb7a-432d-b910-dc439d5487dd
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.accordion
+    - block_content.type.blocks
+    - block_content.type.embed
+    - block_content.type.featured_bill
+    - block_content.type.featured_content
+    - block_content.type.featured_image
+    - block_content.type.file_uploads
+    - block_content.type.hero
+    - block_content.type.media
+    - block_content.type.microsite_contact_webform
+    - block_content.type.promotional_banners_list
+    - block_content.type.quick_facts
+    - block_content.type.quote
+    - block_content.type.slider
+    - block_content.type.tabs
+    - block_content.type.text
+    - block_content.type.video
+    - block_content.type.views
+    - field.storage.node.field_landing_blocks
+    - node.type.landing
+  module:
+    - entity_reference_revisions
+id: node.landing.field_landing_blocks
+field_name: field_landing_blocks
+entity_type: node
+bundle: landing
+label: Blocks
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:block_content'
+  handler_settings:
+    target_bundles:
+      accordion: accordion
+      blocks: blocks
+      embed: embed
+      featured_bill: featured_bill
+      featured_content: featured_content
+      featured_image: featured_image
+      file_uploads: file_uploads
+      hero: hero
+      views: views
+      media: media
+      promotional_banners_list: promotional_banners_list
+      quick_facts: quick_facts
+      quote: quote
+      slider: slider
+      tabs: tabs
+      text: text
+      video: video
+      microsite_contact_webform: microsite_contact_webform
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: accordion
+field_type: entity_reference_revisions

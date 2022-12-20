@@ -19,40 +19,29 @@ source:
   bundle: pg_accordion
   key: migrate
 process:
-  type:
-    -
-      plugin: get
-      source: bundle
-  field_pg_fc_accordion:
-    -
-      plugin: sub_process
-      source: field_pg_fc_accordion
-      process:
-        target_id:
-          -
-            plugin: paragraphs_lookup
-            tags: 'Field Collection Content'
-            source: value
-          -
-            plugin: extract
-            index:
-              - id
-        target_revision_id:
-          -
-            plugin: paragraphs_lookup
-            tags:
-              - 'Field Collection Revisions Content'
-              - 'Field Collection Content'
-            tag_ids:
-              'Field Collection Revisions Content':
-                - revision_id
-              'Field Collection Content':
-                - value
-          -
-            plugin: extract
-            index:
-              - revision_id
+  field_accordion_item:
+    plugin: sub_process
+    source: field_pg_fc_accordion
+    process:
+      target_id:
+        -
+          plugin: migration_lookup
+          migration: nys_paragraphs_pg_accordion_item
+          source: value
+        -
+          plugin: extract
+          index:
+            - 0
+      target_revision_id:
+        -
+          plugin: migration_lookup
+          migration: nys_paragraphs_pg_accordion_item
+          source: value
+        -
+          plugin: extract
+          index:
+            - 1
 destination:
   plugin: 'entity:block_content'
-  default_bundle: pg_accordion
+  default_bundle: accordion
 migration_dependencies: null

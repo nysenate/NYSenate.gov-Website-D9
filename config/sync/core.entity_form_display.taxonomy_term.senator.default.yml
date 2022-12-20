@@ -25,6 +25,8 @@ dependencies:
     - field.field.taxonomy_term.senator.field_ol_shortname
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_press_kit
+    - field.field.taxonomy_term.senator.field_promotional_banners
     - field.field.taxonomy_term.senator.field_senator_name
     - field.field.taxonomy_term.senator.field_store_settings
     - field.field.taxonomy_term.senator.field_top_issue
@@ -34,9 +36,11 @@ dependencies:
     - taxonomy.vocabulary.senator
   module:
     - field_group
+    - file
     - inline_entity_form
     - media_library
     - name
+    - paragraphs
     - paragraphs_features
     - telephone
 third_party_settings:
@@ -65,6 +69,7 @@ third_party_settings:
         - field_microsite_theme
         - field_image_hero
         - field_top_issue
+        - group_manage_promotional_banners
         - group_social_media_links
       label: 'Microsite Settings'
       region: content
@@ -87,7 +92,7 @@ third_party_settings:
       label: 'Social Media Links'
       region: content
       parent_name: group_microsite_settings
-      weight: 8
+      weight: 9
       format_type: fieldset
       format_settings:
         classes: ''
@@ -101,7 +106,7 @@ third_party_settings:
       label: 'Key Staff'
       region: content
       parent_name: group_contact_page
-      weight: 35
+      weight: 32
       format_type: fieldset
       format_settings:
         classes: ''
@@ -115,7 +120,7 @@ third_party_settings:
       label: 'Office Addresses'
       region: content
       parent_name: group_contact_page
-      weight: 36
+      weight: 33
       format_type: fieldset
       format_settings:
         classes: ''
@@ -130,7 +135,7 @@ third_party_settings:
       label: 'Direct Messaging'
       region: content
       parent_name: ''
-      weight: 5
+      weight: 6
       format_type: fieldset
       format_settings:
         classes: ''
@@ -145,7 +150,7 @@ third_party_settings:
       label: 'Auto-Reply Settings'
       region: content
       parent_name: ''
-      weight: 6
+      weight: 7
       format_type: fieldset
       format_settings:
         classes: ''
@@ -162,7 +167,7 @@ third_party_settings:
       label: 'Contact Page'
       region: content
       parent_name: ''
-      weight: 4
+      weight: 5
       format_type: fieldset
       format_settings:
         classes: ''
@@ -176,16 +181,32 @@ third_party_settings:
         - field_media_email
         - field_media_phone
         - field_media_fax
+        - field_press_kit
       label: 'Media Inquiries'
       region: content
       parent_name: ''
-      weight: 3
+      weight: 4
       format_type: fieldset
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
         description: ''
+        required_fields: true
+    group_manage_promotional_banners:
+      children:
+        - field_promotional_banners
+      label: 'Manage Promotional Banners Footer'
+      region: content
+      parent_name: group_microsite_settings
+      weight: 8
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: 'Top 4 promotional banners will show on all footers but your home page.'
         required_fields: true
 id: taxonomy_term.senator.default
 targetEntityType: taxonomy_term
@@ -194,7 +215,7 @@ mode: default
 content:
   field_active_senator:
     type: boolean_checkbox
-    weight: 7
+    weight: 8
     region: content
     settings:
       display_label: true
@@ -262,7 +283,7 @@ content:
     third_party_settings: {  }
   field_media_contact:
     type: string_textfield
-    weight: 31
+    weight: 5
     region: content
     settings:
       size: 60
@@ -270,7 +291,7 @@ content:
     third_party_settings: {  }
   field_media_email:
     type: email_default
-    weight: 32
+    weight: 6
     region: content
     settings:
       placeholder: ''
@@ -278,14 +299,14 @@ content:
     third_party_settings: {  }
   field_media_fax:
     type: telephone_default
-    weight: 34
+    weight: 9
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_media_phone:
     type: telephone_default
-    weight: 33
+    weight: 8
     region: content
     settings:
       placeholder: ''
@@ -344,14 +365,14 @@ content:
     third_party_settings: {  }
   field_ol_member_id:
     type: number
-    weight: 13
+    weight: 10
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_ol_shortname:
     type: string_textfield
-    weight: 12
+    weight: 9
     region: content
     settings:
       size: 60
@@ -370,6 +391,30 @@ content:
     settings:
       placeholder: ''
       size: 60
+    third_party_settings: {  }
+  field_press_kit:
+    type: file_generic
+    weight: 10
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_promotional_banners:
+    type: inline_entity_form_complex
+    weight: 3
+    region: content
+    settings:
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: false
+      allow_existing: true
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: false
+      collapsed: false
+      revision: false
     third_party_settings: {  }
   field_senator_name:
     type: name_default
@@ -404,7 +449,7 @@ content:
     third_party_settings: {  }
   field_store_settings:
     type: boolean_checkbox
-    weight: 15
+    weight: 12
     region: content
     settings:
       display_label: true
@@ -454,7 +499,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   simple_sitemap:
-    weight: 14
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -44,6 +44,7 @@ dependencies:
     - field.field.node.bill.field_ol_sponsor_name
     - field.field.node.bill.field_ol_substituted_by
     - field.field.node.bill.field_ol_summary
+    - field.field.node.bill.field_ol_version
     - field.field.node.bill.field_ol_votes
     - node.type.bill
   module:
@@ -60,13 +61,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 45
+    weight: 47
     region: content
     settings: {  }
     third_party_settings: {  }
   field_bill_multi_session_root:
     type: entity_reference_autocomplete
-    weight: 43
+    weight: 45
     region: content
     settings:
       match_operator: CONTAINS
@@ -83,7 +84,7 @@ content:
     third_party_settings: {  }
   field_comments:
     type: comment_default
-    weight: 49
+    weight: 51
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -113,7 +114,7 @@ content:
     third_party_settings: {  }
   field_ol_active_version:
     type: string_textfield
-    weight: 8
+    weight: 9
     region: content
     settings:
       size: 60
@@ -121,7 +122,7 @@ content:
     third_party_settings: {  }
   field_ol_add_sponsor_names:
     type: string_textarea
-    weight: 16
+    weight: 18
     region: content
     settings:
       rows: 5
@@ -129,7 +130,7 @@ content:
     third_party_settings: {  }
   field_ol_add_sponsors:
     type: entity_reference_autocomplete
-    weight: 15
+    weight: 17
     region: content
     settings:
       match_operator: CONTAINS
@@ -139,7 +140,7 @@ content:
     third_party_settings: {  }
   field_ol_all_actions:
     type: string_textarea
-    weight: 18
+    weight: 20
     region: content
     settings:
       rows: 5
@@ -147,7 +148,7 @@ content:
     third_party_settings: {  }
   field_ol_all_statuses:
     type: string_textarea
-    weight: 17
+    weight: 19
     region: content
     settings:
       rows: 5
@@ -155,7 +156,7 @@ content:
     third_party_settings: {  }
   field_ol_amendments:
     type: string_textarea
-    weight: 24
+    weight: 26
     region: content
     settings:
       rows: 5
@@ -177,7 +178,7 @@ content:
     third_party_settings: {  }
   field_ol_co_sponsor_names:
     type: string_textarea
-    weight: 35
+    weight: 37
     region: content
     settings:
       rows: 5
@@ -185,13 +186,13 @@ content:
     third_party_settings: {  }
   field_ol_co_sponsors:
     type: options_select
-    weight: 34
+    weight: 36
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ol_full_text:
     type: string_textarea
-    weight: 33
+    weight: 35
     region: content
     settings:
       rows: 5
@@ -199,40 +200,40 @@ content:
     third_party_settings: {  }
   field_ol_has_same_as:
     type: boolean_checkbox
-    weight: 26
+    weight: 28
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_ol_is_active_version:
     type: boolean_checkbox
-    weight: 42
+    weight: 44
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_ol_is_amended:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_ol_last_status:
     type: options_select
-    weight: 20
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ol_last_status_date:
     type: datetime_default
-    weight: 21
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ol_latest_status:
     type: string_textfield
-    weight: 19
+    weight: 21
     region: content
     settings:
       size: 60
@@ -240,7 +241,7 @@ content:
     third_party_settings: {  }
   field_ol_latest_status_committee:
     type: string_textfield
-    weight: 22
+    weight: 24
     region: content
     settings:
       size: 60
@@ -248,7 +249,7 @@ content:
     third_party_settings: {  }
   field_ol_law_code:
     type: string_textarea
-    weight: 29
+    weight: 31
     region: content
     settings:
       rows: 5
@@ -256,7 +257,7 @@ content:
     third_party_settings: {  }
   field_ol_law_section:
     type: string_textfield
-    weight: 28
+    weight: 30
     region: content
     settings:
       size: 60
@@ -264,7 +265,7 @@ content:
     third_party_settings: {  }
   field_ol_memo:
     type: string_textarea
-    weight: 32
+    weight: 34
     region: content
     settings:
       rows: 5
@@ -272,7 +273,7 @@ content:
     third_party_settings: {  }
   field_ol_multi_sponsor_names:
     type: string_textarea
-    weight: 37
+    weight: 39
     region: content
     settings:
       rows: 5
@@ -280,13 +281,13 @@ content:
     third_party_settings: {  }
   field_ol_multi_sponsors:
     type: options_select
-    weight: 36
+    weight: 38
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ol_name:
     type: string_textarea
-    weight: 11
+    weight: 13
     region: content
     settings:
       rows: 5
@@ -294,7 +295,7 @@ content:
     third_party_settings: {  }
   field_ol_previous_versions:
     type: string_textarea
-    weight: 25
+    weight: 27
     region: content
     settings:
       rows: 5
@@ -302,7 +303,7 @@ content:
     third_party_settings: {  }
   field_ol_print_no:
     type: string_textfield
-    weight: 9
+    weight: 10
     region: content
     settings:
       size: 60
@@ -310,7 +311,7 @@ content:
     third_party_settings: {  }
   field_ol_program_info:
     type: string_textfield
-    weight: 40
+    weight: 42
     region: content
     settings:
       size: 60
@@ -318,20 +319,20 @@ content:
     third_party_settings: {  }
   field_ol_program_info_seq:
     type: number
-    weight: 41
+    weight: 43
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_ol_publish_date:
     type: datetime_default
-    weight: 12
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ol_same_as:
     type: string_textarea
-    weight: 27
+    weight: 29
     region: content
     settings:
       rows: 5
@@ -346,7 +347,7 @@ content:
     third_party_settings: {  }
   field_ol_sponsor:
     type: entity_reference_autocomplete
-    weight: 13
+    weight: 15
     region: content
     settings:
       match_operator: CONTAINS
@@ -356,7 +357,7 @@ content:
     third_party_settings: {  }
   field_ol_sponsor_name:
     type: string_textfield
-    weight: 14
+    weight: 16
     region: content
     settings:
       size: 60
@@ -364,7 +365,7 @@ content:
     third_party_settings: {  }
   field_ol_substituted_by:
     type: string_textfield
-    weight: 39
+    weight: 41
     region: content
     settings:
       size: 60
@@ -372,15 +373,23 @@ content:
     third_party_settings: {  }
   field_ol_summary:
     type: string_textarea
-    weight: 23
+    weight: 25
     region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  field_ol_version:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_ol_votes:
     type: inline_entity_form_complex
-    weight: 38
+    weight: 40
     region: content
     settings:
       form_mode: default
@@ -397,24 +406,24 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 46
+    weight: 48
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 31
+    weight: 33
     region: content
     settings: {  }
     third_party_settings: {  }
   simple_sitemap:
-    weight: 10
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 48
+    weight: 50
     region: content
     settings:
       display_label: true
@@ -429,7 +438,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 44
+    weight: 46
     region: content
     settings:
       match_operator: CONTAINS
@@ -439,12 +448,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 32
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 47
+    weight: 49
     region: content
     settings: {  }
     third_party_settings: {  }

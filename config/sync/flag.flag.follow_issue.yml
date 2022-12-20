@@ -1,0 +1,37 @@
+uuid: f36aac0e-9107-4d5a-af28-52769ced0b1e
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: follow_issue
+label: 'Follow Issue'
+bundles:
+  - issues
+  - majority_issues
+entity_type: taxonomy_term
+global: false
+flag_short: 'Follow This Issue'
+flag_long: 'Follow this issue'
+flag_message: 'Following this Issue'
+unflag_short: 'Unfollow This Issue'
+unflag_long: 'Unfollow this issue'
+unflag_message: 'Not following this issue'
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:taxonomy_term'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+    diff_standard: '0'
+    token: '0'
+    search_index: '0'
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: true
+  extra_permissions: {  }
+  access_author: ''
+linkTypeConfig:
+  flag_confirmation: null
+  unflag_confirmation: null

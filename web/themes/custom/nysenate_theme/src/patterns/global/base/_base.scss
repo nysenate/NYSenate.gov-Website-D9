@@ -1,7 +1,7 @@
 /*-------------------------------------------------------
 /
 / CONTAINER GLOBALS
-/ containers are reuseable blocks 
+/ containers are reuseable blocks
 / things with uniform titles and links to those sections
 / ie - newsroom container which includes a title,
 /	synopsis of a few articles and a link to the newsroom
@@ -56,15 +56,6 @@ h3 {
   }
 }
 
-.c-block {
-  p {
-    font-family: $font-serif;
-    line-height: 1.5em;
-    color: $grey03;
-    font-size: 16px;
-  }
-}
-
 .c-detail--section-title {
   overflow: hidden;
   padding-bottom: 10px;
@@ -78,6 +69,7 @@ h3 {
   }
 }
 
+.c-block .c-detail--download,
 .c-detail--download {
   display: block;
   margin-bottom: 20px;
@@ -210,7 +202,7 @@ h3 {
   margin-right: auto;
   // max-width should account for padding,
   // so + 40 (20px left and 20px right)
-  padding: 0 20px;
+  padding: 20px;
   max-width: 440px;
 }
 
@@ -239,7 +231,7 @@ h3 {
   }
 
   .l-row--main {
-    padding: 0 40px;
+    padding: 40px;
     max-width: 840px;
   }
 
@@ -391,6 +383,10 @@ main.l-row--main {
   font-weight: $font-weight-normal;
   color: $grey08;
   font-size: 16px;
+
+  a {
+    color: $grey08;
+  }
 }
 
 /*-------------------------------------------------------
@@ -622,7 +618,7 @@ main.l-row--main {
 }
 
 /*----------------------------------------
-/ LIST ITEM 
+/ LIST ITEM
 /----------------------------------------*/
 .c-list-item {
   padding-top: 20px;
@@ -634,6 +630,7 @@ main.l-row--main {
 /-------------------------------------*/
 
 h2.c-subpage-header--title {
+  color: $grey08;
   margin: 0;
   font-family: $font-serif-bold;
   line-height: 1em;
@@ -642,6 +639,7 @@ h2.c-subpage-header--title {
 }
 
 .c-subpage-header--title02 {
+  color: $grey08;
   margin: 0;
   font-family: $font-serif-bold;
   line-height: 1em;
@@ -650,6 +648,7 @@ h2.c-subpage-header--title {
 }
 
 .c-subpage-header--title03 {
+  color: $grey08;
   margin: 0;
   font-family: $font-serif-bold;
   line-height: 1em;
@@ -749,6 +748,21 @@ h2.c-subpage-header--title {
     font-size: 15px;
     font-family: $font-sans-bold;
     white-space: normal;
+
+    &::after {
+      content: ',';
+    }
+
+    &:last-child::after {
+      content: '';
+    }
+  }
+
+  .list-formatter-list {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
   a {
@@ -767,4 +781,107 @@ h2.c-subpage-header--title {
   font-size: 15px;
   line-height: 1.2em;
   font-family: $font-sans-bold;
+}
+
+// NEWS HEADER AREA
+.c-news--head {
+  margin-bottom: 20px;
+
+  @include breakpoint($bp-sm) {
+    margin-bottom: 30px;
+  }
+
+  .nys-article-title {
+    margin-bottom: 30px;
+    color: $grey08;
+    font-family: $font-serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2em;
+
+    @include breakpoint($bp-sm) {
+      font-size: 48px;
+    }
+  }
+
+  .c-news--head-meta {
+    line-height: 15px;
+
+    .c-news--pub-date {
+      display: inline-block;
+      margin: 0 10px 0 0;
+      text-transform: capitalize;
+      font-family: $font-sans;
+      font-size: 12px;
+      line-height: 1.2em;
+      color: $grey04;
+
+      @include breakpoint($bp-sm) {
+        font-size: 15px;
+      }
+
+      b {
+        font-weight: bold;
+        line-height: inherit;
+        color: $grey04;
+        font-family: $font-serif-bold;
+
+        .date-display-single {
+          font-family: $font-sans;
+
+          @include breakpoint($bp-sm) {
+            font-size: 14px;
+            line-height: 18.2px;
+          }
+        }
+      }
+    }
+
+    .c-news--author {
+      text-transform: uppercase;
+      display: inline-block;
+      margin: 0 10px 0 0;
+      font-family: $font-sans;
+      font-size: 12px;
+      line-height: 1.2em;
+
+      @include breakpoint($bp-sm) {
+        font-size: 15px;
+      }
+    }
+
+    p {
+      color: #666;
+    }
+  }
+
+  ul.links {
+    display: block;
+    list-style: none;
+    line-height: 25px;
+
+    li {
+      display: inline-block;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-family: $font-sans-bold;
+      white-space: nowrap;
+    }
+
+    a {
+      font-size: 12px;
+      line-height: 1em;
+      @extend .lgt-text;
+    }
+  }
+
+  .field-name-field-issues {
+    padding: 0;
+  }
+}
+
+.media-oembed-content {
+  max-width: 100%;
+  width: 100%;
+  height: 426px;
 }

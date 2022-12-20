@@ -21,9 +21,10 @@
   color: $grey08;
   font-size: 14px;
   text-transform: uppercase;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   border-bottom: 1px solid $grey05;
   margin-bottom: 20px;
+  letter-spacing: 0.1em;
 
   @include breakpoint($bp-md) {
     font-size: 16px;
@@ -35,15 +36,9 @@
   background-color: $grey06;
   border: 0;
   margin-bottom: 10px;
-  width: 112%;
-  margin-left: -6%;
+  width: 100%;
 
-  @include breakpoint($bp-xsm) {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  &:first-of-type {
+    &:first-of-type {
     border: 0;
   }
 
@@ -98,12 +93,18 @@
 .nysenate-accordion__heading {
   color: #2b6a90;
   font-size: 14px;
-  font-weight: 500;
+  letter-spacing: 0.1em;
+  font-weight: $font-weight-normal;
   text-transform: uppercase;
   flex: 75%;
+  font-family: $font-sans-bold;
 
   @include breakpoint($bp-sm) {
     font-size: 16px;
+  }
+
+  &.hide-number .count {
+    display: none;
   }
 }
 
@@ -111,7 +112,6 @@
   max-height: 0;
   margin-top: 0;
   overflow: hidden;
-  padding: 0 32px;
   transition: max-height 0.15s, border-bottom 0.15s;
   color: $grey03;
   font-size: 18px;

@@ -1,0 +1,98 @@
+uuid: 72110151-4cbb-4b2a-b5ec-379a943e5593
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.in_the_news.body
+    - field.field.node.in_the_news.field_accessible_sitewide
+    - field.field.node.in_the_news.field_article_author
+    - field.field.node.in_the_news.field_attachment
+    - field.field.node.in_the_news.field_committee
+    - field.field.node.in_the_news.field_committee_featured
+    - field.field.node.in_the_news.field_date
+    - field.field.node.in_the_news.field_featured
+    - field.field.node.in_the_news.field_image_hero
+    - field.field.node.in_the_news.field_image_main
+    - field.field.node.in_the_news.field_issues
+    - field.field.node.in_the_news.field_publication_source_date
+    - field.field.node.in_the_news.field_publication_source_url
+    - field.field.node.in_the_news.field_publication_title
+    - field.field.node.in_the_news.field_senator_multiref
+    - field.field.node.in_the_news.field_subhead
+    - node.type.in_the_news
+  module:
+    - datetime
+    - layout_builder
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.in_the_news.search_index
+targetEntityType: node
+bundle: in_the_news
+mode: search_index
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_publication_source_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_accessible_sitewide: true
+  field_article_author: true
+  field_attachment: true
+  field_committee: true
+  field_committee_featured: true
+  field_featured: true
+  field_image_hero: true
+  field_image_main: true
+  field_publication_source_url: true
+  field_publication_title: true
+  field_subhead: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

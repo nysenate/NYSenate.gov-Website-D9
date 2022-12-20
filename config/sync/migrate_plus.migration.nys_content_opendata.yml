@@ -58,9 +58,12 @@ process:
       process:
         target_id:
           plugin: migration_lookup
-          migration: nys_media_file_opendata
+          migration: nys_senate_gov_managed_files
           source: fid
           no_stub: true
+        display:
+          plugin: default_value
+          default_value: 1
   field_open_date_type:
     -
       plugin: get

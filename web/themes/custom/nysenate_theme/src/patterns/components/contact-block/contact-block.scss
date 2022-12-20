@@ -7,7 +7,7 @@
 
 .c-block--senator-office,
 .c-block--senator-media {
-  background: $greyLight;
+  background: $grey06;
 
   .vcard,
   .l-col-2 {
@@ -18,15 +18,38 @@
     border: none;
   }
 
+  .inquiries-title {
+    margin-bottom: 0;
+
+    .c-download-contact--name {
+      font-family: $font-serif-regular;
+      font-size: 16px;
+      color: $grey08;
+      font-weight: normal;
+      margin-top: -5px;
+    }
+
+  }
+
   .fn[itemprop="name"],
   .c-office-info--title {
     display: block;
     margin-bottom: 10px;
-    @extend .contrast_text;
+    color: $contrast_drk;
     font-family: $font-sans-bold;
     text-transform: uppercase;
     font-size: 14px;
     font-weight: normal;
+  }
+
+  hr {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    height: 3px;
+    width: 100%;
+    border: none;
   }
 
   abbr[title] { border: none; }
@@ -54,7 +77,7 @@
   .c-senator-media--item {
     text-transform: none;
     span {
-      @extend .contrast_text;
+      color: $contrast_drk;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
@@ -69,11 +92,16 @@
 
   .tel {
     clear: left;
+
     span {
-      @extend .contrast_text;
+      color: $contrast_drk;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
+    }
+
+    a {
+      @extend .lgt-text;
     }
   }
 
@@ -84,7 +112,7 @@
       display: none;
     }
 
-    a { 
+    a {
       color: $grey02;
     }
   }
@@ -127,10 +155,25 @@
     font-family:$font-sans;
     font-size:16px;
     line-height: 1.2em;
-    @extend .lgt-text;
+    //@extend .lgt-text;
 
     strong {
       font-family:$font-sans;
+    }
+
+    .c-block--btn {
+      padding-left: 20px;
+      @include breakpoint($bp-sm) {
+        padding-left: 40px;
+      }
+
+      @extend .lgt-bg;
+      @extend .icon-before__presskit;
+      color: $color-white;
+
+      &:hover {
+        @extend .drk-bg;
+      }
     }
 
     &.vcard {
@@ -139,7 +182,7 @@
     }
 
     span {
-      @extend .contrast_text;
+      color: $contrast_drk;
       font-family: $font-sans-bold;
       font-size: 14px;
       font-weight: normal;
@@ -147,7 +190,6 @@
 
     a {
       text-decoration: none;
-      @extend .lgt-text;
     }
   }
 
@@ -162,7 +204,7 @@
 }
 
 .c-block--senator-office {
-  padding: 40px 20px 15px;
+  padding: 40px 20px 80px;
 
   .l-col {
     clear: left;
@@ -180,8 +222,8 @@
     margin-top: 20px;
   }
 
-  .c-office-location-link { 
-    display: none; 
+  .c-office-location-link {
+    display: none;
   }
 
 }

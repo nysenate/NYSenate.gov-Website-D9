@@ -1,0 +1,91 @@
+uuid: 99b57d5d-1ddc-437a-8c05-edccfe688dc0
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.honoree.body
+    - field.field.node.honoree.field_add_honoree_list
+    - field.field.node.honoree.field_attachment
+    - field.field.node.honoree.field_date
+    - field.field.node.honoree.field_featured
+    - field.field.node.honoree.field_honoree_contact_email
+    - field.field.node.honoree.field_honoree_contact_name
+    - field.field.node.honoree.field_honoree_military_branch
+    - field.field.node.honoree.field_honoree_name
+    - field.field.node.honoree.field_honoree_rank
+    - field.field.node.honoree.field_honoree_type
+    - field.field.node.honoree.field_honoree_video
+    - field.field.node.honoree.field_image_main
+    - field.field.node.honoree.field_issues
+    - field.field.node.honoree.field_profile_status
+    - field.field.node.honoree.field_senator_multiref
+    - node.type.honoree
+  module:
+    - datetime
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.honoree.search_index
+targetEntityType: node
+bundle: honoree
+mode: search_index
+content:
+  field_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F j, Y'
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_senator:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 115
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  body: true
+  field_add_honoree_list: true
+  field_attachment: true
+  field_featured: true
+  field_honoree_contact_email: true
+  field_honoree_contact_name: true
+  field_honoree_military_branch: true
+  field_honoree_name: true
+  field_honoree_rank: true
+  field_honoree_type: true
+  field_honoree_video: true
+  field_image_main: true
+  field_profile_status: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

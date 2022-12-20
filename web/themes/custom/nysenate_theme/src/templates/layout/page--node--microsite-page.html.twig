@@ -53,7 +53,7 @@
   ]
 %}
 
-<div class="layout-container page {{ theme }}">
+<div class="layout-container page {{ theme }} {% if not is_active %} inactive-pallette{% endif %}{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}">
 
   {%
     embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
@@ -72,7 +72,7 @@
     {% block microsite_hero %}
       {{ microsite_hero }}
     {% endblock %}
-    
+
     {% block menu %}
       {{ microsite_menu }}
     {% endblock %}
@@ -90,9 +90,9 @@
   <main role="main" class="container l-row l-row--main l-main">
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
     <div {{ attributes.addClass(layout_classes) }}>
-      <h2 class="nys-title--events nys-title">{{ title }}</h2>
 
       {{ page.content }}
+      {{ message_senator }}
 
       {% if page.sidebar_right %}
         <aside class="layout-sidebar-right" role="complementary">
@@ -106,7 +106,7 @@
 	  <div id="footer-first">
       <div class="panel-pane pane-block pane-nys-blocks-sitewide-footer">
         <div class="pane-content">
-          <section class="c-senator-footer">
+          <section class="c-senator-footer {% if not is_active %} senator-inactive {% endif %}">
             <div class="l-row">
               <div class="c-senator-footer-col c-senator-footer-col__home">
                 {{ page.footer_left }}

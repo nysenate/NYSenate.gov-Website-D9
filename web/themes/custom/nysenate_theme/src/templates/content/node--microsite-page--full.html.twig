@@ -69,18 +69,20 @@
 #}
 {%
   set classes = [
-    'node',
-    'node--type-' ~ node.bundle|clean_class,
-    node.isPromoted() ? 'node--promoted',
-    node.isSticky() ? 'node--sticky',
-    not node.isPublished() ? 'node--unpublished',
-    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-  ]
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  microsite_type
+]
 %}
 {{ attach_library('classy/node') }}
 <article{{ attributes.addClass(classes) }}>
 
   {{ title_prefix }}
+
   {% if microsite_type == 'about' %}
     {% if title %}
       <h2 class="c-subpage-header--title">
@@ -88,36 +90,40 @@
       </h2>
     {% endif %}
 
-    <p class="c-subpage-header--subtitle01">{{ short_title }}</p>
+    <p class="c-subpage-header--subtitle01">{{ (short_title) ? short_title : ((media_title) ? media_title : '') }}</p>
     <p class="c-subpage-header--subtitle02 lgt-text">
       <span class="u-mobile-only">{{ party }}</span>
       <span class="u-tablet-plus">{{ party }}</span>
     </p>
-    <p class="c-subpage-header--subtitle013">{{ district_name }}</p>
-
+    <p class="c-subpage-header--subtitle03">{{ district_name }}</p>
+  {% elseif microsite_type == 'events' or microsite_type == 'legislation' or microsite_type == 'newsroom' %}
+    {% if title %}
+      <h2 class="nys-title">
+        {{ title }}
+      </h2>
+    {% endif %}
   {% endif %}
-  
+
   {{ title_suffix }}
 
   <div{{ content_attributes.addClass('node__body', 'container') }}>
-    {{ content }}
+    {{ content.field_block }}
   </div>
 
   {% if display_submitted %}
     <footer class="node__meta">
       {{ author_picture }}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+      <div{{author_attributes.addClass('node__submitted')}}>
+        {% trans %}Submitted by
+          {{ author_name }}
+          on
+          {{ date }}{% endtrans %}
         {{ metadata }}
       </div>
     </footer>
   {% endif %}
 
-  {% if is_events %}
-    <div{{ content_attributes.addClass('node__content') }}>
-      {{ drupal_view('senator_events', 'featured_event',content.field_senator_multiref['#items'].0.target_id) }}
-      {{ drupal_view('senator_events', 'senator_today_events',content.field_senator_multiref['#items'].0.target_id) }}
-      {{ drupal_view('senator_events', 'upcoming_events',content.field_senator_multiref['#items'].0.target_id) }}
-    </div>
+  {% if content.field_senator_multiref['#items'] and microsite_type != 'landing' %}
+    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
   {% endif %}
 </article>

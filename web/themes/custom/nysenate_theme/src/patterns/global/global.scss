@@ -17,6 +17,9 @@
 // Import base styles.
 @import 'base/base';
 
+// Import base styles.
+@import 'ckeditor/ckeditor';
+
 // Base
 //
 // Plain html element styling. Shouldn't require
@@ -56,11 +59,6 @@ body {
   @include font-stack-secondary;
   margin: 0;
   color: $grey10;
-
-  &.nav-open {
-    position: fixed;
-    overflow: hidden;
-  }
 }
 
 // Render the `main` element consistently in IE.
@@ -79,6 +77,8 @@ hr {
 pre {
   font-family: monospace, monospace;
   font-size: 1em;
+  margin: 0;
+  white-space: pre-line;
 }
 
 // Text-level semantics.
@@ -409,6 +409,10 @@ label {
   }
 }
 
+.node--unpublished {
+  background-color: unset !important;
+}
+
 .u-mobile-only {
   display: block;
 }
@@ -451,6 +455,19 @@ label {
     border-bottom: 1px solid #AAAAAA;
     margin-bottom: 0;
     padding-bottom: 20px;
+  }
+}
+
+.nys-subtitle-title {
+  margin: 0 0 15px;
+  text-transform: capitalize;
+  font-family: $font-serif-regular;
+  font-size: 18px;
+  line-height: 1;
+
+  @include breakpoint($bp-sm) {
+    margin: 0 0 30px;
+    font-size: 26px;
   }
 }
 
@@ -507,17 +524,40 @@ label {
   &.facebook {
     @extend .icon-replace__facebook;
   }
+
   &.twitter {
     @extend .icon-replace__twitter;
   }
+
+  &.youtube {
+    @extend .icon-replace__youtube;
+  }
+
+  &.instagram {
+    @extend .icon-replace__instagram;
+  }
+
   &.email {
     @extend .icon-replace__mail;
   }
 }
 
+.c-block .c-view--link {
+  @extend .icon-before__presskit;
+	@extend .lgt-text;
+	margin: 0 0 20px;
+	text-transform: uppercase;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	&::before {
+		margin-top: -3px;
+		font-size: 20px;
+	}	
+}
+
 .c-detail--subhead {
   margin: 0 0 10px;
-  color: $grey02;
+  color: $grey08;
   font-family: $font-sans;
   font-weight: $font-weight-normal;
   font-size: 14px;
@@ -581,19 +621,44 @@ label {
   }
 }
 
-textarea[name="email_body"] {
+textarea[name="email_body"],
+textarea[name="message"] {
   padding: 10px;
   height: auto;
 }
 
-.page-node-type-video .field--name-field-issues a {
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 32px;
+.page {
+  overflow: hidden;
+}
+
+.page-node-type-video .field--name-field-issues .list-formatter-list {
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  white-space: normal;
+  text-align: left;
+
+  a {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 32px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
 }
 
 .page-node-type-meeting .field--name-field-issues a {
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
   font-size: 12px;
   font-weight: 400;
   line-height: 30px;
+  text-align: left;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

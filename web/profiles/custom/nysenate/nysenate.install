@@ -5,6 +5,8 @@
  * Install, update and uninstall hooks for the mcprofile install profile.
  */
 
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * NYSD9-372: Set the label of List Views block content type.
  */
@@ -26,4 +28,41 @@ function nysenate_update_9001() {
       }
     }
   }
+}
+
+/**
+ * NYSD9-434: Update the senator events block content.
+ */
+function nysenate_update_9002() {
+  $bcid = \Drupal::entityQuery('block_content')
+    ->condition('type', 'views')->execute();
+
+  if (!empty($bcid)) {
+    $list_views = \Drupal::entityTypeManager()
+      ->getStorage('block_content')
+      ->loadMultiple($bcid);
+
+    foreach ($list_views as $view) {
+      if ($view->hasField('field_views_ref') && !$view->get('field_views_ref')->isEmpty()) {
+        // Replace the microsite content (event)
+        // with the senator events (upcoming events).
+        if ($view->field_views_ref->target_id == 'senator_microsite_content' &&
+        $view->field_views_ref->__get('display_id') == 'microsite_events_content') {
+          $view->field_views_ref->target_id = 'senator_events';
+          $view->field_views_ref->__set('display_id', 'upcoming_events');
+          $view->save();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add Message term in microsite pages vocabulary.
+ */
+function nysenate_update_9003() {
+  Term::create([
+    'name' => 'Message',
+    'vid' => 'microsite_page_type',
+  ])->save();
 }

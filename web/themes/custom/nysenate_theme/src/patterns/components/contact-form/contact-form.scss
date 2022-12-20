@@ -39,6 +39,20 @@
   .form-actions {
     margin-top: 1em;
     margin-bottom: 1em;
+
+		.webform-button--submit {
+			margin: 20px 0 5px;
+			font-family: $font-sans-bold;
+			text-transform: uppercase;
+			font-size: 14px;
+			letter-spacing: 0.2em;
+			border: 0;
+			@extend .med-bg;
+
+			&:hover {
+				color: $color-white;
+			}
+		}
   }
 
   .form-checkboxes .form-item, 
@@ -74,6 +88,14 @@
 				font-size: 16px;
 			}
 		}
+
+		.form-item,
+		.form-actions {
+
+			.webform-button--submit {
+				font-size: 16px;
+			}
+		}
 	}
 }
 
@@ -97,7 +119,8 @@
     }
 	}
 
-	#edit-submit {
+	#edit-submit,
+	.webform-button--submit {
 		padding: 0 20px;
 		font-family: $font-sans-bold;
 		text-transform: uppercase;
@@ -106,6 +129,10 @@
 		line-height: 40px;
 		margin-top: 0;
 		@extend .med-bg;
+
+		&:hover {
+			color: $color-white;
+		}
 	}
 
 	.ajax-progress-throbber {
@@ -154,10 +181,13 @@
 
 #nys-messaging-senator-message-form {
   padding: 0 8px;
-  #edit-submit {
+
+  #edit-submit,
+	.webform-button--submit {
     @extend .lgt-bg;
     margin-top: 30px;
   }
+
   input[type="text"] {
     margin-bottom: 30px;
   }

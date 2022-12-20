@@ -35,3 +35,59 @@ function nys_migrate_uninstall() {
     $config_factory->getEditable($config)->delete();
   }
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function nys_migrate_update_8001() {
+  $node_ids = \Drupal::entityQuery('node')
+    ->condition('nid', '9000000', '>')
+    ->condition('type', ['bill', 'resolution'], 'IN')
+    ->execute();
+
+  if (!empty($node_ids)) {
+    $storage_handler = \Drupal::entityTypeManager()->getStorage("node");
+    foreach (array_chunk($node_ids, 50) as $chunk) {
+      $nodes = $storage_handler->loadMultiple($chunk);
+      $storage_handler->delete($nodes);
+    }
+  };
+}
+
+/**
+ * Updates the Publish abd Status Date fields to match Drupal's expectations.
+ */
+function nys_migrate_update_8002() {
+  $db = \Drupal::database();
+
+  // Update Publish date.
+  $result = $db->query("UPDATE node__field_ol_publish_date pd
+    SET pd.field_ol_publish_date_value = DATE_FORMAT(FROM_UNIXTIME(pd.field_ol_publish_date_value), '%Y-%m-%dT%T')
+    WHERE LENGTH(pd.field_ol_publish_date_value) < 19
+    AND pd.bundle IN ('bill','resolution');");
+
+  // Update Publish date revisions.
+  $result = $db->query("UPDATE node_revision__field_ol_publish_date pd
+    SET pd.field_ol_publish_date_value = DATE_FORMAT(FROM_UNIXTIME(pd.field_ol_publish_date_value), '%Y-%m-%dT%T')
+    WHERE LENGTH(pd.field_ol_publish_date_value) < 19
+    AND pd.bundle IN ('bill','resolution');");
+
+  // Update Status Date.
+  $result = $db->query("UPDATE node__field_ol_last_status_date sd
+    SET sd.field_ol_last_status_date_value = DATE_FORMAT(sd.field_ol_last_status_date_value, '%Y-%m-%dT%T')
+    WHERE sd.field_ol_last_status_date_value IS NOT NULL
+    AND sd.field_ol_last_status_date_value <> ''
+    AND sd.field_ol_last_status_date_value <> '1662041840'
+    AND LENGTH(sd.field_ol_last_status_date_value) < 19
+    AND sd.bundle IN ('bill','resolution');");
+
+  // Update Status Date revisions.
+  $result = $db->query("UPDATE node_revision__field_ol_last_status_date sd
+    SET sd.field_ol_last_status_date_value = DATE_FORMAT(sd.field_ol_last_status_date_value, '%Y-%m-%dT%T')
+    WHERE sd.field_ol_last_status_date_value IS NOT NULL
+    AND sd.field_ol_last_status_date_value <> ''
+    AND sd.field_ol_last_status_date_value <> '1662041840'
+    AND LENGTH(sd.field_ol_last_status_date_value) < 19
+    AND sd.bundle IN ('bill','resolution');");
+
+}

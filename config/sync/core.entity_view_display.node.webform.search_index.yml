@@ -39,89 +39,54 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 101
-    region: content
-  field_accessible_sitewide:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 110
-    region: content
-  field_article_author:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 105
-    region: content
-  field_byline:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 104
+    weight: 1
     region: content
   field_committee:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 108
-    region: content
-  field_image_main:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 106
+    weight: 4
     region: content
   field_issues:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 109
+    weight: 5
     region: content
   field_senator_multiref:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 107
-    region: content
-  field_title_stub:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 103
+    weight: 3
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 0
     region: content
   webform:
     type: webform_entity_reference_entity_view
     label: hidden
-    settings: {  }
+    settings:
+      source_entity: true
     third_party_settings: {  }
-    weight: 102
+    weight: 2
     region: content
 hidden:
+  field_accessible_sitewide: true
+  field_article_author: true
+  field_byline: true
   field_date: true
   field_expiration_date: true
+  field_image_main: true
   field_last_notified: true
+  field_title_stub: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

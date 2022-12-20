@@ -1,17 +1,53 @@
 @import "../../global/utils/init";
 
 .nysenate-promotional-banner-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   max-width: 760px;
-  margin: 0 auto 40px;
-  row-gap: 40px;
-  column-gap: 45.5938px;
+  margin: 0 auto 20px;
+  row-gap: 20px;
+
+  @include breakpoint($bp-sm) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0 auto 40px;
+    row-gap: 40px;
+    column-gap: 45.5938px;
+  }
 
   .c-block--initiative {
 
     &__has-img {
       grid-column: 1 / span 2;
+    }
+  }
+
+  &__single-item {
+
+    .c-block--initiative,
+    .node--type-promotional-banner,
+    .node--type-event,
+    .node--type-article,
+    .node--type-honoree,
+    .node--type-bill {
+      grid-column: 1 / span 2;
+    }
+
+    .c-block--initiative__no-img {
+      height: auto;
+
+      .c-initiative--content {
+        height: auto;
+      }
+
+      @include breakpoint($bp-sm) {
+        width: 100%;
+        min-height: 240px;
+
+        &.c-block--even {
+          margin-right: 0;
+        }
+      }
     }
   }
 }

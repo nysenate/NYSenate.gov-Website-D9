@@ -1,0 +1,92 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if page %}
+    <header class="c-news--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      <div class="c-news--head-meta">
+        {% if content.field_article_author.0 %}
+          <p class="c-news--author">
+            {{ content.field_article_author.0 }}
+          </p>
+        {% elseif content.field_senator_multiref.0 %}
+          <p class="c-news--author">
+            {{ content.field_senator_multiref.0 }}
+          </p>
+        {% endif %}
+        <p class="c-news--pub-date">
+          {{ content.field_date.0 }}
+        </p>
+
+        {% if content.field_issues.0 %}
+          <ul class="nys-associated-topics">
+            {% for key,issue in content.field_issues if key matches '/^\\d+$/'  %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+  {{ title_suffix }}
+
+  <section class="c-news--body">
+    {% if content.field_yt.0 %}
+      <div class="flex-video widescreen">
+        {{ content.field_yt.0 }}
+      </div>
+    {% endif %}
+
+    {% if content.field_subtitle.0 %}
+      <div class="c-news--subtitle">
+        {{ content.field_subtitle.0 }}
+      </div>
+    {% endif %}
+
+    {% if content.body.0 %}
+      <div class="c-block">
+        {{ content.body.0 }}
+      </div>
+    {% endif %}
+
+    {% if content.field_bills.0 %}
+      <aside>
+        <div class="c-container--header__top-border">
+          <h2 class="c-container--title">related legislation</h2>
+        </div>
+        {{ content.field_bills.0 }}
+      </aside>
+    {% endif %}
+
+    {% if content.field_chapters.0 %}
+      <section class="c-block">
+        {{ content.field_chapters.0 }}
+      </section>
+    {% endif %}
+
+    {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+      title: node.type.entity.label,
+      node_url: url,
+      cta: cta,
+    } only %}
+
+  </section>
+
+  {% if content.field_senator_multiref['#items'] %}
+    {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+  {% endif %}
+</article>

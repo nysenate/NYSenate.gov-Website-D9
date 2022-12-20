@@ -1,0 +1,58 @@
+uuid: b26f533f-bcd0-41c6-a1e6-53d4835132b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.calendar.field_calendar_bill_list
+    - field.field.node.calendar.field_calendar_type
+    - field.field.node.calendar.field_ol_cal
+    - field.field.node.calendar.field_ol_cal_no
+    - field.field.node.calendar.field_ol_calendar_date
+    - field.field.node.calendar.field_ol_year
+    - field.field.node.calendar.field_publication_date
+    - node.type.calendar
+  module:
+    - datetime
+    - layout_builder
+    - options
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.calendar.search_index
+targetEntityType: node
+bundle: calendar
+mode: search_index
+content:
+  field_calendar_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_publication_date:
+    type: datetime_custom
+    label: above
+    settings:
+      timezone_override: ''
+      date_format: 'M d, Y'
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  field_calendar_bill_list: true
+  field_ol_cal: true
+  field_ol_cal_no: true
+  field_ol_calendar_date: true
+  field_ol_year: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

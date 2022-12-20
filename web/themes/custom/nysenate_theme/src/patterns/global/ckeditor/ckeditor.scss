@@ -1,0 +1,173 @@
+@import "../../global/utils/init";
+
+.field--name-field-landing-blocks {
+  > .field__item {
+    margin-bottom: 80px;
+
+    .text-layout__container {
+      h2.c-container--h2-title {
+        margin-top: 40px;
+      }
+    }
+  }
+}
+
+
+.c-paragraph--more-link {
+  clear: both;
+  margin: 15px 0 30px;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  font-size: 16px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
+  @extend .icon-after__arrow;
+  @extend .link-text;
+  &.a-left {
+    display: block;
+    text-align: left;
+  }
+  &.a-right {
+    text-align: right;
+    display: block;
+  }
+  &::after {
+    margin-top: -2px;
+    font-size: 17px;
+    line-height: 12px;
+  }
+}
+
+.text-layout__body {
+  h2.c-container--h2-title {
+    border-bottom: 1px solid $grey05;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: $grey02;
+    text-transform: uppercase;
+    @include font-stack-secondary;
+    font-size: 18px;
+    margin-top: -12px;
+  }
+}
+
+a.nys-btn--gold {
+  transition: background-color 0.2s ease;
+  position: relative;
+  display: block;
+  padding: 20px 10px;
+  background: $yellow01;
+  color: $color-white;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  line-height: 24px;
+
+  &:hover {
+    color: #fff;
+    background: $yellow03;
+  }
+}
+
+a.nys-btn--blue {
+  transition: background-color 0.2s ease;
+  position: relative;
+  display: block;
+  padding: 20px 10px;
+  background: $blue03;
+  color: $color-white;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  line-height: 24px;
+
+  &:hover {
+    color: #fff;
+    background: $blue02;
+  }
+}
+
+a.c-btn--small-blue {
+  position: relative;
+  display: block;
+  padding: 5px 20px;
+  float: left;
+  outline: none;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: $blue01;
+  font-family: $font-sans-bold;
+  letter-spacing: 0.1em;
+  font-size: 14px;
+  line-height: 40px;
+  //@extend .lgt-bg;
+  &:hover,
+  &:active,
+  &:focus {
+    outline: 0;
+  }
+}
+
+
+.c-pullquote--citation {
+  display: block;
+  margin-top: 20px;
+  color: $grey02;
+  @include font-stack-secondary;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.c-block--background {
+  background-color: $color-light-gray;
+  padding: 40px;
+}
+
+
+// senate seal
+
+
+  ul.c-block--about-seal {
+    list-style: none;
+    margin: 30px 0 20px;
+    counter-reset: seal-counter;
+
+    li {
+      position: relative;
+      padding-left: 40px;
+
+      & + li {
+        margin-top: 20px;
+      }
+
+      &::before {
+        border-radius: 50%;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 27px;
+        width: 28px;
+        background: $yellow01;
+        text-align: center;
+        font-size: 18px;
+        line-height: 28px;
+        color: #fff;
+        font-family: $font-sans-bold;
+        content: counter(seal-counter);
+        counter-increment: seal-counter;
+      }
+
+      &:first-of-type {
+        &::before {
+          padding-left: 1px;
+        }
+      }
+    }
+  }
+

@@ -1,0 +1,41 @@
+{{ attach_library('nysenate_theme/nysenate-user-profile') }}
+
+<div class="c-block c-login">
+  <h3 class="nys-title">
+    {{ 'This address is in Senate District'|t }} {{ district_number }}
+  </h3>
+  <p>
+    {{
+      'If your address information below is correct, select "FINISH" to
+    complete the sign-up process and connect with your Senator. If not, please
+    select "BACK"'|t
+    }}
+  </p>
+  <div class="c-login-left">
+    <div class="nys-senator--thumb">
+      {{ user.image }}
+    </div>
+    <ul class="c-user--info">
+      <li>{{ user.name }}</li>
+      <li>{{ user.email }}</li>
+      <li>{{ user.address_1 }}</li>
+      <li>{{ user.address_2 }}</li>
+    </ul>
+  </div>
+  <div class="c-login-right">
+    <div class="nys-senator--thumb">
+      {{ senator.image }}
+    </div>
+    <ul class="c-senator--info">
+      <li>Your Senator</li>
+      <li>{{ senator.name }}</li>
+      <li>{{ senator.duties }}</li>
+      <li>
+        NY Senate District {{ senator.district_number }}
+        {% if senator.location %}
+          (<a href="{{ senator.location }}">Map</a>)
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+</div>

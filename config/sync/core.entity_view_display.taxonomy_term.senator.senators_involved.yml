@@ -26,13 +26,14 @@ dependencies:
     - field.field.taxonomy_term.senator.field_ol_shortname
     - field.field.taxonomy_term.senator.field_party
     - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_press_kit
+    - field.field.taxonomy_term.senator.field_promotional_banners
     - field.field.taxonomy_term.senator.field_senator_name
     - field.field.taxonomy_term.senator.field_store_settings
     - field.field.taxonomy_term.senator.field_top_issue
     - field.field.taxonomy_term.senator.field_twitter_url
     - field.field.taxonomy_term.senator.field_user_account
     - field.field.taxonomy_term.senator.field_youtube_url
-    - image.style.thumbnail
     - taxonomy.vocabulary.senator
   module:
     - layout_builder
@@ -52,7 +53,7 @@ content:
     label: hidden
     settings:
       image_link: ''
-      image_style: thumbnail
+      image_style: ''
       image_loading:
         attribute: lazy
     third_party_settings: {  }
@@ -100,6 +101,8 @@ hidden:
   field_ol_shortname: true
   field_party: true
   field_press_inquiries: true
+  field_press_kit: true
+  field_promotional_banners: true
   field_store_settings: true
   field_top_issue: true
   field_twitter_url: true

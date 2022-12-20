@@ -16,8 +16,10 @@ dependencies:
     - node.type.webform
     - taxonomy.vocabulary.senator
   module:
+    - block
     - field_permissions
     - filter
+    - flag
     - layout_builder
     - node
     - system
@@ -42,6 +44,7 @@ permissions:
   - 'access toolbar'
   - 'access user contact forms'
   - 'add media from remote sources'
+  - 'administer blocks'
   - 'administer nodes'
   - 'allow disabling privatemsg'
   - 'create advpoll content'

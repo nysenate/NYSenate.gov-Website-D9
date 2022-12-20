@@ -4,33 +4,12 @@ status: true
 dependencies:
   config:
     - block_content.type.microsite_hero
-    - field.field.block_content.microsite_hero.field_collapsed
-    - field.field.block_content.microsite_hero.field_microsite_hero_image
     - field.field.block_content.microsite_hero.field_senator
 id: block_content.microsite_hero.default
 targetEntityType: block_content
 bundle: microsite_hero
 mode: default
 content:
-  field_collapsed:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 0
-    region: content
-  field_microsite_hero_image:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: senator_microsite_hero
-      link: false
-    third_party_settings: {  }
-    weight: 1
-    region: content
   field_senator:
     type: entity_reference_entity_id
     label: hidden

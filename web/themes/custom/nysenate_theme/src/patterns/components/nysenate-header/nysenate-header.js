@@ -20,57 +20,57 @@
       let topbarDropdown;
 
       const $adminToolbar = $('#toolbar-bar');
+      const $adminTray = $('#toolbar-item-administration-tray.toolbar-tray');
 
-      let adminHeight =
-        $adminToolbar.length > 0
-          ? $adminToolbar.outerHeight()
-          : 0;
-      let headerHeight =
-        nav.length > 0
-          ? nav.outerHeight()
-          : 0; // Create empty variables to use later for calculating heights.
+      if ($adminToolbar.length > 0) {
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function () {
+            nav.prependTo('.layout-container').css({
+              'z-index': '100',
+              'margin-top': $('body').css('padding-top')
+            });
+          });
+        });
 
-      let $combinedHeights = 0;
-
-      if ($('.layout-container').length > 0) {
-        adminHeight =
-        $adminToolbar.length > 0
-          ? $adminToolbar.outerHeight()
-          : 0;
-        headerHeight = nav.length > 0 ? nav.outerHeight() : 0;
-
-        $combinedHeights = headerHeight + adminHeight;
-
-        nav.prependTo('.layout-container').css({
-          'z-index': '100',
-          'margin-top': ''.concat($combinedHeights, 'px')
+        observer.observe($adminTray[0], {
+          attributes: true,
+          attributeFilter: ['class']
         });
       }
 
-      if(self.isSenatorLanding(origNav)) {
+      if (self.isSenatorLanding(origNav)) {
         actionBar = nav.find('.c-senator-hero');
 
-        // place clone
-        nav.prependTo('.page').css({
-          'z-index': '14',
-        }).addClass('l-header__collapsed');
+        if (self.isSenatorCollapsed()) {
 
-        menu = nav.find('.c-nav--wrap');
-        headerBar = nav.find('.c-header-bar');
-        mobileNavToggle = nav.find('.js-mobile-nav--btn');
-        searchToggle = $('.js-search--toggle');
-        topbarDropdown = nav.find('.c-login--list');
+          $( document ).ready(function() {
+            $('#senatorImage').html($('#smallShotImage').html());
+          });
 
-        // collapse / hide nav
-        menu.addClass('closed');
-        actionBar.addClass('hidden');
+          // place origin Nav
+          nav
+            .prependTo('.page')
+            .css({
+              'z-index': '100'
+            })
+            .addClass('l-header__collapsed');
 
-        // set headerBar to collapsed state
-        origNav.find('.c-header-bar').css('visibility', 'hidden');
+          origNav
+            .prependTo('.page')
+            .css({
+              'z-index': '100'
+            })
+            .addClass('l-header__collapsed')
+            .css('visibility', 'hidden');
 
-        // bind scrolling
-        $(window).scroll(
-          function () {
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list');
+
+          // bind scrolling
+          $(window).scroll(function () {
             currentTop = $(this).scrollTop();
 
             self.senatorLandingScroll(
@@ -85,10 +85,51 @@
             );
 
             previousTop = $(document).scrollTop();
-          }
-        );
+          });
+        }
+        else {
+
+          // place clone
+          nav
+            .prependTo('.page')
+            .css({
+              'z-index': '14'
+            })
+            .addClass('l-header__collapsed');
+
+          menu = nav.find('.c-nav--wrap');
+          headerBar = nav.find('.c-header-bar');
+          mobileNavToggle = nav.find('.js-mobile-nav--btn');
+          searchToggle = $('.js-search--toggle');
+          topbarDropdown = nav.find('.c-login--list');
+
+          // collapse / hide nav
+          menu.addClass('closed');
+          actionBar.addClass('hidden');
+
+          // set headerBar to collapsed state
+          origNav.find('.c-header-bar').css('visibility', 'hidden');
+
+          // bind scrolling
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+
+            self.senatorLandingScroll(
+              currentTop,
+              previousTop,
+              userScroll,
+              origNav,
+              menu,
+              headerBar,
+              nav,
+              actionBar
+            );
+
+            previousTop = $(document).scrollTop();
+          });
+        }
       }
-      else if(self.isHomepage()) {
+      else if (self.isHomepage()) {
         // place clone
         nav.prependTo('.page').css({
           'z-index': '100'
@@ -97,7 +138,7 @@
         origActionBar = nav.find('.c-actionbar');
         actionBar = origActionBar.clone();
 
-        if(self.isInSession()) {
+        if (self.isInSession()) {
           actionBar.appendTo(nav);
           origActionBar.css('visibility', 'hidden');
         }
@@ -114,44 +155,32 @@
         // hide original nav -- just for visual
         origNav.css('visibility', 'hidden');
 
-        if(self.isTooLow(currentTop)) {
+        if (self.isTooLow(currentTop)) {
           menu.addClass('closed');
         }
 
         if (self.isMicroSitePage()) {
-          $(window).scroll(
-            function () {
-              currentTop = $(this).scrollTop();
-
-              self.microSiteScroll(
-                currentTop,
-                previousTop,
-                headerBar,
-                nav,
-                menu);
-
-              previousTop = $(document).scrollTop();
-            }
-          );
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+            self.microSiteScroll(currentTop, previousTop, headerBar, nav, menu);
+            previousTop = $(document).scrollTop();
+          });
         }
         else {
-          $(window).scroll(
-            function () {
-              currentTop = $(this).scrollTop();
-
-              self.basicScroll(
-                currentTop,
-                previousTop,
-                headerBar,
-                nav,
-                menu,
-                actionBar,
-                origActionBar
-              );
-
-              previousTop = $(document).scrollTop();
-            }
-          );
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
+            self.basicScroll(
+              currentTop,
+              previousTop,
+              headerBar,
+              nav,
+              menu,
+              actionBar,
+              origActionBar,
+              'hide-actionbar'
+            );
+            previousTop = $(document).scrollTop();
+          });
         }
       }
       else {
@@ -159,6 +188,15 @@
         nav.prependTo('.page').css({
           'z-index': '100'
         });
+
+        if (self.isOpenData()) {
+          origActionBar = nav.find('.c-actionbar');
+          actionBar = origActionBar.clone();
+
+          actionBar.appendTo(nav);
+          origActionBar.css('visibility', 'hidden');
+          actionBar.appendTo(nav).removeClass('hidden');
+        }
 
         menu = nav.find('.c-nav--wrap');
         headerBar = nav.find('.c-header-bar');
@@ -169,66 +207,52 @@
         // hide original nav -- just for visual
         origNav.css('visibility', 'hidden');
 
-
-        if(self.isTooLow(currentTop)) {
+        if (self.isTooLow(currentTop)) {
           menu.addClass('closed');
         }
 
         if (self.isMicroSitePage()) {
-          $(window).scroll(
-            function () {
-              currentTop = $(this).scrollTop();
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
 
-              self.microSiteScroll(
-                currentTop,
-                previousTop,
-                headerBar,
-                nav,
-                menu);
+            self.microSiteScroll(currentTop, previousTop, headerBar, nav, menu);
 
-              previousTop = $(document).scrollTop();
-            }
-          );
+            previousTop = $(document).scrollTop();
+          });
         }
         else {
-          $(window).scroll(
-            function () {
-              currentTop = $(this).scrollTop();
+          $(window).scroll(function () {
+            currentTop = $(this).scrollTop();
 
-              self.basicScroll(
-                currentTop,
-                previousTop,
-                headerBar,
-                nav,
-                menu,
-                actionBar,
-                origActionBar
-              );
+            self.basicScroll(
+              currentTop,
+              previousTop,
+              headerBar,
+              nav,
+              menu,
+              actionBar,
+              origActionBar,
+              self.isOpenData() ? 'show-actionbar' : 'hide-action-bar'
+            );
 
-              previousTop = $(document).scrollTop();
-            }
-          );
+            previousTop = $(document).scrollTop();
+          });
         }
       }
 
-      mobileNavToggle.once('nySenateHeaderMobile').on('click touch', function() {
-        self.toggleMobileNav(menu);
-      });
+      mobileNavToggle
+        .once('nySenateHeaderMobile')
+        .on('click touch', function () {
+          self.toggleMobileNav(menu);
+        });
 
-      searchToggle.once('nySenateHeader').on('click touch', function(e) {
+      searchToggle.once('nySenateHeader').on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
     },
-    microSiteScroll: function (
-      currentTop,
-      previousTop,
-      headerBar,
-      nav,
-      menu) {
-
+    microSiteScroll: function (currentTop, previousTop, headerBar, nav, menu) {
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
       this.checkMenuState(menu, currentTop, previousTop);
-
     },
     basicScroll: function (
       currentTop,
@@ -237,32 +261,30 @@
       nav,
       menu,
       actionBar,
-      origActionBar
+      origActionBar,
+      toggleActionBar
     ) {
-
-      // homepage NOT in session has different actionbar behavior
-      // if(this.isHomepage() && !this.isInSession()) {
       if (origActionBar) {
-        if(
-          this.isMovingDown(currentTop, previousTop)
-          && currentTop + nav.outerHeight() >= origActionBar.offset().top
+        if (
+          this.isMovingDown(currentTop, previousTop) &&
+          currentTop + nav.outerHeight() >= origActionBar.offset().top
         ) {
           actionBar.removeClass('hidden');
         }
-        else if(
-          this.isMovingUp(currentTop, previousTop)
-        && currentTop <= origActionBar.offset().top
+        else if (
+          this.isMovingUp(currentTop, previousTop) &&
+          currentTop <= origActionBar.offset().top
         ) {
-          actionBar.addClass('hidden');
+          if (toggleActionBar !== 'show-actionbar') {
+            actionBar.addClass('hidden');
+          }
         }
       }
-      // }
 
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
       this.checkMenuState(menu, currentTop, previousTop);
-
     },
-    senatorLandingScroll: function(
+    senatorLandingScroll: function (
       currentTop,
       previousTop,
       userScroll,
@@ -272,34 +294,44 @@
       nav,
       actionBar
     ) {
-
       // Close the nav after scrolling 1/3rd of page.
       if (
-        Math.abs(userScroll - $(window).scrollTop()) > $(window).height() / 3
+        Math.abs(userScroll - $(window).scrollTop()) >
+        $(window).height() / 3
       ) {
         this.closeSearch();
       }
 
-      var heroHeight =
-        origNav.outerHeight()
-        - menu.outerHeight()
-        - $('.c-senator-hero--contact-btn').outerHeight()
-        - headerBar.outerHeight()
-        - nav.outerHeight();
+      var menuHeigth;
+      if (menu.length > 0) {
+        menuHeigth = menu.outerHeight();
+      }
+      else {
+        menuHeigth = 0;
+      }
 
-      if($(window).width() < 760) {
-        if(
-          this.isMovingDown(currentTop, previousTop)
-          && currentTop >= origNav.outerHeight()
+      var heroHeight =
+          origNav.outerHeight() -
+          menuHeigth -
+          $('.c-senator-hero--contact-btn').outerHeight() -
+          headerBar.outerHeight() -
+          nav.outerHeight();
+
+      if ($(window).width() < 769) {
+        if (
+          this.isMovingDown(currentTop, previousTop) &&
+          currentTop >= origNav.outerHeight() &&
+            !this.isSenatorCollapsed()
         ) {
           actionBar.removeClass('hidden');
           this.checkTopBarState(currentTop, previousTop, headerBar, nav);
         }
-        else if(
-          this.isMovingUp(currentTop, previousTop)
-          && currentTop < origNav.outerHeight()
+        else if (
+          this.isMovingUp(currentTop, previousTop) &&
+          currentTop < origNav.outerHeight() &&
+            !this.isSenatorCollapsed()
         ) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.addClass('hidden');
           headerBar.removeClass('collapsed');
         }
@@ -308,25 +340,28 @@
         this.checkTopBarState(currentTop, previousTop, headerBar, nav);
 
         if (
-          this.isMovingUp(currentTop, previousTop)
-          && currentTop <= origNav.outerHeight() - 100 - 100
+          this.isMovingUp(currentTop, previousTop) &&
+          currentTop <= origNav.outerHeight() - 100 - 100
         ) {
-          menu.addClass('closed');
-
+          if (this.isSenatorCollapsed()) {
+            menu.removeClass('closed');
+          }
+          else {
+            menu.addClass('closed');
+          }
           if (
-            this.isMovingUp(currentTop, previousTop)
-            && currentTop <= origNav.outerHeight() - 100 - 100 - 40 - 100
+            this.isMovingUp(currentTop, previousTop) &&
+            currentTop <= origNav.outerHeight() - 100 - 100 - 40 - 100
           ) {
             actionBar.addClass('hidden');
-            jQuery('#largeHeadshot').addClass('hidden');
-            jQuery('#smallHeadshot').removeClass('hidden');
+            $('#largeHeadshot').addClass('hidden');
+            $('#smallHeadshot').removeClass('hidden');
           }
         }
-
-        else if(currentTop >= heroHeight) {
-          jQuery('#senatorImage').html(jQuery('#smallShotImage').html());
+        else if (currentTop >= heroHeight) {
+          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.removeClass('hidden');
-          headerBar.removeClass('collapsed');
+          headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
         }
       }
@@ -336,10 +371,10 @@
         return;
       }
 
-      if (this.isMovingDown(currentTop, previousTop) ) {
+      if (this.isMovingDown(currentTop, previousTop)) {
         menu.addClass('closed');
       }
-      else if (this.isMovingUp(currentTop, previousTop) ) {
+      else if (this.isMovingUp(currentTop, previousTop)) {
         menu.removeClass('closed');
       }
     },
@@ -355,9 +390,9 @@
       }
 
       if (
-        currentTop > nav.outerHeight()
-        && !headerBar.hasClass('collapsed')
-        && !nav.hasClass('l-header__collapsed')
+        currentTop > nav.outerHeight() &&
+        !headerBar.hasClass('collapsed') &&
+        !nav.hasClass('l-header__collapsed')
       ) {
         headerBar.addClass('collapsed');
         nav.addClass('l-header__collapsed');
@@ -368,7 +403,9 @@
         nav.hasClass('l-header__collapsed')
       ) {
         headerBar.removeClass('collapsed');
-        nav.removeClass('l-header__collapsed');
+        if (!this.isSenatorCollapsed()) {
+          nav.removeClass('l-header__collapsed');
+        }
       }
     },
     isOutOfBounds: function (currentTop, previousTop) {
@@ -389,7 +426,7 @@
       body.toggleClass('nav-open');
       menu.removeClass('closed');
     },
-    toggleSearchBar: function(userScroll, e) {
+    toggleSearchBar: function (userScroll, e) {
       e.preventDefault();
       const button = e.target;
       // Set page position, to detect scrolling later.
@@ -397,7 +434,7 @@
 
       var nav = $(button).parents('.c-nav--wrap');
 
-      if(nav.hasClass('search-open')) {
+      if (nav.hasClass('search-open')) {
         nav.removeClass('search-open');
         nav.find('.c-site-search--box').blur();
         $('.c-site-search').removeClass('open');
@@ -410,25 +447,29 @@
         $('.c-site-search').find('.c-site-search--box').focus();
       }
     },
-    closeSearch: function() {
-
-      if($('.c-nav--wrap').hasClass('search-open')) {
+    closeSearch: function () {
+      if ($('.c-nav--wrap').hasClass('search-open')) {
         $('.c-nav--wrap').removeClass('search-open');
         $('.c-nav--wrap').find('.c-site-search--box').blur();
       }
     },
-    isHomepage: function() {
+    isHomepage: function () {
       return $('.hero--homepage').length > 0;
     },
-    isInSession: function() {
+    isInSession: function () {
       return this.isHomepage() && $('.c-hero-livestream-video').length > 0;
     },
-    isMicroSitePage: function() {
+    isMicroSitePage: function () {
       return $('.hero--senator').length > 0;
     },
-    isSenatorLanding: function(origNav) {
-      return this.isMicroSitePage() &&
-					!origNav.hasClass('l-header__collapsed');
+    isSenatorLanding: function (origNav) {
+      return this.isMicroSitePage() && !origNav.hasClass('l-header__collapsed');
     },
+    isOpenData: function () {
+      return $('.open-data-section').length > 0;
+    },
+    isSenatorCollapsed: function () {
+      return $('.hero--senator-collapsed').length > 0;
+    }
   };
 })(document, Drupal, jQuery);

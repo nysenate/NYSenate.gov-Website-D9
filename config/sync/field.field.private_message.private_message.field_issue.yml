@@ -1,0 +1,30 @@
+uuid: 8919b548-c826-408e-ac03-e5be6367421e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.private_message.field_issue
+    - taxonomy.vocabulary.issues
+  module:
+    - private_message
+id: private_message.private_message.field_issue
+field_name: field_issue
+entity_type: private_message
+bundle: private_message
+label: Issue
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      issues: issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

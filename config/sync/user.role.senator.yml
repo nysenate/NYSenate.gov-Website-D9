@@ -16,7 +16,9 @@ dependencies:
   module:
     - field_permissions
     - filter
+    - flag
     - node
+    - private_message
     - system
 id: senator
 label: Senator
@@ -77,6 +79,7 @@ permissions:
   - 'read privatemsg'
   - 'unflag bookmarks'
   - 'unflag follow_issue'
+  - 'use private messaging system'
   - 'use text format basic_html'
   - 'use text format full_html'
   - 'view field_district'

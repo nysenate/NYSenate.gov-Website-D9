@@ -24,15 +24,25 @@
     .bullet {
       color: $grey15;
     }
+
+    p {
+      margin: 0;
+    }
   }
 
-  &__author {
+  &__author,
+  &__author a {
+    @include font(13 13);
     margin: 0;
-    font-family: $font-serif-semibold;
+    font-family: 'Helvetica Nueue', 'Arial', sans-serif;
+    font-weight: $font-weight-bold;
+    color: $color-nys-blue;
   }
 
   &__time {
+    @include font(12 12);
     color: $grey03;
+    font-family: 'Helvetica Nueue', 'Arial', sans-serif;
   }
 
   &__replies {
@@ -42,9 +52,32 @@
 
   &__body {
 
+    p, a {
+      @include font(15 21);
+      font-weight: $font-weight-normal;
+      font-family: 'Helvetica Nueue', 'Arial', sans-serif;
+      color: $grey00;
+    }
+
+    a {
+      color: $color-nys-blue;
+    }
+
     .button {
       cursor: pointer;
       font-family: $font-sans-bold;
+
+      &:first-child {
+        margin-right: 15px;
+      }
+
+      a {
+        color: $color-white;
+      }
+
+      &:hover a {
+        color: $color-blue;
+      }
     }
   }
 
@@ -60,7 +93,47 @@
       min-height: 130px;
     }
   }
+
+  &__alert {
+    max-width: 1500px;
+    background-color: $grey06;
+    letter-spacing: 0em;
+    line-height: 26px;
+    color: $grey02;
+    border: 0;
+    padding: 30px;
+    text-transform: none;
+    color: $grey02;
+    font-size: 16px;
+    font-family: $font-serif;
+    margin: 20px 0 20px 0;
+
+    &::before {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0;
+      font-size: 24px;
+      color: $blue01;
+      background-color: $grey06;
+  
+      @include breakpoint($bp-md) {
+        font-size: 46px;
+      }
+    }
+  }
 }
 
+.comment-wrapper {
+  margin-bottom: 40px;
 
+  .indented {
+    padding-left: 40px;
+  }
 
+  .form-actions .button {
+    cursor: pointer;
+    font-family: $font-sans-bold;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}

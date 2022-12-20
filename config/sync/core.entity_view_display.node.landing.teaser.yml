@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.landing.field_block
+    - field.field.node.landing.field_date
+    - field.field.node.landing.field_issues
+    - field.field.node.landing.field_landing_blocks
     - field.field.node.landing.field_meta_tags
-    - field.field.node.landing.field_short_title
+    - field.field.node.landing.field_show_date
+    - field.field.node.landing.field_show_issues
     - field.field.node.landing.field_summary
-    - field.field.node.landing.field_thumbnail
     - node.type.landing
   module:
     - user
@@ -26,19 +28,14 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_thumbnail:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: thumbnail
-      link: false
-    third_party_settings: {  }
-    weight: 0
-    region: content
 hidden:
-  field_block: true
+  field_date: true
+  field_issues: true
+  field_landing_blocks: true
   field_meta_tags: true
-  field_short_title: true
+  field_show_date: true
+  field_show_issues: true
   langcode: true
   links: true
+  private_message_link: true
   search_api_excerpt: true

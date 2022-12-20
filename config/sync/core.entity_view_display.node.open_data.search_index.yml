@@ -16,7 +16,6 @@ dependencies:
     - file
     - layout_builder
     - options
-    - text
     - user
 third_party_settings:
   layout_builder:
@@ -27,16 +26,9 @@ targetEntityType: node
 bundle: open_data
 mode: search_index
 content:
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: content
   field_date:
     type: datetime_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
       format_type: medium
@@ -45,7 +37,7 @@ content:
     region: content
   field_open_data_file:
     type: file_default
-    label: above
+    label: hidden
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
@@ -53,14 +45,14 @@ content:
     region: content
   field_open_date_type:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 3
     region: content
   field_publication_date:
     type: datetime_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
       format_type: medium
@@ -68,7 +60,9 @@ content:
     weight: 1
     region: content
 hidden:
+  body: true
   field_end_date: true
   langcode: true
   links: true
+  private_message_link: true
   search_api_excerpt: true

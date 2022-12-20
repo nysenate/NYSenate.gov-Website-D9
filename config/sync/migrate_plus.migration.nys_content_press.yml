@@ -45,7 +45,7 @@ process:
   field_category:
     -
       plugin: default_value
-      default_value: article
+      default_value: press_release
   body:
     -
       plugin: get
@@ -152,6 +152,10 @@ process:
       plugin: senator_migrate_map_lookup
       migration: nys_senate_gov_taxonomy_term_senator
       source: field_associated_senators
+  field_layout_components:
+    -
+      plugin: map_article_block
+      source: field_paragraphs
 destination:
   plugin: 'entity:node'
   default_bundle: article

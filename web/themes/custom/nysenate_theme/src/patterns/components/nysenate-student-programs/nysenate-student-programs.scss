@@ -1,22 +1,21 @@
 @import "../../global/utils/init";
 
 .c-block--about-student-programs {
-  padding-bottom: 20px;
   margin-top: 60px;
+	padding-bottom: 20px;
 
   .c-container--link {
     position: absolute;
     top: auto;
     bottom: 0;
+		margin: 0;
   }
 }
 
 .c-student-program-are-you {
-  .gen-wrapper {
+  .text-layout__body {
     width: 100%;
     margin-bottom: 48px;
-    display: grid;
-    grid-template-columns: 1fr;
 
     h3 {
       font-family: $font-serif-bold;
@@ -37,29 +36,33 @@
       text-transform: uppercase;
     }
 
-    .gen-col--height {
+    .content {
       transition: background-color 0.25s ease;
-      height: 100px;
       margin-bottom: 48px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
 
-      &.yellow {
+      .nys-btn--gold {
         background: $yellow01;
       }
 
-      &.yellow:hover {
+      .nys-btn--gold:hover {
         background-color: $yellow02;
       }
 
-      &.blue {
+      .nys-btn--blue {
         background: $blue03;
       }
 
-      &.blue:hover {
+      .nys-btn--blue:hover {
         background-color: $blue02;
       }
+
+			.nys-btn--blue,
+			.nys-btn--gold {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 100px;
+			}
     }
 
     &:first-of-type {
@@ -70,12 +73,10 @@
 
 @include breakpoint($bp-sm) {
   .c-student-program-are-you {
-    .gen-wrapper {
-      grid-gap: 52px;
-      grid-template-columns: 1fr 1fr;
+    .text-layout__body {
       margin-bottom: 36px;
 
-      .gen-col--height {
+      .content {
         margin-bottom: 0;
       }
     }
@@ -95,10 +96,18 @@
 		.view-footer {
 			display: none;
 		}
+
+		.js-pager__items.pager {
+			padding-left: 0;
+
+			.pager__item {
+				padding: 0;
+			}
+		}
 	}
 
 	.explore-link {
-		font-family: "Proxima Nova SemiBold";
+		font-family: $font-sans-bold;
 		font-size: 14px;
 		line-height: 18px;
 		text-transform: uppercase;
@@ -115,13 +124,13 @@
 
 	.gen-wrapper {
 		.section-title {
-			font-family: "Proxima Nova Regular";
+			font-family: $font-sans;
 			font-size: 16px;
 			line-height: 18px;
 			padding-bottom: 20px;
 			margin-bottom: 25px;
 			text-transform: uppercase;
-			color: $grey02;
+			color: $grey08;
 			border-bottom: 1px solid $grey05;
 		}
 	}
@@ -132,10 +141,10 @@
 
 	.pane-node {
 		.pane-title {
-			font-family: "Adelle Bold";
+			font-family: $font-serif-bold;
 			font-size: 32px;
 			line-height: 41px;
-			color: $grey02;
+			color: $grey08;
 			margin: 40px 0;
 		}
 
@@ -153,23 +162,23 @@
 
 	.pane-student-programs-news {
 		.pane-title {
-			font-family: "Proxima Nova Regular";
+			font-family: $font-sans;
 			font-size: 16px;
 			line-height: 18px;
 			padding-bottom: 20px;
 			margin-bottom: 25px;
 			text-transform: uppercase;
-			color: $grey02;
-			border-bottom: 1px solid $grey02;
+			color: $grey08;
+			border-bottom: 1px solid $grey08;
 		}
 
 		.view-student-programs-news {
 			.view-empty {
 				h2 {
-					font-family: "Adelle Bold";
+					font-family: $font-serif-bold;
 					font-size: 14px;
 					line-height: 18px;
-					color: $grey02;
+					color: $grey08;
 					margin-bottom: 40px;
 				}
 			}
@@ -184,7 +193,7 @@
 
 				.content-type,
 				.content-title {
-					font-family: "Adelle Bold";
+					font-family: $font-serif-bold;
 					font-size: 18px;
 					line-height: 22px;
 				}
@@ -194,22 +203,22 @@
 					position: relative;
 					top: inherit;
 					left: inherit;
-					color: $grey02;
+					color: $grey08;
 				}
 
 				.content-title {
-					font-family: "Adelle Light";
+					font-family: $font-serif;
 					font-size: 24px;
 					line-height: 32px;
 					margin-left: 0;
 
 					a {
-						color: $grey02;
+						color: $grey08;
 					}
 				}
 				.published-date {
 					margin-left: 0;
-					font-family: "Proxima Nova Regular";
+					font-family: $font-sans;
 					font-size: 14px;
 					line-height: 32px;
 					color: $grey04;
@@ -229,17 +238,17 @@
 			}
 
 			.views-field-title {
-				font-family: "Proxima Nova Regular";
+				font-family: $font-sans;
 				font-size: 16px;
 				line-height: 18px;
 				padding-bottom: 20px;
 				margin-bottom: 25px;
 				text-transform: uppercase;
-				color: $grey02;
+				color: $grey08;
 				border-bottom: 1px solid $grey05;
 
 				a {
-				  color: $grey02;
+				  color: $grey08;
 				}
 			}
 
@@ -279,20 +288,20 @@
 	.c-student-program-contact {
 		margin-top: 40px;
 
-		.gen-col {
+		.text-layout__body {
 			background-color: $grey06;
-			padding: 40px;
 
-			.col {
+			.content {
 				width: 100%;
 				display: block;
 				vertical-align: top;
 
 				p {
-					font-family: "Proxima Nova Regular";
+					font-family: $font-sans;
 					font-size: 16px;
 					line-height: 25px;
-					color: $grey02;
+					color: $grey08;
+					margin: 0;
 
 					a {
 						color: $yellow03;
@@ -305,7 +314,7 @@
 
 				h3,
 				h4 {
-					font-family: "Proxima Nova SemiBold";
+					font-family: $font-sans-bold;
 					font-size: 14px;
 					line-height: 18px;
 					text-transform: uppercase;
@@ -317,10 +326,6 @@
 				h4 {
 					text-transform: none;
 				}
-
-				.top-col-title {
-					margin-top: 40px;
-				}
 			}
 		}
 	}
@@ -328,20 +333,20 @@
 
 .pane-student-programs-news {
 	.pane-title {
-		font-family: "Proxima Nova Regular";
+		font-family: $font-sans;
 		font-size: 16px;
 		line-height: 18px;
 		padding-bottom: 20px;
 		margin-bottom: 25px;
 		text-transform: uppercase;
-		color: $grey02;
-		border-bottom: 1px solid $grey02;
+		color: $grey08;
+		border-bottom: 1px solid $grey08;
 	}
 
 	.pager-load-more {
 		position: relative;
 		top: -22px;
-		border-top: 2px solid white;
+		border-top: 2px solid $color-white;
 		margin-top: 0;
 		z-index: 25;
 	}
@@ -356,45 +361,43 @@
 .article-student-program {
 	.gen-wrapper {
 		.section-title {
-			font-family: "Proxima Nova Regular";
+			font-family: $font-sans;
 			font-size: 16px;
 			line-height: 18px;
 			padding-bottom: 20px;
 			margin-bottom: 25px;
 			text-transform: uppercase;
-			color: $grey02;
+			color: $grey08;
 			border-bottom: 1px solid $grey05;
 		}
 	}
 
 	.block-title {
-		font-family: "Proxima Nova Regular";
+		font-family: $font-sans;
 		font-size: 16px;
 		line-height: 18px;
 		padding-bottom: 20px;
 		margin-bottom: 25px;
 		text-transform: uppercase;
-		color: $grey02;
-		border-bottom: 1px solid $grey02;
+		color: $grey08;
+		border-bottom: 1px solid $grey08;
 	}
 
 	.c-student-program-contact {
 		margin-top: 40px;
 
-		.gen-col {
-			background-color: $grey06;
-			padding: 40px;
+		.text-layout__body {
 
-			.col {
+			.content {
 				width: 100%;
 				display: block;
 				vertical-align: top;
 
 				p {
-					font-family: "Proxima Nova Regular";
+					font-family: $font-sans;
 					font-size: 16px;
 					line-height: 25px;
-					color: $grey02;
+					color: $grey08;
 
 					a {
 						color: $yellow03;
@@ -407,7 +410,7 @@
 
 				h3,
 				h4 {
-					font-family: "Proxima Nova SemiBold";
+					font-family: $font-sans-bold;
 					font-size: 14px;
 					line-height: 18px;
 					text-transform: uppercase;
@@ -430,10 +433,10 @@
 	.view-student-programs-news {
 		.view-empty {
 			h2 {
-				font-family: "Adelle Bold";
+				font-family: $font-serif-bold;
 				font-size: 14px;
 				line-height: 18px;
-				color: $grey02;
+				color: $grey08;
 				margin-bottom: 40px;
 			}
 		}
@@ -448,7 +451,7 @@
 
 			.content-type,
 			.content-title {
-				font-family: "Adelle Bold";
+				font-family: $font-serif-bold;
 				font-size: 18px;
 				line-height: 22px;
 			}
@@ -458,23 +461,23 @@
 				position: relative;
 				top: inherit;
 				left: inherit;
-				color: $grey02;
+				color: $grey08;
 			}
 
 			.content-title {
-				font-family: "Adelle Light";
+				font-family: $font-serif;
 				font-size: 24px;
 				line-height: 32px;
 				margin-left: 0;
 
 				a {
-					color: $grey02;
+					color: $grey08;
 				}
 			}
 
 			.published-date {
 				margin-left: 0;
-				font-family: "Proxima Nova Regular";
+				font-family: $font-sans;
 				font-size: 14px;
 				line-height: 32px;
 				color: $grey04;
@@ -487,13 +490,13 @@
 	}
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.page-student-programs,
 	.page-alumni-testimonial {
 
 		.c-student-program-contact {
-			.gen-col {
-				.col {
+			.text-layout__body {
+				.content {
 					width: 45%;
 					display: inline-block;
 
@@ -536,7 +539,7 @@
 
 					.date-display-single {
 						margin-left: 0;
-						font-family: "Proxima Nova Regular";
+						font-family: $font-sans;
 						font-size: 14px;
 						line-height: 32px;
 						color: $grey04;
@@ -548,8 +551,8 @@
 	.article-student-program {
 
 		.c-student-program-contact {
-			.gen-col {
-				.col {
+			.text-layout__body {
+				.content {
 					width: 45%;
 					display: inline-block;
 
@@ -591,7 +594,7 @@
 
 				.date-display-single {
 					margin-left: 0;
-					font-family: "Proxima Nova Regular";
+					font-family: $font-sans;
 					font-size: 14px;
 					line-height: 32px;
 					color: $grey04;
@@ -599,8 +602,4 @@
 			}
 		}
 	}
-}
-
-@media #{$desktop} {
-
 }

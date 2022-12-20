@@ -45,23 +45,23 @@
 
           $( document ).ready(function() {
             $('#senatorImage').html($('#smallShotImage').html());
-          })
+          });
 
           // place origin Nav
           nav
-              .prependTo('.page')
-              .css({
-                'z-index': '100'
-              })
-              .addClass('l-header__collapsed');
+            .prependTo('.page')
+            .css({
+              'z-index': '100'
+            })
+            .addClass('l-header__collapsed');
 
           origNav
-              .prependTo('.page')
-              .css({
-                'z-index': '100'
-              })
-              .addClass('l-header__collapsed')
-              .css('visibility', 'hidden');
+            .prependTo('.page')
+            .css({
+              'z-index': '100'
+            })
+            .addClass('l-header__collapsed')
+            .css('visibility', 'hidden');
 
           menu = nav.find('.c-nav--wrap');
           headerBar = nav.find('.c-header-bar');
@@ -74,27 +74,28 @@
             currentTop = $(this).scrollTop();
 
             self.senatorLandingScroll(
-                currentTop,
-                previousTop,
-                userScroll,
-                origNav,
-                menu,
-                headerBar,
-                nav,
-                actionBar
+              currentTop,
+              previousTop,
+              userScroll,
+              origNav,
+              menu,
+              headerBar,
+              nav,
+              actionBar
             );
 
             previousTop = $(document).scrollTop();
           });
-        } else {
+        }
+        else {
 
           // place clone
           nav
-              .prependTo('.page')
-              .css({
-                'z-index': '14'
-              })
-              .addClass('l-header__collapsed');
+            .prependTo('.page')
+            .css({
+              'z-index': '14'
+            })
+            .addClass('l-header__collapsed');
 
           menu = nav.find('.c-nav--wrap');
           headerBar = nav.find('.c-header-bar');
@@ -114,14 +115,14 @@
             currentTop = $(this).scrollTop();
 
             self.senatorLandingScroll(
-                currentTop,
-                previousTop,
-                userScroll,
-                origNav,
-                menu,
-                headerBar,
-                nav,
-                actionBar
+              currentTop,
+              previousTop,
+              userScroll,
+              origNav,
+              menu,
+              headerBar,
+              nav,
+              actionBar
             );
 
             previousTop = $(document).scrollTop();
@@ -304,7 +305,8 @@
       var menuHeigth;
       if (menu.length > 0) {
         menuHeigth = menu.outerHeight();
-      } else {
+      }
+      else {
         menuHeigth = 0;
       }
 
@@ -343,7 +345,8 @@
         ) {
           if (this.isSenatorCollapsed()) {
             menu.removeClass('closed');
-          } else {
+          }
+          else {
             menu.addClass('closed');
           }
           if (

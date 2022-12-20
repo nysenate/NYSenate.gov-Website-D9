@@ -15,9 +15,29 @@
     <h3 class="c-press-release--descript">
       <a href="{{ article.description.url }}">{{ article.description.text }}</a>
     </h3>
-    <p class="c-press-release--date">
-      <span class="date-display-single">{{ article.date }}</span>
-    </p>
+
+    {% if article.author %}
+      <div class="author">
+        <span>By: <a href="{{ article.author.url }}">{{ article.author.name }}</a></span>
+      </div>
+    {% endif %}
+
+    {% if article.date or article.issue_type %}
+      <p class="c-press-release--date">
+        {% if article.date %}<span class="date-display-single">{{ article.date }}</span>{% endif %}{% if article.issue_type %} | <span class="issue-type">In <a href="{{ article.issue_type.url }}">{{ article.issue_type.text }}</a></span> {% endif %}
+      </p>
+    {% endif %}
+
+    {% if article.location %}
+      <div class="event-location icon-before__circle-pin">{{ article.location }}</div>
+    {% endif %}
+
+    {% if article.time %}
+      <div class="event-date-time">
+        <span class="date-display-single">{{ article.time }}</span>
+      </div>
+    {% endif %}
+
     {% if article.img_src %}
       <!-- if has video thumbnail it would go here -->
       <div class="c-press-release--img"><img src="{{ article.img_src }}" width="200" height="125" alt=""></div>

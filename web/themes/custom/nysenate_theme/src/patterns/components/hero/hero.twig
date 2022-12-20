@@ -1,13 +1,13 @@
 {{ attach_library('nysenate_theme/hero') }}
 {{ attach_library('rain_theme/media') }}
 
-<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %}">
+<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == "default" %} hero--default{% endif %}">
   {% if type == "senator" %}
     {# start of senator hero #}
     <div class="l-header-region l-row l-row--hero c-senator-hero">
       {% if senator_microsite_link %}
         <a href="{{ senator_microsite_link }}">
-      {% endif %}
+        {% endif %}
         <div class="c-senator-hero--img" id="senatorImage">
           {% if image_hero %}
             {{ image_hero }}
@@ -18,7 +18,7 @@
         <div id="smallShotImage">
           {{ senator_headshot }}
         </div>
-      {% if senator_microsite_link %}
+        {% if senator_microsite_link %}
         </a>
       {% endif %}
       <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
@@ -68,7 +68,7 @@
       {% endif %}
     </div>
     {# end of senator hero #}
-  {% else %}
+  {% elseif type == "session" %}
     {%
       include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
         is_logged: is_logged
@@ -129,6 +129,33 @@
           </div>
         </div>
       </div>
+    </div>
+  {% else %}
+    <div class="first last odd">
+
+      <div class="l-header-region l-row l-row--hero c-hero">
+        {% if image_hero %}
+          {{ image_hero }}
+        {% else %}
+          <img src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg" />
+        {% endif %}
+        <div class="l-row c-hero--tout c-hero--featured">
+          <p class="c-hero--date">
+            <span class="date-display-single">{{ date }}</span>
+          </p>
+          <p class="c-hero--committee">{{ committee }}</p>
+          <h3 class="c-hero--title">
+            {{ title }}
+          </h3>
+        </div>
+      </div>
+
+      {%
+        include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
+          is_logged: is_logged
+        } only
+      %}
+
     </div>
   {% endif %}
 </section>

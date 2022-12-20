@@ -1,0 +1,47 @@
+@import '../../global/utils/init';
+
+.comm-follow-widget {
+  .title,
+  .title a,
+  .unfollow,
+  .unflag-action,
+  .flag-action {
+    font-family: 'Proxima Nova SemiBold';
+    color: $blue01;
+    text-transform: uppercase;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
+  }
+
+  .unfollow,
+  .unflag-action,
+  .flag-action {
+    color: white;
+    font-size: 12px;
+    line-height: 20px;
+    background-color: $blue01;
+    padding: 4px 10px;
+    display: inline-block;
+    margin: 10px 0 30px 0;
+
+    &::before {
+      font-size: 18px;
+    }
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .comm-follow-widget {
+    .title,
+    .unfollow {
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    .unfollow {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+}

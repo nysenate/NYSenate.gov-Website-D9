@@ -1,0 +1,327 @@
+@import "../../global/utils/init";
+
+.c-container--const-inbox {
+
+  .c-container--title {
+    text-transform: uppercase;
+    font-family: $font-serif-semibold;
+    font-size: 18px;
+    line-height: 32px;
+    letter-spacing: 0;
+    color: $grey08;
+  }
+
+  .c-container--cta {
+    font-size: 16px;
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    display: block;
+    margin-bottom: 35px;
+
+    color: #008CBA;
+    text-decoration: none;
+    line-height: inherit;
+
+    &::after {
+      font-family: 'senate_icons';
+      display: inline-block;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+      -webkit-font-smoothing: antialiased;
+
+      content: "\3e";
+    }
+  }
+
+  .c-search-form {
+    display: grid;
+    column-gap: 20px;
+    width: 94%;
+
+    @include breakpoint($bp-sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+  }
+
+  .search-wrapper {
+    margin: 0 0 1rem 0;
+
+    .container-inline {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .form-item {
+        flex: 1;
+      }
+    }
+
+    input[type='search'] {
+      margin: 0;
+      height: 55px;
+      font-family: 'Proxima Nova Regular';
+      font-size: 1rem;
+      color: #222222;
+      padding: 0 10px;
+      box-shadow: none;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: #888888;
+      cursor: pointer;
+      display: block;
+      font-weight: normal;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+      font-family: 'Proxima Nova Regular';
+      text-transform: uppercase;
+
+      color: #444444;
+      text-transform: none;
+    }
+
+    button {
+      // display: none;
+      // width: 0;
+      background: transparent;
+      top: 50%;
+      transform: translateY(-50%);
+      // top: 0;
+      right: 0;
+
+      &::after {
+        position: relative;
+
+        content: "\6d";
+
+        width: 100%;
+        padding: 0;
+        line-height: 45px;
+
+        color: #175B81;
+      }
+
+
+    }
+  }
+
+  #edit-go {
+    border-style: solid;
+    border-width: 0px;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-weight: normal;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    padding-top: 1rem;
+    padding-right: 2rem;
+    padding-bottom: 1.0625rem;
+    padding-left: 2rem;
+    font-size: 1rem;
+    background-color: #008CBA;
+    border-color: #007095;
+    color: #FFFFFF;
+    transition: background-color 300ms
+  }
+
+  .inbox-action-links {
+    display: flex;
+    justify-content: space-between;
+
+    input[type='checkbox'] {
+      vertical-align: middle;
+    }
+
+    .option {
+      display: inline-block;
+      margin: 0;
+      text-transform: capitalize;
+
+      margin-left: 0.5rem;
+      margin-right: 1rem;
+    }
+
+    .action-button-wrapper {
+      button {
+
+        border-style: solid;
+        border-width: 0px;
+        cursor: pointer;
+        font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+        font-weight: normal;
+        line-height: normal;
+        margin: 0 0 1.25rem;
+        position: relative;
+        text-decoration: none;
+        text-align: center;
+        display: inline-block;
+        padding-top: 1rem;
+        padding-right: 2rem;
+        padding-bottom: 1.0625rem;
+        padding-left: 2rem;
+        font-size: 1rem;
+        background-color: #008CBA;
+        border-color: #007095;
+        color: #FFFFFF;
+        transition: background-color 300ms ease-out;
+
+        background-color: #008CBA;
+        border-color: #007095;
+        color: #FFFFFF;
+        cursor: default;
+        box-shadow: none;
+
+
+        display: inline-block;
+        height: 32px;
+        width: auto;
+        padding: 0 18px;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        text-transform: uppercase;
+
+        background-color: #2B6A90;
+
+        margin-left: 20px;
+
+        color: #fff;
+
+        &[disabled] {
+          opacity: 0.7;
+        }
+
+      }
+    }
+  }
+
+  #inbox_message_table {
+    table {
+
+      background: #FFFFFF;
+      margin-bottom: 1.25rem;
+      border: solid 1px #DDDDDD;
+      table-layout: auto;
+
+
+      border-collapse: collapse;
+      border-spacing: 0;
+
+      thead {
+
+        background: #F5F5F5;
+
+
+      }
+
+      th,
+      td {
+
+        padding: 0.5625rem 0.625rem;
+        font-size: 0.875rem;
+        color: #222222;
+        text-align: left;
+
+
+        padding: 0.5rem 0.625rem 0.625rem;
+        font-size: 0.875rem;
+        font-weight: bold;
+        color: #222222;
+
+        display: table-cell;
+        line-height: 1.125rem;
+      }
+
+      th {
+        border-bottom: none;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #666666;
+        background-color: #EEEEEE;
+        height: 51px;
+      }
+
+      td {
+
+        font-family: "Proxima Nova Regular";
+        color: #444444;
+        border: none;
+        border-bottom: 1px solid #e2e8ec;
+        height: 80px;
+        font-size: 13px;
+        line-height: 18px;
+        vertical-align: top;
+
+        input[type='checkbox'] {
+
+          margin: 0.9rem 0 1rem 0;
+        }
+
+        &.privatemsg-message-information {
+
+          .privatemsg-author-name {
+
+            a {
+              color: #444444;
+              font-size: 18px;
+              line-height: 18px;
+              font-family: "Proxima Nova Regular";
+            }
+          }
+
+          .message-body {
+
+            p {
+              font-size: 14px;
+              line-height: 20px;
+            }
+          }
+
+        }
+
+        &.privatemsg-list-subject-item {
+
+          .subject {
+
+            a {
+              font-size: 14px;
+              line-height: 18px;
+              color: #666666;
+            }
+          }
+        }
+
+        &.privatemsg-list-date {
+          font-family: "Proxima Nova Regular";
+          color: #444444;
+          border-bottom: 1px solid #e2e8ec;
+          height: 80px;
+          font-size: 13px;
+          line-height: 18px;
+          vertical-align: top;
+        }
+      }
+
+      tr:nth-child(odd) {
+
+        background-color: #eee;
+        border-bottom: 1px solid #ccc;
+      }
+
+      tbody {
+        border-top: 1px solid #ccc;
+      }
+    }
+  }
+
+}

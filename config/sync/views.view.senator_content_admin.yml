@@ -3,7 +3,10 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.taxonomy_term.petitions
+    - core.entity_view_mode.taxonomy_term.questionnaires
     - core.entity_view_mode.taxonomy_term.related_content
+    - core.entity_view_mode.taxonomy_term.senator_bills
     - taxonomy.vocabulary.senator
   module:
     - taxonomy
@@ -196,7 +199,7 @@ display:
         type: 'entity:taxonomy_term'
         options:
           relationship: none
-          view_mode: related_content
+          view_mode: petitions
       query:
         type: views_query
         options:
@@ -216,7 +219,18 @@ display:
           entity_type: taxonomy_term
           plugin_id: entity_reverse
           required: false
-      header: {  }
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: "<div id=\"block-rain-admin-local-actions\">\r\n<ul class=\"action-links\">\r\n<li><a href=\"/node/add\" class=\"button button-action button--primary button--small\" data-drupal-link-system-path=\"node/add\">Add content</a></li>\r\n</ul>\r\n</div>"
+          tokenize: false
       footer: {  }
       display_extenders: {  }
     cache_metadata:
@@ -229,17 +243,29 @@ display:
         - user
         - user.permissions
       tags: {  }
-  senator_content_admin_page:
-    id: senator_content_admin_page
-    display_title: Page
+  page_1:
+    id: page_1
+    display_title: Content
     display_plugin: page
     position: 1
     display_options:
+      style:
+        type: default
+        options: {  }
+      row:
+        type: 'entity:taxonomy_term'
+        options:
+          relationship: none
+          view_mode: related_content
+      defaults:
+        style: false
+        row: false
+      display_description: ''
       display_extenders: {  }
-      path: admin/content/senator-content
+      path: admin/senator/content
       menu:
-        type: tab
-        title: 'Senator Content'
+        type: 'default tab'
+        title: Content
         description: ''
         weight: 25
         expanded: false
@@ -247,8 +273,157 @@ display:
         parent: system.admin_content
         context: '0'
       tab_options:
-        type: none
-        title: ''
+        type: tab
+        title: Content
+        description: ''
+        weight: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - user.permissions
+      tags: {  }
+  page_2:
+    id: page_2
+    display_title: Questionnaires
+    display_plugin: page
+    position: 1
+    display_options:
+      style:
+        type: default
+        options: {  }
+      row:
+        type: 'entity:taxonomy_term'
+        options:
+          relationship: none
+          view_mode: questionnaires
+      defaults:
+        style: false
+        row: false
+        header: false
+      display_description: ''
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: "<div id=\"block-rain-admin-local-actions\">\r\n<ul class=\"action-links\">\r\n<li><a href=\"/node/add/webform\" class=\"button button-action button--primary button--small\" data-drupal-link-system-path=\"node/add/webform\">Add Questionnaire</a></li>\r\n<li><a href=\"/admin/webform/add\" class=\"button button-action button--primary button--small\" data-drupal-link-system-path=\"admin/webform/add\">Add Webform</a></li>\r\n</ul>\r\n</div>"
+          tokenize: false
+      display_extenders: {  }
+      path: admin/senator/content/questionnaires
+      menu:
+        type: tab
+        title: Questionnaires
+        description: ''
+        weight: 25
+        expanded: false
+        menu_name: admin
+        parent: system.admin_content
+        context: '0'
+      tab_options:
+        type: tab
+        title: 'Senator Content'
+        description: ''
+        weight: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - user.permissions
+      tags: {  }
+  page_3:
+    id: page_3
+    display_title: Petitions
+    display_plugin: page
+    position: 1
+    display_options:
+      style:
+        type: default
+        options: {  }
+      row:
+        type: 'entity:taxonomy_term'
+        options:
+          relationship: none
+          view_mode: petitions
+      defaults:
+        style: false
+        row: false
+        header: false
+      display_description: ''
+      header: {  }
+      display_extenders: {  }
+      path: admin/senator/content/petitions
+      menu:
+        type: tab
+        title: Petitions
+        description: ''
+        weight: 25
+        expanded: false
+        menu_name: admin
+        parent: system.admin_content
+        context: '0'
+      tab_options:
+        type: tab
+        title: 'Senator Content'
+        description: ''
+        weight: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - user.permissions
+      tags: {  }
+  senator_content_admin_page:
+    id: senator_content_admin_page
+    display_title: Legislation
+    display_plugin: page
+    position: 1
+    display_options:
+      style:
+        type: default
+        options: {  }
+      row:
+        type: 'entity:taxonomy_term'
+        options:
+          relationship: none
+          view_mode: senator_bills
+      defaults:
+        style: false
+        row: false
+        header: false
+      display_description: ''
+      header: {  }
+      display_extenders: {  }
+      path: admin/senator/content/bills
+      menu:
+        type: tab
+        title: Legislation
+        description: ''
+        weight: 25
+        expanded: false
+        menu_name: admin
+        parent: system.admin_content
+        context: '0'
+      tab_options:
+        type: tab
+        title: 'Senator Content'
         description: ''
         weight: 0
     cache_metadata:

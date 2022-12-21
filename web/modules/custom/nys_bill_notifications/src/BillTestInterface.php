@@ -52,4 +52,18 @@ interface BillTestInterface {
    */
   public function isEnabled(): bool;
 
+  /**
+   * Generates context data points for an update.
+   *
+   * Some updates require some bit of information from a successful test, e.g.,
+   * substitutions need the print number of the other bill.
+   *
+   * @param object $update
+   *   An OpenLeg update block.
+   *
+   * @return array
+   *   An array of data points pulled from the update.
+   */
+  public function context(object $update): array;
+
 }

@@ -414,8 +414,8 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending('Email failed while validating body (id=%id, ct=%ct)', [
-          'message' => $e->getMessage(),
-          'body' => $body,
+          '%message' => $e->getMessage(),
+          '%body' => $body,
           '%ct' => $content_type,
         ]);
       }

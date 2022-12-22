@@ -132,23 +132,10 @@ function nys_sunset_policy_get_expiring() {
 function nys_sunset_policy_mail($key, &$message, $params) {
   switch ($key) {
     case 'expired_mail':
-      $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = $params['subject'];
-      $body_data = [
-        '#theme' => 'expired_mail',
-        '#message' => $params['body'],
-      ];
-      $message['body'][] = \Drupal::service('renderer')->render($body_data);
-      break;
-
     case 'expiring_mail':
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = $params['subject'];
-      $body_data = [
-        '#theme' => 'expiring_mail',
-        '#message' => $params['body'],
-      ];
-      $message['body'][] = \Drupal::service('renderer')->render($body_data);
+      $message['body'][] = $params['body'];
       break;
   }
 }

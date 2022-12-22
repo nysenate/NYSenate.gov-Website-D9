@@ -2606,6 +2606,7 @@ function nysenate_theme_preprocess_node__event(&$variables) {
 
   // Set up reference variables indicating if this event spans multiple days.
   $is_multiday = FALSE;
+  // @phpstan-ignore-next-line
   if (!empty($start_date) && !empty($end_date)) {
     $is_multiday = !($start_date->format('Ymd') == $end_date->format('Ymd'));
   }
@@ -2743,6 +2744,7 @@ function get_date_range_values($variables) {
       $end_date = new DateTime($variables['content']['field_date_range'][0]['end_date']['#text']);
     }
 
+    // @phpstan-ignore-next-line
     if (isset($start_date) && isset($end_date)) {
       $date_value['day'] = date_format($start_date, "d");
       $date_value['month'] = date_format($start_date, "M");

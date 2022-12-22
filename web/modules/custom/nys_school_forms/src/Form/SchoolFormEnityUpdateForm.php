@@ -2,7 +2,6 @@
 
 namespace Drupal\nys_school_forms\Form;
 
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Connection;
@@ -23,6 +22,9 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileSystem;
 use Drupal\file\FileRepository;
 use Drupal\nys_school_forms\SchoolFormsService;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 
 /**
  * Builds a Form for search school form submissions.
@@ -130,6 +132,20 @@ class SchoolFormEnityUpdateForm extends FormBase {
   protected $fileRepository;
 
   /**
+   * The tempstore object.
+   *
+   * @var \Drupal\Core\TempStore\SharedTempStore
+   */
+  protected $privateTempStore;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Class constructor.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request
@@ -160,6 +176,10 @@ class SchoolFormEnityUpdateForm extends FormBase {
    *   File system service.
    * @param \Drupal\file\FileRepository $fileRepository
    *   File repository service.
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   *   The tempstore factory.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
    */
   public function __construct(
     RequestStack $request,
@@ -175,7 +195,9 @@ class SchoolFormEnityUpdateForm extends FormBase {
     SchoolFormsService $schoolFormsService,
     FileUrlGenerator $fileUrlGenerator,
     FileSystem $fileSystem,
-    FileRepository $fileRepository) {
+    FileRepository $fileRepository,
+    PrivateTempStoreFactory $temp_store_factory,
+    AccountInterface $current_user) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -190,6 +212,8 @@ class SchoolFormEnityUpdateForm extends FormBase {
     $this->fileUrlGenerator = $fileUrlGenerator;
     $this->fileSystem = $fileSystem;
     $this->fileRepository = $fileRepository;
+    $this->currentUser = $current_user;
+    $this->privateTempStore = $temp_store_factory->get('school_form_multiple_delete_confirm');
   }
 
   /**
@@ -210,7 +234,9 @@ class SchoolFormEnityUpdateForm extends FormBase {
       $container->get('nys_school_forms.school_forms'),
       $container->get('file_url_generator'),
       $container->get('file_system'),
-      $container->get('file.repository')
+      $container->get('file.repository'),
+      $container->get('tempstore.private'),
+      $container->get('current_user')
     );
   }
 
@@ -224,7 +250,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $sort_by = NULL, string $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $from_date = NULL, string $to_date = NULL, string $sort_by = NULL, string $order = NULL) {
     $form['operations'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Operations'),
@@ -236,6 +262,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
       '#options' => [
         '' => $this->t('- Choose an Operation -'),
         'show_student' => $this->t('Show Student'),
+        'delete_submission' => $this->t('Delete Submission'),
       ],
       '#title_display' => FALSE,
     ];
@@ -245,11 +272,10 @@ class SchoolFormEnityUpdateForm extends FormBase {
       '#name' => 'apply',
     ];
 
-    $form['table'] = $this->getTable($senator, $form_type, $school, $teacher_name, $sort_by, $order);
+    $form['table'] = $this->getTable($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
     $form['pager'] = [
       '#type' => 'pager',
     ];
-
     return $form;
   }
 
@@ -259,7 +285,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
    * @return array
    *   The search form and search results build array.
    */
-  public function getTable($senator, $form_type, $school, $teacher_name, $sort_by, $order) {
+  public function getTable($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order) {
     // Initialize the pager.
     $page = $this->pagerParam->findPage();
     $num_per_page = 150;
@@ -273,7 +299,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
     ];
     $offset = $num_per_page * $page;
     $num_results = 0;
-    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $sort_by, $order);
+    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
     $table_results = [];
     // Transform Results into Table.
     $i = 0;
@@ -361,9 +387,26 @@ class SchoolFormEnityUpdateForm extends FormBase {
           }
         }
       }
+      $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
+      $form_state->setRedirectUrl($url);
     }
-    $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
-    $form_state->setRedirectUrl($url);
+    if ($operation == 'delete_submission') {
+      $table = $form_state->getValue('table');
+      $files = [];
+      foreach ($table as $key => $value) {
+        if ($value) {
+          $parts = explode('-', $value);
+          $fid = $parts[0];
+          $file = $this->entityTypeManager->getStorage('file')->load($fid);
+          if (!empty($file)) {
+            $files[] = $file;
+          }
+        }
+      }
+      $this->privateTempStore->set($this->currentUser->id(), $files);
+      $url = Url::fromRoute('nys_school_forms.delete_submission');
+      $form_state->setRedirectUrl($url);
+    }
   }
 
 }

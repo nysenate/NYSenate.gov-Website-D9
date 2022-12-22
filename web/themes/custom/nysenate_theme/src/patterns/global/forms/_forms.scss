@@ -260,7 +260,7 @@
     @extend .icon-after__see-more;
     position: absolute;
     right: 10px;
-    top: 5px;
+    top: auto;
     font-size: 25px;
     color: $blue01;
     pointer-events: none;
@@ -278,6 +278,7 @@
 
 .view-filters select,
 .js-form-type-select select {
+  position: relative;
   color: $blue01;
   font-family: $font-sans-bold;
   font-size: 14px;

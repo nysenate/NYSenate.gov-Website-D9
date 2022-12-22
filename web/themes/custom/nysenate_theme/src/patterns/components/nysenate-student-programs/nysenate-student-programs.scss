@@ -142,9 +142,10 @@
 	.pane-node {
 		.pane-title {
 			font-family: $font-serif-bold;
+			font-weight: $font-weight-normal;
 			font-size: 32px;
 			line-height: 41px;
-			color: $grey08;
+			color: $grey02;
 			margin: 40px 0;
 		}
 
@@ -163,13 +164,14 @@
 	.pane-student-programs-news {
 		.pane-title {
 			font-family: $font-sans;
+			font-weight: $font-weight-normal;
 			font-size: 16px;
 			line-height: 18px;
 			padding-bottom: 20px;
 			margin-bottom: 25px;
 			text-transform: uppercase;
-			color: $grey08;
-			border-bottom: 1px solid $grey08;
+			color: $grey02;
+			border-bottom: 1px solid $grey02;
 		}
 
 		.view-student-programs-news {
@@ -288,6 +290,11 @@
 	.c-student-program-contact {
 		margin-top: 40px;
 
+		.text-layout__title {
+			font-size: 16px;
+			color: $grey08;
+		}
+
 		.text-layout__body {
 			background-color: $grey06;
 
@@ -305,6 +312,14 @@
 
 					a {
 						color: $yellow03;
+					}
+
+					&:first-child strong {
+						font-family: $font-sans-bold;
+						font-size: 14px;
+						line-height: 18px;
+						font-weight: $font-weight-normal;
+						color: $grey08;
 					}
 				}
 
@@ -334,13 +349,14 @@
 .pane-student-programs-news {
 	.pane-title {
 		font-family: $font-sans;
+		font-weight: $font-weight-normal;
 		font-size: 16px;
 		line-height: 18px;
 		padding-bottom: 20px;
 		margin-bottom: 25px;
 		text-transform: uppercase;
-		color: $grey08;
-		border-bottom: 1px solid $grey08;
+		color: $grey02;
+		border-bottom: 1px solid $grey02;
 	}
 
 	.pager-load-more {
@@ -359,6 +375,11 @@
 }
 
 .article-student-program {
+
+	.nys-associated-topics a {
+		color: $yellow03;
+	}
+
 	.gen-wrapper {
 		.section-title {
 			font-family: $font-sans;
@@ -540,9 +561,9 @@
 					.date-display-single {
 						margin-left: 0;
 						font-family: $font-sans;
-						font-size: 14px;
-						line-height: 32px;
-						color: $grey04;
+						font-size: 10px;
+						line-height: 15px;
+						color: $grey10;
 					}
 				}
 			}

@@ -1,59 +1,24 @@
-<div class="c-block c-container c-container--const-inbox">
-  <h3 class="c-container--title">
+<form class="c-block c-container c-container--const-inbox" action="{{ action_link }}" method="post" accept-charset="UTF-8">
+  <h3 class="c-container__title">
     {{ title }}
   </h3>
-  <a class="c-container--cta {{ type == 'sent' ? 'c-container--cta__sent' : 'c-container--cta__inbox' }}" href="{{ cta.link }}">{{ cta.label }}</a>
+  <a class="c-container__cta {{ type == 'sent' ? 'c-container__cta--sent' : '' }}" href="{{ cta.link }}">{{ cta.label }}</a>
 
   <div class="c-search-form">
-    <div class="search-wrapper">
-      <label for="messagesearch">Message Search</label>
-      <div class="container-inline form-wrapper">
-        <div class="form-item form-type-textfield form-item-messagesearch">
-          <label class="element-invisible" for="edit-messagesearch">Message Search
-          </label>
-          <input class="c-site-search--box icon_after__search form-text form-text" type="search" id="edit-messagesearch" name="messagesearch" value="" size="60" maxlength="128">
-        </div>
-        <button class="c-site-search--btn form-submit" id="edit-submit" name="op" value="Search" type="submit"></button>
-      </div>
-    </div>
 
-    <div class="search-wrapper">
-      <label for="usersearch">Name Search</label>
-      <div class="container-inline form-wrapper">
-        <div class="form-item form-type-textfield form-item-usersearch">
-          <label class="element-invisible" for="edit-usersearch">Name Search
-          </label>
-          <input class="c-site-search--box icon_after__search form-text form-text" type="search" id="edit-usersearch" name="usersearch" value="" size="60" maxlength="128">
+    {% for search_input in search_inputs %}
+      <div class="search-form-group__wrapper">
+        <label for="{{ search_input.name }}">{{ search_input.label }}</label>
+        <div class="search-form-group">
+          <div class="search-form-group__inner">
+            <label class="element-invisible" for="edit-messagesearch">{{ search_input.label }}
+            </label>
+            <input class="search-form-group__input" type="search" name="{{ search_inputs.name }}" value="" size="60" maxlength="128">
+          </div>
+          <button class="search-form-group__button c-site-search--btn" name="op" value="Search" type="submit"></button>
         </div>
-        <button class="c-site-search--btn form-submit" id="edit-submit" name="op" value="Search" type="submit"></button>
       </div>
-    </div>
-
-    <div class="search-wrapper">
-      <label for="issuesearch">Issue Search</label>
-      <div class="container-inline form-wrapper">
-        <div class="form-item form-type-textfield form-item-issuesearch" role="application">
-          <label class="element-invisible" for="edit-issuesearch">Issue Search
-          </label>
-          <input class="c-site-search--box icon_after__search form-text form-text form-autocomplete" type="search" id="edit-issuesearch" name="issuesearch" value="" size="60" maxlength="128" autocomplete="OFF" aria-autocomplete="list"><input type="hidden" id="edit-issuesearch-autocomplete" value="https://dev-ny-senate.pantheonsite.io/index.php?q=taxonomy/autocomplete/field_issues" disabled="disabled" class="autocomplete autocomplete-processed">
-          <span class="element-invisible" aria-live="assertive" aria-atomic="true" id="edit-issuesearch-autocomplete-aria-live"></span>
-        </div>
-        <button class="c-site-search--btn form-submit" id="edit-submit" name="op" value="Search" type="submit"></button>
-      </div>
-    </div>
-
-    <div class="search-wrapper">
-      <label for="billsearch">Bill Search</label>
-      <div class="container-inline form-wrapper">
-        <div class="form-item form-type-textfield form-item-billsearch" role="application">
-          <label class="element-invisible" for="edit-billsearch">Bill Search
-          </label>
-          <input class="c-site-search--box icon_after__search form-text form-text form-autocomplete" onchange="this.form.submit();" type="search" id="edit-billsearch" name="billsearch" value="" size="60" maxlength="128" autocomplete="OFF" aria-autocomplete="list"><input type="hidden" id="edit-billsearch-autocomplete" value="https://dev-ny-senate.pantheonsite.io/index.php?q=nys-inbox/autocomplete/bill-search" disabled="disabled" class="autocomplete autocomplete-processed">
-          <span class="element-invisible" aria-live="assertive" aria-atomic="true" id="edit-billsearch-autocomplete-aria-live"></span>
-        </div>
-        <button class="c-site-search--btn form-submit" id="edit-submit" name="op" value="Search" type="submit"></button>
-      </div>
-    </div>
+    {% endfor %}
   </div>
 
   <button class="search-button" name="op" value="Search" type="submit">Search</button>
@@ -67,77 +32,61 @@
 
       </div>
     </div>
-    <div class="action-button-wrapper">
-      <div class="form-actions form-wrapper">
-        <button name="delete" value="Delete" type="button" class="ajax-processed" disabled="">Delete</button>
-        <button class="icon-before__contact" name="op" value="Message" type="submit" disabled="">Message</button>
-      </div>
+    <div class="form-actions form-wrapper">
+      <button class="action-button" name="delete" value="Delete" type="button">Delete</button>
+      <button class="action-button action-button--message" name="op" value="Message" type="submit">Message</button>
     </div>
   </div>
 
-  <div class="message-table">
-    {% if messages is not empty %}
-      <table class="privatemsg-list tableheader-processed sticky-enabled" width="100%">
-        <thead>
-          <tr>
-            <th></th>
-            <th class="privatemsg-header-name">name</th>
-            <th class="privatemsg-header-subject">subject</th>
-            <th sort="desc" class="privatemsg-header-lastupdated">Date Sent</th>
-            <th class="privatemsg-header-downarrow"></th>
-          </tr>
-        </thead>
-        <tbody>
+  <div class="message-list__wrapper">
+    <table class="message-list">
+      <thead>
+        <tr>
+          <th class="message-list__th"></th>
+          <th class="message-list__th">name</th>
+          <th class="message-list__th message-list__th--hide-sm">subject</th>
+          <th class="message-list__th">Date Sent</th>
+          <th class="message-list__th"></th>
+        </tr>
+      </thead>
+      <tbody>
 
+        {% if messages is not empty %}
           {% for message in messages %}
             <tr>
-              <td>
-                <div class="form-item form-type-checkbox form-item-list-402746">
-                  <input class="privatemsg-list tableheader-processed form-checkbox" width="100%" type="checkbox" id="edit-list-402746" name="list[402746]" value="402746">
+              <td class="message-list__td">
+                <div class="">
+                  <input class="form-check" type="checkbox">
                 </div>
               </td>
-              <td class="privatemsg-message-information">
-                <div class="privatemsg-author-name">
-                  <a href="{{ message.author_link }}" class="nys-dashboard-user-link">{{ message.author }}</a>
+              <td class="message-list__td message-list__td--information">
+                <div class="message-list__td--information__author">
+                  <a href="{{ message.author_link }}">{{ message.author }}</a>
                 </div>
-                <div class="message-preview visible">
+                <div class="message-list__td--information__message">
                   <a href="{{ message.content_link }}">{{ message.content }}
                   </a>
                 </div>
               </td>
-              <td class="privatemsg-list-subject-item">
-                <div class="subject">
-                  <a href="{{ message.subject_link }}">{{ message.subject }}</a>
-                </div>
+              <td class="message-list__td message-list__td--subject message-list__td--hide-sm">
+                <a href="{{ message.subject_link }}">{{ message.subject }}</a>
               </td>
-              <td class="privatemsg-list-date">{{message.date_sent}}</td>
-              <td class="privatemsg-list-issue">
-                <div class="message-body-toggle"></div>
-                <div class="message-action-buttons">
-                  <a class="action-button" href="{{ message.forward_link }}">Forward</a>
-                  <a class="action-button" href="{{ message.reply_link }}">Reply</a>
+              <td class="message-list__td message-list__td--date">{{message.date_sent}}</td>
+              <td class="message-list__td message-list__td--issue">
+                <div class="message-list__td--issue__toggle"></div>
+                <div class="message-list__td--issue__actions">
+                  <a class="message-list__td--issue__action action-button" href="{{ message.forward_link }}">Forward</a>
+                  <a class="message-list__td--issue__action action-button" href="{{ message.reply_link }}">Reply</a>
                 </div>
               </td>
             </tr>
           {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <table class="privatemsg-list tableheader-processed sticky-enabled" width="100%">
-        <thead>
+        {% else %}
           <tr>
-            <th class="privatemsg-header-name">name</th>
-            <th class="privatemsg-header-subject">subject</th>
-            <th sort="desc" class="privatemsg-header-lastupdated">Date Sent</th>
-            <th class="privatemsg-header-downarrow"></th>
+            <td colspan="5" class="message-list__td">No messages available.</td>
           </tr>
-        </thead>
-        <tbody>
-          <tr class="odd">
-            <td colspan="4" class="empty message">No messages available.</td>
-          </tr>
-        </tbody>
-      </table>
-    {% endif %}
+        {% endif %}
+      </tbody>
+    </table>
   </div>
-</div>
+</form>

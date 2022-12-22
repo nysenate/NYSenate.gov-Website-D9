@@ -2,19 +2,19 @@
 
 .c-container--const-inbox {
 
-  a {
-    &:focus {
-      outline: thin dotted;
-    }
+  a:focus {
+    outline: thin dotted;
+
   }
 
-  .c-container--title {
+  .c-container__title {
     text-transform: uppercase;
     font-family: $font-serif-semibold;
     font-size: 18px;
     line-height: 32px;
     letter-spacing: 0;
     color: $grey08;
+    margin-bottom: 0;
 
     @include breakpoint($bp-sm) {
       font-size: 24px;
@@ -22,43 +22,41 @@
     }
   }
 
-  .c-container--cta {
+  .c-container__cta {
     font-size: 16px;
     text-transform: uppercase;
     font-family: $font-sans-bold;
     display: block;
     margin-bottom: 35px;
-
-    color: #008CBA;
+    color: $color-nys-blue;
     text-decoration: none;
     line-height: inherit;
 
-    &__inbox::after {
+    &::after,
+    &::before {
       font-family: $senate-icons;
       display: inline-block;
       vertical-align: middle;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
       text-transform: none;
       padding-left: 3px;
       -webkit-font-smoothing: antialiased;
-
       content: "\3e";
     }
 
-    &__sent::before {
-      font-family: $senate-icons;
-      display: inline-block;
-      vertical-align: middle;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-      -webkit-font-smoothing: antialiased;
-
+    &::before {
+      display: none;
       content: "\3c";
+    }
+
+    &--sent {
+
+      &::after {
+        display: none;
+      }
+
+      &::before {
+        display: inline-block;
+      }
     }
   }
 
@@ -73,81 +71,70 @@
 
   }
 
-  .search-wrapper {
-    margin: 0 0 1rem 0;
+  .search-form-group {
+    position: relative;
+    display: flex;
+    align-items: center;
 
-    .container-inline {
-      position: relative;
-      display: flex;
-      align-items: center;
+    &__wrapper {
+      margin: 0 0 1rem 0;
 
-      .form-item {
-        flex: 1;
+      label {
+        font-size: 0.8rem;
+        color: $grey04;
+        cursor: pointer;
+        display: block;
+        font-weight: normal;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+        font-family: $font-sans;
+        text-transform: uppercase;
+        color: $grey08;
+        text-transform: none;
       }
+    }
+
+    &__inner {
+      flex: 1;
     }
 
     input[type='search'] {
       margin: 0;
       height: 55px;
-      font-family: 'Proxima Nova Regular';
+      font-family: $font-sans;
       font-size: 1rem;
-      color: #222222;
+      color: $grey10;
       padding: 0 10px;
       box-shadow: none;
 
       &:focus {
-        border-color: #999999;
+        border-color: $ns_grey_med;
         outline: none;
       }
     }
 
-    label {
-      font-size: 0.8rem;
-      color: #888888;
-      cursor: pointer;
-      display: block;
-      font-weight: normal;
-      line-height: 1.5;
-      margin-bottom: 0.5rem;
-      font-family: 'Proxima Nova Regular';
-      text-transform: uppercase;
-
-      color: $grey08;
-      text-transform: none;
-    }
-
     button {
-      // display: none;
-      // width: 0;
       background: transparent;
       top: 50%;
       transform: translateY(-50%);
-      // top: 0;
       right: 0;
       outline: 0;
-      margin-right: 2px;
 
       &::after {
-        position: relative;
-
         content: "\6d";
-
-        width: 100%;
-        padding: 0;
         line-height: 45px;
-
-        color: #175B81;
+        color: $gen_blue_med;
       }
-
-
     }
   }
 
   .search-button {
     border-style: solid;
     border-width: 0px;
+    border-color: #007095;
     cursor: pointer;
     font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-size: 1rem;
     font-weight: normal;
     line-height: normal;
     margin: 0 0 1.25rem;
@@ -155,19 +142,55 @@
     text-decoration: none;
     text-align: center;
     display: inline-block;
-    padding-top: 1rem;
-    padding-right: 2rem;
-    padding-bottom: 1.0625rem;
-    padding-left: 2rem;
-    font-size: 1rem;
-    background-color: #008CBA;
-    border-color: #007095;
-    color: #FFFFFF;
+    padding: 1rem 2rem 1.0625rem;
+    background-color: $color-nys-blue;
+    color: $color-white;
     transition: background-color 300ms;
 
     &:focus {
       background-color: #007095;
       outline: 0;
+    }
+  }
+
+  .action-button {
+    border-style: solid;
+    border-width: 0px;
+    border-color: #007095;
+    cursor: pointer;
+    font-family: $font-sans-bold;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 24px;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 4px 18px;
+    color: $color-white;
+    box-shadow: none;
+    width: auto;
+    background-color: $gen_blue_lgt;
+    vertical-align: middle;
+    transition: background-color 300ms ease-out;
+
+    &--message::before {
+      content: "\6e";
+      display: inline-block;
+      font-family: $senate-icons;
+      line-height: 22px;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-right: 3px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    &[disabled] {
+      opacity: 0.7;
     }
   }
 
@@ -184,159 +207,135 @@
       display: inline-block;
       margin: 0;
       text-transform: capitalize;
-
       margin-left: 0.5rem;
       margin-right: 1rem;
     }
 
-    .action-button-wrapper {
-      button {
-
-        border-style: solid;
-        border-width: 0px;
-        cursor: pointer;
-        font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
-        font-weight: normal;
-        line-height: normal;
-        margin: 0 0 20px 20px;
-        position: relative;
-        text-decoration: none;
-        text-align: center;
-        display: inline-block;
-        padding-top: 1rem;
-        padding-right: 2rem;
-        padding-bottom: 1.0625rem;
-        padding-left: 2rem;
-        font-size: 1rem;
-        background-color: #008CBA;
-        border-color: #007095;
-        color: #FFFFFF;
-        transition: background-color 300ms ease-out;
-
-        background-color: #008CBA;
-        border-color: #007095;
-        color: #FFFFFF;
-        cursor: default;
-        box-shadow: none;
-
-
-        display: inline-block;
-        height: 32px;
-        width: auto;
-        padding: 0 18px;
-        font-family: $font-sans-bold;
-        font-size: 12px;
-        text-transform: uppercase;
-
-        background-color: #2B6A90;
-
-        // margin-left: 20px;
-
-        color: #fff;
-
-        &[disabled] {
-          opacity: 0.7;
-        }
-
-        &:first-child {
-          margin-left: 0;
-        }
-
-        @include breakpoint($bp-under-xsm) {
-          margin: 0 0 0 20px;
-        }
-
-      }
+    .form-actions {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
     }
   }
 
-  .message-table {
-    overflow-x: auto;
+  .message-list {
+    background: $color-white;
+    margin-bottom: 1.25rem;
+    border: solid 1px #DDDDDD;
+    table-layout: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
 
-    table {
+    &__wrapper {
+      overflow-x: auto;
+    }
 
-      background: #FFFFFF;
-      margin-bottom: 1.25rem;
-      border: solid 1px #DDDDDD;
-      table-layout: auto;
+    thead {
+      background: $grey16;
+    }
 
+    tr:nth-child(odd) {
+      background-color: $grey06;
+      border-bottom: 1px solid $grey15;
+    }
 
-      border-collapse: collapse;
-      border-spacing: 0;
+    tbody {
+      border-top: 1px solid $grey15;
+    }
 
-      thead {
-        background: #F5F5F5;
+    &__th,
+    &__td {
+      text-align: left;
+      padding: 0.5rem 0.625rem 0.625rem;
+      line-height: 1.125rem;
+
+      &--hide-sm {
+        display: none;
+
+        @include breakpoint($bp-sm) {
+          display: table-cell;
+        }
+      }
+    }
+
+    &__th {
+      font-family: $font-sans-bold;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: $grey03;
+      background-color: $grey06;
+      height: 51px;
+      border-bottom: none;
+    }
+
+    &__td {
+      font-size: 13px;
+      font-family: $font-sans;
+      color: $grey08;
+      border: none;
+      border-bottom: 1px solid $grey13;
+      height: 80px;
+      line-height: 18px;
+      vertical-align: top;
+
+      input[type='checkbox'] {
+        margin: 0.9rem 0 1rem 0;
       }
 
-      th,
-      td {
-        padding: 0.5625rem 0.625rem;
-        font-size: 0.875rem;
-        color: #222222;
-        text-align: left;
-        padding: 0.5rem 0.625rem 0.625rem;
-        font-size: 0.875rem;
-        font-weight: bold;
-        color: #222222;
-        display: table-cell;
-        line-height: 1.125rem;
-      }
+      &--information {
 
-      th {
-        border-bottom: none;
-        font-family: $font-sans-bold;
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #666666;
-        background-color: #EEEEEE;
-        height: 51px;
-      }
-
-      td {
-        font-family: $font-sans;
-        color: $grey08;
-        border: none;
-        border-bottom: 1px solid #e2e8ec;
-        height: 80px;
-        font-size: 13px;
-        line-height: 18px;
-        vertical-align: top;
-
-        input[type='checkbox'] {
-
-          margin: 0.9rem 0 1rem 0;
+        a {
+          color: $grey08;
         }
 
-        &.privatemsg-message-information {
+        &__author {
 
           a {
-            color: $grey08;
+            font-size: 18px;
+            line-height: 18px;
+            font-family: $font-sans;
+            font-weight: normal;
           }
+        }
 
-          .privatemsg-author-name {
+        &__message {
 
-            a {
-              font-size: 18px;
-              line-height: 18px;
-              font-family: $font-sans;
-              font-weight: normal;
-            }
-          }
-
-          .message-preview {
+          a {
+            display: block;
             max-width: 264px;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
-
-            p {
-              font-size: 14px;
-              line-height: 20px;
-            }
           }
         }
+      }
 
-        .message-body-toggle {
+      &--subject {
+
+        a {
+          font-size: 14px;
+          line-height: 18px;
+          color: $grey03;
+        }
+      }
+
+      &--date {
+        font-family: $font-sans;
+        color: $grey08;
+        border-bottom: 1px solid $grey13;
+        height: 80px;
+        font-size: 13px;
+        line-height: 18px;
+        vertical-align: top;
+      }
+
+      &--issue {
+        text-align: right;
+        height: 100px;
+        position: relative;
+
+        &__toggle {
           text-indent: -9999em;
           font-size: 0;
           display: block;
@@ -347,131 +346,26 @@
             width: 28px;
             height: 24px;
             font-size: 16px;
-            font-family: 'senate_icons';
+            font-family: $senate-icons;
             line-height: 22px;
           }
 
           &--expanded::before {
             content: "\5e";
-            display: block;
-            width: 28px;
-            height: 24px;
-            font-size: 16px;
-            font-family: 'senate_icons';
-            line-height: 22px;
           }
+
         }
 
-        .message-action-buttons {
+        &__actions {
           position: absolute;
-          bottom: 0;
           display: none;
+          bottom: 0;
           justify-content: flex-end;
+          gap: 20px;
+          margin-bottom: 20px;
           right: 24px;
         }
-
-        &.privatemsg-list-subject-item {
-
-          .subject {
-
-            a {
-              font-size: 14px;
-              line-height: 18px;
-              color: #666666;
-            }
-          }
-        }
-
-        &.privatemsg-list-date {
-          font-family: $font-sans;
-          color: $grey08;
-          border-bottom: 1px solid #e2e8ec;
-          height: 80px;
-          font-size: 13px;
-          line-height: 18px;
-          vertical-align: top;
-        }
-
-        &.privatemsg-list-issue {
-          // display: block;
-          text-align: right;
-
-          // max-width: 135px;
-          height: 100px;
-          position: relative;
-        }
-      }
-
-      th.privatemsg-header-subject,
-      td.privatemsg-list-subject-item {
-        display: none;
-
-        @include breakpoint($bp-sm) {
-          display: table-cell;
-        }
-      }
-
-      tr:nth-child(odd) {
-        background-color: #eee;
-        border-bottom: 1px solid #ccc;
-      }
-
-      tbody {
-        border-top: 1px solid #ccc;
       }
     }
   }
-
-  .action-button {
-    border-style: solid;
-    border-width: 0px;
-    cursor: pointer;
-    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
-    font-weight: normal;
-    line-height: 8px;
-    margin: 0 0 1.25rem;
-    position: relative;
-    text-decoration: none;
-    text-align: center;
-    display: inline-block;
-    padding-top: 12px;
-    padding-right: 18px;
-    padding-bottom: 12px;
-    padding-left: 18px;
-    font-size: 1rem;
-    background-color: #008CBA;
-    border-color: #007095;
-    color: #FFFFFF;
-    transition: background-color 300ms ease-out;
-
-    background-color: #008CBA;
-    border-color: #007095;
-    color: #FFFFFF;
-    cursor: default;
-    box-shadow: none;
-
-
-    display: inline-block;
-    // height: 32px;
-    width: auto;
-    // padding: 0 18px;
-    font-family: $font-sans-bold;
-    font-size: 12px;
-    text-transform: uppercase;
-
-    background-color: #2B6A90;
-
-    margin-left: 20px;
-
-    color: #fff;
-
-
-    display: inline-block;
-    vertical-align: middle;
-
-    &[disabled] {
-      opacity: 0.7;
-    }
-  }
-
 }

@@ -316,10 +316,12 @@ class BillsHelper {
    * @see formatTitleParts()
    */
   public function formatTitle(NodeInterface $node, string $version = '', string $separator = '-'): string {
-    if (($node->hasField('field_ol_base_print_no') && !$node->get('field_ol_base_print_no')
-          ->isEmpty()) &&
-      ($node->hasField('field_ol_session') && !$node->get('field_ol_session')
-          ->isEmpty())) {
+    if (
+      $node->hasField('field_ol_base_print_no')
+      && !$node->get('field_ol_base_print_no')->isEmpty()
+      && $node->hasField('field_ol_session')
+      && !$node->get('field_ol_session')->isEmpty()
+    ) {
       $title = $this->formatTitleParts(
         $node->field_ol_session->value,
         $node->field_ol_base_print_no->value,

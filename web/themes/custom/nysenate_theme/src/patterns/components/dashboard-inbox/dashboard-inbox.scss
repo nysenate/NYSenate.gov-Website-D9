@@ -2,6 +2,12 @@
 
 .c-container--const-inbox {
 
+  a {
+    &:focus {
+      outline: thin dotted;
+    }
+  }
+
   .c-container--title {
     text-transform: uppercase;
     font-family: $font-serif-semibold;
@@ -9,12 +15,17 @@
     line-height: 32px;
     letter-spacing: 0;
     color: $grey08;
+
+    @include breakpoint($bp-sm) {
+      font-size: 24px;
+      line-height: 32px;
+    }
   }
 
   .c-container--cta {
     font-size: 16px;
     text-transform: uppercase;
-    font-family: "Proxima Nova SemiBold";
+    font-family: $font-sans-bold;
     display: block;
     margin-bottom: 35px;
 
@@ -22,8 +33,8 @@
     text-decoration: none;
     line-height: inherit;
 
-    &::after {
-      font-family: 'senate_icons';
+    &__inbox::after {
+      font-family: $senate-icons;
       display: inline-block;
       vertical-align: middle;
       font-style: normal;
@@ -34,6 +45,20 @@
       -webkit-font-smoothing: antialiased;
 
       content: "\3e";
+    }
+
+    &__sent::before {
+      font-family: $senate-icons;
+      display: inline-block;
+      vertical-align: middle;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-right: 3px;
+      -webkit-font-smoothing: antialiased;
+
+      content: "\3c";
     }
   }
 
@@ -69,6 +94,11 @@
       color: #222222;
       padding: 0 10px;
       box-shadow: none;
+
+      &:focus {
+        border-color: #999999;
+        outline: none;
+      }
     }
 
     label {
@@ -82,7 +112,7 @@
       font-family: 'Proxima Nova Regular';
       text-transform: uppercase;
 
-      color: #444444;
+      color: $grey08;
       text-transform: none;
     }
 
@@ -94,6 +124,8 @@
       transform: translateY(-50%);
       // top: 0;
       right: 0;
+      outline: 0;
+      margin-right: 2px;
 
       &::after {
         position: relative;
@@ -111,7 +143,7 @@
     }
   }
 
-  #edit-go {
+  .search-button {
     border-style: solid;
     border-width: 0px;
     cursor: pointer;
@@ -131,12 +163,18 @@
     background-color: #008CBA;
     border-color: #007095;
     color: #FFFFFF;
-    transition: background-color 300ms
+    transition: background-color 300ms;
+
+    &:focus {
+      background-color: #007095;
+      outline: 0;
+    }
   }
 
   .inbox-action-links {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     input[type='checkbox'] {
       vertical-align: middle;
@@ -160,7 +198,7 @@
         font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
         font-weight: normal;
         line-height: normal;
-        margin: 0 0 1.25rem;
+        margin: 0 0 20px 20px;
         position: relative;
         text-decoration: none;
         text-align: center;
@@ -186,13 +224,13 @@
         height: 32px;
         width: auto;
         padding: 0 18px;
-        font-family: "Proxima Nova SemiBold";
+        font-family: $font-sans-bold;
         font-size: 12px;
         text-transform: uppercase;
 
         background-color: #2B6A90;
 
-        margin-left: 20px;
+        // margin-left: 20px;
 
         color: #fff;
 
@@ -200,11 +238,21 @@
           opacity: 0.7;
         }
 
+        &:first-child {
+          margin-left: 0;
+        }
+
+        @include breakpoint($bp-under-xsm) {
+          margin: 0 0 0 20px;
+        }
+
       }
     }
   }
 
-  #inbox_message_table {
+  .message-table {
+    overflow-x: auto;
+
     table {
 
       background: #FFFFFF;
@@ -217,33 +265,26 @@
       border-spacing: 0;
 
       thead {
-
         background: #F5F5F5;
-
-
       }
 
       th,
       td {
-
         padding: 0.5625rem 0.625rem;
         font-size: 0.875rem;
         color: #222222;
         text-align: left;
-
-
         padding: 0.5rem 0.625rem 0.625rem;
         font-size: 0.875rem;
         font-weight: bold;
         color: #222222;
-
         display: table-cell;
         line-height: 1.125rem;
       }
 
       th {
         border-bottom: none;
-        font-family: "Proxima Nova SemiBold";
+        font-family: $font-sans-bold;
         font-size: 12px;
         text-transform: uppercase;
         color: #666666;
@@ -252,9 +293,8 @@
       }
 
       td {
-
-        font-family: "Proxima Nova Regular";
-        color: #444444;
+        font-family: $font-sans;
+        color: $grey08;
         border: none;
         border-bottom: 1px solid #e2e8ec;
         height: 80px;
@@ -269,24 +309,65 @@
 
         &.privatemsg-message-information {
 
+          a {
+            color: $grey08;
+          }
+
           .privatemsg-author-name {
 
             a {
-              color: #444444;
               font-size: 18px;
               line-height: 18px;
-              font-family: "Proxima Nova Regular";
+              font-family: $font-sans;
+              font-weight: normal;
             }
           }
 
-          .message-body {
+          .message-preview {
+            max-width: 264px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
 
             p {
               font-size: 14px;
               line-height: 20px;
             }
           }
+        }
 
+        .message-body-toggle {
+          text-indent: -9999em;
+          font-size: 0;
+          display: block;
+
+          &::before {
+            content: "\65";
+            display: block;
+            width: 28px;
+            height: 24px;
+            font-size: 16px;
+            font-family: 'senate_icons';
+            line-height: 22px;
+          }
+
+          &--expanded::before {
+            content: "\5e";
+            display: block;
+            width: 28px;
+            height: 24px;
+            font-size: 16px;
+            font-family: 'senate_icons';
+            line-height: 22px;
+          }
+        }
+
+        .message-action-buttons {
+          position: absolute;
+          bottom: 0;
+          display: none;
+          justify-content: flex-end;
+          right: 24px;
         }
 
         &.privatemsg-list-subject-item {
@@ -302,18 +383,35 @@
         }
 
         &.privatemsg-list-date {
-          font-family: "Proxima Nova Regular";
-          color: #444444;
+          font-family: $font-sans;
+          color: $grey08;
           border-bottom: 1px solid #e2e8ec;
           height: 80px;
           font-size: 13px;
           line-height: 18px;
           vertical-align: top;
         }
+
+        &.privatemsg-list-issue {
+          // display: block;
+          text-align: right;
+
+          // max-width: 135px;
+          height: 100px;
+          position: relative;
+        }
+      }
+
+      th.privatemsg-header-subject,
+      td.privatemsg-list-subject-item {
+        display: none;
+
+        @include breakpoint($bp-sm) {
+          display: table-cell;
+        }
       }
 
       tr:nth-child(odd) {
-
         background-color: #eee;
         border-bottom: 1px solid #ccc;
       }
@@ -321,6 +419,58 @@
       tbody {
         border-top: 1px solid #ccc;
       }
+    }
+  }
+
+  .action-button {
+    border-style: solid;
+    border-width: 0px;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-weight: normal;
+    line-height: 8px;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    padding-top: 12px;
+    padding-right: 18px;
+    padding-bottom: 12px;
+    padding-left: 18px;
+    font-size: 1rem;
+    background-color: #008CBA;
+    border-color: #007095;
+    color: #FFFFFF;
+    transition: background-color 300ms ease-out;
+
+    background-color: #008CBA;
+    border-color: #007095;
+    color: #FFFFFF;
+    cursor: default;
+    box-shadow: none;
+
+
+    display: inline-block;
+    // height: 32px;
+    width: auto;
+    // padding: 0 18px;
+    font-family: $font-sans-bold;
+    font-size: 12px;
+    text-transform: uppercase;
+
+    background-color: #2B6A90;
+
+    margin-left: 20px;
+
+    color: #fff;
+
+
+    display: inline-block;
+    vertical-align: middle;
+
+    &[disabled] {
+      opacity: 0.7;
     }
   }
 

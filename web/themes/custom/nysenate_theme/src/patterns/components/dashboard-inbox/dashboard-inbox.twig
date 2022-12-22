@@ -2,7 +2,7 @@
   <h3 class="c-container--title">
     {{ title }}
   </h3>
-  <a class="c-container--cta" href={{cta.link}}>{{ cta.label }}</a>
+  <a class="c-container--cta {{ type == 'sent' ? 'c-container--cta__sent' : 'c-container--cta__inbox' }}" href="{{ cta.link }}">{{ cta.label }}</a>
 
   <div class="c-search-form">
     <div class="search-wrapper">
@@ -56,26 +56,26 @@
     </div>
   </div>
 
-  <button id="edit-go" name="op" value="Search" type="submit">Search</button>
+  <button class="search-button" name="op" value="Search" type="submit">Search</button>
 
   <div class="inbox-action-links">
     <div class="select-all-messages">
       <div class="form-item form-type-checkbox form-item-check-all">
-        <input id="checkall" type="checkbox" name="check_all" value="1" class="form-checkbox">
+        <input type="checkbox" name="check_all" value="1" class="form-checkbox">
         <label class="option" for="edit-check-all">Check All
         </label>
 
       </div>
     </div>
     <div class="action-button-wrapper">
-      <div class="form-actions form-wrapper" id="edit-actions">
-        <button id="edit-delete" name="delete" value="Delete" type="button" class="ajax-processed" disabled="">Delete</button>
-        <button class="icon-before__contact" id="edit-message" name="op" value="Message" type="submit" disabled="">Message</button>
+      <div class="form-actions form-wrapper">
+        <button name="delete" value="Delete" type="button" class="ajax-processed" disabled="">Delete</button>
+        <button class="icon-before__contact" name="op" value="Message" type="submit" disabled="">Message</button>
       </div>
     </div>
   </div>
 
-  <div id="inbox_message_table">
+  <div class="message-table">
     {% if messages is not empty %}
       <table class="privatemsg-list tableheader-processed sticky-enabled" width="100%">
         <thead>
@@ -98,31 +98,24 @@
               </td>
               <td class="privatemsg-message-information">
                 <div class="privatemsg-author-name">
-                  <a href="/users/mediacurrentuser-0/dashboard/issues" class="nys-dashboard-user-link">{{message.name}}</a>
+                  <a href="{{ message.author_link }}" class="nys-dashboard-user-link">{{ message.author }}</a>
                 </div>
-                {# <div id="message-preview-402746" class="message-preview visible">
-                                                                                                  <a href="/users/mediacurrentuser-0/dashboard/inbox/reply/402746">Test
-                                                                                                  </a>
-                                                                                                </div> #}
-                <div id="message-body-402746" class="message-body">
-                  <p>Test</p>
+                <div class="message-preview visible">
+                  <a href="{{ message.content_link }}">{{ message.content }}
+                  </a>
                 </div>
               </td>
               <td class="privatemsg-list-subject-item">
                 <div class="subject">
-                  <a href="/users/mediacurrentuser-0/dashboard/inbox/reply/402746">{{message.subject}}</a>
+                  <a href="{{ message.subject_link }}">{{ message.subject }}</a>
                 </div>
               </td>
               <td class="privatemsg-list-date">{{message.date_sent}}</td>
               <td class="privatemsg-list-issue">
-                <div class="message-body-toggle" data-thread_id="402746">⌄</div>
-                <div
-                  class="message-action-buttons" style="display: none;">
-                  {# <a class="forward-button" id="forward-button-402746" href="/users/mediacurrentuser-0/dashboard/inbox/forward/402746">Forward</a>
-                                                      <a class="reply-button" id="reply-button-402746" href="/users/mediacurrentuser-0/dashboard/inbox/reply/402746">Reply</a> #}
-
-                  {% include "@nysenate_theme/button/button.twig" with { button: { url: "", modifier: "", text: "Forward" } } only %}
-                  {% include "@nysenate_theme/button/button.twig" with { button: { url: "", modifier: "", text: "Reply" } } only %}
+                <div class="message-body-toggle"></div>
+                <div class="message-action-buttons">
+                  <a class="action-button" href="{{ message.forward_link }}">Forward</a>
+                  <a class="action-button" href="{{ message.reply_link }}">Reply</a>
                 </div>
               </td>
             </tr>

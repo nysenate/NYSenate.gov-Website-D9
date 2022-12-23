@@ -12,9 +12,9 @@ dependencies:
     - taxonomy
     - user
 id: senator_content_admin
-label: 'Senator''s Content'
+label: 'Senator Admin Content'
 module: views
-description: 'Admin View for administering Senator Content'
+description: 'Staff Admin View for administering Senator Content'
 tag: ''
 base_table: taxonomy_term_field_data
 base_field: tid
@@ -267,7 +267,7 @@ display:
         type: 'default tab'
         title: Content
         description: ''
-        weight: 25
+        weight: 0
         expanded: false
         menu_name: admin
         parent: system.admin_content
@@ -293,6 +293,7 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      title: 'Senator''s Questionnaires'
       style:
         type: default
         options: {  }
@@ -302,6 +303,7 @@ display:
           relationship: none
           view_mode: questionnaires
       defaults:
+        title: false
         style: false
         row: false
         header: false
@@ -324,7 +326,7 @@ display:
         type: tab
         title: Questionnaires
         description: ''
-        weight: 25
+        weight: 20
         expanded: false
         menu_name: admin
         parent: system.admin_content
@@ -350,6 +352,7 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      enabled: false
       style:
         type: default
         options: {  }
@@ -396,6 +399,7 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      title: 'Senator''s Legislation'
       style:
         type: default
         options: {  }
@@ -405,6 +409,7 @@ display:
           relationship: none
           view_mode: senator_bills
       defaults:
+        title: false
         style: false
         row: false
         header: false
@@ -416,7 +421,7 @@ display:
         type: tab
         title: Legislation
         description: ''
-        weight: 25
+        weight: 10
         expanded: false
         menu_name: admin
         parent: system.admin_content

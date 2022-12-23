@@ -3,6 +3,7 @@
 namespace Drupal\nys_sendgrid;
 
 use SendGrid\Mail\Personalization;
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 
 /**
  * General helper functions.
@@ -42,8 +43,8 @@ abstract class Helper {
   public static function detectMailRerouting(): bool {
     $cfg = \Drupal::config('reroute_email.settings');
     return \Drupal::service('module_handler')->moduleExists('reroute_email')
-      && $cfg->get(REROUTE_EMAIL_ENABLE)
-      && $cfg->get(REROUTE_EMAIL_ADDRESS);
+      && $cfg->get(RerouteEmailConstants::REROUTE_EMAIL_ENABLE)
+      && $cfg->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS);
   }
 
   /**

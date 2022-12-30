@@ -36,9 +36,11 @@
 <p>
     <ul>
         <li><a href="/taxonomy/term/{{ term.id }}/edit">Manage Senator theme, name, biography, member images, contact information, and promotional banners</a></li>
+        <li><a href="/admin/senator/content/micropage">Manage Microsite pages</a> [Home, About, Contact, Events, Legislation, Newsroom, District]</li>
         <li><a href="/senators/{{ content.field_senator_name[0]['#markup']|lower|replace({' ':'-'}) }}/district">Add a description to the Senator's district</a></li>
         <li><a href="/admin/senator/content/committee">Committee chairs can manage committee descriptions, featured legislation, and header images.</a></li>
-        <li><a href="/admin/senator/content/bills">Assign issues to bills the Senator has sponsored</a></li>
+        <li><a href="/admin/senator/content/bills?title=&type_1=bill&field_ol_session_value=">Assign issues to bills the Senator has sponsored</a></li>
+        <li><a href="/admin/senator/content/bills?title=&type_1=resolution&field_ol_session_value=">Add issues and images to Resolutions introduced by the Senator</a></li>
         <li><a href="/admin/senator/content/petitions">View All Published Petitions</a></li>
     </ul>
 </p>
@@ -46,7 +48,6 @@
 <p>
 
     <ul>
-        <li><a href="/admin/senator/content?title=&type=microsite_page&field_category_value=All&status=All">Microsite pages</a></li>
         <li><a href="/admin/senator/content?title=&type=article&status=All&field_category_value=article">Articles</a></li>
         <li><a href="/admin/senator/content??title=&type=article&field_category_value=press_release&status=All">Press Releases</a></li>
         <li><a href="/admin/senator/content?title=&type=event&field_category_value=All&status=All">Events</a></li>

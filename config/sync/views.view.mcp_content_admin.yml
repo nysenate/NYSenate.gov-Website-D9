@@ -27,6 +27,7 @@ dependencies:
     - taxonomy.vocabulary.microsite_page_type
   module:
     - datetime
+    - history
     - node
     - options
     - taxonomy
@@ -426,16 +427,30 @@ display:
           row_class: ''
           default_row_class: true
           columns:
+            views_bulk_operations_bulk_form: views_bulk_operations_bulk_form
             title: title
+            timestamp: title
             field_senator_multiref: field_senator_multiref
-            webform: webform
+            type: type
             status: status
             changed: changed
             edit_node: edit_node
             delete_node: edit_node
           default: '-1'
           info:
+            views_bulk_operations_bulk_form:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             title:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: '&nbsp;'
+              empty_column: false
+              responsive: ''
+            timestamp:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -447,7 +462,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            webform:
+            type:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -857,6 +872,57 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        timestamp:
+          id: timestamp
+          table: history
+          field: timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: history_user_timestamp
+          label: 'Has new content'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_node: false
+          comments: false
         field_senator_multiref:
           id: field_senator_multiref
           table: node__field_senator_multiref
@@ -1495,7 +1561,7 @@ display:
           exposed: true
           expose:
             operator_id: ''
-            label: Status
+            label: Published
             description: ''
             use_operator: false
             operator: status_1_op
@@ -1653,6 +1719,57 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        timestamp:
+          id: timestamp
+          table: history
+          field: timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: history_user_timestamp
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_node: false
+          comments: false
         field_senator_multiref:
           id: field_senator_multiref
           table: node__field_senator_multiref
@@ -3691,6 +3808,57 @@ display:
           text: delete
           output_url_as_text: false
           absolute: false
+        timestamp:
+          id: timestamp
+          table: history
+          field: timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: history_user_timestamp
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_node: false
+          comments: false
       sorts:
         changed:
           id: changed

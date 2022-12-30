@@ -7,6 +7,7 @@ dependencies:
     - core.entity_view_mode.taxonomy_term.questionnaires
     - core.entity_view_mode.taxonomy_term.related_content
     - core.entity_view_mode.taxonomy_term.senator_bills
+    - system.menu.admin
     - taxonomy.vocabulary.senator
   module:
     - taxonomy
@@ -262,9 +263,9 @@ display:
         row: false
       display_description: ''
       display_extenders: {  }
-      path: admin/senator/content
+      path: admin/senator/contentx
       menu:
-        type: 'default tab'
+        type: normal
         title: Content
         description: ''
         weight: 0
@@ -321,9 +322,9 @@ display:
           content: "<div id=\"block-rain-admin-local-actions\">\r\n<ul class=\"action-links\">\r\n<li><a href=\"/node/add/webform\" class=\"button button-action button--primary button--small\" data-drupal-link-system-path=\"node/add/webform\">Add Questionnaire</a></li>\r\n<li><a href=\"/admin/webform/add\" class=\"button button-action button--primary button--small\" data-drupal-link-system-path=\"admin/webform/add\">Add Webform</a></li>\r\n</ul>\r\n</div>"
           tokenize: false
       display_extenders: {  }
-      path: admin/senator/content/questionnaires
+      path: admin/senator/content/questionnairesx
       menu:
-        type: tab
+        type: normal
         title: Questionnaires
         description: ''
         weight: 20
@@ -416,9 +417,9 @@ display:
       display_description: ''
       header: {  }
       display_extenders: {  }
-      path: admin/senator/content/bills
+      path: admin/senator/content/billsx
       menu:
-        type: tab
+        type: normal
         title: Legislation
         description: ''
         weight: 10

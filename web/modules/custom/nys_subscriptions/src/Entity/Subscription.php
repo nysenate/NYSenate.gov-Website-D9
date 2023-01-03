@@ -345,7 +345,7 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    * {@inheritdoc}
    */
   public function getCreated(): int {
-    return $this->get('created')->value;
+    return $this->get('created')->value ?? 0;
   }
 
   /**
@@ -369,7 +369,7 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    * {@inheritdoc}
    */
   public function getSubscriberId(): int {
-    return $this->get('uid')->target_id;
+    return $this->get('uid')->target_id ?? 0;
   }
 
   /**
@@ -392,7 +392,7 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    * {@inheritdoc}
    */
   public function getLastSent(): int {
-    return $this->get('last_sent')->value;
+    return $this->get('last_sent')->value ?? 0;
   }
 
   /**
@@ -407,21 +407,21 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    * {@inheritDoc}
    */
   public function getType(): string {
-    return $this->get('sub_type')->value;
+    return $this->get('sub_type')->value ?? '';
   }
 
   /**
    * {@inheritDoc}
    */
   public function getConfirmed(): int {
-    return $this->get('confirmed')->value;
+    return $this->get('confirmed')->value ?? 0;
   }
 
   /**
    * {@inheritDoc}
    */
   public function getCanceled(): int {
-    return $this->get('canceled')->value;
+    return $this->get('canceled')->value ?? 0;
   }
 
   /**
@@ -609,11 +609,17 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
       // Handle the flags.
       switch ($flags) {
         case static::SUBSCRIBERS_ACTIVE_ONLY:
-          $subs->condition('confirmed', 0, '>')->condition('canceled', 0);
+          $group = $subs->orConditionGroup()
+            ->notExists('canceled')
+            ->condition('canceled', '0');
+          $subs->condition('confirmed', 0, '>')->condition($group);
           break;
 
         case static::SUBSCRIBERS_UNCONFIRMED_ONLY:
-          $subs->condition('confirmed', 0);
+          $group = $subs->orConditionGroup()
+            ->notExists('confirmed')
+            ->condition('confirmed', '0');
+          $subs->condition($group);
           break;
 
         case static::SUBSCRIBERS_CANCELED_ONLY:

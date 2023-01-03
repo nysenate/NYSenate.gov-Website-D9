@@ -219,8 +219,12 @@ class BillsHelper {
 
     if (is_null($ret) && $cid) {
       $ret = [];
-      if (($node->hasField('field_ol_base_print_no') && !$node->get('field_ol_base_print_no')->isEmpty()) &&
-        ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty())) {
+      if (
+        $node->hasField('field_ol_base_print_no')
+        && !$node->get('field_ol_base_print_no')->isEmpty()
+        && $node->hasField('field_ol_session')
+        && !$node->get('field_ol_session')->isEmpty()
+      ) {
         $base_print = $node->field_ol_base_print_no->value;
         $session = $node->field_ol_session->value;
 
@@ -238,7 +242,7 @@ class BillsHelper {
   /**
    * Wrapper to allow for loading by session and base print number.
    */
-  public function loadBillBySessionPrint(int $session, string $base_print, string $version = ''): ? NodeInterface {
+  public function loadBillBySessionPrint(int $session, string $base_print, string $version = ''): ?NodeInterface {
     return $this->loadBillByTitle(static::formatTitleParts($session, $base_print, $version));
   }
 
@@ -248,10 +252,10 @@ class BillsHelper {
    * @param string $print_num
    *   A bill print number, such as '2021-S123B'.
    */
-  public function loadBillByTitle(string $print_num): NodeInterface {
+  public function loadBillByTitle(string $print_num): ?NodeInterface {
     try {
       $nodes = $this->getStorage()->loadByProperties([
-        'type' => 'bill',
+        'type' => ['bill', 'resolution'],
         'title' => $print_num,
       ]);
       /** @var \Drupal\node\NodeInterface|NULL $ret */
@@ -312,8 +316,12 @@ class BillsHelper {
    * @see formatTitleParts()
    */
   public function formatTitle(NodeInterface $node, string $version = '', string $separator = '-'): string {
-    if (($node->hasField('field_ol_base_print_no') && !$node->get('field_ol_base_print_no')->isEmpty()) &&
-      ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty())) {
+    if (
+      $node->hasField('field_ol_base_print_no')
+      && !$node->get('field_ol_base_print_no')->isEmpty()
+      && $node->hasField('field_ol_session')
+      && !$node->get('field_ol_session')->isEmpty()
+    ) {
       $title = $this->formatTitleParts(
         $node->field_ol_session->value,
         $node->field_ol_base_print_no->value,
@@ -341,7 +349,8 @@ class BillsHelper {
           case 'senate':
             $term = $this->senatorsHelper->getSenatorTidFromMemberId($one_sponsor->memberId);
             if (!empty($term)) {
-              $ret[$type][] = $this->entityTypeManager->getViewBuilder('taxonomy_term')->view($term, 'sponsor_list_bill_detail');
+              $ret[$type][] = $this->entityTypeManager->getViewBuilder('taxonomy_term')
+                ->view($term, 'sponsor_list_bill_detail');
             }
             break;
 
@@ -387,7 +396,7 @@ class BillsHelper {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function loadActiveVersion(NodeInterface $node): ? NodeInterface {
+  public function loadActiveVersion(NodeInterface $node): ?NodeInterface {
     $title = $this->formatTitle($node, $node->field_ol_active_version->value);
     if ($node->getTitle() == $title) {
       $ret = $node;
@@ -501,7 +510,7 @@ class BillsHelper {
    *   found, a new PathAlias is created (but not saved) from those values.  If
    *   a matching alias is found, it is returned as loaded.   *
    */
-  protected function getPathAlias(array $values = []): ? PathAlias {
+  protected function getPathAlias(array $values = []): ?PathAlias {
     try {
       /** @var \Drupal\path_alias\PathAliasStorage $storage */
       $storage = $this->entityTypeManager->getStorage('path_alias');

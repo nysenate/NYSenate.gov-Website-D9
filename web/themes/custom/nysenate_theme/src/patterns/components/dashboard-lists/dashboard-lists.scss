@@ -21,6 +21,11 @@
   .filter-wrapper {
     display: flex;
     gap: 20px;
+
+    &--empty {
+      border-bottom: 1px solid $blue04;
+      margin-bottom: 30px;
+    }
   }
 
   .c-follow-issue--header,
@@ -62,6 +67,7 @@
 
   label {
     color: $grey08;
+    font-weight: $font-weight-bold;
     text-transform: none;
   }
 
@@ -74,6 +80,10 @@
     .c-press-release--header {
       top: 0;
     }
+  }
+
+  .c-press-release--title {
+    color: $grey08;
   }
 
   @include breakpoint($bp-sm) {

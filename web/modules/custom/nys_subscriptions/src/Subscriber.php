@@ -162,11 +162,18 @@ class Subscriber {
       throw new InvalidSubscriptionEntity('A subscriber cannot be created from a canceled or unconfirmed subscription');
     }
     return new static(
-      $sub->id(), $sub->uuid(), $sub->sub_type->value,
-      $sub->uid->target_id, $sub->email->value,
-      $sub->subscribe_to_type->value, $sub->subscribe_to_id->value,
-      $sub->subscribe_from_type->value, $sub->subscribe_from_id->value,
-      $sub->created->value, $sub->last_sent->value);
+      $sub->id() ?? 0,
+      $sub->uuid() ?? '',
+      $sub->sub_type->value ?? '',
+      $sub->uid->target_id ?? 0,
+      $sub->email->value ?? '',
+      $sub->subscribe_to_type->value ?? '',
+      $sub->subscribe_to_id->value ?? 0,
+      $sub->subscribe_from_type->value ?? '',
+      $sub->subscribe_from_id->value ?? 0,
+      $sub->created->value ?? 0,
+      $sub->last_sent->value ?? 0
+    );
   }
 
   /**

@@ -103,12 +103,9 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
    *
    * Wraps the return into a SubscriptionQueueItem object.
    */
-  public function claimItem($lease_time = 30): SubscriptionQueueItem {
+  public function claimItem($lease_time = 30): ?SubscriptionQueueItem {
     $ret = parent::claimItem($lease_time);
-    if ($ret) {
-      $ret = new SubscriptionQueueItem($ret, $this);
-    }
-    return $ret;
+    return $ret ? new SubscriptionQueueItem($ret, $this) : NULL;
   }
 
   /**

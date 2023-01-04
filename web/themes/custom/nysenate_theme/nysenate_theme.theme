@@ -48,34 +48,6 @@ function nysenate_theme_preprocess_block__system_branding_block(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_block_ID().
- */
-function nysenate_theme_preprocess_block__twitterblock(&$variables) {
-  $args = [
-    '@username' => $variables['configuration']['username'],
-  ];
-
-  // Follow link.
-  $variables['content']['follow_link'] = [
-    '#type' => 'link',
-    '#title' => t('Follow'),
-    '#url' => Url::fromUri(strtr('https://twitter.com/intent/follow?screen_name=@username', $args)),
-  ];
-
-  // Account link.
-  $variables['content']['account_link'] = [
-    '#type' => 'link',
-    '#title' => strtr('@@username', $args),
-    '#url' => Url::fromUri(strtr('https://twitter.com/@username', $args)),
-  ];
-
-  // Profile image.
-  $variables['content']['profile_image'] = [
-    '#markup' => strtr('<img src="https://unavatar.io/twitter/@username" width="100" height"100" />', $args),
-  ];
-}
-
-/**
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
@@ -3517,4 +3489,43 @@ function nysenate_theme_preprocess_node__student_program(&$variables) {
 function nysenate_theme_preprocess_comment(&$variables) {
   $date = $variables['comment']->getCreatedTime();
   $variables['created_relative'] = \Drupal::service('date.formatter')->formatTimeDiffSince($date, ['granularity' => 1]);
+}
+
+/**
+ * Implements hook_preprocess_tweets().
+ */
+function nysenate_theme_preprocess_tweets(&$variables) {
+  /** @var  \Drupal\Core\Datetime\DateFormatterInterface $formatter   $args */
+  $args = [
+    '@username' => $variables['elements']['#tweets'][0]['username'],
+  ];
+
+  // Follow link.
+  $variables['content']['follow_link'] = [
+    '#type' => 'link',
+    '#title' => t('Follow'),
+    '#url' => Url::fromUri(strtr('https://twitter.com/intent/follow?screen_name=@username', $args)),
+  ];
+
+  // Account link.
+  $variables['content']['account_link'] = [
+    '#type' => 'link',
+    '#title' => strtr('@@username', $args),
+    '#url' => Url::fromUri(strtr('https://twitter.com/@username', $args)),
+  ];
+  // Profile image.
+  $variables['content']['profile_image'] = [
+    '#markup' => strtr('<img src="//pbs.twimg.com/profile_images/1597653003816865792/17Jjbhbi_normal.jpg" width="100" height"100" />', $args),
+  ];
+
+  $elements = $variables['elements']['#tweets'];
+  foreach ($elements as $element) {
+    $created_at = $element['created_at'];
+    $date = date(strtotime($created_at));
+    $variables['date'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $date);
+    $variables['content']['items'][] = [
+      'body' => $element['text'],
+      'week' => $variables['date'],
+    ];
+  }
 }

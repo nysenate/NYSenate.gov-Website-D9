@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Twitter API display tweets method.
+ *
+ * Available variables:
+ * - attributes: The Drupal attribute object.
+ * - elements: The original data passed to this template.
+ *   - tweets: The unprocessed list of tweets.
+ * - oembed: Either true or false.
+ * - items: The list of tweets, already rendered.
+ * - context: An array with extra info to please crazy advanced theming logic.
+ *
+ * @ingroup themeable
+ *
+ * @see https://developer.twitter.com/en/docs/twitter-for-websites/embedded-tweets/overview
+ */
+#}
+{{ attach_library('nysenate_theme/nysenate-twitter-block') }}
+{%
+    set classes = [
+    'tweets',
+    oembed ? 'tweets--oembed',
+    'nyesenate-twitter-block'
+]
+%}
+
+<div{{attributes.addClass(classes)}}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% block content %}
+    {% include "@nysenate_theme/nysenate-twitter-block/nysenate-twitter-block.twig" with {
+      image: content.profile_image,
+      title: 'New York State Senate',
+      link: content.account_link,
+      items: content.items
+    } only %}
+  {% endblock %}
+</div>

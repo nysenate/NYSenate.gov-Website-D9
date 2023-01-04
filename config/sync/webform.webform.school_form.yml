@@ -25,6 +25,7 @@ elements: |-
       sort:
         field: field_school_legal_name
         direction: ASC
+    '#required': true
   contact_name:
     '#type': textfield
     '#title': 'Contact Name'
@@ -68,7 +69,7 @@ elements: |-
       '#multiple__add': false
       '#multiple__add_more_input': false
       '#format': list
-      '#format_items': ol
+      '#format_items': table
       '#access_create_roles':
         - authenticated
       '#access_update_roles':
@@ -100,7 +101,11 @@ elements: |-
           '#button': true
           '#button__title': 'Select file to add'
         show_student:
-          '#type': checkbox
+          '#type': radios
+          '#options':
+            - N/A
+            - 'NO'
+            - 'YES'
           '#title': 'Show Student?'
           '#private': true
 css: ''

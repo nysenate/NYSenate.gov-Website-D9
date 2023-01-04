@@ -33,7 +33,7 @@ elements: |-
     '#type': email
     '#title': 'Contact Email'
     '#required': true
-    '#pattern': '[a-z0-9]+@[a-z]+\.[a-z]{2,3}'
+    '#pattern': '[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)+[a-z]{2,3}'
     '#pattern_error': 'Please enter a valid email address'
   grade:
     '#type': select

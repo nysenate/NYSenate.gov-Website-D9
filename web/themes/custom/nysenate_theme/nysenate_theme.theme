@@ -3495,7 +3495,6 @@ function nysenate_theme_preprocess_comment(&$variables) {
  * Implements hook_preprocess_tweets().
  */
 function nysenate_theme_preprocess_tweets(&$variables) {
-  /** @var  \Drupal\Core\Datetime\DateFormatterInterface $formatter   $args */
   $args = [
     '@username' => $variables['elements']['#tweets'][0]['username'],
   ];

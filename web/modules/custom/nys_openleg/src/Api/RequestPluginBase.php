@@ -155,7 +155,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
       $offset = (($page - 1) * $limit) + 1;
     }
     $params = [
-      'term' => urlencode($search_term),
+      'term' => $search_term,
       'offset' => $offset,
       'limit' => $limit,
       'page' => $page,

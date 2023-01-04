@@ -26,15 +26,31 @@ use Drupal\nys_bill_notifications\BillTestBase;
 class NewSameAs extends BillTestBase {
 
   /**
-   * {@inheritDoc}
+   * Returns the print number of the target bill for a same_as update.
    */
-  public function getSummary(object $update): string {
-    $same_as = $update->fields->{'Same As Session Year'} . '-' .
-      $update->fields->{'Same As Bill Print No'};
+  protected function getSameAsPrint(object $update): string {
+    $same_as = $update->fields->{'Same As Bill Print No'};
     if (trim($update->fields->{'Same As Amend Version'})) {
       $same_as .= $update->fields->{'Same As Amend Version'};
     }
-    return $update->id->basePrintNoStr . " has a new Same As bill: $same_as";
+    return $same_as;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getSummary(object $update): string {
+    return $update->id->basePrintNoStr . " has a new Same As bill: " .
+      $this->getSameAsPrint($update);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * Adds the print number for the "same as" bill.
+   */
+  public function doContext(object $update): array {
+    return ['bill.same_as' => $this->getSameAsPrint($update)];
   }
 
 }

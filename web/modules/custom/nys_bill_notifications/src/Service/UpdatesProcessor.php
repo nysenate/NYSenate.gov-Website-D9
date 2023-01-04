@@ -202,6 +202,7 @@ class UpdatesProcessor {
           'name' => $one_test->getName(),
           'timestamp' => $one_result->getSourceTime(),
           'text' => $one_test->getSummary($one_result->getUpdate()),
+          'context' => $one_test->context($one_result->getUpdate()),
           'priority' => $one_test->getPriority(),
         ];
       }

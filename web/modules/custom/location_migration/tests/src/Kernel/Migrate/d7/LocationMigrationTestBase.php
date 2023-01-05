@@ -31,7 +31,7 @@ abstract class LocationMigrationTestBase extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp() : void {
     parent::setUp();
     $this->loadFixture($this->getDatabaseFixtureFilePath());
     $module_handler = \Drupal::moduleHandler();

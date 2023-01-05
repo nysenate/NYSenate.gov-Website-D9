@@ -46,7 +46,7 @@ class LocationMigrationTest extends LocationMigrationTestBase {
    * {@inheritdoc}
    */
   public function getDatabaseFixtureFilePath(): string {
-    return drupal_get_path('module', 'location_migration') . '/tests/fixtures/d7/drupal7_location.php';
+    return \Drupal::service('extension.list.module')->getPath('location_migration') . '/tests/fixtures/d7/drupal7_location.php';
   }
 
   /**

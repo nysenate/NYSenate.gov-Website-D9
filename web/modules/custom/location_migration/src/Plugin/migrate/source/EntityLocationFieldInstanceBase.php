@@ -34,6 +34,7 @@ if (
      * {@inheritdoc}
      */
     protected function doCount() {
+      // @phpstan-ignore-next-line
       return (int) $this->initializeIterator()->count();
     }
 

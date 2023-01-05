@@ -3,6 +3,7 @@
 namespace Drupal\location_migration\Plugin\migrate\field;
 
 use Drupal\location_migration\LocationMigration;
+use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
@@ -104,7 +105,9 @@ class Location extends FieldPluginBase {
       ['d7_field_location_instance'],
       [$data['entity_type'], $data['bundle']]
     );
-    $migration->set('migration_dependencies', $migration_dependencies);
+    if ($migration instanceof Migration) {
+      $migration->set('migration_dependencies', $migration_dependencies);
+    }
   }
 
 }

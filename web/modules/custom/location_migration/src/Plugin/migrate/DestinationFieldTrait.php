@@ -59,6 +59,7 @@ trait DestinationFieldTrait {
     $field_settings = is_string($migration_source_row['field_storage_data'] ?? $migration_source_row['data'] ?? NULL)
       ? unserialize($migration_source_row['field_storage_data'] ?? $migration_source_row['data'])
       : [];
+    // @phpstan-ignore-next-line
     $location_settings = $migration_source_row['location_settings'] ?? $field_settings['settings']['location_settings'] ?? [];
     $hidden_form_props = static::getFormHiddenFields($location_settings);
     $hidden_display_props = static::getDisplayHiddenFields($location_settings);

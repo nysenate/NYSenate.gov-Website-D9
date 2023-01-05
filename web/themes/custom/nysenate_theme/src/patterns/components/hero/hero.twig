@@ -139,15 +139,21 @@
         {% else %}
           <img src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg" />
         {% endif %}
-        <div class="l-row c-hero--tout c-hero--featured">
-          <p class="c-hero--date">
-            <span class="date-display-single">{{ date }}</span>
-          </p>
-          <p class="c-hero--committee">{{ committee }}</p>
-          <h3 class="c-hero--title">
-            {{ title }}
-          </h3>
-        </div>
+        {% if title %}
+          <div class="l-row c-hero--tout c-hero--featured">
+            <p class="c-hero--date">
+              <span class="date-display-single">{{ date }}</span>
+            </p>
+            <p class="c-hero--committee">{{ committee }}</p>
+            <h3 class="c-hero--title">
+              <a href="{{ url }}">{{ title }}</a>
+            </h3>
+          </div>
+        {% else %}
+          <div class="l-row l-row--main c-hero--tout">
+            <p class="c-hero--welcome" >Share your opinion on the <a href="/explore-issues">issues</a> facing our state, say aye or nay to the <a href="/legislation">bills</a> before our legislature, and let your voice <a href="/user/login">be heard</a>.</p>
+          </div>
+        {% endif %}
       </div>
 
       {%

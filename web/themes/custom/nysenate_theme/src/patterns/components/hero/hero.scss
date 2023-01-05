@@ -18,10 +18,10 @@
 .c-hero--tout {
   position: relative;
   padding: 0;
+  max-width: 440px;
 
   &.c-hero--featured {
     padding: 20px;
-    max-width: 440px;
     background: $color-white;
   }
 }
@@ -50,6 +50,7 @@
 
 .c-hero--welcome {
   padding: 30px 20px;
+  margin: 0;
   color: $grey02;
   font-family: $font-serif;
   font-size: 24px;
@@ -141,11 +142,11 @@
   }
 
   .c-hero--tout {
+    max-width: 760px;
     margin-top: -15%; //temp
 
     &.c-hero--featured {
       padding: 40px 70px 60px;
-      max-width: 760px;
       background: $color-white;
     }
   }
@@ -1192,19 +1193,16 @@
       padding: 0;
 
       @include breakpoint($bp-sm) {
-
         margin-top: -15%;
       }
     }
 
     &--featured {
       padding: 20px;
-      max-width: 440px;
       background: #fff;
 
       @include breakpoint($bp-sm) {
         padding: 40px 70px 60px;
-        max-width: 760px;
         background: #fff;
       }
     }

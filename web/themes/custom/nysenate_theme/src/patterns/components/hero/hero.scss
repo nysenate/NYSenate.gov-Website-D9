@@ -134,6 +134,18 @@
   line-height: 1.5em;
 }
 
+
+.hero {
+  .c-actionbar,
+  .c-senate-status {
+    max-width: none;
+
+    &.hidden {
+      margin-top: -60px;
+    }
+  }
+}
+
 @include breakpoint($bp-sm) {
   .c-hero--welcome {
     font-size: 32px;
@@ -198,6 +210,30 @@
   .c-hero--cta-msg {
     width: 65%;
     max-width: 495px;
+  }
+
+  .hero {
+    .c-actionbar,
+    .c-senate-status {
+      max-width: 1500px;
+      padding: 0 9%;
+      transition: margin 0.25s ease-in 0s;
+
+      &.hidden {
+        margin-top: -100px;
+        display: block;
+      }
+
+      .c-actionbar--cta {
+        max-width: 400px;
+        font-size: 18px;
+        line-height: 1.3em;
+      }
+
+      .c-block--btn {
+        font-size: 16px;
+      }
+    }
   }
 }
 

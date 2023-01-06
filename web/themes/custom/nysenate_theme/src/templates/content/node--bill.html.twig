@@ -212,26 +212,47 @@
   {% if votes_block %}
     <div class="c-block c-bill-section">
       <h3 class="c-detail--subhead c-detail--section-title">Votes</h3>
-      <dl style="margin-bottom:10px" class="c-block accordion" data-accordion>
-        <dd class="accordion-navigation">
 
-          <a href="#accordion-votes" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide votes" data-closed-text="view votes">
-            view votes
-          </a>
-
-          <div id="accordion-votes" class="content">
+      <div>
+        <article class="nysenate-accordion">
+          <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion--votes__content-1" aria-expanded="false" id="nysenate-accordion--votes__toggle-1" aria-selected="false">
+            <span class="nysenate-accordion__heading hide-number">
+              <span class="indicator">View
+              </span>Votes
+            </span>
+            {{ icons.get('accordion__arrow'|lower) }}
+          </button>
+          <div class="nysenate-accordion__content" id="nysenate-accordion--votes__content-1" aria-hidden="true" aria-labelledby="nysenate-accordion--votes__content-1">
             <div
               class="content" id="panel-votes">
               <!-- Bill Votes -->
               <div class="c-block c-detail--votes-wrapper c-bill-section">
                 <div class="c-detail--votes">
-                  {{ votes_block }}
+                  <!-- Temporary Votes Render Block -->
+                  <div>{{ votes_block.date }} - {{ votes_block.type }} VOTE</div>
+                  <div>Aye Count: {{ votes_block.aye_count }}</div>
+                  <div>Nay Count: {{ votes_block.nay_count }}</div>
+                  <div>Aye Names:
+                    <ul>
+                      {% for aye_member in votes_block.aye_members %}
+                        <li><a href="{{ aye_member.url }}">{{ aye_member.name }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  <div>Nay Names:
+                    <ul>
+                      {% for nay_member in votes_block.nay_members %}
+                        <li><a href="{{ nay_member.url }}">{{ nay_member.name }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  {# {{ votes_block }} #}
                 </div>
               </div>
             </div>
           </div>
-        </dd>
-      </dl>
+        </article>
+      </div>
     </div>
   {% endif %}
 

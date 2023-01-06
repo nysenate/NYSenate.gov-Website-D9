@@ -2311,6 +2311,64 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     }
   }
 
+  // Temporary Votes Content.
+  if ($node->hasField('field_ol_votes') && !empty($node->field_ol_votes)) {
+    foreach ($node->field_ol_votes as $key => $item) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+
+      $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+      $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+      /** @var \Drupal\paragraphs\Entity\Paragraph $votes */
+      $votes = $paragraph_storage->load($item->target_id);
+
+      $aye_members = [];
+      if ($votes->hasField('field_ol_aye_members') && !empty($votes->field_ol_aye_members)) {
+        foreach ($votes->field_ol_aye_members as $aye_key => $aye_item) {
+          if (!is_numeric($aye_key)) {
+            continue;
+          }
+
+          $term = $term_storage->load($aye_item->target_id);
+          if ($term) {
+            $aye_members[] = [
+              'name' => $term->field_senator_name->family ?? '',
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
+        }
+      }
+
+      $nay_members = [];
+      if ($votes->hasField('field_ol_nay_members') && !empty($votes->field_ol_nay_members)) {
+        foreach ($votes->field_ol_nay_members as $nay_key => $nay_item) {
+          if (!is_numeric($nay_key)) {
+            continue;
+          }
+
+          $term = $term_storage->load($nay_item->target_id);
+          if ($term) {
+            $nay_members[] = [
+              'name' => $term->field_senator_name->family ?? '',
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
+        }
+      }
+
+      $variables['votes_block'] = [
+        'aye_count' => $votes->field_ol_aye_count->value ?? 0,
+        'nay_count' => $votes->field_ol_nay_count->value ?? 0,
+        'aye_members' => $aye_members,
+        'nay_members' => $nay_members,
+        'type' => $votes->field_ol_vote_type->value ?? NULL,
+        'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
+      ];
+    }
+  }
+
   // Create the HTML for the bill's session.
   $variables['legislative_session'] = '<div class="c-bill--session-year">' .
   $bill_session_year . '-' . ($bill_session_year + 1) . ' Legislative Session</div>';

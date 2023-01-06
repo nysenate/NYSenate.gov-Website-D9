@@ -1,0 +1,32 @@
+id: d7_field_location_formatter
+label: Geolocation field formatter configuration for Location
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\location_migration\Plugin\migrate\D7LocationFieldDeriver
+source:
+  plugin: d7_field_formatter_settings_location
+  constants:
+    settings: []
+    third_party_settings: {}
+process:
+  entity_type: entity_type
+  bundle: bundle
+  field_name: field_name
+  view_mode: view_mode
+  'options/weight': widget/weight
+  'options/type': formatter_type
+  'options/settings': constants/settings
+  'options/third_party_settings': constants/third_party_settings
+  hidden:
+    plugin: static_map
+    source: "@options/type"
+    map:
+      hidden: true
+    default_value: display_hidden
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - d7_field_location_instance
+    - d7_view_modes

@@ -1,0 +1,60 @@
+{{ attach_library('nysenate_theme/article-page') }}
+
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
+
+<article{{attributes.addClass(classes)}}>
+  {{ title_prefix }}
+  {% if page %}
+    <header class="c-questionnaire--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      {% if content.field_form_date.0 or content.field_issues.0 %}
+        <div class="c-news--head-meta">
+          <p class="c-news--pub-date">
+            {{ content.field_form_date.0 }}
+          </p>
+          {% if content.field_issues.0 %}
+            <ul class="nys-associated-topics">
+              {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
+                <li>{{ issue }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+    </header>
+  {% endif %}
+
+  {{ title_suffix }}
+
+  <div class="c-questionnaire--body">
+    {% if content.field_form_banner_image.0 %}
+      <div class="c-block c-block--img">
+        {{ content.field_form_banner_image.0 }}
+      </div>
+    {% endif %}
+
+    <div class="c-block">
+      {{ content.field_form_summary }}
+    </div>
+
+    <section class="c-block">
+      {{ content.field_school_form }}
+    </section>
+
+    {% if content.field_senator_multiref['#items'] %}
+      {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% endif %}
+  </div>
+
+</article>

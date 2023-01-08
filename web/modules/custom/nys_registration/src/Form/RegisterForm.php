@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\nys_sage\Service\SageApi;
+use Drupal\nys_registration\RegistrationHelper;
 use Drupal\user\RegisterForm as UserRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,28 +18,28 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RegisterForm extends UserRegisterForm {
 
   /**
-   * NYS Sage API service.
+   * Registration Helper service.
    *
-   * @var \Drupal\nys_sage\Service\SageApi
+   * @var \Drupal\nys_registration\RegistrationHelper
    */
-  protected SageApi $sageApi;
+  protected RegistrationHelper $helper;
 
   /**
    * {@inheritDoc}
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, SageApi $sageApi, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, RegistrationHelper $helper, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
-    $this->sageApi = $sageApi;
+    $this->helper = $helper;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('entity.repository'),
       $container->get('language_manager'),
-      $container->get('sage_api'),
+      $container->get('nys_registration.helper'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time')
     );
@@ -185,38 +185,18 @@ class RegisterForm extends UserRegisterForm {
    * Process the district and ensure the entity gets updated.
    */
   public function formSubmitStep1(array &$form, FormStateInterface $form_state) {
-    // Process the district.  Prep the address for SAGE.
+    // Process the district.
     $address = $form_state->getValue(['field_address', '0', 'address']) ?? [];
-    $zip = explode('-', $address['postal_code'] ?? '');
-    $params = array_filter([
-      'addr1' => $address['address_line1'] ?? '',
-      'addr2' => $address['address_line2'] ?? '',
-      'city' => $address['locality'] ?? '',
-      'state' => $address['administrative_area'] ?? '',
-      'zip5' => $zip[0] ?? '',
-      'zip4' => $zip[1] ?? '',
-    ]);
-
-    // SAGE returns a district number.  Try to load the district entity.
-    $district = $this->sageApi->districtAssign($params);
-    try {
-      $district_term = current(
-        $this->entityTypeManager
-          ->getStorage('taxonomy_term')
-          ->loadByProperties(['field_district_number' => $district])
-      );
-    }
-    catch (\Throwable $e) {
-      $district = 0;
-      $district_term = NULL;
-    }
+    $district_term = $this->helper->getDistrictFromAddress($address);
+    $district_id = $district_term?->id();
+    $district_num = $district_term ? $district_term->field_district_number->value : 0;
 
     // Record the district info in form state, and move to the next step.
-    $new_id = ($district && $district_term) ? $district_term->id() : NULL;
-    $form_state->setValue('field_district', [$new_id])
-      ->set('senate_district', $district)
+    $form_state->setValue('field_district', [$district_id])
+      ->set('senate_district', $district_num)
+      ->set('district', $district_term)
       ->set('step', 2)
-      ->setRebuild(TRUE);
+      ->setRebuild();
 
     // Update the entity with all the form values (incl. district)
     $this->submitForm($form, $form_state);
@@ -260,7 +240,7 @@ class RegisterForm extends UserRegisterForm {
    *
    * Make sure confirmations are checked, save the entity, and send email.
    */
-  public function formSubmitStep2(array &$form, FormStateInterface $form_state) {
+  public function formSubmitStep2(array $form, FormStateInterface $form_state) {
     // Save incoming values to state.
     $this->compileValues($form_state);
 
@@ -268,7 +248,7 @@ class RegisterForm extends UserRegisterForm {
     parent::save($form, $form_state);
 
     // Go to final step, and disable form redirection.
-    $form_state->set('step', 3)->setRebuild(TRUE)->disableRedirect(TRUE);
+    $form_state->set('step', 3)->setRebuild()->disableRedirect();
   }
 
   /**
@@ -299,7 +279,7 @@ class RegisterForm extends UserRegisterForm {
     $form_state->setValue('field_district', NULL)
       ->set('senate_district', 0)
       ->set('step', 1)
-      ->setRebuild(TRUE);
+      ->setRebuild();
 
     // Make sure values is set properly.
     $this->compileValues($form_state);

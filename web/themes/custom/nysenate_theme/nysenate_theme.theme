@@ -3239,6 +3239,9 @@ function nysenate_theme_preprocess_page(&$variables) {
       }
     }
   }
+
+  $variables['dashboard_link'] = '/user/' . \Drupal::currentUser()->id();
+  $variables['edit_account_link'] = '/users/' . \Drupal::currentUser()->id() . '/edit';
 }
 
 /**

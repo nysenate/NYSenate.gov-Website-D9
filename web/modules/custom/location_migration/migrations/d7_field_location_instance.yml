@@ -1,0 +1,32 @@
+id: d7_field_location_instance
+label: Geolocation field instance for Location
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\location_migration\Plugin\migrate\D7LocationFieldDeriver
+source:
+  plugin: d7_field_location_instance
+  constants:
+    status: true
+    langcode: und
+    default_value: []
+process:
+  type: type
+  entity_type: entity_type
+  field_name: field_name
+  bundle: bundle
+  label: field_label
+  required: required
+  status: constants/status
+  settings:
+    plugin: default_value
+    source: field_instance_settings
+    default_value: []
+  default_value_function: ''
+  default_value: constants/default_value
+  translatable: translatable
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d7_field_location

@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Validates given user is designated on senator's list of editors.
@@ -203,4 +204,50 @@ function _nys_access_permissions_get_allowed_senators_dropdown(AccountProxy $che
 
   // Return the static cache.
   return $select_options[$check_user_id];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_access_permissions_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $user = \Drupal::currentUser()->getRoles();
+
+  if ($form_id == 'node_bill_edit_form') {
+    if (!in_array("administrator", $user)) {
+      $form['title']['#disabled'] = 1;
+      $form['metatags']['#access'] = FALSE;
+      $form['revision_information']['#access'] = FALSE;
+      $form['comment_settings']['#access'] = FALSE;
+      $form['author']['#access'] = FALSE;
+      $form['options']['#access'] = FALSE;
+      foreach ($form as $key => $value) {
+        if (strpos($key, 'field_') === 0 && !in_array($key, [
+          'field_issues',
+          'field_bill_no_issue_tags',
+        ]
+        )) {
+          $form[$key]['#access'] = FALSE;
+        }
+      }
+    }
+  }
+  if ($form_id == 'node_resolution_edit_form') {
+    $form['title']['#disabled'] = 1;
+    $form['metatags']['#access'] = FALSE;
+    $form['revision_information']['#access'] = FALSE;
+    $form['comment_settings']['#access'] = FALSE;
+    $form['author']['#access'] = FALSE;
+    $form['options']['#access'] = FALSE;
+    foreach ($form as $key => $value) {
+      if (strpos($key, 'field_') !== FALSE && !in_array($key, [
+        'field_issues',
+        'field_image_main',
+        'field_featured_quote',
+        'field_majority_issue_tag',
+      ]
+      )) {
+        $form[$key]['#access'] = FALSE;
+      }
+    }
+  }
 }

@@ -32,17 +32,21 @@ process:
     source: '@slide_items'
     process:
       target_id:
-        - plugin: migration_lookup
+        -
+          plugin: migration_lookup
           migration: nys_paragraphs_pg_image_slider_item
           source: value
-        - plugin: extract
+        -
+          plugin: extract
           index:
             - 0
       target_revision_id:
-        - plugin: migration_lookup
+        -
+          plugin: migration_lookup
           migration: nys_paragraphs_pg_image_slider_item
           source: value
-        - plugin: extract
+        -
+          plugin: extract
           index:
             - 1
 destination:

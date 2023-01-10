@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90650aef082b93c31a17eb72a33d88c9",
+    "content-hash": "d3395a6a8f448f344c964bd90d586bf4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6783,6 +6783,81 @@
             }
         },
         {
+            "name": "drupal/menu_token",
+            "version": "9.1.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/menu_token.git",
+                "reference": "9.1.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/menu_token-9.1.0-alpha1.zip",
+                "reference": "9.1.0-alpha1",
+                "shasum": "60da78642c347ec589eeda83149f6e50968ebf93"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/token": "^1.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "9.1.0-alpha1",
+                    "datestamp": "1638424643",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "See contributors",
+                    "homepage": "https://www.drupal.org/node/353073/committers",
+                    "role": "Developer"
+                },
+                {
+                    "name": "dealancer",
+                    "homepage": "https://www.drupal.org/user/243418"
+                },
+                {
+                    "name": "DevElCuy",
+                    "homepage": "https://www.drupal.org/user/125473"
+                },
+                {
+                    "name": "fubhy",
+                    "homepage": "https://www.drupal.org/user/761344"
+                },
+                {
+                    "name": "joelpittet",
+                    "homepage": "https://www.drupal.org/user/160302"
+                },
+                {
+                    "name": "nhaarish",
+                    "homepage": "https://www.drupal.org/user/3388728"
+                },
+                {
+                    "name": "peter.draucbaher",
+                    "homepage": "https://www.drupal.org/user/2409142"
+                },
+                {
+                    "name": "ygerasimov",
+                    "homepage": "https://www.drupal.org/user/257311"
+                }
+            ],
+            "description": "Menu Token module provides tokens, that can be used in title or in path of menu items (links).",
+            "homepage": "http://drupal.org/project/menu_token",
+            "support": {
+                "source": "https://git.drupalcode.org/project/menu_token",
+                "issues": "http://drupal.org/project/issues/menu_token"
+            }
+        },
+        {
             "name": "drupal/message",
             "version": "1.4.0",
             "source": {
@@ -7970,6 +8045,66 @@
             "homepage": "https://www.drupal.org/project/permissions_filter",
             "support": {
                 "source": "https://git.drupalcode.org/project/permissions_filter"
+            }
+        },
+        {
+            "name": "drupal/prepopulate",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/prepopulate.git",
+                "reference": "8.x-2.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/prepopulate-8.x-2.3.zip",
+                "reference": "8.x-2.3",
+                "shasum": "5a49eaf7f231395f64d378a3978ba42a8fab6554"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/inline_entity_form": "*",
+                "drupal/og": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.3",
+                    "datestamp": "1588005625",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "eafarris",
+                    "homepage": "https://www.drupal.org/user/812"
+                },
+                {
+                    "name": "ff1",
+                    "homepage": "https://www.drupal.org/user/41738"
+                },
+                {
+                    "name": "heddn",
+                    "homepage": "https://www.drupal.org/user/1463982"
+                },
+                {
+                    "name": "jbrauer",
+                    "homepage": "https://www.drupal.org/user/12363"
+                }
+            ],
+            "description": "Allows form elements to be prepopulated from the URL.",
+            "homepage": "https://www.drupal.org/project/prepopulate",
+            "support": {
+                "source": "https://git.drupalcode.org/project/prepopulate"
             }
         },
         {
@@ -9792,6 +9927,58 @@
             }
         },
         {
+            "name": "drupal/twig_vardumper",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/twig_vardumper.git",
+                "reference": "3.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/twig_vardumper-3.1.0.zip",
+                "reference": "3.1.0",
+                "shasum": "f573450d1792967cf2cea831b9a47b49f53a4162"
+            },
+            "require": {
+                "drupal/core": "^9 || ^10",
+                "symfony/var-dumper": "^6|^5"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.1.0",
+                    "datestamp": "1663153696",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Ruben Egiguren a.k.a keopx",
+                    "homepage": "https://www.drupal.org/user/377362",
+                    "email": "keopx@keopx.net"
+                }
+            ],
+            "description": "Twig vardumper provides a better dump() and vardumper() function that can help you debug Twig variables.",
+            "homepage": "https://www.drupal.org/project/twig_vardumper",
+            "keywords": [
+                "Development",
+                "Drupal",
+                "Twig"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/twig_vardumper",
+                "issues": "https://www.drupal.org/project/issues/twig_vardumper"
+            }
+        },
+        {
             "name": "drupal/twitter_api_block",
             "version": "4.0.3",
             "source": {
@@ -11043,6 +11230,54 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/webform_views",
                 "issues": "https://www.drupal.org/project/issues/webform_views"
+            }
+        },
+        {
+            "name": "drupal/webform_views_extras",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/webform_views_extras.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/webform_views_extras-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "b4433184d0df0ad013bbac74af26c9b16924821b"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/webform": "*",
+                "drupal/webform_views": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1660906475",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mohamed Anis Taktak (matio89)",
+                    "homepage": "https://www.drupal.org/u/matio89",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Extends webform views and support relationship views with all content entities not only node.",
+            "homepage": "https://www.drupal.org/project/webform_views_extras",
+            "support": {
+                "source": "http://cgit.drupalcode.org/webform_views_extras",
+                "issues": "https://www.drupal.org/project/issues/webform_views_extras"
             }
         },
         {
@@ -24101,6 +24336,7 @@
         "drupal/htmlpurifier": 5,
         "drupal/inline_entity_form": 5,
         "drupal/media_migration": 15,
+        "drupal/menu_token": 15,
         "drupal/migrate_devel": 15,
         "drupal/name": 5,
         "drupal/node_export": 15,

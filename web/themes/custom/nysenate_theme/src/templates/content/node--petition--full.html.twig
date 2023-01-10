@@ -8,16 +8,13 @@
   node.isSticky() ? 'node--sticky',
   not node.isPublished() ? 'node--unpublished',
   view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-  'c-block',
-  'c-block--initiative',
-  banner_image ? 'c-block--initiative__has-img' : 'c-block--initiative__no-img',
 ]
 %}
 
 <article{{attributes.addClass(classes)}}>
 
   {{ title_prefix }}
-  
+
   {% if page %}
     <header class="c-petition--head">
       <h1 class="nys-title">{{ title }}</h1>
@@ -66,16 +63,15 @@
 
   <section class="c-news--body">
 
-
     {% if content.body %}
       <div class="c-block">
         {{ content.body }}
       </div>
     {% endif %}
 
-    {% if logged_in and sign_petition_link is not empty %}
+    {% if logged_in and content.flag_sign_petition is not empty %}
       <div class="c-block">
-        <span class="c-btn--cta c-btn--cta__sign">{{ sign_petition_link }}</span>
+        <span class="c-btn--cta c-btn--cta__sign">{{ content.flag_sign_petition }}</span>
         <p class="petition-small-text">Click once to sign the petition.</p>
       </div>
     {% else %}

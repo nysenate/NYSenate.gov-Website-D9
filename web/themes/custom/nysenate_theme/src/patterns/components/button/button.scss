@@ -10,6 +10,7 @@
 }
 
 .button,
+a.button,
 input[type='submit'] {
   background-color: $color-blue;
   border: 2px solid $color-blue;
@@ -20,7 +21,7 @@ input[type='submit'] {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
-  transition: background-color 0.25s, color 0.25s;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
 
   &:hover {
     background-color: $color-white;
@@ -52,6 +53,18 @@ input[type='submit'] {
       transform: scale(0.7);
       font-size: 24px;
       fill: $blue01;
+    }
+  }
+
+  &.button--grey {
+    background-color: $grey06;
+    color: $blue01;
+    border-color: $grey06;
+
+    &:hover {
+      background-color: $color-white;
+      color: $color-blue;
+      border-color: $color-blue;
     }
   }
 }

@@ -14,9 +14,13 @@ description: 'The webform used for seasonal school contents.'
 category: ''
 elements: |-
   school_name:
-    '#type': entity_autocomplete
+    '#type': webform_entity_select
     '#title': 'School Name'
-    '#help': 'Start typing school name to narrow down list.'
+    '#description': 'Start typing your school&#39;s name and choose from list. If your school does not show up, <a href="/webforms/add-school-list-contact-form">please contact us</a>.'
+    '#description_display': after
+    '#placeholder': '- Start typing school name to narrow list -'
+    '#select2': true
+    '#required': true
     '#target_type': node
     '#selection_handler': 'default:node'
     '#selection_settings':
@@ -25,6 +29,7 @@ elements: |-
       sort:
         field: field_school_legal_name
         direction: ASC
+    '#required': true
   contact_name:
     '#type': textfield
     '#title': 'Contact Name'
@@ -33,7 +38,7 @@ elements: |-
     '#type': email
     '#title': 'Contact Email'
     '#required': true
-    '#pattern': '[a-z0-9]+@[a-z]+\.[a-z]{2,3}'
+    '#pattern': '[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)+[a-z]{2,3}'
     '#pattern_error': 'Please enter a valid email address'
   grade:
     '#type': select
@@ -53,22 +58,27 @@ elements: |-
       11: '11th Grade'
       12: '12th Grade'
       Homeschool: Homeschool
+    '#empty_option': '- Select a value -'
     '#required': true
     '#width': 100
   submissions:
     '#type': details
     '#title': 'Student Submissions'
     '#open': true
+    '#required': true
     attach_your_submission:
       '#type': webform_custom_composite
       '#title': 'Attach your submission'
       '#multiple': 50
+      '#title_display': none
       '#multiple__header': false
+      '#multiple__min_items': 1
       '#multiple__sorting': false
       '#multiple__add': false
       '#multiple__add_more_input': false
+      '#multiple__add_more_button_label': 'Add another student'
       '#format': list
-      '#format_items': ol
+      '#format_items': table
       '#access_create_roles':
         - authenticated
       '#access_update_roles':
@@ -80,9 +90,7 @@ elements: |-
           '#type': textfield
           '#required': true
           '#title': 'Student''s Name'
-          '#placeholder': 'Student''s Name'
-          '#description': 'Student''s Name'
-          '#help': 'Student''s Name'
+          '#description': 'Student''s last name is optional.'
         submission_type:
           '#type': radios
           '#options':
@@ -90,19 +98,27 @@ elements: |-
             - 'AN ESSAY'
             - 'A POEM'
           '#required': true
-          '#title': 'Submission Type'
+          '#title': 'My submission could be best described as'
         student_submission:
           '#type': managed_file
           '#required': true
           '#title': 'Attach your submission'
-          '#file_extensions': 'jpg, png pdf txt doc docx'
+          '#max_filesize': '10'
+          '#file_extensions': 'txt png jpg jpeg pdf doc docx'
           '#sanitize': true
           '#button': true
           '#button__title': 'Select file to add'
         show_student:
-          '#type': checkbox
+          '#type': radios
+          '#options':
+            - N/A
+            - 'NO'
+            - 'YES'
           '#title': 'Show Student?'
           '#private': true
+  actions:
+    '#type': webform_actions
+    '#title': 'Submit button(s)'
 css: ''
 javascript: ''
 settings:

@@ -18,6 +18,7 @@ use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\address\Plugin\Field\FieldType\AddressItem;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -3321,6 +3322,20 @@ function nysenate_theme_preprocess_node__petition(&$variables) {
       $variables['field_senator'] = $senatorName;
     }
   }
+
+  $current_path = \Drupal::service('path.current')->getPath();
+  $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+  if (!$path_alias) {
+    throw new NotFoundHttpException();
+  }
+  $params = [
+    'destination' => $path_alias,
+  ];
+  $variables['petition_login_link'] = Link::fromTextAndUrl(
+    t('Logged-in users can sign with one click.'),
+    Url::fromUserInput('/user/login', ['query' => $params])
+  );
+
 }
 
 /**

@@ -79,11 +79,6 @@
     line-height: 37.6px;
   }
 
-  .featured-content__banners-list .c-block .c-initiative--title {
-    font-size: 36px;
-    line-height: 42.3px;
-  }
-
   // has img modifications
   .c-block--initiative__has-img {
     overflow: hidden;
@@ -168,6 +163,20 @@
         padding-bottom: 0;
       }
     }
+  }
+}
+
+.featured-content__banners-list {
+  .c-block--initiative__no-img {
+    grid-column: 1 / span 2;
+    margin: 0;
+    height: auto;
+  }
+
+
+  .c-block .c-initiative--title {
+    font-size: 36px;
+    line-height: 42.3px;
   }
 }
 

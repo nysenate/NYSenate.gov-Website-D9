@@ -1484,6 +1484,13 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     $view = $variables['view'];
     $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
   }
+
+  // Add suggestions to semanticviews_style hook.
+  if ($hook == 'semanticviews_style') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id();
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
 }
 
 /**

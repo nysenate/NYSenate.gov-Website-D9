@@ -1491,6 +1491,20 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
   }
+
+  // Add suggestion to form hook.
+  if ($hook == 'form' && !empty($variables['element']['#theme'])) {
+    $suggestions[] = 'form__' . $variables['element']['#theme'][0];
+  }
+
+  if ($hook == 'form_element' && !empty($variables['element']['#name'])) {
+    $suggestions[] = 'form_element__' . $variables['element']['#name'];
+  }
+
+  // Add suggestion to views_exposed_form hook.
+  if ($hook == 'views_exposed_form' && !empty($variables['form']['#theme'])) {
+    $suggestions[] = $variables['form']['#theme'][0];
+  }
 }
 
 /**
@@ -3102,6 +3116,39 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
       unset($form['type']['#options']['All']);
     }
   }
+
+  if (!empty($form['#id']) && $form['#id'] == 'views-exposed-form-private-message-inbox-inbox') {
+    $form['#attached']['library'][] = 'nysenate_theme/dashboard-inbox';
+    $values = $form_state->getValues();
+
+    $field_elements = [
+      'message__value',
+      'owner',
+      'field_issue_target_id',
+      'title',
+    ];
+
+    foreach ($field_elements as $field_element) {
+      $form[$field_element]['#default_value'] = $values[$field_element] ?? '';
+      $form[$field_element]['#size'] = 60;
+      $form[$field_element]['#maxlength'] = 128;
+      $form[$field_element]['#attributes'] = [
+        'class' => ['search-form-group__input'],
+        'type' => 'search',
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_form__views_exposed_form().
+ */
+function nysenate_theme_preprocess_form__views_exposed_form__private_message_inbox__inbox(&$variables) {
+  $variables['title'] = 'Inbox';
+  $variables['cta'] = [
+    'link' => '#',
+    'label' => 'View Sent Messages',
+  ];
 }
 
 /**

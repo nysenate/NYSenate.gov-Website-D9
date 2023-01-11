@@ -40,7 +40,7 @@ class SearchApiSolrCommands extends DrushCommands implements StdinAwareInterface
   /**
    * {@inheritdoc}
    */
-  public function setLogger(LoggerInterface $logger) {
+  public function setLogger(LoggerInterface $logger): void {
     parent::setLogger($logger);
     $this->commandHelper->setLogger($logger);
   }
@@ -57,7 +57,7 @@ class SearchApiSolrCommands extends DrushCommands implements StdinAwareInterface
    */
   public function reinstallFieldtypes() {
     $this->commandHelper->reinstallFieldtypesCommand();
-    $this->logger()->success(dt('Solr field types re-installed.'));
+    $this->logger()->success('Solr field types re-installed.');
   }
 
   /**
@@ -140,7 +140,7 @@ class SearchApiSolrCommands extends DrushCommands implements StdinAwareInterface
   public function finalizeIndex($indexId = NULL, array $options = ['force' => FALSE]) {
     $force = (bool) $options['force'];
     $this->commandHelper->finalizeIndexCommand($indexId ? [$indexId] : $indexId, $force);
-    $this->logger()->success(dt('Solr %index_id finalized.', ['%index_id' => $indexId]));
+    $this->logger()->success('Solr %index_id finalized.', ['%index_id' => $indexId]);
   }
 
   /**

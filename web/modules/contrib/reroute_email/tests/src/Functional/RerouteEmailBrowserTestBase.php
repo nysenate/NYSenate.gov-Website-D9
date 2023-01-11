@@ -5,6 +5,7 @@ namespace Drupal\Tests\reroute_email\Functional;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Test\AssertMailTrait;
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -106,21 +107,22 @@ abstract class RerouteEmailBrowserTestBase extends BrowserTestBase {
    * Helper function to configure Reroute Email Settings.
    *
    * An array of configuration options to set. All params are optional.
-   * REROUTE_EMAIL_* define should be used as for array keys.
+   * RerouteEmailConstants::REROUTE_EMAIL_* define should be
+   * used as for array keys.
    * Default values can be found at reroute_email.schema.yml file.
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
   public function configureRerouteEmail($post_values): void {
     $schema_values = [
-      REROUTE_EMAIL_ENABLE => FALSE,
-      REROUTE_EMAIL_ADDRESS => '',
-      REROUTE_EMAIL_ALLOWLIST => '',
-      REROUTE_EMAIL_ROLES => [],
-      REROUTE_EMAIL_DESCRIPTION => TRUE,
-      REROUTE_EMAIL_MESSAGE => TRUE,
-      REROUTE_EMAIL_MAILKEYS => '',
-      REROUTE_EMAIL_MAILKEYS_SKIP => '',
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => FALSE,
+      RerouteEmailConstants::REROUTE_EMAIL_ADDRESS => '',
+      RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST => '',
+      RerouteEmailConstants::REROUTE_EMAIL_ROLES => [],
+      RerouteEmailConstants::REROUTE_EMAIL_DESCRIPTION => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_MESSAGE => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_MAILKEYS => '',
+      RerouteEmailConstants::REROUTE_EMAIL_MAILKEYS_SKIP => '',
     ];
 
     // Configure to Reroute Email settings form.
@@ -138,7 +140,7 @@ abstract class RerouteEmailBrowserTestBase extends BrowserTestBase {
 
     // Submit Reroute Email Settings form and check if it was successful.
     $this->drupalGet('admin/config/development/reroute_email');
-    $this->submitForm($post_values, t('Save configuration'));
+    $this->submitForm($post_values, $this->t('Save configuration'));
     $this->assertSession()->pageTextContains(t('The configuration options have been saved.'));
 
     // Rebuild config values after form submit.
@@ -183,7 +185,7 @@ abstract class RerouteEmailBrowserTestBase extends BrowserTestBase {
 
     // Check email properties related to `to` value.
     if ($reroute_expected) {
-      $this->assertMail('to', $this->rerouteConfig->get(REROUTE_EMAIL_ADDRESS), new FormattableMarkup('An email was properly rerouted to the email address: @address.', ['@address' => $this->rerouteDestination]));
+      $this->assertMail('to', $this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS), new FormattableMarkup('An email was properly rerouted to the email address: @address.', ['@address' => $this->rerouteDestination]));
       $this->assertEquals($mail['headers']['X-Rerouted-Original-to'], $post['to'] ?? '', new FormattableMarkup('X-Rerouted-Original-to is correctly set to submitted value: @address', ['@address' => $post['to'] ?? '']));
       $this->assertMailString('body', $search_originally_to, 1, 'Found the correct "Originally to" line in the body.');
     }
@@ -210,7 +212,7 @@ abstract class RerouteEmailBrowserTestBase extends BrowserTestBase {
     $this->assertMailReroutedHeaders('bcc', $post['bcc'] ?? NULL, $reroute_expected);
 
     // Check reroute_mail module special headers.
-    if ($this->rerouteConfig->get(REROUTE_EMAIL_ENABLE) === FALSE) {
+    if ($this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ENABLE) === FALSE) {
       $this->assertMailHeaderNotExist('X-Rerouted-Status');
       $this->assertMailHeaderNotExist('X-Rerouted-Reason');
       $this->assertMailHeaderNotExist('X-Rerouted-Original-to');

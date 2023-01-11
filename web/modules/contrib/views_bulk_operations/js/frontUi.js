@@ -19,7 +19,7 @@
   /**
    * VBO selection handling class.
    */
-  class viewsBulkOperationsSelection {
+  let viewsBulkOperationsSelection = class {
 
     constructor(vbo_form) {
       this.vbo_form = vbo_form;
@@ -142,7 +142,7 @@
         });
       }
     }
-  }
+  };
 
   /**
    * Callback used in {@link Drupal.behaviors.views_bulk_operations}.

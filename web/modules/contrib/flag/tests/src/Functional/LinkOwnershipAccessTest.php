@@ -19,7 +19,7 @@ class LinkOwnershipAccessTest extends FlagTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
@@ -51,14 +51,14 @@ class LinkOwnershipAccessTest extends FlagTestBase {
     // Flag the node with user 1.
     $this->drupalGet($this->node->toUrl());
     $this->clickLink($flag->getShortText('flag'));
-    $this->assertResponse(200);
-    $this->assertLink($flag->getShortText('unflag'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkExists($flag->getShortText('unflag'));
 
     // Switch to user 2. They should see the link to flag.
     $user_2 = $this->drupalCreateUser();
     $this->drupalLogin($user_2);
     $this->drupalGet($this->node->toUrl());
-    $this->assertLink($flag->getShortText('flag'), 0, "A flag link is found on the page for user 2.");
+    $this->assertSession()->linkExists($flag->getShortText('flag'), 0, "A flag link is found on the page for user 2.");
 
   }
 
@@ -77,14 +77,14 @@ class LinkOwnershipAccessTest extends FlagTestBase {
     // Flag the node with user 1.
     $this->drupalGet($this->node->toUrl());
     $this->clickLink($flag->getShortText('flag'));
-    $this->assertResponse(200);
-    $this->assertLink($flag->getShortText('unflag'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkExists($flag->getShortText('unflag'));
 
     // Switch to user 2. They should see the unflag link too.
     $user_2 = $this->drupalCreateUser();
     $this->drupalLogin($user_2);
     $this->drupalGet($this->node->toUrl());
-    $this->assertLink($flag->getShortText('unflag'), 0, "The unflag link is found on the page for user 2.");
+    $this->assertSession()->linkExists($flag->getShortText('unflag'), 0, "The unflag link is found on the page for user 2.");
   }
 
 }

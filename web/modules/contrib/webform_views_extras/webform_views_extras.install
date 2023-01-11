@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\webform\Entity\WebformSubmission;
+
+/**
+ * Add entity_id_CONTENT_ENTITY in webform submission entity
+ * and update previous Webform submissions.
+ * Implements hook_install().
+ */
+function webform_views_extras_install() {
+
+  // Create field storage definitions.
+  $content_entity_ids = array_keys(webform_views_extras_content_entities());
+  $field_manager = \Drupal::service('entity_field.manager');
+  $field_storage_manager = \Drupal::service('field_storage_definition.listener');
+  foreach ($content_entity_ids as $content_entity_id) {
+    $definition = $field_manager->getFieldStorageDefinitions('webform_submission');
+    $field_definition = $definition["entity_id_{$content_entity_id}"];
+    if (!is_null($field_definition)) {
+      $field_storage_manager->onFieldStorageDefinitionCreate($field_definition);
+    }
+  }
+  // Update existing values.
+  $webform_submissions = WebformSubmission::loadMultiple();
+  foreach ($webform_submissions as $webform_submission) {
+    /**
+     * @var \Drupal\webform\Entity\WebformSubmission $webform_submission
+     */
+    $entity_id = $webform_submission->get('entity_id')->value;
+    $entity_type = $webform_submission->get('entity_type')->value;
+    if ($entity_id) {
+      $webform_submission->set("entity_id_" . $entity_type, $entity_id);
+      $webform_submission->save();
+    }
+  }
+}

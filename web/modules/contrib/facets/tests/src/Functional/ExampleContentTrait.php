@@ -30,6 +30,7 @@ trait ExampleContentTrait {
   protected function insertExampleContent() {
     $count = \Drupal::entityQuery('entity_test_mulrev_changed')
       ->count()
+      ->accessCheck()
       ->execute();
 
     $entity_test_storage = \Drupal::entityTypeManager()
@@ -74,6 +75,7 @@ trait ExampleContentTrait {
     $this->entities[5]->save();
     $count = \Drupal::entityQuery('entity_test_mulrev_changed')
       ->count()
+      ->accessCheck()
       ->execute() - $count;
     $this->assertEquals($count, 5, "$count items inserted.");
   }

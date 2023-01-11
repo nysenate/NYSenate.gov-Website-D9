@@ -4,7 +4,7 @@
  */
 
 (function ($, Drupal) {
-  'use strict';
+  "use strict";
 
   /**
    * Dynamic map handling aka "AirBnB mode".
@@ -19,7 +19,7 @@
      * @param {GeolocationSettings} drupalSettings.geolocation
      */
     attach: function (context, drupalSettings) {
-      if (typeof drupalSettings.geolocation === 'undefined') {
+      if (typeof drupalSettings.geolocation === "undefined") {
         return false;
       }
 
@@ -33,8 +33,8 @@
          */
         function (mapId, commonMapSettings) {
           if (
-            typeof commonMapSettings.dynamic_map !== 'undefined'
-            && commonMapSettings.dynamic_map.enable
+            typeof commonMapSettings.dynamic_map !== "undefined" &&
+            commonMapSettings.dynamic_map.enable
           ) {
             var map = Drupal.geolocation.getMapById(mapId);
 
@@ -62,45 +62,57 @@
              * These possibilities are ordered by UX preference.
              */
             if (
-              map.container.length
-              && map.type === 'google_maps'
-              && !map.container.hasClass('geolocation-common-map-google-processed')
+              map.container.length &&
+              map.type === "google_maps" &&
+              !map.container.hasClass("geolocation-common-map-google-processed")
             ) {
-              map.container.addClass('geolocation-common-map-google-processed');
+              map.container.addClass("geolocation-common-map-google-processed");
 
               map.addPopulatedCallback(function (map) {
                 var geolocationMapIdleTimer;
-                map.googleMap.addListener('bounds_changed', function () {
+                map.googleMap.addListener("bounds_changed", function () {
                   clearTimeout(geolocationMapIdleTimer);
 
-                  geolocationMapIdleTimer = setTimeout(
-                    function () {
-                      var ajaxSettings = Drupal.geolocation.commonMap.dynamicMapViewsAjaxSettings(commonMapSettings);
-
-                      // Add bounds.
-                      var currentBounds = map.googleMap.getBounds();
-                      var bound_parameters = {};
-                      bound_parameters[commonMapSettings['dynamic_map']['parameter_identifier'] + '[lat_north_east]'] = currentBounds.getNorthEast().lat();
-                      bound_parameters[commonMapSettings['dynamic_map']['parameter_identifier'] + '[lng_north_east]'] = currentBounds.getNorthEast().lng();
-                      bound_parameters[commonMapSettings['dynamic_map']['parameter_identifier'] + '[lat_south_west]'] = currentBounds.getSouthWest().lat();
-                      bound_parameters[commonMapSettings['dynamic_map']['parameter_identifier'] + '[lng_south_west]'] = currentBounds.getSouthWest().lng();
-
-                      ajaxSettings.submit = $.extend(
-                        ajaxSettings.submit,
-                        bound_parameters
+                  geolocationMapIdleTimer = setTimeout(function () {
+                    var ajaxSettings =
+                      Drupal.geolocation.commonMap.dynamicMapViewsAjaxSettings(
+                        commonMapSettings
                       );
 
-                      Drupal.ajax(ajaxSettings).execute();
-                    },
-                    commonMapSettings.dynamic_map.views_refresh_delay
-                  );
+                    // Add bounds.
+                    var currentBounds = map.googleMap.getBounds();
+                    var bound_parameters = {};
+                    bound_parameters[
+                      commonMapSettings["dynamic_map"]["parameter_identifier"] +
+                        "[lat_north_east]"
+                    ] = currentBounds.getNorthEast().lat();
+                    bound_parameters[
+                      commonMapSettings["dynamic_map"]["parameter_identifier"] +
+                        "[lng_north_east]"
+                    ] = currentBounds.getNorthEast().lng();
+                    bound_parameters[
+                      commonMapSettings["dynamic_map"]["parameter_identifier"] +
+                        "[lat_south_west]"
+                    ] = currentBounds.getSouthWest().lat();
+                    bound_parameters[
+                      commonMapSettings["dynamic_map"]["parameter_identifier"] +
+                        "[lng_south_west]"
+                    ] = currentBounds.getSouthWest().lng();
+
+                    ajaxSettings.submit = $.extend(
+                      ajaxSettings.submit,
+                      bound_parameters
+                    );
+
+                    Drupal.ajax(ajaxSettings).execute();
+                  }, commonMapSettings.dynamic_map.views_refresh_delay);
                 });
               });
             }
           }
-        });
+        }
+      );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(jQuery, Drupal);

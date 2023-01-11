@@ -420,7 +420,8 @@
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -750,9 +751,10 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
-.c-senators-container .js-form-type-select::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
+.c-senators-committees-header .c-container--link::after,
 .unflag-action::after {
   font-family: 'senate_icons';
   display: inline-block;
@@ -766,7 +768,9 @@ strong {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-.icon-after__down-arrow::after {
+
+.icon-after__down-arrow::after,
+.c-senators-committees-header .c-container--link::after {
   content: '\e601'; }
 
 .icon-after__error::after {
@@ -912,7 +916,7 @@ strong {
 
 
 .icon-after__see-more::after,
-.c-senators-container .js-form-type-select::after {
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1406,33 +1410,92 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
+.c-senators-committees-header {
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 60px; }
+  .c-senators-committees-header p {
+    margin-bottom: 20px; }
+  .c-senators-committees-header .c-container--link {
+    top: auto;
+    bottom: 0;
+    width: 50%;
+    padding-right: 20px;
+    text-align: right; }
+    .c-senators-committees-header .c-container--link:after {
+      position: absolute;
+      bottom: 3px;
+      right: 0; }
+
+.views-exposed-form .views-exposed-widget {
+  padding: 0; }
+
+@media screen and (min-width: 760px) {
+  .c-senators-committees-header {
+    padding-bottom: 40px; }
+    .c-senators-committees-header p {
+      margin-bottom: 40px;
+      line-height: 32px; }
+    .c-senators-committees-header .c-container--link {
+      width: auto;
+      text-align: left;
+      padding-right: 0; }
+      .c-senators-committees-header .c-container--link:after {
+        position: relative;
+        bottom: auto;
+        font-size: 17px;
+        line-height: 17px; } }
+
+/*-------------------------------------------------------
+/
+/ 	SENATE DIRECTORIES
+/	right below the senator list
+/
+/-------------------------------------------------------*/
 .c-senators-container {
   overflow: hidden; }
-  .c-senators-container .js-form-type-select {
-    position: relative;
-    width: 100%; }
-    .c-senators-container .js-form-type-select::after {
-      position: absolute;
-      right: 10px;
-      top: 5px;
-      font-size: 25px;
-      color: #2b6990;
-      pointer-events: none;
-      cursor: pointer; }
-    .c-senators-container .js-form-type-select select {
-      margin-bottom: 16px; }
   .c-senators-container .view-filters {
-    margin-left: 0px; }
-    .c-senators-container .view-filters select {
-      color: #2b6990;
-      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
-      font-size: 14px;
-      padding: 10px 40px 10px 20px;
-      background: none;
-      background-image: none;
-      text-transform: uppercase;
-      min-height: 45px;
-      width: 100%; }
+    margin: 0; }
 
 .c-senator-block {
   display: flex;
@@ -1459,12 +1522,15 @@ strong {
     margin: 0 0 10px; }
   .c-senator-block .nys-senator--district {
     color: #888888;
-    font-size: 10px; }
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase; }
   .c-senator-block .nys-senator--party {
     color: #666666;
     margin-right: 0.5em;
     text-transform: uppercase;
-    font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    letter-spacing: 0.6px; }
   .c-senator-block .c-position {
     margin: 15px 0 0 15px;
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
@@ -1510,16 +1576,7 @@ strong {
     margin: 0 0 40px;
     max-width: 760px; }
     .c-senators-container .view-filters {
-      margin: 0 2.5%; }
-    .c-senators-container .js-form-type-select {
-      float: left;
-      width: 47.5%;
-      margin-right: 2.5%; }
-      .c-senators-container .js-form-type-select + .js-form-type-select {
-        margin-right: 0;
-        margin-left: 2.5%; }
-      .c-senators-container .js-form-type-select select {
-        margin-bottom: 40px; }
+      margin: 0; }
   .c-senator-block {
     flex-direction: column;
     float: left;
@@ -1535,10 +1592,12 @@ strong {
       font-size: 16px;
       line-height: 20px; }
     .c-senator-block .nys-senator--district {
-      font-size: 12px; }
+      font-size: 12px;
+      line-height: 14.4px; }
     .c-senator-block .nys-senator--party {
       display: block;
-      margin-bottom: 0.4em; }
+      margin-bottom: 0.4em;
+      line-height: 14.4px; }
     .c-senator-block .c-name {
       margin: 20px 15px 20px 15px; }
     .c-senator-block .c-district {

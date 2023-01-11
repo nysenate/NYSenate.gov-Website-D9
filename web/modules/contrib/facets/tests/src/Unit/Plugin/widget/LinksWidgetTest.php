@@ -245,9 +245,7 @@ class LinksWidgetTest extends WidgetTestBase {
    * Sets up a container.
    */
   protected function createContainer() {
-    $router = $this->getMockBuilder(TestRouterInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $router = $this->createMock(TestRouterInterface::class);
     $router->expects($this->any())
       ->method('matchRequest')
       ->willReturn([
@@ -255,28 +253,20 @@ class LinksWidgetTest extends WidgetTestBase {
         '_route' => 'test',
       ]);
 
-    $url_processor = $this->getMockBuilder(UrlProcessorInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $url_processor = $this->createMock(UrlProcessorInterface::class);
 
-    $manager = $this->getMockBuilder(FacetSourcePluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $manager = $this->createMock(FacetSourcePluginManager::class);
     $manager->expects($this->exactly(1))
       ->method('createInstance')
       ->willReturn($url_processor);
 
     $storage = $this->createMock(EntityStorageInterface::class);
-    $em = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $em = $this->createMock(EntityTypeManagerInterface::class);
     $em->expects($this->exactly(1))
       ->method('getStorage')
       ->willReturn($storage);
 
-    $facets_url_generator = $this->getMockBuilder(FacetsUrlGenerator::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facets_url_generator = $this->createMock(FacetsUrlGenerator::class);
 
     $container = new ContainerBuilder();
     $container->set('router.no_access_checks', $router);

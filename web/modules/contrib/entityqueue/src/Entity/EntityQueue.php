@@ -338,6 +338,7 @@ class EntityQueue extends ConfigEntityBundleBase implements EntityQueueInterface
    */
   public static function loadMultipleByTargetType($target_entity_type_id) {
     $ids = \Drupal::entityTypeManager()->getStorage('entity_queue')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('entity_settings.target_type', $target_entity_type_id)
       ->execute();
 

@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Result\Result;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Base class for widget unit tests.
  */
-abstract class WidgetTestBase extends UnitTestCase {
+abstract class WidgetTestBase extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * The widget to be tested.
@@ -37,13 +37,6 @@ abstract class WidgetTestBase extends UnitTestCase {
    * @var \Drupal\facets\Result\Result[]
    */
   protected $originalResults;
-
-  /**
-   * An array of possible query types.
-   *
-   * @var string[]
-   */
-  protected $queryTypes;
 
   /**
    * Sets up the container and other variables used in all the tests.
@@ -76,13 +69,6 @@ abstract class WidgetTestBase extends UnitTestCase {
     $container->set('string_translation', $string_translation->reveal());
     $container->set('url_generator', $url_generator->reveal());
     \Drupal::setContainer($container);
-
-    $this->queryTypes = [
-      'date' => 'date',
-      'string' => 'string',
-      'numeric' => 'numeric',
-      'range' => 'range',
-    ];
   }
 
   /**
@@ -97,7 +83,7 @@ abstract class WidgetTestBase extends UnitTestCase {
    * Tests get query type.
    */
   public function testGetQueryType() {
-    $result = $this->widget->getQueryType($this->queryTypes);
+    $result = $this->widget->getQueryType();
     $this->assertEquals(NULL, $result);
   }
 

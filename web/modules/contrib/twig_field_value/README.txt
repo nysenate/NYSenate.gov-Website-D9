@@ -28,8 +28,31 @@ To print image link and the alt text of an image:
   <img src={{ file_url(content.field_image|field_target_entity.uri.value) }}
     alt={{ content.field_image|field_raw('alt') }} />
 
+To print content of multiple referenced items.
+  <ul>
+    {% if content.field_tags.1 %}
+      {% for item in content.field_tags | field_target_entity %}
+        <li>{{ item.id }}</li>
+      {% endfor %}
+    {% else %}
+      <li>{{ item.id }}</li>
+    {% endif %}
+  <ul>
+
 The above examples assume that 'content.field_example' is the render array of
 the of a field, as for example in a node template.
+
+IMPORTANT CACHING NOTICE
+------------------------
+
+When you print data of referenced entities the cache data of that entity is
+ignored. The cache will not be invalidated when the referenced entity changes.
+
+To compensate, render the field without printing the output. The rendering makes
+sure that the cache metadata is captured and applied to the output.
+
+{{ content.field_referenced_entity|field_target_entity.label }}
+{% set dummy = content.field_referenced_entity|render %}
 
 KNOW RESTRICTIONS
 -----------------

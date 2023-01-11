@@ -50,7 +50,7 @@
  */
 
 (function ($, Drupal) {
-  'use strict';
+  "use strict";
 
   /**
    * @namespace
@@ -64,23 +64,22 @@
     attach: function (context, drupalSettings) {
       $.each(Drupal.geolocation.widgets, function (index, widget) {
         $.each(widget.pendingAddedInputs, function (inputIndex, inputData) {
-          if (typeof inputData === 'undefined') {
+          if (typeof inputData === "undefined") {
             return;
           }
-          if (typeof inputData.delta === 'undefined') {
+          if (typeof inputData.delta === "undefined") {
             return;
           }
           var input = widget.getInputByDelta(inputData.delta);
           if (input) {
             widget.setInput(inputData.location, inputData.delta);
             widget.pendingAddedInputs.splice(inputIndex, 1);
-          }
-          else {
+          } else {
             widget.addNewEmptyInput();
           }
         });
       });
-    }
+    },
   };
 
   /**
@@ -93,7 +92,6 @@
    * @param {GeolocationWidgetSettings} widgetSettings - Setting to create widget.
    */
   function GeolocationMapWidgetBase(widgetSettings) {
-
     this.locationAlteredCallbacks = [];
 
     this.settings = widgetSettings || {};
@@ -111,12 +109,8 @@
   }
 
   GeolocationMapWidgetBase.prototype = {
-
     locationAlteredCallback: function (identifier, location, delta) {
-      if (
-          typeof delta === 'undefined'
-          || delta === null
-      ) {
+      if (typeof delta === "undefined" || delta === null) {
         delta = this.getNextDelta();
       }
       if (delta === false) {
@@ -130,29 +124,25 @@
       this.locationAlteredCallbacks.push(callback);
     },
     getAllInputs: function () {
-      return $('.geolocation-widget-input', this.wrapper);
+      return $(".geolocation-widget-input", this.wrapper);
     },
     refreshWidgetByInputs: function () {
       var that = this;
       this.getAllInputs().each(function (delta, inputElement) {
         var input = $(inputElement);
-        var lng = input.find('input.geolocation-input-longitude').val();
-        var lat = input.find('input.geolocation-input-latitude').val();
+        var lng = input.find("input.geolocation-input-longitude").val();
+        var lat = input.find("input.geolocation-input-latitude").val();
         var location;
-        if (
-          lng === ''
-          || lat === ''
-        ) {
+        if (lng === "" || lat === "") {
           location = null;
-        }
-        else {
+        } else {
           location = {
             lat: Number(lat),
-            lng: Number(lng)
-          }
+            lng: Number(lng),
+          };
         }
 
-        that.locationAlteredCallback('widget-refreshed', location, delta);
+        that.locationAlteredCallback("widget-refreshed", location, delta);
         that.attachInputChangedTriggers(input, delta);
       });
     },
@@ -167,26 +157,26 @@
     getCoordinatesByInput: function (input) {
       input = $(input);
       if (
-        input.find('input.geolocation-input-longitude').val() !== ''
-        && input.find('input.geolocation-input-latitude').val() !== ''
+        input.find("input.geolocation-input-longitude").val() !== "" &&
+        input.find("input.geolocation-input-latitude").val() !== ""
       ) {
         return {
-          lat: input.find('input.geolocation-input-latitude').val(),
-          lng: input.find('input.geolocation-input-longitude').val()
-        }
+          lat: input.find("input.geolocation-input-latitude").val(),
+          lng: input.find("input.geolocation-input-longitude").val(),
+        };
       }
-      return false
+      return false;
     },
     getNextDelta: function () {
       if (this.cardinality === 1) {
         return 0;
       }
 
-      var delta = Math.max(this.getNextEmptyInputDelta(), this.getNextPendingDelta());
-      if (
-          delta > this.cardinality
-          && this.cardinality > 0
-      ) {
+      var delta = Math.max(
+        this.getNextEmptyInputDelta(),
+        this.getNextPendingDelta()
+      );
+      if (delta > this.cardinality && this.cardinality > 0) {
         console.error("Cannot add further geolocation input.");
         return false;
       }
@@ -195,7 +185,7 @@
     getNextPendingDelta: function () {
       var maxDelta = this.pendingAddedInputs.length - 1;
       $.each(this.pendingAddedInputs, function (index, item) {
-        if (typeof item.delta === 'undefined') {
+        if (typeof item.delta === "undefined") {
           return;
         }
         maxDelta = Math.max(maxDelta, item.delta);
@@ -208,7 +198,7 @@
         return 0;
       }
 
-      if (typeof delta === 'undefined') {
+      if (typeof delta === "undefined") {
         delta = this.getAllInputs().length - 1;
       }
 
@@ -216,8 +206,8 @@
 
       // Current input not empty, return next delta.
       if (
-        input.find('input.geolocation-input-longitude').val()
-        || input.find('input.geolocation-input-latitude').val()
+        input.find("input.geolocation-input-longitude").val() ||
+        input.find("input.geolocation-input-latitude").val()
       ) {
         return delta + 1;
       }
@@ -231,7 +221,9 @@
       return this.getNextEmptyInputDelta(delta - 1);
     },
     addNewEmptyInput: function () {
-      var button = this.wrapper.find('[name="' + this.fieldName + '_add_more"]');
+      var button = this.wrapper.find(
+        '[name="' + this.fieldName + '_add_more"]'
+      );
       if (button.length) {
         button.trigger("mousedown");
       }
@@ -239,8 +231,8 @@
     attachInputChangedTriggers: function (input, delta) {
       input = $(input);
       var that = this;
-      var longitude = input.find('input.geolocation-input-longitude');
-      var latitude = input.find('input.geolocation-input-latitude');
+      var longitude = input.find("input.geolocation-input-longitude");
+      var latitude = input.find("input.geolocation-input-latitude");
 
       longitude.off("change");
       longitude.change(function () {
@@ -249,12 +241,14 @@
         }
 
         var currentValue = $(this).val();
-        if (currentValue === '') {
-          that.locationAlteredCallback('input-altered', null, delta)
-        }
-        else if (latitude.val() !== '') {
-          var location = {lat: Number(latitude.val()), lng: Number(currentValue)};
-          that.locationAlteredCallback('input-altered', location, delta);
+        if (currentValue === "") {
+          that.locationAlteredCallback("input-altered", null, delta);
+        } else if (latitude.val() !== "") {
+          var location = {
+            lat: Number(latitude.val()),
+            lng: Number(currentValue),
+          };
+          that.locationAlteredCallback("input-altered", location, delta);
         }
       });
 
@@ -265,39 +259,40 @@
         }
 
         var currentValue = $(this).val();
-        if (currentValue === '') {
-          that.locationAlteredCallback('input-altered', null, delta)
-        }
-        else if (longitude.val() !== '') {
-          var location = {lat: Number(currentValue), lng: Number(longitude.val())};
-          that.locationAlteredCallback('input-altered', location, delta);
+        if (currentValue === "") {
+          that.locationAlteredCallback("input-altered", null, delta);
+        } else if (longitude.val() !== "") {
+          var location = {
+            lat: Number(currentValue),
+            lng: Number(longitude.val()),
+          };
+          that.locationAlteredCallback("input-altered", location, delta);
         }
       });
     },
     setInput: function (location, delta) {
-      if (typeof delta === 'undefined') {
+      if (typeof delta === "undefined") {
         delta = this.getNextDelta();
       }
 
-      if (
-        typeof delta === 'undefined'
-        || delta === false
-      ) {
-        console.error(location, Drupal.t('Could not determine delta for new widget input.'));
+      if (typeof delta === "undefined" || delta === false) {
+        console.error(
+          location,
+          Drupal.t("Could not determine delta for new widget input.")
+        );
         return null;
       }
 
       var input = this.getInputByDelta(delta);
       if (input) {
         this.inputChangedEventPaused = true;
-        input.find('input.geolocation-input-longitude').val(location.lng);
-        input.find('input.geolocation-input-latitude').val(location.lat);
+        input.find("input.geolocation-input-longitude").val(location.lng);
+        input.find("input.geolocation-input-latitude").val(location.lat);
         this.inputChangedEventPaused = false;
-      }
-      else {
+      } else {
         this.pendingAddedInputs.push({
           delta: delta,
-          location: location
+          location: location,
         });
         this.addNewEmptyInput();
       }
@@ -307,10 +302,10 @@
     removeInput: function (delta) {
       var input = this.getInputByDelta(delta);
       this.inputChangedEventPaused = true;
-      input.find('input.geolocation-input-longitude').val('');
-      input.find('input.geolocation-input-latitude').val('');
+      input.find("input.geolocation-input-longitude").val("");
+      input.find("input.geolocation-input-latitude").val("");
       this.inputChangedEventPaused = false;
-    }
+    },
   };
 
   Drupal.geolocation.widget.GeolocationMapWidgetBase = GeolocationMapWidgetBase;
@@ -327,7 +322,7 @@
    */
   function Factory(widgetSettings, reset) {
     reset = reset || false;
-    widgetSettings.type = widgetSettings.type || 'google';
+    widgetSettings.type = widgetSettings.type || "google";
 
     var widget = null;
 
@@ -344,30 +339,39 @@
     });
 
     if (reset === true || !existingWidget) {
-      if (typeof Drupal.geolocation.widget[Drupal.geolocation.widget.widgetProviders[widgetSettings.type]] !== 'undefined') {
-        var widgetProvider = Drupal.geolocation.widget[Drupal.geolocation.widget.widgetProviders[widgetSettings.type]];
+      if (
+        typeof Drupal.geolocation.widget[
+          Drupal.geolocation.widget.widgetProviders[widgetSettings.type]
+        ] !== "undefined"
+      ) {
+        var widgetProvider =
+          Drupal.geolocation.widget[
+            Drupal.geolocation.widget.widgetProviders[widgetSettings.type]
+          ];
         widget = new widgetProvider(widgetSettings);
         if (widget) {
           Drupal.geolocation.widgets.push(widget);
 
           widget.refreshWidgetByInputs();
-          widget.addLocationAlteredCallback(function (location, delta, identifier) {
+          widget.addLocationAlteredCallback(function (
+            location,
+            delta,
+            identifier
+          ) {
             if (
-                identifier !== 'input-altered'
-                || identifier !== 'widget-refreshed'
+              identifier !== "input-altered" ||
+              identifier !== "widget-refreshed"
             ) {
               if (location === null) {
                 widget.removeInput(delta);
-              }
-              else {
+              } else {
                 widget.setInput(location, delta);
               }
             }
           });
         }
       }
-    }
-    else {
+    } else {
       widget = existingWidget;
     }
 
@@ -404,5 +408,4 @@
 
     return widget;
   };
-
 })(jQuery, Drupal);

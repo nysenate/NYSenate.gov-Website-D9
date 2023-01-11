@@ -420,7 +420,8 @@
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -750,6 +751,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -909,7 +911,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1403,10 +1407,51 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
 .button__container {
   margin-top: 30px; }
 
 .button,
+a.button,
 input[type='submit'] {
   background-color: #003954;
   border: 2px solid #003954;
@@ -1417,21 +1462,25 @@ input[type='submit'] {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
-  transition: background-color 0.25s, color 0.25s; }
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s; }
   .button:hover,
+  a.button:hover,
   input[type='submit']:hover {
     background-color: #fff;
     color: #003954; }
   @media screen and (min-width: 768px) {
     .button,
+    a.button,
     input[type='submit'] {
       font-size: 1rem;
       padding: 1rem 2rem; } }
   .button.button--small,
+  a.button.button--small,
   input[type='submit'].button--small {
     font-size: 0.875rem;
     padding: 0.5rem 1rem; }
   .button.load--more,
+  a.button.load--more,
   input[type='submit'].load--more {
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
     width: 100%;
@@ -1443,7 +1492,20 @@ input[type='submit'] {
     padding: 1rem 2rem;
     cursor: pointer; }
     .button.load--more svg,
+    a.button.load--more svg,
     input[type='submit'].load--more svg {
       transform: scale(0.7);
       font-size: 24px;
       fill: #2b6990; }
+  .button.button--grey,
+  a.button.button--grey,
+  input[type='submit'].button--grey {
+    background-color: #eeeeee;
+    color: #2b6990;
+    border-color: #eeeeee; }
+    .button.button--grey:hover,
+    a.button.button--grey:hover,
+    input[type='submit'].button--grey:hover {
+      background-color: #fff;
+      color: #003954;
+      border-color: #003954; }

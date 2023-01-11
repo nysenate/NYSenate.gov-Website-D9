@@ -33,8 +33,7 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Spiderfying.
@@ -47,21 +46,20 @@
   Drupal.behaviors.geolocationSpiderfying = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'spiderfying',
+        "spiderfying",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
          * @param {SpiderfyingSettings} featureSettings - Settings for current feature.
          */
         function (map, featureSettings) {
-          if (typeof OverlappingMarkerSpiderfier === 'undefined') {
+          if (typeof OverlappingMarkerSpiderfier === "undefined") {
             return;
           }
 
           /* global OverlappingMarkerSpiderfier */
 
           map.addInitializedCallback(function (map) {
-
             var oms = null;
 
             /**
@@ -71,7 +69,7 @@
               markersWontMove: featureSettings.markersWontMove,
               markersWontHide: featureSettings.markersWontHide,
               keepSpiderfied: featureSettings.keepSpiderfied,
-              ignoreMapClick: featureSettings.ignoreMapClick
+              ignoreMapClick: featureSettings.ignoreMapClick,
             });
 
             if (featureSettings.nearbyDistance) {
@@ -79,7 +77,8 @@
             }
 
             if (featureSettings.circleSpiralSwitchover) {
-              oms.circleSpiralSwitchover = featureSettings.circleSpiralSwitchover;
+              oms.circleSpiralSwitchover =
+                featureSettings.circleSpiralSwitchover;
             }
 
             if (featureSettings.circleFootSeparation) {
@@ -103,88 +102,84 @@
             }
 
             if (oms) {
-
               var geolocationOmsMarkerFunction = function (marker) {
-                google.maps.event.addListener(marker, 'spider_format', function (status) {
+                google.maps.event.addListener(
+                  marker,
+                  "spider_format",
+                  function (status) {
+                    /**
+                     * @param {Object} marker.originalIcon
+                     */
+                    if (typeof marker.originalIcon === "undefined") {
+                      var originalIcon = marker.getIcon();
 
-                  /**
-                   * @param {Object} marker.originalIcon
-                   */
-                  if (typeof marker.originalIcon === 'undefined') {
-                    var originalIcon = marker.getIcon();
-
-                    if (typeof originalIcon === 'undefined') {
-                      marker.orginalIcon = '';
+                      if (typeof originalIcon === "undefined") {
+                        marker.orginalIcon = "";
+                      } else if (
+                        typeof originalIcon !== "undefined" &&
+                        originalIcon !== null &&
+                        typeof originalIcon.url !== "undefined" &&
+                        originalIcon.url ===
+                          featureSettings.spiderfiable_marker_path
+                      ) {
+                        // Do nothing.
+                      } else {
+                        marker.orginalIcon = originalIcon;
+                      }
                     }
-                    else if (
-                      typeof originalIcon !== 'undefined'
-                      && originalIcon !== null
-                      && typeof originalIcon.url !== 'undefined'
-                      && originalIcon.url === featureSettings.spiderfiable_marker_path
-                    ) {
-                      // Do nothing.
+
+                    var icon = null;
+                    var iconSize = new google.maps.Size(23, 32);
+                    switch (status) {
+                      case OverlappingMarkerSpiderfier.markerStatus
+                        .SPIDERFIABLE:
+                        icon = {
+                          url: featureSettings.spiderfiable_marker_path,
+                          size: iconSize,
+                          scaledSize: iconSize,
+                        };
+                        break;
+
+                      case OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED:
+                        icon = marker.orginalIcon;
+                        break;
+
+                      case OverlappingMarkerSpiderfier.markerStatus
+                        .UNSPIDERFIABLE:
+                        icon = marker.orginalIcon;
+                        break;
+
+                      case OverlappingMarkerSpiderfier.markerStatus
+                        .UNSPIDERFIED:
+                        icon = marker.orginalIcon;
+                        break;
                     }
-                    else {
-                      marker.orginalIcon = originalIcon;
-                    }
-                  }
-
-                  var icon = null;
-                  var iconSize = new google.maps.Size(23, 32);
-                  switch (status) {
-                    case OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE:
-                      icon = {
-                        url: featureSettings.spiderfiable_marker_path,
-                        size: iconSize,
-                        scaledSize: iconSize
-                      };
-                      break;
-
-                    case OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED:
-                      icon = marker.orginalIcon;
-                      break;
-
-                    case OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIABLE:
-                      icon = marker.orginalIcon;
-                      break;
-
-                    case OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIED:
-                      icon = marker.orginalIcon;
-                      break;
-                  }
-                  marker.setIcon(icon);
-                });
-
-                $.each(
-                  marker.listeners,
-                  function (index, listener) {
-                    if (listener.e === 'click') {
-                      google.maps.event.removeListener(listener.listener);
-                      marker.addListener('spider_click', listener.f);
-                    }
+                    marker.setIcon(icon);
                   }
                 );
+
+                $.each(marker.listeners, function (index, listener) {
+                  if (listener.e === "click") {
+                    google.maps.event.removeListener(listener.listener);
+                    marker.addListener("spider_click", listener.f);
+                  }
+                });
                 oms.addMarker(marker);
               };
 
               // Remove if https://github.com/jawj/OverlappingMarkerSpiderfier/issues/103
               // is ever corrected.
-              google.maps.event.addListener(
-                map.googleMap,
-                'idle', function () {
-                  Object.getPrototypeOf(oms).h.call(oms);
-                }
-              );
+              google.maps.event.addListener(map.googleMap, "idle", function () {
+                Object.getPrototypeOf(oms).h.call(oms);
+              });
 
               $.each(map.mapMarkers, function (index, marker) {
                 geolocationOmsMarkerFunction(marker);
               });
 
-              map.addMarkerAddedCallback(
-                function (marker) {
-                  geolocationOmsMarkerFunction(marker)
-                }
-              );
+              map.addMarkerAddedCallback(function (marker) {
+                geolocationOmsMarkerFunction(marker);
+              });
             }
           });
 
@@ -193,7 +188,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(jQuery, Drupal);

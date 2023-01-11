@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\facets\Unit\Utility;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginManager;
 use Drupal\facets\Utility\FacetsUrlGenerator;
-use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
@@ -15,7 +15,7 @@ use Prophecy\Argument;
  * @group facets
  * @coversDefaultClass \Drupal\facets\Utility\FacetsUrlGenerator
  */
-class FacetsUrlGeneratorTest extends UnitTestCase {
+class FacetsUrlGeneratorTest extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * Tests that passing an invalid facet ID throws an InvalidArgumentException.

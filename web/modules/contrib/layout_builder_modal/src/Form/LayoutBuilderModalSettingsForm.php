@@ -35,14 +35,14 @@ class LayoutBuilderModalSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Options'),
     ];
     $form['options']['modal_width'] = [
-      '#type' => 'number',
+      '#type' => 'textfield',
       '#title' => $this->t('Width'),
       '#default_value' => $config->get('modal_width'),
       '#description' => $this->t(
-        'Width in pixels with no units (e.g. "<code>768</code>"). See <a href=":link">the jQuery Dialog documentation</a> for more details.',
+        'Width in pixels with no units (e.g. "<code>768</code>"), or use percentage (e.g. "<code>80%</code>"). See <a href=":link">the jQuery Dialog documentation</a> for more details.',
         [':link' => 'https://api.jqueryui.com/dialog/#option-width']
       ),
-      '#min' => 1,
+      '#size' => 20,
       '#required' => TRUE,
     ];
     $form['options']['modal_height'] = [
@@ -84,6 +84,16 @@ class LayoutBuilderModalSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $width = $form_state->getValue('modal_width');
+    if (substr_count($width, '%') == 1 && $width[strlen($width) - 1] == '%') {
+      $percentage_value = substr($width,0,-1);
+      if (!is_numeric($percentage_value) || $percentage_value < 1 || $percentage_value > 100) {
+        $form_state->setErrorByName('modal_width', $this->t('Width must be a positive number or a percentage.'));
+      }
+    }
+    elseif ((!is_numeric($width) || $width < 1)) {
+      $form_state->setErrorByName('modal_width', $this->t('Width must be a positive number or a percentage.'));
+    }
     $height = $form_state->getValue('modal_height');
     if ((!is_numeric($height) || $height < 1) && $height !== 'auto') {
       $form_state->setErrorByName('modal_height', $this->t('Height must be a positive number or "auto".'));

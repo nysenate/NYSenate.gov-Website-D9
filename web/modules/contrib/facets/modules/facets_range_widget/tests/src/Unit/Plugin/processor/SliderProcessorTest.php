@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\facets_range_widget\Unit\Plugin\processor;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\ArrayWidget;
 use Drupal\facets\Result\Result;
 use Drupal\facets\Widget\WidgetPluginManager;
 use Drupal\facets_range_widget\Plugin\facets\processor\SliderProcessor;
-use Drupal\Tests\UnitTestCase;
 
 /**
  * Unit test for processor.
@@ -16,7 +16,7 @@ use Drupal\Tests\UnitTestCase;
  * @group facets
  * @coversDefaultClass \Drupal\facets_range_widget\Plugin\facets\processor\SliderProcessor
  */
-class SliderProcessorTest extends UnitTestCase {
+class SliderProcessorTest extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * The processor we're testing.

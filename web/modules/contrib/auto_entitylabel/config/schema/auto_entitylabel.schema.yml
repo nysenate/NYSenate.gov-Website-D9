@@ -14,6 +14,12 @@ auto_entitylabel.settings.*:
     preserve_titles:
       type: boolean
       label: 'Preserve node titles'
+    save:
+      type: boolean
+      label: 'Re-save all labels'
+    chunk:
+      type: integer
+      label: 'Number of entities to be processed per batch operation'
     dependencies:
       type: config_dependencies
       label: 'Dependencies'

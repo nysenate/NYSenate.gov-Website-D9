@@ -116,6 +116,7 @@ class MigrateExecutable extends MigrateExecutableBase {
     $this->listeners[MigrateEvents::POST_ROW_DELETE] = [$this, 'onPostRowDelete'];
     $this->listeners[MigratePlusEvents::PREPARE_ROW] = [$this, 'onPrepareRow'];
     foreach ($this->listeners as $event => $listener) {
+      $this->resetListeners($event);
       $this->getEventDispatcher()->addListener($event, $listener);
     }
   }
@@ -265,6 +266,22 @@ class MigrateExecutable extends MigrateExecutableBase {
   }
 
   /**
+   * Clean up the event listeners that cannot be removed by removeListeners().
+   *
+   * @param string $event_name
+   *   The name of the event to remove.
+   */
+  protected function resetListeners(string $event_name) {
+    if (in_array($event_name, [MigrateEvents::POST_IMPORT, MigrateEvents::POST_ROLLBACK], TRUE)) {
+      foreach ($this->getEventDispatcher()->getListeners($event_name) as $registered_listener) {
+        if ($registered_listener[0] instanceof self) {
+          $this->getEventDispatcher()->removeListener($event_name, $registered_listener);
+        }
+      }
+    }
+  }
+
+  /**
    * Emit information on what we've done.
    *
    * Either since the last feedback or the beginning of this migration.
@@ -321,7 +338,14 @@ class MigrateExecutable extends MigrateExecutableBase {
    *   TRUE if this is the last items to rollback. Otherwise FALSE.
    */
   protected function rollbackMessage($done = TRUE) {
-    $rolled_back = $this->getRollbackCount();
+    $translation = \Drupal::translation();
+    if (($rolled_back = $this->getRollbackCount()) === 0) {
+      $this->message->display($translation->translate(
+        "No item has been rolled back - done with '@name'",
+        ['@name' => $this->migration->id()])
+      );
+      return;
+    }
     if ($done) {
       $singular_message = "Rolled back 1 item - done with '@name'";
       $plural_message = "Rolled back @numitems items - done with '@name'";
@@ -330,7 +354,7 @@ class MigrateExecutable extends MigrateExecutableBase {
       $singular_message = "Rolled back 1 item - continuing with '@name'";
       $plural_message = "Rolled back @numitems items - continuing with '@name'";
     }
-    $this->message->display(\Drupal::translation()->formatPlural($rolled_back,
+    $this->message->display($translation->formatPlural($rolled_back,
       $singular_message, $plural_message,
       [
         '@numitems' => $rolled_back,

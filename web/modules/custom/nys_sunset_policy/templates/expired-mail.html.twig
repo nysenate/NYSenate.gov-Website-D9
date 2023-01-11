@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present an expired email for sunset policy.
+ *
+ * Available variables:
+ * - message: 'message.alias'.
+ * - message: 'message.title'.
+ * - message: 'message.url'.
+ *
+ * @see nys_sunset_policy_mail()
+ */
+#}
+
+Hello,<br><br>
+
+This item has been unpublished from the New York Senate web site:<br><br>
+
+"{{ message.title|raw }}" https://{{ message.alias }}<br><br>
+
+You may edit the content to republish and change the expiration date.<br><br>
+
+https://{{ message.url }}/edit<br><br>
+
+Thank you,<br><br>
+
+NY Senate team

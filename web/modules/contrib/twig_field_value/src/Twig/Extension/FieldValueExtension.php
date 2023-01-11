@@ -2,6 +2,9 @@
 
 namespace Drupal\twig_field_value\Twig\Extension;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
@@ -11,13 +14,29 @@ use Drupal\Core\Render\Element\RenderCallbackInterface;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Provides field value filters for Twig templates.
  */
-class FieldValueExtension extends \Twig_Extension {
+class FieldValueExtension extends AbstractExtension {
 
   use DoTrustedCallbackTrait;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
 
   /**
    * The controller resolver.
@@ -36,12 +55,18 @@ class FieldValueExtension extends \Twig_Extension {
   /**
    * Constructs a FieldValueExtension.
    *
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
+   *   The entity repository.
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
    *   The controller resolver.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    *   The logger channel factory.
    */
-  public function __construct(ControllerResolverInterface $controllerResolver, LoggerChannelFactoryInterface $loggerFactory) {
+  public function __construct(LanguageManagerInterface $language_manager, EntityRepositoryInterface $entityRepository, ControllerResolverInterface $controllerResolver, LoggerChannelFactoryInterface $loggerFactory) {
+    $this->languageManager = $language_manager;
+    $this->entityRepository = $entityRepository;
     $this->controllerResolver = $controllerResolver;
     $this->loggerChannel = $loggerFactory->get('twig_field_value');
   }
@@ -51,10 +76,10 @@ class FieldValueExtension extends \Twig_Extension {
    */
   public function getFilters() {
     return [
-      new \Twig_SimpleFilter('field_label', [$this, 'getFieldLabel']),
-      new \Twig_SimpleFilter('field_value', [$this, 'getFieldValue']),
-      new \Twig_SimpleFilter('field_raw', [$this, 'getRawValues']),
-      new \Twig_SimpleFilter('field_target_entity', [$this, 'getTargetEntity']),
+      new TwigFilter('field_label', [$this, 'getFieldLabel']),
+      new TwigFilter('field_value', [$this, 'getFieldValue']),
+      new TwigFilter('field_raw', [$this, 'getRawValues']),
+      new TwigFilter('field_target_entity', [$this, 'getTargetEntity']),
     ];
   }
 
@@ -184,11 +209,13 @@ class FieldValueExtension extends \Twig_Extension {
     $parent = $build[$parent_key];
 
     $entities = [];
-    /** @var \Drupal\Core\Field\FieldItemInterface $fieldItems */
     $fieldItems = $parent->get($build['#field_name']);
     foreach ($fieldItems as $delta => $item) {
-      if (isset($item->entity) && $item->entity->access('view')) {
-        $entities[$delta] = $item->entity;
+      if (isset($item->entity) && $item->entity instanceof EntityInterface) {
+        $entity = $this->entityRepository->getTranslationFromContext($item->entity);
+        if ($entity->access('view')) {
+          $entities[$delta] = $entity;
+        }
       }
     }
 

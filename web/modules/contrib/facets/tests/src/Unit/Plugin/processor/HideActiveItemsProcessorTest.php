@@ -17,7 +17,7 @@ class HideActiveItemsProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\processor\BuildProcessorInterface
+   * @var \Drupal\facets\Processor\BuildProcessorInterface
    */
   protected $processor;
 

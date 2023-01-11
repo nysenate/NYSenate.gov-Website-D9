@@ -1,0 +1,206 @@
+
+image: mediacurrent/mc-bb-pipelines:PHP8.0
+
+pipelines:
+  default:
+    - step:
+        name: Build and test
+        caches:
+          - composer
+          # - composer-project-vendor
+        script:
+          - SLACK_CHANNEL="mc-alerts-rain"
+          - uname -a
+          - mkdir -p /root/.ssh
+          - echo "bitbucket.org,104.192.143.2 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==" >> /root/.ssh/known_hosts
+          - echo -e "$SSH_ID_RSA" >> ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - echo -e "$SSH_ID_RSA_PUB" >> ~/.ssh/id_rsa.pub
+          - chmod 600 ~/.ssh/id_rsa.pub
+          - chmod 700 ~/.ssh
+          - php --version
+          - source /root/.bashrc
+          - rm -rf ./mis_rain_ddev
+          - git clone git@bitbucket.org:mediacurrent/mis_rain_ddev.git
+          # Check against the 9.x-lb branch
+          - cd mis_rain_ddev
+          - git checkout 9.x-lb
+          - composer selfupdate
+          - composer validate --no-check-all --no-check-publish
+          - composer --verbose install
+          - BRANCH_ALIAS="${BITBUCKET_BRANCH}-dev"
+          - if ! [[ "${BITBUCKET_BRANCH}" =~ ^[0-9]*.x$ ]]; then BRANCH_ALIAS="dev-${BITBUCKET_BRANCH}"; fi
+          - echo ${BRANCH_ALIAS}
+          - composer require mediacurrent/mis_profile:${BRANCH_ALIAS} --update-with-all-dependencies
+          - ls -l ./vendor/bin
+          - ./vendor/bin/behat --version
+          - ./vendor/bin/drush version
+          - ./vendor/bin/phpunit --version
+          - composer robo --version
+          - composer robo list
+          - composer robo project:init example.mcdev 127.0.0.1
+          # - nvm install v7.4.0
+          # - nvm use v7.4.0
+          # Drupal coding standards test on custom modules
+          - echo "Coding Standards"
+          - ./vendor/bin/phpcs --standard=./vendor/drupal/coder/coder_sniffer/Drupal --extensions=php,module,inc,install,test,profile,theme,info,txt,md,yml ./web/profiles/contrib/mis_profile
+          # - CMD=$(./tests/code-sniffer.sh ./web 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h ${SLACK_CHANNEL} -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/ ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
+          - echo "PHPUnit unit tests"
+          - if [ "$(ls -A web/modules/custom/)" ]; then
+          - composer robo test:phpunit-tests
+          - fi
+          - echo "Drupal-check custom development for Drupal 9/10 readiness"
+          - ./vendor/bin/drupal-check web/profiles/contrib/mis_profile
+          # - CMD=$(composer robo test:phpunit-tests 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h ${SLACK_CHANNEL} -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
+          - printf "127.0.0.1 example.mcdev" >> /etc/hosts
+          - cd ./web
+          # Set script to continue on failure.
+          # - set +e
+          # Check for pending security updates.
+          # - PMSECURITY=$(../vendor/bin/drush pm:security 2>&1)
+          # - printf '%s\n' "${PMSECURITY}"
+          # - if grep -vq '[success]' <<< ${PMSECURITY} ; then
+          # - slackcli -h ${SLACK_CHANNEL} -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - pm:security \`\`\`${PMSECURITY}\`\`\`"
+          # # - exit 1
+          # - fi
+          # Set script to stop on failure.
+          # - set -e
+          # Install site using options to disable email notification.
+          - echo "\$config['system.mail']['interface']['default'] = 'test_mail_collector';" >> ./sites/default/settings.php
+          - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install rain_demo install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
+          # - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install rain_demo install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal
+          - ../vendor/bin/drush status
+          - ../vendor/bin/drush sget system.test_mail_collector
+          - ../vendor/bin/drush sql-dump > ../vendor/bin/db.sql
+          - cd ..
+        services:
+          - mysql
+        artifacts:
+          - mis_rain_ddev/**
+    - parallel:
+      - step:
+          name: A11y and regression tests
+          script:
+            - ls -l
+            - cd mis_rain_ddev
+            - ls -l ./vendor/bin
+            - cd web
+            - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
+            - ../vendor/bin/drush status
+            - ../vendor/bin/drush -vvv --debug runserver 8080 &
+            - sleep 3
+            - cd ..
+            - if [ "$(ls -A web/modules/custom/)" ]; then
+            # The SIMPLETEST_DB var is needed for Kernel and Functional tests.
+            - echo 'SIMPLETEST_DB="mysql://drupal:drupal@127.0.0.1:3306/drupal"' >> .env
+            # PHPUnit - Kernel and Functional tests
+            - composer robo test:phpunit-tests -- --filter="/Kernel|Functional/"
+            # PHPUnit - Drupal Test Trait ExistingSite tests
+            - DTT_BASE_URL=http://127.0.0.1:8080 ./vendor/bin/phpunit --configuration=./tests/dtt/phpunit.xml ./web/modules/custom/
+            - fi
+            # Drupal accessibility tests
+            # - echo "Accessibility tests"
+            # - pa11y --version
+            # - ./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html
+            # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h ${SLACK_CHANNEL} -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
+            # Drupal behat tests
+            - echo "Behat tests"
+            - ./tests/behat/behat-run.sh http://127.0.0.1:8080
+            # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h ${SLACK_CHANNEL} -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
+          services:
+            - mysql
+      - step:
+          name: Security tests
+          caches:
+            - docker
+          script:
+            - cd mis_rain_ddev/web
+            - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
+            - ../vendor/bin/drush status
+            - ../vendor/bin/drush -vvv --debug runserver 172.17.0.1:8080 &
+            - cd ..
+            # OWASP Zap Baseline report
+            - echo "OWASP ZAP Baseline report"
+            - docker version
+            # Set script to continue on failure.
+            - set +e
+            - ln -s $(pwd) /zap/wrk
+            - ls -l /zap/wrk/
+            # - /zap/zap-baseline.py -c owasp-zap.conf -p owasp-zap-progress.json -t http://127.0.0.1:8080
+            - CMD=$(/zap/zap-baseline.py -d -c owasp-zap.conf -p owasp-zap-progress.json -t http://172.17.0.1:8080) && printf '%s\n' "${CMD}"|| ( slackcli -h ${SLACK_CHANNEL} -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - OWASP Zap Baseline report \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
+            # Set script to stop on failure.
+            - set -e
+            # Run Security Review checks
+            - cd web
+            # Check security review.
+            - ../vendor/bin/drush en security_review
+            - SECURITYREVIEW=$(../vendor/bin/drush secrev --skip=failed_logins,file_perms,private_files,views_access,trusted_hosts,field 2>&1)
+            - printf '%s\n' "${SECURITYREVIEW}"
+            - if grep -q 'failed' <<< ${SECURITYREVIEW} ; then
+            - slackcli -h ${SLACK_CHANNEL} -e ":lock:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER - ${BITBUCKET_BRANCH} - secrev \`\`\`${SECURITYREVIEW}\`\`\`"
+            - exit 1
+            - fi
+          services:
+            - docker
+            - mysql
+      - step:
+          name: Visual Regression
+          caches:
+            - docker
+            - visual-regression-ci-reference
+            - visual-regression-node-modules
+          script:
+            - aws --version
+            - ls -l
+            - cd mis_rain_ddev
+            - ls -l ./vendor/bin
+            - cd web
+            - ../vendor/bin/drush sqlc < ../vendor/bin/db.sql
+            - ../vendor/bin/drush status
+            - ../vendor/bin/drush -vvv --debug runserver 172.17.0.1:8080 &
+            - sleep 3
+            - cd ..
+            - cd tests/visual-regression
+            - chmod -R o+w ./backstop_data
+            - npm install
+            - set +e
+            # Generate new reference if needed
+            - if [ ! "$(ls -A backstop_data/ci_reference)" ]; then
+            - aws s3 cp s3://mis-ci-tests/vrt/reference-${BITBUCKET_REPO_SLUG} backstop_data --recursive
+            - if [ ! "$(ls -A backstop_data/ci_reference)" ]; then
+            - make -i ci-reference
+            - fi
+            - fi
+            - make -i ci-test
+            - aws s3 cp backstop_data s3://mis-ci-tests/vrt/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER} --recursive
+            # link to results posted to Bitbucket
+            - export VRT_URL="http://vrt.mediacurrent.com/test-${BITBUCKET_REPO_SLUG}-${BITBUCKET_BUILD_NUMBER}/ci_html_report/"
+            - export BUILD_STATUS="{\"key\":\"doc\", \"state\":\"SUCCESSFUL\", \"name\":\"VRT Results\", \"url\":\"${VRT_URL}\"}"
+            - curl -H "Content-Type:application/json" -X POST --user "${BB_AUTH_STRING}" -d "${BUILD_STATUS}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/commit/${BITBUCKET_COMMIT}/statuses/build"
+            # Use current develop as reference
+            - if [ "${BITBUCKET_BRANCH}" == "develop" ]; then
+            - make -i ci-approve;
+            - aws s3 cp backstop_data s3://mis-ci-tests/vrt/reference-${BITBUCKET_REPO_SLUG} --recursive
+            - fi
+          services:
+            - docker
+            - mysql
+          artifacts:
+            - tests/visual-regression/backstop_data/**
+
+
+definitions:
+  caches:
+    # composer-project-vendor: mis_rain_ddev/vendor/
+    visual-regression-ci-reference: mis_rain_ddev/tests/visual-regression/backstop_data/ci_reference
+    visual-regression-node-modules: mis_rain_ddev/tests/visual-regression/node_modules
+  services:
+    docker:
+      memory: 2048
+    mysql:
+      image: mysql:8.0
+      environment:
+        MYSQL_DATABASE: 'drupal'
+        MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+        MYSQL_USER: 'drupal'
+        MYSQL_PASSWORD: 'drupal'

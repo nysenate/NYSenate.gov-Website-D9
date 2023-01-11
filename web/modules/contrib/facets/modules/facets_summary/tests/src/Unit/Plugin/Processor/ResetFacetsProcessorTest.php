@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\facets_summary\Unit\Plugin\Processor;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\facets_summary\Entity\FacetsSummary;
 use Drupal\facets_summary\Plugin\facets_summary\processor\ResetFacetsProcessor;
-use Drupal\Tests\UnitTestCase;
 
 /**
  * Provides the ResetFacetsProcessorTest class.
@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
  * @group facets
  * @coversDefaultClass \Drupal\facets_summary\Plugin\facets_summary\processor\ResetFacetsProcessor
  */
-class ResetFacetsProcessorTest extends UnitTestCase {
+class ResetFacetsProcessorTest extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * The processor we're testing.

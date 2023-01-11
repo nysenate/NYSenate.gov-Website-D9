@@ -4,8 +4,7 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Generic behavior.
@@ -18,39 +17,57 @@
    */
   Drupal.behaviors.locationInputGeocoder = {
     attach: function (context, drupalSettings) {
-      $.each(drupalSettings.geolocation.locationInput.geocoder, function (index, settings) {
-        var inputWrapper = $('.location-input-geocoder.' + settings.identifier, context).once('location-input-geocoder-processed').first();
-        if (inputWrapper.length) {
-          if (settings.hideForm) {
-            inputWrapper.hide();
-          }
-
-          var latitudeInput = inputWrapper.find('input.geolocation-input-latitude').first();
-          var longitudeInput = inputWrapper.find('input.geolocation-input-longitude').first();
-          var geocoderAddressInput = inputWrapper.parent().find('input.geolocation-geocoder-address').first();
-
-          Drupal.geolocation.geocoder.addResultCallback(function (address) {
-            if (typeof address.geometry.location === 'undefined') {
-              return false;
+      $.each(
+        drupalSettings.geolocation.locationInput.geocoder,
+        function (index, settings) {
+          var inputWrapper = $(
+            ".location-input-geocoder." + settings.identifier,
+            context
+          )
+            .once("location-input-geocoder-processed")
+            .first();
+          if (inputWrapper.length) {
+            if (settings.hideForm) {
+              inputWrapper.hide();
             }
-            latitudeInput.val(address.geometry.location.lat());
-            longitudeInput.val(address.geometry.location.lng());
 
-            if (settings.autoSubmit) {
-              if (geocoderAddressInput.length) {
-                geocoderAddressInput.val(address.formatted_address);
+            var latitudeInput = inputWrapper
+              .find("input.geolocation-input-latitude")
+              .first();
+            var longitudeInput = inputWrapper
+              .find("input.geolocation-input-longitude")
+              .first();
+            var geocoderAddressInput = inputWrapper
+              .parent()
+              .find("input.geolocation-geocoder-address")
+              .first();
+
+            Drupal.geolocation.geocoder.addResultCallback(function (address) {
+              if (typeof address.geometry.location === "undefined") {
+                return false;
               }
-              inputWrapper.closest('form').find('input.js-form-submit').first().click();
-            }
-          }, settings.identifier);
+              latitudeInput.val(address.geometry.location.lat());
+              longitudeInput.val(address.geometry.location.lng());
 
-          Drupal.geolocation.geocoder.addClearCallback(function () {
-            latitudeInput.val('');
-            longitudeInput.val('');
-          }, settings.identifier);
+              if (settings.autoSubmit) {
+                if (geocoderAddressInput.length) {
+                  geocoderAddressInput.val(address.formatted_address);
+                }
+                inputWrapper
+                  .closest("form")
+                  .find("input.js-form-submit")
+                  .first()
+                  .click();
+              }
+            }, settings.identifier);
+
+            Drupal.geolocation.geocoder.addClearCallback(function () {
+              latitudeInput.val("");
+              longitudeInput.val("");
+            }, settings.identifier);
+          }
         }
-      });
-    }
+      );
+    },
   };
-
 })(jQuery, Drupal);

@@ -14,8 +14,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Zoom control.
@@ -28,7 +27,7 @@
   Drupal.behaviors.geolocationZoomControl = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'control_zoom',
+        "control_zoom",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -39,14 +38,13 @@
             var options = {
               zoomControlOptions: {
                 position: google.maps.ControlPosition[featureSettings.position],
-                style: google.maps.ZoomControlStyle[featureSettings.style]
-              }
+                style: google.maps.ZoomControlStyle[featureSettings.style],
+              },
             };
 
-            if (featureSettings.behavior === 'always') {
+            if (featureSettings.behavior === "always") {
               options.zoomControl = true;
-            }
-            else {
+            } else {
               options.zoomControl = undefined;
             }
             map.googleMap.setOptions(options);
@@ -57,7 +55,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(Drupal);

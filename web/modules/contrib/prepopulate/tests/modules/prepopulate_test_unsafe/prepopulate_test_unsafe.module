@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the prepopulate_test_unsafe module.
+ */
+
+/**
+ * Implements hook_prepopulate_whitelist_alter().
+ */
+function prepopulate_test_unsafe_prepopulate_whitelist_alter(array &$whitelisted_types) {
+  $whitelisted_types[] = 'checkbox';
+  $whitelisted_types[] = 'checkboxes';
+  $whitelisted_types[] = 'radio';
+  $whitelisted_types[] = 'radios';
+}

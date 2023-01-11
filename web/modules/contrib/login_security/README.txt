@@ -13,10 +13,11 @@ These are the features included:
 
 Ongoing attack detection
 ------------------------
-System will detect if a password guessing or brute-force attack is being performed
-against the Drupal login form. Using a threshold value, you may instruct the
-module to alert (using a watchdog message, and optionally sending an email) the
-admin user when the number of invalid login attempts reaches the threshold value.
+System will detect if a password guessing or brute-force attack is being
+performed against the Drupal login form. Using a threshold value, you may
+instruct the module to alert (using a watchdog message, and optionally sending
+an email) the admin user when the number of invalid login attempts reaches the
+threshold value.
 
 Soft protections
 ----------------
@@ -38,8 +39,8 @@ block users because of leak password guessing attempts, hard protections may
 prevent the system being beaten.
 
  - Block account: it's common to block an account after a number of failed login
-   attempts. Once this number is reached, the account can be blocked and the user
-   and admin are advised.
+   attempts. Once this number is reached, the account can be blocked and the
+   user and admin are advised.
 
  - Block IP address: on a number of failed attempts, a host may be added to the
    access control list. This action will leave the host completely banned from
@@ -48,11 +49,11 @@ prevent the system being beaten.
 
 Track time: protection time window
 ----------------------------------
-The time the protections are defined as a time window (or "track time"), the time
-during which login events are being considered for protective action. For example,
-an account can be blocked on the third login attempt in the protection time
-window. If the time protection window is one hour, the three attempts must be
-within the last 60 minutes.
+The time the protections are defined as a time window (or "track time"), the
+time during which login events are being considered for protective action.
+For example, an account can be blocked on the third login attempt in the
+protection time window. If the time protection window is one hour, the three
+attempts must be within the last 60 minutes.
 
 Blocked accounts and hosts will remain blocked until an administrator unblocks
 them.
@@ -103,10 +104,11 @@ Basic options
    Administer -> User Management -> Users
 
  - Maximum number of login failures before soft blocking a host: after this
-   number of attempts to login from that IP address (regardless of the username),
-   the host will not be allowed to submit the login form again, but the
-   content of the site will still be accessible from that IP address. The login
-   attempts tracked will start to clear after the "track time" time window.
+   number of attempts to login from that IP address (regardless of the
+   username), the host will not be allowed to submit the login form again, but
+   the content of the site will still be accessible from that IP address. The
+   login attempts tracked will start to clear after the "track time" time
+   window.
 
  - Maximum number of login failures before blocking a host: analogous to soft
    blocking, but the IP address will be completely banned from the site, using
@@ -138,11 +140,12 @@ Notifications
  - Send a notification email to a site user of your choice each time an account
    is blocked.
 
- - Send a notification email to a site user of your choice about suspicious login
-   activity (once a specified threshold of invalid login attempts is reached).
+ - Send a notification email to a site user of your choice about suspicious
+   login activity (once a specified threshold of invalid login attempts is
+   reached).
 
-Notifications are configurable in the Login Security settings section. The strings
-can be personalized using the following placeholders:
+Notifications are configurable in the Login Security settings section. The
+strings can be personalized using the following placeholders:
 
     %date                  :  The (formatted) date and time of the operation
     %ip                    :  The IP Address performing the operation
@@ -180,13 +183,13 @@ list of what's now implemented and how login submissions affect the protections:
     successful login or by track time expiration, the pair host-username is
     deleted from the security log.
 
- 2. For the soft blocking operation, any failed attempt from that host is tracked
-    and, when the number of attempts is exceeded, the host is not allowed to
-    submit the form.
+ 2. For the soft blocking operation, any failed attempt from that host is
+    tracked and, when the number of attempts is exceeded, the host is not
+    allowed to submit the form.
 
     Note: (2nd and 3rd impose restrictions to the login form and the time these
-    restrictions are in rule is the time the information is being tracked: "Track
-    Time").
+    restrictions are in rule is the time the information is being tracked:
+    "Track Time").
 
  3. For the user blocking operation, any failed attempt is tracked so, no matter
     what the source IP address is, when too many attempts appear, the account is
@@ -194,29 +197,30 @@ list of what's now implemented and how login submissions affect the protections:
     entries from the database.
 
  4. For the host blocking operation, only the host is taken into account. When
-    too many attempts are made, regardless of the username being tested, the host
-    IP address is banned.
+    too many attempts are made, regardless of the username being tested, the
+    host IP address is banned.
 
     Note: 4th and 5th operations are not cancelled automatically.
-    Note: The tracking entries in the database for any host <-> username pair are
-          deleted on: "login", "update", and "delete" user operations.
+    Note: The tracking entries in the database for any host <-> username pair
+          are deleted on: "login", "update", and "delete" user operations.
 
- 5. For the ongoing attack detection, all the tracked events are taken into account.
-    The system detects an ongoing attack and notifies the admin. It will remain in
-    attack mode (no more notices will be sent) until the attack is no longer
-    detected. This will happen when the total number of tracked events is
-    below "maximum allowed to detect ongoing attack" / 3. Once the threshold is
-    reached again, a new notification will be logged or sent by email.
+ 5. For the ongoing attack detection, all the tracked events are taken into
+    account. The system detects an ongoing attack and notifies the admin.
+    It will remain inattack mode (no more notices will be sent) until the
+    attack is no longer detected. This will happen when the total number of
+    tracked events is below "maximum allowed to detect ongoing attack" / 3.
+    Once the threshold is reached again, a new notification will be logged or
+    sent by email.
 
     E.g. Say you put 1 hour of track time and a maximum number of login failures
     to detect an ongoing attack of 20. This means that, if during the last hour
     there are more than 20 invalid login attempts, an attack is detected. A log
     entry is created and the system switches to "attack" mode, in which no more
-    notices about the attack are logged or sent. After some time, the attack stops.
-    Once the number of invalid login attempts for this last hour is below 1/3 of
-    this maximum: invalid attempts are below 6 (20 / 3 in this example), the system
-    returns to normal status. If a new attack is detected, the module will alert
-    about it again.
+    notices about the attack are logged or sent. After some time, the attack]
+    stops. Once the number of invalid login attempts for this last hour
+    is below 1/3 of this maximum: invalid attempts are below 6 (20 / 3 in this
+    example), the system returns to normal status. If a new attack is detected,
+    the module will alert about it again.
 
 
 Most used configuration
@@ -229,8 +233,8 @@ The most common configuration options will look like this:
  Max number of login failures before blocking a host  = 15
 
  - The user will be blocked after five account guesses within the "track time".
- - Any host attempting 10 logins will be punished by not being permitted to submit
-   the login form again within the "track time".
+ - Any host attempting 10 logins will be punished by not being permitted to
+   submit the login form again within the "track time".
  - If the number of attempts reaches 15, the host will be banned.
 
 
@@ -248,7 +252,8 @@ Currently, user uid 1 is never blocked, even if the "user blocking operation" is
 enabled. User uid 1 is widely exposed on too many sites (and probably the name
 for that account is "admin") so uid 1 was is not provided this protection due to
 the risk of being too easily blocked. If you want to protect your users, you can
-use a combination of features, not relying solely on the user blocking operation.
+use a combination of features, not relying solely on the user blocking
+operation.
 
 More information: http://drupal.org/node/601846
 

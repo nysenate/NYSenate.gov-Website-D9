@@ -137,12 +137,12 @@ class Helper
      * @param int|string|\DateTimeInterface $input Accepted formats: timestamp, date string, DateTime or
      *                                             DateTimeImmutable
      *
-     * @return string|bool false is returned in case of invalid input
+     * @return string|false false is returned in case of invalid input
      */
     public function formatDate($input)
     {
         switch (true) {
-            // input of datetime object
+            // input of DateTime or DateTimeImmutable object
             case $input instanceof \DateTimeInterface:
                 $input = clone $input;
                 break;
@@ -172,15 +172,10 @@ class Helper
 
         // handle the filtered input
         if ($input) {
-            // when we get here the input is always a datetime object
+            // when we get here $input is always a DateTime or DateTimeImmutable object
             $input = $input->setTimezone(new \DateTimeZone('UTC'));
-            // Solr seems to require the format PHP erroneously declares as ISO8601.
-            /** @noinspection DateTimeConstantsUsageInspection */
-            $iso8601 = $input->format(\DateTimeInterface::ISO8601);
-            $iso8601 = strstr($iso8601, '+', true); // strip timezone
-            $iso8601 .= 'Z';
 
-            return $iso8601;
+            return $input->format('Y-m-d\TH:i:s\Z');
         }
 
         // unsupported input

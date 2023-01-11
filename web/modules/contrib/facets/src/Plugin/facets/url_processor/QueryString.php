@@ -108,7 +108,7 @@ class QueryString extends UrlProcessorPluginBase {
         return $it !== NULL;
       });
       foreach ($values as $value) {
-        $original_filter_params[] = $this->getUrlAliasByFacetId($facet_id, $facet->getFacetSourceId()) . ":" . $value;
+        $original_filter_params[] = $this->getUrlAliasByFacetId($facet_id, $facet->getFacetSourceId()) . $this->getSeparator() . $value;
       }
     }
 
@@ -315,7 +315,7 @@ class QueryString extends UrlProcessorPluginBase {
     $url_parameters = $this->request->query;
 
     // Get the active facet parameters.
-    $active_params = $url_parameters->get($this->filterKey, [], TRUE);
+    $active_params = $url_parameters->all()[$this->filterKey] ?? "";
     $facet_source_id = $this->configuration['facet']->getFacetSourceId();
 
     // When an invalid parameter is passed in the url, we can't do anything.

@@ -3,7 +3,7 @@
  * Provides base widget behaviours.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, once) {
 
   'use strict';
 
@@ -20,8 +20,7 @@
    *   filter is executed.
    *
    * This is an example how to trigger "facets_filter" event for your widget:
-   *   $('.my-custom-widget.js-facets-widget')
-   *     .once('my-custom-widget-on-change')
+   *   $(once('my-custom-widget-on-change', '.my-custom-widget.js-facets-widget'))
    *     .on('change', function () {
    *       // In this example $(this).val() will provide needed URL.
    *       $(this).trigger('facets_filter', [ $(this).val() ]);
@@ -34,8 +33,7 @@
    * event before initial filter request is finished.
    *
    * This is an example how to handle "facets_filtering":
-   *   $('.my-custom-widget.js-facets-widget')
-   *     .once('my-custom-widget-on-facets-filtering')
+   *   $(once('my-custom-widget-on-facets-filtering', '.my-custom-widget.js-facets-widget'))
    *     .on('facets_filtering.my_widget_module', function () {
    *       // Let's say, that widget can be simply disabled (fe. select).
    *       $(this).prop('disabled', true);
@@ -47,8 +45,7 @@
    */
   Drupal.behaviors.facetsFilter = {
     attach: function (context) {
-      $('.js-facets-widget', context)
-        .once('js-facet-filter')
+      $(once('js-facet-filter', '.js-facets-widget', context))
         .on('facets_filter.facets', function (event, url) {
           $('.js-facets-widget').trigger('facets_filtering');
 
@@ -57,4 +54,4 @@
     }
   };
 
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);

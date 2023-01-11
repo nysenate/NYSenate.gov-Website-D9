@@ -97,92 +97,115 @@ trait WebformEntityReferenceWidgetTrait {
     /** @var \Drupal\webform\WebformInterface $webform */
     $webform = ($target_id) ? Webform::load($target_id) : NULL;
 
-    $element['settings'] = [
-      '#type' => 'details',
-      '#title' => $this->t('@title settings', ['@title' => $element['target_id']['#title']]),
-      '#element_validate' => [[$this, 'validateOpenClose']],
-      '#open' => ($items[$delta]->target_id) ? TRUE : FALSE,
-      '#weight' => $weight++,
-    ];
-
-    // Disable a warning message about the webform's state using Ajax.
-    $is_webform_closed = ($webform && $webform->isClosed());
-    if ($is_webform_closed) {
-      $t_args = [
-        '%webform' => $webform->label(),
-        ':href' => $webform->toUrl('settings-form')->toString(),
+    if ($this->getSetting('allow_status') || $this->getSetting('default_data')) {
+      $element['settings'] = [
+        '#type' => 'details',
+        '#title' => $this->t('@title settings', ['@title' => $element['target_id']['#title']]),
+        '#element_validate' => [[$this, 'validateOpenClose']],
+        '#open' => ($items[$delta]->target_id) ? TRUE : FALSE,
+        '#weight' => $weight++,
       ];
-      if ($webform->access('update')) {
-        $message = $this->t('The %webform webform is <a href=":href">closed</a>. The below status will be ignored.', $t_args);
+
+      // Disable a warning message about the webform's state using Ajax.
+      $is_webform_closed = ($webform && $webform->isClosed());
+      if ($is_webform_closed) {
+        $t_args = [
+          '%webform' => $webform->label(),
+          ':href' => $webform->toUrl('settings-form')->toString(),
+        ];
+        if ($webform->access('update')) {
+          $message = $this->t('The %webform webform is <a href=":href">closed</a>. The below status will be ignored.', $t_args);
+        }
+        else {
+          $message = $this->t('The %webform webform is <strong>closed</strong>. The below status will be ignored.', $t_args);
+        }
+        $element['settings']['status_message'] = [
+          '#type' => 'webform_message',
+          '#message_type' => 'warning',
+          '#message_message' => $message,
+        ];
       }
       else {
-        $message = $this->t('The %webform webform is <strong>closed</strong>. The below status will be ignored.', $t_args);
+        // Render empty element so that Ajax wrapper is embedded in the page.
+        $element['settings']['status_message'] = [];
       }
-      $element['settings']['status_message'] = [
-        '#type' => 'webform_message',
-        '#message_type' => 'warning',
-        '#message_message' => $message,
+      $ajax_id = 'webform-entity-reference-' . $field_name . '-' . $delta;
+      $this->buildAjaxElementTrigger($ajax_id, $element['target_id']);
+      $this->buildAjaxElementUpdate($ajax_id, $element);
+      $this->buildAjaxElementWrapper($ajax_id, $element['settings']['status_message']);
+    }
+    else {
+      $element['settings'] = [];
+    }
+
+    if ($this->getSetting('allow_status')) {
+      $element['settings']['status'] = [
+        '#type' => 'radios',
+        '#title' => $this->t('Status'),
+        '#description' => $this->t('The open, closed, or scheduled status applies to only this webform instance.'),
+        '#options' => [
+          WebformInterface::STATUS_OPEN => $this->t('Open'),
+          WebformInterface::STATUS_CLOSED => $this->t('Closed'),
+          WebformInterface::STATUS_SCHEDULED => $this->t('Scheduled'),
+        ],
+        '#options_display' => 'side_by_side',
+        '#default_value' => $items[$delta]->status,
+      ];
+
+      $element['settings']['scheduled'] = [
+        '#type' => 'item',
+        '#title' => $element['target_id']['#title'],
+        '#title_display' => 'invisible',
+        '#input' => FALSE,
+        '#states' => [
+          'visible' => [
+            'input[name="' . $field_input_name . '[settings][status]"]' => ['value' => WebformInterface::STATUS_SCHEDULED],
+          ],
+        ],
+      ];
+      $element['settings']['scheduled']['open'] = [
+        '#type' => 'datetime',
+        '#title' => $this->t('Open'),
+        '#default_value' => $items[$delta]->open ? DrupalDateTime::createFromTimestamp(strtotime($items[$delta]->open)) : NULL,
+        '#prefix' => '<div class="container-inline form-item">',
+        '#suffix' => '</div>',
+        '#help' => FALSE,
+        '#description' => [
+          '#type' => 'webform_help',
+          '#help' => $this->t('If the open date/time is left blank, this form will immediately be opened.'),
+          '#help_title' => $this->t('Open'),
+        ],
+      ];
+      $element['settings']['scheduled']['close'] = [
+        '#type' => 'datetime',
+        '#title' => $this->t('Close'),
+        '#default_value' => $items[$delta]->close ? DrupalDateTime::createFromTimestamp(strtotime($items[$delta]->close)) : NULL,
+        '#prefix' => '<div class="container-inline form-item">',
+        '#suffix' => '</div>',
+        '#help' => FALSE,
+        '#description' => [
+          '#type' => 'webform_help',
+          '#help' => $this->t('If the close date/time is left blank, this webform will never be closed.'),
+          '#help_title' => $this->t('Close'),
+        ],
       ];
     }
     else {
-      // Render empty element so that Ajax wrapper is embedded in the page.
-      $element['settings']['status_message'] = [];
-    }
-    $ajax_id = 'webform-entity-reference-' . $field_name . '-' . $delta;
-    $this->buildAjaxElementTrigger($ajax_id, $element['target_id']);
-    $this->buildAjaxElementUpdate($ajax_id, $element);
-    $this->buildAjaxElementWrapper($ajax_id, $element['settings']['status_message']);
-
-    $element['settings']['status'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Status'),
-      '#description' => $this->t('The open, closed, or scheduled status applies to only this webform instance.'),
-      '#options' => [
-        WebformInterface::STATUS_OPEN => $this->t('Open'),
-        WebformInterface::STATUS_CLOSED => $this->t('Closed'),
-        WebformInterface::STATUS_SCHEDULED => $this->t('Scheduled'),
-      ],
-      '#options_display' => 'side_by_side',
-      '#default_value' => $items[$delta]->status,
-    ];
-
-    $element['settings']['scheduled'] = [
-      '#type' => 'item',
-      '#title' => $element['target_id']['#title'],
-      '#title_display' => 'invisible',
-      '#input' => FALSE,
-      '#states' => [
-        'visible' => [
-          'input[name="' . $field_input_name . '[settings][status]"]' => ['value' => WebformInterface::STATUS_SCHEDULED],
+      $element['settings']['status'] = [
+        '#type' => 'value',
+        '#value' => $items[$delta]->status,
+      ];
+      $element['settings']['scheduled'] = [
+        'open' => [
+          '#type' => 'value',
+          '#value' => $items[$delta]->open ? DrupalDateTime::createFromTimestamp(strtotime($items[$delta]->open)) : NULL,
         ],
-      ],
-    ];
-    $element['settings']['scheduled']['open'] = [
-      '#type' => 'datetime',
-      '#title' => $this->t('Open'),
-      '#default_value' => $items[$delta]->open ? DrupalDateTime::createFromTimestamp(strtotime($items[$delta]->open)) : NULL,
-      '#prefix' => '<div class="container-inline form-item">',
-      '#suffix' => '</div>',
-      '#help' => FALSE,
-      '#description' => [
-        '#type' => 'webform_help',
-        '#help' => $this->t('If the open date/time is left blank, this form will immediately be opened.'),
-        '#help_title' => $this->t('Open'),
-      ],
-    ];
-    $element['settings']['scheduled']['close'] = [
-      '#type' => 'datetime',
-      '#title' => $this->t('Close'),
-      '#default_value' => $items[$delta]->close ? DrupalDateTime::createFromTimestamp(strtotime($items[$delta]->close)) : NULL,
-      '#prefix' => '<div class="container-inline form-item">',
-      '#suffix' => '</div>',
-      '#help' => FALSE,
-      '#description' => [
-        '#type' => 'webform_help',
-        '#help' => $this->t('If the close date/time is left blank, this webform will never be closed.'),
-        '#help_title' => $this->t('Close'),
-      ],
-    ];
+        'closed' => [
+          '#type' => 'value',
+          '#value' => $items[$delta]->close ? DrupalDateTime::createFromTimestamp(strtotime($items[$delta]->close)) : NULL,
+        ],
+      ];
+    }
 
     if ($this->getSetting('default_data')) {
       /** @var \Drupal\webform\WebformTokenManagerInterface $token_manager */

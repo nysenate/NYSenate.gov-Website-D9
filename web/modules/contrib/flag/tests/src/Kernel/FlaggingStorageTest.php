@@ -39,7 +39,7 @@ class FlaggingStorageTest extends FlagKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->account = $this->createUser();

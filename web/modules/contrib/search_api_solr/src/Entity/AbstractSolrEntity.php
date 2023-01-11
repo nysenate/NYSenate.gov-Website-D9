@@ -76,7 +76,7 @@ abstract class AbstractSolrEntity extends ConfigEntityBase implements SolrConfig
     /* @noinspection PhpComposerExtensionStubsInspection */
     $dom = dom_import_simplexml($root)->ownerDocument;
     $dom->formatOutput = TRUE;
-    $formatted_xml_string = $dom->saveXML();
+    $formatted_xml_string = str_replace('__EMPTY_STRING_VALUE__', '', $dom->saveXML());
 
     // Remove the XML declaration before returning the XML fragment.
     return preg_replace('/<\?.*?\?>\s*\n?/', '', $formatted_xml_string);
@@ -92,8 +92,11 @@ abstract class AbstractSolrEntity extends ConfigEntityBase implements SolrConfig
    */
   protected static function buildXmlFromArrayRecursive(\SimpleXMLElement $element, array $attributes) {
     foreach ($attributes as $key => $value) {
-      if (is_scalar($value)) {
-        if (is_bool($value) === TRUE) {
+      if (is_scalar($value) || is_null($value)) {
+        if (is_null($value)) {
+          $value = '__EMPTY_STRING_VALUE__';
+        }
+        elseif (is_bool($value) === TRUE) {
           // SimpleXMLElement::addAtribute() converts booleans to integers 0
           // and 1. But Solr requires the strings 'false' and 'true'.
           $value = $value ? 'true' : 'false';

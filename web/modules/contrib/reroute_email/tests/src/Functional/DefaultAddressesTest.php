@@ -3,6 +3,8 @@
 namespace Drupal\Tests\reroute_email\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 
 /**
  * Test for default address.
@@ -15,6 +17,8 @@ use Drupal\Component\Render\FormattableMarkup;
  * @group reroute_email
  */
 class DefaultAddressesTest extends RerouteEmailBrowserTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -49,23 +53,23 @@ class DefaultAddressesTest extends RerouteEmailBrowserTestBase {
     $this->assertTrue(isset($site_mail), new FormattableMarkup('Site mail is not empty: @site_mail.', ['@site_mail' => $site_mail]));
 
     // Programmatically enable email rerouting.
-    $this->rerouteConfig->set(REROUTE_EMAIL_ENABLE, TRUE)->save();
+    $this->rerouteConfig->set(RerouteEmailConstants::REROUTE_EMAIL_ENABLE, TRUE)->save();
 
     // Load Reroute Email Settings form page. Ensure rerouting is enabled.
     $this->drupalGet('admin/config/development/reroute_email');
     $this->assertSession()->checkboxChecked('edit-enable');
-    $this->assertTrue($this->rerouteConfig->get(REROUTE_EMAIL_ENABLE), 'Rerouting is enabled.');
+    $this->assertTrue($this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ENABLE), 'Rerouting is enabled.');
 
     // Email addresses field default value is system.site.mail.
-    $this->assertSession()->fieldValueEquals(REROUTE_EMAIL_ADDRESS, $site_mail);
+    $this->assertSession()->fieldValueEquals(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS, $site_mail);
 
     // Ensure reroute_email_address is actually empty at this point.
-    $this->assertNull($this->rerouteConfig->get(REROUTE_EMAIL_ADDRESS), 'Reroute email destination address is not configured.');
+    $this->assertNull($this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS), 'Reroute email destination address is not configured.');
 
     // Submit a test email, check if it is rerouted to system.site.mail address.
     $this->drupalGet($this->rerouteTestFormPath);
     $this->submitForm(['to' => 'to@example.com'], 'Send email');
-    $this->assertSession()->pageTextContains(t('Test email submitted for delivery from test form.'));
+    $this->assertSession()->pageTextContains($this->t('Test email submitted for delivery from test form.'));
     $this->assertCount(1, $this->getMails(), 'Exactly one email captured.');
 
     // Check rerouted email is the site email address.
@@ -80,20 +84,20 @@ class DefaultAddressesTest extends RerouteEmailBrowserTestBase {
     // Configure the allowed list of addresses as an empty string to abort all
     // emails.
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ENABLE => TRUE,
-      REROUTE_EMAIL_ALLOWLIST => '',
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST => '',
     ]);
 
     // Make sure configured emails values are an empty string.
-    $this->assertSame($this->rerouteConfig->get(REROUTE_EMAIL_ADDRESS), '', 'Reroute email destination address is an empty string.');
-    $this->assertSame($this->rerouteConfig->get(REROUTE_EMAIL_ALLOWLIST), '', 'Allowed email address is an empty string.');
+    $this->assertSame($this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS), '', 'Reroute email destination address is an empty string.');
+    $this->assertSame($this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST), '', 'Allowed email address is an empty string.');
 
     // Flush the Test Mail collector to ensure it is empty for this tests.
     \Drupal::state()->set('system.test_mail_collector', []);
 
     // Submit a test email to check if it is aborted.
     $this->drupalGet($this->rerouteTestFormPath);
-    $this->submitForm(['to' => 'to@example.com'], t('Send email'));
+    $this->submitForm(['to' => 'to@example.com'], $this->t('Send email'));
     $this->assertCount(0, $this->getMails(), 'Email sending was properly aborted because rerouting email address is an empty string.');
 
     // Check status message is displayed properly after email form submission.

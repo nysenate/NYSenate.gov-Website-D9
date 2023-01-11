@@ -46,7 +46,7 @@ abstract class FlagTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Get the Flag Service.
@@ -77,7 +77,7 @@ abstract class FlagTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'node',
     'user',

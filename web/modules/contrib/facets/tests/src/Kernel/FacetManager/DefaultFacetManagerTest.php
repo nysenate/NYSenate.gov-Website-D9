@@ -179,8 +179,8 @@ class DefaultFacetManagerTest extends EntityKernelTestBase {
     // Make sure that query cachebillity will include facets cache tags e.g.
     // view results will depends on the facet configuration.
     $this->facetManager->alterQuery($query, $facet_source);
-    $this->assertCacheabillityArrays($expected_contexts, $query->getCacheContexts());
-    $this->assertCacheabillityArrays($expected_tags, $query->getCacheTags());
+    $this->assertEqualsCanonicalizing($expected_contexts, $query->getCacheContexts());
+    $this->assertEqualsCanonicalizing($expected_tags, $query->getCacheTags());
   }
 
   /**
@@ -191,7 +191,7 @@ class DefaultFacetManagerTest extends EntityKernelTestBase {
    * @param array $expected_metadata
    *   The expected cache metadata for the given facet source.
    *
-   * @dataProvider testBuildCacheabilityMetadataProvider
+   * @dataProvider buildCacheabilityMetadataProvider
    */
   public function testBuildCacheabilityMetadata(string $facet_source_id, array $expected_metadata) {
     $facet = $this->createAndSaveFacet('mars', $facet_source_id);
@@ -219,8 +219,8 @@ class DefaultFacetManagerTest extends EntityKernelTestBase {
     $metadata = CacheableMetadata::createFromObject($facet);
     $metadata->applyTo($build);
     $this->assertEquals($expected_metadata['max-age'], $build['#cache']['max-age']);
-    $this->assertCacheabillityArrays($expected_metadata['contexts'], $build['#cache']['contexts']);
-    $this->assertCacheabillityArrays($expected_metadata['tags'], $build['#cache']['tags']);
+    $this->assertEqualsCanonicalizing($expected_metadata['contexts'], $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing($expected_metadata['tags'], $build['#cache']['tags']);
 
     $facet->removeProcessor('fpc_sort_processor');
     // Test that un-cacheable plugin kills the cache.
@@ -238,8 +238,8 @@ class DefaultFacetManagerTest extends EntityKernelTestBase {
     $metadata->applyTo($build);
 
     $this->assertEquals(0, $build['#cache']['max-age']);
-    $this->assertCacheabillityArrays($expected_metadata['contexts'], $build['#cache']['contexts']);
-    $this->assertCacheabillityArrays($expected_metadata['tags'], $build['#cache']['tags']);
+    $this->assertEqualsCanonicalizing($expected_metadata['contexts'], $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing($expected_metadata['tags'], $build['#cache']['tags']);
   }
 
   /**
@@ -295,22 +295,6 @@ class DefaultFacetManagerTest extends EntityKernelTestBase {
   }
 
   /**
-   * Assert that actual cachebillity matches expected one.
-   */
-  public function assertCacheabillityArrays($expected, $actual, string $message = ''): void {
-    foreach ([&$expected, &$actual] as &$array) {
-      foreach ($array as &$value) {
-        if (is_array($value)) {
-          sort($value);
-        }
-      }
-    }
-    sort($expected);
-    sort($actual);
-    $this->assertEquals($expected, $actual, $message);
-  }
-
-  /**
    * Data provider for testBuildCacheabilityMetadata().
    *
    * @return array
@@ -318,7 +302,7 @@ class DefaultFacetManagerTest extends EntityKernelTestBase {
    *
    * @see ::testBuildCacheabilityMetadata
    */
-  public function testBuildCacheabilityMetadataProvider() {
+  public function buildCacheabilityMetadataProvider() {
     $basic = [
       'contexts' => [
         // Facet API uses Request query params to populate active facets values.

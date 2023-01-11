@@ -46,6 +46,11 @@ class DefaultFacetsSummaryManager {
   protected $facetManager;
 
   /**
+   * @var \Drupal\facets\FacetInterface[]
+   */
+  protected $facets = [];
+
+  /**
    * Constructs a new instance of the DefaultFacetManager.
    *
    * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_manager
@@ -83,23 +88,15 @@ class DefaultFacetsSummaryManager {
    */
   public function build(FacetsSummaryInterface $facets_summary) {
     // Let the facet_manager build the facets.
+    $facets = $this->getFacets($facets_summary);
+    $facets_config = $facets_summary->getFacets();
     $facetsource_id = $facets_summary->getFacetSourceId();
 
-    /** @var \Drupal\facets\Entity\Facet[] $facets */
-    $facets = $this->facetManager->getFacetsByFacetSourceId($facetsource_id);
     // Get the current results from the facets and let all processors that
     // trigger on the build step do their build processing.
     // @see \Drupal\facets\Processor\BuildProcessorInterface.
     // @see \Drupal\facets\Processor\SortProcessorInterface.
     $this->facetManager->updateResults($facetsource_id);
-
-    $facets_config = $facets_summary->getFacets();
-    // Exclude facets which were not selected for this summary.
-    $facets = array_filter($facets,
-      function ($item) use ($facets_config) {
-        return (isset($facets_config[$item->id()]));
-      }
-    );
 
     foreach ($facets as $facet) {
       // Do not build the facet in summary if facet is not rendered.
@@ -177,6 +174,35 @@ class DefaultFacetsSummaryManager {
       }
     }
     return $items;
+  }
+
+  /**
+   * Get facet entities.
+   *
+   * @param \Drupal\facets_summary\FacetsSummaryInterface $facets_summary
+   *   The facet we should build.
+   *
+   * @return \Drupal\facets\FacetInterface[]
+   *   The facet entities.
+   *
+   * @throws \Drupal\facets\Exception\InvalidProcessorException
+   */
+  public function getFacets(FacetsSummaryInterface $facets_summary): array {
+    $facetsource_id = $facets_summary->getFacetSourceId();
+
+    if (!isset($this->facets[$facetsource_id])) {
+      $this->facets[$facetsource_id] = $this->facetManager->getFacetsByFacetSourceId($facetsource_id);
+
+      $facets_config = $facets_summary->getFacets();
+      // Exclude facets which were not selected for this summary.
+      $this->facets[$facetsource_id] = array_filter($this->facets[$facetsource_id],
+        function ($item) use ($facets_config) {
+          return (isset($facets_config[$item->id()]));
+        }
+      );
+    }
+
+    return $this->facets[$facetsource_id];
   }
 
 }

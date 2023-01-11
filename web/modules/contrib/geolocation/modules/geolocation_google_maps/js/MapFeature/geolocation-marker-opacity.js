@@ -12,8 +12,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Google MarkerOpacity.
@@ -26,7 +25,7 @@
   Drupal.behaviors.geolocationMarkerOpacity = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'marker_opacity',
+        "marker_opacity",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -42,6 +41,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
 })(Drupal);

@@ -15,7 +15,7 @@ class FlagServiceProvider implements ServiceModifierInterface {
   /**
    * Modifies existing service definitions.
    *
-   * @param ContainerBuilder $container
+   * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
    *   The ContainerBuilder whose service definitions can be altered.
    */
   public function alter(ContainerBuilder $container) {
@@ -23,13 +23,15 @@ class FlagServiceProvider implements ServiceModifierInterface {
     for ($id = 'access_check.csrf'; $container->hasAlias($id); $id = (string) $container->getAlias($id));
 
     // Hide the original service definition.
-    $original_definition = $container->getDefinition($id)->setPublic(FALSE);
 
+    $original_definition = $container->getDefinition($id)->setPublic(FALSE);
+    
     // Replace it with our definition.
     $container->setDefinition("flag.$id", $original_definition);
     $new_definition = new Definition('Drupal\flag\Access\CsrfAccessCheck', [new Reference("flag.$id"), new Reference('current_user')]);
     $new_definition->setTags($original_definition->getTags());
     $original_definition->setTags([]);
+    $new_definition->setPublic(TRUE);
     $container->setDefinition($id, $new_definition);
   }
 

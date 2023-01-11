@@ -32,7 +32,7 @@ class SecKitTestCaseTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['seckit', 'filter'];
+  protected static $modules = ['seckit', 'filter'];
 
   /**
    * {@inheritdoc}
@@ -49,7 +49,7 @@ class SecKitTestCaseTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->admin = $this->drupalCreateUser(['administer seckit']);
     $this->drupalLogin($this->admin);
@@ -72,7 +72,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testDisabledCsp() {
     $form['seckit_xss[csp][checkbox]'] = FALSE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('Content-Security-Policy', NULL);
     $this->assertSession()->responseHeaderEquals('X-Content-Security-Policy', NULL);
     $this->assertSession()->responseHeaderEquals('X-WebKit-CSP', NULL);
@@ -100,7 +101,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_xss[csp][report-uri]' => $this->reportPath,
       'seckit_xss[csp][upgrade-req]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = 'default-src *; script-src *; object-src *; style-src *; img-src *; media-src *; frame-src *; frame-ancestors *; child-src *; font-src *; connect-src *; report-uri ' . base_path() . $this->reportPath . '; upgrade-insecure-requests';
     $this->assertSession()->responseHeaderEquals('Content-Security-Policy', $expected);
     $this->assertSession()->responseHeaderEquals('X-Content-Security-Policy', $expected);
@@ -129,7 +131,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_xss[csp][report-uri]' => $this->reportPath,
       'seckit_xss[csp][upgrade-req]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = 'default-src *; script-src *; object-src *; style-src *; img-src *; media-src *; frame-src *; frame-ancestors *; child-src *; font-src *; connect-src *; report-uri ' . base_path() . $this->reportPath . '; upgrade-insecure-requests';
     $this->assertSession()->responseHeaderEquals('Content-Security-Policy', $expected);
     $this->assertSession()->responseHeaderEquals('X-Content-Security-Policy', NULL);
@@ -158,7 +161,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_xss[csp][report-uri]' => $this->reportPath,
       'seckit_xss[csp][upgrade-req]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = 'default-src *; script-src *; object-src *; style-src *; img-src *; media-src *; frame-src *; frame-ancestors *; child-src *; font-src *; connect-src *; report-uri ' . base_path() . $this->reportPath . '; upgrade-insecure-requests';
     $this->assertSession()->responseHeaderEquals('Content-Security-Policy', $expected);
     $this->assertSession()->responseHeaderEquals('X-Content-Security-Policy', $expected);
@@ -187,7 +191,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_xss[csp][report-uri]' => $this->reportPath,
       'seckit_xss[csp][upgrade-req]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = 'default-src *; script-src *; object-src *; style-src *; img-src *; media-src *; frame-src *; frame-ancestors *; child-src *; font-src *; connect-src *; report-uri ' . base_path() . $this->reportPath . '; upgrade-insecure-requests';
     $this->assertSession()->responseHeaderEquals('Content-Security-Policy', $expected);
     $this->assertSession()->responseHeaderEquals('X-Content-Security-Policy', NULL);
@@ -218,11 +223,12 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_xss[csp][report-uri]'  => $this->reportPath,
       'seckit_xss[csp][policy-uri]'  => 'http://mysite.com/csp.xml',
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = 'policy-uri http://mysite.com/csp.xml';
-    $this->assertEqual($expected, $this->drupalGetHeader('Content-Security-Policy'), t('Content-Security-Policy has only policy-uri.'));
-    $this->assertEqual($expected, $this->drupalGetHeader('X-Content-Security-Policy'), t('X-Content-Security-Policy has only policy-uri.'));
-    $this->assertEqual($expected, $this->drupalGetHeader('X-WebKit-CSP'), t('X-WebKit-CSP has only policy-uri.'));
+    $this->assertEquals($expected, $this->getSession()->getResponseHeader('Content-Security-Policy'), t('Content-Security-Policy has only policy-uri.'));
+    $this->assertEquals($expected, $this->getSession()->getResponseHeader('X-Content-Security-Policy'), t('X-Content-Security-Policy has only policy-uri.'));
+    $this->assertEquals($expected, $this->getSession()->getResponseHeader('X-WebKit-CSP'), t('X-WebKit-CSP has only policy-uri.'));
   }
 
   /**
@@ -250,7 +256,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_xss[csp][upgrade-req]' => FALSE,
       'seckit_xss[csp][policy-uri]' => '',
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = "default-src self; report-uri " . base_path() . $this->reportPath;
     $this->assertSession()->responseHeaderEquals('Content-Security-Policy', $expected);
     $this->assertSession()->responseHeaderEquals('X-Content-Security-Policy', $expected);
@@ -265,7 +272,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
     $form['seckit_xss[csp][vendor-prefix][x]'] = TRUE;
     $form['seckit_xss[csp][vendor-prefix][webkit]'] = TRUE;
     $form['seckit_xss[csp][report-only]'] = TRUE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderContains('Content-Security-Policy-Report-Only', 'report-uri');
     $this->assertSession()->responseHeaderContains('X-Content-Security-Policy-Report-Only', 'report-uri');
     $this->assertSession()->responseHeaderContains('X-WebKit-CSP-Report-Only', 'report-uri');
@@ -320,7 +328,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
       $form['seckit_xss[csp][vendor-prefix][webkit]'] = TRUE;
       $form['seckit_xss[csp][default-src]'] = 'self';
       $form['seckit_xss[csp][report-uri]'] = $report_uri['uri'];
-      $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+      $this->drupalGet('admin/config/system/seckit');
+      $this->submitForm($form, t('Save configuration'));
       if ($report_uri['valid']) {
         $base_path = ($report_uri['absolute']) ? '' : base_path();
         $expected = 'default-src self; report-uri ' . $base_path . $report_uri['uri'];
@@ -336,13 +345,11 @@ class SecKitTestCaseTest extends BrowserTestBase {
       else {
         if ($report_uri['absolute']) {
           $expected = 'The CSP report-uri seems absolute but does not seem to be a valid URI.';
-          $uri_type = 'absolute';
         }
         else {
           $expected = 'The CSP report-uri seems relative but does not seem to be a valid path.';
-          $uri_type = 'relative';
         }
-        $this->assertSession()->responseContains($expected, sprintf('Invalid %s setting for CSP report-uri was rejected.', $uri_type));
+        $this->assertSession()->responseContains($expected);
       }
     }
   }
@@ -352,7 +359,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testXxssProtectionIsDisabled() {
     $form['seckit_xss[x_xss][select]'] = SeckitInterface::X_XSS_DISABLE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-XSS-Protection', NULL);
   }
 
@@ -361,7 +369,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testXxssProtectionIs0() {
     $form['seckit_xss[x_xss][select]'] = SeckitInterface::X_XSS_0;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-XSS-Protection', '0');
   }
 
@@ -370,7 +379,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testXxssProtectionIs1() {
     $form['seckit_xss[x_xss][select]'] = SeckitInterface::X_XSS_1;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-XSS-Protection', '1');
   }
 
@@ -379,7 +389,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testXxssProtectionIs1Block() {
     $form['seckit_xss[x_xss][select]'] = SeckitInterface::X_XSS_1_BLOCK;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-XSS-Protection', '1; mode=block');
   }
 
@@ -388,9 +399,11 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testOriginAllowsSite() {
     $form['seckit_csrf[origin]'] = TRUE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->originHeader = \Drupal::request()->getSchemeAndHttpHost();
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -404,9 +417,11 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_csrf[origin]' => TRUE,
       'seckit_csrf[origin_whitelist]' => 'http://www.example.com',
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->originHeader = 'http://www.example.com';
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -420,9 +435,11 @@ class SecKitTestCaseTest extends BrowserTestBase {
       'seckit_csrf[origin]' => TRUE,
       'seckit_csrf[origin_whitelist]' => 'http://www.example.com, https://www.example.com, https://example.com:8080',
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->originHeader = 'http://www.example.com';
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -431,10 +448,12 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testOriginDeny() {
     $form['seckit_csrf[origin]'] = TRUE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->originHeader = 'http://www.example.com';
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
-    $this->assertEqual([], $_POST, t('POST is empty.'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
+    $this->assertEquals([], $_POST, t('POST is empty.'));
     $this->assertSession()->statusCodeEquals(403);
   }
 
@@ -443,7 +462,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testXframeOptionsIsDisabled() {
     $form['seckit_clickjacking[x_frame]'] = SeckitInterface::X_FRAME_DISABLE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', NULL);
   }
 
@@ -452,7 +472,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testXframeOptionsIsSameOrigin() {
     $form['seckit_clickjacking[x_frame]'] = SeckitInterface::X_FRAME_SAMEORIGIN;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', 'SAMEORIGIN');
   }
 
@@ -461,7 +482,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
    */
   public function testXframeOptionsIsDeny() {
     $form['seckit_clickjacking[x_frame]'] = SeckitInterface::X_FRAME_DENY;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', 'DENY');
   }
 
@@ -471,7 +493,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
   public function testXframeOptionsIsAllowFrom() {
     $form['seckit_clickjacking[x_frame]'] = SeckitInterface::X_FRAME_ALLOW_FROM;
     $form['seckit_clickjacking[x_frame_allow_from]'] = 'http://www.google.com';
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', 'ALLOW-FROM http://www.google.com');
   }
 
@@ -481,7 +504,8 @@ class SecKitTestCaseTest extends BrowserTestBase {
   public function testJsCssNoscript() {
     $form['seckit_clickjacking[js_css_noscript]'] = TRUE;
     $form['seckit_clickjacking[noscript_message]'] = 'Sorry, your JavaScript is disabled.';
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $config = \Drupal::config('seckit.settings');
     $noscript_message = $config->get('seckit_clickjacking.noscript_message');
     // @TODO this was duplicated from the Event subscriber, move to function
@@ -489,7 +513,7 @@ class SecKitTestCaseTest extends BrowserTestBase {
     $noscript_message = $noscript_message ?
         $noscript_message :
         $config->get('seckit_clickjacking.noscript_message');
-    $path = base_path() . drupal_get_path('module', 'seckit');
+    $path = base_path() . \Drupal::service('extension.list.module')->getPath('seckit');
     $code = <<< EOT
         <script type="text/javascript" src="$path/js/seckit.document_write.js"></script>
         <link type="text/css" rel="stylesheet" id="seckit-clickjacking-no-body" media="all" href="$path/css/seckit.no_body.css" />
@@ -501,7 +525,7 @@ class SecKitTestCaseTest extends BrowserTestBase {
         </div>
         </noscript>
 EOT;
-    $this->assertSession()->responseContains($code, t('JavaScript + CSS + Noscript protection is loaded.'));
+    $this->assertSession()->responseContains($code);
   }
 
   /**
@@ -509,7 +533,8 @@ EOT;
    */
   public function testDisabledHsts() {
     $form['seckit_ssl[hsts]'] = FALSE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('Strict-Transport-Security', NULL);
   }
 
@@ -522,7 +547,8 @@ EOT;
       'seckit_ssl[hsts_max_age]' => 1000,
       'seckit_ssl[hsts_subdomains]' => 1,
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = 'max-age=1000; includeSubDomains';
     $this->assertSession()->responseHeaderEquals('Strict-Transport-Security', $expected);
   }
@@ -532,7 +558,8 @@ EOT;
    */
   public function testDisabledFromOrigin() {
     $form['seckit_various[from_origin]'] = FALSE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('From-Origin', NULL);
   }
 
@@ -544,7 +571,8 @@ EOT;
       'seckit_various[from_origin]' => TRUE,
       'seckit_various[from_origin_destination]' => 'same',
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('From-Origin', 'same');
   }
 
@@ -553,7 +581,8 @@ EOT;
    */
   public function testDisabledReferrerPolicy() {
     $form['seckit_various[referrer_policy]'] = FALSE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('Referrer-Policy', NULL);
   }
 
@@ -565,7 +594,8 @@ EOT;
       'seckit_various[referrer_policy]' => TRUE,
       'seckit_various[referrer_policy_policy]' => 'no-referrer-when-downgrade',
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('Referrer-Policy', 'no-referrer-when-downgrade');
   }
 
@@ -574,7 +604,8 @@ EOT;
    */
   public function testDisabledExpectCt() {
     $form['seckit_ct[expect_ct]'] = FALSE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('Expect-CT', NULL);
   }
 
@@ -588,7 +619,8 @@ EOT;
       'seckit_ct[enforce]' => TRUE,
       'seckit_ct[report_uri]' => 'https://www.example.com/report',
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = 'max-age=86400, enforce, report-uri="https://www.example.com/report"';
     $this->assertSession()->responseHeaderEquals('Expect-CT', $expected);
   }
@@ -598,7 +630,8 @@ EOT;
    */
   public function testDisabledFeaturePolicy() {
     $form['seckit_fp[feature_policy]'] = FALSE;
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $this->assertSession()->responseHeaderEquals('Feature-Policy', NULL);
   }
 
@@ -610,7 +643,8 @@ EOT;
       'seckit_fp[feature_policy]' => TRUE,
       'seckit_fp[feature_policy_policy]' => "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'",
     ];
-    $this->drupalPostForm('admin/config/system/seckit', $form, t('Save configuration'));
+    $this->drupalGet('admin/config/system/seckit');
+    $this->submitForm($form, t('Save configuration'));
     $expected = "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'";
     $this->assertSession()->responseHeaderEquals('Feature-Policy', $expected);
   }

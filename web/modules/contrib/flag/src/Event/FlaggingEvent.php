@@ -3,7 +3,7 @@
 namespace Drupal\flag\Event;
 
 use Drupal\flag\FlaggingInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Event for when a flagging is created.

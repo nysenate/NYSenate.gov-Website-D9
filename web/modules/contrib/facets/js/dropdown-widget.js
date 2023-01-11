@@ -3,7 +3,7 @@
  * Transforms links into a dropdown list.
  */
 
-(function ($) {
+(function ($, once) {
 
   'use strict';
 
@@ -24,7 +24,7 @@
    */
   Drupal.facets.makeDropdown = function (context, settings) {
     // Find all dropdown facet links and turn them into an option.
-    $('.js-facets-dropdown-links').once('facets-dropdown-transform').each(function () {
+    $(once('facets-dropdown-transform', '.js-facets-dropdown-links')).each(function () {
       var $ul = $(this);
       var $links = $ul.find('.facet-item a');
       var $dropdown = $('<select></select>');
@@ -101,4 +101,4 @@
     });
   };
 
-})(jQuery);
+})(jQuery, once);

@@ -169,7 +169,6 @@ function geolocation_update_8203(&$sandbox) {
         foreach ($display['display_options']['style']['options']['centre'] as $options_id => $value) {
           switch ($options_id) {
             case 'fixed_value':
-            case 'freeogeoip':
               $displays[$display_id]['display_options']['style']['options']['centre'][$options_id]['map_center_id'] = 'location_plugins';
               break;
 

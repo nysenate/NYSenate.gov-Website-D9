@@ -27,13 +27,6 @@ class MigrateUpgradeCommands extends DrushCommands {
   protected $state;
 
   /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * MigrateUpgradeCommands constructor.
    *
    * @param \Drupal\Core\State\StateInterface $state

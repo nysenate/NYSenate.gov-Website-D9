@@ -189,6 +189,7 @@ class EntityQueueListBuilder extends ConfigEntityListBuilder {
 
     if ($handler->supportsMultipleSubqueues()) {
       $subqueues_count = $this->entityTypeManager->getStorage('entity_subqueue')->getQuery()
+        ->accessCheck(FALSE)
         ->condition('queue', $queue->id(), '=')
         ->count()
         ->execute();

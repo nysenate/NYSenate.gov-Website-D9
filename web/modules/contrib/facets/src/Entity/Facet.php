@@ -125,13 +125,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $hierarchy;
 
   /**
-   * The hierarchy instance.
-   *
-   * @var \Drupal\facets\Hierarchy\HierarchyPluginBase
-   */
-  protected $hierarchy_processor;
-
-  /**
    * The operator to hand over to the query, currently AND | OR.
    *
    * @var string
@@ -301,7 +294,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The facet source config object.
    *
-   * @var \Drupal\Facets\FacetSourceInterface
+   * @var \Drupal\facets\FacetSourceInterface
    *   The facet source config object.
    */
   protected $facetSourceConfig;

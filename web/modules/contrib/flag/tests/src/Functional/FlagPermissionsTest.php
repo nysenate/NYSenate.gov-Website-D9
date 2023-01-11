@@ -19,7 +19,7 @@ class FlagPermissionsTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public static $modules = ['flag', 'node', 'user'];
+  protected static $modules = ['flag', 'node', 'user'];
 
   /**
    * The flag under test.
@@ -66,7 +66,7 @@ class FlagPermissionsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Create content type.

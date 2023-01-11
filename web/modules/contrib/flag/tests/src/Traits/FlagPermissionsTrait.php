@@ -41,9 +41,7 @@ trait FlagPermissionsTrait {
     if ($can_unflag) {
       $role->grantPermission('unflag ' . $flag->id());
     }
-
-    $role->grantPermission('access contextual links');
-
+    
     $role->save();
   }
 

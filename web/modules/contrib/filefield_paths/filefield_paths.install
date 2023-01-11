@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_install().
@@ -16,6 +18,83 @@ function filefield_paths_install() {
     ->update('file_managed')
     ->expression('origname', 'filename')
     ->execute();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function filefield_paths_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $temporary_path = \Drupal::config('filefield_paths.settings')->get('temp_location');
+
+    // If it's not set, we don't need to do anything because the default will
+    // be secure.
+    if (!$temporary_path) {
+      return [];
+    }
+
+    $temporary_scheme = substr($temporary_path, 0, 9);
+    if ($temporary_scheme !== 'public://') {
+      return [];
+    }
+    // If private files are supported, and the temporary scheme is 'public://'
+    // then let the user know they need to change the temporary scheme in order
+    // to be secure.
+    $wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers();
+    $recommended_wrappers = ['private', 'temporary'];
+    foreach ($recommended_wrappers as $recommended_wrapper) {
+      if (in_array($recommended_wrapper, array_keys($wrappers), TRUE)) {
+      $requirements['filefield_paths'] = [
+        'title' => t('File (Field) Paths temporary path'),
+        'value' => t('Insecure!'),
+        'description' => t('This site supports private files but the File (Field) Paths temporary path is under public:// which could lead to private files being temporarily exposed publicly. <a href=":url">Change the temporary path</a> to be under temporary:// or private:// in order to secure your files.', [':url' => Url::fromRoute('filefield_paths.admin_settings')->toString()]),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Add 'origname' field to 'file' entities.
+ */
+function filefield_paths_update_8001() {
+  $storage_definition = BaseFieldDefinition::create('string')
+    ->setLabel(t('Original filename'))
+    ->setDescription(t('Original name of the file with no path components.'));
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('origname', 'file', 'filefield_paths', $storage_definition);
+}
+
+/**
+ * Change the temporary path if the site supports private files.
+ */
+function filefield_paths_update_9001() {
+
+  $config = \Drupal::configFactory()->getEditable('filefield_paths.settings');
+  $temporary_path = $config->get('temp_location');
+
+  // If it's not set, we don't need to do anything because the default will
+  // be secure.
+  if (!$temporary_path) {
+    return;
+  }
+
+  \Drupal::moduleHandler()->load('filefield_paths');
+  $scheme = substr($temporary_path, 0, 9);
+  $recommended_scheme = filefield_paths_recommended_temporary_scheme();
+
+  // If the scheme is 'public://' but the recommended scheme is NOT, then
+  // we need to update to the variable to use the recommended scheme.
+  if ($scheme == 'public://' && $recommended_scheme != 'public://') {
+    $temporary_path = $recommended_scheme . substr($temporary_path, 9);
+    $config->set('temp_location', $temporary_path)->save();
+  }
 }
 
 ///**

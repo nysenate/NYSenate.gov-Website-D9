@@ -13,8 +13,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Streetview control.
@@ -27,7 +26,7 @@
   Drupal.behaviors.geolocationRotateControl = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'control_rotate',
+        "control_rotate",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -37,14 +36,13 @@
           map.addPopulatedCallback(function (map) {
             var options = {
               rotateControlOptions: {
-                position: google.maps.ControlPosition[featureSettings.position]
-              }
+                position: google.maps.ControlPosition[featureSettings.position],
+              },
             };
 
-            if (featureSettings.behavior === 'always') {
+            if (featureSettings.behavior === "always") {
               options.rotateControl = true;
-            }
-            else {
+            } else {
               options.rotateControl = undefined;
             }
             map.googleMap.setOptions(options);
@@ -55,7 +53,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(Drupal);

@@ -107,7 +107,7 @@ class WebformSubmissionField extends FieldPluginBase {
 
     $form['webform_check_access'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Check view acces for this field'),
+      '#title' => $this->t('Check view access for this field'),
       '#default_value' => $this->options['webform_check_access'],
       '#description' => $this->t('Uncheck to disable field access permission checking.'),
     ];

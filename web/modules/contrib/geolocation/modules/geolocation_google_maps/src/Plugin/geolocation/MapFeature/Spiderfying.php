@@ -22,7 +22,7 @@ class Spiderfying extends MapFeatureBase {
    */
   public static function getDefaultSettings() {
     return [
-      'spiderfiable_marker_path' => base_path() . drupal_get_path('module', 'geolocation_google_maps') . '/images/marker-plus.svg',
+      'spiderfiable_marker_path' => base_path() . \Drupal::service('extension.list.module')->getPath('geolocation_google_maps') . '/images/marker-plus.svg',
       'markersWontMove' => TRUE,
       'markersWontHide' => FALSE,
       'keepSpiderfied' => TRUE,

@@ -70,7 +70,7 @@ class AJAXactionLink extends Reload {
       // no matter how many times the flag is clicked.
       return $destination;
     }
-    parent::getDestination();
+    return parent::getDestination();
   }
 
   /**

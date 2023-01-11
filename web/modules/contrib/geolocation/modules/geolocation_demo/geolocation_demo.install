@@ -29,7 +29,7 @@ function geolocation_demo_install() {
 
     $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
 
-    $icon_path = drupal_get_path('module', 'geolocation_demo') . '/icons/';
+    $icon_path = \Drupal::service('extension.list.module')->getPath('geolocation_demo') . '/icons/';
 
     /** @var \Drupal\taxonomy\TermInterface $term_a */
     $term_a = $taxonomy_storage->create([
@@ -38,7 +38,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-deadpool.png');
-    $file = file_save_data($data, 'public://druplicon-deadpool.png', FileSystemInterface::EXISTS_REPLACE);
+    $file = \Drupal::service('file.repository')->writeData($data, 'public://druplicon-deadpool.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_a->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),
@@ -55,7 +55,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-wolverine.png');
-    $file = file_save_data($data, 'public://druplicon-wolverine.png', FileSystemInterface::EXISTS_REPLACE);
+    $file = \Drupal::service('file.repository')->writeData($data, 'public://druplicon-wolverine.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_b->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),
@@ -72,7 +72,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-wonder-woman.png');
-    $file = file_save_data($data, 'public://druplicon-wonder-woman.png', FileSystemInterface::EXISTS_REPLACE);
+    $file = \Drupal::service('file.repository')->writeData($data, 'public://druplicon-wonder-woman.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_c->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),
@@ -111,7 +111,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-nick-fury.png');
-    $file = file_save_data($data, 'public://druplicon-nick-fury.png', FileSystemInterface::EXISTS_REPLACE);
+    $file = \Drupal::service('file.repository')->writeData($data, 'public://druplicon-nick-fury.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_single->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),

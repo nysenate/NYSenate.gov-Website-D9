@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\query_type;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetInterface;
@@ -13,7 +14,6 @@ use Drupal\search_api\IndexInterface;
 use Drupal\facets\Result\ResultInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\ServerInterface;
-use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
@@ -21,7 +21,7 @@ use Prophecy\Argument;
  *
  * @group facets
  */
-class SearchApiGranularTest extends UnitTestCase {
+class SearchApiGranularTest extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * {@inheritdoc}

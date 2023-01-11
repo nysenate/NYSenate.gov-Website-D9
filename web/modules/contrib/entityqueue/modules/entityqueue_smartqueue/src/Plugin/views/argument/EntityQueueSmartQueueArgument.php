@@ -87,7 +87,7 @@ class EntityQueueSmartQueueArgument extends StringArgument {
    */
   public function setArgument($arg) {
     $queue = $this->options['smartqueue'];
-    if (strpos($arg, $queue) !== 0) {
+    if ($arg && strpos($arg, $queue) !== 0) {
       $arg = $queue . '__' . $arg;
     }
     return parent::setArgument($arg);

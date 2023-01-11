@@ -31,7 +31,7 @@ class FlagContextualLinksTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'contextual',
     'field_ui',
     'flag',
@@ -88,7 +88,7 @@ class FlagContextualLinksTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Get the Flag Service.

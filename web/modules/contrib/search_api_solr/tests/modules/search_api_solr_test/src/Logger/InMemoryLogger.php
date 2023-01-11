@@ -9,12 +9,17 @@ use Psr\Log\AbstractLogger;
  */
 class InMemoryLogger extends AbstractLogger {
 
+  /**
+   * The log messages.
+   *
+   * @var array
+   */
   private $messages = [];
 
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
     $this->messages[] = [
       'level' => $level,
       'message' => $message,

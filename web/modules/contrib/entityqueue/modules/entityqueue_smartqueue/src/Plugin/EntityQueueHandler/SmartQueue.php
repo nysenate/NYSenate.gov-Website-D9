@@ -192,7 +192,11 @@ class SmartQueue extends Multiple implements ContainerFactoryPluginInterface {
     // Generate list of subqueues to be deleted, and add batch operations
     // to delete them.
     // 1. Get the existing subqueue ids.
-    $subqueue_ids = $this->entityTypeManager->getStorage('entity_subqueue')->getQuery()->condition('queue', $queue->id())->execute();
+    $subqueue_ids = $this->entityTypeManager->getStorage('entity_subqueue')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('queue', $queue->id())
+      ->execute();
 
     // 2. Get the list of relevant subqueues for this queue.
     $subqueue_id_list = array_map(function ($subqueue_id) use ($queue) {
@@ -234,7 +238,11 @@ class SmartQueue extends Multiple implements ContainerFactoryPluginInterface {
    */
   public function onQueuePostDelete(EntityQueueInterface $queue, EntityStorageInterface $storage) {
     // Create batch operation to delete all the subqueues when the parent queue is deleted.
-    $subqueue_ids = $this->entityTypeManager->getStorage('entity_subqueue')->getQuery()->condition('queue', $queue->id())->execute();
+    $subqueue_ids = $this->entityTypeManager->getStorage('entity_subqueue')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('queue', $queue->id())
+      ->execute();
     $subqueue_id_chunks = array_chunk($subqueue_ids, 20);
     $operations = [];
     foreach ($subqueue_id_chunks as $subqueue_id_chunk) {
@@ -257,7 +265,11 @@ class SmartQueue extends Multiple implements ContainerFactoryPluginInterface {
    * Create initial subqueues based on smartqueue configuration.
    */
   public function initSubqueuesCreate($queue, $entity_ids, $entity_type_id, &$context) {
-    $subqueue_ids = $this->entityTypeManager->getStorage('entity_subqueue')->getQuery()->condition('queue', $queue->id())->execute();
+    $subqueue_ids = $this->entityTypeManager->getStorage('entity_subqueue')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('queue', $queue->id())
+      ->execute();
 
     // Add new queues according to configured entity and/or bundle.
     $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple($entity_ids);
@@ -332,7 +344,9 @@ class SmartQueue extends Multiple implements ContainerFactoryPluginInterface {
     $entity_type_id = $this->configuration['entity_type'];
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
 
-    $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery();
+    $query = $this->entityTypeManager->getStorage($entity_type_id)
+      ->getQuery()
+      ->accessCheck(TRUE);
 
     if ($entity_type->hasKey('bundle') && !empty($this->configuration['bundles'])) {
       $query->condition($entity_type->getKey('bundle'), $this->configuration['bundles'], 'IN');

@@ -5,7 +5,7 @@
  * Contains core functions for the File (Field) Paths module.
  */
 
-use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -14,6 +14,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
+use Drupal\filefield_paths\Utility\FieldItem;
 use Symfony\Component\HttpFoundation\Response;
 
 // @TODO - Turn this into a plugin.
@@ -211,13 +212,9 @@ function filefield_paths_form_field_config_edit_form_alter(array &$form, FormSta
 function filefield_paths_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
   // Force all File (Field) Paths uploads to go to the temporary file system
   // prior to being processed.
-  if (isset($element['#type']) && $element['#type'] == 'managed_file') {
-    $settings = $context['items']->getFieldDefinition()
-      ->getThirdPartySettings('filefield_paths');
-    if (isset($settings['enabled']) && $settings['enabled']) {
-      $element['#upload_location'] = \Drupal::config('filefield_paths.settings')
-        ->get('temp_location');
-    }
+  if (FieldItem::hasConfigurationEnabled(FieldItem::getFromSupportedWidget($element, $context))) {
+    $element['#upload_location'] = \Drupal::config('filefield_paths.settings')
+      ->get('temp_location');
   }
 }
 
@@ -267,16 +264,13 @@ function filefield_paths_batch_update(FieldConfig $field_config) {
   }
 
   // Create batch.
-  $batch = [
-    'title'      => t('Updating File (Field) Paths'),
-    'operations' => [
-      [
-        '_filefield_paths_batch_update_process',
-        [$result, $field_config],
-      ],
-    ],
-  ];
-  batch_set($batch);
+  $batch = (new BatchBuilder())
+    ->setTitle(t('Updating File (Field) Paths'));
+  $batch->addOperation(
+    '_filefield_paths_batch_update_process',
+    [$result, $field_config]
+  );
+  batch_set($batch->toArray());
 
   return TRUE;
 }
@@ -346,25 +340,18 @@ function filefield_paths_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function filefield_paths_entity_update(EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface) {
-    foreach ($entity->getFields() as $field) {
-      if ($field instanceof FileFieldItemList) {
-        /** @var FieldConfig $definition */
-        $definition = $field->getFieldDefinition();
-        // Ignore base fields.
-        if ($definition instanceof ThirdPartySettingsInterface) {
-          $settings = $definition->getThirdPartySettings('filefield_paths');
-          if (isset($settings['enabled']) && $settings['enabled']) {
-            // Invoke hook_filefield_paths_process_file().
-            foreach (\Drupal::moduleHandler()
-                       ->getImplementations('filefield_paths_process_file') as $module) {
-              if (function_exists($function = "{$module}_filefield_paths_process_file")) {
-                $function($entity, $field, $settings);
-              }
-            }
-          }
-        }
-      }
+  if (!$entity instanceof ContentEntityInterface) {
+    return;
+  }
+  $module_handler = \Drupal::moduleHandler();
+  foreach ($entity->getFields() as $field) {
+    if (FieldItem::hasConfigurationEnabled($field)) {
+      $settings = FieldItem::getConfiguration($field);
+      // Invoke hook_filefield_paths_process_file().
+      $module_handler->invokeAll(
+        'filefield_paths_process_file',
+        [$entity, $field, $settings]
+      );
     }
   }
 }
@@ -476,4 +463,46 @@ function filefield_paths_process_string($value, $data, array $settings = []) {
   $value = preg_replace('/\/+/', '/', $value);
 
   return $value;
+}
+
+/**
+ * Get the recommended file scheme based on which file systems are enabled.
+ */
+function filefield_paths_recommended_temporary_scheme() {
+  $scheme =& drupal_static(__FUNCTION__);
+  if (!$scheme) {
+    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper */
+    $stream_wrapper = \Drupal::service('stream_wrapper_manager');
+    $scheme = 'public://';
+    $recommended = array('temporary', 'private');
+    $wrappers = array_keys($stream_wrapper->getWrappers());
+    foreach ($recommended as $wrapper) {
+      if (in_array($wrapper, $wrappers, TRUE)) {
+        $path = $wrapper . '://';
+        if (is_writable($path)) {
+          $scheme = $path;
+          break;
+        }
+      }
+    }
+  }
+  return $scheme;
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function filefield_paths_local_tasks_alter(&$local_tasks) {
+  foreach ($local_tasks as $task_id => $definition) {
+    if ($definition['route_name'] === 'system.file_system_settings') {
+      return;
+    }
+  }
+  // Provide filesystem route if it not exists. 
+  $local_tasks['system.file_system_settings'] = [
+      'route_name' => 'system.file_system_settings',
+      'base_route' => 'system.file_system_settings',
+      'title' => t('Settings'),
+      'id' => 'system.file_system_settings',
+    ] + $local_tasks['filefield_paths.admin_settings'];
 }

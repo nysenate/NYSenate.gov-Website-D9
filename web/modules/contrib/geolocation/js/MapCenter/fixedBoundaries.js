@@ -4,8 +4,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   Drupal.geolocation = Drupal.geolocation || {};
   Drupal.geolocation.mapCenter = Drupal.geolocation.mapCenter || {};
@@ -23,10 +22,9 @@
       north: centerOption.settings.north,
       east: centerOption.settings.east,
       south: centerOption.settings.south,
-      west: centerOption.settings.west
+      west: centerOption.settings.west,
     });
 
     return true;
-  }
-
+  };
 })(Drupal);

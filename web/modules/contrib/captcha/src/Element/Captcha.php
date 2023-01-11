@@ -157,14 +157,15 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
     // Added a new access attribute,
     // by default it will be true if access attribute
     // not defined in a custom form.
-    $form_state->set('captcha_info', [
+    $info = [
       'this_form_id' => $this_form_id,
       'posted_form_id' => $posted_form_id,
       'captcha_sid' => $captcha_sid,
       'module' => $captcha_type_module,
       'captcha_type' => $captcha_type_challenge,
       'access' => $element['#access'] ?? CAPTCHA_FIELD_DEFAULT_ACCESS,
-    ]);
+    ];
+    $form_state->set('captcha_info', $info);
     $element['#captcha_info'] = [
       'form_id' => $this_form_id,
       'captcha_sid' => $captcha_sid,
@@ -179,6 +180,9 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
           $captcha_type_challenge,
           $captcha_sid,
         ]);
+
+      // Allow other modules to alter the captcha.
+      \Drupal::moduleHandler()->alter('captcha', $captcha, $info);
 
       // @todo Isn't this moment a bit late to figure out
       // that we don't need CAPTCHA?

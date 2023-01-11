@@ -20,16 +20,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
   Drupal.AjaxCommands.prototype.actionLinkFlash = function (ajax, response, status) {
     if (status === 'success') {
-      var para = document.createElement('P');
-      para.innerText = response.message;
+      if (response.message.length) {
+        var para = document.createElement('P');
+        para.innerText = response.message;
 
-      para.setAttribute('class', 'js-flag-message');
+        para.setAttribute('class', 'js-flag-message');
 
-      para.addEventListener('animationend', function (event) {
-        return event.target.remove();
-      }, false);
+        para.addEventListener('animationend', function (event) {
+          return event.target.remove();
+        }, false);
 
-      document.querySelector(response.selector).appendChild(para);
+        document.querySelector(response.selector).appendChild(para);
+      }
     } else {
       var links = [].concat(_toConsumableArray(document.querySelectAll('.flag-waiting')));
       links.forEach(function (link) {

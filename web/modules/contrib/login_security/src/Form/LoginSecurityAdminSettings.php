@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 
 /**
- * Class LoginSecurityAdminSettings.
+ * Providing a class for LoginSecurityAdminSettings form.
  *
  * @package Drupal\login_security\Form
  */
@@ -37,8 +37,8 @@ class LoginSecurityAdminSettings extends ConfigFormBase {
       '#title' => $this->t('Track time'),
       '#default_value' => $config->get('track_time'),
       '#size' => 3,
-      '#description' => $this->t('The time window to check for security violations: the time in hours the login information is kept to compute the login attempts count. A common example could be 24 hours. After that time, the attempt is deleted from the list, and will never be considered again.'),
-      '#field_suffix' => $this->t('hour(s)'),
+      '#description' => $this->t('The time window to check for security violations: the time in minutes the login information is kept to compute the login attempts count. A common example could be 1440 minutes (24 hours). After that time, the attempt is deleted from the list, and will never be considered again.'),
+      '#field_suffix' => $this->t('minute(s)'),
     ];
     $form['general_settings']['user_wrong_count'] = [
       '#type' => 'number',

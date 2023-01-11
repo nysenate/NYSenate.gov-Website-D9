@@ -50,8 +50,10 @@ class EntityLabelNotNullConstraintValidator extends NotNullConstraintValidator i
       $entity = $typed_data->getEntity();
       /** @var \Drupal\auto_entitylabel\AutoEntityLabelManager $decorated_entity */
       $decorated_entity = $this->entityDecorator->decorate($entity);
-
-      if ($decorated_entity->hasLabel() && $decorated_entity->autoLabelNeeded()) {
+      if ($decorated_entity->hasLabel()
+        && $decorated_entity->autoLabelNeeded()
+        && $value->getFieldDefinition()->getName() == $decorated_entity->getLabelName()
+      ) {
         return;
       }
     }

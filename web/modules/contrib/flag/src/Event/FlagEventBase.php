@@ -3,7 +3,7 @@
 namespace Drupal\flag\Event;
 
 use Drupal\flag\FlagInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Base Event from which other flag event are defined.

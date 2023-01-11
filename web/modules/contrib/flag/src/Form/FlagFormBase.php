@@ -205,7 +205,7 @@ abstract class FlagFormBase extends EntityForm {
       '#type' => 'details',
       '#open' => TRUE,
       '#title' => $this->t('Display options'),
-      '#description' => $this->t('Flags are usually controlled through links that allow users to toggle their behavior. You can choose how users interact with flags by changing options here. It is legitimate to have none of the following checkboxes ticked, if, for some reason, you wish <a href="@placement-url">to place the the links on the page yourself</a>.', ['@placement-url' => 'http://drupal.org/node/295383']),
+      '#description' => $this->t('Flags are usually controlled through links that allow users to toggle their behavior. You can choose how users interact with flags by changing options here. It is legitimate to have none of the following checkboxes ticked, if, for some reason, you wish <a href="@placement-url">to place the links on the page yourself</a>.', ['@placement-url' => 'http://drupal.org/node/295383']),
       '#tree' => FALSE,
       '#weight' => 20,
       '#prefix' => '<div id="link-type-settings-wrapper">',

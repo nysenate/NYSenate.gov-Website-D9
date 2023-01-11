@@ -53,7 +53,7 @@ final class PreAddLanguageFallbackFieldEvent extends Event {
    * @param \Drupal\search_api\Item\ItemInterface $item
    *   The Search API item the field belongs to.
    */
-  public function __construct(string $langcode, mixed $value, string $type, ItemInterface $item) {
+  public function __construct(string $langcode, $value, string $type, ItemInterface $item) {
     $this->langcode = $langcode;
     $this->value = $value;
     $this->type = $type;
@@ -76,7 +76,7 @@ final class PreAddLanguageFallbackFieldEvent extends Event {
    * @return mixed
    *   The field values.
    */
-  public function getValue(): mixed {
+  public function getValue() {
     return $this->value;
   }
 
@@ -87,7 +87,7 @@ final class PreAddLanguageFallbackFieldEvent extends Event {
    *   The field value. If you supply NULL as the value and no modifier the
    *   field will be removed.
    */
-  public function setValue(mixed $value): void {
+  public function setValue($value): void {
     $this->value = $value;
   }
 

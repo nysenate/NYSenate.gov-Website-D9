@@ -29,7 +29,7 @@ class AjaxLinkTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['flag', 'node', 'user'];
+  protected static $modules = ['flag', 'node', 'user'];
 
   /**
    * Flag to test with.
@@ -74,7 +74,7 @@ class AjaxLinkTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // A article to test with.

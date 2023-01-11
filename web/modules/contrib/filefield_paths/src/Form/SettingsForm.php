@@ -76,8 +76,8 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Temporary file location'),
       '#type' => 'textfield',
       '#default_value' => $this->config('filefield_paths.settings')
-        ->get('temp_location'),
-      '#description' => $this->t('The location that unprocessed files will be uploaded prior to being processed by File (Field) Paths.<br />It is recommended that you use the temporary file system (temporary://) if your server configuration allows for that.'),
+        ->get('temp_location') ?: filefield_paths_recommended_temporary_scheme() . 'filefield_paths',
+      '#description'   => t('The location that unprocessed files will be uploaded prior to being processed by File (Field) Paths.<br />It is recommended that you use the temporary file system (temporary://) or, as a 2nd choice, the private file system (private://) if your server configuration allows for one of those.<br /><strong>Never use the public directory (public://) if the site supports private files, or private files can be temporarily exposed publicly.</strong>'),
     ];
 
     return parent::buildForm($form, $form_state);

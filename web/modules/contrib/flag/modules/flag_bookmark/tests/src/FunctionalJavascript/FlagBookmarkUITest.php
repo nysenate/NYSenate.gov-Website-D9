@@ -21,7 +21,7 @@ class FlagBookmarkUITest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'flag',
     'flag_bookmark',
@@ -30,7 +30,7 @@ class FlagBookmarkUITest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
   }

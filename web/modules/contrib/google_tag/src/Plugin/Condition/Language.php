@@ -87,7 +87,7 @@ class Language extends ConditionBase implements ContainerFactoryPluginInterface 
     $languages = $this->languageManager->getLanguages(LanguageInterface::STATE_ALL);
     $selected = $this->configuration['language_list'];
     // Reduce the language object list to a language name list.
-    $this->values = array_reduce($languages, function (&$names, $language) use ($selected) {
+    $this->values = array_reduce($languages, function ($names, $language) use ($selected) {
       if (!empty($selected[$language->getId()])) {
         $names[$language->getId()] = $language->getName();
       }

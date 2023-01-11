@@ -95,6 +95,11 @@ code on the script tag. It does not load the snippet file and inspect the code
 therein. Instead of relying on this bot, check whether the GTM snippets are
 loaded as a result of the snippet added by this project.
 
+If you run Drush as other than the web user, then do not enable the 'Recreate
+snippets on cache rebuild' module setting. Otherwise snippet files will be
+created and owned by the user running Drush. On the next cache rebuild the web
+user may not be able to delete the files (resulting in a fatal error).
+
 ## MAINTAINERS
 
 Current maintainer:

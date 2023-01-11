@@ -147,7 +147,7 @@ class Taxonomy extends HierarchyPluginBase {
     $parentIds = [];
     $topLevelTerms = [];
 
-    foreach ($ids as $id) {
+    foreach ($ids as $key => $id) {
       if (!$activeIds || in_array($id, $activeIds)) {
         $currentParentIds = $this->getParentIds($id);
         if (!$currentParentIds) {
@@ -158,10 +158,12 @@ class Taxonomy extends HierarchyPluginBase {
             // Issue #3260603:
             // Due to a bug in core
             // https://www.drupal.org/project/drupal/issues/2723323
-            // it may happen that a taxonomy term is still referenced in a field,
-            // even though the term has been deleted.
-            // Not checking the term is empty produces a fatal error.
+            // it may happen that a taxonomy term is still referenced in a
+            // field, even though the term has been deleted. Not checking the
+            // term is empty produces a fatal error. The same could happen if
+            // someone manipulates the query parameter.
             if (!$term instanceof TermInterface) {
+              unset($ids[$key]);
               continue;
             }
 
@@ -214,7 +216,14 @@ class Taxonomy extends HierarchyPluginBase {
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return Cache::mergeTags(parent::getCacheTags(), ['taxonomy_term:list']);
+    return Cache::mergeTags(parent::getCacheTags(), ['taxonomy_term_list']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
 }

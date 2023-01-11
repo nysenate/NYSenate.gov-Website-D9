@@ -4,8 +4,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Enable Tilt.
@@ -17,9 +16,8 @@
    */
   Drupal.behaviors.geolocationDisableTilt = {
     attach: function (context, drupalSettings) {
-
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'map_disable_tilt',
+        "map_disable_tilt",
 
         /**
          * @param {GeolocationMapInterface} map - Current map.
@@ -35,6 +33,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
 })(Drupal);

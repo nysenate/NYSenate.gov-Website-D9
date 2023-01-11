@@ -99,6 +99,7 @@ class FullCalendarDisplay extends StylePluginBase {
     $options['createEventLink'] = ['default' => 0];
     $options['openEntityInNewTab'] = ['default' => 1];
     $options['eventLimit'] = ['default' => 2];
+    $options['slotDuration'] = ['default' => '00:30:00'];
     return $options;
   }
 
@@ -396,11 +397,21 @@ class FullCalendarDisplay extends StylePluginBase {
       '#title' => $this->t('Legend Colors'),
       '#description' => $this->t('Set color value of legends for each content type or each taxonomy.'),
     ];
+    $form['slotDuration'] = [
+      '#type' => 'textfield',
+      '#fieldset' => 'display',
+      '#title' => $this->t('Slot duration'),
+      '#description' => $this->t('The frequency for displaying time slots.'),
+      '#size' => 8,
+      '#maxlength' => 8,
+      '#default_value' => (isset($this->options['slotDuration'])) ? $this->options['slotDuration'] : '00:30:00',
+    ];
 
     $moduleHandler = \Drupal::service('module_handler');
     if ($moduleHandler->moduleExists('taxonomy')) {
       // All vocabularies.
-      $cabNames = taxonomy_vocabulary_get_names();
+      $cabNames = \Drupal::entityQuery('taxonomy_vocabulary')
+  ->execute();
       // Taxonomy reference field.
       $tax_fields = [];
       // Find out all taxonomy reference fields of this View.

@@ -222,7 +222,7 @@ class MigrateUpgradeDrushRunner {
         [get_class(), 'onIdMapMessage']);
     }
     foreach ($this->migrationList as $migration_id => $migration) {
-      $this->logger->log('ok', dt('Upgrading @migration', ['@migration' => $migration_id]));
+      $this->logger->log('notice', dt('Upgrading @migration', ['@migration' => $migration_id]));
       $executable = new MigrateExecutable($migration, static::$messages);
       // drush_op() provides --simulate support.
       drush_op([$executable, 'import']);
@@ -434,7 +434,7 @@ class MigrateUpgradeDrushRunner {
     $this->migrationList = array_reverse($migrations);
 
     foreach ($migrations as $migration) {
-      $this->logger->log('ok', dt('Rolling back @migration', ['@migration' => $migration->id()]));
+      $this->logger->log('notice', dt('Rolling back @migration', ['@migration' => $migration->id()]));
       $executable = new MigrateExecutable($migration, static::$messages);
       // drush_op() provides --simulate support.
       drush_op([$executable, 'rollback']);

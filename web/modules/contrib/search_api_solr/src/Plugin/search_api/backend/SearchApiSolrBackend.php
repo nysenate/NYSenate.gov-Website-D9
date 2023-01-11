@@ -110,7 +110,7 @@ use Laminas\Stdlib\ArrayUtils;
 class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInterface, PluginFormInterface {
 
   use PluginFormTrait {
-    submitConfigurationForm as traitSubmitConfigurationForm;
+    PluginFormTrait::submitConfigurationForm as traitSubmitConfigurationForm;
   }
 
   use PluginDependencyTrait;
@@ -452,7 +452,7 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
       '#options' => array_combine($domains, $domains),
       '#title' => $this->t('Targeted content domain'),
       '#description' => $this->t('For example "UltraBot3000" would be indexed as "Ultra" "Bot" "3000" in a generic domain, "CYP2D6" has to stay like it is in a scientific domain.'),
-      '#default_value' => isset($this->configuration['domain']) ? $this->configuration['domain'] : 'generic',
+      '#default_value' => $this->configuration['domain'] ?? 'generic',
     ];
 
     $environments = Utility::getAvailableEnvironments();
@@ -461,7 +461,7 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
       '#options' => array_combine($environments, $environments),
       '#title' => $this->t('Targeted environment'),
       '#description' => $this->t('For example "dev", "stage" or "prod".'),
-      '#default_value' => isset($this->configuration['environment']) ? $this->configuration['environment'] : 'default',
+      '#default_value' => $this->configuration['environment'] ?? 'default',
     ];
 
     $form['advanced']['i_know_what_i_do'] = [
@@ -1188,11 +1188,14 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function getDocuments(IndexInterface $index, array $items, UpdateQuery $update_query = NULL) {
+    $index_third_party_settings = $index->getThirdPartySettings('search_api_solr') + search_api_solr_default_index_third_party_settings();
     $documents = [];
     $index_id = $this->getTargetedIndexId($index);
     $site_hash = $this->getTargetedSiteHash($index);
     $languages = $this->languageManager->getLanguages();
-    $specific_languages = array_keys(array_filter($index->getThirdPartySetting('search_api_solr', 'multilingual', ['specific_languages' => []])['specific_languages']));
+    $specific_languages = array_keys(array_filter($index_third_party_settings['multilingual']['specific_languages'] ?? []));
+    $use_language_undefined_as_fallback_language = $index_third_party_settings['multilingual']['use_language_undefined_as_fallback_language'] ?? FALSE;
+    $use_universal_collation = $index_third_party_settings['multilingual']['use_universal_collation'] ?? FALSE;
     $fulltext_fields = $index->getFulltextFields();
     $request_time = $this->formatDate($this->time->getRequestTime());
     $base_urls = [];
@@ -1213,19 +1216,22 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
         $item->setLanguage($language_id);
       }
 
-      /** @see \Drupal\search_api\Plugin\search_api\processor\LanguageWithFallback */
+      /* @see \Drupal\search_api\Plugin\search_api\processor\LanguageWithFallback */
       $fallback_languages = [];
       $fallback_field_names = [];
       $language_with_fallback_field = $item->getField('language_with_fallback', FALSE);
       if ($language_with_fallback_field) {
-        $fallback_languages = array_diff($language_with_fallback_field->getValues(), [$language_id, LanguageInterface::LANGCODE_NOT_SPECIFIED]);
+        $fallback_languages = array_diff($language_with_fallback_field->getValues(), [
+            $language_id,
+            LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        ]);
         if (!empty($specific_languages)) {
           $fallback_languages = array_intersect($fallback_languages, $specific_languages);
         }
       }
 
       foreach ($fallback_languages as $fallback_language) {
-        $fallback_field_names[$fallback_language] = $this->getLanguageSpecificSolrFieldNames($fallback_language, $index);
+        $fallback_field_names[$fallback_language] = $this->getLanguageSpecificSolrFieldNames($use_language_undefined_as_fallback_language ? LanguageInterface::LANGCODE_NOT_SPECIFIED : $fallback_language, $index);
       }
       $field_names = $this->getLanguageSpecificSolrFieldNames($language_id, $index);
       $boost_terms = [];
@@ -1295,11 +1301,16 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
             }
 
             $first_value = $this->addIndexField($doc, $field_names[$name], $auto_aggregate_values[$type], $type, $boost_terms);
-            if (in_array($field_identifier, $fulltext_fields)) {
-              foreach ($fallback_languages as $fallback_language) {
+            $fallback_values = [];
+            foreach ($fallback_languages as $fallback_language) {
+              if (!isset($fallback_values[$fallback_language])) {
                 $event = new PreAddLanguageFallbackFieldEvent($fallback_language, $auto_aggregate_values[$type], $type, $item);
                 $this->eventDispatcher->dispatch($event);
-                $this->addIndexField($doc, $fallback_field_names[$fallback_language][$name], $event->getValue(), $type, $boost_terms);
+                $value = $event->getValue();
+                if ($value) {
+                  $this->addIndexField($doc, $fallback_field_names[$fallback_language][$name], $value, $type, $boost_terms);
+                }
+                $fallback_values[$fallback_language] = $value;
               }
             }
             break;
@@ -1315,10 +1326,17 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
           default:
             $first_value = $this->addIndexField($doc, $field_names[$name], $field->getValues(), $type, $boost_terms);
             if (in_array($field_identifier, $fulltext_fields)) {
+              $fallback_values = [];
               foreach ($fallback_languages as $fallback_language) {
-                $event = new PreAddLanguageFallbackFieldEvent($fallback_language, $field->getValues(), $type, $item);
-                $this->eventDispatcher->dispatch($event);
-                $this->addIndexField($doc, $fallback_field_names[$fallback_language][$name], $event->getValue(), $type, $boost_terms);
+                if (!isset($fallback_values[$fallback_language])) {
+                  $event = new PreAddLanguageFallbackFieldEvent($fallback_language, $field->getValues(), $type, $item);
+                  $this->eventDispatcher->dispatch($event);
+                  $value = $event->getValue();
+                  if ($value) {
+                    $this->addIndexField($doc, $fallback_field_names[$fallback_language][$name], $value, $type, $boost_terms);
+                  }
+                  $fallback_values[$fallback_language] = $value;
+                }
               }
             }
             break;
@@ -1347,14 +1365,16 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
                 $first_value = Unicode::truncate($first_value, 128);
               }
 
-              // Always copy fulltext and string fields to a dedicated sort
-              // fields for faster sorts and language specific collations. To
-              // allow sorted multilingual searches we need to fill *all*
-              // language-specific sort fields!
-              $sort_languages = array_keys($this->languageManager
-                ->getLanguages());
-              if (!empty($specific_languages)) {
-                $sort_languages = array_intersect($sort_languages, $specific_languages);
+              if (!$use_universal_collation) {
+                // Copy fulltext and string fields to a dedicated sort fields
+                // for faster sorts and language specific collations. To
+                // allow sorted multilingual searches we need to fill *all*
+                // language-specific sort fields!
+                $sort_languages = array_keys($this->languageManager
+                  ->getLanguages());
+                if (!empty($specific_languages)) {
+                  $sort_languages = array_intersect($sort_languages, $specific_languages);
+                }
               }
               $sort_languages[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
               foreach ($sort_languages as $sort_language_id) {
@@ -1708,7 +1728,8 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
         $search_api_language_ids = $query->getLanguages() ?? [];
         if (!empty($search_api_language_ids)) {
           $unspecific_field_names = $this->getSolrFieldNames($index);
-          // For solr_document datasource, search_api_language might not be mapped.
+          // For solr_document datasource, search_api_language might not be
+          // mapped.
           if (!empty($unspecific_field_names['search_api_language'])) {
             $solarium_query->createFilterQuery('language_filter')->setQuery(
               $this->createFilterQuery($unspecific_field_names['search_api_language'], $language_ids, 'IN', new Field($index, 'search_api_language'), $options)
@@ -1923,9 +1944,15 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
         // @see https://www.drupal.org/project/search_api_solr/issues/3133997
         $query->mergeCacheMaxAge(0);
       }
-      throw $e;
+
+      // Don't expose Solr error message details to the user. The search_api
+      // views integration forwards the exception message to the end user. Just
+      // log the datails.
+      $this->getLogger()->error('@exception', ['@exception' => $e->getMessage()]);
+
+      throw new SearchApiSolrException('An error occurred while searching, try again later.', $e->getCode());
     }
-}
+  }
 
   /**
    * Ensures the given Search API query has a language condition applied.
@@ -2263,7 +2290,8 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
    * @return bool
    *   TRUE if the index only contains "solr_*" datasources, FALSE otherwise.
    *
-   * @deprecated in search_api_solr:4.2.0 and is removed from
+   * @deprecated SearchApiSolrBackend::hasIndexJustSolrDatasources() is
+   *   deprecated in search_api_solr:4.2.0 and is removed from
    *   search_api_solr:4.3.0. Use
    *   Utility::hasIndexJustSolrDatasources() instead.
    *
@@ -2271,7 +2299,7 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
    * @see \Drupal\search_api_solr\Utility\Utility::hasIndexJustSolrDatasources()
    */
   protected function hasIndexJustSolrDatasources(IndexInterface $index) {
-    @trigger_error('SearchApiSolrBackend::hasIndexJustSolrDatasources() is deprecated in 4.2.0 and is removed from 4.3.0.', E_USER_DEPRECATED);
+    @trigger_error('SearchApiSolrBackend::hasIndexJustSolrDatasources() is deprecated in search_api_solr:4.2.0 and is removed from search_api_solr:4.3.0. Use Utility::hasIndexJustSolrDatasources() instead.', E_USER_DEPRECATED);
     return Utility::hasIndexJustSolrDatasources($index);
   }
 
@@ -2285,7 +2313,8 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
    *   TRUE if the index only contains "solr_document" datasources, FALSE
    *   otherwise.
    *
-   * @deprecated in search_api_solr:4.2.0 and is removed from
+   * @deprecated SearchApiSolrBackend::hasIndexJustSolrDocumentDatasource() is
+   *   deprecated in search_api_solr:4.2.0 and is removed from
    *   search_api_solr:4.3.0. Use
    *   Utility::hasIndexJustSolrDocumentDatasource() instead.
    *
@@ -2293,7 +2322,7 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
    * @see \Drupal\search_api_solr\Utility\Utility::hasIndexJustSolrDocumentDatasource()
    */
   protected function hasIndexJustSolrDocumentDatasource(IndexInterface $index) {
-    @trigger_error('SearchApiSolrBackend::hasIndexJustSolrDocumentDatasource() is deprecated in 4.2.0 and is removed from 4.3.0.', E_USER_DEPRECATED);
+    @trigger_error('SearchApiSolrBackend::hasIndexJustSolrDocumentDatasource() is deprecated in search_api_solr:4.2.0 and is removed from search_api_solr:4.3.0.', E_USER_DEPRECATED);
     return Utility::hasIndexJustSolrDocumentDatasource($index);
   }
 
@@ -2912,6 +2941,11 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
       }
 
       $item_id = $doc_fields[$id_field];
+      // For an unknown reason we sometimes get an array here. See
+      // https://www.drupal.org/project/search_api_solr/issues/3281703
+      if (is_array($item_id)) {
+        $item_id = current($item_id);
+      }
       // For items coming from a different site, we need to adapt the item ID.
       if (isset($doc_fields['hash']) && !$this->configuration['site_hash'] && $doc_fields['hash'] != $site_hash) {
         $item_id = $doc_fields['hash'] . '--' . $item_id;
@@ -2940,6 +2974,11 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
 
       if ($language_field && isset($doc_fields[$language_field])) {
         $language_id = $doc_fields[$language_field];
+        // For an unknown reason we sometimes get an array here. See
+        // https://www.drupal.org/project/search_api_solr/issues/3281703
+        if (is_array($language_id)) {
+          $language_id = current($language_id);
+        }
         $result_item->setLanguage($language_id);
         $field_names = $this->getLanguageSpecificSolrFieldNames($language_id, $index);
       }
@@ -3693,9 +3732,9 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
             //   considered. And the results have to be combined across
             //   languages. One way to implement it might be facet queries.
             //   For now, log an error and throw an exception.
-            $msg = sprintf('Facets for fulltext fields are not yet supported. Consider converting the following field to a string or index it twice as string: %s.', $info['field']);
-            $this->getLogger()->error($msg);
-            throw new SearchApiSolrException($msg);
+            $msg = 'Facets for fulltext fields are not yet supported. Consider converting the following field to a string or indexing it one more time as string:';
+            $this->getLogger()->error($msg . ' @field', ['@field' => $info['field']]);
+            throw new SearchApiSolrException(sprintf($msg . ' %s', $info['field']));
           }
           else {
             // Create the Solarium facet field object.
@@ -3737,9 +3776,9 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
             // Trie based field types were deprecated in Solr 6 and with Solr 7
             // we switched to the point based equivalents. But lucene doesn't
             // support a mincount of "0" for these field types.
-            $msg = sprintf('Facets having a mincount of "0" is not yet supported by Solr for point based field types. Consider converting the following field to a string or index it twice as string: %s.', $info['field']);
-            $this->getLogger()->error($msg);
-            throw new SearchApiSolrException($msg);
+            $msg = 'Facets having a mincount of "0" are not yet supported by Solr for point based field types. Consider converting the following field to a string or indexing it one more time as string:';
+            $this->getLogger()->error($msg . ' @field', ['@field' => $info['field']]);
+            throw new SearchApiSolrException(sprintf($msg . ' %s', $info['field']));
           }
         }
 
@@ -4232,9 +4271,9 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
         // switched to the point based equivalents. But lucene doesn't support
         // mlt based on these field types. Date fields don't seem to be
         // supported at all in MLT queries.
-        $msg = sprintf('More like this (MLT) is not yet supported by Solr for point based field types. Consider converting the following field to a string or index it twice as string: %s.', $mlt_field);
-        $this->getLogger()->error($msg);
-        throw new SearchApiSolrException($msg);
+        $msg = 'More like this (MLT) is not yet supported by Solr for point based field types. Consider converting the following field to a string or indexing it one more time as string:';
+        $this->getLogger()->error($msg . ' @field', ['@field' => $mlt_field]);
+        throw new SearchApiSolrException(sprintf($msg . ' %s', $mlt_field));
       }
 
       if (strpos($first_field, 't') !== 0) {
@@ -4396,7 +4435,7 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
     $field_names = $this->getSolrFieldNames($query->getIndex());
     $rpt = reset($rpt_options);
     $solr_field = $field_names[$rpt['field']];
-    $rpt['geom'] = isset($rpt['geom']) ? $rpt['geom'] : '["-180 -90" TO "180 90"]';
+    $rpt['geom'] = $rpt['geom'] ?? '["-180 -90" TO "180 90"]';
 
     // Add location filter.
     $solarium_query->createFilterQuery($solr_field)->setQuery($solr_field . ':' . $rpt['geom']);
@@ -4476,6 +4515,11 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
 
         if (!empty($grouping_options['group_limit']) && ($grouping_options['group_limit'] != 1)) {
           $grouping_component->setLimit($grouping_options['group_limit']);
+        }
+
+        // Set group offset.
+        if (isset($grouping_options['group_offset'])) {
+          $grouping_component->setOffset($grouping_options['group_offset']);
         }
 
         if (!empty($grouping_options['group_sort'])) {
@@ -4624,7 +4668,7 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
    * {@inheritdoc}
    */
   public function isOptimizeEnabled() {
-    return isset($this->configuration['optimize']) ? $this->configuration['optimize'] : FALSE;
+    return $this->configuration['optimize'] ?? FALSE;
   }
 
   /**
@@ -4646,20 +4690,27 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
    * {@inheritdoc}
    */
   public function getSchemaLanguageStatistics(?Endpoint $endpoint = NULL) {
-    $available = $this->getSolrConnector()->pingServer();
-
     $stats = [];
-    foreach ($this->languageManager->getLanguages() as $language) {
-      $language_id = $language->getId();
+    $language_ids = array_keys($this->languageManager->getLanguages());
+    $language_ids[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    foreach ($language_ids as $language_id) {
       // Convert zk-hans to zk_hans.
       $converted_language_id = str_replace('-', '_', $language_id);
-      $stats[$language_id] = $available ? ($this->isPartOfSchema('fieldTypes', 'text_' . $converted_language_id, $endpoint) ? $converted_language_id : FALSE) : FALSE;
-      if (!$stats[$language_id]) {
-        // Try language fallback.
-        $converted_language_id = preg_replace('/-.+$/', '', $language_id);
-        $stats[$language_id] = $available ? ($this->isPartOfSchema('fieldTypes', 'text_' . $converted_language_id, $endpoint) ? $converted_language_id : FALSE) : FALSE;
+
+      $stats[$language_id] = FALSE;
+      try {
+        $stats[$language_id] = $this->isPartOfSchema('fieldTypes', 'text_' . $converted_language_id, $endpoint) ? $converted_language_id : FALSE;
+        if (!$stats[$language_id]) {
+          // Try language fallback.
+          $converted_language_id = preg_replace('/-.+$/', '', $language_id);
+          $stats[$language_id] = $this->isPartOfSchema('fieldTypes', 'text_' . $converted_language_id, $endpoint) ? $converted_language_id : FALSE;
+        }
+      }
+      catch (SearchApiSolrException $e) {
+        $stats[$language_id] = FALSE;
       }
     }
+
     return $stats;
   }
 

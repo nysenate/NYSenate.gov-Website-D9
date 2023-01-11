@@ -8,7 +8,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\twig_field_value\Twig\Extension\FieldValueExtension

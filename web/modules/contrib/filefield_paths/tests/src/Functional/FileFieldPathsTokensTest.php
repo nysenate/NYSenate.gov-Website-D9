@@ -51,7 +51,7 @@ class FileFieldPathsTokensTest extends FileFieldPathsTestBase {
     $text_file->save();
 
     // Move the text file.
-    $moved_file = file_move($text_file, 'public://moved.diff');
+    $moved_file = \Drupal::service('file.repository')->move($text_file, 'public://moved.diff');
 
     // Ensure tokens are processed correctly.
     $data = ['file' => $moved_file];

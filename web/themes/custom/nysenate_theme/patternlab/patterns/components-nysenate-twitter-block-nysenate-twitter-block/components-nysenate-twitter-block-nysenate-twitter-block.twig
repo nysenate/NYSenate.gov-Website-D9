@@ -1,0 +1,53 @@
+{{ attach_library('nysenate_theme/nysenate-twitter-block') }}
+{# PATTERNLAB STYLEGUIDE SAMPLE #}
+<section class="nyesenate-twitter-block">
+  <h2 class="c-container--title">The New York State Senate on Twitter</h2>
+  <div class="l-tweets">
+    <div class="view-header">
+      <div class="l-twitter-user">
+        <div>
+          <div class="c-twitter--logo">
+            {{ image}}
+          </div>
+          <div class="c-twitter-user--info">
+            <h3 class="c-twitter-user--name">{{ title }}</h3>
+            <div>
+              <a href=class="c-twitter-user--link">{{ link }}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="c-twitter-user--follow">
+          <a href="https://twitter.com/intent/follow?screen_name=NYSenate">Follow</a>
+        </div>
+      </div>
+    </div>
+    <div class="tweets-container">
+      {% for item in items %}
+
+        <div class="first u-odd">
+          <article class="c-twitter-block">
+            <h3 class="c-tweet">{{ item.body }}
+            </h3>
+            <div class="c-timestamp">
+              <em class="placeholder">{{ item.week }}</em>
+            ago</div>
+            <div class="c-web_intents">
+            <span>
+              <a href="https://twitter.com/intent/tweet?in_reply_to=1610301566300323842">Reply</a>
+            </span>
+              <span>
+              <a href="https://twitter.com/intent/retweet?tweet_id=1610301566300323842">Retweet</a>
+            </span>
+              <span>
+              <a href="https://twitter.com/intent/favorite?tweet_id=1609519941618700288">Favorite</a>
+            </span>
+            </div>
+          </article>
+        </div>
+
+      {% endfor %}
+
+    </div>
+  </div>
+</section>

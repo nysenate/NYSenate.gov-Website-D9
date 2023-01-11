@@ -21,7 +21,7 @@ class FlagPermissions implements ContainerInjectionInterface {
   /**
    * Constructs a FlagPermissions instance.
    *
-   * @param FlagServiceInterface $flag
+   * @param \Drupal\flag\FlagServiceInterface $flag
    *   The flag service.
    */
   public function __construct(FlagServiceInterface $flag) {

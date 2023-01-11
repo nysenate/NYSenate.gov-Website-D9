@@ -99,7 +99,7 @@ function filefield_paths_filefield_paths_process_file(ContentEntityInterface $en
       $path = filefield_paths_process_string($settings['file_path']['value'], $token_data, $settings['file_path']['options']);
 
       $destination = \Drupal::service('stream_wrapper_manager')
-        ->normalizeUri($field_storage->getSetting('uri_scheme') . '://' . $path . DIRECTORY_SEPARATOR . $name);
+        ->normalizeUri($field_storage->getSetting('uri_scheme') . '://' . $path . '/' . $name);
 
       // Ensure file uri is no more than 255 characters.
       if (mb_strlen($destination) > 255) {
@@ -113,7 +113,7 @@ function filefield_paths_filefield_paths_process_file(ContentEntityInterface $en
         $dirname = $file_system->dirname($destination);
         if (
           \Drupal::service('file_system')->prepareDirectory($dirname, FileSystem::CREATE_DIRECTORY)
-          && $new_file = file_move($file, $destination)
+          && $new_file = \Drupal::service('file.repository')->move($file, $destination)
         ) {
           // Create redirect from old location.
           if (

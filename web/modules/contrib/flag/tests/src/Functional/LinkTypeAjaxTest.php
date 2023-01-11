@@ -31,7 +31,7 @@ class LinkTypeAjaxTest extends FlagTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a node to flag.
@@ -61,18 +61,18 @@ class LinkTypeAjaxTest extends FlagTestBase {
     $this->drupalGet($node_url);
 
     // Confirm the flag link exists.
-    $this->assertLink($this->flag->getShortText('flag'));
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
 
     // Click the flag link. This ensures that the non-JS fallback works we are
     // redirected to back to the page and the node is flagged.
     $this->clickLink($this->flag->getShortText('flag'));
-    $this->assertUrl($node_url);
-    $this->assertLink($this->flag->getShortText('unflag'));
+    $this->assertSession()->addressEquals($node_url);
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
 
     // Click the unflag link, repeat the check.
     $this->clickLink($this->flag->getShortText('unflag'));
-    $this->assertUrl($node_url);
-    $this->assertLink($this->flag->getShortText('flag'));
+    $this->assertSession()->addressEquals($node_url);
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
   }
 
 }

@@ -30,28 +30,28 @@ login_security.settings:
       type: integer
       label: 'Display last access timestamp'
     notice_attempts_message:
-      type: string
+      type: text
       label: 'Message to be shown on each failed login attempt'
     host_soft_banned:
-      type: string
+      type: text
       label: 'Message for banned host (Soft IP ban)'
     host_hard_banned:
-      type: string
+      type: text
       label: 'Message for banned host (Hard IP ban)'
     user_blocked:
-      type: string
+      type: text
       label: 'Message when user is blocked by uid'
     user_blocked_email_subject:
-      type: string
+      type: label
       label: 'Email subject'
     user_blocked_email_body:
-      type: string
+      type: text
       label: 'Email body'
     login_activity_email_subject:
-      type: string
+      type: label
       label: 'Email subject'
     login_activity_email_body:
-      type: string
+      type: text
       label: 'Email body'
     user_blocked_notification_emails:
       type: string

@@ -588,8 +588,14 @@ class Utility {
     elseif (strpos($first_solr_field_name, 's') === 0 || strpos($first_solr_field_name, 't') === 0) {
       // For string and fulltext fields use the dedicated sort field for faster
       // and language specific sorts. If multiple languages are specified, use
-      // the first one.
-      $language_ids = $query->getLanguages() ?? [LanguageInterface::LANGCODE_NOT_SPECIFIED];
+      // the first one or the universal collation field if enabled.
+      $index_third_party_settings = $query->getIndex()->getThirdPartySettings('search_api_solr') + search_api_solr_default_index_third_party_settings();
+      if (!($index_third_party_settings['multilingual']['use_universal_collation'] ?? FALSE)) {
+        $language_ids = $query->getLanguages() ?? [LanguageInterface::LANGCODE_NOT_SPECIFIED];
+      }
+      else {
+        $language_ids = [LanguageInterface::LANGCODE_NOT_SPECIFIED];
+      }
       return Utility::encodeSolrName('sort' . SolrBackendInterface::SEARCH_API_SOLR_LANGUAGE_SEPARATOR . reset($language_ids) . '_' . $field_name);
     }
     elseif (preg_match('/^([a-z]+)m(_.*)/', $first_solr_field_name, $matches)) {
@@ -1289,7 +1295,7 @@ class Utility {
       }
     }
 
-    $specific_languages = array_keys(array_filter($index->getThirdPartySetting('search_api_solr', 'multilingual', ['specific_languages' => []])['specific_languages']));
+    $specific_languages = array_keys(array_filter($index->getThirdPartySetting('search_api_solr', 'multilingual', ['specific_languages' => []])['specific_languages'] ?? []));
     if (!empty($specific_languages)) {
       $language_ids = array_intersect($language_ids, $specific_languages);
       $fallback_languages = array_intersect($fallback_languages, $specific_languages);

@@ -74,7 +74,7 @@ class FlagCountsTest extends FlagKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installSchema('user', 'users_data');
@@ -166,23 +166,23 @@ class FlagCountsTest extends FlagKernelTestBase {
     // Get the count of flaggings for the flag. The other flag also has
     // flaggings, which should not be included in the count.
     $flag_get_entity_flag_counts = $this->flagCountService->getFlagFlaggingCount($this->flag);
-    $this->assertEqual($flag_get_entity_flag_counts, 3, "getFlagFlaggingCount() returns the expected count.");
+    $this->assertEquals(3, $flag_get_entity_flag_counts, "getFlagFlaggingCount() returns the expected count.");
 
     // Get the counts of all flaggings on the entity. The other node is also
     // flagged, but should not be included in the count.
     $flag_get_counts = $this->flagCountService->getEntityFlagCounts($this->node);
-    $this->assertEqual($flag_get_counts[$this->flag->id()], 2, "getEntityFlagCounts() returns the expected count.");
-    $this->assertEqual($flag_get_counts[$this->otherFlag->id()], 1, "getEntityFlagCounts() returns the expected count.");
+    $this->assertEquals(2,$flag_get_counts[$this->flag->id()], "getEntityFlagCounts() returns the expected count.");
+    $this->assertEquals(1, $flag_get_counts[$this->otherFlag->id()], "getEntityFlagCounts() returns the expected count.");
 
     // Get the number of entities for the flag. Two users have flagged one node
     // with the flag, but that should count only once.
     $flag_get_flag_counts = $this->flagCountService->getFlagEntityCount($this->flag);
-    $this->assertEqual($flag_get_flag_counts, 2, "getFlagEntityCount() returns the expected count.");
+    $this->assertEquals(2, $flag_get_flag_counts, "getFlagEntityCount() returns the expected count.");
 
     // Unflag everything with the main flag.
     $this->flagService->unflagAllByFlag($this->flag);
     $flag_get_flag_counts = $this->flagCountService->getFlagEntityCount($this->flag);
-    $this->assertEqual($flag_get_flag_counts, 0, "getFlagEntityCount() on reset flag returns the expected count.");
+    $this->assertEquals(0, $flag_get_flag_counts, "getFlagEntityCount() on reset flag returns the expected count.");
   }
 
   /**
@@ -203,9 +203,9 @@ class FlagCountsTest extends FlagKernelTestBase {
     // For non-global flags anonymous users can uniquely identified by
     // session_id.
     $anon1_count = $this->flagCountService->getUserFlagFlaggingCount($this->flag, $this->anonymousUser, $anon1_session_id);
-    $this->assertEqual($anon1_count, 1, "getUserFlagFlaggingCount() counts only the first user.");
+    $this->assertEquals(1, $anon1_count, "getUserFlagFlaggingCount() counts only the first user.");
     $anon2_count = $this->flagCountService->getUserFlagFlaggingCount($this->flag, $this->anonymousUser, $anon2_session_id);
-    $this->assertEqual($anon2_count, 1, "getUserFlagFlaggingCount() counts only the second user.");
+    $this->assertEquals(1, $anon2_count, "getUserFlagFlaggingCount() counts only the second user.");
 
     // Switch to a global flag, the accounting rules.
     $this->flag->setGlobal(TRUE);
@@ -214,7 +214,7 @@ class FlagCountsTest extends FlagKernelTestBase {
     // Despite being a global flag, queries about specific anonymous users can
     // still be made.
     $rejected_count = $this->flagCountService->getUserFlagFlaggingCount($this->flag, $this->anonymousUser, $anon1_session_id);
-    $this->assertEqual($rejected_count, 1, "getUserFlagFlaggingCount() ignores the session id.");
+    $this->assertEquals(1, $rejected_count, "getUserFlagFlaggingCount() ignores the session id.");
   }
 
   /**
@@ -241,13 +241,13 @@ class FlagCountsTest extends FlagKernelTestBase {
 
     // Confirm the counts have been incremented.
     $article1_count_before = $this->flagCountService->getEntityFlagCounts($article1);
-    $this->assertEqual($article1_count_before[$this->flag->id()], 1, 'The article1 has been flagged.');
+    $this->assertEquals(1, $article1_count_before[$this->flag->id()], 'The article1 has been flagged.');
     $article2_count_before = $this->flagCountService->getEntityFlagCounts($article2);
-    $this->assertEqual($article2_count_before[$this->flag->id()], 1, 'The article2 has been flagged.');
+    $this->assertEquals(1, $article2_count_before[$this->flag->id()], 'The article2 has been flagged.');
 
     // Confirm the flagging have been created.
     $flaggings_before = $this->getFlagFlaggings($this->flag);
-    $this->assertEqual(count($flaggings_before), 2, 'There are two flaggings associated with the flag');
+    $this->assertEquals(2, count($flaggings_before), 'There are two flaggings associated with the flag');
 
     // Delete the flag.
     $this->flag->delete();
@@ -288,13 +288,13 @@ class FlagCountsTest extends FlagKernelTestBase {
 
     // Confirm the counts have been incremented.
     $article1_count_before = $this->flagCountService->getEntityFlagCounts($article1);
-    $this->assertEqual($article1_count_before[$this->flag->id()], 1, 'The article1 has been flagged.');
+    $this->assertEquals(1, $article1_count_before[$this->flag->id()], 'The article1 has been flagged.');
     $article2_count_before = $this->flagCountService->getEntityFlagCounts($article2);
-    $this->assertEqual($article2_count_before[$this->flag->id()], 1, 'The article2 has been flagged.');
+    $this->assertEquals(1, $article2_count_before[$this->flag->id()], 'The article2 has been flagged.');
 
     // Confirm the flagging have been created.
     $flaggings_before = $this->getFlagFlaggings($this->flag);
-    $this->assertEqual(count($flaggings_before), 2, 'There are two flaggings associated with the flag');
+    $this->assertEquals(2, count($flaggings_before), 'There are two flaggings associated with the flag');
 
     // Delete the entities.
     $article1->delete();
@@ -302,13 +302,13 @@ class FlagCountsTest extends FlagKernelTestBase {
 
     // The list of all flaggings MUST now be empty.
     $flaggings_after = $this->getFlagFlaggings($this->flag);
-    $this->assert(empty($flaggings_after), 'The flaggings were removed, when the flag was deleted');
+    $this->assertEmpty($flaggings_after, 'The flaggings were removed, when the flag was deleted');
 
     // Confirm the counts have been removed.
     $article1_count_after = $this->flagCountService->getEntityFlagCounts($article1);
-    $this->assertTrue(empty($article1_count_after), 'Article1 counts has been removed.');
+    $this->assertEmpty($article1_count_after, 'Article1 counts has been removed.');
     $article2_count_after = $this->flagCountService->getEntityFlagCounts($article2);
-    $this->assertTrue(empty($article2_count_after), 'Article2 counts has been removed.');
+    $this->assertEmpty($article2_count_after, 'Article2 counts has been removed.');
   }
 
   /**
@@ -339,10 +339,10 @@ class FlagCountsTest extends FlagKernelTestBase {
     $this->flagService->flag($this->flag, $article, $auth_user);
 
     $user_before_count = $this->flagCountService->getEntityFlagCounts($auth_user);
-    $this->assertEqual($user_before_count[$user_flag->id()], 1, 'The user has been flagged.');
+    $this->assertEquals(1, $user_before_count[$user_flag->id()], 'The user has been flagged.');
 
     $article_count_before = $this->flagCountService->getEntityFlagCounts($article);
-    $this->assertEqual($article_count_before[$this->flag->id()], 1, 'The article has been flagged by the user.');
+    $this->assertEquals(1, $article_count_before[$this->flag->id()], 'The article has been flagged by the user.');
 
     $auth_user->delete();
 
@@ -350,7 +350,7 @@ class FlagCountsTest extends FlagKernelTestBase {
     $this->assertEmpty($flaggings_after, 'The user flaggings were removed when the user was deleted.');
 
     $flaggings_after = $this->getFlagFlaggings($this->flag);
-    $this->assert(empty($flaggings_after), 'The node flaggings were removed when the user was deleted');
+    $this->assertEmpty($flaggings_after, 'The node flaggings were removed when the user was deleted');
   }
 
 }

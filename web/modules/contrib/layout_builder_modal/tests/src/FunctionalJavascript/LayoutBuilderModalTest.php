@@ -31,12 +31,12 @@ class LayoutBuilderModalTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_tasks_block');
@@ -65,12 +65,13 @@ class LayoutBuilderModalTest extends WebDriverTestBase {
       'administer node display',
       'create and edit custom blocks',
     ], 'foobar'));
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
 
     // Enable layout builder.
-    $this->drupalPostForm(
-      'admin/structure/types/manage/bundle_with_section_field/display/default',
-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
-      'Save');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
   }
 
   /**
@@ -271,9 +272,6 @@ class LayoutBuilderModalTest extends WebDriverTestBase {
 
     // Verify there is a 'primary' class.
     $assert_session->elementExists('css', '#layout-builder-modal .button--primary');
-    $button_background = $this->getSession()->evaluateScript('jQuery("#layout-builder-modal .button--primary").css("background-color")');
-    $default_background = "rgb(221, 221, 221)";
-    $this->assertSame($button_background, $default_background);
 
     \Drupal::configFactory()->getEditable('layout_builder_modal.settings')
       ->set('theme_display', 'seven')

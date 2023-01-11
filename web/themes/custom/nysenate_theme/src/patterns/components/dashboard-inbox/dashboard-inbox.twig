@@ -1,0 +1,92 @@
+<form class="c-block c-container c-container--const-inbox" action="{{ action_link }}" method="post" accept-charset="UTF-8">
+  <h3 class="c-container__title">
+    {{ title }}
+  </h3>
+  <a class="c-container__cta {{ type == 'sent' ? 'c-container__cta--sent' : '' }}" href="{{ cta.link }}">{{ cta.label }}</a>
+
+  <div class="c-search-form">
+
+    {% for search_input in search_inputs %}
+      <div class="search-form-group__wrapper">
+        <label for="{{ search_input.name }}">{{ search_input.label }}</label>
+        <div class="search-form-group">
+          <div class="search-form-group__inner">
+            <label class="element-invisible" for="edit-messagesearch">{{ search_input.label }}
+            </label>
+            <input class="search-form-group__input" type="search" name="{{ search_inputs.name }}" value="" size="60" maxlength="128">
+          </div>
+          <button class="search-form-group__button c-site-search--btn" name="op" value="Search" type="submit"></button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <button class="search-button" name="op" value="Search" type="submit">Search</button>
+
+  <div class="inbox-action-links">
+    <div class="select-all-messages">
+      <div class="form-item form-type-checkbox form-item-check-all">
+        <input type="checkbox" name="check_all" value="1" class="form-checkbox">
+        <label class="option" for="edit-check-all">Check All
+        </label>
+
+      </div>
+    </div>
+    <div class="form-actions form-wrapper">
+      <button class="action-button" name="delete" value="Delete" type="button">Delete</button>
+      <button class="action-button action-button--message" name="op" value="Message" type="submit">Message</button>
+    </div>
+  </div>
+
+  <div class="message-list__wrapper">
+    <table class="message-list">
+      <thead>
+        <tr>
+          <th class="message-list__th"></th>
+          <th class="message-list__th">name</th>
+          <th class="message-list__th message-list__th--hide-sm">subject</th>
+          <th class="message-list__th">Date Sent</th>
+          <th class="message-list__th"></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% if messages is not empty %}
+          {% for message in messages %}
+            <tr>
+              <td class="message-list__td">
+                <div class="">
+                  <input class="form-check" type="checkbox">
+                </div>
+              </td>
+              <td class="message-list__td message-list__td--information">
+                <div class="message-list__td--information__author">
+                  <a href="{{ message.author_link }}">{{ message.author }}</a>
+                </div>
+                <div class="message-list__td--information__message">
+                  <a href="{{ message.content_link }}">{{ message.content }}
+                  </a>
+                </div>
+              </td>
+              <td class="message-list__td message-list__td--subject message-list__td--hide-sm">
+                <a href="{{ message.subject_link }}">{{ message.subject }}</a>
+              </td>
+              <td class="message-list__td message-list__td--date">{{message.date_sent}}</td>
+              <td class="message-list__td message-list__td--issue">
+                <div class="message-list__td--issue__toggle"></div>
+                <div class="message-list__td--issue__actions">
+                  <a class="message-list__td--issue__action action-button" href="{{ message.forward_link }}">Forward</a>
+                  <a class="message-list__td--issue__action action-button" href="{{ message.reply_link }}">Reply</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5" class="message-list__td">No messages available.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</form>

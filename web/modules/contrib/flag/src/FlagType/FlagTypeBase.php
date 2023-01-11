@@ -87,7 +87,7 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
    *
    * @param array $form
    *   The form array.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
    * @return array
@@ -106,7 +106,7 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
    *
    * @param array $form
    *   The form array.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
@@ -118,7 +118,7 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
    *
    * @param array $form
    *   The form array.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {

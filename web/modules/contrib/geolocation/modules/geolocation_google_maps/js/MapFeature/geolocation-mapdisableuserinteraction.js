@@ -4,8 +4,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Disable User interaction.
@@ -17,9 +16,8 @@
    */
   Drupal.behaviors.geolocationDisableUserInteraction = {
     attach: function (context, drupalSettings) {
-
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'map_disable_user_interaction',
+        "map_disable_user_interaction",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -28,8 +26,8 @@
         function (map, featureSettings) {
           map.addInitializedCallback(function (map) {
             map.googleMap.setOptions({
-              gestureHandling: 'none',
-              zoomControl: false
+              gestureHandling: "none",
+              zoomControl: false,
             });
           });
 
@@ -38,6 +36,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
 })(Drupal);

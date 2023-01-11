@@ -62,7 +62,7 @@ abstract class GTMTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->defaultTheme = 'stark';
     parent::setUp();
     $this->basePath = $this->config('google_tag.settings')->get('uri');
@@ -190,7 +190,8 @@ abstract class GTMTestBase extends BrowserTestBase {
 
     // Confirm no snippet files.
     $message = 'No snippet files found after delete';
-    parent::assertDirectoryNotExists($directory . '/google_tag', $message);
+    $method = method_exists($parent, $a = 'assertDirectoryDoesNotExist') ? $a : 'assertDirectoryNotExists';
+    parent::$method($directory . '/google_tag', $message);
   }
 
   /**

@@ -2,7 +2,7 @@
 
 namespace Drupal\flag\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Event for when a flagging is deleted.

@@ -98,7 +98,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
     $action = $this->getAction($flag, $entity);
     $access = $flag->actionAccess($action, $this->currentUser, $entity);
 
-    if($access->isAllowed()) {
+    if ($access->isAllowed()) {
       $url = $this->getUrl($action, $flag, $entity);
       $url->setRouteParameter('destination', $this->getDestination());
       $render = [
@@ -151,7 +151,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
    * Helper method to generate a destination URL parameter.
    *
    * @return string
-   *  A string containing a destination URL parameter.
+   *   A string containing a destination URL parameter.
    */
   protected function getDestination() {
     return $this->getRedirectDestination()->get();
@@ -171,7 +171,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
    *
    * @param array $form
    *   The form array.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
    * @return array

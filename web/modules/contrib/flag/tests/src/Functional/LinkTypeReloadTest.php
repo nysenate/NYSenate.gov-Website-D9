@@ -66,7 +66,7 @@ class LinkTypeReloadTest extends FlagTestBase {
     // We (probably) can't obtain the URL from the route rather than hardcoding
     // it, as that would probably give us the token too.
     $this->drupalGet("flag/flag/$flag_id/$node_id");
-    $this->assertResponse(403, "Access to the flag reload link is denied when no token is supplied.");
+    $this->assertSession()->statusCodeEquals(403);
 
     // Click the flag link.
     $this->drupalGet('node/' . $node_id);
@@ -74,7 +74,7 @@ class LinkTypeReloadTest extends FlagTestBase {
 
     // Check that the node is flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertLink($this->flag->getShortText('unflag'));
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
 
     // Check the flag count was incremented.
     $flag_count_flagged = \Drupal::database()->query('SELECT count FROM {flag_counts}
@@ -83,11 +83,11 @@ class LinkTypeReloadTest extends FlagTestBase {
       ':entity_type' => 'node',
       ':entity_id' => $node_id,
     ])->fetchField();
-    $this->assertEqual($flag_count_flagged, $flag_count_pre + 1, "The flag count was incremented.");
+    $this->assertEquals($flag_count_pre + 1, $flag_count_flagged,"The flag count was incremented.");
 
     // Attempt to load the reload link URL without the token.
     $this->drupalGet("flag/unflag/$flag_id/$node_id");
-    $this->assertResponse(403, "Access to the unflag reload link is denied when no token is supplied.");
+    $this->assertSession()->statusCodeEquals(403);
 
     // Unflag the node.
     $this->drupalGet('node/' . $node_id);
@@ -95,7 +95,7 @@ class LinkTypeReloadTest extends FlagTestBase {
 
     // Check that the node is no longer flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertLink($this->flag->getShortText('flag'));
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
 
     // Check the flag count was decremented.
     $flag_count_unflagged = \Drupal::database()->query('SELECT count FROM {flag_counts}
@@ -104,7 +104,7 @@ class LinkTypeReloadTest extends FlagTestBase {
       ':entity_type' => 'node',
       ':entity_id' => $node_id,
     ])->fetchField();
-    $this->assertEqual($flag_count_unflagged, $flag_count_flagged - 1, "The flag count was decremented.");
+    $this->assertEquals($flag_count_flagged - 1, $flag_count_unflagged, "The flag count was decremented.");
   }
 
 }

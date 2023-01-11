@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\reroute_email\Functional;
 
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
+
 /**
  * Test Reroute Email's with an allow-listed permission.
  *
@@ -24,9 +26,9 @@ class SkipRolesTest extends RerouteEmailBrowserTestBase {
 
     // Configure to skip rerouting by a role.
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ENABLE => TRUE,
-      REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
-      REROUTE_EMAIL_ROLES => [$role],
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
+      RerouteEmailConstants::REROUTE_EMAIL_ROLES => [$role],
     ]);
 
     // Create a user.

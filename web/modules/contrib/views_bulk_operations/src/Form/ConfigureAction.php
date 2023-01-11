@@ -87,18 +87,11 @@ class ConfigureAction extends FormBase {
 
     $form['list'] = $this->getListRenderable($form_data);
 
-    // :D Make sure the submit button is at the bottom of the form
-    // and is editable from the action buildConfigurationForm method.
-    $form['actions'] = [
-      '#type' => 'actions',
-      '#weight' => 666,
-    ];
+    $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
+      '#button_type' => 'primary',
       '#value' => $this->t('Apply'),
-      '#submit' => [
-        [$this, 'submitForm'],
-      ],
     ];
     $this->addCancelButton($form);
 

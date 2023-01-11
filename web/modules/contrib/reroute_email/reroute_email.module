@@ -6,15 +6,7 @@
  */
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-
-define('REROUTE_EMAIL_ENABLE', 'enable');
-define('REROUTE_EMAIL_ADDRESS', 'address');
-define('REROUTE_EMAIL_ALLOWLIST', 'allowed');
-define('REROUTE_EMAIL_ROLES', 'roles');
-define('REROUTE_EMAIL_DESCRIPTION', 'description');
-define('REROUTE_EMAIL_MESSAGE', 'message');
-define('REROUTE_EMAIL_MAILKEYS', 'mailkeys');
-define('REROUTE_EMAIL_MAILKEYS_SKIP', 'mailkeys_skip');
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 
 /**
  * Implements hook_module_implements_alter().
@@ -103,7 +95,7 @@ function reroute_email_mail_alter(&$message) {
   }
 
   // Get reroute_email_address, or use system.site.mail if not set.
-  $rerouting_addresses = $config->get(REROUTE_EMAIL_ADDRESS);
+  $rerouting_addresses = $config->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS);
   if (NULL === $rerouting_addresses) {
     $rerouting_addresses = \Drupal::config('system.site')->get('mail');
   }
@@ -111,7 +103,7 @@ function reroute_email_mail_alter(&$message) {
   $message['to'] = $rerouting_addresses;
 
   // Format a message to show at the top.
-  if ($config->get(REROUTE_EMAIL_DESCRIPTION)) {
+  if ($config->get(RerouteEmailConstants::REROUTE_EMAIL_DESCRIPTION)) {
     $message_lines = [
       t('This email was rerouted.'),
       t('Web site: @site', ['@site' => $base_url]),
@@ -151,16 +143,16 @@ function reroute_email_mail_alter(&$message) {
   }
 
   // If configured, display a message to users to let them know.
-  if ($config->get(REROUTE_EMAIL_MESSAGE)) {
+  if ($config->get(RerouteEmailConstants::REROUTE_EMAIL_MESSAGE)) {
     \Drupal::messenger()->addMessage(t('An email (ID: %message_id) either aborted or rerouted to the configured address. Site administrators can check the recent log entries for complete details on the rerouted email. For more details please refer to Reroute Email settings.', ['%message_id' => $message['id']]));
   }
 
-  // Extensive params keys cause OOM error in var_export().
+  // Extensive params keys cause OOM error when outputting the value.
   // But we need to keep 'params' (e.g. attachments).
   $params = $message['params'];
   unset($message['params']);
 
-  // Simplify subject to avoid OOM error in var_export().
+  // Simplify subject to avoid OOM error in the variable output.
   if ($message['subject'] instanceof TranslatableMarkup) {
     $message['subject'] = $message['subject']->render();
   }
@@ -169,7 +161,7 @@ function reroute_email_mail_alter(&$message) {
   \Drupal::logger('reroute_email')
     ->notice('An email (ID: %message_id) was either rerouted or aborted.<br/>Detailed email data: Array $message <pre>@message</pre>', [
       '%message_id' => $message['id'],
-      '@message' => var_export($message, TRUE),
+      '@message' => json_encode($message, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
     ]);
 
   // Re-add 'params'.
@@ -209,12 +201,12 @@ function reroute_email_mail($key, &$message, $params) {
 function reroute_email_check(array &$message): bool {
   // Disable rerouting according to admin settings.
   $config = \Drupal::config('reroute_email.settings');
-  if (empty($config->get(REROUTE_EMAIL_ENABLE))) {
+  if (empty($config->get(RerouteEmailConstants::REROUTE_EMAIL_ENABLE))) {
     return FALSE;
   }
 
   // Check configured mail keys filters.
-  $keys = reroute_email_split_string($config->get(REROUTE_EMAIL_MAILKEYS, ''));
+  $keys = reroute_email_split_string($config->get(RerouteEmailConstants::REROUTE_EMAIL_MAILKEYS));
   if (!empty($keys) && !(in_array($message['id'], $keys, TRUE) || in_array($message['module'], $keys, TRUE))) {
     $message['headers']['X-Rerouted-Reason'] = 'MAILKEY-ALLOWED';
     $message['headers']['X-Rerouted-Status'] = 'NOT-REROUTED';
@@ -222,7 +214,7 @@ function reroute_email_check(array &$message): bool {
   }
 
   // Check configured mail keys to skip.
-  $keys_skip = reroute_email_split_string($config->get(REROUTE_EMAIL_MAILKEYS_SKIP, ''));
+  $keys_skip = reroute_email_split_string($config->get(RerouteEmailConstants::REROUTE_EMAIL_MAILKEYS_SKIP));
   if (!empty($keys_skip) && (in_array($message['id'], $keys_skip, TRUE) || in_array($message['module'], $keys_skip, TRUE))) {
     $message['headers']['X-Rerouted-Reason'] = 'MAILKEY-SKIPPED';
     $message['headers']['X-Rerouted-Status'] = 'NOT-REROUTED';
@@ -236,7 +228,7 @@ function reroute_email_check(array &$message): bool {
       $original_addresses = array_unique(array_merge($original_addresses, reroute_email_extract_addresses($message['headers'][$header])));
     }
   }
-  $allowlisted_addresses = reroute_email_split_string($config->get(REROUTE_EMAIL_ALLOWLIST));
+  $allowlisted_addresses = reroute_email_split_string($config->get(RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST));
   $allowlisted_patterns = [];
 
   // Split allowed domains and partial addresses patterns from the allowlist.
@@ -317,7 +309,7 @@ function reroute_email_check_email_by_permission(string $email): bool {
   /** @var \Drupal\user\UserInterface $account */
   $account = reset($users);
 
-  $roles = (array) \Drupal::config('reroute_email.settings')->get(REROUTE_EMAIL_ROLES);
+  $roles = (array) \Drupal::config('reroute_email.settings')->get(RerouteEmailConstants::REROUTE_EMAIL_ROLES);
   foreach ($roles as $role) {
     if ($account->hasRole($role)) {
       return TRUE;
@@ -341,7 +333,10 @@ function reroute_email_check_email_by_permission(string $email): bool {
 function reroute_email_split_string(?string $string): array {
 
   // Split string into array of emails.
-  $addresses = preg_split('/[\s,;\n]+/', $string, -1, PREG_SPLIT_NO_EMPTY);
+  $addresses = [];
+  if (!empty($string)) {
+    $addresses = preg_split('/[\s,;\n]+/', $string ?? '', -1, PREG_SPLIT_NO_EMPTY);
+  }
 
   // Remove duplications.
   $addresses = array_unique($addresses);
@@ -365,7 +360,7 @@ function reroute_email_split_string(?string $string): array {
 function reroute_email_extract_addresses(?string $string): array {
 
   // Split string (with display names) into array of emails.
-  preg_match_all('/[^\s,;\n<]+@[^\s,;\n>]+/', $string, $addresses, PREG_PATTERN_ORDER);
+  preg_match_all('/[^\s,;\n<]+@[^\s,;\n>]+/', $string ?? '', $addresses, PREG_PATTERN_ORDER);
 
   // Remove duplications.
   $addresses = array_unique($addresses);

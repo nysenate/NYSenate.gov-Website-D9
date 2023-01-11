@@ -1,0 +1,110 @@
+@import "../../global/utils/init";
+
+.c-block.c-container.c-container--const-issues-follow {
+  margin: 0;
+
+  .view-header {
+    p {
+      margin: 0;
+    }
+
+    .c-container--title {
+      font-family: $font-serif-semibold;
+      font-size: 18px;
+      line-height: 32px;
+      color: #444444;
+      text-transform: capitalize;
+      margin-bottom: 20px;
+    }
+  }
+
+  .filter-wrapper {
+    display: flex;
+    gap: 20px;
+
+    &--empty {
+      border-bottom: 1px solid $blue04;
+      margin-bottom: 30px;
+    }
+  }
+
+  .c-follow-issue--header,
+  .c-list--header {
+    position: relative;
+    margin-bottom: 20px;
+    border-top: 1px solid $blue04;
+    padding-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .explore-link {
+      font-family: $font-sans-bold;
+      font-size: 17px;
+      line-height: 24px;
+      text-transform: uppercase;
+      color: $yellow03;
+      position: relative;
+      top: inherit;
+      right: inherit;
+    }
+
+    .c-container--title {
+      text-transform: capitalize;
+      font-family: $font-serif-semibold;
+      font-size: 18px;
+      line-height: 32px;
+      letter-spacing: 0;
+      color: $grey08;
+    }
+  }
+
+  .c-list--header {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  label {
+    color: $grey08;
+    font-weight: $font-weight-bold;
+    text-transform: none;
+  }
+
+  .top-issue-updates .first {
+    .c-block-press-release {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .c-press-release--header {
+      top: 0;
+    }
+  }
+
+  .c-press-release--title {
+    color: $grey08;
+  }
+
+  @include breakpoint($bp-sm) {
+    .view-header .c-container--title {
+      font-size: 24px;
+      margin-bottom: 40px;
+    }
+
+    .view-filters {
+      margin: 0;
+
+      .js-form-type-select {
+        width: auto;
+      }
+    }
+
+    .c-follow-issue--header,
+    .c-list--header {
+      .c-container--title {
+        font-size: 24px;
+      }
+    }
+  }
+}

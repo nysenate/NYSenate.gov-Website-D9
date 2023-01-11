@@ -95,6 +95,19 @@ class Solr36Connector extends SolrConnectorPluginBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Solr 3.6 doesn't support JSON which became the default in solarium 7. Force
+   * XML format for update queries.
+   */
+  public function getUpdateQuery() {
+    $query = parent::getUpdateQuery();
+    $query->setRequestFormat($query::REQUEST_FORMAT_XML);
+
+    return $query;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function reloadCore() {
     return FALSE;

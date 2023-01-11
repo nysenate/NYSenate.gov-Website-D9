@@ -3,6 +3,8 @@
 namespace Drupal\Tests\reroute_email\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 
 /**
  * Test handling of unusual fields.
@@ -15,6 +17,8 @@ use Drupal\Component\Render\FormattableMarkup;
  * @group reroute_email
  */
 class UnusualMessageFieldsTest extends RerouteEmailBrowserTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -49,8 +53,8 @@ class UnusualMessageFieldsTest extends RerouteEmailBrowserTestBase {
 
     // Configure to reroute to {$this->rerouteDestination}.
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ENABLE => TRUE,
-      REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
     ]);
 
     // Print test email values for comparing values on test results page.
@@ -88,7 +92,7 @@ class UnusualMessageFieldsTest extends RerouteEmailBrowserTestBase {
 
     // Check the watchdog entry logged by reroute_email_test_mail_alter.
     $this->drupalGet('admin/reports/dblog');
-    $this->assertSession()->responseContains(t('A String was detected in the body'));
+    $this->assertSession()->responseContains($this->t('A String was detected in the body'));
 
     // Test the robustness of the CC and BCC keys in headers.
     $this->assertEquals($mail['headers']['X-Rerouted-Original-cc'], $test_message['params']['headers'][$test_cc_key], new FormattableMarkup('X-Rerouted-Original-cc is correctly set to @test_cc_address, although Cc header message key provided was: @test_cc_key', [

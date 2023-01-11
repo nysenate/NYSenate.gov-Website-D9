@@ -6,6 +6,7 @@
       var tabContainer = $('.l-tab-bar');
       var tabLink = $('.c-tab .c-tab-link');
       var textExpander = $('.text-expander');
+      var loadMore = $('.load-more');
       tabContainer.each(function () {
         var tabArrowDown = $(this).find('.c-tab--arrow');
         var tabInput = $(this).find('input.form-radio');
@@ -53,6 +54,25 @@
             link.html('View Less');
             link.addClass('expanded');
           }
+        });
+      } // event for load more
+
+
+      if (loadMore) {
+        loadMore.each(function () {
+          var items = $(this).closest('.pager-load-more').parent().find('.content__item');
+          items.css('display', 'none');
+          items.slice(0, 5).show();
+          var itemsHidden = $(this).closest('.pager-load-more').parent().find('.content__item:hidden');
+          $(this).on('click', function (e) {
+            e.preventDefault();
+            itemsHidden.slice(0, 5).slideDown();
+            itemsHidden = $(this).closest('.pager-load-more').parent().find('.content__item:hidden');
+
+            if (itemsHidden.length === 0) {
+              $(this).css('display', 'none');
+            }
+          });
         });
       }
     },

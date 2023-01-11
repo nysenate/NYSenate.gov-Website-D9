@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\facets\Kernel\Plugin\query_type;
 
+use Drupal\Tests\facets\Kernel\Drupal10CompatibilityKernelTestBase;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Result\ResultInterface;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\query_type\SearchApiDate;
 use Drupal\search_api\Backend\BackendInterface;
@@ -17,7 +17,7 @@ use Drupal\search_api\ServerInterface;
  *
  * @group facets
  */
-class SearchApiDateTest extends KernelTestBase {
+class SearchApiDateTest extends Drupal10CompatibilityKernelTestBase {
 
   /**
    * {@inheritdoc}

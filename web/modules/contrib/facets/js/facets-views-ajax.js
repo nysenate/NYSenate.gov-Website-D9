@@ -4,7 +4,7 @@
  */
 
 
-(function ($, Drupal) {
+(function ($, Drupal, once) {
   'use strict';
 
   /**
@@ -39,7 +39,7 @@
 
         // Update view on summary block click.
         if (updateFacetsSummaryBlock() && (facetId === 'facets_summary_ajax')) {
-          $('[data-drupal-facets-summary-id=' + facetSettings.facets_summary_id + ']').children('ul').children('li').once().click(function (e) {
+          $(once(facetId, '[data-drupal-facets-summary-id=' + facetSettings.facets_summary_id + '] ul li')).click(function (e) {
             e.preventDefault();
             var facetLink = $(this).find('a');
             updateFacetsView(facetLink.attr('href'), current_dom_id, view_path);
@@ -216,4 +216,4 @@
     return href.split('?')[0] + '?' + $.param(params);
   };
 
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);

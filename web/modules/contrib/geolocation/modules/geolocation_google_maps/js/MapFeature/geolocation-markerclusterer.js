@@ -18,8 +18,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * MarkerClusterer.
@@ -32,35 +31,34 @@
   Drupal.behaviors.geolocationMarkerClusterer = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'marker_clusterer',
+        "marker_clusterer",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
          * @param {MarkerClustererSettings} featureSettings - Settings for current feature.
          */
         function (map, featureSettings) {
-          if (typeof MarkerClusterer === 'undefined') {
+          if (typeof MarkerClusterer === "undefined") {
             return;
           }
 
           /* global MarkerClusterer */
 
-          var imagePath = '';
+          var imagePath = "";
           if (featureSettings.imagePath) {
             imagePath = featureSettings.imagePath;
-          }
-          else {
-            imagePath = 'https://cdn.jsdelivr.net/gh/googlemaps/js-marker-clusterer@gh-pages/images/m';
+          } else {
+            imagePath =
+              "https://cdn.jsdelivr.net/gh/googlemaps/js-marker-clusterer@gh-pages/images/m";
           }
 
           var markerClustererStyles = {};
-          if (
-            typeof featureSettings.styles !== 'undefined') {
+          if (typeof featureSettings.styles !== "undefined") {
             markerClustererStyles = featureSettings.styles;
           }
 
           map.addPopulatedCallback(function (map) {
-            if (typeof map.markerClusterer === 'undefined') {
+            if (typeof map.markerClusterer === "undefined") {
               map.markerClusterer = new MarkerClusterer(
                 map.googleMap,
                 map.mapMarkers,
@@ -71,7 +69,7 @@
                   gridSize: featureSettings.gridSize,
                   zoomOnClick: featureSettings.zoomOnClick,
                   averageCenter: featureSettings.averageCenter,
-                  minimumClusterSize: featureSettings.minimumClusterSize
+                  minimumClusterSize: featureSettings.minimumClusterSize,
                 }
               );
             }
@@ -86,7 +84,7 @@
           });
 
           map.addUpdatedCallback(function (map, mapSettings) {
-            if (typeof map.markerClusterer !== 'undefined') {
+            if (typeof map.markerClusterer !== "undefined") {
               map.markerClusterer.clearMarkers();
             }
           });
@@ -96,7 +94,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(Drupal);

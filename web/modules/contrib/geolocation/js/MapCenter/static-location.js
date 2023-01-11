@@ -4,8 +4,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   Drupal.geolocation = Drupal.geolocation || {};
   Drupal.geolocation.mapCenter = Drupal.geolocation.mapCenter || {};
@@ -16,13 +15,9 @@
    * @param {Boolean} centerOption.success
    */
   Drupal.geolocation.mapCenter.location_plugins = function (map, centerOption) {
-    if (
-      typeof centerOption.success !== "undefined"
-      && centerOption.success
-    ) {
+    if (typeof centerOption.success !== "undefined" && centerOption.success) {
       return true;
     }
     return false;
-  }
-
+  };
 })(Drupal);

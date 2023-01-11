@@ -33,7 +33,10 @@ function layout_builder_modal_contextual_links_alter(array &$links, $group, arra
  */
 function layout_builder_modal_element_info_alter(array &$types) {
   if (isset($types['layout_builder'])) {
-    $types['layout_builder']['#pre_render'][] = [LayoutBuilderModal::class, 'preRenderContextual'];
+    $types['layout_builder']['#pre_render'][] = [
+      LayoutBuilderModal::class,
+      'preRenderContextual',
+    ];
   }
 }
 
@@ -51,6 +54,10 @@ function layout_builder_modal_link_alter(&$variables) {
   $route_name = $url->getRouteName();
 
   if ($route_name !== 'layout_builder.add_block' && $route_name !== 'layout_builder.update_block') {
+    return;
+  }
+
+  if (!isset($variables['options']['attributes']['class'])) {
     return;
   }
 

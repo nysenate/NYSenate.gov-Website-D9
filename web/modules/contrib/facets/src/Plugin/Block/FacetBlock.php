@@ -4,6 +4,7 @@ namespace Drupal\facets\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -90,7 +91,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $build = $this->facetManager->build($facet);
 
     if (!empty($build)) {
-      CacheableMetadata::createFromObject($facet)->applyTo($build);
+      CacheableMetadata::createFromObject($this)->applyTo($build);
 
       // Add extra elements from facet source, for example, ajax scripts.
       // @see Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay
@@ -127,7 +128,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   }
 
   /**
-   * Get facet block entity.
+   * Get facet entity.
    *
    * @return \Drupal\facets\FacetInterface
    *   The facet entity.
@@ -143,21 +144,21 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return $this->getFacet()->getCacheTags();
+    return Cache::mergeTags(parent::getCacheTags(), $this->getFacet()->getCacheTags());
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return $this->getFacet()->getCacheContexts();
+    return Cache::mergeContexts(parent::getCacheContexts(), $this->getFacet()->getCacheContexts());
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
-    return $this->getFacet()->getCacheMaxAge();
+    return Cache::mergeMaxAges(parent::getCacheMaxAge(), $this->getFacet()->getCacheMaxAge());
   }
 
   /**

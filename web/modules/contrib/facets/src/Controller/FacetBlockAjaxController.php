@@ -117,7 +117,7 @@ class FacetBlockAjaxController extends ControllerBase {
 
     // Rebuild the request and the current path, needed for facets.
     $path = $request->request->get('facet_link');
-    $facets_blocks = $request->request->get('facets_blocks');
+    $facets_blocks = $request->request->all()['facets_blocks'] ?? [];
 
     if (empty($path) || empty($facets_blocks)) {
       throw new NotFoundHttpException('No facet link or facet blocks found.');

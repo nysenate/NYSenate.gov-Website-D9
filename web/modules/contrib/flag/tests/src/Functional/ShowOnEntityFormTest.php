@@ -24,7 +24,7 @@ class ShowOnEntityFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
@@ -55,7 +55,7 @@ class ShowOnEntityFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create content type.
@@ -121,7 +121,7 @@ class ShowOnEntityFormTest extends BrowserTestBase {
 
     // Go back to the node edit page and check if the flag checkbox is updated.
     $this->drupalGet($node_edit_path);
-    $this->assertNoFieldChecked($flag_checkbox_id, 'The flag checkbox is unchecked on the entity form.');
+    $this->assertSession()->checkboxNotChecked($flag_checkbox_id);
 
     // Verify link is on the add form.
     $this->drupalGet('node/add/' . $this->nodeType);
@@ -149,7 +149,7 @@ class ShowOnEntityFormTest extends BrowserTestBase {
 
     // Form element should not appear on the delete form.
     $this->drupalGet($node->toUrl('delete-form'));
-    $this->assertNoField($flag_checkbox_id);
+    $this->assertSession()->fieldNotExists($flag_checkbox_id);
   }
 
 }

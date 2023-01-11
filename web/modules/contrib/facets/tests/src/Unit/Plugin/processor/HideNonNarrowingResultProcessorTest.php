@@ -17,7 +17,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\processor\SortProcessorInterface
+   * @var \Drupal\facets\Processor\SortProcessorInterface
    */
   protected $processor;
 

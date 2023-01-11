@@ -8,7 +8,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\twig_field_value\Twig\Extension\FieldValueExtension
@@ -16,6 +15,9 @@ use org\bovigo\vfs\vfsStream;
  */
 class FieldRawTest extends EntityKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'twig_field_value',
     'twig_field_value_test',

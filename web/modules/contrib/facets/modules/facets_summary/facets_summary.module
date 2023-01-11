@@ -5,6 +5,11 @@
  * Hook implementations for the facets summary module.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Site\Settings;
+use Drupal\facets_summary\Entity\FacetsSummary;
+use Drupal\search_api\Entity\Index;
+
 /**
  * Implements hook_theme().
  */
@@ -97,4 +102,20 @@ function facets_summary_theme_suggestions_facets_summary_item_list(array $variab
  */
 function facets_summary_preprocess_facets_summary_item_list(array &$variables) {
   template_preprocess_item_list($variables);
+
+  if (Settings::get('facets_debug_cacheable_metadata', FALSE)) {
+    if ($facetsSummary = FacetsSummary::load($variables['facet_summary_id'])) {
+      $facetsSummaryManager = \Drupal::service('facets_summary.manager');
+      $cacheableMetadata = new CacheableMetadata();
+
+      foreach ($facetsSummaryManager->getFacets($facetsSummary) as $facet) {
+        $cacheableMetadata->addCacheableDependency($facet);
+      }
+
+      $variables['cache_hash'] = substr(base_convert(hash('sha256', uniqid(time())), 16, 36), 0, 6);
+      $variables['cache_contexts'] = implode(', ', $cacheableMetadata->getCacheContexts());
+      $variables['cache_tags'] = implode(', ', $cacheableMetadata->getCacheTags());
+      $variables['cache_max_age'] = $cacheableMetadata->getCacheMaxAge() . ' seconds';
+    }
+  }
 }

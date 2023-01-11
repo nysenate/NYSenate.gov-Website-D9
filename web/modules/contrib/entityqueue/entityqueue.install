@@ -161,6 +161,7 @@ function entityqueue_update_8006() {
   $queue_ids = \Drupal::entityTypeManager()
     ->getStorage('entity_queue')
     ->getQuery()
+    ->accessCheck(FALSE)
     ->execute();
 
   $bfo_ids = array_map(function ($queue_id) {

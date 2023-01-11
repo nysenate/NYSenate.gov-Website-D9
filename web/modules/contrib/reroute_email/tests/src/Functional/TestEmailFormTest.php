@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\reroute_email\Functional;
 
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
+
 /**
  * Test Reroute Email's form for sending a test email.
  *
@@ -27,9 +29,9 @@ class TestEmailFormTest extends RerouteEmailBrowserTestBase {
 
     // Configure to reroute all outgoing emails.
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ENABLE => $enabled,
-      REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
-      REROUTE_EMAIL_ALLOWLIST => $allowlisted,
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => $enabled,
+      RerouteEmailConstants::REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
+      RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST => $allowlisted,
     ]);
 
     // Check Subject field default value.
@@ -122,8 +124,8 @@ class TestEmailFormTest extends RerouteEmailBrowserTestBase {
     ];
     $data[] = [
       'enabled' => TRUE,
-      'allowlisted' => 'myname@*, *@great-company.com',
-      'post' => ['to' => 'myname@allowed.com, email@great-company.com'],
+      'allowlisted' => 'some+*@allowlisted.com, *@great-company.com',
+      'post' => ['to' => 'some+partial@allowlisted.com, email@great-company.com'],
       'rerouted' => FALSE,
     ];
 

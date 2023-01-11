@@ -254,7 +254,7 @@ class DefaultFacetManager {
       foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_POST_QUERY) as $processor) {
         $processor_config = $processor_configs[$processor->getPluginDefinition()['id']]['settings'];
         $processor_config['facet'] = $facet;
-        /** @var \Drupal\facets\processor\PostQueryProcessorInterface $post_query_processor */
+        /** @var \Drupal\facets\Processor\PostQueryProcessorInterface $post_query_processor */
         $post_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], $processor_config);
         if (!$post_query_processor instanceof PostQueryProcessorInterface) {
           throw new InvalidProcessorException("The processor {$processor->getPluginDefinition()['id']} has a post_query definition but doesn't implement the required PostQueryProcessor interface");
@@ -459,7 +459,7 @@ class DefaultFacetManager {
       unset($this->processedFacets[$facetsource_id]);
       unset($this->builtFacets[$facetsource_id]);
 
-      /** @var \drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source_plugin */
+      /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source_plugin */
       $facet_source_plugin = $this->facetSourcePluginManager->createInstance($facetsource_id);
       $facet_source_plugin->fillFacetsWithResults($facets);
     }

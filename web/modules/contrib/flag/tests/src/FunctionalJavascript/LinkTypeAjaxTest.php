@@ -57,12 +57,12 @@ class LinkTypeAjaxTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['flag', 'flag_event_test', 'node', 'user'];
+  protected static $modules = ['flag', 'flag_event_test', 'node', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Get the Flag Service.

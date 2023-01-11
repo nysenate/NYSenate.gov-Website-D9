@@ -146,10 +146,9 @@
     } else {
       once(
         'ajax-pager',
-        this.$view
-          // Don't attach to nested views. Doing so would attach multiple
-          // behaviors to a given element.
-          .filter($.proxy(this.filterNestedViews, this)),
+        // Don't attach to nested views. Doing so would attach multiple
+        // behaviors to a given element:
+        this.$view.filter($.proxy(this.filterNestedViews, this)),
       ).forEach($.proxy(this.attachPagerAjax, this));
     }
 
@@ -176,11 +175,16 @@
    *   The form element.
    */
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function (form) {
+    if (!form) {
+      form = this.$exposed_form;
+    }
     this.exposedFormAjax = [];
     // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
     $('input[type=submit], button[type=submit], input[type=image]', form)
-      .not('[data-drupal-selector=edit-reset]')
+      .not(
+        '[data-drupal-selector=edit-reset], [data-drupal-selector^="edit-tab-selector"]',
+      )
       .each((index, element) => {
         const selfSettings = $.extend({}, this.element_settings, {
           base: $(element).attr('id'),
@@ -190,6 +194,27 @@
         delete selfSettings.selector;
         this.exposedFormAjax[index] = Drupal.ajax(selfSettings);
       });
+  };
+
+  /**
+   * @return {bool}
+   *   If there is at least one parent with a view class return false.
+   */
+  Drupal.views.ajaxView.prototype.filterNestedViews = function () {
+    // If there is at least one parent with a view class, this view
+    // is nested (e.g., an attachment). Bail.
+    return !this.$view.parents('.view').length;
+  };
+
+  /**
+   * Attach the ajax behavior to each link.
+   */
+  Drupal.views.ajaxView.prototype.attachPagerAjax = function () {
+    this.$view
+      .find(
+        'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
+      )
+      .each($.proxy(this.attachPagerLinkAjax, this));
   };
 
   /**

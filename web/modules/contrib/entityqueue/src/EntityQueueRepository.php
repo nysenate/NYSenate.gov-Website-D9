@@ -31,6 +31,7 @@ class EntityQueueRepository implements EntityQueueRepositoryInterface {
     $storage = $this->entityTypeManager->getStorage('entity_queue');
 
     $queue_ids = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('entity_settings.target_type', $entity->getEntityTypeId(), '=')
       ->condition('status', TRUE)
       ->execute();

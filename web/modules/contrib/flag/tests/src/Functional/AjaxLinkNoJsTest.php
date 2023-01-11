@@ -27,7 +27,7 @@ class AjaxLinkNoJsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['flag', 'node', 'user'];
+  protected static $modules = ['flag', 'node', 'user'];
 
   /**
    * Flag to test with.
@@ -67,7 +67,7 @@ class AjaxLinkNoJsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp() :void{
     parent::setUp();
 
     // A article to test with.

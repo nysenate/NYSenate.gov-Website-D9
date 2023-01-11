@@ -1,0 +1,24 @@
+name: 'Prepopulate test module'
+type: module
+description: 'Provides test form and config for pre-populating.'
+package: Testing
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:datetime
+  - drupal:datetime_range
+  - drupal:link
+  - drupal:node
+  - drupal:options
+  - drupal:path
+  - drupal:taxonomy
+  - drupal:telephone
+  - drupal:text
+  - drupal:user
+  - inline_entity_form:inline_entity_form
+  - prepopulate:prepopulate
+
+# Information added by Drupal.org packaging script on 2020-04-27
+version: '8.x-2.3'
+project: 'prepopulate'
+datestamp: 1588005627

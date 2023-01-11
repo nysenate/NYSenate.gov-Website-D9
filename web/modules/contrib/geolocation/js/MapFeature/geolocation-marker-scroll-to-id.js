@@ -4,8 +4,7 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Recenter control.
@@ -18,7 +17,7 @@
   Drupal.behaviors.geolocationMarkerScrollToId = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'geolocation_marker_scroll_to_id',
+        "geolocation_marker_scroll_to_id",
 
         /**
          * @param {GeolocationMapInterface} map
@@ -26,15 +25,18 @@
          */
         function (map, featureSettings) {
           map.addMarkerAddedCallback(function (marker) {
-            marker.addListener('click', function () {
-              var id = marker.locationWrapper.data('scroll-target-id');
+            marker.addListener("click", function () {
+              var id = marker.locationWrapper.data("scroll-target-id");
 
-              var target = $('#' + id + ':visible').first();
+              var target = $("#" + id + ":visible").first();
 
               if (target.length === 1) {
-                $('html, body').animate({
-                  scrollTop: target.offset().top
-                }, 'slow');
+                $("html, body").animate(
+                  {
+                    scrollTop: target.offset().top,
+                  },
+                  "slow"
+                );
               }
             });
           });
@@ -44,7 +46,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(jQuery, Drupal);

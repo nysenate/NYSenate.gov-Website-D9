@@ -142,7 +142,7 @@ class FlagViewsLinkField extends FieldPluginBase implements ContainerFactoryPlug
    * For example, if this field's flag relationship is itself on a node, then
    * this will return the node entity for the current row.
    *
-   * @param ResultRow $values
+   * @param \Drupal\views\ResultRow $values
    *   The current result row.
    *
    * @return \Drupal\Core\Entity\EntityInterface
@@ -164,9 +164,9 @@ class FlagViewsLinkField extends FieldPluginBase implements ContainerFactoryPlug
   /**
    * Creates a render array for flag links.
    *
-   * @param EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
-   * @param ResultRow $values
+   * @param \Drupal\views\ResultRow $values
    *   The current result row.
    *
    * @return array|string

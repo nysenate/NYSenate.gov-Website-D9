@@ -5,7 +5,7 @@ namespace Drupal\layout_builder_modal;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
- * Class LayoutBuilderModal.
+ * Handles contextual metadata for Layout Builder Modal.
  */
 class LayoutBuilderModal implements TrustedCallbackInterface {
 

@@ -249,4 +249,39 @@ class WidgetIntegrationTest extends FacetsTestBase {
     $this->checkFacetIsNotActive('article');
   }
 
+  /**
+   * Tests that, when there are multiple facets, the "Show all" link's `is-active` CSS class doesn't leak into subsequent inactive facet links.
+   * https://www.drupal.org/project/facets/issues/3295536
+   */
+  public function testMultilpleResetLinks() {
+    $firstId = 'first_facet';
+    $this->createFacet('First Facet', $firstId);
+    $firstEditUrl = 'admin/config/search/facets/' . $firstId . '/edit';
+    $this->drupalGet($firstEditUrl);
+    $this->submitForm(['widget' => 'links', 'widget_config[show_reset_link]' => TRUE], 'Save');
+
+    $secondId = 'second_facet';
+    $this->createFacet('Second Facet', $secondId);
+    $secondEditUrl = 'admin/config/search/facets/' . $secondId . '/edit';
+    $this->drupalGet($secondEditUrl);
+    $this->submitForm(['widget' => 'links', 'widget_config[show_reset_link]' => TRUE], 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+
+    $showAllLinks = $this->findFacetLink('Show all');
+    $this->assertCount(2, $showAllLinks);
+    for ($i = 0; $i < 2; ++$i)
+      $this->assertTrue($showAllLinks[$i]->getParent()->hasClass('is-active'), 'The "Show all" link should be active.');
+
+    $itemLinks = $this->findFacetLink('item');
+    $this->assertCount(2, $itemLinks);
+    for ($i = 0; $i < 2; ++$i)
+      $this->assertTrue(! $itemLinks[$i]->getParent()->hasClass('is-active'), 'The "item" link should not be active.');
+
+    $articleLinks = $this->findFacetLink('article');
+    $this->assertCount(2, $articleLinks);
+    for ($i = 0; $i < 2; ++$i)
+      $this->assertTrue(! $articleLinks[$i]->getParent()->hasClass('is-active'), 'The "article" link should not be active.');
+  }
+
 }

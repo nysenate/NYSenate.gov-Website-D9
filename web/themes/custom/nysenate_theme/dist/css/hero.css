@@ -420,7 +420,8 @@
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -750,6 +751,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -909,7 +911,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1403,6 +1407,46 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
 .hero {
   position: relative; }
 
@@ -1416,14 +1460,28 @@ strong {
 /-------------------------------*/
 .c-hero--tout {
   position: relative;
-  padding: 0; }
+  padding: 0;
+  max-width: 440px; }
   .c-hero--tout.c-hero--featured {
     padding: 20px;
-    max-width: 440px;
     background: #fff; }
+
+.hero--homepage {
+  width: 100vw;
+  max-width: 1500px;
+  margin-bottom: 40px;
+  margin-top: -40px; }
+  @media screen and (min-width: 768px) {
+    .hero--homepage {
+      margin-top: -80px; } }
+  .hero--homepage .l-row.l-row--hero.c-hero {
+    padding: 0; }
+  .hero--homepage .l-row.l-row--hero.c-actionbar {
+    max-width: 420px; }
 
 .c-hero--welcome {
   padding: 30px 20px;
+  margin: 0;
   color: #7d7c7c;
   font-family: "Adelle Light", serif;
   font-size: 24px;
@@ -1491,17 +1549,30 @@ strong {
   font-size: 15px;
   line-height: 1.5em; }
 
+.hero .c-actionbar,
+.hero .c-senate-status {
+  max-width: none; }
+
 @media screen and (min-width: 768px) {
   .c-hero--welcome {
     font-size: 32px;
     line-height: 60px;
     padding: 40px; }
   .c-hero--tout {
+    max-width: 760px;
     margin-top: -15%; }
     .c-hero--tout.c-hero--featured {
       padding: 40px 70px 60px;
-      max-width: 760px;
       background: #fff; }
+  .hero--homepage {
+    margin-bottom: 80px; }
+    .hero--homepage .l-row.l-row--hero.c-hero {
+      padding: 0; }
+      .hero--homepage .l-row.l-row--hero.c-hero img {
+        width: 100%; }
+    .hero--homepage .l-row.l-row--hero.c-actionbar {
+      padding: 0 40px;
+      max-width: 760px; }
   .c-block--btn-hero {
     position: absolute;
     left: auto;
@@ -1522,7 +1593,20 @@ strong {
       text-align: center; }
   .c-hero--cta-msg {
     width: 65%;
-    max-width: 495px; } }
+    max-width: 495px; }
+  .hero .c-actionbar,
+  .hero .c-senate-status {
+    max-width: 1500px;
+    padding: 0 9%;
+    transition: margin 0.25s ease-in 0s; }
+    .hero .c-actionbar .c-actionbar--cta,
+    .hero .c-senate-status .c-actionbar--cta {
+      max-width: 400px;
+      font-size: 18px;
+      line-height: 1.3em; }
+    .hero .c-actionbar .c-block--btn,
+    .hero .c-senate-status .c-block--btn {
+      font-size: 16px; } }
 
 /*------------------------------
 / SITEWIDE -- IN SESSION HERO
@@ -2139,3 +2223,155 @@ strong {
     left: auto; }
     .l-header__collapsed .c-senator-hero--contact-btn::before {
       line-height: 100px; } }
+
+/*------------------------------
+/ DEFAULT HERO COLLAPSED
+/-------------------------------*/
+.hero--default img {
+  width: 100%; }
+
+.hero--default .l-row--hero {
+  padding: 0; }
+
+.hero--default .c-hero--tout {
+  position: relative;
+  padding: 0; }
+  @media screen and (min-width: 768px) {
+    .hero--default .c-hero--tout {
+      margin-top: -15%; } }
+
+.hero--default .c-hero--featured {
+  padding: 20px;
+  background: #fff; }
+  @media screen and (min-width: 768px) {
+    .hero--default .c-hero--featured {
+      padding: 40px 70px 60px;
+      background: #fff; } }
+
+.hero--default .c-hero--date {
+  display: inline;
+  margin: 0 10px 20px 0;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  color: #888888;
+  font-size: 12px; }
+
+.hero--default .c-hero--committee {
+  display: inline;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding-left: 15px;
+  border-left: 1px solid #AAAAAA;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  color: #CB8D37;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  line-height: 1.2em;
+  white-space: normal; }
+
+.hero--default .c-hero--title {
+  color: #444444;
+  font-family: "Adelle Light", serif;
+  font-size: 24px;
+  line-height: 1.3em;
+  padding-top: 20px;
+  margin: 0; }
+  .hero--default .c-hero--title a {
+    color: #444444; }
+
+.hero--default .c-actionbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  transition: margin 0.25s ease 0s;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0; }
+  @media screen and (min-width: 768px) {
+    .hero--default .c-actionbar {
+      height: 100px;
+      max-width: 760px;
+      margin: 0 auto; } }
+  .hero--default .c-actionbar::before {
+    content: "";
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    width: 1px;
+    vertical-align: middle;
+    margin-left: -4px; }
+  .hero--default .c-actionbar .c-actionbar--info {
+    display: none;
+    vertical-align: middle;
+    height: auto; }
+    @media screen and (min-width: 768px) {
+      .hero--default .c-actionbar .c-actionbar--info {
+        display: inline-block;
+        flex: 1;
+        padding: 0 40px; } }
+    .hero--default .c-actionbar .c-actionbar--info .c-actionbar--cta {
+      margin: 0;
+      color: #fff;
+      max-width: 320px;
+      font-size: 14px; }
+      @media screen and (min-width: 768px) {
+        .hero--default .c-actionbar .c-actionbar--info .c-actionbar--cta {
+          width: 100%;
+          max-width: 380px;
+          font-size: 16px;
+          line-height: 1.3em;
+          letter-spacing: 0.05em; } }
+  .hero--default .c-actionbar .c-block--btn {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #fff;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    letter-spacing: 0.2em;
+    font-size: 12px;
+    line-height: 60px;
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 12px; }
+    @media screen and (min-width: 768px) {
+      .hero--default .c-actionbar .c-block--btn {
+        width: auto;
+        font-size: 14px; } }
+    .hero--default .c-actionbar .c-block--btn a {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0 18px;
+      line-height: 60px;
+      color: #fff;
+      top: 0; }
+      @media screen and (min-width: 768px) {
+        .hero--default .c-actionbar .c-block--btn a {
+          padding: 0 40px;
+          font-size: 16px;
+          line-height: 100px; } }
+      .hero--default .c-actionbar .c-block--btn a::before {
+        font-family: "senate_icons";
+        display: inline-block;
+        vertical-align: middle;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-right: 3px;
+        -webkit-font-smoothing: antialiased;
+        content: "\24"; }
+        @media screen and (min-width: 768px) {
+          .hero--default .c-actionbar .c-block--btn a::before {
+            height: 100%;
+            margin-right: 0.1em;
+            font-size: 32px;
+            line-height: 100px; } }

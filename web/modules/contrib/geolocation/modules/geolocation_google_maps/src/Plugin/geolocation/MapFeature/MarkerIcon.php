@@ -2,8 +2,11 @@
 
 namespace Drupal\geolocation_google_maps\Plugin\geolocation\MapFeature;
 
+use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\geolocation\MapFeatureBase;
 use Drupal\Core\Render\BubbleableMetadata;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides Google Maps.
@@ -15,7 +18,43 @@ use Drupal\Core\Render\BubbleableMetadata;
  *   type = "google_maps",
  * )
  */
-class MarkerIcon extends MapFeatureBase {
+class MarkerIcon extends MapFeatureBase implements ContainerFactoryPluginInterface{
+
+  /**
+   * File uri generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
+   * Constructs a new LeafletMarkerIcon plugin object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file url generator.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FileUrlGeneratorInterface $file_url_generator) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->fileUrlGenerator = $file_url_generator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('file_url_generator')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -168,7 +207,7 @@ class MarkerIcon extends MapFeatureBase {
 
     if (!empty($feature_settings['marker_icon_path'])) {
       $path = \Drupal::token()->replace($feature_settings['marker_icon_path'], $context);
-      $path = file_create_url($path);
+      $path = $this->fileUrlGenerator->generateAbsoluteString($path);
       $render_array['#attached']['drupalSettings']['geolocation']['maps'][$render_array['#id']][$this->getPluginId()]['markerIconPath'] = $path;
 
       if (!empty($render_array['#children']['locations'])) {

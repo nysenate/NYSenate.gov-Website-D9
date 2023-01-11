@@ -174,3 +174,11 @@ plugin.plugin_configuration.facets_processor.granularity_item:
     include_edges:
       type: boolean
       label: 'Include first lower and last upper bound'
+
+plugin.plugin_configuration.facets_processor.replace:
+  type: mapping
+  label: 'Settings for facet replacement processor'
+  mapping:
+    replacements:
+      type: text
+      label: 'Replacement values'

@@ -15,8 +15,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Google MarkerIcon.
@@ -29,7 +28,7 @@
   Drupal.behaviors.geolocationMarkerLabel = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'marker_label',
+        "marker_label",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -43,15 +42,14 @@
             var newLabel = {};
             var currentLabel = currentMarker.getLabel();
 
-            if (typeof currentLabel === 'undefined') {
+            if (typeof currentLabel === "undefined") {
               return;
             }
 
             var text;
-            if (typeof currentLabel === 'string') {
+            if (typeof currentLabel === "string") {
               text = currentLabel;
-            }
-            else {
+            } else {
               text = currentLabel.text;
             }
 
@@ -62,19 +60,19 @@
             newLabel.text = text;
 
             if (featureSettings.color) {
-              newLabel.color = featureSettings.color
+              newLabel.color = featureSettings.color;
             }
 
             if (featureSettings.fontFamily) {
-              newLabel.fontFamily = featureSettings.fontFamily
+              newLabel.fontFamily = featureSettings.fontFamily;
             }
 
             if (featureSettings.fontSize) {
-              newLabel.fontSize = featureSettings.fontSize
+              newLabel.fontSize = featureSettings.fontSize;
             }
 
             if (featureSettings.fontWeight) {
-              newLabel.fontWeight = featureSettings.fontWeight
+              newLabel.fontWeight = featureSettings.fontWeight;
             }
 
             currentMarker.setLabel(newLabel);
@@ -85,6 +83,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
 })(Drupal);

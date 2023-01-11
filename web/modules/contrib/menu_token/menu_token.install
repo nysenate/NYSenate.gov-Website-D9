@@ -1,0 +1,65 @@
+<?php
+
+use Drupal\user\Entity\Role;
+
+/**
+ * @file
+ * Contains menu_token.install.
+ */
+
+/**
+ * Implements _uninstall().
+ */
+function menu_token_uninstall() {
+
+  // Remove the styles directory and generated images.
+  \Drupal::service('config.factory')->getEditable('menu_token.link_configuration_storage')->delete();
+  \Drupal::service('config.factory')->getEditable('menu_token.availableentitiesconfiguration')->delete();
+  // Make sure all the custom menus are not discoverable so they do not dissaper
+  $connection = \Drupal::service('database');
+  $query = $connection->select('menu_link_content_data', 'mlcd')
+    ->fields('mlcd', ['menu_name']);
+  $query->groupBy("mlcd.menu_name");
+  $results = $query->execute();
+  $menus = [];
+  if ($results ) {
+    foreach ($results as $key => $value) {
+      $menus[] = $value->menu_name;
+    }
+  }
+  // Get list of menus from menu tree where the discover is 1
+  $query = $connection->select('menu_tree', 'mr')
+    ->fields('mr', ['mlid']);
+  $query->condition('mr.menu_name', $menus, 'IN');
+  $query->condition('mr.discovered', 1, '=');
+  $results = $query->execute();
+  $menu_links = [];
+  if ($results) {
+    foreach ($results as $key => $value) {
+      $menu_links[] = $value->mlid;
+    }
+  }
+  if ($menu_links) {
+    $num_updated = $connection->update('menu_tree')
+    ->fields([
+      'discovered' => 0,
+    ])
+    ->condition('mlid', $menu_links, 'IN')
+    ->execute();
+    \Drupal::messenger()->addStatus(t('Reset %num_updated menu items.', ['%num_updated' => $num_updated]));
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function menu_token_update_8901(&$sandbox) {
+  $roles = Role::loadMultiple();
+
+  foreach ($roles as $role) {
+    if ($role->hasPermission('access administration pages') && !$role->hasPermission('administer site configuration')) {
+      $role->grantPermission('administer site configuration');
+      $role->save();
+    }
+  }
+}

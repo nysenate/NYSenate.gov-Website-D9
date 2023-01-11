@@ -43,6 +43,14 @@ interface FlaggingInterface extends ContentEntityInterface, EntityOwnerInterface
   public function getFlaggableType();
 
   /**
+   * Returns the time that the flagging was created.
+   *
+   * @return int
+   *   The timestamp of when the flagging was created.
+   */
+  public function getCreatedTime();
+
+  /**
    * Gets the entity ID of the flaggable.
    *
    * @return string

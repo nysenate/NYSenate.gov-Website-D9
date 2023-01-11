@@ -19,7 +19,7 @@ class CountLimitProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\processor\BuildProcessorInterface
+   * @var \Drupal\facets\Processor\BuildProcessorInterface
    */
   protected $processor;
 
@@ -53,9 +53,7 @@ class CountLimitProcessorTest extends UnitTestCase {
       ],
     ];
 
-    $manager = $this->getMockBuilder(ProcessorPluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $manager = $this->createMock(ProcessorPluginManager::class);
     $manager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn($processor_definitions);

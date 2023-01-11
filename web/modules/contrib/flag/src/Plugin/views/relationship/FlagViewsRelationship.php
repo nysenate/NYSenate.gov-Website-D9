@@ -178,6 +178,9 @@ class FlagViewsRelationship extends RelationshipPluginBase {
    *   The flag being selected by in the view.
    */
   public function getFlag() {
+    if (empty($this->options['flag'])) {
+      return NULL;
+    }
     $flag = $this->flagService->getFlagById($this->options['flag']);
     return $flag;
   }

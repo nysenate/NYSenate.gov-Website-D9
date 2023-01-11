@@ -24,7 +24,7 @@ class FileFieldPathsTransliterationTest extends FileFieldPathsTestBase {
     $this->drupalGet("admin/structure/types/manage/{$this->contentType}/fields/node.{$this->contentType}.{$field_name}");
     foreach (['path', 'name'] as $field) {
       // Transliteration checkbox is present in File settings.
-      $this->assertField("third_party_settings[filefield_paths][file_{$field}][options][transliterate]");
+      $this->assertSession()->fieldExists("third_party_settings[filefield_paths][file_{$field}][options][transliterate]");
 
       $element = $this->xpath('//input[@name=:name]/@disabled', [':name' => "third_party_settings[filefield_paths][file_{$field}][options][transliterate]"]);
       $this->assertEmpty($element, 'Transliteration checkbox is not disabled in File ' . Unicode::ucfirst($field) . ' settings.');
@@ -63,7 +63,7 @@ class FileFieldPathsTransliterationTest extends FileFieldPathsTestBase {
     // Ensure that file path/name have been processed correctly by
     // Transliteration.
     $node = \Drupal::entitytypeManager()->getStorage('node')->load($nid);
-    $this->assertEqual($node->{$field_name}[0]->entity->getFileUri(), "public://node/test/test.txt", 'File path/name has been processed correctly by Transliteration');
+    $this->assertEquals("public://node/test/test.txt", $node->{$field_name}[0]->entity->getFileUri(), 'File path/name has been processed correctly by Transliteration');
   }
 
 }

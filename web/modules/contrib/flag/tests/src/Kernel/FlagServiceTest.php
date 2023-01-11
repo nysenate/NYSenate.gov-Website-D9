@@ -33,7 +33,7 @@ class FlagServiceTest extends FlagKernelTestBase {
     // Search for flag.
     $user_with_access = $this->createUser(['flag ' . $flag->id()]);
     $result = $this->flagService->getAllFlags('node', 'article');
-    $this->assertIdentical(count($result), 1, 'Found flag type');
+    $this->assertSame(count($result), 1, 'Found flag type');
     $this->assertEquals([$flag->id()], array_keys($result));
   }
 
@@ -72,7 +72,6 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The flag() method throws an exception when the flag does not apply to the entity type of the flaggable entity.");
     }
 
     // Try flagging a node of the wrong bundle.
@@ -87,7 +86,6 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The flag() method throws an exception when the flag does not apply to the bundle of the flaggable entity.");
     }
 
     // Flag the node, then try to flag it again.
@@ -104,7 +102,6 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The flag() method throws an exception when the flaggable entity is already flagged by the user with the flag.");
     }
 
     try {
@@ -112,7 +109,6 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The flag() method throws an exception when a non-global flag is associated with a poorly specified anonymous user.");
     }
 
     // Test unflagging.
@@ -122,7 +118,6 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The unflag() method throws an exception when the flag does not apply to the entity type of the flaggable entity.");
     }
 
     // Try unflagging a node of the wrong bundle.
@@ -131,7 +126,6 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The unflag() method throws an exception when the flag does not apply to the bundle of the flaggable entity.");
     }
 
     // Create a new node that's not flagged, and try to unflag it.
@@ -146,7 +140,6 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The unflag() method throws an exception when the flaggable entity is not flagged by the user with the flag.");
     }
 
     try {
@@ -154,14 +147,12 @@ class FlagServiceTest extends FlagKernelTestBase {
       $this->fail("The exception was not thrown.");
     }
     catch (\LogicException $e) {
-      $this->pass("The unflag() method throws an exception when a non-global flag is associated with a poorly specified anonymous user.");
     }
 
     // Demonstrate a valid combination can be unflagged without throwing an
     // exception.
     try {
       $this->flagService->unflag($flag, $flaggable_node, $account, $session_id);
-      $this->pass('The unflag() method throws no exception when the flaggable entity and user is correct');
     }
     catch (\LogicException $e) {
       $this->fail('The unfag() method threw an exception where processing a valid unflag request.');

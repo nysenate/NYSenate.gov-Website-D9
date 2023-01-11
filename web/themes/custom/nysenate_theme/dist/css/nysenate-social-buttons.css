@@ -430,7 +430,8 @@
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -760,6 +761,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -919,7 +921,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1413,75 +1417,113 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
-.c-block--social {
-  margin-top: 20px;
-  margin-bottom: 40px; }
-  .c-block--social .c-container--header__top-border {
-    font-family: "Proxima Nova Regular", "Arial", sans-serif;
-    text-transform: uppercase;
-    border-top: 1px solid #aaaaaa;
-    padding: 20px 0;
-    position: relative;
-    letter-spacing: 0.1em; }
-    .c-block--social .c-container--header__top-border .container--title {
-      font-size: 12px;
-      margin: 0;
-      font-weight: normal;
-      color: #444444; }
-      @media screen and (min-width: 768px) {
-        .c-block--social .c-container--header__top-border .container--title {
-          font-size: 16px; } }
-  .c-block--social .c-btn--small,
-  .c-block--social .share-icon {
-    position: relative;
-    display: inline-block;
-    height: 40px;
-    width: 60px;
-    margin-right: 7%;
-    padding-left: 20px;
-    padding-top: 10px;
-    float: left;
-    outline: none;
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
     cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
+.c-block--social .c-container--header__top-border {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  text-transform: uppercase;
+  border-top: 1px solid #aaaaaa;
+  padding: 20px 0;
+  position: relative;
+  letter-spacing: 0.1em; }
+  .c-block--social .c-container--header__top-border .container--title {
+    font-size: 12px;
+    margin: 0;
+    font-weight: normal;
+    color: #444444; }
     @media screen and (min-width: 768px) {
-      .c-block--social .c-btn--small,
-      .c-block--social .share-icon {
-        width: 160px; } }
-    .c-block--social .c-btn--small label,
-    .c-block--social .share-icon label {
-      display: none;
-      cursor: pointer;
-      color: #fff;
-      font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
-      @media screen and (min-width: 768px) {
-        .c-block--social .c-btn--small label,
-        .c-block--social .share-icon label {
-          display: block; } }
-    .c-block--social .c-btn--small::after,
-    .c-block--social .share-icon::after {
-      line-height: 40px;
-      width: 100%;
-      text-align: center;
-      font-size: 30px; }
-    .c-block--social .c-btn--small:hover, .c-block--social .c-btn--small:active, .c-block--social .c-btn--small:focus,
-    .c-block--social .share-icon:hover,
-    .c-block--social .share-icon:active,
-    .c-block--social .share-icon:focus {
-      outline: 0; }
-    .c-block--social .c-btn--small svg,
-    .c-block--social .share-icon svg {
-      fill: #fff;
-      color: #fff;
-      width: 21px;
-      height: 21px;
-      position: absolute;
-      left: auto;
-      top: 8px; }
-      @media screen and (min-width: 768px) {
-        .c-block--social .c-btn--small svg,
-        .c-block--social .share-icon svg {
-          left: 77%;
-          width: 22px; } }
-      .c-block--social .c-btn--small svg .icon--envelope,
-      .c-block--social .share-icon svg .icon--envelope {
-        width: 20px; }
+      .c-block--social .c-container--header__top-border .container--title {
+        font-size: 16px; } }
+
+.c-block--social .c-btn--small,
+.c-block--social .share-icon {
+  position: relative;
+  display: inline-block;
+  height: 40px;
+  width: 60px;
+  margin-right: 7%;
+  padding-left: 20px;
+  padding-top: 10px;
+  float: left;
+  outline: none;
+  cursor: pointer; }
+  @media screen and (min-width: 768px) {
+    .c-block--social .c-btn--small,
+    .c-block--social .share-icon {
+      width: 160px; } }
+  .c-block--social .c-btn--small label,
+  .c-block--social .share-icon label {
+    display: none;
+    cursor: pointer;
+    color: #fff;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+    @media screen and (min-width: 768px) {
+      .c-block--social .c-btn--small label,
+      .c-block--social .share-icon label {
+        display: block; } }
+  .c-block--social .c-btn--small::after,
+  .c-block--social .share-icon::after {
+    line-height: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 30px; }
+  .c-block--social .c-btn--small:hover, .c-block--social .c-btn--small:active, .c-block--social .c-btn--small:focus,
+  .c-block--social .share-icon:hover,
+  .c-block--social .share-icon:active,
+  .c-block--social .share-icon:focus {
+    outline: 0; }
+  .c-block--social .c-btn--small svg,
+  .c-block--social .share-icon svg {
+    fill: #fff;
+    color: #fff;
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    left: auto;
+    top: 8px; }
+    @media screen and (min-width: 768px) {
+      .c-block--social .c-btn--small svg,
+      .c-block--social .share-icon svg {
+        left: 77%;
+        width: 22px; } }
+    .c-block--social .c-btn--small svg .icon--envelope,
+    .c-block--social .share-icon svg .icon--envelope {
+      width: 20px; }

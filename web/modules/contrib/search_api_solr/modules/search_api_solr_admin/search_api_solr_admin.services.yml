@@ -11,6 +11,12 @@ services:
     tags:
       - { name: access_check, applies_to: _search_api_solr_admin_cloud_access_check }
 
+  access_check.search_api_solr_admin_trusted_context_supported:
+    class: Drupal\search_api_solr_admin\Access\SolrAdminTrustedContextSupportedAccessCheck
+    arguments: ['@current_user']
+    tags:
+      - { name: access_check, applies_to: _search_api_solr_admin_trusted_context_supported_access_check }
+
   search_api_solr_admin.command_helper:
     class: Drupal\search_api_solr_admin\Utility\SolrAdminCommandHelper
     arguments: ['@entity_type.manager', '@module_handler', '@event_dispatcher', '@extension.list.module', '@file_system', '@messenger']

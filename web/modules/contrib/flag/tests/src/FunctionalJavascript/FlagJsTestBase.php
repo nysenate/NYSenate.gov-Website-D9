@@ -45,7 +45,7 @@ abstract class FlagJsTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Get the Flag Service.
@@ -76,7 +76,7 @@ abstract class FlagJsTestBase extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'node',
     'user',

@@ -26,8 +26,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Marker InfoWindow.
@@ -40,7 +39,7 @@
   Drupal.behaviors.geolocationMarkerInfoWindow = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'marker_infowindow',
+        "marker_infowindow",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -48,11 +47,12 @@
          */
         function (map, featureSettings) {
           map.addMarkerAddedCallback(function (currentMarker) {
-            if (typeof (currentMarker.locationWrapper) === 'undefined') {
+            if (typeof currentMarker.locationWrapper === "undefined") {
               return;
             }
 
-            var content = currentMarker.locationWrapper.find('.location-content');
+            var content =
+              currentMarker.locationWrapper.find(".location-content");
 
             if (content.length < 1) {
               return;
@@ -61,7 +61,7 @@
 
             var markerInfoWindow = {
               content: content.toString(),
-              disableAutoPan: featureSettings.disableAutoPan
+              disableAutoPan: featureSettings.disableAutoPan,
             };
 
             if (featureSettings.maxWidth > 0) {
@@ -69,11 +69,13 @@
             }
 
             // Set the info popup text.
-            var currentInfoWindow = new google.maps.InfoWindow(markerInfoWindow);
+            var currentInfoWindow = new google.maps.InfoWindow(
+              markerInfoWindow
+            );
 
-            currentMarker.addListener('click', function () {
+            currentMarker.addListener("click", function () {
               if (featureSettings.infoWindowSolitary) {
-                if (typeof map.infoWindow !== 'undefined') {
+                if (typeof map.infoWindow !== "undefined") {
                   map.infoWindow.close();
                 }
                 map.infoWindow = currentInfoWindow;
@@ -82,15 +84,18 @@
             });
 
             if (featureSettings.infoAutoDisplay) {
-              if (map.googleMap.get('tilesloading')) {
-                google.maps.event.addListenerOnce(map.googleMap, 'tilesloaded', function () {
-                  google.maps.event.trigger(currentMarker, 'click');
-                });
-              }
-              else {
+              if (map.googleMap.get("tilesloading")) {
+                google.maps.event.addListenerOnce(
+                  map.googleMap,
+                  "tilesloaded",
+                  function () {
+                    google.maps.event.trigger(currentMarker, "click");
+                  }
+                );
+              } else {
                 jQuery.each(map.mapMarkers, function (index, currentMarker) {
-                  google.maps.event.trigger(currentMarker, 'click');
-                })
+                  google.maps.event.trigger(currentMarker, "click");
+                });
               }
             }
           });
@@ -100,6 +105,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
 })(Drupal);

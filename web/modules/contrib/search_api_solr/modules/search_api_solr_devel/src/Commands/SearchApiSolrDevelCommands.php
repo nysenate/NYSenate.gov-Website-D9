@@ -48,7 +48,7 @@ class SearchApiSolrDevelCommands extends DrushCommands {
   /**
    * {@inheritdoc}
    */
-  public function setLogger(LoggerInterface $logger) {
+  public function setLogger(LoggerInterface $logger): void {
     parent::setLogger($logger);
     $this->commandHelper->setLogger($logger);
   }

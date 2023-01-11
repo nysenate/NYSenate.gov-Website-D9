@@ -58,6 +58,71 @@ class WebformFieldTest extends WebformBrowserTestBase {
     $this->assertNoCssSelect('#edit-field-webform-0-target-id optgroup');
     $assert_session->optionExists('edit-field-webform-0-target-id', 'contact');
 
+    // Check if the webform settings wrapper is there.
+    $this->assertCssSelect('details#edit-field-webform-0-settings');
+
+    // Check that the webform status settings fieldset is there.
+    $this->assertCssSelect('fieldset#edit-field-webform-0-settings-status--wrapper');
+    $this->assertCssSelect('input#edit-field-webform-0-settings-status-open');
+    $this->assertCssSelect('input#edit-field-webform-0-settings-status-closed');
+    $this->assertCssSelect('input#edit-field-webform-0-settings-status-scheduled');
+
+    // Check that the webform schedule fields are there.
+    $this->assertCssSelect('input#edit-field-webform-0-settings-scheduled-open-date');
+    $this->assertCssSelect('input#edit-field-webform-0-settings-scheduled-open-time');
+    $this->assertCssSelect('input#edit-field-webform-0-settings-scheduled-close-date');
+    $this->assertCssSelect('input#edit-field-webform-0-settings-scheduled-close-time');
+
+    // Check that the default submission data (YAML) field is there.
+    $this->assertCssSelect('textarea#edit-field-webform-0-settings-default-data');
+
+    // Disable showing the status options fields.
+    $form_display->setComponent('field_webform', [
+      'type' => 'webform_entity_reference_select',
+      'settings' => [
+        'allow_status' => FALSE,
+      ],
+    ]);
+    $form_display->save();
+
+    // Check if the status options fields are removed.
+    $this->drupalGet('/node/add/page');
+    $this->assertNoCssSelect('fieldset#edit-field-webform-0-settings-status--wrapper');
+    $this->assertNoCssSelect('input#edit-field-webform-0-settings-status-open');
+    $this->assertNoCssSelect('input#edit-field-webform-0-settings-status-closed');
+    $this->assertNoCssSelect('input#edit-field-webform-0-settings-status-scheduled');
+    $this->assertNoCssSelect('input#edit-field-webform-0-settings-scheduled-open-date');
+    $this->assertNoCssSelect('input#edit-field-webform-0-settings-scheduled-open-time');
+    $this->assertNoCssSelect('input#edit-field-webform-0-settings-scheduled-close-date');
+    $this->assertNoCssSelect('input#edit-field-webform-0-settings-scheduled-close-time');
+
+    // Disable showing the default submission data (YAML) field.
+    $form_display->setComponent('field_webform', [
+      'type' => 'webform_entity_reference_select',
+      'settings' => [
+        'default_data' => FALSE,
+      ],
+    ]);
+    $form_display->save();
+
+    // Check if the default submission data (YAML) field is removed.
+    $this->drupalGet('/node/add/page');
+    $this->assertNoCssSelect('textarea#edit-field-webform-0-settings-default-data');
+
+    // Disable showing both the status options & default submission data (YAML) field.
+    $form_display->setComponent('field_webform', [
+      'type' => 'webform_entity_reference_select',
+      'settings' => [
+        'allow_status' => FALSE,
+        'default_data' => FALSE,
+      ],
+    ]);
+    $form_display->save();
+
+    // Check if the webform settings wrapper is removed.
+    $this->drupalGet('/node/add/page');
+    $this->assertNoCssSelect('details#edit-field-webform-0-settings');
+
     // Add category to 'contact' webform.
     /** @var \Drupal\webform\WebformInterface $webform */
     $webform = Webform::load('contact');

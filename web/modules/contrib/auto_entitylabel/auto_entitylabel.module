@@ -6,11 +6,12 @@
  */
 
 use Drupal\auto_entitylabel\AutoEntityLabelManager;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -21,9 +22,14 @@ function auto_entitylabel_help($route_name, RouteMatchInterface $route_match) {
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('This is a small and efficient module that allows hiding of entity label fields. To prevent empty labels it can be configured to generate the label automatically by a given pattern. The module can be used for any entity type that has a label, including e.g. for node titles, comment subjects, taxonomy term names and profile2 labels.') . '</p>';
       $output .= '<p>' . t('Patterns for automatic labels are constructed with the help of tokens. Drupal core provides a basic set of <a href="@url_tokens" target="blank">tokens</a>. For a token selection widget install the token. Some entity types (e.g. profile2) provide tokens via the entity_token, which is part of the entity module.', ['@url_tokens' => 'https://www.drupal.org/project/token']) . '</p>';
-      $output .= '<p>' . t('Watch the <a href="@url_daily_dose_of_drupal" target="blank">Daily Dose of Drupal</a> screencast by <a href="@url_shane_thomas" target="blank">Shane Thomas</a> for a short introduction and demonstration of the module and some of its features. Demonstration made in D7 but can help a lot.', ['@url_daily_dose_of_drupal' => 'http://codekarate.com/daily-dose-of-drupal/drupal-7-automatic-entity-label-module', '@url_shane_thomas' => 'https://www.drupal.org/user/506260']) . '</p>';
+      $output .= '<p>' . t('Watch the <a href="@url_daily_dose_of_drupal" target="blank">Daily Dose of Drupal</a> screencast by <a href="@url_shane_thomas" target="blank">Shane Thomas</a> for a short introduction and demonstration of the module and some of its features. Demonstration made in D7 but can help a lot.',
+          [
+            '@url_daily_dose_of_drupal' => 'http://codekarate.com/daily-dose-of-drupal/drupal-7-automatic-entity-label-module',
+            '@url_shane_thomas' => 'https://www.drupal.org/user/506260',
+          ]) . '</p>';
       $output .= '<h3>' . t('Usage') . '</h3>';
       $output .= '<p>' . t('The configuration can be accessed with the <i>Manage automatic entity labels</i> operation or the <i>Automatic label</i> tab when editing entity types. For example, when configuring a node type, visit <i>Administration</i> » <i>Structure</i> » <i>Content types</i> (/admin/structure/types). You can also configure automatic labels for other entity types such as <i>Media<i>, in which case you would visit <i>Administration</i> » <i>Structure</i> » <i>Media</i> (/admin/structure/media).') . '</p>';
+
       return $output;
   }
 }
@@ -46,9 +52,9 @@ function auto_entitylabel_entity_type_alter(array &$entity_types) {
  * Implements hook_form_alter().
  */
 function auto_entitylabel_form_alter(&$form, FormStateInterface $form_state) {
-  if (isset($form['#entity_builders'])) {
-    /** @var \Drupal\Core\Entity\EntityFormInterface $formObject */
-    $formObject = $form_state->getFormObject();
+  /** @var \Drupal\Core\Entity\EntityFormInterface $formObject */
+  $formObject = $form_state->getFormObject();
+  if ($formObject instanceof EntityFormInterface) {
     $entity = $formObject->getEntity();
     if ($entity instanceof ContentEntityInterface) {
       auto_entitylabel_prepare_entityform($form, $entity);
@@ -89,6 +95,7 @@ function auto_entitylabel_inline_entity_label_callback($entity, $variables) {
     }
 
   }
+
   return $autolabel;
 }
 
@@ -209,7 +216,8 @@ function auto_entitylabel_entity_operation(EntityInterface $entity) {
   $entity_type_id = $entity_type->id();
   $entity_id = $entity->id();
   if ($entity->hasLinkTemplate('auto-label') &&
-    \Drupal::currentUser()->hasPermission('administer ' . $entity_type_id . ' labels')) {
+    \Drupal::currentUser()
+      ->hasPermission('administer ' . $entity_type_id . ' labels')) {
 
     $operations['auto-label'] = [
       'title' => t('Manage automatic entity labels'),

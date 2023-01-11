@@ -4,8 +4,6 @@ namespace Drupal\Tests\search_api_solr\Kernel\Processor;
 
 use Drupal\search_api\Entity\Server;
 use Drupal\search_api_solr\Utility\SolrCommitTrait;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Symfony\Component\Yaml\Yaml;
 
 defined('SOLR_CLOUD') || define('SOLR_CLOUD', getenv('SOLR_CLOUD') ?: 'false');
@@ -53,7 +51,7 @@ trait SolrBackendTrait {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     $this->index->clear();
     $this->ensureCommit($this->index);
     parent::tearDown();

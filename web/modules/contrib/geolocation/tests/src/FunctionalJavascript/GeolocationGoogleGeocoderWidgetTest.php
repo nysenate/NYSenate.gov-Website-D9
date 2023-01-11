@@ -161,7 +161,7 @@ class GeolocationGoogleGeocoderWidgetTest extends GeolocationJavascriptTestBase 
 
     /** @var \Drupal\node\NodeInterface $new_node */
     $new_node = \Drupal::entityTypeManager()->getStorage('node')->load(5);
-    $this->assertSession()->assert($new_node->get('field_geolocation')->isEmpty(), "Node geolocation field empty after saving from predefined location widget");
+    $this->assertTrue($new_node->get('field_geolocation')->isEmpty());
   }
 
 }

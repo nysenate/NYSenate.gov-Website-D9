@@ -23,7 +23,7 @@ class FlagCountExtensionTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'flag',
     'flag_bookmark',
@@ -33,7 +33,7 @@ class FlagCountExtensionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     // Set the linkTypePlugin of the flag to count_link for running the tests.

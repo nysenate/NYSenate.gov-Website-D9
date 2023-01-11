@@ -20,7 +20,7 @@ class FlagFollowerUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'flag',
     'flag_follower',
@@ -80,7 +80,7 @@ class FlagFollowerUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
@@ -169,21 +169,21 @@ class FlagFollowerUITest extends BrowserTestBase {
   public function doFollowerView() {
     $this->drupalLogin($this->userA);
     $this->drupalGet('flag-followers');
-    $this->assertNoText($this->userB->getAccountName());
-    $this->assertText($this->userC->getAccountName());
-    $this->assertText('2', 'A sees C has two followers.');
+    $this->assertSession()->pageTextNotContains($this->userB->getAccountName());
+    $this->assertSession()->pageTextContains($this->userC->getAccountName());
+    $this->assertSession()->pageTextContains('2');
 
     $this->drupalLogin($this->userB);
     $this->drupalGet('flag-followers');
-    $this->assertText($this->userA->getAccountName());
-    $this->assertText($this->userC->getAccountName());
-    $this->assertText('2', 'B sees C has two followers.');
-    $this->assertText('1', 'B sees A has one follower.');
+    $this->assertSession()->pageTextContains($this->userA->getAccountName());
+    $this->assertSession()->pageTextContains($this->userC->getAccountName());
+    $this->assertSession()->pageTextContains('2');
+    $this->assertSession()->pageTextContains('1');
 
     $this->drupalLogin($this->userC);
     $this->drupalGet('flag-followers');
-    $this->assertNoText($this->userA->getAccountName());
-    $this->assertNoText($this->userB->getAccountName());
+    $this->assertSession()->pageTextNotContains($this->userA->getAccountName());
+    $this->assertSession()->pageTextNotContains($this->userB->getAccountName());
   }
 
   /**
@@ -192,18 +192,18 @@ class FlagFollowerUITest extends BrowserTestBase {
   public function doContentView() {
     $this->drupalLogin($this->userA);
     $this->drupalGet('flag-followers/content');
-    $this->assertText($this->nodeC->label());
-    $this->assertNoText($this->nodeB->label());
+    $this->assertSession()->pageTextContains($this->nodeC->label());
+    $this->assertSession()->pageTextNotContains($this->nodeB->label());
 
     $this->drupalLogin($this->userB);
     $this->drupalGet('flag-followers/content');
-    $this->assertText($this->nodeA->label());
-    $this->assertText($this->nodeC->label());
+    $this->assertSession()->pageTextContains($this->nodeA->label());
+    $this->assertSession()->pageTextContains($this->nodeC->label());
 
     $this->drupalLogin($this->userC);
     $this->drupalGet('flag-followers/content');
-    $this->assertNoText($this->nodeA->label());
-    $this->assertNoText($this->nodeB->label());
+    $this->assertSession()->pageTextNotContains($this->nodeA->label());
+    $this->assertSession()->pageTextNotContains($this->nodeB->label());
   }
 
 }

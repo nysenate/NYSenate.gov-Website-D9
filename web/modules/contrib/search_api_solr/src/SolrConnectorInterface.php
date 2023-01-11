@@ -40,6 +40,14 @@ interface SolrConnectorInterface extends ConfigurableInterface {
   public function isCloud();
 
   /**
+   * Returns TRUE if the connector supports a Solr trusted context.
+   *
+   * @return bool
+   *   Whether the connector supports a Solr trusted context.
+   */
+  public function isTrustedContextSupported();
+
+  /**
    * Returns a link to the Solr server.
    *
    * @return \Drupal\Core\Link

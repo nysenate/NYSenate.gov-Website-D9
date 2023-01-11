@@ -4,7 +4,7 @@
  */
 
 (function (Drupal) {
-  'use strict';
+  "use strict";
 
   /**
    * GeolocationGoogleMapWidget element.
@@ -15,16 +15,25 @@
    * @inheritDoc
    */
   function GeolocationGoogleMapWidget(widgetSettings) {
-    Drupal.geolocation.widget.GeolocationMapWidgetBase.call(this, widgetSettings);
+    Drupal.geolocation.widget.GeolocationMapWidgetBase.call(
+      this,
+      widgetSettings
+    );
 
     return this;
   }
-  GeolocationGoogleMapWidget.prototype = Object.create(Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype);
+  GeolocationGoogleMapWidget.prototype = Object.create(
+    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype
+  );
   GeolocationGoogleMapWidget.prototype.constructor = GeolocationGoogleMapWidget;
   GeolocationGoogleMapWidget.prototype.addMarker = function (location, delta) {
-    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.addMarker.call(this, location, delta);
+    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.addMarker.call(
+      this,
+      location,
+      delta
+    );
 
-    if (typeof delta === 'undefined') {
+    if (typeof delta === "undefined") {
       delta = this.getNextDelta();
     }
 
@@ -33,38 +42,58 @@
     }
 
     var marker = this.map.setMapMarker({
-      position: location
+      position: location,
     });
     marker = this.initializeMarker(marker, delta);
 
     return marker;
   };
-  GeolocationGoogleMapWidget.prototype.initializeMarker = function (marker, delta) {
-    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.initializeMarker.call(this, marker, delta);
+  GeolocationGoogleMapWidget.prototype.initializeMarker = function (
+    marker,
+    delta
+  ) {
+    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.initializeMarker.call(
+      this,
+      marker,
+      delta
+    );
 
     var location = marker.getPosition();
-    marker.setTitle(Drupal.t('[@delta] Latitude: @latitude Longitude: @longitude', {
-      '@delta': delta,
-      '@latitude': location.lat(),
-      '@longitude': location.lng()
-    }));
+    marker.setTitle(
+      Drupal.t("[@delta] Latitude: @latitude Longitude: @longitude", {
+        "@delta": delta,
+        "@latitude": location.lat(),
+        "@longitude": location.lng(),
+      })
+    );
     marker.setDraggable(true);
     marker.setLabel((delta + 1).toString());
 
     var that = this;
-    marker.addListener('dragend', function (e) {
-      that.locationAlteredCallback('marker', {lat: Number(e.latLng.lat()), lng: Number(e.latLng.lng())}, marker.delta);
+    marker.addListener("dragend", function (e) {
+      that.locationAlteredCallback(
+        "marker",
+        { lat: Number(e.latLng.lat()), lng: Number(e.latLng.lng()) },
+        marker.delta
+      );
     });
 
-    marker.addListener('click', function () {
+    marker.addListener("click", function () {
       that.removeMarker(marker.delta);
-      that.locationAlteredCallback('marker', null, marker.delta);
+      that.locationAlteredCallback("marker", null, marker.delta);
     });
 
     return marker;
   };
-  GeolocationGoogleMapWidget.prototype.updateMarker = function (location, delta) {
-    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.updateMarker.call(this, location, delta);
+  GeolocationGoogleMapWidget.prototype.updateMarker = function (
+    location,
+    delta
+  ) {
+    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.updateMarker.call(
+      this,
+      location,
+      delta
+    );
 
     /** @param {google.map.Marker} marker */
     var marker = this.getMarkerByDelta(delta);
@@ -72,8 +101,11 @@
 
     return marker;
   };
-  Drupal.geolocation.widget.GeolocationGoogleMapWidget = GeolocationGoogleMapWidget;
+  Drupal.geolocation.widget.GeolocationGoogleMapWidget =
+    GeolocationGoogleMapWidget;
 
-  Drupal.geolocation.widget.addWidgetProvider('google', 'GeolocationGoogleMapWidget');
-
+  Drupal.geolocation.widget.addWidgetProvider(
+    "google",
+    "GeolocationGoogleMapWidget"
+  );
 })(Drupal);

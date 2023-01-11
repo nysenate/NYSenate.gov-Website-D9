@@ -5,7 +5,6 @@
  * Module implementation file.
  */
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -15,15 +14,14 @@ use Drupal\environment_indicator\ToolbarHandler;
  * Implements hook_help().
  */
 function environment_indicator_help($route_name, RouteMatchInterface $route_match) {
-  $permissions_url = Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-environment_indicator'])
-    ->toString();
+  $permissions_url = Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-environment_indicator'])->toString();
   $settings_url = Url::fromRoute('environment_indicator.settings')->toString();
   switch ($route_name) {
     case 'environment_indicator.settings':
       $output = '<p>' . t('The Environment Indicator adds a coloured strip to the site informing you which environment you are currently in (Development, Staging, Production, etc.)') . '</p>';
       $output .= '<p>' . t('The Environment Indicator\'s visibility depends upon the permissions of the viewer. The <a href=":permissions">access environment indicator</a> permission must be enabled for a user role in order for users of that role to see the indicator.', [
-          ':permissions' => $permissions_url,
-        ]) . '</p>';
+        ':permissions' => $permissions_url,
+      ]) . '</p>';
       $output .= '<p>' . t('The recommended way to add information about your release is to set the "environment_indicator.current_release" state. Use your git hooks to set the state using drush: <code>drush sset environment_indicator.current_release v1.2.44</code>') . '</p>';
       return $output;
 
@@ -57,25 +55,6 @@ function environment_indicator_help($route_name, RouteMatchInterface $route_matc
 }
 
 /**
- * Implements hook_preprocess_HOOK() for page templates.
- */
-function environment_indicator_preprocess_html(&$variables) {
-  if (_environment_indicator_external_integration_is_enabled('toolbar')) {
-    return;
-  }
-  $active_environment = \Drupal::config('environment_indicator.indicator');
-  $title = $active_environment->get('name');
-  if (empty($title) || !\Drupal::currentUser()->hasPermission('access environment indicator')) {
-    return;
-  }
-  $variables['attributes']['class'][] = 'environment-indicator';
-  $html_class = strtolower(sprintf('environment-indicator__%s', $title));
-  $html_class = preg_replace('/[^A-Za-z0-9_-]/', '-', $html_class);
-  $html_class = preg_replace('/\-*$/', '', $html_class);
-  $variables['attributes']['class'][] = Html::cleanCssIdentifier($html_class);
-}
-
-/**
  * Implements hook_page_top().
  */
 function environment_indicator_page_top(array &$page_top) {
@@ -89,10 +68,9 @@ function environment_indicator_page_top(array &$page_top) {
     '#title' => $title,
     '#fg_color' => $active_environment->get('fg_color'),
     '#bg_color' => $active_environment->get('bg_color'),
-    '#description' => \Drupal::state()
-      ->get('environment_indicator.current_release'),
+    '#description' => \Drupal::state()->get('environment_indicator.current_release'),
     '#access' => !empty($title) && \Drupal::currentUser()
-        ->hasPermission('access environment indicator'),
+      ->hasPermission('access environment indicator'),
     '#attached' => [
       'library' => ['environment_indicator/drupal.environment_indicator'],
       'drupalSettings' => [
@@ -102,7 +80,6 @@ function environment_indicator_page_top(array &$page_top) {
           'bgColor' => $active_environment->get('bg_color'),
           'addFavicon' => \Drupal::config('environment_indicator.settings')
             ->get('favicon'),
-          'alterToolbar' => FALSE,
         ],
       ],
     ],
@@ -118,7 +95,7 @@ function environment_indicator_page_top(array &$page_top) {
       '#attributes' => [
         'class' => ['environment-switcher-container'],
         'style' => 'border-top: 1px solid ' . \Drupal::config('environment_indicator.indicator')
-            ->get('fg_color'),
+          ->get('fg_color'),
       ],
     ];
     $page_top['indicator']['#attributes'] = [
@@ -205,9 +182,6 @@ function _environment_indicator_parse_style(string $style): array {
  * Implements hook_toolbar().
  */
 function environment_indicator_toolbar() {
-  if (!_environment_indicator_external_integration_is_enabled('toolbar')) {
-    return [];
-  }
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(ToolbarHandler::class)
     ->toolbar();

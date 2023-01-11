@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -12,7 +13,6 @@ use Drupal\facets\FacetManager\DefaultFacetManager;
 use Drupal\facets\Plugin\facets\processor\DependentFacetProcessor;
 use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\Result\Result;
-use Drupal\Tests\UnitTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  *
  * @group facets
  */
-class DependentFacetProcessorTest extends UnitTestCase {
+class DependentFacetProcessorTest extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * An array of results.
@@ -42,28 +42,20 @@ class DependentFacetProcessorTest extends UnitTestCase {
       new Result($facet, 'barn_owl', 'Barn owl', 1),
     ];
 
-    $facet_entity_type = $this->getMockBuilder(ConfigEntityType::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facet_entity_type = $this->createMock(ConfigEntityType::class);
     $facet_entity_type->method('getConfigPrefix')
       ->willReturn('facets.facet');
 
-    $entity_type_manager = $this->getMockBuilder(EntityTypeManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_type_manager = $this->createMock(EntityTypeManager::class);
     $entity_type_manager->method('getDefinition')
       ->with('facets_facet')
       ->willReturn($facet_entity_type);
 
-    $processor_plugin_manager = $this->getMockBuilder(ProcessorPluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $processor_plugin_manager = $this->createMock(ProcessorPluginManager::class);
     $processor_plugin_manager->method('getDefinitions')
       ->willReturn([]);
 
-    $event_dispatcher = $this->getMockBuilder(EventDispatcher::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $event_dispatcher = $this->createMock(EventDispatcher::class);
 
     $container = new ContainerBuilder();
     $container->set('entity_type.manager', $entity_type_manager);

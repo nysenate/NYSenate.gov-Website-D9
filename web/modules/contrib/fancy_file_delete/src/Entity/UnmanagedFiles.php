@@ -41,7 +41,10 @@ class UnmanagedFiles extends ContentEntityBase implements UnmanagedFilesInterfac
   }
 
   /**
-   * {@inheritdoc}
+   * @param string $filename
+   *   The filename.
+   *
+   * @return UnmanagedFilesInterface|void
    */
   public function setPath($filename) {
     $this->get('path')->value = $filename;

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Link;
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 
 /**
  * Implements hook_requirements().
@@ -14,10 +15,10 @@ function reroute_email_requirements($phase) {
   $requirements = [];
   $reroute_config = \Drupal::config('reroute_email.settings');
 
-  if ($phase === 'runtime' && $reroute_config->get(REROUTE_EMAIL_ENABLE)) {
+  if ($phase === 'runtime' && $reroute_config->get(RerouteEmailConstants::REROUTE_EMAIL_ENABLE)) {
     $settings = [
       '@link' => Link::createFromRoute(t('configure allow list'), 'reroute_email.settings')->toString(),
-      '%addresses' => $reroute_config->get(REROUTE_EMAIL_ADDRESS),
+      '%addresses' => $reroute_config->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS) ?? '',
     ];
 
     if (empty($settings['%addresses'])) {
@@ -47,35 +48,35 @@ function reroute_email_requirements($phase) {
 function reroute_email_update_8001() {
   // A map of changed config names.
   $old = [
-    REROUTE_EMAIL_ENABLE => 'reroute_email_enable',
-    REROUTE_EMAIL_ADDRESS => 'reroute_email_address',
-    REROUTE_EMAIL_DESCRIPTION => 'reroute_email_enable_message',
+    RerouteEmailConstants::REROUTE_EMAIL_ENABLE => 'reroute_email_enable',
+    RerouteEmailConstants::REROUTE_EMAIL_ADDRESS => 'reroute_email_address',
+    RerouteEmailConstants::REROUTE_EMAIL_DESCRIPTION => 'reroute_email_enable_message',
   ];
 
   $config = \Drupal::configFactory()->getEditable('reroute_email.settings');
 
   // Do not update values if the user sets them manually already.
   // `Allowed list addresses` is a new variable, so it couldn't exist before.
-  if (NULL !== $config->get(REROUTE_EMAIL_ALLOWLIST)) {
+  if (NULL !== $config->get(RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST)) {
     return t('The setting form was updated manually already. This update is to be skipped.');
   }
 
   // Update the list of allowed email addresses.
-  $addresses = $config->get($old[REROUTE_EMAIL_ADDRESS]);
-  $config->set(REROUTE_EMAIL_ALLOWLIST, $addresses);
+  $addresses = $config->get($old[RerouteEmailConstants::REROUTE_EMAIL_ADDRESS]);
+  $config->set(RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST, $addresses);
 
   // Update rerouting email addresses value.
   $addresses = reroute_email_split_string($addresses);
-  $config->set(REROUTE_EMAIL_ADDRESS, !empty($addresses[0]) ? $addresses[0] : '');
+  $config->set(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS, !empty($addresses[0]) ? $addresses[0] : '');
 
   // Update other configs to new names.
-  $config->set(REROUTE_EMAIL_ENABLE, $config->get($old[REROUTE_EMAIL_ENABLE]));
-  $config->set(REROUTE_EMAIL_DESCRIPTION, $config->get($old[REROUTE_EMAIL_DESCRIPTION]));
+  $config->set(RerouteEmailConstants::REROUTE_EMAIL_ENABLE, $config->get($old[RerouteEmailConstants::REROUTE_EMAIL_ENABLE]));
+  $config->set(RerouteEmailConstants::REROUTE_EMAIL_DESCRIPTION, $config->get($old[RerouteEmailConstants::REROUTE_EMAIL_DESCRIPTION]));
 
   // Remove old configs.
-  $config->clear($old[REROUTE_EMAIL_ENABLE]);
-  $config->clear($old[REROUTE_EMAIL_ADDRESS]);
-  $config->clear($old[REROUTE_EMAIL_DESCRIPTION]);
+  $config->clear($old[RerouteEmailConstants::REROUTE_EMAIL_ENABLE]);
+  $config->clear($old[RerouteEmailConstants::REROUTE_EMAIL_ADDRESS]);
+  $config->clear($old[RerouteEmailConstants::REROUTE_EMAIL_DESCRIPTION]);
 
   // Save configuration values.
   $config->save();
@@ -93,18 +94,18 @@ function reroute_email_update_8001() {
  */
 function reroute_email_update_8201() {
   // A map of changed config names.
-  $old = [REROUTE_EMAIL_ALLOWLIST => 'whitelist'];
+  $old = [RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST => 'whitelist'];
 
   // Do not update values if the user sets them manually already.
   // `Allowed list addresses` is a new property, so it couldn't exist before.
   $config = \Drupal::configFactory()->getEditable('reroute_email.settings');
-  if (NULL !== $config->get(REROUTE_EMAIL_ALLOWLIST)) {
+  if (NULL !== $config->get(RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST)) {
     return t('The setting form was updated manually already. This update is to be skipped.');
   }
 
   // Update the list of allowed email addresses.
-  $addresses = $config->get($old[REROUTE_EMAIL_ALLOWLIST]);
-  $config->set(REROUTE_EMAIL_ALLOWLIST, $addresses);
+  $addresses = $config->get($old[RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST]);
+  $config->set(RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST, $addresses);
   $config->save();
 
   // Return a message to the user.

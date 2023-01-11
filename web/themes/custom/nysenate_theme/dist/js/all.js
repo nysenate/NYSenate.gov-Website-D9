@@ -335,6 +335,40 @@
 
 /**
  * @file
+ * Behaviors for the Hero.
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Hero behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.dashboardInbox = {
+    attach: function attach(context) {
+      var toggleBtn = $('.message-list__td--issue__toggle', context).once('messageList');
+      toggleBtn.each(function () {
+        var actionBtns = $(this).parent().find('.message-list__td--issue__actions');
+        $(this).click(function () {
+          if (actionBtns.css('display') === 'flex') {
+            actionBtns.css('display', 'none');
+            $(this).removeClass('message-list__td--issue__toggle--expanded');
+          } else {
+            actionBtns.css('display', 'flex');
+            $(this).addClass('message-list__td--issue__toggle--expanded');
+          }
+        });
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=dashboard-inbox.es6.js.map
+
+/**
+ * @file
  * Behaviors for the Filter Accordion.
  */
 
@@ -1673,6 +1707,44 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 /**
  * @file
+ * Behaviors for the Hero.
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Hero behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.hero = {
+    attach: function attach() {
+      var self = this;
+      var heroContainer = $('.hero--homepage');
+      var pageMargin = ($('main').outerWidth(true) - $('main').outerWidth()) / 2;
+      var pagePadding = ($('main').innerWidth() - $('main').width()) / 2;
+      self.heroMargin(heroContainer, pageMargin, pagePadding);
+      $(window).on('resize', function () {
+        pageMargin = ($('main').outerWidth(true) - $('main').outerWidth()) / 2;
+        pagePadding = ($('main').innerWidth() - $('main').width()) / 2;
+        self.heroMargin(heroContainer, pageMargin, pagePadding);
+      });
+    },
+    heroMargin: function heroMargin(heroContainer, pageMargin, pagePadding) {
+      if ($(window).width() >= 1500) {
+        heroContainer.css('margin-left', "-".concat(1500 / 4 - 5, "px"));
+      } else {
+        heroContainer.css('margin-left', "-".concat(pageMargin + pagePadding, "px"));
+      }
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=hero.js.map
+
+/**
+ * @file
  * Behaviors for the How Senate Works.
  */
 
@@ -3004,6 +3076,87 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 }(document, Drupal, jQuery);
 //# sourceMappingURL=nysenate-accordion.es6.js.map
 
+/**
+ * @file
+ * Behaviors for the Chapters.
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Chapters behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.chapters = {
+    attach: function attach() {
+      var chapterBtn = $('.node-chapter .node-title');
+      var collapseClass = 'c-chapter__collapsed';
+      var openedText = 'Collapse Section';
+      var closedText = 'Read More';
+      chapterBtn.on('click', function () {
+        var parent = $(this).parent('.node-chapter');
+        var ctaText = $(this).find('.c-chapter-cta');
+
+        if (parent.hasClass(collapseClass)) {
+          parent.removeClass(collapseClass);
+          ctaText.text(openedText);
+        } else {
+          parent.addClass(collapseClass);
+          ctaText.text(closedText);
+        }
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=nysenate-chapters.js.map
+
+/**
+ * @file
+ * Behaviors for the Committees List.
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Committees List behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.committeesList = {
+    attach: function attach() {
+      var commList = $('.comm-widget-wrapper');
+      commList.each(function () {
+        var unflagBtn = $(this).find('.flag.unflag-action');
+        var flagBtn = $(this).find('.flag.flag-action');
+        var flagMsg = $(this).find('.flag-message');
+        var closeMsg = $(this).find('.flag-message .close-message');
+        flagMsg.css('display', 'none');
+        unflagBtn.html('<span class="close-message">X</span> Unfollow');
+        unflagBtn.attr('href', unflagBtn.data('unfollow-link'));
+        flagBtn.html('Follow this committee');
+        flagBtn.attr('href', flagBtn.data('follow-link'));
+        unflagBtn.add(flagBtn).each(function () {
+          $(this).on('click', function () {
+            $(this).parent().find('.flag-message').fadeIn();
+          });
+        });
+
+        if (closeMsg.length) {
+          closeMsg.on('click', function () {
+            $(this).parent().remove();
+          });
+        }
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=nysenate-committee-widget.js.map
+
 !function (document, Drupal, $) {
   'use strict';
 
@@ -3339,6 +3492,50 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 /**
  * @file
+ * Behaviors for the Issues List.
+ */
+
+/* eslint-disable max-len */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Issues List behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.issuesList = {
+    attach: function attach() {
+      var issuesList = $('.c-block--issue');
+      issuesList.each(function () {
+        var unflagBtn = $(this).find('.flag.unflag-action');
+        var flagBtn = $(this).find('.flag.flag-action');
+        var flagMsg = $(this).find('.flag-message');
+        var closeMsg = $(this).find('.flag-message .close-message');
+        flagMsg.css('display', 'none');
+        unflagBtn.html('Unfollow This Issue');
+        unflagBtn.attr('href', unflagBtn.data('unfollow-link'));
+        flagBtn.html('Follow This Issue');
+        flagBtn.attr('href', flagBtn.data('follow-link'));
+        unflagBtn.add(flagBtn).each(function () {
+          $(this).on('click', function () {
+            $(this).parent().find('.flag-message').fadeIn();
+          });
+        });
+
+        if (closeMsg.length) {
+          closeMsg.on('click', function () {
+            $(this).parent().remove();
+          });
+        }
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=nysenate-issues.js.map
+
+/**
+ * @file
  * Behaviors for the Senator List.
  */
 
@@ -3374,6 +3571,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var tabContainer = $('.l-tab-bar');
       var tabLink = $('.c-tab .c-tab-link');
       var textExpander = $('.text-expander');
+      var loadMore = $('.load-more');
       tabContainer.each(function () {
         var tabArrowDown = $(this).find('.c-tab--arrow');
         var tabInput = $(this).find('input.form-radio');
@@ -3421,6 +3619,25 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             link.html('View Less');
             link.addClass('expanded');
           }
+        });
+      } // event for load more
+
+
+      if (loadMore) {
+        loadMore.each(function () {
+          var items = $(this).closest('.pager-load-more').parent().find('.content__item');
+          items.css('display', 'none');
+          items.slice(0, 5).show();
+          var itemsHidden = $(this).closest('.pager-load-more').parent().find('.content__item:hidden');
+          $(this).on('click', function (e) {
+            e.preventDefault();
+            itemsHidden.slice(0, 5).slideDown();
+            itemsHidden = $(this).closest('.pager-load-more').parent().find('.content__item:hidden');
+
+            if (itemsHidden.length === 0) {
+              $(this).css('display', 'none');
+            }
+          });
         });
       }
     },

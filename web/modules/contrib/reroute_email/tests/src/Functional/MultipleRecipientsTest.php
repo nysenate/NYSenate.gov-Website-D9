@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\reroute_email\Functional;
 
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
+
 /**
  * Test Reroute Email with multiple recipients.
  *
@@ -23,14 +25,14 @@ class MultipleRecipientsTest extends RerouteEmailBrowserTestBase {
     $emails_reroute_to_result = "user1@reroute-to.com,user2@reroute-to.com,user3@reroute-to.com";
     $email_allow_domain = '*@allowlisted.com';
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ENABLE => TRUE,
-      REROUTE_EMAIL_ADDRESS => $emails_reroute_to_form,
-      REROUTE_EMAIL_ALLOWLIST => $email_allow_domain,
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_ADDRESS => $emails_reroute_to_form,
+      RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST => $email_allow_domain,
     ]);
 
     // Make sure configured emails were set properly.
-    $this->assertEquals($this->rerouteConfig->get(REROUTE_EMAIL_ADDRESS), $emails_reroute_to_result, 'Reroute email addresses was set.');
-    $this->assertEquals($this->rerouteConfig->get(REROUTE_EMAIL_ALLOWLIST), $email_allow_domain, 'Value was set to the allowed list.');
+    $this->assertEquals($this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS), $emails_reroute_to_result, 'Reroute email addresses was set.');
+    $this->assertEquals($this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST), $email_allow_domain, 'Value was set to the allowed list.');
 
     // Submit a test email (should be rerouted).
     $this->assertMailReroutedFromTestForm(['to' => 'email@not-allowlisted.com, email@allowlisted.com']);

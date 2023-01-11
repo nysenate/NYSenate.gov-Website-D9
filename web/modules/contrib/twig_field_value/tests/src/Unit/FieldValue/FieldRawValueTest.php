@@ -2,6 +2,10 @@
 
 namespace Drupal\Tests\twig_field_value\Unit\FieldValue;
 
+use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\twig_field_value\Twig\Extension\FieldValueExtension;
 
@@ -23,16 +27,12 @@ class FieldRawValueTest extends UnitTestCase {
    */
   protected function setUp(): void {
 
-    /** @var \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver */
-    $controllerResolver = $this->getMockBuilder('\Drupal\Core\Controller\ControllerResolver')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $languageManager = $this->createMock(LanguageManagerInterface::class);
+    $entityRepository = $this->createMock(EntityRepositoryInterface::class);
+    $controllerResolver = $this->createMock(ControllerResolverInterface::class);
+    $loggerFactory = $this->createMock(LoggerChannelFactoryInterface::class);
 
-    $loggerFactory = $this->getMockBuilder('\Drupal\Core\Logger\LoggerChannelFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $this->extension = new FieldValueExtension($controllerResolver, $loggerFactory);
+    $this->extension = new FieldValueExtension($languageManager, $entityRepository, $controllerResolver, $loggerFactory);
   }
 
   /**
@@ -45,10 +45,7 @@ class FieldRawValueTest extends UnitTestCase {
    *   The entity object.
    */
   protected function mockFieldItem($values) {
-
-    $field_item = $this->getMockBuilder('Drupal\Core\Field\FieldItemBase')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $field_item = $this->createMock('Drupal\Core\Field\FieldItemBase');
     $field_item->expects($this->any())
       ->method('getValue')
       ->will($this->returnValue($values));

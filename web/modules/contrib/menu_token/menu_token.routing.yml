@@ -1,0 +1,19 @@
+menu_token.available_entities_configuration_form:
+  path: '/admin/config/menu_token'
+  defaults:
+    _form: '\Drupal\menu_token\Form\AvailableEntitiesConfigurationForm'
+    _title: 'Menu Token'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+menu_token.page.show.available.tokens:
+  path: '/admin/menu_token/show_available_tokens'
+  defaults:
+    _controller: '\Drupal\menu_token\Controller\MenuTokenSupportedTokensController::content'
+    _title: 'Available tokens'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

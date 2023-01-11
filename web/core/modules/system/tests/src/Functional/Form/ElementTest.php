@@ -21,7 +21,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Tests placeholder text for elements that support placeholders.

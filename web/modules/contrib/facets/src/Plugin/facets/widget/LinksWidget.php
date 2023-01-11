@@ -3,7 +3,6 @@
 namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Result\Result;
 use Drupal\facets\Widget\WidgetPluginBase;

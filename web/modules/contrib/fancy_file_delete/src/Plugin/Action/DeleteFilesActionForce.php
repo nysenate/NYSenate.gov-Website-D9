@@ -18,7 +18,12 @@ use Drupal\file\Entity\File;
 class DeleteFilesActionForce extends DeleteFilesAction {
 
   /**
-   * {@inheritdoc}
+   * Execute Multiples method.
+   *
+   * @param array $entities
+   *   The entities array we are executing.
+   * 
+   * @return array|mixed[]|void
    */
   public function executeMultiple(array $entities) {
     // Set entities to batch our way.

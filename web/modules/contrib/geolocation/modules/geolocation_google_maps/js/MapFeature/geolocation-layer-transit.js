@@ -4,8 +4,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Layer traffic.
@@ -17,9 +16,8 @@
    */
   Drupal.behaviors.geolocationGoogleMapsLayerTransit = {
     attach: function (context, drupalSettings) {
-
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'google_maps_layer_transit',
+        "google_maps_layer_transit",
 
         /**
          * @param {GeolocationMapInterface} map - Current map.
@@ -36,6 +34,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
 })(Drupal);

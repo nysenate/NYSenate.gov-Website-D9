@@ -420,7 +420,8 @@
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -538,6 +539,7 @@ strong {
 .icon-before__facebook::before,
 .icon-before__x::before,
 .c-block--issue .c-block--btn a[title^="Unfollow"]::before,
+.c-block--issue .c-block--btn .unflag-action::before,
 .icon-before__check::before,
 .icon-before__circle-check::before,
 .icon-before__see-more::before,
@@ -547,6 +549,7 @@ strong {
 .icon-before__questionaire::before,
 .icon-before__plus::before,
 .c-block--issue .c-block--btn a[title^="Follow"]::before,
+.c-block--issue .c-block--btn .flag-action::before,
 .icon-before__mail::before,
 .c-block--issue .c-block--btn .flag-success-btn::before,
 .icon-before__notification::before,
@@ -685,7 +688,8 @@ strong {
 
 
 .icon-before__plus::before,
-.c-block--issue .c-block--btn a[title^="Follow"]::before {
+.c-block--issue .c-block--btn a[title^="Follow"]::before,
+.c-block--issue .c-block--btn .flag-action::before {
   content: '\2b'; }
 
 .icon-before__presskit::before {
@@ -729,7 +733,8 @@ strong {
 
 
 .icon-before__x::before,
-.c-block--issue .c-block--btn a[title^="Unfollow"]::before {
+.c-block--issue .c-block--btn a[title^="Unfollow"]::before,
+.c-block--issue .c-block--btn .unflag-action::before {
   content: '\78'; }
 
 .icon-before__youtube::before {
@@ -760,6 +765,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -921,7 +927,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1420,6 +1428,46 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
 .view-issues-listings {
   width: 100%;
   margin-bottom: 50px; }
@@ -1509,11 +1557,14 @@ strong {
         background: #aaaaaa; }
       .c-block--issue .c-block--btn a::before {
         font-size: 16px; }
-    .c-block--issue .c-block--btn a[title^="Follow"] {
+    .c-block--issue .c-block--btn a[title^="Follow"],
+    .c-block--issue .c-block--btn .flag-action {
       background-color: #e29c44; }
-      .c-block--issue .c-block--btn a[title^="Follow"]:hover {
+      .c-block--issue .c-block--btn a[title^="Follow"]:hover,
+      .c-block--issue .c-block--btn .flag-action:hover {
         background-color: #cb8d37; }
-    .c-block--issue .c-block--btn a[title^="Unfollow"] {
+    .c-block--issue .c-block--btn a[title^="Unfollow"],
+    .c-block--issue .c-block--btn .unflag-action {
       background-color: #cb8d37; }
     .c-block--issue .c-block--btn .flag-wrapper {
       position: relative;
@@ -1535,13 +1586,15 @@ strong {
       font-size: 14px;
       letter-spacing: 0.1em;
       z-index: 2;
-      pointer-events: none; }
+      pointer-events: none;
+      margin: 0; }
       .c-block--issue .c-block--btn .message-text p span {
         line-height: 1;
         display: block; }
         .c-block--issue .c-block--btn .message-text p span + span {
           display: none; }
     .c-block--issue .c-block--btn .close-message {
+      cursor: pointer;
       position: absolute;
       top: 0;
       left: 0;
@@ -1552,9 +1605,9 @@ strong {
       transition: background-color 0.2s ease; }
       .c-block--issue .c-block--btn .close-message::after {
         position: absolute;
-        top: 5px;
-        right: 15px;
-        left: auto;
+        top: 5px !important;
+        right: 15px !important;
+        left: auto !important;
         width: 20px;
         font-size: 23px; }
       .c-block--issue .c-block--btn .close-message:hover {
@@ -1602,12 +1655,12 @@ strong {
     margin: 20px 2% 0px 0;
     height: 150px;
     /**
-         * This overrides the old margins.
-         * Old margins will be used in browsers that don't
-         * support nth-child in this way.
-         *
-         * All are set to 32% width.
-         */ }
+			* This overrides the old margins.
+			* Old margins will be used in browsers that don't
+			* support nth-child in this way.
+			*
+			* All are set to 32% width.
+			*/ }
     .c-block--issue .c-block--btn {
       font-size: 12px; }
       .c-block--issue .c-block--btn .flag-success-message {

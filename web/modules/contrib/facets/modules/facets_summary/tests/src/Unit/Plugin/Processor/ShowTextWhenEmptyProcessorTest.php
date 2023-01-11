@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\facets_summary\Unit\Plugin\Processor;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\facets_summary\Entity\FacetsSummary;
 use Drupal\facets_summary\Plugin\facets_summary\processor\ShowTextWhenEmptyProcessor;
-use Drupal\Tests\UnitTestCase;
 
 /**
  * Provides the ShowTextWhenEmptyProcessorTest class.
@@ -15,7 +15,7 @@ use Drupal\Tests\UnitTestCase;
  * @group facets
  * @coversDefaultClass \Drupal\facets_summary\Plugin\facets_summary\processor\ShowTextWhenEmptyProcessor
  */
-class ShowTextWhenEmptyProcessorTest extends UnitTestCase {
+class ShowTextWhenEmptyProcessorTest extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * The processor we're testing.

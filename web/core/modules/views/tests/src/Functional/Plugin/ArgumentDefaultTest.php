@@ -28,7 +28,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     'test_argument_default_current_user',
     'test_argument_default_node',
     'test_argument_default_query_param',
-    ];
+  ];
 
   /**
    * {@inheritdoc}
@@ -42,6 +42,9 @@ class ArgumentDefaultTest extends ViewTestBase {
    */
   protected static $modules = ['node', 'views_ui', 'block'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
 
@@ -145,7 +148,7 @@ class ArgumentDefaultTest extends ViewTestBase {
       'bypass node access',
       'access user profiles',
       'view all revisions',
-      ];
+    ];
     $views_admin = $this->drupalCreateUser($permissions);
     $this->drupalLogin($views_admin);
 

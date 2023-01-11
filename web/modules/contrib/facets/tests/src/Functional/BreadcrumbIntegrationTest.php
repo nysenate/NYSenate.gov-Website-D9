@@ -26,11 +26,6 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUp(): void {
     parent::setUp();
 
@@ -100,7 +95,7 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
     $this->drupalGet('search-api-test-fulltext', ['query' => $initial_query]);
 
     $this->clickLink('item');
-    $breadcrumb = $this->getSession()->getPage()->find('css', '.breadcrumb');
+    $breadcrumb = $this->getSession()->getPage()->find('css', 'nav[aria-labelledby="system-breadcrumb"]');
     $this->assertFalse(strpos($breadcrumb->getText(), 'Type'));
     $breadcrumb->findLink('item');
 
@@ -109,7 +104,7 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
     $initial_query = ['search_api_fulltext' => 'foo'];
     $this->drupalGet('search-api-test-fulltext', ['query' => $initial_query]);
     $this->clickLink('item');
-    $breadcrumb = $this->getSession()->getPage()->find('css', '.breadcrumb');
+    $breadcrumb = $this->getSession()->getPage()->find('css', 'nav[aria-labelledby="system-breadcrumb"]');
     $this->assertNotFalse(strpos($breadcrumb->getText(), 'Type'));
   }
 

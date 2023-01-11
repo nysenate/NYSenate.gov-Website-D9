@@ -156,6 +156,10 @@ class Nominatim extends GeocoderBase implements GeocoderInterface {
         case 'suburb':
           $address_atomics['suburb'] = $value;
           break;
+
+        case 'ISO3166-2-lvl6':
+          $address_atomics['countyCode'] = $value;
+          break;
       }
     }
 

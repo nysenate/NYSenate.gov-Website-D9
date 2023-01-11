@@ -44,7 +44,7 @@ class LinkOutputLocationTest extends FlagTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a flag.
@@ -119,7 +119,7 @@ class LinkOutputLocationTest extends FlagTestBase {
     $this->drupalGet('admin/structure/types/manage/article/display/teaser');
     $this->submitForm($edit, 'Save');
     // Check the form was saved successfully.
-    $this->assertText('Your settings have been saved.');
+    $this->assertSession()->responseContains('Your settings have been saved.');
 
     // Check the full node still shows the flag link as a field.
     $this->drupalGet('node/' . $this->node->id());
@@ -161,7 +161,7 @@ class LinkOutputLocationTest extends FlagTestBase {
     // TODO: check no entity field link.
 
     $this->drupalGet('node/' . $this->node->id() . '/edit');
-    $this->assertNoField('flag[' . $this->flag->id() . ']');
+    $this->assertSession()->fieldNotExists('flag[' . $this->flag->id() . ']');
     $this->assertNoContextualLinkPlaceholder($contextual_links_id);
   }
 
@@ -211,7 +211,7 @@ class LinkOutputLocationTest extends FlagTestBase {
     $xpath = $this->xpath("//*[contains(@class, 'node__content')]//div[contains(@class, :id)]", [
       ':id' => 'flag-' . $flag->id() . '-' . $entity->id(),
     ]);
-    $this->assert(count($xpath) == ($exists ? 1 : 0), $message);
+    $this->assertTrue(count($xpath) == ($exists ? 1 : 0), $message);
   }
 
   /**

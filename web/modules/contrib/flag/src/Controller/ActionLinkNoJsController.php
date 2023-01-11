@@ -10,6 +10,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Returns nojs responses to flag and unflag action links.
@@ -75,6 +76,10 @@ class ActionLinkNoJsController implements ContainerInjectionInterface {
     /* @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->flagService->getFlaggableById($flag, $entity_id);
 
+    if (empty($entity)) {
+      throw new NotFoundHttpException();
+    }
+
     try {
       $this->flagService->flag($flag, $entity);
     }
@@ -103,6 +108,10 @@ class ActionLinkNoJsController implements ContainerInjectionInterface {
     /* @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->flagService->getFlaggableById($flag, $entity_id);
 
+    if (empty($entity)) {
+      throw new NotFoundHttpException();
+    }
+
     try {
       $this->flagService->unflag($flag, $entity);
     }
@@ -126,8 +135,9 @@ class ActionLinkNoJsController implements ContainerInjectionInterface {
    *   The response object.
    */
   private function generateResponse(EntityInterface $entity, $message) {
-    $this->messenger->addMessage($message);
-
+    if (!empty($message)) {
+      $this->messenger->addMessage($message);
+    }
     if ($entity->hasLinkTemplate('canonical')) {
       // Redirect back to the entity. A passed in destination query parameter
       // will automatically override this.

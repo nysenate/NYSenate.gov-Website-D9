@@ -93,6 +93,7 @@ function entityqueue_entity_delete(EntityInterface $entity) {
   foreach ($queues as $queue) {
     // Get all the subqueues which are referencing the deleted entity.
     $query = \Drupal::entityQuery('entity_subqueue')
+      ->accessCheck(FALSE)
       ->condition('queue', $queue->id())
       ->condition('items', $entity->id());
     $result = $query->execute();

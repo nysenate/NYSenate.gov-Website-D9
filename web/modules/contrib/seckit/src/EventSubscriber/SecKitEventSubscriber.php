@@ -2,6 +2,8 @@
 
 namespace Drupal\seckit\EventSubscriber;
 
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -9,8 +11,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\seckit\SeckitInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -65,10 +65,10 @@ class SecKitEventSubscriber implements EventSubscriberInterface {
   /**
    * Executes actions on the request event.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   Event Response Object.
    */
-  public function onKernelRequest(GetResponseEvent $event) {
+  public function onKernelRequest(RequestEvent $event) {
     $this->request = $event->getRequest();
 
     // Execute necessary functions.
@@ -80,10 +80,10 @@ class SecKitEventSubscriber implements EventSubscriberInterface {
   /**
    * Executes actions on the response event.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   Filter Response Event object.
    */
-  public function onKernelResponse(FilterResponseEvent $event) {
+  public function onKernelResponse(ResponseEvent $event) {
     $this->response = $event->getResponse();
 
     // Execute necessary functions.
@@ -409,7 +409,7 @@ class SecKitEventSubscriber implements EventSubscriberInterface {
         $this->config->get('seckit_clickjacking.noscript_message');
 
     $message = Xss::filter($noscript_message);
-    $path = base_path() . drupal_get_path('module', 'seckit');
+    $path = base_path() . \Drupal::service('extension.list.module')->getPath('seckit');
     return <<< EOT
         <script type="text/javascript" src="$path/js/seckit.document_write.js"></script>
         <link type="text/css" rel="stylesheet" id="seckit-clickjacking-no-body" media="all" href="$path/css/seckit.no_body.css" />

@@ -22,7 +22,7 @@ class OutputLocationEntityFormAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'node',
@@ -54,7 +54,7 @@ class OutputLocationEntityFormAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     NodeType::create(['type' => 'page', 'name' => 'page'])->save();
@@ -110,8 +110,8 @@ class OutputLocationEntityFormAccessTest extends BrowserTestBase {
     // Get the node edit form.
     $this->drupalGet("node/" . $this->node->id() . "/edit");
 
-    $this->assertSession()->pageTextContains('Flag allowed', 'The checkbox for the flag with access is shown.');
-    $this->assertSession()->pageTextNotContains('Flag denied', 'The checkbox for the flag without access is not shown.');
+    $this->assertSession()->pageTextContains('Flag allowed');
+    $this->assertSession()->pageTextNotContains('Flag denied');
   }
 
 }

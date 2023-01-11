@@ -1,0 +1,23 @@
+uuid: 1f6539b6-9ba6-4e7e-95ee-89fa885794cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_majority_issue
+    - taxonomy.vocabulary.issues
+id: taxonomy_term.issues.field_majority_issue
+field_name: field_majority_issue
+entity_type: taxonomy_term
+bundle: issues
+label: 'Majority Issue'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -34,6 +34,11 @@ class ViewsBulkOperationsViewData implements ViewsBulkOperationsViewDataInterfac
   protected ViewExecutable $view;
 
   /**
+   * The display handler.
+   */
+  protected DisplayPluginBase $displayHandler;
+
+  /**
    * The relationship ID.
    */
   protected string $relationship;

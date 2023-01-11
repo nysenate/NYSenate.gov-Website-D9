@@ -1,0 +1,123 @@
+// Import site utilities.
+@import "../../global/utils/init";
+
+/*----------------------------------------
+/
+/	SCHOOL FORM PAGE STYLES
+/
+/-----------------------------------------*/
+#edit-submissions {
+  width: 100%;
+  display: inline;
+}
+
+.webform-submission-school-form-form {
+  .button,
+  input[type="submit"] {
+    background-color: $color-nys-blue;
+    border: 0;
+    color: $color-white;
+
+    &:hover {
+      background-color: #007095;
+    }
+  }
+
+  details {
+    background-color: $grey06;
+
+    summary {
+      background-color: $grey16;
+      pointer-events: none;
+      padding: 10px;
+      text-transform: uppercase;
+      color: $yellow01;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      border-bottom: 3px solid $grey15;
+      list-style: none;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    label,
+    span,
+    .option {
+      margin-bottom: 8px;
+      font-size: 12.8px;
+      color: $grey04;
+      line-height: 1.5;
+      font-family: $font-sans;
+      text-transform: uppercase;
+    }
+
+    .form-text {
+      margin: 0;
+    }
+
+    .webform-element-description {
+      color: $gen_blue_lgt;
+      font-family: $font-sans-bold;
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: 3px;
+      margin-bottom: 18px;
+    }
+
+    .webform-element-help {
+      margin-bottom: 0;
+
+      span {
+        display: block;
+        margin: -2px 0 0;
+      }
+    }
+
+    .webform-multiple-table--operations {
+      padding: 0 0 0 20px;
+    }
+
+    .button,
+    input[type="submit"] {
+      background-color: $yellow01;
+      border: 0;
+      color: $color-white;
+
+      &:hover {
+        background-color: $yellow03;
+      }
+    }
+
+    input[type="file"],
+    input[type="checkbox"],
+    input[type="radio"] {
+      margin: 16px 0;
+    }
+
+    .js-form-type-managed-file {
+      border: 1px solid $grey05;
+      padding: 20px;
+
+      .webform-element-description {
+        margin-bottom: 0;
+        margin-top: 20px;
+      }
+    }
+
+    .js-form-item {
+      margin-top: 0;
+    }
+  }
+
+  .js-form-type-select {
+    width: 100%;
+    margin-top: 0px;
+
+    #edit-grade {
+      width: 100%;
+      margin-bottom: 0px;
+    }
+  }
+}

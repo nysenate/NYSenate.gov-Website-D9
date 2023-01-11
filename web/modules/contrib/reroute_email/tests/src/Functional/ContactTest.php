@@ -3,6 +3,8 @@
 namespace Drupal\Tests\reroute_email\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 
 /**
  * Test ability to reroute mail sent from the Contact module form.
@@ -12,6 +14,8 @@ use Drupal\Component\Render\FormattableMarkup;
  * @group reroute_email
  */
 class ContactTest extends RerouteEmailBrowserTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -72,13 +76,13 @@ class ContactTest extends RerouteEmailBrowserTestBase {
 
     // Configure to reroute to {$this->rerouteDestination}.
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ENABLE => TRUE,
-      REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_ADDRESS => $this->rerouteDestination,
     ]);
 
     // Configure the contact settings to send to $original_destination.
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->submitForm(['recipients' => $this->originalDestination], t('Save'));
+    $this->submitForm(['recipients' => $this->originalDestination], $this->t('Save'));
 
     // Go to the contact page and send an email.
     $post = [
@@ -102,30 +106,30 @@ class ContactTest extends RerouteEmailBrowserTestBase {
     // not be rerouted. Configure two email addresses in reroute form.
     // Body injection is still turned on.
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ALLOWLIST => "{$this->rerouteDestination}, {$additional_destination}",
+      RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST => "{$this->rerouteDestination}, {$additional_destination}",
     ]);
 
     // Configure the contact settings to point to the additional recipient.
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->submitForm(['recipients' => $additional_destination], t('Save'));
+    $this->submitForm(['recipients' => $additional_destination], $this->t('Save'));
 
     // Go to the contact page and send an email.
     $this->drupalGet('contact');
-    $this->submitForm($post, t('Send message'));
+    $this->submitForm($post, $this->t('Send message'));
     $this->assertSession()->pageTextContains($this->confirmationMessage);
     $this->assertMail('to', $additional_destination, 'Email was not rerouted because destination was in the allowed list.');
 
     // Now change the configuration to disable reroute and set the default
     // email recipients (from system.site.mail)
-    $this->configureRerouteEmail([REROUTE_EMAIL_ENABLE => FALSE]);
+    $this->configureRerouteEmail([RerouteEmailConstants::REROUTE_EMAIL_ENABLE => FALSE]);
 
     // Set the contact form to send to original_destination.
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->submitForm(['recipients' => $this->originalDestination], t('Save'));
+    $this->submitForm(['recipients' => $this->originalDestination], $this->t('Save'));
 
     // Go to the contact page and send an email.
     $this->drupalGet('contact');
-    $this->submitForm($post, t('Send message'));
+    $this->submitForm($post, $this->t('Send message'));
     $this->assertSession()->pageTextContains($this->confirmationMessage);
 
     // Mail should not be rerouted - should go to $original_destination.
@@ -133,14 +137,14 @@ class ContactTest extends RerouteEmailBrowserTestBase {
 
     // Configure to reroute without body injection.
     $this->configureRerouteEmail([
-      REROUTE_EMAIL_ENABLE => TRUE,
-      REROUTE_EMAIL_ALLOWLIST => '',
-      REROUTE_EMAIL_DESCRIPTION => FALSE,
+      RerouteEmailConstants::REROUTE_EMAIL_ENABLE => TRUE,
+      RerouteEmailConstants::REROUTE_EMAIL_ALLOWLIST => '',
+      RerouteEmailConstants::REROUTE_EMAIL_DESCRIPTION => FALSE,
     ]);
 
     // Go to the contact page and send an email.
     $this->drupalGet('contact');
-    $this->submitForm($post, t('Send message'));
+    $this->submitForm($post, $this->t('Send message'));
     $this->assertSession()->pageTextContains($this->confirmationMessage);
     $mails = $this->getMails();
     $mail = end($mails);

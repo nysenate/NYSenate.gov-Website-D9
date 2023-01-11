@@ -18,7 +18,7 @@ nys_school_forms.school_forms:
     _title: 'School Form Search'
     _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::view'
   requirements:
-    _permission: 'access content'
+    _permission: 'access all webform results'
   options:
     _admin_route: TRUE
 nys_school_forms.student_export:
@@ -27,6 +27,14 @@ nys_school_forms.student_export:
     _title: "Student Export"
     _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::exportCsv'
   requirements:
-    _permission: "access content"
+    _permission: "access all webform results"
   options:
     _admin_route: TRUE
+nys_school_forms.delete_submission:
+  path: '/admin/school-forms/delete'
+  defaults:
+    _form: 'Drupal\nys_school_forms\Form\SchoolFormDeleteForm'
+    _title: 'Confirm Deletion'
+  requirements:
+    _permission: 'administer site configuration'
+    id: ^\d+$

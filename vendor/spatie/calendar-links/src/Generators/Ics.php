@@ -14,9 +14,12 @@ class Ics implements Generator
     protected $dateFormat = 'Ymd';
     protected $dateTimeFormat = 'e:Ymd\THis';
 
-    /** @var array */
+    /** @var array<non-empty-string, non-empty-string> */
     protected $options = [];
 
+    /**
+     * @param array<non-empty-string, non-empty-string> $options
+     */
     public function __construct(array $options = [])
     {
         $this->options = $options;
@@ -47,7 +50,7 @@ class Ics implements Generator
         }
 
         if ($link->description) {
-            $url[] = 'X-ALT-DESC;FMTTYPE=text/html:'.$this->escapeString($link->description);
+            $url[] = 'DESCRIPTION:'.$this->escapeString(strip_tags($link->description));
         }
         if ($link->address) {
             $url[] = 'LOCATION:'.$this->escapeString($link->address);

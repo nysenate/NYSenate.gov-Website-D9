@@ -54,6 +54,9 @@ class BlockUiTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Create and log in an administrative user.
@@ -101,9 +104,23 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->assertEscaped('<strong>Test theme</strong>');
 
     // Ensure that a hidden theme cannot use the block demo page.
-    \Drupal::service('theme_installer')->install(['stable']);
-    $this->drupalGet('admin/structure/block/demo/stable');
+    \Drupal::service('theme_installer')->install(['stable9']);
+    $this->drupalGet('admin/structure/block/demo/stable9');
     $this->assertSession()->statusCodeEquals(404);
+
+    // Delete all blocks and verify saving the block layout results in a
+    // validation error.
+    $block_storage = \Drupal::service('entity_type.manager')->getStorage('block');
+    $blocks = $block_storage->loadMultiple();
+    foreach ($blocks as $block) {
+      $block->delete();
+    }
+    $this->drupalGet('admin/structure/block');
+    $blocks_table = $this->xpath("//tr[@class='block-enabled']");
+    $this->assertEmpty($blocks_table, 'The blocks table is now empty.');
+    $this->submitForm([], 'Save blocks');
+    $this->assertSession()->pageTextContains('No blocks settings to update');
+
   }
 
   /**
@@ -147,25 +164,25 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stark']);
     // We have to enable at least one extra theme that is not hidden so that
     // local tasks will show up. That's why we enable test_theme_theme.
-    \Drupal::service('theme_installer')->install(['stable', 'test_theme_theme']);
+    \Drupal::service('theme_installer')->install(['stable9', 'test_theme_theme']);
     $this->drupalGet('admin/structure/block');
     $theme_handler = \Drupal::service('theme_handler');
     $this->assertSession()->linkExists($theme_handler->getName('stark'));
     $this->assertSession()->linkExists($theme_handler->getName('test_theme_theme'));
-    $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
+    $this->assertSession()->linkNotExists($theme_handler->getName('stable9'));
 
     // Ensure that a hidden theme cannot use the block demo page.
-    $this->drupalGet('admin/structure/block/list/stable');
+    $this->drupalGet('admin/structure/block/list/stable9');
     $this->assertSession()->statusCodeEquals(404);
 
     // Ensure that a hidden theme set as the admin theme can use the block demo
     // page.
-    \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
+    \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable9')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
-    $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
+    $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable9']);
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->linkExists($theme_handler->getName('stable'));
-    $this->drupalGet('admin/structure/block/list/stable');
+    $this->assertSession()->linkExists($theme_handler->getName('stable9'));
+    $this->drupalGet('admin/structure/block/list/stable9');
     $this->assertSession()->statusCodeEquals(200);
   }
 

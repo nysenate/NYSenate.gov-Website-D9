@@ -97,6 +97,13 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
   /**
    * {@inheritdoc}
    */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFlaggable() {
     $flaggable_type = $this->getFlaggableType();
     $flaggable_id = $this->getFlaggableId();
@@ -187,7 +194,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
     parent::postSave($storage, $update);
 
     if (!$update) {
-      \Drupal::service('event_dispatcher')->dispatch(FlagEvents::ENTITY_FLAGGED, new FlaggingEvent($this));
+      \Drupal::service('event_dispatcher')->dispatch(new FlaggingEvent($this), FlagEvents::ENTITY_FLAGGED);
     }
   }
 
@@ -198,7 +205,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
     parent::preDelete($storage, $entities);
 
     $event = new UnflaggingEvent($entities);
-    \Drupal::service('event_dispatcher')->dispatch(FlagEvents::ENTITY_UNFLAGGED, $event);
+    \Drupal::service('event_dispatcher')->dispatch($event, FlagEvents::ENTITY_UNFLAGGED);
   }
 
   /**

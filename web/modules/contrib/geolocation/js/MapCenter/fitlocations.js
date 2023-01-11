@@ -4,8 +4,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   Drupal.geolocation = Drupal.geolocation || {};
   Drupal.geolocation.mapCenter = Drupal.geolocation.mapCenter || {};
@@ -29,8 +28,7 @@
 
     if (centerOption.settings.reset_zoom) {
       map.setZoom(undefined, true);
-    }
-    else if (centerOption.settings.min_zoom) {
+    } else if (centerOption.settings.min_zoom) {
       map.getZoom().then(function (zoom) {
         if (centerOption.settings.min_zoom < zoom) {
           map.setZoom(centerOption.settings.min_zoom);
@@ -39,6 +37,5 @@
     }
 
     return true;
-  }
-
+  };
 })(Drupal);

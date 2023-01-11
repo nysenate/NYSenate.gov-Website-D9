@@ -87,15 +87,11 @@ class HideWhenNotRenderedProcessorTest extends UnitTestCase {
    *   The value for rendered in current request.
    */
   protected function createContainer($renderedInCurrentRequestValue) {
-    $fsi = $this->getMockBuilder(FacetSourcePluginInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $fsi = $this->createMock(FacetSourcePluginInterface::class);
     $fsi->method('isRenderedInCurrentRequest')
       ->willReturn($renderedInCurrentRequestValue);
 
-    $facetSourceManager = $this->getMockBuilder(FacetSourcePluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facetSourceManager = $this->createMock(FacetSourcePluginManager::class);
     $facetSourceManager->method('createInstance')
       ->willReturn($fsi);
 

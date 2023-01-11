@@ -6,7 +6,7 @@ use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Facets\FacetInterface;
+use Drupal\facets\FacetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\QueryType\QueryTypePluginManager;
 

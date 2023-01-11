@@ -42,7 +42,7 @@ class SolariumRequestLogger implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[SolariumEvents::POST_CREATE_QUERY][] = ['postCreateQuery'];
     $events[SolariumEvents::PRE_EXECUTE_REQUEST][] = ['preExecuteRequest'];
     $events[SolariumEvents::POST_EXECUTE_REQUEST][] = ['postExecuteRequest'];

@@ -12,7 +12,7 @@ use Drupal\field\FieldStorageConfigInterface;
  */
 function geolocation_field_views_data(FieldStorageConfigInterface $field_storage) {
   // Make sure views.views.inc is loaded.
-  module_load_include('inc', 'views', 'views.views');
+  \Drupal::moduleHandler()->loadInclude('inc', 'views', 'views.views');
 
   $entity_storage = \Drupal::entityTypeManager()->getStorage($field_storage->getTargetEntityTypeId());
   $entity_definition = \Drupal::entityTypeManager()->getDefinition($field_storage->getTargetEntityTypeId());

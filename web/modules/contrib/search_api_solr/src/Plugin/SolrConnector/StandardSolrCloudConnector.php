@@ -233,7 +233,7 @@ class StandardSolrCloudConnector extends SolrConnectorPluginBase implements Solr
       }
     }
     catch (\Exception $e) {
-      $this->getLogger()->debug($e->getMessage());
+      $this->getLogger()->debug('@exception', ['@exception' => $e->getMessage()]);
     }
 
     return NULL;

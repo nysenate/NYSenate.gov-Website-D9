@@ -102,7 +102,7 @@ class Redirect implements RedirectInterface {
     if ($wrapper = $this->streamWrapperManager->getViaUri($file_uri)) {
       $directory = $wrapper->getDirectoryPath();
       $target = StreamWrapperManager::getTarget($file_uri);
-      return $directory . DIRECTORY_SEPARATOR . $target;
+      return $directory . '/' . $target;
     }
   }
 

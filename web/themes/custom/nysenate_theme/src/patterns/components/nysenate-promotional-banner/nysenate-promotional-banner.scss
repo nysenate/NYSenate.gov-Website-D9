@@ -3,6 +3,7 @@
 .c-block--initiative {
   position: relative;
   padding: 0;
+  margin: 0;
   @extend .lgt-bg;
 
   .node__content .c-block {
@@ -57,6 +58,7 @@
   .c-block--initiative {
     clear: both;
     padding: 0;
+    margin: 0;
 
     .c-block--btn {
       padding-left: 25px;
@@ -161,5 +163,28 @@
         padding-bottom: 0;
       }
     }
+  }
+}
+
+.featured-content__banners-list {
+  .c-block--initiative__no-img {
+    grid-column: 1 / span 2;
+    margin: 0;
+    height: auto;
+  }
+
+
+  .c-block .c-initiative--title {
+    font-size: 36px;
+    line-height: 42.3px;
+  }
+}
+
+.view-global-promo-banner {
+  padding-top: 40px;
+
+  .view-content {
+    display: grid;
+    row-gap: 40px;
   }
 }

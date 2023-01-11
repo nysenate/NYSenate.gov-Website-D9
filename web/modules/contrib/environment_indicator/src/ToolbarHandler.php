@@ -156,6 +156,7 @@ class ToolbarHandler implements ContainerInjectionInterface {
             'title' => $this->t('Environments'),
             'class' => ['toolbar-icon', 'toolbar-icon-environment'],
           ],
+          '#access' => !empty($title),
         ],
         'tray' => [
           '#heading' => $this->t('Environments menu'),
@@ -176,7 +177,6 @@ class ToolbarHandler implements ContainerInjectionInterface {
               'fgColor' => $this->activeEnvironment->get('fg_color'),
               'bgColor' => $this->activeEnvironment->get('bg_color'),
               'addFavicon' => $this->config->get('favicon'),
-              'alterToolbar' => true,
             ],
           ],
         ]
@@ -218,9 +218,9 @@ class ToolbarHandler implements ContainerInjectionInterface {
   /**
    * Construct the title for the active environment.
    *
-   * @return string
+   * @return string|null
    */
-  public function getTitle(): string {
+  public function getTitle(): ?string {
     $environment = $this->activeEnvironment->get('name');
     $release = $this->getCurrentRelease();
     return ($release) ? '(' . $release . ') ' . $environment : $environment;

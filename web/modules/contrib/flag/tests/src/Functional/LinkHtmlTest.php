@@ -67,26 +67,26 @@ class LinkHtmlTest extends FlagTestBase {
     // Click the flag link.
     $this->drupalGet('node/' . $node_id);
     // Find the marked-up flag short text in the raw HTML.
-    $this->assertRaw(Xss::filterAdmin($this->flag->getShortText('flag')));
+    $this->assertSession()->responseContains(Xss::filterAdmin($this->flag->getShortText('flag')));
     // Xss::filter() is used to strip all HTML tags from the short text
     // because clickLink() looks for text as it appears in the brower, and that
     // does not include the unescaped HTML tags. Note that the stripped tags
     // could either be at the ends (we added the italics tags above) OR they
     // could be in the middle as a result of a randomly-generated valid tag
     // in the flag text.
-    $this->clickLink(Html::decodeEntities(Xss::filter($this->flag->getShortText('flag'), [/* no tags allowed */])));
+    $this->clickLink(Html::decodeEntities(Xss::filter($this->flag->getShortText('flag'))));
 
     // Check that the node is flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertRaw(Xss::filterAdmin($this->flag->getShortText('unflag')));
+    $this->assertSession()->responseContains(Xss::filterAdmin($this->flag->getShortText('unflag')));
 
     // Unflag the node.
     $this->drupalGet('node/' . $node_id);
-    $this->clickLink(Html::decodeEntities(Xss::filter($this->flag->getShortText('unflag'), [/* no tags allowed */])));
+    $this->clickLink(Html::decodeEntities(Xss::filter($this->flag->getShortText('unflag'))));
 
     // Check that the node is no longer flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertRaw(Xss::filterAdmin($this->flag->getShortText('flag')));
+    $this->assertSession()->responseContains(Xss::filterAdmin($this->flag->getShortText('flag')));
   }
 
 }

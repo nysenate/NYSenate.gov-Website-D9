@@ -110,7 +110,7 @@ class SettingsForm extends ConfigFormBase {
     $fieldset['rebuild_snippets'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Recreate snippets on cache rebuild'),
-      '#description' => $this->t('If checked, then the JavaScript snippet files will be created during a cache rebuild. This is <strong>recommended on production sites</strong>. If not checked, any missing snippet files will be created during a page response.'),
+      '#description' => $this->t('If checked, then the JavaScript snippet files will be created during a cache rebuild. If not checked, any missing snippet files will be created during a page response. NOTE: If Drush commands are run as a user other than the web user, then do NOT enable this setting unless the web user has permission to delete files created by the Drush user.'),
       '#default_value' => $config->get('rebuild_snippets'),
     ];
 

@@ -431,7 +431,8 @@ ol li a, a {
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -783,6 +784,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -945,7 +947,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1474,6 +1478,46 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
 .container {
   max-width: unset; }
 
@@ -1593,16 +1637,16 @@ body .block-content--type-gallery {
     color: #666666;
     font-size: 16px;
     line-height: 24px;
-    margin-top: 18px;
-    margin-bottom: 18px; }
-    .c-block p:first-child {
-      margin-top: 3px; }
-    .c-block p:last-child {
-      margin-bottom: 24px; }
+    margin: 0; }
     @media screen and (min-width: 768px) {
       .c-block p {
         font-size: 20px;
         line-height: 32px; } }
+  .c-block p + p {
+    margin-top: 20px; }
+    @media screen and (min-width: 768px) {
+      .c-block p + p {
+        margin-top: 40px; } }
 
 .c-block .c-img--caption {
   margin: 0;
@@ -1681,6 +1725,9 @@ body .block-content--type-gallery {
 .c-block--social {
   margin-top: 20px;
   margin-bottom: 40px; }
+  @media screen and (min-width: 768px) {
+    .c-block--social {
+      margin-bottom: 60px; } }
 
 .c-block--btn {
   position: absolute;
@@ -2436,13 +2483,75 @@ main.l-row--main {
   .l-col-3-of-3 {
     width: 27%; } }
 
+/*------------------------------------
+/	SENATOR LISTING  
+/ 	
+/	circular thumbnail of senator
+/	description to the right
+/	name, district, party affiliation
+/-------------------------------------*/
+.nys-senator {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 10px; }
+
+.nys-senator--thumb {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  height: 46px;
+  width: 45px;
+  margin-right: 15px;
+  border-radius: 50%;
+  overflow: hidden; }
+  .nys-senator--thumb a {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%; }
+  .nys-senator--thumb img {
+    height: 100%;
+    width: 100%; }
+
+.nys-senator--info {
+  display: inline-block;
+  vertical-align: middle;
+  list-style: none; }
+
+.nys-senator--title {
+  color: #aaaaaa;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 10px;
+  line-height: 1.2em; }
+
 .nys-senator--name {
-  font-family: "Adelle Light", serif;
-  font-weight: 400;
+  margin: 0;
   color: #444444;
-  font-size: 16px; }
+  text-transform: capitalize;
+  font-family: "Adelle Light", serif;
+  font-size: 16px;
+  line-height: 1.2em;
+  font-weight: 400; }
   .nys-senator--name a {
     color: #444444; }
+
+.nys-senator--district {
+  color: #666666;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  line-height: 1.2em; }
+
+.nys-senator--party {
+  color: #2b6990;
+  text-transform: capitalize;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
 
 /*-------------------------------------------------------
 /
@@ -3238,7 +3347,8 @@ ol li a, a {
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -3590,6 +3700,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -3752,7 +3863,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -4281,6 +4394,46 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
 .field--name-field-landing-blocks > .field__item {
   margin-bottom: 80px; }
   .field--name-field-landing-blocks > .field__item .text-layout__container h2.c-container--h2-title {
@@ -4735,6 +4888,17 @@ label {
     border-bottom: 1px solid #AAAAAA;
     margin-bottom: 0;
     padding-bottom: 20px; }
+
+.nys-subtitle-title {
+  margin: 0 0 15px;
+  text-transform: capitalize;
+  font-family: "Adelle Regular", serif;
+  font-size: 18px;
+  line-height: 1; }
+  @media screen and (min-width: 768px) {
+    .nys-subtitle-title {
+      margin: 0 0 30px;
+      font-size: 26px; } }
 
 .node-type-bill .c-bill--vote_2\27 {
   margin-top: 30px; }

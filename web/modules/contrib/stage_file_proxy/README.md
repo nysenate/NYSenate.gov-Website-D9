@@ -51,6 +51,27 @@ configure this within your settings.php or settings.local.php file. Detailed
 descriptions of each setting, and syntax for defining the configuration in code
 is in INSTALL.md
 
+NGINX COMPATIBILITY
+-------------------
+The recommended NGINX configuration for Drupal includes rewrites that bypass
+Drupal for 404's inside certain directories or with certain file extensions.
+Make the following change to your NGINX configuration:
+
+Before
+
+```
+location ~ ^/sites/.*/files/styles/ {
+    try_files $uri @rewrite;
+}
+```
+
+After
+
+```
+location ~ ^/sites/.*/files/ {
+    try_files $uri @rewrite;
+}
+```
 
 MAINTAINERS
 -----------

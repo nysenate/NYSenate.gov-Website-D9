@@ -4,8 +4,7 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Recenter control.
@@ -18,7 +17,7 @@
   Drupal.behaviors.geolocationControlRecenter = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'control_recenter',
+        "control_recenter",
 
         /**
          * @param {GeolocationMapInterface} map
@@ -26,7 +25,10 @@
          */
         function (map, featureSettings) {
           map.addInitializedCallback(function (map) {
-            var recenterButton = $('.geolocation-map-control .recenter', map.wrapper);
+            var recenterButton = $(
+              ".geolocation-map-control .recenter",
+              map.wrapper
+            );
             recenterButton.click(function (e) {
               map.setCenter();
               e.preventDefault();
@@ -38,7 +40,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(jQuery, Drupal);

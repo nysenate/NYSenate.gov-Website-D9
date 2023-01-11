@@ -34,28 +34,28 @@ class TermWeightWidgetOrderProcessorTest extends UnitTestCase {
   /**
    * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * Mocked term, used for comparison.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $termA;
 
   /**
    * Mocked term, used for comparison.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $termB;
 
   /**
    * Mocked entity (term) storage.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $termStorage;
 
@@ -67,12 +67,8 @@ class TermWeightWidgetOrderProcessorTest extends UnitTestCase {
 
     // Build up a chain of mocks that we will have the processor use to fetch
     // the weight of the terms that are being compared.
-    $this->termStorage = $this->getMockBuilder(EntityStorageInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->termStorage = $this->createMock(EntityStorageInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->willReturn($this->termStorage);
@@ -83,12 +79,8 @@ class TermWeightWidgetOrderProcessorTest extends UnitTestCase {
     // Setup two mock terms that will be set up to have specific weights before
     // the processor is used to compare them.
     // The mocks are used in the individual tests.
-    $this->termA = $this->getMockBuilder(Term::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->termB = $this->getMockBuilder(Term::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->termA = $this->createMock(Term::class);
+    $this->termB = $this->createMock(Term::class);
 
     // Prepare the terms that will be returned when the processor loads its list
     // of term-ids from the Results raw values.

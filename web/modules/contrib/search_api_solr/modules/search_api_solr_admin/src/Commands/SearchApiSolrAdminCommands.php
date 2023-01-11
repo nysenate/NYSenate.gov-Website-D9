@@ -36,7 +36,7 @@ class SearchApiSolrAdminCommands extends DrushCommands implements StdinAwareInte
   /**
    * {@inheritdoc}
    */
-  public function setLogger(LoggerInterface $logger) {
+  public function setLogger(LoggerInterface $logger): void {
     parent::setLogger($logger);
     $this->commandHelper->setLogger($logger);
   }
@@ -60,7 +60,7 @@ class SearchApiSolrAdminCommands extends DrushCommands implements StdinAwareInte
    */
   public function reload(string $server_id): void {
     $this->commandHelper->reload($server_id);
-    $this->logger()->success(dt('Solr core/collection of %server_id reloaded.', ['%server_id' => $server_id]));
+    $this->logger()->success('Solr core/collection of %server_id reloaded.', ['%server_id' => $server_id]);
   }
 
   /**
@@ -81,7 +81,7 @@ class SearchApiSolrAdminCommands extends DrushCommands implements StdinAwareInte
    */
   public function deleteCollection(string $server_id): void {
     $this->commandHelper->deleteCollection($server_id);
-    $this->logger()->success(dt('Solr collection of %server_id deleted.', ['%server_id' => $server_id]));
+    $this->logger()->success('Solr collection of %server_id deleted.', ['%server_id' => $server_id]);
   }
 
   /**
@@ -192,7 +192,7 @@ class SearchApiSolrAdminCommands extends DrushCommands implements StdinAwareInte
       $options['numShards'] = $num_shards;
     }
     $this->commandHelper->uploadConfigset($server_id, $options, $this->output()->isVerbose());
-    $this->logger()->success(dt('Solr configset for %server_id uploaded.', ['%server_id' => $server_id]));
+    $this->logger()->success('Solr configset for %server_id uploaded.', ['%server_id' => $server_id]);
   }
 
 }

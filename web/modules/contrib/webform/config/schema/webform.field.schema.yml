@@ -60,6 +60,9 @@ field.widget.settings.webform_entity_reference_autocomplete:
     placeholder:
       type: label
       label: Placeholder
+    allow_status:
+      type: boolean
+      label: 'Allow status changes'
     default_data:
       type: boolean
       label: 'Default submission data'
@@ -68,6 +71,9 @@ field.widget.settings.webform_entity_reference_select:
   type: mapping
   label: 'Webform select display format settings'
   mapping:
+    allow_status:
+      type: boolean
+      label: 'Allow status changes'
     default_data:
       type: boolean
       label: 'Default submission data'

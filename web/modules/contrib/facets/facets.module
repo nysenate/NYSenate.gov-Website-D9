@@ -211,10 +211,10 @@ function facets_preprocess_facets_item_list(array &$variables) {
       $variables['title'] = $facet->label();
     }
     if (Settings::get('facets_debug_cacheable_metadata', FALSE) && $facet->getFacetSource() instanceof SearchApiFacetSourceInterface) {
-      $variables['cache_hash'] = $hash = substr(base_convert(hash('sha256', uniqid(time())), 16, 36), 0, 6);
+      $variables['cache_hash'] = substr(base_convert(hash('sha256', uniqid(time())), 16, 36), 0, 6);
       $variables['cache_contexts'] = implode(', ', $facet->getCacheContexts());
       $variables['cache_tags'] = implode(', ', $facet->getCacheTags());
-      $variables['cache_max_age'] = $facet->getCacheMaxAge();
+      $variables['cache_max_age'] = $facet->getCacheMaxAge() . ' seconds';
     }
   }
   template_preprocess_item_list($variables);

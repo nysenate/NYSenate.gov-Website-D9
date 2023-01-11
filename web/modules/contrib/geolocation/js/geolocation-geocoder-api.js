@@ -16,7 +16,7 @@
  * Geocoder API.
  */
 (function ($, Drupal) {
-  'use strict';
+  "use strict";
 
   Drupal.geolocation = Drupal.geolocation || {};
 
@@ -29,12 +29,16 @@
    * @param {string} elementId - Source ID.
    */
   Drupal.geolocation.geocoder.resultCallback = function (result, elementId) {
-    Drupal.geolocation.geocoder.resultCallbacks = Drupal.geolocation.geocoder.resultCallbacks || [];
-    $.each(Drupal.geolocation.geocoder.resultCallbacks, function (index, callbackContainer) {
-      if (callbackContainer.elementId === elementId) {
-        callbackContainer.callback(result);
+    Drupal.geolocation.geocoder.resultCallbacks =
+      Drupal.geolocation.geocoder.resultCallbacks || [];
+    $.each(
+      Drupal.geolocation.geocoder.resultCallbacks,
+      function (index, callbackContainer) {
+        if (callbackContainer.elementId === elementId) {
+          callbackContainer.callback(result);
+        }
       }
-    });
+    );
   };
 
   /**
@@ -43,12 +47,19 @@
    * @param {GeolocationGeocoderResultCallback} callback - The callback
    * @param {string} elementId - Identify source of result by its element ID.
    */
-  Drupal.geolocation.geocoder.addResultCallback = function (callback, elementId) {
-    if (typeof elementId === 'undefined') {
+  Drupal.geolocation.geocoder.addResultCallback = function (
+    callback,
+    elementId
+  ) {
+    if (typeof elementId === "undefined") {
       return;
     }
-    Drupal.geolocation.geocoder.resultCallbacks = Drupal.geolocation.geocoder.resultCallbacks || [];
-    Drupal.geolocation.geocoder.resultCallbacks.push({callback: callback, elementId: elementId});
+    Drupal.geolocation.geocoder.resultCallbacks =
+      Drupal.geolocation.geocoder.resultCallbacks || [];
+    Drupal.geolocation.geocoder.resultCallbacks.push({
+      callback: callback,
+      elementId: elementId,
+    });
   };
 
   /**
@@ -57,12 +68,16 @@
    * @param {string} elementId - Source ID.
    */
   Drupal.geolocation.geocoder.clearCallback = function (elementId) {
-    Drupal.geolocation.geocoder.clearCallbacks = Drupal.geolocation.geocoder.clearCallbacks || [];
-    $.each(Drupal.geolocation.geocoder.clearCallbacks, function (index, callbackContainer) {
-      if (callbackContainer.elementId === elementId) {
-        callbackContainer.callback();
+    Drupal.geolocation.geocoder.clearCallbacks =
+      Drupal.geolocation.geocoder.clearCallbacks || [];
+    $.each(
+      Drupal.geolocation.geocoder.clearCallbacks,
+      function (index, callbackContainer) {
+        if (callbackContainer.elementId === elementId) {
+          callbackContainer.callback();
+        }
       }
-    });
+    );
   };
 
   /**
@@ -71,12 +86,18 @@
    * @param {GeolocationGeocoderClearCallback} callback - The callback
    * @param {string} elementId - Identify source of result by its element ID.
    */
-  Drupal.geolocation.geocoder.addClearCallback = function (callback, elementId) {
-    if (typeof elementId === 'undefined') {
+  Drupal.geolocation.geocoder.addClearCallback = function (
+    callback,
+    elementId
+  ) {
+    if (typeof elementId === "undefined") {
       return;
     }
-    Drupal.geolocation.geocoder.clearCallbacks = Drupal.geolocation.geocoder.clearCallbacks || [];
-    Drupal.geolocation.geocoder.clearCallbacks.push({callback: callback, elementId: elementId});
+    Drupal.geolocation.geocoder.clearCallbacks =
+      Drupal.geolocation.geocoder.clearCallbacks || [];
+    Drupal.geolocation.geocoder.clearCallbacks.push({
+      callback: callback,
+      elementId: elementId,
+    });
   };
-
 })(jQuery, Drupal);

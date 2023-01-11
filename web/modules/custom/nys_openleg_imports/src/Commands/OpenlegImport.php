@@ -196,7 +196,7 @@ class OpenlegImport extends DrushCommands {
       $this->logger()->warning("Process lock detected ...");
       if (!$this->options['force']) {
         $message = "Process lock in place since " .
-          date(Request::OPENLEG_TIME_FORMAT, $has_lock) .
+          date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
           ".  Wait for it to release, or use option --force to reset.";
         $this->logger()->critical($message);
         return DRUSH_FRAMEWORK_ERROR;

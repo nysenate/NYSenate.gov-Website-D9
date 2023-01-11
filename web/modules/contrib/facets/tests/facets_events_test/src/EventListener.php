@@ -2,6 +2,7 @@
 
 namespace Drupal\facets_events_test;
 
+use Drupal\facets\Event\FacetsEvents;
 use Drupal\facets\Event\QueryStringCreated;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -15,7 +16,7 @@ class EventListener implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     return [
-      QueryStringCreated::NAME => 'queryStringCreated',
+      FacetsEvents::QUERY_STRING_CREATED => 'queryStringCreated',
     ];
   }
 

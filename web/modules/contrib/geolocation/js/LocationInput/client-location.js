@@ -12,8 +12,7 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Generic behavior.
@@ -25,40 +24,48 @@
    *   Attaches functionality to relevant elements.
    */
   Drupal.behaviors.locationInputClientLocation = {
-
     /**
      * @param {Object} drupalSettings.geolocation.locationInput
      * @param {LocationInputClientLocationSettings[]} drupalSettings.geolocation.locationInput.clientLocation
      */
     attach: function (context, drupalSettings) {
-      $.each(drupalSettings.geolocation.locationInput.clientLocation, function (index, settings) {
-        var input = $('.location-input-client-location.' + settings.identifier, context).once('location-input-client-location-processed').first();
-        if (
-          navigator.geolocation
-          && input.length
-        ) {
-          if (settings.hideForm) {
-            input.hide();
-          }
-          var successCallback = function (position) {
-            var latitudeInput = input.find('input.geolocation-input-latitude').first();
-            var longitudeInput = input.find('input.geolocation-input-longitude').first();
-            if (
-              latitudeInput.val() === ''
-              && longitudeInput.val() === ''
-            ) {
-              latitudeInput.val(position.coords.latitude);
-              longitudeInput.val(position.coords.longitude);
-              if (settings.autoSubmit) {
-                input.closest('form').find('input.js-form-submit').first().click();
-              }
+      $.each(
+        drupalSettings.geolocation.locationInput.clientLocation,
+        function (index, settings) {
+          var input = $(
+            ".location-input-client-location." + settings.identifier,
+            context
+          )
+            .once("location-input-client-location-processed")
+            .first();
+          if (navigator.geolocation && input.length) {
+            if (settings.hideForm) {
+              input.hide();
             }
-            return false;
-          };
-          navigator.geolocation.getCurrentPosition(successCallback);
+            var successCallback = function (position) {
+              var latitudeInput = input
+                .find("input.geolocation-input-latitude")
+                .first();
+              var longitudeInput = input
+                .find("input.geolocation-input-longitude")
+                .first();
+              if (latitudeInput.val() === "" && longitudeInput.val() === "") {
+                latitudeInput.val(position.coords.latitude);
+                longitudeInput.val(position.coords.longitude);
+                if (settings.autoSubmit) {
+                  input
+                    .closest("form")
+                    .find("input.js-form-submit")
+                    .first()
+                    .click();
+                }
+              }
+              return false;
+            };
+            navigator.geolocation.getCurrentPosition(successCallback);
+          }
         }
-      });
-    }
+      );
+    },
   };
-
 })(jQuery, Drupal);

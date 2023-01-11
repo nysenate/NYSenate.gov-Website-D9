@@ -6,7 +6,7 @@
 
 use Drupal\search_api\IndexInterface;
 
-$index_fallback_test = FALSE;
+$_search_api_solr_test_index_fallback_test = FALSE;
 
 /**
  * Implements hook_search_api_solr_config_files_alter().
@@ -29,9 +29,9 @@ function search_api_solr_test_search_api_solr_config_files_alter(array &$files, 
  *   An array of items to be indexed, keyed by their item IDs.
  */
 function search_api_solr_test_search_api_solr_documents_alter(array &$documents, IndexInterface $index, array $items) {
-  global $index_fallback_test;
+  global $_search_api_solr_test_index_fallback_test;
 
-  if ($index_fallback_test) {
+  if ($_search_api_solr_test_index_fallback_test) {
     foreach ($documents as $document) {
       if ('entity:entity_test_mulrev_changed/2:en' === $document->ss_search_api_id) {
         // Mess up this document by sending a string as value of a float field.

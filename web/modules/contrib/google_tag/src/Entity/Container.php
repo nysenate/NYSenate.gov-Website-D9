@@ -244,7 +244,7 @@ class Container extends ConfigEntityBase implements ConfigEntityInterface, Entit
       'data_layer' => $this->dataLayerSnippet(),
     ];
     // Allow other modules to alter the snippets.
-    \Drupal::moduleHandler()->alter('google_tag_snippets', $snippets, $this);
+    $this->moduleHandler()->alter('google_tag_snippets', $snippets, $this);
     return $snippets;
   }
 
@@ -289,7 +289,7 @@ EOS;
 
     // Build noscript snippet.
     $noscript = <<<EOS
-<noscript aria-hidden="true"><iframe src="https://www.googletagmanager.com/ns.html?id=$container_id$query"
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=$container_id$query"
  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 EOS;
     return $this->compactSnippet($noscript, ["\n"]);
@@ -407,7 +407,7 @@ EOS;
       }
 
       // Allow other modules to alter the insertion criteria.
-      \Drupal::moduleHandler()->alter('google_tag_insert', $satisfied[$this->id], $this);
+      $this->moduleHandler()->alter('google_tag_insert', $satisfied[$this->id], $this);
       $this->displayMessage('after alter @satisfied', ['@satisfied' => $satisfied[$this->id]]);
     }
     return $satisfied[$this->id];
@@ -557,8 +557,7 @@ EOS;
     $uri = $this->snippetURI($type);
     // Remove the if-else when core_version_requirement >= 9.3 for this module.
     if (\Drupal::hasService('file_url_generator')) {
-      $generator = \Drupal::service('file_url_generator');
-      $url = $generator->transformRelative($generator->generateAbsoluteString($uri));
+      $url = \Drupal::service('file_url_generator')->generateString($uri);
     }
     else {
       $url = file_url_transform_relative(file_create_url($uri));

@@ -1,13 +1,13 @@
 uri: 'public:/'
 compact_snippet: true
 include_file: true
-rebuild_snippets: true
+rebuild_snippets: false
 flush_snippets: false
 debug_output: false
 _default_container:
   container_id: ''
   path_toggle: 'exclude listed'
-  path_list: "/admin*\n/batch*\n/node/add*\n/node/*/edit\n/node/*/delete\n/user/*/edit*\n/user/*/cancel*"
+  path_list: "/admin*\n/batch*\n/node/add*\n/node/*/edit\n/node/*/delete\n/node/*/layout\n/taxonomy/term/*/edit\n/taxonomy/term/*/layout\n/user/*/edit*\n/user/*/cancel*\n/user/*/layout"
   role_toggle: 'exclude listed'
   role_list: {}
   status_toggle: 'exclude listed'

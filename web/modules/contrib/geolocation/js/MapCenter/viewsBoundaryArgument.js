@@ -4,8 +4,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   Drupal.geolocation = Drupal.geolocation || {};
   Drupal.geolocation.mapCenter = Drupal.geolocation.mapCenter || {};
@@ -18,17 +17,19 @@
    * @param {float} centerOption.latSouthWest
    * @param {float} centerOption.lngSouthWest
    */
-  Drupal.geolocation.mapCenter.views_boundary_argument = function (map, centerOption) {
+  Drupal.geolocation.mapCenter.views_boundary_argument = function (
+    map,
+    centerOption
+  ) {
     var centerBounds = {
       north: centerOption.latNorthEast,
       east: centerOption.lngNorthEast,
       south: centerOption.latSouthWest,
-      west: centerOption.lngSouthWest
+      west: centerOption.lngSouthWest,
     };
 
-    map.fitBoundaries(centerBounds, 'views_boundary_argument');
+    map.fitBoundaries(centerBounds, "views_boundary_argument");
 
     return true;
-  }
-
+  };
 })(Drupal);

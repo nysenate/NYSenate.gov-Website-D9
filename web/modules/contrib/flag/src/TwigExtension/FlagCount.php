@@ -5,11 +5,13 @@ namespace Drupal\flag\TwigExtension;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides a Twig extension to get the flag count given a flag and flaggable.
  */
-class FlagCount extends \Twig_Extension {
+class FlagCount extends AbstractExtension {
 
   /**
    * The flag count.
@@ -39,7 +41,7 @@ class FlagCount extends \Twig_Extension {
    */
   public function getFunctions() {
     return [
-      new \Twig_SimpleFunction('flagcount', [$this, 'count'], ['is_safe' => ['html']]),
+      new TwigFunction('flagcount', [$this, 'count'], ['is_safe' => ['html']]),
     ];
   }
 

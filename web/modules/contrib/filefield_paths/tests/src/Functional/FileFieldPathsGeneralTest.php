@@ -82,7 +82,7 @@ class FileFieldPathsGeneralTest extends FileFieldPathsTestBase {
 
     // Ensure that the file was put into the Temporary file location.
     $config = $this->config('filefield_paths.settings');
-    $session->responseContains(file_create_url("{$config->get('temp_location')}/{$test_file->getFilename()}"), 'File has been uploaded to the temporary file location.');
+    $session->responseContains(\Drupal::service('file_url_generator')->generateString("{$config->get('temp_location')}/{$test_file->getFilename()}"), 'File has been uploaded to the temporary file location.');
 
     // Save the node.
     $this->submitForm([], 'Save');

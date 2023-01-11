@@ -115,6 +115,8 @@ class FullcalendarViewPreprocess {
     $left_buttons = Xss::filter($options['left_buttons']);
     // Right side buttons.
     $right_buttons = Xss::filter($options['right_buttons']);
+    // Slot Duration.
+    $slot_duration = empty($options['slotDuration']) ? '00:30:00' : Xss::filter($options['slotDuration']);
     $entries = [];
 
     if (!empty($start_field)) {
@@ -349,6 +351,7 @@ class FullcalendarViewPreprocess {
         // Limits the number of events displayed on a day.
         'eventLimit' => isset($options['eventLimit']) ? intval($options['eventLimit']) : 2,
         'eventOverlap' => $options['allowEventOverlap'] !== 0,
+        'slotDuration' => $slot_duration,
       ];
       // Dialog options.
       // Other modules can override following options by custom plugin.

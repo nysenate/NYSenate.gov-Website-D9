@@ -14,11 +14,11 @@ trait TestHelperTrait {
    *
    * @see \Drupal\simpletest\AssertContentTrait::assertLink
    */
-  protected function assertFacetLabel($label, $index = 0, $message = '', $group = 'Other') {
+  protected function assertFacetLabel($label, $index = 0, $message = '') {
     $links = $this->findFacetLink($label);
 
     $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
-    return $this->assertArrayHasKey($index, $links, $message, $group);
+    return $this->assertArrayHasKey($index, $links, $message);
   }
 
   /**

@@ -1,0 +1,14 @@
+{{ attach_library('nysenate_theme/button') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+
+{% if button.url and icon == false %}
+  <a href="{{ button.url }}" class="button{{ button.modifier ? ' ' ~ button.modifier }}">{{ button.text }}</a>
+{% elseif icon and url %}
+  <a class="button{{ modifier ? ' ' ~ modifier }}" href="{{ url }}"
+     title="{{ 'Load more items'|t }}" rel="next">
+    {{ text }}
+  {{ icons.get('accordion__arrow') }}
+  </a>
+{% else %}
+  <button class="button{{ button.modifier ? ' ' ~ button.modifier }}">{{ button.text }}</button>
+{% endif %}

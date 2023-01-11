@@ -420,7 +420,8 @@
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -750,6 +751,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -909,7 +911,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1403,6 +1407,46 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
 .c-committees-container {
   overflow: hidden;
   margin-bottom: 30px;
@@ -1438,7 +1482,31 @@ strong {
       padding-bottom: 0px;
       font-family: "Proxima Nova Regular", "Arial", sans-serif;
       font-size: 14px;
-      text-transform: capitalize; }
+      text-transform: capitalize;
+      font-weight: 400; }
+  .c-committees-container--bulleted .c-container-title {
+    color: #222222;
+    margin: 40px 0 30px;
+    font-size: 27px;
+    padding: 0; }
+  .c-committees-container--bulleted .c-group-title {
+    color: #222222;
+    margin: 40px 0 20px;
+    padding: 0; }
+  .c-committees-container--bulleted .c-subgroup-title {
+    margin: 12px 0 6px;
+    font-family: "Semibold";
+    color: #666666;
+    font-size: 14px;
+    font-weight: 400; }
+  .c-committees-container--bulleted .c-committee-link {
+    display: inline;
+    width: auto;
+    border-bottom: 0; }
+    .c-committees-container--bulleted .c-committee-link .c-committee-title {
+      font-family: "Adelle Light", serif;
+      line-height: 1.5em;
+      font-size: 16px; }
 
 @media screen and (min-width: 768px) {
   .c-committees-container .c-container-title {
@@ -1451,7 +1519,9 @@ strong {
     margin-bottom: 40px; }
   .c-committees-container .c-committees-wrapper {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); }
+    grid-template-columns: repeat(2, 1fr);
+    -moz-column-gap: 3%;
+    column-gap: 3%; }
   .c-committees-container .c-category-title {
     float: left;
     clear: left; }
@@ -1460,4 +1530,20 @@ strong {
     padding: 20px 0;
     float: left; }
     .c-committees-container .c-committee-link .c-committee-title {
-      font-size: 20px; } }
+      font-size: 20px; }
+  .c-committees-container--bulleted .c-container-title {
+    border-bottom: 0;
+    font-size: 37px; }
+  .c-committees-container--bulleted .c-group-title {
+    font-size: 30px;
+    margin: 40px 0 20px; }
+  .c-committees-container--bulleted .c-subgroup-title {
+    font-size: 24px; }
+  .c-committees-container--bulleted .c-committees-wrapper {
+    display: block; }
+  .c-committees-container--bulleted .c-committee-link {
+    width: auto;
+    float: unset; }
+    .c-committees-container--bulleted .c-committee-link .c-committee-title {
+      font-size: 20px;
+      line-height: 32px; } }

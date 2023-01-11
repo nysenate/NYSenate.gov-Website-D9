@@ -95,6 +95,7 @@ abstract class JsBase extends WebDriverTestBase {
 
     $inserted_entities = \Drupal::entityQuery('entity_test_mulrev_changed')
       ->count()
+      ->accessCheck()
       ->execute();
     $this->assertEquals(5, $inserted_entities, "5 items inserted.");
 

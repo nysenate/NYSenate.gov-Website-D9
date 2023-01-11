@@ -88,7 +88,7 @@ class ResetFacetsProcessor extends ProcessorPluginBase implements BuildProcessor
     try {
       $url = Url::fromUserInput($path);
     }
-    catch (InvalidArgumentException $e) {
+    catch (\InvalidArgumentException $e) {
       $url = Url::fromUri($path);
     }
     $url->setOptions(['query' => $query_params]);

@@ -58,8 +58,7 @@
 /* global InfoBubble */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Marker InfoBubble.
@@ -72,7 +71,7 @@
   Drupal.behaviors.geolocationMarkerInfoBubble = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'marker_infobubble',
+        "marker_infobubble",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -80,15 +79,16 @@
          */
         function (map, featureSettings) {
           map.addMarkerAddedCallback(function (currentMarker) {
-            var content = currentMarker.locationWrapper.find('.location-content').html();
+            var content = currentMarker.locationWrapper
+              .find(".location-content")
+              .html();
 
             if (content.length < 1) {
               return;
             }
 
-            google.maps.event.addListener(currentMarker, 'click', function () {
-
-              if (typeof currentMarker.infoBubble === 'undefined') {
+            google.maps.event.addListener(currentMarker, "click", function () {
+              if (typeof currentMarker.infoBubble === "undefined") {
                 currentMarker.infoBubble = new InfoBubble({
                   map: map.googleMap,
                   content: content,
@@ -104,17 +104,17 @@
 
                   hideCloseButton: !featureSettings.closeButton,
                   closeSrc: featureSettings.closeButtonSrc,
-                  backgroundClassName: 'infobubble',
+                  backgroundClassName: "infobubble",
                   backgroundColor: featureSettings.backgroundColor,
                   minWidth: featureSettings.minWidth,
                   maxWidth: featureSettings.maxWidth,
                   minHeight: featureSettings.minHeight,
-                  maxHeight: featureSettings.maxHeight
+                  maxHeight: featureSettings.maxHeight,
                 });
               }
 
               if (featureSettings.closeOther) {
-                if (typeof map.infoBubble !== 'undefined') {
+                if (typeof map.infoBubble !== "undefined") {
                   map.infoBubble.close();
                 }
                 map.infoBubble = currentMarker.infoBubble;
@@ -129,6 +129,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
 })(Drupal);

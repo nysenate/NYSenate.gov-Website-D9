@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Fill form elements with data from GET or POST values.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function prepopulate_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // If this is a subsequent step of a multi-step form, the prepopulate values
+  // have done their work, and the user may have modified them: bail.
+  if ($form_state->isRebuilding()) {
+    return;
+  }
+  if (\Drupal::request()->query->has('edit')) {
+    $form['#after_build'][] = 'prepopulate_after_build';
+  }
+}
+
+/**
+ * An #after_build function to set the values prepopulated in the request.
+ */
+function prepopulate_after_build($form) {
+  /** @var \Drupal\prepopulate\Populate $populate */
+  $populate = \Drupal::service('prepopulate.populator');
+  $populate->populateForm($form);
+  return $form;
+}

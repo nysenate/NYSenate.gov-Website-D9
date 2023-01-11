@@ -35,9 +35,9 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   /**
    * Returns true of there's a flagging for this flag and the given entity.
    *
-   * @param EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The flaggable entity.
-   * @param AccountInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   (optional) The account of the user that flagged the entity.
    * @param string $session_id
    *   (optional) The session ID. This must be supplied if $account is the
@@ -269,7 +269,7 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    *
    * @param string $action
    *   The action for which to check permissions, either 'flag' or 'unflag'.
-   * @param AccountInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   (optional) An AccountInterface object.
    * @param \Drupal\Core\Entity\EntityInterface $flaggable
    *   (optional) The flaggable entity.

@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FacetsProcessor(
  *   id = "combine_processor",
  *   label = @Translation("Combine facets"),
- *   description = @Translation("Combine the results of two or more facets. The raw value of a result item is used to identify a resuls item. It is up to you to ensure that the combination of the result sets makes sense. As the combination bases on the raw calues it makes sense to place this processor on an early position, especially before the URL handler"),
+ *   description = @Translation("Combine the results of two or more facets. The raw value of a result item is used to identify a results item. It is up to you to ensure that the combination of the result sets makes sense. As the combination bases on the raw values it makes sense to place this processor on an early position, especially before the URL handler"),
  *   stages = {
  *     "build" = 5
  *   }

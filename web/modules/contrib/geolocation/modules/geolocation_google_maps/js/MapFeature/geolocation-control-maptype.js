@@ -14,8 +14,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Maptype control.
@@ -28,7 +27,7 @@
   Drupal.behaviors.geolocationMapTypeControl = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'control_maptype',
+        "control_maptype",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -39,14 +38,13 @@
             var options = {
               mapTypeControlOptions: {
                 position: google.maps.ControlPosition[featureSettings.position],
-                style: google.maps.MapTypeControlStyle[featureSettings.style]
-              }
+                style: google.maps.MapTypeControlStyle[featureSettings.style],
+              },
             };
 
-            if (featureSettings.behavior === 'always') {
+            if (featureSettings.behavior === "always") {
               options.mapTypeControl = true;
-            }
-            else {
+            } else {
               options.mapTypeControl = undefined;
             }
 
@@ -58,7 +56,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(Drupal);

@@ -12,6 +12,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\Html;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Controller responses to flag and unflag action links.
@@ -74,6 +75,10 @@ class ActionLinkController implements ContainerInjectionInterface {
     /* @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->flagService->getFlaggableById($flag, $entity_id);
 
+    if (empty($entity)) {
+      throw new NotFoundHttpException();
+    }
+
     try {
       $this->flagService->flag($flag, $entity);
     }
@@ -101,6 +106,10 @@ class ActionLinkController implements ContainerInjectionInterface {
   public function unflag(FlagInterface $flag, $entity_id) {
     /* @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->flagService->getFlaggableById($flag, $entity_id);
+
+    if (empty($entity)) {
+      throw new NotFoundHttpException();
+    }
 
     try {
       $this->flagService->unflag($flag, $entity);

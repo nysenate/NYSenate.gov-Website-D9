@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets_range_widget\Unit\Plugin\processor;
 
+use Drupal\Tests\facets\Unit\Drupal10CompatibilityUnitTestCase;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -12,7 +13,6 @@ use Drupal\facets\Plugin\facets\url_processor\QueryString;
 use Drupal\facets\Result\Result;
 use Drupal\facets\Utility\FacetsUrlGenerator;
 use Drupal\facets_range_widget\Plugin\facets\processor\RangeSliderProcessor;
-use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
@@ -21,7 +21,7 @@ use Prophecy\Argument;
  * @group facets
  * @coversDefaultClass \Drupal\facets_range_widget\Plugin\facets\processor\RangeSliderProcessor
  */
-class RangeSliderProcessorTest extends UnitTestCase {
+class RangeSliderProcessorTest extends Drupal10CompatibilityUnitTestCase {
 
   /**
    * The processor we're testing.

@@ -177,6 +177,7 @@ function facets_update_8005() {
 function facets_update_8006() {
   $query = \Drupal::entityQuery('block')
     ->condition('plugin', 'facet_block', 'STARTS_WITH')
+    ->accessCheck()
     ->execute();
 
   foreach ($query as $block_id) {

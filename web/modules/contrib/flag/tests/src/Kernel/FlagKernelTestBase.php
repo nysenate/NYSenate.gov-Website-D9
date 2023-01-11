@@ -27,7 +27,7 @@ abstract class FlagKernelTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'filter',
     'flag',
@@ -40,7 +40,7 @@ abstract class FlagKernelTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('user');
@@ -65,6 +65,7 @@ abstract class FlagKernelTestBase extends KernelTestBase {
    */
   protected function getFlagFlaggings(FlagInterface $flag) {
     $query = \Drupal::entityQuery('flagging');
+    $query->accessCheck();
     $query->condition('flag_id', $flag->id());
     $ids = $query->execute();
 

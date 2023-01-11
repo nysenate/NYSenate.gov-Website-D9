@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * The module file for og_prepopulate.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for og_complex.
+ */
+function og_prepopulate_field_widget_og_complex_form_alter(&$element, FormStateInterface $form_state, $context) {
+  // If this is a subsequent step of a multi-step form, the prepopulate values
+  // have done their work, and the user may have modified them: bail.
+  if ($form_state->isRebuilding()) {
+    return;
+  }
+  /** @var \Drupal\Core\Field\FieldItemList $field */
+  $field = $context['items'];
+  if (\Drupal::request()->query->has($field->getName())) {
+    $element['#after_build'][] = 'og_prepopulate_after_build';
+  }
+  // If a value is already assigned, then hide the og audience field.
+  elseif (!$field->isEmpty()) {
+    $element['#access'] = FALSE;
+  }
+}
+
+/**
+ * An #after_build function to set the values prepopulated in the request.
+ */
+function og_prepopulate_after_build($element) {
+  $field_name = reset($element['#parents']);
+  $entity_id = \Drupal::request()->query->get($field_name);
+  /** @var \Drupal\prepopulate\Populate $populate */
+  $populate = \Drupal::service('og_prepopulate.populator');
+  // This lets us use URLs like example.com/node/add/page?og_audience=1.
+  $populate->populateForm($element, ['target_id' => $entity_id]);
+  return $element;
+}

@@ -24,7 +24,7 @@ class AnonymousFlagTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user', 'node', 'flag'];
+  protected static $modules = ['system', 'user', 'node', 'flag'];
 
   /**
    * @var \Drupal\node\Entity\Node
@@ -39,7 +39,7 @@ class AnonymousFlagTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     NodeType::create(['type' => 'page', 'name' => 'page'])->save();

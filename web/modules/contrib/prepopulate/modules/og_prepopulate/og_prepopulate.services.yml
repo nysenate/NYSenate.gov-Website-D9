@@ -1,0 +1,4 @@
+services:
+  og_prepopulate.populator:
+    class: Drupal\og_prepopulate\Populate
+    arguments: ['@request_stack', '@entity_type.manager', '@module_handler', '@current_user']

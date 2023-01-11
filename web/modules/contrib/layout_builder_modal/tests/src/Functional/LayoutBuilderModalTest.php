@@ -21,7 +21,7 @@ class LayoutBuilderModalTest extends BrowserTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * Tests the Layout Builder Modal settings form.

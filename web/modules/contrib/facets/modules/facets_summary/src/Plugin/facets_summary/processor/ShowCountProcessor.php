@@ -31,7 +31,7 @@ class ShowCountProcessor extends ProcessorPluginBase implements BuildProcessorIn
     $count = $facets_summary->getFacetSource()->getCount();
     $build_count = [
       '#theme' => 'facets_summary_count',
-      '#count' => $count,
+      '#count' => $count === NULL ? 0 : $count,
     ];
     array_unshift($build['#items'], $build_count);
     return $build;

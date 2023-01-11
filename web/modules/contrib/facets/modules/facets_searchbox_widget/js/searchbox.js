@@ -23,7 +23,7 @@
         let displayCount = 0;
         let display = getDisplayBehavior.call(this);
 
-        $("[data-drupal-facet-alias='" + targetListId + "'] li").each(function () {
+        $("[data-drupal-facet-id='" + targetListId + "'] li").each(function () {
           if (filter !== '') {
             search.call(this, filter, display, $targetList);
           } else {
@@ -88,7 +88,7 @@
       }
 
       function handleNoResults(targetListId, $facetsWidgetSearchboxNoResult) {
-        if ($("[data-drupal-facet-alias='" + targetListId + "'] li:visible:not(.hide-if-no-result)").length === 0) {
+        if ($("[data-drupal-facet-id='" + targetListId + "'] li:visible:not(.hide-if-no-result)").length === 0) {
           $facetsWidgetSearchboxNoResult.removeClass('hide');
           $('.hide-if-no-result').addClass('hide');
         } else {

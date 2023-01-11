@@ -26,9 +26,7 @@ class HideOnlyOneItemProcessorTest extends UnitTestCase {
     $results = [
       new Result($facet, '1', 1, 1),
     ];
-    $facet = $this->getMockBuilder(Facet::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facet = $this->createMock(Facet::class);
     $processed_results = $processor->build($facet, $results);
     $this->assertCount(0, $processed_results);
   }
@@ -45,9 +43,7 @@ class HideOnlyOneItemProcessorTest extends UnitTestCase {
       new Result($facet, '1', 1, 1),
     ];
     $results[0]->setActiveState(TRUE);
-    $facet = $this->getMockBuilder(Facet::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facet = $this->createMock(Facet::class);
     $processed_results = $processor->build($facet, $results);
     $this->assertCount(1, $processed_results);
   }
@@ -64,9 +60,7 @@ class HideOnlyOneItemProcessorTest extends UnitTestCase {
       new Result($facet, '1', 1, 1),
       new Result($facet, '2', 2, 2),
     ];
-    $facet = $this->getMockBuilder(Facet::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facet = $this->createMock(Facet::class);
     $processed_results = $processor->build($facet, $results);
     $this->assertCount(2, $processed_results);
   }

@@ -13,13 +13,12 @@ use Drupal\views\Entity\View;
  */
 class FlagFollowerInstallUninstallTest extends FlagKernelTestBase {
 
-  public static $modules = ['field', 'text'];
+  protected static $modules = ['field', 'text'];
 
   public function testInstallUninstall() {
     // Provides configuraiton depended on by the view.
     $this->installConfig(['node']);
     // Tables necessary for uninstall.
-    $this->installSchema('system', ['key_value_expire']);
     $this->installSchema('user', ['users_data']);
 
     // Install the Flag follower module.

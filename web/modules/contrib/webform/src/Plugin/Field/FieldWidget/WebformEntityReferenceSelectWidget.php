@@ -32,6 +32,7 @@ class WebformEntityReferenceSelectWidget extends OptionsWidgetBase {
    */
   public static function defaultSettings() {
     return [
+      'allow_status' => TRUE,
       'default_data' => TRUE,
       'webforms' => [],
     ] + parent::defaultSettings();
@@ -42,6 +43,12 @@ class WebformEntityReferenceSelectWidget extends OptionsWidgetBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
+    $element['allow_status'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow setting the status of the form'),
+      '#description' => $this->t('If checked, site builders will be able to set or schedule the open/closed state'),
+      '#default_value' => $this->getSetting('allow_status'),
+    ];
     $element['default_data'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable default submission data (YAML)'),
@@ -67,6 +74,7 @@ class WebformEntityReferenceSelectWidget extends OptionsWidgetBase {
    */
   public function settingsSummary() {
     $summary = parent::settingsSummary();
+    $summary[] = $this->t('Allow status changes: @default_data', ['@default_data' => $this->getSetting('allow_status') ? $this->t('Yes') : $this->t('No')]);
     $summary[] = $this->t('Default submission data: @default_data', ['@default_data' => $this->getSetting('default_data') ? $this->t('Yes') : $this->t('No')]);
     if ($webform_options = $this->getWebformsAsOptions()) {
       $summary[] = $this->t('Webforms: @webforms', ['@webforms' => implode('; ', $webform_options)]);

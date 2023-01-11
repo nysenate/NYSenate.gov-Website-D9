@@ -20,28 +20,28 @@ class FacetSourcePluginManagerTest extends UnitTestCase {
   /**
    * The cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 
   /**
    * The plugin discovery.
    *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $discovery;
 
   /**
    * The plugin factory.
    *
-   * @var \Drupal\Component\Plugin\Factory\DefaultFactory|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\Factory\DefaultFactory|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $factory;
 
   /**
    * The module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
@@ -58,9 +58,7 @@ class FacetSourcePluginManagerTest extends UnitTestCase {
   public function setUp(): void {
     $this->discovery = $this->createMock(DiscoveryInterface::class);
 
-    $this->factory = $this->getMockBuilder(DefaultFactory::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->factory = $this->createMock(DefaultFactory::class);
 
     $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
 

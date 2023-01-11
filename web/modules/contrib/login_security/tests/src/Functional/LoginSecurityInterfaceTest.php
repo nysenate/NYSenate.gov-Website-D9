@@ -2,28 +2,32 @@
 
 namespace Drupal\Tests\login_security\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
-
 /**
  * Test Login Security's web interface.
  *
  * @group login_security
  */
 class LoginSecurityInterfaceTest extends LoginSecurityTestBase {
+
   /**
-   * {@inheritdoc}
+   * A user with admin permissions.
+   *
+   * @var \Drupal\user\Entity\User
    */
-  public static $modules = ['user', 'login_security'];
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
-    // Create and login user.
-    $admin_user = $this->drupalCreateUser(['administer site configuration']);
-    $this->drupalLogin($admin_user);
+    // Create and login admin user:
+    $this->adminUser = $this->drupalCreateUser([]);
+    $this->adminUser->addRole($this->createAdminRole('admin', 'admin'));
+    $this->adminUser->save();
+
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
@@ -33,11 +37,11 @@ class LoginSecurityInterfaceTest extends LoginSecurityTestBase {
     $settings_fields = $this->getAdminUserSettingsFields();
 
     $this->drupalGet(parent::ADMIN_SETTINGS_PATH);
-    $this->assertResponse(200, 'Access granted to settings page.');
+    $this->assertSession()->statusCodeEquals(200);
 
     // Assert Fields.
     foreach ($settings_fields as $field_name) {
-      $this->assertField($field_name, new FormattableMarkup('@field_name field exists.', ['@field_name' => $field_name]));
+      $this->assertSession()->fieldExists($field_name);
     }
   }
 

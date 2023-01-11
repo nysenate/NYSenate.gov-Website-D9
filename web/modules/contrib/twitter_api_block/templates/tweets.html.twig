@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Twitter API display tweets method.
+ *
+ * Available variables:
+ * - attributes: The Drupal attribute object.
+ * - elements: The original data passed to this template.
+ *   - tweets: The unprocessed list of tweets.
+ * - oembed: Either true or false.
+ * - items: The list of tweets, already rendered.
+ * - context: An array with extra info to please crazy advanced theming logic.
+ *
+ * @ingroup themeable
+ *
+ * @see https://developer.twitter.com/en/docs/twitter-for-websites/embedded-tweets/overview
+ */
+#}
+{%
+	set classes = [
+		'tweets',
+		oembed ? 'tweets--oembed',
+	]
+%}
+
+<div{{attributes.addClass(classes)}}>
+	{{ items }}
+</div>

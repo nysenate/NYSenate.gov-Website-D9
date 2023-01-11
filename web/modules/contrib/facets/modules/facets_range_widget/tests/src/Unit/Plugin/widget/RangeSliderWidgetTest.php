@@ -23,7 +23,7 @@ class RangeSliderWidgetTest extends SliderWidgetTest {
    * {@inheritdoc}
    */
   public function testGetQueryType() {
-    $result = $this->widget->getQueryType($this->queryTypes);
+    $result = $this->widget->getQueryType();
     $this->assertEquals('range', $result);
   }
 

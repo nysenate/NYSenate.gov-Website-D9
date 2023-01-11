@@ -420,7 +420,8 @@
 / MEDIA QUERIES	for NEW YORK SENATE theme (nysenate_theme)
 /---------------------------*/
 strong {
-  font-family: "Adelle Bold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  font-weight: 700; }
 
 .font-secondary {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
@@ -528,7 +529,7 @@ strong {
 [class*=' icon-before']::before,
 .icon-before__quotes::before,
 .icon-before__find-senator::before,
-.c-issue--contact-btn.no-senator::before,
+.c-block .c-issue--contact-btn.no-senator::before,
 .icon-before__recruit-friends::before,
 .icon-before__left::before,
 .icon-before__right::before,
@@ -636,7 +637,7 @@ strong {
 
 
 .icon-before__find-senator::before,
-.c-issue--contact-btn.no-senator::before {
+.c-block .c-issue--contact-btn.no-senator::before {
   content: '\24'; }
 
 .icon-before__hamburger::before {
@@ -753,6 +754,7 @@ strong {
 .icon-after__user-guide::after,
 .icon-after__see-less::after,
 .icon-after__see-more::after,
+.js-form-type-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -912,7 +914,9 @@ strong {
 .icon-after__see-less::after {
   content: '\5e'; }
 
-.icon-after__see-more::after {
+
+.icon-after__see-more::after,
+.js-form-type-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1406,7 +1410,47 @@ strong {
 .webform-client-form .webform-component-fieldset {
   clear: both; }
 
-.c-issue--contact-btn {
+.js-form-type-select {
+  position: relative; }
+  .js-form-type-select::after {
+    position: absolute;
+    right: 10px;
+    top: auto;
+    font-size: 25px;
+    color: #2b6990;
+    pointer-events: none;
+    cursor: pointer; }
+  .js-form-type-select select {
+    margin-bottom: 16px; }
+
+.view-filters {
+  margin-left: 0px; }
+
+.view-filters select,
+.js-form-type-select select {
+  position: relative;
+  color: #2b6990;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  background: none;
+  background-image: none;
+  text-transform: uppercase;
+  min-height: 45px;
+  width: 100%; }
+
+@media screen and (min-width: 768px) {
+  .js-form-type-select {
+    float: left;
+    width: 47.5%;
+    margin-right: 2.5%; }
+    .js-form-type-select + .js-form-type-select {
+      margin-right: 0;
+      margin-left: 2.5%; }
+    .js-form-type-select select {
+      margin-bottom: 40px; } }
+
+.c-block .c-issue--contact-btn {
   position: relative;
   display: flex;
   align-items: center;
@@ -1423,27 +1467,28 @@ strong {
   font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 14px;
   letter-spacing: 0.1em; }
-  .c-issue--contact-btn::before {
+  .c-block .c-issue--contact-btn::before {
     content: '';
     display: inline-block;
     vertical-align: middle;
     font-size: 1.8em; }
-  .c-issue--contact-btn:hover, .c-issue--contact-btn:focus {
-    color: #fff; }
-  .c-issue--contact-btn .nys-senator--thumb {
+  .c-block .c-issue--contact-btn:hover, .c-block .c-issue--contact-btn:focus {
+    color: #fff;
+    background: #2b6990; }
+  .c-block .c-issue--contact-btn .nys-senator--thumb {
     display: none; }
-  .c-issue--contact-btn a {
+  .c-block .c-issue--contact-btn a {
     color: #fff; }
 
 @media screen and (min-width: 768px) {
-  .c-issue--contact-btn {
+  .c-block .c-issue--contact-btn {
     height: 80px;
     padding: 0 80px 0 30px;
     margin: 20px 0 0;
     text-align: left; }
-    .c-issue--contact-btn .nys-senator--thumb {
+    .c-block .c-issue--contact-btn .nys-senator--thumb {
       display: inline-block; }
-    .c-issue--contact-btn.no-senator {
+    .c-block .c-issue--contact-btn.no-senator {
       padding-right: 40px; }
-      .c-issue--contact-btn.no-senator::before {
+      .c-block .c-issue--contact-btn.no-senator::before {
         margin-top: 0; } }

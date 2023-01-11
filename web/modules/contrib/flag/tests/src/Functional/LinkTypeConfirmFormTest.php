@@ -84,7 +84,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
 
     // Check that the node is flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertLink($this->flag->getShortText('unflag'));
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
 
     // Check the flag count was incremented.
     $flag_count_flagged = \Drupal::database()->query('SELECT count FROM {flag_counts}
@@ -93,7 +93,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
       ':entity_type' => 'node',
       ':entity_id' => $node_id,
     ])->fetchField();
-    $this->assertEqual($flag_count_flagged, $flag_count_pre + 1, "The flag count was incremented.");
+    $this->assertEquals($flag_count_pre + 1, $flag_count_flagged, "The flag count was incremented.");
 
     // Unflag the node.
     $this->clickLink($this->flag->getShortText('unflag'));
@@ -106,7 +106,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
 
     // Check that the node is no longer flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertLink($this->flag->getShortText('flag'));
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
 
     // Check the flag count was decremented.
     $flag_count_unflagged = \Drupal::database()->query('SELECT count FROM {flag_counts}
@@ -115,7 +115,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
       ':entity_type' => 'node',
       ':entity_id' => $node_id,
     ])->fetchField();
-    $this->assertEqual($flag_count_unflagged, $flag_count_flagged - 1, "The flag count was decremented.");
+    $this->assertEquals($flag_count_flagged - 1, $flag_count_unflagged, "The flag count was decremented.");
   }
 
 }

@@ -17,7 +17,6 @@ class FlagBookmarkInstallUninstallTest extends FlagKernelTestBase {
     // Provides configuraiton depended on by the view.
     $this->installConfig(['system']);
     // Tables necessary for uninstall.
-    $this->installSchema('system', ['key_value_expire']);
     $this->installSchema('user', ['users_data']);
 
     // Install the Flag bookmark module.

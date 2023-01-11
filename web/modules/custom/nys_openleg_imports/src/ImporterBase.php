@@ -169,7 +169,7 @@ abstract class ImporterBase implements ImporterInterface {
     $this->logger->info("[@time] Beginning processing of @total @type items", [
       '@total' => count($items),
       '@type' => $this->pluginId,
-      '@time' => date(Request::OPENLEG_TIME_FORMAT, time()),
+      '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
     ]);
 
     // Iterate the items.  Success/fail/exceptions are tracked.
@@ -218,7 +218,7 @@ abstract class ImporterBase implements ImporterInterface {
       '@success' => $this->results->getSuccess(),
       '@fail' => $this->results->getFail(),
       '@skip' => $attempted - $this->results->total(),
-      '@time' => date(Request::OPENLEG_TIME_FORMAT, time()),
+      '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
     ];
     $message = "[@time] Finished processing @total @type items: @success pass, @fail fail, @skip skipped";
     if ($full_fail = count($this->results->getExceptions())) {

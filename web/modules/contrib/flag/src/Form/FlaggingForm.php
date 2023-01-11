@@ -64,7 +64,7 @@ class FlaggingForm extends ContentEntityForm {
       $route_params = [
         'flag' => $this->entity->getFlagId(),
         'entity_id' => $this->entity->getFlaggableId(),
-        'destination' => $this->getRequest()->request->get('destination'),
+        'destination' => $this->getRequest()->query->get('destination'),
       ];
       $url = Url::fromRoute('flag.field_entry.delete', $route_params);
 

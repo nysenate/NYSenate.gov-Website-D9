@@ -16,30 +16,24 @@ class LoginSecurityEmailTest extends LoginSecurityTestBase {
   use StringTranslationTrait;
 
   /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['user', 'login_security'];
-
-  /**
    * Test user.
    *
-   * @var \Drupal\user\UserInterface
+   * @var \Drupal\user\Entity\User
    */
   protected $account;
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
-    // Create first user.
+    // Create first user:
     $this->drupalCreateUser();
 
-    // Create second user.
+    // Create second user:
     $this->account = $this->drupalCreateUser();
-
-    $this->drupalLoginLite($this->account);
+    $this->drupalLogin($this->account);
 
     // Setup emails to be sent.
     \Drupal::configFactory()->getEditable('login_security.settings')
@@ -60,9 +54,10 @@ class LoginSecurityEmailTest extends LoginSecurityTestBase {
 
   /**
    * Test that email is sent when activity exceeds configured threshold.
+   *
+   * @todo Implement this test.
    */
-  public function testActivityThresholdEmail() {
-    // @todo.
+  public function todoTestActivityThresholdEmail() {
   }
 
 }

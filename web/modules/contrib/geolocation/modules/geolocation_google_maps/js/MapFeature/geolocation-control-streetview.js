@@ -13,8 +13,7 @@
  */
 
 (function (Drupal) {
-
-  'use strict';
+  "use strict";
 
   /**
    * Streetview control.
@@ -27,7 +26,7 @@
   Drupal.behaviors.geolocationStreetViewControl = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
-        'control_streetview',
+        "control_streetview",
 
         /**
          * @param {GeolocationGoogleMap} map - Current map.
@@ -37,14 +36,13 @@
           map.addPopulatedCallback(function (map) {
             var options = {
               streetViewControlOptions: {
-                position: google.maps.ControlPosition[featureSettings.position]
-              }
+                position: google.maps.ControlPosition[featureSettings.position],
+              },
             };
 
-            if (featureSettings.behavior === 'always') {
+            if (featureSettings.behavior === "always") {
               options.streetViewControl = true;
-            }
-            else {
+            } else {
               options.streetViewControl = undefined;
             }
 
@@ -56,7 +54,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) {},
   };
-
 })(Drupal);

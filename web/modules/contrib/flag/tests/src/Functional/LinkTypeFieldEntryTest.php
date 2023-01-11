@@ -37,7 +37,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // The breadcrumb block is needed for FieldUiTestTrait's tests.
@@ -73,9 +73,9 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->drupalPostAjaxForm(NULL, $edit, 'link_type');
 
     // Check confirm form field entry.
-    $this->assertText(t('Flag confirmation message'));
-    $this->assertText(t('Enter flagging details message'));
-    $this->assertText(t('Unflag confirmation message'));
+    $this->assertSession()->responseContains(t('Flag confirmation message'));
+    $this->assertSession()->responseContains(t('Enter flagging details message'));
+    $this->assertSession()->responseContains(t('Unflag confirmation message'));
   }
 
   /**
@@ -105,7 +105,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
 
     // Check the Field UI tabs appear on the flag edit page.
     $this->drupalGet('admin/structure/flags/manage/' . $flag_id);
-    $this->assertText(t("Manage fields"), "The Field UI tabs appear on the flag edit form page.");
+    $this->assertSession()->responseContains(t("Manage fields"));
 
     $this->fieldUIAddNewField('admin/structure/flags/manage/' . $flag_id, $this->flagFieldId, $this->flagFieldLabel, 'text');
   }
@@ -130,7 +130,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->clickLink($this->flag->getShortText('flag'));
 
     // Check if we have the confirm form message displayed.
-    $this->assertText($this->flagConfirmMessage);
+    $this->assertSession()->responseContains($this->flagConfirmMessage);
 
     // Enter the field value and submit it.
     $this->flagFieldValue = $this->randomString();
@@ -140,7 +140,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->submitForm($edit, $this->createButtonText);
 
     // Check that the node is flagged.
-    $this->assertLink($this->flag->getShortText('unflag'));
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
   }
 
   /**
@@ -155,17 +155,13 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->clickLink($this->flag->getShortText('unflag'));
 
     $node_url = Url::fromRoute('entity.node.canonical', ['node' => $this->nodeId]);
-    $this->assertUrl('flag/details/edit/' . $flag_id . '/' . $this->nodeId, [
-      'query' => [
-        'destination' => $node_url->toString(),
-      ],
-    ]);
+    $this->assertSession()->addressEquals('flag/details/edit/' . $flag_id . '/' . $this->nodeId);
 
     // See if the details message is displayed.
-    $this->assertText($this->flagDetailsMessage);
+    $this->assertSession()->responseContains($this->flagDetailsMessage);
 
     // See if the field value was preserved.
-    $this->assertFieldByName('field_' . $this->flagFieldId . '[0][value]', $this->flagFieldValue);
+    $this->assertSession()->fieldValueEquals('field_' . $this->flagFieldId . '[0][value]', $this->flagFieldValue);
 
     // Update the field value.
     $this->flagFieldValue = $this->randomString();
@@ -178,7 +174,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->drupalGet('flag/details/edit/' . $flag_id . '/' . $this->nodeId);
 
     // See if the field value was preserved.
-    $this->assertFieldByName('field_' . $this->flagFieldId . '[0][value]', $this->flagFieldValue);
+    $this->assertSession()->fieldValueEquals('field_' . $this->flagFieldId . '[0][value]', $this->flagFieldValue);
   }
 
   /**
@@ -189,16 +185,16 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
 
     // Test a good flag ID param, but a bad flaggable ID param.
     $this->drupalGet('flag/details/edit/' . $flag_id . '/-9999');
-    $this->assertResponse('404', 'Editing an invalid flagging path: good flag, bad entity.');
-
+    $this->assertSession()->statusCodeEquals('404');
+        
     // Test a bad flag ID param, but a good flaggable ID param.
     $this->drupalGet('flag/details/edit/jibberish/' . $this->nodeId);
-    $this->assertResponse('404', 'Editing an invalid flagging path: bad flag, good entity');
+    $this->assertSession()->statusCodeEquals('404');
 
     // Test editing a unflagged entity.
     $unlinked_node = $this->drupalCreateNode(['type' => $this->nodeType]);
     $this->drupalGet('flag/details/edit/' . $flag_id . '/' . $unlinked_node->id());
-    $this->assertResponse('404', 'Editing an invalid flagging path: good flag, good entity, but not flagged');
+    $this->assertSession()->statusCodeEquals('404');
   }
 
   /**
@@ -216,15 +212,15 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->clickLink($this->deleteButtonText);
 
     // Check if we have the confirm form message displayed.
-    $this->assertText($this->unflagConfirmMessage);
+    $this->assertSession()->responseContains($this->unflagConfirmMessage);
 
     // Submit the confirm form.
     $this->submitForm([], $this->deleteButtonText);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check that the node is no longer flagged.
     $this->drupalGet('node/' . $this->nodeId);
-    $this->assertLink($this->flag->getShortText('flag'));
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
   }
 
 }

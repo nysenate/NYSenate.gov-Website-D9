@@ -336,6 +336,7 @@ class ModerationSidebarController extends ControllerBase {
     $node_storage = $this->entityTypeManager()->getStorage('node');
 
     $result = $node_storage->getQuery()
+      ->accessCheck(TRUE)
       ->allRevisions()
       ->condition($node->getEntityType()->getKey('id'), $node->id())
       ->sort($node->getEntityType()->getKey('revision'), 'DESC')

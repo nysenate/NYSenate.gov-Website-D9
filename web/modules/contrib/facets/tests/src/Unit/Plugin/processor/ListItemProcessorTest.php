@@ -31,7 +31,7 @@ class ListItemProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\processor\BuildProcessorInterface
+   * @var \Drupal\facets\Processor\BuildProcessorInterface
    */
   protected $processor;
 
@@ -57,17 +57,11 @@ class ListItemProcessorTest extends UnitTestCase {
       new Result($facet, 3, 3, 15),
     ];
 
-    $config_manager = $this->getMockBuilder(ConfigManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config_manager = $this->createMock(ConfigManager::class);
 
-    $entity_field_manager = $this->getMockBuilder(EntityFieldManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_field_manager = $this->createMock(EntityFieldManager::class);
 
-    $entity_type_bundle_info = $this->getMockBuilder(EntityTypeBundleInfo::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_type_bundle_info = $this->createMock(EntityTypeBundleInfo::class);
 
     // Create a search api based facet source and make the property definition
     // return null.
@@ -75,9 +69,7 @@ class ListItemProcessorTest extends UnitTestCase {
     $data_definition->expects($this->any())
       ->method('getPropertyDefinition')
       ->willReturn(NULL);
-    $facet_source = $this->getMockBuilder(FacetSourcePluginInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facet_source = $this->createMock(FacetSourcePluginInterface::class);
     $facet_source->expects($this->any())
       ->method('getDataDefinition')
       ->willReturn($data_definition);
@@ -92,9 +84,7 @@ class ListItemProcessorTest extends UnitTestCase {
       ->willReturn(CacheBackendInterface::CACHE_PERMANENT);
 
     // Add the plugin manager.
-    $pluginManager = $this->getMockBuilder(FacetSourcePluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $pluginManager = $this->createMock(FacetSourcePluginManager::class);
     $pluginManager->expects($this->any())
       ->method('hasDefinition')
       ->willReturn(TRUE);
@@ -104,28 +94,20 @@ class ListItemProcessorTest extends UnitTestCase {
 
     $this->processor = new ListItemProcessor([], 'list_item', [], $config_manager, $entity_field_manager, $entity_type_bundle_info);
 
-    $facet_entity_type = $this->getMockBuilder(ConfigEntityType::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facet_entity_type = $this->createMock(ConfigEntityType::class);
     $facet_entity_type->method('getConfigPrefix')
       ->willReturn('facets.facet');
 
-    $entity_type_manager = $this->getMockBuilder(EntityTypeManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_type_manager = $this->createMock(EntityTypeManager::class);
     $entity_type_manager->method('getDefinition')
       ->with('facets_facet')
       ->willReturn($facet_entity_type);
 
-    $this->processor_plugin_manager = $this->getMockBuilder(ProcessorPluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->processor_plugin_manager = $this->createMock(ProcessorPluginManager::class);
     $this->processor_plugin_manager->method('getDefinitions')
       ->willReturn(['list_item' => ['class' => ListItemProcessor::class]]);
 
-    $event_dispatcher = $this->getMockBuilder(EventDispatcher::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $event_dispatcher = $this->createMock(EventDispatcher::class);
 
     $container = new ContainerBuilder();
     $container->set('plugin.manager.facets.facet_source', $pluginManager);
@@ -139,9 +121,7 @@ class ListItemProcessorTest extends UnitTestCase {
    * Tests facet build with field.module field.
    */
   public function testBuildConfigurableField() {
-    $module_field = $this->getMockBuilder(FieldStorageConfig::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $module_field = $this->createMock(FieldStorageConfig::class);
     // Return cache field metadata.
     $module_field->expects($this->exactly(1))
       ->method('getCacheContexts')
@@ -155,20 +135,14 @@ class ListItemProcessorTest extends UnitTestCase {
 
     // Make sure that when the processor calls loadConfigEntityByName the field
     // we created here is called.
-    $config_manager = $this->getMockBuilder(ConfigManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config_manager = $this->createMock(ConfigManager::class);
     $config_manager->expects($this->exactly(2))
       ->method('loadConfigEntityByName')
       ->willReturn($module_field);
 
-    $entity_field_manager = $this->getMockBuilder(EntityFieldManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_field_manager = $this->createMock(EntityFieldManager::class);
 
-    $entity_type_bundle_info = $this->getMockBuilder(EntityTypeBundleInfo::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_type_bundle_info = $this->createMock(EntityTypeBundleInfo::class);
 
     $processor = new ListItemProcessor([], 'list_item', [], $config_manager, $entity_field_manager, $entity_type_bundle_info);
     $this->processor_plugin_manager->method('createInstance')
@@ -200,9 +174,7 @@ class ListItemProcessorTest extends UnitTestCase {
    * Tests facet build with field.module field.
    */
   public function testBuildBundle() {
-    $module_field = $this->getMockBuilder(FieldStorageConfig::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $module_field = $this->createMock(FieldStorageConfig::class);
     // Return cache field metadata.
     $module_field->expects($this->exactly(1))
       ->method('getCacheContexts')
@@ -214,20 +186,14 @@ class ListItemProcessorTest extends UnitTestCase {
       ->method('getCacheMaxAge')
       ->willReturn(54321);
 
-    $config_manager = $this->getMockBuilder(ConfigManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config_manager = $this->createMock(ConfigManager::class);
     $config_manager->expects($this->exactly(2))
       ->method('loadConfigEntityByName')
       ->willReturn($module_field);
 
-    $entity_field_manager = $this->getMockBuilder(EntityFieldManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_field_manager = $this->createMock(EntityFieldManager::class);
 
-    $entity_type_bundle_info = $this->getMockBuilder(EntityTypeBundleInfo::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_type_bundle_info = $this->createMock(EntityTypeBundleInfo::class);
 
     $processor = new ListItemProcessor([], 'list_item', [], $config_manager, $entity_field_manager, $entity_type_bundle_info);
     $this->processor_plugin_manager->method('createInstance')
@@ -260,13 +226,9 @@ class ListItemProcessorTest extends UnitTestCase {
    * Tests facet build with base props.
    */
   public function testBuildBaseField() {
-    $config_manager = $this->getMockBuilder(ConfigManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config_manager = $this->createMock(ConfigManager::class);
 
-    $base_field = $this->getMockBuilder(BaseFieldDefinition::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $base_field = $this->createMock(BaseFieldDefinition::class);
     // Return cache field metadata.
     $base_field->expects($this->exactly(1))
       ->method('getCacheContexts')
@@ -278,9 +240,7 @@ class ListItemProcessorTest extends UnitTestCase {
       ->method('getCacheMaxAge')
       ->willReturn(1235813);
 
-    $entity_field_manager = $this->getMockBuilder(EntityFieldManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_field_manager = $this->createMock(EntityFieldManager::class);
     $entity_field_manager->expects($this->any())
       ->method('getFieldDefinitions')
       ->with('node', '')
@@ -288,9 +248,7 @@ class ListItemProcessorTest extends UnitTestCase {
         'test_facet_baseprop' => $base_field,
       ]);
 
-    $entity_type_bundle_info = $this->getMockBuilder(EntityTypeBundleInfo::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_type_bundle_info = $this->createMock(EntityTypeBundleInfo::class);
 
     $processor = new ListItemProcessor([], 'list_item', [], $config_manager, $entity_field_manager, $entity_type_bundle_info);
     $this->processor_plugin_manager->method('createInstance')

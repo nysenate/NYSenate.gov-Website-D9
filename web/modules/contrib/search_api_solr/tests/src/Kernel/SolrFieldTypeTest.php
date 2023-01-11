@@ -82,7 +82,9 @@ class SolrFieldTypeTest extends KernelTestBase {
 
     foreach ($this->configNames as $config_name) {
       $data = $default_config_storage->read($config_name);
-      $this->assertConfigSchema($typed_config, $config_name, $data);
+      if ($data !== FALSE) {
+        $this->assertConfigSchema($typed_config, $config_name, $data);
+      }
     }
   }
 

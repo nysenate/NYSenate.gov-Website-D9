@@ -2117,11 +2117,44 @@ function search_api_solr_update_8413() {
  * Configure language-specific field usage individually per index.
  */
 function search_api_solr_update_8414() {
-  $indexes = search_api_solr_update_helper_get_indexes();
   foreach (search_api_solr_update_helper_get_index_third_party_settings() as $index_id => $third_party_settings) {
     if (!isset($third_party_settings['multilingual']) || !isset($third_party_settings['multilingual']['specific_languages'])) {
       $third_party_settings['multilingual']['specific_languages'] = [];
+      search_api_solr_update_helper_save_index_third_party_settings($index_id, $third_party_settings);
     }
-    search_api_solr_update_helper_save_index_third_party_settings($index_id, $third_party_settings);
+  }
+}
+
+/**
+ * Offer language undefined as fallback language.
+ */
+function search_api_solr_update_8415() {
+  foreach (search_api_solr_update_helper_get_index_third_party_settings() as $index_id => $third_party_settings) {
+    if (!isset($third_party_settings['multilingual']) || !isset($third_party_settings['multilingual']['use_language_undefined_as_fallback_language'])) {
+      $third_party_settings['multilingual']['use_language_undefined_as_fallback_language'] = FALSE;
+      search_api_solr_update_helper_save_index_third_party_settings($index_id, $third_party_settings);
+    }
+  }
+}
+
+/**
+ * Configurable language-specific collations.
+ */
+function search_api_solr_update_8416() {
+  foreach (search_api_solr_update_helper_get_field_type_configs() as $field_type_name => $field_type_config) {
+    if (
+      $field_type_config['field_type_language_code'] === LanguageInterface::LANGCODE_NOT_SPECIFIED &&
+      !empty($field_type_config['collated_field_type'])
+    ) {
+      $field_type_config['collated_field_type']['locale'] = NULL;
+      search_api_solr_update_helper_save_field_type_config($field_type_name, $field_type_config);
+    }
+  }
+
+  foreach (search_api_solr_update_helper_get_index_third_party_settings() as $index_id => $third_party_settings) {
+    if (!isset($third_party_settings['multilingual']) || !isset($third_party_settings['multilingual']['use_universal_collation'])) {
+      $third_party_settings['multilingual']['use_universal_collation'] = FALSE;
+      search_api_solr_update_helper_save_index_third_party_settings($index_id, $third_party_settings);
+    }
   }
 }

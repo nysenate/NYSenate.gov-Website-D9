@@ -3,10 +3,11 @@
 namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\facets\Exception\Exception;
@@ -14,12 +15,11 @@ use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
-use Drupal\facets\QueryType\QueryTypePluginManager;
 use Drupal\search_api\Backend\BackendInterface;
-use Drupal\search_api\Display\DisplayPluginManager;
+use Drupal\search_api\Display\DisplayPluginManagerInterface;
 use Drupal\search_api\FacetsQueryTypeMappingInterface;
 use Drupal\search_api\Query\ResultSetInterface;
-use Drupal\search_api\Utility\QueryHelper;
+use Drupal\search_api\Utility\QueryHelperInterface;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,14 +59,14 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
   /**
    * The display plugin manager.
    *
-   * @var \Drupal\search_api\Display\DisplayPluginManager
+   * @var \Drupal\search_api\Display\DisplayPluginManagerInterface
    */
   protected $displayPluginManager;
 
   /**
    * The search result cache.
    *
-   * @var \Drupal\search_api\Utility\QueryHelper
+   * @var \Drupal\search_api\Utility\QueryHelperInterface
    */
   protected $searchApiQueryHelper;
 
@@ -80,7 +80,7 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
   /**
    * The Drupal module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandler
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
@@ -100,18 +100,18 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\facets\QueryType\QueryTypePluginManager $query_type_plugin_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $query_type_plugin_manager
    *   The query type plugin manager.
-   * @param \Drupal\search_api\Utility\QueryHelper $search_results_cache
+   * @param \Drupal\search_api\Utility\QueryHelperInterface $search_results_cache
    *   The query type plugin manager.
-   * @param \Drupal\search_api\Display\DisplayPluginManager $display_plugin_manager
+   * @param \Drupal\search_api\Display\DisplayPluginManagerInterface $display_plugin_manager
    *   The display plugin manager.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object for the current request.
-   * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   Core's module handler class.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, QueryHelper $search_results_cache, DisplayPluginManager $display_plugin_manager, Request $request, ModuleHandler $moduleHandler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $query_type_plugin_manager, QueryHelperInterface $search_results_cache, DisplayPluginManagerInterface $display_plugin_manager, Request $request, ModuleHandlerInterface $moduleHandler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
 
     $this->searchApiQueryHelper = $search_results_cache;
@@ -180,18 +180,21 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
     // rendered on the same page, such as views_page.
     $results = $this->searchApiQueryHelper->getResults($search_id);
 
-    // If there are no results, we can check the Search API Display plugin has
-    // configuration for views. If that configuration exists, we can execute
-    // that view and try to use its results.
-    $display_definition = $this->getDisplay()->getPluginDefinition();
     $view = NULL;
 
-    if ($results === NULL && isset($display_definition['view_id'])) {
-      $view = Views::getView($display_definition['view_id']);
-      $view->setDisplay($display_definition['view_display']);
-      $view->preExecute();
-      $view->execute();
-      $results = $this->searchApiQueryHelper->getResults($search_id);
+    if ($results === NULL) {
+      // If there are no results, we can check the Search API Display plugin has
+      // configuration for views. If that configuration exists, we can execute
+      // that view and try to use its results.
+      $display_definition = $this->getDisplay()->getPluginDefinition();
+
+      if (isset($display_definition['view_id'])) {
+        $view = Views::getView($display_definition['view_id']);
+        $view->setDisplay($display_definition['view_display']);
+        $view->preExecute();
+        $view->execute();
+        $results = $this->searchApiQueryHelper->getResults($search_id);
+      }
     }
 
     if (!$results instanceof ResultSetInterface) {

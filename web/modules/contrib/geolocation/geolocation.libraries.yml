@@ -11,15 +11,15 @@ geolocation.api:
   dependencies:
     - core/drupal
     - core/jquery
-    - core/jquery.once
+    - core/once
 
 geolocation.geocoder.api:
   version: 8.x-3.x
   js:
     js/geolocation-geocoder-api.js: {}
   dependencies:
-    - core/jquery.once
-    - core/jquery.ui.autocomplete
+    - core/once
+    - jquery_ui_autocomplete/autocomplete
 
 geolocation.widget.api:
   version: 8.x-3.x
@@ -98,7 +98,7 @@ location_input.client_location:
     js/LocationInput/client-location.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
 
 location_input.geocoder:
   js:
@@ -106,7 +106,7 @@ location_input.geocoder:
   dependencies:
     - geolocation/geolocation.geocoder.api
     - core/jquery
-    - core/jquery.once
+    - core/once
 
 #
 #

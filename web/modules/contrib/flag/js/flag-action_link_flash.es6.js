@@ -31,16 +31,18 @@
    */
   Drupal.AjaxCommands.prototype.actionLinkFlash = (ajax, response, status) => {
     if (status === 'success') {
-      // Prepare a message element.
-      const para = document.createElement('P');
-      para.innerText = response.message;
-      // Adding this class will initiate a CSS transition.
-      para.setAttribute('class', 'js-flag-message');
-      // As the transition ends delete the message from the DOM.
-      para.addEventListener('animationend', event => event.target.remove(), false);
+      if (response.message.length) {
+        // Prepare a message element.
+        const para = document.createElement('P');
+        para.innerText = response.message;
+        // Adding this class will initiate a CSS transition.
+        para.setAttribute('class', 'js-flag-message');
+        // As the transition ends delete the message from the DOM.
+        para.addEventListener('animationend', event => event.target.remove(), false);
 
-      // Add message element to the DOM.
-      document.querySelector(response.selector).appendChild(para);
+        // Add message element to the DOM.
+        document.querySelector(response.selector).appendChild(para);
+      }
     }
     else {
       // If the XHR failed, assume the replace command that would normally make

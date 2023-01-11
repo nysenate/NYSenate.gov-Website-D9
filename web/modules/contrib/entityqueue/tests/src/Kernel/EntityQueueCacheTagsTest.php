@@ -71,7 +71,7 @@ class EntityQueueCacheTagsTest extends KernelTestBase {
     $renderer = $this->container->get('bare_html_page_renderer');
     $response = $renderer->renderBarePage($build, '', 'maintenance_page');
 
-    $this->assertEquals([
+    $this->assertEqualsCanonicalizing([
       'config:entityqueue.entity_queue.simple_queue',
       'config:views.view.simple_queue_listing',
       'entity_field_info',

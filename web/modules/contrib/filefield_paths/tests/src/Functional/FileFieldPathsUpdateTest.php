@@ -66,7 +66,7 @@ class FileFieldPathsUpdateTest extends FileFieldPathsTestBase {
     $this->drupalGet("node/{$nid}");
     $date = date('Y-m');
     // The File is in the default path.
-    $this->assertRaw("{$this->publicFilesDirectory}/styles/thumbnail/public/{$date}/{$test_file->getFilename()}");
+    $this->assertSession()->responseContains("{$this->publicFilesDirectory}/styles/thumbnail/public/{$date}/{$test_file->getFilename()}");
 
     // Trigger retroactive updates.
     $this->drupalGet("admin/structure/types/manage/{$this->contentType}/fields/node.{$this->contentType}.{$field_name}");
@@ -85,7 +85,7 @@ class FileFieldPathsUpdateTest extends FileFieldPathsTestBase {
     // Ensure that the file path has been retroactively updated.
     $this->drupalGet("node/{$nid}");
     // The File path has been retroactively updated.
-    $this->assertRaw("{$this->publicFilesDirectory}/styles/thumbnail/public/node/{$nid}/{$test_file->getFilename()}");
+    $this->assertSession()->responseContains("{$this->publicFilesDirectory}/styles/thumbnail/public/node/{$nid}/{$test_file->getFilename()}");
   }
 
 }

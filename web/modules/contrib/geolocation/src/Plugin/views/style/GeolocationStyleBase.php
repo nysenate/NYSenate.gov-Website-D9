@@ -9,6 +9,7 @@ use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
  * Geolocation Style Base.
@@ -45,12 +46,20 @@ abstract class GeolocationStyleBase extends StylePluginBase {
   protected $dataProviderManager = NULL;
 
   /**
+   * File url generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $data_provider_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $data_provider_manager, FileUrlGeneratorInterface $file_url_generator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->dataProviderManager = $data_provider_manager;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -61,7 +70,8 @@ abstract class GeolocationStyleBase extends StylePluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('plugin.manager.geolocation.dataprovider')
+      $container->get('plugin.manager.geolocation.dataprovider'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -113,18 +123,19 @@ abstract class GeolocationStyleBase extends StylePluginBase {
           }
 
           if (!empty($style)) {
-            $icon_url = file_url_transform_relative($style->buildUrl($file_uri));
+            $icon_url = $this->fileUrlGenerator->transformRelative($style->buildUrl($file_uri));
           }
           else {
-            $icon_url = file_url_transform_relative(file_create_url($file_uri));
+            $icon_url = $this->fileUrlGenerator->generateString($file_uri);
           }
         }
       }
     }
     elseif (!empty($this->options['marker_icon_path'])) {
       $icon_token_uri = $this->viewsTokenReplace($this->options['marker_icon_path'], $this->rowTokens[$row->index]);
+      $icon_token_uri = $this->globalTokenReplace($icon_token_uri);
       $icon_token_uri = preg_replace('/\s+/', '', $icon_token_uri);
-      $icon_url = file_url_transform_relative(file_create_url($icon_token_uri));
+      $icon_url = $this->fileUrlGenerator->generateString($icon_token_uri);
     }
 
     try {

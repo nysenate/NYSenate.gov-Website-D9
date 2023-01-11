@@ -74,6 +74,20 @@ function foo_captcha_captcha($op, $captcha_type = '') {
 }
 
 /**
+ * Allow modules to alter a CAPTCHA.
+ *
+ * @param array $captcha
+ *   The array returned by hook_captcha().
+ * @param array $info
+ *   Array of information about the CAPTCHA.
+ */
+function hook_captcha_alter(array &$captcha, array $info) {
+  if ($info['module'] == 'mymodule') {
+    $captcha['form']['captcha_response']['#description'] = t('New description.');
+  }
+}
+
+/**
  * Implements hook_help().
  *
  * You should of course implement a function foo_captcha_settings_form() which

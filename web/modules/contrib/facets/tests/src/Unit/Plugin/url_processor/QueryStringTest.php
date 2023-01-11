@@ -115,9 +115,7 @@ class QueryStringTest extends UnitTestCase {
     $storage->expects($this->any())
       ->method('loadByProperties')
       ->willReturn([$facet]);
-    $entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->willReturn($storage);
@@ -152,9 +150,7 @@ class QueryStringTest extends UnitTestCase {
     $storage->expects($this->atLeastOnce())
       ->method('loadByProperties')
       ->willReturnOnConsecutiveCalls([$facet], [$facet], []);
-    $entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->willReturn($storage);
@@ -233,9 +229,7 @@ class QueryStringTest extends UnitTestCase {
     $storage->expects($this->atLeastOnce())
       ->method('loadByProperties')
       ->willReturnOnConsecutiveCalls([$facet2], [$facet2], [$facet2], [$facet2], [$facet2], [$facet2]);
-    $entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->willReturn($storage);
@@ -299,9 +293,7 @@ class QueryStringTest extends UnitTestCase {
     $storage->expects($this->once())
       ->method('load')
       ->willReturn($facet_source);
-    $em = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $em = $this->createMock(EntityTypeManagerInterface::class);
     $em->expects($this->any())
       ->method('getStorage')
       ->willReturn($storage);
@@ -350,9 +342,7 @@ class QueryStringTest extends UnitTestCase {
    */
   public function testContextualFilters() {
     // Override router.
-    $router = $this->getMockBuilder(TestRouterInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $router = $this->createMock(TestRouterInterface::class);
     $router->expects($this->any())
       ->method('matchRequest')
       ->willReturn([
@@ -385,18 +375,14 @@ class QueryStringTest extends UnitTestCase {
    */
   public function testUnroutedPath() {
     // Override router.
-    $router = $this->getMockBuilder(TestRouterInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $router = $this->createMock(TestRouterInterface::class);
     $router->expects($this->any())
       ->method('matchRequest')
       ->willThrowException(new ResourceNotFoundException());
 
     $request = new Request();
 
-    $request_stack = $this->getMockBuilder(RequestStack::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $request_stack = $this->createMock(RequestStack::class);
     $request_stack->expects($this->any())
       ->method('getCurrentRequest')
       ->willReturn($request);
@@ -427,9 +413,7 @@ class QueryStringTest extends UnitTestCase {
    * Sets up a container.
    */
   protected function setContainer() {
-    $router = $this->getMockBuilder(TestRouterInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $router = $this->createMock(TestRouterInterface::class);
     $router->expects($this->any())
       ->method('matchRequest')
       ->willReturn([
@@ -439,24 +423,18 @@ class QueryStringTest extends UnitTestCase {
 
     $validator = $this->createMock(PathValidatorInterface::class);
 
-    $fsi = $this->getMockBuilder(FacetSourcePluginInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $fsi = $this->createMock(FacetSourcePluginInterface::class);
     $fsi->method('getPath')
       ->willReturn('/test');
 
-    $manager = $this->getMockBuilder(FacetSourcePluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $manager = $this->createMock(FacetSourcePluginManager::class);
     $manager->method('createInstance')
       ->willReturn($fsi);
     $manager->method('hasDefinition')
       ->with('facet_source__dummy')
       ->willReturn(TRUE);
 
-    $facetentity = $this->getMockBuilder(Facet::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $facetentity = $this->createMock(Facet::class);
     $facetentity->method('id')
       ->willReturn('king');
 
@@ -464,9 +442,7 @@ class QueryStringTest extends UnitTestCase {
     $storage->expects($this->any())
       ->method('loadByProperties')
       ->willReturn([$facetentity]);
-    $em = $this->getMockBuilder(EntityTypeManagerInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $em = $this->createMock(EntityTypeManagerInterface::class);
     $em->expects($this->any())
       ->method('getStorage')
       ->willReturn($storage);

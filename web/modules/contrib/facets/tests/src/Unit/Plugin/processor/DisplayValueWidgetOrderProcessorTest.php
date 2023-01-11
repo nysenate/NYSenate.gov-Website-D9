@@ -46,9 +46,7 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
       new Result($facet, '2', '2', 22),
     ];
 
-    $transliteration = $this->getMockBuilder(TransliterationInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $transliteration = $this->createMock(TransliterationInterface::class);
     $transliteration
       ->expects($this->any())
       ->method('removeDiacritics')

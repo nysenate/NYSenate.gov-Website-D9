@@ -10,6 +10,12 @@ $font-sans: 'Proxima Nova Regular', 'Arial', sans-serif;
 $font-sans-bold: 'Proxima Nova SemiBold', 'Arial', sans-serif;
 $senate-icons: 'senate_icons';
 
+// Font-Weights.
+$font-weight-light: 200;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-italic: italic;
+
 @mixin font-stack-primary {
   font-family: $font-serif;
 }
@@ -20,21 +26,17 @@ $senate-icons: 'senate_icons';
 
 // Basic font styles
 strong {
-  font-family: $font-serif-bold;
+  font-family: $font-serif-semibold;
+  font-weight: $font-weight-bold;
 }
 
 .font-secondary  {
   @include font-stack-secondary;
+
   strong {
     font-family: $font-sans-bold;
   }
 }
-
-// Font-Weights.
-$font-weight-light: 200;
-$font-weight-normal: 400;
-$font-weight-bold: 700;
-$font-italic: italic;
 
 // Heading mixins.
 @mixin heading-1-style {

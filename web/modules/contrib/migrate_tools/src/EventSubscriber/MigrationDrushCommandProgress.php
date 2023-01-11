@@ -59,8 +59,10 @@ class MigrationDrushCommandProgress implements EventSubscriberInterface {
    *   The output.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
+   * @param array $options
+   *   Additional options of the command.
    */
-  public function initializeProgress(OutputInterface $output, MigrationInterface $migration) {
+  public function initializeProgress(OutputInterface $output, MigrationInterface $migration, array $options = []) {
     // Don't display progress bar if explicitly disabled.
     if (!empty($migration->skipProgressBar)) {
       return;
@@ -73,7 +75,12 @@ class MigrationDrushCommandProgress implements EventSubscriberInterface {
     try {
       // Clone so that any generators aren't initialized prematurely.
       $source = clone $migration->getSourcePlugin();
-      $this->symfonyProgressBar = new ProgressBar($output, $source->count());
+      $count = $source->count();
+      // In case the --limit option is set, reduce the count.
+      if (array_key_exists('limit', $options) && $options['limit'] > 0 && $options['limit'] < $count) {
+        $count = $options['limit'];
+      }
+      $this->symfonyProgressBar = new ProgressBar($output, $count);
     }
     catch (\Exception $exception) {
       if (!empty($migration->continueOnFailure)) {

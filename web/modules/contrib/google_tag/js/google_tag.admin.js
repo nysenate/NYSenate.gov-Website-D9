@@ -22,28 +22,18 @@
           var str = '';
           var toggle = $('input[type="radio"]:checked', context).val();
           var values;
-          if (element == 'checkbox') {
-            values = $('input[type="checkbox"]:checked + label', context).length;
+
+          values = element === 'checkbox' ?
+            $('input[type="checkbox"]:checked + label', context).length :
+            $('textarea', context).val();
+
+          if (toggle === 'exclude listed') {
+            str = !values ? 'All !plural' : 'All !plural except !adjective !plural';
           }
           else {
-            var values = $('textarea', context).val();
+            str = !values ? 'No !plural' : 'Only !adjective !plural';
           }
-          if (toggle == 'exclude listed') {
-            if (!values) {
-              str = 'All !plural';
-            }
-            else {
-              str = 'All !plural except !adjective !plural';
-            }
-          }
-          else {
-            if (!values) {
-              str = 'No !plural';
-            }
-            else {
-              str = 'Only !adjective !plural';
-            }
-          }
+
           const args = {'!plural': plural, '!adjective': adjective};
           return Drupal.t(Drupal.formatString(str, args));
         }

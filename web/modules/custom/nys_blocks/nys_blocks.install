@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @file
+ * Install file for the nys_blocks module.
+ */
+
+use Drupal\block_content\Entity\BlockContent;
+
+/**
+ * Implements hook_update_N().
+ */
+function nys_blocks_update_9001() {
+  // Create Student Programs Overview Text block.
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Overview Text',
+    ]);
+
+  if (empty($block)) {
+    $student_programs_block = BlockContent::create([
+      'info' => 'Student Programs Overview Text',
+      'type' => 'text',
+      'revision_user' => 1,
+      'field_title' => 'Student Programs Overview Text',
+      'field_body_left' => [
+        'value' => '<div class="c-block c-block--about-student-programs">
+        <div class="nys-subtitle-title">Student Programs</div>
+        <p class="l-row">From the halls of higher-learning to the halls of the State Capitol, New York State Senate Student Programs offers undergraduate and graduate students exciting opportunities to learn about state government and to experience firsthand the legislative process. If you have ever thought about a career in public service or state government, now is the time to get started! Our on-site, experiential learning programs provide students with a work experience that is both professionally rewarding and academically enriching.</p>
+        <a href="/student-programs" class="c-container--link">Learn More</a>
+        </div>',
+        'format' => 'full_html',
+      ],
+      'field_is_full_bleed' => 0,
+      'field_show_title' => 0,
+      'field_with_background' => 0,
+      'field_link' => [
+        'uri' => 'internal:/student-programs',
+        'title' => 'Learn More',
+      ],
+    ]);
+    $student_programs_block->save();
+  }
+
+  // Create Student Programs Program Links block.
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Student Programs Program Links',
+    ]);
+
+  if (empty($block)) {
+    $program_links_block = BlockContent::create([
+      'info' => 'Student Programs Program Links',
+      'type' => 'text',
+      'revision_user' => 1,
+      'field_title' => 'Student Programs Program Links',
+      'field_body_left' => [
+        'value' => '<p class="nys-btn--gold"><a href="/newsroom/articles/undergraduate-program"><span>Undergraduate Session<br />
+        Assistants Program</span></a></p>
+
+        <p class="nys-btn--blue"><a href="/newsroom/articles/graduate-program"><span>Graduate Fellowships</span></a></p>',
+        'format' => 'full_html',
+      ],
+      'field_body_right' => [
+        'value' => '<p class="nys-btn--gold"><a href="/newsroom/articles/2022/work-based-learning-assistant-springfall"><span>Work-based Learning Assistant<br />
+        (Spring/Fall)</span></a></p>
+
+        <p class="nys-btn--blue"><a href="/newsroom/articles/2022/senate-production-internship-summer"><span>Senate Production Internship<br />
+        (Summer)</span></a></p>',
+        'format' => 'full_html',
+      ],
+      'field_is_full_bleed' => 0,
+      'field_show_title' => 0,
+      'field_with_background' => 0,
+    ]);
+    $program_links_block->save();
+  }
+
+  // Create Contact Us block.
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Contact Us',
+    ]);
+
+  if (empty($block)) {
+    $contact_us_block = BlockContent::create([
+      'info' => 'Contact Us',
+      'type' => 'text',
+      'revision_user' => 1,
+      'field_title' => 'Contact Us',
+      'field_body_left' => [
+        'value' => '<div class="c-block--background">
+        <p><strong>NEW YORK STATE SENATE OFFICE OF STUDENT PROGRAMS</strong></p>
+
+        <p>208 Legislative Office Building<br />
+        Albany, NY 12247<br />
+        <br />
+        <strong>Tel:</strong>&nbsp;(518) 455-2611<br />
+        <strong>Fax:</strong>&nbsp;(518) 426-6827<br />
+        <strong>E-mail:</strong>&nbsp;students@nysenate.gov</p>
+        </div>',
+        'format' => 'full_html',
+      ],
+      'field_is_full_bleed' => 0,
+      'field_show_title' => 1,
+      'field_title_format' => 'container',
+      'field_with_background' => 0,
+    ]);
+    $contact_us_block->save();
+  }
+}

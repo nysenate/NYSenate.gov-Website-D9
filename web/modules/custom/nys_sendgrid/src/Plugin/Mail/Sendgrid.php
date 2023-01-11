@@ -17,6 +17,7 @@ use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\reroute_email\Constants\RerouteEmailConstants;
 use SendGrid\Mail\Mail;
 use SendGrid\Mail\From;
 use SendGrid\Mail\MimeType;
@@ -413,8 +414,8 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending('Email failed while validating body (id=%id, ct=%ct)', [
-          'message' => $e->getMessage(),
-          'body' => $body,
+          '%message' => $e->getMessage(),
+          '%body' => $body,
           '%ct' => $content_type,
         ]);
       }
@@ -464,7 +465,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         $dest = $this->message['to'] ?? '';
       }
       else {
-        $dest = $this->rerouteConfig->get(REROUTE_EMAIL_ADDRESS) ?: $this->siteConfig->get('site_mail');
+        $dest = $this->rerouteConfig->get(RerouteEmailConstants::REROUTE_EMAIL_ADDRESS) ?: $this->siteConfig->get('site_mail');
       }
 
       // If a reroute address is found, update each personalization.

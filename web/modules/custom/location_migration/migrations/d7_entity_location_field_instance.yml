@@ -1,0 +1,35 @@
+id: d7_entity_location_field_instance
+label: Entity location field instance
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\location_migration\Plugin\migrate\D7EntityLocationDeriver
+source:
+  plugin: d7_entity_location_field_instance
+  constants:
+    required: false
+    status: true
+    langcode: und
+    default_value: []
+    translatable: true
+process:
+  type: type
+  entity_type: entity_type
+  field_name: field_name
+  bundle: bundle
+  label: field_label
+  # Required logic is broken in the source module.
+  required: constants/required
+  status: constants/status
+  settings:
+    plugin: default_value
+    source: field_instance_settings
+    default_value: []
+  default_value_function: ''
+  default_value: constants/default_value
+  translatable: constants/translatable
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d7_entity_location_field

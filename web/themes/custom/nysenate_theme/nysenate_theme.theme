@@ -48,34 +48,6 @@ function nysenate_theme_preprocess_block__system_branding_block(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_block_ID().
- */
-function nysenate_theme_preprocess_block__twitterblock(&$variables) {
-  $args = [
-    '@username' => $variables['configuration']['username'],
-  ];
-
-  // Follow link.
-  $variables['content']['follow_link'] = [
-    '#type' => 'link',
-    '#title' => t('Follow'),
-    '#url' => Url::fromUri(strtr('https://twitter.com/intent/follow?screen_name=@username', $args)),
-  ];
-
-  // Account link.
-  $variables['content']['account_link'] = [
-    '#type' => 'link',
-    '#title' => strtr('@@username', $args),
-    '#url' => Url::fromUri(strtr('https://twitter.com/@username', $args)),
-  ];
-
-  // Profile image.
-  $variables['content']['profile_image'] = [
-    '#markup' => strtr('<img src="https://unavatar.io/twitter/@username" width="100" height"100" />', $args),
-  ];
-}
-
-/**
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
@@ -791,11 +763,16 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
         'type' => $node->bundle(),
         'date' => $date,
         'title' => $node->getTitle(),
+        'url' => $node->toUrl()->toString(),
         'committee' => $committee,
         'image_hero' => $image_main,
       ];
+
     }
   }
+
+  // Invalidate cache tags on views:homepage_hero.
+  $variables['#cache']['tags'][] = 'views:homepage_hero';
 }
 
 /**
@@ -1505,6 +1482,13 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
   // Add suggestion to views_view_unformatted hook.
   if ($hook == 'views_view_unformatted') {
     $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
+
+  // Add suggestions to semanticviews_style hook.
+  if ($hook == 'semanticviews_style') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
   }
 }
@@ -3292,6 +3276,9 @@ function nysenate_theme_preprocess_page(&$variables) {
       }
     }
   }
+
+  $variables['dashboard_link'] = '/user/' . \Drupal::currentUser()->id();
+  $variables['edit_account_link'] = '/users/' . \Drupal::currentUser()->id() . '/edit';
 }
 
 /**
@@ -3575,4 +3562,42 @@ function nysenate_theme_preprocess_node__student_program(&$variables) {
 function nysenate_theme_preprocess_comment(&$variables) {
   $date = $variables['comment']->getCreatedTime();
   $variables['created_relative'] = \Drupal::service('date.formatter')->formatTimeDiffSince($date, ['granularity' => 1]);
+}
+
+/**
+ * Implements hook_preprocess_tweets().
+ */
+function nysenate_theme_preprocess_tweets(&$variables) {
+  $args = [
+    '@username' => $variables['elements']['#tweets'][0]['username'],
+  ];
+
+  // Follow link.
+  $variables['content']['follow_link'] = [
+    '#type' => 'link',
+    '#title' => t('Follow'),
+    '#url' => Url::fromUri(strtr('https://twitter.com/intent/follow?screen_name=@username', $args)),
+  ];
+
+  // Account link.
+  $variables['content']['account_link'] = [
+    '#type' => 'link',
+    '#title' => strtr('@@username', $args),
+    '#url' => Url::fromUri(strtr('https://twitter.com/@username', $args)),
+  ];
+  // Profile image.
+  $variables['content']['profile_image'] = [
+    '#markup' => strtr('<img src="//pbs.twimg.com/profile_images/1597653003816865792/17Jjbhbi_normal.jpg" width="100" height"100" />', $args),
+  ];
+
+  $elements = $variables['elements']['#tweets'];
+  foreach ($elements as $element) {
+    $created_at = $element['created_at'];
+    $date = date(strtotime($created_at));
+    $variables['date'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $date);
+    $variables['content']['items'][] = [
+      'body' => $element['text'],
+      'week' => $variables['date'],
+    ];
+  }
 }

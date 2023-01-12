@@ -54,13 +54,15 @@
       {% endif %}
 
       {% if article_items %}
-        {% for article_item in article_items %}
-          <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
-            {% include "@nysenate_theme/nysenate-press-release/nysenate-press-release.twig" with {
-                article: article_item
-              } only %}
-          </div>
-        {% endfor %}
+        <div class="content-list__wrapper">
+          {% for article_item in article_items %}
+            <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+              {% include "@nysenate_theme/nysenate-press-release/nysenate-press-release.twig" with {
+                  article: article_item
+                } only %}
+            </div>
+          {% endfor %}
+        </div>
       {% else %}
         {% if empty_message and page_type != "issues" %}
           <div class="view-empty">
@@ -70,12 +72,10 @@
 
       {% endif %}
       {% if article_items|length > 5 %}
-        <div class="item-list">
-          <ul class="pager pager-load-more">
-            <li class="pager-next first last">
-              <a href="{{ pagination_link }}">{{ pagination_link_text }}</a>
-            </li>
-          </ul>
+        <div class="pager pager-load-more">
+          <span class="pager-next first last">
+            <a class="load-more">{{ pagination_link_text }}</a>
+          </span>
         </div>
       {% endif %}
 
@@ -124,10 +124,10 @@
 
 {% if issue_cards|length > 12 %}
   <div class="item-list">
-    <ul class="pager pager-load-more">
-      <li class="pager-next first last">
-        <a href="{{ pagination_link }}">{{ pagination_link_text }}</a>
-      </li>
-    </ul>
+    <div class="pager pager-load-more">
+      <span class="pager-next first last">
+        <a class="load-more">{{ pagination_link_text }}</a>
+      </span>
+    </div>
   </div>
 {% endif %}

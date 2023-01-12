@@ -123,6 +123,19 @@ carousel:
   dependencies:
     - nysenate_theme/slick
 
+chart:
+  css:
+    component:
+      dist/css/chart.css: {}
+  js:
+    dist/js/chart.es6.js: {}
+  dependencies:
+    - nysenate_theme/highcharts
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
 colorbox:
   css:
     theme:
@@ -454,6 +467,18 @@ nysenate-accordion:
     - core/drupal
     - core/drupalSettings
 
+nysenate-accordion-nested:
+  css:
+    component:
+      dist/css/nysenate-accordion-nested.css: {}
+  js:
+    dist/js/nysenate-accordion-nested.es6.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
 nysenate-upcoming-events:
   css:
     component:
@@ -724,6 +749,10 @@ slick:
     - core/drupalSettings
     - core/jquery.once
     - core/jquery
+
+highcharts:
+  js:
+    dist/js/highcharts.js: {}
 
 sticky-nav:
   css:

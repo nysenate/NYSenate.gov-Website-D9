@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
@@ -16,6 +17,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\Component\Utility\Html;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\address\Plugin\Field\FieldType\AddressItem;
 
@@ -1506,6 +1508,25 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
   // Add suggestion to form hook.
   if ($hook == 'form' && !empty($variables['element']['#theme'])) {
     $suggestions[] = 'form__' . $variables['element']['#theme'][0];
+  }
+
+  // Add suggestion to private_message_inbox form hook.
+  if ($hook == 'form' && !empty($variables['element']['#form_id'])) {
+    $current_user = \Drupal::entityTypeManager()->getStorage('user')
+      ->load(\Drupal::currentUser()->id());
+
+    $senator_message_form_ids = [];
+    if ($current_user->hasField('field_senator_management') && !$current_user->get('field_senator_management')->isEmpty()) {
+      foreach ($current_user->field_senator_management as $senator_management) {
+        $senator = $senator_management->entity;
+        $senator_message_form_ids[] = 'views_form_private_message_inbox_inbox_' . $senator->field_user_account->target_id;
+      }
+    }
+
+    if ($variables['element']['#form_id'] == 'views_form_private_message_inbox_inbox_' . \Drupal::currentUser()->id() ||
+      (!empty($senator_message_form_ids) && in_array($variables['element']['#form_id'], $senator_message_form_ids))) {
+      $suggestions[] = 'form__views_form_private_message_inbox__list';
+    }
   }
 
   // Add suggestion to form_element hook.
@@ -3157,8 +3178,15 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
  */
 function nysenate_theme_preprocess_form__views_exposed_form__private_message_inbox__inbox(&$variables) {
   $variables['title'] = 'Inbox';
+
+  $cta_link = '/users/' . \Drupal::currentUser()->id() . '/dashboard/sent';
+  $uri_explode = explode('/', \Drupal::request()->getRequestUri());
+  if ($uri_explode && is_array($uri_explode)) {
+    $cta_link = '/users/' . $uri_explode[2] . '/dashboard/sent';
+  }
+
   $variables['cta'] = [
-    'link' => '#',
+    'link' => $cta_link,
     'label' => 'View Sent Messages',
   ];
 }
@@ -3211,6 +3239,9 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
         $row_id = $result->_entity->id();
         $field_to = $result->_entity->field_to->target_id;
         $subject = $result->_entity->field_subject->value;
+        $owner = User::load($result->_entity->owner[0]->target_id);
+        $owner_name = $owner->name->value ?? '';
+        $message = $result->_entity->message->value ?? '';
 
         $link_options = [
           'attributes' => [
@@ -3223,6 +3254,11 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
 
         $url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/reply/' . $row_id);
         $link = Link::fromTextAndUrl($subject, $url);
+        $owner_link = Link::fromTextAndUrl($owner_name, $url)->toString();
+        $message_link = Link::fromTextAndUrl($message, $url)->toString();
+        $variables['rows'][$key]['columns']['owner']['content'][0]['field_output']['#markup'] = '
+          <div class="message-list__td--information__author">' . $owner_link . '</div>
+          <div class="message-list__td--information__message">' . $message_link . '</div>';
         $variables['rows'][$key]['columns']['field_subject']['content'][0]['field_output']['#markup'] = $link->toString();
 
         $url->setOptions($link_options);
@@ -3230,9 +3266,13 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
         $forward_url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/forward/' . $row_id);
         $forward_url->setOptions($link_options);
         $forward_link = Link::fromTextAndUrl(t('Forward'), $forward_url)->toString();
+        $actions_attributes = new Attribute([
+          'class' => ['message-list__td--issue'],
+        ]);
 
-        $variables['rows'][$key]['columns']['actions']['content'][0]['field_output']['#markup'] = $forward_link . ' ' . $reply_link;
-
+        $variables['rows'][$key]['columns']['actions']['content'][0]['field_output']['#markup'] = '<div class="message-list__td--issue__toggle"></div>
+          <div class="message-list__td--issue__actions">' . $forward_link . ' ' . $reply_link . '</div>';
+        $variables['rows'][$key]['columns']['actions']['attributes'] = $actions_attributes;
       }
     }
   }

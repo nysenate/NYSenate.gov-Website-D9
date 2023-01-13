@@ -56,7 +56,7 @@
                     'views-field',
                     'views-field-' ~ fields[key],
                     'message-list__th',
-                    column.content == 'SUBJECT' ? 'message-list__th--hide-sm' : '',
+                    key == 'field_subject' ? 'message-list__th--hide-sm' : '',
                   ]
                 %}
               {% endif %}
@@ -91,6 +91,10 @@
                     set column_classes = [
                       'views-field',
                       'message-list__td',
+                      key == 'owner' ? 'message-list__td--information' : '',
+                      key == 'field_subject' ? 'message-list__td--subject' : '',
+                      key == 'field_subject' ? 'message-list__td--hide-sm' : '',
+                      key == 'created' ? 'message-list__td--date' : '',
                     ]
                   %}
                   {% for field in column.fields %}

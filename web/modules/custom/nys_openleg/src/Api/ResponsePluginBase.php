@@ -74,4 +74,11 @@ abstract class ResponsePluginBase implements ResponsePluginInterface {
     $this->response = $response;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getTotal() {
+    return $this->response->total;
+  }
+
 }

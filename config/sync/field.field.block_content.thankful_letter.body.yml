@@ -1,0 +1,31 @@
+uuid: 4028d835-8579-46da-ae9a-9629398b8f5a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.thankful_letter
+    - field.storage.block_content.body
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats: {  }
+id: block_content.thankful_letter.body
+field_name: body
+entity_type: block_content
+bundle: thankful_letter
+label: Body
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: "<p>Dear Participant,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the Thanksgiving Day Creative Celebration. We received outstanding poems, essays, and artwork that exemplify the creativity of New York State’s young people.</p>\r\n\r\n<p>The submissions received are remarkable in what they represent – showing gratitude and respect for family, friends, our troops fighting overseas, and many other important subjects and activities. I am humbled and honored to see such inspiring contributions in response to what is a deceptively difficult question: “What are you thankful for?”</p>\r\n\r\n<p>On behalf of the New York State Senate, I would like to offer my wholehearted congratulations to all of the participants in this year’s Thanksgiving Day Creative Celebration.</p>\r\n"
+    summary: ''
+    format: full_html
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

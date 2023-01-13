@@ -1,0 +1,40 @@
+uuid: 47bc789b-c9f0-462f-bc82-ffa4d50302f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sincerely
+    - field.field.block_content.sincerely.body
+  module:
+    - text
+id: block_content.sincerely.default
+targetEntityType: block_content
+bundle: sincerely
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 26
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

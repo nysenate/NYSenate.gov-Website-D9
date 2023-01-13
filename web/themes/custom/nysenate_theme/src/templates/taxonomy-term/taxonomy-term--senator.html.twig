@@ -1,0 +1,78 @@
+{#
+/**
+ * @file
+ * Theme override to display a taxonomy term.
+ *
+ * Available variables:
+ * - url: URL of the current term.
+ * - name: (optional) Name of the current term.
+ * - content: Items for the content of the term (fields and description).
+ *   Use 'content' to print them all, or print a subset such as
+ *   'content.description'. Use the following code to exclude the
+ *   printing of a given child element:
+ *   @code
+ *   {{ content|without('description') }}
+ *   @endcode
+ * - attributes: HTML attributes for the wrapper.
+ * - page: Flag for the full page state.
+ * - term: The taxonomy term entity, including:
+ *   - id: The ID of the taxonomy term.
+ *   - bundle: Machine name of the current vocabulary.
+ * - view_mode: View mode, e.g. 'full', 'teaser', etc.
+ *
+ * @see template_preprocess_taxonomy_term()
+ */
+#}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/taxonomy-term-issues') }}
+
+
+<h2 class="nys-title">Senator {{ content.field_senator_name[0]['#markup'] }}'s Staff Dashboard</h2>
+<p><a class="c-paragraph--more-link a-left" href="/senators/{{ content.field_senator_name[0]['#markup']|lower|replace({' ':'-'}) }}">Go to Senator {{ content.field_senator_name[0]['#markup']}}'s home page</a></p>
+
+<div>
+        <h3 class="c-subpage-header--title">Manage Senator's Information</h3>
+<p>
+    <ul>
+        <li><a href="/taxonomy/term/{{ term.id }}/edit">Manage Senator theme, name, biography, member images, contact information, and promotional banners</a></li>
+        <li><a href="/admin/senator/content/micropage">Manage Microsite pages</a> [Home, About, Contact, Events, Legislation, Newsroom, District]</li>
+        <li><a href="/senators/{{ content.field_senator_name[0]['#markup']|lower|replace({' ':'-'}) }}/district">Add a description to the Senator's district</a></li>
+        <li><a href="/admin/senator/content/committee">Committee chairs can manage committee descriptions, featured legislation, and header images.</a></li>
+        <li><a href="/admin/senator/content/bills?title=&type_1=bill&field_ol_session_value=">Assign issues to bills the Senator has sponsored</a></li>
+        <li><a href="/admin/senator/content/bills?title=&type_1=resolution&field_ol_session_value=">Add issues and images to Resolutions introduced by the Senator</a></li>
+        <li><a href="/admin/senator/content/petitions">View All Published Petitions</a></li>
+    </ul>
+</p>
+    <h3 class="c-subpage-header--title">Manage Senator's Existing Content</h3>
+<p>
+
+    <ul>
+        <li><a href="/admin/senator/content/content?title=&type=article&status=All&field_category_value=article">Articles</a></li>
+        <li><a href="/admin/senator/content/content??title=&type=article&field_category_value=press_release&status=All">Press Releases</a></li>
+        <li><a href="/admin/senator/content/content?title=&type=event&field_category_value=All&status=All">Events</a></li>
+        <li><a href="/admin/senator/content/content?title=&type=honoree&field_category_value=All&status=All">Honoree Profiles</a></li>
+        <li><a href="/admin/senator/content/content?title=&type=in_the_news&status=All&field_category_value=article">In the News</a></li>
+        <li><a href="/admin/senator/content/content?title=&type=petition&status=All&field_category_value=article">Petitions</a></li>
+        <li><a href="/admin/senator/content/content?title=&type=video&status=All&field_category_value=article">Videos</a></li>
+    </ul>
+    </p>
+    <h3 class="c-subpage-header--title">Manage Senator Sponsored Bills and Resolutions</h3>
+    <p>***Add issues to Bills and images to Resolutions introduced by the Senator. Issue tags help constituents discover bills and build exposure on NYSenate.gov***</p>
+    <p>
+    <ul>
+        <li><a href="/admin/senator/content/bills?title=&type=bill&status=All">Bills</a></li>
+        <li><a href="/admin/senator/content/bills?title=&type=resolution&status=All">Resolutions</a></li>
+    </ul>
+    </p>
+    <h3>Manage Questionnaires and Webforms</h3>
+    <p>
+    <ul>
+        <li><a href="/admin/webform">Manage webforms that have been attached to questionnaires</a></li>
+        <li><a href="/admin/webform/add">Add new webform</a></li>
+        <li><a href="/admin/senator/content/questionnaires">View/Add Questionnaires</a></li>
+    </ul>
+    </p>
+</div>
+</ul>
+

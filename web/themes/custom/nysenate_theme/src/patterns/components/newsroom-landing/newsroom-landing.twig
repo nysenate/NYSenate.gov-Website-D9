@@ -4,7 +4,7 @@
   <div class="c-container--header">
     <h2 class="c-container--title">
       {% if news %}
-        Newsroom
+        {{cta_name|default('Newsroom')}}
       {% elseif events %}
         Upcoming Events
       {% else %}
@@ -13,7 +13,7 @@
     </h2>
     <a href="{{ cta_url }}" class="c-container--link">
       {% if news %}
-        Go to Newsroom
+        {{cta_label|default('Go to Newsroom')}}
       {% elseif events %}
         Go to Events
       {% else %}
@@ -25,7 +25,11 @@
     {% for item in items %}
       {% if news %}
         <article class="c-news-block {% if loop.first %} first {% endif %} {% if loop.index is even %} u-even {% else %} u-odd {% endif %}">
-          <div class="c-title">{{ item.news_title }}</div>
+          <div class="c-title">{{ item.news_title }}
+            <span class="c-news-date">
+              <span class="date-display-single">{{ item.news_date }}</span>
+            </span>
+          </div>
           {% if item.news_image %}
             <div class="c-newsroom-image">
               <a href="{{ item.news_url }}"><img src="{{ item.news_image }}" width="360" height="200" alt=""></a>
@@ -39,6 +43,21 @@
               <a class="c-press-release--topic" href="{{ item.news_topic.url }}">{{ item.news_topic.text }}</a>
             </div>
           {% endif %}
+
+          {% if item.news_topics|length %}
+            <div class="c-newsroom-link">
+              {% for topic in item.news_topics %}
+                <a class="c-press-release--topic" href="{{ topic.url }}">{{ topic.text }}</a>
+                {{ loop.first and item.news_topics <= 1 or loop.last ? '' : ', ' }}
+              {% endfor %}
+            </div>
+          {% endif %}
+          <div class="c-senator-card">
+            <h4 class="nys-senator--involved">{{ item.news_senator_count|default(0) }}
+              Senator{{ item.news_senator_count|default(0) > 1 ? 's' : '' }}
+              Involved</h4>
+          </div>
+
         </article>
       {% elseif events %}
         <article class="c-event-block c-event-block--upcoming {% if loop.first %} first {% endif %} {% if loop.index is even %} u-even {% else %} u-odd {% endif %}">
@@ -90,19 +109,19 @@
                 <hr>
                 {% for position in item.bill_positions %}
                   {% if position.is_grouped %}
-                  <li class="nys-bill-status--assem-sen">
-                    <ul class="nys-bill-status">
-                    {% for item in position.items %}
-                      <li {% if item.is_passed %}class="passed"{% endif %} title="{{ item.text }}">
-                        <span class="nys-bill-status--text">{{ item.text }}</span>
-                      </li>
-                    {% endfor %}
-                    </ul>
-                  </li>
+                    <li class="nys-bill-status--assem-sen">
+                      <ul class="nys-bill-status">
+                        {% for item in position.items %}
+                          <li {% if item.is_passed %} class="passed" {% endif %} title="{{ item.text }}">
+                            <span class="nys-bill-status--text">{{ item.text }}</span>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </li>
                   {% else %}
-                    <li {% if position.is_passed == true %}class="passed"{% endif %} title="{{ position.text }}">
+                    <li {% if position.is_passed == true %} class="passed" {% endif %} title="{{ position.text }}">
                       <span class="nys-bill-status--text">{{ position.text }}</span>
-                    </li> 
+                    </li>
                   {% endif %}
                 {% endfor %}
                 <li class="spacer"></li>

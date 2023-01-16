@@ -3,8 +3,12 @@ langcode: en
 status: true
 dependencies:
   module:
+    - field_permissions
     - taxonomy
     - user
+third_party_settings:
+  field_permissions:
+    permission_type: custom
 id: user.field_senator_multiref
 field_name: field_senator_multiref
 entity_type: user

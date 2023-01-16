@@ -2346,7 +2346,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
 
       $type = $votes->field_ol_vote_type->value ?? NULL;
       if ($type == 'COMMITTEE') {
-        $vote_committee = $term_storage->load($votes->field_ol_committee[0]->target_id);
+        $vote_committee = $term_storage->load($votes->field_ol_committee[0]->getValue()['target_id']);
         if ($vote_committee) {
           $type = ($vote_committee->name->value ?? '') . ' ' . $type;
         }

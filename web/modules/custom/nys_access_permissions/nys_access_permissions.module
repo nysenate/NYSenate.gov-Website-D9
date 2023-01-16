@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Validates given user is designated on senator's list of editors.
@@ -91,9 +92,9 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
         }
       }
       elseif (in_array($node->bundle(), _nys_access_permissions_microsite_content_producer_node_types())) {
-        if ($node->hasField('field_senator_multiref') && $target_ids = $node->field_senator_multiref->getValue()) {
-          foreach ($target_ids as $target_id) {
-            if (_nys_access_permissions_user_is_senators_microsite_producer($target_id, $account->id())) {
+        if ($node->hasField('field_senator_multiref') && $senator_multirefs = $node->field_senator_multiref->getValue()) {
+          foreach ($senator_multirefs as $senator_multiref) {
+            if (_nys_access_permissions_user_is_senators_microsite_producer($senator_multiref['target_id'], $account->id())) {
               return AccessResult::allowed();
             }
           }
@@ -203,4 +204,50 @@ function _nys_access_permissions_get_allowed_senators_dropdown(AccountProxy $che
 
   // Return the static cache.
   return $select_options[$check_user_id];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_access_permissions_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $user = \Drupal::currentUser()->getRoles();
+
+  if ($form_id == 'node_bill_edit_form') {
+    if (!in_array("administrator", $user)) {
+      $form['title']['#disabled'] = 1;
+      $form['metatags']['#access'] = FALSE;
+      $form['revision_information']['#access'] = FALSE;
+      $form['comment_settings']['#access'] = FALSE;
+      $form['author']['#access'] = FALSE;
+      $form['options']['#access'] = FALSE;
+      foreach ($form as $key => $value) {
+        if (strpos($key, 'field_') === 0 && !in_array($key, [
+          'field_issues',
+          'field_bill_no_issue_tags',
+        ]
+        )) {
+          $form[$key]['#access'] = FALSE;
+        }
+      }
+    }
+  }
+  if ($form_id == 'node_resolution_edit_form') {
+    $form['title']['#disabled'] = 1;
+    $form['metatags']['#access'] = FALSE;
+    $form['revision_information']['#access'] = FALSE;
+    $form['comment_settings']['#access'] = FALSE;
+    $form['author']['#access'] = FALSE;
+    $form['options']['#access'] = FALSE;
+    foreach ($form as $key => $value) {
+      if (strpos($key, 'field_') !== FALSE && !in_array($key, [
+        'field_issues',
+        'field_image_main',
+        'field_featured_quote',
+        'field_majority_issue_tag',
+      ]
+      )) {
+        $form[$key]['#access'] = FALSE;
+      }
+    }
+  }
 }

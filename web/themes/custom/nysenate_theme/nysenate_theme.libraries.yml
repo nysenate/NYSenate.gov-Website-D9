@@ -185,6 +185,28 @@ content-carousel:
   dependencies:
     - rain_theme/slick
 
+dashboard-inbox:
+  css:
+    component:
+      dist/css/dashboard-inbox.css: {}
+  js:
+    dist/js/dashboard-inbox.es6.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
+dashboard-lists:
+  css:
+    component:
+      dist/css/dashboard-lists.css: {}
+
+dashboard-petitions-questionnaires:
+  css:
+    component:
+      dist/css/dashboard-petitions-questionnaires.css: {}
+
 district:
   css:
     component:
@@ -308,6 +330,12 @@ hero:
   css:
     component:
       dist/css/hero.css: {}
+  js:
+    dist/js/hero.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
 
 heading:
   css:
@@ -455,6 +483,28 @@ nysenate-issues:
   css:
     component:
       dist/css/nysenate-issues.css: {}
+  js:
+    dist/js/nysenate-issues.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+nysenate-committee-widget:
+  css:
+    component:
+      dist/css/nysenate-committee-widget.css: {}
+  js:
+    dist/js/nysenate-committee-widget.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+nysenate-press-release:
+  css:
+    component:
+      dist/css/nysenate-press-release.css: {}
 
 nysenate-senators-events:
   css:
@@ -525,6 +575,11 @@ nysenate-actionbar:
     component:
       dist/css/nysenate-actionbar.css: {}
 
+nysenate-almost-there:
+  css:
+    component:
+      dist/css/nysenate-almost-there.css: {}
+
 nysenate-promotional-banner:
   css:
     component:
@@ -544,6 +599,43 @@ nysenate-senators-talking-about-this-issue:
   css:
     component:
       dist/css/nysenate-senators-talking-about-this-issue.css: {}
+
+nysenate-committee-detail:
+  css:
+    component:
+      dist/css/nysenate-committee-detail.css: {}
+
+nysenate-senator-list:
+  css:
+    component:
+      dist/css/nysenate-senator-list.css: {}
+  js:
+    dist/js/nysenate-senator-list.js: {}
+  dependencies:
+    - core/jquery
+
+nysenate-senate-directory:
+  css:
+    component:
+      dist/css/nysenate-senate-directory.css: {}
+
+nysenate-user-profile:
+  css:
+    component:
+      dist/css/nysenate-user-profile.css: {}
+nysenate-chapters:
+  css:
+    component:
+      dist/css/nysenate-chapters.css: {}
+  js:
+    dist/js/nysenate-chapters.js: {}
+  dependencies:
+    - core/jquery
+
+nysenate-student-programs:
+  css:
+    component:
+      dist/css/nysenate-student-programs.css: {}
 
 page-layout:
   css:
@@ -694,3 +786,8 @@ want-to:
   css:
     component:
       dist/css/want-to.css: {}
+
+school-form:
+  css:
+    component:
+      dist/css/school-form.css: {}

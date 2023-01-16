@@ -5,6 +5,7 @@
       const tabContainer = $('.l-tab-bar');
       const tabLink = $('.c-tab .c-tab-link');
       const textExpander = $('.text-expander');
+      const loadMore = $('.load-more');
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
@@ -62,12 +63,57 @@
           }
         });
       }
+
+      // event for load more
+      if (loadMore) {
+        loadMore.each(function () {
+          const items = $(this)
+            .closest('.pager-load-more')
+            .parent()
+            .find('.content__item');
+
+          items.css('display', 'none');
+
+          items.slice(0, 5).show();
+
+          let itemsHidden = $(this)
+            .closest('.pager-load-more')
+            .parent()
+            .find('.content__item:hidden');
+
+          $(this).on('click', function(e) {
+            e.preventDefault();
+
+            itemsHidden.slice(0, 5).slideDown();
+
+            itemsHidden = $(this)
+              .closest('.pager-load-more')
+              .parent()
+              .find('.content__item:hidden');
+
+            if(itemsHidden.length === 0) {
+              $(this).css('display', 'none');
+            }
+          });
+        });
+      }
     },
     toggleTabDropdown: function (e) {
       e.preventDefault();
 
-      var tab = $(this).parent('.c-tab');
-      var tabBar = $(this).parents('.l-tab-bar');
+      const tab = $(this).parent('.c-tab');
+      const tabBar = $(this).parents('.l-tab-bar');
+      const billVersion = tab.data('version').split('-');
+      const newUrl = tab.data('target');
+
+      if (billVersion && newUrl) {
+        const tabContent = tab.closest('.c-bill--amendment-details').parent().find('.tabs-content');
+
+        history.pushState({}, 'NY State Senate Bill ' + billVersion[1], newUrl);
+
+        tabContent.find('.active').removeClass('active');
+        tabContent.find($(this).val()).addClass('active');
+      }
 
       if (tab.hasClass('active') && !tabBar.hasClass('open')) {
         tabBar.addClass('open');

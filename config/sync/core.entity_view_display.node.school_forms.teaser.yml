@@ -1,0 +1,37 @@
+uuid: cfc57351-7fc7-43cb-9cb3-f24f683ecca5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.school_forms.field_form_banner_image
+    - field.field.node.school_forms.field_form_date
+    - field.field.node.school_forms.field_form_summary
+    - field.field.node.school_forms.field_form_title
+    - field.field.node.school_forms.field_issues
+    - field.field.node.school_forms.field_school_form
+    - field.field.node.school_forms.field_school_form_type
+    - node.type.school_forms
+  module:
+    - user
+id: node.school_forms.teaser
+targetEntityType: node
+bundle: school_forms
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_form_banner_image: true
+  field_form_date: true
+  field_form_summary: true
+  field_form_title: true
+  field_issues: true
+  field_school_form: true
+  field_school_form_type: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

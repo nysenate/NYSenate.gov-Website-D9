@@ -62,6 +62,13 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
   protected EntityTypeManagerInterface $manager;
 
   /**
+   * Local copy of NYSenate global site settings.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected ImmutableConfig $siteConfig;
+
+  /**
    * Constructs event subscriber.
    */
   public function __construct(ConfigFactory $configFactory, Slack $slack, EntityTypeManagerInterface $manager) {
@@ -69,6 +76,9 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
     $this->slack = $slack;
     $this->manager = $manager;
     $this->logger = $this->getLogger('nys_bill_notifications');
+
+    // Also, set a reference to the global site config.
+    $this->siteConfig = $configFactory->get('nys_config.settings');
   }
 
   /**
@@ -91,7 +101,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
     $new_subs = [$this->config->get('inject_email') ?? ''];
 
     // Add any user accounts to be injected.
-    $users = User::loadMultiple($this->config->get('inject_userid') ?? []);
+    $users = User::loadMultiple([$this->config->get('inject_userid') ?? '']);
     foreach ($users as $user) {
       $new_subs[] = ['uid' => $user->id(), 'email' => $user->getEmail()];
     }
@@ -203,8 +213,6 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
         'summary' => 'field_ol_name',
         'sponsor' => 'field_ol_sponsor_name',
         'latest_committee' => 'field_ol_latest_status_committee',
-        'same_as' => 'field_ol_same_as',
-        'substituted_by' => 'field_ol_substituted_by',
       ];
       foreach ($refs as $key => $val) {
         $sub_name = '%bill.' . $key . '%';
@@ -225,28 +233,28 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       }
 
       // Add the full session reference (2015-2016 vs 2015).
-      if ($test_val = ($subs['%node.session%'] ?? '')) {
-        $subs['%node.full_session%'] = $test_val % 2
+      if ($test_val = ($subs['%bill.session%'] ?? '')) {
+        $subs['%bill.full_session%'] = $test_val % 2
           ? $test_val . '-' . ((++$test_val) % 100)
           : --$test_val . '-' . ((++$test_val) % 100);
       }
 
       // Set the alternate chamber.
-      $subs['%bill.alternate_chamber%'] = match ($subs['%node.chamber%']) {
+      $subs['%bill.alternate_chamber%'] = match ($subs['%bill.chamber%'] ?? '') {
         'Senate' => "Assembly",
         'Assembly' => "Senate",
         default => '',
       };
 
       // Get the same_as variable we need for rendering.
-      $same_as_array = json_decode($subs['%node.same_as%']);
-      $subs['%bill.same_as%'] = $same_as_array[0]->printNo;
+      $same_as_array = json_decode($item->references["updated_bill"]->field_ol_same_as->value ?? '');
+      $subs['%bill.same_as%'] = $same_as_array[0]->printNo ?? '';
 
       // Values for committee emails.
       $url_formatted_committee_string = strtolower(str_replace(
         [',', ' '],
         ['', '-'],
-        $subs['%node.latest_committee%']
+        $subs['%bill.latest_committee%'] ?? ''
       ));
       $subs['%bill.committee_path%'] =
         $url_formatted_committee_string
@@ -270,9 +278,14 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       }
       $subs['%other_events%'] = $extra;
 
+      // Add any context data points set in the primary event.  Context takes
+      // precedence over anything set above.
+      foreach (($item->data['primary_event']['context'] ?? []) as $key => $val) {
+        $subs["%{$key}%"] = $val;
+      }
+
       // Add the governor's name.
-      // @todo fix this. Need a reference to variable_get('governor_full_name')
-      $subs['%governor.full_name%'] = 'governor name';
+      $subs['%governor.full_name%'] = $this->siteConfig->get('governor_name');
     }
 
   }

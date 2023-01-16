@@ -69,6 +69,7 @@ h3 {
   }
 }
 
+.c-block .c-detail--download,
 .c-detail--download {
   display: block;
   margin-bottom: 20px;
@@ -377,14 +378,13 @@ main.l-row--main {
   }
 }
 
-/*-----------------------------------------
+/*------------------------------------
+/	SENATOR LISTING
 /
-/ 	SENATOR LISTING
-/ 	circular thumbnail of senator
-/ 	description to the right
-/ 	name, district, party affiliation
-/
-/-----------------------------------------*/
+/	circular thumbnail of senator
+/	description to the right
+/	name, district, party affiliation
+/-------------------------------------*/
 .nys-senator {
 	position: relative;
 	overflow: hidden;
@@ -401,6 +401,7 @@ main.l-row--main {
 	width: 45px;
 	margin-right: 15px;
   border-radius: 50%;
+  overflow: hidden;
 
 	a {
 		display: block;
@@ -426,22 +427,38 @@ main.l-row--main {
 .nys-senator--title {
 	color: $grey05;
 	text-transform: uppercase;
-	font-family: $font-serif;
+	font-family: $font-sans;
 	font-size: 10px;
 	line-height: 1.2em;
 }
 
 .nys-senator--name {
-  margin: 0;
-  font-family: $font-serif;
+	margin: 0;
+	color: $grey08;
+	text-transform: capitalize;
+	font-family: $font-serif;
+	font-size: 16px;
+	line-height: 1.2em;
   font-weight: $font-weight-normal;
-  color: $grey08;
-  font-size: 16px;
-  line-height: 1.2em;
 
-  a {
-    color: $grey08;
-  }
+	a {
+		color: $grey08;
+	}
+}
+
+.nys-senator--district {
+	color: $grey03;
+	text-transform: uppercase;
+	font-family: $font-sans;
+	font-size: 12px;
+	letter-spacing: 0.05em;
+	line-height: 1.2em;
+}
+
+.nys-senator--party {
+	color: $blue01;
+	text-transform: capitalize;
+	font-family: $font-sans-bold;
 }
 
 .nys-senator--district {

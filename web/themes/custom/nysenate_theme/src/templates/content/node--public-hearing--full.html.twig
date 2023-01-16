@@ -96,6 +96,8 @@
       } only %}
     </div>
   {% endif %}
+
+  {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
 </article>
 
 {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
@@ -104,3 +106,4 @@
   cta: cta,
 } only
 %}
+

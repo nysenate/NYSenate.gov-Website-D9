@@ -1,4 +1,5 @@
 {{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
 
 <div class="newsroom-content l-row">
   {% if event %}
@@ -26,55 +27,26 @@
 
     {% if news %}
       {% for panel in panels %}
-        <div class="panel-pane pane-views pane-senator-news content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
+        <div class="content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
 
-
-          <div class="pane-content">
-            <div class="c-news-container view view-senator-news view-id-senator_news view-display-id-all_news">
-
-
-              <div class="view-content">
-                {% for content in panel.contents %}
-                  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
-                    <article class="c-block c-block-press-release">
-                      <div class="c-press-release--header">
-                        <p class="c-press-release--title">{{ content.title }}</p>
-                        {% for topic in content.topics %}
-                          {% if loop.last %}
-                            <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>
-                          {% else %}
-                            <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>,
-                          {% endif %}
-                        {% endfor %}
-                      </div>
-                      <div class="c-press-release--body {% if content.img_src %}c-press-release--body__has-img {% endif %}">
-                        <h3 class="c-press-release--descript">
-                          <a href="{{ content.description.url }}">{{ content.description.text }}</a>
-                        </h3>
-                        <p class="c-press-release--date">
-                          <span class="date-display-single">{{ content.date }}</span>
-                        </p>
-                        {% if content.img_src %}
-                          <!-- if has video thumbnail it would go here -->
-                          <div class="c-press-release--img"><img src="{{ content.img_src }}" width="200" height="125" alt=""></div>
-                        {% endif %}
-                      </div>
-                    </article>
-                  </div>
-                {% endfor %}
+          <div class="content-list__wrapper">
+            {% for content in panel.contents %}
+              <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+                {% include "@nysenate_theme/nysenate-press-release/nysenate-press-release.twig" with {
+                  article: content
+                } only %}
               </div>
-
-              <div class="item-list">
-                <ul class="pager pager-load-more">
-                  <li class="pager-next first last">
-                    <a href="{{ panel.pagination_link }}">See More
-                      {{ panel.pagination_link_text }}</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            {% endfor %}
           </div>
 
+          {% if panel.contents|length > 5 %}
+            <div class="pager pager-load-more">
+              <span class="pager-next first last">
+                <a class="load-more">See More
+                  {{ panel.pagination_link_text }}</a>
+              </span>
+            </div>
+          {% endif %}
 
         </div>
         {% if not loop.last %}
@@ -85,88 +57,93 @@
       {% for panel in panels %}
         <div class="content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
           <div id="wrapper1">
-            <div class="view view-senator-events view-id-senator_events view-display-id-upcoming_events view-dom-id-">
 
-              <div class="view-content">
-                {% for content in panel.contents %}
-                  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
-                    <article class="c-event-block c-event-block--list">
-                      <div class="c-event-date">
-                        <span>{{ content.date }}</span>
-                        {{ content.month }}</div>
-                      <div class="event-details">
-                        <a href="{{ content.event_url }}">
-                          <h3 class="c-event-name">{{ content.event_name }}</h3>
-                        </a>
-                        <a class="c-event-location" href="{{ content.location.link }}" target="_blank">
-                          <span class="icon-before__circle-pin"></span>
-                          <span>{{ content.location.name }}</span>
-                        </a>
-                        {% if content.address %}
-                          <div class="c-event-address">{{ content.address|raw }}</div>
-                        {% endif %}
-                        <div class="c-event-time">
-                          <span class="date-display-single">
-                            <span class="date-display-range">
-                              <span class="date-display-start">{{ content.time_start }}</span>
-                              to
-                              <span class="date-display-end">{{ content.time_end }}</span>
-                            </span>
+            <div class="content-list__wrapper">
+              {% for content in panel.contents %}
+                <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
+                  <article class="c-event-block c-event-block--list">
+                    <div class="c-event-date">
+                      <span>{{ content.date }}</span>
+                      {{ content.month }}</div>
+                    <div class="event-details">
+                      <a href="{{ content.event_url }}">
+                        <h3 class="c-event-name">{{ content.event_name }}</h3>
+                      </a>
+                      <a class="c-event-location" href="{{ content.location.link }}" target="_blank">
+                        <span class="icon-before__circle-pin"></span>
+                        <span>{{ content.location.name }}</span>
+                      </a>
+                      {% if content.address %}
+                        <div class="c-event-address">{{ content.address|raw }}</div>
+                      {% endif %}
+                      <div class="c-event-time">
+                        <span class="date-display-single">
+                          <span class="date-display-range">
+                            <span class="date-display-start">{{ content.time_start }}</span>
+                            to
+                            <span class="date-display-end">{{ content.time_end }}</span>
                           </span>
-                        </div>
+                        </span>
                       </div>
-                    </article>
-                  </div>
-                {% endfor %}
-              </div>
-
-
+                    </div>
+                  </article>
+                </div>
+              {% endfor %}
             </div>
+
+            {% if panel.contents|length > 5 %}
+              <div class="pager pager-load-more">
+                <span class="pager-next first last">
+                  <a class="load-more">See More
+                    {{ panel.pagination_link_text }}</a>
+                </span>
+              </div>
+            {% endif %}
+
           </div>
         </div>
       {% endfor %}
     {% elseif legislation %}
       {% for panel in panels %}
-        <div class="panel-pane pane-views pane-legislation-bills content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
+        <div class="content {% if loop.first %} active {% endif %}" id="panel{{ loop.index }}">
 
+          <div class="content-list__wrapper">
+            {% if panel.content %}
+              {% for content in panel.contents %}
+                <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
 
-          <div class="pane-content">
-            <div class="view view-legislation-bills view-id-legislation_bills view-display-id-senator_legislation_bills c-news-container view-dom-id-f2615fca79255f15c96de0c4e84396e0 jquery-once-1-processed refresh-processed">
-
-
-              <div class="view-content">
-                {% if panel.content %}
-                  {% for content in panel.contents %}
-                    <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} odd u-odd {% else %} even u-even {% endif %}">
-
-                      {% include "@nysenate_theme/bill-item/bill-item.twig" with {
-                        bill: content.bill
-                      } only %}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  <div class="view-empty">
-                    No content found at this time
-                  </div>
-                {% endif %}
-              </div>
-
-
-              {% if panel.content %}
-                <div class="c-container--header link">
-                  <a href="{{ panel.view_all_link }}" class="c-container--link">
-                    {{ panel.view_all_text }}
-                  </a>
+                  {% include "@nysenate_theme/bill-item/bill-item.twig" with {
+                    bill: content.bill
+                  } only %}
                 </div>
-              {% endif %}
-            </div>
+              {% endfor %}
+            {% else %}
+              <div class="view-empty">
+                No content found at this time
+              </div>
+            {% endif %}
           </div>
 
+          {% if panel.contents|length > 5 %}
+            <div class="pager pager-load-more">
+              <span class="pager-next first last">
+                <a class="load-more">See More
+                  {{ panel.pagination_link_text }}</a>
+              </span>
+            </div>
+          {% endif %}
+
+          {% if panel.content %}
+            <div class="c-container--header link">
+              <a href="{{ panel.view_all_link }}" class="c-container--link">
+                {{ panel.view_all_text }}
+              </a>
+            </div>
+          {% endif %}
 
         </div>
       {% endfor %}
     {% endif %}
 
   </div>
-
 </div>

@@ -1,0 +1,26 @@
+uuid: 1dca4a35-a884-431d-9dc0-457e77d33946
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: global_promo_banner
+label: 'Global Promo Banner'
+handler: simple
+handler_configuration: {  }
+entity_settings:
+  target_type: node
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      promotional_banner: promotional_banner
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+queue_settings:
+  min_size: 0
+  max_size: 0
+  act_as_queue: false
+  reverse: false

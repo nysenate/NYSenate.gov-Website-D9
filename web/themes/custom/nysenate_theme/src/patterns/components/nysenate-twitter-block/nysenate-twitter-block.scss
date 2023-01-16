@@ -5,6 +5,149 @@
   margin: 0 auto;
 }
 
+.pager.pager--load-more {
+  ul {
+    display: block;
+    margin: 20px 0;
+    width: 100%;
+    background-color: $grey06;
+    float: left;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+
+  li {
+    background-image: none;
+    display: inline;
+    list-style-type: none;
+    padding: 0;
+  }
+
+  a {
+    display: block;
+    padding: 15px 0;
+    width: 100%;
+    text-align: center;
+    font-family: $font-sans-bold;
+    font-size: 16px;
+    line-height: 0;
+    color: $gen_blue_lgt;
+    height: -1px;
+    margin-top: 3px;
+
+    &::after {
+      height: 24px;
+      margin-top: -3px;
+      font-size: 24px;
+      line-height: 25px;
+      content: "\65";
+      font-family: $senate-icons;
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+      -webkit-font-smoothing: antialiased;
+      color: $gen_blue_lgt;
+    }
+  }
+}
+
+@media screen and (min-width: 827px) {
+  .nyesenate-twitter-block {
+    .c-twitter-user--info {
+      margin-top: 9px;
+    }
+
+    .l-twitter-user > div {
+      margin-top: 34px;
+      display: inline-block !important;
+    }
+
+    .c-twitter-user--follow {
+      margin-left: 47% !important;
+    }
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .nyesenate-twitter-block {
+    .c-twitter-user--follow {
+      margin-left: 42% !important;
+    }
+  }
+}
+
+.view-issues-listings {
+  .view-header {
+    margin-bottom: 44px;
+    .nys-subtitle-title {
+      margin: 0 0 15px;
+      text-transform: capitalize;
+      font-family: $font-serif-regular;
+      font-size: 26px;
+      line-height: 1;
+      font-weight: normal;
+    }
+  }
+
+  .c-explore-issues--descript {
+    font-family: $font-serif;
+    line-height: 1.5em;
+    color: $grey03;
+    font-size: 20px;
+  }
+}
+
+.c-block--issue .c-issue-block--title {
+  font-weight: normal;
+}
+
+@include breakpoint($bp-under-sm) {
+  .view-issues-listings {
+    .view-header {
+      margin-bottom: 0px;
+      .nys-subtitle-title {
+        font-size: 18px;
+      }
+    }
+
+    .c-explore-issues--descript {
+      font-size: 16px;
+    }
+  }
+
+  .c-block {
+    .c-press-release--img {
+      display: contents;
+    }
+
+    .c-press-release--body__has-img {
+      padding-right: unset !important;
+    }
+  }
+
+  .c-news--head .nys-article-title {
+    font-family: $font-serif-bold;
+    font-size: 18px;
+  }
+
+  .c-news--body .c-block p {
+    margin-bottom: 20px !important;
+  }
+
+  .c-twitter-user--follow {
+    margin-top: 45px !important;
+  }
+}
+
+.field__item.clearfix {
+  margin-bottom: 0;
+}
+
 .timeline-InformationCircle {
   right: 20px !important;
   top: 50% !important;
@@ -115,7 +258,7 @@
 
 // PATTERNLAB SAMPLE STYLING
 .nyesenate-twitter-block {
-  margin-bottom: 40px;
+  margin-bottom: 63px;
 
   .c-container--title {
     padding: 20px 0 30px;
@@ -124,6 +267,8 @@
 
   .tweets-container {
     padding-top: 15px;
+    display: flex;
+    flex-flow: wrap;
 
     .u-even,
     .u-odd {
@@ -150,18 +295,20 @@
 
   // header area
   .l-twitter-user {
-    display: flex;
+    display: inline-block;
     max-width: 1200px;
     margin: 0 auto;
     justify-content: space-between;
     align-items: center;
     background-color: $grey06;
-    padding: 35px 40px 0;
+    padding: 0;
     column-gap: 15px;
+    width: 100% ;
   }
 
   .c-twitter--logo {
-    display: block;
+    display: inline-block ;
+    vertical-align: bottom ;
     width: 60px;
     height: 60px;
 
@@ -171,7 +318,7 @@
   }
 
   .c-twitter-user--info {
-    display: block;
+    display: inline-block;
     margin-top: 15px;
 
     p {
@@ -185,11 +332,14 @@
     font-size: 19px;
     color: $grey03;
     margin: 0;
+    font-weight: normal;
   }
 
   .c-twitter-user--link {
     margin: 0;
-
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: $font-sans-bold;
     a {
       color: $orange01;
       font-family: $font-sans-bold;
@@ -201,11 +351,15 @@
 
   .c-twitter-user--follow {
     display: block;
-    margin: 20px 0 0 0;
+    margin: 45px 0 0 0;
     border: 1px solid $grey05;
-    padding: 10px 15px;
+    padding: 0 13px;
     background-color: $color-white;
     text-align: center;
+    width: 75px;
+    line-height: 1.3;
+    height: 26px;
+    vertical-align: top;
 
     a {
       color: $orange01;
@@ -227,9 +381,11 @@
       font-size: 18px;
       color: $grey04;
       margin-bottom: 30px;
+      font-weight: normal;
 
       a {
         color: $grey02;
+        font-weight: normal;
       }
     }
 
@@ -309,7 +465,8 @@
     }
 
     .l-twitter-user > div {
-      display: flex;
+      margin-top: 34px;
+      display: inline-block;
       align-items: center;
     }
 

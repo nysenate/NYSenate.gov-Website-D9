@@ -1,0 +1,23 @@
+@import "../../global/utils/init";
+
+.nysenate-almost-there__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  @include breakpoint($bp-sm) {
+    flex-direction: row;
+    gap: 30px;
+
+    .image-wrapper {
+      width: 30%;
+    }
+
+    .c-block {
+      width: 70%;
+      margin: 0;
+    }
+  }
+}

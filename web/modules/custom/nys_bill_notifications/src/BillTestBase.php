@@ -169,4 +169,20 @@ abstract class BillTestBase implements BillTestInterface, ContainerFactoryPlugin
     return !$this->isDisabled();
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * Enforces the need to match this test.  If not, an empty array is returned.
+   */
+  public function context(object $update): array {
+    return $this->isMatch($update) ? $this->doContext($update) : [];
+  }
+
+  /**
+   * Actually generate the context array.
+   */
+  protected function doContext(object $update): array {
+    return [];
+  }
+
 }

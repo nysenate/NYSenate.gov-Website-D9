@@ -77,6 +77,8 @@ hr {
 pre {
   font-family: monospace, monospace;
   font-size: 1em;
+  margin: 0;
+  white-space: pre-line;
 }
 
 // Text-level semantics.
@@ -456,6 +458,19 @@ label {
   }
 }
 
+.nys-subtitle-title {
+  margin: 0 0 15px;
+  text-transform: capitalize;
+  font-family: $font-serif-regular;
+  font-size: 18px;
+  line-height: 1;
+
+  @include breakpoint($bp-sm) {
+    margin: 0 0 30px;
+    font-size: 26px;
+  }
+}
+
 // Override for bill page pie chart colors for committees section
 .node-type-bill {
   .c-bill--vote_2\27 {
@@ -527,9 +542,22 @@ label {
   }
 }
 
+.c-block .c-view--link {
+  @extend .icon-before__presskit;
+	@extend .lgt-text;
+	margin: 0 0 20px;
+	text-transform: uppercase;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	&::before {
+		margin-top: -3px;
+		font-size: 20px;
+	}	
+}
+
 .c-detail--subhead {
   margin: 0 0 10px;
-  color: $grey02;
+  color: $grey08;
   font-family: $font-sans;
   font-weight: $font-weight-normal;
   font-size: 14px;

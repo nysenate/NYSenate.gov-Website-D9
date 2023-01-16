@@ -48,6 +48,15 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_expiration_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 11
+    region: content
   field_featured:
     type: boolean
     label: above
@@ -110,7 +119,6 @@ content:
     weight: 0
     region: content
 hidden:
-  field_expiration_date: true
   field_last_notified: true
   langcode: true
   private_message_link: true

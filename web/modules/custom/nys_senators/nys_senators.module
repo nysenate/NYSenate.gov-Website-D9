@@ -324,6 +324,8 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
     'Events',
     'Our District',
     'Contact',
+    'Earth Day',
+    'Thankful',
   ];
   // Iterates through each microsite term and creates the microsite page.
   foreach ($micrositeTypes as $micrositeType) {
@@ -394,6 +396,14 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
               'target_revision_id' => $senatorContactBlock->getRevisionId(),
             ];
           }
+          break;
+
+        case 'Thankful':
+          $nodeValues['title'] = 'Thankful ';
+          break;
+
+        case 'Earth Day':
+          $nodeValues['title'] = 'Earth Day ';
           break;
 
       }

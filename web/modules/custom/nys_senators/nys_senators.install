@@ -335,3 +335,22 @@ function nys_senators_update_9013() {
     $item->delete();
   }
 }
+
+/**
+ * Creates new Microsite Page Type terms.
+ */
+function nys_senators_update_9014() {
+  // Earth Day term.
+  $earthday = Term::create([
+    'name' => 'Earth Day',
+    'vid' => 'microsite_page_type',
+  ]);
+  $earthday->save();
+
+  // Thankful term.
+  $thankful = Term::create([
+    'name' => 'Thankful',
+    'vid' => 'microsite_page_type',
+  ]);
+  $thankful->save();
+}

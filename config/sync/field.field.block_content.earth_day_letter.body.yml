@@ -1,0 +1,31 @@
+uuid: 33434c06-5d80-4785-bda6-30cede241603
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.earth_day_letter
+    - field.storage.block_content.body
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats: {  }
+id: block_content.earth_day_letter.body
+field_name: body
+entity_type: block_content
+bundle: earth_day_letter
+label: Body
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: "<p>Dear Students,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the New York State Senate’s Earth Day Poster Contest. This year we received many outstanding posters that exemplify the creativity of the young people in our Senatorial District.</p>\r\n\r\n<p>Each entry from my District displayed tremendous originality and vision as well as obvious concern for the ecological future of our communities and our state. I am proud of your work and that of your classmates, and encourage you to continue to study and learn more about the serious challenges that face our environment.</p>\r\n\r\n<p>I would like to offer my wholehearted congratulations to all of the participants in this year’s Contest. I also want to thank your family and give special thanks to your teachers, whose dedication and involvement in this event provided the encouragement for you to be creative and participate in the 2017 Earth Day Poster Contest.</p>\r\n"
+    summary: ''
+    format: full_html
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

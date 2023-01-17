@@ -83,13 +83,15 @@ display:
           batch: true
           batch_size: 10
           form_step: true
-          buttons: false
+          buttons: true
           action_title: Action
           clear_on_exposed: true
           force_selection_info: false
           selected_actions:
             3:
               action_id: views_bulk_operations_delete_entity
+              preconfiguration:
+                label_override: Delete
         owner:
           id: owner
           table: private_messages
@@ -372,7 +374,7 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Apply
+          submit_button: SearchMessage
           reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'

@@ -1,0 +1,24 @@
+uuid: ba82e1a8-a5d9-4a4f-a0b0-89b855a35074
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sincerely
+    - field.field.block_content.sincerely.body
+  module:
+    - text
+id: block_content.sincerely.default
+targetEntityType: block_content
+bundle: sincerely
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

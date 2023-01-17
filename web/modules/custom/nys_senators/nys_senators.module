@@ -242,14 +242,16 @@ function nys_senators_form_node_form_alter(&$form, $form_state) {
       $form['field_senator_multiref']['widget']['#default_value'] = array_column($user->field_senator_multiref->getValue(), 'target_id');
     }
     $targets = array_column($user->field_senator_multiref->getValue(), 'target_id');
-    $options = $form['field_senator_multiref']['widget']['#options'];
-    $result = [];
-    foreach ($options as $key => $option) {
-      if ($key == '_none' || in_array($key, $targets)) {
-        $result[$key] = $option;
+
+    if ($options = $form['field_senator_multiref']['widget']['#options'] ?? []) {
+      $result = [];
+      foreach ($options as $key => $option) {
+        if ($key == '_none' || in_array($key, $targets)) {
+          $result[$key] = $option;
+        }
+        $form['field_senator_multiref']['widget']['#options'] = $result;
       }
     }
-    $form['field_senator_multiref']['widget']['#options'] = $result;
   }
 }
 

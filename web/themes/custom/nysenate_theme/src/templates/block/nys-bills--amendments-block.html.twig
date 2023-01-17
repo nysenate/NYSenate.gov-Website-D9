@@ -172,10 +172,9 @@
           <div id="sponsor-memo-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
-
+                {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
                 {{ read_more_parts.part_1 }}
               </pre>
-              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_memo.value, '\n', 25) %}
             </div>
             {% if read_more_parts.show_expander %}
               <div id="memo-expand-{{ node_wrapper.label() }}" style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}" class="c-detail--memo">
@@ -210,10 +209,9 @@
           <div id="full-text-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
-
+              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}
               {{ read_more_parts.part_1 }}
               </pre>
-              {% set read_more_parts = get_readmore_parts(node_wrapper.field_ol_full_text.value, '\n', 50) %}
             </div>
             {% if read_more_parts.show_expander %}
               <div id="expand-{{ node_wrapper.label() }}" style="display:none;" data-linecount="{{ read_more_parts.extra_line_count }}" class="c-detail--memo">

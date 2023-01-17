@@ -1,0 +1,83 @@
+// Import site utilities.
+@import "../../global/utils/init";
+
+.sidebar {
+  position: fixed;
+  z-index: $zi-lowest;
+  top: 0;
+  right: 0;
+  max-height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  margin: 0;
+  background-color: #f7f8f9;
+  /* hide on default */
+  display: none;
+
+
+  @include breakpoint($bp-sm) {
+    position: relative;
+    max-width: 400px;
+    max-height: auto;
+  }
+
+  &.show {
+    display: block;
+  }
+
+  h2 {
+    font-family: $font-serif-semibold;
+    font-size: 16px;
+    line-height: 56px;
+    color: $grey03;
+    padding: 20px 40px;
+    border-bottom: 1px solid $blue04;
+    border-left: 1px solid $blue04;
+    margin: 0;
+  }
+
+  .menu {
+    li {
+      list-style: none;
+      border-bottom: 1px solid $blue04;
+      border-left: 1px solid $blue04;
+
+      a {
+        display: block;
+        padding: 30px 40px;
+        font-family: $font-serif-semibold;
+        color: $grey02;
+        font-size: 24px;
+        height: auto;
+
+        &.active {
+          background-color: $color-white;
+          color: $gen_blue_lgt;
+        }
+      }
+    }
+  }
+}
+
+// add this class to the button toggle
+.sidebar-toggle {
+
+  &--show-icon {
+    @extend .icon-replace__hamburger;
+
+    &.show {
+      @extend .icon-replace__x;
+    }
+  }
+}
+
+// add this class to body if showed
+body .sidebar-open {
+  position: fixed;
+  overflow: hidden;
+
+  @include breakpoint($bp-sm) {
+    position: static;
+    overflow: visible;
+  }
+}

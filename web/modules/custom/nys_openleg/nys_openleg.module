@@ -67,3 +67,48 @@ function nys_openleg_theme(): array {
     ],
   ];
 }
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables) {
+  $content = $variables['elements']['content'];
+  $variables['facts_title'] = $content['#first_year'] . '-' . $content['#second_year'] . ' by the numbers';
+
+  $legislative_session = date("Y", strtotime("now"));
+
+  if (($legislative_session % 2) == 0) {
+    $legislative_session--;
+
+  }
+
+  /** @var \Drupal\nys_openleg\Service\ApiManager $openApiService */
+  $openApiService = \Drupal::service('manager.openleg_api');
+  /** @var \Drupal\nys_openleg\Api\ResponsePluginBase $awaiting */
+  $awaiting = $openApiService->getSearch('bill', 'session:' . $legislative_session . ' AND status.statusType:DELIVERED_TO_GOV');
+  /** @var \Drupal\nys_openleg\Api\ResponsePluginBase $signed */
+  $signed = $openApiService->getSearch('bill', 'session:' . $legislative_session . ' AND status.statusType:SIGNED_BY_GOV');
+  /** @var \Drupal\nys_openleg\Api\ResponsePluginBase $vetoed */
+  $vetoed = $openApiService->getSearch('bill', 'session:' . $legislative_session . ' AND status.statusType:VETOED');
+
+  $variables['facts'] = [
+    [
+      'link' => '/search/legislation?searched=true&type=f_bill&bill_session_year=' . $content['#session_year'] . '&bill_status=SIGNED_BY_GOV&page=1',
+      'statistic' => $signed->getTotal(),
+      'description' => 'Bills Signed into Law',
+      'status' => 'signed',
+    ],
+    [
+      'link' => '/search/legislation?searched=true&type=f_bill&bill_session_year=' . $content['#session_year'] . '&bill_status=DELIVERED_TO_GOV&page=1',
+      'statistic' => $awaiting->getTotal(),
+      'description' => 'BILLS AWAITING THE GOVERNOR’S SIGNATURE',
+      'status' => 'waiting',
+    ],
+    [
+      'link' => '/search/legislation?searched=true&type=f_bill&bill_session_year=' . $content['#session_year'] . '&bill_status=VETOED&page=1',
+      'statistic' => $vetoed->getTotal(),
+      'description' => 'BILLS VETOED BY THE GOVERNOR',
+      'status' => 'vetoed',
+    ],
+  ];
+}

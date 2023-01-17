@@ -31,19 +31,17 @@
   }
 }
 
-.nysenate-accordion {
-  transition: background 0.75s;
-  background-color: $grey06;
+.nysenate-accordion-nested {
   border: 0;
   margin-bottom: 10px;
   width: 100%;
 
-    &:first-of-type {
+  &:first-of-type {
     border: 0;
   }
 
-  &.open {
-    .nysenate-accordion__toggle svg {
+  &__toggle.show {
+    svg {
       transform: rotate(-180deg);
     }
   }
@@ -68,10 +66,10 @@
   }
 }
 
-.nysenate-accordion__toggle {
+.nysenate-accordion-nested__toggle {
   padding: 22px 16px 22px 30px;
   border: 0;
-  background: transparent;
+  background-color: $grey06;
   cursor: pointer;
   outline: inherit;
   position: relative;
@@ -90,7 +88,7 @@
   }
 }
 
-.nysenate-accordion__heading {
+.nysenate-accordion-nested__heading {
   color: #2b6a90;
   font-size: 14px;
   letter-spacing: 0.1em;
@@ -108,28 +106,16 @@
   }
 }
 
-.nysenate-accordion__content {
-  max-height: 0;
-  margin-top: 0;
-  overflow: hidden;
-  transition: max-height 0.15s, border-bottom 0.15s;
-  color: $grey03;
-  font-size: 18px;
-  font-weight: normal;
-  line-height: 26px;
-  background-color: $color-white;
+.nysenate-accordion-nested {
+  list-style: none;
+  padding: 0;
 
-  .open & {
-    max-height: 9999vh;
-    border-bottom: 1px solid #b0b0b0;
+  &--inner {
+    overflow: hidden;
+    display: none;
 
-    &:last-child {
-      border-bottom: 0;
+    &.show {
+      display: block;
     }
-  }
-
-  img {
-    position: relative;
-    border: 15px solid $color-blue;
   }
 }

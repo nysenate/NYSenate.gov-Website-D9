@@ -326,6 +326,8 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
     'Events',
     'Our District',
     'Contact',
+    'Earth Day',
+    'Thankful',
   ];
   // Iterates through each microsite term and creates the microsite page.
   foreach ($micrositeTypes as $micrositeType) {
@@ -398,6 +400,14 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           }
           break;
 
+        case 'Thankful':
+          $nodeValues['title'] = '2021 Thanksgiving Day Creative Celebration';
+          break;
+
+        case 'Earth Day':
+          $nodeValues['title'] = '2021 Earth Day Poster Contest Celebration';
+          break;
+
       }
 
       // Creates the new microsite page.
@@ -429,64 +439,77 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
   if (!$originalSenator->hasField('field_active_senator')) {
     return;
   }
-  $updatedValue = (string) $term->get('field_active_senator')->value;
-  $originalValue = $originalSenator->get('field_active_senator')->value;
+  $updatedValue = (bool) $term->get('field_active_senator')->value;
 
   // Checks if Senator status is being updated.
-  if ($term->get('status')->value !== TRUE) {
-    if ($originalValue !== $updatedValue) {
-      // Sets currentTid variable from the term.
-      $currentTid = $entity->id();
+  if ($term->hasField('field_active_senator')) {
+    _nys_senators_validate_microsite_term($entity, $term->get('field_active_senator')->first()->getValue()['value'], $updatedValue);
+  }
+}
 
-      // Looks for the Microsite pages that are referencing this senator.
-      $pages = \Drupal::entityQuery('node')
-        ->accessCheck(FALSE)
-        ->condition('type', 'microsite_page')
-        ->condition('field_senator_multiref', [$currentTid], 'IN')
-        ->execute();
+/**
+ * Creates and validates microsite term.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The original entity object.
+ * @param int $activeSenator
+ *   The Active Senator value.
+ * @param bool $updatedValue
+ *   The Tid variable from the term.
+ */
+function _nys_senators_validate_microsite_term(EntityInterface $entity, int $activeSenator, bool $updatedValue) {
 
-      // Checks if there are results or not.
-      if (!empty($pages)) {
-        // Loads the microsite pages found.
-        $nodes = Node::loadMultiple($pages);
+  /** @var \Drupal\taxonomy\Entity\Term $term */
+  $term = $entity;
 
-        // Initialize aboutNode to store About page information.
-        $aboutNode = [];
+  // Sets currentTid variable from the term.
+  $currentTid = $entity->id();
 
-        foreach ($nodes as $node) {
-          // Acts on every new senator taxonomy term that's updated.
-          if ($term->bundle() === 'senator') {
-            if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
-              $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
-              $micrositeTerm = Term::load($tid);
-              if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing') {
-                // Unpublished Landing microsite page.
-                if ($node->isPublished()) {
-                  $node->set('status', (int) $term->get('field_active_senator')->value);
-                }
-              }
-              elseif ($term->get('field_active_senator')->value === 0 && $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About') {
-                /** @var \Drupal\node\Entity\Node $aboutNode */
-                $aboutNode = $node;
-              }
-              elseif ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
-                if (!$node->isPublished()) {
-                  // Published Inactive microsite page.
-                  $node->set('status', !(int) $term->get('field_active_senator')->value);
-                }
-              }
-              $node->save();
-            }
+  // Looks for the Microsite pages that are referencing this senator.
+  $pages = \Drupal::entityQuery('node')
+    ->accessCheck(FALSE)
+    ->condition('type', 'microsite_page')
+    ->condition('field_senator_multiref', [$currentTid], 'IN')
+    ->execute();
+
+  // Checks if there are results or not.
+  if (!empty($pages)) {
+    // Loads the microsite pages found.
+    $nodes = Node::loadMultiple($pages);
+
+    // Initialize aboutNode to store About page information.
+    $aboutNode = [];
+
+    foreach ($nodes as $node) {
+      // Acts on every new senator taxonomy term that's updated.
+      if ($term->bundle() === 'senator') {
+        if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+          $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
+          $micrositeTerm = Term::load($tid);
+          $validateLanding = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing';
+          $validateAbout = $term->get('field_active_senator')->value === 0 && $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About';
+          $validateInactive = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive';
+
+          if ($validateLanding) {
+            $activeSenator === 1 ? $node->setPublished() : $node->setUnpublished();
           }
-        }
-
-        // Checks if the senator has an Inactive microsite page or not.
-        if ($updatedValue === '0') {
-          $hasInactivePage = \Drupal::service('nys_senators.senators_helper')->hasMicroSiteInactive($nodes);
-          if (!$hasInactivePage) {
-            _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
+          elseif ($validateAbout) {
+            /** @var \Drupal\node\Entity\Node $aboutNode */
+            $aboutNode = $node;
           }
+          elseif ($validateInactive) {
+            $activeSenator === 0 ? $node->setPublished() : $node->setUnpublished();
+          }
+          $node->save();
         }
+      }
+    }
+
+    // Checks if the senator has an Inactive microsite page or not.
+    if (!$updatedValue) {
+      $hasInactivePage = \Drupal::service('nys_senators.senators_helper')->hasMicroSiteInactive($nodes);
+      if (!$hasInactivePage) {
+        _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
       }
     }
   }
@@ -673,6 +696,7 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
           case 'Newsroom':
           case 'Legislation':
           case 'Contact':
+          case 'Thankful':
             // @todo Add extra logic if needed.
             break;
 
@@ -682,6 +706,10 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
 
           case 'Events':
             $replacements[] = 'calendar';
+            break;
+
+          case 'Earth Day':
+            $replacements[] = 'earthday';
             break;
 
         }
@@ -792,4 +820,130 @@ function nys_senators_views_data_alter(array &$data) {
       'id' => 'senator_district',
     ],
   ];
+}
+
+/**
+ * Adds Earth Day & Thankful Microsite pages on existing senators.
+ */
+function _nys_senators_create_microsites(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  // Creates hero block to be attached to the microsite content.
+  $heroBlock = BlockContent::create([
+    'info' => $senator_name . ' - Hero block',
+    'type' => 'microsite_hero',
+    'revision_user' => 1,
+    'field_senator' => [
+      'target_id' => $entity->id(),
+    ],
+  ]);
+  $heroBlock->save();
+
+  // Creates menu block to be attached to the microsite content.
+  $menuBlock = BlockContent::create([
+    'info' => $senator_name . ' - Menu block',
+    'type' => 'senator_microsite_menu',
+    'revision_user' => 1,
+  ]);
+  $menuBlock->save();
+
+  // Creates thankful block to be attached to the microsite content.
+  $thankfulBlock = BlockContent::create([
+    'info' => $senator_name . ' - Thankful Letter Block',
+    'type' => 'thankful_letter',
+    'revision_user' => 1,
+    'field_senator' => [
+      'target_id' => $entity->id(),
+    ],
+  ]);
+  $thankfulBlock->save();
+
+  // Creates earth day block to be attached to the microsite content.
+  $earthDayBlock = BlockContent::create([
+    'info' => $senator_name . ' - Earth Day Letter Block',
+    'type' => 'earth_day_letter',
+    'revision_user' => 1,
+    'field_senator' => [
+      'target_id' => $entity->id(),
+    ],
+  ]);
+  $earthDayBlock->save();
+
+  // Creates sincerely block to be attached to the microsite content.
+  $sincerelyBlock = BlockContent::create([
+    'info' => $senator_name . ' - Sincerely Block',
+    'type' => 'sincerely',
+    'revision_user' => 1,
+    'field_senator' => [
+      'target_id' => $entity->id(),
+    ],
+  ]);
+  $sincerelyBlock->save();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $senatorMicrosites = [
+    'Earth Day',
+    'Thankful',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+      // Default node values.
+      $nodeValues = [
+        'type' => 'microsite_page',
+        'status' => 1,
+        'uid' => 1,
+        'field_microsite_page_type' => [
+          'target_id' => $micrositeType->id(),
+        ],
+        'field_block' => [
+          [
+            'target_id' => $heroBlock->id(),
+            'target_revision_id' => $heroBlock->getRevisionId(),
+          ],
+          [
+            'target_id' => $menuBlock->id(),
+            'target_revision_id' => $menuBlock->getRevisionId(),
+          ],
+        ],
+        'field_senator_multiref' => [
+          [
+            'target_id' => $entity->id(),
+          ],
+        ],
+      ];
+
+      switch ($micrositeType->getName()) {
+        case 'Thankful':
+          $nodeValues['title'] = '2021 Thanksgiving Day Creative Celebration';
+          $nodeValues['field_block'][] = [
+            'target_id' => $thankfulBlock->id(),
+            'target_revision_id' => $thankfulBlock->getRevisionId(),
+          ];
+          break;
+
+        case 'Earth Day':
+          $nodeValues['title'] = '2021 Earth Day Poster Contest Celebration';
+          $nodeValues['field_block'][] = [
+            'target_id' => $earthDayBlock->id(),
+            'target_revision_id' => $earthDayBlock->getRevisionId(),
+          ];
+          break;
+
+      }
+
+      $nodeValues['field_block'][] = [
+        'target_id' => $sincerelyBlock->id(),
+        'target_revision_id' => $sincerelyBlock->getRevisionId(),
+      ];
+
+      $node = Node::create($nodeValues);
+      $node->save();
+    }
+  }
 }

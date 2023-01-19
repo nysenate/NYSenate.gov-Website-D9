@@ -52,11 +52,13 @@
               {% endfor %}
             </div>
           {% endif %}
-          <div class="c-senator-card">
-            <h4 class="nys-senator--involved">{{ item.news_senator_count|default(0) }}
-              Senator{{ item.news_senator_count|default(0) > 1 ? 's' : '' }}
-              Involved</h4>
-          </div>
+          {% if item.news_senator_count is not empty %}
+            <div class="c-senator-card">
+              <h4 class="nys-senator--involved">{{ item.news_senator_count|default(0) }}
+                Senator{{ item.news_senator_count|default(0) > 1 ? 's' : '' }}
+                Involved</h4>
+            </div>
+          {% endif %}
 
         </article>
       {% elseif events %}

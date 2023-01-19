@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
@@ -16,6 +17,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\Component\Utility\Html;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\address\Plugin\Field\FieldType\AddressItem;
 
@@ -1473,9 +1475,20 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     $suggestions[] = $hook . '__' . $view->id() . '__' . $display_id;
   }
 
+  if ($hook == 'container' && !empty($variables['element']['submit']['#id'])) {
+    $suggestions[] = $hook . '__' . strtr($variables['element']['submit']['#id'], '-', '_');
+  }
+
   // Add suggestion to views_view hook.
   if ($hook == 'views_view') {
     $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
+
+  // Add suggestion to views_view_table hook.
+  if ($hook == 'views_view_table') {
+    $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
   }
 
@@ -1490,6 +1503,40 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     $view = $variables['view'];
     $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
+  }
+
+  // Add suggestion to form hook.
+  if ($hook == 'form' && !empty($variables['element']['#theme'])) {
+    $suggestions[] = 'form__' . $variables['element']['#theme'][0];
+  }
+
+  // Add suggestion to private_message_inbox form hook.
+  if ($hook == 'form' && !empty($variables['element']['#form_id'])) {
+    $current_user = \Drupal::entityTypeManager()->getStorage('user')
+      ->load(\Drupal::currentUser()->id());
+
+    $senator_message_form_ids = [];
+    if ($current_user->hasField('field_senator_management') && !$current_user->get('field_senator_management')->isEmpty()) {
+      foreach ($current_user->field_senator_management as $senator_management) {
+        $senator = $senator_management->entity;
+        $senator_message_form_ids[] = 'views_form_private_message_inbox_inbox_' . $senator->field_user_account->target_id;
+      }
+    }
+
+    if ($variables['element']['#form_id'] == 'views_form_private_message_inbox_inbox_' . \Drupal::currentUser()->id() ||
+      (!empty($senator_message_form_ids) && in_array($variables['element']['#form_id'], $senator_message_form_ids))) {
+      $suggestions[] = 'form__views_form_private_message_inbox__list';
+    }
+  }
+
+  // Add suggestion to form_element hook.
+  if ($hook == 'form_element' && !empty($variables['element']['#name'])) {
+    $suggestions[] = 'form_element__' . $variables['element']['#name'];
+  }
+
+  // Add suggestion to views_exposed_form hook.
+  if ($hook == 'views_exposed_form' && !empty($variables['form']['#theme'])) {
+    $suggestions[] = $variables['form']['#theme'][0];
   }
 }
 
@@ -1515,7 +1562,7 @@ function nysenate_theme_theme_suggestions_form_alter(array &$suggestions, array 
  */
 function nysenate_theme_theme_suggestions_page_alter(array &$suggestions, array $variables, $hook) {
   $node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($node) && $node->bundle() == 'microsite_page') {
+  if (!empty($node) && is_object($node) && $node->bundle() == 'microsite_page') {
     $suggestions[] = $hook . '__node__' . $node->bundle();
   }
 }
@@ -2168,6 +2215,7 @@ function nysenate_theme_preprocess_nysenate_senators_talking_about_this_issue(&$
  */
 function nysenate_theme_preprocess_node__bill(&$variables) {
   $node = $variables['node'];
+
   if (isset($variables['content']['field_issues'][0]) && $variables['view_mode'] == 'full') {
     $issues = [];
     foreach ($variables['content']['field_issues'][0]['#items'] as $issue) {
@@ -2187,10 +2235,9 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   }
 
   // Bill PDF Link.
-  $openleg_config = \Drupal::config('nys_openleg.settings');
-  $base_path = $openleg_config->get('base_path');
+  $ol_base_url = \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov');
   if (isset($variables['content']['field_ol_session'][0]['#markup'])) {
-    $variables['pdf_link'] = $base_path . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
+    $variables['pdf_link'] = $ol_base_url . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
   }
 
   $variables['active_amend_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
@@ -2295,6 +2342,79 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     }
   }
 
+  // Temporary Votes Content.
+  if ($node->hasField('field_ol_votes') && !empty($node->field_ol_votes)) {
+    $votes_list = [];
+    foreach ($node->field_ol_votes as $key => $item) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+
+      $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+      $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+      /** @var \Drupal\paragraphs\Entity\Paragraph $votes */
+      $votes = $paragraph_storage->load($item->target_id);
+
+      $aye_members = [];
+      if ($votes->hasField('field_ol_aye_members') && !empty($votes->field_ol_aye_members)) {
+        foreach ($votes->field_ol_aye_members as $aye_key => $aye_item) {
+          if (!is_numeric($aye_key)) {
+            continue;
+          }
+
+          $term = $term_storage->load($aye_item->target_id);
+          if ($term) {
+            $aye_members[] = [
+              'name' => $term->field_senator_name->family ?? '',
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
+        }
+      }
+
+      $nay_members = [];
+      if ($votes->hasField('field_ol_nay_members') && !empty($votes->field_ol_nay_members)) {
+        foreach ($votes->field_ol_nay_members as $nay_key => $nay_item) {
+          if (!is_numeric($nay_key)) {
+            continue;
+          }
+
+          $term = $term_storage->load($nay_item->target_id);
+          if ($term) {
+            $nay_members[] = [
+              'name' => $term->field_senator_name->family ?? '',
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
+        }
+      }
+
+      $type = $votes->field_ol_vote_type->value ?? NULL;
+      if ($type == 'COMMITTEE') {
+        $vote_committee = $term_storage->load($votes->field_ol_committee[0]->getValue()['target_id']);
+        if ($vote_committee) {
+          $type = ($vote_committee->name->value ?? '') . ' ' . $type;
+        }
+      }
+
+      $votes_list[$votes->field_ol_vote_type->value] = [
+        'aye_count' => $votes->field_ol_aye_count->value ?? 0,
+        'nay_count' => $votes->field_ol_nay_count->value ?? 0,
+        'absent_count' => $votes->field_ol_absent_count->value ?? 0,
+        'excused_count' => $votes->field_ol_excused_count->value ?? 0,
+        'abstained_count' => $votes->field_ol_abstained_count->value ?? 0,
+        'aye_members' => $aye_members,
+        'nay_members' => $nay_members,
+        'type' => ucwords(strtolower(trim($type))),
+        'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
+      ];
+    }
+
+    krsort($votes_list);
+    $variables['votes_block'] = $votes_list;
+  }
+
   // Create the HTML for the bill's session.
   $variables['legislative_session'] = '<div class="c-bill--session-year">' .
   $bill_session_year . '-' . ($bill_session_year + 1) . ' Legislative Session</div>';
@@ -2362,6 +2482,11 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['committee'] = $committee;
   $variables['committee_link'] = '/committees/' .
     strtolower(str_replace([',', ' '], ['', '-'], $committee));
+
+  $variables['bill'] = [
+    'url' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
+    'name' => $node->hasField('field_ol_print_no') ? $node->field_ol_print_no->value : '',
+  ];
 }
 
 /**
@@ -3102,6 +3227,46 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
       unset($form['type']['#options']['All']);
     }
   }
+
+  if (!empty($form['#id']) && $form['#id'] == 'views-exposed-form-private-message-inbox-inbox') {
+    $form['#attached']['library'][] = 'nysenate_theme/dashboard-inbox';
+    $values = $form_state->getValues();
+
+    $field_elements = [
+      'message__value',
+      'owner',
+      'field_issue_target_id',
+      'title',
+    ];
+
+    foreach ($field_elements as $field_element) {
+      $form[$field_element]['#default_value'] = $values[$field_element] ?? '';
+      $form[$field_element]['#size'] = 60;
+      $form[$field_element]['#maxlength'] = 128;
+      $form[$field_element]['#attributes'] = [
+        'class' => ['search-form-group__input'],
+        'type' => 'search',
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_form__views_exposed_form().
+ */
+function nysenate_theme_preprocess_form__views_exposed_form__private_message_inbox__inbox(&$variables) {
+  $variables['title'] = 'Inbox';
+
+  $cta_link = '/users/' . \Drupal::currentUser()->id() . '/dashboard/sent';
+  $uri_explode = explode('/', \Drupal::request()->getRequestUri());
+  if ($uri_explode && is_array($uri_explode)) {
+    $cta_link = '/users/' . $uri_explode[2] . '/dashboard/sent';
+  }
+
+  $variables['cta'] = [
+    'link' => $cta_link,
+    'label' => 'View Sent Messages',
+  ];
 }
 
 /**
@@ -3141,21 +3306,51 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
   $view = $variables['view'];
 
   if ($variables['view']->id() == 'private_message_inbox') {
+    // Add column for the action links.
+    $variables['header']['actions'] = [
+      'content' => '',
+      'default_classes' => TRUE,
+    ];
+
     if (isset($variables['result']) && !empty($variables['result'])) {
       foreach ($variables['result'] as $key => $result) {
         $row_id = $result->_entity->id();
         $field_to = $result->_entity->field_to->target_id;
         $subject = $result->_entity->field_subject->value;
+        $owner = User::load($result->_entity->owner[0]->target_id);
+        $owner_name = $owner->name->value ?? '';
+        $message = $result->_entity->message->value ?? '';
+
+        $link_options = [
+          'attributes' => [
+            'class' => [
+              'message-list__td--issue__action',
+              'action-button',
+            ],
+          ],
+        ];
+
         $url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/reply/' . $row_id);
         $link = Link::fromTextAndUrl($subject, $url);
+        $owner_link = Link::fromTextAndUrl($owner_name, $url)->toString();
+        $message_link = Link::fromTextAndUrl($message, $url)->toString();
+        $variables['rows'][$key]['columns']['owner']['content'][0]['field_output']['#markup'] = '
+          <div class="message-list__td--information__author">' . $owner_link . '</div>
+          <div class="message-list__td--information__message">' . $message_link . '</div>';
         $variables['rows'][$key]['columns']['field_subject']['content'][0]['field_output']['#markup'] = $link->toString();
 
+        $url->setOptions($link_options);
         $reply_link = Link::fromTextAndUrl(t('Reply'), $url)->toString();
         $forward_url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/forward/' . $row_id);
+        $forward_url->setOptions($link_options);
         $forward_link = Link::fromTextAndUrl(t('Forward'), $forward_url)->toString();
+        $actions_attributes = new Attribute([
+          'class' => ['message-list__td--issue'],
+        ]);
 
-        $variables['rows'][$key]['columns']['actions']['content'][0]['field_output']['#markup'] = '<p>' . $forward_link . '</p><p>' . $reply_link . '</p>';
-
+        $variables['rows'][$key]['columns']['actions']['content'][0]['field_output']['#markup'] = '<div class="message-list__td--issue__toggle"></div>
+          <div class="message-list__td--issue__actions">' . $forward_link . ' ' . $reply_link . '</div>';
+        $variables['rows'][$key]['columns']['actions']['attributes'] = $actions_attributes;
       }
     }
   }
@@ -3207,7 +3402,7 @@ function nysenate_theme_preprocess_page(&$variables) {
 
   // Microsite theme settings.
   $node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($node) && $node->bundle() == 'microsite_page') {
+  if (!empty($node) && is_object($node) && $node->bundle() == 'microsite_page') {
     if (!empty($node->field_senator_multiref)) {
       $sid = $node->field_senator_multiref->target_id;
       $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
@@ -3340,7 +3535,7 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
   $publish_date = $variables['content']['field_ol_publish_date'][0]['#text'] ?? '';
   $publish_date = !empty($publish_date) ? strtotime($publish_date) : '';
 
-  $ol_base_url = \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov');
+  $ol_base_url = \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov');
   $transcript_base_url = $ol_base_url . '/pdf/';
   $transcript_type = $variables['content']['field_ol_transcript_type'][0]['#markup'] ?? '';
   $is_hearing = NULL;

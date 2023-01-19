@@ -1,3 +1,11 @@
-<h3 class="nys-subtitle-title">Bills You Are Following</h3>
+<div class="dashboard">
+  <div>
+    {% include '@nysenate_theme/button/button.twig' with {
+      button: button
+    } %}
+    <h3 class="nys-subtitle-title">Bills You Are Following</h3>
 
-{% include "@nysenate_theme/featured-bills/featured-bills.twig" with featured_bills only %}
+    {% include "@nysenate_theme/featured-bills/featured-bills.twig" with featured_bills only %}
+  </div>
+  {% include "@nysenate_theme/sidebar/sidebar.twig" with sidebar only %}
+</div>

@@ -19,7 +19,6 @@
       const self = this;
       const carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
       const theViewportWidth = $(window).width();
-      const headingCurrentPosition = $('#issuesUpdatesHeader').offset().top;
 
       self.highlightUpTo();
 
@@ -39,12 +38,16 @@
 
         $(`input[value="${tabNumber}"]`).click();
 
-        if (theViewportWidth > 769) {
-          pageBody.animate({scrollTop:headingCurrentPosition - 220}, '1000', 'swing');
-        }
-        else {
-          $(tabNumber).click();
-          pageBody.animate({scrollTop:headingCurrentPosition - 110}, '1000', 'swing');
+        const issuesUpdatesHeader = $('#issuesUpdatesHeader').offset();
+        if (issuesUpdatesHeader !== undefined) {
+          const headingCurrentPosition = issuesUpdatesHeader.top;
+          if (theViewportWidth > 769) {
+            pageBody.animate({scrollTop:headingCurrentPosition - 220}, '1000', 'swing');
+          }
+          else {
+            $(tabNumber).click();
+            pageBody.animate({scrollTop:headingCurrentPosition - 110}, '1000', 'swing');
+          }
         }
       });
 
@@ -74,7 +77,9 @@
       const carousel = wrap.find('.js-carousel');
       const itemAmt = carousel.children().length;
       const itemWidth = carousel.width() / itemAmt;
-      const carouselPos = parseInt(carousel.css('left'));
+      let carouselPos = 0;
+      carouselPos = parseInt(carousel.css('left'));
+      console.log(carouselPos);
 
       // if the previous button is hidden - do not move that way or at all
       if (e.direction === 4 && nav.children('.prev').hasClass('hidden')) {

@@ -366,16 +366,11 @@ class BoundaryFilter extends FilterPluginBase implements ContainerFactoryPluginI
     );
   }
 
-  /**
-   * Check if boundary values are set.
-   *
-   * @param Float[] $values
-   *   Boundary.
-   *
-   * @return bool
-   *   Empty or not.
-   */
-  private function isBoundarySet(array $values): bool {
+  private function isBoundarySet($values): bool {
+    if (!is_array($values)) {
+      return FALSE;
+    }
+
     if (
       isset($values['lat_north_east'])
       && is_numeric($values['lat_north_east'])

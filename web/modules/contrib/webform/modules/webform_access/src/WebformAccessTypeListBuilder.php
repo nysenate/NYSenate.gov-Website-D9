@@ -91,8 +91,9 @@ class WebformAccessTypeListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\webform_access\WebformAccessTypeInterface $entity */
 
+    $row = [];
     // Label.
-    $row['label'] = $entity->toLink($entity->label(), 'edit-form');
+    $row['label'] = $entity->toLink((string) $entity->label(), 'edit-form');
 
     // Groups.
     $entity_ids = $this->getEntityStorage('webform_access_group')->getQuery()

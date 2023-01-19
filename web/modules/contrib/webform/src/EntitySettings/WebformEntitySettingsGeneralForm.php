@@ -167,6 +167,7 @@ class WebformEntitySettingsGeneralForm extends WebformEntitySettingsBaseForm {
       '#type' => 'details',
       '#title' => $this->t('URL path settings'),
       '#open' => TRUE,
+      '#access' => ($this->config('webform.settings')->get('settings.default_page') !== FALSE),
     ];
     $default_page_base_path = $default_settings['default_page_base_path'];
     if ($default_page_base_path) {

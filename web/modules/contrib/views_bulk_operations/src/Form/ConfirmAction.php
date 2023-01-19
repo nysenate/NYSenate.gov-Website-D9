@@ -94,8 +94,10 @@ class ConfirmAction extends FormBase {
       ]
     );
 
+    $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
+      '#button_type' => 'primary',
       '#value' => $this->t('Execute action'),
       '#submit' => [
         [$this, 'submitForm'],

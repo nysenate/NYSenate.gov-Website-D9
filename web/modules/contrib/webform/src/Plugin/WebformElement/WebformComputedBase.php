@@ -62,6 +62,7 @@ abstract class WebformComputedBase extends WebformElementBase implements Webform
       'store' => FALSE,
       'ajax' => FALSE,
       // Attributes.
+      'attributes' => [],
       'wrapper_attributes' => [],
       'label_attributes' => [],
     ] + $this->defineDefaultBaseProperties();
@@ -173,6 +174,10 @@ abstract class WebformComputedBase extends WebformElementBase implements Webform
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
+
+    // Change the 'Element attributes' label to reflect that the hidden element
+    // attributes are being defined.
+    $form['element_attributes']['#title'] = $this->t('Hidden element attributes');
 
     $form['computed'] = [
       '#type' => 'fieldset',

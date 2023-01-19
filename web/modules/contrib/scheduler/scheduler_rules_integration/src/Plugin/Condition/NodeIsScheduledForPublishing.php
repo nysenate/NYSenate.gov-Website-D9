@@ -2,6 +2,7 @@
 
 namespace Drupal\scheduler_rules_integration\Plugin\Condition;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\rules\Core\RulesConditionBase;
 
 /**
@@ -24,11 +25,13 @@ class NodeIsScheduledForPublishing extends RulesConditionBase {
   /**
    * Determines whether a node is scheduled for publishing.
    *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node to be checked.
+   *
    * @return bool
    *   TRUE if the node is scheduled for publishing, FALSE if not.
    */
-  protected function doEvaluate() {
-    $node = $this->getContextValue('node');
+  protected function doEvaluate(EntityInterface $node) {
     return !empty($node->publish_on->value);
   }
 

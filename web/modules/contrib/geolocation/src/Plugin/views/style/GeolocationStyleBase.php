@@ -150,6 +150,7 @@ abstract class GeolocationStyleBase extends StylePluginBase {
       $location = [
         '#type' => 'geolocation_map_location',
         'content' => $this->view->rowPlugin->render($row),
+        '#row' => $row,
         '#title' => $this->getTitleField($row) ?? '',
         '#label' => $this->getLabelField($row) ?? '',
         '#coordinates' => $position,

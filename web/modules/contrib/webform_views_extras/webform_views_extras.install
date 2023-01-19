@@ -25,16 +25,23 @@ function webform_views_extras_install() {
     }
   }
   // Update existing values.
-  $webform_submissions = WebformSubmission::loadMultiple();
-  foreach ($webform_submissions as $webform_submission) {
-    /**
-     * @var \Drupal\webform\Entity\WebformSubmission $webform_submission
-     */
-    $entity_id = $webform_submission->get('entity_id')->value;
-    $entity_type = $webform_submission->get('entity_type')->value;
-    if ($entity_id) {
-      $webform_submission->set("entity_id_" . $entity_type, $entity_id);
-      $webform_submission->save();
+  $submission_ids = \Drupal::entityTypeManager()->getStorage('webform_submission')
+    ->getQuery()->accessCheck(false)->execute();
+  $slice_size = 100;
+  $start = 0;
+  while ($start < count($submission_ids)) {
+    $webform_submissions = WebformSubmission::loadMultiple(array_slice($submission_ids, $start, $slice_size));
+    foreach ($webform_submissions as $webform_submission) {
+      /**
+       * @var \Drupal\webform\Entity\WebformSubmission $webform_submission
+       */
+      $entity_id = $webform_submission->get('entity_id')->value;
+      $entity_type = $webform_submission->get('entity_type')->value;
+      if ($entity_id) {
+        $webform_submission->set("entity_id_" . $entity_type, $entity_id);
+        $webform_submission->save();
+      }
     }
+    $start += $slice_size;
   }
 }

@@ -32,12 +32,11 @@
       $.each(
         drupalSettings.geolocation.locationInput.clientLocation,
         function (index, settings) {
-          var input = $(
-            ".location-input-client-location." + settings.identifier,
-            context
-          )
-            .once("location-input-client-location-processed")
-            .first();
+          var input = $(once("location-input-client-location-processed", $(
+               ".location-input-client-location." + settings.identifier,
+               context
+             ))
+            ).first();
           if (navigator.geolocation && input.length) {
             if (settings.hideForm) {
               input.hide();

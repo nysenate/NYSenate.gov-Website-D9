@@ -32,6 +32,10 @@
         var canvas = $canvas[0];
 
         var refresh = function () {
+          // Open all closed details, so that signatures work as expected.
+          var $details = $canvas.parents('details:not([open])');
+          $details.attr('open', 'open');
+
           // Set dimensions.
           $canvas.attr('width', $wrapper.width());
           $canvas.attr('height', $wrapper.width() / 3);
@@ -41,6 +45,9 @@
           if (value) {
             signaturePad.fromDataURL(value);
           }
+
+          // Now, close details.
+          $details.removeAttr('open');
         };
 
         // Initialize signature canvas.

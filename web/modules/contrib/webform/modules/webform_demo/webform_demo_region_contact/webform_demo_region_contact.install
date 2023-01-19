@@ -161,6 +161,7 @@ function webform_demo_region_contact_uninstall() {
   ];
   foreach ($entity_types as $entity_type => $entity_key) {
     $entity_ids = \Drupal::entityQuery($entity_type)
+      ->accessCheck(FALSE)
       ->condition($entity_key, 'demo_region', 'STARTS_WITH')
       ->execute();
     if ($entity_ids) {

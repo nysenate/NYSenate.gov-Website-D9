@@ -165,8 +165,8 @@ class WebformEntityAccessControlHandlerTest extends UnitTestCase {
       ->willReturnMap([
         ['create', $account, TRUE, AccessResult::allowed()],
       ]);
-    $webform->method('getSetting')->willReturnMap([
-      ['page', FALSE, TRUE],
+    $webform->method('hasPage')->willReturnOnConsecutiveCalls([
+      FALSE, TRUE,
     ]);
     $webform->method('getCacheMaxAge')
       ->willReturn(Cache::PERMANENT);

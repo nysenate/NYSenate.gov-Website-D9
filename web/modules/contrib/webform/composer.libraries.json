@@ -12,11 +12,6 @@
             "role": "Maintainer"
         },
         {
-            "name": "Alexander Trotsenko (bucefal91)",
-            "homepage": "https://www.drupal.org/u/bucefal91",
-            "role": "Co-maintainer"
-        },
-        {
             "name": "Contributors",
             "homepage": "https://www.drupal.org/node/7404/committers",
             "role": "Contributor"
@@ -29,7 +24,6 @@
         "forum": "https://drupal.stackexchange.com/questions/tagged/webform"
     },
     "require": {
-        "composer/installers": "*",
         "algolia/places": "*",
         "choices/choices": "*",
         "ckeditor/autogrow": "*",
@@ -74,7 +68,8 @@
                 "dist": {
                     "url": "https://registry.npmjs.org/places.js/-/places.js-1.19.0.tgz",
                     "type": "tar"
-                }
+                },
+                "license": "MIT"
             }
         },
         "choices": {
@@ -87,99 +82,106 @@
                     "installer-name": "choices"
                 },
                 "dist": {
-                    "url": "https://github.com/jshjohnson/Choices/archive/v9.0.1.zip",
+                    "url": "https://github.com/Choices-js/Choices/archive/refs/tags/v9.0.1.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "ckeditor.autogrow": {
             "type": "package",
             "package": {
                 "name": "ckeditor/autogrow",
-                "version": "4.17.1",
+                "version": "4.18.0",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "ckeditor.autogrow"
                 },
                 "dist": {
-                    "url": "https://download.ckeditor.com/autogrow/releases/autogrow_4.17.1.zip",
+                    "url": "https://download.ckeditor.com/autogrow/releases/autogrow_4.18.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "GPL-2.0-or-later"
             }
         },
         "ckeditor.codemirror": {
             "type": "package",
             "package": {
                 "name": "ckeditor/codemirror",
-                "version": "v1.17.12",
+                "version": "v1.18.3",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "ckeditor.codemirror"
                 },
                 "dist": {
-                    "url": "https://github.com/w8tcha/CKEditor-CodeMirror-Plugin/releases/download/v1.17.12/CKEditor-CodeMirror-Plugin.zip",
+                    "url": "https://github.com/w8tcha/CKEditor-CodeMirror-Plugin/releases/download/v1.18.3/CKEditor-CodeMirror-Plugin.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "ckeditor.fakeobjects": {
             "type": "package",
             "package": {
                 "name": "ckeditor/fakeobjects",
-                "version": "4.17.1",
+                "version": "4.18.0",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "ckeditor.fakeobjects"
                 },
                 "dist": {
-                    "url": "https://download.ckeditor.com/fakeobjects/releases/fakeobjects_4.17.1.zip",
+                    "url": "https://download.ckeditor.com/fakeobjects/releases/fakeobjects_4.18.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "GPL-2.0-or-later"
             }
         },
         "ckeditor.image": {
             "type": "package",
             "package": {
                 "name": "ckeditor/image",
-                "version": "4.17.1",
+                "version": "4.18.0",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "ckeditor.image"
                 },
                 "dist": {
-                    "url": "https://download.ckeditor.com/image/releases/image_4.17.1.zip",
+                    "url": "https://download.ckeditor.com/image/releases/image_4.18.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "GPL-2.0-or-later"
             }
         },
         "ckeditor.link": {
             "type": "package",
             "package": {
                 "name": "ckeditor/link",
-                "version": "4.17.1",
+                "version": "4.18.0",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "ckeditor.link"
                 },
                 "dist": {
-                    "url": "https://download.ckeditor.com/link/releases/link_4.17.1.zip",
+                    "url": "https://download.ckeditor.com/link/releases/link_4.18.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "GPL-2.0-or-later"
             }
         },
         "codemirror": {
             "type": "package",
             "package": {
                 "name": "codemirror/codemirror",
-                "version": "5.61.1",
+                "version": "5.65.3",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "codemirror"
                 },
                 "dist": {
-                    "url": "https://github.com/components/codemirror/archive/5.61.1.zip",
+                    "url": "https://github.com/components/codemirror/archive/refs/tags/5.65.3.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.chosen": {
@@ -194,7 +196,8 @@
                 "dist": {
                     "url": "https://github.com/harvesthq/chosen/releases/download/v1.8.7/chosen_v1.8.7.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.geocomplete": {
@@ -207,9 +210,10 @@
                     "installer-name": "jquery.geocomplete"
                 },
                 "dist": {
-                    "url": "https://github.com/ubilabs/geocomplete/archive/1.7.0.zip",
+                    "url": "https://github.com/ubilabs/geocomplete/archive/refs/tags/1.7.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.hotkeys": {
@@ -222,9 +226,10 @@
                     "installer-name": "jquery.hotkeys"
                 },
                 "dist": {
-                    "url": "https://github.com/jeresig/jquery.hotkeys/archive/0.2.0.zip",
+                    "url": "https://github.com/jeresig/jquery.hotkeys/archive/refs/tags/0.2.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.icheck": {
@@ -239,7 +244,8 @@
                 "dist": {
                     "url": "https://github.com/dargullin/icheck/archive/refs/tags/1.0.2.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.image-picker": {
@@ -252,54 +258,58 @@
                     "installer-name": "jquery.image-picker"
                 },
                 "dist": {
-                    "url": "https://github.com/rvera/image-picker/archive/0.3.1.zip",
+                    "url": "https://github.com/rvera/image-picker/archive/refs/tags/0.3.1.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.inputmask": {
             "type": "package",
             "package": {
                 "name": "jquery/inputmask",
-                "version": "5.0.6",
+                "version": "5.0.7",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "jquery.inputmask"
                 },
                 "dist": {
-                    "url": "https://github.com/RobinHerbots/jquery.inputmask/archive/5.0.6.zip",
+                    "url": "https://github.com/RobinHerbots/jquery.inputmask/archive/refs/tags/5.0.7.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.intl-tel-input": {
             "type": "package",
             "package": {
                 "name": "jquery/intl-tel-input",
-                "version": "16.1.0",
+                "version": "17.0.19",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "jquery.intl-tel-input"
                 },
                 "dist": {
-                    "url": "https://github.com/jackocnr/intl-tel-input/archive/v16.1.0.zip",
+                    "url": "https://github.com/jackocnr/intl-tel-input/archive/refs/tags/v17.0.19.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.rateit": {
             "type": "package",
             "package": {
                 "name": "jquery/rateit",
-                "version": "1.1.3",
+                "version": "1.1.5",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "jquery.rateit"
                 },
                 "dist": {
-                    "url": "https://github.com/gjunge/rateit.js/archive/1.1.3.zip",
+                    "url": "https://github.com/gjunge/rateit.js/archive/refs/tags/1.1.5.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.select2": {
@@ -312,9 +322,10 @@
                     "installer-name": "jquery.select2"
                 },
                 "dist": {
-                    "url": "https://github.com/select2/select2/archive/4.0.13.zip",
+                    "url": "https://github.com/select2/select2/archive/refs/tags/4.0.13.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.textcounter": {
@@ -327,24 +338,26 @@
                     "installer-name": "jquery.textcounter"
                 },
                 "dist": {
-                    "url": "https://github.com/ractoon/jQuery-Text-Counter/archive/0.9.0.zip",
+                    "url": "https://github.com/ractoon/jQuery-Text-Counter/archive/refs/tags/0.9.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.timepicker": {
             "type": "package",
             "package": {
                 "name": "jquery/timepicker",
-                "version": "1.13.18",
+                "version": "1.14.0",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "jquery.timepicker"
                 },
                 "dist": {
-                    "url": "https://github.com/jonthornton/jquery-timepicker/archive/1.13.18.zip",
+                    "url": "https://github.com/jonthornton/jquery-timepicker/archive/refs/tags/1.14.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "jquery.toggles": {
@@ -357,9 +370,10 @@
                     "installer-name": "jquery.toggles"
                 },
                 "dist": {
-                    "url": "https://github.com/simontabor/jquery-toggles/archive/v4.0.0.zip",
+                    "url": "https://github.com/simontabor/jquery-toggles/archive/refs/tags/v4.0.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "progress-tracker": {
@@ -372,9 +386,10 @@
                     "installer-name": "progress-tracker"
                 },
                 "dist": {
-                    "url": "https://github.com/NigelOToole/progress-tracker/archive/2.0.7.zip",
+                    "url": "https://github.com/NigelOToole/progress-tracker/archive/refs/tags/2.0.7.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "signature_pad": {
@@ -387,9 +402,10 @@
                     "installer-name": "signature_pad"
                 },
                 "dist": {
-                    "url": "https://github.com/szimek/signature_pad/archive/v2.3.0.zip",
+                    "url": "https://github.com/szimek/signature_pad/archive/refs/tags/v2.3.0.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "svg-pan-zoom": {
@@ -402,9 +418,10 @@
                     "installer-name": "svg-pan-zoom"
                 },
                 "dist": {
-                    "url": "https://github.com/ariutta/svg-pan-zoom/archive/3.6.1.zip",
+                    "url": "https://github.com/ariutta/svg-pan-zoom/archive/refs/tags/3.6.1.zip",
                     "type": "zip"
-                }
+                },
+                "license": "BSD-2-Clause"
             }
         },
         "tabby": {
@@ -417,9 +434,10 @@
                     "installer-name": "tabby"
                 },
                 "dist": {
-                    "url": "https://github.com/cferdinandi/tabby/archive/v12.0.3.zip",
+                    "url": "https://github.com/cferdinandi/tabby/archive/refs/tags/v12.0.3.zip",
                     "type": "zip"
-                }
+                },
+                "license": "MIT"
             }
         },
         "tippyjs/5.x": {
@@ -434,22 +452,24 @@
                 "dist": {
                     "url": "https://unpkg.com/tippy.js@5.2.1/dist/tippy-bundle.iife.min.js",
                     "type": "file"
-                }
+                },
+                "license": "MIT"
             }
         },
         "tippyjs/6.x": {
             "type": "package",
             "package": {
                 "name": "tippyjs/6.x",
-                "version": "6.2.6",
+                "version": "6.3.7",
                 "type": "drupal-library",
                 "extra": {
                     "installer-name": "tippyjs/6.x"
                 },
                 "dist": {
-                    "url": "https://unpkg.com/tippy.js@6.2.6/dist/tippy-bundle.umd.min.js",
+                    "url": "https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js",
                     "type": "file"
-                }
+                },
+                "license": "MIT"
             }
         }
     }

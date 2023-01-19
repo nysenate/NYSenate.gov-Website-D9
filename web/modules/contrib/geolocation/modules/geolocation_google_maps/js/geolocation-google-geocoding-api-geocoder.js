@@ -44,8 +44,7 @@
   Drupal.geolocation.geocoder.googleGeocodingAPI.attach = function (
     geocoderInput
   ) {
-    geocoderInput
-      .once()
+    $(once('geocoder-input', geocoderInput))
       .autocomplete({
         autoFocus: true,
         minLength: minLength,

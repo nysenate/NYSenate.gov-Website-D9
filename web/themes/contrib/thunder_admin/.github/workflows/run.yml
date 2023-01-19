@@ -1,0 +1,163 @@
+name: Visual regression tests
+
+on:
+  push:
+    branches:
+      - '8.x-3.x'
+  pull_request:
+  schedule:
+    - cron:  '0 6 * * *'
+
+env:
+  THUNDER_ADMIN_TESTS_BRANCH: 'master'
+
+jobs:
+  ### Build job
+  build:
+    runs-on: ubuntu-20.04
+
+    env:
+      PROFILE: 'thunder/thunder-distribution'
+      PROFILE_BRANCH: '6.4.x-dev'
+      PROJECT: 'thunder/thunder-project'
+      PROJECT_BRANCH: '3.x'
+      THUNDER_TESTING_DEMO_BRANCH: '4.x'
+      #DRUPAL_CORE: '8.7.x'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: '8'
+        extensions: gd,pdo_sqlite
+
+    - name: Install sqlite3 packages
+      run: sudo apt-get update && sudo apt-get install -y sqlite3
+
+    - name: Get build environment
+      run: git clone --depth 1 https://github.com/thunder/thunder-admin-tests.git -b ${THUNDER_ADMIN_TESTS_BRANCH} ${HOME}/build/thunder/thunder-admin-tests
+
+    - name: Cache composer dependencies
+      uses: actions/cache@v1
+      with:
+        path: ~/.composer/cache
+        key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.json') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Setup environment variables
+      run: |
+        echo "$HOME/.composer/vendor/bin" >> $GITHUB_PATH
+        echo "$HOME/build/thunder/thunder-admin-tests/scripts" >> $GITHUB_PATH
+        echo "$HOME/build/test-dir/vendor/bin" >> $GITHUB_PATH
+
+    - name: Build composer project
+      run: build-codebase.sh
+      env:
+        PROFILE: ${{ env.PROFILE }}
+        PROFILE_BRANCH:  ${{ env.PROFILE_BRANCH }}
+        PROJECT: ${{ env.PROJECT }}
+        PROJECT_BRANCH: ${{ env.PROJECT_BRANCH }}
+        THUNDER_TESTING_DEMO_BRANCH: ${{ env.THUNDER_TESTING_DEMO_BRANCH }}
+        DRUPAL_CORE: ${{ env.DRUPAL_CORE }}
+
+    - name: Install application
+      run: install-application.sh
+
+    - name: Zip build
+      run: cd ${HOME}; tar cfz build.tgz build/test-dir; mv build.tgz ${GITHUB_WORKSPACE}
+
+    - name: Upload build
+      uses: actions/upload-artifact@v1
+      with:
+        name: build
+        path: build.tgz
+
+  ### Visual regression testing job
+  visual:
+    needs: build
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        SHARPEYE_BROWSER: ['chrome', 'firefox']
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: '8'
+        extensions: gd,pdo_sqlite
+
+    - name: Install sqlite3 and graphicsmagick packages
+      run: sudo apt-get update && sudo apt-get install -y sqlite3 graphicsmagick
+
+    - name: Get build environment
+      run: git clone --depth 1 https://github.com/thunder/thunder-admin-tests.git -b ${THUNDER_ADMIN_TESTS_BRANCH} ${HOME}/build/thunder/thunder-admin-tests
+
+    - name: Cache NPM dependencies
+      id: npm-cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Setup environment variables
+      run: |
+        echo "$HOME/.composer/vendor/bin" >> $GITHUB_PATH
+        echo "$HOME/build/thunder/thunder-admin-tests/scripts" >> $GITHUB_PATH
+        echo "$HOME/build/test-dir/vendor/bin" >> $GITHUB_PATH
+
+    - id: message
+      name: Get commit message
+      run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
+
+    - name: Download build
+      uses: actions/download-artifact@v1
+      with:
+        name: build
+
+    - name: Unzip build artifact
+      run: tar xCfz ${HOME} build/build.tgz build/test-dir; rm -rf build
+
+    - name: Build theme
+      run: build-theme.sh
+
+    - name: Visual regression testing
+      run: visual.sh
+      env:
+        JOB_ID: ${{ github.run_id }}
+        SHARPEYE_BROWSER: ${{ matrix.SHARPEYE_BROWSER }}
+        UPDATE_SCREENSHOTS: ${{ contains(steps.message.outputs.message, '[UPDATE_SCREENSHOTS') }}
+
+    - name: Upload images
+      if: failure()
+      uses: actions/upload-artifact@v1
+      with:
+        name: images-${{ matrix.SHARPEYE_BROWSER }}
+        path: /tmp/sharpeye
+
+    - name: Update screenshots
+      if: failure() && github.event_name == 'pull_request' && contains(steps.message.outputs.message, '[UPDATE_SCREENSHOTS')
+      run: update-screenshots.sh
+      env:
+        JOB_ID: ${{ github.run_id }}
+        SHARPEYE_BROWSER: ${{ matrix.SHARPEYE_BROWSER }}
+        BRANCH: ${{ github.head_ref }}
+        REPOSITORY: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ secrets.TechAccountToken }}

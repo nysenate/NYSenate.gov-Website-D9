@@ -122,7 +122,7 @@ function _webform_test_load_include($id) {
 
   $include_base_path = __DIR__ . '/includes';
   if (file_exists("$include_base_path/webform_test.$id.inc")) {
-    module_load_include('inc', 'webform_test', 'includes/webform_test.' . $id);
+    \Drupal::moduleHandler()->loadInclude('webform_test', 'inc', 'includes/webform_test.' . $id);
     return $id;
   }
   else {

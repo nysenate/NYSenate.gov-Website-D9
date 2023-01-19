@@ -21,7 +21,8 @@ geocoder.googlegeocodingapi:
   js:
     js/geolocation-google-geocoding-api-geocoder.js: {}
   dependencies:
-    - core/jquery.once
+    - core/once
+    - core/jquery
     - geolocation/geolocation.geocoder.api
     - geolocation_google_maps/googlemapsapi
 
@@ -47,7 +48,8 @@ widget.google_maps.geojson:
   js:
     js/geolocation-geometry-widget-google-maps.js: {}
   dependencies:
-    - core/jquery.once
+    - core/once
+    - core/jquery
     - geolocation/geolocation.map
 
 #

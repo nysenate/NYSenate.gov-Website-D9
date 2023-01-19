@@ -37,6 +37,9 @@
         .setAttribute('class', '')
         .addClass(classes)
     %}
+    {% if is_active %}
+      {% set attributes = attributes.setAttribute('aria-current', 'step') %}
+    {% endif %}
     <li{{ attributes }}>
       <div class="progress-marker" data-webform-progress-step data-webform-progress-link data-text="{{ index + 1 }}"></div>
       {% if progress|length < max_pages %}

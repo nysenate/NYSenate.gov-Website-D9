@@ -36,7 +36,7 @@
       return;
     }
 
-    autocomplete.once().autocomplete({
+    $(once('geolocation-geocoder-autocomplete', autocomplete)).autocomplete({
       autoFocus: true,
       minLength: minLength,
       source: function (request, response) {

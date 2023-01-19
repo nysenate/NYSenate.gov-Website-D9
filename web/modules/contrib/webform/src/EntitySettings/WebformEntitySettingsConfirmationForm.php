@@ -191,16 +191,9 @@ class WebformEntitySettingsConfirmationForm extends WebformEntitySettingsBaseFor
     ];
     $form['confirmation_settings']['confirmation_title'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Confirmation title'),
+      '#title' => $this->t('Confirmation page/modal title'),
       '#description' => $this->t('Page title to be shown upon successful submission.'),
       '#default_value' => $settings['confirmation_title'],
-      '#states' => [
-        'visible' => [
-          [':input[name="confirmation_type"]' => ['value' => WebformInterface::CONFIRMATION_PAGE]],
-          'or',
-          [':input[name="confirmation_type"]' => ['value' => WebformInterface::CONFIRMATION_MODAL]],
-        ],
-      ],
     ];
     $form['confirmation_settings']['confirmation_message'] = [
       '#type' => 'webform_html_editor',

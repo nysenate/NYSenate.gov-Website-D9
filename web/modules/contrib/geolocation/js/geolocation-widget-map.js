@@ -64,8 +64,7 @@
   Drupal.behaviors.geolocationWidget = {
     attach: function (context, drupalSettings) {
       // Initialize new widgets.
-      $(".geolocation-map-widget", context)
-        .once("geolocation-widget-processed")
+      $(once("geolocation-widget-processed", ".geolocation-map-widget", context))
         .each(function (index, item) {
           var widgetSettings = {};
           var widgetWrapper = $(item);

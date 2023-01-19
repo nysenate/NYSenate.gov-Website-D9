@@ -46,7 +46,9 @@ function webform_webform_options_time_zones_alter(array &$options, array $elemen
  */
 function webform_webform_options_country_codes_alter(array &$options, array $element = []) {
   if (empty($options)) {
-    $options = CountryManager::getStandardList();
+    /** @var \Drupal\Core\Locale\CountryManagerInterface $country_manager */
+    $country_manager = \Drupal::service('country_manager');
+    $options = $country_manager->getList();
   }
 }
 
@@ -55,7 +57,9 @@ function webform_webform_options_country_codes_alter(array &$options, array $ele
  */
 function webform_webform_options_country_names_alter(array &$options, array $element = []) {
   if (empty($options)) {
-    $countries = CountryManager::getStandardList();
+    /** @var \Drupal\Core\Locale\CountryManagerInterface $country_manager */
+    $country_manager = \Drupal::service('country_manager');
+    $countries = $country_manager->getList();
     $options = array_combine($countries, $countries);
   }
 }

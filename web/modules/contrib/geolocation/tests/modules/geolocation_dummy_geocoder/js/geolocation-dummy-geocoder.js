@@ -15,7 +15,7 @@
    */
   Drupal.behaviors.geolocationGeocoderDummy = {
     attach: function (context) {
-      $('input.geolocation-geocoder-dummy', context).once().on('input', function () {
+      $(once('geolocation-geocoder-dummy', 'input.geolocation-geocoder-dummy', context)).on('input', function () {
         var that = $(this);
         Drupal.geolocation.geocoder.clearCallback(that.data('source-identifier'));
 

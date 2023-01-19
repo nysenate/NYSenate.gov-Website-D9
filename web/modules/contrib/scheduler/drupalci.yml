@@ -4,18 +4,38 @@ build:
     validate_codebase:
       phplint:
       container_composer:
+      container_command:
+        commands:
+      host_command:
+        commands:
+          # Apply patch from https://www.drupal.org/project/drupalci_testbot/issues/3251817
+          # @todo Remove this when Drupal 9.4.9 and 9.5.0 and 10.0.0 have been released.
+          - "cd ${SOURCE_DIR} && sudo -u www-data curl https://www.drupal.org/files/issues/2021-11-30/3251817-4.run-tests-with-multiple-groups.patch | sudo -u www-data patch -p1 --verbose"
       csslint:
       eslint:
       phpcs:
-      # Static analysis for uses of @deprecated code.
       phpstan:
         halt-on-fail: false
     testing:
-      run_tests.standard:
+      container_command:
+        commands:
+          # Rules 3.0-alpha7 is not compatible with PHP8.1 but the dev version has been fixed.
+          # Added mglaman/phpstan-drupal:* to allow downgrade. See https://www.drupal.org/i/3326114
+          - "cd ${SOURCE_DIR} && sudo -u www-data composer require drupal/rules:3.x-dev mglaman/phpstan-drupal:*"
+          # Get workbench moderation modules only when testing with Drupal 9, as these are not compatible with Drupal 10.
+          # Use * because only the dev version of WBMA is compatible with D9.
+          - 'drush core:status | awk "NR==1{print \$2\$3\$4}"'
+          - 'drush core:status | awk "NR==1{print \$2\$3\$4}" | grep version:9 && sudo -u www-data composer require drupal/workbench_moderation drupal/workbench_moderation_actions:*'
+          # Show the eslint version
+          - 'echo "eslint version $(${SOURCE_DIR}/core/node_modules/.bin/eslint --version)"'
+      run_tests.functional:
         types: 'PHPUnit-Functional'
-        suppress-deprecations: true
+        testgroups: '--all'
+        # The groups are 'scheduler,scheduler_api,scheduler_rules_integration'
+        suppress-deprecations: false
       run_tests.js:
         types: 'PHPUnit-FunctionalJavascript'
-        suppress-deprecations: true
+        testgroups: 'scheduler_js'
+        suppress-deprecations: false
         concurrency: 1
         halt-on-fail: false

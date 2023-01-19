@@ -2,7 +2,6 @@
 
 namespace Drupal\webform_node\Controller;
 
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -10,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\webform\EntityStorage\WebformEntityStorageTrait;
 use Drupal\webform\Utility\WebformDialogHelper;
 use Drupal\webform\Utility\WebformElementHelper;
+use Drupal\webform\Utility\WebformYaml;
 use Drupal\webform\WebformInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -182,7 +182,7 @@ class WebformNodeReferencesListController extends EntityListBuilder implements C
           if (!$entity->hasField($field_name)) {
             continue;
           }
-          $default_data = Yaml::decode($entity->$field_name->default_data);
+          $default_data = WebformYaml::decode($entity->$field_name->default_data);
           if (empty($default_data[$variant_element_key])) {
             continue;
           }
@@ -417,6 +417,7 @@ class WebformNodeReferencesListController extends EntityListBuilder implements C
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
 
     // Add field names.
@@ -442,6 +443,7 @@ class WebformNodeReferencesListController extends EntityListBuilder implements C
    */
   protected function getTotal() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
 
     // Add field names.

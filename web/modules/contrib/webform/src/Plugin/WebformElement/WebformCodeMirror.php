@@ -13,7 +13,7 @@ use Drupal\webform\WebformSubmissionInterface;
  * @WebformElement(
  *   id = "webform_codemirror",
  *   label = @Translation("CodeMirror"),
- *   description = @Translation("Provides a form element for editing code in a number of programming languages and markup."),
+ *   description = @Translation("Provides a form element for editing code in a number of programming languages and markup. Code editing support is provided by the <a href=""https://codemirror.net"">CodeMirror</a> library."),
  *   category = @Translation("Advanced elements"),
  *   multiline = TRUE,
  * )

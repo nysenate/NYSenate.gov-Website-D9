@@ -70,7 +70,8 @@ widget.leaflet.geojson:
   js:
     js/geolocation-geometry-widget-leaflet.js: {}
   dependencies:
-    - core/jquery.once
+    - core/once
+    - core/jquery
     - geolocation/geolocation.map
     - geolocation_leaflet/geolocation.leaflet
     - geolocation_leaflet/leaflet.draw
@@ -81,7 +82,8 @@ geocoder.photon:
   js:
     js/photon-geocoder.js: {}
   dependencies:
-  - core/jquery.once
+  - core/once
+  - core/jquery
   - geolocation/geolocation.geocoder.api
 
 #

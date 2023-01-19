@@ -38,14 +38,16 @@ class SchedulerPermissionsTest extends SchedulerBrowserTestBase {
     // Check that a new node can be saved and published.
     $title = $this->randomString(15);
     $edit = ['title[0][value]' => $title, 'status[value]' => TRUE];
-    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->type);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains(sprintf('%s %s has been created.', $this->typeName, $title));
     $this->assertTrue($this->drupalGetNodeByTitle($title)->isPublished(), 'The new node is published');
 
     // Check that a new node can be saved as unpublished.
     $title = $this->randomString(15);
     $edit = ['title[0][value]' => $title, 'status[value]' => FALSE];
-    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->type);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains(sprintf('%s %s has been created.', $this->typeName, $title));
     $this->assertFalse($this->drupalGetNodeByTitle($title)->isPublished(), 'The new node is unpublished');
 
@@ -97,7 +99,8 @@ class SchedulerPermissionsTest extends SchedulerBrowserTestBase {
 
     // Edit the unpublished node and save.
     $title = 'For Publishing ' . $this->randomString(10);
-    $this->drupalPostForm('node/' . $unpublished_node->id() . '/edit', ['title[0][value]' => $title], 'Save');
+    $this->drupalGet('node/' . $unpublished_node->id() . '/edit');
+    $this->submitForm(['title[0][value]' => $title], 'Save');
 
     // Check the updated title, to verify that edit and save was sucessful.
     $unpublished_node = $this->nodeStorage->load($unpublished_node->id());
@@ -112,7 +115,8 @@ class SchedulerPermissionsTest extends SchedulerBrowserTestBase {
 
     // Edit the published node and save.
     $title = 'For Unpublishing ' . $this->randomString(10);
-    $this->drupalPostForm('node/' . $published_node->id() . '/edit', ['title[0][value]' => $title], 'Save');
+    $this->drupalGet('node/' . $published_node->id() . '/edit');
+    $this->submitForm(['title[0][value]' => $title], 'Save');
 
     // Check the updated title, to verify that edit and save was sucessful.
     $published_node = $this->nodeStorage->load($published_node->id());

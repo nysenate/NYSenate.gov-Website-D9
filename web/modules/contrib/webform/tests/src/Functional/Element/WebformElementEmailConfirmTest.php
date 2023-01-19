@@ -49,6 +49,11 @@ class WebformElementEmailConfirmTest extends WebformElementBrowserTestBase {
     // Check flexbox.
     $assert_session->responseContains('<div data-drupal-selector="edit-email-confirm-flexbox-flexbox" class="webform-flexbox js-webform-flexbox js-form-wrapper form-wrapper" id="edit-email-confirm-flexbox-flexbox"><div class="webform-flex webform-flex--1"><div class="webform-flex--container">');
 
+    // Check inline title.
+    $assert_session->responseContains('<fieldset id="edit-email-confirm-inline--wrapper" class="webform-email-confirm--wrapper fieldgroup form-composite webform-composite-hidden-title js-webform-type-webform-email-confirm webform-type-webform-email-confirm js-form-item form-item js-form-wrapper form-wrapper">');
+    $assert_session->responseContains('<div class="webform-element--title-inline js-form-item form-item js-form-type-email form-item-email-confirm-inline-mail-1 js-form-item-email-confirm-inline-mail-1">');
+    $assert_session->responseContains('<div class="webform-element--title-inline js-form-item form-item js-form-type-email form-item-email-confirm-inline-mail-2 js-form-item-email-confirm-inline-mail-2">');
+
     // Check flexbox submit.
     $this->drupalGet('/webform/test_element_email_confirm');
     $edit = [

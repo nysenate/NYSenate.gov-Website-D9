@@ -2,6 +2,7 @@
 
 namespace Drupal\scheduler_rules_integration\Plugin\Condition;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\rules\Core\RulesConditionBase;
 
 /**
@@ -24,12 +25,14 @@ class UnpublishingIsEnabled extends RulesConditionBase {
   /**
    * Determines whether scheduled unpublishing is enabled for this node type.
    *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node to be checked.
+   *
    * @return bool
    *   TRUE if scheduled unpublishing is enabled for the content type of this
    *   node.
    */
-  public function evaluate() {
-    $node = $this->getContextValue('node');
+  protected function doEvaluate(EntityInterface $node) {
     $config = \Drupal::config('scheduler.settings');
     return ($node->type->entity->getThirdPartySetting('scheduler', 'unpublish_enable', $config->get('default_unpublish_enable')));
   }

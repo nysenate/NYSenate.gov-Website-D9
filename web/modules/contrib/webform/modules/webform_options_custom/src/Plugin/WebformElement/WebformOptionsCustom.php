@@ -62,6 +62,8 @@ class WebformOptionsCustom extends Select implements WebformOptionsCustomInterfa
    * {@inheritdoc}
    */
   public function initialize(array &$element) {
+    parent::initialize($element);
+
     // Make sure the #template property is not set by the element
     // since it allows for unfiltered HTML, CSS, and JS.
     unset($element['#template']);

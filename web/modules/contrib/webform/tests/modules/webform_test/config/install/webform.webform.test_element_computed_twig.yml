@@ -34,11 +34,27 @@ elements: |
     '#default_value': |
       <p>This is a <strong>text format</strong> string.</p>
       <p>It contains &quot;double&quot; and 'single' quotes with special characters like &lt;, &gt;, &lt;&gt;, and &gt;&lt;.</p>
-      
+
   xss:
     '#type': textfield
     '#title': xss
     '#default_value': '<script>alert("XSS");</script>'
+  custom_attributes:
+    '#type': webform_computed_twig
+    '#title': custom_attributes
+    '#wrapper_attributes':
+      class:
+        - wrapper-custom
+      style: 'border: 1px solid red'
+    '#attributes':
+      class:
+        - element-custom
+      style: 'border: 1px solid yellow'
+    '#label_attributes':
+      class:
+        - label-custom
+      style: 'border: 1px solid blue'
+    '#template': 'Testing attributes'
   webform_computed_twig_auto:
     '#type': webform_computed_twig
     '#title': webform_computed_twig_auto
@@ -48,7 +64,7 @@ elements: |
       <b class="webform_computed_twig_auto">complex string:</b> {{ webform_token('[webform_submission:values:complex_string]', webform_submission) }}<br />
       <b class="webform_computed_twig_auto">text_format:</b> {{ webform_token('[webform_submission:values:text_format]', webform_submission) }}<br />
       <b class="webform_computed_twig_auto">xss:</b> {{ webform_token('[webform_submission:values:xss]', webform_submission) }}<br />
-      
+
   webform_computed_twig_html:
     '#type': webform_computed_twig
     '#title': webform_computed_twig_html
@@ -59,7 +75,7 @@ elements: |
       <b class="webform_computed_twig_html">complex string:</b> {{ webform_token('[webform_submission:values:complex_string]', webform_submission) }}<br />
       <b class="webform_computed_twig_html">text_format:</b> {{ webform_token('[webform_submission:values:text_format]', webform_submission) }}<br />
       <b class="webform_computed_twig_html">xss:</b> {{ webform_token('[webform_submission:values:xss]', webform_submission) }}<br />
-      
+
   webform_computed_twig_text:
     '#type': webform_computed_twig
     '#title': webform_computed_twig_text
@@ -70,7 +86,7 @@ elements: |
       complex string: {{ webform_token('[webform_submission:values:complex_string]', webform_submission) }}
       text_format: {{ webform_token('[webform_submission:values:text_format]', webform_submission) }}
       xss: {{ webform_token('[webform_submission:values:xss]', webform_submission) }}
-      
+
   webform_computed_twig_data:
     '#type': webform_computed_twig
     '#title': webform_computed_twig_data
@@ -80,7 +96,7 @@ elements: |
       <b class="webform_computed_twig_data">complex string:</b> {{ data.complex_string }}<br />
       <b class="webform_computed_twig_data">text_format:</b> {{ data.text_format.value }}<br />
       <b class="webform_computed_twig_data">xss:</b> {{ data.xss }}<br />
-      
+
   webform_computed_twig_store:
     '#type': webform_computed_twig
     '#title': webform_computed_twig_store
@@ -98,7 +114,7 @@ elements: |
     '#title': webform_computed_twig_spaceless
     '#whitespace': spaceless
     '#template': ' <em>This is spaceless</em>  <br/> '
-  
+
 css: ''
 javascript: ''
 settings:

@@ -312,13 +312,7 @@ abstract class WebformHandlerFormBase extends FormBase {
     $this->webformHandler->setNotes($form_state->getValue('notes'));
     $this->webformHandler->setStatus($form_state->getValue('status'));
     $this->webformHandler->setWeight($form_state->getValue('weight'));
-    // Clear conditions if conditions or handler is disabled.
-    if (!$this->webformHandler->supportsConditions() || $this->webformHandler->isDisabled()) {
-      $this->webformHandler->setConditions([]);
-    }
-    else {
-      $this->webformHandler->setConditions($form_state->getValue('conditions'));
-    }
+    $this->webformHandler->setConditions($form_state->getValue('conditions'));
 
     if ($this instanceof WebformHandlerAddForm) {
       $this->webform->addWebformHandler($this->webformHandler);

@@ -51,7 +51,8 @@ class SchedulerNonEnabledTypeTest extends SchedulerBrowserTestBase {
     // setting remains on, the node must be able to be saved without a date.
     $this->nonSchedulerNodeType->setThirdPartySetting('scheduler', 'publish_required', !$publishing_enabled)->save();
     $this->nonSchedulerNodeType->setThirdPartySetting('scheduler', 'unpublish_required', !$unpublishing_enabled)->save();
-    $this->drupalPostForm('node/add/' . $this->nonSchedulerNodeType->id(), ['title[0][value]' => $title], 'Save');
+    $this->drupalGet('node/add/' . $this->nonSchedulerNodeType->id());
+    $this->submitForm(['title[0][value]' => $title], 'Save');
     // Check that the node has saved OK.
     $string = sprintf('%s %s has been created.', $this->nonSchedulerNodeType->get('name'), $title);
     $this->assertSession()->pageTextContains($string);

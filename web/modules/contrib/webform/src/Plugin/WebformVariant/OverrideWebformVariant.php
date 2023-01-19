@@ -204,7 +204,7 @@ class OverrideWebformVariant extends WebformVariantBase {
           $webform->setElements([$element_key => $element_properties] + $webform->getElementsDecoded());
         }
         else {
-          $element = $webform->getElement($element_key);
+          $element = $webform->getElementDecoded($element_key);
           if (!$element) {
             continue;
           }

@@ -9,19 +9,3 @@ scheduler.cron_tab:
   title: Lightweight cron
   weight: 10
   base_route: scheduler.admin_form
-
-content_moderation.content:
-  # Use content_moderation.content which is the same key as is used in the core
-  # Content Moderation module. If that modules is enabled this avoids two
-  # 'Overview' links. If https://www.drupal.org/project/drupal/issues/3199682
-  # gets committed then this route could be removed from here.
-  title: 'Overview'
-  route_name: system.admin_content
-  parent_id: system.admin_content
-
-scheduler.scheduled_content:
-  title: 'Scheduled content'
-  route_name: view.scheduler_scheduled_content.overview
-  parent_id: system.admin_content
-  # Overview seems to have weight 0 and moderated content is weight 1.
-  weight: 5

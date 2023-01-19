@@ -104,7 +104,7 @@ class WebformOptionsHelper {
    *   An array containing an option's text and description.
    */
   public static function splitOption($text) {
-    return explode(static::DESCRIPTION_DELIMITER, $text);
+    return explode(static::DESCRIPTION_DELIMITER, $text, 2);
   }
 
   /**

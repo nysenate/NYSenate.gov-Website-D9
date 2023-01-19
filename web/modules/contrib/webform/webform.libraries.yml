@@ -1028,15 +1028,15 @@ imce.input:
 # External libraries.
 
 libraries.choices:
-  remote: https://github.com/jshjohnson/Choices
+  remote: https://github.com/Choices-js/Choices
   version: '9.0.1'
   license:
     name: MIT
-    url: https://github.com/jshjohnson/Choices/blob/master/LICENSE
+    url: https://github.com/Choices-js/Choices/blob/master/LICENSE
     gpl-compatible: true
   directory: choices
   cdn:
-    /libraries/choices/: https://cdn.jsdelivr.net/gh/jshjohnson/Choices@v9.0.1/
+    /libraries/choices/: https://cdn.jsdelivr.net/gh/Choices-js/Choices@v9.0.1/
   css:
     component:
       css/webform.choices.base.css: {  }
@@ -1048,15 +1048,15 @@ libraries.choices:
 libraries.codemirror.text:
   remote: https://github.com/codemirror/codemirror
   download: https://github.com/components/codemirror
-  version: &webform_codemirror_version '5.61.1'
+  version: &webform_codemirror_version '5.65.3'
   license: &webform_codemirror_license
     name: MIT
     url: http://codemirror.net/LICENSE
     gpl-compatible: true
   directory: &webform_codemirror_directory codemirror
   cdn: &webform_codemirror_cdn
-    /libraries/codemirror/lib/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.1/
-    /libraries/codemirror/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.1/
+    /libraries/codemirror/lib/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/
+    /libraries/codemirror/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/
   css:
     component:
       /libraries/codemirror/lib/codemirror.css: {}
@@ -1154,14 +1154,14 @@ libraries.algolia.places:
 
 libraries.jquery.inputmask:
   remote: https://github.com/RobinHerbots/jquery.inputmask
-  version: '5.0.6'
+  version: '5.0.7'
   license:
     name: MIT
     url: http://opensource.org/licenses/mit-license.php
     gpl-compatible: true
   directory: jquery.inputmask
   cdn:
-    /libraries/jquery.inputmask/: https://cdn.jsdelivr.net/gh/RobinHerbots/Inputmask@5.0.6/
+    /libraries/jquery.inputmask/: https://cdn.jsdelivr.net/gh/RobinHerbots/Inputmask@5.0.7/
   js:
     /libraries/jquery.inputmask/dist/jquery.inputmask.min.js: { minified: true }
   dependencies:
@@ -1169,14 +1169,14 @@ libraries.jquery.inputmask:
 
 libraries.jquery.intl-tel-input:
   remote: https://github.com/jackocnr/intl-tel-input
-  version: 'v16.1.0'
+  version: 'v17.0.19'
   license:
     name: MIT
     url: https://github.com/jackocnr/intl-tel-input/blob/master/LICENSE
     gpl-compatible: true
   directory: jquery.intl-tel-input
   cdn:
-    /libraries/jquery.intl-tel-input/: https://cdn.jsdelivr.net/gh/jackocnr/intl-tel-input@v16.1.0/
+    /libraries/jquery.intl-tel-input/: https://cdn.jsdelivr.net/gh/jackocnr/intl-tel-input@v17.0.19/
   css:
     component:
       /libraries/jquery.intl-tel-input/build/css/intlTelInput.min.css: { minified: true }
@@ -1189,14 +1189,14 @@ libraries.jquery.intl-tel-input:
 
 libraries.jquery.rateit:
   remote: https://github.com/gjunge/rateit.js
-  version: '1.1.3'
+  version: '1.1.5'
   license:
     name: MIT
     url: https://github.com/gjunge/rateit.js/blob/master/LICENSE.md
     gpl-compatible: true
   directory: jquery.rateit
   cdn:
-    /libraries/jquery.rateit/: https://cdn.jsdelivr.net/gh/gjunge/rateit.js@1.1.3/
+    /libraries/jquery.rateit/: https://cdn.jsdelivr.net/gh/gjunge/rateit.js@1.1.5/
   css:
     component:
       /libraries/jquery.rateit/scripts/rateit.css: {}
@@ -1258,14 +1258,14 @@ libraries.jquery.textcounter:
 
 libraries.jquery.timepicker:
   remote: https://github.com/jonthornton/jquery-timepicker
-  version: '1.13.18'
+  version: '1.14.0'
   license:
     name: MIT
     url: http://opensource.org/licenses/mit-license.php
     gpl-compatible: true
   directory: jquery.timepicker
   cdn:
-    /libraries/jquery.timepicker/: https://cdn.jsdelivr.net/gh/jonthornton/jquery-timepicker@1.13.18/
+    /libraries/jquery.timepicker/: https://cdn.jsdelivr.net/gh/jonthornton/jquery-timepicker@1.14.0/
   css:
     component:
       /libraries/jquery.timepicker/jquery.timepicker.min.css: { minified: true }

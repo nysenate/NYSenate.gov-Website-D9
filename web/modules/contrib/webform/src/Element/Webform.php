@@ -2,6 +2,7 @@
 
 namespace Drupal\webform\Element;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\webform\Entity\Webform as WebformEntity;
@@ -76,6 +77,13 @@ class Webform extends RenderElement {
 
         // Build the webform.
         $element['webform_build'] = $webform->getSubmissionForm($values);
+
+        // Add url.path to cache contexts.
+        $meta = new CacheableMetadata();
+        $meta->setCacheContexts(['url.path']);
+        $renderer = \Drupal::service('renderer');
+        $renderer->addCacheableDependency($element, $meta);
+        static::addCacheableDependency($element, $webform);
       }
       elseif ($webform->getSetting('form_access_denied') !== WebformInterface::ACCESS_DENIED_DEFAULT) {
         // Set access denied message.

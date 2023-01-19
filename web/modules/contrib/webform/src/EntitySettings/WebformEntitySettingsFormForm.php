@@ -296,7 +296,7 @@ class WebformEntitySettingsFormForm extends WebformEntitySettingsBaseForm {
       '#open' => TRUE,
       '#states' => [
         'visible' => [
-          ':input[name="method"]' => ['value' => ''],
+          'select[name="form_method"]' => ['value' => ''],
         ],
       ],
     ];
@@ -419,9 +419,48 @@ class WebformEntitySettingsFormForm extends WebformEntitySettingsBaseForm {
       '#title' => $this->t('Display show/hide all wizard pages link'),
       '#description' => $this->t('If checked, a hide/show all elements link will be added to this webform when there are wizard pages.'),
       '#return_value' => TRUE,
-      '#default_value' => $settings['wizard_auto_forward'],
+      '#default_value' => $settings['wizard_toggle'],
       '#access' => FALSE,
     ];
+    // Wizard settings: Page.
+    $form['wizard_settings']['wizard_page_title'] = [
+      '#type' => 'container',
+      '#prefix' => '<strong>',
+      '#suffix' => '</strong>',
+      '#markup' => $this->t('Page'),
+    ];
+    $form['wizard_settings']['wizard_page_type'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Wizard page type'),
+      '#description' => $this->t('The container used to display a wizard page.'),
+      '#options' => [
+        'container' => $this->t('Container'),
+        'fieldset' => $this->t('Fieldset'),
+        'webform_section' => $this->t('Section'),
+      ],
+      '#default_value' => $settings['wizard_page_type'],
+    ];
+    $form['wizard_settings']['wizard_page_title_tag'] = [
+      '#type' => 'webform_select_other',
+      '#title' => $this->t('Wizard page title tag'),
+      '#description' => $this->t("The page's title HTML tag."),
+      '#options' => [
+        'h1' => $this->t('Header 1 (h1)'),
+        'h2' => $this->t('Header 2 (h2)'),
+        'h3' => $this->t('Header 3 (h3)'),
+        'h4' => $this->t('Header 4 (h4)'),
+        'h5' => $this->t('Header 5 (h5)'),
+        'h6' => $this->t('Header 6 (h6)'),
+        'label' => $this->t('Label (label)'),
+      ],
+      '#default_value' => $settings['wizard_page_title_tag'],
+      '#states' => [
+        'visible' => [
+          ':input[name="wizard_page_type"]' => ['value' => 'webform_section'],
+        ],
+      ],
+    ];
+
     // Wizard settings: Labels.
     $form['wizard_settings']['wizard_labels_title'] = [
       '#type' => 'container',
@@ -511,7 +550,7 @@ class WebformEntitySettingsFormForm extends WebformEntitySettingsBaseForm {
       '#open' => TRUE,
       '#states' => [
         'visible' => [
-          ':input[name="method"]' => ['value' => ''],
+          'select[name="form_method"]' => ['value' => ''],
         ],
       ],
     ];
@@ -633,7 +672,7 @@ class WebformEntitySettingsFormForm extends WebformEntitySettingsBaseForm {
       '#message_message' => $this->t("Please make sure this webform's action URL or path is setup to handle the webform's submission."),
       '#states' => [
         'invisible' => [
-          ':input[name="method"]' => ['value' => ''],
+          'select[name="form_method"]' => ['value' => ''],
         ],
       ],
     ];

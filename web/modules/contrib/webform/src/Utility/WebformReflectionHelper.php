@@ -26,7 +26,7 @@ class WebformReflectionHelper {
     }
 
     self::$modules = [];
-    $files = \Drupal::service('file_system')->scanDirectory(__DIR__ . '/../../modules', '/.*\.info\.yml/');
+    $files = \Drupal::service('file_system')->scanDirectory(__DIR__ . '/../../modules', '/.*\.info\.yml/', ['nomask' => '/^tests$/']);
     foreach ($files as $file) {
       $module_name = str_replace('.info.yml', '', $file->filename);
       self::$modules[$module_name] = $module_name;

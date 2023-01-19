@@ -46,7 +46,8 @@ class SchedulerValidationTest extends SchedulerBrowserTestBase {
       'status' => FALSE,
     ]);
     $edit = ['status[value]' => TRUE];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     // Check that validation prevents publishing the node directly without an
     // unpublish-on date if unpublishing is required.
     $this->assertSession()->pageTextContains("Either you must set an 'unpublish on' date or save this node as unpublished.");
@@ -64,7 +65,8 @@ class SchedulerValidationTest extends SchedulerBrowserTestBase {
       'unpublish_on[0][value][date]' => $this->dateFormatter->format($this->requestTime + 1800, 'custom', 'Y-m-d'),
       'unpublish_on[0][value][time]' => $this->dateFormatter->format($this->requestTime + 1800, 'custom', 'H:i:s'),
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     // Check that validation prevents entering an unpublish-on date which is
     // earlier than the publish-on date.
     $this->assertSession()->pageTextContains("The 'unpublish on' date must be later than the 'publish on' date.");

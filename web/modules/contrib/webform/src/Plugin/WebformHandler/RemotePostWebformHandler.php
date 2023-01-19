@@ -3,6 +3,7 @@
 namespace Drupal\webform\Plugin\WebformHandler;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -152,8 +153,14 @@ class RemotePostWebformHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    // @todo Determine why entity field manager dependency can't be injected.
-    $field_names = array_keys(\Drupal::service('entity_field.manager')->getBaseFieldDefinitions('webform_submission'));
+    // We can't inject the entity field manager dependency because
+    // RemotePostWebformHandler::defaultConfiguration() is called with in
+    // RemotePostWebformHandler::create().
+    // @see \Drupal\webform\Plugin\WebformHandlerBase::create
+    // @see https://www.drupal.org/project/webform/issues/3285846
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $field_names = array_keys($entity_field_manager->getBaseFieldDefinitions('webform_submission'));
     $excluded_data = array_combine($field_names, $field_names);
     return [
       'method' => 'POST',
@@ -934,7 +941,7 @@ class RemotePostWebformHandler extends WebformHandlerBase {
       '#title' => $this->t('Request options'),
       '#wrapper_attributes' => ['style' => 'margin: 0'],
       'data' => [
-        '#markup' => htmlspecialchars(Yaml::encode($request_options)),
+        '#markup' => Html::escape(Yaml::encode($request_options)),
         '#prefix' => '<pre>',
         '#suffix' => '</pre>',
       ],
@@ -954,7 +961,7 @@ class RemotePostWebformHandler extends WebformHandlerBase {
         '#title' => $this->t('Response header:'),
         '#wrapper_attributes' => ['style' => 'margin: 0'],
         'data' => [
-          '#markup' => htmlspecialchars(Yaml::encode($response->getHeaders())),
+          '#markup' => Html::escape(Yaml::encode($response->getHeaders())),
           '#prefix' => '<pre>',
           '#suffix' => '</pre>',
         ],
@@ -964,7 +971,7 @@ class RemotePostWebformHandler extends WebformHandlerBase {
         '#wrapper_attributes' => ['style' => 'margin: 0'],
         '#title' => $this->t('Response body:'),
         'data' => [
-          '#markup' => htmlspecialchars($response->getBody()),
+          '#markup' => Html::escape($response->getBody()),
           '#prefix' => '<pre>',
           '#suffix' => '</pre>',
         ],
@@ -976,7 +983,7 @@ class RemotePostWebformHandler extends WebformHandlerBase {
           '#wrapper_attributes' => ['style' => 'margin: 0'],
           '#title' => $this->t('Response data:'),
           'data' => [
-            '#markup' => Yaml::encode($response_data),
+            '#markup' => Html::escape(Yaml::encode($response_data)),
             '#prefix' => '<pre>',
             '#suffix' => '</pre>',
           ],
@@ -990,7 +997,7 @@ class RemotePostWebformHandler extends WebformHandlerBase {
           '#title' => $this->t('Response tokens:'),
           'description' => ['#markup' => $this->t('Below tokens can ONLY be used to insert response data into value and hidden elements.')],
           'data' => [
-            '#markup' => implode(PHP_EOL, $tokens),
+            '#plain_text' => implode(PHP_EOL, $tokens),
             '#prefix' => '<pre>',
             '#suffix' => '</pre>',
           ],

@@ -27,6 +27,12 @@ class WebformSettingsAssetsTest extends WebformBrowserTestBase {
 
     $webform_assets = Webform::load('test_form_assets');
 
+    // Check that 404 status is returned to pages without any CSS or JS.
+    $this->drupalGet('/webform/javascript/contact');
+    $assert_session->statusCodeEquals(404);
+    $this->drupalGet('/webform/css/contact');
+    $assert_session->statusCodeEquals(404);
+
     // Check has CSS (href) and JavaScript (src).
     $this->drupalGet('/webform/test_form_assets');
     $assert_session->responseContains('href="' . base_path() . 'webform/css/test_form_assets?');
@@ -50,6 +56,12 @@ class WebformSettingsAssetsTest extends WebformBrowserTestBase {
     $this->drupalGet('/webform/test_form_assets');
     $assert_session->responseContains('href="' . base_path() . 'webform/css/test_form_assets?');
     $assert_session->responseContains('src="' . base_path() . 'webform/javascript/test_form_assets?');
+
+    // Check that 200 status is returned to pages without any CSS or JS.
+    $this->drupalGet('/webform/javascript/contact');
+    $assert_session->statusCodeEquals(200);
+    $this->drupalGet('/webform/css/contact');
+    $assert_session->statusCodeEquals(200);
   }
 
 }

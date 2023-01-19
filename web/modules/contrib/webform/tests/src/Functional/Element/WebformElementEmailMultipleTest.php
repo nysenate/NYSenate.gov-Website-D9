@@ -26,7 +26,7 @@ class WebformElementEmailMultipleTest extends WebformElementBrowserTestBase {
     $this->drupalGet('/webform/test_element_email_multiple');
     $assert_session->responseContains('<label for="edit-email-multiple-basic">email_multiple_basic</label>');
     $assert_session->responseContains('<input data-drupal-selector="edit-email-multiple-basic" aria-describedby="edit-email-multiple-basic--description" type="text" id="edit-email-multiple-basic" name="email_multiple_basic" value="" size="60" class="form-text webform-email-multiple" />');
-    $assert_session->responseContains('Multiple email addresses may be separated by commas.');
+    $assert_session->responseContains('Multiple email addresses may be separated by commas. Emails are only sent to cc and bcc addresses if a To email address is provided.');
 
     // Check email multiple invalid second email address.
     $this->drupalGet('/webform/test_element_email_multiple');

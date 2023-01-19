@@ -1078,8 +1078,8 @@ class WebformElementStates extends FormElement {
         'optional' => t('Optional'),
       ],
       $value_optgroup => [
-        'checked' => t('Checked'),
-        'unchecked' => t('Unchecked'),
+        'checked' => t('Checked', [], ['context' => 'Add check mark']),
+        'unchecked' => t('Unchecked', [], ['context' => 'Remove check mark']),
       ],
     ];
   }
@@ -1094,8 +1094,8 @@ class WebformElementStates extends FormElement {
     return [
       'empty' => t('Empty'),
       'filled' => t('Filled'),
-      'checked' => t('Checked'),
-      'unchecked' => t('Unchecked'),
+      'checked' => t('Checked', [], ['context' => 'Add check mark']),
+      'unchecked' => t('Unchecked', [], ['context' => 'Remove check mark']),
       'value' => t('Value is'),
       '!value' => t('Value is not'),
       'pattern' => t('Pattern'),

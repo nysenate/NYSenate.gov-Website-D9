@@ -255,13 +255,13 @@ function webform_cards_webform_submission_form_alter(array &$form, FormStateInte
   }
 
   // Process the submitted values before they are stored.
-  $form['#entity_builders'][] = 'webform_card_webform_submission_builder';
+  $form['#entity_builders'][] = 'webform_cards_webform_submission_builder';
 }
 
 /**
  * Entity form builder to set the current card for a webform submission.
  */
-function webform_card_webform_submission_builder($entity_type, WebformSubmissionInterface $entity, &$form, FormStateInterface $form_state) {
+function webform_cards_webform_submission_builder($entity_type, WebformSubmissionInterface $entity, &$form, FormStateInterface $form_state) {
   $entity->set('current_card', $form_state->getValue('current_card'));
 }
 

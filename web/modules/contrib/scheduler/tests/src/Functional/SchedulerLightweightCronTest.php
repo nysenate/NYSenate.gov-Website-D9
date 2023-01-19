@@ -59,7 +59,8 @@ class SchedulerLightweightCronTest extends SchedulerBrowserTestBase {
     $this->assertEquals(20, strlen($key), 'The default lightweight cron key string length should be 20');
 
     // Check that a new random key can be generated.
-    $this->drupalPostForm($this->routeCronForm, [], 'Generate new random key');
+    $this->drupalGet($this->routeCronForm);
+    $this->submitForm([], 'Generate new random key');
     $new_key_xpath = $this->xpath('//input[@id="edit-lightweight-access-key"]/@value');
     $new_key = $new_key_xpath[0]->getText();
     $this->assertNotEmpty($new_key, 'The lightweight cron key field should not be empty after generating a new key');
@@ -67,11 +68,13 @@ class SchedulerLightweightCronTest extends SchedulerBrowserTestBase {
     $this->assertNotEquals($new_key, $key, 'The new lightweight cron key should be different from the previous key.');
 
     // Check that the 'run lightweight cron' button works.
-    $this->drupalPostForm($this->routeCronForm, [], "Run Scheduler's lightweight cron now");
+    $this->drupalGet($this->routeCronForm);
+    $this->submitForm([], "Run Scheduler's lightweight cron now");
     $this->assertSession()->pageTextContains('Lightweight cron run completed.');
 
     // Check that the form cannot be saved if the cron key is blank.
-    $this->drupalPostForm($this->routeCronForm, ['lightweight_access_key' => ''], 'Save configuration');
+    $this->drupalGet($this->routeCronForm);
+    $this->submitForm(['lightweight_access_key' => ''], 'Save configuration');
     $this->assertSession()->pageTextContains('Lightweight cron access key field is required.');
     $this->assertSession()->pageTextNotContains('The configuration options have been saved.');
   }

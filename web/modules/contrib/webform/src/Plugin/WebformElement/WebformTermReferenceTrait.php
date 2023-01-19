@@ -73,6 +73,7 @@ trait WebformTermReferenceTrait {
       '#type' => 'textfield',
       '#title' => $this->t('Breadcrumb delimiter'),
       '#size' => 10,
+      '#attributes' => ['data-webform-states-no-clear' => TRUE],
       '#states' => [
         'visible' => [
           [':input[name="properties[breadcrumb]"]' => ['checked' => TRUE]],

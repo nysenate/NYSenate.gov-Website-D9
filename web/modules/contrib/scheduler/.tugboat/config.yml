@@ -7,22 +7,33 @@ services:
     commands:
       update: |
         set -eux
+
         # Check out a branch using the unique Tugboat ID for this repository, to
         # ensure we don't clobber an existing branch.
         git checkout -b $TUGBOAT_REPO_ID
+
         # Composer is hungry. You need a Tugboat project with a pretty sizeable
         # chunk of memory.
         export COMPOSER_MEMORY_LIMIT=-1
+
         # This is an environment variable we added in the Dockerfile that
         # provides the path to Drupal composer root (not the web root).
         cd $DRUPAL_COMPOSER_ROOT
+
         # We configure the Drupal project to use the checkout of the module as a
         # Composer package repository.
         composer config repositories.tugboat vcs $TUGBOAT_ROOT
+
         # Now we can require this module, specifing the branch name we created
         # above that uses the $TUGBOAT_REPO_ID environment variable.
-        composer require drupal/scheduler:dev-$TUGBOAT_REPO_ID --dev
+        composer require drupal/scheduler:dev-$TUGBOAT_REPO_ID
+
+        # Get other useful modules.
         composer require drupal/devel_generate
+        composer require drupal/module_filter
+        composer require drupal/workbench_moderation
+        composer require drupal/workbench_moderation_actions:dev-1.x
+
         # Install Drupal on the site.
         vendor/bin/drush \
           --yes \
@@ -30,22 +41,28 @@ services:
           --site-name="Scheduler issue ${TUGBOAT_PREVIEW_NAME}" \
           --account-pass=admin \
           site:install standard
+
         # Set up the files directory permissions.
         mkdir -p $DRUPAL_DOCROOT/sites/default/files
         chgrp -R www-data $DRUPAL_DOCROOT/sites/default/files
         chmod 2775 $DRUPAL_DOCROOT/sites/default/files
         chmod -R g+w $DRUPAL_DOCROOT/sites/default/files
+
         # Enable modules.
-        vendor/bin/drush --yes pm:enable scheduler devel devel_generate
+        vendor/bin/drush --yes pm:enable scheduler devel devel_generate module_filter
+
+        # Show versions.
         composer show drupal/scheduler | egrep 'name |vers'
         vendor/bin/drush pml | grep scheduler
         composer show drupal/devel | egrep 'name |vers'
         vendor/bin/drush pml | grep devel
 
-        # Scheduler settings
-        vendor/bin/drush config-set scheduler.settings allow_date_only 1 -y
-        vendor/bin/drush config-set scheduler.settings default_time '22:06:00' -y
+        # Scheduler general settings.
+        vendor/bin/drush -y config-set scheduler.settings allow_date_only 1
+        vendor/bin/drush -y config-set scheduler.settings default_time '22:06:00'
         vendor/bin/drush config-get scheduler.settings
+
+        # Scheduler content settings.
         vendor/bin/drush -y config-set node.type.article third_party_settings.scheduler.publish_enable 1
         vendor/bin/drush -y config-set node.type.article third_party_settings.scheduler.unpublish_enable 1
         vendor/bin/drush -y config-set node.type.article third_party_settings.scheduler.expand_fieldset 'always'
@@ -53,35 +70,43 @@ services:
         vendor/bin/drush -y config-set node.type.article third_party_settings.scheduler.publish_past_date 'schedule'
         vendor/bin/drush config-get node.type.article third_party_settings
 
-        # Create roles for each of the two scheduler user permissions.
-        vendor/bin/drush role-create 'content_editor' 'Content Editor'
-        vendor/bin/drush role-add-perm 'content_editor' 'schedule publishing of nodes'
+        # Create roles for each of the scheduler user permissions.
+        vendor/bin/drush role-create 'my_content_editor' 'Content Editor'
+        vendor/bin/drush role-add-perm 'my_content_editor' 'schedule publishing of nodes'
         vendor/bin/drush role-create 'content_viewer' 'Content Viewer'
         vendor/bin/drush role-add-perm 'content_viewer' 'view scheduled content'
-        # Add permissions for all users.
-        vendor/bin/drush role-add-perm 'authenticated' "create article content, edit any article content, delete any article content, access content overview, view own unpublished content, switch users"
 
-        # Create users.
-        vendor/bin/drush user-create 'Eddy the editor'
-        vendor/bin/drush user-add-role 'content_editor' 'Eddy the editor'
-        vendor/bin/drush user-create 'Vera the viewer'
-        vendor/bin/drush user-add-role 'content_viewer' 'Vera the viewer'
+        # Add some permissions for all authenticated users.
+        vendor/bin/drush role-add-perm 'authenticated' \
+          "create article content, edit any article content, delete any article content, \
+           access content overview, view own unpublished content, switch users"
+
+        # Create users and give them roles.
+        vendor/bin/drush user-create 'Eddy content editor'
+        vendor/bin/drush user-add-role 'my_content_editor' 'Eddy content editor'
+        vendor/bin/drush user-create 'Vera content viewer'
+        vendor/bin/drush user-add-role 'content_viewer' 'Vera content viewer'
 
         # Generate content.
-        vendor/bin/drush devel-generate-content 5 --bundles=article --authors=1,2 --verbose
+        vendor/bin/drush devel-generate-content 2 --bundles=article --authors=1,2 --verbose
+        vendor/bin/drush devel-generate-content 2 --bundles=page --authors=1,2 --verbose
 
         # @todo Place the 'Switch users' block in first sidebar.
+        # @todo Add 'content overview' to tools menu.
 
       build: |
         set -eux
+
         # Delete and re-check out this branch in case this is built from a Base Preview.
         git branch -D $TUGBOAT_REPO_ID && git checkout -b $TUGBOAT_REPO_ID || true
         export COMPOSER_MEMORY_LIMIT=-1
         cd $DRUPAL_COMPOSER_ROOT
         composer install --optimize-autoloader
+
         # Update this module, including all dependencies.
         composer update drupal/scheduler --with-all-dependencies
         vendor/bin/drush --yes updb
         vendor/bin/drush cache:rebuild
+
   mysql:
     image: tugboatqa/mariadb

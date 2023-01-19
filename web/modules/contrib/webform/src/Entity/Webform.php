@@ -779,8 +779,12 @@ class Webform extends ConfigEntityBundleBase implements WebformInterface {
    * {@inheritdoc}
    */
   public function hasPage() {
-    $settings = $this->getSettings();
-    return $settings['page'] ? TRUE : FALSE;
+    if (\Drupal::config('webform.settings')->get('settings.default_page') === FALSE) {
+      return FALSE;
+    }
+    else {
+      return (boolean) $this->getSetting('page');
+    }
   }
 
   /**
@@ -1155,6 +1159,8 @@ class Webform extends ConfigEntityBundleBase implements WebformInterface {
       'wizard_toggle' => FALSE,
       'wizard_toggle_show_label' => '',
       'wizard_toggle_hide_label' => '',
+      'wizard_page_type' => 'container',
+      'wizard_page_title_tag' => \Drupal::config('webform.settings')->get('element.default_section_title_tag'),
       'preview' => DRUPAL_DISABLED,
       'preview_label' => '',
       'preview_title' => '',
@@ -1681,7 +1687,7 @@ class Webform extends ConfigEntityBundleBase implements WebformInterface {
       // Set webform, id, key, parent_key, depth, and parent children.
       $element['#webform'] = $this->id();
       $element['#webform_id'] = $this->id() . '--' . $key;
-      $element['#webform_key'] = $key;
+      $element['#webform_key'] = (string) $key;
       $element['#webform_parent_key'] = $parent;
       $element['#webform_parent_flexbox'] = FALSE;
       $element['#webform_depth'] = $depth;
@@ -2420,7 +2426,7 @@ class Webform extends ConfigEntityBundleBase implements WebformInterface {
 
     // If 'Allow users to post submission from a dedicated URL' is disabled,
     // delete all existing paths.
-    if (empty($this->getSetting('page'))) {
+    if (empty($this->hasPage())) {
       $this->deletePaths();
       return;
     }
@@ -2457,7 +2463,7 @@ class Webform extends ConfigEntityBundleBase implements WebformInterface {
     }
 
     $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
-    $query = $path_alias_storage->getQuery('OR');
+    $query = $path_alias_storage->getQuery('OR')->accessCheck();
 
     // Delete webform base, confirmation, submissions and drafts paths.
     $path_suffixes = ['', '/confirmation', '/submissions', '/drafts'];

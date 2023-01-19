@@ -28,17 +28,20 @@ class SchedulerPastDatesTest extends SchedulerBrowserTestBase {
       'publish_on[0][value][date]' => $this->dateFormatter->format(strtotime('-1 day', $this->requestTime), 'custom', 'Y-m-d'),
       'publish_on[0][value][time]' => $this->dateFormatter->format(strtotime('-1 day', $this->requestTime), 'custom', 'H:i:s'),
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The 'publish on' date must be in the future");
 
     // Test the 'error' behavior explicitly.
     $this->nodetype->setThirdPartySetting('scheduler', 'publish_past_date', 'error')->save();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The 'publish on' date must be in the future");
 
     // Test the 'publish' behavior: the node should be published immediately.
     $this->nodetype->setThirdPartySetting('scheduler', 'publish_past_date', 'publish')->save();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     // Check that no error message is shown when the publication date is in the
     // past and the "publish" behavior is chosen.
     $this->assertSession()->pageTextNotContains("The 'publish on' date must be in the future");
@@ -59,7 +62,8 @@ class SchedulerPastDatesTest extends SchedulerBrowserTestBase {
     $this->nodetype->setThirdPartySetting('scheduler', 'publish_past_date', 'schedule')->save();
     $node = $this->drupalCreateNode(['type' => $this->type, 'status' => FALSE]);
     $created_time = $node->getCreatedTime();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     // Check that no error is shown when the publish_on date is in the past.
     $this->assertSession()->pageTextNotContains("The 'publish on' date must be in the future");
     $this->assertSession()->pageTextContains(sprintf('%s is scheduled to be published', $edit['title[0][value]']));
@@ -95,7 +99,8 @@ class SchedulerPastDatesTest extends SchedulerBrowserTestBase {
 
       // Create a new node, edit and save.
       $node = $this->drupalCreateNode(['type' => $this->type, 'status' => FALSE]);
-      $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+      $this->drupalGet('node/' . $node->id() . '/edit');
+      $this->submitForm($edit, 'Save');
 
       if ($option == 'schedule') {
         scheduler_cron();
@@ -116,7 +121,8 @@ class SchedulerPastDatesTest extends SchedulerBrowserTestBase {
       'unpublish_on[0][value][date]' => $this->dateFormatter->format($this->requestTime - 3600, 'custom', 'Y-m-d'),
       'unpublish_on[0][value][time]' => $this->dateFormatter->format($this->requestTime - 3600, 'custom', 'H:i:s'),
     ];
-    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->type);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The 'unpublish on' date must be in the future");
   }
 

@@ -73,7 +73,8 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
       'unpublish_on[0][value][time]' => '',
     ];
     // Add or edit the node.
-    $this->drupalPostForm($path, $values, 'Save');
+    $this->drupalGet($path);
+    $this->submitForm($values, 'Save');
 
     // Check for the expected result.
     if ($publish_expected) {

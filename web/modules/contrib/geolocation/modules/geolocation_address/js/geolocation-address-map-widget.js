@@ -40,7 +40,7 @@
 
   Drupal.behaviors.geolocationAddressMapWidgetPendingActions = {
     attach: function (context, drupalSettings) {
-      $(document).once('geolocation-address-handler').ajaxComplete(function (event, xhr, settings) {
+      $(once('geolocation-address-handler', 'html')).ajaxComplete(function (event, xhr, settings) {
         if (
           typeof settings.extraData === 'undefined'
           || typeof settings.extraData._drupal_ajax === 'undefined'
@@ -111,7 +111,7 @@
           return;
         }
 
-        var geolocationWidgetWrapper = $('.field--name-' + sourceFieldName.replace(/_/g, '-'), context).once('geolocation-address-integration-enabled');
+        var geolocationWidgetWrapper = $(once('geolocation-address-integration-enabled', '.field--name-' + sourceFieldName.replace(/_/g, '-'), context));
         if (geolocationWidgetWrapper.length === 0) {
           return;
         }
@@ -403,7 +403,7 @@
             var element = null;
             $.each(elements, function (index, className) {
               element = addressElement.find('.' + className);
-              element.once('geolocation-address-listener').change(function () {
+              $(once('geolocation-address-listener', element)).change(function () {
                 if (widget.addressChangedEventPaused) {
                   return;
                 }

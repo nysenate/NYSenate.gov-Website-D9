@@ -120,6 +120,38 @@ class SchedulerManager {
   }
 
   /**
+   * Returns an array of function names implemented for a specific hook.
+   *
+   * @param string $hook
+   *   The identifier of the hook function, for example 'publish_action' or
+   *   'allow_unpublishing' or 'hide_publish_on_field'.
+   *
+   * @return array
+   *   An array of callable function names for the implementations of this hook
+   *   function for the type of entity being processed.
+   */
+  public function getHookImplementations(string $hook) {
+    // Find all modules that implement these hooks, then append the $hookName to
+    // the end of the module, thus giving the full function name.
+    $all_hook_implementations = [];
+    $hookName = "scheduler_$hook";
+    if (version_compare(\Drupal::VERSION, '9.4', '>=')) {
+      // getImplementations() is deprecated in D9.4, use invokeAllWith().
+      $this->moduleHandler->invokeAllWith($hookName, function (callable $hook, string $module) use ($hookName, &$all_hook_implementations) {
+        $all_hook_implementations[] = $module . "_" . $hookName;
+      });
+    }
+    else {
+      // Use getImplementations() to maintain compatibility with Drupal 8.9.
+      $implementations = $this->moduleHandler->getImplementations($hookName);
+      array_walk($implementations, function (&$module) use ($hookName, &$all_hook_implementations) {
+        $all_hook_implementations[] = $module . "_" . $hookName;
+      });
+    }
+    return $all_hook_implementations;
+  }
+
+  /**
    * Publish scheduled nodes.
    *
    * @return bool
@@ -236,11 +268,10 @@ class SchedulerManager {
         // Invoke all implementations of hook_scheduler_publish_action() to
         // allow other modules to do the "publishing" process instead of
         // Scheduler.
-        $hook = 'scheduler_publish_action';
+        $hook = 'publish_action';
         $processed = FALSE;
         $failed = FALSE;
-        foreach ($this->moduleHandler->getImplementations($hook) as $module) {
-          $function = $module . '_' . $hook;
+        foreach ($this->getHookImplementations($hook) as $function) {
           $return = $function($node);
           $processed = $processed || ($return === 1);
           $failed = $failed || ($return === -1);
@@ -254,7 +285,7 @@ class SchedulerManager {
           '@type' => $node_type->label(),
           '%title' => $node->getTitle(),
           'link' => $node_type_link->toString() . ' ' . $view_link->toString(),
-          '@hook' => 'hook_' . $hook,
+          '@hook' => 'hook_scheduler_' . $hook,
         ];
 
         if ($failed) {
@@ -294,10 +325,22 @@ class SchedulerManager {
         $node = $event->getNode();
         $action_id = 'node_publish_action';
         if ($this->moduleHandler->moduleExists('workbench_moderation_actions')) {
-          // workbench_moderation_actions module uses a custom action instead.
-          $action_id = 'state_change__node__published';
+          // workbench_moderation_actions module replaces the standard action
+          // with a custom one which should be used only when the content type
+          // is part of a moderation workflow.
+          /** @var \Drupal\workbench_moderation\ModerationInformationInterface $moderation_info */
+          $moderation_info = \Drupal::service('workbench_moderation.moderation_information');
+          if ($moderation_info->isModeratableEntity($node)) {
+            $action_id = 'state_change__node__published';
+          }
         }
-        $this->entityTypeManager->getStorage('action')->load($action_id)->getPlugin()->execute($node);
+        if ($loaded_action = $this->entityTypeManager->getStorage('action')->load($action_id)) {
+          $loaded_action->getPlugin()->execute($node);
+        }
+        else {
+          // Just save the node, as setPublished() has already been done above.
+          $node->save();
+        }
 
         $result = TRUE;
       }
@@ -416,11 +459,10 @@ class SchedulerManager {
         // Invoke all implementations of hook_scheduler_unpublish_action() to
         // allow other modules to do the "unpublishing" process instead of
         // Scheduler.
-        $hook = 'scheduler_unpublish_action';
+        $hook = 'unpublish_action';
         $processed = FALSE;
         $failed = FALSE;
-        foreach ($this->moduleHandler->getImplementations($hook) as $module) {
-          $function = $module . '_' . $hook;
+        foreach ($this->getHookImplementations($hook) as $function) {
           $return = $function($node);
           $processed = $processed || ($return === 1);
           $failed = $failed || ($return === -1);
@@ -434,7 +476,7 @@ class SchedulerManager {
           '@type' => $node_type->label(),
           '%title' => $node->getTitle(),
           'link' => $node_type_link->toString() . ' ' . $view_link->toString(),
-          '@hook' => 'hook_' . $hook,
+          '@hook' => 'hook_scheduler_' . $hook,
         ];
 
         if ($failed) {
@@ -469,10 +511,22 @@ class SchedulerManager {
         $node = $event->getNode();
         $action_id = 'node_unpublish_action';
         if ($this->moduleHandler->moduleExists('workbench_moderation_actions')) {
-          // workbench_moderation_actions module uses a custom action instead.
-          $action_id = 'state_change__node__archived';
+          // workbench_moderation_actions module replaces the standard action
+          // with a custom one which should be used only when the content type
+          // is part of a moderation workflow.
+          /** @var \Drupal\workbench_moderation\ModerationInformationInterface $moderation_info */
+          $moderation_info = \Drupal::service('workbench_moderation.moderation_information');
+          if ($moderation_info->isModeratableEntity($node)) {
+            $action_id = 'state_change__node__archived';
+          }
         }
-        $this->entityTypeManager->getStorage('action')->load($action_id)->getPlugin()->execute($node);
+        if ($loaded_action = $this->entityTypeManager->getStorage('action')->load($action_id)) {
+          $loaded_action->getPlugin()->execute($node);
+        }
+        else {
+          // Just save the node, as setUnpublished() has already been done.
+          $node->save();
+        }
 
         $result = TRUE;
       }
@@ -503,9 +557,8 @@ class SchedulerManager {
     // Default to TRUE.
     $result = TRUE;
     // Check that other modules allow the action.
-    $hook = 'scheduler_allow_' . $action . 'ing';
-    foreach ($this->moduleHandler->getImplementations($hook) as $module) {
-      $function = $module . '_' . $hook;
+    $hook = 'allow_' . $action . 'ing';
+    foreach ($this->getHookImplementations($hook) as $function) {
       $result &= $function($node);
     }
 
@@ -527,8 +580,7 @@ class SchedulerManager {
   public function nidList($action) {
     $nids = [];
 
-    foreach ($this->moduleHandler->getImplementations('scheduler_nid_list') as $module) {
-      $function = $module . '_scheduler_nid_list';
+    foreach ($this->getHookImplementations('nid_list') as $function) {
       $nids = array_merge($nids, $function($action));
     }
 

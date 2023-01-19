@@ -5,6 +5,7 @@ namespace Drupal\webform\Plugin\WebformHandler;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\webform\Element\WebformAjaxElementTrait;
@@ -687,10 +688,11 @@ class EmailWebformHandler extends WebformHandlerBase implements WebformHandlerMe
         ':href_smtp' => 'https://www.drupal.org/project/smtp',
         ':href_mailsystem' => 'https://www.drupal.org/project/mailsystem',
         ':href_swiftmailer' => 'https://www.drupal.org/project/swiftmailer',
+        ':href_symfony_mailer' => 'https://www.drupal.org/project/symfony_mailer',
       ];
       $form['attachments']['attachments_message'] = [
         '#type' => 'webform_message',
-        '#message_message' => $this->t('To send email attachments, please install and configure the <a href=":href_smtp">SMTP Authentication Support</a> module or the <a href=":href_mailsystem">Mail System</a> and <a href=":href_swiftmailer">SwiftMailer</a> module.', $t_args),
+        '#message_message' => $this->t('To send email attachments, please install and configure the <a href=":href_smtp">SMTP Authentication Support</a> module, the <a href=":href_mailsystem">Mail System</a> and <a href=":href_swiftmailer">SwiftMailer</a> module or the <a href=":href_symfony_mailer">Symfony Mailer</a> module.', $t_args),
         '#message_type' => 'warning',
         '#message_close' => TRUE,
         '#message_storage' => WebformMessage::STORAGE_SESSION,
@@ -1434,12 +1436,13 @@ class EmailWebformHandler extends WebformHandlerBase implements WebformHandlerMe
       return TRUE;
     }
 
-    // The Mail System module, which supports a variety of mail handlers,
-    // and the SMTP module support attachments.
+    // The Mail System module, which supports a variety of mail handlers, the
+    // SMTP module and Symfony Mailer support attachments.
     $mailsystem_installed = $this->moduleHandler->moduleExists('mailsystem');
     $smtp_enabled = $this->moduleHandler->moduleExists('smtp')
       && $this->configFactory->get('smtp.settings')->get('smtp_on');
-    return $mailsystem_installed || $smtp_enabled;
+    $symfony_mailer_installed = $this->moduleHandler->moduleExists('symfony_mailer');
+    return $mailsystem_installed || $smtp_enabled || $symfony_mailer_installed;
   }
 
   /**
@@ -1619,7 +1622,7 @@ class EmailWebformHandler extends WebformHandlerBase implements WebformHandlerMe
     // Tweak elements.
     switch ($name) {
       case 'from_mail':
-        $element[$name]['#other__description'] = $this->t('Multiple email addresses may be separated by commas.')
+        $element[$name]['#other__description'] = $this->t('Multiple email addresses may be separated by commas. Emails are only sent to cc and bcc addresses if a To email address is provided.')
           . ' '
           . $this->t("If multiple email addresses are entered the '@name' will be not included in the email.", ['@name' => $this->t('From name')]);
         break;
@@ -1670,7 +1673,7 @@ class EmailWebformHandler extends WebformHandlerBase implements WebformHandlerMe
       $options_element = $this->webform->getElement($token_element_name);
 
       // Set mapping options.
-      $mapping_options = $options_element['#options'];
+      $mapping_options = OptGroup::flattenOptions($options_element['#options']);
       array_walk($mapping_options, function (&$value, $key) {
         $value = '<b>' . $value . '</b>';
       });

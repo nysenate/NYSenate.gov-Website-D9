@@ -20,7 +20,7 @@ class WebformEmailMultiple extends FormElement {
     $class = get_class($this);
     return [
       '#input' => TRUE,
-      '#description' => $this->t('Multiple email addresses may be separated by commas.'),
+      '#description' => $this->t('Multiple email addresses may be separated by commas. Emails are only sent to cc and bcc addresses if a To email address is provided.'),
       '#size' => 60,
       '#cardinality' => NULL,
       '#allow_tokens' => FALSE,

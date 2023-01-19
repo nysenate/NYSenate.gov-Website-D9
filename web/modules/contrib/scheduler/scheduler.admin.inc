@@ -19,7 +19,6 @@ function _scheduler_form_node_type_form_alter(array &$form, FormStateInterface $
   /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
 
-  $form['#attached']['library'][] = 'scheduler/admin';
   $form['#attached']['library'][] = 'scheduler/vertical-tabs';
 
   $form['scheduler'] = [

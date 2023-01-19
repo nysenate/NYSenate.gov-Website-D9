@@ -12,7 +12,7 @@
  *   An array containing test elements with #states.
  */
 function webform_test_test_states_client_invisible() {
-  module_load_include('inc', 'webform_test', 'includes/webform_test.test_states');
+  \Drupal::moduleHandler()->loadInclude('webform_test', 'inc', 'includes/webform_test.test_states');
 
   $elements = [];
   $elements['trigger'] = [

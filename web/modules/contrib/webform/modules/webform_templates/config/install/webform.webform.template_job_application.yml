@@ -46,12 +46,15 @@ elements: |
     '#type': webform_section
     resume_method:
       '#type': radios
+      '#title': 'Resume method'
+      '#title_display': invisible
       '#options':
         attach: 'Attach resume file'
         paste: 'Paste your resume'
-      '#prefix': '<div class="container-inline">'
-      '#suffix': '</div>'
       '#default_value': attach
+      '#wrapper_attributes':
+        class:
+          - container-inline
     resume_file:
       '#type': managed_file
       '#title': Resume
@@ -84,7 +87,7 @@ elements: |
     '#type': webform_actions
     '#title': 'Submit button(s)'
     '#submit__label': Apply
-  
+
 css: ''
 javascript: ''
 settings:

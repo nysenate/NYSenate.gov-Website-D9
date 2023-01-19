@@ -376,6 +376,10 @@ class TextFormat extends WebformElementBase {
   public function postDelete(array &$element, WebformSubmissionInterface $webform_submission) {
     $key = $element['#webform_key'];
     $value = $webform_submission->getElementData($key);
+    if (is_null($value)) {
+      return;
+    }
+
     $uuids = _webform_parse_file_uuids($value['value']);
     _webform_delete_file_usage($uuids, $webform_submission->getEntityTypeId(), $webform_submission->id(), 0);
   }

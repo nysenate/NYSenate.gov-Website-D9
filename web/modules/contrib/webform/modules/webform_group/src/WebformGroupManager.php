@@ -162,6 +162,7 @@ class WebformGroupManager implements WebformGroupManagerInterface {
 
     // Get group content id for the source entity.
     $group_content_ids = $group_content_storage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('entity_id', (int) $source_entity->id())
       ->execute();
     /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
@@ -201,6 +202,7 @@ class WebformGroupManager implements WebformGroupManagerInterface {
 
     // Get group content id for the source entity.
     $group_content_ids = $group_content_storage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('entity_id', $source_entity->id())
       ->execute();
 

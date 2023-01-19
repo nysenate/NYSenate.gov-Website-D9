@@ -132,7 +132,7 @@ class GeolocationGoogleMapsSettings extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable China mode'),
       '#default_value' => $config->get('china_mode') ? TRUE : FALSE,
-      '#description' => $this->t('Use the specific URLs required in the PR China. See explanation at <a href=":google_faq">Google FAQ</a>.', [':google_faq' => 'https://developers.google.com/maps/faq?hl=de#china_ws_access']),
+      '#description' => $this->t('Use the specific URLs required in the PR China. See explanation at <a href=":google_faq">Google FAQ</a>.', [':google_faq' => 'https://developers.google.com/maps/faq?#china_ws_access']),
     ];
 
     $form['google_maps_base_url'] = [

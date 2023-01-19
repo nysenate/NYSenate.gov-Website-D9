@@ -30,7 +30,8 @@ class SchedulerAdminSettingsTest extends SchedulerBrowserTestBase {
       'allow_date_only' => TRUE,
       'default_time' => '6:30',
     ];
-    $this->drupalPostForm('admin/config/content/scheduler', $settings, 'Save configuration');
+    $this->drupalGet('admin/config/content/scheduler');
+    $this->submitForm($settings, 'Save configuration');
     // Verify that the values have been saved correctly.
     $this->assertTrue($this->config('scheduler.settings')->get('allow_date_only'), 'The config setting for allow_date_only is stored correctly.');
     $this->assertEquals('06:30:00', $this->config('scheduler.settings')->get('default_time'), 'The config setting for default_time is stored correctly.');
@@ -40,7 +41,8 @@ class SchedulerAdminSettingsTest extends SchedulerBrowserTestBase {
       'allow_date_only' => TRUE,
       'default_time' => '123',
     ];
-    $this->drupalPostForm('admin/config/content/scheduler', $settings, 'Save configuration');
+    $this->drupalGet('admin/config/content/scheduler');
+    $this->submitForm($settings, 'Save configuration');
     // Verify that the value has not been saved and an error is displayed.
     $this->assertEquals('06:30:00', $this->config('scheduler.settings')->get('default_time'), 'The config setting for default_time has not changed.');
     $this->assertSession()->pageTextContains('The default time should be in the format HH:MM:SS');
@@ -49,7 +51,8 @@ class SchedulerAdminSettingsTest extends SchedulerBrowserTestBase {
     $settings = [
       'hide_seconds' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/content/scheduler', $settings, 'Save configuration');
+    $this->drupalGet('admin/config/content/scheduler');
+    $this->submitForm($settings, 'Save configuration');
     // Verify that the hide seconds option is saved and the default time is
     // stored in HH:MM format with no seconds.
     $this->assertTrue($this->config('scheduler.settings')->get('hide_seconds'), 'The config setting for hide_seconds is stored correctly.');
@@ -59,7 +62,8 @@ class SchedulerAdminSettingsTest extends SchedulerBrowserTestBase {
     $settings = [
       'default_time' => '456',
     ];
-    $this->drupalPostForm('admin/config/content/scheduler', $settings, 'Save configuration');
+    $this->drupalGet('admin/config/content/scheduler');
+    $this->submitForm($settings, 'Save configuration');
     // Verify that the value has not been saved, and that an error message is
     // displayed showing the correct format HH:MM not HH:MM:SS.
     $this->assertEquals('06:30', $this->config('scheduler.settings')->get('default_time'), 'The config setting for default_time has not changed.');

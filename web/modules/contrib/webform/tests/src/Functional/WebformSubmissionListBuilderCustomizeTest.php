@@ -242,7 +242,7 @@ class WebformSubmissionListBuilderCustomizeTest extends WebformBrowserTestBase {
     // Check that 'Customize' button and link are visible.
     $this->drupalGet('/admin/structure/webform/manage/test_submissions/results/submissions');
     $assert_session->responseContains('>Customize<');
-    $assert_session->linkByHrefExists("${base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom");
+    $assert_session->linkByHrefExists("{$base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom");
 
     // Enabled customized results.
     $webform->setSetting('results_customize', TRUE)->save();
@@ -250,12 +250,12 @@ class WebformSubmissionListBuilderCustomizeTest extends WebformBrowserTestBase {
     // Check that 'Customize' button and link are not visible.
     $this->drupalGet('/admin/structure/webform/manage/test_submissions/results/submissions');
     $assert_session->responseNotContains('>Customize<');
-    $assert_session->linkByHrefExists("${base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom");
+    $assert_session->linkByHrefExists("{$base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom");
 
     // Check that 'Customize my table' button and link are visible.
     $this->drupalGet('/admin/structure/webform/manage/test_submissions/results/submissions');
     $assert_session->responseContains('>Customize my table<');
-    $assert_session->linkByHrefExists("${base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom/user");
+    $assert_session->linkByHrefExists("{$base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom/user");
 
     // Check that first name is before last name.
     $assert_session->responseMatches('#First name.+Last name#s');
@@ -263,7 +263,7 @@ class WebformSubmissionListBuilderCustomizeTest extends WebformBrowserTestBase {
     // Check that 'Customize default table' button and link are visible.
     $this->drupalGet('/admin/structure/webform/manage/test_submissions/results/submissions/custom/user');
     $assert_session->responseContains('>Customize default table<');
-    $assert_session->linkByHrefExists("${base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom");
+    $assert_session->linkByHrefExists("{$base_path}admin/structure/webform/manage/test_submissions/results/submissions/custom");
 
     // Switch to admin submission user.
     $this->drupalLogin($admin_submission_user);

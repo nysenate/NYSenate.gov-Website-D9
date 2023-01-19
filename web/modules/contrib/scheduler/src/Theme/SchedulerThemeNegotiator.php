@@ -23,10 +23,12 @@ class SchedulerThemeNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    // Return the admin theme.
     $config = \Drupal::service('config.factory')->getEditable('system.theme');
     $admin_theme = $config->get('admin');
-    return $admin_theme;
+    // Return the admin theme only if the user has permission to use it.
+    if (\Drupal::currentUser()->hasPermission('view the administration theme')) {
+      return $admin_theme;
+    }
   }
 
 }

@@ -7,7 +7,7 @@
 
   'use strict';
 
-  // @see https://github.com/jshjohnson/Choices
+  // @see https://github.com/Choices-js/Choices
   Drupal.webform = Drupal.webform || {};
   Drupal.webform.choices = Drupal.webform.choices || {};
   Drupal.webform.choices.options = Drupal.webform.choices.options || {};

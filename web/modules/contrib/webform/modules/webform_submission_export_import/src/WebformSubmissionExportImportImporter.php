@@ -305,7 +305,7 @@ class WebformSubmissionExportImportImporter implements WebformSubmissionExportIm
         $files = $element_plugin->getTargetEntities($element, $webform_submission) ?: [];
         $values = [];
         foreach ($files as $file) {
-          $values[] = file_create_url($file->getFileUri());
+          $values[] = $file->createFileUrl(FALSE);
         }
         $value = implode(',', $values);
         $record[] = $this->exportValue($value);
@@ -730,7 +730,7 @@ class WebformSubmissionExportImportImporter implements WebformSubmissionExportIm
     $existing_file_uris = [];
     $existing_files = ($webform_submission) ? $element_plugin->getTargetEntities($element, $webform_submission) ?: [] : [];
     foreach ($existing_files as $existing_file) {
-      $existing_file_uri = file_create_url($existing_file->getFileUri());
+      $existing_file_uri = $existing_file->createFileUrl(FALSE);
       $existing_file_uris[$existing_file_uri] = $existing_file->id();
 
       $existing_file_hash = sha1_file($existing_file->getFileUri());

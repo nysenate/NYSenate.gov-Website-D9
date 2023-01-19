@@ -34,10 +34,11 @@ function webform_image_select_webform_libraries_info() {
     'description' => t('A simple jQuery plugin that transforms a select element into a more user friendly graphical interface.'),
     'notes' => t('Image Picker is used by the Image select element.'),
     'homepage_url' => Url::fromUri('https://rvera.github.io/image-picker/'),
-    'download_url' => Url::fromUri('https://github.com/rvera/image-picker/archive/0.3.1.zip'),
+    'download_url' => Url::fromUri('https://github.com/rvera/image-picker/archive/refs/tags/0.3.1.zip'),
     'version' => '0.3.1',
     'elements' => ['webform_image_select'],
     'optional' => FALSE,
+    'license' => 'MIT',
   ];
   return $libraries;
 }

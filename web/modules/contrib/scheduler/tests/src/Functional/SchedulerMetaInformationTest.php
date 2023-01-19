@@ -29,7 +29,7 @@ class SchedulerMetaInformationTest extends SchedulerBrowserTestBase {
 
     // Since we did not set an unpublish date, there should be no X-Robots-Tag
     // header on the response.
-    $this->assertNull($this->drupalGetHeader('X-Robots-Tag'), 'X-Robots-Tag is not present when no unpublish date is set.');
+    $this->assertNull($this->getSession()->getResponseHeader('X-Robots-Tag'), 'X-Robots-Tag should not be present when no unpublish date is set.');
 
     // Set a scheduler unpublish date on the node.
     $unpublish_date = strtotime('+1 day');
@@ -37,12 +37,19 @@ class SchedulerMetaInformationTest extends SchedulerBrowserTestBase {
       'unpublish_on[0][value][date]' => $this->dateFormatter->format($unpublish_date, 'custom', 'Y-m-d'),
       'unpublish_on[0][value][time]' => $this->dateFormatter->format($unpublish_date, 'custom', 'H:i:s'),
     ];
-    $this->drupalPostForm('node/' . $published_node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $published_node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // The node page should now have an X-Robots-Tag header with an
     // unavailable_after-directive and RFC850 date- and time-value.
     $this->drupalGet('node/' . $published_node->id());
     $this->assertSession()->responseHeaderEquals('X-Robots-Tag', 'unavailable_after: ' . date(DATE_RFC850, $unpublish_date));
+
+    // Check that the node is shown on the summary page but the tag is not.
+    $this->drupalGet('node');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($published_node->label());
+    $this->assertNull($this->getSession()->getResponseHeader('X-Robots-Tag'), 'X-Robots-Tag should not be added when entity is not in "full" view mode.');
   }
 
 }

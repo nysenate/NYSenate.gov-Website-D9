@@ -2,6 +2,7 @@
 
 namespace Drupal\scheduler_rules_integration\Plugin\RulesAction;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\rules\Core\RulesActionBase;
@@ -29,10 +30,13 @@ class SetPublishingDate extends RulesActionBase {
 
   /**
    * Set the publish_on date for the node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node to be scheduled for publishing.
+   * @param int $date
+   *   The date for publishing.
    */
-  public function doExecute() {
-    $node = $this->getContextValue('node');
-    $date = $this->getContextValue('date');
+  public function doExecute(EntityInterface $node, int $date) {
     $config = \Drupal::config('scheduler.settings');
     if ($node->type->entity->getThirdPartySetting('scheduler', 'publish_enable', $config->get('default_publish_enable'))) {
       $node->set('publish_on', $date);

@@ -27,6 +27,7 @@ use Drupal\webform\Plugin\WebformElement\Checkboxes;
 use Drupal\webform\Plugin\WebformElement\ContainerBase;
 use Drupal\webform\Plugin\WebformElement\Details;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
+use Drupal\webform\Plugin\WebformElement\WebformEmailConfirm;
 use Drupal\webform\Twig\WebformTwigExtension;
 use Drupal\webform\Utility\WebformArrayHelper;
 use Drupal\webform\Utility\WebformDialogHelper;
@@ -739,7 +740,9 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
     // Add inline title display support.
     // Inline fieldset layout is handled via webform_preprocess_fieldset().
     // @see webform_preprocess_fieldset()
-    if (isset($element['#title_display']) && $element['#title_display'] === 'inline') {
+    if (isset($element['#title_display'])
+      && $element['#title_display'] === 'inline'
+      && !$this instanceof WebformEmailConfirm) {
       // Store reference to unset #title_display.
       $element['#_title_display'] = $element['#title_display'];
       unset($element['#title_display']);
@@ -753,7 +756,9 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
     }
 
     // Add tooltip description display support.
-    if (isset($element['#description_display']) && $element['#description_display'] === 'tooltip') {
+    if (isset($element['#description_display'])
+      && $element['#description_display'] === 'tooltip'
+      && !empty($element['#description'])) {
       $element['#description_display'] = 'invisible';
       $element[$attributes_property]['class'][] = 'js-webform-tooltip-element';
       $element[$attributes_property]['class'][] = 'webform-tooltip-element';
@@ -778,6 +783,11 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
     $this->setElementDefaultCallback($element, 'element_validate');
     $this->prepareElementValidateCallbacks($element, $webform_submission);
 
+    // Replace tokens for all properties.
+    if ($webform_submission) {
+      $this->replaceTokens($element, $webform_submission);
+    }
+
     if ($this->isInput($element)) {
       // Handle #readonly support.
       // @see \Drupal\Core\Form\FormBuilder::handleInputElement
@@ -801,11 +811,6 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
       if (isset($element['#title'])) {
         $element['#title'] = WebformHtmlHelper::toHtmlMarkup($element['#title'], WebformXss::getHtmlTagList());
       }
-    }
-
-    // Replace tokens for all properties.
-    if ($webform_submission) {
-      $this->replaceTokens($element, $webform_submission);
     }
 
     // Check markup properties after token replacement just-in-case markup
@@ -2166,8 +2171,8 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
     // Set checked/unchecked states for any element that contains checkboxes.
     if ($this instanceof Checkbox || $this instanceof Checkboxes) {
       $states[$value_optgroup] = [
-        'checked' => $this->t('Checked'),
-        'unchecked' => $this->t('Unchecked'),
+        'checked' => $this->t('Checked', [], ['context' => 'Add check mark']),
+        'unchecked' => $this->t('Unchecked', [], ['context' => 'Remove check mark']),
       ];
     }
 
@@ -3100,7 +3105,7 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
       '#type' => 'webform_codemirror',
       '#mode' => 'twig',
       '#title' => $this->t('Item format custom HTML'),
-      '#description' => $this->t('The HTML to display for a single element value. You may include HTML or <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'http://twig.sensiolabs.org/documentation']),
+      '#description' => $this->t('The HTML to display for a single element value. You may include HTML or <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'https://twig.symfony.com/documentation']),
       '#states' => $format_custom_states,
       '#access' => $format_custom,
     ];
@@ -3108,7 +3113,7 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
       '#type' => 'webform_codemirror',
       '#mode' => 'twig',
       '#title' => $this->t('Item format custom Text'),
-      '#description' => $this->t('The text to display for a single element value. You may include <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'http://twig.sensiolabs.org/documentation']),
+      '#description' => $this->t('The text to display for a single element value. You may include <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'https://twig.symfony.com/documentation']),
       '#states' => $format_custom_states,
       '#access' => $format_custom,
     ];
@@ -3173,7 +3178,7 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
       '#type' => 'webform_codemirror',
       '#mode' => 'twig',
       '#title' => $this->t('Items format custom HTML'),
-      '#description' => $this->t('The HTML to display for multiple element values. You may include HTML or <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'http://twig.sensiolabs.org/documentation']),
+      '#description' => $this->t('The HTML to display for multiple element values. You may include HTML or <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'https://twig.symfony.com/documentation']),
       '#states' => $format_items_custom_states,
       '#access' => $format_items_custom,
     ];
@@ -3181,7 +3186,7 @@ class WebformElementBase extends PluginBase implements WebformElementInterface, 
       '#type' => 'webform_codemirror',
       '#mode' => 'twig',
       '#title' => $this->t('Items format custom Text'),
-      '#description' => $this->t('The text to display for multiple element values. You may include <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'http://twig.sensiolabs.org/documentation']),
+      '#description' => $this->t('The text to display for multiple element values. You may include <a href=":href">Twig</a>. You may enter data from the submission as per the "variables" below.', [':href' => 'https://twig.symfony.com/documentation']),
       '#states' => $format_items_custom_states,
       '#access' => $format_items_custom,
     ];

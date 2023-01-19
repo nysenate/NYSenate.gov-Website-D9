@@ -34,8 +34,8 @@ class WebformOptions extends FormElement {
       '#min_items' => 3,
       '#empty_items' => 1,
       '#add_more_items' => 1,
-      '#options_value_maxlength' => 255,
-      '#options_text_maxlength' => 255,
+      '#options_value_maxlength' => 512,
+      '#options_text_maxlength' => 512,
       '#options_description' => FALSE,
       '#options_description_maxlength' => NULL,
       '#process' => [

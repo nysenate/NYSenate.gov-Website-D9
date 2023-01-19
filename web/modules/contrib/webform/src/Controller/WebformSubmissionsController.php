@@ -58,6 +58,7 @@ class WebformSubmissionsController extends ControllerBase {
       }
 
       $query = $storage->getQuery();
+      $query->accessCheck(TRUE);
       $query->range(0, 10);
       $query->condition($definition->getKey('id'), $source_entity_ids, 'IN');
       $query->condition($query->orConditionGroup()

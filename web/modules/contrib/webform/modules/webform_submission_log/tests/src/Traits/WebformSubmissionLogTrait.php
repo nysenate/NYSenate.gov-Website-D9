@@ -35,7 +35,7 @@ trait WebformSubmissionLogTrait {
     $query->range(0, 1);
     $submission_log = $query->execute()->fetch();
     if ($submission_log) {
-      $submission_log->variables = unserialize($submission_log->variables);
+      $submission_log->variables = unserialize($submission_log->variables, ['allowed_classes' => FALSE]);
     }
     return $submission_log;
   }
@@ -67,7 +67,7 @@ trait WebformSubmissionLogTrait {
     $query->orderBy('l.lid', 'DESC');
     $submission_logs = $query->execute()->fetchAll();
     foreach ($submission_logs as &$submission_log) {
-      $submission_log->variables = unserialize($submission_log->variables);
+      $submission_log->variables = unserialize($submission_log->variables, ['allowed_classes' => FALSE]);
     }
     return $submission_logs;
   }

@@ -10,6 +10,7 @@
 .webform-element-more--link:before {
   content: "► ";
   font-size: 0.8em;
+  cursor: pointer;
 }
 
 .webform-element-more.is-open .webform-element-more--link:before {
@@ -17,7 +18,7 @@
 }
 
 html.js .webform-element-more--link {
-  display: block;
+  display: inline-block;
 }
 
 html.js .webform-element-more--content {

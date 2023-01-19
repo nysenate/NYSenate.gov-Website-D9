@@ -31,8 +31,11 @@ class WebformSubmissionImportExportFunctionalTest extends WebformBrowserTestBase
   public function testSubmissionExport() {
     $this->drupalLogin($this->rootUser);
 
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+
     $export_csv_uri = 'public://test_submission_export_import-export.csv';
-    $export_csv_url = file_create_url('public://test_submission_export_import-export.csv');
+    $export_csv_url = $file_url_generator->generateAbsoluteString('public://test_submission_export_import-export.csv');
 
     $webform = Webform::load('test_submission_export_import');
 
@@ -96,8 +99,8 @@ class WebformSubmissionImportExportFunctionalTest extends WebformBrowserTestBase
     return;
 
     // Deleted the third submission.
-    $file_uri = file_create_url(File::load($submissions[2]->getElementData('file'))->getFileUri());
-    $files_uri = file_create_url(File::load($submissions[2]->getElementData('files')[0])->getFileUri());
+    $file_uri = File::load($submissions[2]->getElementData('file'))->createFileUrl(FALSE);
+    $files_uri = File::load($submissions[2]->getElementData('files')[0])->createFileUrl(FALSE);
     $submissions[2]->delete();
     unset($submissions[2]);
 
@@ -153,12 +156,15 @@ class WebformSubmissionImportExportFunctionalTest extends WebformBrowserTestBase
    * Test submission import.
    */
   public function testSubmissionImport() {
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+
     $assert_session = $this->assertSession();
 
     $this->drupalLogin($this->rootUser);
 
-    $webform_csv_url = file_create_url('public://test_submission_export_import-webform.csv');
-    $external_csv_url = file_create_url('public://test_submission_export_import-external.csv');
+    $webform_csv_url = $file_url_generator->generateAbsoluteString('public://test_submission_export_import-webform.csv');
+    $external_csv_url = $file_url_generator->generateAbsoluteString('public://test_submission_export_import-external.csv');
 
     $webform = Webform::load('test_submission_export_import');
 

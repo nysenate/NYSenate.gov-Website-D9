@@ -169,7 +169,7 @@ class AddressFieldProvider extends DataProviderBase implements DataProviderInter
     $address = $address . ' ' . $this->countryRepository->get($item->getCountryCode())->getName();
 
     $coordinates = $this->geocoder->geocode($address);
-    return [$coordinates['location']];
+    return (!empty($coordinates['location'])) ? [$coordinates['location']] : [];
   }
 
   /**

@@ -37,6 +37,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class OptionsLimitWebformHandler extends WebformHandlerBase implements WebformOptionsLimitHandlerInterface {
 
   use WebformAjaxElementTrait;
+  use WebformEntityTrait;
 
   /**
    * The database object.
@@ -1142,7 +1143,7 @@ class OptionsLimitWebformHandler extends WebformHandlerBase implements WebformOp
     // Set entity options.
     $webform_element = $this->getWebformElement();
     if ($webform_element instanceof WebformElementEntityOptionsInterface) {
-      WebformEntityTrait::setOptions($element);
+      $this->setOptions($element);
     }
 
     return ($element) ? OptGroup::flattenOptions($element['#options']) : [];
@@ -1380,9 +1381,9 @@ class OptionsLimitWebformHandler extends WebformHandlerBase implements WebformOp
     return new FormattableMarkup($message, [
       '@name' => $this->getElementLabel(),
       '@label' => $limit['label'],
-      '@limit' => $limit['limit'],
-      '@total' => $limit['total'],
-      '@remaining' => $limit['remaining'],
+      '@limit' => $limit['limit'] ?? '',
+      '@total' => $limit['total'] ?? '',
+      '@remaining' => $limit['remaining'] ?? '',
     ]);
   }
 

@@ -46,7 +46,8 @@ class SchedulerTokenReplaceTest extends SchedulerBrowserTestBase {
       $edit = [
         'body[0][value]' => 'Publish on: [node:scheduler-publish' . $test_data['token_format'] . ']. Unpublish on: [node:scheduler-unpublish' . $test_data['token_format'] . '].',
       ];
-      $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+      $this->drupalGet('node/' . $node->id() . '/edit');
+      $this->submitForm($edit, 'Save');
       $this->drupalGet('node/' . $node->id());
 
       // Refresh the node and get the body output value.

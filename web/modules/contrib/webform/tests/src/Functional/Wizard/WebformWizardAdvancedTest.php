@@ -30,8 +30,8 @@ class WebformWizardAdvancedTest extends WebformWizardTestBase {
 
     // Get initial wizard start page (Your Information).
     $this->drupalGet('/webform/test_form_wizard_advanced');
-    // Check progress bar is set to 'Your Information'.
-    $assert_session->responseMatches('#<li data-webform-page="information" class="webform-progress-bar__page webform-progress-bar__page--current"><b>Your Information</b><span></span></li>#');
+    // Check current page is set to 'Your Information'.
+    $this->assertCurrentPage('Your Information', 'information');
     // Check progress pages.
     $assert_session->responseContains('1 of 5');
     // Check progress percentage.
@@ -42,6 +42,8 @@ class WebformWizardAdvancedTest extends WebformWizardTestBase {
     $assert_session->buttonExists('edit-wizard-next');
     // Check first name field does exist.
     $assert_session->fieldValueEquals('edit-first-name', 'John');
+    // Check page container type is section.
+    $assert_session->responseContains('<section data-webform-key="information" data-drupal-selector="edit-information" id="edit-information" class="js-form-wrapper form-wrapper js-form-item form-item webform-section">');
 
     // Create a login user who can save drafts.
     $account = $this->drupalCreateUser();
@@ -265,6 +267,16 @@ class WebformWizardAdvancedTest extends WebformWizardTestBase {
     $assert_session->responseNotContains('{webform complete}');
     $this->drupalGet('/webform/test_form_wizard_advanced/confirmation');
     $assert_session->responseNotContains('class="webform-progress-bar"');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertCurrentPage($title, $page): void {
+    parent::assertCurrentPage($title, $page);
+    if ($page !== WebformInterface::PAGE_CONFIRMATION) {
+      $this->assertSession()->responseContains('<h3 class="webform-section-title">' . $title . '</h3>');
+    }
   }
 
 }

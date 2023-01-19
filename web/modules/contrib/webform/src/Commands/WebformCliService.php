@@ -356,10 +356,11 @@ class WebformCliService implements WebformCliServiceInterface {
     // Convert dashes to underscores.
     foreach ($export_options as $key => $value) {
       unset($export_options[$key]);
+      $key = str_replace('-', '_', $key);
       if (isset($default_options[$key]) && is_array($default_options[$key])) {
         $value = explode(',', $value);
       }
-      $export_options[str_replace('-', '_', $key)] = $value;
+      $export_options[$key] = $value;
     }
     $export_options += $submission_exporter->getDefaultExportOptions();
     $submission_exporter->setExporter($export_options);
@@ -494,7 +495,7 @@ class WebformCliService implements WebformCliServiceInterface {
 
     if (!$webform) {
       $submission_total = \Drupal::entityQuery('webform_submission')->count()->accessCheck(FALSE)->execute();
-      $form_total = \Drupal::entityQuery('webform')->count()->execute();
+      $form_total = \Drupal::entityQuery('webform')->count()->accessCheck(FALSE)->execute();
 
       $t_args = [
         '@submission_total' => $submission_total,
@@ -673,7 +674,7 @@ class WebformCliService implements WebformCliServiceInterface {
    * {@inheritdoc}
    */
   public function drush_webform_libraries_status() {
-    module_load_include('install', 'webform');
+    \Drupal::moduleHandler()->loadInclude('webform', 'install');
 
     /** @var \Drupal\webform\WebformLibrariesManagerInterface $libraries_manager */
     $libraries_manager = \Drupal::service('webform.libraries_manager');
@@ -840,7 +841,7 @@ class WebformCliService implements WebformCliServiceInterface {
       return $this->drush_user_abort();
     }
 
-    module_load_include('install', 'webform');
+    \Drupal::moduleHandler()->loadInclude('webform', 'install');
 
     $this->drush_print($this->dt('Repairing webform submission storage schema…'));
     _webform_update_webform_submission_storage_schema();
@@ -854,6 +855,9 @@ class WebformCliService implements WebformCliServiceInterface {
     $this->drush_print($this->dt('Repairing webform handlers…'));
     _webform_update_webform_handler_settings();
 
+    $this->drush_print($this->dt('Repairing webform actions…'));
+    _webform_update_actions();
+
     $this->drush_print($this->dt('Repairing webform field storage definitions…'));
     _webform_update_field_storage_definitions();
 
@@ -862,7 +866,7 @@ class WebformCliService implements WebformCliServiceInterface {
 
     if (\Drupal::moduleHandler()->moduleExists('webform_entity_print')) {
       $this->drush_print($this->dt('Repairing webform entity print settings…'));
-      module_load_include('install', 'webform_entity_print');
+      \Drupal::moduleHandler()->loadInclude('webform_entity_print', 'install');
       webform_entity_print_install();
     }
 
@@ -1239,6 +1243,7 @@ class WebformCliService implements WebformCliServiceInterface {
             'url' => $dist_url,
             'type' => $dist_type,
           ],
+          'license' => $library['license'] ?: 'N/A',
         ],
       ];
 

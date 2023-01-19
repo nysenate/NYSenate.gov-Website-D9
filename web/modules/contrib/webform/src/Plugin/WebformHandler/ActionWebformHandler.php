@@ -282,7 +282,8 @@ class ActionWebformHandler extends WebformHandlerBase {
 
     // Append notes.
     if ($this->configuration['notes']) {
-      $notes = rtrim($webform_submission->getNotes());
+      $notes = $webform_submission->getNotes() ?? '';
+      $notes = rtrim($notes);
       $notes .= ($notes ? PHP_EOL . PHP_EOL : '') . $this->replaceTokens($this->configuration['notes'], $webform_submission);
       $webform_submission->setNotes($notes);
     }

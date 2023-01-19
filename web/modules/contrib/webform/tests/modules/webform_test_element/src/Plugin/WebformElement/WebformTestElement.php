@@ -120,7 +120,7 @@ class WebformTestElement extends WebformElementBase {
    * @param string $context1
    *   Additional parameter passed to the invoked method name.
    */
-  protected function displayMessage($method_name, $context1 = NULL) {
+  protected function displayMessage($method_name, $context1 = '') {
     if (PHP_SAPI !== 'cli') {
       $t_args = ['@class_name' => get_class($this), '@method_name' => $method_name, '@context1' => $context1];
       $this->messenger()->addStatus($this->t('Invoked: @class_name:@method_name @context1', $t_args));

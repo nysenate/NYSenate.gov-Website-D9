@@ -143,7 +143,8 @@ class WebformOptionsListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\webform\WebformOptionsInterface $entity */
-    $row['label'] = $entity->toLink($entity->label(), 'edit-form');
+    $row = [];
+    $row['label'] = $entity->toLink((string) $entity->label(), 'edit-form');
     $row['category'] = $entity->get('category');
     $row['likert'] = $entity->isLikert() ? $this->t('Yes') : $this->t('No');
     $row['alter'] = $entity->hasAlterHooks() ? $this->t('Yes') : $this->t('No');

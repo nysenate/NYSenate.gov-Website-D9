@@ -121,7 +121,7 @@ class WebformSubmissionController extends ControllerBase {
       '@state' => $webform_submission->isSticky() ? 'on' : 'off',
       '@label' => $webform_submission->isSticky() ? t('Unstar/Unflag @label', $t_args) : t('Star/flag @label', $t_args),
     ];
-    return new FormattableMarkup('<span class="webform-icon webform-icon-sticky webform-icon-sticky--@state"></span><span class="visually-hidden">@label</span>', $args);
+    return new FormattableMarkup('<span class="webform-icon webform-icon-sticky webform-icon-sticky--@state" title="@label"></span><span class="visually-hidden">@label</span>', $args);
   }
 
   /**
@@ -139,7 +139,7 @@ class WebformSubmissionController extends ControllerBase {
       '@state' => $webform_submission->isLocked() ? 'on' : 'off',
       '@label' => $webform_submission->isLocked() ? t('Unlock @label', $t_args) : t('Lock @label', $t_args),
     ];
-    return new FormattableMarkup('<span class="webform-icon webform-icon-lock webform-icon-locked--@state"></span><span class="visually-hidden">@label</span>', $args);
+    return new FormattableMarkup('<span class="webform-icon webform-icon-lock webform-icon-locked--@state" title="@label"></span><span class="visually-hidden">@label</span>', $args);
   }
 
   /**

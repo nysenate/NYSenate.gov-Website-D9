@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -13,9 +14,12 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\workbench_moderation\Plugin\Action\ModerationOptOutPublishNode;
+use Drupal\workbench_moderation\Plugin\Action\ModerationOptOutUnpublishNode;
 use Drupal\node\Entity\NodeType;
 use Drupal\scheduler\SchedulerEvent;
 use Drupal\scheduler\SchedulerEvents;
+use Drupal\views\Entity\View;
 
 /**
  * Implements hook_help().
@@ -27,7 +31,7 @@ function scheduler_help($route_name, RouteMatchInterface $route_match) {
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Scheduler module provides the functionality for automatic publishing and unpublishing of nodes at specified future dates.') . '</p>';
       $output .= '<p>' . t('You can read more in the <a href="@readme">readme</a> file or our <a href="@project">project page on Drupal.org</a>.', [
-        '@readme' => $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'scheduler') . '/README.md',
+        '@readme' => $GLOBALS['base_url'] . '/' . \Drupal::service('extension.list.module')->getPath('scheduler') . '/README.md',
         '@project' => 'https://drupal.org/project/scheduler',
       ]) . '</p>';
       break;
@@ -80,21 +84,20 @@ function scheduler_form_node_form_alter(&$form, FormStateInterface $form_state) 
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
+  /** @var \Drupal\scheduler\SchedulerManager $scheduler_manager */
+  $scheduler_manager = \Drupal::service('scheduler.manager');
+
   // Invoke all implementations of hook_scheduler_hide_publish_on_field() to
   // allow other modules to hide the field on the node edit form.
   if ($publishing_enabled && $publishing_displayed) {
-    $hook = 'scheduler_hide_publish_on_field';
-    foreach (\Drupal::moduleHandler()->getImplementations($hook) as $module) {
-      $function = $module . '_' . $hook;
+    foreach ($scheduler_manager->getHookImplementations('hide_publish_on_field') as $function) {
       $publishing_displayed = ($function($form, $form_state, $node) !== TRUE) && $publishing_displayed;
     }
   }
   // Invoke all implementations of hook_scheduler_hide_unpublish_on_field() to
   // allow other modules to hide the field on the node edit form.
   if ($unpublishing_enabled && $unpublishing_displayed) {
-    $hook = 'scheduler_hide_unpublish_on_field';
-    foreach (\Drupal::moduleHandler()->getImplementations($hook) as $module) {
-      $function = $module . '_' . $hook;
+    foreach ($scheduler_manager->getHookImplementations('hide_unpublish_on_field') as $function) {
       $unpublishing_displayed = ($function($form, $form_state, $node) !== TRUE) && $unpublishing_displayed;
     }
   }
@@ -228,8 +231,10 @@ function scheduler_form_node_form_alter(&$form, FormStateInterface $form_state) 
     $form['unpublish_on']['widget'][0]['value']['#required'] = FALSE;
   }
 
-  // Check which widget type is set for the scheduler fields, and give a warning
-  // if the wrong one has been set and provide a hint and link to fix it.
+  // Check which widget is set for the scheduler fields, and give a warning and
+  // provide a hint and link for how to fix it. Allow third-party modules to
+  // provide their own custom widget, we are only interested in checking that it
+  // has not reverted back to the core 'datetime_timestamp' widget.
   $pluginDefinitions = $display->get('pluginManager')->getDefinitions();
   $fields_to_check = [];
   if ($publishing_enabled && $publishing_displayed) {
@@ -241,7 +246,7 @@ function scheduler_form_node_form_alter(&$form, FormStateInterface $form_state) 
   $correct_widget_id = 'datetime_timestamp_no_default';
   foreach ($fields_to_check as $field) {
     $actual_widget_id = $display->getComponent($field)['type'];
-    if ($actual_widget_id != $correct_widget_id) {
+    if ($actual_widget_id == 'datetime_timestamp') {
       \Drupal::messenger()->addMessage(t('The widget for field %field is incorrectly set to %wrong. This should be changed to %correct by an admin user via Field UI <a href="@link">content type form display</a> :not_available', [
         '%field' => (string) $form[$field]['widget']['#title'],
         '%correct' => (string) $pluginDefinitions[$correct_widget_id]['label'],
@@ -382,6 +387,25 @@ function scheduler_entity_base_field_info(EntityTypeInterface $entity_type) {
       ->addConstraint('SchedulerUnpublishOn');
 
     return $fields;
+  }
+}
+
+/**
+ * Implements hook_action_info_alter().
+ */
+function scheduler_action_info_alter(&$definitions) {
+  // Workbench Moderation has a bug where the wrong actions are assigned which
+  // causes scheduled publishing of non-moderated content to fail. This fix will
+  // work regardless of the relative weights of the two modules, and will
+  // continue to work even if WBM is fixed before this code is removed.
+  // See https://www.drupal.org/project/workbench_moderation/issues/3238576
+  if (\Drupal::moduleHandler()->moduleExists('workbench_moderation')) {
+    if (isset($definitions['entity:publish_action:node']['class']) && $definitions['entity:publish_action:node']['class'] == ModerationOptOutUnpublishNode::class) {
+      $definitions['entity:publish_action:node']['class'] = ModerationOptOutPublishNode::class;
+    }
+    if (isset($definitions['entity:unpublish_action:node']['class']) && $definitions['entity:unpublish_action:node']['class'] == UnpublishAction::class) {
+      $definitions['entity:unpublish_action:node']['class'] = ModerationOptOutUnpublishNode::class;
+    }
   }
 }
 
@@ -578,9 +602,9 @@ function scheduler_cron() {
   // Scheduler 7.x provided hook_scheduler_api() which has been replaced by
   // event dispatching in 8.x. Display a warning in the log if any of these
   // hooks still exist, so that admins and developers are informed.
-  foreach (Drupal::moduleHandler()->getImplementations('scheduler_api') as $module) {
-    \Drupal::logger('scheduler')->warning('Function %function has not been executed. In Drupal 8, implementations of hook_scheduler_api() should be replaced by Scheduler event listeners.', [
-      '%function' => $module . '_scheduler_api',
+  foreach ($scheduler_manager->getHookImplementations('api') as $function) {
+    \Drupal::logger('scheduler')->warning('Function %function has not been executed. Implementations of hook_scheduler_api() should be replaced by Scheduler event listeners.', [
+      '%function' => $function,
     ]);
   }
 
@@ -728,4 +752,39 @@ function _scheduler_get_scheduler_enabled_node_types($action) {
     /** @var \Drupal\node\NodeTypeInterface $bundle */
     return $bundle->getThirdPartySetting('scheduler', $action . '_enable', $config->get('default_' . $action . '_enable'));
   });
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function scheduler_local_tasks_alter(&$local_tasks) {
+  $view = View::load('scheduler_scheduled_content');
+  if ($view && $view->status() && $view->getDisplay('overview')) {
+    // Views do not currently support defining secondary local tasks, so define
+    // it dynamically if the view exists, is enabled and the display exists.
+    // Change this if https://www.drupal.org/node/2172307 gets fixed.
+    $local_tasks['scheduler.scheduled_content'] = [
+      'title' => t('Scheduled content'),
+      'route_name' => 'view.scheduler_scheduled_content.overview',
+      'parent_id' => 'system.admin_content',
+      'class' => 'Drupal\Core\Menu\LocalTaskDefault',
+      'options' => [],
+      // Overview seems to have weight 0 and moderated content is weight 1.
+      'weight' => 5,
+    ];
+
+    if (!\Drupal::moduleHandler()->moduleExists('content_moderation')) {
+      // Define a fallback overview local task if content_moderation is not
+      // enabled. If https://www.drupal.org/project/drupal/issues/3199682
+      // gets committed then this route could be removed from here.
+      $local_tasks['scheduler.content_overview'] = [
+        'title' => t('Overview'),
+        'route_name' => 'system.admin_content',
+        'parent_id' => 'system.admin_content',
+        'class' => 'Drupal\Core\Menu\LocalTaskDefault',
+        'options' => [],
+        'weight' => 0,
+      ];
+    }
+  }
 }

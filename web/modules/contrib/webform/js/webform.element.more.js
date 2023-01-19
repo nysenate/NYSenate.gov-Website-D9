@@ -26,7 +26,7 @@
         });
 
         // Add event handlers.
-        $a.on('click', toggle)
+        $a.parent().on('click', toggle)
           .on('keydown', function (event) {
             // Space or Return.
             if (event.which === 32 || event.which === 13) {

@@ -7,7 +7,7 @@
 
 use Drupal\webform\WebformInterface;
 
-module_load_include('inc', 'webform_test', 'includes/webform_test.test_element_format');
+\Drupal::moduleHandler()->loadInclude('webform_test', 'inc', 'includes/webform_test.test_element_format');
 
 /**
  * Generate test composite element formats with multiple values.

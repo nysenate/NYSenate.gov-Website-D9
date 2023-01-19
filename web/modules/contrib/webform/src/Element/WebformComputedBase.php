@@ -197,6 +197,7 @@ abstract class WebformComputedBase extends FormElement implements WebformCompute
     $element['hidden']['#type'] = 'hidden';
     $element['hidden']['#value'] = ['#markup' => $value];
     $element['hidden']['#parents'] = $element['#parents'];
+    $element['hidden']['#attributes'] = $element['#attributes'];
   }
 
   /**

@@ -98,7 +98,9 @@ class WebformThemeManager implements WebformThemeManagerInterface {
    *   A theme's name
    */
   public function getThemeName($name) {
-    return $this->themeHandler->getName($name);
+    return $this->themeHandler->themeExists($name)
+      ? $this->themeHandler->getName($name)
+      : NULL;
   }
 
   /**
@@ -110,9 +112,7 @@ class WebformThemeManager implements WebformThemeManagerInterface {
   public function getThemeNames() {
     $themes = [];
     foreach ($this->themeHandler->listInfo() as $name => $theme) {
-      if ($theme->status === 1) {
-        $themes[$name] = $theme->info['name'];
-      }
+      $themes[$name] = $theme->info['name'];
     }
     asort($themes);
     return ['' => $this->t('Default')] + $themes;
@@ -150,6 +150,11 @@ class WebformThemeManager implements WebformThemeManagerInterface {
    * {@inheritdoc}
    */
   public function setCurrentTheme($theme_name = NULL) {
+    // Make sure the theme exists before setting it.
+    if ($theme_name && !$this->themeHandler->themeExists($theme_name)) {
+      return;
+    }
+
     if (!isset($this->activeTheme)) {
       $this->activeTheme = $this->themeManager->getActiveTheme();
     }

@@ -5,7 +5,7 @@ namespace Drupal\Tests\scheduler\FunctionalJavascript;
 /**
  * Tests the JavaScript functionality for default dates.
  *
- * @group scheduler
+ * @group scheduler_js
  */
 class SchedulerJavascriptDefaultTimeTest extends SchedulerJavascriptTestBase {
 

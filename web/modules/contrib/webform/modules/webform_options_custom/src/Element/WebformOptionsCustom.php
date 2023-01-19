@@ -44,7 +44,7 @@ class WebformOptionsCustom extends FormElement implements WebformOptionsCustomIn
     // NOTE:
     // Choices is not supported by custom options because of <option> being
     // removed inside the <select>.
-    // @see https://github.com/jshjohnson/Choices/issues/601
+    // @see https://github.com/Choices-js/Choices/issues/601
     '#placeholder',
     '#help_display',
     '#size',

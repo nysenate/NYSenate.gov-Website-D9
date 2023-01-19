@@ -119,11 +119,12 @@ class WebformElementMediaFileTest extends WebformElementManagedFileTestBase {
 
     // Check managed file formatting.
     $this->drupalGet('/admin/structure/webform/manage/test_element_managed_file/submission/' . $sid);
+    $assert_session = $this->assertSession();
     if ($type === 'multiple') {
       $assert_session->responseContains('<label>managed_file_multiple</label>');
       $assert_session->responseContains('<div class="item-list">');
     }
-    $assert_session->responseContains('<span class="file file--mime-text-plain file--text"> <a href="' . file_create_url($file->getFileUri()) . '" type="text/plain; length=' . $file->getSize() . '">' . $file->getFilename() . '</a></span>');
+    $assert_session->responseContains('<span class="file file--mime-text-plain file--text"> <a href="' . $file->createFileUrl(FALSE) . '" type="text/plain; length=' . $file->getSize() . '">' . $file->getFilename() . '</a></span>');
 
     // Remove the uploaded file.
     $this->drupalGet('/admin/structure/webform/manage/test_element_managed_file/submission/' . $sid . '/edit');

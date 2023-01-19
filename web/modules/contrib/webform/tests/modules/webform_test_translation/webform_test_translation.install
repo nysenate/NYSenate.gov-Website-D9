@@ -4,7 +4,7 @@
  * @file
  * Install, update and uninstall functions for the Webform test translation module.
  *
- * `drush php-eval 'module_load_include('install', 'webform_test_translation'); webform_test_translation_install()'; drush cr;`
+ * `drush php-eval '\Drupal::moduleHandler()->loadInclude('webform_test_translation', 'install'); webform_test_translation_install()'; drush cr;`
  */
 
 use Drupal\Core\Serialization\Yaml;
@@ -39,7 +39,7 @@ function _webform_test_translation_install_config($table_name) {
     ->condition('collection', 'language.es');
   $result = $query->execute();
   while ($record = $result->fetchAssoc()) {
-    $data = unserialize($record['data']);
+    $data = unserialize($record['data'], ['allowed_classes' => FALSE]);
 
     $filename = __DIR__ . '/config/install/language/es/' . $record['name'] . '.yml';
     if (!file_exists($filename)) {

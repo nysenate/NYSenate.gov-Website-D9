@@ -2,6 +2,7 @@
 
 namespace Drupal\scheduler_rules_integration\Plugin\RulesAction;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\rules\Core\RulesActionBase;
 
 /**
@@ -27,9 +28,11 @@ class PublishNow extends RulesActionBase {
    * This action should really be provided by Rules or by Core, but it is not
    * yet done (as of Aug 2016). Scheduler users need this action so we provide
    * it here. It could be removed later when Rules or Core includes it.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node to be published.
    */
-  public function doExecute() {
-    $node = $this->getContextValue('node');
+  public function doExecute(EntityInterface $node) {
     $node->setPublished();
   }
 

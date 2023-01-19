@@ -88,6 +88,7 @@ class WebformAdminConfigLibrariesForm extends WebformAdminConfigBaseForm {
     $libraries_header = [
       'title' => ['data' => $this->t('Title')],
       'version' => ['data' => $this->t('Version')],
+      'license' => ['data' => $this->t('License'), 'class' => [RESPONSIVE_PRIORITY_LOW]],
       'description' => ['data' => $this->t('Description/Notes'), 'class' => [RESPONSIVE_PRIORITY_LOW]],
       'elements' => ['data' => $this->t('Required elements'), 'class' => [RESPONSIVE_PRIORITY_LOW]],
       'provider' => ['data' => $this->t('Provider'), 'class' => [RESPONSIVE_PRIORITY_LOW]],
@@ -134,6 +135,7 @@ class WebformAdminConfigLibrariesForm extends WebformAdminConfigBaseForm {
       $library_option = [
         'title' => $library['title'],
         'version' => $library['version'],
+        'license' => $library['license'],
         'description' => [
           'data' => [
             'content' => ['#markup' => $library['description'], '#suffix' => '<br />'],

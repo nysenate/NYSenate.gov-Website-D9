@@ -99,7 +99,7 @@ class WebformThemeNegotiator implements ThemeNegotiatorInterface {
 
     // If webform route and page is disabled, apply admin theme to
     // the webform routes.
-    if ($is_webform_route && !$webform->getSetting('page')) {
+    if ($is_webform_route && !$webform->hasPage()) {
       return ($this->user->hasPermission('view the administration theme'))
         ? $this->configFactory->get('system.theme')->get('admin')
         : '';

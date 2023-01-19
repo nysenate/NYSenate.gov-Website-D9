@@ -315,7 +315,7 @@ class WebformAdminConfigAdvancedForm extends WebformAdminConfigBaseForm {
     if ($op === (string) $this->t('Repair configuration')) {
       // Copied from:
       // @see \Drupal\webform\Commands\WebformCliService::drush_webform_repair
-      module_load_include('install', 'webform');
+      \Drupal::moduleHandler()->loadInclude('webform', 'install');
 
       $this->messenger()->addMessage($this->t('Repairing webform submission storage schema…'));
       _webform_update_webform_submission_storage_schema();
@@ -329,6 +329,9 @@ class WebformAdminConfigAdvancedForm extends WebformAdminConfigBaseForm {
       $this->messenger()->addMessage($this->t('Repairing webform handlers…'));
       _webform_update_webform_handler_settings();
 
+      $this->messenger()->addMessage($this->t('Repairing webform actions…'));
+      _webform_update_actions();
+
       $this->messenger()->addMessage($this->t('Repairing webform field storage definitions…'));
       _webform_update_field_storage_definitions();
 
@@ -337,7 +340,7 @@ class WebformAdminConfigAdvancedForm extends WebformAdminConfigBaseForm {
 
       if ($this->moduleHandler->moduleExists('webform_entity_print')) {
         $this->messenger()->addMessage($this->t('Repairing webform entity print settings…'));
-        module_load_include('install', 'webform_entity_print');
+        $this->moduleHandler->loadInclude('webform_entity_print', 'install');
         webform_entity_print_install();
       }
 

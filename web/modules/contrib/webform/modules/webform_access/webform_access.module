@@ -150,8 +150,8 @@ function webform_access_menu_local_tasks_alter(&$data, $route_name) {
 
   /** @var \Drupal\Core\Cache\CacheableMetadata $cacheability */
   $cacheability = $data['cacheability'];
-  foreach ($webform_access_groups as $webforn_access_group) {
-    $cacheability->addCacheableDependency($webforn_access_group);
+  foreach ($webform_access_groups as $webform_access_group) {
+    $cacheability->addCacheableDependency($webform_access_group);
   }
 }
 
@@ -181,8 +181,8 @@ function webform_access_webform_access(WebformInterface $webform, $operation, Ac
   }
 
   $permission = str_replace('submission_', '', $operation);
-  foreach ($webform_access_groups as $webforn_access_group) {
-    $permissions = $webforn_access_group->get('permissions');
+  foreach ($webform_access_groups as $webform_access_group) {
+    $permissions = $webform_access_group->get('permissions');
     if (
       // Is admin.
       in_array('administer', $permissions)
@@ -190,7 +190,7 @@ function webform_access_webform_access(WebformInterface $webform, $operation, Ac
       || in_array($permission, $permissions)) {
       return AccessResult::allowed()
         ->cachePerUser()
-        ->addCacheableDependency($webforn_access_group);
+        ->addCacheableDependency($webform_access_group);
     }
   }
 
@@ -207,7 +207,7 @@ function webform_access_webform_submission_access(WebformSubmissionInterface $we
   }
 
   $webform = $webform_submission->getWebform();
-  $source_entity = $webform_submission->getSourceEntity(['webform_submission']);
+  $source_entity = $webform_submission->getSourceEntity();
   if (!$source_entity) {
     return AccessResult::neutral();
   }
@@ -219,8 +219,8 @@ function webform_access_webform_submission_access(WebformSubmissionInterface $we
     return AccessResult::neutral();
   }
 
-  foreach ($webform_access_groups as $webforn_access_group) {
-    $permissions = $webforn_access_group->get('permissions');
+  foreach ($webform_access_groups as $webform_access_group) {
+    $permissions = $webform_access_group->get('permissions');
     if (
       // Is admin.
       (in_array('administer', $permissions)) ||
@@ -231,7 +231,7 @@ function webform_access_webform_submission_access(WebformSubmissionInterface $we
     ) {
       return AccessResult::allowed()
         ->cachePerUser()
-        ->addCacheableDependency($webforn_access_group);
+        ->addCacheableDependency($webform_access_group);
     }
   }
 

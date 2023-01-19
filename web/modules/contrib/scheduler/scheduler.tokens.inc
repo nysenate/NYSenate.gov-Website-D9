@@ -11,6 +11,8 @@ use Drupal\Core\Render\BubbleableMetadata;
  * Implements hook_token_info().
  */
 function scheduler_token_info() {
+  // Initialise the array to avoid 'variable is undefined' phpcs error.
+  $info = [];
   $info['tokens']['node']['scheduler-publish'] = [
     'name' => t('Publish on date'),
     'description' => t("The date the node will be published."),
@@ -31,7 +33,7 @@ function scheduler_token_info() {
 function scheduler_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
   $date_formatter = \Drupal::service('date.formatter');
-  $language_code = isset($options['langcode']) ? $options['langcode'] : NULL;
+  $language_code = $options['langcode'] ?? NULL;
   $replacements = [];
 
   if ($type == 'node' && !empty($data['node'])) {

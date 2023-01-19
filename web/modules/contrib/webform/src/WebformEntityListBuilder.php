@@ -393,7 +393,7 @@ class WebformEntityListBuilder extends ConfigEntityListBuilder {
     if ($entity->access('test')) {
       $operations['test'] = [
         'title' => $this->t('Test'),
-        'url' => $entity->toUrl('canonical'),
+        'url' => $entity->toUrl('test-form'),
         'weight' => 20,
       ];
     }

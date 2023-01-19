@@ -1,0 +1,24 @@
+uuid: 46eecd44-799f-480d-a0fd-dedb4c0d7c93
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.earth_day_letter
+    - field.field.block_content.earth_day_letter.body
+  module:
+    - text
+id: block_content.earth_day_letter.default
+targetEntityType: block_content
+bundle: earth_day_letter
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

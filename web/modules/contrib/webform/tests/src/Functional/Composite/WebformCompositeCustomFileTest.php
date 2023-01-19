@@ -60,7 +60,7 @@ class WebformCompositeCustomFileTest extends WebformElementManagedFileTestBase {
 
     // Check the composite file is attached to the email.
     $assert_session->responseContains('<label>Attachments</label>');
-    $assert_session->responseContains('<strong><a href="' . file_create_url($file->getFileUri()) . '">' . $file->getFileName() . '</a></strong> (text/plain) - 1 KB');
+    $assert_session->responseContains('<strong><a href="' . $file->createFileUrl(FALSE) . '">' . $file->getFileName() . '</a></strong> (text/plain) - 1 KB');
 
     // Check file permanent.
     $this->assertTrue($file->isPermanent());

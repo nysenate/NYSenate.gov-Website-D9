@@ -10,6 +10,7 @@ use Drupal\webform\Plugin\WebformElement\TableSelect;
 use Drupal\webform\Plugin\WebformElementManagerInterface;
 use Drupal\webform\Plugin\WebformHandlerManager;
 use Drupal\webform\Utility\WebformElementHelper;
+use Drupal\webform\Utility\WebformYaml;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -45,7 +46,14 @@ abstract class WebformAdminConfigBaseForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('webform.settings');
+
     _webform_config_update($config);
+
+    // Normalizing the data.
+    $data = $config->getRawData();
+    WebformYaml::normalize($data);
+    $config->setData($data);
+
     $config->save();
 
     parent::submitForm($form, $form_state);

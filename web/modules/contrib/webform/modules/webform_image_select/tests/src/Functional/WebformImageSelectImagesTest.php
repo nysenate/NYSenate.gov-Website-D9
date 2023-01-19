@@ -93,7 +93,7 @@ dog_4:
     // Check invalid images.
     $this->assertEquals([], $webform_images->getImages());
 
-    // Check admin user access denied.
+    // Check normal user access denied.
     $this->drupalGet('/admin/structure/webform/options/images/manage');
     $assert_session->statusCodeEquals(403);
     $this->drupalGet('/admin/structure/webform/options/images/manage/add');

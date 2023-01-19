@@ -86,7 +86,8 @@ class SchedulerDefaultTimeTest extends SchedulerBrowserTestBase {
       'unpublish_on[0][value][date]' => $this->unpublishTime->format('Y-m-d'),
     ];
     // Create a node and check that the expected error messages are shown.
-    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->type);
+    $this->submitForm($edit, 'Save');
     // By default it is required to enter a time when scheduling content for
     // publishing and for unpublishing.
     $this->assertSession()->pageTextNotMatches('/' . $edit['title[0][value]'] . ' is scheduled to be published .* and unpublished .*/');
@@ -97,7 +98,8 @@ class SchedulerDefaultTimeTest extends SchedulerBrowserTestBase {
     $config->set('allow_date_only', TRUE)->save();
 
     // Create a node and check that the validation messages are not shown.
-    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->type);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextNotContains($publish_validation_message);
     $this->assertSession()->pageTextNotContains($unpublish_validation_message);
 
@@ -164,7 +166,8 @@ class SchedulerDefaultTimeTest extends SchedulerBrowserTestBase {
       'unpublish_on[0][value][date]' => $this->unpublishTime->format('Y-m-d'),
     ];
     // Create a node and check that the expected default time has been saved.
-    $this->drupalPostForm('node/add/' . $type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $type);
+    $this->submitForm($edit, 'Save');
 
     // Get the pattern of the 'long' default date format.
     $date_format_storage = $this->container->get('entity_type.manager')->getStorage('date_format');

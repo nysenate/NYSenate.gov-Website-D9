@@ -39,6 +39,10 @@ require_once __DIR__ . '/includes/webform.query.inc';
  * Implements hook_help().
  */
 function webform_help($route_name, RouteMatchInterface $route_match) {
+  if (!$route_match->getRouteObject()) {
+    return NULL;
+  }
+
   // Get path from route match.
   $path = preg_replace('/^' . preg_quote(base_path(), '/') . '/', '/', Url::fromRouteMatch($route_match)->setAbsolute(FALSE)->toString());
   if (!in_array($route_name, ['system.modules_list', 'update.status']) && strpos($route_name, 'webform') === FALSE && strpos($path, '/webform') === FALSE) {
@@ -304,13 +308,14 @@ function webform_module_implements_alter(&$implementations, $hook) {
  * Implements hook_token_info_alter().
  */
 function webform_token_info_alter(&$data) {
-  module_load_include('inc', 'webform', 'webform.tokens');
+  \Drupal::moduleHandler()->loadInclude('webform', 'tokens.inc');
 
   // Append learn more about token suffixes to all webform token descriptions.
   // @see \Drupal\webform\WebformTokenManager::replace
   // @see webform_page_attachments()
   $token_suffixes = t('Append the below suffixes to alter the returned value.') .
     '<ul>' .
+    '<li>' . t('<code>:base64encode</code> base64 encodes returned value') . '</li>' .
     '<li>' . t('<code>:clear</code> removes the token when it is not replaced.') . '</li>' .
     '<li>' . t('<code>:urlencode</code> URL encodes returned value.') . '</li>' .
     '<li>' . t('<code>:rawurlencode</code> Raw URL encodes returned value with only hex digits.') . '</li>' .

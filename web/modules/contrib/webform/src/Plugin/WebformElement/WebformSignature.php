@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @WebformElement(
  *   id = "webform_signature",
  *   label = @Translation("Signature"),
- *   description = @Translation("Provides a form element to collect electronic signatures from users."),
+ *   description = @Translation("Provides a form element to collect electronic signatures from users. Signature support is provided by the <a href=""https://github.com/szimek/signature_pad"">Signature Pad</a> library."),
  *   category = @Translation("Advanced elements"),
  * )
  */
@@ -306,12 +306,15 @@ class WebformSignature extends WebformElementBase implements WebformElementFileD
       $image_directory = $image_submission_directory;
     }
 
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+
     // If a signature file was already created and shared using an
     // unsafe image hash, then return it.
     $unsafe_image_hash = Crypt::hmacBase64($value, Settings::getHashSalt());
     $unsafe_image_uri = "$image_directory/signature-$unsafe_image_hash.png";
     if (file_exists($unsafe_image_uri)) {
-      return file_create_url($unsafe_image_uri);
+      return $file_url_generator->generateAbsoluteString($unsafe_image_uri);
     }
 
     $image_hash = Crypt::hmacBase64('webform-signature-' . $value, Settings::getHashSalt());
@@ -331,7 +334,7 @@ class WebformSignature extends WebformElementBase implements WebformElementFileD
       }
     }
 
-    return file_create_url($image_uri);
+    return $file_url_generator->generateAbsoluteString($image_uri);
   }
 
   /**

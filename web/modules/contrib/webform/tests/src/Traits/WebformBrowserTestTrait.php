@@ -141,9 +141,6 @@ trait WebformBrowserTestTrait {
     foreach ($ids as $id) {
       $this->loadWebform($id);
     }
-    $this->pass(new FormattableMarkup('Loaded webforms: %webforms.', [
-      '%webforms' => implode(', ', $ids),
-    ]));
   }
 
   /**

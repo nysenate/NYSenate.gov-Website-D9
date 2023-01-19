@@ -21,6 +21,6 @@ interface WebformElementFileDownloadAccessInterface {
    * @see hook_file_download()
    * @see webform_file_download()
    */
-  public static function accessFileDownload(string $uri);
+  public static function accessFileDownload($uri);
 
 }

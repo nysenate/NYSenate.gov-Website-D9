@@ -121,7 +121,7 @@ class WebformSubmissionExportImportController extends ControllerBase implements 
     $webform = $this->requestHandler->getCurrentWebform();
     $source_entity = $this->requestHandler->getCurrentSourceEntity();
 
-    $users = $this->getEntityStorage('user')->getQuery()->execute();
+    $users = $this->getEntityStorage('user')->getQuery()->accessCheck(TRUE)->execute();
     $uid = array_rand($users);
 
     $url = $webform->toUrl();

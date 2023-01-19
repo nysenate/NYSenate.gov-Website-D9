@@ -60,8 +60,8 @@ class WebformEntityConditionsManager implements WebformEntityConditionsManagerIn
       'collapsed' => $this->t('collapsed'),
       'required' => $this->t('required'),
       'optional' => $this->t('optional'),
-      'checked' => $this->t('checked'),
-      'unchecked' => $this->t('unchecked'),
+      'checked' => $this->t('checked', [], ['context' => 'Add check mark']),
+      'unchecked' => $this->t('unchecked', [], ['context' => 'Remove check mark']),
     ];
     $options['triggers'] += [
       'empty' => $this->t('is empty'),

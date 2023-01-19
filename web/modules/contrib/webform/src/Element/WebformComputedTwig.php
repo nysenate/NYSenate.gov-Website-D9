@@ -39,6 +39,9 @@ class WebformComputedTwig extends WebformComputedBase {
    * {@inheritdoc}
    */
   public static function computeValue(array $element, WebformSubmissionInterface $webform_submission) {
+    if (empty($element['#template'])) {
+      return '';
+    }
     /** @var \Drupal\webform\WebformThemeManagerInterface $theme_manager */
     $theme_manager = \Drupal::service('webform.theme_manager');
     // Do not compute value via Twig if there is no active theme,

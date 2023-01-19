@@ -132,7 +132,7 @@ class Photon extends GeocoderBase implements GeocoderInterface {
     ];
 
     $lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    if (in_array($lang, ['de', 'en', 'it', 'fr'])) {
+    if (in_array($lang, ['de', 'en', 'fr'])) {
       $options['lang'] = $lang;
     }
 

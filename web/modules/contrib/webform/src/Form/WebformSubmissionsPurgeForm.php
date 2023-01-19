@@ -127,6 +127,7 @@ class WebformSubmissionsPurgeForm extends WebformSubmissionsDeleteFormBase {
       $this->submissionTotal = $this->entityTypeManager
         ->getStorage('webform_submission')
         ->getQuery()
+        ->accessCheck(FALSE)
         ->count()
         ->execute();
     }

@@ -10,7 +10,6 @@ return array(
     'Stiphle' => array($vendorDir . '/davedevelopment/stiphle/src'),
     'Stack' => array($vendorDir . '/stack/builder/src'),
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
-    'Dflydev\\DotAccessData' => array($vendorDir . '/dflydev/dot-access-data/src'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
     'Caxy\\HtmlDiff' => array($vendorDir . '/caxy/php-htmldiff/lib'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),

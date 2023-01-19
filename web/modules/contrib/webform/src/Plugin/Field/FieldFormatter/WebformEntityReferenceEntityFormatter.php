@@ -117,7 +117,7 @@ class WebformEntityReferenceEntityFormatter extends WebformEntityReferenceFormat
     $items_entity = $items->getEntity();
 
     // Get the items main entity. For Paragraphs this would be the parent entity
-    // of the the paragraph field.
+    // of the paragraph field.
     $items_main_entity = WebformSourceEntityManager::getMainSourceEntity($items_entity);
 
     $request_source_entity = $this->requestHandler->getCurrentSourceEntity();

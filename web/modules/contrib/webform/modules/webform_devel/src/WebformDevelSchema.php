@@ -110,9 +110,7 @@ class WebformDevelSchema implements WebformDevelSchemaInterface {
 
     $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions('webform_submission');
     foreach ($field_definitions as $field_name => $field_definition) {
-      $definition = $this->getDefinition($field_definition);
-      unset($definition['options']);
-      $records[$field_name] = $definition;
+      $records[$field_name] = $this->getDefinition($field_definition);
     }
 
     return $records;
@@ -187,7 +185,9 @@ class WebformDevelSchema implements WebformDevelSchemaInterface {
     $data['multiple'] = $definition->getCardinality();
 
     // Options.
-    $data['options'] = [];
+    $data['options_text'] = [];
+    $data['options_value'] = [];
+
 
     return $data;
   }

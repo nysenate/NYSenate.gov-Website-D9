@@ -86,14 +86,12 @@ yaml_decode_value:
     $edit = ['html_basic' => "<b>bold</bold>"];
     $this->submitForm($edit, 'Submit');
     $assert_session->responseContains('<em class="placeholder">html_basic</em> is not valid.');
-    $assert_session->responseContains('expected &#039;&gt;&#039;');
 
     // Check valid HTML.
     $this->drupalGet('/webform/test_element_codemirror');
     $edit = ['html_basic' => '<b>bold</b>'];
     $this->submitForm($edit, 'Submit');
     $assert_session->responseNotContains('<em class="placeholder">html_basic</em> is not valid.');
-    $assert_session->responseNotContains('expected &#039;&gt;&#039;');
 
     /* ********************************************************************** */
     // code:twig.

@@ -19,7 +19,6 @@
       var self = this;
       var carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
       var theViewportWidth = $(window).width();
-      var headingCurrentPosition = $('#issuesUpdatesHeader').offset().top;
       self.highlightUpTo();
       $('#js-carousel-about-stats').hammer().on('swipe', function (event) {
         self.carouselAdvance(event, self, $(this));
@@ -32,16 +31,21 @@
         var tabNumber = "#panel".concat($(this).data('tab'));
         var pageBody = $('html, body');
         $("input[value=\"".concat(tabNumber, "\"]")).click();
+        var issuesUpdatesHeader = $('#issuesUpdatesHeader').offset();
 
-        if (theViewportWidth > 769) {
-          pageBody.animate({
-            scrollTop: headingCurrentPosition - 220
-          }, '1000', 'swing');
-        } else {
-          $(tabNumber).click();
-          pageBody.animate({
-            scrollTop: headingCurrentPosition - 110
-          }, '1000', 'swing');
+        if (issuesUpdatesHeader !== undefined) {
+          var headingCurrentPosition = issuesUpdatesHeader.top;
+
+          if (theViewportWidth > 769) {
+            pageBody.animate({
+              scrollTop: headingCurrentPosition - 220
+            }, '1000', 'swing');
+          } else {
+            $(tabNumber).click();
+            pageBody.animate({
+              scrollTop: headingCurrentPosition - 110
+            }, '1000', 'swing');
+          }
         }
       });
     },
@@ -68,7 +72,9 @@
       var carousel = wrap.find('.js-carousel');
       var itemAmt = carousel.children().length;
       var itemWidth = carousel.width() / itemAmt;
-      var carouselPos = parseInt(carousel.css('left')); // if the previous button is hidden - do not move that way or at all
+      var carouselPos = 0;
+      carouselPos = parseInt(carousel.css('left'));
+      console.log(carouselPos); // if the previous button is hidden - do not move that way or at all
 
       if (e.direction === 4 && nav.children('.prev').hasClass('hidden')) {
         return false;

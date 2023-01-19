@@ -105,7 +105,7 @@ class WebformTranslationConfigManager implements WebformTranslationConfigManager
   /**
    * {@inheritdoc}
    */
-  public function alterForm(&$form, FormStateInterface $form_state) {
+  public function alterForm(array &$form, FormStateInterface $form_state) {
     foreach ($form['config_names'] as $config_name => &$config_element) {
       if ($config_name === 'webform.settings') {
         $this->alterConfigSettingsForm($config_name, $config_element);
@@ -271,7 +271,7 @@ class WebformTranslationConfigManager implements WebformTranslationConfigManager
   /**
    * {@inheritdoc}
    */
-  public static function validateWebformForm(&$form, FormStateInterface $form_state) {
+  public static function validateWebformForm(array &$form, FormStateInterface $form_state) {
     $source_elements = $form_state->get('webform_source_elements');
     if ($form_state::hasAnyErrors() || empty($source_elements)) {
       return;
@@ -429,7 +429,7 @@ class WebformTranslationConfigManager implements WebformTranslationConfigManager
     $elements = [
       '#type' => 'details',
       '#title' => $this->t('@title (@type)', [
-        '@title' => $element['#title'],
+        '@title' => $element['#title'] ?? '',
         '@type' => $webform_element->getPluginId(),
       ]),
       '#open' => TRUE,
@@ -737,6 +737,12 @@ class WebformTranslationConfigManager implements WebformTranslationConfigManager
       '#parents' => $property_parents,
     ];
 
+    if (is_array($element_property) && array_key_exists("#maxlength", $element_property)) {
+      $property_translation_element += [
+        '#maxlength' => $element_property['#maxlength'],
+      ];
+    }
+
     if (is_array($property_value)) {
       $property_translation_element += [
         '#type' => 'webform_codemirror',
@@ -744,11 +750,12 @@ class WebformTranslationConfigManager implements WebformTranslationConfigManager
       ];
     }
     elseif ($property_type === 'text_format') {
+      $format = $element['#format'] ?? $element_property['#format'];
       $property_translation_element += [
         '#type' => 'text_format',
         '#title_display' => 'hidden',
-        '#format' => $element_property['#format'],
-        '#allowed_formats' => [$element_property['#format']],
+        '#format' => $format,
+        '#allowed_formats' => [$format],
       ];
     }
     elseif ($property_type) {
@@ -964,7 +971,7 @@ class WebformTranslationConfigManager implements WebformTranslationConfigManager
       if (!WebformElementHelper::isElement($element, $key)) {
         continue;
       }
-      if (isset($element['#type']) && !in_array($element['#type'], ['fieldset', 'details'])) {
+      if (isset($element['#type']) && !in_array($element['#type'], ['container', 'details', 'fieldset'])) {
         $flattened_elements[$key] = WebformElementHelper::getProperties($element);
       }
       $flattened_elements += $this->getElementsFlattened($element);

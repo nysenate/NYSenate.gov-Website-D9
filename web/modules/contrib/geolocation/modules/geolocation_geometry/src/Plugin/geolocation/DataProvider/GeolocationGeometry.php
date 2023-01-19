@@ -192,7 +192,6 @@ class GeolocationGeometry extends DataProviderBase implements DataProviderInterf
     $shapes = $locations = [];
 
     $this->parseGeoJson($fieldItem->get('geojson')->getString(), $locations, $shapes);
-
     $positions = [];
 
     foreach ($shapes as $shape) {
@@ -387,42 +386,42 @@ class GeolocationGeometry extends DataProviderBase implements DataProviderInterf
       switch ($entry->type) {
         case 'FeatureCollection':
           if (empty($entry->features)) {
-            return;
+            continue 2;
           }
-          $this->parseGeoJson($entry->features, $locations, $shapes);
-          return;
+          $this->parseGeoJson(is_string($entry->features) ?: json_encode($entry->features), $locations, $shapes);
+          break;
 
         case 'Feature':
           if (empty($entry->geometry)) {
-            return;
+            continue 2;
           }
-          $this->parseGeoJson($entry->geometry, $locations, $shapes);
-          return;
+          $this->parseGeoJson(is_string($entry->geometry) ?: json_encode($entry->geometry), $locations, $shapes);
+          break;
 
         case 'GeometryCollection':
           if (empty($entry->geometries)) {
-            return;
+            continue 2;
           }
-          $this->parseGeoJson($entry->geometries, $locations, $shapes);
-          return;
+          $this->parseGeoJson(is_string($entry->geometries) ?: json_encode($entry->geometries), $locations, $shapes);
+          break;
 
         case 'MultiPolygon':
         case 'Polygon':
         case 'MultiLineString':
         case 'LineString':
           if (empty($entry->coordinates)) {
-            return;
+            continue 2;
           }
           $shapes[] = $entry;
-          return;
+          break;
 
         case 'MultiPoint':
         case 'Point':
           if (empty($entry->coordinates)) {
-            return;
+            continue 2;
           }
           $locations[] = $entry;
-          return;
+          break;
       }
     }
   }

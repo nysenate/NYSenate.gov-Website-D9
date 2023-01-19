@@ -20,11 +20,11 @@
       $.each(
         drupalSettings.geolocation.locationInput.geocoder,
         function (index, settings) {
-          var inputWrapper = $(
-            ".location-input-geocoder." + settings.identifier,
-            context
-          )
-            .once("location-input-geocoder-processed")
+          var inputWrapper =
+            $(once("location-input-geocoder-processed", $(
+               ".location-input-geocoder." + settings.identifier,
+               context
+             )))
             .first();
           if (inputWrapper.length) {
             if (settings.hideForm) {

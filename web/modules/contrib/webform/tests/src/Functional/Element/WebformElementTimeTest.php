@@ -87,6 +87,18 @@ time_timepicker_min_max: '14:00:00'");
     $edit = ['time_min_max' => '22:00'];
     $this->submitForm($edit, 'Submit');
     $assert_session->responseContains('<em class="placeholder">time_min_max</em> must be on or before <em class="placeholder">18:00</em>.');
+
+    // Check step trigger validation error (15 minutes step).
+    $this->drupalGet('/webform/test_element_time');
+    $edit = ['time_steps' => '14:16'];
+    $this->submitForm($edit, 'Submit');
+    $assert_session->responseContains('<em class="placeholder">time_steps</em> must be a valid time with intervals from the dropdown (<em class="placeholder">15</em> min/s).');
+
+    // Check step validation (15 minutes step).
+    $this->drupalGet('/webform/test_element_time');
+    $edit = ['time_steps' => '14:15'];
+    $this->submitForm($edit, 'Submit');
+    $assert_session->responseContains("time_steps: '14:15:00'");
   }
 
 }

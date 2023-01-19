@@ -115,7 +115,22 @@ class WebformEntityReferenceItem extends EntityReferenceItem {
     // Get webform options grouped by category.
     /** @var \Drupal\webform\WebformEntityStorageInterface $webform_storage */
     $webform_storage = \Drupal::service('entity_type.manager')->getStorage('webform');
-    return $webform_storage->getOptions(FALSE);
+    $options = $webform_storage->getOptions(FALSE);
+
+    // Make sure the options are included in the settable options.
+    $settable_options = parent::getSettableOptions($account);
+    foreach ($options as $value => $text) {
+      // If optgroup, make sure all options are included settable options.
+      if (is_array($text)) {
+        $options[$value] = array_intersect_key($text, $settable_options);
+      }
+      // Unset the option value, if it is not a settable options.
+      elseif (!isset($settable_options[$value])) {
+        unset($options[$value]);
+      }
+    }
+
+    return $options;
   }
 
 }

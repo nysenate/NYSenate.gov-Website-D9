@@ -91,7 +91,7 @@
       },
     attach: function (context) {
       var thisBehavior = this;
-      $('.geolocation-geometry-widget-leaflet-geojson', context).once('geolocation-geometry-processed').each(function (index, item) {
+      $(once('geolocation-geometry-processed', '.geolocation-geometry-widget-leaflet-geojson', context)).each(function (index, item) {
         var mapWrapper = $('.geolocation-geometry-widget-leaflet-geojson-map', item);
         var inputWrapper = $('.geolocation-geometry-widget-leaflet-geojson-input', item);
         var geometryType = $(item).data('geometryType');

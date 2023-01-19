@@ -15,7 +15,7 @@ function scheduler_api_test_scheduler_nid_list($action) {
   $nids = [];
 
   // Check to see what test nodes exist.
-  $query = \Drupal::entityQuery('node');
+  $query = \Drupal::entityQuery('node')->accessCheck(FALSE);
   $nodes = Node::loadMultiple($query->execute());
   $request_time = \Drupal::time()->getRequestTime();
   foreach ($nodes as $nid => $node) {
@@ -39,7 +39,7 @@ function scheduler_api_test_scheduler_nid_list($action) {
  * Implements hook_scheduler_nid_list_alter().
  */
 function scheduler_api_test_scheduler_nid_list_alter(&$nids, $action) {
-  $query = \Drupal::entityQuery('node');
+  $query = \Drupal::entityQuery('node')->accessCheck(FALSE);
   $nodes = Node::loadMultiple($query->execute());
   $request_time = \Drupal::time()->getRequestTime();
   foreach ($nodes as $nid => $node) {
@@ -126,7 +126,8 @@ function scheduler_api_test_scheduler_allow_unpublishing(NodeInterface $node) {
  */
 function scheduler_api_test_scheduler_hide_publish_on_field($form, $form_state, $node) {
   // Hide the publish_on field if the node title contains orange or green.
-  if (stristr($node->title->value, 'orange') || stristr($node->title->value, 'green')) {
+  $title = $node->title->value ?? '';
+  if (stristr($title, 'orange') || stristr($title, 'green')) {
     \Drupal::messenger()->addMessage(t('Scheduler_Api_Test: The publish_on field is hidden for orange or green node titles.'), 'status', FALSE);
     return TRUE;
   }
@@ -140,7 +141,8 @@ function scheduler_api_test_scheduler_hide_publish_on_field($form, $form_state, 
  */
 function scheduler_api_test_scheduler_hide_unpublish_on_field($form, $form_state, $node) {
   // Hide the publish_on field if the node title contains yellow or green.
-  if (stristr($node->title->value, 'yellow') || stristr($node->title->value, 'green')) {
+  $title = $node->title->value ?? '';
+  if (stristr($title, 'yellow') || stristr($title, 'green')) {
     \Drupal::messenger()->addMessage(t('Scheduler_Api_Test: The unpublish_on field is hidden for yellow or green node titles.'), 'status', FALSE);
     return TRUE;
   }

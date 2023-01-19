@@ -45,9 +45,10 @@ function webform_options_custom_webform_libraries_info() {
     'description' => t('Simple pan/zoom solution for SVGs in HTML.'),
     'notes' => t('Svg-pan-zoom is used by custom options elements.'),
     'homepage_url' => Url::fromUri('https://github.com/ariutta/svg-pan-zoom'),
-    'download_url' => Url::fromUri('https://github.com/ariutta/svg-pan-zoom/archive/3.6.1.zip'),
+    'download_url' => Url::fromUri('https://github.com/ariutta/svg-pan-zoom/archive/refs/tags/3.6.1.zip'),
     'version' => '3.6.1',
     'optional' => FALSE,
+    'license' => 'BSD-2-Clause',
   ];
   return $libraries;
 }

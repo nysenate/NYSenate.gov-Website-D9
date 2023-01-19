@@ -38,7 +38,7 @@ function webform_submission_export_import_test_form_webform_submission_export_im
       $csv_uri = "public://test_submission_export_import-$file_name.csv";
 
       // Set file URL href as href.
-      $t_args[":href_$file_name"] = file_create_url($csv_uri);
+      $t_args[":href_$file_name"] = \Drupal::service('file_url_generator')->generateAbsoluteString($csv_uri);
 
       // Skip generate test CSV if it exists.
       if (file_exists($csv_uri)) {

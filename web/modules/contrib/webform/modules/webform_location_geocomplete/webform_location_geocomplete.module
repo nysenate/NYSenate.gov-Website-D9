@@ -19,11 +19,12 @@ function webform_location_geocomplete_webform_libraries_info() {
     'description' => t("Geocomple is an advanced jQuery plugin that wraps the Google Maps API's Geocoding and Places Autocomplete services."),
     'notes' => t('Geocomplete is used by the location element.'),
     'homepage_url' => Url::fromUri('http://ubilabs.github.io/geocomplete/'),
-    'download_url' => Url::fromUri('https://github.com/ubilabs/geocomplete/archive/1.7.0.zip'),
+    'download_url' => Url::fromUri('https://github.com/ubilabs/geocomplete/archive/refs/tags/1.7.0.zip'),
     'version' => '1.7.0',
     'elements' => ['webform_location_geocomplete'],
     'optional' => FALSE,
     'deprecated' => t('The jQuery: Geocoding and Places Autocomplete Plugin library is not being maintained. It has been <a href=":href">deprecated</a> and will be removed in Webform 7.0.', [':href' => 'https://www.drupal.org/node/2991275']),
+    'license' => 'MIT',
   ];
   return $libraries;
 }

@@ -6,10 +6,6 @@ namespace Drupal\Tests\scheduler\Functional;
  * Tests the Scheduler interaction with Devel Generate module.
  *
  * @group scheduler
- * @group legacy
- * @todo Remove the 'legacy' tag when Devel no longer uses the deprecated
- * $published parameter for setPublished(), and does not use functions
- * drupal_set_message(), format_date() and db_query_range().
  */
 class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
 
@@ -57,6 +53,7 @@ class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
   protected function countScheduledNodes($type, $field, $num_nodes, $num_scheduled, $time_range = NULL) {
     // Check that the expected number of nodes have been created.
     $count = $this->nodeStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', $type)
       ->count()
       ->execute();
@@ -64,6 +61,7 @@ class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
 
     // Check that the expected number of nodes have been scheduled.
     $count = $this->nodeStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', $type)
       ->exists($field)
       ->count()
@@ -82,6 +80,7 @@ class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
 
       $query = $this->nodeStorage->getAggregateQuery();
       $result = $query
+        ->accessCheck(FALSE)
         ->condition('type', $type)
         ->aggregate($field, 'min')
         ->aggregate($field, 'max')
@@ -106,7 +105,8 @@ class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
     $generate_settings = [
       "edit-node-types-$this->type" => TRUE,
     ];
-    $this->drupalPostForm('admin/config/development/generate/content', $generate_settings, 'Generate');
+    $this->drupalGet('admin/config/development/generate/content');
+    $this->submitForm($generate_settings, 'Generate');
     // Display the full content list and the scheduled list. Calls to these
     // pages are for information and debug only. They could be removed.
     $this->drupalGet('admin/content');
@@ -126,7 +126,8 @@ class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
       'scheduler_publishing' => 100,
       'scheduler_unpublishing' => 0,
     ];
-    $this->drupalPostForm('admin/config/development/generate/content', $generate_settings, 'Generate');
+    $this->drupalGet('admin/config/development/generate/content');
+    $this->submitForm($generate_settings, 'Generate');
     $this->drupalGet('admin/content');
     $this->drupalGet('admin/content/scheduled');
 
@@ -145,7 +146,8 @@ class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
       'scheduler_publishing' => 0,
       'scheduler_unpublishing' => 100,
     ];
-    $this->drupalPostForm('admin/config/development/generate/content', $generate_settings, 'Generate');
+    $this->drupalGet('admin/config/development/generate/content');
+    $this->submitForm($generate_settings, 'Generate');
     $this->drupalGet('admin/content');
     $this->drupalGet('admin/content/scheduled');
 
@@ -165,7 +167,8 @@ class SchedulerDevelGenerateTest extends SchedulerBrowserTestBase {
       'scheduler_publishing' => 100,
       'scheduler_unpublishing' => 100,
     ];
-    $this->drupalPostForm('admin/config/development/generate/content', $generate_settings, 'Generate');
+    $this->drupalGet('admin/config/development/generate/content');
+    $this->submitForm($generate_settings, 'Generate');
     $this->drupalGet('admin/content');
     $this->drupalGet('admin/content/scheduled');
 

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\webform\Functional\Form;
 
 use Drupal\Tests\webform\Functional\WebformBrowserTestBase;
+use Drupal\webform\Entity\Webform;
 
 /**
  * Tests for form properties.
@@ -29,6 +30,24 @@ class WebformFormPropertiesTest extends WebformBrowserTestBase {
     // Check invalid elements .
     $this->drupalGet('/webform/test_element_invalid');
     $assert_session->responseContains('Unable to display this webform. Please contact the site administrator.');
+
+    // Change invalid to empty elements.
+    Webform::load('test_element_invalid')
+      ->setElements([])
+      ->save();
+
+    // Check that exception message is still displayed.
+    $this->drupalGet('/webform/test_element_invalid');
+    $assert_session->responseContains('Unable to display this webform. Please contact the site administrator.');
+
+    // Check that custom message is displayed to user who can update
+    // the webform.
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet('/webform/test_element_invalid');
+    $assert_session->responseNotContains('Unable to display this webform. Please contact the site administrator.');
+    $assert_session->responseContains('This webform has no elements added to it.');
+    $this->drupalLogout();
+
 
     // Check element's root properties moved to the webform's properties.
     $this->drupalGet('/webform/test_form_properties');

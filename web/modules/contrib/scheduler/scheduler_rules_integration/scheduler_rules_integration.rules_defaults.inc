@@ -14,6 +14,9 @@
  * @todo Convert to 8.x, this is stil 7.x code
  */
 function scheduler_rules_integration_default_rules_configuration() {
+  // Initialise the array to avoid 'variable is undefined' phpcs error.
+  $configs = [];
+
   // Define two reaction rules which will be displayed on the 'Rules' tab. These
   // are initially inactive, but the user can enable them, and then modify the
   // values and/or add more conditions and actions.

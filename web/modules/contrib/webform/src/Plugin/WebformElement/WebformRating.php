@@ -13,7 +13,7 @@ use Drupal\webform\WebformSubmissionInterface;
  * @WebformElement(
  *   id = "webform_rating",
  *   label = @Translation("Rating"),
- *   description = @Translation("Provides a form element to rate something using an attractive voting widget."),
+ *   description = @Translation("Provides a form element to rate something using an attractive voting widget. Rating widget is provided by the <a href=""https://github.com/gjunge/rateit.js"">RateIt</a> library."),
  *   category = @Translation("Advanced elements"),
  * )
  */

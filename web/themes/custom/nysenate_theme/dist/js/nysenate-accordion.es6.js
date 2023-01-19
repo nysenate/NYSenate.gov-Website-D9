@@ -22,6 +22,11 @@
         var $accordion = $(this);
         var $heading = $accordion.find('.nysenate-accordion__heading');
         var $itemCount = $accordion.find('.nysenate-accordion__content', context).length;
+
+        if ($accordion.find('.nysenate-accordion__content .c-bill--actions-table-col2 span', context).length) {
+          $itemCount = $accordion.find('.nysenate-accordion__content .c-bill--actions-table-col2 span', context).length;
+        }
+
         $("<span class=\"count\">(".concat($itemCount, ")</span>")).appendTo($heading); // Attach click handler for accordion.
 
         var $toggle = $accordion.find('.nysenate-accordion__toggle', context);

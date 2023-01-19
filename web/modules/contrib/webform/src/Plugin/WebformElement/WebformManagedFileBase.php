@@ -293,6 +293,14 @@ abstract class WebformManagedFileBase extends WebformElementBase implements Webf
       $element = $container;
     }
 
+    // Allow ManagedFile Ajax callback to disable flexbox wrapper.
+    // @see \Drupal\file\Element\ManagedFile::uploadAjaxCallback
+    // @see \Drupal\webform\Plugin\WebformElementBase::preRenderFixFlexboxWrapper
+    if (\Drupal::request()->request->get('_drupal_ajax')
+      && \Drupal::request()->request->get('files')) {
+      $element['#webform_wrapper'] = FALSE;
+    }
+
     // Add process callback.
     // Set element's #process callback so that is not replaced by
     // additional #process callbacks.
@@ -400,7 +408,7 @@ abstract class WebformManagedFileBase extends WebformElementBase implements Webf
       case 'value':
       case 'raw':
       default:
-        return file_create_url($file->getFileUri());
+        return $file->createFileUrl(FALSE);
     }
   }
 
@@ -557,6 +565,7 @@ abstract class WebformManagedFileBase extends WebformElementBase implements Webf
 
     // Look for an existing temp files that have not been uploaded.
     $fids = $this->getFileStorage()->getQuery()
+      ->accessCheck(FALSE)
       ->condition('status', 0)
       ->condition('uid', $this->currentUser->id())
       ->condition('uri', $upload_location . '/' . $key . '.%', 'LIKE')
@@ -1444,7 +1453,7 @@ abstract class WebformManagedFileBase extends WebformElementBase implements Webf
         'filepath' => $this->fileSystem->realpath($file->getFileUri()) ?: $file->getFileUri(),
         // URI is used when debugging or resending messages.
         // @see \Drupal\webform\Plugin\WebformHandler\EmailWebformHandler::buildAttachments
-        '_fileurl' => file_create_url($file->getFileUri()),
+        '_fileurl' => $file->createFileUrl(FALSE),
       ];
     }
     return $attachments;

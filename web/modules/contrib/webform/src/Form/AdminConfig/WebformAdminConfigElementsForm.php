@@ -454,6 +454,7 @@ class WebformAdminConfigElementsForm extends WebformAdminConfigBaseForm {
     foreach ($element_plugins as $element_id => $element_plugin) {
       $element_plugin_definition = $element_plugin->getPluginDefinition();
       $element_plugin_label = $element_plugin_definition['label'];
+      $element_plugin_description = $element_plugin_definition['description'];
       $element_plugin_states = [
         'disabled' => [
           ':input[name="excluded_elements[' . $element_id . ']"]' => ['checked' => FALSE],
@@ -463,29 +464,42 @@ class WebformAdminConfigElementsForm extends WebformAdminConfigBaseForm {
       $row = [];
 
       // Title.
-      $row['title'] = ['#markup' => $element_plugin_label];
+      $row['title'] = [
+        'title' => [
+          '#markup' => $element_plugin_label,
+          '#prefix' => '<strong>',
+          '#suffix' => '</strong>',
+        ],
+        'description' => [
+          '#markup' => $element_plugin_description,
+          '#prefix' => '<div>',
+          '#suffix' => '</div>',
+        ],
+      ];
 
       // ID.
       $row['id'] = ['#markup' => $element_id];
 
       // Item format.
       $item_formats = WebformOptionsHelper::appendValueToText($element_plugin->getItemFormats());
-      $item_default_format = $element_plugin->getItemDefaultFormat();
-      $item_default_format_label = $item_formats[$item_default_format] ?? $item_default_format;
       $row['item'] = [
         '#type' => 'select',
         '#title' => $this->t('Item format'),
         '#title_display' => 'invisible',
-        '#field_suffix' => [
-          '#type' => 'webform_help',
-          '#help' => $this->t('Defaults to: %value', ['%value' => $item_default_format_label]),
-        ],
         '#empty_option' => $this->t('- Default -'),
         '#options' => $item_formats,
         '#default_value' => $config->get("format.$element_id"),
         '#parents' => ['format', $element_id, 'item'],
         '#states' => $element_plugin_states,
       ];
+      $item_default_format = $element_plugin->getItemDefaultFormat();
+      $item_default_format_label = $item_formats[$item_default_format] ?? $item_default_format;
+      if ($item_default_format_label) {
+        $row['item']['#field_suffix'] = [
+          '#type' => 'webform_help',
+          '#help' => $this->t('Defaults to: %value', ['%value' => $item_default_format_label]),
+        ];
+      }
 
       // Items format.
       if ($element_plugin->supportsMultipleValues()) {

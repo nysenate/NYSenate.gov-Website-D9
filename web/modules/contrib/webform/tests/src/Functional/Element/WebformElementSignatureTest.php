@@ -53,10 +53,13 @@ class WebformElementSignatureTest extends WebformElementBrowserTestBase {
     $sid = $this->postSubmissionTest($webform);
     $webform_submission = WebformSubmission::load($sid);
 
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+
     // Check signature saved image in public directory.
     $public_files = \Drupal::service('file_system')->scanDirectory($signature_public_directory, '/^signature-.*\.png$/');
     $public_file_uri = array_key_first($public_files);
-    $public_file_url = file_create_url($public_file_uri);
+    $public_file_url = $file_url_generator->generateAbsoluteString($public_file_uri);
     $assert_session->responseContains("$signature_public_path/$sid/signature-");
     $this->assertFileExists("$signature_public_directory/$sid");
     $this->assertCount(1, $public_files);
@@ -64,7 +67,7 @@ class WebformElementSignatureTest extends WebformElementBrowserTestBase {
     // Check signature saved image in private directory.
     $private_files = \Drupal::service('file_system')->scanDirectory($signature_private_directory, '/^signature-.*\.png$/');
     $private_file_uri = array_key_first($private_files);
-    $private_file_url = file_create_url($private_file_uri);
+    $private_file_url = $file_url_generator->generateAbsoluteString($private_file_uri);
     $assert_session->responseContains("$signature_private_path/$sid/signature-");
     $this->assertFileExists("$signature_private_directory/$sid");
     $this->assertCount(1, $private_files);

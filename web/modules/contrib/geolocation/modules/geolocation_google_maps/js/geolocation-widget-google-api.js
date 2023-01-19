@@ -67,7 +67,9 @@
       })
     );
     marker.setDraggable(true);
-    marker.setLabel((delta + 1).toString());
+    if (delta > 0) {
+      marker.setLabel((delta + 1).toString());
+    }
 
     var that = this;
     marker.addListener("dragend", function (e) {

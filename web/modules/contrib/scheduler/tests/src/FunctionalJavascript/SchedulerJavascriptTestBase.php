@@ -7,8 +7,6 @@ use Drupal\Tests\scheduler\Traits\SchedulerSetupTrait;
 
 /**
  * Base class for Scheduler javascript tests.
- *
- * @group scheduler
  */
 abstract class SchedulerJavascriptTestBase extends WebDriverTestBase {
 

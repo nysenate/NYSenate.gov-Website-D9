@@ -16,8 +16,7 @@
    */
   Drupal.behaviors.geolocationGoogleMapsWidget = {
     attach: function (context, drupalSettings) {
-      $(".geolocation-map-widget", context)
-        .once("geolocation-google-maps-widget-processed")
+      $(once("geolocation-google-maps-widget-processed", ".geolocation-map-widget", context))
         .each(function (index, item) {
           var widgetId = $(item).attr("id").toString();
           var widget = Drupal.geolocation.widget.getWidgetById(widgetId);

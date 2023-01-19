@@ -62,11 +62,14 @@ function template_preprocess_block_content(&$variables) {
 function block_content_template_theme_suggestions_block_content(array $variables) {
 
   $suggestions = [];
-
   $block_content = $variables['elements']['#block_content'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 
+  $suggestions[] = implode('__', ['block_content', $sanitized_view_mode]);
   $suggestions[] = implode('__', ['block_content', $block_content->bundle()]);
+  $suggestions[] = implode('__', ['block_content', $block_content->bundle(), $sanitized_view_mode]);
   $suggestions[] = implode('__', ['block_content', $block_content->id()]);
+  $suggestions[] = implode('__', ['block_content', $block_content->id(), $sanitized_view_mode]);
 
   return $suggestions;
 

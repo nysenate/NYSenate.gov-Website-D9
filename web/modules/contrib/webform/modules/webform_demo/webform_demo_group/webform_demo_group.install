@@ -4,8 +4,8 @@
  * @file
  * Install, update and uninstall functions for the webform demo group module.
  *
- * `drush php-eval "module_load_include('install', 'webform_demo_group'); webform_demo_group_install()";`
- * `drush php-eval "module_load_include('install', 'webform_demo_group'); webform_demo_group_uninstall()";`
+ * `drush php-eval "\Drupal::moduleHandler()->loadInclude('webform_demo_group', 'install'); webform_demo_group_install()";`
+ * `drush php-eval "\Drupal::moduleHandler()->loadInclude('webform_demo_group', 'install'); webform_demo_group_uninstall()";`
  */
 
 use Drupal\Core\Language\Language;

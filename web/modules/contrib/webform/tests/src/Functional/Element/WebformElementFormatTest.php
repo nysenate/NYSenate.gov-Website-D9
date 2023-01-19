@@ -73,6 +73,8 @@ class WebformElementFormatTest extends WebformElementBrowserTestBase {
       'Date (Default short date)' => '06/18/1942 - 00:00',
       'Time (Value)' => '09:00',
       'Time (Raw value)' => '09:00:00',
+      'Radios (Option description)' => 'This is a description',
+      'Radios (Option text and description)' => 'One' . PHP_EOL . '<div class="description">This is a description</div>',
 // phpcs:disable
 //      'Entity autocomplete (Raw value)' => 'user:1',
 //      'Entity autocomplete (Link)' => '<a href="http://localhost/webform/user/1" hreflang="en">admin</a>',
@@ -86,7 +88,12 @@ class WebformElementFormatTest extends WebformElementBrowserTestBase {
     }
 
     // Check code format.
-    $this->assertStringContainsString('<pre class="js-webform-codemirror-runmode webform-codemirror-runmode" data-webform-codemirror-mode="text/x-yaml">message: \'Hello World\'</pre>', $body);
+    if (version_compare(phpversion(), '8.1', '>')) {
+      $this->assertStringContainsString('<pre class="js-webform-codemirror-runmode webform-codemirror-runmode" data-webform-codemirror-mode="text/x-yaml">message: &#039;Hello World&#039;</pre>', $body);
+    }
+    else {
+      $this->assertStringContainsString('<pre class="js-webform-codemirror-runmode webform-codemirror-runmode" data-webform-codemirror-mode="text/x-yaml">message: \'Hello World\'</pre>', $body);
+    }
 
     // Check elements formatted as text.
     $body = $this->getMessageBody($submission, 'email_text');
@@ -110,6 +117,8 @@ class WebformElementFormatTest extends WebformElementBrowserTestBase {
       'Date (Default short date): 06/18/1942 - 00:00',
       'Time (Value): 09:00',
       'Time (Raw value): 09:00:00',
+      'Radios (Option description): This is a description',
+      'Radios (Option text and description): One - This is a description',
     ];
     foreach ($elements as $value) {
       $this->assertStringContainsString($value, $body, new FormattableMarkup('Found @value', ['@value' => $value]));
@@ -332,10 +341,7 @@ class WebformElementFormatTest extends WebformElementBrowserTestBase {
   protected function getSubmissionFileUrl(WebformSubmissionInterface $submission, $element_key, $relative = FALSE) {
     $fid = $submission->getElementData($element_key);
     $file = File::load($fid);
-    if ($relative) {
-      return $file->createFileUrl();
-    }
-    return file_create_url($file->getFileUri());
+    return $file->createFileUrl($relative);
   }
 
 }

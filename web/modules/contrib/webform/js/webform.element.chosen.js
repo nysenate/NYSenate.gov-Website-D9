@@ -79,7 +79,7 @@
 
           // Remove required attribute from IE11 which breaks
           // HTML5 clientside validation.
-          if (window.navigator.userAgent.indexOf('Trident/') !== false
+          if (window.navigator.userAgent.indexOf('Trident/') !== -1
             && $select.attr('multiple')
             && $select.attr('required')) {
             $select.removeAttr('required');

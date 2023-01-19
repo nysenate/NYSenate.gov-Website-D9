@@ -189,7 +189,7 @@ class WebformTwigExtension extends \Twig_Extension {
     ]);
 
     $t_args = [
-      ':twig_href' => 'https://twig.sensiolabs.org/',
+      ':twig_href' => 'https://twig.symfony.com/',
       ':drupal_href' => 'https://www.drupal.org/docs/8/theming/twig',
     ];
     $output = [];

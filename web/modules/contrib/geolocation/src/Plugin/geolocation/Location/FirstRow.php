@@ -61,7 +61,7 @@ class FirstRow extends LocationBase implements LocationInterface {
     /** @var \Drupal\geolocation\DataProviderInterface $data_provider */
     $data_provider = \Drupal::service('plugin.manager.geolocation.dataprovider')->getDataProviderByViewsField($source_field);
 
-    $positions = $data_provider->getPositionsFromViewsRow($views_style->view->result[0]);
+    $positions = $data_provider->getPositionsFromViewsRow($views_style->view->result[0], $source_field);
 
     if (!empty($positions[0])) {
       return $positions[0];

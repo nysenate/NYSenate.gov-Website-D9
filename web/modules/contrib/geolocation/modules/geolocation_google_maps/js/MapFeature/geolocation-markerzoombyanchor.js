@@ -16,8 +16,7 @@
    */
   Drupal.behaviors.geolocationMarkerZoomByAnchor = {
     attach: function (context, drupalSettings) {
-      $("a.geolocation-marker-zoom")
-        .once("geolocation-marker-zoom-by-anchor")
+      $(once("geolocation-marker-zoom-by-anchor", "a.geolocation-marker-zoom"))
         .click(function (e) {
           e.preventDefault();
           var markerAnchor = $(this).attr("href").split("#").pop();

@@ -5,7 +5,6 @@ namespace Drupal\webform\Plugin\WebformElement;
 use Drupal\Component\Serialization\Json;
 use Drupal\webform\Element\WebformMessage as WebformMessageElement;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Locale\CountryManager;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,6 +38,13 @@ class Telephone extends TextBase {
   protected $telephoneValidator;
 
   /**
+   * The country manager.
+   *
+   * @var \Drupal\Core\Locale\CountryManagerInterface
+   */
+  protected $countryManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -47,6 +53,7 @@ class Telephone extends TextBase {
     $instance->telephoneValidator = ($instance->moduleHandler->moduleExists('telephone_validation'))
       ? $container->get('telephone_validation.validator')
       : NULL;
+    $instance->countryManager = $container->get('country_manager');
     return $instance;
   }
 
@@ -159,7 +166,7 @@ class Telephone extends TextBase {
       '#title' => $this->t('Initial country'),
       '#type' => 'select',
       '#empty_option' => $this->t('- None -'),
-      '#options' => CountryManager::getStandardList(),
+      '#options' => $this->countryManager->getList(),
       '#states' => [
         'visible' => [':input[name="properties[international]"]' => ['checked' => TRUE]],
       ],
@@ -167,7 +174,7 @@ class Telephone extends TextBase {
     $form['telephone']['international_preferred_countries'] = [
       '#title' => $this->t('Preferred countries'),
       '#type' => 'select',
-      '#options' => CountryManager::getStandardList(),
+      '#options' => $this->countryManager->getList(),
       '#description' => $this->t('Specify the countries to appear at the top of the list.'),
       '#select2' => TRUE,
       '#multiple' => TRUE,

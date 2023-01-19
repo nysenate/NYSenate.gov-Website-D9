@@ -2511,6 +2511,7 @@ webform_computed_token:
   access_view_users: {  }
   admin_notes: ''
   admin_title: ''
+  attributes: {  }
   ajax: false
   description: ''
   description_display: ''
@@ -2552,6 +2553,7 @@ webform_computed_twig:
   admin_notes: ''
   admin_title: ''
   ajax: false
+  attributes: {  }
   description: ''
   description_display: ''
   display_on: both

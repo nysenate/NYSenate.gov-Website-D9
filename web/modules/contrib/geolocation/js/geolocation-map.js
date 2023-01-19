@@ -21,8 +21,7 @@
      * @param {Object} drupalSettings.geolocation
      */
     attach: function (context, drupalSettings) {
-      $(".geolocation-map-wrapper")
-        .once("geolocation-map-processed")
+      $(once("geolocation-map-processed", ".geolocation-map-wrapper"))
         .each(function (index, item) {
           var mapWrapper = $(item);
           var mapSettings = {};
@@ -69,7 +68,7 @@
           var map = Drupal.geolocation.Factory(mapSettings, reset);
 
           if (!map) {
-            mapWrapper.removeOnce("geolocation-map-processed");
+            once.removeOnce("geolocation-map-processed", mapWrapper);
             return;
           }
 

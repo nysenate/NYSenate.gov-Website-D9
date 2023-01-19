@@ -53,13 +53,11 @@ class WebformEntityTest extends KernelTestBase {
       $this->fail('Not possible to save webform with override = TRUE.');
     }
     catch (WebformException $e) {
-      $this->pass('Not possible to save webform with override = TRUE.');
     }
 
     try {
       $webform->setOverride(FALSE);
       $webform->save();
-      $this->pass('Possible to save webform with override = FALSE.');
     }
     catch (WebformException $e) {
       $this->fail('Possible to save webform with override = FALSE.');

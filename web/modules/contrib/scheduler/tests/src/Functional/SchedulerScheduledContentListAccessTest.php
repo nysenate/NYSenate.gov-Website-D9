@@ -28,6 +28,9 @@ class SchedulerScheduledContentListAccessTest extends SchedulerBrowserTestBase {
       'view own unpublished content',
     ];
 
+    // Create three users, all of whom can access and create content. The editor
+    // can also view the admin overview page, and the two scheduler users each
+    // have one of the scheduler permissions but not the other.
     $this->editorUser = $this->drupalCreateUser(array_merge($base_permissions, ['access content overview']));
     $this->schedulerUser = $this->drupalCreateUser(array_merge($base_permissions, ['schedule publishing of nodes']));
     $this->schedulerManager = $this->drupalCreateUser(array_merge($base_permissions, ['view scheduled content']));
@@ -143,6 +146,28 @@ class SchedulerScheduledContentListAccessTest extends SchedulerBrowserTestBase {
     $assert->pageTextContains('Node created by Scheduler User for unpublishing');
     $assert->pageTextContains('Node created by Scheduler Manager for publishing');
     $assert->pageTextContains('Node created by Scheduler Manager for unpublishing');
+
+    // Disable the scheduled content view.
+    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('scheduler_scheduled_content');
+    $view->disable()->save();
+
+    // Attempt to view the scheduled content page. Interactively this gives a
+    // '404 page not found' error, but in phpunit it is served with a 200 code.
+    // However the page is empty so we can check that the content is not shown.
+    $this->drupalGet('admin/content/scheduled');
+    $assert->pageTextNotContains('Node created by Scheduler User for unpublishing');
+
+    // Check that access to the content overview page is unaffected.
+    $this->drupalLogin($this->editorUser);
+    $this->drupalGet('admin/content');
+    $assert->statusCodeEquals(200);
+    $assert->pageTextContains('Node created by Scheduler User for unpublishing');
+
+    // Delete the view and check again that the overview remains accessible.
+    $view->delete();
+    $this->drupalGet('admin/content');
+    $assert->statusCodeEquals(200);
+    $assert->pageTextContains('Node created by Scheduler User for unpublishing');
   }
 
 }

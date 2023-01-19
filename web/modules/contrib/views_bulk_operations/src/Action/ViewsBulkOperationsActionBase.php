@@ -88,7 +88,7 @@ abstract class ViewsBulkOperationsActionBase extends ActionBase implements Views
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state object.
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
 
   }
 
@@ -103,7 +103,7 @@ abstract class ViewsBulkOperationsActionBase extends ActionBase implements Views
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state object.
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $form_state->cleanValues();
     foreach ($form_state->getValues() as $key => $value) {
       $this->configuration[$key] = $value;

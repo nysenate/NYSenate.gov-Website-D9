@@ -32,7 +32,7 @@ class WebformAttachmentUrl extends WebformAttachmentBase {
       $token_manager = \Drupal::service('webform.token_manager');
       $url = $token_manager->replace($url, $webform_submission);
       // Url can be a URI.
-      $url = file_create_url($url) ?: $url;
+      $url = \Drupal::service('file_url_generator')->generateAbsoluteString($url) ?: $url;
       // Prepend scheme and host to root relative path.
       if (strpos($url, '/') === 0) {
         $url = \Drupal::request()->getSchemeAndHttpHost() . $url;

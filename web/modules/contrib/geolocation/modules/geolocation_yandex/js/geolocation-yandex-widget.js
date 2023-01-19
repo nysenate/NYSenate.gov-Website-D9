@@ -17,7 +17,7 @@
    */
   Drupal.behaviors.geolocationYandexWidget = {
     attach: function (context, drupalSettings) {
-      $('.geolocation-map-widget', context).once('geolocation-yandex-widget-processed').each(function (index, item) {
+      $(once('geolocation-yandex-widget-processed', '.geolocation-map-widget', context)).each(function (index, item) {
         var widgetId = $(item).attr('id').toString();
         Drupal.geolocation.widget.getWidgetById(widgetId);
       });

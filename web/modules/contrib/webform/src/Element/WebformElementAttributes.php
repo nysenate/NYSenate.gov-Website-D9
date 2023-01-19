@@ -90,7 +90,9 @@ class WebformElementAttributes extends FormElement {
         '#type' => 'textfield',
         '#title' => t('@title CSS classes', $t_args),
         '#description' => t("Apply classes to the @type.", $t_args),
-        '#default_value' => implode(' ', $element['#default_value']['class']),
+        '#default_value' => (is_array($element['#default_value']['class']))
+          ? implode(' ', $element['#default_value']['class'])
+          : $element['#default_value']['class'],
       ];
     }
 

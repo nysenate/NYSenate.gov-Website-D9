@@ -133,8 +133,8 @@ class WebformSubmissionLogManager implements WebformSubmissionLogManagerInterfac
       ->execute();
     $records = [];
     while ($record = $result->fetchObject()) {
-      $record->variables = unserialize($record->variables);
-      $record->data = unserialize($record->data);
+      $record->variables = unserialize($record->variables, ['allowed_classes' => FALSE]);
+      $record->data = unserialize($record->data, ['allowed_classes' => FALSE]);
       $records[] = $record;
     }
     return $records;

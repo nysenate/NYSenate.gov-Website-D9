@@ -2,6 +2,7 @@
 
 namespace Drupal\scheduler_rules_integration\Plugin\Condition;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\rules\Core\RulesConditionBase;
 
 /**
@@ -24,11 +25,13 @@ class NodeIsScheduledForUnpublishing extends RulesConditionBase {
   /**
    * Determines whether a node is scheduled for unpublishing.
    *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node to be checked.
+   *
    * @return bool
    *   TRUE if the node is scheduled for unpublishing, FALSE if not.
    */
-  protected function doEvaluate() {
-    $node = $this->getContextValue('node');
+  protected function doEvaluate(EntityInterface $node) {
     return !empty($node->unpublish_on->value);
   }
 

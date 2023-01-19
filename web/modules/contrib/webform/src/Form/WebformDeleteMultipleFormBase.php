@@ -98,7 +98,7 @@ abstract class WebformDeleteMultipleFormBase extends DeleteMultipleForm {
   public function getConfirmInput() {
     return [
       '#type' => 'checkbox',
-      '#title' => $this->formatPlural(count($this->selection), 'Yes, I want to delete this @item?', 'Yes, I want to delete these @items?', [
+      '#title' => $this->formatPlural(count($this->selection), 'Yes, I want to delete this @item.', 'Yes, I want to delete these @items.', [
         '@item' => $this->entityType->getSingularLabel(),
         '@items' => $this->entityType->getPluralLabel(),
       ]),

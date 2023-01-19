@@ -249,6 +249,7 @@ class WebformScheduledEmailManager implements WebformScheduledEmailManagerInterf
       if (!$scheduled_email) {
         $query = $this->database->insert('webform_scheduled_email');
         $action = $this->t('scheduled');
+        $operation = $this->t('email scheduled');
         $status = WebformScheduledEmailManagerInterface::EMAIL_SCHEDULED;
       }
       else {
@@ -257,10 +258,12 @@ class WebformScheduledEmailManager implements WebformScheduledEmailManagerInterf
 
         if ($scheduled_email->send !== $send_timestamp) {
           $action = $this->t('rescheduled');
+          $operation = $this->t('email rescheduled');
           $status = WebformScheduledEmailManagerInterface::EMAIL_RESCHEDULED;
         }
         else {
           $action = NULL;
+          $operation = NULL;
           $status = WebformScheduledEmailManagerInterface::EMAIL_ALREADY_SCHEDULED;
         }
       }
@@ -289,7 +292,7 @@ class WebformScheduledEmailManager implements WebformScheduledEmailManagerInterf
         'link' => $webform_submission->toLink($this->t('View'))->toString(),
         'webform_submission' => $webform_submission,
         'handler_id' => $handler_id,
-        'operation' => 'email ' . $action,
+        'operation' => $operation,
       ];
       $this->getLogger($channel)->notice("@title: Email @action by '@handler' handler to be sent on @date.", $context);
 
@@ -360,7 +363,7 @@ class WebformScheduledEmailManager implements WebformScheduledEmailManagerInterf
         'link' => $webform_submission->toLink($this->t('View'))->toString(),
         'webform_submission' => $webform_submission,
         'handler_id' => $handler_id,
-        'operation' => 'email unscheduled',
+        'operation' => $this->t('email unscheduled'),
       ];
       $this->getLogger($channel)->notice("@title: Email unscheduled for '@handler' handler.", $context);
     }
@@ -668,10 +671,16 @@ class WebformScheduledEmailManager implements WebformScheduledEmailManagerInterf
         continue;
       }
 
-      if (!$handler->checkConditions($webform_submission)) {
+      if ($handler->isDisabled()) {
+        // Disable sending email.
+        $action = $this->t('skipped (disabled)');
+        $operation = $this->t('scheduled email disabled');
+        $stat = WebformScheduledEmailManagerInterface::EMAIL_SKIPPED;
+      }
+      elseif (!$handler->checkConditions($webform_submission)) {
         // Skip sending email.
         $action = $this->t('skipped (conditions not met)');
-        $operation = 'scheduled email skipped';
+        $operation = $this->t('scheduled email skipped');
         $stat = WebformScheduledEmailManagerInterface::EMAIL_SKIPPED;
       }
       else {

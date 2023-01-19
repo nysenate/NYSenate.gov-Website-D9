@@ -564,7 +564,7 @@ abstract class DateBase extends WebformElementBase {
     $time = strtotime($value);
 
     // Ensure that the input is greater than the #date_date_min property, if set.
-    if (isset($element['#date_date_min'])) {
+    if (!empty($element['#date_date_min'])) {
       $min = strtotime(static::formatDate('Y-m-d', strtotime($element['#date_date_min'])));
       if ($time < $min) {
         $form_state->setError($element, t('%name must be on or after %min.', [
@@ -575,7 +575,7 @@ abstract class DateBase extends WebformElementBase {
     }
 
     // Ensure that the input is less than the #date_date_max property, if set.
-    if (isset($element['#date_date_max'])) {
+    if (!empty($element['#date_date_max'])) {
       $max = strtotime(static::formatDate('Y-m-d 23:59:59', strtotime($element['#date_date_max'])));
       if ($time > $max) {
         $form_state->setError($element, t('%name must be on or before %max.', [
@@ -586,7 +586,7 @@ abstract class DateBase extends WebformElementBase {
     }
 
     // Ensure that the input is greater than the #date_min property, if set.
-    if (isset($element['#date_min'])) {
+    if (!empty($element['#date_min'])) {
       $min = strtotime($element['#date_min']);
       if ($time < $min) {
         $form_state->setError($element, t('%name must be on or after %min.', [
@@ -597,7 +597,7 @@ abstract class DateBase extends WebformElementBase {
     }
 
     // Ensure that the input is less than the #date_max property, if set.
-    if (isset($element['#date_max'])) {
+    if (!empty($element['#date_max'])) {
       $max = strtotime($element['#date_max']);
       if ($time > $max) {
         $form_state->setError($element, t('%name must be on or before %max.', [
@@ -710,7 +710,7 @@ abstract class DateBase extends WebformElementBase {
   }
 
   /**
-   * Determine if the the jQuery UI date picker is supported.
+   * Determine if the jQuery UI date picker is supported.
    *
    * @return bool
    *   TRUE if Drupal 8 or for Drupal 9 support the jQuery UI date picker

@@ -526,6 +526,10 @@ class WebformHelpManager implements WebformHelpManagerInterface {
    * {@inheritdoc}
    */
   public function buildAddOns($docs = FALSE) {
+    $t_args = [
+      ':href_submodules' => 'https://www.drupal.org/docs/contributed-modules/webform/webform-sub-modules',
+      ':href_libraries' => 'https://www.drupal.org/docs/contributed-modules/webform/webform-libraries',
+    ];
     $build = [
       'quote' => [
         '#markup' => '<table class="views-view-grid" width="100%"><tr>
@@ -535,9 +539,13 @@ class WebformHelpManager implements WebformHelpManagerInterface {
         '#allowed_tags' => Xss::getAdminTagList(),
       ],
       'content' => [
-        '#markup' => '<p>' . $this->t("Below is a list of modules and projects that extend and/or provide additional functionality to the Webform module and Drupal's Form API.") . '</p>' .
-          '<hr/>' .
-          '<p>★ = ' . $this->t('Recommended') . '</p>',
+        '#markup' => '<p>'
+        . $this->t("Below is a list of modules and projects that extend and/or provide additional functionality to the Webform module and Drupal's Form API.")
+        . ' '
+        . $this->t('(Other optional functionality is provided by <a href=":href_submodules">Webform sub-modules</a> and <a href=":href_libraries">Webform libraries</a>.)', $t_args)
+        . '</p>'
+        . '<hr/>'
+        . '<p>★ = ' . $this->t('Recommended') . '</p>',
       ],
     ];
 
@@ -1787,7 +1795,8 @@ class WebformHelpManager implements WebformHelpManagerInterface {
       }
     }
     $t_args += [
-      ':href_6x' => 'https://git.drupalcode.org/sandbox/jrockowitz-2941983/-/raw/6.x/libraries.zip',
+      ':href_62x' => 'https://git.drupalcode.org/sandbox/jrockowitz-2941983/-/raw/6.2.x/libraries.zip',
+      ':href_61x' => 'https://git.drupalcode.org/sandbox/jrockowitz-2941983/-/raw/6.1.x/libraries.zip',
     ];
     $help['config_libraries_help'] = [
       'group' => 'configuration',
@@ -1795,7 +1804,7 @@ class WebformHelpManager implements WebformHelpManagerInterface {
       'content' => '<p>' . $this->t('The Webform module utilizes third-party Open Source libraries to enhance webform elements and to provide additional functionality.') . ' ' .
         $this->t("It is recommended that these libraries are installed in your Drupal installation's /libraries or /web/libraries directory.") . ' ' .
         $this->t('If these libraries are not installed, they will be automatically loaded from a CDN.') . ' ' .
-        $this->t('All libraries are optional and can be excluded via the admin settings form.') .
+        $this->t('All libraries are optional and can be excluded via the admin settings form.') . ' ' .
         '</p>' .
         '<p>' . $this->t('There are several ways to download the needed third-party libraries.') . '</p>' .
         '<p><strong>' . $this->t('Recommended') . '</strong></p>' .
@@ -1807,7 +1816,7 @@ class WebformHelpManager implements WebformHelpManagerInterface {
         '<li>' . $this->t('Generate a composer.json file using <code>drush @webform-libraries-composer</code>.', $t_args) . '</li>' .
         '<li>' . $this->t('Execute <code>drush @webform-libraries-download</code>, to download third-party libraries required by the Webform module. (OSX/Linux)', $t_args) . '</li>' .
         '<li>' . $this->t("Execute <code>drush @webform-composer-update</code>, to update your Drupal installation's composer.json to include the Webform module's selected libraries as repositories.", $t_args) . '</li>' .
-        '<li>' . $this->t('Download and extract a zipped archive containing all webform libraries (<a href=":href_6x">6.x</a>) and extract the directories and files to /libraries or /web/libraries', $t_args) . '</li>' .
+        '<li>' . $this->t('Download and extract a zipped archive containing all webform libraries (<a href=":href_61x">6.1.x</a> or <a href=":href_62x">6.2.x</a>) and extract the directories and files to /libraries or /web/libraries', $t_args) . '</li>' .
         '</ul>',
       'message_type' => 'info',
       'message_close' => TRUE,
@@ -2355,8 +2364,8 @@ class WebformHelpManager implements WebformHelpManagerInterface {
     /* ********************************************************************** */
 
     // Initialize help.
-    foreach ($help as $id => &$help_info) {
-      $help_info += [
+    foreach (array_keys($help) as $id) {
+      $help[$id] += [
         'id' => $id,
         'reset_version' => FALSE,
       ];

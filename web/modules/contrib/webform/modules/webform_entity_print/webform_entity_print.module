@@ -83,7 +83,7 @@ function webform_entity_print_file_download($uri) {
   // Match signature element.
   if ($signature_elements && preg_match_all('#/webform/' . $webform_id . '/(' . implode('|', $signature_elements) . ')/#', $uri, $matches)) {
     $webform_entity_print_token = \Drupal::request()->get('webform_entity_print_itok');
-    $encrypt_token = _webform_entity_print_token_generate(file_create_url($uri));
+    $encrypt_token = _webform_entity_print_token_generate(\Drupal::service('file_url_generator')->generateAbsoluteString($uri));
     if ($webform_entity_print_token === $encrypt_token) {
       /** @var \Drupal\Core\File\FileSystemInterface $file_system */
       $file_system = \Drupal::service('file_system');

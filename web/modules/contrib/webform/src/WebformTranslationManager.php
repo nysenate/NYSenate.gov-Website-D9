@@ -88,6 +88,9 @@ class WebformTranslationManager implements WebformTranslationManagerInterface {
    */
   public function isAdminRoute() {
     $route_name = $this->routeMatch->getRouteName();
+    if (empty($route_name)) {
+      return FALSE;
+    }
 
     // Don't initialize translation on webform CRUD routes.
     if (preg_match('/^entity\.webform\.(?:edit_form|duplicate_form|delete_form)$/', $route_name)) {

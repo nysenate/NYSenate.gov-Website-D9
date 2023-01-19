@@ -1,5 +1,6 @@
 settings:
   default_status: open
+  default_page: true
   default_page_base_path: /form
   default_ajax: false
   default_ajax_effect: fade
@@ -30,7 +31,7 @@ settings:
     messages messages--error
     messages messages--warning
     messages messages--status
-    
+
   button_classes: ''
   default_wizard_prev_button_label: '< Previous'
   default_wizard_next_button_label: 'Next >'
@@ -76,15 +77,15 @@ settings:
     messages messages--error
     messages messages--warning
     messages messages--status
-    
+
   confirmation_classes: |
     messages messages--error
     messages messages--warning
     messages messages--status
-    
+
   confirmation_back_classes: |
     button
-    
+
   default_limit_total_message: 'No more submissions are permitted.'
   default_limit_user_message: 'No more submissions are permitted.'
   default_share: false
@@ -166,14 +167,14 @@ element:
     messages messages--error
     messages messages--warning
     messages messages--status
-    
+
   classes: |
     container-inline clearfix
     form--inline clearfix
     messages messages--error
     messages messages--warning
     messages messages--status
-    
+
   horizontal_rule_classes: |
     webform-horizontal-rule--solid
     webform-horizontal-rule--dashed
@@ -184,7 +185,7 @@ element:
     webform-horizontal-rule--thick
     webform-horizontal-rule--flaired
     webform-horizontal-rule--glyph
-    
+
   default_description_display: ''
   default_more_title: More
   default_section_title_tag: h2
@@ -227,16 +228,16 @@ mail:
   default_body_text: |
     Submitted on [webform_submission:created]
     Submitted by: [webform_submission:user]
-    
+
     Submitted values are:
     [webform_submission:values]
-    
+
   default_body_html: |
     <p>Submitted on [webform_submission:created]</p>
     <p>Submitted by: [webform_submission:user]</p>
     <p>Submitted values are:</p>
     [webform_submission:values]
-    
+
   roles: {  }
 test:
   types: |
@@ -279,7 +280,7 @@ test:
     webform_time:
       - '09:00'
       - '17:00'
-    
+
   names: |
     first_name:
       - 'John'
@@ -319,7 +320,7 @@ test:
       - 'Loremipsum'
       - 'Oratione'
       - 'Dixisset'
-    
+
 ui:
   video_display: dialog
   details_save: true

@@ -518,7 +518,7 @@ class WebformSubmissionLimitBlock extends BlockBase implements ContainerFactoryP
     $token_manager = \Drupal::service('webform.token_manager');
 
     // Get token name and descriptions.
-    module_load_include('inc', 'webform', 'webform.tokens');
+    \Drupal::moduleHandler()->loadInclude('webform', 'tokens.inc');
     $token_info = webform_token_info();
     $tokens = $token_info['tokens']['webform_submission'];
 

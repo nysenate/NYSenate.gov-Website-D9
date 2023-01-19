@@ -102,6 +102,8 @@ class WebformAdminConfigFormsForm extends WebformAdminConfigBaseForm {
         '30' => '30',
         '40' => '40',
         '50' => '50',
+        '75' => '75',
+        '100' => '100',
       ],
       '#parents' => ['form', 'limit'],
       '#default_value' => $config->get('form.limit') ?: 50,
@@ -136,6 +138,13 @@ class WebformAdminConfigFormsForm extends WebformAdminConfigBaseForm {
       '#title' => $this->t('Form URL path settings'),
       '#open' => TRUE,
       '#tree' => TRUE,
+    ];
+    $form['page_settings']['default_page'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow users to post submissions from a dedicated URL for all webform'),
+      '#description' => $this->t('If unchecked, all webform must added to your website using a node, block, or paragraph.'),
+      '#return_value' => TRUE,
+      '#default_value' => $settings['default_page'],
     ];
     $form['page_settings']['default_page_base_path'] = [
       '#type' => 'textfield',

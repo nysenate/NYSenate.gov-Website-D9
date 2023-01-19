@@ -63,10 +63,12 @@ class WebformElementTermReferenceTest extends WebformElementBrowserTestBase {
     $assert_session->responseContains('<label for="edit-webform-term-checkboxes-tree-depth-9" class="option">Parent 3</label>');
 
     // Check term checkboxes tree advanced.
-    $assert_session->responseContains('<fieldset data-drupal-selector="edit-webform-term-checkboxes-tree-advanced" class="js-webform-term-checkboxes webform-term-checkboxes webform-term-checkboxes--wrapper fieldgroup form-composite webform-composite-visible-title js-webform-type-webform-term-checkboxes webform-type-webform-term-checkboxes js-form-item form-item js-form-wrapper form-wrapper" id="edit-webform-term-checkboxes-tree-advanced--wrapper">');
+    $assert_session->responseContains('<fieldset data-drupal-selector="edit-webform-term-checkboxes-tree-advanced" class="js-webform-term-checkboxes webform-term-checkboxes webform-term-checkboxes--wrapper fieldgroup form-composite webform-composite-visible-title js-webform-type-webform-term-checkboxes webform-type-webform-term-checkboxes js-form-item form-item js-form-wrapper form-wrapper" data-options-all="all" data-options-none="none" id="edit-webform-term-checkboxes-tree-advanced--wrapper">');
     $assert_session->responseContains('<span class="field-prefix">..</span>');
     $assert_session->responseContains('<input data-drupal-selector="edit-webform-term-checkboxes-tree-advanced-2" type="checkbox" id="edit-webform-term-checkboxes-tree-advanced-2" name="webform_term_checkboxes_tree_advanced[2]" value="2" class="form-checkbox" />');
     $assert_session->responseContains('<label for="edit-webform-term-checkboxes-tree-advanced-2" class="option">Parent 1: Child 1</label>');
+    $assert_session->responseContains('<input data-drupal-selector="edit-webform-term-checkboxes-tree-advanced-all" type="checkbox" id="edit-webform-term-checkboxes-tree-advanced-all" name="webform_term_checkboxes_tree_advanced[all]" value="all" class="form-checkbox" />');
+    $assert_session->responseContains('<input data-drupal-selector="edit-webform-term-checkboxes-tree-advanced-none" type="checkbox" id="edit-webform-term-checkboxes-tree-advanced-none" name="webform_term_checkboxes_tree_advanced[none]" value="none" class="form-checkbox" />');
 
     // Check term checkboxes breadcrumb.
     $assert_session->responseContains('<label for="edit-webform-term-checkboxes-breadcrumb-default-2" class="option">Parent 1 › Parent 1: Child 1</label>');

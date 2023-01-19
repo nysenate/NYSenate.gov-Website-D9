@@ -368,7 +368,7 @@ class WebformTestEditorialController extends ControllerBase implements Container
    *   A renderable array containing webform entity scheme.
    */
   public function drush() {
-    module_load_include('inc', 'webform', 'drush/webform.drush');
+    $this->moduleHandler()->loadInclude('webform', 'inc', 'drush/webform.drush');
 
     $build = [];
     $build['title'] = [

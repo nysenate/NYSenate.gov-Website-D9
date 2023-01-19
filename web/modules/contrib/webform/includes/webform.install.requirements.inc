@@ -172,7 +172,7 @@ function webform_requirements($phase) {
   foreach ($config_factory->listAll('webform.webform.') as $webform_config_name) {
     $webform_config = $config_factory->getEditable($webform_config_name);
     $data = $webform_config->getRawData();
-    if (strpos($data['elements'], 'datepicker')) {
+    if (isset($data['elements']) && strpos($data['elements'], 'datepicker')) {
       $has_datepicker = TRUE;
       break;
     }

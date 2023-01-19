@@ -144,8 +144,9 @@ class WebformImageSelectImagesListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    $row = [];
     /** @var \Drupal\webform_image_select\WebformImageSelectImagesInterface $entity */
-    $row['label'] = $entity->toLink($entity->label(), 'edit-form');
+    $row['label'] = $entity->toLink((string) $entity->label(), 'edit-form');
     $row['category'] = $entity->get('category');
     $row['images'] = $this->buildImages($entity);
     $row['used_by'] = $this->buildUsedBy($entity);

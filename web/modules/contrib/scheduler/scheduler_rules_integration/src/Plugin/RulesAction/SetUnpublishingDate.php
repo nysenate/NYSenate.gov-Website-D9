@@ -2,6 +2,7 @@
 
 namespace Drupal\scheduler_rules_integration\Plugin\RulesAction;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\rules\Core\RulesActionBase;
@@ -29,10 +30,13 @@ class SetUnpublishingDate extends RulesActionBase {
 
   /**
    * Set the unpublish_on date for the node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node to be scheduled for unpublishing.
+   * @param int $date
+   *   The date for unpublishing.
    */
-  public function doExecute() {
-    $node = $this->getContextValue('node');
-    $date = $this->getContextValue('date');
+  public function doExecute(EntityInterface $node, int $date) {
     $config = \Drupal::config('scheduler.settings');
     if ($node->type->entity->getThirdPartySetting('scheduler', 'unpublish_enable', $config->get('default_unpublish_enable'))) {
       $node->set('unpublish_on', $date);

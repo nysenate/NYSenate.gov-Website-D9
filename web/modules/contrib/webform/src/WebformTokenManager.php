@@ -65,6 +65,9 @@ class WebformTokenManager implements WebformTokenManagerInterface {
    * @see webform_token_info_alter()
    */
   protected static $suffixes = [
+    // Base64 encode the token's value.
+    // @see https://www.php.net/manual/en/function.base64-encode.php
+    'base64encode',
     // Removes the token when not replaced.
     'clear',
     // Decodes HTML entities.
@@ -461,6 +464,9 @@ class WebformTokenManager implements WebformTokenManagerInterface {
           // Encode xml.
           if (isset($suffixes['xmlencode'])) {
             $replace = htmlspecialchars($replace, ENT_XML1);
+          }
+          if (isset($suffixes['base64encode'])) {
+            $replace = base64_encode($replace);
           }
         }
 

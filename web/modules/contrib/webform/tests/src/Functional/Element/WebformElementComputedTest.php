@@ -104,6 +104,11 @@ class WebformElementComputedTest extends WebformElementBrowserTestBase {
     // Get computed Twig form.
     $this->drupalGet('/webform/test_element_computed_twig');
 
+    // Check custom attributes.
+    $this->assertCssSelect('.wrapper-custom[style="border: 1px solid red"]');
+    $this->assertCssSelect('.wrapper-custom .label-custom[style="border: 1px solid blue"]');
+    $this->assertCssSelect('.wrapper-custom .element-custom[style="border: 1px solid yellow"]');
+
     // Check computed Twig is processed on form load.
     $assert_session->responseContains('<b class="webform_computed_twig_auto">number:</b> 2 * 2 = 4<br />');
 

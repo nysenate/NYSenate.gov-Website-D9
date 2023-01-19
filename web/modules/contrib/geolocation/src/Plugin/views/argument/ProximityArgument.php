@@ -26,7 +26,7 @@ class ProximityArgument extends Formula {
    *
    * @var string
    */
-  protected $operator = '<';
+  public string $operator = '<';
 
   /**
    * Distance.

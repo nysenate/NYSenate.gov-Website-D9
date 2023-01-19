@@ -359,7 +359,7 @@ class WebformSubmissionExportImportUploadForm extends ConfirmFormBase {
       '#title' => $this->t('Review import'),
     ];
     // Displaying when no UUID or token is found.
-    if (!isset($source['uuid']) && !isset($source['uuid'])) {
+    if (!isset($source['uuid']) && !isset($source['token'])) {
       $form['review']['warning'] = [
         '#type' => 'webform_message',
         '#message_type' => 'warning',

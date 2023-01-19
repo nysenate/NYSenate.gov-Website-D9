@@ -381,7 +381,7 @@ abstract class WebformExporterBase extends PluginBase implements WebformExporter
   protected function addToZipFile($path, $name, array $options = []) {
     if (!isset($this->archive)) {
       $this->archive = new \ZipArchive();
-      $flags = !file_exists($this->getArchiveFilePath()) ? \ZipArchive::CREATE : NULL;
+      $flags = !file_exists($this->getArchiveFilePath()) ? \ZipArchive::CREATE : 0;
       $this->archive->open($this->getArchiveFilePath(), $flags);
     }
 

@@ -38,12 +38,22 @@ class SchedulerBasicTest extends SchedulerBrowserTestBase {
   }
 
   /**
+   * Tests scheduled publishing/unpublishing of a node when actions are missing.
+   */
+  public function testMissingActionPublishingAndUnpublishing() {
+    $this->container->get('entity_type.manager')->getStorage('action')->load('node_publish_action')->delete();
+    $this->container->get('entity_type.manager')->getStorage('action')->load('node_unpublish_action')->delete();
+    $this->testPublishingAndUnpublishing();
+  }
+
+  /**
    * Helper function for testPublishingAndUnpublishing().
    *
    * Schedules content, runs cron and asserts status.
    */
   protected function helpTestScheduler($edit) {
-    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->type);
+    $this->submitForm($edit, 'Save');
     // Verify that the node was created.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotEmpty($node, sprintf('"%s" was created sucessfully.', $edit['title[0][value]']));

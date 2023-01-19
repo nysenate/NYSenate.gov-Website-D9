@@ -158,6 +158,8 @@ interface WebformSubmissionInterface extends ContentEntityInterface, EntityOwner
   /**
    * Get the submission's sticky flag.
    *
+   * Please note that the sticky flag is displayed as a star.
+   *
    * @return string
    *   The submission's stick flag.
    */
@@ -165,6 +167,8 @@ interface WebformSubmissionInterface extends ContentEntityInterface, EntityOwner
 
   /**
    * Sets the submission's sticky flag.
+   *
+   * Please note that the sticky flag is displayed as a star.
    *
    * @param bool $sticky
    *   The submission's stick flag.
@@ -262,6 +266,8 @@ interface WebformSubmissionInterface extends ContentEntityInterface, EntityOwner
 
   /**
    * Returns the submission sticky status.
+   *
+   * Please note that the sticky flag is displayed as a star.
    *
    * @return bool
    *   TRUE if the submission is sticky.

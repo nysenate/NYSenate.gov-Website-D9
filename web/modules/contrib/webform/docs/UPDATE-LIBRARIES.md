@@ -64,7 +64,7 @@ Update libraries.zip
 
     # Checkout branch
     cd ~/Sites/drupal_webform/web/modules/sandbox/webform_libraries/
-    git checkout 6.x
+    git checkout 6.1.x
 
     # Remove libraries.zip
     cd ~/Sites/drupal_webform/web/modules/sandbox/webform_libraries/
@@ -79,7 +79,7 @@ Commit changes
 
     # Commit changes.
     cd ~/Sites/drupal_webform/web/modules/sandbox/webform_libraries/
-    git checkout 6.x
+    git checkout 6.1.x
     git commit -am"Update webform_libraries"
     git push
 

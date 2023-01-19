@@ -193,6 +193,8 @@ class WebformCustomComposite extends WebformCompositeBase {
     $element['#webform_composite_elements'] = [];
     foreach ($element['#element'] as $composite_key => $composite_element) {
       $this->elementManager->initializeElement($composite_element);
+      // Make sure the composite element has a #admin_title, especially markup.
+      $composite_element['#admin_title'] = $composite_element['#admin_title'] ?? $composite_key;
       $element['#webform_composite_elements'][$composite_key] = $composite_element;
     }
     $this->initializeCompositeElementsRecursive($element, $element['#webform_composite_elements']);

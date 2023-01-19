@@ -5,6 +5,7 @@ namespace Drupal\webform\Plugin\WebformElement;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManager;
 use Drupal\webform\WebformSubmissionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'telephone' (composite) element.
@@ -19,6 +20,22 @@ use Drupal\webform\WebformSubmissionInterface;
  * )
  */
 class WebformTelephone extends WebformCompositeBase {
+
+  /**
+   * The country manager.
+   *
+   * @var \Drupal\Core\Locale\CountryManagerInterface
+   */
+  protected $countryManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->countryManager = $container->get('country_manager');
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -102,6 +119,7 @@ class WebformTelephone extends WebformCompositeBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
+
     $form['composite']['phone__international'] = [
       '#title' => $this->t('Enhance support for international phone numbers'),
       '#type' => 'checkbox',
@@ -114,7 +132,7 @@ class WebformTelephone extends WebformCompositeBase {
       '#empty_option' => $this->t('- None -'),
       '#options' => [
         'auto' => $this->t('Auto detect'),
-      ] + CountryManager::getStandardList(),
+      ] + $this->countryManager->getList(),
       '#states' => [
         'visible' => [
           ':input[name="properties[phone__international]"]' => ['checked' => TRUE],

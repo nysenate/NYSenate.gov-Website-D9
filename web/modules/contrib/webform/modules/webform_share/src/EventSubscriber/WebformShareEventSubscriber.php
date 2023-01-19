@@ -5,7 +5,7 @@ namespace Drupal\webform_share\EventSubscriber;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\webform_share\WebformShareHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -33,10 +33,10 @@ class WebformShareEventSubscriber implements EventSubscriberInterface {
   /**
    * Remove 'X-Frame-Options' from the response header for shared webforms.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event.
    */
-  public function onResponse(FilterResponseEvent $event) {
+  public function onResponse(ResponseEvent $event) {
     if (!WebformShareHelper::isPage($this->routeMatch)) {
       return;
     }

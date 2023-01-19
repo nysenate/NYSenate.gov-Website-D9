@@ -110,14 +110,14 @@ interdiff \
 **Execute Webform update hook **
 
 ```bash
-drush php-eval 'module_load_include('install', 'webform'); webform_update_N();';
+drush php-eval '\Drupal::moduleHandler()->loadInclude('webform', 'install'); webform_update_N();';
 ```
 
 **Reinstall Webform module.**
 
 ```bash
-drush php-eval 'module_load_include('install', 'webform'); webform_uninstall();'; drush cron;
-drush php-eval 'module_load_include('install', 'webform_node'); webform_node_uninstall();'; drush cron;
+drush php-eval '\Drupal::moduleHandler()->loadInclude('webform', 'install'); webform_uninstall();'; drush cron;
+drush php-eval '\Drupal::moduleHandler()->loadInclude('webform_node', 'install'); webform_node_uninstall();'; drush cron;
 drush webform-purge --all -y; drush pmu -y webform_test; drush pmu -y webform_devel; drush pmu -y webform_examples; drush pmu -y webform_templates; drush pmu -y webform_ui; drush pmu -y webform_node; drush pmu -y webform;
 drush en -y webform webform_ui webform_devel webform_examples webform_templates webform_node;
 
@@ -219,7 +219,7 @@ drush webform-generate example_elements
 **Test update hooks**
 
 ```bash
-drush php-eval 'module_load_include('install', 'webform'); ($message = webform_update_8001()) ? drupal_set_message($message) : NULL;'
+drush php-eval '\Drupal::moduleHandler()->loadInclude('webform', 'install'); ($message = webform_update_8001()) ? drupal_set_message($message) : NULL;'
 ```
 
 **Access developer information**

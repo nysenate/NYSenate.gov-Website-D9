@@ -75,7 +75,7 @@
             };
 
             var lang = $('html').attr('lang');
-            if ($.inArray(lang, ['de', 'en', 'it', 'fr']) !== -1) {
+            if ($.inArray(lang, ['de', 'en', 'fr']) !== -1) {
               options.lang = lang;
             }
 

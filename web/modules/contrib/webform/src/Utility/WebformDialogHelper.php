@@ -68,7 +68,7 @@ class WebformDialogHelper {
     // phpcs:ignore Drupal.Classes.FullyQualifiedNamespace.UseStatementMissing
     if (\Drupal::moduleHandler()->moduleExists('imce') && \Drupal\imce\Imce::access()) {
       $build['#attached']['library'][] = 'imce/drupal.imce.ckeditor';
-      $build['#attached']['drupalSettings']['webform']['html_editor']['ImceImageIcon'] = file_create_url(\Drupal::service('extension.list.module')->getPath('imce') . '/js/plugins/ckeditor/icons/imceimage.png');
+      $build['#attached']['drupalSettings']['webform']['html_editor']['ImceImageIcon'] = \Drupal::service('file_url_generator')->generateAbsoluteString(\Drupal::service('extension.list.module')->getPath('imce') . '/js/plugins/ckeditor/icons/imceimage.png');
     }
   }
 

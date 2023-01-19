@@ -17,7 +17,7 @@
    */
   Drupal.behaviors.geolocationLeafletMapsWidget = {
     attach: function (context, drupalSettings) {
-      $('.geolocation-map-widget', context).once('geolocation-leaflet-maps-widget-processed').each(function (index, item) {
+      $(once('geolocation-leaflet-maps-widget-processed', '.geolocation-map-widget', context)).each(function (index, item) {
         var widgetId = $(item).attr('id').toString();
         var widget = Drupal.geolocation.widget.getWidgetById(widgetId);
         if (!widget) {

@@ -53,27 +53,27 @@ class WebformHandlerRemotePostTest extends WebformBrowserTestBase {
 
     // Check 'completed' operation.
     $sid = $this->postSubmission($webform);
+    $webform_submission = WebformSubmission::load($sid);
 
     // Check POST response.
     $assert_session->responseContains("method: post
 status: success
-message: 'Processed completed request.'
+message: &#039;Processed completed request.&#039;
 options:
   headers:
     Accept-Language: en
-    custom_header: 'true'
+    custom_header: &#039;true&#039;
   form_params:
     custom_completed: true
     custom_data: true
-    response_type: '200'
+    response_type: &#039;200&#039;
     first_name: John
     last_name: Smith");
 
-    $webform_submission = WebformSubmission::load($sid);
     $assert_session->responseContains("form_params:
   custom_completed: true
   custom_data: true
-  response_type: '200'
+  response_type: &#039;200&#039;
   first_name: John
   last_name: Smith");
     $assert_session->responseContains('This is a custom 200 success message.');
@@ -94,7 +94,7 @@ options:
     $assert_session->responseContains("form_params:
   custom_updated: true
   custom_data: true
-  response_type: '200'
+  response_type: &#039;200&#039;
   first_name: John
   last_name: Smith");
     $assert_session->responseContains('Processed updated request.');
@@ -107,7 +107,7 @@ options:
   custom_data: true
   first_name: John
   last_name: Smith
-  response_type: '200'");
+  response_type: &#039;200&#039;");
     $assert_session->responseContains('Processed deleted request.');
 
     // Switch anonymous user.
@@ -118,7 +118,7 @@ options:
     $assert_session->responseContains("form_params:
   custom_draft_created: true
   custom_data: true
-  response_type: '200'
+  response_type: &#039;200&#039;
   first_name: John
   last_name: Smith");
     $assert_session->responseContains('Processed draft_created request.');
@@ -132,7 +132,7 @@ options:
   custom_data: true
   first_name: John
   last_name: Smith
-  response_type: '200'");
+  response_type: &#039;200&#039;");
     $assert_session->responseContains('Processed converted request.');
     $assert_session->responseNotContains('Unable to process this submission. Please contact the site administrator.');
 
@@ -145,11 +145,11 @@ options:
     $sid = $this->postSubmission($webform);
     $assert_session->responseContains('first_name: John');
     $assert_session->responseNotContains('last_name: Smith');
-    $assert_session->responseContains("sid: '$sid'");
+    $assert_session->responseContains("sid: &#039;$sid&#039;");
     $assert_session->responseNotContains('Unable to process this submission. Please contact the site administrator.');
 
     // Check 200 Success Error.
-    $this->postSubmission($webform, ['response_type' => '200']);
+    $this->postSubmission($webform, ['response_type' => 200]);
     $assert_session->responseContains('This is a custom 200 success message.');
     $assert_session->responseContains('Processed completed request.');
 
@@ -201,7 +201,7 @@ options:
     $this->assertNull($sid);
 
     // Get confirmation number from JSON packet.
-    preg_match('/&quot;confirmation_number&quot;:&quot;([a-zA-z0-9]+)&quot;/', $this->getSession()->getPage()->getContent(), $match);
+    preg_match('/&quot;confirmation_number&quot;:&quot;([a-zA-Z0-9]+)&quot;/', $this->getSession()->getPage()->getContent(), $match);
     $assert_session->responseContains('Your confirmation number is ' . $match[1] . '.');
 
     // Set remote post error URL to homepage.
@@ -226,14 +226,14 @@ options:
     // Check PUT response.
     $assert_session->responseContains("method: put
 status: success
-message: 'Processed completed request.'
+message: &#039;Processed completed request.&#039;
 options:
   headers:
-    custom_header: 'true'
+    custom_header: &#039;true&#039;
   form_params:
     custom_completed: true
     custom_data: true
-    response_type: '200'
+    response_type: &#039;200&#039;
     first_name: John
     last_name: Smith");
 
@@ -249,19 +249,19 @@ options:
     // Check GET response.
     $assert_session->responseContains("method: get
 status: success
-message: 'Processed completed request.'
+message: &#039;Processed completed request.&#039;
 options:
   headers:
-    custom_header: 'true'");
+    custom_header: &#039;true&#039;");
 
     // Check request URL contains query string.
     $assert_session->responseContains("http://webform-test-handler-remote-post/completed?custom_completed=1&amp;custom_data=1&amp;response_type=200&amp;first_name=John&amp;last_name=Smith");
 
     // Check response data.
-    $assert_session->responseContains("message: 'Processed completed request.'");
+    $assert_session->responseContains("message: &#039;Processed completed request.&#039;");
 
     // Get confirmation number from JSON packet.
-    preg_match('/&quot;confirmation_number&quot;:&quot;([a-zA-z0-9]+)&quot;/', $this->getSession()->getPage()->getContent(), $match);
+    preg_match('/&quot;confirmation_number&quot;:&quot;([a-zA-Z0-9]+)&quot;/', $this->getSession()->getPage()->getContent(), $match);
     $assert_session->responseContains('Your confirmation number is ' . $match[1] . '.');
 
     /* ********************************************************************** */
@@ -292,7 +292,7 @@ options:
   _file:
     id: $file_id
     name: file.txt
-    uri: 'private://webform/test_handler_remote_post_file/$sid/file.txt'
+    uri: &#039;private://webform/test_handler_remote_post_file/$sid/file.txt&#039;
     mime: text/plain
     uuid: $file_uuid
     data: dGhpcyBpcyBhIHNhbXBsZSB0eHQgZmlsZQppdCBoYXMgdHdvIGxpbmVzCg==
@@ -300,7 +300,7 @@ options:
     -
       id: $files_id
       name: files.txt
-      uri: 'private://webform/test_handler_remote_post_file/$sid/files.txt'
+      uri: &#039;private://webform/test_handler_remote_post_file/$sid/files.txt&#039;
       mime: text/plain
       uuid: $files_uuid
       data: dGhpcyBpcyBhIHNhbXBsZSB0eHQgZmlsZQppdCBoYXMgdHdvIGxpbmVzCg==");
@@ -318,14 +318,14 @@ options:
   _file:
     id: $file_id
     name: file.txt
-    uri: 'private://webform/test_handler_remote_post_file/$sid/file.txt'
+    uri: &#039;private://webform/test_handler_remote_post_file/$sid/file.txt&#039;
     mime: text/plain
     uuid: $file_uuid
   _files:
     -
       id: $files_id
       name: files.txt
-      uri: 'private://webform/test_handler_remote_post_file/$sid/files.txt'
+      uri: &#039;private://webform/test_handler_remote_post_file/$sid/files.txt&#039;
       mime: text/plain
       uuid: $files_uuid");
 
@@ -342,11 +342,11 @@ options:
   integer: 100
   float: 100.01
   checkbox: false
-  number: ''
+  number: &#039;&#039;
   number_multiple: {  }
   custom_composite:
     -
-      textfield: ''
+      textfield: &#039;&#039;
       number: !!float 0
       checkbox: false");
 

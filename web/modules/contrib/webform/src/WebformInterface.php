@@ -171,7 +171,7 @@ interface WebformInterface extends ConfigEntityInterface, EntityWithPluginCollec
    * Determine if the webform has page or is attached to other entities.
    *
    * @return bool
-   *   TRUE if the webform is a page with dedicated path.
+   *   TRUE if the webform has a page with dedicated path.
    */
   public function hasPage();
 

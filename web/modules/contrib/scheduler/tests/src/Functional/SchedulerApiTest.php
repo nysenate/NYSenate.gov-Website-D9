@@ -7,7 +7,7 @@ use Drupal\node\Entity\NodeType;
 /**
  * Tests the API of the Scheduler module.
  *
- * @group scheduler
+ * @group scheduler_api
  */
 class SchedulerApiTest extends SchedulerBrowserTestBase {
 
@@ -68,7 +68,8 @@ class SchedulerApiTest extends SchedulerBrowserTestBase {
       'publish_on[0][value][date]' => date('Y-m-d', time() + 3),
       'publish_on[0][value][time]' => date('H:i:s', time() + 3),
     ];
-    $this->drupalPostForm('node/add/' . $this->customName, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->customName);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('is scheduled for publishing, but will not be published until approved.');
 
     // Create a node that is scheduled but not approved for publication. Then
@@ -105,7 +106,8 @@ class SchedulerApiTest extends SchedulerBrowserTestBase {
 
     // Check that a node can be approved and published via edit form.
     $node = $this->createUnapprovedNode('publish_on');
-    $this->drupalPostForm('node/' . $node->id() . '/edit', ['field_approved_publishing[value]' => '1'], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm(['field_approved_publishing[value]' => '1'], 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertTrue($node->isPublished(), 'An approved node with a date in the past is published immediately after saving via edit form.');
@@ -135,7 +137,8 @@ class SchedulerApiTest extends SchedulerBrowserTestBase {
       'unpublish_on[0][value][date]' => date('Y-m-d', time() + 3),
       'unpublish_on[0][value][time]' => date('H:i:s', time() + 3),
     ];
-    $this->drupalPostForm('node/add/' . $this->customName, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->customName);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('is scheduled for unpublishing, but will not be unpublished until approved.');
 
     // Create a node that is scheduled but not approved for unpublication. Then
@@ -257,7 +260,8 @@ class SchedulerApiTest extends SchedulerBrowserTestBase {
       'publish_on[0][value][date]' => date('Y-m-d', strtotime('-2 day', $this->requestTime)),
       'publish_on[0][value][time]' => date('H:i:s', strtotime('-2 day', $this->requestTime)),
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     // Verify that the values have been altered as expected.
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());

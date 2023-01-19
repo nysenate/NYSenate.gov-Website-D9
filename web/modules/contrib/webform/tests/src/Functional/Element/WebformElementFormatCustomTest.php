@@ -52,7 +52,7 @@ class WebformElementFormatCustomTest extends WebformElementBrowserTestBase {
     $file = File::load($fid);
     $file_name = $file->getFilename();
     $file_size = $file->getSize();
-    $file_url = file_create_url($file->getFileUri());
+    $file_url = $file->createFileUrl(FALSE);
 
     /* ********************************************************************** */
     // Custom HTML.

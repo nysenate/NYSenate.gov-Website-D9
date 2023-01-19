@@ -49,10 +49,12 @@
       '@longitude': location.lng
     }));
     marker.dragging.enable();
-    marker.bindTooltip(String((delta + 1)), {
-      permanent: true,
-      direction: 'top'
-    });
+    if (delta > 0) {
+      marker.bindTooltip(String((delta + 1)), {
+        permanent: true,
+        direction: 'top'
+      });
+    }
 
     var that = this;
     marker.on('dragend', function (e) {

@@ -177,7 +177,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
           'same_as' => $same_as,
           'prev_vers' => $prev_vers,
           'prev_vers_pre' => $prev_vers_pre,
-          'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov'),
+          'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov'),
           'version' => '',
         ],
       ];

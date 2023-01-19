@@ -2597,7 +2597,7 @@ function nysenate_bill_positions($node) {
       'is_passed' => FALSE,
     ],
     [
-      'text' => t('Chaptered/Signed by Governor'),
+      'text' => t('Chaptered/Vetoed'),
       'is_passed' => FALSE,
     ],
   ];
@@ -2647,8 +2647,13 @@ function nysenate_bill_positions($node) {
       }
     }
 
-    if ($current_status_index === 5 && $last_status === 'VETOED') {
-      $positions[5]['text'] = 'Vetoed';
+    if ($current_status_index === 5) {
+      if ($last_status === 'VETOED') {
+        $positions[5]['text'] = 'Vetoed';
+      }
+      else {
+        $positions[5]['text'] = 'Chaptered/Signed by Governor';
+      }
     }
   }
   return $positions;

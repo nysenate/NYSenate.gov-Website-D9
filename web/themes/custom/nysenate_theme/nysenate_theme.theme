@@ -574,7 +574,7 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
       if ($content->hasField('field_featured_quote') && !$content->get('field_featured_quote')->isEmpty()) {
 
         $quote = $content->field_featured_quote->value;
-        $bill_id = $content->get('field_featured_bill')[0]->target_id;
+        $bill_id = $content->get('field_featured_bill')->first()->getValue()['target_id'];
         $bill = Node::load($bill_id);
 
         $allowed_values = '';

@@ -2628,12 +2628,12 @@ function nysenate_bill_positions($node) {
 
     // Arrange the positions value.
     foreach ($positions as $index => $item) {
-      if ($index == 3) {
+      if ($index === 3) {
         if ($current_status_index == 3) {
-          if ($last_status == 'PASSED_SENATE') {
+          if ($last_status === 'PASSED_SENATE') {
             $positions[3]['items'][0]['is_passed'] = TRUE;
           }
-          if ($last_status == 'PASSED_ASSEMBLY') {
+          if ($last_status === 'PASSED_ASSEMBLY') {
             $positions[3]['items'][1]['is_passed'] = TRUE;
           }
         }
@@ -2644,6 +2644,15 @@ function nysenate_bill_positions($node) {
       }
       else {
         $positions[$index]['is_passed'] = $current_status_index >= $index;
+      }
+    }
+
+    if ($current_status_index === 5) {
+      if ($last_status === 'VETOED') {
+        $positions[5]['text'] = 'Vetoed';
+      }
+      else {
+        $positions[5]['text'] = 'Chaptered/Signed by Governor';
       }
     }
   }

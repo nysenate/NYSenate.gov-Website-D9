@@ -2235,10 +2235,9 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   }
 
   // Bill PDF Link.
-  $openleg_config = \Drupal::config('nys_openleg.settings');
-  $base_path = $openleg_config->get('base_path');
+  $ol_base_url = \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov');
   if (isset($variables['content']['field_ol_session'][0]['#markup'])) {
-    $variables['pdf_link'] = $base_path . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
+    $variables['pdf_link'] = $ol_base_url . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
   }
 
   $variables['active_amend_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
@@ -3536,7 +3535,7 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
   $publish_date = $variables['content']['field_ol_publish_date'][0]['#text'] ?? '';
   $publish_date = !empty($publish_date) ? strtotime($publish_date) : '';
 
-  $ol_base_url = \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov');
+  $ol_base_url = \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov');
   $transcript_base_url = $ol_base_url . '/pdf/';
   $transcript_type = $variables['content']['field_ol_transcript_type'][0]['#markup'] ?? '';
   $is_hearing = NULL;

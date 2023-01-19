@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
+use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use Drupal\file\Entity\File;
@@ -560,56 +561,58 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
       $variables['party'] = '(' . $parties . ')';
 
       if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
-        $variables['senator_image'] = $senator->field_member_headshot->view('full')[0];
+        $variables['senator_image'] = !empty($senator->field_member_headshot->view('full')) ?
+          $senator->field_member_headshot->view('full')[0] : $senator->field_member_headshot->view()[0];
       }
     }
 
     $bills = [];
-    foreach ($variables['content']['field_featured_legislation'] as $key => $item) {
-      if (!is_numeric($key)) {
-        continue;
-      }
+    $itemsFeaturedLegislation = $variables['content']['field_featured_legislation']['#items']->getValue();
+    foreach ($itemsFeaturedLegislation as $item) {
 
-      $content = $item['#paragraph'];
-      $quote = $content->field_featured_quote->value;
-      $bill_id = $content->get('field_featured_bill')[0]->target_id;
-      $bill = Node::load($bill_id);
+      $content = Paragraph::load($item['target_id']);
+      if ($content->hasField('field_featured_quote') && !$content->get('field_featured_quote')->isEmpty()) {
 
-      $allowed_values = '';
-      if ($bill->hasField('field_ol_last_status')) {
-        $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
-      }
-      $published_date = '';
-      if ($bill->hasField('field_ol_publish_date') &&
-        !$bill->get('field_ol_publish_date')->isEmpty()) {
-        $published_date = $bill->field_ol_publish_date->value;
-      }
+        $quote = $content->field_featured_quote->value;
+        $bill_id = $content->get('field_featured_bill')[0]->target_id;
+        $bill = Node::load($bill_id);
 
-      // If published_date is not timestamp, use strtotime().
-      if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
-        $published_date = strtotime($published_date);
-      }
+        $allowed_values = '';
+        if ($bill->hasField('field_ol_last_status')) {
+          $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
+        }
+        $published_date = '';
+        if ($bill->hasField('field_ol_publish_date') &&
+          !$bill->get('field_ol_publish_date')->isEmpty()) {
+          $published_date = $bill->field_ol_publish_date->value;
+        }
 
-      $last_status = '';
-      if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
-        $last_status = $allowed_values[$bill->field_ol_last_status->value];
+        // If published_date is not timestamp, use strtotime().
+        if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
+          $published_date = strtotime($published_date);
+        }
+
+        $last_status = '';
+        if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
+          $last_status = $allowed_values[$bill->field_ol_last_status->value];
+        }
+        $bills[] = [
+          'bill' => [
+            'featured' => TRUE,
+            'small' => FALSE,
+            'is_poll' => TRUE,
+            'resolution' => TRUE,
+            'link' => $bill->toUrl()->toString(),
+            'number' => $bill->getTitle(),
+            'description_position' => 'bottom',
+            'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
+            'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
+            'update_location' => $last_status,
+            'positions' => nysenate_bill_positions($bill),
+          ],
+          'quote' => $quote,
+        ];
       }
-      $bills[] = [
-        'bill' => [
-          'featured' => TRUE,
-          'small' => FALSE,
-          'is_poll' => TRUE,
-          'resolution' => TRUE,
-          'link' => $bill->toUrl()->toString(),
-          'number' => $bill->getTitle(),
-          'description_position' => 'bottom',
-          'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
-          'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
-          'update_location' => $last_status,
-          'positions' => nysenate_bill_positions($bill),
-        ],
-        'quote' => $quote,
-      ];
     }
 
     $variables['bills'] = $bills;
@@ -3430,7 +3433,7 @@ function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variabl
     $url = $node->field_link->uri;
     if ($node->field_link_type->value === 'internal') {
       $url = $variables['url'];
-      if (!$node->field_promotional_content->isEmpty()) {
+      if (!$node->field_promotional_content->isEmpty() && isset($node->field_promotional_content->entity)) {
         $promo_content = $node->field_promotional_content->entity;
         $url = $promo_content->toUrl()->toString();
       }

@@ -202,7 +202,7 @@
           {{ is_active_version ? ' (ACTIVE)' : '' }}
           - Bill Text
           <span style="float:right;">
-            <a href="{{ content.ol_base_url }}/pdf/bills/{{ content.bill_wrapper.field_ol_session.value}}/{{ node_wrapper.title()|lower }}" class="c-detail--download" target="_blank">download pdf</a>
+            <a href="{{ content.ol_base_url }}/pdf/bills/{{ content.bill_wrapper.field_ol_session.value}}/{{ content.bill_wrapper.field_ol_print_no.value|lower }}" class="c-detail--download" target="_blank">download pdf</a>
           </span>
         </h3>
         {% if node_wrapper.field_ol_full_text.value %}

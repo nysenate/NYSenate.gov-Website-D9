@@ -38,6 +38,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  email_tfa_status:
+    type: boolean_checkbox
+    weight: 23
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_address:
     type: address_autocomplete
     weight: 3
@@ -175,6 +182,11 @@ content:
   path:
     type: path
     weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  private_messages:
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }

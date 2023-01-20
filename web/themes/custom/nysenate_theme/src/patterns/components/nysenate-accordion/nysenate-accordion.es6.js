@@ -23,7 +23,10 @@
       $accordions.each(function() {
         const $accordion = $(this);
         const $heading = $accordion.find('.nysenate-accordion__heading');
-        const $itemCount = $accordion.find('.nysenate-accordion__content', context).length;
+        let $itemCount = $accordion.find('.nysenate-accordion__content', context).length;
+        if ($accordion.find('.nysenate-accordion__content .c-bill--actions-table-col2 span', context).length) {
+          $itemCount = $accordion.find('.nysenate-accordion__content .c-bill--actions-table-col2 span', context).length;
+        }
 
         $(`<span class="count">(${$itemCount})</span>`).appendTo($heading);
 

@@ -17,18 +17,9 @@
 #}
 
 {{ attach_library('nysenate_theme/session') }}
-{{ attach_library('nysenate_theme/nysenate-tabs') }}
 
 {% for row in rows %}
-  <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+  <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
     {{ row.content }}
   </div>
 {% endfor %}
-
-{% if rows|length > 5 %}
-  <div class="pager pager-load-more">
-    <span class="pager-next first last">
-      <a class="load-more">Load More</a>
-    </span>
-  </div>
-{% endif %}

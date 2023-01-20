@@ -18,6 +18,7 @@ dependencies:
     - field.storage.node.field_ol_latest_status_committee
     - field.storage.node.field_ol_name
     - field.storage.node.field_ol_sponsor
+    - field.storage.node.field_ol_sponsor_name
     - field.storage.node.field_ol_votes
     - field.storage.paragraph.field_ol_absent_count
     - field.storage.paragraph.field_ol_abstained_count
@@ -41,7 +42,7 @@ dependencies:
     - taxonomy
     - text
     - user
-    - views_load_more
+    - views_infinite_scroll
 id: committee_meetings
 label: 'Committee Meetings'
 module: views
@@ -489,28 +490,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: load_more
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 4
-          id: '0'
-          total_pages: ''
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
           expose:
-            items_per_page: 0
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: 0
+            offset: false
             offset_label: Offset
-          more_button_text: 'Load more'
-          end_text: ''
-          advanced:
-            content_selector: ''
-            pager_selector: ''
-          effects:
-            type: ''
-            speed: slow
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: basic
         options:
@@ -614,6 +614,7 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
+      use_ajax: true
       header: {  }
       footer: {  }
       display_extenders: {  }

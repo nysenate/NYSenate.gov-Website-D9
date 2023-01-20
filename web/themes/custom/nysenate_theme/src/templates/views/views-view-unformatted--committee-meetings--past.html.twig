@@ -17,10 +17,9 @@
 #}
 
 {{ attach_library('nysenate_theme/session') }}
-{{ attach_library('nysenate_theme/nysenate-tabs') }}
 
 {% for content in past_meetings %}
-  <div class="content__item c-block c-meeting-detail--past {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+  <div class="c-block c-meeting-detail--past {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
     <div class="l-col l-col-1-of-2">
       <p class="c-meeting-detail--date">
         <span class="c-meeting-date--num">{{ content.event_date }}</span>
@@ -51,11 +50,3 @@
     </div>
   </div>
 {% endfor %}
-
-{% if rows|length > 5 %}
-  <div class="pager pager-load-more">
-    <span class="pager-next first last">
-      <a class="load-more">Load More</a>
-    </span>
-  </div>
-{% endif %}

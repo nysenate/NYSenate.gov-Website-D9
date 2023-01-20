@@ -740,6 +740,15 @@ $settings['entity_update_batch_size'] = 50;
 $settings['entity_update_backup'] = TRUE;
 
 /**
+ * Queue Unique.
+ *
+ * In order for the queues to use the Queue Unique functionality the module requires
+ * this update in the settings file.
+*/
+$settings['queue_service_nys_sunset_expiring_queue'] = 'queue_unique.database';
+$settings['queue_service_nys_sunset_expired_queue'] = 'queue_unique.database';
+
+/**
  * Node migration type.
  *
  * This is used to force the migration system to use the classic node migrations

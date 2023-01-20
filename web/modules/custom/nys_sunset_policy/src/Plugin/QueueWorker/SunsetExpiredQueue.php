@@ -58,11 +58,11 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
    */
   public function processItem($data) {
     /** @var \Drupal\node\NodeInterface $node */
-    $node = $this->nodeStorage->load($data);
+    $node = $this->nodeStorage->load($data['data']);
     if ($node instanceof NodeInterface) {
       $host = \Drupal::request()->getHost();
       $body['message']['alias'] = $host . $node->toUrl()->toString();
-      $body['message']['url'] = $host . '/node/' . $data;
+      $body['message']['url'] = $host . '/node/' . $data['data'];
       $body['message']['title'] = $node->getTitle();
       $params['message'] = $this->renderMailBodyExpired($body);
       $subject = 'Content has expired - ' . $node->getTitle();
@@ -107,7 +107,7 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
     }
     catch (\Throwable $e) {
       \Drupal::logger('nys_sunset_policy')
-        ->error('Unable to send expired mail for node/' . $data, ['message' => $e->getMessage()]);
+        ->error('Unable to send expired mail for node/' . $data['data'], ['%message' => $e->getMessage()]);
     }
   }
 

@@ -99,6 +99,26 @@
       flex: 1;
     }
 
+    .search-form-group__input {
+      margin: 0;
+      height: 55px;
+      font-family: $font-sans;
+      font-size: 1rem;
+      color: $grey10;
+      padding: 0 10px;
+      box-shadow: none;
+      background: none;
+
+      &.ui-autocomplete-loading {
+        background: none;
+      }
+
+      &:focus {
+        border-color: $ns_grey_med;
+        outline: none;
+      }
+    }
+
     input[type='search'] {
       margin: 0;
       height: 55px;

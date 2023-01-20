@@ -25,6 +25,8 @@ dependencies:
     - system
     - taxonomy
     - toolbar
+    - webform
+    - webform_node
 id: microsite_content_producer
 label: 'Microsite Content Producer'
 weight: 6
@@ -38,11 +40,13 @@ permissions:
   - 'access content overview'
   - 'access dashboard'
   - 'access media browser'
+  - 'access own webform configuration'
   - 'access own webform results'
   - 'access own webform submissions'
   - 'access site-wide contact form'
   - 'access toolbar'
   - 'access user contact forms'
+  - 'access webform overview'
   - 'add media from remote sources'
   - 'administer blocks'
   - 'administer nodes'
@@ -65,6 +69,7 @@ permissions:
   - 'create public_hearing content'
   - 'create questionnaire content'
   - 'create video content'
+  - 'create webform'
   - 'create webform content'
   - 'delete any promotional_banner content'
   - 'delete any public_hearing content'
@@ -105,6 +110,7 @@ permissions:
   - 'edit own questionnaire content'
   - 'edit own senator content'
   - 'edit own video content'
+  - 'edit own webform'
   - 'edit own webform content'
   - 'edit own webform submissions'
   - 'edit terms in senator'
@@ -139,6 +145,8 @@ permissions:
   - 'view own field_featured'
   - 'view own field_form_description'
   - 'view own field_members'
+  - 'view own field_senator_multiref'
   - 'view own unpublished content'
   - 'view the administration theme'
+  - 'view webform submissions own node'
   - 'write privatemsg'

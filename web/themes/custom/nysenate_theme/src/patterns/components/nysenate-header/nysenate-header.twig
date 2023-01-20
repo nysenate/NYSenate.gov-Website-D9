@@ -28,8 +28,50 @@
               {% endfor %}
             </ul>
 
-            <a class="c-header--btn c-header--btn__taking_action u-tablet-plus" href="/citizen-guide">get involved</a>
-            <a class="c-header--btn c-header--btn__primary u-tablet-plus GoogleAnalyticsET-processed" href="/user/login">login</a>
+            {% if is_logged %}
+              <ul class="c-login--list u-tablet-plus">
+                <li>
+                  <a class="c-header--btn c-header--btn__primary {% if user_avatar %} has-avatar {% endif %}" href="{{ dashboard_link }}">
+                    {% if user_avatar %}
+                      <span>My Dashboard</span>
+                      {{ user_avatar }}
+                    {% else %}
+                      My Dashboard
+                    {% endif %}
+                  </a>
+                </li>
+
+                <li class="c-login--edit">
+                  <a class="c-header--btn" href="{{ edit_account_link }}">Edit Account</a>
+                </li>
+
+                <li class="c-login--logout">
+                  <a class="c-header--btn" href="/user/logout">Logout</a>
+                </li>
+
+                {% if is_admin %}
+                  <li class="c-login--admin">
+                    <a class="c-header--btn" href="/admin/dashboard">Admin</a>
+                  </li>
+                {% endif %}
+              </ul>
+              {% if has_senator %}
+                <a class="c-header--btn c-senator-header--btn" href="{{ senator_microsite_link }}">
+                  <div class="nys-senator">
+                    <div class="nys-senator--info">
+                      <h3 class="nys-senator--title">My Senator</h3>
+                    </div>
+                    <div class="nys-senator--thumb">
+                      {{ senator_image }}
+                    </div>
+                  </div>
+                </a>
+              {% endif %}
+
+            {% else %}
+              <a class="c-header--btn c-header--btn__taking_action u-tablet-plus" href="/citizen-guide">get involved</a>
+              <a class="c-header--btn c-header--btn__primary u-tablet-plus GoogleAnalyticsET-processed" href="/user/login">login</a>
+            {% endif %}
           </div>
 
         </div>
@@ -80,13 +122,15 @@
               <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">search</button>
 
 
-              <ul class="c-nav--social u-mobile-only">
-                {% for social in socials %}
-                  <li class="{% if loop.first %}first {% endif %}leaf">
-                    <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
-                  </li>
-                {% endfor %}
-              </ul>
+              {% if socials %}
+                <ul class="c-nav--social u-mobile-only">
+                  {% for social in socials %}
+                    <li class="{% if loop.first %}first {% endif %}leaf">
+                      <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
 
               <div class="c-mobile-login--list u-mobile-only">
                 <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">

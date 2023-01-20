@@ -1,0 +1,24 @@
+uuid: f3f41cb4-4e10-40dd-856a-2b4aeaebeeab
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.thankful_letter
+    - field.field.block_content.thankful_letter.body
+  module:
+    - text
+id: block_content.thankful_letter.default
+targetEntityType: block_content
+bundle: thankful_letter
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

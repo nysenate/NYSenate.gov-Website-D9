@@ -126,6 +126,15 @@ h3.c-bill-num {
         margin-top: 20px;
         text-transform: uppercase;
       }
+
+      &--serif {
+
+        .sponsor-name {
+          font-family: $font-serif;
+          text-transform: none;
+          font-size: 20px;
+        }
+      }
     }
 
     .nys-senator.sponsor-list {
@@ -209,11 +218,11 @@ h3.c-bill-num {
     text-decoration: none;
     border-bottom: solid 0.05em $color-white;
     width: fit-content;
-  
+
     @include breakpoint($bp-sm) {
       font-size: 14px;
     }
-    
+
     &:hover {
       border-bottom: none;
     }
@@ -258,6 +267,7 @@ h3.c-bill-num {
       a {
         color: $color-white;
         border-bottom: solid 0.05em $color-white;
+
         &:hover {
           border-bottom: none;
         }
@@ -325,6 +335,7 @@ h3.c-bill-num {
       border: 0;
       background: $blue01;
     }
+
     &.nys-bill-status--assem-sen {
       height: auto;
       width: 18%;
@@ -356,6 +367,7 @@ h3.c-bill-num {
         }
       }
     }
+
     /* 
 			spacer is necessary to pull off
 			justified lists
@@ -422,11 +434,13 @@ h3.c-bill-num {
     }
   }
 }
+
 // small colors
 .nys-bill-status__sml {
   hr {
     background: $grey-line;
   }
+
   li {
     background: $grey-dot;
 
@@ -439,6 +453,7 @@ h3.c-bill-num {
     }
   }
 }
+
 // colored colors
 .nys-bill-status.nys-bill-status__drk {
   hr {
@@ -451,6 +466,7 @@ h3.c-bill-num {
     &.passed {
       background: $grey05;
     }
+
     &.nys-bill-status--assem-sen {
       border: 2px solid;
       color: $gen_blue_drk;
@@ -467,6 +483,7 @@ h3.c-bill-num {
     hr {
       max-width: 710px;
     }
+
     li {
       overflow: visible;
       margin-top: -1.55em;
@@ -531,6 +548,7 @@ h3.c-bill-num {
   }
 
   .c-block-legislation {
+
     // social starts hidden;
     .c-social {
       position: absolute;
@@ -588,6 +606,10 @@ h3.c-bill-num {
 
   h3.c-bill-num {
     font-size: 22px;
+
+    &--large {
+      font-size: 32px;
+    }
   }
 
 
@@ -644,6 +666,14 @@ h3.c-bill-num {
       // with long quote.
       min-height: 480px;
     }
+
+    p.c-bill-update--location {
+
+      a {
+        color: $color-white;
+      }
+    }
+
   }
 
   .c-bill-polling {
@@ -652,6 +682,7 @@ h3.c-bill-num {
     .nys-bill-vote-form {
       position: relative;
       height: 200px;
+
       &.nys-bill-vote-form-embedded {
         height: 120px;
       }
@@ -663,6 +694,7 @@ h3.c-bill-num {
         .form-item {
           margin: 0;
         }
+
         .nys-bill-vote-widget {
           height: 80px;
         }

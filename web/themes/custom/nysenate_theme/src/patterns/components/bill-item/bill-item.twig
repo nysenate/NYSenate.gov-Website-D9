@@ -2,7 +2,7 @@
 
 <div class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %}">
   <div class="c-legislation-info">
-    <h3 class="c-bill-num">
+    <h3 class="c-bill-num {{ bill.number_large ? 'c-bill-num--large' : '' }}">
       <a href="{{ bill.link }}">{{ bill.number }}</a>
     </h3>
     <div>
@@ -82,9 +82,9 @@
       {% endif %}
 
       {% if bill.sponsor %}
-        <div class="sponsors">
-          <span>Sponsored by</span>
-          <span>{{ bill.sponsor }}</span>
+        <div class="sponsors {{ bill.sponsor_modifier }}">
+          <span>{{ bill.sponsor_text|default('Sponsored by') }}</span>
+          <span class="sponsor-name">{{ bill.sponsor }}</span>
         </div>
       {% endif %}
 

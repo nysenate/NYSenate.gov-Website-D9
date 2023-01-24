@@ -10,7 +10,12 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\file\FileInterface;
 use Drupal\Core\Url;
+use Drupal\file\FileRepository;
+use Drupal\Core\File\FileSystem;
+use Drupal\Core\file\FileSystemInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 
 /**
  * Defines a confirmation form to confirm setting school submissions to public.
@@ -18,7 +23,7 @@ use Drupal\Core\Url;
 class SchoolFormShowStudentForm extends ConfirmFormBase {
 
   /**
-   * The array of files to delete.
+   * The array of files to show public.
    *
    * @var string[][]
    */
@@ -32,11 +37,18 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   protected $privateTempStoreFactory;
 
   /**
-   * The file storage.
+   * File system service.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\File\FileSystem
    */
-  protected $fileStorage;
+  protected $fileSystem;
+
+  /**
+   * File repository service.
+   *
+   * @var \Drupal\file\FileRepository
+   */
+  protected $fileRepository;
 
   /**
    * The current user.
@@ -44,6 +56,13 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
+
+  /**
+   * Entity Type Mananger.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
 
   /**
    * Constructs a SchoolFormDeleteForm form object.
@@ -54,14 +73,29 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\File\FileSystem $fileSystem
+   *   File system service.
+   * @param \Drupal\file\FileRepository $fileRepository
+   *   File repository service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The String translation.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
+   *   The entity type manager.
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityTypeManagerInterface $entity_type_manager, AccountInterface $account, TranslationInterface $string_translation) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory,
+  EntityTypeManagerInterface $entity_type_manager,
+  AccountInterface $account,
+  FileSystem $fileSystem,
+  FileRepository $fileRepository,
+  TranslationInterface $string_translation,
+  EntityTypeManager $entityTypeManager) {
     $this->privateTempStoreFactory = $temp_store_factory;
     $this->fileStorage = $entity_type_manager->getStorage('file');
     $this->currentUser = $account;
+    $this->fileSystem = $fileSystem;
+    $this->fileRepository = $fileRepository;
     $this->setStringTranslation($string_translation);
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -72,7 +106,10 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
       $container->get('tempstore.private'),
       $container->get('entity_type.manager'),
       $container->get('current_user'),
-      $container->get('string_translation')
+      $container->get('file_system'),
+      $container->get('file.repository'),
+      $container->get('string_translation'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -128,8 +165,6 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('confirm') && !empty($this->files)) {
       foreach ($this->files as $file) {
-        $submission_storage = \Drupal::entityTypeManager()->getStorage('webform_submission');
-        ;
 
         $query = \Drupal::database()->select('webform_submission_data')
           ->fields('webform_submission_data', ['sid'])
@@ -139,20 +174,42 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
 
         $sids = $query->execute()->fetchCol();
         $sid = $sids[0];
-        if ($file) {
+        if (!empty($sid)) {
           $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
+          $entity_id = $submission->getSourceEntity();
           $submission_timestamp = $submission->getCreatedTime();
-          $node = $this->entityTypeManager->getStorage('node')->load($nid);
+          $school_form_type = '';
+          if ($entity_id) {
+            $nid = $entity_id->get('nid')->value;
+            $node = $this->entityTypeManager->getStorage('node')->load($nid);
+            $school_form_type = $node->get('field_school_form_type')->entity->label();
+            $directory = 'public://' . $school_form_type . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
+          }
+          else {
+            $webform = $submission->getWebform();
+            $directory = 'public://' . 'webform' . '/' . $webform->id() . '/' . $sid . '/';
+          }
+          $count = count($this->files);
           if ($file instanceof FileInterface) {
-            $directory = 'public://' . $node->get('field_school_form_type')->entity->label() . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
-            $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-            $destination = $directory . $file->getFilename();
-            $this->fileRepository->move($file, $destination);
+            $file_uri = $file->getFileUri();
+            $file_exists_error = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_ERROR);
+            if (!$file_exists_error) {
+              $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+              $destination = $directory . $file->getFilename();
+              $this->fileRepository->move($file, $destination);
+            }
+            else {
+              $this->logger('School Forms')->notice('The file you selected to show does not exist.');
+              $this->messenger()->addMessage($this->stringTranslation->formatPlural($count,
+                '1 file does not exist in the file system. Cannot show student submission file.',
+                'A file you selected do not exits in the file system. Cannot show student submission file.'));
+              $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
+              $form_state->setRedirectUrl($url);
+            }
           }
         }
       }
       $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->delete($this->currentUser->id());
-      $count = count($this->files);
       $this->logger('School Forms')->notice('@count student submissions have been moved to public access.', ['@count' => $count]);
       $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Show 1 submissions.', 'Show @count student submissions.'));
       $url = Url::fromRoute('nys_school_forms.school_forms', [], []);

@@ -3750,3 +3750,52 @@ function nysenate_theme_preprocess_tweets(&$variables) {
     ];
   }
 }
+
+/**
+ * Implements hook_preprocess_webform_confirmation().
+ */
+function nysenate_theme_preprocess_webform_confirmation__school_form(&$variables) {
+  $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
+
+  $school_id = $variables['webform_submission']->getData()['school_name'];
+  $school = \Drupal::entityTypeManager()->getStorage('node')->load($school_id);
+  $grades = $webform->getElementsDecoded()['grade']['#options'];
+  $grade = $variables['webform_submission']->getData()['grade'];
+  $submission_types = $webform->getElementsDecoded()['submissions']['attach_your_submission']['#element']['submission_type']['#options'];
+
+  $variables['school_name'] = $school->title->value ?? '';
+  $variables['contact_name'] = $variables['webform_submission']->getData()['contact_name'] ?? '';
+  $variables['contact_email'] = $variables['webform_submission']->getData()['contact_email'] ?? '';
+  $variables['grade'] = $grades[$grade] ?? '';
+
+  $submissions = [];
+  $student_submissions = $variables['webform_submission']->getData()['attach_your_submission'] ?? [];
+
+  foreach ($student_submissions as $submission) {
+    $file = \Drupal::entityTypeManager()->getStorage('file')->load($submission['student_submission']);
+    $file_uri = $file->getFileUri();
+    $file_url = \Drupal::service('file_url_generator')->generateString($file_uri);
+    $image = \Drupal::service('image.factory')->get($file_uri);
+
+    if ($image->isValid()) {
+      $submissions[] = [
+        'students_name' => $submission['student_name'],
+        'category' => $submission_types[$submission['submission_type']],
+        'attachment' => [
+          '#markup' => '<img src="' . $file_url . '" />',
+        ],
+      ];
+    }
+    else {
+      $link = Link::fromTextAndUrl($file->filename->value, Url::fromUserInput($file_url));
+      $submissions[] = [
+        'students_name' => $submission['student_name'],
+        'category' => $submission_types[$submission['submission_type']],
+        'file' => [
+          'attachment' => $link,
+        ],
+      ];
+    }
+  }
+  $variables['student_submissions'] = $submissions;
+}

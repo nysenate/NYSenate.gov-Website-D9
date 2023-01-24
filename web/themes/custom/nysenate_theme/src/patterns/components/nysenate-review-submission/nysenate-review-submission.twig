@@ -46,32 +46,34 @@
       <h3 class="label-above label-above">
         Student Submissions:
       </h3>
-      <div class="ds-1col entity entity-field-collection-item field-collection-item-field-school-stud-earthday-subm view-mode-full clearfix">
-        <p class="label-inline form-label">
-          Student's Name:
-        </p>
-
-        <div>
-          <p class="form-results">
-            {{ students_name }}
-          </p>
-        </div>
-
-        <div class="attachment_container">
+      {% for submission in student_submissions %}
+        <div class="ds-1col entity entity-field-collection-item field-collection-item-field-school-stud-earthday-subm view-mode-full clearfix">
           <p class="label-inline form-label">
-            Submission:
+            Student's Name:
           </p>
 
-          {% if file %}
-            {% include '@nysenate_theme/file-uploads/file-uploads.twig' with {
-              title: file.title,
-              attachment: file.attachment
-            } only %}
-          {% else %}
-            {{ attachment }}
-          {% endif %}
+          <div>
+            <p class="form-results">
+              {{ submission.students_name }}
+            </p>
+          </div>
+
+          <div class="attachment_container">
+            <p class="label-inline form-label">
+              Submission:
+            </p>
+
+            {% if submission.file %}
+              {% include '@nysenate_theme/file-uploads/file-uploads.twig' with {
+                title: submission.file.title,
+                attachment: submission.file.attachment
+              } only %}
+            {% else %}
+              {{ submission.attachment }}
+            {% endif %}
+          </div>
         </div>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="button-wrapper">

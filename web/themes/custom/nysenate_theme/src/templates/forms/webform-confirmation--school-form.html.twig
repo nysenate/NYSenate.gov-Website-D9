@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation to webform confirmation.
+ *
+ * Available variables:
+ * - progress: Progress bar.
+ * - message: Confirmation message.
+ * - back_url: URL to the previous webform submission.
+ *
+ * @see template_preprocess_webform_confirmation()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% include '@nysenate_theme/nysenate-review-submission/nysenate-review-submission.twig' with {
+  alert_message: message,
+  form_action: '',
+  teachers_name: '',
+  teachers_email: '',
+  grade: grade,
+  school_name: school_name,
+  student_submissions: student_submissions,
+} only %}

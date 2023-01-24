@@ -188,8 +188,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
             $submission_timestamp = $submission->getCreatedTime();
             $school_form_type = '';
             if ($entity_id) {
-              /** @var Drupal\node\Entity\Node $nid */
-              $nid = $entity_id->get('nid')->value;
+              $nid = $entity_id->id();
               $node = $this->entityTypeManager->getStorage('node')->load($nid);
               $school_form_type = $node->get('field_school_form_type')->entity->label();
               $directory = 'public://' . $school_form_type . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';

@@ -2012,6 +2012,13 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     $variables['video'] = $video_view->buildRenderable('video', $args);
   }
 
+  // Get the Follower count flag.
+  $flag_service = \Drupal::service('flag.count');
+  $flag = $flag_service->getEntityFlagCounts($variables['term']);
+  if ($flag) {
+    $variables['flag_count'] = $flag['follow_issue'];
+  }
+
   // Set the cache tags for the issues taxonomy.
   // Invalidation will occur on nys_senators_user_presave method.
   $variables['#cache']['tags'][] = 'taxonomy_term_list:issues';

@@ -194,7 +194,7 @@
 
 @include breakpoint($bp-sm) {
 	.c-stats--container {
-		margin-top: 60px;
+		// margin-top: 60px;
 		padding-bottom: 45px;
 
 		.c-container--title {
@@ -267,6 +267,10 @@
 				display: block;
 			}
 		}
+
+		&--about {
+			padding-top: 48px;
+		}
 	}
 
 	.c-stats--item {
@@ -281,5 +285,9 @@
 			right: 0;
 			left: 0;
 		}
+	}
+
+	.c-stats--container--about {
+		margin-top: 0;
 	}
 }

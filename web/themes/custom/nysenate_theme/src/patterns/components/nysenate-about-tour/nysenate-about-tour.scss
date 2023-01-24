@@ -1,0 +1,104 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-block {
+  &--about-tour {
+    p {
+      margin-bottom: 20px;
+
+      @include breakpoint($bp-sm) {
+        margin-bottom: 40px;
+      }
+    }
+
+    .c-tour-contact {
+
+      margin-bottom: 40px;
+
+      @include breakpoint($bp-sm) {
+
+        position: absolute;
+        left: 340px;
+      }
+
+      &--title {
+        margin: 0 0 5px 0;
+        padding-right: 20px;
+        font-size: 18px;
+        line-height: 1.2em;
+      }
+    }
+
+    .nys-btn {
+      &--gold {
+        margin-bottom: 60px;
+
+        @include breakpoint($bp-sm) {
+          width: 300px;
+          float: left;
+        }
+      }
+    }
+
+    .c-tour-contact {
+
+      &--loc,
+      &--phone {
+        margin: 0;
+        font-family: "Proxima Nova Regular";
+        font-size: 16px;
+        line-height: 1.2em;
+      }
+    }
+  }
+}
+
+
+.c-student-program-are-you {
+  .gen-wrapper {
+    width: 100%;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    @include breakpoint($bp-sm) {
+      grid-gap: 52px;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 36px;
+    }
+
+    a {
+      display: block;
+      width: 100%;
+      color: white;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 14px;
+      line-height: 18px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .gen-col {
+      &--height {
+        transition: background-color 0.25s ease 0s;
+        height: 100px;
+        margin-bottom: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        @include breakpoint($bp-sm) {
+          margin-bottom: 0;
+        }
+
+        &.yellow {
+          background: #F1AF58;
+        }
+
+        &.blue {
+          background: #04A9C5;
+        }
+      }
+    }
+  }
+}

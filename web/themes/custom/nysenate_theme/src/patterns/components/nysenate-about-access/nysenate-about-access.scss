@@ -1,0 +1,55 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-block {
+
+  &--about-access {
+    .nys-subtitle-title {
+      margin: 0 0 15px;
+      text-transform: capitalize;
+      font-family: "Adelle Regular";
+      font-size: 18px;
+      line-height: 1;
+
+      @include breakpoint($bp-sm) {
+        margin: 0 0 30px;
+        font-size: 26px;
+      }
+    }
+
+    .l-col .nys-subtitle-title {
+      clear: both;
+      margin: 20px 0 5px;
+
+      @include breakpoint($bp-sm) {
+        margin-top: 40px;
+        color: #444444;
+        font-family: "Adelle Bold";
+        font-size: 18px;
+      }
+    }
+
+    .l-col-2+.l-col-2 .nys-subtitle-title {
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    .c-container {
+      &--link {
+        position: relative;
+        float: right;
+        margin: 10px 0 20px;
+
+        @include breakpoint($bp-sm) {
+          float: left;
+        }
+      }
+    }
+
+    .nys-btn--gold {
+      margin-top: 20px;
+    }
+  }
+}

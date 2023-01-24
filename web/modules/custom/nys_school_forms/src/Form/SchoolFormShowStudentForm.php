@@ -14,7 +14,7 @@ use Drupal\file\FileInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileRepository;
 use Drupal\Core\File\FileSystem;
-use Drupal\Core\file\FileSystemInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 
 /**
@@ -35,6 +35,13 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected $privateTempStoreFactory;
+
+  /**
+   * The file storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $fileStorage;
 
   /**
    * File system service.
@@ -164,33 +171,33 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('confirm') && !empty($this->files)) {
+      $count = count($this->files);
       foreach ($this->files as $file) {
+        if ($file instanceof FileInterface) {
+          $query = \Drupal::database()->select('webform_submission_data')
+            ->fields('webform_submission_data', ['sid'])
+            ->condition('webform_id', 'school_form')
+            ->condition('value', $file->get('fid')->value)
+            ->distinct();
 
-        $query = \Drupal::database()->select('webform_submission_data')
-          ->fields('webform_submission_data', ['sid'])
-          ->condition('webform_id', 'school_form')
-          ->condition('value', $file->get('fid')->value)
-          ->distinct();
-
-        $sids = $query->execute()->fetchCol();
-        $sid = $sids[0];
-        if (!empty($sid)) {
-          $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
-          $entity_id = $submission->getSourceEntity();
-          $submission_timestamp = $submission->getCreatedTime();
-          $school_form_type = '';
-          if ($entity_id) {
-            $nid = $entity_id->get('nid')->value;
-            $node = $this->entityTypeManager->getStorage('node')->load($nid);
-            $school_form_type = $node->get('field_school_form_type')->entity->label();
-            $directory = 'public://' . $school_form_type . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
-          }
-          else {
-            $webform = $submission->getWebform();
-            $directory = 'public://' . 'webform' . '/' . $webform->id() . '/' . $sid . '/';
-          }
-          $count = count($this->files);
-          if ($file instanceof FileInterface) {
+          $sids = $query->execute()->fetchCol();
+          $sid = $sids[0];
+          if (!empty($sid)) {
+            $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
+            $entity_id = $submission->getSourceEntity();
+            $submission_timestamp = $submission->getCreatedTime();
+            $school_form_type = '';
+            if ($entity_id) {
+              /** @var Drupal\node\Entity\Node $nid */
+              $nid = $entity_id->get('nid')->value;
+              $node = $this->entityTypeManager->getStorage('node')->load($nid);
+              $school_form_type = $node->get('field_school_form_type')->entity->label();
+              $directory = 'public://' . $school_form_type . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
+            }
+            else {
+              $webform = $submission->getWebform();
+              $directory = 'public://' . 'webform' . '/' . $webform->id() . '/' . $sid . '/';
+            }
             $file_uri = $file->getFileUri();
             $file_exists_error = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_ERROR);
             if (!$file_exists_error) {

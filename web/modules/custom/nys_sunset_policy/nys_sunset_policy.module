@@ -39,7 +39,9 @@ function nys_sunset_policy_cron() {
     $expiring_nids = nys_sunset_policy_get_expiring();
     if (!empty($expiring_nids)) {
       foreach ($expiring_nids as $nid) {
-        $expiring_queue->createItem($nid);
+        $expiring_queue->createItem([
+          'data' => $nid,
+        ]);
       }
     }
     /** @var \Drupal\Core\Queue\QueueInterface $expired_queue */
@@ -47,13 +49,15 @@ function nys_sunset_policy_cron() {
     $expired_nids = nys_sunset_policy_get_expired();
     if (!empty($expired_nids)) {
       foreach ($expired_nids as $nid) {
-        $expired_queue->createItem($nid);
+        $expired_queue->createItem([
+          'data' => $nid,
+        ]);
       }
     }
   }
   catch (\Throwable $e) {
     \Drupal::logger('nys_sunset_policy')
-      ->error('Sunset policy queues not created.', ['message' => $e->getMessage()]);
+      ->error('Sunset policy queues not created.', ['%message' => $e->getMessage()]);
   }
 }
 
@@ -77,7 +81,7 @@ function nys_sunset_policy_get_expired() {
   if (!empty($results)) {
     foreach ($results as $nid) {
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      if (!empty($node->field_expiration_date->getValue()[0]['value'])) {
+      if (!empty($node->field_expiration_date->getValue())) {
         if ($node->field_last_notified->getValue()[0]['value'] <
             $node->field_expiration_date->getValue()[0]['value'] ||
             empty($node->field_last_notified->getValue)) {

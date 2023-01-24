@@ -740,6 +740,15 @@ $settings['entity_update_batch_size'] = 50;
 $settings['entity_update_backup'] = TRUE;
 
 /**
+ * Queue Unique.
+ *
+ * In order for the queues to use the Queue Unique functionality the module requires
+ * this update in the settings file.
+*/
+$settings['queue_service_nys_sunset_expiring_queue'] = 'queue_unique.database';
+$settings['queue_service_nys_sunset_expired_queue'] = 'queue_unique.database';
+
+/**
  * Node migration type.
  *
  * This is used to force the migration system to use the classic node migrations
@@ -861,6 +870,27 @@ else {
   $config['email_tfa.settings']['status'] = FALSE;
 }
 
+// Pantheon-specific Redis configuration.
+if (!empty($_ENV['PANTHEON_ENVIRONMENT']) && !empty($_ENV['CACHE_HOST'])) {
+  // Include the Redis services.yml file. Adjust the path if you installed to a contrib or other subdirectory.
+  $settings['container_yamls'][] = 'modules/redis/example.services.yml';
+
+  //phpredis is built into the Pantheon application container.
+  $settings['redis.connection']['interface'] = 'PhpRedis';
+  // These are dynamic variables handled by Pantheon.
+  $settings['redis.connection']['host']      = $_ENV['CACHE_HOST'];
+  $settings['redis.connection']['port']      = $_ENV['CACHE_PORT'];
+  $settings['redis.connection']['password']  = $_ENV['CACHE_PASSWORD'];
+
+  $settings['redis_compress_length'] = 100;
+  $settings['redis_compress_level'] = 1;
+
+  $settings['cache']['default'] = 'cache.backend.redis'; // Use Redis as the default cache.
+  $settings['cache_prefix']['default'] = 'pantheon-redis';
+
+  $settings['cache']['bins']['form'] = 'cache.backend.database'; // Use the database for forms
+}
+
 // If a private settings file exists within the files directory, load it.
 if (file_exists($app_root . '/sites/default/files/private/private_settings.php')) {
   include $app_root . '/sites/default/files/private/private_settings.php';
@@ -886,4 +916,9 @@ if (file_exists($app_root . '/' . $site_path . '/private_settings.php')) {
  */
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
+}
+
+// Include settings required for Redis cache.
+if ((file_exists(__DIR__ . '/settings.ddev.redis.php') && getenv('IS_DDEV_PROJECT') == 'true')) {
+  include __DIR__ . '/settings.ddev.redis.php';
 }

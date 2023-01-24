@@ -7,7 +7,7 @@
     .nys-subtitle-title {
       margin: 0 0 15px;
       text-transform: capitalize;
-      font-family: "Adelle Regular";
+      font-family: $font-serif-regular;
       font-size: 18px;
       line-height: 1;
 
@@ -23,8 +23,8 @@
 
       @include breakpoint($bp-sm) {
         margin-top: 40px;
-        color: #444444;
-        font-family: "Adelle Bold";
+        color: $grey08;
+        font-family: $font-serif-bold;
         font-size: 18px;
       }
     }

@@ -777,7 +777,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'homepage_hero');
+          $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
         }
       }
 
@@ -2351,7 +2351,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   // Bill PDF Link.
   $ol_base_url = \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov');
   if (isset($variables['content']['field_ol_session'][0]['#markup'])) {
-    $variables['pdf_link'] = $ol_base_url . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $variables['label'][0]['#context']['value'];
+    $variables['pdf_link'] = $ol_base_url . '/pdf/bills/' . $variables['content']['field_ol_session'][0]['#markup'] . '/' . $node->field_ol_print_no->value;
   }
 
   $variables['active_amend_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();

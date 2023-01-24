@@ -1,0 +1,48 @@
+@import '../../global/utils/init';
+
+.c-block {
+  &--about-tour {
+    width: 100%;
+  }
+
+  &--about-rules {
+    margin-top: 55px;
+    margin-bottom: 25px;
+  }
+
+  &--about-how {
+    p {
+      margin-bottom: 40px;
+    }
+  }
+
+  .c-about {
+    &--img {
+      img {
+        margin-bottom: 25px;
+      }
+    }
+  }
+}
+
+.pane-content {
+  position: static;
+}
+
+main.l-main--about {
+  .nysenate-promotional-banner-list {
+    margin-top: 40px;
+
+    @include breakpoint($bp-sm) {
+      margin-top: 60px;
+    }
+  }
+
+}
+
+@include breakpoint($bp-sm) {
+
+  main.l-main--about {
+    padding-top: 0;
+  }
+}

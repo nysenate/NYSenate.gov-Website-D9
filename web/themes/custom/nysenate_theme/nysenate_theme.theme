@@ -2411,6 +2411,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
       $votes_list[$votes->field_ol_vote_type->value] = [
         'aye_count' => $votes->field_ol_aye_count->value ?? 0,
         'nay_count' => $votes->field_ol_nay_count->value ?? 0,
+        'aye_reservations_count' => $votes->field_ol_aye_wr_count->value ?? 0,
         'absent_count' => $votes->field_ol_absent_count->value ?? 0,
         'excused_count' => $votes->field_ol_excused_count->value ?? 0,
         'abstained_count' => $votes->field_ol_abstained_count->value ?? 0,

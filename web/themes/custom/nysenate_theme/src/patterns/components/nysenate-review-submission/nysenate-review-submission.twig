@@ -76,22 +76,28 @@
       {% endfor %}
     </div>
 
-    <div class="button-wrapper">
-      {% include '@nysenate_theme/button/button.twig' with {
-        button: {
-          url: edit.href,
-          text: edit.button_text
-        }
-      } only %}
+    {% if edit or submit %}
+      <div class="button-wrapper">
+        {% if edit %}
+          {% include '@nysenate_theme/button/button.twig' with {
+            button: {
+              url: edit.href,
+              text: edit.button_text
+            }
+          } only %}
+        {% endif %}
 
-      <div class="edit-submit">
-        {% include '@nysenate_theme/button/button.twig' with {
-          button: {
-            url: submit.href,
-            text: submit.button_text
-          }
-        } only %}
+        {% if submit %}
+          <div class="edit-submit">
+            {% include '@nysenate_theme/button/button.twig' with {
+              button: {
+                url: submit.href,
+                text: submit.button_text
+              }
+            } only %}
+          </div>
+        {% endif %}
       </div>
-    </div>
+    {% endif %}
   </form>
 </div>

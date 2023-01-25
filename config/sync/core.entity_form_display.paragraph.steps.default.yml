@@ -1,0 +1,32 @@
+uuid: 0ca565c6-b87a-410e-833b-13c1e66cf3b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.steps.field_description
+    - field.field.paragraph.steps.field_title
+    - paragraphs.paragraphs_type.steps
+id: paragraph.steps.default
+targetEntityType: paragraph
+bundle: steps
+mode: default
+content:
+  field_description:
+    type: string_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

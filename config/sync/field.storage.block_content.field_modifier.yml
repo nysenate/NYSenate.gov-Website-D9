@@ -1,0 +1,31 @@
+uuid: 5aa71bc6-b7f0-4d0f-82bc-28e441a2db2d
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - field_permissions
+    - options
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: block_content.field_modifier
+field_name: field_modifier
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: law
+      label: Law
+    -
+      value: budget
+      label: Budget
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

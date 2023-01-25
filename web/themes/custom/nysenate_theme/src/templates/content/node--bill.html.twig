@@ -239,27 +239,36 @@
                     </span>
                   </a>
 
+                  {% set values = [vote.nay_count|default(0), vote.aye_count|default(0)] %}
+                  {% set colors =  vote.type|lower != 'floor' ? ["#F1AF58", "#CB8D37"] : ["#1F798F", "#04A9C5"] %}
+
                   {% include "@nysenate_theme/chart/chart.twig" with {
                     chart: {
                       type: "pie",
-                      values: [20, 43],
-                      colors: ["#1F798F", "#04A9C5"]
+                      values: values,
+                      colors: colors
                     }
                   } only %}
 
                   <div class="c-bill--vote-details">
                     <div class="c-bill--vote-details-wrapper">
                       <div class="vote-container">
-                        <div class="aye">
+                        <div class="aye {{ vote.type|lower != 'floor' ? "committee_vote" : "" }}">
                           <div class="vote-count">{{ vote.aye_count|default(0) }}</div>
                           <div class="vote-label">Aye</div>
                         </div>
-                        <div class="nay">
+                        <div class="nay {{ vote.type|lower != 'floor' ? "committee_vote" : "" }}">
                           <div class="vote-count">{{ vote.nay_count|default(0)  }}</div>
                           <div class="vote-label">Nay</div>
                         </div>
                       </div>
                       <div class="vote-meta">
+                        {% if vote.type|lower != 'floor' %}
+                          <div class="meta-row">
+                            <div class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</div>
+                            <div class="meta-label">Aye with Reservations</div>
+                          </div>
+                        {% endif %}
                         <div class="meta-row">
                           <div class="meta-count">{{ vote.absent_count|default(0)  }}</div>
                           <div class="meta-label">Absent</div>

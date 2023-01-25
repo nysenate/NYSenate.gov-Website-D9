@@ -1,0 +1,56 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-block {
+  &--about-seal {
+    ul {
+      list-style: none;
+      margin: 30px 0 20px;
+      counter-reset: seal-counter;
+
+      li {
+        position: relative;
+        padding-left: 40px;
+
+        @include breakpoint($bp-sm) {
+          font-size: 20px;
+          line-height: 32px;
+        }
+
+        &::before {
+          overflow: hidden;
+          -webkit-border-radius: 50%;
+          border-radius: 50%;
+          background-clip: padding-box;
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 27px;
+          width: 28px;
+          background: $yellow01;
+          text-align: center;
+          font-size: 18px;
+          line-height: 28px;
+          color: $color-white;
+          font-family: Verdana;
+          content: counter(seal-counter);
+          counter-increment: seal-counter;
+        }
+
+        &+li {
+          margin-top: 20px;
+        }
+      }
+    }
+
+    .c-seal--img {
+      @include breakpoint($bp-sm) {
+        width: 60%;
+        max-width: 470px;
+        margin: 0 auto;
+      }
+
+    }
+  }
+}

@@ -1,0 +1,30 @@
+uuid: e0dd7199-7e87-43a4-b8f9-d32e35fc0389
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.steps.field_description
+    - field.field.paragraph.steps.field_title
+    - paragraphs.paragraphs_type.steps
+id: paragraph.steps.default
+targetEntityType: paragraph
+bundle: steps
+mode: default
+content:
+  field_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

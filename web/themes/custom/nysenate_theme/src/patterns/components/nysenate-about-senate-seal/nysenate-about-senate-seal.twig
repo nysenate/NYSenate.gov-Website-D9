@@ -1,0 +1,15 @@
+{{ attach_library('nysenate_theme/nysenate-senate-seal') }}
+
+<div class="c-block c-block--about c-block--about-seal">
+  <h3 class="nys-subtitle-title">{{ title }}</h3>
+  <img class="c-seal--img" src="https://source.unsplash.com/PhYq704ffdA/787x787">
+  <p>{{ description }}</p>
+
+  {% if items|length %}
+    <ul>
+      {% for item in items %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

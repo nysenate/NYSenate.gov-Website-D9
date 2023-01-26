@@ -1,0 +1,140 @@
+{{ attach_library('nysenate_theme/session') }}
+{{ attach_library('nysenate_theme/meeting-detail') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/nysenate_sponsor_list') }}
+
+<article class="c-block c-meeting-detail--header">
+  <div class="c-meeting-detail--meta">
+    {% if event_status.key == 'live_now' %}
+      <p class="c-meeting-detail--live-flag">
+        {{ event_status.value }}
+      </p>
+    {% endif %}
+    {% if content.field_off_the_floor.0['#markup'] == '1' %}
+      <p class="c-meeting-detail--floor-flag">
+        off the floor
+      </p>
+    {% endif %}
+  </div>
+
+  <div class="c-meeting-detail--overview">
+    <div class="c-block">
+      <p class="c-meeting-detail--date">
+        <span class="c-meeting-date--num">{{ date_value.day }}</span>
+        <span class="c-meeting-date--month">{{ date_value.month }}</span>
+        <span class="c-meeting-date--year">{{ date_value.year }}</span>
+      </p>
+
+      <div class="c-meeting-detail--info">
+        <h1 class="c-meeting-detail--title">
+          {{ title }}
+        </h1>
+        {% if event_place == 'online' %}
+          {% if event_online_link %}
+            <div>
+              <a class="c-meeting-detail--location-link" href="{{ event_online_link }}">
+                Online Meeting
+              </a>
+            </div>
+          {% elseif content.field_meeting_location.0 %}
+            <div class="c-meeting-detail--location-link">
+              Online Meeting
+            </div>
+          {% endif %}
+        {% elseif event_place == 'cap' %}
+          <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank">
+            NYS Capitol Building
+          </a>
+        {% elseif event_place == 'lob' %}
+          <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/Legislative+Office+Building/@42.6526202,-73.7614498,17z/data=!3m1!4b1!4m5!3m4!1s0x89de0a24d3a304b5:0x1012cb31c839dfe9!8m2!3d42.6526202!4d-73.7592611?hl=en" title="Legislative Office Building" target="_blank">
+            Legislative Office Building
+          </a>
+        {% endif %}
+
+        <div class="c-meeting-detail--location">
+          {% if content.field_meeting_location.0 %}
+            {{ content.field_meeting_location.0 }}
+          {% endif %}
+        </div>
+
+        <p class="c-meeting-detail--time">
+          {{ date_value.from_time }}
+          {% if date_value.from_time != date_value.to_time %}
+            to
+            {{ date_value.to_time }}
+          {% endif %}
+          {% if video_status.key != 'streaming_redirect' %}
+            <span class="c-meeting-video--status icon-before__youtube">
+              {{ video_status.value }}
+            </span>
+          {% endif %}
+        </p>
+        {% if calendar_links %}
+          {% include '@nysenate_theme/add-to-calendar/add-to-calendar.twig' with {
+            calendar_links: calendar_links
+          } only %}
+        {% endif %}
+      </div>
+      <div class="c-meeting-detail--descript">
+        {% if content.body %}
+          {{ content.body }}
+        {% endif %}
+      </div>
+
+      {% if field_chapters %}
+        <div class="c-meeting-detail--descript">
+          {{ field_chapters }}
+        </div>
+      {% endif %}
+
+      {% if content.field_issues.0 %}
+        <div class="c-meeting-detail--related">
+          <ul>
+            <p>
+              related issues:
+            </p>
+            {% if field_majority_issue_tag %}
+              <li>{{ field_majority_issue_tag }}</li>
+            {% endif %}
+            {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
+              <li>{{ issue }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if
+    video_status.key == 'streaming_live_now' and content.field_video_redirect.0 %}
+    <div class="c-meeting-detail--descript">
+      {{ content.field_ustream }}
+    </div>
+  {% elseif
+    video_status.key == 'streaming_redirect' and content.field_video_redirect.0 %}
+    {{ content.field_ustream }}
+  {% endif %}
+
+  {% if content.field_yt.0 %}
+    <div class="c-meeting-detail--descript">
+      {% include '@nysenate_theme/video-embed/video-embed.twig' with {
+        video: content.field_yt
+      } only %}
+    </div>
+  {% endif %}
+
+  {{ meeting_agenda }}
+</article>
+
+{% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+  title: node.type.entity.label,
+  node_url: url,
+  cta: cta,
+} only
+%}
+
+{{ committee_events }}
+
+{{ drupal_view('senator_microsite_content', 'promo_footer') }}
+
+{{ bill }}

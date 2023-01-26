@@ -16,6 +16,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\nys_school_forms\SchoolFormsService;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\file\Entity\File;
 
 /**
  * Route controller for School Form submissions.
@@ -236,9 +237,14 @@ class SchoolFormsController extends ControllerBase {
       'School Phone',
       'Senator',
       'District Number',
+      'Student Submission',
     ], ',');
 
     foreach ($results as $result) {
+      $file = File::load($result['student']['student_submission']);
+      $uri = $file->getFileUri();
+      $url = \Drupal::service('file_url_generator')->generate($uri);
+      $file_string = $url->toString();
       $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
       $line = [
         date('F j, Y', $result['submission']->getCreatedTime()),
@@ -252,6 +258,7 @@ class SchoolFormsController extends ControllerBase {
         $result['school_node']->get('field_school_ceo_phone')->getValue()[0]['value'],
         $result['senator']->label(),
         $result['school_node']->get('field_district')->entity->label(),
+        $file_string,
       ];
       fputcsv($handle, $line, ',');
     }

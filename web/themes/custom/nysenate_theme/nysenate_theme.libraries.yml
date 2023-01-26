@@ -123,6 +123,19 @@ carousel:
   dependencies:
     - nysenate_theme/slick
 
+chart:
+  css:
+    component:
+      dist/css/chart.css: {}
+  js:
+    dist/js/chart.es6.js: {}
+  dependencies:
+    - nysenate_theme/highcharts
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
 colorbox:
   css:
     theme:
@@ -400,6 +413,11 @@ main-menu:
     - core/drupal
     - core/drupalSettings
 
+meeting-detail:
+  css:
+    component:
+      dist/css/meeting-detail.css: {}
+
 message:
   css:
     component:
@@ -442,12 +460,51 @@ news-teaser:
     component:
       dist/css/news-teaser.css: {}
 
+nysenate-about-access:
+  css:
+    component:
+      dist/css/nysenate-about-access.css: {}
+
+nysenate-about-leadership:
+  css:
+    component:
+      dist/css/nysenate-about-leadership.css: {}
+
+nysenate-about-rules:
+  css:
+    component:
+      dist/css/nysenate-about-rules.css: {}
+
+nysenate-about-senate-seal:
+  css:
+    component:
+      dist/css/nysenate-about-senate-seal.css: {}
+
+nysenate-about-tour:
+  css:
+    component:
+      dist/css/nysenate-about-tour.css: {}
+  dependencies:
+    - nysenate_theme/carousel
+
 nysenate-accordion:
   css:
     component:
       dist/css/nysenate-accordion.css: {}
   js:
     dist/js/nysenate-accordion.es6.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
+nysenate-accordion-nested:
+  css:
+    component:
+      dist/css/nysenate-accordion-nested.css: {}
+  js:
+    dist/js/nysenate-accordion-nested.es6.js: {}
   dependencies:
     - core/jquery
     - core/jquery.once
@@ -583,7 +640,7 @@ nysenate-promotional-banner:
 nysenate_sponsor_list:
   css:
     component:
-      dist/css/nysenate-sponser-list.css: {}
+      dist/css/nysenate-sponsor-list.css: {}
 
 nysenate-promotional-banner-list:
   css:
@@ -613,6 +670,11 @@ nysenate-senate-directory:
   css:
     component:
       dist/css/nysenate-senate-directory.css: {}
+
+nysenate-senate-seal:
+  css:
+    component:
+      dist/css/nysenate-senate-seal.css: {}
 
 nysenate-user-profile:
   css:
@@ -695,6 +757,13 @@ session:
     component:
       dist/css/session.css: {}
 
+sidebar:
+  css:
+    component:
+      dist/css/sidebar.css: {}
+  js:
+    dist/js/sidebar.es6.js: {}
+
 site-branding:
   css:
     component:
@@ -724,6 +793,10 @@ slick:
     - core/drupalSettings
     - core/jquery.once
     - core/jquery
+
+highcharts:
+  js:
+    dist/js/highcharts.js: {}
 
 sticky-nav:
   css:

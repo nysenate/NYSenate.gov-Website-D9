@@ -2,6 +2,7 @@
 @import '../../global/utils/init';
 
 .newsroom-landing {
+
   .odd,
   .even {
     width: 100%;
@@ -28,19 +29,39 @@
     }
   }
 
+  .c-news-block {
+    img {
+      width: 100%;
+    }
+  }
+
+  &.c-news-container {
+
+    .c-news-block {
+
+      .c-newsroom-name {
+
+        a {
+          color: $grey08;
+        }
+      }
+    }
+  }
 
   @include breakpoint($bp-sm) {
+
     .odd,
     .even {
       width: 45%;
       float: left;
       clear: both;
+
       .c-bill-meta,
       .c-bill-body {
         width: 100%;
       }
     }
-  
+
     .even {
       float: right;
       clear: none;
@@ -57,6 +78,6 @@
         margin-top: -13px;
       }
     }
-  
+
   }
 }

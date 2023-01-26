@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Functions and hooks of Location Migration.
+ */
+
+use Drupal\location_migration\MigrationPluginAlterer;
+use Drupal\location_migration\Plugin\migrate\field\Location;
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function location_migration_migration_plugins_alter(array &$definitions) {
+  MigrationPluginAlterer::alterMigrationPlugins($definitions);
+}
+
+/**
+ * Implements hook_migrate_field_info_alter().
+ */
+function location_migration_migrate_field_info_alter(&$definitions) {
+  // Geolocation has added a location field migrate plugin in
+  // https://drupal.org/i/3174059 which migrates Drupal 7 location fields to
+  // geolocation fields.
+  // Location Migration provides a more complete data migration, so if this
+  // module is enabled, we need to set this plugin definition back to our
+  // implementation.
+  if (
+    !empty($definitions['location']) &&
+    $definitions['location']['type_map']['location'] !== 'address'
+  ) {
+    $definitions['location']['type_map'] = [
+      'location' => 'address',
+    ];
+    $definitions['location']['core'] = [7];
+    $definitions['location']['source_module'] = 'location_cck';
+    $definitions['location']['destination_module'] = 'address';
+    $definitions['location']['class'] = Location::class;
+    $definitions['location']['provider'] = 'location_migration';
+  }
+}

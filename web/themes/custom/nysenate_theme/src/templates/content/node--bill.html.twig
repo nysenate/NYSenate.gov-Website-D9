@@ -1,5 +1,6 @@
 {{ attach_library('nysenate_theme/bill') }}
 {{ attach_library('nysenate_theme/nysenate-accordion') }}
+{{ attach_library('nysenate_theme/nysenate-accordion-nested') }}
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
 {{ attach_library('nysenate_theme/resolution-page') }}
 
@@ -87,9 +88,9 @@
           </span>
           {{ icons.get('accordion__arrow'|lower) }}
         </button>
-          <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-analytics" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-analytics">
-            {{ looker_extended_iframe }}
-          </div>
+        <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-analytics" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-analytics">
+          {{ looker_extended_iframe }}
+        </div>
       </article>
     </div>
   {% endif %}
@@ -212,26 +213,122 @@
   {% if votes_block %}
     <div class="c-block c-bill-section">
       <h3 class="c-detail--subhead c-detail--section-title">Votes</h3>
-      <dl style="margin-bottom:10px" class="c-block accordion" data-accordion>
-        <dd class="accordion-navigation">
 
-          <a href="#accordion-votes" class="accordion--btn nys-btn-more nys-btn-more--bg" data-open-text="hide votes" data-closed-text="view votes">
-            view votes
-          </a>
+      <div>
+        <article class="nysenate-accordion">
+          <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion--votes__content-1" aria-expanded="false" id="nysenate-accordion--votes__toggle-1" aria-selected="false">
+            <span class="nysenate-accordion__heading hide-number">
+              <span class="indicator">View
+              </span>Votes
+            </span>
+            {{ icons.get('accordion__arrow'|lower) }}
+          </button>
+          <div class="nysenate-accordion__content" id="nysenate-accordion--votes__content-1" aria-hidden="true" aria-labelledby="nysenate-accordion--votes__content-1">
+            {% for vote in votes_block %}
+              <div
+                class="content" id="panel-votes">
+                <!-- Bill Votes -->
+                <div class="c-block c-detail--votes-wrapper c-bill-section">
+                  <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
+                    {{ vote.date }}
+                    -  {{ vote.type }} Vote
+                  </h3>
+                  <a href="{{ bill.url }}">
+                    <span class="c-bill-action-version c-bill--flag c-bill-action--orig-bill">
+                      {{ bill.name }}
+                    </span>
+                  </a>
 
-          <div id="accordion-votes" class="content">
-            <div
-              class="content" id="panel-votes">
-              <!-- Bill Votes -->
-              <div class="c-block c-detail--votes-wrapper c-bill-section">
-                <div class="c-detail--votes">
-                  {{ votes_block }}
+                  {% set values = [vote.nay_count|default(0), vote.aye_count|default(0)] %}
+                  {% set colors =  vote.type|lower != 'floor' ? ["#CB8D37", "#F1AF58"] : ["#1F798F", "#04A9C5"] %}
+
+                  {% include "@nysenate_theme/chart/chart.twig" with {
+                    chart: {
+                      type: "pie",
+                      values: values,
+                      colors: colors
+                    }
+                  } only %}
+
+                  <div class="c-bill--vote-details">
+                    <div class="c-bill--vote-details-wrapper">
+                      <div class="vote-container">
+                        <div class="aye {{ vote.type|lower != 'floor' ? "committee_vote" : "" }}">
+                          <div class="vote-count">{{ vote.aye_count|default(0) }}</div>
+                          <div class="vote-label">Aye</div>
+                        </div>
+                        <div class="nay {{ vote.type|lower != 'floor' ? "committee_vote" : "" }}">
+                          <div class="vote-count">{{ vote.nay_count|default(0)  }}</div>
+                          <div class="vote-label">Nay</div>
+                        </div>
+                      </div>
+                      <div class="vote-meta">
+                        {% if vote.type|lower != 'floor' %}
+                          <div class="meta-row">
+                            <div class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</div>
+                            <div class="meta-label">Aye with Reservations</div>
+                          </div>
+                        {% endif %}
+                        <div class="meta-row">
+                          <div class="meta-count">{{ vote.absent_count|default(0)  }}</div>
+                          <div class="meta-label">Absent</div>
+                        </div>
+                        <div class="meta-row">
+                          <div class="meta-count">{{ vote.excused_count|default(0)  }}</div>
+                          <div class="meta-label">Excused</div>
+                        </div>
+                        <div class="meta-row">
+                          <div class="meta-count">{{ vote.abstained_count|default(0)  }}</div>
+                          <div class="meta-label">Abstained</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                <ul class="nysenate-accordion-nested">
+                  <li class="nysenate-accordion-nested__item">
+                    <button type="button" class="nysenate-accordion-nested__toggle">
+                      <span class="nysenate-accordion-nested__heading">
+                        <span class="indicator">View</span>
+                        {{ vote.type }} vote details
+                      </span>
+                      {{ icons.get('accordion__arrow'|lower) }}
+                    </button>
+                    <ul class="nysenate-accordion-nested nysenate-accordion-nested--inner">
+                      <li class="nysenate-accordion-nested__item">
+                        <h3 class="c-vote-detail--date">
+                          {{ vote.type }} Vote:
+                          {{ vote.date }}</h3>
+                        <div class="c-detail--vote-grp odd">
+                          <div class="c-detail--section-title">aye ({{ vote.aye_count|default(0) }})</div>
+                          <ul class="c-votes--items">
+                            {% for aye_member in vote.aye_members %}
+                              <li>
+                                <a href="{{ aye_member.url }}">{{ aye_member.name }}</a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                        <div class="c-detail--vote-grp even">
+                          <div class="c-detail--section-title">nay ({{ vote.nay_count|default(0) }})</div>
+                          <ul class="c-votes--items">
+                            {% for nay_member in vote.nay_members %}
+                              <li>
+                                <a href="{{ nay_member.url }}">{{ nay_member.name }}</a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
               </div>
-            </div>
+            {% endfor %}
           </div>
-        </dd>
-      </dl>
+        </article>
+      </div>
     </div>
   {% endif %}
 

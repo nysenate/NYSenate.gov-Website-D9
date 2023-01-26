@@ -28,7 +28,7 @@
     },
     heroMargin: function (heroContainer, pageMargin, pagePadding) {
       if ($(window).width() >= 1500) {
-        heroContainer.css('margin-left', `-${1500 / 4 }px`);
+        heroContainer.css('margin-left', `-${(1500 / 4) - 5 }px`);
       }
       else {
         heroContainer.css('margin-left', `-${pageMargin + pagePadding}px`);

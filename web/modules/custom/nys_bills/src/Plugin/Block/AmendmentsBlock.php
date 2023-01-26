@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_bills\Plugin\Block;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Block\BlockBase;
@@ -91,7 +92,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       // Wrap Committee in a link if it is a Senate committee.
       if ($last_status === 'IN_SENATE_COMM') {
         $committee_bill_details = 'Senate ' . $last_status_comm;
-        $target = Url::fromUserInput('/committees/' . $last_status_comm, []);
+        $target = Url::fromUserInput('/committees/' . Html::getClass($last_status_comm), []);
         $comm_status_pre = Link::fromTextAndUrl($committee_bill_details, $target)->toString();
       }
       if ($last_status === 'IN_ASSEMBLY_COMM') {
@@ -177,7 +178,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
           'same_as' => $same_as,
           'prev_vers' => $prev_vers,
           'prev_vers_pre' => $prev_vers_pre,
-          'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'http://legislation.nysenate.gov'),
+          'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov'),
           'version' => '',
         ],
       ];

@@ -1,0 +1,12 @@
+@import '../../global/utils/init';
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr fit-content(400px);
+  grid-auto-flow: row;
+
+  .sidebar-toggle {
+    position: relative;
+    z-index: $zi-low;
+  }
+}

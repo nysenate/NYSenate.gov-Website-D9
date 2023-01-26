@@ -96,9 +96,9 @@
       <span class="u-tablet-plus">{{ party }}</span>
     </p>
     <p class="c-subpage-header--subtitle03">{{ district_name }}</p>
-  {% elseif microsite_type == 'events' or microsite_type == 'legislation' or microsite_type == 'newsroom' %}
+  {% elseif microsite_type == 'events' or microsite_type == 'legislation' or microsite_type == 'newsroom' or microsite_type == 'thankful' or microsite_type == 'earth day' %}
     {% if title %}
-      <h2 class="nys-title">
+      <h2 class="nys-title {{ (microsite_type == 'thankful' or microsite_type == 'earth day') ? 'senator--tittle' }}">
         {{ title }}
       </h2>
     {% endif %}

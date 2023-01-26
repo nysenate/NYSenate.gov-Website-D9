@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.taxonomy_term.issues.field_drupal_6_tid
     - field.field.taxonomy_term.issues.field_keywords
+    - field.field.taxonomy_term.issues.field_majority_issue
     - field.field.taxonomy_term.issues.field_metatags
     - taxonomy.vocabulary.issues
   module:
@@ -30,12 +31,27 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_majority_issue:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 11
+    region: content
   field_metatags:
     type: metatag_empty_formatter
     label: above
     settings: {  }
     third_party_settings: {  }
     weight: 2
+    region: content
+  flag_follow_issue:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
     region: content
 hidden:
   field_drupal_6_tid: true

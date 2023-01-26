@@ -91,6 +91,7 @@ abbr[title] {
 
 b,
 strong {
+  font-family: $font-serif-bold;
   font-weight: bolder;
 }
 
@@ -451,6 +452,14 @@ label {
     margin: 30px 0 20px;
   }
 
+  &.senator--tittle {
+    margin: 0 0 30px;
+    font-size: 48px;
+    color: $grey08;
+    font-family: $font-serif;
+    line-height: 1.2em;
+  }
+
   &.nys-title--events {
     border-bottom: 1px solid #AAAAAA;
     margin-bottom: 0;
@@ -553,6 +562,43 @@ label {
 		margin-top: -3px;
 		font-size: 20px;
 	}	
+}
+
+.c-block {
+  &--full-bleed {
+    float: left;
+    padding-top: 30px;
+    padding-bottom: 0;
+    background: #EEEEEE;
+
+    @include breakpoint($bp-sm) {
+      padding-top: 60px;
+      padding-bottom: 0;
+    }
+
+    &::after,
+    &::before {
+      content: "";
+      position: absolute;
+      display: block;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      background: #EEEEEE;
+    }
+
+    &::before {
+      right: 100%;
+    }
+
+    &::after {
+      left: 100%;
+    }
+
+    .c-container--header {
+      margin-bottom: 20px;
+    }
+  }
 }
 
 .c-detail--subhead {

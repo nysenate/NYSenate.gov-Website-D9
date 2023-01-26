@@ -1,0 +1,5 @@
+{{ attach_library('nysenate_theme/chart') }}
+
+<figure class="chart">
+  <div class="{{ chart.type == 'pie' ? 'pieContainer': '' }}" data-colors='{{ chart.colors|json_encode() }}' data-values="{{ chart.values|json_encode() }}"></div>
+</figure>

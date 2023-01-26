@@ -1,0 +1,58 @@
+uuid: c886d27a-d913-48ee-87ef-361352f7e596
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.how_senate_works
+    - field.field.block_content.how_senate_works.field_link
+    - field.field.block_content.how_senate_works.field_modifier
+    - field.field.block_content.how_senate_works.field_steps
+    - field.field.block_content.how_senate_works.field_title
+  module:
+    - entity_reference_revisions
+    - link
+    - options
+id: block_content.how_senate_works.default
+targetEntityType: block_content
+bundle: how_senate_works
+mode: default
+content:
+  field_link:
+    type: link_separate
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_modifier:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_steps:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_title:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

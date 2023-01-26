@@ -1,0 +1,121 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.nysenate-accordion__title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2b6a90;
+
+  @include breakpoint($bp-md) {
+    font-size: 16px;
+  }
+}
+
+.nysenate-accordion__wrapper {
+  max-width: none;
+  position: relative;
+  margin-top: 50px;
+}
+
+.nysenate-accordion__wrapper-title {
+  color: $grey08;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $grey05;
+  margin-bottom: 20px;
+  letter-spacing: 0.1em;
+
+  @include breakpoint($bp-md) {
+    font-size: 16px;
+  }
+}
+
+.nysenate-accordion-nested {
+  border: 0;
+  margin-bottom: 10px;
+  width: 100%;
+
+  &:first-of-type {
+    border: 0;
+  }
+
+  &__toggle.show {
+    svg {
+      transform: rotate(-180deg);
+    }
+  }
+
+  .field--type-link {
+    margin-top: 20px;
+
+    a {
+      color: #2b6a90;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 26px;
+      position: relative;
+      text-decoration: none;
+      margin-top: 21px;
+
+      &::after {
+        content: '>';
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.nysenate-accordion-nested__toggle {
+  padding: 22px 16px 22px 30px;
+  border: 0;
+  background-color: $grey06;
+  cursor: pointer;
+  outline: inherit;
+  position: relative;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &::after {
+    display: none;
+  }
+
+  svg {
+    fill: #2b6a90;
+  }
+}
+
+.nysenate-accordion-nested__heading {
+  color: #2b6a90;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  font-weight: $font-weight-normal;
+  text-transform: uppercase;
+  flex: 75%;
+  font-family: $font-sans-bold;
+
+  @include breakpoint($bp-sm) {
+    font-size: 16px;
+  }
+
+  &.hide-number .count {
+    display: none;
+  }
+}
+
+.nysenate-accordion-nested {
+  list-style: none;
+  padding: 0;
+
+  &--inner {
+    overflow: hidden;
+    display: none;
+
+    &.show {
+      display: block;
+    }
+  }
+}

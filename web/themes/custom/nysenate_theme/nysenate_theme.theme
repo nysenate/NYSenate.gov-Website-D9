@@ -3596,8 +3596,12 @@ function nysenate_theme_preprocess_page(&$variables) {
   }
 
   // Microsite theme settings.
+  $node_types = [
+    'microsite_page',
+    'petition',
+  ];
   $node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($node) && is_object($node) && $node->bundle() == 'microsite_page') {
+  if (!empty($node) && is_object($node) && in_array($node->bundle(), $node_types)) {
     if (!empty($node->field_senator_multiref)) {
       $sid = $node->field_senator_multiref->target_id;
       $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')

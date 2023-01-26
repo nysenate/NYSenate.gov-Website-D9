@@ -80,13 +80,6 @@
           <div class="petition-form">
             {{ petition_form }}
           </div>
-        {% else %}
-          <span class="c-btn--cta c-btn--cta__sign">
-              <span class="flag-wrapper flag-sign-petition">
-                {{ ctools_modal_text_button }}
-                {# <?php print ctools_modal_text_button(t('sign this petition'), 'registration/nojs/login', t('sign this petition'), 'ctools-modal-login-modal flag unflag-action flag-link-toggle flag-processed'); ?> #}
-              </span>
-            </span>
         {% endif %}
         <p class="petition-small-text">{{ petition_login_link }}</p>
       </div>

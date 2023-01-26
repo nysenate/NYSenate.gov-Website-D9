@@ -240,7 +240,7 @@
                   </a>
 
                   {% set values = [vote.nay_count|default(0), vote.aye_count|default(0)] %}
-                  {% set colors =  vote.type|lower != 'floor' ? ["#F1AF58", "#CB8D37"] : ["#1F798F", "#04A9C5"] %}
+                  {% set colors =  vote.type|lower != 'floor' ? ["#CB8D37", "#F1AF58"] : ["#1F798F", "#04A9C5"] %}
 
                   {% include "@nysenate_theme/chart/chart.twig" with {
                     chart: {

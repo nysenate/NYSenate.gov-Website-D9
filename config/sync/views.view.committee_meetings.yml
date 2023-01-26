@@ -18,6 +18,7 @@ dependencies:
     - field.storage.node.field_ol_latest_status_committee
     - field.storage.node.field_ol_name
     - field.storage.node.field_ol_sponsor
+    - field.storage.node.field_ol_sponsor_name
     - field.storage.node.field_ol_votes
     - field.storage.paragraph.field_ol_absent_count
     - field.storage.paragraph.field_ol_abstained_count
@@ -41,7 +42,7 @@ dependencies:
     - taxonomy
     - text
     - user
-    - views_load_more
+    - views_infinite_scroll
 id: committee_meetings
 label: 'Committee Meetings'
 module: views
@@ -489,28 +490,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: load_more
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 4
-          id: '0'
-          total_pages: ''
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
           expose:
-            items_per_page: 0
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: 0
+            offset: false
             offset_label: Offset
-          more_button_text: 'Load more'
-          end_text: ''
-          advanced:
-            content_selector: ''
-            pager_selector: ''
-          effects:
-            type: ''
-            speed: slow
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: basic
         options:
@@ -614,6 +614,7 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
+      use_ajax: true
       header: {  }
       footer: {  }
       display_extenders: {  }
@@ -1005,6 +1006,69 @@ display:
           settings:
             view_mode: agenda_senator_sponsors
           group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_ol_sponsor_name:
+          id: field_ol_sponsor_name
+          table: node__field_ol_sponsor_name
+          field: field_ol_sponsor_name
+          relationship: field_ol_bill
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -3289,6 +3353,7 @@ display:
         - 'config:field.storage.node.field_ol_latest_status_committee'
         - 'config:field.storage.node.field_ol_name'
         - 'config:field.storage.node.field_ol_sponsor'
+        - 'config:field.storage.node.field_ol_sponsor_name'
         - 'config:field.storage.node.field_ol_votes'
         - 'config:field.storage.paragraph.field_ol_absent_count'
         - 'config:field.storage.paragraph.field_ol_abstained_count'
@@ -5177,7 +5242,22 @@ display:
         arguments: false
         filters: false
         filter_groups: false
+        header: false
       display_description: ''
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: "<div class=\"c-container--header\">\r\n<h3 class=\"c-container--title \">past {{ arguments.nid }} committee events</h3>\r\n</div>"
+            format: full_html
+          tokenize: true
       display_extenders: {  }
       block_description: 'Past Committee Meetings'
     cache_metadata:

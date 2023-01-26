@@ -2,6 +2,7 @@
 {{ attach_library('nysenate_theme/meeting-detail') }}
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
 {{ attach_library('nysenate_theme/nysenate_sponsor_list') }}
+{{ attach_library('nysenate_theme/video-embed') }}
 
 <article class="c-block c-meeting-detail--header">
   <div class="c-meeting-detail--meta">
@@ -116,15 +117,14 @@
   {% endif %}
 
   {% if content.field_yt.0 %}
-    <div class="c-meeting-detail--descript">
-      {% include '@nysenate_theme/video-embed/video-embed.twig' with {
-        video: content.field_yt
-      } only %}
+    <div class="c-meeting-detail--descript flex-video">
+      {{ content.field_yt }}
     </div>
   {% endif %}
 
-  {{ meeting_agenda }}
 </article>
+
+{{ meeting_agenda }}
 
 {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
   title: node.type.entity.label,

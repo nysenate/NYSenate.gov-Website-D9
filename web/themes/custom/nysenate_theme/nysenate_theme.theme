@@ -1259,14 +1259,14 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
       elseif ($node->bundle() === 'video') {
         $video_id = $node->field_yt->target_id;
-        $video = $media_storage->load($video_id);
+        $video = $video_id ? $media_storage->load($video_id) : NULL;
         if ($video) {
           $video->enforceMetadataUpdate();
           $media_storage->save($video);
+          $image_file = File::load($video->thumbnail->target_id);
+          $image_uri = $image_file->uri->value;
+          $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri);
         }
-        $image_file = File::load($video->thumbnail->target_id);
-        $image_uri = $image_file->uri->value;
-        $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri);
       }
 
       $contents[] = [
@@ -1282,6 +1282,14 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     }
 
     $variables['contents'] = $contents;
+
+    if ($view->current_display == 'microsite_newsroom_content' && $view->exposed_raw_input['type_1']) {
+      $pagination_link_text = 'News';
+      if ($view->exposed_raw_input['type_1'] == '2') {
+        $pagination_link_text = 'Videos';
+      }
+      $variables['panel']['pagination_link_text'] = $pagination_link_text;
+    }
   }
 
   // Legislation.

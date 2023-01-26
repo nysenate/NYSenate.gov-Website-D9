@@ -207,17 +207,7 @@ class RegisterForm extends UserRegisterForm {
    */
   public function formBuildStep2(array &$form, FormStateInterface $form_state): array {
     $district = $form_state->get('senate_district') ?? 0;
-    $blurb = $this->t('If your address is incorrect, please click "BACK" to edit it.  Otherwise, select "FINISH" to create your account.');
-    $assignment = $district
-      ? "This address is in Senate District $district."
-      : "We were unable to place your address in a Senate district.";
-    $form['registration_wizard'] = [
-      '#type' => 'container',
-      'district_assignment' => [
-        '#markup' => '<h1>' . $assignment . '</h1>',
-      ],
-      'instruction' => ['#markup' => '<p>' . $blurb . '</p>'],
-    ];
+
     $form['actions'] = [
       'next' => [
         '#type' => 'submit',
@@ -232,6 +222,12 @@ class RegisterForm extends UserRegisterForm {
         '#limit_validation_errors' => [],
       ],
     ];
+
+    $form['#theme'] = 'register_form_step2';
+    $form['#attributes']['variables'] = [
+      'district_dumber' => $district,
+    ];
+
     return $form;
   }
 

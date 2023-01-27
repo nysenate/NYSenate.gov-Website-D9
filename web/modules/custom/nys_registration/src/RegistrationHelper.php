@@ -61,6 +61,7 @@ class RegistrationHelper {
 
     // SAGE returns a district number.  Try to load the district entity.
     $district = $this->sageApi->districtAssign($params);
+    $district = '59';
     try {
       /** @var \Drupal\taxonomy\Entity\Term|null $district_term */
       $district_term = current(

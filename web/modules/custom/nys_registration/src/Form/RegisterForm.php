@@ -190,11 +190,16 @@ class RegisterForm extends UserRegisterForm {
     $district_term = $this->helper->getDistrictFromAddress($address);
     $district_id = $district_term?->id();
     $district_num = $district_term ? $district_term->field_district_number->value : 0;
+    $senator = $district_term ? $district_term->get('field_senator')->entity : 0;
 
-    // Record the district info in form state, and move to the next step.
+    // Record the district info in form state.
     $form_state->setValue('field_district', [$district_id])
       ->set('senate_district', $district_num)
-      ->set('district', $district_term)
+      ->set('district', $district_term);
+
+    // Record the senator info in form state, and move to the next step.
+    $form_state->setValue('field_senator', [$senator])
+      ->set('senator', $senator)
       ->set('step', 2)
       ->setRebuild();
 
@@ -207,6 +212,10 @@ class RegisterForm extends UserRegisterForm {
    */
   public function formBuildStep2(array &$form, FormStateInterface $form_state): array {
     $district = $form_state->get('senate_district') ?? 0;
+    $senator = [];
+    $senator_term = $form_state->get('senator');
+    $senator_name = $senator_term->get('field_senator_name')->getValue();
+    $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
 
     $form['actions'] = [
       'next' => [
@@ -225,7 +234,8 @@ class RegisterForm extends UserRegisterForm {
 
     $form['#theme'] = 'register_form_step2';
     $form['#attributes']['variables'] = [
-      'district_dumber' => $district,
+      'district_number' => $district,
+      'senator' => json_encode($senator),
     ];
 
     return $form;

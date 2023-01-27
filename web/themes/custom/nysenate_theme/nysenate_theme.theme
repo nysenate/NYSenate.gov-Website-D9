@@ -1623,16 +1623,23 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
       ->load(\Drupal::currentUser()->id());
 
     $senator_message_form_ids = [];
+    $senator_sent_form_ids = [];
     if ($current_user->hasField('field_senator_management') && !$current_user->get('field_senator_management')->isEmpty()) {
       foreach ($current_user->field_senator_management as $senator_management) {
         $senator = $senator_management->entity;
         $senator_message_form_ids[] = 'views_form_private_message_inbox_inbox_' . $senator->field_user_account->target_id;
+        $senator_sent_form_ids[] = 'views_form_private_message_inbox_sent_' . $senator->field_user_account->target_id;
       }
     }
 
     if ($variables['element']['#form_id'] == 'views_form_private_message_inbox_inbox_' . \Drupal::currentUser()->id() ||
       (!empty($senator_message_form_ids) && in_array($variables['element']['#form_id'], $senator_message_form_ids))) {
       $suggestions[] = 'form__views_form_private_message_inbox__list';
+    }
+
+    if ($variables['element']['#form_id'] == 'views_form_private_message_inbox_sent_' . \Drupal::currentUser()->id() ||
+      (!empty($senator_message_form_ids) && in_array($variables['element']['#form_id'], $senator_message_form_ids))) {
+      $suggestions[] = 'form__views_form_private_message_sent__list';
     }
   }
 
@@ -3430,7 +3437,9 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
     }
   }
 
-  if (!empty($form['#id']) && $form['#id'] == 'views-exposed-form-private-message-inbox-inbox') {
+  if (!empty($form['#id']) &&
+    ($form['#id'] == 'views-exposed-form-private-message-inbox-inbox' ||
+    $form['#id'] == 'views-exposed-form-private-message-inbox-sent')) {
     $form['#attached']['library'][] = 'nysenate_theme/dashboard-inbox';
     $values = $form_state->getValues();
 
@@ -3468,6 +3477,25 @@ function nysenate_theme_preprocess_form__views_exposed_form__private_message_inb
   $variables['cta'] = [
     'link' => $cta_link,
     'label' => 'View Sent Messages',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_form__views_exposed_form().
+ */
+function nysenate_theme_preprocess_form__views_exposed_form__private_message_inbox__sent(&$variables) {
+  $variables['title'] = 'Sent';
+
+  $cta_link = '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox';
+  $uri_explode = explode('/', \Drupal::request()->getRequestUri());
+  if ($uri_explode && is_array($uri_explode)) {
+    $cta_link = '/users/' . $uri_explode[2] . '/dashboard/inbox';
+  }
+
+  $variables['type'] = 'sent';
+  $variables['cta'] = [
+    'link' => $cta_link,
+    'label' => 'Back to Inbox',
   ];
 }
 

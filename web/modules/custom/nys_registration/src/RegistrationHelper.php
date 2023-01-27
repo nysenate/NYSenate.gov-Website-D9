@@ -77,4 +77,26 @@ class RegistrationHelper {
     return $district_term;
   }
 
+  /**
+   * Get the Senators' district page.
+   *
+   * @param \Drupal\taxonomy\Entity\Term $senator
+   *   The senators' taxonomy term.
+   *
+   * @return string $district_url
+   *   returns the alias for the page
+   */
+  public function getMicrositeDistrictAlias(Term $senator) {
+
+    $nids = $this->entityTypeManager->getStorage('node')->loadByProperties([
+      'field_microsite_page_type' => '200001',
+      'field_senator_multiref' => $senator->id(),
+    ]);
+    foreach ($nids as $nid => $value) {
+      $district_node = $this->entityTypeManager->getStorage('node')->load($nid);
+    }
+    $district_url = \Drupal::service('path_alias.manager')->getPathByAlias($district_node->toUrl()->toString());
+    return $district_url;
+  }
+
 }

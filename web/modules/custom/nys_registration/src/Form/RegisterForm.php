@@ -196,7 +196,6 @@ class RegisterForm extends UserRegisterForm {
     $form_state->setValue('field_district', [$district_id])
       ->set('senate_district', $district_num)
       ->set('district', $district_term);
-
     // Record the senator info in form state, and move to the next step.
     $form_state->setValue('field_senator', [$senator])
       ->set('senator', $senator)
@@ -215,20 +214,28 @@ class RegisterForm extends UserRegisterForm {
     $senator = [];
     $senator_term = $form_state->get('senator');
     $senator_name = $senator_term->get('field_senator_name')->getValue();
+    $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
     $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
+    $first_name = $form_state->getValue('field_first_name');
+    $last_name = $form_state->getValue('field_last_name');
+    $address = $form_state->getValue(['field_address', '0', 'address']);
+    $user['name'] = $first_name[0]['value'] . ' ' . $last_name[0]['value'];
+    $user['address_1'] = $address['address_line1'];
+    $user['address_2'] = $address['address_line2'];
+    $user['mail'] = $form_state->getValue('mail');
 
     $form['actions'] = [
-      'next' => [
-        '#type' => 'submit',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Next'),
-        '#submit' => ['::formSubmitStep2'],
-      ],
       'back' => [
         '#type' => 'submit',
         '#value' => $this->t('Back'),
         '#submit' => ['::formSubmitBack'],
         '#limit_validation_errors' => [],
+      ],
+      'next' => [
+        '#type' => 'submit',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Next'),
+        '#submit' => ['::formSubmitStep2'],
       ],
     ];
 
@@ -236,6 +243,7 @@ class RegisterForm extends UserRegisterForm {
     $form['#attributes']['variables'] = [
       'district_number' => $district,
       'senator' => json_encode($senator),
+      'user' => json_encode($user),
     ];
 
     return $form;

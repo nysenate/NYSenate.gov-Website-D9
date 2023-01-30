@@ -11,6 +11,8 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\nys_registration\RegistrationHelper;
 use Drupal\user\RegisterForm as UserRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\media\Entity\Media;
+use Drupal\file\Entity\File;
 
 /**
  * Custom multi-step registration form.
@@ -214,6 +216,15 @@ class RegisterForm extends UserRegisterForm {
     $senator = [];
     $senator_term = $form_state->get('senator');
     $senator_name = $senator_term->get('field_senator_name')->getValue();
+    $senator_party = $senator_term->get('field_party')->getValue();
+    $mid = $senator_term->get('field_member_headshot')->target_id;
+    $media = Media::load($mid);
+    $fid = $media->get('field_image')->target_id;
+    $file = File::load($fid);
+    $senator['image'] = empty($file) ?
+      '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
+      file_create_url($file->getFileUri());
+    $senator['party'] = $this->helper->getPartyAffilation($senator_party);
     $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
     $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
     $first_name = $form_state->getValue('field_first_name');

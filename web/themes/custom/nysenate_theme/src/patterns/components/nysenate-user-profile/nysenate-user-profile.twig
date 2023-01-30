@@ -26,12 +26,12 @@
     </div>
     <div class="c-login-right">
       <div class="nys-senator--thumb">
-        {{ senator.image }}
+       <img src="{{ senator.image }}" alt="Senator {{ senator.name }} avatar" />
       </div>
       <ul class="c-senator--info">
         <li>Your Senator</li>
         <li>{{ senator.name }}</li>
-        <li>{{ senator.duties }}</li>
+        <li>{{ senator.party }}</li>
         <li>
           NY Senate District {{ district_number }}
           {% if senator.location %}

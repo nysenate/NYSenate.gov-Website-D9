@@ -3746,7 +3746,9 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
  * Implements hook_preprocess_node__NODE_TYPE().
  */
 function nysenate_theme_preprocess_node__petition(&$variables) {
-  $variables['image_caption'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  if (isset($variables['content']['field_image_main'][0])) {
+    $variables['image_caption'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  }
   $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
 
   /** @var \Drupal\node\NodeInterface $node */

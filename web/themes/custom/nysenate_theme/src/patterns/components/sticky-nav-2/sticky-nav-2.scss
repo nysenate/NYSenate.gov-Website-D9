@@ -1,0 +1,149 @@
+@import '../../global/utils/init';
+
+/*-----------------------------------
+/ about senate page nav
+/------------------------------------*/
+.c-about--nav {
+  display: none;
+}
+
+@media screen and (min-width: #{$desktopWidth}px) {
+
+  .c-about--nav {
+    transition: height 0.25s ease;
+    display: block;
+    position: fixed;
+    overflow: hidden;
+    z-index: 40;
+    top: 270px;
+    right: 20px;
+    width: 220px;
+    height: 275px;
+    padding-right: 20px;
+
+    // triangle
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      margin: auto;
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 20px solid $blue01;
+    }
+
+    > ul {
+      transition: top 0.2s ease;
+      list-style: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: auto;
+      width: 200px;
+      padding: 20px 25px;
+      background: $blue01;
+    }
+
+    li {
+      position: relative;
+      padding-left: 20px;
+      font-family: $font-sans;
+      font-size: 14px;
+      line-height: 14px;
+      transition: opacity 0.25s ease .2s,
+        padding .2s ease;
+
+      & + li {
+        margin-top: 18px;
+      }
+
+      &::before {
+        content: '\65';
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: $color-white;
+        font-family: 'senate_icons';
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-right: 3px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      a {
+        display: block;
+        color: $color-white;
+      }
+    }
+
+    //collapsed state
+    &.collapsed {
+      transition: height 0.35s ease;
+      height: 50px;
+
+      > ul {
+        transition: top 0.35s ease;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      li {
+        padding: 18px 0 18px;
+        opacity: 0;
+        transition: opacity 0.1s ease,
+          padding 0.2s ease 0.1s,
+          margin 0.2s ease 0.1s;
+
+        & + li {
+          margin-top: 0;
+        }
+
+        &.active {
+          opacity: 1;
+        }
+
+        &::before {
+          content: '';
+        }
+      }
+
+      &:hover {
+        transition: height 0.25s ease;
+        height: 310px;
+
+        > ul {
+          top: 0 !important;
+          padding: 20px 25px;
+        }
+
+        li {
+          padding: 0 0 0 20px;
+          opacity: 1;
+          transition: opacity 0.25s ease .2s,
+            padding .2s ease,
+            margin .2s ease;
+
+          & + li {
+            margin-top: 18px;
+          }
+
+          &::before {
+            content: '\65';
+          }
+        }
+      }
+    }
+  }
+}

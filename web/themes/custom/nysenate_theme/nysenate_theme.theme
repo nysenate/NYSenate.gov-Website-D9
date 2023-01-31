@@ -21,6 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\address\Plugin\Field\FieldType\AddressItem;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Implements hook_preprocess_menu_ID().
@@ -1623,16 +1624,23 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
       ->load(\Drupal::currentUser()->id());
 
     $senator_message_form_ids = [];
+    $senator_sent_form_ids = [];
     if ($current_user->hasField('field_senator_management') && !$current_user->get('field_senator_management')->isEmpty()) {
       foreach ($current_user->field_senator_management as $senator_management) {
         $senator = $senator_management->entity;
         $senator_message_form_ids[] = 'views_form_private_message_inbox_inbox_' . $senator->field_user_account->target_id;
+        $senator_sent_form_ids[] = 'views_form_private_message_inbox_sent_' . $senator->field_user_account->target_id;
       }
     }
 
     if ($variables['element']['#form_id'] == 'views_form_private_message_inbox_inbox_' . \Drupal::currentUser()->id() ||
       (!empty($senator_message_form_ids) && in_array($variables['element']['#form_id'], $senator_message_form_ids))) {
       $suggestions[] = 'form__views_form_private_message_inbox__list';
+    }
+
+    if ($variables['element']['#form_id'] == 'views_form_private_message_inbox_sent_' . \Drupal::currentUser()->id() ||
+      (!empty($senator_message_form_ids) && in_array($variables['element']['#form_id'], $senator_message_form_ids))) {
+      $suggestions[] = 'form__views_form_private_message_sent__list';
     }
   }
 
@@ -3430,7 +3438,9 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
     }
   }
 
-  if (!empty($form['#id']) && $form['#id'] == 'views-exposed-form-private-message-inbox-inbox') {
+  if (!empty($form['#id']) &&
+    ($form['#id'] == 'views-exposed-form-private-message-inbox-inbox' ||
+    $form['#id'] == 'views-exposed-form-private-message-inbox-sent')) {
     $form['#attached']['library'][] = 'nysenate_theme/dashboard-inbox';
     $values = $form_state->getValues();
 
@@ -3468,6 +3478,25 @@ function nysenate_theme_preprocess_form__views_exposed_form__private_message_inb
   $variables['cta'] = [
     'link' => $cta_link,
     'label' => 'View Sent Messages',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_form__views_exposed_form().
+ */
+function nysenate_theme_preprocess_form__views_exposed_form__private_message_inbox__sent(&$variables) {
+  $variables['title'] = 'Sent';
+
+  $cta_link = '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox';
+  $uri_explode = explode('/', \Drupal::request()->getRequestUri());
+  if ($uri_explode && is_array($uri_explode)) {
+    $cta_link = '/users/' . $uri_explode[2] . '/dashboard/inbox';
+  }
+
+  $variables['type'] = 'sent';
+  $variables['cta'] = [
+    'link' => $cta_link,
+    'label' => 'Back to Inbox',
   ];
 }
 
@@ -3603,8 +3632,12 @@ function nysenate_theme_preprocess_page(&$variables) {
   }
 
   // Microsite theme settings.
+  $node_types = [
+    'microsite_page',
+    'petition',
+  ];
   $node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($node) && is_object($node) && $node->bundle() == 'microsite_page') {
+  if (!empty($node) && is_object($node) && in_array($node->bundle(), $node_types)) {
     if (!empty($node->field_senator_multiref)) {
       $sid = $node->field_senator_multiref->target_id;
       $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
@@ -3713,7 +3746,9 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
  * Implements hook_preprocess_node__NODE_TYPE().
  */
 function nysenate_theme_preprocess_node__petition(&$variables) {
-  $variables['image_caption'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  if (isset($variables['content']['field_image_main'][0])) {
+    $variables['image_caption'] = $variables['content']['field_image_main'][0]['#media']->field_image->title;
+  }
   $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
 
   /** @var \Drupal\node\NodeInterface $node */
@@ -3725,6 +3760,20 @@ function nysenate_theme_preprocess_node__petition(&$variables) {
       $variables['field_senator'] = $senatorName;
     }
   }
+
+  $current_path = \Drupal::service('path.current')->getPath();
+  $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+  if (!$path_alias) {
+    throw new NotFoundHttpException();
+  }
+  $params = [
+    'destination' => $path_alias,
+  ];
+  $variables['petition_login_link'] = Link::fromTextAndUrl(
+    t('Logged-in users can sign with one click.'),
+    Url::fromUserInput('/user/login', ['query' => $params])
+  );
+
 }
 
 /**
@@ -3907,9 +3956,12 @@ function nysenate_theme_preprocess_comment(&$variables) {
  * Implements hook_preprocess_tweets().
  */
 function nysenate_theme_preprocess_tweets(&$variables) {
-  $args = [
-    '@username' => $variables['elements']['#tweets'][0]['username'],
-  ];
+  $args = [];
+  if (!empty($variables['elements']['#tweets'])) {
+    $args = [
+      '@username' => $variables['elements']['#tweets'][0]['username'],
+    ];
+  }
 
   // Follow link.
   $variables['content']['follow_link'] = [
@@ -3939,4 +3991,53 @@ function nysenate_theme_preprocess_tweets(&$variables) {
       'week' => $variables['date'],
     ];
   }
+}
+
+/**
+ * Implements hook_preprocess_webform_confirmation().
+ */
+function nysenate_theme_preprocess_webform_confirmation__school_form(&$variables) {
+  $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
+
+  $school_id = $variables['webform_submission']->getData()['school_name'];
+  $school = \Drupal::entityTypeManager()->getStorage('node')->load($school_id);
+  $grades = $webform->getElementsDecoded()['grade']['#options'];
+  $grade = $variables['webform_submission']->getData()['grade'];
+  $submission_types = $webform->getElementsDecoded()['submissions']['attach_your_submission']['#element']['submission_type']['#options'];
+
+  $variables['school_name'] = $school->title->value ?? '';
+  $variables['contact_name'] = $variables['webform_submission']->getData()['contact_name'] ?? '';
+  $variables['contact_email'] = $variables['webform_submission']->getData()['contact_email'] ?? '';
+  $variables['grade'] = $grades[$grade] ?? '';
+
+  $submissions = [];
+  $student_submissions = $variables['webform_submission']->getData()['attach_your_submission'] ?? [];
+
+  foreach ($student_submissions as $submission) {
+    $file = \Drupal::entityTypeManager()->getStorage('file')->load($submission['student_submission']);
+    $file_uri = $file->getFileUri();
+    $file_url = \Drupal::service('file_url_generator')->generateString($file_uri);
+    $image = \Drupal::service('image.factory')->get($file_uri);
+
+    if ($image->isValid()) {
+      $submissions[] = [
+        'students_name' => $submission['student_name'],
+        'category' => $submission_types[$submission['submission_type']],
+        'attachment' => [
+          '#markup' => '<img src="' . $file_url . '" />',
+        ],
+      ];
+    }
+    else {
+      $link = Link::fromTextAndUrl($file->filename->value, Url::fromUserInput($file_url));
+      $submissions[] = [
+        'students_name' => $submission['student_name'],
+        'category' => $submission_types[$submission['submission_type']],
+        'file' => [
+          'attachment' => $link,
+        ],
+      ];
+    }
+  }
+  $variables['student_submissions'] = $submissions;
 }

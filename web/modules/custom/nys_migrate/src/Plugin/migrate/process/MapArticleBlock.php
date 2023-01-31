@@ -88,7 +88,7 @@ class MapArticleBlock extends ProcessPluginBase {
           ->execute()->fetchCol();
 
         if (!$dest_block) {
-          throw new MigrateSkipRowException(sprintf('Mapping id for Paragraph %s not found', $value));
+          throw new MigrateSkipRowException(sprintf('Mapping id for Paragraph %s not found', $value['value']));
         }
         else {
 
@@ -100,7 +100,7 @@ class MapArticleBlock extends ProcessPluginBase {
             ->execute()->fetchCol();
 
           if (!$result) {
-            throw new MigrateSkipRowException(sprintf('Rev ID for block %s not found', $value));
+            throw new MigrateSkipRowException(sprintf('Rev ID for block %s not found', $value['value']));
           }
 
           $blocks = [

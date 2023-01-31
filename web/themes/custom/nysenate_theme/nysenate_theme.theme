@@ -3956,9 +3956,12 @@ function nysenate_theme_preprocess_comment(&$variables) {
  * Implements hook_preprocess_tweets().
  */
 function nysenate_theme_preprocess_tweets(&$variables) {
-  $args = [
-    '@username' => $variables['elements']['#tweets'][0]['username'],
-  ];
+  $args = [];
+  if (!empty($variables['elements']['#tweets'])) {
+    $args = [
+      '@username' => $variables['elements']['#tweets'][0]['username'],
+    ];
+  }
 
   // Follow link.
   $variables['content']['follow_link'] = [

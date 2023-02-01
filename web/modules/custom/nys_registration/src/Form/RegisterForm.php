@@ -280,9 +280,7 @@ class RegisterForm extends UserRegisterForm {
    * Step 3 is confirmation page, with directions to check for an email.
    */
   public function formBuildStep3(array &$form, FormStateInterface $form_state): array {
-    $form['registration_wizard'] = [
-      '#markup' => '<h1>Almost there!</h1><p>Please find the email that was just sent to you. Click on the login URL in the email (or paste it into your browser) to validate your address and set up a password. New users must login with 7 days to retain an active account. Once that\'s done, you\'ll be ready to participate in the legislative process.</p>',
-    ];
+    $form['#theme'] = 'register_form_step3';
     return $form;
   }
 

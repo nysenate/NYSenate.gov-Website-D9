@@ -1,0 +1,37 @@
+{{ attach_library('nysenate_theme/nysenate-about-tour') }}
+
+<div class="c-block c-block--about c-block--full-bleed c-block--about-tour">
+  <h3 class="nys-subtitle-title">{{ title }}</h3>
+
+  <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}" {{- attributes ? attributes|without(class) -}}>
+    <ul class="carousel__list carousel__slick">
+      {% if carousel %}
+        {% block carousel_items %}
+          {% for item in carousel.list %}
+            {%
+          include '@rain_theme/carousel/_carousel-item.twig' with {
+            "item": item
+          } only
+        %}
+          {% endfor %}
+        {% endblock %}
+      {% endif %}
+    </ul>
+  </section>
+
+
+  <p>{{ description }}</p>
+
+  {% if contact %}
+    <div class="c-tour-contact">
+      <p class="c-tour-contact--title">{{ contact.title }}</p>
+      <p class="c-tour-contact--loc">{{ contact.loc }}</p>
+      <p class="c-tour-contact--phone">{{ contact.phone }}</p>
+    </div>
+  {% endif %}
+
+  {% if cta %}
+    <a class="nys-btn--gold" href="">{{ cta.text }}</a>
+  {% endif %}
+
+</div>

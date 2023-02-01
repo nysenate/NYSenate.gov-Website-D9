@@ -379,8 +379,8 @@ main.l-row--main {
 }
 
 /*------------------------------------
-/	SENATOR LISTING  
-/ 	
+/	SENATOR LISTING
+/
 /	circular thumbnail of senator
 /	description to the right
 /	name, district, party affiliation
@@ -468,6 +468,21 @@ main.l-row--main {
 	color: $blue01;
 	text-transform: capitalize;
 	font-family: $font-sans-bold;
+}
+
+.nys-senator--district {
+	color: $grey03;
+	text-transform: uppercase;
+	font-family: $font-serif;
+	font-size: 12px;
+	letter-spacing: 0.05em;
+	line-height: 1.2em;
+}
+
+.nys-senator--party {
+	color: $blue01;
+	text-transform: capitalize;
+	font-family: $font-serif;
 }
 
 /*-------------------------------------------------------
@@ -627,6 +642,11 @@ main.l-row--main {
       font-family: $font-sans-bold;
       text-transform: uppercase;
       font-size: 10px;
+    }
+
+    .nys-senator--district {
+      letter-spacing: 0.05em;
+      line-height: 1.2em;
     }
 
     .nys-senator--involved {
@@ -965,4 +985,8 @@ h2.c-subpage-header--title {
   max-width: 100%;
   width: 100%;
   height: 426px;
+}
+
+.panel-separator {
+  clear: both;
 }

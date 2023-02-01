@@ -45,6 +45,7 @@
 }
 
 @include breakpoint($bp-sm) {
+
   .nys-bill-status__sml li,
   .nys-bill-status__drk li {
     margin-top: -7.5px;
@@ -68,17 +69,28 @@
     }
 
     .bills-container {
-  
+
       &.c-block--half-wrap {
         width: 50%;
         margin-right: 60px;
       }
     }
-    
+
     .c-block-legislation-featured.c-block--half-wrap {
       margin: 0 24px 28px 0;
       clear: both;
       width: 100%;
+    }
+  }
+}
+
+.bills-container {
+
+  @include breakpoint($bp-sm) {
+    &--col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 60px;
     }
   }
 }

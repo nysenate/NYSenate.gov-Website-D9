@@ -9,9 +9,7 @@
   <section class="c-block c-student-program-are-you">
     <div class="gen-wrapper">
       {% for program in programs %}
-        <div class="gen-col--height {{ program.color }}">
-          <a href="{{ program.url }}">{{ program.text }}</a>
-        </div>
+        <a class="gen-col--height {{ program.color }}" href="{{ program.url }}">{{ program.text }}</a>
       {% endfor %}
     </div>
   </section>

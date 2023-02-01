@@ -17,8 +17,6 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\File\FileUrlGenerator;
-use Drupal\file\FileInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileSystem;
 use Drupal\file\FileRepository;
 use Drupal\nys_school_forms\SchoolFormsService;
@@ -132,11 +130,18 @@ class SchoolFormEnityUpdateForm extends FormBase {
   protected $fileRepository;
 
   /**
-   * The tempstore object.
+   * The tempstore object for Delete.
    *
    * @var \Drupal\Core\TempStore\SharedTempStore
    */
-  protected $privateTempStore;
+  protected $privateTempStoreDelete;
+
+  /**
+   * The tempstore object for Show Student.
+   *
+   * @var \Drupal\Core\TempStore\SharedTempStore
+   */
+  protected $privateTempStoreShow;
 
   /**
    * The current user.
@@ -213,7 +218,8 @@ class SchoolFormEnityUpdateForm extends FormBase {
     $this->fileSystem = $fileSystem;
     $this->fileRepository = $fileRepository;
     $this->currentUser = $current_user;
-    $this->privateTempStore = $temp_store_factory->get('school_form_multiple_delete_confirm');
+    $this->privateTempStoreDelete = $temp_store_factory->get('school_form_multiple_delete_confirm');
+    $this->privateTempStoreShow = $temp_store_factory->get('school_form_multiple_show_student_confirm');
   }
 
   /**
@@ -324,7 +330,15 @@ class SchoolFormEnityUpdateForm extends FormBase {
           1 => 'an essay',
           2 => 'a poem',
         ];
-        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id() . '-' . $result['parent_node']->id()] = [
+        if ($result['parent_node']) {
+          $parent_node_id = $result['parent_node']->id();
+          $school_form_type = $result['parent_node']->get('field_school_form_type')->entity->label();
+        }
+        else {
+          $parent_node_id = 'none';
+          $school_form_type = 'Submitted directly from webform';
+        }
+        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id() . '-' . $parent_node_id] = [
           'school' => new FormattableMarkup('@school_name <br> @street <br> @city, @state, @zipcode', [
             '@school_name' => $school_name,
             '@street' => $school_address['address_line1'],
@@ -345,7 +359,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
             '@show_status' => $show_status,
           ]),
           'date_submitted' => date('F j, Y', $result['submission']->getCreatedTime()),
-          'school_form_type' => $result['parent_node']->get('field_school_form_type')->entity->label(),
+          'school_form_type' => $school_form_type,
         ];
         $i++;
       }
@@ -367,43 +381,25 @@ class SchoolFormEnityUpdateForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $operation = $form_state->getValue(['operations', 'action_type']);
-    if ($operation == 'show_student') {
-      $table = $form_state->getValue('table');
-      foreach ($table as $key => $value) {
-        if ($value) {
-          $parts = explode('-', $value);
-          $fid = $parts[0];
-          $sid = $parts[1];
-          $nid = $parts[2];
-          $file = $this->entityTypeManager->getStorage('file')->load($fid);
-          $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
-          $submission_timestamp = $submission->getCreatedTime();
-          $node = $this->entityTypeManager->getStorage('node')->load($nid);
-          if ($file instanceof FileInterface) {
-            $directory = 'public://' . $node->get('field_school_form_type')->entity->label() . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
-            $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-            $destination = $directory . $file->getFilename();
-            $this->fileRepository->move($file, $destination);
-          }
+    $table = $form_state->getValue('table');
+    $files = [];
+    foreach ($table as $key => $value) {
+      if ($value) {
+        $parts = explode('-', $value);
+        $fid = $parts[0];
+        $file = $this->entityTypeManager->getStorage('file')->load($fid);
+        if (!empty($file)) {
+          $files[] = $file;
         }
       }
-      $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
+    }
+    if ($operation == 'show_student') {
+      $this->privateTempStoreShow->set($this->currentUser->id(), $files);
+      $url = Url::fromRoute('nys_school_forms.show_student_submission');
       $form_state->setRedirectUrl($url);
     }
     if ($operation == 'delete_submission') {
-      $table = $form_state->getValue('table');
-      $files = [];
-      foreach ($table as $key => $value) {
-        if ($value) {
-          $parts = explode('-', $value);
-          $fid = $parts[0];
-          $file = $this->entityTypeManager->getStorage('file')->load($fid);
-          if (!empty($file)) {
-            $files[] = $file;
-          }
-        }
-      }
-      $this->privateTempStore->set($this->currentUser->id(), $files);
+      $this->privateTempStoreDelete->set($this->currentUser->id(), $files);
       $url = Url::fromRoute('nys_school_forms.delete_submission');
       $form_state->setRedirectUrl($url);
     }

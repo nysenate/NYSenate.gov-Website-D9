@@ -58,6 +58,18 @@
             </p>
           </div>
 
+          {% if submission.category is not empty %}
+            <p class="label-inline form-label">
+              Category:
+            </p>
+
+            <div>
+              <p class="form-results">
+                {{ submission.category }}
+              </p>
+            </div>
+          {% endif %}
+
           <div class="attachment_container">
             <p class="label-inline form-label">
               Submission:

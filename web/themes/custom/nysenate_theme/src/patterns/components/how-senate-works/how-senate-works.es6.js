@@ -13,28 +13,41 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.howSenateWorks = {
-    attach: function() {
+    attach: function (context) {
+      if (context !== document) {
+        return;
+      }
       const self = this;
       let carouselAnimating = false;
-      const carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
+      const carouselNavBtn = $(
+        '.c-carousel--how-senate-works.c-carousel--nav .c-carousel--btn',
+        context
+      );
 
-      if($('#js-carousel-budget').length > 0) {
-        $('#js-carousel-budget').hammer().on('swipe', function(event) {
-          self.carouselAdvance(event, carouselAnimating, self, $(this));
-        });
+      if ($('#js-carousel-budget').length > 0) {
+        $('#js-carousel-budget')
+          .hammer()
+          .on('swipe', function (event) {
+            self.carouselAdvance(event, carouselAnimating, self, $(this));
+          });
       }
-      if($('#js-carousel-law').length > 0) {
-        $('#js-carousel-law').hammer().on('swipe', function(event) {
-          self.carouselAdvance(event, carouselAnimating, self, $(this));
-        });
+      if ($('#js-carousel-law').length > 0) {
+        $('#js-carousel-law')
+          .hammer()
+          .on('swipe', function (event) {
+            self.carouselAdvance(event, carouselAnimating, self, $(this));
+          });
       }
 
-      carouselNavBtn.on('click', function (event) {
-        self.carouselAdvance(event, carouselAnimating, self, $(this));
-      });
+      carouselNavBtn.on(
+        'click',
+        Drupal.debounce(function (event) {
+          self.carouselAdvance(event, carouselAnimating, self, $(this));
+        }, 300)
+      );
     },
-    carouselAdvance: function(e, carouselAnimating, self, item) {
-      if(carouselAnimating) {
+    carouselAdvance: function (e, carouselAnimating, self, item) {
+      if (carouselAnimating) {
         return;
       }
 
@@ -43,7 +56,7 @@
       let activeElem;
 
       // the nav is a different relationship if we're touch
-      if(e.direction === 4 || e.direction === 2) {
+      if (e.direction === 4 || e.direction === 2) {
         nav = $(e.target).parents('.js-carousel').siblings('.c-carousel--nav');
       }
       else {
@@ -71,18 +84,18 @@
       // set flag to stop button jammers
       carouselAnimating = true;
 
-      const setCarouselAnimating = function() {
+      const setCarouselAnimating = function () {
         carouselAnimating = false;
       };
 
       // logic to set directionaltiy and left offset of carousel
-      if(item.hasClass('prev') || e.direction === 4) {
+      if (item.hasClass('prev') || e.direction === 4) {
         newPos = carouselPos + itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth - 1;
 
         self.checkCarouselBtns(nav, activeElem, itemAmt);
       }
-      else if(item.hasClass('next')  || e.direction === 2) {
+      else if (item.hasClass('next') || e.direction === 2) {
         newPos = carouselPos - itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth + 1;
 
@@ -95,9 +108,8 @@
 
       // settimeout based on length of css transition -- stops button jammers
       setTimeout(setCarouselAnimating, 300);
-
     },
-    checkCarouselBtns: function(nav, activeElem, itemAmt) {
+    checkCarouselBtns: function (nav, activeElem, itemAmt) {
       // logic to toggle visiblity of btns
       if (activeElem > 0) {
         nav.children('.prev').addClass('visible').removeClass('hidden');

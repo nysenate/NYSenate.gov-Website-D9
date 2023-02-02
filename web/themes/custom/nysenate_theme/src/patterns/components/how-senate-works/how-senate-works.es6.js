@@ -47,6 +47,9 @@
       );
     },
     carouselAdvance: function (e, carouselAnimating, self, item) {
+      const PREV_VALUE = 4;
+      const NEXT_VALUE = 2;
+
       if (carouselAnimating) {
         return;
       }
@@ -56,7 +59,7 @@
       let activeElem;
 
       // the nav is a different relationship if we're touch
-      if (e.direction === 4 || e.direction === 2) {
+      if (e.direction === PREV_VALUE || e.direction === NEXT_VALUE) {
         nav = $(e.target).parents('.js-carousel').siblings('.c-carousel--nav');
       }
       else {
@@ -70,11 +73,11 @@
       const carouselPos = parseInt(carousel.css('left'));
 
       // if the previous button is hidden - do not move that way or at all
-      if (e.direction === 4 && nav.children('.prev').hasClass('hidden')) {
+      if (e.direction === PREV_VALUE && nav.children('.prev').hasClass('hidden')) {
         return false;
       }
       // if the next button is hidden - do not move that way or at all
-      else if (e.direction === 2 && nav.children('.next').hasClass('hidden')) {
+      else if (e.direction === NEXT_VALUE && nav.children('.next').hasClass('hidden')) {
         return false;
       }
       else {
@@ -89,13 +92,13 @@
       };
 
       // logic to set directionaltiy and left offset of carousel
-      if (item.hasClass('prev') || e.direction === 4) {
+      if (item.hasClass('prev') || e.direction === PREV_VALUE) {
         newPos = carouselPos + itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth - 1;
 
         self.checkCarouselBtns(nav, activeElem, itemAmt);
       }
-      else if (item.hasClass('next') || e.direction === 2) {
+      else if (item.hasClass('next') || e.direction === NEXT_VALUE) {
         newPos = carouselPos - itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth + 1;
 

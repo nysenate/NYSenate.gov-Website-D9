@@ -6,15 +6,12 @@
 #}
 
 {% if items.next %}
-<ul{{ attributes }}>
-  <li class="pager__item">
-    {% include '@nysenate_theme/button/button.twig' with {
-      url: items.next.href,
-      icon: true,
-      modifier: "load--more",
-      text: options.button_text
-    }only
-    %}
-  </li>
-</ul>
+  {% include '@nysenate_theme/pager/pager.twig' with {
+      modifier: "pager-load-more",
+      load_more: {
+        href: items.next.href,
+        text: options.button_text
+      }
+    } only
+  %}
 {% endif %}

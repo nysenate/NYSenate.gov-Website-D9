@@ -46,50 +46,70 @@
       <h3 class="label-above label-above">
         Student Submissions:
       </h3>
-      <div class="ds-1col entity entity-field-collection-item field-collection-item-field-school-stud-earthday-subm view-mode-full clearfix">
-        <p class="label-inline form-label">
-          Student's Name:
-        </p>
-
-        <div>
-          <p class="form-results">
-            {{ students_name }}
-          </p>
-        </div>
-
-        <div class="attachment_container">
+      {% for submission in student_submissions %}
+        <div class="ds-1col entity entity-field-collection-item field-collection-item-field-school-stud-earthday-subm view-mode-full clearfix">
           <p class="label-inline form-label">
-            Submission:
+            Student's Name:
           </p>
 
-          {% if file %}
-            {% include '@nysenate_theme/file-uploads/file-uploads.twig' with {
-              title: file.title,
-              attachment: file.attachment
-            } only %}
-          {% else %}
-            {{ attachment }}
+          <div>
+            <p class="form-results">
+              {{ submission.students_name }}
+            </p>
+          </div>
+
+          {% if submission.category is not empty %}
+            <p class="label-inline form-label">
+              Category:
+            </p>
+
+            <div>
+              <p class="form-results">
+                {{ submission.category }}
+              </p>
+            </div>
           {% endif %}
+
+          <div class="attachment_container">
+            <p class="label-inline form-label">
+              Submission:
+            </p>
+
+            {% if submission.file %}
+              {% include '@nysenate_theme/file-uploads/file-uploads.twig' with {
+                title: submission.file.title,
+                attachment: submission.file.attachment
+              } only %}
+            {% else %}
+              {{ submission.attachment }}
+            {% endif %}
+          </div>
         </div>
-      </div>
+      {% endfor %}
     </div>
 
-    <div class="button-wrapper">
-      {% include '@nysenate_theme/button/button.twig' with {
-        button: {
-          url: edit.href,
-          text: edit.button_text
-        }
-      } only %}
+    {% if edit or submit %}
+      <div class="button-wrapper">
+        {% if edit %}
+          {% include '@nysenate_theme/button/button.twig' with {
+            button: {
+              url: edit.href,
+              text: edit.button_text
+            }
+          } only %}
+        {% endif %}
 
-      <div class="edit-submit">
-        {% include '@nysenate_theme/button/button.twig' with {
-          button: {
-            url: submit.href,
-            text: submit.button_text
-          }
-        } only %}
+        {% if submit %}
+          <div class="edit-submit">
+            {% include '@nysenate_theme/button/button.twig' with {
+              button: {
+                url: submit.href,
+                text: submit.button_text
+              }
+            } only %}
+          </div>
+        {% endif %}
       </div>
-    </div>
+    {% endif %}
   </form>
 </div>

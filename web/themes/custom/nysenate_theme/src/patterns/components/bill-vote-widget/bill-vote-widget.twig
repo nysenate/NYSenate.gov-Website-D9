@@ -11,7 +11,7 @@
       <input type="hidden" name="nid" value="{{ bill.cta_buttons_id }}" />
       <input type="hidden" name="tid" value="53928" />
       <p class="c-bill-polling--cta">
-        what's your position?
+        {{ poll_text|default("what's your position?") }}
       </p>
       <div class="button-wrapper">
         <button class="c-block--btn nys-subscribe-button ajax-processed"

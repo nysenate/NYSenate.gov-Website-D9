@@ -31,11 +31,11 @@ elements: |-
         direction: ASC
   contact_name:
     '#type': textfield
-    '#title': 'Contact Name'
+    '#title': 'Teacher Name'
     '#required': true
   contact_email:
     '#type': email
-    '#title': 'Contact Email'
+    '#title': 'Teacher Email'
     '#required': true
     '#pattern': '[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)+[a-z]{2,3}'
     '#pattern_error': 'Please enter a valid email address'
@@ -101,6 +101,7 @@ elements: |-
           '#sanitize': true
           '#button': true
           '#button__title': 'Select file to add'
+          '#upload_location': 'public://public/webform/school_form'
         show_student:
           '#type': radios
           '#options':
@@ -199,6 +200,8 @@ settings:
   wizard_toggle: false
   wizard_toggle_show_label: ''
   wizard_toggle_hide_label: ''
+  wizard_page_type: container
+  wizard_page_title_tag: h2
   preview: 0
   preview_label: ''
   preview_title: ''
@@ -217,7 +220,7 @@ settings:
   confirmation_type: page
   confirmation_url: ''
   confirmation_title: ''
-  confirmation_message: ''
+  confirmation_message: 'Thank you! Your submission to the Thanksgiving Day Showcase has been received.'
   confirmation_attributes: {  }
   confirmation_back: true
   confirmation_back_label: ''

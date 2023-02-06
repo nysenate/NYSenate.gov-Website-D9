@@ -59,6 +59,7 @@ body {
   @include font-stack-secondary;
   margin: 0;
   color: $grey10;
+  -webkit-font-smoothing: antialiased;
 }
 
 // Render the `main` element consistently in IE.
@@ -91,6 +92,7 @@ abbr[title] {
 
 b,
 strong {
+  font-family: $font-serif-bold;
   font-weight: bolder;
 }
 
@@ -398,6 +400,7 @@ label {
 }
 
 .form-item-agree-terms {
+
   input[type='checkbox'] + label,
   input[type='radio'] + label {
     display: inline-block;
@@ -552,15 +555,52 @@ label {
 
 .c-block .c-view--link {
   @extend .icon-before__presskit;
-	@extend .lgt-text;
-	margin: 0 0 20px;
-	text-transform: uppercase;
-	font-family: $font-sans-bold;
-	font-size: 12px;
-	&::before {
-		margin-top: -3px;
-		font-size: 20px;
-	}	
+  @extend .lgt-text;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+  font-family: $font-sans-bold;
+  font-size: 12px;
+  &::before {
+    margin-top: -3px;
+    font-size: 20px;
+  }
+}
+
+.c-block {
+  &--full-bleed {
+    float: left;
+    padding-top: 30px;
+    padding-bottom: 0;
+    background: #EEEEEE;
+
+    @include breakpoint($bp-sm) {
+      padding-top: 60px;
+      padding-bottom: 0;
+    }
+
+    &::after,
+    &::before {
+      content: "";
+      position: absolute;
+      display: block;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      background: #EEEEEE;
+    }
+
+    &::before {
+      right: 100%;
+    }
+
+    &::after {
+      left: 100%;
+    }
+
+    .c-container--header {
+      margin-bottom: 20px;
+    }
+  }
 }
 
 .c-detail--subhead {

@@ -363,6 +363,7 @@ how-senate-works:
     dist/js/how-senate-works.es6.js: {}
   dependencies:
     - nysenate_theme/hammer
+    - core/drupal.debounce
 
 latest-news:
   css:
@@ -413,6 +414,11 @@ main-menu:
     - core/drupal
     - core/drupalSettings
 
+meeting-detail:
+  css:
+    component:
+      dist/css/meeting-detail.css: {}
+
 message:
   css:
     component:
@@ -454,6 +460,33 @@ news-teaser:
   css:
     component:
       dist/css/news-teaser.css: {}
+
+nysenate-about-access:
+  css:
+    component:
+      dist/css/nysenate-about-access.css: {}
+
+nysenate-about-leadership:
+  css:
+    component:
+      dist/css/nysenate-about-leadership.css: {}
+
+nysenate-about-rules:
+  css:
+    component:
+      dist/css/nysenate-about-rules.css: {}
+
+nysenate-about-senate-seal:
+  css:
+    component:
+      dist/css/nysenate-about-senate-seal.css: {}
+
+nysenate-about-tour:
+  css:
+    component:
+      dist/css/nysenate-about-tour.css: {}
+  dependencies:
+    - nysenate_theme/carousel
 
 nysenate-accordion:
   css:
@@ -525,6 +558,11 @@ nysenate-press-release:
   css:
     component:
       dist/css/nysenate-press-release.css: {}
+
+nysenate-review-submission:
+  css:
+    component:
+      dist/css/nysenate-review-submission.css: {}
 
 nysenate-senators-events:
   css:
@@ -608,7 +646,7 @@ nysenate-promotional-banner:
 nysenate_sponsor_list:
   css:
     component:
-      dist/css/nysenate-sponser-list.css: {}
+      dist/css/nysenate-sponsor-list.css: {}
 
 nysenate-promotional-banner-list:
   css:
@@ -638,6 +676,11 @@ nysenate-senate-directory:
   css:
     component:
       dist/css/nysenate-senate-directory.css: {}
+
+nysenate-senate-seal:
+  css:
+    component:
+      dist/css/nysenate-senate-seal.css: {}
 
 nysenate-user-profile:
   css:
@@ -685,6 +728,7 @@ quick-facts:
     dist/js/quick-facts.es6.js: {}
   dependencies:
     - nysenate_theme/hammer
+    - core/drupal.debounce
 
 quote:
   css:
@@ -772,6 +816,11 @@ sticky-nav:
     - core/jquery.once
     - core/drupal
     - core/drupalSettings
+
+sticky-nav-2:
+  css:
+    component:
+      dist/css/sticky-nav-2.css: {}
 
 tabs:
   css:

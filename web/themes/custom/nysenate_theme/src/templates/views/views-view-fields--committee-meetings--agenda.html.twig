@@ -1,0 +1,103 @@
+{#
+/**
+ * @file
+ * Default view template to display all the fields in a row.
+ *
+ * Available variables:
+ * - view: The view in use.
+ * - fields: A list of fields, each one contains:
+ *   - content: The output of the field.
+ *   - raw: The raw data for the field, if it exists. This is NOT output safe.
+ *   - class: The safe class ID to use.
+ *   - handler: The Views field handler controlling this field.
+ *   - inline: Whether or not the field should be inline.
+ *   - wrapper_element: An HTML element for a wrapper.
+ *   - wrapper_attributes: List of attributes for wrapper element.
+ *   - separator: An optional separator that may appear before a field.
+ *   - label: The field's label text.
+ *   - label_element: An HTML element for a label wrapper.
+ *   - label_attributes: List of attributes for label wrapper.
+ *   - label_suffix: Colon after the label.
+ *   - element_type: An HTML element for the field content.
+ *   - element_attributes: List of attributes for HTML element for field content.
+ *   - has_label_colon: A boolean indicating whether to display a colon after
+ *     the label.
+ *   - element_type: An HTML element for the field content.
+ *   - element_attributes: List of attributes for HTML element for field content.
+ * - row: The raw result from the query, with all data it fetched.
+ *
+ * @see template_preprocess_views_view_fields()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set aye_count = fields.field_ol_aye_count.content ? fields.field_ol_aye_count.content : 0 %}
+{% set nay_count = fields.field_ol_nay_count.content ? fields.field_ol_nay_count.content : 0 %}
+{% set ayewr_count = fields.field_ol_aye_wr_count.content ? fields.field_ol_aye_wr_count.content : 0 %}
+{% set excused_count = fields.field_ol_excused_count.content ? fields.field_ol_excused_count.content : 0 %}
+{% set abstained_count = fields.field_ol_abstained_count.content ? fields.field_ol_abstained_count.content : 0 %}
+{% set absent_count = fields.field_ol_absent_count.content ? fields.field_ol_absent_count.content : 0 %}
+
+<article class="c-update-block">
+  <div class="l-panel-col l-panel-col--lft">
+    <h4 class="c-listing--bill-num">{{ fields.title_1.content }}</h4>
+		<div class="c-tabs--related-issues">{{ fields.field_issues_1.content }}</div>
+  </div>
+  <div class="l-panel-col l-panel-col--ctr">
+    <p>{{ fields.field_ol_name.content }}</p>
+    {% if fields.field_ol_sponsor.content %}
+      {{ fields.field_ol_sponsor.content }}
+      {% if fields.field_ol_add_sponsors.content %}
+        <br />{{ fields.field_ol_add_sponsors.content }}
+      {% endif %}
+    {% elseif not fields.field_ol_sponsor.content and fields.field_ol_sponsor_name.content %}
+      <br />
+      <label>Sponsor: {{ fields.field_ol_sponsor_name.content }}</label>
+    {% else %}
+      <br />
+      <label>{{ fields.field_ol_sponsor_name.content }}</label>
+    {% endif %}
+  </div>
+  <div class="l-right-actions">
+    {% if fields.field_ol_cal_no.content %}
+      <p class="c-calendar--num">
+        <span class="c-calendar--num-mark u-mobile-only">cal no.</span>
+        {{ fields.field_ol_cal_no.content }}
+      </p>
+    {% endif %}
+    <div class="vote-container">
+			<div class="aye">
+				<div class="vote-count">{{ aye_count }}</div>
+				<div class="vote-label">Aye</div>
+			</div>
+			<div class="nay">
+				<div class="vote-count">{{ nay_count }}</div>
+				<div class="vote-label">Nay</div>
+			</div>
+		</div>
+    <div class="vote-meta">
+			<div class="meta-row">
+				<div class="meta-count">{{ ayewr_count }}</div><div class="meta-label">ayewr</div>
+			</div>
+            <div class="meta-row">
+                <div class="meta-count">{{ absent_count }}</div><div class="meta-label">absent</div>
+            </div>
+            <div class="meta-row">
+				<div class="meta-count">{{ excused_count }}</div><div class="meta-label">excused</div>
+			</div>
+			<div class="meta-row">
+				<div class="meta-count">{{ abstained_count }}</div><div class="meta-label">abstained</div>
+			</div>
+		</div>
+    <div class="vote-meta">
+			<div class="meta-row">
+				<div class="meta-comm-referral">
+          {% if fields.field_ol_bill_message.content and row.committee_url %}
+            Referred to<br /><a class="link-text" href="/{{ row.committee_url }}">{{ row.committee_name }} committee</a>
+          {% endif %}
+				</div>
+			</div>
+		</div>
+  </div>
+</article>

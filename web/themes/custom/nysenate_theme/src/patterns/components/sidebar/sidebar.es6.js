@@ -36,9 +36,9 @@
           }
         });
         $(window).resize($this.debounce(() => $this.onResize(sidebarToggle)));
-      });
 
-      $this.onResize(sidebarToggle);
+        $this.onResize(sidebarToggle);
+      });
     },
     onResize: function (sidebarToggle) {
       const sidebarToggleBottom =

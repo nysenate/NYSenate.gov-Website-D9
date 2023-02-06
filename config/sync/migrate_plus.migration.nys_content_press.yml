@@ -149,9 +149,12 @@ process:
       source: field_senator
   field_associated_senators:
     -
+      plugin: skip_on_empty
+      method: process
+      source: field_associated_senator
+    -
       plugin: senator_migrate_map_lookup
       migration: nys_senate_gov_taxonomy_term_senator
-      source: field_associated_senators
   field_layout_components:
     -
       plugin: map_article_block

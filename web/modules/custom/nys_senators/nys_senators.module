@@ -490,12 +490,13 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
           $validateAbout = $term->get('field_active_senator')->value === 0 && $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About';
           $validateInactive = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive';
 
-          if ($validateLanding) {
-            $activeSenator === 1 ? $node->setPublished() : $node->setUnpublished();
-          }
-          elseif ($validateAbout) {
+          if ($validateAbout) {
             /** @var \Drupal\node\Entity\Node $aboutNode */
             $aboutNode = $node;
+          }
+
+          if ($validateLanding) {
+            $activeSenator === 1 ? $node->setPublished() : $node->setUnpublished();
           }
           elseif ($validateInactive) {
             $activeSenator === 0 ? $node->setPublished() : $node->setUnpublished();
@@ -508,7 +509,7 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
     // Checks if the senator has an Inactive microsite page or not.
     if (!$updatedValue) {
       $hasInactivePage = \Drupal::service('nys_senators.senators_helper')->hasMicroSiteInactive($nodes);
-      if (!$hasInactivePage) {
+      if (!$hasInactivePage && !empty($aboutNode)) {
         _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
       }
     }

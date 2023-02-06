@@ -142,6 +142,10 @@
   @extend .lgt-text;
   @extend .icon-before__circle-pin;
 
+  @include breakpoint($bp-sm) {
+    font-size: 20px;
+  }
+
   &::before {
     margin-top: -5px;
     font-size: 20px;
@@ -160,11 +164,15 @@
   }
 }
 
-.c-meeting-detail--location {
+p.c-meeting-detail--location {
   margin: 0 0 10px 0;
   color: $grey04;
   font-family: $font-sans;
   font-size: 18px;
+
+  @include breakpoint($bp-sm) {
+    font-size: 20px;
+  }
 }
 
 .c-block .c-meeting-detail--time {
@@ -172,6 +180,10 @@
   color: $grey08;
   font-family: $font-sans-bold;
   font-size: 18px;
+
+  @include breakpoint($bp-sm) {
+    font-size: 20px;
+  }
 }
 
 .c-meeting-detail--descript {
@@ -182,6 +194,12 @@
   p {
     margin-bottom: 15px;
     font-size: 18px;
+  }
+
+  @include breakpoint($bp-sm) {
+    clear: both;
+    margin-bottom: 30px;
+    font-size: 20px;
   }
 }
 
@@ -240,7 +258,8 @@
   }
 }
 
-.node-type-meeting {
+.node-type-meeting,
+.page-node-type-meeting {
   .panel-pane .pane-content {
     div {
       .c-when {
@@ -292,7 +311,7 @@
 
 // this is different from the above view
 // it's on the committee meetings
-.view-meeting-agenda-block {
+.view-meeting-agenda-block, .view-agenda-block {
   .view-header {
     .nys-title {
       font-size: 18px;
@@ -377,6 +396,7 @@
 .c-meeting-detail--past {
   overflow: hidden;
   padding: 25px 0 40px;
+  margin-bottom: 0;
 
   & + .c-meeting-detail--past {
     border-top: 1px solid $grey05;
@@ -465,7 +485,8 @@
   font-size: 12px;
 }
 
-.node-type-meeting {
+.node-type-meeting,
+.page-node-type-meeting {
   .columns {
     padding: 0;
   }
@@ -577,7 +598,7 @@
       }
     }
   }
-  .view-meeting-agenda-block {
+  .view-meeting-agenda-block, .view-agenda-block {
     .view-content {
       .odd,
       .even {
@@ -627,7 +648,7 @@
     }
   }
   .view-meeting-agenda.view-display-id-block_1,
-  .view-meeting-agenda-block {
+  .view-meeting-agenda-block, .view-agenda-block {
     // .view-header {
     // 	.bill-title {
     // 		margin-left: 14%;
@@ -871,7 +892,7 @@
       }
     }
   }
-  .view-meeting-agenda-block {
+  .view-meeting-agenda-block, .view-agenda-block {
     .view-header {
       .nys-title {
         font-size: 26px;
@@ -956,5 +977,50 @@
   }
   .c-meeting-news--date {
     font-size: 14px;
+  }
+}
+
+.l-panel-col {
+  display: block;
+  float: left;
+
+  & + .l-panel-col {
+    margin: 0;
+  }
+}
+.l-panel-col--lft {
+  width: 24%;
+  max-width: 180px;
+}
+
+.l-panel-col--ctr {
+  width: 56%;
+  padding-right: 2%;
+  max-width: 440px;
+
+  .c-press-release--descript {
+    font-size: 18px;
+    line-height: 22px;
+    color: $grey02;
+  }
+}
+
+.l-panel-col--rgt {
+  width: 20%;
+  max-width: 140px;
+
+  &.l-panel-padded {
+    padding-left: 10%;
+  }
+}
+
+.flex-video {
+  position: relative;
+  padding-bottom: 67.5%;
+  height: 0;
+  overflow: hidden;
+
+  .field__label {
+    display: none;
   }
 }

@@ -1,0 +1,40 @@
+<?php
+
+use Drupal\queue_unique\UniqueDatabaseQueue;
+
+/**
+ * Migrate existing queue data to a new table.
+ */
+function queue_unique_update_8001() {
+  $connection = \Drupal::database();
+  if (!$connection->schema()->tableExists(UniqueDatabaseQueue::TABLE_NAME)) {
+    return 'Queue table does not exist, nothing to do';
+  }
+  $existing_count = $connection->select(UniqueDatabaseQueue::TABLE_NAME)->countQuery()->execute()->fetchField();
+  if (!$existing_count) {
+    $connection->schema()->dropTable(UniqueDatabaseQueue::TABLE_NAME);
+    return 'No items were in the existing queue table. Table dropped.';
+  }
+  $temp_table = UniqueDatabaseQueue::TABLE_NAME . '_temp';
+  $connection->schema()->renameTable(UniqueDatabaseQueue::TABLE_NAME, $temp_table);
+  /** @var \Drupal\queue_unique\UniqueQueueDatabaseFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue_unique.database');
+  $queue = $queue_factory->get(__FUNCTION__);
+  // Add a dummy item to the queue so the new table is created.
+  $queue->createQueue();
+  $queue->createItem(['test']);
+  $item = $queue->claimItem();
+  $queue->deleteItem($item);
+  $query = $connection->select($temp_table, 't');
+  $query->fields('t', ['item_id', 'name', 'data', 'expire', 'created']);
+  $result = $query->execute();
+  $result->setFetchMode(\PDO::FETCH_ASSOC);
+  foreach ($result as $row) {
+    $row['hash'] = UniqueDatabaseQueue::hash($row['name'], $row['data']);
+    $query = $connection->insert(UniqueDatabaseQueue::TABLE_NAME);
+    $query->fields($row);
+    $query->execute();
+  }
+  $connection->schema()->dropTable($temp_table);
+  return "Migrated $existing_count items from the old queue table to the new table.";
+}

@@ -15,6 +15,7 @@ use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -73,6 +74,20 @@ class AjaxCommentsController extends ControllerBase {
   protected $messenger;
 
   /**
+   * The Configuration Factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The current user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a AjaxCommentsController object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -87,14 +102,17 @@ class AjaxCommentsController extends ControllerBase {
    *   The TempStore service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The Messenger service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The Configuration Factory service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, RendererInterface $renderer, RouterInterface $router, TempStore $temp_store, MessengerInterface $messenger) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, RendererInterface $renderer, RouterInterface $router, TempStore $temp_store, MessengerInterface $messenger, ConfigFactoryInterface $config_factory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->renderer = $renderer;
     $this->router = $router;
     $this->tempStore = $temp_store;
     $this->messenger = $messenger;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -107,7 +125,8 @@ class AjaxCommentsController extends ControllerBase {
       $container->get('renderer'),
       $container->get('router.no_access_checks'),
       $container->get('ajax_comments.temp_store'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('config.factory')
     );
   }
 
@@ -228,7 +247,7 @@ class AjaxCommentsController extends ControllerBase {
    *   The modified ajax response.
    */
   protected function addMessages(Request $request, AjaxResponse $response, $selector = '', $position = 'prepend') {
-    $settings = \Drupal::config('ajax_comments.settings');
+    $settings = $this->configFactory->get('ajax_comments.settings');
     $notify = $settings->get('notify');
 
     if ($notify || !empty($this->messenger->messagesByType(MessengerInterface::TYPE_ERROR))) {
@@ -332,15 +351,17 @@ class AjaxCommentsController extends ControllerBase {
       $form = $this->entityFormBuilder()->getForm($comment);
       $response->addCommand(new AfterCommand(static::getCommentSelectorPrefix() . $comment->id(), $form));
 
-      // TODO: Get this custom ajax command working later.
+      // @todo Get this custom ajax command working later.
+      // @codingStandardsIgnoreStart
       // if (\Drupal::config('ajax_comments.settings')->get('enable_scroll')) {
       //   $response->addCommand(new ajaxCommentsScrollToElementCommand('.ajax-comments-reply-form-' . $comment->getCommentedEntityId() . '-' . $comment->get('pid')->target_id . '-' . $comment->id()));
       // }
-
+      // @codingStandardsIgnoreEnd
       // Don't delete the tempStore variables here; we need them
       // to persist for the save() method below, where the form returned
       // here will be submitted.
-      // Instead, return the response without calling $this->tempStore->deleteAll().
+      // Instead, return the response without calling
+      // $this->tempStore->deleteAll().
       return $response;
     }
     else {
@@ -416,7 +437,7 @@ class AjaxCommentsController extends ControllerBase {
       $cid = $this->tempStore->getCid();
 
       // Try to insert the message above the new comment.
-      if (!empty($cid) && !$errors && \Drupal::currentUser()->hasPermission('skip comment approval')) {
+      if (!empty($cid) && !$errors && $this->currentUser()->hasPermission('skip comment approval')) {
         $selector = static::getCommentSelectorPrefix() . $cid;
         $response = $this->addMessages(
           $request,
@@ -454,10 +475,10 @@ class AjaxCommentsController extends ControllerBase {
     // core/misc/drupal.js is reinserted into the DOM, the following line of
     // code will execute, causing Drupal.attachBehaviors() to run on the entire
     // document, and reattach behaviors to DOM elements that already have them:
-    // @code
+    // @codingStandardsIgnoreStart
     // // Attach all behaviors.
     // domready(function () { Drupal.attachBehaviors(document, drupalSettings); });
-    // @endcode
+    // @codingStandardsIgnoreEnd
     $attachments = $response->getAttachments();
     // Need to have only 'core/drupalSettings' in the asset library list.
     // If neither 'core/drupalSettings', nor a library with a dependency on it,
@@ -494,10 +515,17 @@ class AjaxCommentsController extends ControllerBase {
 
     if ($cid != 0) {
       // Show the hidden anchor.
-      $response->addCommand(new InvokeCommand('a#comment-' . $cid, 'show', [200, 'linear']));
+      $response->addCommand(new InvokeCommand(
+        'a#comment-' . $cid, 'show', [200, 'linear']
+        )
+      );
 
       // Show the hidden comment.
-      $response->addCommand(new InvokeCommand(static::getCommentSelectorPrefix() . $cid, 'show', [200, 'linear']));
+      $response->addCommand(new InvokeCommand(
+        static::getCommentSelectorPrefix() . $cid, 'show',
+        [200, 'linear']
+        )
+      );
     }
 
     // Remove the form.
@@ -658,10 +686,10 @@ class AjaxCommentsController extends ControllerBase {
     // core/misc/drupal.js is reinserted into the DOM, the following line of
     // code will execute, causing Drupal.attachBehaviors() to run on the entire
     // document, and reattach behaviors to DOM elements that already have them:
-    // @code
+    // @codingStandardsIgnoreStart
     // // Attach all behaviors.
     // domready(function () { Drupal.attachBehaviors(document, drupalSettings); });
-    // @endcode
+    // @codingStandardsIgnoreEnd
     $attachments = $response->getAttachments();
     // Need to have only 'core/drupalSettings' in the asset library list.
     // If neither 'core/drupalSettings', nor a library with a dependency on it,
@@ -738,7 +766,8 @@ class AjaxCommentsController extends ControllerBase {
       // Don't delete the tempStore variables here; we need them
       // to persist for the saveReply() method, where the form returned
       // here will be submitted.
-      // Instead, return the response without calling $this->tempStore->deleteAll().
+      // Instead, return the response without calling
+      // $this->tempStore->deleteAll().
       return $response;
     }
     else {
@@ -794,21 +823,21 @@ class AjaxCommentsController extends ControllerBase {
 
     // Build a dummy comment entity to pass to $this->save(), which will use
     // it to rebuild the comment entity form to trigger form submission.
-    // @code
+    // @codingStandardsIgnoreStart
     // $form = $this->entityFormBuilder()->getForm($comment, 'default', ['editing' => TRUE]);
-    // @endcode
+    // @codingStandardsIgnoreEnd
     // Note that this approach will correctly process the form submission
     // even though we are passing in an empty, dummy comment, because two steps
     // later in the call stack, \Drupal\Core\Form\FormBuilder::buildForm() is
     // called, and it checks the current request object for form submission
     // values if there aren't any in the form state, yet:
-    // @code
+    // @codingStandardsIgnoreStart
     // $input = $form_state->getUserInput();
     // if (!isset($input)) {
     //   $input = $form_state->isMethodType('get') ? $request->query->all() : $request->request->all();
     //   $form_state->setUserInput($input);
     // }
-    // @endcode
+    // @codingStandardsIgnoreEnd
     // This approach is very similar to the one taken in
     // \Drupal\comment\CommentLazyBuilders::renderForm().
     $comment = $this->entityTypeManager()->getStorage('comment')->create([
@@ -836,7 +865,7 @@ class AjaxCommentsController extends ControllerBase {
    *   (optional) Some comments are replies to other comments. In those cases,
    *   $pid is the parent comment's comment ID. Defaults to NULL.
    *
-   * @return \Drupal\Core\Ajax\AjaxResponse $response
+   * @return \Drupal\Core\Ajax\AjaxResponse
    *   The ajax response, if access is denied.
    */
   public function replyAccess(Request $request, AjaxResponse $response, EntityInterface $entity, $field_name, $pid = NULL) {
@@ -855,7 +884,7 @@ class AjaxCommentsController extends ControllerBase {
       if (empty($selector)) {
         $selector = $wrapper_html_id;
       }
-      $this->messenger->addError(t('You do not have permission to post a comment.'));
+      $this->messenger->addError($this->t('You do not have permission to post a comment.'));
       // If this is a new top-level comment (not a reply to another comment so
       // no $pid), replace the comment form with the error message.
       if (empty($pid)) {

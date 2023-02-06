@@ -537,7 +537,12 @@ class Highcharts extends AbstractChart {
       $options['type'] = 'pie';
       // Remove donut from seriesData.
       foreach ($seriesData as &$value) {
-        $value = str_replace('donut', 'pie', $value);
+        if (isset($value['type'])) {
+          $value['type'] = str_replace('donut', 'pie', $value['type']);
+        }
+        else {
+          $value = str_replace('donut', 'pie', $value);
+        }
       }
       // Add innerSize to differentiate between donut and pie.
       foreach ($seriesData as &$value) {

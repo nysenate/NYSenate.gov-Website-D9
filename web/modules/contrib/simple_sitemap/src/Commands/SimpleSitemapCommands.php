@@ -72,8 +72,8 @@ class SimpleSitemapCommands extends DrushCommands {
   public function rebuildQueue(array $options = ['variants' => '']): void {
     // @todo No need to load all sitemaps here.
     $variants = array_keys(SimpleSitemap::loadMultiple());
-    if (strlen($options['variants']) > 0) {
-      $chosen_variants = array_map('trim', array_filter(explode(',', $options['variants'])));
+    if (isset($options['variants']) && (string) $options['variants'] !== '') {
+      $chosen_variants = array_map('trim', array_filter(explode(',', (string) $options['variants'])));
       if (!empty($erroneous_variants = array_diff($chosen_variants, $variants))) {
         $message = 'The following variants do not exist: ' . implode(', ', $erroneous_variants)
           . '. Available variants are: ' . implode(', ', $variants) . '.';

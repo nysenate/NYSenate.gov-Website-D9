@@ -1495,3 +1495,9 @@ strong {
     margin: 0 24px 28px 0;
     clear: both;
     width: 100%; } }
+
+@media screen and (min-width: 768px) {
+  .bills-container--col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 60px; } }

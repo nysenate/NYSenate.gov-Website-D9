@@ -36,6 +36,9 @@ class KeySelect extends Select {
     // Add a property for key description.
     $info['#key_description'] = TRUE;
 
+    // Add the 'empty' option.
+    $info['#empty_option'] = $this->t('- Select a key -');
+
     return $info;
   }
 

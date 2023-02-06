@@ -13,10 +13,14 @@
    */
 
   Drupal.behaviors.howSenateWorks = {
-    attach: function attach() {
+    attach: function attach(context) {
+      if (context !== document) {
+        return;
+      }
+
       var self = this;
       var carouselAnimating = false;
-      var carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
+      var carouselNavBtn = $('.c-carousel--how-senate-works.c-carousel--nav .c-carousel--btn', context);
 
       if ($('#js-carousel-budget').length > 0) {
         $('#js-carousel-budget').hammer().on('swipe', function (event) {
@@ -30,11 +34,14 @@
         });
       }
 
-      carouselNavBtn.on('click', function (event) {
+      carouselNavBtn.on('click', Drupal.debounce(function (event) {
         self.carouselAdvance(event, carouselAnimating, self, $(this));
-      });
+      }, 300));
     },
     carouselAdvance: function carouselAdvance(e, carouselAnimating, self, item) {
+      var PREV_VALUE = 4;
+      var NEXT_VALUE = 2;
+
       if (carouselAnimating) {
         return;
       }
@@ -43,7 +50,7 @@
       var newPos;
       var activeElem; // the nav is a different relationship if we're touch
 
-      if (e.direction === 4 || e.direction === 2) {
+      if (e.direction === PREV_VALUE || e.direction === NEXT_VALUE) {
         nav = $(e.target).parents('.js-carousel').siblings('.c-carousel--nav');
       } else {
         nav = item.parent('.c-carousel--nav');
@@ -55,10 +62,10 @@
       var itemWidth = carousel.width() / itemAmt;
       var carouselPos = parseInt(carousel.css('left')); // if the previous button is hidden - do not move that way or at all
 
-      if (e.direction === 4 && nav.children('.prev').hasClass('hidden')) {
+      if (e.direction === PREV_VALUE && nav.children('.prev').hasClass('hidden')) {
         return false;
       } // if the next button is hidden - do not move that way or at all
-      else if (e.direction === 2 && nav.children('.next').hasClass('hidden')) {
+      else if (e.direction === NEXT_VALUE && nav.children('.next').hasClass('hidden')) {
           return false;
         } else {
           e.preventDefault();
@@ -72,11 +79,11 @@
       }; // logic to set directionaltiy and left offset of carousel
 
 
-      if (item.hasClass('prev') || e.direction === 4) {
+      if (item.hasClass('prev') || e.direction === PREV_VALUE) {
         newPos = carouselPos + itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth - 1;
         self.checkCarouselBtns(nav, activeElem, itemAmt);
-      } else if (item.hasClass('next') || e.direction === 2) {
+      } else if (item.hasClass('next') || e.direction === NEXT_VALUE) {
         newPos = carouselPos - itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth + 1;
         self.checkCarouselBtns(nav, activeElem, itemAmt);

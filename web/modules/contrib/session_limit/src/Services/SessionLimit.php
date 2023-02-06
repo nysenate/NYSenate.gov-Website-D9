@@ -170,7 +170,7 @@ class SessionLimit implements EventSubscriberInterface {
     /** @var SessionLimitBypassEvent $bypassEvent */
     $bypassEvent = $this
       ->getEventDispatcher()
-      ->dispatch('session_limit.bypass', new SessionLimitBypassEvent());
+      ->dispatch(new SessionLimitBypassEvent(), 'session_limit.bypass');
 
     // Check the result of the event to see if we should bypass.
     if ($bypassEvent->shouldBypass()) {
@@ -185,7 +185,7 @@ class SessionLimit implements EventSubscriberInterface {
 
       $this
         ->getEventDispatcher()
-        ->dispatch('session_limit.collision', $collisionEvent);
+        ->dispatch($collisionEvent, 'session_limit.collision');
     }
     else {
       // force checking this twice as there's a race condition around
@@ -294,7 +294,7 @@ class SessionLimit implements EventSubscriberInterface {
     /** @var SessionLimitDisconnectEvent $disconnectEvent */
     $disconnectEvent = $this
       ->getEventDispatcher()
-      ->dispatch('session_limit.disconnect', new SessionLimitDisconnectEvent($event->getSessionId(), $event, $this->getMessage($event->getAccount())));
+      ->dispatch(new SessionLimitDisconnectEvent($event->getSessionId(), $event, $this->getMessage($event->getAccount())), 'session_limit.disconnect');
 
     if (!$disconnectEvent->shouldPreventDisconnect()) {
       $this->sessionActiveDisconnect($disconnectEvent->getMessage());
@@ -331,7 +331,7 @@ class SessionLimit implements EventSubscriberInterface {
         /** @var SessionLimitDisconnectEvent $disconnectEvent */
         $disconnectEvent = $this
           ->getEventDispatcher()
-          ->dispatch('session_limit.disconnect', new SessionLimitDisconnectEvent($event->getSessionId(), $event, $this->getMessage($event->getAccount())));
+          ->dispatch(new SessionLimitDisconnectEvent($event->getSessionId(), $event, $this->getMessage($event->getAccount())), 'session_limit.disconnect');
 
         if (!$disconnectEvent->shouldPreventDisconnect()) {
           $this->sessionDisconnect($session->sid, $disconnectEvent->getMessage());

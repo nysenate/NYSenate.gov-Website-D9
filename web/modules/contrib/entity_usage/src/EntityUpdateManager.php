@@ -16,7 +16,7 @@ class EntityUpdateManager implements EntityUpdateManagerInterface {
   /**
    * The usage track service.
    *
-   * @var \Drupal\entity_usage\EntityUsage
+   * @var \Drupal\entity_usage\EntityUsageInterface
    */
   protected $usageService;
 
@@ -37,14 +37,14 @@ class EntityUpdateManager implements EntityUpdateManagerInterface {
   /**
    * EntityUpdateManager constructor.
    *
-   * @param \Drupal\entity_usage\EntityUsage $usage_service
+   * @param \Drupal\entity_usage\EntityUsageInterface $usage_service
    *   The usage tracking service.
    * @param \Drupal\entity_usage\EntityUsageTrackManager $track_manager
    *   The PluginManager track service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(EntityUsage $usage_service, EntityUsageTrackManager $track_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityUsageInterface $usage_service, EntityUsageTrackManager $track_manager, ConfigFactoryInterface $config_factory) {
     $this->usageService = $usage_service;
     $this->trackManager = $track_manager;
     $this->config = $config_factory->get('entity_usage.settings');

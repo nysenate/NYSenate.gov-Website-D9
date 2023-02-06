@@ -434,6 +434,39 @@ class IntegrationTest extends EntityUsageJavascriptTestBase {
     $node2->delete();
     $usage = $usage_service->listSources($node1);
     $this->assertEquals([], $usage);
-  }
 
+    // Create Node 3 referencing Node 1 with an absolute URL in the link field.
+    // Whitelist the local hostname so we can test absolute URLs.
+    $current_request = \Drupal::request();
+    $config = \Drupal::configFactory()->getEditable('entity_usage.settings');
+    $config->set('site_domains', [$current_request->getHttpHost() . $current_request->getBasePath()]);
+    $config->save();
+    drupal_flush_all_caches();
+    $this->drupalGet('/node/add/eu_test_ct');
+    $page->fillField('title[0][value]', 'Node 3');
+    $page->fillField('field_link1[0][uri]', $node1->toUrl()->setAbsolute()->toString());
+    $assert_session->waitOnAutocomplete();
+    $page->fillField('field_link1[0][title]', "Linked text");
+    $page->pressButton('Save');
+    $session->wait(500);
+    $this->saveHtmlOutput();
+    $assert_session->pageTextContains('eu_test_ct Node 3 has been created.');
+    $node3 = $this->getLastEntityOfType('node', TRUE);
+    // Check that the usage of Node 1 points to Node 2.
+    $usage = $usage_service->listSources($node1);
+    $expected = [
+      'node' => [
+        $node3->id() => [
+          0 => [
+            'source_langcode' => 'en',
+            'source_vid' => $node3->getRevisionId(),
+            'method' => 'link',
+            'field_name' => 'field_link1',
+            'count' => 1,
+          ],
+        ],
+      ],
+    ];
+    $this->assertEquals($expected, $usage);
+  }
 }

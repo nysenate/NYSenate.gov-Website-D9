@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides ajax enhancements to core default Comment form.
- *
- * @package Drupal\ajax_comments
  */
 class AjaxCommentsForm extends CommentForm {
 
@@ -58,24 +56,26 @@ class AjaxCommentsForm extends CommentForm {
   protected $requestStack;
 
   /**
-   * Constructs a new CommentForm.
+   * Constructs a new AjaxCommentsForm.
    *
-   *@param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The EntityFieldManagerInterface service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route_match
    *   The CurrentRouteMatch service.
    * @param \Drupal\ajax_comments\FieldSettingsHelper $field_settings_helper
    *   The FieldSettingsHelper service.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The entity type bundle service.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
    * @param \Drupal\ajax_comments\TempStore $temp_store
    *   The TempStore service.
    */
@@ -125,7 +125,10 @@ class AjaxCommentsForm extends CommentForm {
     // If the user is on the standalone comment reply page or comment edit page,
     // it means JavaScript is disabled or the ajax functionality is not working.
     // Do not proceed with the form alter.
-    if (in_array($this->currentRouteMatch->getRouteName(), ['comment.reply', 'entity.comment.edit_form'])) {
+    if (in_array(
+      $this->currentRouteMatch->getRouteName(),
+      ['comment.reply', 'entity.comment.edit_form']
+    )) {
       return $form;
     }
 
@@ -159,7 +162,10 @@ class AjaxCommentsForm extends CommentForm {
     // update the temp store values while rebuilding the form, if necessary.
     $this->tempStore->processForm($request, $form, $form_state);
 
-    if ($is_ajax && in_array($route_name, ['ajax_comments.edit', 'ajax_comments.reply'])) {
+    if ($is_ajax && in_array(
+      $route_name, ['ajax_comments.edit', 'ajax_comments.reply']
+      )
+    ) {
       $wrapper_html_id = $this->tempStore->getSelectorValue($request, 'wrapper_html_id');
     }
     else {
@@ -190,7 +196,7 @@ class AjaxCommentsForm extends CommentForm {
    * @param string $wrapper_html_id
    *   The value for the wrapper id.
    */
-  protected function setWrapperId(&$form, $wrapper_html_id) {
+  protected function setWrapperId(array &$form, $wrapper_html_id) {
     // Add the wrapping fields's HTML id as a hidden input
     // so we can access it in the controller.
     $form['wrapper_html_id']['#value'] = $wrapper_html_id;
@@ -274,7 +280,7 @@ class AjaxCommentsForm extends CommentForm {
     // Build the cancel button render array.
     $cancel = [
       '#type' => 'button',
-      '#value' => t('Cancel'),
+      '#value' => $this->t('Cancel'),
       '#access' => TRUE,
       '#ajax' => [
         'url' => Url::fromRoute(
@@ -375,7 +381,10 @@ class AjaxCommentsForm extends CommentForm {
     $request = $this->requestStack->getCurrentRequest();
     $route_name = $this->currentRouteMatch->getRouteName();
     $this->tempStore->processForm($request, $form, $form_state, $is_validating = TRUE);
-    if ($form_state->hasAnyErrors() && in_array($route_name, ['ajax_comments.save', 'ajax_comments.save_reply'])) {
+    if ($form_state->hasAnyErrors() && in_array(
+      $route_name, ['ajax_comments.save', 'ajax_comments.save_reply']
+      )
+    ) {
       // If we are trying to save an edit to an existing comment, and there is
       // a form error, set the wrapper element ID back to its original value,
       // because we haven't executed a complete replacement of the wrapper

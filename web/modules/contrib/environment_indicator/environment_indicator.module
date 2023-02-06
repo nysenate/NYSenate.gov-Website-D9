@@ -55,6 +55,22 @@ function environment_indicator_help($route_name, RouteMatchInterface $route_matc
 }
 
 /**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
+function environment_indicator_preprocess_html(&$variables) {
+  if (_environment_indicator_external_integration_is_enabled('toolbar')) {
+    return;
+  }
+  $active_environment = \Drupal::config('environment_indicator.indicator');
+  $title = $active_environment->get('name');
+  if (empty($title) || !\Drupal::currentUser()->hasPermission('access environment indicator')) {
+    return;
+  }
+  $variables['attributes']['class'][] = 'environment-indicator';
+
+}
+
+/**
  * Implements hook_page_top().
  */
 function environment_indicator_page_top(array &$page_top) {

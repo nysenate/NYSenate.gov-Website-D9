@@ -6,6 +6,7 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\paragraphs\Entity\Paragraph;
 
 /**
  * Implements hook_update_N().
@@ -113,5 +114,168 @@ function nys_blocks_update_9001() {
       'field_with_background' => 0,
     ]);
     $contact_us_block->save();
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function nys_blocks_update_9002() {
+  // Create Student Programs Overview Text block.
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'how_senate_works',
+      'field_title' => 'How a Bill Becomes Law',
+    ]);
+
+  $steps = [
+    [
+      'title' => 'write',
+      'description' => 'Senator has new policy idea',
+    ],
+    [
+      'title' => 'propose',
+      'description' => 'Idea is drafted into a Bill',
+    ],
+    [
+      'title' => 'committee-votes',
+      'description' => 'Bill undergoes committee process',
+    ],
+    [
+      'title' => 'floor-votes',
+      'description' => 'Senate and Assembly pass bill',
+    ],
+    [
+      'title' => 'passed',
+      'description' => 'Bill is signed by Governor',
+    ],
+  ];
+
+  if (empty($block)) {
+    $student_programs_block = BlockContent::create([
+      'info' => 'How a Bill Becomes Law block',
+      'type' => 'how_senate_works',
+      'revision_user' => 1,
+      'field_title' => 'How a Bill Becomes Law',
+      'field_modifier' => 'law',
+      'field_link' => [
+        'uri' => 'internal:/how-bill-becomes-law',
+        'title' => 'Learn More',
+      ],
+    ]);
+    $student_programs_block->save();
+
+    $field_steps = [];
+
+    foreach ($steps as $key => $step) {
+      $paragraph = Paragraph::create(['type' => 'steps']);
+      $paragraph->field_title = $step['title'];
+      $paragraph->field_description = $step['description'];
+      $paragraph->parent_id = $student_programs_block->id();
+      $paragraph->parent_type = 'block_content';
+      $paragraph->parent_field_name = 'field_steps';
+      $paragraph->isNew();
+      $paragraph->save();
+
+      $field_steps[] = [
+        'target_id' => $paragraph->id(),
+        'target_revision_id' => $paragraph->revision_id->value,
+      ];
+    }
+
+    $student_programs_block->field_steps = $field_steps;
+    $student_programs_block->save();
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function nys_blocks_update_9003() {
+  // Create/Update How a Bill Becomes Law block.
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'how_senate_works',
+      'info' => 'How a Bill Becomes Law block',
+    ]);
+
+  $steps = [
+    [
+      'title' => 'write',
+      'description' => 'Senator has new policy idea',
+    ],
+    [
+      'title' => 'propose',
+      'description' => 'Idea is drafted into a Bill',
+    ],
+    [
+      'title' => 'committee-votes',
+      'description' => 'Bill undergoes committee process',
+    ],
+    [
+      'title' => 'floor-votes',
+      'description' => 'Senate and Assembly pass bill',
+    ],
+    [
+      'title' => 'passed',
+      'description' => 'Bill is signed by Governor',
+    ],
+  ];
+
+  if (empty($block)) {
+    $block = BlockContent::create([
+      'info' => 'How a Bill Becomes Law block',
+      'type' => 'how_senate_works',
+      'revision_user' => 1,
+      'field_title' => 'How a Bill Becomes Law',
+      'field_modifier' => 'law',
+      'field_link' => [
+        'uri' => 'internal:/how-bill-becomes-law',
+        'title' => 'Learn More',
+      ],
+    ]);
+    $block->save();
+  }
+  else {
+    if (is_array($block)) {
+      $block = reset($block);
+    }
+
+    $block->field_title = 'How a Bill Becomes Law';
+    $block->field_modifier = 'law';
+    $block->field_link = [
+      'uri' => 'internal:/how-bill-becomes-law',
+      'title' => 'Learn More',
+    ];
+    $block->save();
+  }
+
+  // Save steps.
+  if (($block->hasField('field_steps')) && $block->get('field_steps')->isEmpty()) {
+    // Check if paragraph type: steps exists.
+    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('paragraph');
+    if (in_array('steps', array_keys($bundles))) {
+      $field_steps = [];
+      foreach ($steps as $key => $step) {
+        $paragraph = Paragraph::create(['type' => 'steps']);
+        $paragraph->field_title = $step['title'];
+        $paragraph->field_description = $step['description'];
+        $paragraph->parent_id = $block->id();
+        $paragraph->parent_type = 'block_content';
+        $paragraph->parent_field_name = 'field_steps';
+        $paragraph->isNew();
+        $paragraph->save();
+
+        $field_steps[] = [
+          'target_id' => $paragraph->id(),
+          'target_revision_id' => $paragraph->revision_id->value,
+        ];
+      }
+
+      $block->field_steps = $field_steps;
+      $block->save();
+    }
   }
 }

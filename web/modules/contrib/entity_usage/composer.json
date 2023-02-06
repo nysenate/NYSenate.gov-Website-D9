@@ -12,12 +12,13 @@
   },
   "require": { },
   "require-dev": {
+    "drupal/ckeditor": "^1.0",
     "drupal/entity_embed": "~1.0",
     "drupal/entity_reference_revisions": "~1.0",
     "drupal/paragraphs": "~1.0",
     "drupal/webform": "^6.0.0-alpha4",
     "drupal/block_field": "~1.0",
-    "drupal/dynamic_entity_reference": "~1.0",
+    "drupal/dynamic_entity_reference": "~1.0 || ^2.0 || ^4.0",
     "drupal/entity_browser": "~2.0",
     "drupal/entity_browser_block": "~1.0",
     "drupal/inline_entity_form": "^1.0@RC"
@@ -25,7 +26,7 @@
   "extra": {
     "drush": {
       "services": {
-        "drush.services.yml": "^9"
+        "drush.services.yml": "^9 || ^10 || ^11"
       }
     }
   }

@@ -30,12 +30,13 @@ class ConfigEntityTrackingTest extends EntityUsageJavascriptTestBase {
     'block',
     'block_content',
     'block_field',
+    'dblog',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -142,8 +143,7 @@ class ConfigEntityTrackingTest extends EntityUsageJavascriptTestBase {
     $this->assertSession()->pageTextContains('eu_test_ct Node that points to a webform has been created.');
 
     // Visit the webform page, check the usage tab is there.
-    $webform_link = $assert_session->elementExists('css', '.field--name-field-eu-test-related-webforms a');
-    $webform_link->click();
+    $this->clickLink('Contact');
     $this->saveHtmlOutput();
 
     // Click on the tab and verify if the usage was correctly tracked.

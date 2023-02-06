@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\simple_sitemap_engines\Entity\SimpleSitemapEngine;
-use Drupal\simple_sitemap_engines\Form\FormHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

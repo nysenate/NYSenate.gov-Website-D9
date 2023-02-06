@@ -1,0 +1,103 @@
+{% include "@nysenate_theme/sticky-nav-2/sticky-nav-2.twig" with sticky_nav only %}
+
+<div id="section-1">
+  {% include "@nysenate_theme/landing-page-hero/landing-page-hero.twig" with landing_page_hero only %}
+</div>
+
+<main role="main" class="l-row l-row--main l-main l-main--about">
+  <div class="large-12 <!--main columns-->">
+
+    <div class="panel-pane pane-block pane-nys-blocks-about-quick-facts">
+
+      <div class="pane-content">
+        {% include "@nysenate_theme/quick-facts/quick-facts.twig" with quick_facts only %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-how-works">
+
+      <div class="pane-content">
+        <div id="section-2" class="c-block c-block--about c-block--full-bleed c-block--about-how text-layout text-layout--full-bleed text-layout--with-bg">
+          <h3 class="nys-subtitle-title">how the senate works</h3>
+
+          {% include "@nysenate_theme/media/media.twig" with media only %}
+
+          <p>The Legislature is the law-making branch of state government. It is a bicameral, or two-house, body composed of the Senate and the Assembly. The Constitution authorizes a Senate of varying number, currently 63 members, and an Assembly of 150 members, who are elected from districts throughout the State for two-year terms. Each member of the Legislature must be a United States citizen, a resident of the State for five years and, in most cases, of the Senate or Assembly district for one year preceding the election.</p>
+
+          <p>After each election, the Senate elects from among its members a Temporary President who serves a two-year term. Traditionally, the Temporary President is the ranking Senator of the majority political party — the Majority Leader. It is the duty of the Temporary President to direct and guide the business of the Senate, appoint Senate committees, name Senate employees and perform or delegate to another Senator the duties of the President during the Lieutenant Governor’s absence from the Senate Chamber.</p>
+
+          <p>The Constitution reserves varied and extensive powers for the Legislature. The most important is that which permits the Senate and Assembly to propose laws, within the limits of the Federal Constitution and certain Federal statutes and treaties. These laws first take the form of bills, which may be introduced in either house. A bill passed by one house must be passed in the same form by the other before it can be sent to the Governor for a signature or veto.</p>
+
+          <p>The Senate and Assembly have several additional powers that are reserved solely for them in the Constitution. An important weapon in legislative deliberation is the override of the Governor’s veto. The Legislature can approve a law despite a veto by the Governor with the support of two-thirds of the membership in each house. However, the most common lawmaking procedure is the result of compromise among the Senate, the Assembly and the Governor.</p>
+
+          <p>The Senate alone has the power to confirm the Governor’s appointment of non-elected state officials and court judges. The Constitution provides that such appointments are subject to the advice and consent of the Senate, which approves or disapproves them, after hearings on the candidate’s qualifications.</p>
+
+          <p>The Legislature, through its varied functions, serves as a check upon the executive authority of the Governor and helps ensure that the best interests of the State’s citizens are legislatively represented.</p>
+
+          {% include "@nysenate_theme/how-senate-works/how-senate-works.twig" with how_senate_works only %}
+
+          <p>The job of the Senate is to work with the Assembly and the Governor to enact, amend or repeal statutes which make up the body of laws by which we are governed. This involves drafting, discussing and approving bills and resolutions.</p>
+          <p>The text shows the process in a simplified progression from "Idea" to "Law." At any step in the process, participation by a citizen or group of citizens is as easy as making a call, writing a letter, or signing a petition being sent to your Senator, any other legislator or the Governor.</p>
+
+          {% include "@nysenate_theme/nysenate-about-rules/nysenate-about-rules.twig" with about_rules only %}
+
+          {% include "@nysenate_theme/nysenate-about-leadership/nysenate-about-leadership.twig" with about_leadership only %}
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-map">
+
+      <div class="pane-content">
+        <div id="section-3" class="c-block c-block--about c-block--about-map">
+          <h3 class="nys-subtitle-title">district map</h3>
+          <div class="c-about-map-wrap">
+            <iframe src="//pubgeo.nysenate.gov/map/senate" width="100%" height="100%"></iframe>
+            <button class="u-mobile-only c-map--btn"></button>
+          </div>
+          <a class="nys-btn--gold u-mobile-only" href="//pubgeo.nysenate.gov/map/senate" target="_blank">view map</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-seal">
+
+      <div id="section-4" class="pane-content">
+        {% include "@nysenate_theme/nysenate-about-senate-seal/nysenate-about-senate-seal.twig" with senate_seal only %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-tour">
+
+      <div id="section-5" class="pane-content">
+        {% include "@nysenate_theme/nysenate-about-tour/nysenate-about-tour.twig" with about_tour only %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-stdnt-prog-are-you">
+
+      <div id="section-6" class="pane-content">
+        {% include "@nysenate_theme/nysenate-student-programs/nysenate-student-programs.twig" with about_student_programs only %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-access">
+
+      <div id="section-7" class="pane-content">
+        {% include "@nysenate_theme/nysenate-about-access/nysenate-about-access.twig" with about_access only %}
+      </div>
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-views pane-promo-banner-senators-committees">
+      <div class="pane-content">
+        {% include "@nysenate_theme/nysenate-promotional-banner-list/nysenate-promotional-banner-list.twig" with promotional_banner_list only %}
+      </div>
+    </div>
+  </div>
+</main>

@@ -1557,6 +1557,9 @@ strong {
   text-decoration: none;
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 18px; }
+  @media screen and (min-width: 768px) {
+    .c-block .c-meeting-detail--location-link {
+      font-size: 20px; } }
   .c-block .c-meeting-detail--location-link::before {
     margin-top: -5px;
     font-size: 20px; }
@@ -1565,17 +1568,23 @@ strong {
   .c-block .c-meeting-detail--location-link:hover {
     color: #0078a0; }
 
-.c-meeting-detail--location {
+p.c-meeting-detail--location {
   margin: 0 0 10px 0;
   color: #888888;
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 18px; }
+  @media screen and (min-width: 768px) {
+    p.c-meeting-detail--location {
+      font-size: 20px; } }
 
 .c-block .c-meeting-detail--time {
   margin: 0;
   color: #444444;
   font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 18px; }
+  @media screen and (min-width: 768px) {
+    .c-block .c-meeting-detail--time {
+      font-size: 20px; } }
 
 .c-meeting-detail--descript .video-embed {
   margin-top: 24px; }
@@ -1583,6 +1592,12 @@ strong {
 .c-meeting-detail--descript p {
   margin-bottom: 15px;
   font-size: 18px; }
+
+@media screen and (min-width: 768px) {
+  .c-meeting-detail--descript {
+    clear: both;
+    margin-bottom: 30px;
+    font-size: 20px; } }
 
 .c-block .c-meeting-detail--related {
   text-transform: uppercase;
@@ -1621,14 +1636,16 @@ strong {
     .c-block .c-meeting-detail--related a:hover {
       text-decoration: underline; }
 
-.node-type-meeting .panel-pane .pane-content div .c-when {
+.node-type-meeting .panel-pane .pane-content div .c-when,
+.page-node-type-meeting .panel-pane .pane-content div .c-when {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 14px;
   line-height: 20px;
   text-transform: uppercase;
   color: #888888; }
 
-.node-type-meeting .view-nodequeue-2 {
+.node-type-meeting .view-nodequeue-2,
+.page-node-type-meeting .view-nodequeue-2 {
   margin-top: 40px; }
 
 .view-meeting-agenda .view-header {
@@ -1651,28 +1668,29 @@ strong {
   height: 30px;
   width: 30px; }
 
-.view-meeting-agenda-block .view-header .nys-title {
+.view-meeting-agenda-block .view-header .nys-title, .view-agenda-block .view-header .nys-title {
   font-size: 18px;
   line-height: 1;
   margin-bottom: 30px; }
 
-.view-meeting-agenda-block .c-panel--header {
+.view-meeting-agenda-block .c-panel--header, .view-agenda-block .c-panel--header {
   display: block;
   padding: 0 0 10px 0; }
-  .view-meeting-agenda-block .c-panel--header .l-panel-col {
+  .view-meeting-agenda-block .c-panel--header .l-panel-col, .view-agenda-block .c-panel--header .l-panel-col {
     color: #444444;
     text-transform: uppercase;
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
     font-size: 12px;
     line-height: 1; }
   .view-meeting-agenda-block .c-panel--header .l-panel-col--ctr,
-  .view-meeting-agenda-block .c-panel--header .l-panel-col--rgt {
+  .view-meeting-agenda-block .c-panel--header .l-panel-col--rgt, .view-agenda-block .c-panel--header .l-panel-col--ctr,
+  .view-agenda-block .c-panel--header .l-panel-col--rgt {
     display: none; }
 
-.view-meeting-agenda-block .nys-senator {
+.view-meeting-agenda-block .nys-senator, .view-agenda-block .nys-senator {
   margin: 20px 0 28px; }
 
-.view-meeting-agenda-block .first > .c-update-block {
+.view-meeting-agenda-block .first > .c-update-block, .view-agenda-block .first > .c-update-block {
   border-top: 1px solid #aaaaaa; }
 
 .pane-node-field-ustream {
@@ -1709,7 +1727,8 @@ strong {
 
 .c-meeting-detail--past {
   overflow: hidden;
-  padding: 25px 0 40px; }
+  padding: 25px 0 40px;
+  margin-bottom: 0; }
   .c-meeting-detail--past + .c-meeting-detail--past {
     border-top: 1px solid #aaaaaa; }
   .c-meeting-detail--past .l-col {
@@ -1765,12 +1784,15 @@ strong {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 12px; }
 
-.node-type-meeting .columns {
+.node-type-meeting .columns,
+.page-node-type-meeting .columns {
   padding: 0; }
 
-.node-type-meeting .pane-meeting-details .view-meeting-details .view-content {
+.node-type-meeting .pane-meeting-details .view-meeting-details .view-content,
+.page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content {
   position: relative; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-status {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-status,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-status {
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
     font-size: 16px;
     line-height: 20px;
@@ -1779,28 +1801,33 @@ strong {
     padding-top: 20px;
     border-top: 1px solid #aaaaaa;
     margin-bottom: 25px; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-title {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-title,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-title {
     font-family: "Adelle Light", serif;
     font-size: 42px;
     line-height: 46px;
     color: #444444;
     margin-top: -65px; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-location {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-location,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-location {
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
     font-size: 14px;
     line-height: 18px;
     color: #2b6990; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-date {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-date,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-date {
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
     font-size: 14px;
     line-height: 21px; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-day {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-day,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-day {
     font-size: 48px;
     line-height: 30px;
     margin-bottom: 6px;
     font-family: "Adelle Bold", serif;
     color: #444444; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-month {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-month,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-month {
     line-height: 20px;
     margin-top: 3px;
     font-size: 20px;
@@ -1808,15 +1835,20 @@ strong {
     color: #444444;
     text-transform: uppercase; }
   .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-day,
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-month {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-month,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-day,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-month {
     text-align: center;
     width: 54px; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul {
     display: inline-block; }
-    .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul li {
+    .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul li,
+    .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul li {
       display: inline-block;
       margin: 0 10px 0 0; }
-      .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul li:nth-child(1)::before {
+      .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul li:nth-child(1)::before,
+      .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .field-name-field-issues ul li:nth-child(1)::before {
         content: 'Related Issues:';
         font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
         font-size: 12px;
@@ -1824,14 +1856,19 @@ strong {
         text-transform: uppercase;
         color: #666666;
         margin-right: 10px; }
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-body {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-body,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-body {
     margin: 40px 0 25px 0; }
   .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-title,
   .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-location,
-  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-date {
+  .node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-date,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-title,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-location,
+  .page-node-type-meeting .pane-meeting-details .view-meeting-details .view-content .meeting-date {
     margin: 0 0 15px 28%; }
 
-.node-type-meeting .c-members-title {
+.node-type-meeting .c-members-title,
+.page-node-type-meeting .c-members-title {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 16px;
   line-height: 26px;
@@ -1842,49 +1879,92 @@ strong {
   color: #444444; }
 
 .node-type-meeting .pane-meeting-agenda .pane-title,
-.node-type-meeting .nys-title {
+.node-type-meeting .nys-title,
+.page-node-type-meeting .pane-meeting-agenda .pane-title,
+.page-node-type-meeting .nys-title {
   font-family: "Adelle SemiBold", serif;
   font-size: 26px;
   line-height: 38px;
   margin-bottom: 0px;
   color: #444444; }
 
-.node-type-meeting .pane-embedded-youtube-video .view-embedded-youtube-video .video-embed-description {
+.node-type-meeting .pane-embedded-youtube-video .view-embedded-youtube-video .video-embed-description,
+.page-node-type-meeting .pane-embedded-youtube-video .view-embedded-youtube-video .video-embed-description {
   display: none; }
 
 .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-left,
-.node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left {
+.node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-left,
+.node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-left,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-left,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left,
+.page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-left,
+.page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-left {
   position: absolute;
   top: 33px;
   left: 0;
   margin-top: 0; }
   .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num,
-  .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num {
+  .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num,
+  .node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num,
+  .page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num,
+  .page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num,
+  .page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num,
+  .page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num {
     font-size: 30px; }
     .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num a,
-    .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num a {
+    .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num a, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num a,
+    .node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num a,
+    .page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num a,
+    .page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num a,
+    .page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-left .c-listing--bill-num a,
+    .page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-left .c-listing--bill-num a {
       color: #444444; }
 
 .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right,
-.node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right {
+.node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right,
+.node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right,
+.page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right,
+.page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right {
   float: left;
   margin-left: 26%;
   margin-top: 0; }
   .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container,
-  .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container {
+  .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container,
+  .node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container,
+  .page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container,
+  .page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container,
+  .page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container,
+  .page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container {
     min-height: 45px;
     margin-top: 15px; }
     .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container img,
-    .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container img {
+    .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container img, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container img,
+    .node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container img,
+    .page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container img,
+    .page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container img,
+    .page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container img,
+    .page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container img {
       width: 45px;
       height: 45px;
       border-radius: 45px;
       float: left; }
     .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info,
-    .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info {
+    .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info,
+    .node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info,
+    .page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info,
+    .page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info,
+    .page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info,
+    .page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info {
       margin-left: 55px; }
       .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name,
-      .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name {
+      .node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name,
+      .node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name,
+      .page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name,
+      .page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name,
+      .page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name,
+      .page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right .l-chair-container .c-chair_info .sponsor-name {
         font-family: "Proxima Nova Regular", "Arial", sans-serif;
         font-size: 10px;
         line-height: 14px;
@@ -1892,102 +1972,148 @@ strong {
         color: #aaaaaa; }
 
 .node-type-meeting .view-meeting-agenda-block .view-content .odd .l-right-actions,
-.node-type-meeting .view-meeting-agenda-block .view-content .even .l-right-actions {
+.node-type-meeting .view-meeting-agenda-block .view-content .even .l-right-actions, .node-type-meeting .view-agenda-block .view-content .odd .l-right-actions,
+.node-type-meeting .view-agenda-block .view-content .even .l-right-actions,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .odd .l-right-actions,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .even .l-right-actions,
+.page-node-type-meeting .view-agenda-block .view-content .odd .l-right-actions,
+.page-node-type-meeting .view-agenda-block .view-content .even .l-right-actions {
   margin-left: 60px; }
 
 .node-type-meeting .view-meeting-agenda.view-display-id-block_1 .view-content .odd .c-update-block .l-right,
 .node-type-meeting .view-meeting-agenda.view-display-id-block_1 .view-content .even .c-update-block .l-right,
 .node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right,
-.node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right {
+.node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right, .node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right,
+.node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right,
+.page-node-type-meeting .view-meeting-agenda.view-display-id-block_1 .view-content .odd .c-update-block .l-right,
+.page-node-type-meeting .view-meeting-agenda.view-display-id-block_1 .view-content .even .c-update-block .l-right,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .odd .c-update-block .l-right,
+.page-node-type-meeting .view-meeting-agenda-block .view-content .even .c-update-block .l-right,
+.page-node-type-meeting .view-agenda-block .view-content .odd .c-update-block .l-right,
+.page-node-type-meeting .view-agenda-block .view-content .even .c-update-block .l-right {
   width: 58%;
   margin-left: 20%; }
 
 .node-type-meeting .view-committee-meetings .view-content .odd,
-.node-type-meeting .view-committee-meetings .view-content .even {
+.node-type-meeting .view-committee-meetings .view-content .even,
+.page-node-type-meeting .view-committee-meetings .view-content .odd,
+.page-node-type-meeting .view-committee-meetings .view-content .even {
   position: relative; }
   .node-type-meeting .view-committee-meetings .view-content .odd .c-event-block--featured,
-  .node-type-meeting .view-committee-meetings .view-content .even .c-event-block--featured {
+  .node-type-meeting .view-committee-meetings .view-content .even .c-event-block--featured,
+  .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-block--featured,
+  .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-block--featured {
     border-top: none; }
   .node-type-meeting .view-committee-meetings .view-content .odd .c-event-date,
-  .node-type-meeting .view-committee-meetings .view-content .even .c-event-date {
+  .node-type-meeting .view-committee-meetings .view-content .even .c-event-date,
+  .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-date,
+  .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-date {
     position: absolute;
     top: 20px;
     left: 0;
     text-align: left; }
     .node-type-meeting .view-committee-meetings .view-content .odd .c-event-date span,
-    .node-type-meeting .view-committee-meetings .view-content .even .c-event-date span {
+    .node-type-meeting .view-committee-meetings .view-content .even .c-event-date span,
+    .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-date span,
+    .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-date span {
       font-family: "Proxima Nova Regular", "Arial", sans-serif;
       font-size: 16px;
       line-height: 24px;
       text-transform: uppercase; }
       .node-type-meeting .view-committee-meetings .view-content .odd .c-event-date span span,
-      .node-type-meeting .view-committee-meetings .view-content .even .c-event-date span span {
+      .node-type-meeting .view-committee-meetings .view-content .even .c-event-date span span,
+      .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-date span span,
+      .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-date span span {
         font-family: "Adelle Bold", serif;
         font-size: 40px;
         line-height: 24px;
         text-transform: none; }
   .node-type-meeting .view-committee-meetings .view-content .odd .c-event-name,
-  .node-type-meeting .view-committee-meetings .view-content .even .c-event-name {
+  .node-type-meeting .view-committee-meetings .view-content .even .c-event-name,
+  .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-name,
+  .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-name {
     margin: -8px 0px 10px 21%;
     float: none; }
     .node-type-meeting .view-committee-meetings .view-content .odd .c-event-name a,
-    .node-type-meeting .view-committee-meetings .view-content .even .c-event-name a {
+    .node-type-meeting .view-committee-meetings .view-content .even .c-event-name a,
+    .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-name a,
+    .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-name a {
       font-family: "Adelle Light", serif;
       font-size: 24px;
       line-height: 24px;
       color: #444444; }
   .node-type-meeting .view-committee-meetings .view-content .odd .c-category,
-  .node-type-meeting .view-committee-meetings .view-content .even .c-category {
+  .node-type-meeting .view-committee-meetings .view-content .even .c-category,
+  .page-node-type-meeting .view-committee-meetings .view-content .odd .c-category,
+  .page-node-type-meeting .view-committee-meetings .view-content .even .c-category {
     margin-left: 21%; }
     .node-type-meeting .view-committee-meetings .view-content .odd .c-category a,
-    .node-type-meeting .view-committee-meetings .view-content .even .c-category a {
+    .node-type-meeting .view-committee-meetings .view-content .even .c-category a,
+    .page-node-type-meeting .view-committee-meetings .view-content .odd .c-category a,
+    .page-node-type-meeting .view-committee-meetings .view-content .even .c-category a {
       font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
       font-size: 12px;
       line-height: 14px;
       color: #cb8d37;
       text-transform: uppercase; }
   .node-type-meeting .view-committee-meetings .view-content .odd .c-event-location,
-  .node-type-meeting .view-committee-meetings .view-content .even .c-event-location {
+  .node-type-meeting .view-committee-meetings .view-content .even .c-event-location,
+  .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-location,
+  .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-location {
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
     font-size: 14px;
     line-height: 26px;
     margin-left: 21%;
     float: none; }
     .node-type-meeting .view-committee-meetings .view-content .odd .c-event-location::before,
-    .node-type-meeting .view-committee-meetings .view-content .even .c-event-location::before {
+    .node-type-meeting .view-committee-meetings .view-content .even .c-event-location::before,
+    .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-location::before,
+    .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-location::before {
       color: #2b6990;
       font-size: 20px;
       margin-top: -3px; }
   .node-type-meeting .view-committee-meetings .view-content .odd .c-event-time,
-  .node-type-meeting .view-committee-meetings .view-content .even .c-event-time {
+  .node-type-meeting .view-committee-meetings .view-content .even .c-event-time,
+  .page-node-type-meeting .view-committee-meetings .view-content .odd .c-event-time,
+  .page-node-type-meeting .view-committee-meetings .view-content .even .c-event-time {
     font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
     font-size: 14px;
     line-height: 30px;
     margin: 0 0 0 21%;
     float: none; }
 
-.node-type-meeting .view-committee-meetings .view-content .first {
+.node-type-meeting .view-committee-meetings .view-content .first,
+.page-node-type-meeting .view-committee-meetings .view-content .first {
   border-top: none; }
 
 .node-type-meeting .view-senator-news .view-content .u-odd .c-update-block,
-.node-type-meeting .view-senator-news .view-content .u-even .c-update-block {
+.node-type-meeting .view-senator-news .view-content .u-even .c-update-block,
+.page-node-type-meeting .view-senator-news .view-content .u-odd .c-update-block,
+.page-node-type-meeting .view-senator-news .view-content .u-even .c-update-block {
   border-top: none; }
   .node-type-meeting .view-senator-news .view-content .u-odd .c-update-block .l-left,
-  .node-type-meeting .view-senator-news .view-content .u-even .c-update-block .l-left {
+  .node-type-meeting .view-senator-news .view-content .u-even .c-update-block .l-left,
+  .page-node-type-meeting .view-senator-news .view-content .u-odd .c-update-block .l-left,
+  .page-node-type-meeting .view-senator-news .view-content .u-even .c-update-block .l-left {
     position: relative;
     top: 0px;
     left: 0;
     margin-top: 0; }
   .node-type-meeting .view-senator-news .view-content .u-odd .c-update-block .l-right,
-  .node-type-meeting .view-senator-news .view-content .u-even .c-update-block .l-right {
+  .node-type-meeting .view-senator-news .view-content .u-even .c-update-block .l-right,
+  .page-node-type-meeting .view-senator-news .view-content .u-odd .c-update-block .l-right,
+  .page-node-type-meeting .view-senator-news .view-content .u-even .c-update-block .l-right {
     float: left;
     margin-left: 0;
     margin-top: -7px; }
   .node-type-meeting .view-senator-news .view-content .u-odd .c-update-block .c-image,
-  .node-type-meeting .view-senator-news .view-content .u-even .c-update-block .c-image {
+  .node-type-meeting .view-senator-news .view-content .u-even .c-update-block .c-image,
+  .page-node-type-meeting .view-senator-news .view-content .u-odd .c-update-block .c-image,
+  .page-node-type-meeting .view-senator-news .view-content .u-even .c-update-block .c-image {
     margin-top: 0; }
 
-.node-type-meeting .c-committee-header {
+.node-type-meeting .c-committee-header,
+.page-node-type-meeting .c-committee-header {
   margin-top: 40px; }
 
 @media screen and (min-width: 768px) {
@@ -2066,19 +2192,20 @@ strong {
     .view-meeting-agenda .view-header .bill-title,
     .view-meeting-agenda .view-header .bill-actions {
       display: block; }
-  .view-meeting-agenda-block .view-header .nys-title {
+  .view-meeting-agenda-block .view-header .nys-title, .view-agenda-block .view-header .nys-title {
     font-size: 26px;
     margin-bottom: 40px; }
-  .view-meeting-agenda-block .c-panel--header {
+  .view-meeting-agenda-block .c-panel--header, .view-agenda-block .c-panel--header {
     padding: 0 0 20px 0; }
-    .view-meeting-agenda-block .c-panel--header .l-panel-col {
+    .view-meeting-agenda-block .c-panel--header .l-panel-col, .view-agenda-block .c-panel--header .l-panel-col {
       font-size: 16px; }
     .view-meeting-agenda-block .c-panel--header .l-panel-col--ctr,
-    .view-meeting-agenda-block .c-panel--header .l-panel-col--rgt {
+    .view-meeting-agenda-block .c-panel--header .l-panel-col--rgt, .view-agenda-block .c-panel--header .l-panel-col--ctr,
+    .view-agenda-block .c-panel--header .l-panel-col--rgt {
       display: block; }
-  .view-meeting-agenda-block .nys-senator {
+  .view-meeting-agenda-block .nys-senator, .view-agenda-block .nys-senator {
     margin: 20px 0 0; }
-  .view-meeting-agenda-block .first > .c-update-block {
+  .view-meeting-agenda-block .first > .c-update-block, .view-agenda-block .first > .c-update-block {
     border-top: 1px solid #aaaaaa; }
   .c-meeting-section--title {
     margin: 20px 0 40px;
@@ -2116,3 +2243,36 @@ strong {
       display: block; }
   .c-meeting-news--date {
     font-size: 14px; } }
+
+.l-panel-col {
+  display: block;
+  float: left; }
+  .l-panel-col + .l-panel-col {
+    margin: 0; }
+
+.l-panel-col--lft {
+  width: 24%;
+  max-width: 180px; }
+
+.l-panel-col--ctr {
+  width: 56%;
+  padding-right: 2%;
+  max-width: 440px; }
+  .l-panel-col--ctr .c-press-release--descript {
+    font-size: 18px;
+    line-height: 22px;
+    color: #7d7c7c; }
+
+.l-panel-col--rgt {
+  width: 20%;
+  max-width: 140px; }
+  .l-panel-col--rgt.l-panel-padded {
+    padding-left: 10%; }
+
+.flex-video {
+  position: relative;
+  padding-bottom: 67.5%;
+  height: 0;
+  overflow: hidden; }
+  .flex-video .field__label {
+    display: none; }

@@ -85,15 +85,10 @@ Install a fresh thunder:
 
 Then you can run selenium in docker:
 
-- for Chrome testing start `docker run -d -P -p 6000:5900 -p 4444:4444 --shm-size 2g --add-host=theme.test:host-gateway selenium/standalone-chrome:3.141.59-20210713`
-- for Firefox testing start `docker run -d -P -p 6000:5900 -p 4444:4444 --shm-size 2g --add-host=theme.test:host-gateway selenium/standalone-firefox:3.141.59-20200719`
+- for Chrome testing start `docker run -d -P -p 6000:5900 -p 4444:4444 --shm-size 2g --add-host=theme.test:host-gateway selenium/standalone-chrome:106.0`
+- for Firefox testing start `docker run -d -P -p 6000:5900 -p 4444:4444 --shm-size 2g --add-host=theme.test:host-gateway selenium/standalone-firefox:102.0`
 
-To debug a browser you can use following commands:
-
-- for Chrome testing start `docker run -d -P -p 6000:5900 -p 4444:4444 --shm-size 2g --add-host=theme.test:host-gateway selenium/standalone-chrome-debug:3.141.59-20210713`
-- for Firefox testing start `docker run -d -P -p 6000:5900 -p 4444:4444 --shm-size 2g --add-host=theme.test:host-gateway selenium/standalone-firefox-debug:3.141.59-20200719`
-
-and connect with you vnc client (on mac you can use finder: go to -> connect to server [⌘K]). The password is: `secret`
+For debugging a browser connect using a vnc client (on mac you can use finder: go to -> connect to server [⌘K]).
 
 Before starting, set the correct URL in `sharpeye.conf.js`.
 To start the process, enter following command from within the theme directory:

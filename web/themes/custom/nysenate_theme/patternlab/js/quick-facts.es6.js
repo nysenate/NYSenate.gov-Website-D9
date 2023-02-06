@@ -15,17 +15,21 @@
    */
 
   Drupal.behaviors.quickFacts = {
-    attach: function attach() {
+    attach: function attach(context) {
+      if (context !== document) {
+        return;
+      }
+
       var self = this;
-      var carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
+      var carouselNavBtn = $('.c-carousel--quick-facts.c-carousel--nav .c-carousel--btn', context);
       var theViewportWidth = $(window).width();
       self.highlightUpTo();
       $('#js-carousel-about-stats').hammer().on('swipe', function (event) {
         self.carouselAdvance(event, self, $(this));
       });
-      carouselNavBtn.on('click', function (event) {
+      carouselNavBtn.on('click', Drupal.debounce(function (event) {
         self.carouselAdvance(event, self, $(this));
-      });
+      }, 300));
       $('.c-senate-quick-facts__button').click(function (event) {
         event.preventDefault();
         var tabNumber = "#panel".concat($(this).data('tab'));
@@ -73,8 +77,7 @@
       var itemAmt = carousel.children().length;
       var itemWidth = carousel.width() / itemAmt;
       var carouselPos = 0;
-      carouselPos = parseInt(carousel.css('left'));
-      console.log(carouselPos); // if the previous button is hidden - do not move that way or at all
+      carouselPos = parseInt(carousel.css('left')); // if the previous button is hidden - do not move that way or at all
 
       if (e.direction === 4 && nav.children('.prev').hasClass('hidden')) {
         return false;

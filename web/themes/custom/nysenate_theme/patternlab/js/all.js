@@ -241,30 +241,36 @@
 
   Drupal.behaviors.chart = {
     attach: function attach(context) {
-      $('.chart', context).once('chartInit').each(function () {
+      $('.chart', context).once('chartInit').each(function (index) {
         var $chart = $(this).find('div');
         var colors = $chart.data('colors');
         var values = $chart.data('values');
+        var newId = "chart".concat(index > 0 ? "-".concat(index) : '');
+        $chart.attr('id', newId);
+        var id = $chart.attr('id');
         var data = [];
 
         if (values) {
           data = values.map(function (v, i) {
+            var value = parseInt(v);
+            var y = typeof value === 'number' ? value >= 0 ? value : 0 : 0;
+
             if (i === 0) {
               return {
-                y: v,
+                y: y,
                 sliced: true,
                 selected: true
               };
             }
 
             return {
-              y: v
+              y: y
             };
           });
         } // eslint-disable-next-line no-undef
 
 
-        Highcharts.chart('vote-chart', {
+        Highcharts.chart(id, {
           colors: colors,
           chart: {
             plotBackgroundColor: null,
@@ -15604,10 +15610,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
    */
 
   Drupal.behaviors.howSenateWorks = {
-    attach: function attach() {
+    attach: function attach(context) {
+      if (context !== document) {
+        return;
+      }
+
       var self = this;
       var carouselAnimating = false;
-      var carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
+      var carouselNavBtn = $('.c-carousel--how-senate-works.c-carousel--nav .c-carousel--btn', context);
 
       if ($('#js-carousel-budget').length > 0) {
         $('#js-carousel-budget').hammer().on('swipe', function (event) {
@@ -15621,11 +15631,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         });
       }
 
-      carouselNavBtn.on('click', function (event) {
+      carouselNavBtn.on('click', Drupal.debounce(function (event) {
         self.carouselAdvance(event, carouselAnimating, self, $(this));
-      });
+      }, 300));
     },
     carouselAdvance: function carouselAdvance(e, carouselAnimating, self, item) {
+      var PREV_VALUE = 4;
+      var NEXT_VALUE = 2;
+
       if (carouselAnimating) {
         return;
       }
@@ -15634,7 +15647,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var newPos;
       var activeElem; // the nav is a different relationship if we're touch
 
-      if (e.direction === 4 || e.direction === 2) {
+      if (e.direction === PREV_VALUE || e.direction === NEXT_VALUE) {
         nav = $(e.target).parents('.js-carousel').siblings('.c-carousel--nav');
       } else {
         nav = item.parent('.c-carousel--nav');
@@ -15646,10 +15659,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var itemWidth = carousel.width() / itemAmt;
       var carouselPos = parseInt(carousel.css('left')); // if the previous button is hidden - do not move that way or at all
 
-      if (e.direction === 4 && nav.children('.prev').hasClass('hidden')) {
+      if (e.direction === PREV_VALUE && nav.children('.prev').hasClass('hidden')) {
         return false;
       } // if the next button is hidden - do not move that way or at all
-      else if (e.direction === 2 && nav.children('.next').hasClass('hidden')) {
+      else if (e.direction === NEXT_VALUE && nav.children('.next').hasClass('hidden')) {
           return false;
         } else {
           e.preventDefault();
@@ -15663,11 +15676,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }; // logic to set directionaltiy and left offset of carousel
 
 
-      if (item.hasClass('prev') || e.direction === 4) {
+      if (item.hasClass('prev') || e.direction === PREV_VALUE) {
         newPos = carouselPos + itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth - 1;
         self.checkCarouselBtns(nav, activeElem, itemAmt);
-      } else if (item.hasClass('next') || e.direction === 2) {
+      } else if (item.hasClass('next') || e.direction === NEXT_VALUE) {
         newPos = carouselPos - itemWidth;
         activeElem = Math.abs(carouselPos) / itemWidth + 1;
         self.checkCarouselBtns(nav, activeElem, itemAmt);
@@ -17601,17 +17614,21 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
    */
 
   Drupal.behaviors.quickFacts = {
-    attach: function attach() {
+    attach: function attach(context) {
+      if (context !== document) {
+        return;
+      }
+
       var self = this;
-      var carouselNavBtn = $('.c-carousel--nav .c-carousel--btn');
+      var carouselNavBtn = $('.c-carousel--quick-facts.c-carousel--nav .c-carousel--btn', context);
       var theViewportWidth = $(window).width();
       self.highlightUpTo();
       $('#js-carousel-about-stats').hammer().on('swipe', function (event) {
         self.carouselAdvance(event, self, $(this));
       });
-      carouselNavBtn.on('click', function (event) {
+      carouselNavBtn.on('click', Drupal.debounce(function (event) {
         self.carouselAdvance(event, self, $(this));
-      });
+      }, 300));
       $('.c-senate-quick-facts__button').click(function (event) {
         event.preventDefault();
         var tabNumber = "#panel".concat($(this).data('tab'));
@@ -17659,8 +17676,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var itemAmt = carousel.children().length;
       var itemWidth = carousel.width() / itemAmt;
       var carouselPos = 0;
-      carouselPos = parseInt(carousel.css('left'));
-      console.log(carouselPos); // if the previous button is hidden - do not move that way or at all
+      carouselPos = parseInt(carousel.css('left')); // if the previous button is hidden - do not move that way or at all
 
       if (e.direction === 4 && nav.children('.prev').hasClass('hidden')) {
         return false;
@@ -17838,8 +17854,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         $(window).resize($this.debounce(function () {
           return $this.onResize(sidebarToggle);
         }));
+        $this.onResize(sidebarToggle);
       });
-      $this.onResize(sidebarToggle);
     },
     onResize: function onResize(sidebarToggle) {
       var sidebarToggleBottom = sidebarToggle.offset().top + sidebarToggle.outerHeight();

@@ -155,6 +155,7 @@ class Chart implements \JsonSerializable {
    * @return array
    *   Variables.
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize() {
     $vars = get_object_vars($this);
 

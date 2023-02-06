@@ -35,8 +35,8 @@
         $(window).resize($this.debounce(function () {
           return $this.onResize(sidebarToggle);
         }));
+        $this.onResize(sidebarToggle);
       });
-      $this.onResize(sidebarToggle);
     },
     onResize: function onResize(sidebarToggle) {
       var sidebarToggleBottom = sidebarToggle.offset().top + sidebarToggle.outerHeight();

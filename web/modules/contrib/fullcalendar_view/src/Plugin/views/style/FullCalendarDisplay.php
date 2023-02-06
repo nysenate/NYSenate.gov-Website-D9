@@ -2,6 +2,7 @@
 
 namespace Drupal\fullcalendar_view\Plugin\views\style;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\fullcalendar_view\TaxonomyColor;
 use Drupal\core\form\FormStateInterface;
@@ -9,6 +10,9 @@ use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,7 +37,33 @@ class FullCalendarDisplay extends StylePluginBase {
    */
   protected $usesFields = TRUE;
 
+  /**
+   * The taxonomy color service.
+   *
+   * @var \Drupal\fullcalendar_view\TaxonomyColor
+   */
   protected $taxonomyColorService;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected $moduleHandler;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity type bundle info.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfo
+   */
+  protected $entityTypeBundleInfo;
 
   /**
    * Constructs a PluginBase object.
@@ -46,17 +76,42 @@ class FullCalendarDisplay extends StylePluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\fullcalendar_view\TaxonomyColor $taxonomyColorService
    *   The Taxonomy Color Service object.
+   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   *   The Module Handler Service object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfo $entity_type_bundle_info
+   *   The entity type bundle info.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, TaxonomyColor $taxonomyColorService) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    TaxonomyColor $taxonomyColorService,
+    ModuleHandler $module_handler,
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityTypeBundleInfo $entity_type_bundle_info
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->taxonomyColorService = $taxonomyColorService;
+    $this->moduleHandler = $module_handler;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('fullcalendar_view.taxonomy_color'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('fullcalendar_view.taxonomy_color'),
+      $container->get('module_handler'),
+      $container->get('entity_type.manager'),
+      $container->get('entity_type.bundle.info')
+    );
   }
 
   /**
@@ -190,7 +245,7 @@ class FullCalendarDisplay extends StylePluginBase {
       '#description' => $this->t(
         'Left side buttons. Buttons are separated by commas or space. See the %fullcalendar_doc for available buttons.',
         [
-          '%fullcalendar_doc' => Link::fromTextAndUrl($this->t('Fullcalendar documentation'), Url::fromUri('https://fullcalendar.io/docs/header', array('attributes' => array('target' => '_blank'))))->toString(),
+          '%fullcalendar_doc' => Link::fromTextAndUrl($this->t('Fullcalendar documentation'), Url::fromUri('https://fullcalendar.io/docs/v4/header', array('attributes' => array('target' => '_blank'))))->toString(),
         ]
       ),
     ];
@@ -202,7 +257,7 @@ class FullCalendarDisplay extends StylePluginBase {
       '#title' => $this->t('Display toggles'),
       '#description' => $this->t('Shown as buttons on the right side of the calendar view. See the %fullcalendar_doc.',
           [
-            '%fullcalendar_doc' => Link::fromTextAndUrl($this->t('Fullcalendar "Views" documentation'), Url::fromUri('https://fullcalendar.io/docs', array('attributes' => array('target' => '_blank'))))->toString(),
+            '%fullcalendar_doc' => Link::fromTextAndUrl($this->t('Fullcalendar "Views" documentation'), Url::fromUri('https://fullcalendar.io/docs/v4', array('attributes' => array('target' => '_blank'))))->toString(),
           ]),
     ];
     // Default view.
@@ -228,6 +283,26 @@ class FullCalendarDisplay extends StylePluginBase {
       ],
       '#default_value' => (empty($this->options['firstDay'])) ? '0' : $this->options['firstDay'],
       '#title' => $this->t('First Day'),
+    ];
+    // MinTime
+    $form['minTime'] = [
+      '#type' => 'datetime',
+      '#fieldset' => 'display',
+      '#title' => $this->t('Start time'),
+      '#date_date_element' => 'none',
+      '#date_time_element' => 'time',
+      '#default_value' => new DrupalDateTime(!empty($this->options['minTime']) ? $this->options['minTime'] : '2000-01-01 00:00:00'),
+      '#required' => TRUE,
+    ];
+    // MaxTime
+    $form['maxTime'] = [
+      '#type' => 'datetime',
+      '#fieldset' => 'display',
+      '#title' => $this->t('End time'),
+      '#date_date_element' => 'none',
+      '#date_time_element' => 'time',
+      '#default_value' => new DrupalDateTime(!empty($this->options['maxTime']) ? $this->options['maxTime'] : '2000-01-01 23:59:59'),
+      '#required' => TRUE,
     ];
     // Nav Links.
     $form['nav_links'] = [
@@ -407,11 +482,10 @@ class FullCalendarDisplay extends StylePluginBase {
       '#default_value' => (isset($this->options['slotDuration'])) ? $this->options['slotDuration'] : '00:30:00',
     ];
 
-    $moduleHandler = \Drupal::service('module_handler');
+    $moduleHandler = $this->moduleHandler;
     if ($moduleHandler->moduleExists('taxonomy')) {
       // All vocabularies.
-      $cabNames = \Drupal::entityQuery('taxonomy_vocabulary')
-  ->execute();
+      $cabNames = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->getQuery()->execute();
       // Taxonomy reference field.
       $tax_fields = [];
       // Find out all taxonomy reference fields of this View.
@@ -474,7 +548,7 @@ class FullCalendarDisplay extends StylePluginBase {
       '#fieldset' => 'colors',
     ];
     // All bundle types.
-    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type);
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type);
     // Options list.
     $bundlesList = [];
     foreach ($bundles as $id => $bundle) {
@@ -565,7 +639,7 @@ class FullCalendarDisplay extends StylePluginBase {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $options = &$form_state->getValue('style_options');
-    $input_value = $form_state->getUserInput();
+    $input_value = $form_state->getValues();
     $input_colors = isset($input_value['style_options']['color_taxonomies']) ? $input_value['style_options']['color_taxonomies'] : [];
     // Save the input of colors.
     foreach ($input_colors as $id => $color) {
@@ -573,6 +647,8 @@ class FullCalendarDisplay extends StylePluginBase {
         $options['color_taxonomies'][$id] = $color;
       }
     }
+    $options['minTime'] = $input_value['style_options']['minTime']->format("H:i:s");
+    $options['maxTime'] = $input_value['style_options']['maxTime']->format("H:i:s");
     $options['right_buttons'] = isset($input_value['style_options']['right_buttons']) ? implode(',', array_filter(array_values($input_value['style_options']['right_buttons']))) : '';
 
     // Sanitize user input.
@@ -587,7 +663,7 @@ class FullCalendarDisplay extends StylePluginBase {
   public static function taxonomyColorCallback(array &$form, FormStateInterface $form_state) {
     $options = $form_state->getValue('style_options');
     $vid = $options['vocabularies'];
-    $taxonomy_color_service = \Drupal::service('fullcalendar_view.taxonomy_color');
+    $taxonomy_color_service = $this->taxonomyColorService;
 
     if (isset($options['color_taxonomies'])) {
       $defaultValues = $options['color_taxonomies'];

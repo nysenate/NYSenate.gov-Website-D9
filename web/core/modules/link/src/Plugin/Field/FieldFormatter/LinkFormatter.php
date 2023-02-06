@@ -237,7 +237,12 @@ class LinkFormatter extends FormatterBase {
    *   A Url object.
    */
   protected function buildUrl(LinkItemInterface $item) {
-    $url = $item->getUrl() ?: Url::fromRoute('<none>');
+    try {
+      $url = $item->getUrl();
+    }
+    catch (\InvalidArgumentException $e) {
+      $url = Url::fromRoute('<none>');
+    }
 
     $settings = $this->getSettings();
     $options = $item->options;

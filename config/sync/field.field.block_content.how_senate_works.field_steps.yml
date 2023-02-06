@@ -1,0 +1,79 @@
+uuid: 81a38501-1a42-4d60-ad9d-52192c954b97
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.how_senate_works
+    - field.storage.block_content.field_steps
+    - paragraphs.paragraphs_type.steps
+  module:
+    - entity_reference_revisions
+id: block_content.how_senate_works.field_steps
+field_name: field_steps
+entity_type: block_content
+bundle: how_senate_works
+label: Steps
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      steps: steps
+    negate: 0
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 18
+        enabled: false
+      agenda_bills:
+        weight: 19
+        enabled: false
+      calendar:
+        weight: 20
+        enabled: false
+      card:
+        weight: 21
+        enabled: false
+      carousel:
+        weight: 22
+        enabled: false
+      committee_featured_legislation:
+        weight: 23
+        enabled: false
+      featured_legislation:
+        weight: 24
+        enabled: false
+      gallery_item:
+        weight: 25
+        enabled: false
+      members:
+        weight: 26
+        enabled: false
+      misc_legislative_group_members:
+        weight: 27
+        enabled: false
+      office_contacts:
+        weight: 28
+        enabled: false
+      office_locations:
+        weight: 29
+        enabled: false
+      quick_facts:
+        weight: 30
+        enabled: false
+      quote:
+        weight: 31
+        enabled: false
+      slider_item:
+        weight: 32
+        enabled: false
+      steps:
+        weight: 33
+        enabled: true
+      votes:
+        weight: 34
+        enabled: false
+field_type: entity_reference_revisions

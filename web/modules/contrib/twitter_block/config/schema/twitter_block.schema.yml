@@ -3,7 +3,7 @@ block.settings.twitter_block:
   label: 'Twitter block settings'
   mapping:
     username:
-      type: string
+      type: label
       label: 'Username'
     theme:
       type: string
@@ -40,11 +40,14 @@ block.settings.twitter_block:
       type: string
       label: 'Border Color'
     language:
-      type: string
+      type: label
       label: 'Language'
     tweet_limit:
       type: string
       label: 'Tweet Limit'
+    dnt:
+      type: boolean
+      label: 'Disable tracking'
     related:
       type: string
       label: 'Related'

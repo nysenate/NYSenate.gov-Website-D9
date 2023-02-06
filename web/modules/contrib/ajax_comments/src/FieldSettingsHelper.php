@@ -10,9 +10,7 @@ use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Field\FormatterPluginManager;
 
 /**
- * Class FieldSettingsHelper.
- *
- * @package Drupal\ajax_comments
+ * Provides various methods to work with the fields.
  */
 class FieldSettingsHelper {
 
@@ -31,7 +29,7 @@ class FieldSettingsHelper {
   protected $fieldFormatterManager;
 
   /**
-   * AjaxCommentsFieldSettings constructor.
+   * FieldSettingsHelper constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
@@ -154,8 +152,7 @@ class FieldSettingsHelper {
    *   entity view mode.
    *
    * @return bool
-   *   Whether or not ajax comments is enabled on the comment field's display
-   *   settings.
+   *   Whether ajax comments is enabled on the comment field's display settings.
    */
   public function isEnabled(FormatterInterface $comment_formatter) {
     return $comment_formatter->getThirdPartySetting('ajax_comments', 'enable_ajax_comments', '1');

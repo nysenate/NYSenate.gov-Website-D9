@@ -9,10 +9,12 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\entity_usage\EntityUsage;
+use Drupal\entity_usage\EntityUsageInterface;
 use Drupal\entity_usage\EntityUsageTrackBase;
 use Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
  * Tracks usage of entities related in Layout Builder layouts.
@@ -42,7 +44,7 @@ class LayoutBuilder extends EntityUsageTrackBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\entity_usage\EntityUsage $usage_service
+   * @param \Drupal\entity_usage\EntityUsageInterface $usage_service
    *   The usage tracking service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The EntityTypeManager service.
@@ -54,9 +56,13 @@ class LayoutBuilder extends EntityUsageTrackBase {
    *   The EntityRepositoryInterface service.
    * @param \Drupal\Core\Block\BlockManagerInterface $blockManager
    *   Block manager.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The Drupal Path Validator service.
+   * @param \Drupal\Core\StreamWrapper\PublicStream $public_stream
+   *   The Public Stream service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityUsage $usage_service, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, EntityRepositoryInterface $entity_repository, BlockManagerInterface $blockManager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $usage_service, $entity_type_manager, $entity_field_manager, $config_factory, $entity_repository);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityUsageInterface $usage_service, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, EntityRepositoryInterface $entity_repository, BlockManagerInterface $blockManager, PathValidatorInterface $path_validator, PublicStream $public_stream) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $usage_service, $entity_type_manager, $entity_field_manager, $config_factory, $entity_repository, $path_validator, $public_stream);
     $this->blockManager = $blockManager;
   }
 
@@ -73,7 +79,9 @@ class LayoutBuilder extends EntityUsageTrackBase {
       $container->get('entity_field.manager'),
       $container->get('config.factory'),
       $container->get('entity.repository'),
-      $container->get('plugin.manager.block')
+      $container->get('plugin.manager.block'),
+      $container->get('path.validator'),
+      $container->get('stream_wrapper.public')
     );
   }
 

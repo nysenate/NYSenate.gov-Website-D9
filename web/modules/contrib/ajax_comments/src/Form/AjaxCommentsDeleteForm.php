@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides ajax enhancements to core Comment delete form.
- *
- * @package Drupal\ajax_comments
  */
 class AjaxCommentsDeleteForm extends DeleteForm {
 

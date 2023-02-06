@@ -108,10 +108,10 @@ class DefaultSitemapGenerator extends SitemapGeneratorBase {
       foreach ($url_data['images'] as $image) {
         $this->writer->startElement('image:image');
         $this->writer->writeElement('image:loc', $image['path']);
-        if (strlen($image['title']) > 0) {
+        if (isset($image['title']) && $image['title'] !== '') {
           $this->writer->writeElement('image:title', $image['title']);
         }
-        if (strlen($image['alt']) > 0) {
+        if (isset($image['alt']) && $image['alt'] !== '') {
           $this->writer->writeElement('image:caption', $image['alt']);
         }
         $this->writer->endElement();

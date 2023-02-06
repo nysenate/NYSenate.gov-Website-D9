@@ -115,7 +115,7 @@ class FloodControlSettingsForm extends ConfigFormBase {
       '#options' => [0 => $this->t('None (disabled)')] + array_map([
         $this->dateFormatter,
         'formatInterval',
-      ], array_combine($timeOptions, $timeOptions)),
+      ], array_combine($timeOptions, $timeOptions)) + [PHP_INT_MAX => $this->t('Infinite')],
       '#default_value' => $flood_settings['user_window'],
       '#description' => $this->t('The allowed time window for failed username logins.'),
     ];

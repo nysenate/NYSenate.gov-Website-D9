@@ -12,7 +12,13 @@ use Drupal\entity_usage\EntityUsageTrackBase;
  *   id = "entity_reference",
  *   label = @Translation("Entity Reference"),
  *   description = @Translation("Tracks relationships created with 'Entity Reference' fields."),
- *   field_types = {"entity_reference", "entity_reference_revisions"},
+ *   field_types = {
+ *     "entity_reference",
+ *     "entity_reference_revisions",
+ *     "file",
+ *     "image",
+ *     "webform",
+ *   },
  * )
  */
 class EntityReference extends EntityUsageTrackBase {

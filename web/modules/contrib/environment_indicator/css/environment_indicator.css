@@ -93,9 +93,9 @@
 }
 
 [dir="ltr"] .gin--vertical-toolbar .toolbar-menu-administration > .toolbar-menu > .menu-item .toolbar-menu {
-  margin-left: calc(var(--ginToolbarWidthCollapsed) - 4px);
+  margin-left: calc(var(--gin-toolbar-width-collapsed, var(--ginToolbarWidthCollapsed)) - 4px);
 }
 
 [dir="rtl"] .gin--vertical-toolbar .toolbar-menu-administration > .toolbar-menu > .menu-item .toolbar-menu {
-  margin-right: calc(var(--ginToolbarWidthCollapsed) - 4px);
+  margin-right: calc(var(--gin-toolbar-width-collapsed, var(--ginToolbarWidthCollapsed)) - 4px);
 }

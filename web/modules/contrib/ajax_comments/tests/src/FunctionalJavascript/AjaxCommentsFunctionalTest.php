@@ -23,7 +23,7 @@ class AjaxCommentsFunctionalTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'ajax_comments',
     'node',
@@ -33,7 +33,7 @@ class AjaxCommentsFunctionalTest extends WebDriverTestBase {
     'filter',
   ];
 
-   /**
+  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
@@ -41,7 +41,7 @@ class AjaxCommentsFunctionalTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->entityTypeManager = $this->container->get('entity_type.manager');
 

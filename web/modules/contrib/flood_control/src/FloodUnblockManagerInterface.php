@@ -61,25 +61,27 @@ interface FloodUnblockManagerInterface {
   /**
    * Provides identifier's flood status.
    *
-   * @param string $event
-   *   The flood event name.
    * @param string $identifier
    *   The identifier: IP address and/or UID.
+   * @param string $event
+   *   The flood event name.
    *
    * @return bool
    *   Whether the identifier is blocked.
    */
-  public function isBlocked($event, $identifier);
+  public function isBlocked($identifier, $event);
 
   /**
    * Provides list of event IDs.
    *
    * @param string $event
    *   The flood event name.
+   * @param string $identifier
+   *   Database LIKE query parameter for matching event IDs.
    *
    * @return array
    *   List of event IDs.
    */
-  public function getEventIds($event);
+  public function getEventIds($event, $identifier = NULL);
 
 }

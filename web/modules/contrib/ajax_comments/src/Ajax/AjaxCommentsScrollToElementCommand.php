@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ajax_comments\Ajax\ajaxCommentsScrollToElementCommand.
- */
-
 namespace Drupal\ajax_comments\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;
@@ -14,7 +9,7 @@ use Drupal\Core\Ajax\CommandInterface;
  *
  * @ingroup ajax
  */
-class ajaxCommentsScrollToElementCommand Implements CommandInterface {
+class AjaxCommentsScrollToElementCommand implements CommandInterface {
 
   /**
    * The CSS selector for the element.
@@ -27,7 +22,7 @@ class ajaxCommentsScrollToElementCommand Implements CommandInterface {
    * Constructs a ajaxCommentsScrollToElementCommand object.
    *
    * @param string $selector
-   *
+   *   The selector for the command.
    */
   public function __construct($selector) {
     $this->selector = $selector;

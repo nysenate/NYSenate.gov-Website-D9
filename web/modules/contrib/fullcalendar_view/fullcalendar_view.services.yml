@@ -11,6 +11,7 @@ services:
   # View preprocess service.
   fullcalendar_view.view_preprocess:
     class: Drupal\fullcalendar_view\FullcalendarViewPreprocess
+    arguments: ['@language_manager', '@csrf_token', '@entity_type.manager', '@fullcalendar_view.timezone_conversion_service']
     
   # View processor plugin.
   plugin.manager.fullcalendar_view_processor:

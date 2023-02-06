@@ -1528,8 +1528,130 @@ strong {
 .c-news--body .c-btn--cta__sign {
   float: left; }
 
-.petition-small-text {
+p.petition-small-text {
   font-size: 12px;
   margin-top: 30px;
   float: left;
   clear: left; }
+
+.c-news--author,
+.c-news--pub-date {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  text-transform: capitalize;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 12px; }
+
+.c-news--pub-date {
+  color: #888888; }
+
+.c-news--author {
+  text-transform: uppercase; }
+  .c-news--author a {
+    color: inherit; }
+
+@media screen and (min-width: 768px) {
+  .c-news--author,
+  .c-news--pub-date,
+  .c-news--committees {
+    font-size: 15px;
+    line-height: 1.2em; } }
+
+p {
+  font-family: "Adelle Light", serif;
+  line-height: 1.5em;
+  color: #666666;
+  font-size: 16px; }
+  @media screen and (min-width: 768px) {
+    p {
+      font-size: 20px;
+      line-height: 32px; } }
+
+.c-btn--cta {
+  background-color: #2b6a90; }
+
+.c-btn--cta {
+  display: inline-block;
+  position: relative;
+  padding: 0 20px;
+  height: 60px;
+  min-width: 215px;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  line-height: 60px; }
+  @media screen and (min-width: 768px) {
+    .c-btn--cta {
+      padding: 0 30px;
+      min-height: 55px;
+      min-width: 240px;
+      font-size: 14px; } }
+
+.c-btn--cta__sign {
+  min-width: 250px;
+  padding: 0;
+  text-align: left; }
+
+.c-news--body .c-btn--cta__sign {
+  float: left; }
+
+.c-btn--cta__sign .flag-wrapper {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%; }
+
+.c-btn--cta__sign .flag-wrapper .unflag-disabled,
+.c-btn--cta__sign .flag-wrapper .flag-link-toggle {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
+  padding: 0 20px; }
+
+@media screen and (min-width: 768px) {
+  .c-btn--cta__sign .flag-wrapper .unflag-disabled,
+  .c-btn--cta__sign .flag-wrapper .flag-link-toggle {
+    padding: 0 30px; } }
+
+.c-btn--cta__sign .flag-wrapper .flag-link-toggle::before {
+  font-family: "senate_icons";
+  display: inline-block;
+  vertical-align: middle;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  padding-right: 3px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.icon-before__petition:before,
+.c-btn--cta__sign .flag-wrapper .unflag-disabled:before,
+.c-btn--cta__sign .flag-wrapper .flag-link-toggle:before,
+.c-senate-works--illustration.illustration--write:before {
+  content: "\70"; }
+
+.c-btn--cta__sign .flag-wrapper .unflag-disabled:before,
+.c-btn--cta__sign .flag-wrapper .flag-link-toggle:before {
+  margin-right: 10px;
+  font-size: 28px; }
+  @media screen and (min-width: 768px) {
+    .c-btn--cta__sign .flag-wrapper .unflag-disabled:before,
+    .c-btn--cta__sign .flag-wrapper .flag-link-toggle:before {
+      font-size: 32px; } }
+
+.trad_blue .c-btn--cta {
+  background-color: #1b5187; }
+
+.trad_red .c-btn--cta {
+  background-color: #87002f; }
+
+.c-btn--cta a,
+.trad_blue .c-btn--cta a,
+.trad_red .c-btn--cta a {
+  color: #fff; }

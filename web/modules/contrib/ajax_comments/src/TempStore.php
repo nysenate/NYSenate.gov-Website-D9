@@ -2,17 +2,12 @@
 
 namespace Drupal\ajax_comments;
 
-use Drupal\ajax_comments\Utility;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A service to help store and retrieve data to be used across HTTP requests.
- *
- * @package Drupal\ajax_comments
  */
 class TempStore {
 
@@ -21,7 +16,7 @@ class TempStore {
    *
    * This service stores temporary data to be used across HTTP requests.
    *
-   * @var \Drupal\user\PrivateTempStore
+   * @var \Drupal\Core\TempStore\PrivateTempStore
    */
   protected $privateTempStore;
 
@@ -115,8 +110,6 @@ class TempStore {
    *   The selector to update.
    * @param string $value
    *   The new value for the selector.
-   *
-   * @throws \Drupal\user\TempStoreException
    */
   public function setSelector($selector, $value) {
     $this->privateTempStore->set($selector, '#' . $value);
@@ -133,10 +126,8 @@ class TempStore {
    *   The form state object.
    * @param bool $is_validating
    *   Indicates if this method has been called from a form validation function.
-   *
-   * @throws \Drupal\user\TempStoreException
    */
-  public function processForm(Request $request, $form, FormStateInterface $form_state, $is_validating = FALSE) {
+  public function processForm(Request $request, array $form, FormStateInterface $form_state, $is_validating = FALSE) {
     $form_machine_name = $this->privateTempStore->get('form_machine_name');
     $form_build_info = $form_state->getBuildInfo();
 
@@ -155,8 +146,6 @@ class TempStore {
 
   /**
    * Delete the values from the privateTempStore.
-   *
-   * @throws \Drupal\user\TempStoreException
    */
   public function deleteAll() {
     $values = [

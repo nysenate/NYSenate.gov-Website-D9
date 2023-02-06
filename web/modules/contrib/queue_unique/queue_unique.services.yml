@@ -1,0 +1,4 @@
+services:
+  queue_unique.database:
+    class: Drupal\queue_unique\UniqueQueueDatabaseFactory
+    parent: queue.database

@@ -5,7 +5,6 @@ namespace Drupal\simple_sitemap;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\simple_sitemap\Form\FormHelper;
 
 /**
  * Defines a class to build a listing of sitemap type entities.

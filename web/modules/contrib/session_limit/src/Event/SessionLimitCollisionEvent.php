@@ -2,7 +2,7 @@
 
 namespace Drupal\session_limit\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use Drupal\Core\Session\AccountInterface;
 
 class SessionLimitCollisionEvent extends Event {

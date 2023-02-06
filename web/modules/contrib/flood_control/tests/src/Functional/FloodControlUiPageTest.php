@@ -41,7 +41,7 @@ class FloodControlUiPageTest extends BrowserTestBase {
   /**
    * Create required user and other objects in order to run tests.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser(['access flood unblock']);

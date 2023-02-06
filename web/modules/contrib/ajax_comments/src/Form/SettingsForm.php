@@ -4,10 +4,8 @@ namespace Drupal\ajax_comments\Form;
 
 use Drupal\field_ui\FieldUI;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityListBuilderInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -74,7 +72,7 @@ class SettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'ajax_comments_settings';
   }
 
@@ -102,7 +100,7 @@ class SettingsForm extends ConfigFormBase {
 
     $form['entity_bundles'] = [
       '#type' => 'fieldset',
-      '#title' => t("Enable Ajax Comments on the comment fields' display settings"),
+      '#title' => $this->t("Enable Ajax Comments on the comment fields' display settings"),
       '#description' => $description,
     ];
 
@@ -133,7 +131,8 @@ class SettingsForm extends ConfigFormBase {
                 FieldUI::getRouteBundleParameter($entity_type, $bundle)
               ),
             ];
-          } else {
+          }
+          else {
             $links[$entity_type_id . '.' . $bundle] = [
               '#markup' => $label,
             ];
@@ -160,7 +159,7 @@ class SettingsForm extends ConfigFormBase {
     ];
 
     $form['reply_autoclose'] = [
-      '#title' => t('Autoclose any opened reply forms'),
+      '#title' => $this->t('Autoclose any opened reply forms'),
       '#type' => 'checkbox',
       '#default_value' => $config->get('reply_autoclose'),
     ];

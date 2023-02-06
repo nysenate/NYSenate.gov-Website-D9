@@ -38,3 +38,11 @@ nys_school_forms.delete_submission:
   requirements:
     _permission: 'administer site configuration'
     id: ^\d+$
+nys_school_forms.show_student_submission:
+  path: '/admin/school-forms/show-student'
+  defaults:
+    _form: 'Drupal\nys_school_forms\Form\SchoolFormShowStudentForm'
+    _title: 'Confirm Show Student'
+  requirements:
+    _permission: 'administer site configuration'
+    id: ^\d+$

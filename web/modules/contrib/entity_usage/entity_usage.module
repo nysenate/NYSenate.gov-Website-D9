@@ -5,12 +5,12 @@
  * Contains entity_usage.module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\entity_usage\EntityUpdateManager;
-use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\entity_usage\EntityUpdateManagerInterface;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Implements hook_help().
@@ -40,7 +40,7 @@ function entity_usage_entity_insert(EntityInterface $entity) {
  */
 function entity_usage_entity_update(EntityInterface $entity) {
   $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
-  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  assert($entity_usage_update_manager instanceof EntityUpdateManagerInterface);
   $entity_usage_update_manager->trackUpdateOnEdition($entity);
 }
 
@@ -49,7 +49,7 @@ function entity_usage_entity_update(EntityInterface $entity) {
  */
 function entity_usage_entity_predelete(EntityInterface $entity) {
   $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
-  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  assert($entity_usage_update_manager instanceof EntityUpdateManagerInterface);
   $entity_usage_update_manager->trackUpdateOnDeletion($entity);
 }
 
@@ -58,7 +58,7 @@ function entity_usage_entity_predelete(EntityInterface $entity) {
  */
 function entity_usage_entity_translation_delete(EntityInterface $translation) {
   $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
-  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  assert($entity_usage_update_manager instanceof EntityUpdateManagerInterface);
   $entity_usage_update_manager->trackUpdateOnDeletion($translation, 'translation');
 }
 
@@ -67,7 +67,7 @@ function entity_usage_entity_translation_delete(EntityInterface $translation) {
  */
 function entity_usage_entity_revision_delete(EntityInterface $entity) {
   $entity_usage_update_manager = \Drupal::service('entity_usage.entity_update_manager');
-  assert($entity_usage_update_manager instanceof EntityUpdateManager);
+  assert($entity_usage_update_manager instanceof EntityUpdateManagerInterface);
   $entity_usage_update_manager->trackUpdateOnDeletion($entity, 'revision');
 }
 

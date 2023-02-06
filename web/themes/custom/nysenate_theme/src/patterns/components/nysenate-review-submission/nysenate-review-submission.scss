@@ -1,0 +1,145 @@
+@import "../../global/utils/init";
+
+.review-submission__container {
+  .entityform-earth-day,
+  .entityform-earth-day-preview,
+  .entityform-hannon-photo-contest.view-mode-review,
+  .entityform-hannon-photo-contest.view-mode-confirmation,
+  .entityform-hannon-photo-contest.view-mode-full,
+  .entityform-school-submissions,
+  .entityform-new-york-senate-youth-leadership,
+  .entityform-summer-reading,
+  .entityform-participatory-budgeting {
+    margin-bottom: 10%;
+
+    p.form-label {
+      font-family: $font-sans-bold;
+      margin: 0;
+    }
+
+    p.form-results {
+      font-family: $font-sans;
+      padding-left: 250px;
+      margin: 0;
+    }
+
+    p.label-inline {
+      float: left;
+      padding-right: 3em;
+      font-family: $font-sans-bold;
+      margin: 0;
+    }
+
+    p.label-above,
+    li {
+      font-family: $font-sans-bold;
+    }
+
+    p.label-above.header {
+      font-size: 18px;
+      color: $color-nys-blue;
+      margin-top: 12px;
+    }
+
+    p.header-sm {
+      color: $color-nys-blue;
+      margin-top: 12px;
+    }
+
+    p.description {
+      font-size: 12px;
+      color: $grey10;
+      padding-left: 250px;
+    }
+
+    h3.label-above {
+      margin: 24px 0 12px;
+      padding-top: 3%;
+      border-top: 1px solid $grey10;
+      color: $grey03;
+      font-size: 1.375rem;
+      line-height: 1.4;
+      font-family: "Helvetica Nueue", sans-serif;
+      font-weight: normal;
+
+      @include breakpoint($bp-sm) {
+        font-size: 1.6875rem;
+      }
+    }
+
+    .vcard {
+      display: inline-block;
+      margin: 0;
+      border: none;
+      font-size: 20px;
+      color: $grey03;
+      font-family: $font-sans;
+      padding: 0 35px;
+    }
+
+    img {
+      width: auto;
+    }
+
+    .attachment_container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .entity-field-collection-item {
+      margin-top: 5%;
+      padding-bottom: 3%;
+      border-bottom: 1px dotted $grey01;
+      width: 75%;
+    }
+
+    .c-block.c-block--pg-file-uploads {
+      margin: 0;
+
+      a {
+        margin: 0;
+      }
+    }
+  }
+
+  .button-wrapper {
+    display: flex;
+    gap: 10px;
+
+    .edit-submit .button {
+      @extend .icon-before__check;
+      margin: 0 auto;
+    }
+
+    .button {
+      background: $color-nys-blue;
+      color: $color-white;
+      border: 0;
+
+      &:focus {
+        color: $color-white;
+        background: $color-nys-blue;
+      }
+
+      &:hover {
+        background: #007095;
+        color: $color-white;
+      }
+    }
+  }
+
+  .l-messages {
+    padding-left: 30px;
+    padding-right: 10px;
+
+    .close {
+      color: #333333;
+      opacity: 0.3;
+      font-size: 1.375rem;
+    }
+
+    .alert-box-message {
+      color: $grey08;
+    }
+  }
+}

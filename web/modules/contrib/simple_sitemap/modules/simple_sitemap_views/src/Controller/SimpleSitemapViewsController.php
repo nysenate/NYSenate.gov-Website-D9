@@ -2,7 +2,6 @@
 
 namespace Drupal\simple_sitemap_views\Controller;
 
-use Drupal\simple_sitemap\Form\FormHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\simple_sitemap_views\SimpleSitemapViews;
 use Drupal\Core\Controller\ControllerBase;

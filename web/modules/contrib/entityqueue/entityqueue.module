@@ -64,6 +64,26 @@ function entityqueue_views_pre_render(ViewExecutable $view) {
       }
     }
   }
+
+  // Add contextual link when view row plugin is entity_subqueue,
+  // and entity queue filter are provided.
+  if ($view->rowPlugin && $view->rowPlugin->getPluginId() == 'entity:entity_subqueue' && $view->rowPlugin->getEntityTypeId() == 'entity_subqueue') {
+    $view_filters = $view->filter;
+    foreach ($view_filters as $filter) {
+      if ($filter->field == 'queue' && !empty($filter->value)) {
+        $subqueue = EntitySubqueue::load(reset($filter->value));
+        if ($subqueue) {
+          $route_parameters = [
+            'entity_queue' => $subqueue->getQueue()->id(),
+            'entity_subqueue' => $subqueue->id(),
+          ];
+          $view->element['#contextual_links']['entityqueue'] = [
+            'route_parameters' => $route_parameters,
+          ];
+        }
+      }
+    }
+  }
 }
 
 /**

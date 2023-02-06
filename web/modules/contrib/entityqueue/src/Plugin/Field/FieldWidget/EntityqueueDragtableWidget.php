@@ -4,7 +4,6 @@ namespace Drupal\entityqueue\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\Plugin\Validation\Constraint\ValidReferenceConstraint;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -142,7 +141,7 @@ class EntityqueueDragtableWidget extends EntityReferenceAutocompleteWidget {
       // Show a link to the edit form of the entity if the entity type is
       // editable.
       if ($this->getSetting('link_to_edit_form') && $referenced_entities[$delta]->getEntityType()->hasLinkTemplate('edit-form')) {
-        $element['_edit'] = $referenced_entities[$delta]->toLink($this->t('Edit'), 'edit-form', ['query' => ['destination' => \Drupal::request()->getRequestUri()]])->toRenderable() + [
+        $element['_edit'] = $referenced_entities[$delta]->toLink($this->t('Edit'), 'edit-form', ['query' => ['destination' => \Drupal::urlGenerator()->generateFromRoute('<current>')]])->toRenderable() + [
           '#attributes' => ['class' => ['form-item', 'entityqueue-edit-item-link']],
         ];
         $element['#attached']['html_head'][] = [
@@ -164,7 +163,7 @@ class EntityqueueDragtableWidget extends EntityReferenceAutocompleteWidget {
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
     if ($button = $form_state->getTriggeringElement()) {
       // If an item is being removed, do not check for reference validity.
-      if (end($button['#parents']) === '_remove' && $violation->getConstraint() instanceof ValidReferenceConstraint) {
+      if (end($button['#parents']) === '_remove' && $violation->getMessageTemplate() === 'This entity (%type: %id) cannot be referenced.') {
         return FALSE;
       }
     }

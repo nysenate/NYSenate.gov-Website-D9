@@ -6,10 +6,10 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\flood_control\FloodUnblockManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\flood_control\FloodUnblockManager;
-use Drupal\Core\Session\AccountProxy;
 
 /**
  * Admin form of Flood Unblock.
@@ -26,7 +26,7 @@ class FloodUnblockAdminForm extends FormBase {
   /**
    * The FloodUnblockManager service.
    *
-   * @var \Drupal\flood_control\FloodUnblockManager
+   * @var \Drupal\flood_control\FloodUnblockManagerInterface
    */
   protected $floodUnblockManager;
 
@@ -47,23 +47,23 @@ class FloodUnblockAdminForm extends FormBase {
   /**
    * Current user object.
    *
-   * @var \Drupal\Core\Session\AccountProxy
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
   /**
    * FloodUnblockAdminForm constructor.
    *
-   * @param \Drupal\flood_control\FloodUnblockManager $floodUnblockManager
+   * @param \Drupal\flood_control\FloodUnblockManagerInterface $floodUnblockManager
    *   The FloodUnblockManager service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
-   * @param \Drupal\Core\Session\AccountProxy $currentUser
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user service.
    */
-  public function __construct(FloodUnblockManager $floodUnblockManager, Connection $database, DateFormatterInterface $date_formatter, AccountProxy $currentUser) {
+  public function __construct(FloodUnblockManagerInterface $floodUnblockManager, Connection $database, DateFormatterInterface $date_formatter, AccountProxyInterface $currentUser) {
     $this->floodUnblockManager = $floodUnblockManager;
     $this->database = $database;
     $this->dateFormatter = $date_formatter;
@@ -195,6 +195,7 @@ class FloodUnblockAdminForm extends FormBase {
 
         // Defines list of options for tableselect element.
         $options[$result->fid] = [
+          'title' => ['data' => ['#title' => $this->t('Flood id @id', ['@id' => $result->fid])]],
           'identifier' => $identifiers[$result->identifier],
           'blocked' => $is_blocked ? $this->t('Blocked') : $this->t('Not blocked'),
           'event' => $this->floodUnblockManager->getEventLabel($result->event),
@@ -212,14 +213,16 @@ class FloodUnblockAdminForm extends FormBase {
       '#empty' => $this->t('There are no failed logins at this time.'),
     ];
 
+    $form['actions'] = ['#type' => 'actions'];
+
     // Provides the remove submit button.
-    $form['remove'] = [
+    $form['actions']['remove'] = [
       '#type' => 'submit',
       '#value' => $this->t('Remove selected items from the flood table'),
       '#validate' => ['::validateRemoveItems'],
     ];
     if (count($options) == 0) {
-      $form['remove']['#disabled'] = TRUE;
+      $form['actions']['remove']['#disabled'] = TRUE;
     }
 
     // Provides the pager element.

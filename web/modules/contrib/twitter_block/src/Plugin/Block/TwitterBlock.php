@@ -32,7 +32,7 @@ class TwitterBlock extends BlockBase {
       '#field_prefix' => '@',
     ];
     $form['appearance'] = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Appearance'),
     ];
     $form['appearance']['theme'] = [
@@ -80,7 +80,7 @@ class TwitterBlock extends BlockBase {
       '#description' => $this->t('Control the widget layout and chrome.'),
     ];
     $form['functionality'] = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Functionality'),
     ];
     $form['functionality']['related'] = [
@@ -104,9 +104,15 @@ class TwitterBlock extends BlockBase {
     ];
     $form['functionality']['tweet_limit']['#options'] +=
       array_combine(range(1, 20), range(1, 20));
+    $form['functionality']['dnt'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable tracking'),
+      '#default_value' => $config['dnt'],
+      '#description' => $this->t('Prevent having information from your website used to tailor content and suggestions for Twitter users.'),
+    ];
 
     $form['size'] = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Size'),
       '#description' => $this->t('Embedded timelines are flexible and adaptive,
         functioning at a variety of dimensions ranging from wide to narrow,
@@ -137,7 +143,7 @@ class TwitterBlock extends BlockBase {
         and the maximum is 520px. The minimum height is 200px.') . '</p>',
     ];
     $form['accessibility'] = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Accessibility'),
     ];
     $form['accessibility']['language'] = [
@@ -239,12 +245,16 @@ class TwitterBlock extends BlockBase {
       $render['block']['#attributes']['data-tweet-limit'] = $config['tweet_limit'];
     }
 
+    if ($config['dnt']) {
+      $render['block']['#attributes']['data-dnt'] = 'true';
+    }
+
     if (!empty($config['related'])) {
       $render['block']['#attributes']['data-related'] = $config['related'];
     }
 
     if (!empty($config['polite'])) {
-      $render['block']['#attributes']['aria-polite'] = $config['polite'];
+      $render['block']['#attributes']['aria-live'] = $config['polite'];
     }
 
     return $render;
@@ -266,6 +276,7 @@ class TwitterBlock extends BlockBase {
       'tweet_limit' => '',
       'related' => '',
       'polite' => '',
+      'dnt' => FALSE,
     ];
   }
 

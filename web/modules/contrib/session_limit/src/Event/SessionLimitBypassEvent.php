@@ -2,7 +2,7 @@
 
 namespace Drupal\session_limit\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class SessionLimitBypassEvent extends Event {
 

@@ -34,7 +34,7 @@ jobs:
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
-        php-version: '8'
+        php-version: '8.1'
         extensions: gd,pdo_sqlite
 
     - name: Install sqlite3 packages
@@ -87,7 +87,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        SHARPEYE_BROWSER: ['chrome', 'firefox']
+          include:
+            # chrome latest at this time
+            - browser: 'chrome'
+              version: '106.0'
+            # firefox nearest esr
+            - browser: 'firefox'
+              version: '102.0'
+
+    services:
+      selenium:
+        image: selenium/standalone-${{ matrix.browser }}:${{ matrix.version }}
+        ports:
+          - 4444:4444
+        options: --shm-size 2g
 
     steps:
     - uses: actions/checkout@v1
@@ -99,7 +112,7 @@ jobs:
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
-        php-version: '8'
+        php-version: '8.1'
         extensions: gd,pdo_sqlite
 
     - name: Install sqlite3 and graphicsmagick packages
@@ -122,6 +135,7 @@ jobs:
         echo "$HOME/.composer/vendor/bin" >> $GITHUB_PATH
         echo "$HOME/build/thunder/thunder-admin-tests/scripts" >> $GITHUB_PATH
         echo "$HOME/build/test-dir/vendor/bin" >> $GITHUB_PATH
+        echo "BASE_URL=http://$(docker network inspect bridge --format='{{( index .IPAM.Config 0).Gateway}}'):8080" >> $GITHUB_ENV
 
     - id: message
       name: Get commit message
@@ -135,6 +149,13 @@ jobs:
     - name: Unzip build artifact
       run: tar xCfz ${HOME} build/build.tgz build/test-dir; rm -rf build
 
+    - name: Setup Apache
+      uses: thunder/apache-shiva-php-action@v1
+      with:
+        php-version: '8.1'
+        site-directory: "${HOME}/build/test-dir/docroot"
+        http-port: '8080'
+
     - name: Build theme
       run: build-theme.sh
 
@@ -142,14 +163,14 @@ jobs:
       run: visual.sh
       env:
         JOB_ID: ${{ github.run_id }}
-        SHARPEYE_BROWSER: ${{ matrix.SHARPEYE_BROWSER }}
+        SHARPEYE_BROWSER: ${{ matrix.browser }}
         UPDATE_SCREENSHOTS: ${{ contains(steps.message.outputs.message, '[UPDATE_SCREENSHOTS') }}
 
     - name: Upload images
       if: failure()
       uses: actions/upload-artifact@v1
       with:
-        name: images-${{ matrix.SHARPEYE_BROWSER }}
+        name: images-${{ matrix.browser }}
         path: /tmp/sharpeye
 
     - name: Update screenshots
@@ -157,7 +178,7 @@ jobs:
       run: update-screenshots.sh
       env:
         JOB_ID: ${{ github.run_id }}
-        SHARPEYE_BROWSER: ${{ matrix.SHARPEYE_BROWSER }}
+        SHARPEYE_BROWSER: ${{ matrix.browser }}
         BRANCH: ${{ github.head_ref }}
         REPOSITORY: ${{ github.repository }}
         GITHUB_TOKEN: ${{ secrets.TechAccountToken }}

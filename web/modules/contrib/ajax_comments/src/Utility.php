@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides various helper methods for Ajax Comments.
- *
- * @package Drupal\ajax_comments
  */
 class Utility {
 
@@ -36,8 +34,7 @@ class Utility {
    * @param string $view_mode
    *   The view mode of the render array.
    */
-  public static function setEntityRenderArray($build, ContentEntityInterface $entity, $view_mode = 'default') {
-    $prefix = static::isAjaxRequest(\Drupal::request()) ? 'ajax' : 'standard';
+  public static function setEntityRenderArray(array $build, ContentEntityInterface $entity, $view_mode = 'default') {
     $entity_type = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
     $id = $entity->id();
@@ -58,7 +55,6 @@ class Utility {
    *   cannot be found for the entity/view mode combination.
    */
   public static function getEntityRenderArray(ContentEntityInterface $entity, $view_mode = 'default') {
-    $prefix = static::isAjaxRequest(\Drupal::request()) ? 'ajax' : 'standard';
     $entity_type = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
     $id = $entity->id();
@@ -181,7 +177,7 @@ class Utility {
    * @return bool
    *   Whether or not the request was made using ajax.
    */
-  public static function isAjaxRequest(Request $request, $input = []) {
+  public static function isAjaxRequest(Request $request, array $input = []) {
     $has_ajax_parameter = $request
       ->request
       ->has(AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER);
@@ -189,8 +185,8 @@ class Utility {
       $input[AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER]
     );
     $has_ajax_format = $request
-        ->query
-        ->get(MainContentViewSubscriber::WRAPPER_FORMAT) == 'drupal_ajax';
+      ->query
+      ->get(MainContentViewSubscriber::WRAPPER_FORMAT) == 'drupal_ajax';
     return $has_ajax_parameter || $has_ajax_input_parameter || $has_ajax_format;
   }
 

@@ -102,7 +102,7 @@ class TwitterManager implements TwitterManagerInterface {
    * {@inheritDoc}
    */
   public function init(string $key_id) {
-    $credentials = $this->keyRepository->getKey($key_id)->getKeyValues();
+    $credentials = $this->keyRepository->getKey($key_id)->getKeyInput()->getConfiguration();
     $this->token = $credentials['bearer_token'] ?? NULL;
 
     // Request a Bearer token, if not set.

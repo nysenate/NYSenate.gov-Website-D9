@@ -14,30 +14,36 @@
 
   Drupal.behaviors.chart = {
     attach: function attach(context) {
-      $('.chart', context).once('chartInit').each(function () {
+      $('.chart', context).once('chartInit').each(function (index) {
         var $chart = $(this).find('div');
         var colors = $chart.data('colors');
         var values = $chart.data('values');
+        var newId = "chart".concat(index > 0 ? "-".concat(index) : '');
+        $chart.attr('id', newId);
+        var id = $chart.attr('id');
         var data = [];
 
         if (values) {
           data = values.map(function (v, i) {
+            var value = parseInt(v);
+            var y = typeof value === 'number' ? value >= 0 ? value : 0 : 0;
+
             if (i === 0) {
               return {
-                y: v,
+                y: y,
                 sliced: true,
                 selected: true
               };
             }
 
             return {
-              y: v
+              y: y
             };
           });
         } // eslint-disable-next-line no-undef
 
 
-        Highcharts.chart('vote-chart', {
+        Highcharts.chart(id, {
           colors: colors,
           chart: {
             plotBackgroundColor: null,

@@ -12,6 +12,12 @@ use Drupal\Tests\BrowserTestBase;
 class TwitterBlockTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -21,7 +27,7 @@ class TwitterBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser([
@@ -37,9 +43,9 @@ class TwitterBlockTest extends BrowserTestBase {
    */
   public function testTwitterBlock() {
     // Test availability of the twitter block in the admin "Place blocks" list.
-    \Drupal::service('theme_handler')->install(['bartik', 'seven', 'stark']);
+    \Drupal::service('theme_installer')->install(['olivero', 'claro', 'stark']);
     $theme_settings = $this->config('system.theme');
-    foreach (['bartik', 'seven', 'stark'] as $theme) {
+    foreach (['olivero', 'claro', 'stark'] as $theme) {
       $this->drupalGet('admin/structure/block/list/' . $theme);
       // Configure and save the block.
       $this->drupalPlaceBlock('twitter_block', [
@@ -52,7 +58,7 @@ class TwitterBlockTest extends BrowserTestBase {
       // Set the default theme and ensure the block is placed.
       $theme_settings->set('default', $theme)->save();
       $this->drupalGet('');
-      $this->assertSession()->pageTextContains('Tweets by @drupal', 'Twitter block found');
+      $this->assertSession()->pageTextContains('Tweets by @drupal');
     }
   }
 

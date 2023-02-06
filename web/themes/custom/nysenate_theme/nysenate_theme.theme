@@ -3026,6 +3026,7 @@ function nysenate_theme_preprocess_node__meeting(&$variables) {
     ->getStorage('block_content')
     ->loadByProperties([
       'type' => 'how_senate_works',
+      'info' => 'How a Bill Becomes Law block',
       'field_title' => 'How a Bill Becomes Law',
     ]);
 
@@ -3978,7 +3979,7 @@ function nysenate_theme_preprocess_tweets(&$variables) {
   ];
   // Profile image.
   $variables['content']['profile_image'] = [
-    '#markup' => strtr('<img src="//pbs.twimg.com/profile_images/1597653003816865792/17Jjbhbi_normal.jpg" width="100" height"100" />', $args),
+    '#markup' => strtr('<img src="//pbs.twimg.com/profile_images/1618645642884038657/zT-Caq5N_normal.jpg" width="100" height"100" />', $args),
   ];
 
   $elements = $variables['elements']['#tweets'];

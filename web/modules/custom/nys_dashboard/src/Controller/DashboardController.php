@@ -19,4 +19,14 @@ class DashboardController extends ControllerBase {
     return $content;
   }
 
+  /**
+   * Path to display the bills views.
+   */
+  public function bills() {
+    $content['bills_updates'] = views_embed_view('constituent_updates', 'constituent_all_bill_updates');
+    $content['bills_voted_on'] = views_embed_view('constituent_bills', 'constituent_bills_voted_on');
+
+    return $content;
+  }
+
 }

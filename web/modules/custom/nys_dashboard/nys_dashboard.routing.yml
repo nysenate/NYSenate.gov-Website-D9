@@ -4,3 +4,10 @@ nys_dashboard.issues:
     _controller: '\Drupal\nys_dashboard\Controller\DashboardController::issues'
   requirements:
     _permission: 'access content'
+
+nys_dashboard.bills:
+  path: '/users/{user_id}/dashboard/bills'
+  defaults:
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::bills'
+  requirements:
+    _permission: 'access content'

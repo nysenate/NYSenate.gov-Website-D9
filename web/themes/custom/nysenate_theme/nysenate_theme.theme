@@ -5,6 +5,7 @@
  * Functions to support theming in the rain_theme theme.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
@@ -1494,6 +1495,76 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
     $variables['news'] = $news;
 
+  }
+
+  // Search Global page.
+  if ($view->id() == 'core_search' && $view->current_display == 'page_search') {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $results = $view->result;
+    $search_result = [];
+    foreach ($results as $item) {
+      if (isset($item->_entity)) {
+        $entity = $item->_entity;
+        $bundle = $entity->bundle();
+        $type = '';
+        $title = '';
+        if ($entity instanceof NodeInterface) {
+          $type = $entity_type_manager->getStorage('node_type')->load($bundle);
+          $title = $entity->label();
+        }
+        elseif ($entity instanceof TermInterface) {
+          $type = $entity_type_manager->getStorage('taxonomy_vocabulary')->load($bundle);
+          $title = $entity->getName();
+        }
+
+        if ($type instanceof EntityInterface) {
+          $topics = [];
+          $date = '';
+          $senator_multiref = [];
+
+          if ($entity->hasField('field_issues') && !$entity->field_issues->isEmpty()) {
+            $issues = $entity->field_issues->getValue();
+            foreach ($issues as $issue) {
+              $term = Term::load($issue['target_id']);
+              if (!empty($term)) {
+                $topics[] = [
+                  'name' => $term->label(),
+                  'url' => $term->toUrl(),
+                ];
+              }
+            }
+          }
+          if ($entity->hasField('field_date') && !$entity->field_date->isEmpty()) {
+            $date = $entity->field_date->first()->value;
+            $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
+          }
+
+          if ($entity->hasField('field_senator_multiref') && !$entity->field_senator_multiref->isEmpty()) {
+            $senator_list = $entity->field_senator_multiref->getValue();
+            foreach ($senator_list as $senator) {
+              $term = Term::load($senator['target_id']);
+              $senator_multiref = [
+                'text' => $term->label(),
+                'url' => $term->toUrl(),
+                'type' => 'Senator',
+              ];
+            }
+          }
+
+          $search_result[] = [
+            'title' => $type->label(),
+            'topics' => $topics,
+            'description' => [
+              'text' => $title,
+              'url' => $entity->toUrl(),
+            ],
+            'date' => $date,
+            'issue_type' => $senator_multiref,
+          ];
+        }
+      }
+    }
+    $variables['search_result'] = $search_result;
   }
 }
 

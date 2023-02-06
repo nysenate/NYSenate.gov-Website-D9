@@ -1602,6 +1602,7 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
   // Add suggestion to views_view hook.
   if ($hook == 'views_view') {
     $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
   }
 
@@ -1859,10 +1860,44 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
       $variables['article']['time'] = \Drupal::service('date.formatter')->format(strtotime($field_date), '', 'g:i a');
     }
   }
+  elseif ($node->hasField('field_ol_publish_date') && !$node->get('field_ol_publish_date')->isEmpty()) {
+    $field_ol_publish_date = $node->field_ol_publish_date->value;
+    $variables['article']['date'] = \Drupal::service('date.formatter')->format(strtotime($field_ol_publish_date), '', 'F j, Y');
+  }
 
   if ($node->hasField('field_meeting_location') && !$node->get('field_meeting_location')->isEmpty()) {
     $variables['article']['location'] = $node->field_meeting_location->value;
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__constituents_issues_followed(&$variables) {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $flag_link_service = \Drupal::service('flag.link_builder');
+
+  $issue_cards = [];
+  foreach ($variables['rows'] as $row) {
+    $term = $row['content']['#row']->_entity;
+    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
+
+    $issue_cards[] = [
+      'issue_link' => [
+        'text' => $term->label(),
+        'url' => $term->toUrl()->toString(),
+      ],
+      'issue_id' => $term->id(),
+      'flag_follow_issue' => $flag_link,
+    ];
+  }
+
+  $variables['issue_cards'] = $issue_cards;
+  $variables['card_list_title'] = "Issues You're Following";
+  $variables['explore_link'] = [
+    'text' => 'Explore all issues',
+    'url' => '/explore-issues',
+  ];
 }
 
 /**

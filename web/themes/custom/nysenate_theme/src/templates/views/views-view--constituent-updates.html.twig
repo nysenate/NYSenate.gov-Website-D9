@@ -49,10 +49,16 @@
     {{ title }}
   {% endif %}
   {{ title_suffix }}
-  {% if header %}
+  {% if view.current_display == 'constituent_all_bill_updates' %}
     <div class="c-list--header">
       <h2 class="c-container--title">Updates on Bills You're Following</h2>
     </div>
+  {% else %}
+    {% if header %}
+      <div class="view-header">
+        {{ header }}
+      </div>
+    {% endif %}
   {% endif %}
   {% if exposed %}
     <div class="view-filters">

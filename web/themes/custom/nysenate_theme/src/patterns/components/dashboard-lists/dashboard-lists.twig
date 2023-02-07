@@ -33,6 +33,11 @@
 
 
       {% if page_type == "issues" %}
+        {% if title %}
+          <div class="c-list--header">
+            <h2 class="c-container--title">{{ title }}</h2>
+          </div>
+        {% endif %}
         <div class="filter-wrapper {% if empty_list_title %}filter-wrapper--empty{% endif %}">
           {% for filter_item in filter_items %}
             <div>
@@ -113,7 +118,9 @@
     } only %}
   </div>
 {% elseif bill_cards %}
-  {# bills #}
+  <div class="view-content">
+    {% include "@nysenate_theme/featured-bills/featured-bills.twig" with bill_cards only %}
+  </div>
 {% else %}
   {% if empty_message %}
     <div class="view-empty">

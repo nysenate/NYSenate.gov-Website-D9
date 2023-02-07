@@ -1,0 +1,6 @@
+nys_dashboard.issues:
+  path: '/users/{user_id}/dashboard/issues'
+  defaults:
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::issues'
+  requirements:
+    _permission: 'access content'

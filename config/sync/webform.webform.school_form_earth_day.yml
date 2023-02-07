@@ -1,4 +1,4 @@
-uuid: e4caeb10-d52b-43f3-a947-b302f83d2e00
+uuid: 0e3b29ce-354e-48bc-9c78-83474eac43fe
 langcode: en
 status: open
 dependencies: {  }
@@ -8,8 +8,8 @@ close: null
 uid: 1
 template: false
 archive: false
-id: school_form
-title: 'School Form'
+id: school_form_earth_day
+title: 'School Form - Earth Day'
 description: 'The webform used for seasonal school contents.'
 category: ''
 elements: |-
@@ -84,24 +84,16 @@ elements: |-
           '#required': true
           '#title': 'Student''s Name'
           '#description': 'Student''s last name is optional.'
-        submission_type:
-          '#type': radios
-          '#options':
-            - 'A WORK OF ART'
-            - 'AN ESSAY'
-            - 'A POEM'
-          '#required': true
-          '#title': 'My submission could be best described as'
         student_submission:
           '#type': managed_file
           '#required': true
           '#title': 'Attach your submission'
           '#max_filesize': '10'
-          '#file_extensions': 'txt png jpg jpeg pdf doc docx'
+          '#file_extensions': 'txt png jpg jpeg pdf'
           '#sanitize': true
           '#button': true
           '#button__title': 'Select file to add'
-          '#upload_location': 'public://public/webform/school_form'
+          '#upload_location': 'public://public/webform/school_form_earth_day'
         show_student:
           '#type': radios
           '#options':

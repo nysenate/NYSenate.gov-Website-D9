@@ -16,6 +16,7 @@
     attach: function (context) {
       const $this = this;
       const sidebarToggle = $('.sidebar-toggle', context);
+      const header = $('#js-sticky--dashboard');
 
       sidebarToggle.once('sidebarToggle').each(function () {
         const sidebarToggle = $(this);
@@ -37,14 +38,14 @@
         });
         $(window).resize($this.debounce(() => $this.onResize(sidebarToggle)));
 
-        $this.onResize(sidebarToggle);
+        $this.onResize(header);
       });
     },
-    onResize: function (sidebarToggle) {
-      const sidebarToggleBottom =
-        sidebarToggle.offset().top + sidebarToggle.outerHeight();
+    onResize: function (header) {
+      const headerBottom =
+        header.offset().top + header.outerHeight();
       const sidebar = $('.sidebar');
-      sidebar.css('--top', `${sidebarToggleBottom}px`);
+      sidebar.css('--top', `${headerBottom}px`);
     },
     debounce: function (func, timeout = 300) {
       let timer;

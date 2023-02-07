@@ -5,8 +5,154 @@
   grid-template-columns: 1fr fit-content(400px);
   grid-auto-flow: row;
 
+  .content {
+    padding: 40px;
+  }
+
   .sidebar-toggle {
     position: relative;
     z-index: $zi-low;
+  }
+}
+
+.page-user-dashboard {
+
+  .c-header--connect {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    padding-left: 20px;
+
+    .c-dashboard-header--btn {
+      margin-right: 10px;
+    }
+  }
+
+  .c-page-title {
+    font-family: "Adelle Regular";
+
+    a {
+      &:before {
+        display: none;
+      }
+
+      &:hover {
+        color: $cont_blue_lgt;
+      }
+    }
+  }
+
+  .l-row--nav {
+    max-width: 100%;
+
+    @media #{$tablet} {
+      padding: 0 40px;
+    }
+  }
+
+  .c-header-bar {
+    border-bottom: 1px solid $blue04;
+    height: 60px;
+
+    &:before {
+      content: "";
+      height: 100%;
+      width: 1px;
+      margin-left: -1px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .c-dashboard-header--btn {
+      font-family: "Proxima Nova SemiBold";
+      font-size: 15px;
+      line-height: 18px;
+      color: $blue03;
+      text-transform: uppercase;
+
+      @extend .icon-after__right;
+    }
+
+    .c-nav--toggle {
+      &:after {
+        color: $cont_blue_med;
+      }
+    }
+  }
+
+  .c-page-title {
+    display: none;
+  }
+
+  #js-sticky--dashboard {
+    visibility: hidden;
+  }
+}
+
+@media #{$tablet} {
+  .page-user-dashboard {
+
+    .c-header-bar {
+      height: 75px;
+
+      .c-page-title {
+        display: inline-block;
+        font-size: 18px;
+      }
+
+      .c-nav--toggle {
+        display: block;
+        height: 40px;
+        top: 9px;
+        right: 5px;
+
+        &:after {
+          font-size: 19px;
+          line-height: 1;
+        }
+      }
+
+      &.collapsed {
+
+        .c-nav--toggle {
+          background: none;
+          display: block;
+          top: 8px;
+          transition-property: none;
+
+          &:after {
+            color: $cont_blue_lgt;
+          }
+        }
+      }
+    }
+
+    .c-header--connect {
+      display: flex;
+      width: auto;
+      padding: 0;
+      margin: auto;
+    }
+  }
+}
+
+@media #{$desktop} {
+  .page-user-dashboard {
+    .u-mobile-only {
+      display: none !important;
+    }
+
+    .c-header-bar {
+      height: 100px;
+
+      &.collapsed {
+        height: 40px;
+      }
+    }
+
+    .c-page-title {
+      display: inline-block;
+    }
   }
 }

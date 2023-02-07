@@ -71,53 +71,47 @@ function nys_openleg_theme(): array {
 /**
  * Implements hook_preprocess_block().
  */
-function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables) {
+function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables): void {
   $content = $variables['elements']['content'];
   $variables['facts_title'] = $content['#first_year'] . '-' . $content['#second_year'] . ' by the numbers';
 
   $legislative_session = date("Y", strtotime("now"));
-
   if (($legislative_session % 2) == 0) {
     $legislative_session--;
-
   }
 
-  try {
-    // Call to OpenLeg API.
-    // Consume the call results.
-    /** @var \Drupal\nys_openleg\Service\ApiManager $openApiService */
-    $openApiService = \Drupal::service('manager.openleg_api');
-    /** @var \Drupal\nys_openleg\Api\ResponsePluginBase $awaiting */
-    $awaiting = $openApiService->getSearch('bill', 'session:' . $legislative_session . ' AND status.statusType:DELIVERED_TO_GOV');
-    /** @var \Drupal\nys_openleg\Api\ResponsePluginBase $signed */
-    $signed = $openApiService->getSearch('bill', 'session:' . $legislative_session . ' AND status.statusType:SIGNED_BY_GOV');
-    /** @var \Drupal\nys_openleg\Api\ResponsePluginBase $vetoed */
-    $vetoed = $openApiService->getSearch('bill', 'session:' . $legislative_session . ' AND status.statusType:VETOED');
+  $variables['facts'] = [
+    [
+      'status' => 'signed',
+      'statusType' => 'SIGNED_BY_GOVERNOR',
+      'description' => 'Bills Signed into Law',
+    ],
+    [
+      'status' => 'waiting',
+      'statusType' => 'DELIVERED_TO_GOVERNOR',
+      'description' => 'BILLS AWAITING THE GOVERNOR’S SIGNATURE',
+    ],
+    [
+      'status' => 'vetoed',
+      'statusType' => 'VETOED',
+      'description' => 'BILLS VETOED BY THE GOVERNOR',
+    ],
+  ];
 
-    $variables['facts'] = [
-      [
-        'link' => '/search/legislation?searched=true&type=f_bill&bill_session_year=' . $content['#session_year'] . '&bill_status=SIGNED_BY_GOV&page=1',
-        'statistic' => $signed->getTotal(),
-        'description' => 'Bills Signed into Law',
-        'status' => 'signed',
-      ],
-      [
-        'link' => '/search/legislation?searched=true&type=f_bill&bill_session_year=' . $content['#session_year'] . '&bill_status=DELIVERED_TO_GOV&page=1',
-        'statistic' => $awaiting->getTotal(),
-        'description' => 'BILLS AWAITING THE GOVERNOR’S SIGNATURE',
-        'status' => 'waiting',
-      ],
-      [
-        'link' => '/search/legislation?searched=true&type=f_bill&bill_session_year=' . $content['#session_year'] . '&bill_status=VETOED&page=1',
-        'statistic' => $vetoed->getTotal(),
-        'description' => 'BILLS VETOED BY THE GOVERNOR',
-        'status' => 'vetoed',
-      ],
-    ];
-  }
-  catch (\Throwable $e) {
-    \Drupal::messenger()->addWarning(t('Something is wrong with the Open Leg API, Try again later. @text', [
-      '@text' => $e->getMessage(),
-    ]));
+  // Get Openleg results.  Any error means zero records.
+  /** @var \Drupal\nys_openleg\Service\ApiManager $openApiService */
+  $openApiService = Drupal::service('manager.openleg_api');
+  foreach ($variables['facts'] as &$v) {
+    $v['link'] = '/search/legislation?searched=true&type=f_bill&bill_session_year=' .
+      $legislative_session . '&bill_status=' . $v['statusType'] . '&page=1';
+    $search = 'session:' . $legislative_session .
+      ' AND status.statusType:' . $v['statusType'];
+    try {
+      $result = $openApiService->getSearch('bill', $search);
+      $v['statistic'] = $result->getTotal();
+    }
+    catch (Throwable) {
+      $v['statistic'] = 0;
+    }
   }
 }

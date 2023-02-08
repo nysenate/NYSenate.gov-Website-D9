@@ -106,4 +106,15 @@
   cta: cta,
 } only
 %}
+<h2>Related Issues</h2>
+{{ drupal_view('committee_meetings', 'flags') }}
+<h2>Meetings</h2>
+{{ drupal_view('committee_meetings', 'past') }}
+<h2>news</h2>
+{{ drupal_view('committee_meetings', 'news') }}
+
+<h2>Committee</h2>
+{{ drupal_view('committee_meetings', 'committee') }}
+
+
 

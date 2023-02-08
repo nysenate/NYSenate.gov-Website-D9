@@ -8,8 +8,8 @@
   z-index: $zi-lowest;
   top: var(--top);
   right: 0;
-  max-height: 100vh;
   width: 100%;
+  height: 100%;
   overflow-y: auto;
   margin: 0;
   background-color: #f7f8f9;
@@ -17,10 +17,9 @@
   display: none;
 
 
-  @include breakpoint($bp-sm) {
+  @include breakpoint($bp-md) {
     position: relative;
     max-width: 400px;
-    max-height: auto;
     top: 0;
   }
 
@@ -79,7 +78,7 @@ body .sidebar-open {
   position: fixed;
   overflow: hidden;
 
-  @include breakpoint($bp-sm) {
+  @include breakpoint($bp-md) {
     position: static;
     overflow: visible;
   }

@@ -6,8 +6,28 @@
  * @ingroup views_templates
  */
 #}
-{% include "@nysenate_theme/dashboard-lists/dashboard-lists.twig" with {
-  card_list_title: card_list_title,
-  explore: explore_link,
-  issue_cards: issue_cards
-} %}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-issues') }}
+
+<div class="content-list__wrapper">
+  {% for issue in issue_cards %}
+    <div class="c-block--issue content__item">
+      <h4 class="c-issue-block--title">
+        <a href="{{ issue.issue_link.url }}">{{ issue.issue_link.text }}</a>
+      </h4>
+      <div class="c-block--btn">
+        {% if issue.flag_follow_issue %}
+          {{ issue.flag_follow_issue }}
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% if issue_cards|length > 6 %}
+  <div class="pager pager-load-more">
+    <span class="pager-next first last">
+      <a class="load-more">See more issues</a>
+    </span>
+  </div>
+{% endif %}

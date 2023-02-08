@@ -3344,9 +3344,9 @@ function nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date,
  */
 function nysenate_theme_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $node = $variables['elements']['#node'];
 
   if ($variables['view_mode'] == 'upcoming_event') {
-    $node = $variables['elements']['#node'];
     if ($node->bundle() === 'event') {
       $date = new \Datetime($node->field_date_range->value, new DateTimeZone('UTC'));
       $date->setTimezone(new DateTimeZone('America/New_York'));
@@ -3383,6 +3383,8 @@ function nysenate_theme_preprocess_node(&$variables) {
     }
   }
   $variables['issues'] = $issues;
+
+  $variables['absolute_url'] = $node->toUrl()->setAbsolute()->toString();
 }
 
 /**

@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Default simple view template to display a list of rows.
+ *
+ * @ingroup views_templates
+ */
+#}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+
+{% for id, row in rows %}
+    {%
+      set row_classes = [
+        'content__item',
+      ]
+    %}
+    <div{{ row.attributes.addClass(row_classes) }}>
+      {{- row.content -}}
+    </div>
+
+{% endfor %}
+
+{% if rows|length > 5 %}
+  <div class="pager pager-load-more">
+    <span class="pager-next first last">
+      <a class="load-more">See more</a>
+    </span>
+  </div>
+{% endif %}

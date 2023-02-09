@@ -1585,6 +1585,17 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 /**
  * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
  */
+function nysenate_theme_preprocess_views_view__explore_issues_tabs__constituents_issues_followed(&$variables) {
+  $variables['card_list_title'] = "Issues You're Following";
+  $variables['explore_link'] = [
+    'text' => 'Explore all issues',
+    'url' => '/explore-issues',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
 function nysenate_theme_preprocess_views_view__news_by_issue__news(&$variables) {
   $args = $variables['view']->args;
   $term = Term::load($args[0]);
@@ -1967,11 +1978,6 @@ function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__con
   }
 
   $variables['issue_cards'] = $issue_cards;
-  $variables['card_list_title'] = "Issues You're Following";
-  $variables['explore_link'] = [
-    'text' => 'Explore all issues',
-    'url' => '/explore-issues',
-  ];
 }
 
 /**
@@ -3416,9 +3422,9 @@ function nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date,
  */
 function nysenate_theme_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $node = $variables['elements']['#node'];
 
   if ($variables['view_mode'] == 'upcoming_event') {
-    $node = $variables['elements']['#node'];
     if ($node->bundle() === 'event') {
       $date = new \Datetime($node->field_date_range->value, new DateTimeZone('UTC'));
       $date->setTimezone(new DateTimeZone('America/New_York'));
@@ -3455,6 +3461,8 @@ function nysenate_theme_preprocess_node(&$variables) {
     }
   }
   $variables['issues'] = $issues;
+
+  $variables['absolute_url'] = $node->toUrl()->setAbsolute()->toString();
 }
 
 /**

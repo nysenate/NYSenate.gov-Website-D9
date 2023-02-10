@@ -42,7 +42,6 @@
       );
 
       $('.c-senate-quick-facts__button').click(function (event) {
-        event.preventDefault();
 
         const tabNumber = `#panel${$(this).data('tab')}`;
         const pageBody = $('html, body');

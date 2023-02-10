@@ -1859,7 +1859,7 @@ function nysenate_theme_preprocess_semanticviews_row__committee_content__news(&$
 /**
  * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
  */
-function nysenate_theme_preprocess_semanticviews_row__constituent_updates__constituent_all_issue_updates(&$variables) {
+function nysenate_theme_preprocess_semanticviews_row__constituent_updates(&$variables) {
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $node = $variables['row']->_entity;
 
@@ -1906,10 +1906,12 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
     $node->field_issues->entity;
     foreach ($node->field_issues as $value) {
       $term = $value->entity;
-      $issues[] = [
-        'name' => $term->getName(),
-        'url' => $term->toUrl()->toString(),
-      ];
+      if ($term) {
+        $issues[] = [
+          'name' => $term->getName(),
+          'url' => $term->toUrl()->toString(),
+        ];
+      }
     }
     $variables['article']['topics'] = $issues;
   }
@@ -1953,31 +1955,6 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
   if ($node->hasField('field_meeting_location') && !$node->get('field_meeting_location')->isEmpty()) {
     $variables['article']['location'] = $node->field_meeting_location->value;
   }
-}
-
-/**
- * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
- */
-function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__constituents_issues_followed(&$variables) {
-  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-  $flag_link_service = \Drupal::service('flag.link_builder');
-
-  $issue_cards = [];
-  foreach ($variables['rows'] as $row) {
-    $term = $row['content']['#row']->_entity;
-    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
-
-    $issue_cards[] = [
-      'issue_link' => [
-        'text' => $term->label(),
-        'url' => $term->toUrl()->toString(),
-      ],
-      'issue_id' => $term->id(),
-      'flag_follow_issue' => $flag_link,
-    ];
-  }
-
-  $variables['issue_cards'] = $issue_cards;
 }
 
 /**
@@ -2137,6 +2114,56 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__video(&$var
   if (!empty($term) && is_object($term)) {
     $variables['title'] = t('Latest %term_name Video', ['%term_name' => $term->name->value]);
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__constituent_committees_following(&$variables) {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $flag_link_service = \Drupal::service('flag.link_builder');
+
+  $committees = [];
+  foreach ($variables['rows'] as $row) {
+    $term = $row['content']['#row']->_entity;
+    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+
+    $committees[] = [
+      'committee_link' => [
+        'text' => $term->label(),
+        'url' => $term->toUrl()->toString(),
+      ],
+      'committee_id' => $term->id(),
+      'flag_follow_committee' => $flag_link,
+    ];
+  }
+
+  $variables['committees'] = $committees;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__constituents_issues_followed(&$variables) {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $flag_link_service = \Drupal::service('flag.link_builder');
+
+  $issue_cards = [];
+  foreach ($variables['rows'] as $row) {
+    $term = $row['content']['#row']->_entity;
+    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
+
+    $issue_cards[] = [
+      'issue_link' => [
+        'text' => $term->label(),
+        'url' => $term->toUrl()->toString(),
+      ],
+      'issue_id' => $term->id(),
+      'flag_follow_issue' => $flag_link,
+    ];
+  }
+
+  $variables['issue_cards'] = $issue_cards;
 }
 
 /**

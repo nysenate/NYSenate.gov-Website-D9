@@ -19,4 +19,14 @@ class DashboardController extends ControllerBase {
     return $content;
   }
 
+  /**
+   * Path to display the committee views.
+   */
+  public function committees() {
+    $content['committees_updates'] = views_embed_view('constituent_updates', 'constituent_all_committees_updates');
+    $content['committees_following'] = views_embed_view('constituent_committees_following', 'block');
+
+    return $content;
+  }
+
 }

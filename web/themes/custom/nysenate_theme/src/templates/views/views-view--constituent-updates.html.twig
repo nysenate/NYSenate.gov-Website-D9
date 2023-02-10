@@ -49,10 +49,20 @@
     {{ title }}
   {% endif %}
   {{ title_suffix }}
-  {% if header %}
-    <div class="view-header">
-      {{ header }}
+  {% if view.current_display == 'constituent_all_committees_updates' %}
+    <div class="c-block c-container c-container--const-issues-follow">
+      <div class="c-list--header">
+        <h2 class="c-container--title">Updates on Committees You're Following</h2>
+      </div>
     </div>
+  {% else %}
+    {% if header %}
+      <div class="c-block c-container c-container--const-issues-follow">
+        <div class="c-list--header">
+          {{ header }}
+        </div>
+      </div>
+    {% endif %}
   {% endif %}
   {% if exposed %}
     <div class="view-filters">

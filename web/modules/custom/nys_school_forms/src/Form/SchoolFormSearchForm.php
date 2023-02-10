@@ -169,7 +169,7 @@ class SchoolFormSearchForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $from_date = NULL, string $to_date = NULL, string $sort_by = NULL, string $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $school = NULL, string $teacher_name = NULL, string $from_date = NULL, string $to_date = NULL, string $sort_by = NULL, string $order = NULL) {
     $form['#prefix'] = '<div class="form--inline clearfix">';
     $senator_options = [];
     $senator_options[''] = '- Any -';
@@ -188,16 +188,6 @@ class SchoolFormSearchForm extends FormBase {
     $form_type_options = [];
     $form_type_options[''] = '- Any -';
 
-    $form_type_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('school_form_type');
-    foreach ($form_type_terms as $form_type_term) {
-      $form_type_options[$form_type_term->tid] = $form_type_term->name;
-    }
-    $form['form_type'] = [
-      '#title' => $this->t('School Form Type'),
-      '#type' => 'select',
-      '#options' => $form_type_options,
-      '#default_value' => html_entity_decode($form_type, ENT_QUOTES),
-    ];
     $form['school'] = [
       '#type' => 'textfield',
       '#title' => $this->t('School'),
@@ -257,7 +247,6 @@ class SchoolFormSearchForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $senator = $form_state->getValue('senator');
-    $form_type = $form_state->getValue('form_type');
     $school = $form_state->getValue('school');
     $teacher_name = $form_state->getValue('teacher_name');
     $sort_by = $form_state->getValue('sort_by');
@@ -267,7 +256,6 @@ class SchoolFormSearchForm extends FormBase {
     $url = Url::fromRoute('nys_school_forms.school_forms', [], [
       'query' => [
         'senator' => $senator,
-        'form_type' => $form_type,
         'school' => $school,
         'teacher_name' => $teacher_name,
         'from_date' => $from_date,

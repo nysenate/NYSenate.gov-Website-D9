@@ -5,6 +5,7 @@ namespace Drupal\nys_school_forms;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Elastic Search API Integration.
@@ -33,6 +34,13 @@ class SchoolFormsService {
   protected $entityTypeManager;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
@@ -41,14 +49,18 @@ class SchoolFormsService {
    *   Pager manager.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   Current route match.
    */
   public function __construct(
     PagerParametersInterface $pager_param,
     PagerManagerInterface $pager_manager,
-    EntityTypeManager $entityTypeManager) {
+    EntityTypeManager $entityTypeManager,
+    RouteMatchInterface $current_route_match) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
     $this->entityTypeManager = $entityTypeManager;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -57,10 +69,16 @@ class SchoolFormsService {
    * @return array
    *   The search form and search results build array.
    */
-  public function getResults($senator = '', $form_type = '', $school = '', $teacher_name = '', $from_date = '', $to_date = '', $sort_by = '', $order = '') {
+  public function getResults($senator = '', $school = '', $teacher_name = '', $from_date = '', $to_date = '', $sort_by = '', $order = '') {
     $results = [];
+    $admin_type = $this->currentRouteMatch->getRouteName();
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
-    $query->condition('webform_id', 'school_form');
+    if ($admin_type == 'nys_school_forms.school_forms_earth_day') {
+      $query->condition('webform_id', 'school_form_earth_day');
+    }
+    if ($admin_type == 'nys_school_forms.school_forms_thanksgiving') {
+      $query->condition('webform_id', 'school_form_thanksgiving');
+    }
     if ($from_date) {
       $query->condition('completed', strtotime($from_date), '>');
     }
@@ -79,11 +97,6 @@ class SchoolFormsService {
     $query_results = $query->execute();
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
-      /** @var \Drupal\node\NodeInterface $parent_node */
-      $parent_node = $submission->getSourceEntity();
-      if ($form_type && $form_type != $parent_node->get('field_school_form_type')->getValue()[0]['target_id']) {
-        continue;
-      }
       $submission_data = $submission->getData();
       /** @var \Drupal\node\NodeInterface $school_node */
       $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);

@@ -3901,8 +3901,32 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
-  $variables['dashboard_link'] = '/user/' . \Drupal::currentUser()->id();
+  $variables['dashboard_link'] = '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues';
   $variables['edit_account_link'] = '/users/' . \Drupal::currentUser()->id() . '/edit';
+  $variables['sidebar'] = [
+    'links' => [
+      [
+        'text' => 'Inbox',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox',
+      ],
+      [
+        'text' => 'Bills',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/bills',
+      ],
+      [
+        'text' => 'Issues',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues',
+      ],
+      [
+        'text' => 'Committees',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/committees',
+      ],
+      [
+        'text' => 'Petitions &amp; Questionnaires',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/petitions',
+      ],
+    ],
+  ];
 }
 
 /**

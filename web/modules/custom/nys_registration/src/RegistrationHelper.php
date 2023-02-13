@@ -86,7 +86,7 @@ class RegistrationHelper {
    *   returns the alias for the page
    */
   public function getMicrositeDistrictAlias(Term $senator) {
-
+    $district_url = '';
     $nids = $this->entityTypeManager->getStorage('node')->loadByProperties([
       'field_microsite_page_type' => '200001',
       'field_senator_multiref' => $senator->id(),
@@ -96,8 +96,8 @@ class RegistrationHelper {
     }
     if (!empty($district_node)) {
       $district_url = \Drupal::service('path_alias.manager')->getPathByAlias($district_node->toUrl()->toString());
-      return $district_url;
     }
+    return $district_url;
   }
 
   /**

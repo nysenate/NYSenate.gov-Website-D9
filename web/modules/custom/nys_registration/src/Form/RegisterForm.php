@@ -223,7 +223,7 @@ class RegisterForm extends UserRegisterForm {
     $file = File::load($fid);
     $senator['image'] = empty($file) ?
       '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
-      \Drupal::service('file_url_generator')->generateAbsoluteUrl($file->getFileUri());
+      \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
     $senator['party'] = $this->helper->getPartyAffilation($senator_party);
     $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
     $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];

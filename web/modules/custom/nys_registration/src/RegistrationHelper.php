@@ -94,8 +94,10 @@ class RegistrationHelper {
     foreach ($nids as $nid => $value) {
       $district_node = $this->entityTypeManager->getStorage('node')->load($nid);
     }
-    $district_url = \Drupal::service('path_alias.manager')->getPathByAlias($district_node->toUrl()->toString());
-    return $district_url;
+    if (!empty($district_node)) {
+      $district_url = \Drupal::service('path_alias.manager')->getPathByAlias($district_node->toUrl()->toString());
+      return $district_url;
+    }
   }
 
   /**

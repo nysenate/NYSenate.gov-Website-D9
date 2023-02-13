@@ -108,7 +108,8 @@
 {% if issue_cards %}
   <div class="view-content">
     {% include "@nysenate_theme/nysenate-issues/nysenate-issues.twig" with {
-      issues: issue_cards
+      issues: issue_cards,
+      is_patternlab: true
     } only %}
   </div>
 {% elseif committee_cards %}

@@ -128,12 +128,18 @@
 
 {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
   title: node.type.entity.label,
-  node_url: url,
+  node_url: absolute_url,
   cta: cta,
 } only
 %}
 
 {{ committee_events }}
+
+<h2>Related News</h2>
+{{ drupal_view('committee_meetings', 'news') }}
+
+<h2>Related Committee</h2>
+{{ drupal_view('committee_meetings', 'committee') }}
 
 {{ drupal_view('senator_microsite_content', 'promo_footer') }}
 

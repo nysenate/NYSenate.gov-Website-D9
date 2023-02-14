@@ -5,6 +5,7 @@
  * Functions to support theming in the rain_theme theme.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
@@ -1509,6 +1510,87 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $variables['news'] = $news;
 
   }
+
+  // Search Global page.
+  if ($view->id() == 'core_search' && $view->current_display == 'page_search') {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $results = $view->result;
+    $search_result = [];
+    foreach ($results as $item) {
+      if (isset($item->_entity)) {
+        $entity = $item->_entity;
+        $bundle = $entity->bundle();
+        $type = '';
+        $title = '';
+        if ($entity instanceof NodeInterface) {
+          $type = $entity_type_manager->getStorage('node_type')->load($bundle);
+          $title = $entity->label();
+        }
+        elseif ($entity instanceof TermInterface) {
+          $type = $entity_type_manager->getStorage('taxonomy_vocabulary')->load($bundle);
+          $title = $entity->getName();
+        }
+
+        if ($type instanceof EntityInterface) {
+          $topics = [];
+          $date = '';
+          $senator_multiref = [];
+
+          if ($entity->hasField('field_issues') && !$entity->field_issues->isEmpty()) {
+            $issues = $entity->field_issues->getValue();
+            foreach ($issues as $issue) {
+              $term = Term::load($issue['target_id']);
+              if (!empty($term)) {
+                $topics[] = [
+                  'name' => $term->label(),
+                  'url' => $term->toUrl(),
+                ];
+              }
+            }
+          }
+          if ($entity->hasField('field_date') && !$entity->field_date->isEmpty()) {
+            $date = $entity->field_date->first()->value;
+            $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
+          }
+
+          if ($entity->hasField('field_senator_multiref') && !$entity->field_senator_multiref->isEmpty()) {
+            $senator_list = $entity->field_senator_multiref->getValue();
+            foreach ($senator_list as $senator) {
+              $term = Term::load($senator['target_id']);
+              $senator_multiref = [
+                'text' => $term->label(),
+                'url' => $term->toUrl(),
+                'type' => 'Senator ',
+              ];
+            }
+          }
+
+          $search_result[] = [
+            'title' => $type->label(),
+            'topics' => $topics,
+            'description' => [
+              'text' => $title,
+              'url' => $entity->toUrl(),
+            ],
+            'date' => $date,
+            'issue_type' => $senator_multiref,
+          ];
+        }
+      }
+    }
+    $variables['search_result'] = $search_result;
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__explore_issues_tabs__constituents_issues_followed(&$variables) {
+  $variables['card_list_title'] = "Issues You're Following";
+  $variables['explore_link'] = [
+    'text' => 'Explore all issues',
+    'url' => '/explore-issues',
+  ];
 }
 
 /**
@@ -1777,7 +1859,7 @@ function nysenate_theme_preprocess_semanticviews_row__committee_content__news(&$
 /**
  * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
  */
-function nysenate_theme_preprocess_semanticviews_row__constituent_updates__constituent_all_issue_updates(&$variables) {
+function nysenate_theme_preprocess_semanticviews_row__constituent_updates(&$variables) {
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $node = $variables['row']->_entity;
 
@@ -1808,6 +1890,7 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
         $variables['article']['issue_type'] = [
           'text' => $committee->getName(),
           'url' => $committee->toUrl()->toString(),
+          'type' => 'In ',
         ];
       }
     }
@@ -1823,10 +1906,12 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
     $node->field_issues->entity;
     foreach ($node->field_issues as $value) {
       $term = $value->entity;
-      $issues[] = [
-        'name' => $term->getName(),
-        'url' => $term->toUrl()->toString(),
-      ];
+      if ($term) {
+        $issues[] = [
+          'name' => $term->getName(),
+          'url' => $term->toUrl()->toString(),
+        ];
+      }
     }
     $variables['article']['topics'] = $issues;
   }
@@ -1870,36 +1955,6 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
   if ($node->hasField('field_meeting_location') && !$node->get('field_meeting_location')->isEmpty()) {
     $variables['article']['location'] = $node->field_meeting_location->value;
   }
-}
-
-/**
- * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
- */
-function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__constituents_issues_followed(&$variables) {
-  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-  $flag_link_service = \Drupal::service('flag.link_builder');
-
-  $issue_cards = [];
-  foreach ($variables['rows'] as $row) {
-    $term = $row['content']['#row']->_entity;
-    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
-
-    $issue_cards[] = [
-      'issue_link' => [
-        'text' => $term->label(),
-        'url' => $term->toUrl()->toString(),
-      ],
-      'issue_id' => $term->id(),
-      'flag_follow_issue' => $flag_link,
-    ];
-  }
-
-  $variables['issue_cards'] = $issue_cards;
-  $variables['card_list_title'] = "Issues You're Following";
-  $variables['explore_link'] = [
-    'text' => 'Explore all issues',
-    'url' => '/explore-issues',
-  ];
 }
 
 /**
@@ -2059,6 +2114,56 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__video(&$var
   if (!empty($term) && is_object($term)) {
     $variables['title'] = t('Latest %term_name Video', ['%term_name' => $term->name->value]);
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__constituent_committees_following(&$variables) {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $flag_link_service = \Drupal::service('flag.link_builder');
+
+  $committees = [];
+  foreach ($variables['rows'] as $row) {
+    $term = $row['content']['#row']->_entity;
+    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+
+    $committees[] = [
+      'committee_link' => [
+        'text' => $term->label(),
+        'url' => $term->toUrl()->toString(),
+      ],
+      'committee_id' => $term->id(),
+      'flag_follow_committee' => $flag_link,
+    ];
+  }
+
+  $variables['committees'] = $committees;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__constituents_issues_followed(&$variables) {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $flag_link_service = \Drupal::service('flag.link_builder');
+
+  $issue_cards = [];
+  foreach ($variables['rows'] as $row) {
+    $term = $row['content']['#row']->_entity;
+    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
+
+    $issue_cards[] = [
+      'issue_link' => [
+        'text' => $term->label(),
+        'url' => $term->toUrl()->toString(),
+      ],
+      'issue_id' => $term->id(),
+      'flag_follow_issue' => $flag_link,
+    ];
+  }
+
+  $variables['issue_cards'] = $issue_cards;
 }
 
 /**
@@ -3344,9 +3449,9 @@ function nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date,
  */
 function nysenate_theme_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $node = $variables['elements']['#node'];
 
   if ($variables['view_mode'] == 'upcoming_event') {
-    $node = $variables['elements']['#node'];
     if ($node->bundle() === 'event') {
       $date = new \Datetime($node->field_date_range->value, new DateTimeZone('UTC'));
       $date->setTimezone(new DateTimeZone('America/New_York'));
@@ -3383,6 +3488,8 @@ function nysenate_theme_preprocess_node(&$variables) {
     }
   }
   $variables['issues'] = $issues;
+
+  $variables['absolute_url'] = $node->toUrl()->setAbsolute()->toString();
 }
 
 /**

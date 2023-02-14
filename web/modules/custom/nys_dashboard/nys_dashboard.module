@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Custom functionality for the nys_dashboard module.
+ */
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function nys_dashboard_views_query_alter($view, $query) {
+  if ($view->id() == 'constituent_petitions_and_questionnaires' && $view->current_display == 'constituent_questionnaires_submitted') {
+    if (\Drupal::currentUser()->id()) {
+      $unique_node_ids = [];
+      $result = \Drupal::database()
+        ->select('webform_submission', 'w')
+        ->fields('w', ['entity_id'])
+        ->condition('uid', \Drupal::currentUser()->id())
+        ->condition('entity_type', 'node')
+        ->orderBy('sid', 'DESC')
+        ->execute()
+        ->fetchAll();
+
+      foreach ($result as $res) {
+        if (!in_array($res->entity_id, $unique_node_ids)) {
+          $unique_node_ids[] = $res->entity_id;
+        }
+      }
+
+      if (!empty($unique_node_ids)) {
+        $query->where[1]['conditions'][2]['value'] = $unique_node_ids;
+        $query->where[1]['conditions'][2]['operator'] = 'IN';
+      }
+    }
+  }
+}

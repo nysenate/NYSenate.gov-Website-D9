@@ -66,34 +66,39 @@
 
       // event for load more
       if (loadMore) {
+        const animationDelay = 200;
+        const animationDuration = 400;
         loadMore.each(function () {
-          const items = $(this)
-            .closest('.pager-load-more')
-            .parent()
-            .find('.content__item');
+          const pagerContainer = $(this).closest('.pager-load-more');
+          const items = pagerContainer.parent().find('.content__item');
+
+          const limit = parseInt(pagerContainer.data('limit')) || 5;
 
           items.css('display', 'none');
 
-          items.slice(0, 5).show();
+          items.slice(0, limit).show();
 
           let itemsHidden = $(this)
             .closest('.pager-load-more')
             .parent()
             .find('.content__item:hidden');
 
-          $(this).on('click', function(e) {
+          $(this).on('click', function (e) {
             e.preventDefault();
 
-            itemsHidden.slice(0, 5).slideDown();
+            itemsHidden
+              .slice(0, limit)
+              .delay(animationDelay)
+              .slideDown(animationDuration, () => {
+                itemsHidden = $(this)
+                  .closest('.pager-load-more')
+                  .parent()
+                  .find('.content__item:hidden');
 
-            itemsHidden = $(this)
-              .closest('.pager-load-more')
-              .parent()
-              .find('.content__item:hidden');
-
-            if(itemsHidden.length === 0) {
-              $(this).css('display', 'none');
-            }
+                if (itemsHidden.length === 0) {
+                  $(this).css('display', 'none');
+                }
+              });
           });
         });
       }
@@ -107,7 +112,10 @@
       const newUrl = tab.data('target');
 
       if (billVersion && newUrl) {
-        const tabContent = tab.closest('.c-bill--amendment-details').parent().find('.tabs-content');
+        const tabContent = tab
+          .closest('.c-bill--amendment-details')
+          .parent()
+          .find('.tabs-content');
 
         history.pushState({}, 'NY State Senate Bill ' + billVersion[1], newUrl);
 

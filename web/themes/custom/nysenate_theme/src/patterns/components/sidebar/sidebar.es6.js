@@ -27,12 +27,12 @@
 
           if (sidebar.hasClass('show')) {
             sidebar.removeClass('show');
-            body.removeClass('.sidebar-open');
+            body.removeClass('sidebar-open');
             $(this).removeClass('show');
           }
           else {
             sidebar.addClass('show');
-            body.addClass('.sidebar-open');
+            body.addClass('sidebar-open');
             $(this).addClass('show');
           }
         });

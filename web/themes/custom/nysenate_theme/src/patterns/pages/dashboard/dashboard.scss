@@ -2,11 +2,20 @@
 
 .dashboard {
   display: grid;
-  grid-template-columns: 1fr fit-content(400px);
+  grid-template-columns: 100%;
   grid-auto-flow: row;
+  justify-content: space-between;
+
+  .sidebar-open & {
+    grid-template-columns: 70% fit-content(400px);
+  }
 
   .content {
-    padding: 40px;
+    padding: 40px 20px 0 20px;
+
+    @include breakpoint($bp-sm) {
+      padding: 40px;
+    }
   }
 
   .sidebar-toggle {

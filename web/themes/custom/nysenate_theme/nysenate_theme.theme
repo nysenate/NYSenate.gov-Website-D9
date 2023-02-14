@@ -2318,11 +2318,10 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
   if ($is_out_of_state) {
     $title = t('Contact the Senate about this issue');
     $link = [
-      'url' => '/contact',
+      'url' => '/form/contact',
       'text' => t('Contact Senate'),
     ];
   }
-
   else {
     $title = t('Contact your Senator about this issue');
     $link = [

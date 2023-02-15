@@ -215,26 +215,28 @@ class RegisterForm extends UserRegisterForm {
     $district = $form_state->get('senate_district') ?? 0;
     $senator = [];
     $senator_term = $form_state->get('senator');
-    $senator_name = $senator_term->get('field_senator_name')->getValue();
-    $senator_party = $senator_term->get('field_party')->getValue();
-    $mid = $senator_term->get('field_member_headshot')->target_id;
-    $media = Media::load($mid);
-    $fid = $media->get('field_image')->target_id;
-    $file = File::load($fid);
-    $senator['image'] = empty($file) ?
-      '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
-      \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-    $senator['party'] = $this->helper->getPartyAffilation($senator_party);
-    $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
-    $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
-    $first_name = $form_state->getValue('field_first_name');
-    $last_name = $form_state->getValue('field_last_name');
-    $address = $form_state->getValue(['field_address', '0', 'address']);
-    $user['name'] = $first_name[0]['value'] . ' ' . $last_name[0]['value'];
-    $user['address_1'] = $address['address_line1'];
-    $user['address_2'] = $address['address_line2'];
-    $user['mail'] = $form_state->getValue('mail');
 
+    if ($senator_term != 0) {
+      $senator_name = $senator_term->get('field_senator_name')->getValue();
+      $senator_party = $senator_term->get('field_party')->getValue();
+      $mid = $senator_term->get('field_member_headshot')->target_id;
+      $media = Media::load($mid);
+      $fid = $media->get('field_image')->target_id;
+      $file = File::load($fid);
+      $senator['image'] = empty($file) ?
+        '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
+        \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      $senator['party'] = $this->helper->getPartyAffilation($senator_party);
+      $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
+      $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
+      $first_name = $form_state->getValue('field_first_name');
+      $last_name = $form_state->getValue('field_last_name');
+      $address = $form_state->getValue(['field_address', '0', 'address']);
+      $user['name'] = $first_name[0]['value'] . ' ' . $last_name[0]['value'];
+      $user['address_1'] = $address['address_line1'];
+      $user['address_2'] = $address['address_line2'];
+      $user['mail'] = $form_state->getValue('mail');
+    }
     $form['actions'] = [
       'back' => [
         '#type' => 'submit',
@@ -249,14 +251,17 @@ class RegisterForm extends UserRegisterForm {
         '#submit' => ['::formSubmitStep2'],
       ],
     ];
-
-    $form['#theme'] = 'register_form_step2';
-    $form['#attributes']['variables'] = [
-      'district_number' => $district,
-      'senator' => json_encode($senator),
-      'user' => json_encode($user),
-    ];
-
+    if ($senator_term == 0) {
+      $form['#theme'] = 'register_form_step2_not_found';
+    }
+    else {
+      $form['#theme'] = 'register_form_step2';
+      $form['#attributes']['variables'] = [
+        'district_number' => $district,
+        'senator' => json_encode($senator),
+        'user' => json_encode($user),
+      ];
+    }
     return $form;
   }
 

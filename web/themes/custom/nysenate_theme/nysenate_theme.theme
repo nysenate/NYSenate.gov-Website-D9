@@ -2318,11 +2318,10 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
   if ($is_out_of_state) {
     $title = t('Contact the Senate about this issue');
     $link = [
-      'url' => '/contact',
+      'url' => '/form/contact',
       'text' => t('Contact Senate'),
     ];
   }
-
   else {
     $title = t('Contact your Senator about this issue');
     $link = [
@@ -3922,7 +3921,7 @@ function nysenate_theme_preprocess_page(&$variables) {
         'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/committees',
       ],
       [
-        'text' => 'Petitions &amp; Questionnaires',
+        'text' => 'Petitions & Questionnaires',
         'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/petitions',
       ],
     ],

@@ -39,18 +39,20 @@
     sidebarToggleInit: function () {
       const sidebarToggle = $(this);
 
-      sidebarToggle.click(function () {
+      sidebarToggle.click(function (e) {
+        e.stopImmediatePropagation();
+
         const sidebar = $('.sidebar');
         const body = $('body');
 
         if (sidebar.hasClass('show')) {
           sidebar.removeClass('show');
-          body.removeClass('.sidebar-open');
+          body.removeClass('sidebar-open');
           $(this).removeClass('show');
         }
         else {
           sidebar.addClass('show');
-          body.addClass('.sidebar-open');
+          body.addClass('sidebar-open');
           $(this).addClass('show');
         }
       });

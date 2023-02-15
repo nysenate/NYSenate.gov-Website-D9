@@ -30,10 +30,16 @@
 
         const headerBar = nav.find('.c-header-bar');
 
+        const sidebarToggle = nav.find('.sidebar-toggle');
+        sidebarToggle.each(Drupal.behaviors.sidebar.sidebarToggleInit);
+
         // place clone
         nav.prependTo('.page').css({
           'z-index': '100'
         });
+
+        self.alignPosition(origNav, nav);
+
         win.scroll(
           Drupal.debounce(() => self.checkTopBarState(nav, headerBar), 300)
         );
@@ -52,6 +58,15 @@
         headerBar.hasClass('collapsed')
       ) {
         headerBar.removeClass('collapsed');
+      }
+    },
+    alignPosition: function (orig, clone) {
+      try {
+        const origTop = orig.position().top;
+        clone.css('top', `${typeof origTop === 'number' ? origTop : 0}px`);
+      }
+      catch (err) {
+        return err;
       }
     }
   };

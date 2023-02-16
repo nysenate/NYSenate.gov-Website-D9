@@ -216,7 +216,7 @@ class RegisterForm extends UserRegisterForm {
     $senator = [];
     $senator_term = $form_state->get('senator');
 
-    if ($senator_term != 0) {
+    if ($senator_term) {
       $senator_name = $senator_term->get('field_senator_name')->getValue();
       $senator_party = $senator_term->get('field_party')->getValue();
       $mid = $senator_term->get('field_member_headshot')->target_id;
@@ -251,7 +251,7 @@ class RegisterForm extends UserRegisterForm {
         '#submit' => ['::formSubmitStep2'],
       ],
     ];
-    if ($senator_term == 0) {
+    if (!$senator_term) {
       $form['#theme'] = 'register_form_step2_not_found';
     }
     else {

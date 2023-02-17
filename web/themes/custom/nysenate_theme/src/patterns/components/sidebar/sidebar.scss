@@ -17,7 +17,7 @@
   display: none;
 
 
-  @include breakpoint($bp-md) {
+  @include breakpoint($bp-sm) {
     position: relative;
     max-width: 400px;
     top: 0;
@@ -39,6 +39,8 @@
   }
 
   .menu {
+    margin-left: 0;
+
     li {
       list-style: none;
       border-bottom: 1px solid $blue04;
@@ -74,11 +76,11 @@
 }
 
 // add this class to body if showed
-body .sidebar-open {
+.sidebar-open {
   position: fixed;
   overflow: hidden;
 
-  @include breakpoint($bp-md) {
+  @include breakpoint($bp-sm) {
     position: static;
     overflow: visible;
   }

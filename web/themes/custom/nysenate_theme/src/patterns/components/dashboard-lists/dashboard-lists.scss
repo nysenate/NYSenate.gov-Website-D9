@@ -107,6 +107,26 @@
       }
     }
   }
+
+  .page-user-dashboard & {
+
+    .c-follow-issue--header {
+      display: block;
+
+      @include breakpoint($bp-sm) {
+        display: flex;
+        margin-bottom: 40px;
+      }
+
+      .c-container--title {
+        margin-bottom: 20px;
+
+        @include breakpoint($bp-sm) {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 }
 
 .facet {

@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - senator: Associated senator values.
+ * - user: user input field values.
+ *
+ * @see formBuildStep2()
+ */
+#}
+
+{% set senator = attributes.variables.senator|json_decode %}
+{% set user = attributes.variables.user|json_decode %}
+ 
+{% include '@nysenate_theme/nysenate-user-profile/nysenate-user-profile.twig' with {
+   user: user,
+   senator: senator,
+   district_number: attributes.variables.district_number
+} 
+%}
+
+  <div class="button-group">
+    {{ form }}
+   </div>
+ </div>

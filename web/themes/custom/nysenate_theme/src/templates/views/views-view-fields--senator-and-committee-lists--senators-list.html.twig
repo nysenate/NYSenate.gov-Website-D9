@@ -29,13 +29,14 @@
  * @see template_preprocess_views_view_fields()
  */
 #}
-<a href="{{ fields.view_taxonomy_term.content|render|striptags|trim }}">
+
+<a href="/senators/{{ fields.field_senator_name.content|lower|replace({'a. ':"",' ':"-",'.':"",'ú':"u",'\'':""})|striptags }}">
   <div class="c-senator-block">
     <div class="nys-senator--thumb">
       {{ fields.field_member_headshot_1.content|render|striptags('<img>')|raw }}
     </div>
     <div class="nys-senator--info">
-      <h4 class="nys-senator--name">{{ fields.field_senator_name_2.content|render|striptags }}</h4>
+      <h4 class="nys-senator--name">{{ fields.field_senator_name_2.content }}</h4>
       <span class="nys-senator--district">
         <span class="nys-senator--party">
           {% if not fields.field_party_1.content|render|striptags|trim is empty %}

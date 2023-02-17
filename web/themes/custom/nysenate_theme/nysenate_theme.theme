@@ -4272,6 +4272,7 @@ function nysenate_theme_preprocess_tweets(&$variables) {
  * Implements hook_preprocess_webform_confirmation().
  */
 function nysenate_theme_preprocess_webform_confirmation(&$variables) {
+  $submissions = [];
   if ($variables['webform']->id() === 'school_form_thanksgiving' || $variables['webform']->id() === 'school_form_earth_day') {
     $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
 
@@ -4286,7 +4287,6 @@ function nysenate_theme_preprocess_webform_confirmation(&$variables) {
     $variables['contact_email'] = $variables['webform_submission']->getData()['contact_email'] ?? '';
     $variables['grade'] = $grades[$grade] ?? '';
 
-    $submissions = [];
     $student_submissions = $variables['webform_submission']->getData()['attach_your_submission'] ?? [];
 
     foreach ($student_submissions as $submission) {

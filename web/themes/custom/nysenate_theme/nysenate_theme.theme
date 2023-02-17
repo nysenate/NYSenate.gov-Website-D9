@@ -2146,7 +2146,9 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_committees_f
 /**
  * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
  */
-function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_and_questionnaires__constituent_petitions_signed(&$variables) {
+function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_and_questionnaires(&$variables) {
+  $current_display = $variables['view']->current_display;
+
   $petitions = [];
   foreach ($variables['rows'] as $row) {
     $node = $row['content']['#row']->_entity;
@@ -2166,7 +2168,23 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_an
         $tids[] = '&f[' . ($key + 1) . ']=im_field_issues%3A' . $term->id();
       }
     }
-    $explore_link = $tids ? '/search/global/?f[0]=bundle%3Apetition' . implode('', $tids) : '';
+
+    if ($current_display == 'constituent_petitions_signed') {
+      $explore_link = $tids ? '/search/global/?f[0]=bundle%3Apetition' . implode('', $tids) : '';
+
+      $start_date = $row['content']['#row']->flagging_node_field_data_created;
+      $timestamp = \Drupal::service('date.formatter')->format(
+        $start_date, 'custom', 'F d, Y'
+      );
+    }
+    else {
+      $explore_link = $tids ? '/search/global/?f[0]=bundle%questionnaire' . implode('', $tids) : '';
+
+      $start_date = $row['content']['#row']->field_timestamp;
+      $timestamp = \Drupal::service('date.formatter')->format(
+        $start_date, 'custom', 'F d, Y'
+      );
+    }
 
     $author = [];
     if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
@@ -2176,11 +2194,6 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_an
         'url' => $senator->toUrl()->toString(),
       ];
     }
-
-    $start_date = $row['content']['#row']->flagging_node_field_data_created;
-    $timestamp = \Drupal::service('date.formatter')->format(
-      $start_date, 'custom', 'F d, Y'
-    );
 
     $petition_is_active = 0;
     $date = new DrupalDateTime();
@@ -2203,6 +2216,7 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_an
 
     $petitions[] = [
       'title' => $node->getTitle(),
+      'url' => $node->toUrl()->toString(),
       'issues' => $issues,
       'author' => $author,
       'timestamp' => $timestamp,
@@ -2213,6 +2227,7 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_an
     ];
   }
 
+  $variables['current_display'] = $current_display;
   $variables['petitions'] = $petitions;
 }
 
@@ -3851,6 +3866,28 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
       // Override the views results.
       $view->result = $filteredResults;
       $view->total_rows = count($filteredResults);
+    }
+  }
+
+  if ($view->id() == 'constituent_petitions_and_questionnaires' && $view->current_display == 'constituent_questionnaires_submitted') {
+    $results = $view->result;
+    foreach ($results as $index => $row) {
+      $node = $row->_entity;
+
+      if (\Drupal::currentUser()->id() && isset($node->webform[0]->target_id)) {
+        $result = \Drupal::database()
+          ->select('webform_submission', 'w')
+          ->fields('w', ['completed'])
+          ->condition('uid', \Drupal::currentUser()->id())
+          ->condition('entity_type', 'node')
+          ->condition('entity_id', $row->nid)
+          ->condition('webform_id', $node->webform[0]->target_id)
+          ->orderBy('sid', 'DESC')
+          ->execute()
+          ->fetchField();
+
+        $view->result[$index]->field_timestamp = $result;
+      }
     }
   }
 

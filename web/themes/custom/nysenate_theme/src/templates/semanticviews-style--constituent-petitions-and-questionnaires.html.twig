@@ -10,12 +10,14 @@
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
 {{ attach_library('nysenate_theme/newsroom-content') }}
 
+{% set Type = current_display == 'constituent_petitions_signed' ? 'Petition' : 'Questionnaire' %}
+
 {% if petitions %}
   {% for petition in petitions %}
     <article class="content__item">
       <div class="pet-body">
         <h3 class="entry-title">
-          {{ petition.title }}
+          <a href="{{ petition.url }}">{{ petition.title }}</a>
         </h3>
         <div class="pet-type">
           {% for issue in petition.issues %}
@@ -36,18 +38,18 @@
       <div class="pet-share-bar">
         {% if petition.petition_is_active %}
           <p>
-            Promote this Petition
+            Promote this {{ Type }}
           </p>
           <a href="{{ petition.fb_url }}" class="pet-facebook-share icon-after__facebook"></a>
           <a href="{{ petition.twitter_url }}" class="pet-twitter-share icon-after__twitter"></a>
         {% else %}
           <p>
-            This Petition is No Longer Active
+            This {{ Type }} is No Longer Active
           </p>
         {% endif %}
         {% if petition.explore_link %}
           <a href="{{ petition.explore_link }}" class="explore-link icon-after__right">
-            Explore Related Petitions
+            Explore Related {{ Type }}s
           </a>
         {% endif %}
       </div>

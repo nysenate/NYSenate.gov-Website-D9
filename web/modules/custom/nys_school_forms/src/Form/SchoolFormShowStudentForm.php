@@ -72,6 +72,14 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   protected $entityTypeManager;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+
+  protected $currentRouteMatch;
+
+  /**
    * Constructs a SchoolFormDeleteForm form object.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
@@ -88,6 +96,8 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    *   The String translation.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   Current route match.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory,
   EntityTypeManagerInterface $entity_type_manager,
@@ -95,7 +105,8 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   FileSystem $fileSystem,
   FileRepository $fileRepository,
   TranslationInterface $string_translation,
-  EntityTypeManager $entityTypeManager) {
+  EntityTypeManager $entityTypeManager,
+  RouteMatchInterface $current_route_match) {
     $this->privateTempStoreFactory = $temp_store_factory;
     $this->fileStorage = $entity_type_manager->getStorage('file');
     $this->currentUser = $account;
@@ -103,6 +114,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
     $this->fileRepository = $fileRepository;
     $this->setStringTranslation($string_translation);
     $this->entityTypeManager = $entityTypeManager;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -117,6 +129,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
       $container->get('file.repository'),
       $container->get('string_translation'),
       $container->get('entity_type.manager'),
+      $container->get('current_route_match')
     );
   }
 
@@ -138,7 +151,8 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('nys_school_forms.school_forms');
+    $route = $this->currentRouteMatch->getRouteName();
+    return new Url($route);
   }
 
   /**
@@ -218,7 +232,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
       $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->delete($this->currentUser->id());
       $this->logger('School Forms')->notice('@count student submissions have been moved to public access.', ['@count' => $count]);
       $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Show 1 submissions.', 'Show @count student submissions.'));
-      $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
+      $url = Url::fromRoute($this->currentRouteMatch->getRouteName(), [], []);
       $form_state->setRedirectUrl($url);
     }
   }

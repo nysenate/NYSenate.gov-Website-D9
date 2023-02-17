@@ -3873,6 +3873,7 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
     $results = $view->result;
     foreach ($results as $index => $row) {
       $node = $row->_entity;
+      $nid = $row->nid ?? NULL;
 
       if (\Drupal::currentUser()->id() && isset($node->webform[0]->target_id)) {
         $result = \Drupal::database()
@@ -3880,12 +3881,13 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
           ->fields('w', ['completed'])
           ->condition('uid', \Drupal::currentUser()->id())
           ->condition('entity_type', 'node')
-          ->condition('entity_id', $row->nid)
+          ->condition('entity_id', $nid)
           ->condition('webform_id', $node->webform[0]->target_id)
           ->orderBy('sid', 'DESC')
           ->execute()
           ->fetchField();
 
+        /* @phpstan-ignore-next-line */
         $view->result[$index]->field_timestamp = $result;
       }
     }

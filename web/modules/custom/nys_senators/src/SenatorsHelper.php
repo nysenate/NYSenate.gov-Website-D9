@@ -2,14 +2,12 @@
 
 namespace Drupal\nys_senators;
 
-use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Http\RequestStack;
-use Drupal\Core\Url;
+use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,6 +39,13 @@ class SenatorsHelper {
   protected Request $request;
 
   /**
+   * NYS Senators Microsites service.
+   *
+   * @var \Drupal\nys_senators\Service\Microsites
+   */
+  protected Microsites $microsites;
+
+  /**
    * Constructor class for Bills Helper.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -49,11 +54,14 @@ class SenatorsHelper {
    *   The backend cache.
    * @param \Drupal\Core\Http\RequestStack $request_stack
    *   A request stack service.
+   * @param \Drupal\nys_senators\Service\Microsites $microsites
+   *   NYS Senators Microsites service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, RequestStack $request_stack) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, RequestStack $request_stack, Microsites $microsites) {
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
     $this->request = $request_stack->getCurrentRequest();
+    $this->microsites = $microsites;
   }
 
   /**
@@ -79,32 +87,22 @@ class SenatorsHelper {
   }
 
   /**
-   * Gets the microsite landing page URL for the passed Senator.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\ContextException
+   * Gets the microsite landing page URL for a given senator.
    */
-  public function getMicrositeUrl(Term $senator): Url {
-    return $this->getMicrositeUrlFromField($senator->name);
-  }
-
-  /**
-   * Gets the microsite landing page URL for the name field of a Senator term.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\ContextException
-   */
-  public function getMicrositeUrlFromField(FieldItemListInterface $field): Url {
-    if (!(
-      ($field->getEntity()->bundle() == 'senator')
-      && ($field->getEntity()->getEntityTypeId() == 'taxonomy_term')
-    )) {
-      throw new ContextException('Only Senator taxonomy terms can generate a microsite URL');
-    }
-
-    return Url::fromUri($this->generateMicrositeUrl($field->value));
+  public function getMicrositeUrl(Term $senator): string {
+    $sites = $this->microsites->getMicrosites();
+    return $sites[$senator->id()] ?? '';
   }
 
   /**
    * Turns a string into a microsite landing page URL.
+   *
+   * This is deprecated in favor of compiling the URLs from the pathauto-
+   * generated aliases.  Leaving this in for now as reference.
+   *
+   * @see static::getMicrosites()
+   * @see static::getMicrositeUrl()
+   * @see static::compileMicrosites()
    */
   protected function generateMicrositeUrl(string $name): string {
     return $this->request->getSchemeAndHttpHost() .
@@ -254,7 +252,7 @@ class SenatorsHelper {
    *   Either a district number (as in Senate District 34), or a taxonomy
    *   term representing a district.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @return \Drupal\taxonomy\Entity\Term|null
    *   If an active senator assignment is found, then the taxonomy term
    *   representing that senator is returned.  Otherwise, NULL.
    *

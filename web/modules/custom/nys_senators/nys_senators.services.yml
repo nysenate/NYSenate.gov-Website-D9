@@ -5,16 +5,18 @@ services:
       - '@entity_type.manager'
       - '@cache.default'
       - '@request_stack'
-  nys_senators.microsite_themes:
-    class: Drupal\nys_senators\Service\MicrositeThemes
+      - '@nys_senators.microsites'
+  nys_senators.microsites:
+    class: Drupal\nys_senators\Service\Microsites
     arguments:
+      - '@entity_type.manager'
       - '@cache.default'
       - '@theme_handler'
   nys_senators.json_feed:
     class: Drupal\nys_senators\Service\SenatorsJson
     arguments:
       - '@nys_senators.senators_helper'
-      - '@nys_senators.microsite_themes'
+      - '@nys_senators.microsites'
       - '@cache.data'
       - '@address.country_repository'
       - '@address.subdivision_repository'

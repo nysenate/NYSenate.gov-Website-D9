@@ -61,16 +61,18 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode): array {
     // This formatter only applies to the senator bundle of taxonomy terms.
+    /** @var \Drupal\taxonomy\Entity\Term $entity */
+    $entity = $items->getEntity();
     if (!(
-      ($items->getEntity()->bundle() == 'senator')
-      && ($items->getEntity()->getEntityTypeId() == 'taxonomy_term')
+      ($entity->bundle() == 'senator')
+      && ($entity->getEntityTypeId() == 'taxonomy_term')
     )) {
       throw new ContextException('The microsite_link format may only be applied to a Senator taxonomy term');
     }
 
     return [
       '#type' => 'link',
-      '#url' => $this->helper->getMicrositeUrlFromField($items),
+      '#url' => $this->helper->getMicrositeUrl($entity),
       '#title' => $items->value,
       '#attributes' => ['class' => ['microsite-link']],
     ];

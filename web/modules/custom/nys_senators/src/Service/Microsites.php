@@ -3,22 +3,28 @@
 namespace Drupal\nys_senators\Service;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 
 /**
  * Provides access to the microsite themes defined in CSS.
  */
-class MicrositeThemes {
+class Microsites {
 
   /**
    * The cache key for the compiled theme information.
    */
-  const CACHE_NAME = 'nys_senators.microsite_themes';
+  const CACHE_NAME_MICROSITES = 'nys_senators.microsite_urls';
+
+  /**
+   * The cache key for the compiled theme information.
+   */
+  const CACHE_NAME_THEMES = 'nys_senators.microsite_themes';
 
   /**
    * The maximum age in seconds of the theme compilation.
    */
-  const CACHE_MAX_AGE = 86400;
+  const CACHE_MAX_AGE_THEMES = 86400;
 
   /**
    * The path to the relevant SCSS file.
@@ -55,11 +61,19 @@ class MicrositeThemes {
   protected ThemeHandlerInterface $theme;
 
   /**
+   * Drupal's Entity Type Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Constructor.
    */
-  public function __construct(CacheBackendInterface $cache, ThemeHandlerInterface $theme) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, CacheBackendInterface $cache, ThemeHandlerInterface $theme) {
     $this->cache = $cache;
     $this->theme = $theme;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -106,7 +120,8 @@ class MicrositeThemes {
    * Fetch the array of themes, either from cache, or from the file.
    */
   protected function fetchThemes(): array {
-    $themes = $this->cache->get(static::CACHE_NAME)->data ?? [];
+    $cache = $this->cache->get(static::CACHE_NAME_THEMES);
+    $themes = $cache ? ($cache->data ?? []) : [];
     if (!$themes) {
       $themes = $this->rebuild();
     }
@@ -127,8 +142,83 @@ class MicrositeThemes {
    */
   public function rebuild(): array {
     $themes = $this->readScssPalettes();
-    $this->cache->set(static::CACHE_NAME, $themes, time() + static::CACHE_MAX_AGE);
+    $this->cache->set(static::CACHE_NAME_THEMES, $themes, time() + static::CACHE_MAX_AGE_THEMES);
     return $themes;
+  }
+
+  /**
+   * Gets an array matching senator term ID to senator microsite URL.
+   */
+  public function getMicrosites(): array {
+    $sites = $this->cache->get(static::CACHE_NAME_MICROSITES);
+    $ret = $sites ? $sites->data : [];
+    if (!$ret) {
+      $ret = $this->compileMicrosites();
+    }
+    return $ret;
+  }
+
+  /**
+   * Compiles an array, such that [<senator_id> => <landing_url>, ...].
+   *
+   * All senators with landing pages are included, regardless of "active"
+   * status.  If the page type term cannot be found, or if microsite pages
+   * can not be loaded, an empty array will be returned.
+   */
+  protected function compileMicrosites(): array {
+    // Get the term ID for landing pages.
+    try {
+      $terms = $this->entityTypeManager
+        ->getStorage('taxonomy_term')
+        ->loadByProperties([
+          'vid' => 'microsite_page_type',
+          'name' => 'Landing',
+        ]);
+      $landing_term = current($terms);
+      $landing_id = $landing_term->id();
+    }
+    catch (\Throwable) {
+      $landing_id = 0;
+    }
+
+    // Find all microsite_page nodes assigned to the "Landing" page type.
+    try {
+      $pages = $this->entityTypeManager
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          'field_microsite_page_type' => $landing_id,
+        ]);
+    }
+    catch (\Throwable) {
+      $pages = [];
+    }
+
+    // Compile the array, in the form [<senator_id> => <landing_page_url>, ...].
+    $urls = [];
+    foreach ($pages as $page) {
+      try {
+        $senator_id = $page->field_senator_multiref->entity->id() ?? 0;
+        $url = $page->toUrl('canonical', ['absolute' => TRUE])->toString();
+      }
+      catch (\Throwable) {
+        $senator_id = 0;
+        $url = '';
+      }
+      if ($senator_id && $url) {
+        $urls[$senator_id] = $url;
+      }
+    }
+
+    // Save to cache.
+    $this->cache->set(
+      static::CACHE_NAME_MICROSITES,
+      $urls,
+      $this->cache::CACHE_PERMANENT,
+      ['node_list:microsite_page', 'taxonomy_term_list:senator']
+    );
+
+    return $urls;
   }
 
 }

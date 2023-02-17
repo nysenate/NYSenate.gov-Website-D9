@@ -58,9 +58,9 @@ class SenatorsJson {
   /**
    * NYS Senators' Microsite Themes service.
    *
-   * @var \Drupal\nys_senators\Service\MicrositeThemes
+   * @var \Drupal\nys_senators\Service\Microsites
    */
-  protected MicrositeThemes $themes;
+  protected Microsites $themes;
 
   /**
    * Drupal's Backend Cache service.
@@ -72,7 +72,7 @@ class SenatorsJson {
   /**
    * Constructor.
    */
-  public function __construct(SenatorsHelper $helper, MicrositeThemes $themes, CacheBackendInterface $cache, CountryRepository $countryRepo, SubdivisionRepository $stateRepo, RendererInterface $renderer) {
+  public function __construct(SenatorsHelper $helper, Microsites $themes, CacheBackendInterface $cache, CountryRepository $countryRepo, SubdivisionRepository $stateRepo, RendererInterface $renderer) {
     $this->helper = $helper;
     $this->themes = $themes;
     $this->cache = $cache;
@@ -196,7 +196,7 @@ class SenatorsJson {
         $ret['senate_district_url'] = '';
       }
       try {
-        $ret['url'] = $this->helper->getMicrositeUrl($senator)->toString();
+        $ret['url'] = $this->helper->getMicrositeUrl($senator);
       }
       catch (\Throwable) {
         $ret['url'] = '';

@@ -760,7 +760,12 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
 
   foreach ($result as $node) {
     $node = $node->_entity;
-    if ($node instanceof NodeInterface && $node->bundle() == 'session') {
+    $streaming = [
+      'session',
+      'public_hearing',
+    ];
+
+    if ($node instanceof NodeInterface && in_array($node->bundle(), $streaming)) {
       $date = NULL;
       if (isset($node->field_date_range)) {
         $date_range = $node->field_date_range;
@@ -773,7 +778,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
         }
       }
 
-      if (!$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
+      if ($node->hasField('field_session_calendars') && !$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
         $url_calendar = $node->field_session_calendars->entity->toUrl()->toString();
       }
 

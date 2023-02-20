@@ -2836,36 +2836,36 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
       /** @var \Drupal\paragraphs\Entity\Paragraph $votes */
       $votes = $paragraph_storage->load($item->target_id);
 
-      $aye_members = [];
-      if ($votes->hasField('field_ol_aye_members') && !empty($votes->field_ol_aye_members)) {
-        foreach ($votes->field_ol_aye_members as $aye_key => $aye_item) {
-          if (!is_numeric($aye_key)) {
-            continue;
+      $member_keys = [
+        'field_ol_aye_members' => 'aye_members',
+        'field_ol_nay_members' => 'nay_members',
+        'field_ol_aye_wr_members' => 'aye_wr_members',
+        'field_ol_absent_members' => 'absent_members',
+        'field_ol_excused_members' => 'excused_members',
+        'field_ol_abstained_members' => 'abstained_members',
+      ];
+
+      $all_members = [];
+      foreach ($member_keys as $index => $key) {
+        if ($votes->hasField($index) && !empty($votes->$index)) {
+          $members = [];
+          foreach ($votes->$index as $vote_key => $vote_item) {
+            if (!is_numeric($vote_key)) {
+              continue;
+            }
+
+            $term = $term_storage->load($vote_item->target_id);
+            if ($term) {
+              $members[] = [
+                'name' => $term->field_senator_name->family ?? '',
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
           }
 
-          $term = $term_storage->load($aye_item->target_id);
-          if ($term) {
-            $aye_members[] = [
-              'name' => $term->field_senator_name->family ?? '',
-              'url' => $term->toUrl()->toString(),
-            ];
-          }
-        }
-      }
-
-      $nay_members = [];
-      if ($votes->hasField('field_ol_nay_members') && !empty($votes->field_ol_nay_members)) {
-        foreach ($votes->field_ol_nay_members as $nay_key => $nay_item) {
-          if (!is_numeric($nay_key)) {
-            continue;
-          }
-
-          $term = $term_storage->load($nay_item->target_id);
-          if ($term) {
-            $nay_members[] = [
-              'name' => $term->field_senator_name->family ?? '',
-              'url' => $term->toUrl()->toString(),
-            ];
+          if (!empty($members)) {
+            asort($members);
+            $all_members[$key] = $members;
           }
         }
       }
@@ -2885,8 +2885,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
         'absent_count' => $votes->field_ol_absent_count->value ?? 0,
         'excused_count' => $votes->field_ol_excused_count->value ?? 0,
         'abstained_count' => $votes->field_ol_abstained_count->value ?? 0,
-        'aye_members' => $aye_members,
-        'nay_members' => $nay_members,
+        'all_members' => $all_members,
         'type' => ucwords(strtolower(trim($type))),
         'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
       ];

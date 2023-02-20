@@ -133,7 +133,7 @@ class SenatorsJson {
   protected function transcribeOffice(Paragraph $office): array {
     $address = $office->field_office_address;
     $ret = [];
-    if ($address) {
+    if ($address && property_exists($address, 'country_code')) {
       // Some fields are missing from D9's implementation of location.  The
       // Java model does not appear to need them.  Leaving them here for
       // future reference.
@@ -148,17 +148,17 @@ class SenatorsJson {
         $country_name = '';
       }
       $ret = [
-        "name" => $address->organization,
-        "street" => $address->address_line1,
-        "additional" => $address->address_line2,
-        "city" => $address->locality,
-        "province" => $address->administrative_area,
-        "postal_code" => $address->postal_code,
-        "country" => $address->country_code,
-        "province_name" => $this->statesList()[$address->administrative_area] ?? '',
+        "name" => $address->organization ?? '',
+        "street" => $address->address_line1 ?? '',
+        "additional" => $address->address_line2 ?? '',
+        "city" => $address->locality ?? '',
+        "province" => $address->administrative_area ?? '',
+        "postal_code" => $address->postal_code ?? '',
+        "country" => $address->country_code ?? '',
+        "province_name" => $this->statesList()[$address->administrative_area ?? ''] ?? '',
         "country_name" => $country_name,
-        "fax" => $office->field_fax->value,
-        "phone" => $office->field_office_contact_phone->value,
+        "fax" => $office->field_fax->value ?? '',
+        "phone" => $office->field_office_contact_phone->value ?? '',
       ];
     }
     return $ret;
@@ -178,8 +178,8 @@ class SenatorsJson {
       $ret['senate_district_ordinal'] = $number . $ordinal;
       $ret['is_active'] = (bool) $ret['senate_district'];
       $ret['full_name'] = $senator->name->value;
-      $ret['first_name'] = $senator->field_senator_name->given;
-      $ret['last_name'] = $senator->field_senator_name->family;
+      $ret['first_name'] = $senator->field_senator_name->given ?? '';
+      $ret['last_name'] = $senator->field_senator_name->family ?? '';
       $ret['short_name'] = strtolower($senator->field_ol_shortname->value);
       $ret['email'] = $senator->field_email->value;
       $ret['party'] = $this->getFlatValue($senator->field_party);
@@ -203,9 +203,9 @@ class SenatorsJson {
       }
 
       // Try to collect the images.
-      $img = $senator->field_member_headshot->entity->field_image->entity;
+      $img = $senator->field_member_headshot->entity->field_image->entity ?? '';
       $ret['img'] = $img ? ($img->createFileUrl(FALSE) ?? '') : '';
-      $hero_img = $senator->field_image_hero->entity->field_image->entity;
+      $hero_img = $senator->field_image_hero->entity->field_image->entity ?? '';
       $ret['hero_img'] = $hero_img ? ($hero_img->createFileUrl(FALSE) ?? '') : '';
 
       // Fetch the palette info, if available.

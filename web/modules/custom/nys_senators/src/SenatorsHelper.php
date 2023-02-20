@@ -270,7 +270,7 @@ class SenatorsHelper {
       $district = current($loaded);
     }
 
-    return $district
+    return $district && property_exists($district, 'field_senator')
       ? $this->getStorage()->load($district->field_senator->target_id)
       : NULL;
   }

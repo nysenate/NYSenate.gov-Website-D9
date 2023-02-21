@@ -29,4 +29,13 @@ class DashboardController extends ControllerBase {
     return $content;
   }
 
+  /**
+   * Path to display the petitions and questionnaires views.
+   */
+  public function petitions() {
+    $content['petitions_signed'] = views_embed_view('constituent_petitions_and_questionnaires', 'constituent_petitions_signed');
+
+    return $content;
+  }
+
 }

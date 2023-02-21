@@ -68,7 +68,7 @@
       {% endif %}
     </div>
     {# end of senator hero #}
-  {% elseif type == "session" %}
+  {% elseif type == "session" or type == "public_hearing" %}
     {%
       include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
         is_logged: is_logged

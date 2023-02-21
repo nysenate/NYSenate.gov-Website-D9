@@ -70,20 +70,17 @@
             </div>
           {% endif %}
 
-          <div class="attachment_container">
+          {% if submission.attachment is not empty %}
             <p class="label-inline form-label">
               Submission:
             </p>
 
-            {% if submission.file %}
-              {% include '@nysenate_theme/file-uploads/file-uploads.twig' with {
-                title: submission.file.title,
-                attachment: submission.file.attachment
-              } only %}
-            {% else %}
-              {{ submission.attachment }}
-            {% endif %}
-          </div>
+            <div>
+              <p class="form-results">
+                {{ submission.attachment }}
+              </p>
+           </div>
+         {% endif %}
         </div>
       {% endfor %}
     </div>

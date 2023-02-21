@@ -14,6 +14,10 @@
     <div class="dashboard">
       <div class="content">
 
+        {% if content %}
+          {{ content }}
+        {% endif %}
+
         {% if dashboard_lists %}
           {% include "@nysenate_theme/dashboard-lists/dashboard-lists.twig" with dashboard_lists only %}
         {% endif %}

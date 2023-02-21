@@ -14,7 +14,8 @@
   <div class="content">
     <div class="c-login-left">
       <div class="nys-senator--thumb">
-        {{ user.image }}
+       <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}"
+         alt="Default avatar" />
       </div>
       <ul class="c-user--info">
         <li>{{ user.name }}</li>
@@ -25,14 +26,14 @@
     </div>
     <div class="c-login-right">
       <div class="nys-senator--thumb">
-        {{ senator.image }}
+       <img src="{{ senator.image }}" alt="Senator {{ senator.name }} avatar" />
       </div>
       <ul class="c-senator--info">
         <li>Your Senator</li>
         <li>{{ senator.name }}</li>
-        <li>{{ senator.duties }}</li>
+        <li>{{ senator.party }}</li>
         <li>
-          NY Senate District {{ senator.district_number }}
+          NY Senate District {{ district_number }}
           {% if senator.location %}
             (<a href="{{ senator.location }}">Map</a>)
           {% endif %}
@@ -40,13 +41,3 @@
       </ul>
     </div>
   </div>
-
-  <div class="button-group">
-    {% include '@nysenate_theme/button/button.twig' with {
-      button: back_button
-    } %}
-    {% include '@nysenate_theme/button/button.twig' with {
-      button: next_button
-    } %}
-  </div>
-</div>

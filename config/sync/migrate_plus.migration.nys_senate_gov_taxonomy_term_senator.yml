@@ -112,7 +112,7 @@ process:
             source: value
           -
             plugin: extract
-            default: 'id'
+            default: id
             index:
               - 0
         target_revision_id:
@@ -122,7 +122,7 @@ process:
             source: value
           -
             plugin: extract
-            default: 'revision_id'
+            default: revision_id
             index:
               - 1
   field_offices:
@@ -137,7 +137,7 @@ process:
             source: lid
           -
             plugin: extract
-            default: 'id'
+            default: id
             index:
               - 0
         target_revision_id:
@@ -147,7 +147,7 @@ process:
             source: lid
           -
             plugin: extract
-            default: 'revision_id'
+            default: revision_id
             index:
               - 1
   field_message_notification_email:

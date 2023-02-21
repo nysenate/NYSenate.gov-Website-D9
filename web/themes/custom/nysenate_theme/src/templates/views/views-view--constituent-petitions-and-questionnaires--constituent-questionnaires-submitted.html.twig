@@ -30,6 +30,8 @@
  * @see template_preprocess_views_view()
  */
 #}
+{{ attach_library('nysenate_theme/dashboard-petitions-questionnaires') }}
+
 {%
   set classes = [
     'view',
@@ -40,13 +42,13 @@
     'container',
   ]
 %}
-<div id="committees-pre" {{ attributes.addClass(classes) }}>
 
-  {% include '@nysenate_theme/nysenate-committee-detail/nysenate-committee-detail.twig' with {
-    is_bulleted: false,
-    title: committee['title'],
-    groups: committee['groups'],
-  }only
-  %}
-
+<div{{ attributes.addClass(classes) }}>
+  {% if rows %}
+    {{ rows }}
+  {% elseif empty %}
+    <div class="view-empty">
+      {{ empty }}
+    </div>
+  {% endif %}
 </div>

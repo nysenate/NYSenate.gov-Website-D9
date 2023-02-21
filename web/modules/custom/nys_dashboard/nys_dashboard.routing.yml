@@ -1,0 +1,20 @@
+nys_dashboard.issues:
+  path: '/users/{user_id}/dashboard/issues'
+  defaults:
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::issues'
+  requirements:
+    _permission: 'access content'
+
+nys_dashboard.committees:
+  path: '/users/{user_id}/dashboard/committees'
+  defaults:
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::committees'
+  requirements:
+    _permission: 'access content'
+
+nys_dashboard.petitions:
+  path: '/users/{user_id}/dashboard/petitions'
+  defaults:
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::petitions'
+  requirements:
+    _permission: 'access content'

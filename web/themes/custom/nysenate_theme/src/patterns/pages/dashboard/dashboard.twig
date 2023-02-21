@@ -1,11 +1,34 @@
-<div class="dashboard">
-  <div>
-    {% include '@nysenate_theme/button/button.twig' with {
-      button: button
-    } %}
-    <h3 class="nys-subtitle-title">Bills You Are Following</h3>
+<div class="page-user-dashboard">
+  <div class="page">
+    <header id="js-sticky--dashboard" role="banner" class="l-header l-header__collapsed ">
+      <section class="block block-nys-blocks contextual-links-region block-nys-blocks-user-dashboard-hdr header">
+        <section class="l-header-region l-row l-row--nav c-header-bar">
+          <h1 class="c-page-title">My Dashboard</h1>
+          <div class="c-header--connect">
+            <a class="c-dashboard-header--btn" href="/">NYSenate.gov</a>
+            <button class="c-block--btn icon-replace sidebar-toggle sidebar-toggle--show-icon c-nav--toggle"></button>
+          </div>
+        </section>
+      </section>
+    </header>
+    <div class="dashboard">
+      <div class="content">
 
-    {% include "@nysenate_theme/featured-bills/featured-bills.twig" with featured_bills only %}
+        {% if content %}
+          {{ content }}
+        {% endif %}
+
+        {% if dashboard_lists %}
+          {% include "@nysenate_theme/dashboard-lists/dashboard-lists.twig" with dashboard_lists only %}
+        {% endif %}
+
+        {% if petitions_questionnaires %}
+          {% include "@nysenate_theme/dashboard-petitions-questionnaires/dashboard-petitions-questionnaires.twig" with petitions_questionnaires only %}
+        {% endif %}
+
+      </div>
+      {% include "@nysenate_theme/sidebar/sidebar.twig" with sidebar only %}
+    </div>
   </div>
-  {% include "@nysenate_theme/sidebar/sidebar.twig" with sidebar only %}
+
 </div>

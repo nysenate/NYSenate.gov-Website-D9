@@ -111,14 +111,17 @@
         {{ sub_bill_base_print_no }}
       {% endif %}
       -
-      {{ status_display }}
-      {% if status_display == 'In Senate Committee' and committee %}
-        <a class="committee-link" href="{{ committee_link }}">
-          {{ committee }}
-          Committee
-        </a>
-      {% endif %}
+      <span>
+        {{ status_display }}
+        {% if status_display == 'In Senate Committee' and committee %}
+          <a class="committee-link" href="{{ committee_link }}">
+            {{ committee }}
+            Committee
+          </a>
+        {% endif %}
+      </span>
     </h3>
+
     <!-- Bill Graph Output -->
     <ul class="nys-bill-status">
       <hr/>
@@ -187,12 +190,12 @@
                                     {% set text_class = text_class ~ ' substituted' %}
                                   {% endif %}
                                   {% if 'amended' in item.text|lower or 'print number' in item.text|lower %}
-                                    {% set text_class = text_class ~ ' substituted' %}
+                                    {% set text_class = text_class ~ ' amended' %}
                                   {% endif %}
                                   {% if 'stricken' in item.text|lower %}
                                     {% set text_class = text_class ~ ' stricken' %}
                                   {% endif %}
-                                  <span class="{{ text_class }}">{{ item.text }}</span><br>
+                                  <span class="{{ text_class }}">{{ item.text|lower }}</span><br>
                                 {% endfor %}
                               </td>
                             </tr>
@@ -300,26 +303,22 @@
                         <h3 class="c-vote-detail--date">
                           {{ vote.type }} Vote:
                           {{ vote.date }}</h3>
-                        <div class="c-detail--vote-grp odd">
-                          <div class="c-detail--section-title">aye ({{ vote.aye_count|default(0) }})</div>
-                          <ul class="c-votes--items">
-                            {% for aye_member in vote.aye_members %}
-                              <li>
-                                <a href="{{ aye_member.url }}">{{ aye_member.name }}</a>
-                              </li>
-                            {% endfor %}
-                          </ul>
-                        </div>
-                        <div class="c-detail--vote-grp even">
-                          <div class="c-detail--section-title">nay ({{ vote.nay_count|default(0) }})</div>
-                          <ul class="c-votes--items">
-                            {% for nay_member in vote.nay_members %}
-                              <li>
-                                <a href="{{ nay_member.url }}">{{ nay_member.name }}</a>
-                              </li>
-                            {% endfor %}
-                          </ul>
-                        </div>
+                        {% set count = 0 %}
+                        {% for key,members in vote.all_members %}
+                          {% set title = key|split('_members') %}
+                          {% set title = title[0]|replace({'_': ' '}) %}
+                          {% set count = count + 1 %}
+                          <div class="c-detail--vote-grp {{ ((count % 2) ? 'odd' : 'even') }}">
+                            <div class="c-detail--section-title">{{ title }} ({{ members|length|default(0) }})</div>
+                            <ul class="c-votes--items">
+                              {% for member in members %}
+                                <li>
+                                  <a href="{{ member.url }}">{{ member.name }}</a>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        {% endfor %}
                       </li>
                     </ul>
                   </li>

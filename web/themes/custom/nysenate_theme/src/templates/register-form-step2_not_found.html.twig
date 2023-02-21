@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ *
+ * @see formBuildStep2()
+ */
+#}
+
+{{ attach_library('nysenate_theme/nysenate-user-profile') }}
+
+<div class="c-block c-login">
+  <h3 class="nys-title">
+    {{ 'There was a problem finding your district.'|t }} 
+  </h3>
+  <p class="body">
+    {{
+      'If you are from outside NY State, please continue by selecting "FINISH". 
+      If not, go back and ensure you entered your NY address correctly.'|t
+    }}
+  </p>
+   <div class="button-group">
+    {{ form }}
+   </div>
+</div>

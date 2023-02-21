@@ -198,6 +198,16 @@ content-carousel:
   dependencies:
     - rain_theme/slick
 
+dashboard:
+  css:
+    component:
+      dist/css/dashboard.css: {}
+  js:
+    dist/js/dashboard.es6.js: {}
+  dependencies:
+    - nysenate_theme/nysenate-header
+    - nysenate_theme/sidebar
+
 dashboard-inbox:
   css:
     component:
@@ -363,6 +373,7 @@ how-senate-works:
     dist/js/how-senate-works.es6.js: {}
   dependencies:
     - nysenate_theme/hammer
+    - core/drupal.debounce
 
 latest-news:
   css:
@@ -727,6 +738,7 @@ quick-facts:
     dist/js/quick-facts.es6.js: {}
   dependencies:
     - nysenate_theme/hammer
+    - core/drupal.debounce
 
 quote:
   css:

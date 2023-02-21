@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Default simple view template to display a list of rows.
+ *
+ * @ingroup views_templates
+ */
+#}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+
+{% for id, row in rows %}
+    {%
+      set row_classes = [
+        'content__item',
+      ]
+    %}
+    <div{{ row.attributes.addClass(row_classes) }}>
+      {{- row.content -}}
+    </div>
+
+{% endfor %}
+
+{% set limit = view.current_display == 'constituent_all_committees_updates' ? 4 : 5 %}
+
+{% if rows|length > limit %}
+  <div class="pager pager-load-more" data-limit="{{ limit }}">
+    <span class="pager-next first last">
+      <a class="load-more">See more</a>
+    </span>
+  </div>
+{% endif %}

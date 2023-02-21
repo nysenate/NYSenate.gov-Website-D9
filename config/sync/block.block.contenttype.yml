@@ -1,0 +1,29 @@
+uuid: cbcb1e3b-291e-4086-a5d9-6dc31748b68d
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.content_type
+  module:
+    - facets
+    - system
+  theme:
+    - nysenate_theme
+id: contenttype
+theme: nysenate_theme
+region: content
+weight: 0
+provider: null
+plugin: 'facet_block:content_type'
+settings:
+  id: 'facet_block:content_type'
+  label: 'Content type'
+  label_display: visible
+  provider: facets
+  context_mapping: {  }
+  block_id: contenttype
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /search/global

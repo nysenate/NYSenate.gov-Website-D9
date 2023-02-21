@@ -1,0 +1,5 @@
+services:
+  nysenate.json_decode:
+    class: Drupal\nysenate\TwigExtension\JsonDecode
+    tags:
+      - { name: twig.extension }

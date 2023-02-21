@@ -11,6 +11,8 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\nys_registration\RegistrationHelper;
 use Drupal\user\RegisterForm as UserRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\media\Entity\Media;
+use Drupal\file\Entity\File;
 
 /**
  * Custom multi-step registration form.
@@ -190,11 +192,15 @@ class RegisterForm extends UserRegisterForm {
     $district_term = $this->helper->getDistrictFromAddress($address);
     $district_id = $district_term?->id();
     $district_num = $district_term ? $district_term->field_district_number->value : 0;
+    $senator = $district_term ? $district_term->get('field_senator')->entity : 0;
 
-    // Record the district info in form state, and move to the next step.
+    // Record the district info in form state.
     $form_state->setValue('field_district', [$district_id])
       ->set('senate_district', $district_num)
-      ->set('district', $district_term)
+      ->set('district', $district_term);
+    // Record the senator info in form state, and move to the next step.
+    $form_state->setValue('field_senator', [$senator])
+      ->set('senator', $senator)
       ->set('step', 2)
       ->setRebuild();
 
@@ -207,31 +213,55 @@ class RegisterForm extends UserRegisterForm {
    */
   public function formBuildStep2(array &$form, FormStateInterface $form_state): array {
     $district = $form_state->get('senate_district') ?? 0;
-    $blurb = $this->t('If your address is incorrect, please click "BACK" to edit it.  Otherwise, select "FINISH" to create your account.');
-    $assignment = $district
-      ? "This address is in Senate District $district."
-      : "We were unable to place your address in a Senate district.";
-    $form['registration_wizard'] = [
-      '#type' => 'container',
-      'district_assignment' => [
-        '#markup' => '<h1>' . $assignment . '</h1>',
-      ],
-      'instruction' => ['#markup' => '<p>' . $blurb . '</p>'],
-    ];
+    $senator = [];
+    $senator_term = $form_state->get('senator');
+
+    if ($senator_term) {
+      $senator_name = $senator_term->get('field_senator_name')->getValue();
+      $senator_party = $senator_term->get('field_party')->getValue();
+      $mid = $senator_term->get('field_member_headshot')->target_id;
+      $media = Media::load($mid);
+      $fid = $media->get('field_image')->target_id;
+      $file = File::load($fid);
+      $senator['image'] = empty($file) ?
+        '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
+        \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      $senator['party'] = $this->helper->getPartyAffilation($senator_party);
+      $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
+      $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
+      $first_name = $form_state->getValue('field_first_name');
+      $last_name = $form_state->getValue('field_last_name');
+      $address = $form_state->getValue(['field_address', '0', 'address']);
+      $user['name'] = $first_name[0]['value'] . ' ' . $last_name[0]['value'];
+      $user['address_1'] = $address['address_line1'];
+      $user['address_2'] = $address['address_line2'];
+      $user['mail'] = $form_state->getValue('mail');
+    }
     $form['actions'] = [
-      'next' => [
-        '#type' => 'submit',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Next'),
-        '#submit' => ['::formSubmitStep2'],
-      ],
       'back' => [
         '#type' => 'submit',
         '#value' => $this->t('Back'),
         '#submit' => ['::formSubmitBack'],
         '#limit_validation_errors' => [],
       ],
+      'next' => [
+        '#type' => 'submit',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Next'),
+        '#submit' => ['::formSubmitStep2'],
+      ],
     ];
+    if (!$senator_term) {
+      $form['#theme'] = 'register_form_step2_not_found';
+    }
+    else {
+      $form['#theme'] = 'register_form_step2';
+      $form['#attributes']['variables'] = [
+        'district_number' => $district,
+        'senator' => json_encode($senator),
+        'user' => json_encode($user),
+      ];
+    }
     return $form;
   }
 
@@ -255,9 +285,7 @@ class RegisterForm extends UserRegisterForm {
    * Step 3 is confirmation page, with directions to check for an email.
    */
   public function formBuildStep3(array &$form, FormStateInterface $form_state): array {
-    $form['registration_wizard'] = [
-      '#markup' => '<h1>Almost there!</h1><p>Please find the email that was just sent to you. Click on the login URL in the email (or paste it into your browser) to validate your address and set up a password. New users must login with 7 days to retain an active account. Once that\'s done, you\'ll be ready to participate in the legislative process.</p>',
-    ];
+    $form['#theme'] = 'register_form_step3';
     return $form;
   }
 

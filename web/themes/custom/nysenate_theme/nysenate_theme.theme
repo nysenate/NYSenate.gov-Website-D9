@@ -1474,7 +1474,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   }
 
   // Student Program News Main.
-  if ($view->id() == 'student_programs_news' && $view->current_display == 'main') {
+  if ($view->id() == 'student_programs_news' &&
+    in_array($view->current_display, ['main', 'news_nolink'])) {
     $results = $view->result;
 
     $news = [];
@@ -1653,6 +1654,14 @@ function nysenate_theme_preprocess_views_view__senator_and_committee_lists__comm
  * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
  */
 function nysenate_theme_preprocess_views_view__student_programs_news__main(&$variables) {
+  $view = $variables['view'];
+  $variables['title'] = $view->getTitle();
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__student_programs_news__news_nolink(&$variables) {
   $view = $variables['view'];
   $variables['title'] = $view->getTitle();
 }

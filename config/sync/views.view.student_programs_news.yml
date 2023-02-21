@@ -13,7 +13,6 @@ dependencies:
     - text
     - user
     - views_infinite_scroll
-    - views_load_more
 id: student_programs_news
 label: 'Student Programs News'
 module: views
@@ -1274,28 +1273,9 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: load_more
+        type: none
         options:
           offset: 0
-          items_per_page: 5
-          id: '0'
-          total_pages: ''
-          expose:
-            items_per_page: 0
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
-            items_per_page_options_all_label: '- All -'
-            offset: 0
-            offset_label: Offset
-          more_button_text: 'Load more'
-          end_text: ''
-          advanced:
-            content_selector: ''
-            pager_selector: ''
-          effects:
-            type: ''
-            speed: slow
       defaults:
         pager: false
         fields: false
@@ -1309,7 +1289,6 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

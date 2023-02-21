@@ -4,3 +4,12 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@cache.default'
+  nys_senators.route_subscriber:
+    class: Drupal\nys_senators\EventSubscriber\McpRouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  nys_senators.mcp_access_checker:
+    class: Drupal\nys_senators\Access\McpAccessCheck
+    arguments: [ '@current_user' ]
+    tags:
+      - { name: access_check, applies_to: _custom_access }

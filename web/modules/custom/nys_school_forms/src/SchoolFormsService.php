@@ -97,6 +97,8 @@ class SchoolFormsService {
     $query_results = $query->execute();
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
+      /** @var \Drupal\node\NodeInterface $parent_node */
+      $parent_node = $submission->getSourceEntity();
       $submission_data = $submission->getData();
       /** @var \Drupal\node\NodeInterface $school_node */
       $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);

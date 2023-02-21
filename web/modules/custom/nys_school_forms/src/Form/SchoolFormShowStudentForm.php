@@ -72,14 +72,6 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   protected $entityTypeManager;
 
   /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-
-  protected $currentRouteMatch;
-
-  /**
    * Constructs a SchoolFormDeleteForm form object.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
@@ -96,8 +88,6 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    *   The String translation.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
-   *   Current route match.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory,
   EntityTypeManagerInterface $entity_type_manager,
@@ -105,8 +95,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   FileSystem $fileSystem,
   FileRepository $fileRepository,
   TranslationInterface $string_translation,
-  EntityTypeManager $entityTypeManager,
-  RouteMatchInterface $current_route_match) {
+  EntityTypeManager $entityTypeManager) {
     $this->privateTempStoreFactory = $temp_store_factory;
     $this->fileStorage = $entity_type_manager->getStorage('file');
     $this->currentUser = $account;
@@ -114,7 +103,6 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
     $this->fileRepository = $fileRepository;
     $this->setStringTranslation($string_translation);
     $this->entityTypeManager = $entityTypeManager;
-    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -129,7 +117,6 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
       $container->get('file.repository'),
       $container->get('string_translation'),
       $container->get('entity_type.manager'),
-      $container->get('current_route_match')
     );
   }
 
@@ -151,8 +138,8 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    $route = $this->currentRouteMatch->getRouteName();
-    return new Url($route);
+
+    return \Drupal::request()->headers->get('referer');
   }
 
   /**
@@ -168,7 +155,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->files = $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->get($this->currentUser->id());
     if (empty($this->files)) {
-      return new RedirectResponse($this->getCancelUrl()->setAbsolute()->toString());
+      return new RedirectResponse($this->getCancelUrl());
     }
 
     $form['files'] = [
@@ -186,19 +173,22 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('confirm') && !empty($this->files)) {
       $count = count($this->files);
+      $webform_id = '';
       foreach ($this->files as $file) {
         if ($file instanceof FileInterface) {
           $query = \Drupal::database()->select('webform_submission_data')
             ->fields('webform_submission_data', ['sid'])
-            ->condition('webform_id', 'school_form')
+            ->fields('webform_submission_data', ['webform_id'])
             ->condition('value', $file->get('fid')->value)
             ->distinct();
 
-          $sids = $query->execute()->fetchCol();
-          $sid = $sids[0];
+          $sids = $query->execute()->fetchAll();
+          $sid = $sids[0]->sid;
+          $webform_id = $sids[0]->webform_id;
           if (!empty($sid)) {
             $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
             $entity_id = $submission->getSourceEntity();
+            $webform = $submission->getWebform();
             $submission_timestamp = $submission->getCreatedTime();
             $school_form_type = '';
             if ($entity_id) {
@@ -208,7 +198,6 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
               $directory = 'public://' . $school_form_type . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
             }
             else {
-              $webform = $submission->getWebform();
               $directory = 'public://' . 'webform' . '/' . $webform->id() . '/' . $sid . '/';
             }
             $file_uri = $file->getFileUri();
@@ -223,17 +212,29 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
               $this->messenger()->addMessage($this->stringTranslation->formatPlural($count,
                 '1 file does not exist in the file system. Cannot show student submission file.',
                 'A file you selected do not exits in the file system. Cannot show student submission file.'));
-              $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
-              $form_state->setRedirectUrl($url);
+              if ($webform_id == 'school_form_thanksgiving') {
+                $url = Url::fromRoute('nys_school_forms.school_forms_thanksgiving', [], []);
+                $form_state->setRedirectUrl($url);
+              }
+              elseif ($webform_id == 'school_form_earth_day') {
+                $url = Url::fromRoute('nys_school_forms.school_forms_earth_day', [], []);
+                $form_state->setRedirectUrl($url);
+              }
             }
           }
         }
+        $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->delete($this->currentUser->id());
+        $this->logger('School Forms')->notice('@count student submissions have been moved to public access.', ['@count' => $count]);
+        $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Show 1 submissions.', 'Show @count student submissions.'));
+        if ($webform_id == 'school_form_thanksgiving') {
+          $url = Url::fromRoute('nys_school_forms.school_forms_thanksgiving', [], []);
+          $form_state->setRedirectUrl($url);
+        }
+        elseif ($webform_id == 'school_form_earth_day') {
+          $url = Url::fromRoute('nys_school_forms.school_forms_earth_day', [], []);
+          $form_state->setRedirectUrl($url);
+        }
       }
-      $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->delete($this->currentUser->id());
-      $this->logger('School Forms')->notice('@count student submissions have been moved to public access.', ['@count' => $count]);
-      $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Show 1 submissions.', 'Show @count student submissions.'));
-      $url = Url::fromRoute($this->currentRouteMatch->getRouteName(), [], []);
-      $form_state->setRedirectUrl($url);
     }
   }
 

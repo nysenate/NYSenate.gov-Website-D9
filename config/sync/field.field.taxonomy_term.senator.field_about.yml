@@ -1,0 +1,27 @@
+uuid: eac67a1c-8881-4773-afd0-d01b16f479fc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_about
+    - taxonomy.vocabulary.senator
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - full_html
+      - basic_html
+id: taxonomy_term.senator.field_about
+field_name: field_about
+entity_type: taxonomy_term
+bundle: senator
+label: 'About the Senator'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

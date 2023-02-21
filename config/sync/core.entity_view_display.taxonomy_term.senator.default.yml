@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.senator.field_about
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
@@ -11,6 +12,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_email_autoreply_text
     - field.field.taxonomy_term.senator.field_facebook_url
     - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_inactive_senator_message
     - field.field.taxonomy_term.senator.field_instagram_url
     - field.field.taxonomy_term.senator.field_media_contact
     - field.field.taxonomy_term.senator.field_media_email
@@ -36,6 +38,7 @@ dependencies:
     - taxonomy.vocabulary.senator
   module:
     - name
+    - text
 id: taxonomy_term.senator.default
 targetEntityType: taxonomy_term
 bundle: senator
@@ -50,6 +53,21 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 9
+    region: content
+  field_about:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_inactive_senator_message:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 12
     region: content
   field_senator_name:
     type: name_default

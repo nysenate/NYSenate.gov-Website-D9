@@ -3,7 +3,7 @@
         'name' => 'mediacurrent/drupal-project',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'd9f54068264691a5e0111ed1c424de641d4a1f47',
+        'reference' => 'e9105e5bba964709117bc43cbe798efd7066edf5',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1984,7 +1984,7 @@
         'mediacurrent/drupal-project' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd9f54068264691a5e0111ed1c424de641d4a1f47',
+            'reference' => 'e9105e5bba964709117bc43cbe798efd7066edf5',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

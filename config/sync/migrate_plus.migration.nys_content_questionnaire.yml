@@ -101,10 +101,14 @@ process:
     -
       plugin: get
       source: field_byline
-  body:
+  body/value:
     -
-      plugin: get
-      source: field_body
+      plugin: transform_embed_media
+      source: body/0/value
+  body/format:
+    -
+      plugin: default_value
+      default_value: full_html
   field_title_stub:
     -
       plugin: get

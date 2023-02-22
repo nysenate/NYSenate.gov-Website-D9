@@ -18,7 +18,7 @@ class ConfigIgnoreHookTest extends ConfigIgnoreBrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'config_ignore',
     'config',
     'config_filter',

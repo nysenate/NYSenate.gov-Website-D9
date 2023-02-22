@@ -5,6 +5,7 @@ namespace Drupal\smart_sql_idmap\Plugin\migrate\id_map;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -21,8 +22,8 @@ class SmartSql extends Sql {
    *
    * @see https://drupal.org/i/2845340
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $event_dispatcher);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher, MigrationPluginManagerInterface $migration_plugin_manager = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $event_dispatcher, $migration_plugin_manager);
 
     // Default generated table names, limited to 63 characters.
     $machine_name = str_replace(PluginBase::DERIVATIVE_SEPARATOR, '__', $this->migration->id());

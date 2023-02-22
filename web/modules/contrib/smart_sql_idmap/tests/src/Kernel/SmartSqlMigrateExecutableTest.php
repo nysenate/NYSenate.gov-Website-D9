@@ -43,7 +43,7 @@ class SmartSqlMigrateExecutableTest extends MigrateTestBase {
    *
    * Access level should be public for Drupal core 8.9.x.
    */
-  public static $modules = [
+  protected static $modules = [
     'migrate',
     'migrate_events_test',
     'smart_sql_idmap',

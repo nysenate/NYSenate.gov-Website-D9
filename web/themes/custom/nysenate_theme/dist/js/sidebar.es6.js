@@ -16,32 +16,17 @@
     attach: function attach(context) {
       var $this = this;
       var sidebarToggle = $('.sidebar-toggle', context);
-      sidebarToggle.once('sidebarToggle').each(function () {
-        var sidebarToggle = $(this);
-        sidebarToggle.click(function () {
-          var sidebar = $('.sidebar');
-          var body = $('body');
-
-          if (sidebar.hasClass('show')) {
-            sidebar.removeClass('show');
-            body.removeClass('.sidebar-open');
-            $(this).removeClass('show');
-          } else {
-            sidebar.addClass('show');
-            body.addClass('.sidebar-open');
-            $(this).addClass('show');
-          }
-        });
-        $(window).resize($this.debounce(function () {
-          return $this.onResize(sidebarToggle);
-        }));
-        $this.onResize(sidebarToggle);
-      });
+      var header = $('#js-sticky--dashboard');
+      sidebarToggle.once('sidebarToggle').each($this.sidebarToggleInit);
+      $(window).resize($this.debounce(function () {
+        return $this.onResize(sidebarToggle);
+      }));
+      $this.onResize(header);
     },
-    onResize: function onResize(sidebarToggle) {
-      var sidebarToggleBottom = sidebarToggle.offset().top + sidebarToggle.outerHeight();
+    onResize: function onResize(header) {
+      var headerBottom = header.offset().top + header.outerHeight();
       var sidebar = $('.sidebar');
-      sidebar.css('--top', "".concat(sidebarToggleBottom, "px"));
+      sidebar.css('--top', "".concat(headerBottom, "px"));
     },
     debounce: function debounce(func) {
       var _this = this;
@@ -58,6 +43,24 @@
           func.apply(_this, args);
         }, timeout);
       };
+    },
+    sidebarToggleInit: function sidebarToggleInit() {
+      var sidebarToggle = $(this);
+      sidebarToggle.click(function (e) {
+        e.stopImmediatePropagation();
+        var sidebar = $('.sidebar');
+        var body = $('body');
+
+        if (sidebar.hasClass('show')) {
+          sidebar.removeClass('show');
+          body.removeClass('sidebar-open');
+          $(this).removeClass('show');
+        } else {
+          sidebar.addClass('show');
+          body.addClass('sidebar-open');
+          $(this).addClass('show');
+        }
+      });
     }
   };
 }(document, Drupal, jQuery);

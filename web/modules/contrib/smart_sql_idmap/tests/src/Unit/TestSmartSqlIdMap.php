@@ -42,7 +42,7 @@ class TestSmartSqlIdMap extends SmartSql implements \Iterator {
   public function __construct(Connection $database, MigrationPluginManagerInterface $migration_plugin_manager, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
     $this->database = $database;
     $this->migrationPluginManager = $migration_plugin_manager;
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $event_dispatcher);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $event_dispatcher, $migration_plugin_manager);
   }
 
   /**
@@ -52,9 +52,12 @@ class TestSmartSqlIdMap extends SmartSql implements \Iterator {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
    */
-  protected function getMigrationPluginManager() {
-    return $this->migrationPluginManager;
+  public function getMigrationPluginManager() {
+    // phpcs:enable
+    return parent::getMigrationPluginManager();
   }
 
   /**

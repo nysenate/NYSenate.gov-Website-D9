@@ -1,6 +1,6 @@
 {{ attach_library('nysenate_theme/nysenate-senate-directory') }}
 
-<div id="committees-pre" class="c-block c-container c-senate-directory--container">
+<div class="c-block c-container c-senate-directory--container">
   <h3 class="c-container--title">{{ title }}</h3>
   {% if patternlab %}
     <div class="c-senate-directory">
@@ -14,4 +14,5 @@
   {% elseif content %}
     {{ content|raw }}
   {% endif %}
+  <div id="committees-pre"></div>
 </div>

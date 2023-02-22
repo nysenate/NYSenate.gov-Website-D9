@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.senator.field_about
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
@@ -11,6 +12,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_email_autoreply_text
     - field.field.taxonomy_term.senator.field_facebook_url
     - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_inactive_senator_message
     - field.field.taxonomy_term.senator.field_instagram_url
     - field.field.taxonomy_term.senator.field_media_contact
     - field.field.taxonomy_term.senator.field_media_email
@@ -43,6 +45,7 @@ dependencies:
     - paragraphs
     - paragraphs_features
     - telephone
+    - text
 third_party_settings:
   field_group:
     group_senator_information:
@@ -52,6 +55,7 @@ third_party_settings:
         - field_current_duties
         - field_conference
         - field_member_headshot
+        - field_about
       label: 'Senator Information'
       region: content
       parent_name: ''
@@ -92,7 +96,7 @@ third_party_settings:
       label: 'Social Media Links'
       region: content
       parent_name: group_microsite_settings
-      weight: 9
+      weight: 10
       format_type: fieldset
       format_settings:
         classes: ''
@@ -167,7 +171,7 @@ third_party_settings:
       label: 'Contact Page'
       region: content
       parent_name: ''
-      weight: 5
+      weight: 4
       format_type: fieldset
       format_settings:
         classes: ''
@@ -185,7 +189,7 @@ third_party_settings:
       label: 'Media Inquiries'
       region: content
       parent_name: ''
-      weight: 4
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: ''
@@ -199,7 +203,7 @@ third_party_settings:
       label: 'Manage Promotional Banners Footer'
       region: content
       parent_name: group_microsite_settings
-      weight: 8
+      weight: 9
       format_type: details
       format_settings:
         classes: ''
@@ -213,6 +217,14 @@ targetEntityType: taxonomy_term
 bundle: senator
 mode: default
 content:
+  field_about:
+    type: text_textarea
+    weight: 10
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
   field_active_senator:
     type: boolean_checkbox
     weight: 8
@@ -230,13 +242,13 @@ content:
     third_party_settings: {  }
   field_conference:
     type: options_select
-    weight: 9
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   field_current_duties:
     type: string_textfield
-    weight: 8
+    weight: 7
     region: content
     settings:
       size: 60
@@ -273,6 +285,14 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
+  field_inactive_senator_message:
+    type: string_textfield
+    weight: 38
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_instagram_url:
     type: string_textfield
     weight: 9
@@ -306,14 +326,14 @@ content:
     third_party_settings: {  }
   field_media_phone:
     type: telephone_default
-    weight: 8
+    weight: 7
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_member_headshot:
     type: media_library_widget
-    weight: 27
+    weight: 9
     region: content
     settings:
       media_types: {  }
@@ -380,7 +400,7 @@ content:
     third_party_settings: {  }
   field_party:
     type: options_select
-    weight: 7
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }

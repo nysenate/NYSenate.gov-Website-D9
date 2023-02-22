@@ -128,11 +128,13 @@ class EntityUsageBatchManager implements ContainerInjectionInterface {
     $entity_type_key = $entity_type->getKey('id');
 
     if (empty($context['sandbox']['total'])) {
+      $id_definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id)[$entity_type_key];
+
       // Delete current usage statistics for these entities.
       \Drupal::service('entity_usage.usage')->bulkDeleteSources($entity_type_id);
 
       $context['sandbox']['progress'] = 0;
-      $context['sandbox']['current_id'] = -1;
+      $context['sandbox']['current_id'] = $id_definition->getType() === 'integer' ? -1 : '';
       $context['sandbox']['total'] = (int) $entity_storage->getQuery()
         ->accessCheck(FALSE)
         ->count()

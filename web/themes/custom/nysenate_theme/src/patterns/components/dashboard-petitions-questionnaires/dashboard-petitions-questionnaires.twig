@@ -77,37 +77,37 @@
 
     <div class="content all-petitions" id="allpetitions">
       <div class="c-container--body">
-        {% if questionairres %}
-          {% for questionairre in questionairres %}
+        {% if questionnaires %}
+          {% for questionnaire in questionnaires %}
             <article>
               <div class="pet-body">
                 <h3 class="entry-title">
-                  {{ questionairre.title }}
+                  {{ questionnaire.title }}
                 </h3>
                 <div class="pet-type">
-                  <a href="{{ questionairre.content.url }}">{{ questionairre.content.text }}</a>
+                  <a href="{{ questionnaire.content.url }}">{{ questionnaire.content.text }}</a>
                 </div>
                 <div class="author">
-                  <span>By: <a href="{{ questionairre.author.url }}">{{ questionairre.author.name }}</a></span>
+                  <span>By: <a href="{{ questionnaire.author.url }}">{{ questionnaire.author.name }}</a></span>
                 </div>
                 <div class="article-date">
-                  <span>Signed on {{ questionairre.timestamp }}</span>
+                  <span>Signed on {{ questionnaire.timestamp }}</span>
                 </div>
               </div>
               <div class="pet-share-bar">
-                {% if questionairre.petition_is_active %}
+                {% if questionnaire.petition_is_active %}
                   <p>
                     Promote this Questionnaire
                   </p>
-                  <a href="{{ questionairre.fb_url }}" class="pet-facebook-share icon-after__facebook"></a>
-                  <a href="{{ questionairre.twitter_url }}" class="pet-twitter-share icon-after__twitter"></a>
+                  <a href="{{ questionnaire.fb_url }}" class="pet-facebook-share icon-after__facebook"></a>
+                  <a href="{{ questionnaire.twitter_url }}" class="pet-twitter-share icon-after__twitter"></a>
                 {% else %}
                   <p>
                     This Petition is No Longer Active
                   </p>
                 {% endif %}
-                {% if questionairre.explore_link %}
-                  <a href="{{ questionairre.explore_link }}" class="explore-link icon-after__right">
+                {% if questionnaire.explore_link %}
+                  <a href="{{ questionnaire.explore_link }}" class="explore-link icon-after__right">
                     Explore Related Questionnaires
                   </a>
                 {% endif %}

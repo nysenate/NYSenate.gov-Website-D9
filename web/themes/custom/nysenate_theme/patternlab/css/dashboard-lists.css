@@ -752,6 +752,7 @@ strong {
 .icon-after__see-less::after,
 .icon-after__see-more::after,
 .js-form-type-select::after,
+.facet .view-filters .js-facet-select::after,
 .flag-action::after,
 .icon-after__down-arrow::after,
 .unflag-action::after {
@@ -913,7 +914,8 @@ strong {
 
 
 .icon-after__see-more::after,
-.js-form-type-select::after {
+.js-form-type-select::after,
+.facet .view-filters .js-facet-select::after {
   content: '\65'; }
 
 .icon-after__share::after {
@@ -1517,3 +1519,64 @@ strong {
     .c-block.c-container.c-container--const-issues-follow .c-follow-issue--header .c-container--title,
     .c-block.c-container.c-container--const-issues-follow .c-list--header .c-container--title {
       font-size: 24px; } }
+  .page-user-dashboard .c-block.c-container.c-container--const-issues-follow .c-follow-issue--header {
+    display: block; }
+    @media screen and (min-width: 768px) {
+      .page-user-dashboard .c-block.c-container.c-container--const-issues-follow .c-follow-issue--header {
+        display: flex;
+        margin-bottom: 40px; } }
+    .page-user-dashboard .c-block.c-container.c-container--const-issues-follow .c-follow-issue--header .c-container--title {
+      margin-bottom: 20px; }
+      @media screen and (min-width: 768px) {
+        .page-user-dashboard .c-block.c-container.c-container--const-issues-follow .c-follow-issue--header .c-container--title {
+          margin-bottom: 0; } }
+
+.facet {
+  margin: 0 0 20px 0; }
+  @media screen and (min-width: 1024px) {
+    .facet {
+      margin: 0 8px 40px 0; } }
+  @media screen and (min-width: 768px) {
+    .facet {
+      display: inline-block;
+      max-width: 31%;
+      margin: 0 14px 40px 0; } }
+  .facet.hidden .js-facet-select::after {
+    display: none; }
+  .facet .view-filters .js-facet-select {
+    position: relative; }
+    .facet .view-filters .js-facet-select::after {
+      position: absolute;
+      right: 10px;
+      top: auto;
+      font-size: 25px;
+      color: #2b6990;
+      pointer-events: none;
+      cursor: pointer; }
+  .facet .view-filters .facets-widget-dropdown select {
+    text-transform: none;
+    font-family: "Proxima Nova Regular", "Arial", sans-serif;
+    padding-left: 10px; }
+
+.view-id-core_search .view-header h2 {
+  font-family: "Adelle Regular", serif;
+  font-size: 26px;
+  text-transform: capitalize;
+  font-weight: normal;
+  margin-bottom: 10px; }
+
+.view-id-core_search .view-header .ds-search-extra {
+  font-size: 12px;
+  line-height: 1em;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  color: #888888;
+  text-transform: uppercase;
+  margin-bottom: 30px; }
+
+.view-id-core_search .c-press-release--title {
+  line-height: 24px; }
+
+.view-constituent-updates label {
+  color: #444444;
+  font-weight: 700;
+  text-transform: none; }

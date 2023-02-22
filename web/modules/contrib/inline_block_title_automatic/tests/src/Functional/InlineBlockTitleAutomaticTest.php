@@ -42,7 +42,7 @@ class InlineBlockTitleAutomaticTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'layout_builder',
     'block_content',
@@ -51,7 +51,7 @@ class InlineBlockTitleAutomaticTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     NodeType::create([
@@ -94,7 +94,7 @@ class InlineBlockTitleAutomaticTest extends BrowserTestBase {
   /**
    * Test the automatic title.
    */
-  public function testAutomaticTitle() {
+  public function testAutomaticTitle(): void {
     // Before the module is installed, the title fields should be visible on
     // reusable and inline block content entities.
     $this->drupalGet("layout_builder/add/block/overrides/node.{$this->node->id()}/0/content/inline_block:rich_text");
@@ -119,7 +119,7 @@ class InlineBlockTitleAutomaticTest extends BrowserTestBase {
   /**
    * Test layout builder detects equal section lists correctly.
    */
-  public function testAutomaticTitleLayoutSectionEquals() {
+  public function testAutomaticTitleLayoutSectionEquals(): void {
     // Enable the module and save a version of an inline block that will include
     // an automatic title.
     $this->container->get('module_installer')->install(['inline_block_title_automatic']);
@@ -137,7 +137,7 @@ class InlineBlockTitleAutomaticTest extends BrowserTestBase {
   /**
    * Assert the title fields exist.
    */
-  protected function assertTitleFieldsExist() {
+  protected function assertTitleFieldsExist(): void {
     $this->assertSession()->fieldExists('settings[label]');
     $this->assertSession()->fieldExists('settings[label_display]');
   }
@@ -145,7 +145,7 @@ class InlineBlockTitleAutomaticTest extends BrowserTestBase {
   /**
    * Assert the title fields do not exist.
    */
-  protected function assertTitleFieldsNotExist() {
+  protected function assertTitleFieldsNotExist(): void {
     $this->assertSession()->fieldNotExists('settings[label]');
     $this->assertSession()->fieldNotExists('settings[label_display]');
   }
@@ -156,10 +156,10 @@ class InlineBlockTitleAutomaticTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be reloaded.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\EntityInterface|null
    *   The reloaded entity.
    */
-  protected function reloadEntity(EntityInterface $entity) {
+  protected function reloadEntity(EntityInterface $entity): EntityInterface|null {
     $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache([$entity->id()]);
     return $controller->load($entity->id());

@@ -19,7 +19,7 @@ class ViewFieldUnitTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views_field_view',
     'views_field_view_test_config',
     'user',
@@ -38,7 +38,7 @@ class ViewFieldUnitTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['views_field_view_test_config']);

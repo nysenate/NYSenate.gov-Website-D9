@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Default simple view template to display a list of rows.
+ *
+ * @ingroup views_templates
+ */
+#}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-committee-widget') }}
+<div class="content-list__wrapper">
+  <section class="comm-widget-wrapper">
+    {% for committee in committees %}
+      <div class="comm-follow-widget content__item">
+        <h3 class="title">
+          <a href="{{ committee.committee_link.url }}">{{ committee.committee_link.text }}</a>
+        </h3>
+        {% if committee.flag_follow_committee %}
+          {{ committee.flag_follow_committee }}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </section>
+</div>
+
+{% set limit = 6 %}
+
+{% if committees|length > limit %}
+  <div class="pager pager-load-more" data-limit="{{ limit }}">
+    <span class="pager-next first last">
+      <a class="load-more">See more</a>
+    </span>
+  </div>
+{% endif %}

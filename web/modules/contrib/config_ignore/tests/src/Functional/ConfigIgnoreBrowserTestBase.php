@@ -21,7 +21,7 @@ abstract class ConfigIgnoreBrowserTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_ignore', 'config', 'config_filter'];
+  protected static $modules = ['config_ignore', 'config', 'config_filter'];
 
   /**
    * {@inheritdoc}

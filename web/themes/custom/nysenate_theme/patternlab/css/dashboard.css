@@ -746,6 +746,7 @@ strong {
 .icon-after__mail::after,
 .icon-after__left::after,
 .icon-after__right::after,
+.page-user-dashboard .c-header-bar .c-dashboard-header--btn::after,
 .icon-after__arrow::after,
 .icon-after__recruit-friends::after,
 .icon-after__user-guide::after,
@@ -902,7 +903,9 @@ strong {
 .icon-after__user-guide::after {
   content: '\69'; }
 
-.icon-after__right::after {
+
+.icon-after__right::after,
+.page-user-dashboard .c-header-bar .c-dashboard-header--btn::after {
   content: '\3e'; }
 
 .icon-after__search::after {
@@ -1449,8 +1452,100 @@ strong {
 
 .dashboard {
   display: grid;
-  grid-template-columns: 1fr fit-content(400px);
-  grid-auto-flow: row; }
+  grid-template-columns: 100%;
+  grid-auto-flow: row;
+  justify-content: space-between; }
+  .sidebar-open .dashboard {
+    grid-template-columns: 70% fit-content(400px); }
+  .dashboard .content {
+    padding: 40px 20px 0 20px; }
+    @media screen and (min-width: 768px) {
+      .dashboard .content {
+        padding: 40px; } }
   .dashboard .sidebar-toggle {
     position: relative;
     z-index: 20; }
+
+.page-user-dashboard .c-header--connect {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding-left: 20px; }
+  .page-user-dashboard .c-header--connect .c-dashboard-header--btn {
+    margin-right: 10px; }
+
+.page-user-dashboard .c-page-title {
+  font-family: "Adelle Regular"; }
+  .page-user-dashboard .c-page-title a:before {
+    display: none; }
+  .page-user-dashboard .c-page-title a:hover {
+    color: #04a9c5; }
+
+.page-user-dashboard .l-row--nav {
+  max-width: 100%; }
+  @media screen and (min-width: 760px) {
+    .page-user-dashboard .l-row--nav {
+      padding: 0 40px; } }
+
+.page-user-dashboard .c-header-bar {
+  border-bottom: 1px solid #e1e5ec;
+  height: 60px; }
+  .page-user-dashboard .c-header-bar:before {
+    content: "";
+    height: 100%;
+    width: 1px;
+    margin-left: -1px;
+    display: inline-block;
+    vertical-align: middle; }
+  .page-user-dashboard .c-header-bar .c-dashboard-header--btn {
+    font-family: "Proxima Nova SemiBold";
+    font-size: 15px;
+    line-height: 18px;
+    color: #04a9c5;
+    text-transform: uppercase; }
+  .page-user-dashboard .c-header-bar .c-nav--toggle:after {
+    color: #008ca6; }
+
+.page-user-dashboard .c-page-title {
+  display: none; }
+
+.page-user-dashboard #js-sticky--dashboard {
+  visibility: hidden; }
+
+@media screen and (min-width: 760px) {
+  .page-user-dashboard .c-header-bar {
+    height: 75px; }
+    .page-user-dashboard .c-header-bar .c-page-title {
+      display: inline-block;
+      font-size: 18px; }
+    .page-user-dashboard .c-header-bar .c-nav--toggle {
+      display: block;
+      height: 40px;
+      top: 9px;
+      right: 5px; }
+      .page-user-dashboard .c-header-bar .c-nav--toggle:after {
+        font-size: 19px;
+        line-height: 1; }
+    .page-user-dashboard .c-header-bar.collapsed .c-nav--toggle {
+      background: none;
+      display: block;
+      top: 8px;
+      transition-property: none; }
+      .page-user-dashboard .c-header-bar.collapsed .c-nav--toggle:after {
+        color: #04a9c5; }
+  .page-user-dashboard .c-header--connect {
+    display: flex;
+    width: auto;
+    padding: 0;
+    margin: auto; } }
+
+@media screen and (min-width: 960px) {
+  .page-user-dashboard .u-mobile-only {
+    display: none !important; }
+  .page-user-dashboard .c-header-bar {
+    height: 100px; }
+    .page-user-dashboard .c-header-bar.collapsed {
+      height: 40px; }
+  .page-user-dashboard .c-page-title {
+    display: inline-block; } }

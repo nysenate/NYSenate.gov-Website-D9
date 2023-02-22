@@ -155,6 +155,8 @@ class FullCalendarDisplay extends StylePluginBase {
     $options['openEntityInNewTab'] = ['default' => 1];
     $options['eventLimit'] = ['default' => 2];
     $options['slotDuration'] = ['default' => '00:30:00'];
+    $options['minTime'] = ['default' => '2000-01-01 00:00:00'];
+    $options['maxTime'] = ['default' => '2000-01-01 23:59:59'];
     return $options;
   }
 
@@ -525,7 +527,7 @@ class FullCalendarDisplay extends StylePluginBase {
           ],
         ],
         '#ajax' => [
-          'callback' => 'Drupal\fullcalendar_view\Plugin\views\style\FullCalendarDisplay::taxonomyColorCallback',
+          'callback' => [static::class, 'taxonomyColorCallback'],
           'event' => 'change',
           'wrapper' => 'color-taxonomies-div',
           'progress' => [
@@ -639,17 +641,18 @@ class FullCalendarDisplay extends StylePluginBase {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $options = &$form_state->getValue('style_options');
-    $input_value = $form_state->getValues();
+    // As the color pickup element, here has to use getUserInput().
+    $input_value = $form_state->getUserInput();
     $input_colors = isset($input_value['style_options']['color_taxonomies']) ? $input_value['style_options']['color_taxonomies'] : [];
     // Save the input of colors.
     foreach ($input_colors as $id => $color) {
       if (!empty($color)) {
-        $options['color_taxonomies'][$id] = $color;
+        $options['color_taxonomies'][Xss::filter($id)] = Xss::filter($color);
       }
     }
-    $options['minTime'] = $input_value['style_options']['minTime']->format("H:i:s");
-    $options['maxTime'] = $input_value['style_options']['maxTime']->format("H:i:s");
-    $options['right_buttons'] = isset($input_value['style_options']['right_buttons']) ? implode(',', array_filter(array_values($input_value['style_options']['right_buttons']))) : '';
+    $options['minTime'] = $options['minTime']->format("H:i:s");
+    $options['maxTime'] = $options['maxTime']->format("H:i:s");
+    $options['right_buttons'] = isset($options['right_buttons']) ? implode(',', array_filter(array_values($options['right_buttons']))) : '';
 
     // Sanitize user input.
     $options['timeFormat'] = Xss::filter($options['timeFormat']);
@@ -663,7 +666,9 @@ class FullCalendarDisplay extends StylePluginBase {
   public static function taxonomyColorCallback(array &$form, FormStateInterface $form_state) {
     $options = $form_state->getValue('style_options');
     $vid = $options['vocabularies'];
-    $taxonomy_color_service = $this->taxonomyColorService;
+    // This is a static function,
+    // has to get the service in this way.
+    $taxonomy_color_service = \Drupal::service('fullcalendar_view.taxonomy_color');
 
     if (isset($options['color_taxonomies'])) {
       $defaultValues = $options['color_taxonomies'];

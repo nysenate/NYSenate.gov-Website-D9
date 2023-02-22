@@ -2946,9 +2946,17 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
       if (is_array($item_id)) {
         $item_id = current($item_id);
       }
+      $hash = NULL;
+      if (isset($doc_fields['hash'])) {
+        $hash = $doc_fields['hash'];
+        if (is_array($hash)) {
+          $hash = current($hash);
+        }
+      }
+
       // For items coming from a different site, we need to adapt the item ID.
-      if (isset($doc_fields['hash']) && !$this->configuration['site_hash'] && $doc_fields['hash'] != $site_hash) {
-        $item_id = $doc_fields['hash'] . '--' . $item_id;
+      if (!is_null($hash) && !$this->configuration['site_hash'] && $hash != $site_hash) {
+        $item_id = $hash . '--' . $item_id;
       }
 
       $result_item = NULL;

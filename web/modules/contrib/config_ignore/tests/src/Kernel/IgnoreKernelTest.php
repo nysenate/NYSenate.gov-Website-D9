@@ -25,7 +25,7 @@ class IgnoreKernelTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'language',
     'config',
@@ -37,7 +37,7 @@ class IgnoreKernelTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // We install the system and config_test config so that there is something

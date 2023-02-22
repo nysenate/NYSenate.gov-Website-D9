@@ -3,7 +3,7 @@
 namespace Drupal\Tests\smart_sql_idmap\Unit\Plugin\migrate\id_map;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;

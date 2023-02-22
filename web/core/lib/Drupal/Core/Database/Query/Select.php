@@ -120,6 +120,16 @@ class Select extends Query implements SelectInterface {
   protected $forUpdate = FALSE;
 
   /**
+   * The query metadata for alter purposes.
+   */
+  public $alterMetaData;
+
+  /**
+   * The query tags.
+   */
+  public $alterTags;
+
+  /**
    * Constructs a Select object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -868,7 +878,10 @@ class Select extends Query implements SelectInterface {
 
     // GROUP BY
     if ($this->group) {
-      $query .= "\nGROUP BY " . implode(', ', $this->group);
+      $group_by_fields = array_map(function (string $field): string {
+        return $this->connection->escapeField($field);
+      }, $this->group);
+      $query .= "\nGROUP BY " . implode(', ', $group_by_fields);
     }
 
     // HAVING

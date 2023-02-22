@@ -2,6 +2,7 @@
 
 namespace Drupal\entity_usage;
 
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -91,10 +92,10 @@ abstract class EntityUsageTrackBase extends PluginBase implements EntityUsageTra
    *   The EntityRepositoryInterface service.
    * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
    *   The Drupal Path Validator service.
-   * @param \Drupal\Core\StreamWrapper\PublicStream $public_stream
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperInterface $public_stream
    *   The Public Stream service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityUsageInterface $usage_service, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, EntityRepositoryInterface $entity_repository, PathValidatorInterface $path_validator, PublicStream $public_stream) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityUsageInterface $usage_service, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, EntityRepositoryInterface $entity_repository, PathValidatorInterface $path_validator, StreamWrapperInterface $public_stream) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configuration += $this->defaultConfiguration();
     $this->usageService = $usage_service;

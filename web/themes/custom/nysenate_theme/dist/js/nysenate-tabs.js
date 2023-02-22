@@ -59,19 +59,26 @@
 
 
       if (loadMore) {
+        var animationDelay = 200;
+        var animationDuration = 400;
         loadMore.each(function () {
-          var items = $(this).closest('.pager-load-more').parent().find('.content__item');
+          var pagerContainer = $(this).closest('.pager-load-more');
+          var items = pagerContainer.parent().find('.content__item');
+          var limit = parseInt(pagerContainer.data('limit')) || 5;
           items.css('display', 'none');
-          items.slice(0, 5).show();
+          items.slice(0, limit).show();
           var itemsHidden = $(this).closest('.pager-load-more').parent().find('.content__item:hidden');
           $(this).on('click', function (e) {
-            e.preventDefault();
-            itemsHidden.slice(0, 5).slideDown();
-            itemsHidden = $(this).closest('.pager-load-more').parent().find('.content__item:hidden');
+            var _this = this;
 
-            if (itemsHidden.length === 0) {
-              $(this).css('display', 'none');
-            }
+            e.preventDefault();
+            itemsHidden.slice(0, limit).delay(animationDelay).slideDown(animationDuration, function () {
+              itemsHidden = $(_this).closest('.pager-load-more').parent().find('.content__item:hidden');
+
+              if (itemsHidden.length === 0) {
+                $(_this).css('display', 'none');
+              }
+            });
           });
         });
       }

@@ -14,7 +14,7 @@ use Drupal\entity_usage\EntityUsageTrackBase;
 use Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Path\PathValidatorInterface;
-use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 
 /**
  * Tracks usage of entities related in Layout Builder layouts.
@@ -58,10 +58,10 @@ class LayoutBuilder extends EntityUsageTrackBase {
    *   Block manager.
    * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
    *   The Drupal Path Validator service.
-   * @param \Drupal\Core\StreamWrapper\PublicStream $public_stream
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperInterface $public_stream
    *   The Public Stream service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityUsageInterface $usage_service, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, EntityRepositoryInterface $entity_repository, BlockManagerInterface $blockManager, PathValidatorInterface $path_validator, PublicStream $public_stream) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityUsageInterface $usage_service, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, EntityRepositoryInterface $entity_repository, BlockManagerInterface $blockManager, PathValidatorInterface $path_validator, StreamWrapperInterface $public_stream) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $usage_service, $entity_type_manager, $entity_field_manager, $config_factory, $entity_repository, $path_validator, $public_stream);
     $this->blockManager = $blockManager;
   }

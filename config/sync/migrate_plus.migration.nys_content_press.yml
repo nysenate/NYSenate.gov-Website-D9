@@ -46,10 +46,14 @@ process:
     -
       plugin: default_value
       default_value: press_release
-  body:
+  body/value:
     -
-      plugin: get
-      source: body
+      plugin: transform_embed_media
+      source: body/0/value
+  body/format:
+    -
+      plugin: default_value
+      default_value: full_html
   field_image_main:
     -
       plugin: sub_process

@@ -11,3 +11,10 @@ nys_dashboard.committees:
     _controller: '\Drupal\nys_dashboard\Controller\DashboardController::committees'
   requirements:
     _permission: 'access content'
+
+nys_dashboard.petitions:
+  path: '/users/{user_id}/dashboard/petitions'
+  defaults:
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::petitions'
+  requirements:
+    _permission: 'access content'

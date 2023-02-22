@@ -32,6 +32,10 @@ process:
     -
       plugin: location_fax_to_telephone
       source: field_offices
+  field_office_hours:
+    -
+      plugin: location_contact_to_contact
+      source: field_offices
 destination:
   plugin: 'entity_reference_revisions:paragraph'
   default_bundle: office_locations

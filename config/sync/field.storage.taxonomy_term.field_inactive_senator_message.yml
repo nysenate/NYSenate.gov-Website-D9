@@ -1,0 +1,25 @@
+uuid: 3a8f6b80-9acc-43a8-ac19-55c9d31755ff
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - taxonomy
+third_party_settings:
+  field_permissions:
+    permission_type: custom
+id: taxonomy_term.field_inactive_senator_message
+field_name: field_inactive_senator_message
+entity_type: taxonomy_term
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

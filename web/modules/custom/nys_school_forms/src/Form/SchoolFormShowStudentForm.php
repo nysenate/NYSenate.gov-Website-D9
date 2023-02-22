@@ -138,7 +138,6 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-
     return \Drupal::request()->headers->get('referer');
   }
 
@@ -157,6 +156,12 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
     if (empty($this->files)) {
       return new RedirectResponse($this->getCancelUrl());
     }
+    $from_referrer = $this->getCancelUrl();
+    $form['field_referrer'] = [
+      '#type' => 'hidden',
+      '#title' => $this->t('Form Referrer'),
+      '#default_value' => $from_referrer,
+    ];
 
     $form['files'] = [
       '#theme' => 'item_list',
@@ -173,18 +178,15 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('confirm') && !empty($this->files)) {
       $count = count($this->files);
-      $webform_id = '';
       foreach ($this->files as $file) {
         if ($file instanceof FileInterface) {
           $query = \Drupal::database()->select('webform_submission_data')
             ->fields('webform_submission_data', ['sid'])
-            ->fields('webform_submission_data', ['webform_id'])
             ->condition('value', $file->get('fid')->value)
             ->distinct();
 
-          $sids = $query->execute()->fetchAll();
-          $sid = $sids[0]->sid;
-          $webform_id = $sids[0]->webform_id;
+          $sids = $query->execute()->fetchCol();
+          $sid = $sids[0];
           if (!empty($sid)) {
             $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
             $entity_id = $submission->getSourceEntity();
@@ -212,28 +214,16 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
               $this->messenger()->addMessage($this->stringTranslation->formatPlural($count,
                 '1 file does not exist in the file system. Cannot show student submission file.',
                 'A file you selected do not exits in the file system. Cannot show student submission file.'));
-              if ($webform_id == 'school_form_thanksgiving') {
-                $url = Url::fromRoute('nys_school_forms.school_forms_thanksgiving', [], []);
-                $form_state->setRedirectUrl($url);
-              }
-              elseif ($webform_id == 'school_form_earth_day') {
-                $url = Url::fromRoute('nys_school_forms.school_forms_earth_day', [], []);
-                $form_state->setRedirectUrl($url);
-              }
+              $url = Url::fromUri($form_state->getValue('field_referrer'));
+              $form_state->setRedirectUrl($url);
             }
           }
         }
         $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->delete($this->currentUser->id());
         $this->logger('School Forms')->notice('@count student submissions have been moved to public access.', ['@count' => $count]);
         $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Show 1 submissions.', 'Show @count student submissions.'));
-        if ($webform_id == 'school_form_thanksgiving') {
-          $url = Url::fromRoute('nys_school_forms.school_forms_thanksgiving', [], []);
-          $form_state->setRedirectUrl($url);
-        }
-        elseif ($webform_id == 'school_form_earth_day') {
-          $url = Url::fromRoute('nys_school_forms.school_forms_earth_day', [], []);
-          $form_state->setRedirectUrl($url);
-        }
+        $url = Url::fromUri($form_state->getValue('field_referrer'));
+        $form_state->setRedirectUrl($url);
       }
     }
   }

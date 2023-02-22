@@ -353,7 +353,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
           ]),
           'submission' => new FormattableMarkup('<strong>@student_name</strong> <br> @type <br> <a href="@submission">@file_name</a> <br> Show status: @show_status', [
             '@student_name' => $result['student']['student_name'],
-            '@type' => $submission_types[$result['student']['submission_type']],
+            '@type' => $submission_types[$result['student']['submission_type'] ?? NULL] ?? NULL,
             '@submission' => $file_url,
             '@file_name' => $file->getFilename(),
             '@show_status' => $show_status,

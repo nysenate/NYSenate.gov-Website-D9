@@ -101,14 +101,12 @@ elements: |-
           '#sanitize': true
           '#button': true
           '#button__title': 'Select file to add'
-          '#upload_location': 
+          '#upload_location': null
         show_student:
           '#type': radios
-          '#options':
-            - 'NO'
-            - 'YES'
-          '#default_value': No
+          '#options': yes_no
           '#title': 'Show Student?'
+          '#default_value': No
           '#private': true
   actions:
     '#type': webform_actions

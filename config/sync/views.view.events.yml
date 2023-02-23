@@ -41,7 +41,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: Events
+      title: 'Statewide Senate Events Calendar'
       fields:
         title:
           id: title
@@ -1507,6 +1507,7 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
+      use_ajax: false
       header: {  }
       footer: {  }
       display_extenders: {  }
@@ -1625,6 +1626,91 @@ display:
         - 'config:field.storage.node.field_teleconference_id_number'
         - 'config:field.storage.node.field_teleconference_number'
         - 'config:field.storage.node.field_video_status'
+  month_block:
+    id: month_block
+    display_title: 'Month Block'
+    display_plugin: block
+    position: 1
+    display_options:
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: full_html
+          bef:
+            general:
+              autosubmit: true
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              type:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Type'
+                  collapsible: false
+                  is_secondary: false
+              field_committee_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Committee'
+                  collapsible: false
+                  is_secondary: false
+              field_senator_multiref_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Senator'
+                  collapsible: false
+                  is_secondary: false
+              field_date_range_value:
+                plugin_id: bef_datepicker
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  is_secondary: false
+      defaults:
+        use_ajax: false
+        exposed_form: false
+      use_ajax: true
+      display_description: ''
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.field_date_range'
+        - 'config:field.storage.node.field_event_online_link'
+        - 'config:field.storage.node.field_event_place'
+        - 'config:field.storage.node.field_meeting_location'
+        - 'config:field.storage.node.field_senator_multiref'
+        - 'config:field.storage.node.field_teleconference_id_number'
+        - 'config:field.storage.node.field_teleconference_number'
+        - 'config:field.storage.node.field_video_status'
   page_1:
     id: page_1
     display_title: 'Day(Default page)'
@@ -1702,6 +1788,91 @@ display:
       display_description: ''
       display_extenders: {  }
       path: events/week
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.field_date_range'
+        - 'config:field.storage.node.field_event_online_link'
+        - 'config:field.storage.node.field_event_place'
+        - 'config:field.storage.node.field_meeting_location'
+        - 'config:field.storage.node.field_senator_multiref'
+        - 'config:field.storage.node.field_teleconference_id_number'
+        - 'config:field.storage.node.field_teleconference_number'
+        - 'config:field.storage.node.field_video_status'
+  week_block:
+    id: week_block
+    display_title: 'Week Block'
+    display_plugin: block
+    position: 1
+    display_options:
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: full_html
+          bef:
+            general:
+              autosubmit: true
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              type:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Type'
+                  collapsible: false
+                  is_secondary: false
+              field_committee_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Committee'
+                  collapsible: false
+                  is_secondary: false
+              field_senator_multiref_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Senator'
+                  collapsible: false
+                  is_secondary: false
+              field_date_range_value:
+                plugin_id: bef_datepicker
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  is_secondary: false
+      defaults:
+        use_ajax: false
+        exposed_form: false
+      use_ajax: true
+      display_description: ''
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:

@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormBuilder;
 use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Builds a Form for search school form submissions.
@@ -95,6 +96,13 @@ class SchoolFormSearchForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
    * Class constructor.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request
@@ -117,6 +125,8 @@ class SchoolFormSearchForm extends FormBase {
    *   The StreamWrapperManager.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   Current route match.
    */
   public function __construct(
     RequestStack $request,
@@ -128,7 +138,8 @@ class SchoolFormSearchForm extends FormBase {
     FormBuilder $form_builder,
     AliasManagerInterface $alias_manager,
     StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager) {
+    EntityTypeManager $entityTypeManager,
+    RouteMatchInterface $current_route_match) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -139,6 +150,7 @@ class SchoolFormSearchForm extends FormBase {
     $this->aliasManager = $alias_manager;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->entityTypeManager = $entityTypeManager;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -155,7 +167,8 @@ class SchoolFormSearchForm extends FormBase {
       $container->get('form_builder'),
       $container->get('path_alias.manager'),
       $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('current_route_match')
     );
   }
 
@@ -253,7 +266,7 @@ class SchoolFormSearchForm extends FormBase {
     $order = $form_state->getValue('order');
     $from_date = $form_state->getValue('from_date');
     $to_date = $form_state->getValue('to_date');
-    $url = Url::fromRoute('nys_school_forms.school_forms', [], [
+    $url = Url::fromRoute($this->currentRouteMatch->getRouteName(), [], [
       'query' => [
         'senator' => $senator,
         'school' => $school,

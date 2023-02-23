@@ -104,11 +104,9 @@ elements: |-
           '#upload_location': 
         show_student:
           '#type': radios
-          '#options':
-            - 'NO'
-            - 'YES'
-          '#default_value': No
+          '#options': yes_no
           '#title': 'Show Student?'
+          '#default_value': No
           '#private': true
   actions:
     '#type': webform_actions

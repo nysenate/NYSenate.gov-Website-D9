@@ -16,35 +16,16 @@
     attach: function (context) {
       const $this = this;
       const sidebarToggle = $('.sidebar-toggle', context);
+      const header = $('#js-sticky--dashboard');
 
-      sidebarToggle.once('sidebarToggle').each(function () {
-        const sidebarToggle = $(this);
-
-        sidebarToggle.click(function () {
-          const sidebar = $('.sidebar');
-          const body = $('body');
-
-          if (sidebar.hasClass('show')) {
-            sidebar.removeClass('show');
-            body.removeClass('.sidebar-open');
-            $(this).removeClass('show');
-          }
-          else {
-            sidebar.addClass('show');
-            body.addClass('.sidebar-open');
-            $(this).addClass('show');
-          }
-        });
-        $(window).resize($this.debounce(() => $this.onResize(sidebarToggle)));
-
-        $this.onResize(sidebarToggle);
-      });
+      sidebarToggle.once('sidebarToggle').each($this.sidebarToggleInit);
+      $(window).resize($this.debounce(() => $this.onResize(sidebarToggle)));
+      $this.onResize(header);
     },
-    onResize: function (sidebarToggle) {
-      const sidebarToggleBottom =
-        sidebarToggle.offset().top + sidebarToggle.outerHeight();
+    onResize: function (header) {
+      const headerBottom = header.offset().top + header.outerHeight();
       const sidebar = $('.sidebar');
-      sidebar.css('--top', `${sidebarToggleBottom}px`);
+      sidebar.css('--top', `${headerBottom}px`);
     },
     debounce: function (func, timeout = 300) {
       let timer;
@@ -54,6 +35,27 @@
           func.apply(this, args);
         }, timeout);
       };
+    },
+    sidebarToggleInit: function () {
+      const sidebarToggle = $(this);
+
+      sidebarToggle.click(function (e) {
+        e.stopImmediatePropagation();
+
+        const sidebar = $('.sidebar');
+        const body = $('body');
+
+        if (sidebar.hasClass('show')) {
+          sidebar.removeClass('show');
+          body.removeClass('sidebar-open');
+          $(this).removeClass('show');
+        }
+        else {
+          sidebar.addClass('show');
+          body.addClass('sidebar-open');
+          $(this).addClass('show');
+        }
+      });
     }
   };
 })(document, Drupal, jQuery);

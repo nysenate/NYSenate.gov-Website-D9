@@ -53,10 +53,18 @@
     <div class="c-list--header">
       <h2 class="c-container--title">Updates on Bills You're Following</h2>
     </div>
+  {% elseif view.current_display == 'constituent_all_committees_updates' %}
+    <div class="c-block c-container c-container--const-issues-follow">
+      <div class="c-list--header">
+        <h2 class="c-container--title">Updates on Committees You're Following</h2>
+      </div>
+    </div>
   {% else %}
     {% if header %}
-      <div class="view-header">
-        {{ header }}
+      <div class="c-block c-container c-container--const-issues-follow">
+        <div class="c-list--header">
+          {{ header }}
+        </div>
       </div>
     {% endif %}
   {% endif %}

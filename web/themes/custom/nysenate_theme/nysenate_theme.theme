@@ -5,6 +5,7 @@
  * Functions to support theming in the rain_theme theme.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
@@ -23,6 +24,8 @@ use Drupal\Core\Template\Attribute;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\address\Plugin\Field\FieldType\AddressItem;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
@@ -758,7 +761,12 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
 
   foreach ($result as $node) {
     $node = $node->_entity;
-    if ($node instanceof NodeInterface && $node->bundle() == 'session') {
+    $streaming = [
+      'session',
+      'public_hearing',
+    ];
+
+    if ($node instanceof NodeInterface && in_array($node->bundle(), $streaming)) {
       $date = NULL;
       if (isset($node->field_date_range)) {
         $date_range = $node->field_date_range;
@@ -771,7 +779,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
         }
       }
 
-      if (!$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
+      if ($node->hasField('field_session_calendars') && !$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
         $url_calendar = $node->field_session_calendars->entity->toUrl()->toString();
       }
 
@@ -1540,6 +1548,87 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $variables['news'] = $news;
 
   }
+
+  // Search Global page.
+  if ($view->id() == 'core_search' && $view->current_display == 'page_search') {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $results = $view->result;
+    $search_result = [];
+    foreach ($results as $item) {
+      if (isset($item->_entity)) {
+        $entity = $item->_entity;
+        $bundle = $entity->bundle();
+        $type = '';
+        $title = '';
+        if ($entity instanceof NodeInterface) {
+          $type = $entity_type_manager->getStorage('node_type')->load($bundle);
+          $title = $entity->label();
+        }
+        elseif ($entity instanceof TermInterface) {
+          $type = $entity_type_manager->getStorage('taxonomy_vocabulary')->load($bundle);
+          $title = $entity->getName();
+        }
+
+        if ($type instanceof EntityInterface) {
+          $topics = [];
+          $date = '';
+          $senator_multiref = [];
+
+          if ($entity->hasField('field_issues') && !$entity->field_issues->isEmpty()) {
+            $issues = $entity->field_issues->getValue();
+            foreach ($issues as $issue) {
+              $term = Term::load($issue['target_id']);
+              if (!empty($term)) {
+                $topics[] = [
+                  'name' => $term->label(),
+                  'url' => $term->toUrl(),
+                ];
+              }
+            }
+          }
+          if ($entity->hasField('field_date') && !$entity->field_date->isEmpty()) {
+            $date = $entity->field_date->first()->value;
+            $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
+          }
+
+          if ($entity->hasField('field_senator_multiref') && !$entity->field_senator_multiref->isEmpty()) {
+            $senator_list = $entity->field_senator_multiref->getValue();
+            foreach ($senator_list as $senator) {
+              $term = Term::load($senator['target_id']);
+              $senator_multiref = [
+                'text' => $term->label(),
+                'url' => $term->toUrl(),
+                'type' => 'Senator ',
+              ];
+            }
+          }
+
+          $search_result[] = [
+            'title' => $type->label(),
+            'topics' => $topics,
+            'description' => [
+              'text' => $title,
+              'url' => $entity->toUrl(),
+            ],
+            'date' => $date,
+            'issue_type' => $senator_multiref,
+          ];
+        }
+      }
+    }
+    $variables['search_result'] = $search_result;
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__explore_issues_tabs__constituents_issues_followed(&$variables) {
+  $variables['card_list_title'] = "Issues You're Following";
+  $variables['explore_link'] = [
+    'text' => 'Explore all issues',
+    'url' => '/explore-issues',
+  ];
 }
 
 /**
@@ -1808,7 +1897,7 @@ function nysenate_theme_preprocess_semanticviews_row__committee_content__news(&$
 /**
  * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
  */
-function nysenate_theme_preprocess_semanticviews_row__constituent_updates__constituent_all_issue_updates(&$variables) {
+function nysenate_theme_preprocess_semanticviews_row__constituent_updates(&$variables) {
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $node = $variables['row']->_entity;
 
@@ -1839,6 +1928,7 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
         $variables['article']['issue_type'] = [
           'text' => $committee->getName(),
           'url' => $committee->toUrl()->toString(),
+          'type' => 'In ',
         ];
       }
     }
@@ -1854,10 +1944,12 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
     $node->field_issues->entity;
     foreach ($node->field_issues as $value) {
       $term = $value->entity;
-      $issues[] = [
-        'name' => $term->getName(),
-        'url' => $term->toUrl()->toString(),
-      ];
+      if ($term) {
+        $issues[] = [
+          'name' => $term->getName(),
+          'url' => $term->toUrl()->toString(),
+        ];
+      }
     }
     $variables['article']['topics'] = $issues;
   }
@@ -1901,36 +1993,6 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates__const
   if ($node->hasField('field_meeting_location') && !$node->get('field_meeting_location')->isEmpty()) {
     $variables['article']['location'] = $node->field_meeting_location->value;
   }
-}
-
-/**
- * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
- */
-function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__constituents_issues_followed(&$variables) {
-  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-  $flag_link_service = \Drupal::service('flag.link_builder');
-
-  $issue_cards = [];
-  foreach ($variables['rows'] as $row) {
-    $term = $row['content']['#row']->_entity;
-    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
-
-    $issue_cards[] = [
-      'issue_link' => [
-        'text' => $term->label(),
-        'url' => $term->toUrl()->toString(),
-      ],
-      'issue_id' => $term->id(),
-      'flag_follow_issue' => $flag_link,
-    ];
-  }
-
-  $variables['issue_cards'] = $issue_cards;
-  $variables['card_list_title'] = "Issues You're Following";
-  $variables['explore_link'] = [
-    'text' => 'Explore all issues',
-    'url' => '/explore-issues',
-  ];
 }
 
 /**
@@ -2093,6 +2155,144 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__video(&$var
 }
 
 /**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__constituent_committees_following(&$variables) {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $flag_link_service = \Drupal::service('flag.link_builder');
+
+  $committees = [];
+  foreach ($variables['rows'] as $row) {
+    $term = $row['content']['#row']->_entity;
+    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+
+    $committees[] = [
+      'committee_link' => [
+        'text' => $term->label(),
+        'url' => $term->toUrl()->toString(),
+      ],
+      'committee_id' => $term->id(),
+      'flag_follow_committee' => $flag_link,
+    ];
+  }
+
+  $variables['committees'] = $committees;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_and_questionnaires(&$variables) {
+  $current_display = $variables['view']->current_display;
+
+  $petitions = [];
+  foreach ($variables['rows'] as $row) {
+    $node = $row['content']['#row']->_entity;
+    $url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+
+    $issues = [];
+    $tids = [];
+    if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+      $node->field_issues->entity;
+      foreach ($node->field_issues as $key => $value) {
+        $term = $value->entity;
+
+        $issues[] = [
+          'name' => $term->getName(),
+          'url' => $term->toUrl()->toString(),
+        ];
+        $tids[] = '&f[' . ($key + 1) . ']=im_field_issues%3A' . $term->id();
+      }
+    }
+
+    if ($current_display == 'constituent_petitions_signed') {
+      $explore_link = $tids ? '/search/global/?f[0]=bundle%3Apetition' . implode('', $tids) : '';
+
+      $start_date = $row['content']['#row']->flagging_node_field_data_created;
+      $timestamp = \Drupal::service('date.formatter')->format(
+        $start_date, 'custom', 'F d, Y'
+      );
+    }
+    else {
+      $explore_link = $tids ? '/search/global/?f[0]=bundle%questionnaire' . implode('', $tids) : '';
+
+      $start_date = $row['content']['#row']->field_timestamp;
+      $timestamp = \Drupal::service('date.formatter')->format(
+        $start_date, 'custom', 'F d, Y'
+      );
+    }
+
+    $author = [];
+    if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+      $senator = $node->get('field_senator_multiref')->first()->entity;
+      $author = [
+        'name' => $senator->name->value,
+        'url' => $senator->toUrl()->toString(),
+      ];
+    }
+
+    $petition_is_active = 0;
+    $date = new DrupalDateTime();
+    $date->setTimezone(new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+    $date = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+
+    $start_time = NULL;
+    $end_time = NULL;
+    if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+      $start_time = $node->field_date->value;
+    }
+    if ($node->hasField('field_expiration_date') && !$node->get('field_expiration_date')->isEmpty()) {
+      $end_time = $node->field_expiration_date->value;
+    }
+    if ((($start_time < $date && $end_time > $date) ||
+      ($start_time < $date && is_null($end_time)) ||
+      ($start_time == $end_time)) && $node->status->value == 1) {
+      $petition_is_active = 1;
+    }
+
+    $petitions[] = [
+      'title' => $node->getTitle(),
+      'url' => $node->toUrl()->toString(),
+      'issues' => $issues,
+      'author' => $author,
+      'timestamp' => $timestamp,
+      'petition_is_active' => $petition_is_active,
+      'fb_url' => 'https://www.facebook.com/sharer/sharer.php?u=' . $url,
+      'twitter_url' => 'http://twitter.com/share?url=' . $url . '&text=' . $node->getTitle(),
+      'explore_link' => $explore_link,
+    ];
+  }
+
+  $variables['current_display'] = $current_display;
+  $variables['petitions'] = $petitions;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__constituents_issues_followed(&$variables) {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $flag_link_service = \Drupal::service('flag.link_builder');
+
+  $issue_cards = [];
+  foreach ($variables['rows'] as $row) {
+    $term = $row['content']['#row']->_entity;
+    $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
+
+    $issue_cards[] = [
+      'issue_link' => [
+        'text' => $term->label(),
+        'url' => $term->toUrl()->toString(),
+      ],
+      'issue_id' => $term->id(),
+      'flag_follow_issue' => $flag_link,
+    ];
+  }
+
+  $variables['issue_cards'] = $issue_cards;
+}
+
+/**
  * Implements hook_preprocess_page__node__TYPE().
  */
 function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
@@ -2244,11 +2444,10 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
   if ($is_out_of_state) {
     $title = t('Contact the Senate about this issue');
     $link = [
-      'url' => '/contact',
+      'url' => '/form/contact',
       'text' => t('Contact Senate'),
     ];
   }
-
   else {
     $title = t('Contact your Senator about this issue');
     $link = [
@@ -2668,36 +2867,36 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
       /** @var \Drupal\paragraphs\Entity\Paragraph $votes */
       $votes = $paragraph_storage->load($item->target_id);
 
-      $aye_members = [];
-      if ($votes->hasField('field_ol_aye_members') && !empty($votes->field_ol_aye_members)) {
-        foreach ($votes->field_ol_aye_members as $aye_key => $aye_item) {
-          if (!is_numeric($aye_key)) {
-            continue;
+      $member_keys = [
+        'field_ol_aye_members' => 'aye_members',
+        'field_ol_nay_members' => 'nay_members',
+        'field_ol_aye_wr_members' => 'aye_wr_members',
+        'field_ol_absent_members' => 'absent_members',
+        'field_ol_excused_members' => 'excused_members',
+        'field_ol_abstained_members' => 'abstained_members',
+      ];
+
+      $all_members = [];
+      foreach ($member_keys as $index => $key) {
+        if ($votes->hasField($index) && !empty($votes->$index)) {
+          $members = [];
+          foreach ($votes->$index as $vote_key => $vote_item) {
+            if (!is_numeric($vote_key)) {
+              continue;
+            }
+
+            $term = $term_storage->load($vote_item->target_id);
+            if ($term) {
+              $members[] = [
+                'name' => $term->field_senator_name->family ?? '',
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
           }
 
-          $term = $term_storage->load($aye_item->target_id);
-          if ($term) {
-            $aye_members[] = [
-              'name' => $term->field_senator_name->family ?? '',
-              'url' => $term->toUrl()->toString(),
-            ];
-          }
-        }
-      }
-
-      $nay_members = [];
-      if ($votes->hasField('field_ol_nay_members') && !empty($votes->field_ol_nay_members)) {
-        foreach ($votes->field_ol_nay_members as $nay_key => $nay_item) {
-          if (!is_numeric($nay_key)) {
-            continue;
-          }
-
-          $term = $term_storage->load($nay_item->target_id);
-          if ($term) {
-            $nay_members[] = [
-              'name' => $term->field_senator_name->family ?? '',
-              'url' => $term->toUrl()->toString(),
-            ];
+          if (!empty($members)) {
+            asort($members);
+            $all_members[$key] = $members;
           }
         }
       }
@@ -2717,8 +2916,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
         'absent_count' => $votes->field_ol_absent_count->value ?? 0,
         'excused_count' => $votes->field_ol_excused_count->value ?? 0,
         'abstained_count' => $votes->field_ol_abstained_count->value ?? 0,
-        'aye_members' => $aye_members,
-        'nay_members' => $nay_members,
+        'all_members' => $all_members,
         'type' => ucwords(strtolower(trim($type))),
         'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
       ];
@@ -3375,9 +3573,9 @@ function nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date,
  */
 function nysenate_theme_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $node = $variables['elements']['#node'];
 
   if ($variables['view_mode'] == 'upcoming_event') {
-    $node = $variables['elements']['#node'];
     if ($node->bundle() === 'event') {
       $date = new \Datetime($node->field_date_range->value, new DateTimeZone('UTC'));
       $date->setTimezone(new DateTimeZone('America/New_York'));
@@ -3414,6 +3612,8 @@ function nysenate_theme_preprocess_node(&$variables) {
     }
   }
   $variables['issues'] = $issues;
+
+  $variables['absolute_url'] = $node->toUrl()->setAbsolute()->toString();
 }
 
 /**
@@ -3704,6 +3904,30 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
     }
   }
 
+  if ($view->id() == 'constituent_petitions_and_questionnaires' && $view->current_display == 'constituent_questionnaires_submitted') {
+    $results = $view->result;
+    foreach ($results as $index => $row) {
+      $node = $row->_entity;
+      $nid = $row->nid ?? NULL;
+
+      if (\Drupal::currentUser()->id() && isset($node->webform[0]->target_id)) {
+        $result = \Drupal::database()
+          ->select('webform_submission', 'w')
+          ->fields('w', ['completed'])
+          ->condition('uid', \Drupal::currentUser()->id())
+          ->condition('entity_type', 'node')
+          ->condition('entity_id', $nid)
+          ->condition('webform_id', $node->webform[0]->target_id)
+          ->orderBy('sid', 'DESC')
+          ->execute()
+          ->fetchField();
+
+        /* @phpstan-ignore-next-line */
+        $view->result[$index]->field_timestamp = $result;
+      }
+    }
+  }
+
 }
 
 /**
@@ -3825,8 +4049,32 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
-  $variables['dashboard_link'] = '/user/' . \Drupal::currentUser()->id();
+  $variables['dashboard_link'] = '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues';
   $variables['edit_account_link'] = '/users/' . \Drupal::currentUser()->id() . '/edit';
+  $variables['sidebar'] = [
+    'links' => [
+      [
+        'text' => 'Inbox',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox',
+      ],
+      [
+        'text' => 'Bills',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/bills',
+      ],
+      [
+        'text' => 'Issues',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues',
+      ],
+      [
+        'text' => 'Committees',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/committees',
+      ],
+      [
+        'text' => 'Petitions & Questionnaires',
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/petitions',
+      ],
+    ],
+  ];
 }
 
 /**
@@ -4172,46 +4420,31 @@ function nysenate_theme_preprocess_tweets(&$variables) {
 /**
  * Implements hook_preprocess_webform_confirmation().
  */
-function nysenate_theme_preprocess_webform_confirmation__school_form(&$variables) {
-  $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
-
-  $school_id = $variables['webform_submission']->getData()['school_name'];
-  $school = \Drupal::entityTypeManager()->getStorage('node')->load($school_id);
-  $grades = $webform->getElementsDecoded()['grade']['#options'];
-  $grade = $variables['webform_submission']->getData()['grade'];
-  $submission_types = $webform->getElementsDecoded()['submissions']['attach_your_submission']['#element']['submission_type']['#options'];
-
-  $variables['school_name'] = $school->title->value ?? '';
-  $variables['contact_name'] = $variables['webform_submission']->getData()['contact_name'] ?? '';
-  $variables['contact_email'] = $variables['webform_submission']->getData()['contact_email'] ?? '';
-  $variables['grade'] = $grades[$grade] ?? '';
-
+function nysenate_theme_preprocess_webform_confirmation(&$variables) {
   $submissions = [];
-  $student_submissions = $variables['webform_submission']->getData()['attach_your_submission'] ?? [];
+  if ($variables['webform']->id() === 'school_form_thanksgiving' || $variables['webform']->id() === 'school_form_earth_day') {
+    $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
 
-  foreach ($student_submissions as $submission) {
-    $file = \Drupal::entityTypeManager()->getStorage('file')->load($submission['student_submission']);
-    $file_uri = $file->getFileUri();
-    $file_url = \Drupal::service('file_url_generator')->generateString($file_uri);
-    $image = \Drupal::service('image.factory')->get($file_uri);
+    $school_id = $variables['webform_submission']->getData()['school_name'];
+    $school = \Drupal::entityTypeManager()->getStorage('node')->load($school_id);
+    $grades = $webform->getElementsDecoded()['grade']['#options'];
+    $grade = $variables['webform_submission']->getData()['grade'];
+    $submission_types = $webform->getElementsDecoded()['submissions']['attach_your_submission']['#element']['submission_type']['#options'] ?? NULL;
 
-    if ($image->isValid()) {
+    $variables['school_name'] = $school->title->value ?? '';
+    $variables['contact_name'] = $variables['webform_submission']->getData()['contact_name'] ?? '';
+    $variables['contact_email'] = $variables['webform_submission']->getData()['contact_email'] ?? '';
+    $variables['grade'] = $grades[$grade] ?? '';
+
+    $student_submissions = $variables['webform_submission']->getData()['attach_your_submission'] ?? [];
+
+    foreach ($student_submissions as $submission) {
+      $file = \Drupal::entityTypeManager()->getStorage('file')->load($submission['student_submission']);
+      $file_name = $file->getFilename();
       $submissions[] = [
         'students_name' => $submission['student_name'],
-        'category' => $submission_types[$submission['submission_type']],
-        'attachment' => [
-          '#markup' => '<img src="' . $file_url . '" />',
-        ],
-      ];
-    }
-    else {
-      $link = Link::fromTextAndUrl($file->filename->value, Url::fromUserInput($file_url));
-      $submissions[] = [
-        'students_name' => $submission['student_name'],
-        'category' => $submission_types[$submission['submission_type']],
-        'file' => [
-          'attachment' => $link,
-        ],
+        'category' => $submission_types[$submission['submission_type'] ?? NULL] ?? NULL,
+        'attachment' => $file_name,
       ];
     }
   }

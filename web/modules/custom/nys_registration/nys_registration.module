@@ -15,3 +15,20 @@ function nys_registration_entity_type_alter(array &$entity_types): void {
     $user->setFormClass('register', 'Drupal\nys_registration\Form\RegisterForm');
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function nys_registration_theme($existing, $type, $theme, $path) {
+  return [
+    'register_form_step2' => [
+      'render element' => 'form',
+    ],
+    'register_form_step3' => [
+      'render element' => 'form',
+    ],
+    'register_form_step2_not_found' => [
+      'render element' => 'form',
+    ],
+  ];
+}

@@ -42,10 +42,14 @@ process:
     -
       plugin: get
       source: timestamp
-  body:
+  body/value:
     -
-      plugin: get
-      source: body
+      plugin: transform_embed_media
+      source: body/0/value
+  body/format:
+    -
+      plugin: default_value
+      default_value: full_html
   field_attachment:
     -
       plugin: sub_process

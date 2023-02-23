@@ -20,61 +20,63 @@
 
   <div class="c-meeting-detail--overview">
     <div class="c-block">
-      <p class="c-meeting-detail--date">
-        <span class="c-meeting-date--num">{{ date_value.day }}</span>
-        <span class="c-meeting-date--month">{{ date_value.month }}</span>
-        <span class="c-meeting-date--year">{{ date_value.year }}</span>
-      </p>
-
-      <div class="c-meeting-detail--info">
-        <h1 class="c-meeting-detail--title">
-          {{ title }}
-        </h1>
-        {% if event_place == 'online' %}
-          {% if event_online_link %}
-            <div>
-              <a class="c-meeting-detail--location-link" href="{{ event_online_link }}">
-                Online Meeting
-              </a>
-            </div>
-          {% elseif content.field_meeting_location.0 %}
-            <div class="c-meeting-detail--location-link">
-              Online Meeting
-            </div>
-          {% endif %}
-        {% elseif event_place == 'cap' %}
-          <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank">
-            NYS Capitol Building
-          </a>
-        {% elseif event_place == 'lob' %}
-          <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/Legislative+Office+Building/@42.6526202,-73.7614498,17z/data=!3m1!4b1!4m5!3m4!1s0x89de0a24d3a304b5:0x1012cb31c839dfe9!8m2!3d42.6526202!4d-73.7592611?hl=en" title="Legislative Office Building" target="_blank">
-            Legislative Office Building
-          </a>
-        {% endif %}
-
-        <div class="c-meeting-detail--location">
-          {% if content.field_meeting_location.0 %}
-            {{ content.field_meeting_location.0 }}
-          {% endif %}
-        </div>
-
-        <p class="c-meeting-detail--time">
-          {{ date_value.from_time }}
-          {% if date_value.from_time != date_value.to_time %}
-            to
-            {{ date_value.to_time }}
-          {% endif %}
-          {% if video_status.key != 'streaming_redirect' %}
-            <span class="c-meeting-video--status icon-before__youtube">
-              {{ video_status.value }}
-            </span>
-          {% endif %}
+      <div class="c-meeting-detail--info-container">
+        <p class="c-meeting-detail--date">
+          <span class="c-meeting-date--num">{{ date_value.day }}</span>
+          <span class="c-meeting-date--month">{{ date_value.month }}</span>
+          <span class="c-meeting-date--year">{{ date_value.year }}</span>
         </p>
-        {% if calendar_links %}
-          {% include '@nysenate_theme/add-to-calendar/add-to-calendar.twig' with {
+
+        <div class="c-meeting-detail--info">
+          <h1 class="c-meeting-detail--title">
+            {{ title }}
+          </h1>
+          {% if event_place == 'online' %}
+            {% if event_online_link %}
+              <div>
+                <a class="c-meeting-detail--location-link" href="{{ event_online_link }}">
+                  Online Meeting
+                </a>
+              </div>
+            {% elseif content.field_meeting_location.0 %}
+              <div class="c-meeting-detail--location-link">
+                Online Meeting
+              </div>
+            {% endif %}
+          {% elseif event_place == 'cap' %}
+            <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank">
+              NYS Capitol Building
+            </a>
+          {% elseif event_place == 'lob' %}
+            <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/Legislative+Office+Building/@42.6526202,-73.7614498,17z/data=!3m1!4b1!4m5!3m4!1s0x89de0a24d3a304b5:0x1012cb31c839dfe9!8m2!3d42.6526202!4d-73.7592611?hl=en" title="Legislative Office Building" target="_blank">
+              Legislative Office Building
+            </a>
+          {% endif %}
+
+          <div class="c-meeting-detail--location">
+            {% if content.field_meeting_location.0 %}
+              {{ content.field_meeting_location.0 }}
+            {% endif %}
+          </div>
+
+          <p class="c-meeting-detail--time">
+            {{ date_value.from_time }}
+            {% if date_value.from_time != date_value.to_time %}
+              to
+              {{ date_value.to_time }}
+            {% endif %}
+            {% if video_status.key != 'streaming_redirect' and content.field_yt.0 %}
+              <span class="c-meeting-video--status icon-before__youtube">
+                {{ video_status.value }}
+              </span>
+            {% endif %}
+          </p>
+          {% if calendar_links %}
+            {% include '@nysenate_theme/add-to-calendar/add-to-calendar.twig' with {
             calendar_links: calendar_links
           } only %}
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
       <div class="c-meeting-detail--descript">
         {% if content.body %}

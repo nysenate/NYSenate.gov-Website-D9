@@ -1692,7 +1692,13 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     $view = $variables['view'];
     $display_id = $view->getDisplay();
     $display_id = $display_id->display['id'];
+    $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $display_id;
+  }
+
+  if ($hook == 'views_view_field') {
+    $field = $variables['field'];
+    $suggestions[] = $hook . '__' . $field->field;
   }
 
   if ($hook == 'container' && !empty($variables['element']['submit']['#id'])) {

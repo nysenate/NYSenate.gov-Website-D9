@@ -1529,6 +1529,102 @@ display:
         - 'config:field.storage.node.field_teleconference_id_number'
         - 'config:field.storage.node.field_teleconference_number'
         - 'config:field.storage.node.field_video_status'
+  day_block:
+    id: day_block
+    display_title: 'Day Block'
+    display_plugin: block
+    position: 1
+    display_options:
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: full_html
+          bef:
+            general:
+              autosubmit: true
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              type:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Type'
+                  collapsible: false
+                  is_secondary: false
+              field_committee_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Committee'
+                  collapsible: false
+                  is_secondary: false
+              field_senator_multiref_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|Filter By Senator'
+                  collapsible: false
+                  is_secondary: false
+              field_date_range_value:
+                plugin_id: bef_datepicker
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  is_secondary: false
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options: {  }
+      defaults:
+        use_ajax: false
+        exposed_form: false
+        style: false
+        row: false
+      use_ajax: true
+      display_description: ''
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.field_date_range'
+        - 'config:field.storage.node.field_event_online_link'
+        - 'config:field.storage.node.field_event_place'
+        - 'config:field.storage.node.field_meeting_location'
+        - 'config:field.storage.node.field_senator_multiref'
+        - 'config:field.storage.node.field_teleconference_id_number'
+        - 'config:field.storage.node.field_teleconference_number'
+        - 'config:field.storage.node.field_video_status'
   page_1:
     id: page_1
     display_title: 'Day(Default page)'

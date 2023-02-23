@@ -31,14 +31,92 @@
  * @ingroup themeable
  */
 #}
-<div class="c-event-block c-event-block--list">
+<article class="c-event-block c-event-block--list">
   <div class="c-event-date">
     <span>{{ fields.field_date_range.content }}</span>
     {{ fields.field_date_1.content }}
   </div>
-  <a href="{{ fields.path.content }}"><h3 class="c-event-name">{{ fields.title.content }}</h3></a>
-  <div class="c-event-address">
-    {{ fields.street.content }}<br/>{{ fields.city.content }}, {{ fields.province.content }} {{ fields.postal_code.content }}
+
+  <h3 class="c-event-name">{{ fields.title.content }}</h3>
+
+  {% if fields.senator.content %}
+    <div class="c-senator">
+      {{ fields.senator.content }}
+    </div>
+  {% endif %}
+
+  {% if fields.name.content and (fields.field_event_place.content in ['in_albany', 'in_district']) %}
+    <a class="c-event-location"
+       href="http://maps.google.com/?q={{ fields.street.content }}+{{ fields.city.content }}%2C+{{ fields.province.content }}%2C+{{ fields.postal_code.content }}"
+       target="_blank">
+      <span class="icon-before__circle-pin"></span>{{ fields.name.content }}
+    </a>
+  {% elseif fields.type_1.content == 'Session' %}
+    <a class="c-event-location"
+       href="http://maps.google.com/?q={{ fields.street.content }}+{{ fields.city.content }}%2C+{{ fields.province.content }}%2C+{{ fields.postal_code.content }}"
+       target="_blank">
+      <span class="icon-before__circle-pin"></span>{{ fields.name.content }}
+    </a>
+  {% endif %}
+
+  {% if fields.field_event_place.content == 'online' %}
+    {% if fields.type_1.content == 'Public Hearing' %}
+      {% if fields.field_event_online_link.content %}
+        <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
+          <span class="icon-before__circle-pin"></span><span>Online Hearing</span>
+        </a>
+      {% else %}
+        <div class="c-event-location">
+          <span class="icon-before__circle-pin"></span>
+          <span>Online Hearing</span>
+        </div>
+      {% endif %}
+    {% elseif fields.type_1.content == 'Meeting' %}
+      {% if fields.field_event_online_link.content %}
+        <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
+          <span class="icon-before__circle-pin"></span><span>Online Meeting</span>
+        </a>
+      {% else %}
+        <div class="c-event-location">
+          <span class="icon-before__circle-pin"></span>
+          <span>Online Meeting</span>
+        </div>
+      {% endif %}
+    {% elseif fields.type_1.content == 'Event' %}
+      <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
+        <span class="icon-before__circle-pin"></span><span>Online Event</span>
+      </a>
+    {% endif %}
+  {% elseif fields.field_event_place.content == 'teleconference' %}
+    <a class="c-event-location" href="{{ fields.path.content }}">
+      <span class="icon-before__circle-pin"></span>
+      <span>Teleconference Event</span>
+    </a>
+  {% elseif fields.field_event_place.content == 'cap' %}
+    <a class="c-event-location" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >
+      <span class="icon-before__circle-pin"></span>
+      <span>NYS Capitol Building</span>
+    </a>
+  {% elseif fields.field_event_place.content == 'lob' %}
+    <a class="c-event-location" href="https://www.google.com/maps/place/Legislative+Office+Building/@42.6526202,-73.7614498,17z/data=!3m1!4b1!4m5!3m4!1s0x89de0a24d3a304b5:0x1012cb31c839dfe9!8m2!3d42.6526202!4d-73.7592611?hl=en" title="Legislative Office Building" target="_blank" >
+      <span class="icon-before__circle-pin"></span>
+      <span>Legislative Office Building</span>
+    </a>
+  {% endif %}
+
+  <div class="c-event-time">
+    {% if fields.field_meeting_location.content is not empty %}
+      <div class="c-location">{{ fields.field_meeting_location.content }}</div>
+    {% endif %}
+
+    {% if fields.field_event_place.content not in ['online', 'teleconference'] %}
+      <div class="c-location">
+        {% set city = fields.city.content|replace({' ':''}) %}
+        {% if fields.city.content is not empty %}
+          {{ city }},
+        {% endif %}
+        {{ fields.province.content is not empty ? fields.province.content : '' }}
+      </div>
+    {% endif %}
   </div>
-  <div class="c-event-time">{{ fields.field_date_2.content }}</div>
-</div>
+</article>

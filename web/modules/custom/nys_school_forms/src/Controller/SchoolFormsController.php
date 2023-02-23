@@ -179,7 +179,6 @@ class SchoolFormsController extends ControllerBase {
   public function view() {
     // Fetch, sanitize, and build the query from parameters.
     $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
-    $form_type = $this->sanitizeQuery($this->request->getCurrentRequest()->get('form_type'));
     $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
     $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
     $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
@@ -189,9 +188,9 @@ class SchoolFormsController extends ControllerBase {
     $build = [];
     $build['#theme'] = 'school_forms';
 
-    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
-    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
-    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . urldecode($form_type) . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&from_date=' . urldecode($from_date) . '&to_date=' . urldecode($to_date) . '&sort_by=' . urldecode($sort_by) . '&order=' . urldecode($order);
+    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', urldecode($senator), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
+    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', urldecode($senator), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
+    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&from_date=' . urldecode($from_date) . '&to_date=' . urldecode($to_date) . '&sort_by=' . urldecode($sort_by) . '&order=' . urldecode($order);
     return $build;
   }
 
@@ -216,14 +215,13 @@ class SchoolFormsController extends ControllerBase {
   public function exportCsv() {
     // Fetch, sanitize, and build the query from parameters.
     $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
-    $form_type = $this->sanitizeQuery($this->request->getCurrentRequest()->get('form_type'));
     $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
     $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
     $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
     $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
     $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
     $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
-    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $results = $this->schoolFormsService->getResults($senator, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
     $handle = fopen('php://temp', 'w+');
     fputcsv($handle, [
       'Date submitted',

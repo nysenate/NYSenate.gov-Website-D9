@@ -17,6 +17,13 @@ class ByNumbers extends BlockBase {
   /**
    * {@inheritdoc}
    */
+  public function getCacheMaxAge(): int {
+    return 1800;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     $facts = [];
     $current_year = date('Y');

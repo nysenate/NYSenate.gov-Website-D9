@@ -51,9 +51,9 @@
   {% endif %}
   {{ title_suffix }}
   {% if view.current_display == 'constituent_bills_voted_on' %}
-    <div class="c-list--header">
-      <h2 class="c-container--title">Bills You Are Following</h2>
-    </div>
+    {% include "@nysenate_theme/dashboard-lists/dashboard-lists.twig" with {
+      card_list_title: "Bills You Are Following"
+    } only %}
   {% else %}
     {% if header %}
       <div class="view-header">

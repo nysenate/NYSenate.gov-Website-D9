@@ -391,7 +391,20 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'No messages available.'
+            format: full_html
+          tokenize: false
       sorts:
         created:
           id: created
@@ -690,11 +703,18 @@ display:
           row_class: ''
           default_row_class: true
           columns:
+            views_bulk_operations_bulk_form: views_bulk_operations_bulk_form
             owner: owner
             field_subject: field_subject
             created: created
+            id: id
           default: '-1'
           info:
+            views_bulk_operations_bulk_form:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             owner:
               sortable: false
               default_sort_order: asc
@@ -716,10 +736,17 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            id:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
           override: true
           sticky: false
           summary: ''
-          empty_table: false
+          empty_table: true
           caption: ''
           description: ''
       row:

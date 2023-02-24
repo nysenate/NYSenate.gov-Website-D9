@@ -438,8 +438,9 @@ display:
             title: All
           title_enable: false
           title: ''
-          default_argument_type: current_user
-          default_argument_options: {  }
+          default_argument_type: user
+          default_argument_options:
+            user: false
           default_argument_skip_url: false
           summary_options:
             base_path: ''
@@ -533,7 +534,7 @@ display:
             min: ''
             max: ''
             value: ''
-          group: 1
+          group: 2
           exposed: true
           expose:
             operator_id: owner_op
@@ -589,7 +590,7 @@ display:
           plugin_id: taxonomy_index_tid
           operator: or
           value: {  }
-          group: 1
+          group: 2
           exposed: true
           expose:
             operator_id: field_issue_target_id_op
@@ -648,7 +649,7 @@ display:
           plugin_id: views_autocomplete_filters_string
           operator: contains
           value: ''
-          group: 1
+          group: 2
           exposed: true
           expose:
             operator_id: title_op
@@ -696,6 +697,11 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: OR
+          2: AND
       style:
         type: table
         options:

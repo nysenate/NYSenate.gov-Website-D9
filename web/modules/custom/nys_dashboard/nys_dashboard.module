@@ -35,29 +35,56 @@ function nys_dashboard_views_query_alter($view, $query) {
       }
     }
   }
-
   if ($view->id() == 'private_message_inbox') {
     foreach ($query->where as $key => $where) {
       // Join private_message__field_subject table.
-      if ($where['conditions'][0]['field'] == 'private_messages.message__value') {
-        $configuration = [
-          'type' => 'left',
-          'table' => 'private_message__field_subject',
-          'field' => 'entity_id',
-          'left_table' => 'private_messages',
-          'left_field' => 'id',
-        ];
-        $join = Views::pluginManager('join')->createInstance('standard', $configuration);
-        $query->addRelationship('private_message__field_subject', $join, 'private_messages');
+      if (!empty($where['conditions'])) {
+        if ($where['conditions'][0]['field'] == 'private_messages.message__value') {
+          $configuration = [
+            'type' => 'left',
+            'table' => 'private_message__field_subject',
+            'field' => 'entity_id',
+            'left_table' => 'private_messages',
+            'left_field' => 'id',
+          ];
+          $join = Views::pluginManager('join')->createInstance('standard', $configuration);
+          $query->addRelationship('private_message__field_subject', $join, 'private_messages');
 
-        // Search Subject value as well.
-        $query->addWhere(
-          $key,
-          'private_message__field_subject.field_subject_value',
-          $where['conditions'][0]['value'],
-          $where['conditions'][0]['operator']
-        );
-        $query->where[$key]['type'] = 'OR';
+          // Search Subject value as well.
+          $query->addWhere(
+            $key,
+            'private_message__field_subject.field_subject_value',
+            $where['conditions'][0]['value'],
+            $where['conditions'][0]['operator']
+          );
+          $query->where[$key]['type'] = 'OR';
+        }
+        elseif ($where['conditions'][0]['field'] == 'private_messages.owner') {
+          // Search Owner's Name.
+          $user_ids = [];
+          $users = \Drupal::database()->query(
+            "SELECT u.uid FROM users u
+               LEFT JOIN users_field_data ufd ON ufd.uid = u.uid
+               LEFT JOIN user__field_first_name f ON f.entity_id = u.uid AND f.bundle = 'user'
+               LEFT JOIN user__field_last_name l ON l.entity_id = u.uid AND l.bundle = 'user'
+              WHERE ufd.name LIKE %:namesearch%
+                OR f.field_first_name_value LIKE %:namesearch%
+                OR l.field_last_name_value LIKE %:namesearch%",
+            [':namesearch' => $where['conditions'][0]['value']]
+          );
+          $result = $users->fetchAll();
+
+          foreach ($result as $res) {
+            if (!in_array($res->uid, $user_ids)) {
+              $user_ids[] = $res->uid;
+            }
+          }
+
+          if (!empty($user_ids)) {
+            $query->where[$key]['conditions'][0]['value'] = $user_ids;
+            $query->where[$key]['conditions'][0]['operator'] = 'IN';
+          }
+        }
       }
     }
   }

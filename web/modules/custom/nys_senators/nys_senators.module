@@ -169,8 +169,8 @@ function nys_senators_node_access_records(NodeInterface $node) {
 function nys_senators_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
 
   // Only fire when updating a Senator Term.
-  if ($entity->getEntityType()
-      ->id() === 'taxonomy_term' && $entity->bundle() === 'senator' && $operation === 'update') {
+  if ($entity->getEntityType()->id() === 'taxonomy_term'
+    && $entity->bundle() === 'senator' && $operation === 'update') {
 
     // Fetch the User's roles.
     $user_roles = $account->getRoles();
@@ -491,8 +491,8 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
     foreach ($nodes as $node) {
       // Acts on every new senator taxonomy term that's updated.
       if ($term->bundle() === 'senator') {
-        if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')
-            ->isEmpty()) {
+        if ($node->hasField('field_microsite_page_type')
+          && !$node->get('field_microsite_page_type')->isEmpty()) {
           $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
           $micrositeTerm = Term::load($tid);
           $validateLanding = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing';
@@ -655,15 +655,15 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
     $node = $context['data']['node'];
 
     $replacements = [];
-    if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')
-        ->isEmpty()) {
+    if ($node->hasField('field_microsite_page_type')
+      && !$node->get('field_microsite_page_type')->isEmpty()) {
       $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
       $term = Term::load($tid);
       if ($term instanceof TermInterface && !empty($term->getName())) {
         switch ($term->getName()) {
           case 'Landing':
-            if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')
-                ->isEmpty()) {
+            if ($node->hasField('field_senator_multiref')
+              && !$node->get('field_senator_multiref')->isEmpty()) {
               $sid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
               $senator = Term::load($sid);
               // Checks if the senator isn't active.
@@ -696,8 +696,8 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
             break;
 
           case 'Inactive':
-            if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')
-                ->isEmpty()) {
+            if ($node->hasField('field_senator_multiref')
+              && !$node->get('field_senator_multiref')->isEmpty()) {
               $sid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
               $senator = Term::load($sid);
               // Check if the senator is active.

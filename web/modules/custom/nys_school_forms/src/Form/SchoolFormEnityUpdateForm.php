@@ -305,7 +305,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
     ];
     $offset = $num_per_page * $page;
     $num_results = 0;
-    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $results = $this->schoolFormsService->getResults($senator, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
     $table_results = [];
     // Transform Results into Table.
     $i = 0;
@@ -353,7 +353,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
           ]),
           'submission' => new FormattableMarkup('<strong>@student_name</strong> <br> @type <br> <a href="@submission">@file_name</a> <br> Show status: @show_status', [
             '@student_name' => $result['student']['student_name'],
-            '@type' => $submission_types[$result['student']['submission_type']],
+            '@type' => $submission_types[$result['student']['submission_type'] ?? NULL] ?? NULL,
             '@submission' => $file_url,
             '@file_name' => $file->getFilename(),
             '@show_status' => $show_status,

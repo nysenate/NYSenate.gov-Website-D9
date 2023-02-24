@@ -221,7 +221,7 @@ class SchoolFormsController extends ControllerBase {
     $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
     $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
     $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
-    $results = $this->schoolFormsService->getResults($senator, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
     $handle = fopen('php://temp', 'w+');
     fputcsv($handle, [
       'Date submitted',

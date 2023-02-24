@@ -6,6 +6,7 @@ use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
  * Elastic Search API Integration.
@@ -39,6 +40,13 @@ class SchoolFormsService {
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   protected $currentRouteMatch;
+ 
+  /**
+   * StreamWrapperManager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManager
+   */
+  protected $streamWrapperManager;
 
   /**
    * Class constructor.
@@ -51,16 +59,20 @@ class SchoolFormsService {
    *   The entity type manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
    *   Current route match.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $streamWrapperManager
+   *   The StreamWrapperManager.
    */
   public function __construct(
     PagerParametersInterface $pager_param,
     PagerManagerInterface $pager_manager,
     EntityTypeManager $entityTypeManager,
-    RouteMatchInterface $current_route_match) {
+    RouteMatchInterface $current_route_match,
+    StreamWrapperManager $streamWrapperManager) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
     $this->entityTypeManager = $entityTypeManager;
     $this->currentRouteMatch = $current_route_match;
+    $this->streamWrapperManager = $streamWrapperManager;
   }
 
   /**
@@ -69,16 +81,17 @@ class SchoolFormsService {
    * @return array
    *   The search form and search results build array.
    */
-  public function getResults($senator = '', $school = '', $teacher_name = '', $from_date = '', $to_date = '', $sort_by = '', $order = '') {
+  public function getResults($senator = '', $form_type = '', $school = '', $teacher_name = '', $from_date = '', $to_date = '', $sort_by = '', $order = '') {
     $results = [];
     $admin_type = $this->currentRouteMatch->getRouteName();
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
-    if ($admin_type == 'nys_school_forms.school_forms_earth_day') {
+    if ($admin_type == 'nys_school_forms.school_forms_earth_day' || $form_type == 'Earth Day') {
       $query->condition('webform_id', 'school_form_earth_day');
     }
-    if ($admin_type == 'nys_school_forms.school_forms_thanksgiving') {
+    if ($admin_type == 'nys_school_forms.school_forms_thanksgiving' || $form_type == 'Thankful') {
       $query->condition('webform_id', 'school_form_thanksgiving');
     }
+  
     if ($from_date) {
       $query->condition('completed', strtotime($from_date), '>');
     }
@@ -94,6 +107,7 @@ class SchoolFormsService {
         $query->sort('completed', 'DESC');
       }
     }
+  
     $query_results = $query->execute();
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
@@ -114,20 +128,37 @@ class SchoolFormsService {
       if ($teacher_name && $teacher_name != $submission_data['contact_name']) {
         continue;
       }
-
       foreach ($submission_data['attach_your_submission'] as $student) {
         $file = $this->entityTypeManager->getStorage('file')->load($student['student_submission']);
         if (empty($file)) {
           continue;
         }
-        $results[strtoupper($student['student_name'])] = [
-          'school_node' => $school_node,
-          'parent_node' => $parent_node,
-          'senator' => $school_senator,
-          'submission' => $submission,
-          'student' => $student,
-        ];
+       
+        if ($form_type == 'Earth Day' || $form_type == 'Thankful') {
+          $file_uri = $file->getFileUri();
+          $scheme = $this->streamWrapperManager->getScheme($file_uri);
+          if ($scheme !== 'public') {
+            continue;
+          } 
+        
+          $results[strtoupper($school_node->label())][$submission_data['grade']] = [
+             //'file' => $file,
+            'student' => $student,
+          ];
+        }
+        else {
+          $results[strtoupper($student['student_name'])] = [
+            'school_node' => $school_node,
+            'parent_node' => $parent_node,
+            'senator' => $school_senator,
+            'submission' => $submission,
+            'student' => $student,
+          ];
+        }
       }
+    }
+    if ($form_type == 'Earth Day' || $form_type == 'Thankful') {  
+      return $results;
     }
     if ($sort_by == 'student') {
       ksort($results, SORT_NATURAL);

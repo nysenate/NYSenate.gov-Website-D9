@@ -40,7 +40,7 @@ class SchoolFormsService {
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   protected $currentRouteMatch;
- 
+
   /**
    * StreamWrapperManager.
    *
@@ -91,7 +91,7 @@ class SchoolFormsService {
     if ($admin_type == 'nys_school_forms.school_forms_thanksgiving' || $form_type == 'Thankful') {
       $query->condition('webform_id', 'school_form_thanksgiving');
     }
-  
+
     if ($from_date) {
       $query->condition('completed', strtotime($from_date), '>');
     }
@@ -107,7 +107,7 @@ class SchoolFormsService {
         $query->sort('completed', 'DESC');
       }
     }
-  
+
     $query_results = $query->execute();
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
@@ -133,16 +133,16 @@ class SchoolFormsService {
         if (empty($file)) {
           continue;
         }
-       
+
         if ($form_type == 'Earth Day' || $form_type == 'Thankful') {
           $file_uri = $file->getFileUri();
           $scheme = $this->streamWrapperManager->getScheme($file_uri);
           if ($scheme !== 'public') {
             continue;
-          } 
-        
+          }
+
           $results[strtoupper($school_node->label())][$submission_data['grade']] = [
-             //'file' => $file,
+            'file' => $file,
             'student' => $student,
           ];
         }
@@ -157,7 +157,7 @@ class SchoolFormsService {
         }
       }
     }
-    if ($form_type == 'Earth Day' || $form_type == 'Thankful') {  
+    if ($form_type == 'Earth Day' || $form_type == 'Thankful') {
       return $results;
     }
     if ($sort_by == 'student') {

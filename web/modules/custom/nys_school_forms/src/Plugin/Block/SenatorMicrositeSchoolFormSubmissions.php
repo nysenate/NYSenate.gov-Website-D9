@@ -76,7 +76,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         $container->get('cache.default'),
         $container->get('entity_type.manager'),
         $container->get('current_route_match')
-    ); 
+    );
   }
 
   /**
@@ -99,18 +99,20 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       }
       $senator = $tids[0];
       $results = $this->schoolFormsService->getResults($senator, $form_type, NULL, NULL, NULL, NULL, NULL);
-      // Results come back in this format. First key is the school' name, second key is the grade.
+      // Results come back in this format. First key is the school' name,
+      // second key is the grade.
       /*["SUCCESS ACADEMY BERGEN BEACH"]=> array(1) {
-          [5]=> array(1) {
-             ["student"]=> array(4) { 
-                ["show_student"]=> string(2) "No" 
-                ["student_name"]=> string(5) "test5" 
-                ["student_submission"]=> string(7) "1900918"
-                ["submission_type"]=> string(1) "0" 
-              } 
-            } 
-          } 
-        }*/
+      [5]=> array(1) {
+      ["file] => [file object]
+      ["student"]=> array(4) {
+      ["show_student"]=> string(2) "No"
+      ["student_name"]=> string(5) "test5"
+      ["student_submission"]=> string(7) "1900918"
+      ["submission_type"]=> string(1) "0"
+      }
+      }
+      }
+      }*/
       return [
         '#theme' => 'senator_microsite_school_form_submission',
         '#results' => $results,

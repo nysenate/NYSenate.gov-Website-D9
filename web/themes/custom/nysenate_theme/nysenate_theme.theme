@@ -4496,7 +4496,8 @@ function nysenate_theme_preprocess_tweets(&$variables) {
  */
 function nysenate_theme_preprocess_webform_confirmation(&$variables) {
   $submissions = [];
-  if ($variables['webform']->id() === 'school_form_thanksgiving' || $variables['webform']->id() === 'school_form_earth_day') {
+  if (in_array($variables['webform']->id(),
+    ['school_form', 'school_form_thanksgiving', 'school_form_earth_day'])) {
     $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
 
     $school_id = $variables['webform_submission']->getData()['school_name'];

@@ -2181,7 +2181,6 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_bills(&$vari
     $issues = [];
     if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
       foreach ($node->field_issues as $issue) {
-        // dump($issue->entity->getName());
         $url = Link::fromTextAndUrl($issue->entity->getName(), $issue->entity->toUrl());
         $issues[] = $url;
       }

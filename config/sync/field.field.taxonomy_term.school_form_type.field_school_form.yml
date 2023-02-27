@@ -1,0 +1,25 @@
+uuid: f76c01a1-e705-45d8-894f-0f3420c684f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_school_form
+    - taxonomy.vocabulary.school_form_type
+  module:
+    - webform
+id: taxonomy_term.school_form_type.field_school_form
+field_name: field_school_form
+entity_type: taxonomy_term
+bundle: school_form_type
+label: 'School Form'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:webform'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: webform

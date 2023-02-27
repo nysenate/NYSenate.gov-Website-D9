@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormBuilder;
 use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Builds a Form for search school form submissions.
@@ -95,6 +96,13 @@ class SchoolFormSearchForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
    * Class constructor.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request
@@ -117,6 +125,8 @@ class SchoolFormSearchForm extends FormBase {
    *   The StreamWrapperManager.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   Current route match.
    */
   public function __construct(
     RequestStack $request,
@@ -128,7 +138,8 @@ class SchoolFormSearchForm extends FormBase {
     FormBuilder $form_builder,
     AliasManagerInterface $alias_manager,
     StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager) {
+    EntityTypeManager $entityTypeManager,
+    RouteMatchInterface $current_route_match) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -139,6 +150,7 @@ class SchoolFormSearchForm extends FormBase {
     $this->aliasManager = $alias_manager;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->entityTypeManager = $entityTypeManager;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -155,7 +167,8 @@ class SchoolFormSearchForm extends FormBase {
       $container->get('form_builder'),
       $container->get('path_alias.manager'),
       $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('current_route_match')
     );
   }
 
@@ -169,7 +182,7 @@ class SchoolFormSearchForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $school = NULL, string $teacher_name = NULL, string $from_date = NULL, string $to_date = NULL, string $sort_by = NULL, string $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $params = []) {
     $form['#prefix'] = '<div class="form--inline clearfix">';
     $senator_options = [];
     $senator_options[''] = '- Any -';
@@ -182,7 +195,7 @@ class SchoolFormSearchForm extends FormBase {
       '#title' => $this->t('Senator'),
       '#type' => 'select',
       '#options' => $senator_options,
-      '#default_value' => html_entity_decode($senator, ENT_QUOTES),
+      '#default_value' => html_entity_decode($params['senator'], ENT_QUOTES),
     ];
 
     $form_type_options = [];
@@ -192,23 +205,25 @@ class SchoolFormSearchForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('School'),
       '#autocomplete_route_name' => 'nys_school_forms.autocomplete.school',
-      '#default_value' => html_entity_decode($school, ENT_QUOTES),
+      '#autocomplete_route_parameters' => ['form_type' => $params['form_type']],
+      '#default_value' => html_entity_decode($params['school'], ENT_QUOTES),
     ];
     $form['teacher_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Teacher Name'),
       '#autocomplete_route_name' => 'nys_school_forms.autocomplete.teacher',
-      '#default_value' => html_entity_decode($teacher_name, ENT_QUOTES),
+      '#autocomplete_route_parameters' => ['form_type' => $params['form_type']],
+      '#default_value' => html_entity_decode($params['teacher_name'], ENT_QUOTES),
     ];
     $form['from_date'] = [
       '#type' => 'date',
       '#title' => $this->t('From'),
-      '#default_value' => html_entity_decode($from_date, ENT_QUOTES),
+      '#default_value' => html_entity_decode($params['from_date'], ENT_QUOTES),
     ];
     $form['to_date'] = [
       '#type' => 'date',
       '#title' => $this->t('To'),
-      '#default_value' => html_entity_decode($to_date, ENT_QUOTES),
+      '#default_value' => html_entity_decode($params['to_date'], ENT_QUOTES),
     ];
     $form['sort_by'] = [
       '#title' => $this->t('Sort By'),
@@ -217,17 +232,17 @@ class SchoolFormSearchForm extends FormBase {
         'date' => $this->t('Sort by date submitted'),
         'student' => $this->t('Student Name'),
       ],
-      '#default_value' => html_entity_decode($sort_by, ENT_QUOTES),
+      '#default_value' => html_entity_decode($params['sort_by'], ENT_QUOTES),
     ];
 
-    $form['order'] = [
+    $form['sort_order'] = [
       '#title' => $this->t('Order'),
       '#type' => 'select',
       '#options' => [
         'desc' => $this->t('Desc'),
         'asc' => $this->t('ASC'),
       ],
-      '#default_value' => html_entity_decode($order, ENT_QUOTES),
+      '#default_value' => html_entity_decode($params['sort_order'], ENT_QUOTES),
     ];
 
     $form['actions']['submit'] = [
@@ -250,10 +265,10 @@ class SchoolFormSearchForm extends FormBase {
     $school = $form_state->getValue('school');
     $teacher_name = $form_state->getValue('teacher_name');
     $sort_by = $form_state->getValue('sort_by');
-    $order = $form_state->getValue('order');
+    $sort_order = $form_state->getValue('sort_order');
     $from_date = $form_state->getValue('from_date');
     $to_date = $form_state->getValue('to_date');
-    $url = Url::fromRoute('nys_school_forms.school_forms', [], [
+    $url = Url::fromRoute($this->currentRouteMatch->getRouteName(), [], [
       'query' => [
         'senator' => $senator,
         'school' => $school,
@@ -261,7 +276,7 @@ class SchoolFormSearchForm extends FormBase {
         'from_date' => $from_date,
         'to_date' => $to_date,
         'sort_by' => $sort_by,
-        'order' => $order,
+        'sort_order' => $sort_order,
       ],
     ]);
     $form_state->setRedirectUrl($url);

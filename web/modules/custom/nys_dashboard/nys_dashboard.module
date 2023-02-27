@@ -61,4 +61,37 @@ function nys_dashboard_views_query_alter($view, $query) {
       }
     }
   }
+
+  if ($view->id() == 'events') {
+    $calendar_filter = FALSE;
+    foreach ($query->where as $key => $where) {
+      $conditions = $where['conditions'];
+      $calendar_index = 0;
+      foreach ($conditions as $index => $condition) {
+        // Modify the date filters according to the view block.
+        if (strpos($condition['field'], 'node__field_date_range.field_date_range_value') > 0) {
+          $calendar_filter = TRUE;
+          $calendar_index = $index;
+          if (($view->current_display == 'day_block') || ($view->current_display == 'week_block')) {
+            $query->where[$key]['conditions'][$index]['field'] = str_replace('%Y-%m', '%Y-%m-%d', $condition['field']);
+          }
+        }
+      }
+
+      // Add date format for exposed filters on calendar view.
+      if ($view->current_display == 'day_block') {
+        if (!$calendar_filter) {
+          $query->where[$key]['conditions'][] = [
+            'field' => 'DATE_FORMAT(FROM_UNIXTIME(node__field_date_range.field_date_range_value), \'%Y-%m-%d\') = :field_date_range_value',
+            'value' => [
+              ':field_date_range_value' => date('Y-m-d', time()),
+            ],
+            'operator' => 'formula',
+          ];
+        }
+      }
+
+      // TO DO: month_block and week_block.
+    }
+  }
 }

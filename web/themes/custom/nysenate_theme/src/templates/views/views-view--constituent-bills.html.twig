@@ -41,6 +41,7 @@
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
     'container',
+    'dashboard',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
@@ -49,24 +50,14 @@
     {{ title }}
   {% endif %}
   {{ title_suffix }}
-  {% if view.current_display == 'constituent_all_bill_updates' %}
-    <div class="c-block c-container c-container--const-issues-follow">
-      <div class="c-list--header">
-        <h2 class="c-container--title">Updates on Bills You're Following</h2>
-      </div>
-    </div>
-  {% elseif view.current_display == 'constituent_all_committees_updates' %}
-    <div class="c-block c-container c-container--const-issues-follow">
-      <div class="c-list--header">
-        <h2 class="c-container--title">Updates on Committees You're Following</h2>
-      </div>
-    </div>
+  {% if view.current_display == 'constituent_bills_voted_on' %}
+    {% include "@nysenate_theme/dashboard-lists/dashboard-lists.twig" with {
+      card_list_title: "Bills You Are Following"
+    } only %}
   {% else %}
     {% if header %}
-      <div class="c-block c-container c-container--const-issues-follow">
-        <div class="c-list--header">
-          {{ header }}
-        </div>
+      <div class="view-header">
+        {{ header }}
       </div>
     {% endif %}
   {% endif %}

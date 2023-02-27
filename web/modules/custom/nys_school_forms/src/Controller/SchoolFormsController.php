@@ -176,7 +176,7 @@ class SchoolFormsController extends ControllerBase {
    * @return array
    *   The search form and search results build array.
    */
-  public function view() {
+  public function view($form_type = NULL) {
     // Fetch, sanitize, and build the query from parameters.
     $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
     $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
@@ -184,13 +184,24 @@ class SchoolFormsController extends ControllerBase {
     $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
     $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
     $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
-    $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
+    $sort_order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_order'));
     $build = [];
     $build['#theme'] = 'school_forms';
 
-    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', urldecode($senator), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
-    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', urldecode($senator), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
-    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&from_date=' . urldecode($from_date) . '&to_date=' . urldecode($to_date) . '&sort_by=' . urldecode($sort_by) . '&order=' . urldecode($order);
+    $params = [
+      'form_type' => $form_type,
+      'senator' => urldecode($senator),
+      'school' => urldecode($school),
+      'teacher_name' => urldecode($teacher_name),
+      'from_date' => urldecode($from_date),
+      'to_date' => urldecode($to_date),
+      'sort_by' => urldecode($sort_by),
+      'sort_order' => urldecode($sort_order),
+    ];
+
+    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', $params);
+    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', $params);
+    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . $form_type . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&from_date=' . urldecode($from_date) . '&to_date=' . urldecode($to_date) . '&sort_by=' . urldecode($sort_by) . '&sort_order=' . urldecode($sort_order);
     return $build;
   }
 
@@ -215,13 +226,25 @@ class SchoolFormsController extends ControllerBase {
   public function exportCsv() {
     // Fetch, sanitize, and build the query from parameters.
     $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
+    $form_type = $this->sanitizeQuery($this->request->getCurrentRequest()->get('form_type'));
     $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
     $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
     $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
     $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
     $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
-    $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
-    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $sort_order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_order'));
+
+    $params = [
+      'form_type' => $form_type,
+      'senator' => urldecode($senator),
+      'school' => urldecode($school),
+      'teacher_name' => urldecode($teacher_name),
+      'from_date' => urldecode($from_date),
+      'to_date' => urldecode($to_date),
+      'sort_by' => urldecode($sort_by),
+      'sort_order' => urldecode($sort_order),
+    ];
+    $results = $this->schoolFormsService->getResults($params);
     $handle = fopen('php://temp', 'w+');
     fputcsv($handle, [
       'Date submitted',
@@ -241,8 +264,7 @@ class SchoolFormsController extends ControllerBase {
     foreach ($results as $result) {
       $file = File::load($result['student']['student_submission']);
       $uri = $file->getFileUri();
-      $url = \Drupal::service('file_url_generator')->generate($uri);
-      $file_string = $url->toString();
+      $file_string = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
       $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
       $line = [
         date('F j, Y', $result['submission']->getCreatedTime()),

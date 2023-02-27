@@ -2,10 +2,10 @@
 
 namespace Drupal\nys_school_forms;
 
-use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
@@ -81,27 +81,45 @@ class SchoolFormsService {
    * @return array
    *   The search form and search results build array.
    */
-  public function getResults($senator = '', $form_type = '', $school = '', $teacher_name = '', $from_date = '', $to_date = '', $sort_by = '', $order = '') {
+  public function getResults($params) {
     $results = [];
-    $admin_type = $this->currentRouteMatch->getRouteName();
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
-    if ($admin_type == 'nys_school_forms.school_forms_earth_day' || $form_type == 'Earth Day') {
-      $query->condition('webform_id', 'school_form_earth_day');
-    }
-    if ($admin_type == 'nys_school_forms.school_forms_thanksgiving' || $form_type == 'Thankful') {
-      $query->condition('webform_id', 'school_form_thanksgiving');
+    $webform_id = '';
+    switch ($params['form_type']) {
+      // Earth Day.
+      case 'Earth Day':
+        $webform_id = 'school_form_earth_day';
+        break;
+
+      // Thanksgiving.
+      case 'Thanksgiving':
+        $webform_id = 'school_form_thanksgiving';
+        break;
+
+      default:
+        $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
+          [
+            'vid' => 'school_form_type',
+            'name' => $params['form_type'],
+          ]);
+        if ($terms !== NULL) {
+          $term = reset($terms);
+          $webform_id = $term->field_school_form->target_id;
+        }
+        break;
     }
 
-    if ($from_date) {
-      $query->condition('completed', strtotime($from_date), '>');
+    $query->condition('webform_id', $webform_id);
+    if ($params['from_date']) {
+      $query->condition('completed', strtotime($params['from_date']), '>');
     }
-    if ($to_date) {
+    if ($params['to_date']) {
       // Make to date filter inclusive of the day.
-      $query->condition('completed', strtotime($to_date) + 86399, '<');
+      $query->condition('completed', strtotime($params['to_date']) + 86399, '<');
     }
-    if ($sort_by == 'date' || empty($sort_by)) {
-      if ($order) {
-        $query->sort('completed', $order);
+    if ($params['sort_by'] === 'date') {
+      if ($params['sort_order']) {
+        $query->sort('completed', $params['sort_order']);
       }
       else {
         $query->sort('completed', 'DESC');
@@ -116,16 +134,16 @@ class SchoolFormsService {
       $submission_data = $submission->getData();
       /** @var \Drupal\node\NodeInterface $school_node */
       $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);
-      if ($school && $school != $school_node->label()) {
+      if ($params['school'] && $params['school'] != $school_node->label()) {
         continue;
       }
       /** @var \Drupal\taxonomy\TermInterface $district */
       $district = $school_node->get('field_district')->entity;
       $school_senator = $district->get('field_senator')->entity;
-      if ($senator && $senator != $school_senator->id()) {
+      if ($params['senator'] && $params['senator'] != $school_senator->id()) {
         continue;
       }
-      if ($teacher_name && $teacher_name != $submission_data['contact_name']) {
+      if ($params['teacher_name'] && $params['teacher_name'] != $submission_data['contact_name']) {
         continue;
       }
       foreach ($submission_data['attach_your_submission'] as $student) {
@@ -162,14 +180,10 @@ class SchoolFormsService {
     }
     if ($sort_by == 'student') {
       ksort($results, SORT_NATURAL);
-      $results = array_values($results);
-      if ($order == 'desc') {
+      if ($params['sort_order'] == 'desc') {
         // Reverse the array if sort is descending.
         $results = array_reverse($results);
       }
-    }
-    else {
-      $results = array_values($results);
     }
     return $results;
   }

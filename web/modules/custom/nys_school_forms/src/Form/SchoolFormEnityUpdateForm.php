@@ -256,7 +256,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $from_date = NULL, string $to_date = NULL, string $sort_by = NULL, string $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $params = []) {
     $form['operations'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Operations'),
@@ -278,7 +278,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
       '#name' => 'apply',
     ];
 
-    $form['table'] = $this->getTable($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $form['table'] = $this->getTable($params);
     $form['pager'] = [
       '#type' => 'pager',
     ];
@@ -291,7 +291,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
    * @return array
    *   The search form and search results build array.
    */
-  public function getTable($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order) {
+  public function getTable($params) {
     // Initialize the pager.
     $page = $this->pagerParam->findPage();
     $num_per_page = 150;
@@ -305,7 +305,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
     ];
     $offset = $num_per_page * $page;
     $num_results = 0;
-    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $results = $this->schoolFormsService->getResults($params);
     $table_results = [];
     // Transform Results into Table.
     $i = 0;

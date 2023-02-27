@@ -98,7 +98,17 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         $tids[] = (int) $tid['target_id'];
       }
       $senator = $tids[0];
-      $results = $this->schoolFormsService->getResults($senator, $form_type, NULL, NULL, NULL, NULL, NULL);
+      $params = [
+        'form_type' => $form_type,
+        'senator' => urldecode($senator),
+        'school' => NULL,
+        'teacher_name' => NULL,
+        'from_date' => NULL,
+        'to_date' => NULL,
+        'sort_by' => NULL,
+        'sort_order' => NULL,
+      ];
+      $results = $this->schoolFormsService->getResults($params);
       // Results come back in this format. First key is the school' name,
       // second key is the grade.
       /*["SUCCESS ACADEMY BERGEN BEACH"]=> array(1) {

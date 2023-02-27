@@ -108,7 +108,17 @@ class SchoolFormsService {
         }
         break;
     }
+    switch ($params['form_type_fe']) {
+      // Earth Day.
+      case 'Earth Day':
+        $webform_id = 'school_form_earth_day';
+        break;
 
+      // Thanksgiving.
+      case 'Thankful':
+        $webform_id = 'school_form_thanksgiving';
+        break;
+    }
     $query->condition('webform_id', $webform_id);
     if ($params['from_date']) {
       $query->condition('completed', strtotime($params['from_date']), '>');
@@ -152,19 +162,33 @@ class SchoolFormsService {
           continue;
         }
 
-        $file_uri = $file->getFileUri();
-        $scheme = $this->streamWrapperManager->getScheme($file_uri);
+        if ($params['form_type_fe'] == 'Earth Day' || $params['form_type_fe'] == 'Thankful') {
+          $file_uri = $file->getFileUri();
+          $scheme = $this->streamWrapperManager->getScheme($file_uri);
+          if ($scheme !== 'public') {
+            continue;
+          }
 
-        $results[strtoupper($student['student_name'])] = [
-          'school_node' => $school_node,
-          'parent_node' => $parent_node,
-          'senator' => $school_senator,
-          'submission' => $submission,
-          'student' => $student,
-        ];
+          $results[strtoupper($school_node->label())][$submission_data['grade']] = [
+            'file' => $file,
+            'student' => $student,
+          ];
+        }
+        else {
+          $results[strtoupper($student['student_name'])] = [
+            'school_node' => $school_node,
+            'parent_node' => $parent_node,
+            'senator' => $school_senator,
+            'submission' => $submission,
+            'student' => $student,
+          ];
+        }
       }
     }
-    if ($params['sort_by'] == 'student') {
+    if ($params['form_type_fe'] == 'Earth Day' || $params['form_type_fe'] == 'Thankful') {
+      return $results;
+    }
+    if ($sort_by == 'student') {
       ksort($results, SORT_NATURAL);
       if ($params['sort_order'] == 'desc') {
         // Reverse the array if sort is descending.

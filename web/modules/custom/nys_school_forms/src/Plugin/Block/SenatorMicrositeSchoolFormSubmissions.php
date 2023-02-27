@@ -91,7 +91,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
-      $form_type = $term->getName();
+      $form_type_fe = $term->getName();
       $senator_terms = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->getValue() : [];
       $tids = [];
       foreach ($senator_terms as $tid) {
@@ -99,7 +99,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       }
       $senator = $tids[0];
       $params = [
-        'form_type' => $form_type,
+        'form_type_fe' => $form_type_fe,
         'senator' => urldecode($senator),
         'school' => NULL,
         'teacher_name' => NULL,

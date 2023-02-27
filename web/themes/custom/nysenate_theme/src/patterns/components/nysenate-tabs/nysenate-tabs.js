@@ -108,7 +108,9 @@
 
       const tab = $(this).parent('.c-tab');
       const tabBar = $(this).parents('.l-tab-bar');
-      const billVersion = tab.data('version').split('-');
+      const billVersion = tab.data('version')
+        ? tab.data('version').split('-')
+        : null;
       const newUrl = tab.data('target');
 
       if (billVersion && newUrl) {

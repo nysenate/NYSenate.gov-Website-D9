@@ -12,10 +12,19 @@ nys_school_forms.autocomplete.school:
     _format: json
   requirements:
     _permission: 'access content'
-nys_school_forms.school_forms:
-  path: '/admin/school-forms'
+nys_school_forms.school_forms_thanksgiving:
+  path: '/admin/school-forms-thanksgiving'
   defaults:
-    _title: 'School Form Search'
+    _title: 'School Form Search - Thanksgiving'
+    _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::view'
+  requirements:
+    _permission: 'access all webform results'
+  options:
+    _admin_route: TRUE
+nys_school_forms.school_forms_earth_day:
+  path: '/admin/school-forms-earth-day'
+  defaults:
+    _title: 'School Form Search - Earth Day'
     _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::view'
   requirements:
     _permission: 'access all webform results'

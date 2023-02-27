@@ -3800,10 +3800,7 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
       $form[$field_element]['#default_value'] = $values[$field_element] ?? '';
       $form[$field_element]['#size'] = 60;
       $form[$field_element]['#maxlength'] = 128;
-      $form[$field_element]['#attributes'] = [
-        'class' => ['search-form-group__input'],
-        'type' => 'search',
-      ];
+      $form[$field_element]['#attributes']['class'] = ['search-form-group__input'];
     }
   }
 }
@@ -3952,6 +3949,13 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
           <div class="message-list__td--issue__actions">' . $forward_link . ' ' . $reply_link . '</div>';
         $variables['rows'][$key]['columns']['actions']['attributes'] = $actions_attributes;
       }
+    }
+    else {
+      $empty_attributes = new Attribute([
+        'class' => ['message-list__td'],
+        'colspan' => 5,
+      ]);
+      $variables['rows'][0]['columns'][0]['attributes'] = $empty_attributes;
     }
   }
 }
@@ -4391,7 +4395,8 @@ function nysenate_theme_preprocess_tweets(&$variables) {
  */
 function nysenate_theme_preprocess_webform_confirmation(&$variables) {
   $submissions = [];
-  if ($variables['webform']->id() === 'school_form_thanksgiving' || $variables['webform']->id() === 'school_form_earth_day') {
+  if (in_array($variables['webform']->id(),
+    ['school_form', 'school_form_thanksgiving', 'school_form_earth_day'])) {
     $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
 
     $school_id = $variables['webform_submission']->getData()['school_name'];

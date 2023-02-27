@@ -11,6 +11,7 @@ use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\user\Entity\User;
+use Drupal\nys_users\UsersHelper;
 use Drupal\views\Views;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
@@ -967,6 +968,36 @@ function nysenate_theme_preprocess_paragraph__promotional_banners(&$variables) {
 
   if ($variables['content']['field_is_2_up'][0]) {
     $variables['modifier'] = strtolower($variables['content']['field_is_2_up'][0]['#markup']) == 'on' ? 'two-up' : '';
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID().
+ */
+function nysenate_theme_preprocess_views_view__constituent_updates(&$variables) {
+  if ($variables['view']->current_display == 'constituent_all_bill_updates') {
+    // Get User's District Senator.
+    $current_user = \Drupal::entityTypeManager()->getStorage('user')
+      ->load(\Drupal::currentUser()->id());
+    $senator = UsersHelper::getSenator($current_user);
+
+    $microsite_legislation = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+      'type' => 'microsite_page',
+      // Legislation page.
+      'field_microsite_page_type' => '200003',
+      'field_senator_multiref' => $senator->id(),
+    ]);
+
+    $senator_microsite_link = '';
+    if (!empty($microsite_legislation)) {
+      $legislation = reset($microsite_legislation);
+      $legislation_link = $legislation->toUrl()->toString();
+      $senator_microsite_link = ' or <a href="/' . $legislation_link . '"> browse legislation that your Senator\'s been working on</a>';
+    }
+
+    $variables['empty'] = [
+      '#markup' => '<p>No Updates to show.<br />To get updates on bills that matter to you, <a href="/legislation">search all Senate legislation</a>' . $senator_microsite_link . '.</p>',
+    ];
   }
 }
 
@@ -2121,6 +2152,75 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__video(&$var
   if (!empty($term) && is_object($term)) {
     $variables['title'] = t('Latest %term_name Video', ['%term_name' => $term->name->value]);
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__constituent_bills(&$variables) {
+  $bills = [];
+  foreach ($variables['rows'] as $row) {
+    $node = $row['content']['#row']->_entity;
+
+    // Last status.
+    $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
+    $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
+
+    // Published Date.
+    $published_date = '';
+    if ($node->hasField('field_ol_publish_date') &&
+      !$node->get('field_ol_publish_date')->isEmpty()) {
+      $published_date = $node->field_ol_publish_date->value;
+    }
+    // If published_date is not timestamp, use strtotime().
+    if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
+      $published_date = strtotime($published_date);
+    }
+
+    // Issues.
+    $issues = [];
+    if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+      foreach ($node->field_issues as $issue) {
+        $url = Link::fromTextAndUrl($issue->entity->getName(), $issue->entity->toUrl());
+        $issues[] = $url;
+      }
+    }
+
+    // Sponsor.
+    $sponsor_name = NULL;
+    $sponsor = NULL;
+    if ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
+      $sponsor = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->load($node->field_ol_sponsor->target_id);
+    }
+
+    if (!empty($sponsor)) {
+      $given = $sponsor->field_senator_name->given ?? '';
+      $family = $sponsor->field_senator_name->family ?? '';
+      $sponsor_name = $given . ' ' . $family;
+      $sponsor_name = Link::fromTextAndUrl($sponsor_name, $sponsor->toURL());
+    }
+
+    $bills[] = [
+      'featured' => TRUE,
+      'small' => FALSE,
+      'is_poll' => TRUE,
+      'resolution' => TRUE,
+      'link' => $node->toUrl()->toString(),
+      'number' => $node->getTitle(),
+      'description_position' => 'top',
+      'description' => !empty($node->field_ol_name->value) ? $node->field_ol_name->value : '',
+      'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
+      'update_location' => $last_status,
+      'positions' => nysenate_bill_positions($node),
+      'issues' => $issues,
+      'sponsor' => $sponsor_name,
+      'sponsor_text' => 'SPONSORS',
+    ];
+  }
+
+  $variables['bills'] = $bills;
 }
 
 /**
@@ -3800,10 +3900,7 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
       $form[$field_element]['#default_value'] = $values[$field_element] ?? '';
       $form[$field_element]['#size'] = 60;
       $form[$field_element]['#maxlength'] = 128;
-      $form[$field_element]['#attributes'] = [
-        'class' => ['search-form-group__input'],
-        'type' => 'search',
-      ];
+      $form[$field_element]['#attributes']['class'] = ['search-form-group__input'];
     }
   }
 }
@@ -3952,6 +4049,13 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
           <div class="message-list__td--issue__actions">' . $forward_link . ' ' . $reply_link . '</div>';
         $variables['rows'][$key]['columns']['actions']['attributes'] = $actions_attributes;
       }
+    }
+    else {
+      $empty_attributes = new Attribute([
+        'class' => ['message-list__td'],
+        'colspan' => 5,
+      ]);
+      $variables['rows'][0]['columns'][0]['attributes'] = $empty_attributes;
     }
   }
 }
@@ -4391,7 +4495,8 @@ function nysenate_theme_preprocess_tweets(&$variables) {
  */
 function nysenate_theme_preprocess_webform_confirmation(&$variables) {
   $submissions = [];
-  if ($variables['webform']->id() === 'school_form_thanksgiving' || $variables['webform']->id() === 'school_form_earth_day') {
+  if (in_array($variables['webform']->id(),
+    ['school_form', 'school_form_thanksgiving', 'school_form_earth_day'])) {
     $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
 
     $school_id = $variables['webform_submission']->getData()['school_name'];

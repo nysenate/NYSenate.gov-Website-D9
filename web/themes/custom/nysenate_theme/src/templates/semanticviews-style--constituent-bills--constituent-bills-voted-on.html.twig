@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Default simple view template to display a list of rows.
+ *
+ * @ingroup views_templates
+ */
+#}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+
+<div class="content-list__wrapper">
+  {% for bill in bills %}
+    <div class="content__item">
+      {% include "@nysenate_theme/bill-item/bill-item.twig" with {
+        bill: bill,
+        body: body
+      } only %}
+    </div>
+  {% endfor %}
+</div>
+
+{% set limit = 4 %}
+
+{% if committees|length > limit %}
+  <div class="pager pager-load-more" data-limit="{{ limit }}">
+    <span class="pager-next first last">
+      <a class="load-more">See more</a>
+    </span>
+  </div>
+{% endif %}

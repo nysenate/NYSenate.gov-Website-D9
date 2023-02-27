@@ -128,6 +128,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         '#results' => $results,
       ];
     }
+    return [];
   }
 
   /**

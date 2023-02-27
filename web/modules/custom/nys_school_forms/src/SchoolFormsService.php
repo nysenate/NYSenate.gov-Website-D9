@@ -2,10 +2,11 @@
 
 namespace Drupal\nys_school_forms;
 
-use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Pager\PagerParametersInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
  * Elastic Search API Integration.
@@ -41,6 +42,13 @@ class SchoolFormsService {
   protected $currentRouteMatch;
 
   /**
+   * StreamWrapperManager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManager
+   */
+  protected $streamWrapperManager;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
@@ -51,16 +59,20 @@ class SchoolFormsService {
    *   The entity type manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
    *   Current route match.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $streamWrapperManager
+   *   The StreamWrapperManager.
    */
   public function __construct(
     PagerParametersInterface $pager_param,
     PagerManagerInterface $pager_manager,
     EntityTypeManager $entityTypeManager,
-    RouteMatchInterface $current_route_match) {
+    RouteMatchInterface $current_route_match,
+    StreamWrapperManager $streamWrapperManager) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
     $this->entityTypeManager = $entityTypeManager;
     $this->currentRouteMatch = $current_route_match;
+    $this->streamWrapperManager = $streamWrapperManager;
   }
 
   /**

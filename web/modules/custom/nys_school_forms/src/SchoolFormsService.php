@@ -152,33 +152,19 @@ class SchoolFormsService {
           continue;
         }
 
-        if ($form_type == 'Earth Day' || $form_type == 'Thankful') {
-          $file_uri = $file->getFileUri();
-          $scheme = $this->streamWrapperManager->getScheme($file_uri);
-          if ($scheme !== 'public') {
-            continue;
-          }
+        $file_uri = $file->getFileUri();
+        $scheme = $this->streamWrapperManager->getScheme($file_uri);
 
-          $results[strtoupper($school_node->label())][$submission_data['grade']] = [
-            'file' => $file,
-            'student' => $student,
-          ];
-        }
-        else {
-          $results[strtoupper($student['student_name'])] = [
-            'school_node' => $school_node,
-            'parent_node' => $parent_node,
-            'senator' => $school_senator,
-            'submission' => $submission,
-            'student' => $student,
-          ];
-        }
+        $results[strtoupper($student['student_name'])] = [
+          'school_node' => $school_node,
+          'parent_node' => $parent_node,
+          'senator' => $school_senator,
+          'submission' => $submission,
+          'student' => $student,
+        ];
       }
     }
-    if ($form_type == 'Earth Day' || $form_type == 'Thankful') {
-      return $results;
-    }
-    if ($sort_by == 'student') {
+    if ($params['sort_by'] == 'student') {
       ksort($results, SORT_NATURAL);
       if ($params['sort_order'] == 'desc') {
         // Reverse the array if sort is descending.

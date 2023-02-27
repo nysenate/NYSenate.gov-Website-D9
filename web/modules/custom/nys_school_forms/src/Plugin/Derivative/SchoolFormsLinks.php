@@ -4,6 +4,7 @@ namespace Drupal\nys_school_forms\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,10 +22,18 @@ class SchoolFormsLinks extends DeriverBase implements ContainerDeriverInterface 
   /**
    * {@inheritdoc}
    */
+  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container, $base_plugin_id) {
-    $instance = new static($base_plugin_id);
-    $instance->entityTypeManager = $container->get('entity_type.manager');
-    return $instance;
+    return new static(
+      $base_plugin_id,
+      $container->get('entity_type.manager')
+    );
   }
 
   /**

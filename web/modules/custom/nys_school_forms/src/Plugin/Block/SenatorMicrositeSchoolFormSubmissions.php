@@ -125,7 +125,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       }*/
       $build = [];
       $build = [
-        '#theme' => 'senator_microsite_school_form_submission',
+        '#theme' => 'nysenate-submission-results',
         '#results' => $results,
       ];
       return $build;

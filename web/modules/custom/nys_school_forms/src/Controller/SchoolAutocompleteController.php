@@ -4,7 +4,6 @@ namespace Drupal\nys_school_forms\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\Utility\Xss;
@@ -22,26 +21,27 @@ class SchoolAutocompleteController extends ControllerBase {
   protected $entityTypeManager;
 
   /**
-   * {@inheritdoc}
+   * The database.
+   *
+   * @var \Drupal\mysql\Driver\Database\mysql\Connection
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-  }
+  protected $database;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     // Instantiates this form class.
-    return new static(
-      $container->get('entity_type.manager')
-    );
+    $instance = new static();
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->database = $container->get('database');
+    return $instance;
   }
 
   /**
    * Handler for autocomplete request.
    */
-  public function handleAutocomplete(Request $request) {
+  public function handleAutocomplete(Request $request, $form_type) {
     $results = [];
     $input = $request->query->get('q');
 
@@ -50,10 +50,47 @@ class SchoolAutocompleteController extends ControllerBase {
       return new JsonResponse($results);
     }
 
+    // Narrow the options based on form_type.
+    $webform_id = '';
+    switch ($form_type) {
+      // Earth Day.
+      case 'Earth Day':
+        $webform_id = 'school_form_earth_day';
+        break;
+
+      // Thanksgiving.
+      case 'Thanksgiving':
+        $webform_id = 'school_form_thanksgiving';
+        break;
+
+      default:
+        $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
+          [
+            'vid' => 'school_form_type',
+            'name' => $form_type,
+          ]);
+        if ($terms !== NULL) {
+          $term = reset($terms);
+          $webform_id = $term->field_school_form->target_id;
+        }
+        break;
+    }
+
+    $select = $this->database->select('webform_submission_data', 'wsd')
+      ->fields('wsd', ['value'])
+      ->condition('wsd.webform_id', $webform_id, '=')
+      ->condition('wsd.name', 'school_name', '=')
+      ->distinct()
+      ->orderBy('wsd.value');
+
+    $webform_results = $select->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $school_ids = array_column($webform_results, 'value');
+
     $input = Xss::filter($input);
 
     $query = $this->entityTypeManager->getStorage('node')->getQuery()
       ->condition('title', $input, 'CONTAINS')
+      ->condition('nid', $school_ids, 'IN')
       ->condition('type', 'school', '=')
       ->sort('title')
       ->range(0, 10);

@@ -123,10 +123,12 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       }
       }
       }*/
-      return [
+      $build = [];
+      $build = [
         '#theme' => 'senator_microsite_school_form_submission',
         '#results' => $results,
       ];
+      return $build;
     }
   }
 

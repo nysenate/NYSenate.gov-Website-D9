@@ -188,7 +188,7 @@ class SchoolFormsService {
     if ($params['form_type_fe'] == 'Earth Day' || $params['form_type_fe'] == 'Thankful') {
       return $results;
     }
-    if ($sort_by == 'student') {
+    if ($params['sort_by'] == 'student') {
       ksort($results, SORT_NATURAL);
       if ($params['sort_order'] == 'desc') {
         // Reverse the array if sort is descending.

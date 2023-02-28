@@ -79,7 +79,7 @@ class UsersHelper {
     $district = $user->field_district->entity ?? NULL;
     $ret = !($district && $district->id());
     if (!$ret) {
-      $state = $user->field_address->value[0]['administrative_area'] ?? '';
+      $state = $user->field_address[0]->administrative_area ?? '';
       $ret = !($state == 'NY');
     }
     return $ret;

@@ -310,6 +310,14 @@
     .js-form-type-select {
       width: 100%;
       margin: 0;
+
+      &.form-item-school-name {
+        float: unset;
+
+        &::after {
+          display: none;
+        }
+      }
     }
   }
 }

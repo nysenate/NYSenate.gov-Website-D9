@@ -8,7 +8,7 @@
      $.fn.nysBillVoteUpdate = function (element, vote_label, vote_value) {
          Drupal.behaviors.nysBillVote.voteOnBill(element, vote_label, vote_value);
      };
- 
+
      Drupal.theme.createConfirmationModal = function (options) {
          var defaults = {
                  button_element: 'a',
@@ -25,17 +25,19 @@
                  auto_attach: true,
                  attach_target: 'footer',
                  buttons_first: false,
-             },
-             opts = Object.assign({}, defaults, options),
-             attr = {
+             };
+        var opts = Object.assign({}, defaults, options);
+        var attr = {
                  'data-reveal': '',
                  'aria-hidden': 'true',
                  role: 'dialog',
-             },
-             parent = $('<' + opts.parent_element + '/>').addClass('reveal-modal small').attr(attr),
+             };
+
+        var parent = $('<' + opts.parent_element + '/>').addClass('reveal-modal small').attr(attr),
              button_a = $('<' + opts.button_element + ' href="#" class="default button"/>').html(opts.default_text),
              button_b = $('<' + opts.button_element + ' href="#" class="secondary button"/>').html(opts.cancel_text)
          ;
+
          if (opts.id) {
              parent.attr('id', opts.id);
          }
@@ -61,14 +63,13 @@
          }
          if (opts.auto_attach && $(opts.attach_target).length) {
              $(opts.attach_target).append(parent);
- 
              // Make sure Foundation knows about the new modal.
              parent.foundation();
-             parent.foundation('reveal', 'reflow');
+             parent.foundation('open');
          }
          return parent;
      };
- 
+
      Drupal.behaviors.nysBillVote = {
          attach: function (context, settings) {
              var self = this;
@@ -76,7 +77,8 @@
              if ($('#nys-bills-bill-form input[name=register]', context).prop('checked') === false && !drupalSettings.settings.is_logged_in) {
                  $('.c-bill--message-form .form-item-message', context).hide();
              }
- 
+
+             self.processIntentVote(context, settings);
              // Add a click event handler for hiding the message form if 'Create an
              // account checkbox is unchecked. We need to delegate this event so that:
              //   - it can be added using $.once()
@@ -86,11 +88,11 @@
                      var $func = (e.target.checked) ? 'show' : 'hide';
                      $('.c-bill--message-form .form-item-message')[$func]();
                  });
- 
-                 self.processIntentVote(context, settings);
+
+
              });
          },
- 
+
          processIntentVote: function (context, settings) {
              var self = this,
                  intentValue = self.getQueryParamValue('intent'),
@@ -102,12 +104,12 @@
              if (intentValue === 'support') {
                  intentText = 'support';
              }
- 
+
              // If there is no intent text (i.e., a valid intent), nothing to do.
              if (!intentText) {
                  return;
              }
- 
+
              // Get some info on the detected intent and write it back to settings.
              var response = self.getResponseFromIntent(intentValue),
                  element = self.getTriggeringElement(intentValue)
@@ -117,13 +119,13 @@
                  element: element,
                  intentValue: intentValue
              });
- 
+
              // If the user is not logged in, just process the selection (no modal).
              if (!drupalSettings.settings.is_logged_in) {
                  self.voteOnBill(element, response, intentValue);
                  return;
              }
- 
+
              // Create confirmation modal and append it to footer. It is hidden
              // by default.
              var options = {
@@ -134,49 +136,49 @@
                  default_callback: self.callbackIntentConfirm,
                  cancel_callback: self.callbackIntentCancel
              };
- 
+             console.log(options);
              var confirmationModal = Drupal.theme('createConfirmationModal', options);
- 
+
              // Ask user for confirmation and then record vote.
              setTimeout(function () {
-                 $('#confirm-vote-intent-modal').foundation('reveal', 'open');
+                 $('#confirm-vote-intent-modal').foundation('open');
              }, 1000);
          },
- 
+
          callbackIntentConfirm: function (e) {
              e.preventDefault();
-             var settings = Drupal.settings.bill_vote;
+             var settings = drupalSettings.bill_vote;
              $.ajax({
                  url: '/bill_vote_confirmation/callback/' + settings.bill_entity_id + '/' + settings.response.vote_value,
                  complete: function (jqXHR, status) {
                      if (status === 'success') {
                          // Close modal.
-                         $(e.target).closest('.reveal-modal').foundation('reveal', 'close');
+                         $(e.target).closest('.reveal-modal').foundation('close');
                          // Do the after-vote necessities.
                          Drupal.behaviors.nysBillVote.voteOnBill(settings.element, settings.response, settings.intentValue);
                      }
                  }
              });
          },
- 
+
          callbackIntentCancel: function (e) {
              e.preventDefault();
              // Close modal.
-             $(e.target).closest('.reveal-modal').foundation('reveal', 'close');
+             $(e.target).closest('.reveal-modal').foundation('close');
          },
- 
+
          callbackAutosubHandler: function (e) {
              e.preventDefault();
              var save_val = ($(e.target).hasClass('default')) ? 1 : 0;
              $.ajax({
-                 url: '/bill_vote_autosub/callback/' + Drupal.settings.bill_vote.bill_entity_id + '/' + save_val,
+                 url: '/bill_vote_autosub/callback/' + drupalSettings.bill_vote.bill_entity_id + '/' + save_val,
                  complete: function (jqXHR, status) {
                      // Close modal.
-                     $(e.target).closest('.reveal-modal').foundation('reveal', 'close');
+                     $(e.target).closest('.reveal-modal').foundation('close');
                  }
              });
          },
- 
+
          /**
           * Helper function to retrieve query params by key.
           *
@@ -204,16 +206,16 @@
              if (intent === 'support') {
                  response = {
                      vote_value: 'yes',
-                     vote_label: Drupal.settings.bill_vote.vote_options.yes
+                     vote_label: drupalSettings.bill_vote.vote_options.yes
                  };
              }
              else {
                  response = {
                      vote_value: 'no',
-                     vote_label: Drupal.settings.bill_vote.vote_options.no
+                     vote_label: drupalSettings.bill_vote.vote_options.no
                  };
              }
- 
+
              return response;
          },
          /**
@@ -234,7 +236,7 @@
              else {
                  element = document.querySelectorAll('button.nys-bill-vote-no')[0];
              }
- 
+
              return element;
          },
          /**
@@ -254,44 +256,44 @@
                  intent = vote_value,
                  $target = $(element)
              ;
- 
+
              // Update url with historyApi to add intent query param.
              this.updateQueryStringParam('intent', intent);
- 
+
              // Set the status label.
              if (drupalSettings.settings.is_logged_in === false) {
                  var cta_language = 'Complete this form to <strong>' + intent + '</strong> this bill:';
                  $('p.c-bill-polling--cta', element.form).html(cta_language);
              }
- 
+
              // Set selected class for highlighting the voter's selection.
              $target.addClass('selected accent-bg');
              $target.siblings().removeClass('selected accent-bg');
- 
+
              // Reset the classes to move the widget inline.
              $('.c-bill--vote-widget')
                  .addClass('c-bill--vote-attach')
                  .removeClass('c-bill--vote-widget');
- 
+
              // Hide the subscription form controls.
              // NOTE: This doesn't exist on the page.
              $('.nys-bill-subscribe').addClass('js-hide');
- 
+
              // Show the other form-centric elements.
              // NOTE: Change to using the js-hide if possible.
              // -- https://github.com/jquery/jquery.com/issues/88#issuecomment-72400007
              $('.c-bill--message-form').show();
              $('.c-bill--sentiment-update').show();
- 
+
              // Set the value on the "new" form submit.
              $('input[name=vote_value]').val(vote_value);
- 
+
              // Scroll to the top of the form area.
              if ($('.nys-bill-vote').length) {
                  $('html, body').animate({scrollTop: $('.nys-bill-vote').offset().top - 250}, 'slow');
              }
- 
- 
+
+
              if (drupalSettings.settings.is_logged_in === false) {
                  var buttonText = '';
                  if (vote_value === 'yes') {
@@ -302,7 +304,7 @@
                  }
                  $('#nys-bills-bill-form button[type="submit"]').html(buttonText);
              }
- 
+
              // Handle auto-subscription process.
              if (drupalSettings.settings.auto_subscribe === false && drupalSettings.settings.is_logged_in) {
                  var check_box = $('<input type="checkbox" id="autosub_remember" name="autosub_remember"/>'),
@@ -319,14 +321,14 @@
                          cancel_callback: self.callbackAutosubHandler
                      },
                      autosubModal = Drupal.theme('createConfirmationModal', options);
- 
+
                  // Ask user for confirmation and then record vote.
                  setTimeout(function () {
-                     $('#auto-subscribe-modal').foundation('reveal', 'open');
+                     $('#auto-subscribe-modal').foundation('open');
                  }, 500);
- 
+
              }
- 
+
          },
          /**
           * Explicitly save/update a url parameter using HTML5's replaceState().
@@ -344,17 +346,17 @@
           */
          updateQueryStringParam: function (key, value) {
              var baseUrl = [location.protocol, '//', location.host, location.pathname].join('');
- 
+
              // Grab any existing query params that exist in the URL.
              var urlQueryString = location.search;
              var newParam = key + '=' + value;
              var params = '?' + newParam;
- 
+
              // If an existing query param string exists, then process so we can ensure
              // that any existing keys have their values updated.
              if (urlQueryString) {
                  var keyRegex = new RegExp('([\?&])' + key + '[^&]*');
- 
+
                  // If param exists in the URL already, update it,
                  if (urlQueryString.match(keyRegex) !== null) {
                      params = urlQueryString.replace(keyRegex, '$1' + newParam);
@@ -367,6 +369,5 @@
              history.pushState({}, '', baseUrl + params);
          }
      };
- 
+
  })(jQuery, Drupal, drupalSettings);
- 

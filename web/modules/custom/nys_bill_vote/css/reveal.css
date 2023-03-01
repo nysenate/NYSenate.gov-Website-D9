@@ -1,0 +1,262 @@
+
+body.is-reveal-open {
+  overflow: hidden
+}
+
+html.is-reveal-open,html.is-reveal-open body {
+  min-height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none
+}
+
+.reveal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1005;
+  display: none;
+  background-color: hsla(0,0%,4%,.45);
+  overflow-y: scroll
+}
+
+.reveal {
+  z-index: 1006;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: none;
+  padding: 1rem;
+  border: 1px solid #cacaca;
+  border-radius: 0;
+  background-color: #fefefe;
+  position: relative;
+  top: 100px;
+  margin-right: auto;
+  margin-left: auto;
+  overflow-y: auto
+}
+
+[data-whatinput=mouse] .reveal {
+  outline: 0
+}
+
+@media print,screen and (min-width: 40em) {
+  .reveal {
+      min-height:0
+  }
+}
+
+.reveal .column,.reveal .columns {
+  min-width: 0
+}
+
+.reveal>:last-child {
+  margin-bottom: 0
+}
+
+@media print,screen and (min-width: 40em) {
+  .reveal {
+      width:600px;
+      max-width: 75rem
+  }
+}
+
+@media print,screen and (min-width: 40em) {
+  .reveal .reveal {
+      right:auto;
+      left: auto;
+      margin: 0 auto
+  }
+}
+
+.reveal.collapse {
+  padding: 0
+}
+
+@media print,screen and (min-width: 40em) {
+  .reveal.tiny {
+      width:30%;
+      max-width: 75rem
+  }
+}
+
+@media print,screen and (min-width: 40em) {
+  .reveal.small {
+      width:50%;
+      max-width: 75rem
+  }
+}
+
+@media print,screen and (min-width: 40em) {
+  .reveal.large {
+      width:90%;
+      max-width: 75rem
+  }
+}
+
+.reveal.full {
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  margin-left: 0;
+  border: 0;
+  border-radius: 0
+}
+
+@media screen and (max-width: 39.9375em) {
+  .reveal {
+      top:0;
+      left: 0;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      height: 100vh;
+      min-height: 100vh;
+      margin-left: 0;
+      border: 0;
+      border-radius: 0
+  }
+}
+
+.reveal.without-overlay {
+  position: fixed
+}
+
+
+.reveal-modal-bg {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000000;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 998;
+  display: none;
+  left: 0; }
+
+.reveal-modal, dialog {
+  display: none;
+  position: absolute;
+  z-index: 1005;
+  width: 100vw;
+  top: 0;
+  border-radius: 3px;
+  left: 0;
+  background-color: #FFFFFF;
+  padding: 1.25rem;
+  border: solid 1px #666666;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  padding: 1.875rem; }
+  @media only screen and (max-width: 40em) {
+    .reveal-modal, dialog {
+      min-height: 100vh; } }
+  .reveal-modal .column, dialog .column, .reveal-modal .columns, dialog .columns {
+    min-width: 0; }
+  .reveal-modal > :first-child, dialog > :first-child {
+    margin-top: 0; }
+  .reveal-modal > :last-child, dialog > :last-child {
+    margin-bottom: 0; }
+  @media only screen and (min-width:40.063em) {
+    .reveal-modal, dialog {
+      width: 80%;
+      max-width: 62.5rem;
+      left: 0;
+      right: 0;
+      margin: 0 auto; } }
+  @media only screen and (min-width:40.063em) {
+    .reveal-modal, dialog {
+      top: 6.25rem; } }
+  .reveal-modal.radius, dialog.radius {
+    border-radius: 3px; }
+  .reveal-modal.round, dialog.round {
+    border-radius: 1000px; }
+  .reveal-modal.collapse, dialog.collapse {
+    padding: 0; }
+  @media only screen and (min-width:40.063em) {
+    .reveal-modal.tiny, dialog.tiny {
+      width: 30%;
+      max-width: 62.5rem;
+      left: 0;
+      right: 0;
+      margin: 0 auto; } }
+  @media only screen and (min-width:40.063em) {
+    .reveal-modal.small, dialog.small {
+      width: 40%;
+      max-width: 62.5rem;
+      left: 0;
+      right: 0;
+      margin: 0 auto; } }
+  @media only screen and (min-width:40.063em) {
+    .reveal-modal.medium, dialog.medium {
+      width: 60%;
+      max-width: 62.5rem;
+      left: 0;
+      right: 0;
+      margin: 0 auto; } }
+  @media only screen and (min-width:40.063em) {
+    .reveal-modal.large, dialog.large {
+      width: 70%;
+      max-width: 62.5rem;
+      left: 0;
+      right: 0;
+      margin: 0 auto; } }
+  @media only screen and (min-width:40.063em) {
+    .reveal-modal.xlarge, dialog.xlarge {
+      width: 95%;
+      max-width: 62.5rem;
+      left: 0;
+      right: 0;
+      margin: 0 auto; } }
+  .reveal-modal.full, dialog.full {
+    top: 0;
+    left: 0;
+    height: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    margin-left: 0 !important; }
+    @media only screen and (min-width:40.063em) {
+      .reveal-modal.full, dialog.full {
+        width: 100vw;
+        max-width: 62.5rem;
+        left: 0;
+        right: 0;
+        margin: 0 auto; } }
+  .reveal-modal .close-reveal-modal, dialog .close-reveal-modal {
+    font-size: 2.5rem;
+    line-height: 1;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6875rem;
+    color: #AAAAAA;
+    font-weight: bold;
+    cursor: pointer; }
+
+dialog {
+  display: none; }
+  dialog::backdrop, dialog + .backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000000;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: auto;
+    display: none;
+    left: 0; }
+  dialog[open] {
+    display: block; }
+
+@media print {
+  dialog, .reveal-modal, dialog {
+    display: none;
+    background: #FFFFFF !important; } }

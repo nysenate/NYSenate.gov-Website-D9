@@ -405,11 +405,11 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           // Creates thankful block to be attached to the microsite content.
           $thankfulBlock = BlockContent::create([
             'info' => $senator_name . ' - Thankful Letter Block',
-            'type' => 'form',
+            'type' => 'senator_microsite_school_forms',
             'revision_user' => 1,
-            'field_webform' => [
-              'target_id' => 'school_form_thanksgiving',
-              'status' => 'open',
+            'field_microsite_school_form' => [
+              'plugin_id' => 'nys_senators_microsite_school_forms',
+              'settings' => [],
             ],
           ]);
           $thankfulBlock->save();
@@ -424,11 +424,11 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           // Creates earth day block to be attached to the microsite content.
           $earthDayBlock = BlockContent::create([
             'info' => $senator_name . ' - Earth Day Letter Block',
-            'type' => 'form',
+            'type' => 'senator_microsite_school_forms',
             'revision_user' => 1,
-            'field_webform' => [
-              'target_id' => 'school_form_earth_day',
-              'status' => 'open',
+            'field_microsite_school_form' => [
+              'plugin_id' => 'nys_senators_microsite_school_forms',
+              'settings' => [],
             ],
           ]);
           $earthDayBlock->save();
@@ -1017,11 +1017,11 @@ function _nys_senators_update_microsites(EntityInterface $entity) {
               if ($block_content->bundle() == 'earth_day_letter') {
                 $block = BlockContent::create([
                   'info' => $senator_name . ' - Earth Day Letter Block',
-                  'type' => 'form',
+                  'type' => 'senator_microsite_school_forms',
                   'revision_user' => 1,
-                  'field_webform' => [
-                    'target_id' => 'school_form_earth_day',
-                    'status' => 'open',
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
                   ],
                 ]);
                 $block->save();
@@ -1035,11 +1035,11 @@ function _nys_senators_update_microsites(EntityInterface $entity) {
               elseif ($block_content->bundle() == 'thankful_letter') {
                 $block = BlockContent::create([
                   'info' => $senator_name . ' - Thankful Letter Block',
-                  'type' => 'form',
+                  'type' => 'senator_microsite_school_forms',
                   'revision_user' => 1,
-                  'field_webform' => [
-                    'target_id' => 'school_form_thanksgiving',
-                    'status' => 'open',
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
                   ],
                 ]);
                 $block->save();

@@ -3,11 +3,13 @@
 namespace Drupal\nys_bill_vote;
 
 use Drupal\node\NodeInterface;
+use Drupal\votingapi\Entity\Vote;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\votingapi\VoteResultFunctionManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -53,6 +55,13 @@ class BillVoteHelper {
   protected $entityTypeManager;
 
   /**
+   * Voting api result function manger.
+   *
+   * @var \Drupal\votingapi\VoteResultFunctionManager
+   */
+  protected $voteResultFunctionManager;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -60,13 +69,15 @@ class BillVoteHelper {
     CurrentPathStack $current_path,
     CurrentRouteMatch $current_route_match,
     LoggerChannelFactory $logger,
-    EntityTypeManager $entity_type_manager
+    EntityTypeManager $entity_type_manager,
+    VoteResultFunctionManager $vote_result_function_manager
   ) {
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
     $this->currentRouteMatch = $current_route_match;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
+    $this->voteResultFunctionManager = $vote_result_function_manager;
   }
 
   /**
@@ -130,11 +141,9 @@ class BillVoteHelper {
    */
   public function getOptions() {
 
-    // @todo remove the "maybe" vote option
     $options = [
       'yes' => t('Aye'),
       'no' => t('Nay'),
-      'maybe' => t('Maybe'),
     ];
 
     return $options;
@@ -240,18 +249,15 @@ class BillVoteHelper {
         $needs_processing = TRUE;
       }
       else {
-        $vote_check_criteria = [
-          'uid' => $this->currentUser->id(),
-          'entity_id' => $entity_id,
-          'entity_type' => 'node',
-          'tag' => 'nys_bill_vote',
-        ];
-        // @todo Check voting api module.
-        // @phpstan-ignore-next-line
-        $vote_check = votingapi_select_single_vote_value($vote_check_criteria);
+        $user_votes = $this->entityTypeManager->getStorage('vode')->getUserVotes($this->currentUser->id(), 'nys_bill_vote', 'node', $entity_id);
+        $vote_check = NULL;
+        if (!empty($user_votes)) {
+          $vote = $this->entityTypeManager->getStorage('vode')->load(end($user_votes));
+          $vote_check = $vote->getValue();
+        }
 
         // If no vote exists, or if the vote is different, process the vote.
-        $needs_processing = (is_null($vote_check) || ($vote_check != $vote_index));
+        $needs_processing = (is_null($vote_check) || ($vote_check !== $vote_index));
 
         // Also process auto-subscribe if the user has chosen.
         $account = $this->entityTypeManager->getStorage('user')
@@ -283,7 +289,7 @@ class BillVoteHelper {
 
             // @todo This method comes from nys_subscriptions module.
             // @phpstan-ignore-next-line
-            _real_nys_subscriptions_subscription_signup($data);
+            // _real_nys_subscriptions_subscription_signup($data);
           }
         }
       }
@@ -304,9 +310,14 @@ class BillVoteHelper {
           'tag' => 'nys_bill_vote',
         ];
 
-        // @todo This comes from voting api.
-        // @phpstan-ignore-next-line
-        $ret = votingapi_set_votes($vote);
+        $vote = Vote::create(['type' => 'nys_bill_vote']);
+        $vote->setVotedEntityType('node');
+        $vote->setVotedEntityId($entity_id);
+        $vote->setValueType('option');
+        $vote->setValue($vote_index);
+        $vote->setOwnerId($account->id());
+        $vote->save();
+        $ret = $vote;
       }
     }
 
@@ -358,32 +369,19 @@ class BillVoteHelper {
    *   The entity type.
    * @param string $entity_id
    *   The entity id.
-   * @param bool $clear
-   *   The clear value.
    *
    * @return mixed
    *   The default values.
    */
-  public function getDefault($entity_type, $entity_id, $clear = FALSE) {
-    $entities = &drupal_static(__FUNCTION__, NULL, $clear);
+  public function getDefault($entity_type, $entity_id) {
     if (empty($entities[$entity_type][$entity_id]) && !empty($this->currentUser->id())) {
-      // @todo Commenting the following lines to test the module.
-      // @todo Uncomment the code after porting the voting api module.
-      // @phpstan-ignore-next-line
-      // $entities[$entity_type][$entity_id] = votingapi_select_votes([
-      // 'tag' => 'nys_bill_vote',
-      // 'entity_id' => $entity_id,
-      // 'entity_type' => 'node',
-      // 'uid' => $this->currentUser->id(),
-      // ]);
+      $user_votes = $this->entityTypeManager->getStorage('vode')->getUserVotes($this->currentUser->id(), 'nys_bill_vote', $entity_type, $entity_id);
+      if (!empty($user_votes)) {
+        $vote = $this->entityTypeManager->getStorage('vode')->load(end($user_votes));
+        return $vote->getValue();
+      }
     }
-    if (isset($entities[$entity_type][$entity_id][0]['value'])) {
-      return $entities[$entity_type][$entity_id][0]['value'];
-    }
-    else {
-      // @todo this value is tied to the "maybe" vote option.
-      return 2;
-    }
+    return NULL;
   }
 
   /**
@@ -402,13 +400,12 @@ class BillVoteHelper {
   public function getVotes($entity_type, $entity_id, $clear = FALSE) {
     $entities = &drupal_static(__FUNCTION__, NULL, $clear);
     if (empty($entities[$entity_type][$entity_id])) {
-      // @todo Confirm if we need to use the voting api module.
-      // @phpstan-ignore-next-line
-      $entities[$entity_type][$entity_id] = votingapi_select_results([
+      $results = $this->voteResultFunctionManager->getResults([
         'tag' => 'nys_bill_vote',
         'entity_id' => $entity_id,
         'entity_type' => 'node',
       ]);
+      $entities[$entity_type][$entity_id] = $results['nys_bill_vote']['vote_sum'];
     }
 
     return $entities[$entity_type][$entity_id];

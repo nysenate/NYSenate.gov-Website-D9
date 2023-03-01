@@ -270,6 +270,20 @@
   select {
     margin-bottom: 16px;
   }
+
+  &.js-form-item-field-address-0-address-administrative-area {
+    float: unset;
+    margin: 0 1em 0 0;
+    width: auto;
+
+    select {
+      height: 2.3125rem;
+      padding: 0px 40px 0 20px;
+      min-height: unset;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
 }
 
 .view-filters {
@@ -290,6 +304,21 @@
   width: 100%;
 }
 
+.webform-submission-form {
+  .js-form-type-select {
+    width: 100%;
+    margin: 0;
+
+    &.form-item-school-name {
+      float: unset;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
 @include breakpoint($bp-sm) {
   .js-form-type-select {
     float: left;
@@ -303,35 +332,6 @@
 
     select {
       margin-bottom: 40px;
-    }
-
-    &.js-form-item-field-address-0-address-administrative-area {
-      float: unset;
-      margin: 0 1em 0 0;
-      width: auto;
-
-      select {
-        height: 2.3125rem;
-        padding: 0px 40px 0 20px;
-        min-height: unset;
-        width: auto;
-        box-sizing: border-box;
-      }
-    }
-  }
-
-  .webform-submission-form {
-    .js-form-type-select {
-      width: 100%;
-      margin: 0;
-
-      &.form-item-school-name {
-        float: unset;
-
-        &::after {
-          display: none;
-        }
-      }
     }
   }
 }

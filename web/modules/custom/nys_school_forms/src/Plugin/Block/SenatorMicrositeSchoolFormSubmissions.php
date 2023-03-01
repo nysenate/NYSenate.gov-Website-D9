@@ -88,6 +88,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
+    $results = [];
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
@@ -109,6 +110,9 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         'sort_order' => NULL,
       ];
       $results = $this->schoolFormsService->getResults($params);
+      if (empty($results)) {
+        $results = 'There are no submissions at this time. Please check back later';
+      }
       // Results come back in this format. First key is the school' name,
       // second key is the grade.
       /*["SUCCESS ACADEMY BERGEN BEACH"]=> array(1) {
@@ -123,10 +127,17 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       }
       }
       }*/
-      $build = [];
+      $panels = [];
+      $panels[]['title'] = 'Current Year';
+      $panels[]['title'] = 'Passed Submissions';
+
       $build = [
-        '#theme' => 'nysenate-submission-results',
-        '#results' => $results,
+        '#theme' => 'nys_school_forms__results_block',
+        '#content' => [
+          'panels' => $panels,
+          'results' => $results,
+
+        ],
       ];
       return $build;
     }

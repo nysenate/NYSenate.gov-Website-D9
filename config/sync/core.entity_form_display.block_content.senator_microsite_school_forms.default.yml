@@ -1,0 +1,39 @@
+uuid: 27326fe9-2ec8-47b4-9d3a-5ddce61e91a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.senator_microsite_school_forms
+    - field.field.block_content.senator_microsite_school_forms.field_microsite_school_form
+  module:
+    - block_field
+id: block_content.senator_microsite_school_forms.default
+targetEntityType: block_content
+bundle: senator_microsite_school_forms
+mode: default
+content:
+  field_microsite_school_form:
+    type: block_field_default
+    weight: 27
+    region: content
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

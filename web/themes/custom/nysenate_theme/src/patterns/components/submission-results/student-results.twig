@@ -1,8 +1,7 @@
-{{ attach_library('nysenate_theme/nysenate-submission-results') }}
+{{ attach_library('nysenate_theme/submission-results') }}
 
 <div class="c-committees-container {% if is_bulleted %} c-committees-container--bulleted {% endif %}">
-  <h2 class="c-container-title">{{ title }}</h2>
-
+  <h2 class="c-container-title">title{{ title }}</h2>
   {% if filter_items %}
     {% for filter_item in filter_items %}
       <form {{ form_attr }}>
@@ -21,36 +20,40 @@
         </div>
         {% if filter_item.desc %}
           <div class="description">
-            {{ filter_item.desc }}
+           description {{ filter_item.desc }}
           </div>
         {% endif %}
       </form>
     {% endfor %}
   {% endif %}
   <div class="view-content">
-    {% for group in groups %}
-      <h3 class="c-group-title">{{ group.title }}</h3>
-
+  {% if results is iterable %}
+    {% for school, value in results %}
+      <h3 class="c-group-title">{{ school }}</h3>
       <div class="c-committees-wrapper">
         {% for committee in group.committees %}
           {% if is_bulleted %}
-            <h4 class="c-subgroup-title">{{ committee.title }}</h4>
+            <h4 class="c-subgroup-title">Committe title {{ committee.title }}</h4>
             <ul>
               {% for subgroup in committee.subgroups %}
                 <li>
                   <a href="{{ subgroup.url }}" hreflang="en" class="c-committee-link">
-                    <span class="c-committee-title">{{ subgroup.title }}</span>
+                    <span class="c-committee-title"> {{ subgroup.title }}</span>
                   </a>
                 </li>
               {% endfor %}
             </ul>
           {% else %}
             <a href="{{ committee.url }}" hreflang="en" class="c-committee-link">
-              <h4 class="c-committee-title">{{ committee.title }}</h4>
+              <h4 class="c-committee-title">Committe title{{ committee.title }}</h4>
             </a>
           {% endif %}
         {% endfor %}
       </div>
     {% endfor %}
+  {% endif %}
+  {% if results is not iterable %}
+    {{ results }}
+  {% endif %}
   </div>
 </div>

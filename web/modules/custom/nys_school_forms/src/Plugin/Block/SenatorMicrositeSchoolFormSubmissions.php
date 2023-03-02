@@ -129,7 +129,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       }*/
       $panels = [];
       $panels[]['title'] = 'Current Year';
-      $panels[]['title'] = 'Passed Submissions';
+      $panels[]['title'] = 'Past Submissions';
 
       $build = [
         '#theme' => 'nys_school_forms__results_block',

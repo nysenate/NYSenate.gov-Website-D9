@@ -85,7 +85,7 @@ class SchoolFormsService {
     $results = [];
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
     $webform_id = '';
-    if ($params['form_type']) {
+    if (!empty($params['form_type'])) {
       switch ($params['form_type']) {
         // Earth Day.
         case 'Earth Day':
@@ -168,15 +168,15 @@ class SchoolFormsService {
           continue;
         }
 
-        if ($params['form_type_fe'] == 'Earth Day' || $params['form_type_fe'] == 'Thankful') {
+        if (!empty($params['form_type_fe']) && ($params['form_type_fe'] == 'Earth Day' || $params['form_type_fe'] == 'Thankful')) {
           $file_uri = $file->getFileUri();
           $scheme = $this->streamWrapperManager->getScheme($file_uri);
           if ($scheme !== 'public') {
             continue;
           }
-
-          $results[strtoupper($school_node->label())][$submission_data['grade']] = [
-            'file' => $file,
+          $grade = $this->mapGrades($submission_data['grade']);
+          $results[strtoupper($school_node->label())][$grade] = [
+            // 'file' => $file,
             'student' => $student,
           ];
         }
@@ -191,7 +191,8 @@ class SchoolFormsService {
         }
       }
     }
-    if ($params['form_type_fe'] == 'Earth Day' || $params['form_type_fe'] == 'Thankful') {
+    if (!empty($params['form_type_fe']) && ($params['form_type_fe'] == 'Earth Day' || $params['form_type_fe'] == 'Thankful')) {
+      $results = $this->orderGrades($results);
       return $results;
     }
     if ($params['sort_by'] == 'student') {
@@ -201,6 +202,57 @@ class SchoolFormsService {
         $results = array_reverse($results);
       }
     }
+    return $results;
+  }
+
+  /**
+   * Maps the grade number to the display grade value.
+   *
+   * @return string
+   *   The display value for the grade level.
+   */
+  public function mapGrades($grade) {
+    $grade_value = match ($grade) {
+      'K' => 'Kindergarten',
+      '1' => '1st Grade',
+      '2' => '2nd Grade',
+      '3' => '3rd Grade',
+      '4' => '4th Grade',
+      '5' => '5th Grade',
+      '6' => '6th Grade',
+      '7' => '7th Grade',
+      '8' => '8th Grade',
+      '9' => '9th Grade',
+      '10' => '10th Grade',
+      '11' => '11th Grade',
+      '12' => '12th Grade',
+    };
+    return $grade_value;
+  }
+
+  /**
+   * Maps the grade number to the display grade value.
+   *
+   * @return array
+   *   Re-order the results so that they are in the right grade level order.
+   */
+  public function orderGrades($results) {
+    // @todo Need to sort this array by this grade order:
+    $key_order = [
+      'Kindergarten',
+      '1st Grade',
+      '2nd Grade',
+      '3rd Grade',
+      '4th Grade',
+      '5th Grade',
+      '6th Grade',
+      '7th Grade',
+      '8th Grade',
+      '9th Grade',
+      '10th Grade',
+      '11th Grade',
+      '12th Grade',
+    ];
     return $results;
   }
 

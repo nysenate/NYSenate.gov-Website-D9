@@ -85,41 +85,45 @@ class SchoolFormsService {
     $results = [];
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
     $webform_id = '';
-    switch ($params['form_type']) {
-      // Earth Day.
-      case 'Earth Day':
-        $webform_id = 'school_form_earth_day';
-        break;
+    if ($params['form_type']) {
+      switch ($params['form_type']) {
+        // Earth Day.
+        case 'Earth Day':
+          $webform_id = 'school_form_earth_day';
+          break;
 
-      // Thanksgiving.
-      case 'Thanksgiving':
-        $webform_id = 'school_form_thanksgiving';
-        break;
+        // Thanksgiving.
+        case 'Thanksgiving':
+          $webform_id = 'school_form_thanksgiving';
+          break;
 
-      default:
-        $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
-          [
-            'vid' => 'school_form_type',
-            'name' => $params['form_type'],
-          ]);
-        if ($terms !== NULL) {
-          $term = reset($terms);
-          if ($term) {
-            $webform_id = $term->field_school_form->target_id;
+        default:
+          $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
+            [
+              'vid' => 'school_form_type',
+              'name' => $params['form_type'],
+            ]);
+          if ($terms !== NULL) {
+            $term = reset($terms);
+            if ($term) {
+              $webform_id = $term->field_school_form->target_id;
+            }
           }
-        }
-        break;
+          break;
+      }
     }
-    switch ($params['form_type_fe']) {
-      // Earth Day.
-      case 'Earth Day':
-        $webform_id = 'school_form_earth_day';
-        break;
+    if (!empty($params['form_type_fe'])) {
+      switch ($params['form_type_fe']) {
+        // Earth Day.
+        case 'Earth Day':
+          $webform_id = 'school_form_earth_day';
+          break;
 
-      // Thanksgiving.
-      case 'Thankful':
-        $webform_id = 'school_form_thanksgiving';
-        break;
+        // Thanksgiving.
+        case 'Thankful':
+          $webform_id = 'school_form_thanksgiving';
+          break;
+      }
     }
     $query->condition('webform_id', $webform_id);
     if ($params['from_date']) {

@@ -35,6 +35,7 @@ function nys_dashboard_views_query_alter($view, $query) {
       }
     }
   }
+
   if ($view->id() == 'private_message_inbox') {
     foreach ($query->where as $key => $where) {
       // Join private_message__field_subject table.
@@ -132,7 +133,7 @@ function nys_dashboard_views_query_alter($view, $query) {
       if ($view->current_display == 'day_block') {
         if (!$calendar_filter) {
           $query->where[$key]['conditions'][] = [
-            'field' => 'DATE_FORMAT(FROM_UNIXTIME(node__field_date_range.field_date_range_value), \'%Y-%m-%d\') = :field_date_range_value',
+            'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') = :field_date_range_value',
             'value' => [
               ':field_date_range_value' => date('Y-m-d', time()),
             ],

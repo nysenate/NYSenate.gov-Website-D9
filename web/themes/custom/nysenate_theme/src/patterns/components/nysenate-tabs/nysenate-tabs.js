@@ -70,7 +70,7 @@
         const animationDuration = 400;
         loadMore.each(function () {
           const pagerContainer = $(this).closest('.pager-load-more');
-          const items = pagerContainer.parent().find('.content__item');
+          const items = pagerContainer.parent().parent().find('.content__item');
 
           const limit = parseInt(pagerContainer.data('limit')) || 5;
 

@@ -27,9 +27,11 @@
 {% set limit = 6 %}
 
 {% if issue_cards|length > limit %}
-  <div class="pager pager-load-more" data-limit="{{ limit }}">
-    <span class="pager-next first last">
-      <a class="load-more">See more issues</a>
-    </span>
+  <div class="item-list">
+    <div class="pager pager-load-more" data-limit="{{ limit }}">
+      <span class="pager-next first last">
+        <a class="load-more">See more issues</a>
+      </span>
+    </div>
   </div>
 {% endif %}

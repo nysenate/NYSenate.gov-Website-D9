@@ -23,9 +23,11 @@
 {% set limit = view.current_display == 'constituent_all_committees_updates' ? 4 : 5 %}
 
 {% if rows|length > limit %}
-  <div class="pager pager-load-more" data-limit="{{ limit }}">
-    <span class="pager-next first last">
-      <a class="load-more">See more</a>
-    </span>
+  <div class="item-list">
+    <div class="pager pager-load-more" data-limit="{{ limit }}">
+      <span class="pager-next first last">
+        <a class="load-more">See more</a>
+      </span>
+    </div>
   </div>
 {% endif %}

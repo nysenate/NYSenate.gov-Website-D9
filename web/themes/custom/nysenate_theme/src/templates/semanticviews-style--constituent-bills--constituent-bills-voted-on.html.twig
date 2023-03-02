@@ -22,9 +22,11 @@
 {% set limit = 4 %}
 
 {% if committees|length > limit %}
-  <div class="pager pager-load-more" data-limit="{{ limit }}">
-    <span class="pager-next first last">
-      <a class="load-more">See more</a>
-    </span>
+  <div class="item-list">
+    <div class="pager pager-load-more" data-limit="{{ limit }}">
+      <span class="pager-next first last">
+        <a class="load-more">See more</a>
+      </span>
+    </div>
   </div>
 {% endif %}

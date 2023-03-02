@@ -125,7 +125,7 @@
     {% endif %}
   {% else %}
     {% if view.current_display != 'day_block' %}
-      {{ fields.field_date_range.content }}
+      {{ fields.field_date_range.content|replace({' - ':' TO '})|raw }}
     {% endif %}
 
     {% if fields.field_video_status_1.content is defined and fields.field_video_status_1.content|striptags|trim is not empty  %}

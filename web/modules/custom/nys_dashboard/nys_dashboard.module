@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\Views;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_views_query_alter().
@@ -123,26 +124,154 @@ function nys_dashboard_views_query_alter($view, $query) {
         if (strpos($condition['field'], 'node__field_date_range.field_date_range_value') > 0) {
           $calendar_filter = TRUE;
           $calendar_index = $index;
-          if (($view->current_display == 'day_block') || ($view->current_display == 'week_block')) {
+
+          // Get value.
+          $value = $condition['value'];
+          if (strpos($condition['field'], "= DATE_FORMAT(('") > 0 && strpos($condition['field'], "' + INTERVAL") > 0) {
+            $value_array = explode("= DATE_FORMAT(('", $condition['field']);
+            $value_array = explode("' + INTERVAL", $value_array[1]);
+            $value = $value_array[0];
+          }
+
+          if (in_array($view->current_display, ['page_1', 'day_block'])) {
             $query->where[$key]['conditions'][$index]['field'] = str_replace('%Y-%m', '%Y-%m-%d', $condition['field']);
+          }
+          elseif (in_array($view->current_display, ['page_3', 'week_block'])) {
+            [$start_of_week, $end_of_week] = nys_dashboard_get_date('week', $value);
+
+            $query->where[$key]['conditions'][$index] = [
+              'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
+              'value' => [
+                ':field_date_range_value' => $start_of_week,
+                ':field_date_range_value1' => $end_of_week,
+              ],
+              'operator' => 'formula',
+            ];
+          }
+          else {
+            [$start_of_month, $end_of_month] = nys_dashboard_get_date('month', $value);
+
+            $query->where[$key]['conditions'][$index] = [
+              'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
+              'value' => [
+                ':field_date_range_value' => $start_of_month,
+                ':field_date_range_value1' => $end_of_month,
+              ],
+              'operator' => 'formula',
+            ];
           }
         }
       }
+    }
 
+    if (!$calendar_filter) {
       // Add date format for exposed filters on calendar view.
-      if ($view->current_display == 'day_block') {
-        if (!$calendar_filter) {
-          $query->where[$key]['conditions'][] = [
-            'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') = :field_date_range_value',
-            'value' => [
-              ':field_date_range_value' => date('Y-m-d', time()),
-            ],
-            'operator' => 'formula',
-          ];
-        }
+      if (in_array($view->current_display, ['page_1', 'day_block'])) {
+        $query->where[1]['conditions'][] = [
+          'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') = :field_date_range_value',
+          'value' => [
+            ':field_date_range_value' => date('Y-m-d', time()),
+          ],
+          'operator' => 'formula',
+        ];
       }
+      elseif (in_array($view->current_display, ['page_3', 'week_block'])) {
+        [$start_of_week, $end_of_week] = nys_dashboard_get_date('week');
 
-      // TO DO: month_block and week_block.
+        $query->where[1]['conditions'][] = [
+          'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
+          'value' => [
+            ':field_date_range_value' => $start_of_week,
+            ':field_date_range_value1' => $end_of_week,
+          ],
+          'operator' => 'formula',
+        ];
+      }
+      elseif (in_array($view->current_display, ['page_2', 'month_block'])) {
+        [$start_of_month, $end_of_month] = nys_dashboard_get_date('month');
+
+        $query->where[1]['conditions'][] = [
+          'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
+          'value' => [
+            ':field_date_range_value' => $start_of_month,
+            ':field_date_range_value1' => $end_of_month,
+          ],
+          'operator' => 'formula',
+        ];
+      }
+    }
+
+  }
+}
+
+/**
+ * Get the date ranges to use on calendar page.
+ */
+function nys_dashboard_get_date($range = 'week', $start_date = NULL, $end_date = NULL) {
+  if (!$start_date) {
+    $start_date = date('Y-m-d', time());
+  }
+  if (!$end_date) {
+    $end_date = date('Y-m-d');
+  }
+
+  if ($range == 'week') {
+    if (date('l', strtotime($start_date)) == 'Sunday') {
+      $start_date = date('Y-m-d', strtotime($start_date));
+    }
+    else {
+      $start_date = date('Y-m-d', strtotime('previous sunday', strtotime($start_date)));
+    }
+
+    $end_date = date('Y-m-d', strtotime('next saturday', strtotime($start_date)));
+  }
+  elseif ($range == 'month') {
+    $start_date = date('Y-m-d', strtotime('first day of this month', strtotime($start_date)));
+    $end_date = date('Y-m-t', strtotime($start_date));
+  }
+
+  return [$start_date, $end_date];
+}
+
+/**
+ * Change the date format for exposed filters on calendar page date field.
+ */
+function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $values = $form_state->getValues();
+  $calendar_page = [
+    'views-exposed-form-events-page-1',
+    'views-exposed-form-events-day-block',
+    'views-exposed-form-events-page-2',
+    'views-exposed-form-events-month-block',
+    'views-exposed-form-events-page-3',
+    'views-exposed-form-events-week-block',
+  ];
+  if (!empty($form['#id']) && (in_array($form['#id'], $calendar_page))) {
+    if (in_array($form['#id'], [
+      'views-exposed-form-events-page-1',
+      'views-exposed-form-events-day-block',
+      'views-exposed-form-events-page-3',
+      'views-exposed-form-events-week-block',
+    ])) {
+      $form['date']['#date_format'] = 'm/d/Y';
+      $form['date']['#default_value'] = $values['date'] ?? date('m/d/Y');
+    }
+    if (in_array($form['#id'], [
+      'views-exposed-form-events-page-2',
+      'views-exposed-form-events-month-block',
+    ])) {
+      $form['date']['#date_format'] = 'm/Y';
+      $form['date']['#default_value'] = $values['date'] ?? date('m/d/Y');
+    }
+    if (in_array($form['#id'], [
+      'views-exposed-form-events-page-3',
+      'views-exposed-form-events-week-block',
+    ])) {
+      [$start_of_week, $end_of_week] = nys_dashboard_get_date('week');
+      $form['date']['min']['#date_format'] = 'm/d/Y';
+      $form['date']['min']['#default_value'] = $start_of_week;
+      $form['date']['max']['#date_format'] = 'm/d/Y';
+      $form['date']['max']['#default_value'] = $end_of_week;
     }
   }
 }

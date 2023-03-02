@@ -28,8 +28,8 @@
 {% set limit = 6 %}
 
 {% if committees|length > limit %}
-  <div class="item-list">
-    <div class="pager pager-load-more" data-limit="{{ limit }}">
+  <div class="item-list" data-limit="{{ limit }}">
+    <div class="pager pager-load-more">
       <span class="pager-next first last">
         <a class="load-more">See more</a>
       </span>

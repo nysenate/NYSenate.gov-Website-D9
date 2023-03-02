@@ -48,10 +48,12 @@
 {% endif %}
 
 {% if load_more %}
-  <ul class="pager pager-load-more js-pager__items">
-    <li class="pager-next">
-      <a href="{{ load_more.href }}">{{ load_more.text|default('Load more') }}</a>
-    </li>
-  </ul>
+  <div class="item-list">
+    <ul class="pager pager-load-more js-pager__items">
+      <li class="pager-next">
+        <a href="{{ load_more.href }}">{{ load_more.text|default('Load more') }}</a>
+      </li>
+    </ul>
+  </div>
 {% endif %}
 

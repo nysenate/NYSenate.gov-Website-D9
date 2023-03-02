@@ -104,7 +104,9 @@ class SchoolFormsService {
           ]);
         if ($terms !== NULL) {
           $term = reset($terms);
-          $webform_id = $term->field_school_form->target_id;
+          if ($term) {
+            $webform_id = $term->field_school_form->target_id;
+          }
         }
         break;
     }

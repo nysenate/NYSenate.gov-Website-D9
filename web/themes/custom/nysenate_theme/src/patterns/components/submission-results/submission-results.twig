@@ -1,4 +1,5 @@
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/submission-results') }}
 
 <div class="newsroom-content l-row">
 
@@ -14,10 +15,11 @@
 
   <div class="tabs-content">
     {% for panel in panels %}
-      {% include '@nysenate_theme/nysenate-committee-detail/nysenate-committee-detail.twig' with {
-        is_bulleted: panel.is_bulleted,
+      {% include '@nysenate_theme/submission-results/student-results.twig' with {
+        is_bulleted: TRUE,
         title: panel.title,
-        groups: panel.groups,
+        schools: panel.schools,
+        filter_items: panels.filter_items
       } only
       %}
     {% endfor %}

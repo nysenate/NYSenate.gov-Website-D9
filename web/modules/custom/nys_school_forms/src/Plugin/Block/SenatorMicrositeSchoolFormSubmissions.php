@@ -88,30 +88,46 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
+    $results = [];
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
       $form_type = $term->getName();
       $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->entity : [];
 
-      $params = [
+      $last_year_params = $params = [
         'form_type' => $form_type,
         'senator' => $senator_term->id(),
         'school' => NULL,
         'teacher_name' => NULL,
-        'from_date' => NULL,
+        'from_date' => date('Y-m-d', strtotime('first day of january this year')),
         'to_date' => NULL,
         'sort_by' => NULL,
         'sort_order' => NULL,
       ];
-      $results = $this->schoolFormsService->getResults($params, FALSE);
 
-      return [
-        '#theme' => 'senator_microsite_school_form_submission',
-        '#results' => $results,
+      $last_year_params['from_date'] = NULL;
+      $last_year_params['to_date'] = date('Y-m-d', strtotime('first day of december last year'));
+
+      $build = [
+        '#theme' => 'nys_school_forms__results_block',
+        '#content' => [
+          'panels' => [
+            [
+              'tab_text' => 'Current Year',
+              'title' => date('Y') . ' Poster Submissions',
+              'schools' => $this->schoolFormsService->getResults($params, FALSE),
+            ],
+            [
+              'tab_text' => 'Past Submissions',
+              'title' => 'Archived Submissions',
+              'schools' => $this->schoolFormsService->getResults($last_year_params, FALSE),
+            ],
+          ],
+        ],
       ];
+      return $build;
     }
-    return [];
   }
 
   /**

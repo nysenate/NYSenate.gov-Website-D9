@@ -92,15 +92,11 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
       $form_type = $term->getName();
-      $senator_terms = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->getValue() : [];
-      $tids = [];
-      foreach ($senator_terms as $tid) {
-        $tids[] = (int) $tid['target_id'];
-      }
-      $senator = $tids[0];
+      $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->entity : [];
+
       $params = [
         'form_type' => $form_type,
-        'senator' => urldecode($senator),
+        'senator' => $senator_term->id(),
         'school' => NULL,
         'teacher_name' => NULL,
         'from_date' => NULL,
@@ -108,21 +104,8 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         'sort_by' => NULL,
         'sort_order' => NULL,
       ];
-      $results = $this->schoolFormsService->getResults($params);
-      // Results come back in this format. First key is the school' name,
-      // second key is the grade.
-      /*["SUCCESS ACADEMY BERGEN BEACH"]=> array(1) {
-      [5]=> array(1) {
-      ["file] => [file object]
-      ["student"]=> array(4) {
-      ["show_student"]=> string(2) "No"
-      ["student_name"]=> string(5) "test5"
-      ["student_submission"]=> string(7) "1900918"
-      ["submission_type"]=> string(1) "0"
-      }
-      }
-      }
-      }*/
+      $results = $this->schoolFormsService->getResults($params, FALSE);
+
       return [
         '#theme' => 'senator_microsite_school_form_submission',
         '#results' => $results,

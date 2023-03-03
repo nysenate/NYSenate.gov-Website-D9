@@ -5,6 +5,7 @@ namespace Drupal\nys_school_forms;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
@@ -49,6 +50,13 @@ class SchoolFormsService {
   protected $streamWrapperManager;
 
   /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
@@ -61,18 +69,23 @@ class SchoolFormsService {
    *   Current route match.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $streamWrapperManager
    *   The StreamWrapperManager.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
   public function __construct(
     PagerParametersInterface $pager_param,
     PagerManagerInterface $pager_manager,
     EntityTypeManager $entityTypeManager,
     RouteMatchInterface $current_route_match,
-    StreamWrapperManager $streamWrapperManager) {
+    StreamWrapperManager $streamWrapperManager,
+    FileUrlGeneratorInterface $file_url_generator
+    ) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
     $this->entityTypeManager = $entityTypeManager;
     $this->currentRouteMatch = $current_route_match;
     $this->streamWrapperManager = $streamWrapperManager;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -81,7 +94,7 @@ class SchoolFormsService {
    * @return array
    *   The search form and search results build array.
    */
-  public function getResults($params) {
+  public function getResults($params, $admin_view = TRUE) {
     $results = [];
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
     $webform_id = '';
@@ -157,16 +170,30 @@ class SchoolFormsService {
         $file_uri = $file->getFileUri();
         $scheme = $this->streamWrapperManager->getScheme($file_uri);
 
-        $results[strtoupper($student['student_name'])] = [
-          'school_node' => $school_node,
-          'parent_node' => $parent_node,
-          'senator' => $school_senator,
-          'submission' => $submission,
-          'student' => $student,
-        ];
+        if ($admin_view) {
+          $results[strtoupper($student['student_name'])] = [
+            'school_node' => $school_node,
+            'parent_node' => $parent_node,
+            'senator' => $school_senator,
+            'submission' => $submission,
+            'student' => $student,
+          ];
+        }
+        else {
+          if ($scheme === 'public') {
+            $results[$school_node->label()]['grade_level_' . $submission_data['grade']][] = [
+              'file' => [
+                'url' => $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri()),
+                'title' => $file->getFileName(),
+              ],
+              'student' => $student,
+            ];
+          }
+        }
       }
     }
-    if ($params['sort_by'] == 'student') {
+
+    if ($params['sort_by'] == 'student' && $admin_view) {
       ksort($results, SORT_NATURAL);
       if ($params['sort_order'] == 'desc') {
         // Reverse the array if sort is descending.

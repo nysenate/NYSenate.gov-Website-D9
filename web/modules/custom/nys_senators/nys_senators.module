@@ -9,7 +9,6 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
@@ -198,7 +197,7 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
   // Don't need to waste any performance if user is not MCP.
   if (!$senator_helper->senatorUserIsAdmin($account) && in_array('microsite_content_producer', $user_roles, FALSE)) {
 
-    // Find out all of the User's senators. To do so, load user entity.
+    // Find out all of the User's senators. To do so, load full user entity.
     $user = User::load($account->id());
 
     // Make sure the user has the field and that there is a value.
@@ -233,7 +232,7 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
     }
 
     // Hide Admin routes from Content Bases for non-update access items.
-    if ($entity instanceof ContentEntityBase && (\Drupal::service('router.admin_context')->isAdminRoute() || $operation == 'view all revisions')) {
+    if ($operation == 'view all revisions' && $entity->getEntityType()->id() === 'node') {
       // Returns true if they have update access.
       return AccessResult::allowedIf($entity->access('update', $account))->setCacheMaxAge(0);
     }
@@ -992,5 +991,4 @@ function _nys_senators_create_microsites(EntityInterface $entity) {
 function nys_senators_query_nys_senators_access_alter(AlterableInterface $query) {
   // Add op metadata so node_access is used.
   $query->addMetaData('op', 'update');
-  $query->addTag('node_access');
 }

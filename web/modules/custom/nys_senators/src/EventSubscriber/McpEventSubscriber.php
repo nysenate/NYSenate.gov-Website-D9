@@ -2,11 +2,11 @@
 
 namespace Drupal\nys_senators\EventSubscriber;
 
-use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -44,7 +44,7 @@ class McpEventSubscriber implements EventSubscriberInterface {
   /**
    * A Senator Helper Service.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\nys_senators\SenatorsHelper
    */
   protected $senatorHelper;
 

@@ -255,7 +255,21 @@ function nys_dashboard_views_query_alter($view, $query) {
         ];
       }
     }
+  }
 
+  if ($view->id() == 'upcoming_legislation' &&
+    in_array($view->current_display, ['passed_senate', 'signed_by_gov'])) {
+    // Get year.
+    $session_year = date('Y', strtotime('now'));
+    // If even, go back 1 yr to session start year.
+    if ($session_year % 2 == 0) {
+      $session_year--;
+    }
+
+    // Update filter to current session year.
+    if ($query->where[1]['conditions'][3]['field'] == 'node__field_ol_session.field_ol_session_value') {
+      $query->where[1]['conditions'][3]['value'] = (string) $session_year;
+    }
   }
 }
 

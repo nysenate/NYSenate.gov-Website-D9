@@ -4055,11 +4055,17 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
     if (isset($variables['result']) && !empty($variables['result'])) {
       foreach ($variables['result'] as $key => $result) {
         $row_id = $result->_entity->id();
-        $field_to = $result->_entity->field_to->target_id;
         $subject = $result->_entity->field_subject->value;
         $owner = User::load($result->_entity->owner[0]->target_id);
         $owner_name = $owner->name->value ?? '';
         $message = $result->_entity->message->value ?? '';
+        $field_to = $result->_entity->field_to->target_id;
+
+        $user = \Drupal::entityTypeManager()->getStorage('user')
+          ->load($field_to);
+        $field_to_link = $user->toUrl()->toString();
+        $field_to_parts = explode('/', $field_to_link);
+        $user_name = $field_to_parts[1] ?? $field_to;
 
         $link_options = [
           'attributes' => [
@@ -4070,7 +4076,7 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
           ],
         ];
 
-        $url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/reply/' . $row_id);
+        $url = Url::fromUserInput('/users/' . $user_name . '/dashboard/inbox/reply/' . $row_id);
         $link = Link::fromTextAndUrl($subject, $url);
         $owner_link = Link::fromTextAndUrl($owner_name, $url)->toString();
         $message_link = Link::fromTextAndUrl($message, $url)->toString();
@@ -4081,7 +4087,7 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
 
         $url->setOptions($link_options);
         $reply_link = Link::fromTextAndUrl(t('Reply'), $url)->toString();
-        $forward_url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/forward/' . $row_id);
+        $forward_url = Url::fromUserInput('/users/' . $user_name . '/dashboard/inbox/forward/' . $row_id);
         $forward_url->setOptions($link_options);
         $forward_link = Link::fromTextAndUrl(t('Forward'), $forward_url)->toString();
         $actions_attributes = new Attribute([
@@ -4165,29 +4171,35 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
-  $variables['dashboard_link'] = '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues';
-  $variables['edit_account_link'] = '/users/' . \Drupal::currentUser()->id() . '/edit';
+  $user = \Drupal::entityTypeManager()->getStorage('user')
+    ->load(\Drupal::currentUser()->id());
+  $user_link = $user->toUrl()->toString();
+  $user_parts = explode('/', $user_link);
+  $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
+
+  $variables['dashboard_link'] = '/users/' . $user_name . '/dashboard/issues';
+  $variables['edit_account_link'] = '/users/' . $user_name . '/edit';
   $variables['sidebar'] = [
     'links' => [
       [
         'text' => 'Inbox',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox',
+        'url' => '/users/' . $user_name . '/dashboard/inbox',
       ],
       [
         'text' => 'Bills',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/bills',
+        'url' => '/users/' . $user_name . '/dashboard/bills',
       ],
       [
         'text' => 'Issues',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues',
+        'url' => '/users/' . $user_name . '/dashboard/issues',
       ],
       [
         'text' => 'Committees',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/committees',
+        'url' => '/users/' . $user_name . '/dashboard/committees',
       ],
       [
         'text' => 'Petitions & Questionnaires',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/petitions',
+        'url' => '/users/' . $user_name . '/dashboard/petitions',
       ],
     ],
   ];

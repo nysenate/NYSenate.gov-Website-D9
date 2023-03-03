@@ -6,10 +6,12 @@
   <div class="l-tab-bar">
     <div class="c-tab--arrow u-mobile-only"></div>
     {% for panel in panels %}
+      {% if panels.schools is not empty %}
       <div class="c-tab {% if loop.first %}active{% endif %}">
         <input type="radio" name="language" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
         <label class="c-tab-link">{{ panel.title }}</label>
       </div>
+      {% endif %}
     {% endfor %}
   </div>
 

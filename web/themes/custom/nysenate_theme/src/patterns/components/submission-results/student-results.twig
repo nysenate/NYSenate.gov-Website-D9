@@ -1,5 +1,5 @@
 {{ attach_library('nysenate_theme/submission-results') }}
-
+{% if schools is not empty %}
 <div class="c-committees-container {% if is_bulleted %} c-committees-container--bulleted {% endif %}">
   <h2 class="c-container-title">{{ title }}</h2>
   {% if filter_items %}
@@ -47,3 +47,4 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}

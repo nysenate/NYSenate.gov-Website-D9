@@ -1,0 +1,25 @@
+uuid: d620350b-c960-4f50-a0c5-740acdd28d8d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_school_form_submission
+    - field.storage.block_content.field_microsite_school_form
+  module:
+    - block_field
+id: block_content.microsite_school_form_submission.field_microsite_school_form
+field_name: field_microsite_school_form
+entity_type: block_content
+bundle: microsite_school_form_submission
+label: 'Microsite School Form Submissions'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      nys_senators_microsite_school_forms: nys_senators_microsite_school_forms
+field_type: block_field

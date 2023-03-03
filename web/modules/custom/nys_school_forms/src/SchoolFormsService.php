@@ -2,9 +2,11 @@
 
 namespace Drupal\nys_school_forms;
 
-use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Pager\PagerManagerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Pager\PagerParametersInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
  * Elastic Search API Integration.
@@ -33,6 +35,20 @@ class SchoolFormsService {
   protected $entityTypeManager;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
+   * StreamWrapperManager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManager
+   */
+  protected $streamWrapperManager;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
@@ -41,14 +57,22 @@ class SchoolFormsService {
    *   Pager manager.
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   Current route match.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $streamWrapperManager
+   *   The StreamWrapperManager.
    */
   public function __construct(
     PagerParametersInterface $pager_param,
     PagerManagerInterface $pager_manager,
-    EntityTypeManager $entityTypeManager) {
+    EntityTypeManager $entityTypeManager,
+    RouteMatchInterface $current_route_match,
+    StreamWrapperManager $streamWrapperManager) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
     $this->entityTypeManager = $entityTypeManager;
+    $this->currentRouteMatch = $current_route_match;
+    $this->streamWrapperManager = $streamWrapperManager;
   }
 
   /**
@@ -57,20 +81,47 @@ class SchoolFormsService {
    * @return array
    *   The search form and search results build array.
    */
-  public function getResults($senator = '', $form_type = '', $school = '', $teacher_name = '', $from_date = '', $to_date = '', $sort_by = '', $order = '') {
+  public function getResults($params) {
     $results = [];
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
-    $query->condition('webform_id', 'school_form');
-    if ($from_date) {
-      $query->condition('completed', strtotime($from_date), '>');
+    $webform_id = '';
+    switch ($params['form_type']) {
+      // Earth Day.
+      case 'Earth Day':
+        $webform_id = 'school_form_earth_day';
+        break;
+
+      // Thanksgiving.
+      case 'Thanksgiving':
+        $webform_id = 'school_form_thanksgiving';
+        break;
+
+      default:
+        $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
+          [
+            'vid' => 'school_form_type',
+            'name' => $params['form_type'],
+          ]);
+        if ($terms !== NULL) {
+          $term = reset($terms);
+          if ($term) {
+            $webform_id = $term->field_school_form->target_id;
+          }
+        }
+        break;
     }
-    if ($to_date) {
+
+    $query->condition('webform_id', $webform_id);
+    if ($params['from_date']) {
+      $query->condition('completed', strtotime($params['from_date']), '>');
+    }
+    if ($params['to_date']) {
       // Make to date filter inclusive of the day.
-      $query->condition('completed', strtotime($to_date) + 86399, '<');
+      $query->condition('completed', strtotime($params['to_date']) + 86399, '<');
     }
-    if ($sort_by == 'date' || empty($sort_by)) {
-      if ($order) {
-        $query->sort('completed', $order);
+    if ($params['sort_by'] === 'date') {
+      if ($params['sort_order']) {
+        $query->sort('completed', $params['sort_order']);
       }
       else {
         $query->sort('completed', 'DESC');
@@ -81,22 +132,19 @@ class SchoolFormsService {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
       /** @var \Drupal\node\NodeInterface $parent_node */
       $parent_node = $submission->getSourceEntity();
-      if ($form_type && $form_type != $parent_node->get('field_school_form_type')->getValue()[0]['target_id']) {
-        continue;
-      }
       $submission_data = $submission->getData();
       /** @var \Drupal\node\NodeInterface $school_node */
       $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);
-      if ($school && $school != $school_node->label()) {
+      if ($params['school'] && $params['school'] != $school_node->label()) {
         continue;
       }
       /** @var \Drupal\taxonomy\TermInterface $district */
       $district = $school_node->get('field_district')->entity;
       $school_senator = $district->get('field_senator')->entity;
-      if ($senator && $senator != $school_senator->id()) {
+      if ($params['senator'] && $params['senator'] != $school_senator->id()) {
         continue;
       }
-      if ($teacher_name && $teacher_name != $submission_data['contact_name']) {
+      if ($params['teacher_name'] && $params['teacher_name'] != $submission_data['contact_name']) {
         continue;
       }
 
@@ -105,6 +153,10 @@ class SchoolFormsService {
         if (empty($file)) {
           continue;
         }
+
+        $file_uri = $file->getFileUri();
+        $scheme = $this->streamWrapperManager->getScheme($file_uri);
+
         $results[strtoupper($student['student_name'])] = [
           'school_node' => $school_node,
           'parent_node' => $parent_node,
@@ -114,16 +166,12 @@ class SchoolFormsService {
         ];
       }
     }
-    if ($sort_by == 'student') {
+    if ($params['sort_by'] == 'student') {
       ksort($results, SORT_NATURAL);
-      $results = array_values($results);
-      if ($order == 'desc') {
+      if ($params['sort_order'] == 'desc') {
         // Reverse the array if sort is descending.
         $results = array_reverse($results);
       }
-    }
-    else {
-      $results = array_values($results);
     }
     return $results;
   }

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.taxonomy_term.sponsor_list_bill_detail
+    - field.field.taxonomy_term.senator.field_about
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
     - field.field.taxonomy_term.senator.field_conference
@@ -12,6 +13,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_email_autoreply_text
     - field.field.taxonomy_term.senator.field_facebook_url
     - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_inactive_senator_message
     - field.field.taxonomy_term.senator.field_instagram_url
     - field.field.taxonomy_term.senator.field_media_contact
     - field.field.taxonomy_term.senator.field_media_email
@@ -117,6 +119,7 @@ hidden:
   admin_microsite_legislation_senator_admin_legislation_eva: true
   admin_microsite_legislation_senator_admin_legislation_eva_form: true
   description: true
+  field_about: true
   field_active_senator: true
   field_autoreply_text: true
   field_current_duties: true
@@ -124,6 +127,7 @@ hidden:
   field_email_autoreply_text: true
   field_facebook_url: true
   field_image_hero: true
+  field_inactive_senator_message: true
   field_instagram_url: true
   field_media_contact: true
   field_media_email: true

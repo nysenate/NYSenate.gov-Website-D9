@@ -5,6 +5,19 @@
     <h3 class="c-bill-num {{ bill.number_large ? 'c-bill-num--large' : '' }}">
       <a href="{{ bill.link }}">{{ bill.number }}</a>
     </h3>
+
+    {% if bill.issues %}
+      <div class="bill-type">
+        {% for issue in bill.issues %}
+          {% if loop.last %}
+            <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>
+          {% else %}
+            <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>,
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
     <div>
       {% if bill.description_position == "top" %}
         <p class="c-bill-descript">

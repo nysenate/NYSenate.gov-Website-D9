@@ -94,7 +94,7 @@ class SchoolFormDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('nys_school_forms.school_forms');
+    return \Drupal::request()->headers->get('referer');
   }
 
   /**
@@ -109,9 +109,16 @@ class SchoolFormDeleteForm extends ConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->files = $this->privateTempStoreFactory->get('school_form_multiple_delete_confirm')->get($this->currentUser->id());
+
     if (empty($this->files)) {
-      return new RedirectResponse($this->getCancelUrl()->setAbsolute()->toString());
+      return new RedirectResponse($this->getCancelUrl());
     }
+    $from_referrer = $this->getCancelUrl();
+    $form['field_referrer'] = [
+      '#type' => 'hidden',
+      '#title' => $this->t('Form Referrer'),
+      '#default_value' => $from_referrer,
+    ];
 
     $form['files'] = [
       '#theme' => 'item_list',
@@ -134,7 +141,8 @@ class SchoolFormDeleteForm extends ConfirmFormBase {
       $this->logger('School Forms')->notice('Deleted @count submissions.', ['@count' => $count]);
       $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Deleted 1 submissions.', 'Deleted @count submissions.'));
     }
-    $form_state->setRedirect('nys_school_forms.school_forms');
+    $url = Url::fromUri($form_state->getValue('field_referrer'));
+    $form_state->setRedirectUrl($url);
   }
 
 }

@@ -1,26 +1,21 @@
 nys_school_forms.autocomplete.teacher:
-  path: '/admin/nys_school_forms/autocomplete/teacher'
+  path: '/admin/nys_school_forms/autocomplete/teacher/{form_type}'
   defaults:
     _controller: '\Drupal\nys_school_forms\Controller\TeacherAutocompleteController::handleAutocomplete'
     _format: json
+    form_type: NULL
   requirements:
     _permission: 'access content'
 nys_school_forms.autocomplete.school:
-  path: '/admin/nys_school_forms/autocomplete/school'
+  path: '/admin/nys_school_forms/autocomplete/school/{form_type}'
   defaults:
     _controller: '\Drupal\nys_school_forms\Controller\SchoolAutocompleteController::handleAutocomplete'
     _format: json
+    form_type: NULL
   requirements:
     _permission: 'access content'
-nys_school_forms.school_forms:
-  path: '/admin/school-forms'
-  defaults:
-    _title: 'School Form Search'
-    _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::view'
-  requirements:
-    _permission: 'access all webform results'
-  options:
-    _admin_route: TRUE
+route_callbacks:
+  - Drupal\nys_school_forms\Routing\DynamicRouting::routes
 nys_school_forms.student_export:
   path: "/admin/school-forms/export"
   defaults:

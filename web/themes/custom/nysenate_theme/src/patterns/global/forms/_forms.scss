@@ -270,6 +270,20 @@
   select {
     margin-bottom: 16px;
   }
+
+  &.js-form-item-field-address-0-address-administrative-area {
+    float: unset;
+    margin: 0 1em 0 0;
+    width: auto;
+
+    select {
+      height: 2.3125rem;
+      padding: 0px 40px 0 20px;
+      min-height: unset;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
 }
 
 .view-filters {
@@ -290,6 +304,48 @@
   width: 100%;
 }
 
+.webform-submission-form {
+  .js-form-type-select {
+    width: 100%;
+    margin: 0;
+
+    &.form-item-school-name {
+      float: unset;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.address-container-inline .form-item {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.js-form-wrapper#edit-field-address-0 summary {
+  display: none;
+}
+
+.nys-registration-register-form {
+  #edit-mail--description {
+    color: $grey07;
+  }
+
+  input[type="submit"] {
+    @extend .lgt-bg;
+    margin: 0;
+    border: 0;
+    width: fit-content;
+  
+    &:hover {
+      color: $color-white;
+    }
+  }
+} 
+
 @include breakpoint($bp-sm) {
   .js-form-type-select {
     float: left;
@@ -303,6 +359,72 @@
 
     select {
       margin-bottom: 40px;
+    }
+  }
+
+  .address-container-inline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+
+    & .form-item {
+      margin-right: 0;
+
+      &:first-child {
+        grid-column: 1/span 2;
+      }
+    }
+
+    .js-form-item-field-address-0-address-administrative-area select {
+      margin: 0 0 1rem 0;
+    }
+  }
+
+  .js-form-wrapper#edit-field-address-0-address {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 30px;
+
+    .form-item-field-address-0-address-address-line1 {
+      grid-column: 1/span 1;
+    }
+
+    .form-item-field-address-0-address-address-line2 {
+      grid-column: 2/span 1;
+    }
+
+    .address-container-inline {
+      grid-column: 1/span 2;
+    }
+  }
+
+  .nys-registration-register-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 30px;
+
+    #edit-field-address-wrapper,
+    #edit-field-agree-to-terms-wrapper,
+    #edit-account {
+      grid-column: 1/span 2;
+    }
+
+    .js-form-type-email {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 30px;
+    }
+
+    #edit-mail {
+      grid-column: 1/span 1;
+    }
+
+    #edit-mail--description {
+      display: flex;
+      align-items: center;
+      color: $grey07;
+      grid-row: 1/span 2;
+      grid-column: 2/span 1;
     }
   }
 }

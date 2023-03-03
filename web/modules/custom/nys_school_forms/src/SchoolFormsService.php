@@ -125,19 +125,6 @@ class SchoolFormsService {
           break;
       }
     }
-    if (!empty($params['form_type_fe'])) {
-      switch ($params['form_type_fe']) {
-        // Earth Day.
-        case 'Earth Day':
-          $webform_id = 'school_form_earth_day';
-          break;
-
-        // Thanksgiving.
-        case 'Thankful':
-          $webform_id = 'school_form_thanksgiving';
-          break;
-      }
-    }
     $query->condition('webform_id', $webform_id);
     if ($params['from_date']) {
       $query->condition('completed', strtotime($params['from_date']), '>');
@@ -195,13 +182,15 @@ class SchoolFormsService {
         }
         else {
           if ($scheme === 'public') {
-            $results[$school_node->label()]['grade_level_' . $submission_data['grade']][] = [
-              'file' => [
-                'url' => $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri()),
-                'title' => $file->getFileName(),
+            $grade = $this->mapGrades($submission_data['grade']);
+            $results[$school_node->id()]['grade_levels'][$grade['weight']]['submissions'][] = [
+              'url' => $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri()),
+              'title' => [
+                '#markup' => $student['student_name'] . ' <sub>(' . explode('/', $file->getMimeType())[1] . ')</sub>',
               ],
-              'student' => $student,
             ];
+            $results[$school_node->id()]['grade_levels'][$grade['weight']]['title'] = $grade['value'];
+            $results[$school_node->id()]['title'] = strtoupper($school_node->label());
           }
         }
       }
@@ -220,11 +209,11 @@ class SchoolFormsService {
   /**
    * Maps the grade number to the display grade value.
    *
-   * @return string
-   *   The display value for the grade level.
+   * @return array
+   *   The pair value of grade level and its weight.
    */
   public function mapGrades($grade) {
-    $grade_value = match ($grade) {
+    $map = [
       'K' => 'Kindergarten',
       '1' => '1st Grade',
       '2' => '2nd Grade',
@@ -238,34 +227,12 @@ class SchoolFormsService {
       '10' => '10th Grade',
       '11' => '11th Grade',
       '12' => '12th Grade',
-    };
-    return $grade_value;
-  }
-
-  /**
-   * Maps the grade number to the display grade value.
-   *
-   * @return array
-   *   Re-order the results so that they are in the right grade level order.
-   */
-  public function orderGrades($results) {
-    // @todo Need to sort this array by this grade order:
-    $key_order = [
-      'Kindergarten',
-      '1st Grade',
-      '2nd Grade',
-      '3rd Grade',
-      '4th Grade',
-      '5th Grade',
-      '6th Grade',
-      '7th Grade',
-      '8th Grade',
-      '9th Grade',
-      '10th Grade',
-      '11th Grade',
-      '12th Grade',
     ];
-    return $results;
+
+    return [
+      'value' => $map[$grade],
+      'weight' => array_search($grade, array_keys($map)),
+    ];
   }
 
 }

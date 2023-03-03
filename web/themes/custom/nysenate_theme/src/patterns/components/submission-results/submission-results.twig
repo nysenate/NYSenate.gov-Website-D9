@@ -16,8 +16,10 @@
   <div class="tabs-content">
     {% for panel in panels %}
       {% include '@nysenate_theme/submission-results/student-results.twig' with {
-        is_bulleted: is_bulleted,
-        results: results,
+        is_bulleted: TRUE,
+        title: panel.title,
+        schools: panel.schools,
+        filter_items: panels.filter_items
       } only
       %}
     {% endfor %}

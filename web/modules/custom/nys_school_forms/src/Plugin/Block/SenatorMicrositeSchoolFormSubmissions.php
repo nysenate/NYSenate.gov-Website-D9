@@ -2,14 +2,17 @@
 
 namespace Drupal\nys_school_forms\Plugin\Block;
 
-use Drupal\Core\Block\BlockBase;
 use Drupal\node\NodeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\nys_school_forms\SchoolFormsService;
+use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\nys_school_forms\SchoolFormsService;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Submission results block on the School Forms for Senator Microsite Pages.
@@ -85,7 +88,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
-    $results = [];
+    $build = [];
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
@@ -123,8 +126,9 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
           ],
         ],
       ];
-      return $build;
+
     }
+    return $build;
   }
 
   /**

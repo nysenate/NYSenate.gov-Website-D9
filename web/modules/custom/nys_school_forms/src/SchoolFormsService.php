@@ -98,32 +98,46 @@ class SchoolFormsService {
     $results = [];
     $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
     $webform_id = '';
-    switch ($params['form_type']) {
-      // Earth Day.
-      case 'Earth Day':
-        $webform_id = 'school_form_earth_day';
-        break;
+    if (!empty($params['form_type'])) {
+      switch ($params['form_type']) {
+        // Earth Day.
+        case 'Earth Day':
+          $webform_id = 'school_form_earth_day';
+          break;
 
-      // Thanksgiving.
-      case 'Thanksgiving':
-        $webform_id = 'school_form_thanksgiving';
-        break;
+        // Thanksgiving.
+        case 'Thanksgiving':
+          $webform_id = 'school_form_thanksgiving';
+          break;
 
-      default:
-        $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
-          [
-            'vid' => 'school_form_type',
-            'name' => $params['form_type'],
-          ]);
-        if ($terms !== NULL) {
-          $term = reset($terms);
-          if ($term) {
-            $webform_id = $term->field_school_form->target_id;
+        default:
+          $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
+            [
+              'vid' => 'school_form_type',
+              'name' => $params['form_type'],
+            ]);
+          if ($terms !== NULL) {
+            $term = reset($terms);
+            if ($term) {
+              $webform_id = $term->field_school_form->target_id;
+            }
           }
-        }
-        break;
+          break;
+      }
     }
+    if (!empty($params['form_type_fe'])) {
+      switch ($params['form_type_fe']) {
+        // Earth Day.
+        case 'Earth Day':
+          $webform_id = 'school_form_earth_day';
+          break;
 
+        // Thanksgiving.
+        case 'Thankful':
+          $webform_id = 'school_form_thanksgiving';
+          break;
+      }
+    }
     $query->condition('webform_id', $webform_id);
     if ($params['from_date']) {
       $query->condition('completed', strtotime($params['from_date']), '>');
@@ -140,6 +154,7 @@ class SchoolFormsService {
         $query->sort('completed', 'DESC');
       }
     }
+
     $query_results = $query->execute();
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
@@ -160,7 +175,6 @@ class SchoolFormsService {
       if ($params['teacher_name'] && $params['teacher_name'] != $submission_data['contact_name']) {
         continue;
       }
-
       foreach ($submission_data['attach_your_submission'] as $student) {
         $file = $this->entityTypeManager->getStorage('file')->load($student['student_submission']);
         if (empty($file)) {
@@ -200,6 +214,57 @@ class SchoolFormsService {
         $results = array_reverse($results);
       }
     }
+    return $results;
+  }
+
+  /**
+   * Maps the grade number to the display grade value.
+   *
+   * @return string
+   *   The display value for the grade level.
+   */
+  public function mapGrades($grade) {
+    $grade_value = match ($grade) {
+      'K' => 'Kindergarten',
+      '1' => '1st Grade',
+      '2' => '2nd Grade',
+      '3' => '3rd Grade',
+      '4' => '4th Grade',
+      '5' => '5th Grade',
+      '6' => '6th Grade',
+      '7' => '7th Grade',
+      '8' => '8th Grade',
+      '9' => '9th Grade',
+      '10' => '10th Grade',
+      '11' => '11th Grade',
+      '12' => '12th Grade',
+    };
+    return $grade_value;
+  }
+
+  /**
+   * Maps the grade number to the display grade value.
+   *
+   * @return array
+   *   Re-order the results so that they are in the right grade level order.
+   */
+  public function orderGrades($results) {
+    // @todo Need to sort this array by this grade order:
+    $key_order = [
+      'Kindergarten',
+      '1st Grade',
+      '2nd Grade',
+      '3rd Grade',
+      '4th Grade',
+      '5th Grade',
+      '6th Grade',
+      '7th Grade',
+      '8th Grade',
+      '9th Grade',
+      '10th Grade',
+      '11th Grade',
+      '12th Grade',
+    ];
     return $results;
   }
 

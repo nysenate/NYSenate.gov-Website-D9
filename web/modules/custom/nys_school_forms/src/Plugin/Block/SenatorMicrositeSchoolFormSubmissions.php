@@ -88,6 +88,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
+    $results = [];
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
@@ -111,7 +112,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         '#results' => $results,
       ];
     }
-    return [];
+
   }
 
   /**

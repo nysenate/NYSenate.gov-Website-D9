@@ -107,6 +107,7 @@ class SchoolFormsService {
 
         // Thanksgiving.
         case 'Thanksgiving':
+        case 'Thankful':
           $webform_id = 'school_form_thanksgiving';
           break;
 
@@ -190,12 +191,14 @@ class SchoolFormsService {
               ],
             ];
             $results[$school_node->id()]['grade_levels'][$grade['weight']]['title'] = $grade['value'];
-            $results[$school_node->id()]['title'] = strtoupper($school_node->label());
+            $results[$school_node->id()]['title'] = $school_node->label();
           }
         }
       }
     }
-
+    if (!$admin_view) {
+      $results = $this->orderGrades($results);
+    }
     if ($params['sort_by'] == 'student' && $admin_view) {
       ksort($results, SORT_NATURAL);
       if ($params['sort_order'] == 'desc') {
@@ -233,6 +236,33 @@ class SchoolFormsService {
       'value' => $map[$grade],
       'weight' => array_search($grade, array_keys($map)),
     ];
+  }
+
+  /**
+   * Maps the grade number to the display grade value.
+   *
+   * @return array
+   *   Re-order the results so that they are in the right grade level order.
+   */
+  public function orderGrades(array $schools): array {
+    foreach ($schools as &$school) {
+      $grade_levels = $school['grade_levels'];
+      // Sort by grade level in ascending order.
+      ksort($grade_levels);
+      $school['grade_levels'] = $grade_levels;
+
+      // Sort submissions within each grade level.
+      foreach ($grade_levels as &$grade_level) {
+        $submissions = $grade_level['submissions'];
+        usort($submissions, fn($a, $b) => $a['title']['#markup'] <=> $b['title']['#markup']);
+        $grade_level['submissions'] = $submissions;
+      }
+    }
+
+    // Sort schools by title in ascending order.
+    usort($schools, fn($a, $b) => $a['title'] <=> $b['title']);
+
+    return $schools;
   }
 
 }

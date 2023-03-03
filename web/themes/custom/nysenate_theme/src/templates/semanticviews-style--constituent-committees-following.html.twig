@@ -8,6 +8,8 @@
 #}
 {{ attach_library('nysenate_theme/newsroom-content') }}
 {{ attach_library('nysenate_theme/nysenate-committee-widget') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+
 <div class="content-list__wrapper">
   <section class="comm-widget-wrapper">
     {% for committee in committees %}
@@ -26,9 +28,11 @@
 {% set limit = 6 %}
 
 {% if committees|length > limit %}
-  <div class="pager pager-load-more" data-limit="{{ limit }}">
-    <span class="pager-next first last">
-      <a class="load-more">See more</a>
-    </span>
+  <div class="item-list" data-limit="{{ limit }}">
+    <div class="pager pager-load-more">
+      <span class="pager-next first last">
+        <a class="load-more">See more</a>
+      </span>
+    </div>
   </div>
 {% endif %}

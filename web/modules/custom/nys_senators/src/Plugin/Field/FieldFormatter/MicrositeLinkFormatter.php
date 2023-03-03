@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\UriLinkFormatter;
+use Drupal\Core\Url;
 use Drupal\nys_senators\SenatorsHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Name to Microsite Link"),
  *   field_types = {
  *     "string",
+ *     "name"
  *   }
  * )
  */
@@ -59,10 +61,10 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
    * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If the field's entity is not a taxonomy term in bundle 'senator'.
    */
-  public function viewElements(FieldItemListInterface $items, $langcode): array {
+  public function viewElements(FieldItemListInterface $item, $langcode): array {
     // This formatter only applies to the senator bundle of taxonomy terms.
     /** @var \Drupal\taxonomy\Entity\Term $entity */
-    $entity = $items->getEntity();
+    $entity = $item->getEntity();
     if (!(
       ($entity->bundle() == 'senator')
       && ($entity->getEntityTypeId() == 'taxonomy_term')
@@ -72,8 +74,8 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
 
     return [
       '#type' => 'link',
-      '#url' => $this->helper->getMicrositeUrl($entity),
-      '#title' => $items->value,
+      '#url' => Url::fromUri($this->helper->getMicrositeUrl($entity)),
+      '#title' => $entity->getName(),
       '#attributes' => ['class' => ['microsite-link']],
     ];
   }

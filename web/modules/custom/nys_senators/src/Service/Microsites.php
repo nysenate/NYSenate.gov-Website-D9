@@ -5,6 +5,7 @@ namespace Drupal\nys_senators\Service;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Provides access to the microsite themes defined in CSS.
@@ -144,6 +145,13 @@ class Microsites {
     $themes = $this->readScssPalettes();
     $this->cache->set(static::CACHE_NAME_THEMES, $themes, time() + static::CACHE_MAX_AGE_THEMES);
     return $themes;
+  }
+
+  /**
+   * Gets the URL to a senator's microsite.  Empty string, if not found.
+   */
+  public function getMicrosite(Term $senator): string {
+    return $this->getMicrosites()[$senator->id()] ?? '';
   }
 
   /**

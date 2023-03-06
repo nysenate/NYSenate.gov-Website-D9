@@ -1,23 +1,27 @@
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/submission-results') }}
 
 <div class="newsroom-content l-row">
 
   <div class="l-tab-bar">
     <div class="c-tab--arrow u-mobile-only"></div>
     {% for panel in panels %}
+      {% if panel.schools is not empty %}
       <div class="c-tab {% if loop.first %}active{% endif %}">
         <input type="radio" name="language" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
-        <label class="c-tab-link">{{ panel.tab_text }}</label>
+        <label class="c-tab-link">{{ panel.title }}</label>
       </div>
+      {% endif %}
     {% endfor %}
   </div>
 
   <div class="tabs-content">
     {% for panel in panels %}
-      {% include '@nysenate_theme/nysenate-committee-detail/nysenate-committee-detail.twig' with {
-        is_bulleted: panel.is_bulleted,
+      {% include '@nysenate_theme/submission-results/student-results.twig' with {
+        is_bulleted: TRUE,
         title: panel.title,
-        groups: panel.groups,
+        schools: panel.schools,
+        filter_items: panels.filter_items
       } only
       %}
     {% endfor %}

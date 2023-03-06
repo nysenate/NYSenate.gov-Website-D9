@@ -2,21 +2,10 @@
 
 namespace Drupal\nys_school_forms\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\Core\Pager\PagerParametersInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Drupal\Core\Form\FormBuilder;
-use Drupal\path_alias\AliasManagerInterface;
-use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\nys_school_forms\SchoolFormsService;
-use Symfony\Component\HttpFoundation\Response;
 use Drupal\file\Entity\File;
+use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Route controller for School Form submissions.
@@ -101,73 +90,30 @@ class SchoolFormsController extends ControllerBase {
   protected $schoolFormsService;
 
   /**
-   * Class constructor.
+   * The file URL generator.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request
-   *   Request stack.
-   * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
-   *   Module Handler.
-   * @param \Drupal\Core\Database\Connection $database
-   *   Database connection.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   Drupal Messenger.
-   * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
-   *   Pager.
-   * @param \Drupal\Core\Pager\PagerManagerInterface $pager_manager
-   *   Pager manager.
-   * @param \Drupal\Core\Form\FormBuilder $form_builder
-   *   Form Builder.
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
-   *   Alias Manager.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $streamWrapperManager
-   *   The StreamWrapperManager.
-   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\nys_school_forms\SchoolFormsService $schoolFormsService
-   *   The School Forms Service.
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  public function __construct(
-    RequestStack $request,
-    ModuleHandler $moduleHandler,
-    Connection $database,
-    MessengerInterface $messenger,
-    PagerParametersInterface $pager_param,
-    PagerManagerInterface $pager_manager,
-    FormBuilder $form_builder,
-    AliasManagerInterface $alias_manager,
-    StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager,
-    SchoolFormsService $schoolFormsService) {
-    $this->request = $request;
-    $this->moduleHandler = $moduleHandler;
-    $this->database = $database;
-    $this->messenger = $messenger;
-    $this->pagerParam = $pager_param;
-    $this->pagerManager = $pager_manager;
-    $this->formBuilder = $form_builder;
-    $this->aliasManager = $alias_manager;
-    $this->streamWrapperManager = $streamWrapperManager;
-    $this->entityTypeManager = $entityTypeManager;
-    $this->schoolFormsService = $schoolFormsService;
-  }
+  protected $fileUrlGenerator;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('request_stack'),
-      $container->get('module_handler'),
-      $container->get('database'),
-      $container->get('messenger'),
-      $container->get('pager.parameters'),
-      $container->get('pager.manager'),
-      $container->get('form_builder'),
-      $container->get('path_alias.manager'),
-      $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager'),
-      $container->get('nys_school_forms.school_forms')
-    );
+    $instance = new static();
+    $instance->request = $container->get('request_stack');
+    $instance->moduleHandler = $container->get('module_handler');
+    $instance->database = $container->get('database');
+    $instance->messenger = $container->get('messenger');
+    $instance->pagerParam = $container->get('pager.parameters');
+    $instance->pagerManager = $container->get('pager.manager');
+    $instance->formBuilder = $container->get('form_builder');
+    $instance->aliasManager = $container->get('path_alias.manager');
+    $instance->streamWrapperManager = $container->get('stream_wrapper_manager');
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->schoolFormsService = $container->get('nys_school_forms.school_forms');
+    $instance->fileUrlGenerator = $container->get('file_url_generator');
+    return $instance;
   }
 
   /**
@@ -264,7 +210,7 @@ class SchoolFormsController extends ControllerBase {
     foreach ($results as $result) {
       $file = File::load($result['student']['student_submission']);
       $uri = $file->getFileUri();
-      $file_string = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+      $file_string = $this->fileUrlGenerator->generateAbsoluteString($uri);
       $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
       $line = [
         date('F j, Y', $result['submission']->getCreatedTime()),

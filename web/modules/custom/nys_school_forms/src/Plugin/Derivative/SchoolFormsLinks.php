@@ -10,7 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Derivative class that provides the menu links for the Products.
  */
 class SchoolFormsLinks extends DeriverBase implements ContainerDeriverInterface {
-
   /**
    * The entity type manager.
    *
@@ -32,12 +31,10 @@ class SchoolFormsLinks extends DeriverBase implements ContainerDeriverInterface 
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $links = [];
-
     $school_form_types = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(['vid' => 'school_form_type']);
     foreach ($school_form_types as $form_type) {
       $term_name = $form_type->getName();
       $alias = str_replace([' ', '-', '\''], '_', strtolower($term_name));
-
       $links[$form_type->id()] = [
         'title' => 'School Form Submission - ' . $term_name,
         'description' => 'List School Form Submissions',
@@ -46,7 +43,6 @@ class SchoolFormsLinks extends DeriverBase implements ContainerDeriverInterface 
         'route_parameters' => ['form_type' => $term_name],
       ] + $base_plugin_definition;
     }
-
     return $links;
   }
 

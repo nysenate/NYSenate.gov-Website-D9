@@ -330,15 +330,14 @@ class SchoolFormEnityUpdateForm extends FormBase {
           1 => 'an essay',
           2 => 'a poem',
         ];
-        if ($result['parent_node']) {
-          $parent_node_id = $result['parent_node']->id();
-          $school_form_type = $result['parent_node']->get('field_school_form_type')->entity->label();
+        if ($params['form_type']) {
+          $school_form_type = $params['form_type'];
         }
         else {
           $parent_node_id = 'none';
           $school_form_type = 'Submitted directly from webform';
         }
-        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id() . '-' . $parent_node_id] = [
+        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id() . '-' . $result['parent_node']->id()] = [
           'school' => new FormattableMarkup('@school_name <br> @street <br> @city, @state, @zipcode', [
             '@school_name' => $school_name,
             '@street' => $school_address['address_line1'],

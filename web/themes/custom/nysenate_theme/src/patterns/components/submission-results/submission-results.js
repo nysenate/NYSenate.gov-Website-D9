@@ -69,7 +69,7 @@
         const animationDelay = 200;
         const animationDuration = 400;
         loadMore.each(function () {
-          const pagerContainer = $(this).closest('.item-list');
+          const pagerContainer = $(this).closest('.pager-load-more');
           const items = pagerContainer.parent().find('.content__item');
 
           const limit = parseInt(pagerContainer.data('limit')) || 5;
@@ -79,7 +79,7 @@
           items.slice(0, limit).show();
 
           let itemsHidden = $(this)
-            .closest('.item-list')
+            .closest('.pager-load-more')
             .parent()
             .find('.content__item:hidden');
 
@@ -91,7 +91,7 @@
               .delay(animationDelay)
               .slideDown(animationDuration, () => {
                 itemsHidden = $(this)
-                  .closest('.item-list')
+                  .closest('.pager-load-more')
                   .parent()
                   .find('.content__item:hidden');
 

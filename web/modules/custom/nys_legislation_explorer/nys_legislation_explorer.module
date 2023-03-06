@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for search Legislation Content.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nys_legislation_explorer_theme($existing, $type, $theme, $path):array {
+  return [
+    'nys_blocks_senate_works' => [
+      'variables' => [
+        'display_name' => NULL,
+      ],
+    ],
+  ];
+}

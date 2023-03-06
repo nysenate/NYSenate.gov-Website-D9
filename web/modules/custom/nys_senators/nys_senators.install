@@ -14,6 +14,8 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\webform\Entity\WebformSubmission;
 
 /**
  * Implements hook_update_N().
@@ -467,3 +469,49 @@ function nys_senators_update_9016() {
     }
   }
 }
+
+/**
+ * Create some webform submissions for Earth Day and Thanksgiving with archived dates.
+ */
+/*function nys_senators_update_9017() {
+  // @todo: Create around 10 or so submissions
+  $webform = \Drupal\webform\Entity\Webform::load('school_form_thanksgiving');
+    // Build the submission values.
+    $values = [
+      'school_name' => ['target_id' => 123], // Replace with the actual node ID of the school.
+      'contact_name' => 'John Doe',
+      'contact_email' => 'john@example.com',
+      'grade' => '5',
+      'submissions' => [
+        'attach_your_submission' => [
+          [
+            'student_name' => 'Jane Smith',
+            'submission_type' => 'AN ESSAY',
+            'student_submission' => [
+              'target_id' => 456, 
+            ],
+            'show_student' => 'No',
+          ],
+        ],
+      ],
+    ];
+  // @todo: modify the last 10 submissions that were just created 
+  // So they have 5 in 2019 and 5 in 2022 for testing.
+  $date = '2022-01-01 00:00:00'; // Modify this date as needed.
+  $date_obj = new DrupalDateTime($date);
+  
+  // Find all submissions created before the specified date.
+  $query = \Drupal::entityQuery('webform_submission')
+    ->condition('created', $date_obj->format('U'), '<');
+  $submission_ids = $query->execute();
+  foreach ($submission_ids as $submission_id) {
+    // Load the submission entity.
+    $submission = WebformSubmission::load($submission_id);
+    
+    // Modify the submission as needed.
+    $submission->set('my_field', 'new value');
+    
+    // Save the submission.
+    $submission->save();
+  }
+}*/

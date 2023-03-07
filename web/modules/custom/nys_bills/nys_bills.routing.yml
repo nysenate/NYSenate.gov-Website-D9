@@ -1,0 +1,7 @@
+nys_bills.dashboard_bills:
+  path: '/dashboard/bills'
+  defaults:
+    _title: 'Bills I''m Following'
+    _controller: '\Drupal\nys_bills\Controller\NysDashboardBillsController::followedBills'
+  requirements:
+    _user_is_logged_in: 'TRUE'

@@ -109,6 +109,21 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       $last_year_params['from_date'] = NULL;
       $last_year_params['to_date'] = date('Y-m-d', strtotime('first day of december last year'));
 
+      $filter_options = [];
+      $past_submissions = $this->schoolFormsService->getResults($params, FALSE);
+
+      $filter_options[] = [
+        'value' => 'All',
+        'text' => '- Year -',
+      ];
+
+      foreach (array_keys($past_submissions) as $option) {
+        $filter_options[] = [
+          'value' => $option,
+          'text' => $option,
+        ];
+      }
+
       $build = [
         '#theme' => 'nys_school_forms__results_block',
         '#content' => [
@@ -116,17 +131,21 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
             [
               'tab_text' => 'Current Year',
               'title' => date('Y') . ' Poster Submissions',
-              'schools' => $this->schoolFormsService->getResults($params, FALSE),
+              'years' => $this->schoolFormsService->getResults($params, FALSE),
             ],
             [
               'tab_text' => 'Past Submissions',
               'title' => 'Archived Submissions',
-              'schools' => $this->schoolFormsService->getResults($last_year_params, FALSE),
+              'filter_item' => [
+                'label' => 'Select Year',
+                'desc' => 'Archive only goes back to ' . end($filter_options)['text'],
+                'select_options' => $filter_options,
+              ],
+              'years' => $past_submissions,
             ],
           ],
         ],
       ];
-
     }
     return $build;
   }

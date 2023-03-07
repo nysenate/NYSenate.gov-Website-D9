@@ -78,7 +78,7 @@ class McpEventSubscriber implements EventSubscriberInterface {
 
       $senator_helper = \Drupal::service('nys_senators.senators_helper');
 
-      if ($senator_helper->senatorUserIsAdmin($this->currentUser)) {
+      if (!$senator_helper->senatorUserIsAdmin($this->currentUser)) {
 
         // Load current user in full.
         $user = User::load($this->currentUser->id());

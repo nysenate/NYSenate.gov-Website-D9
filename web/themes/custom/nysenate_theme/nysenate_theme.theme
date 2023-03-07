@@ -4072,7 +4072,7 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
 }
 
 /**
- * Implements hook_form_element_alter().
+ * Implements hook_preprocess_form_element().
  */
 function nysenate_theme_preprocess_form_element(&$variables) {
   if (!empty($variables['element']['#parents'])) {
@@ -4082,10 +4082,12 @@ function nysenate_theme_preprocess_form_element(&$variables) {
     }
   }
 
-  if ($variables['element']['#id'] == 'edit-field-address-0-address-address-line2') {
-    $variables['label_display'] = 'before';
-    $variables['label']['#title'] = t('APT/SUITE/FLOOR (OPTIONAL)');
-    $variables['label']['#title_display'] = 'before';
+  if (!empty($variables['element']['#id'])) {
+    if ($variables['element']['#id'] == 'edit-field-address-0-address-address-line2') {
+      $variables['label_display'] = 'before';
+      $variables['label']['#title'] = t('APT/SUITE/FLOOR (OPTIONAL)');
+      $variables['label']['#title_display'] = 'before';
+    }
   }
 }
 

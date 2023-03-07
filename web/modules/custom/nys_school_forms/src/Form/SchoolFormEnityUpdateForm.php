@@ -337,7 +337,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
           $parent_node_id = 'none';
           $school_form_type = 'Submitted directly from webform';
         }
-        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id() . '-' . $result['parent_node']->id()] = [
+        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id()] = [
           'school' => new FormattableMarkup('@school_name <br> @street <br> @city, @state, @zipcode', [
             '@school_name' => $school_name,
             '@street' => $school_address['address_line1'],

@@ -191,14 +191,12 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
 
           if (!empty($sid)) {
             $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
-            $entity_id = $submission->getSourceEntity();
+            $node = $submission->getSourceEntity();
             $webform = $submission->getWebform();
             $submission_timestamp = $submission->getCreatedTime();
             $school_form_type = '';
 
-            if ($entity_id) {
-              $nid = $entity_id->id();
-              $node = $this->entityTypeManager->getStorage('node')->load($nid);
+            if ($node && $node->hasField('field_school_form_type') && !$node->get('field_school_form_type')->isEmpty()) {
               $school_form_type = $node->get('field_school_form_type')->entity->label();
               $alias = str_replace([' ', '-', '\''], '_', strtolower($school_form_type));
               $directory = 'public://' . $alias . '/' . $node->id() . '/' . $sid . '/';

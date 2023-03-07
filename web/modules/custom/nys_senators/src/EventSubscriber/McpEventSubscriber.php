@@ -62,7 +62,6 @@ class McpEventSubscriber implements EventSubscriberInterface {
     $this->requestStack = $request_stack;
     $this->currentRouteMatch = $current_route_match;
     $this->currentUser = $current_user;
-    $this->senatorHelper = \Drupal::service('nys_senators.senators_helper');
   }
 
   /**
@@ -74,27 +73,31 @@ class McpEventSubscriber implements EventSubscriberInterface {
     $routeName = $this->currentRouteMatch->getRouteName();
 
     // Check if a non-admin is looking at a Senator term.
-    if (!$this->senatorHelper->senatorUserIsAdmin($this->currentUser) &&
-      $routeName === 'entity.taxonomy_term.canonical' &&
+    if ($routeName === 'entity.taxonomy_term.canonical' &&
       ($term = $this->currentRouteMatch->getParameter('taxonomy_term'))->bundle() === 'senator') {
 
-      // Load current user in full.
-      $user = User::load($this->currentUser->id());
-      $has_mcp_access = FALSE;
+      $senator_helper = \Drupal::service('nys_senators.senators_helper');
 
-      // Check if user has access to term.
-      if ($user->hasField('field_senator_multiref') &&
-        !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id')) &&
-        in_array($term->id(), $senators, FALSE)) {
-        // User is MCP with access to term.
-        $has_mcp_access = TRUE;
-      }
+      if ($senator_helper->senatorUserIsAdmin($this->currentUser)) {
 
-      // If no MCP access then redirect.
-      if (!$has_mcp_access) {
-        // Redirecting Home.
-        $response = new TrustedRedirectResponse('/', 302);
-        $event->setResponse($response);
+        // Load current user in full.
+        $user = User::load($this->currentUser->id());
+        $has_mcp_access = FALSE;
+
+        // Check if user has access to term.
+        if ($user->hasField('field_senator_multiref') &&
+          !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id')) &&
+          in_array($term->id(), $senators, FALSE)) {
+          // User is MCP with access to term.
+          $has_mcp_access = TRUE;
+        }
+
+        // If no MCP access then redirect.
+        if (!$has_mcp_access) {
+          // Redirecting Home.
+          $response = new TrustedRedirectResponse('/', 302);
+          $event->setResponse($response);
+        }
       }
     }
   }

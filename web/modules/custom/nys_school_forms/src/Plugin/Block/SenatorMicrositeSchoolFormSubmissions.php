@@ -110,7 +110,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       $last_year_params['to_date'] = date('Y-m-d', strtotime('first day of december last year'));
 
       $filter_options = [];
-      $past_submissions = $this->schoolFormsService->getResults($params, FALSE);
+      $past_submissions = $this->schoolFormsService->getResults($last_year_params, FALSE);
 
       $filter_options[] = [
         'value' => 'All',

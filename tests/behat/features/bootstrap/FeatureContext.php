@@ -48,7 +48,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    *
    * @Given I see the login form
    */
-  public function iClickTheElement($selector) {
+  public function iSeeLoginForm($selector) {
     $this->spin(function($context) {
       return ($context->getSession()->getPage()->findById('user-login-form')->isVisible());
     });

@@ -5,3 +5,24 @@ nys_senators.json_feed:
     _title: 'NYSS Active Senators Feed'
   requirements:
     _permission: 'access content'
+nys_senators.dashboard_senators:
+  path: '/dashboard/senators'
+  defaults:
+    _title: 'Senator Management'
+    _controller: '\Drupal\nys_senators\Controller\NysDashboardSenatorsController::senatorManagement'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+nys_senators.dashboard_senators_second:
+  path: '/dashboard/senators/second'
+  defaults:
+    _title: 'Senator Management Second'
+    _controller: '\Drupal\nys_senators\Controller\NysDashboardSenatorsController::senatorManagementSecond'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+nys_senators.dashboard_senators_third:
+  path: '/dashboard/senators/third'
+  defaults:
+    _title: 'Senator Management Third'
+    _controller: '\Drupal\nys_senators\Controller\NysDashboardSenatorsController::senatorManagementSecond'
+  requirements:
+    _user_is_logged_in: 'TRUE'

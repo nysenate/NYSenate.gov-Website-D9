@@ -25,3 +25,19 @@ nys_dashboard.petitions:
     _controller: '\Drupal\nys_dashboard\Controller\DashboardController::petitions'
   requirements:
     _permission: 'access content'
+
+nys_dashboard.profile:
+  path: '/dashboard/profile'
+  defaults:
+    _title: 'My Profile'
+    _controller: '\Drupal\nys_dashboard\Controller\NysDashboardController::profile'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+nys_dashboard.edit_profile:
+  path: '/dashboard/edit'
+  defaults:
+    _title: 'Edit Profile'
+    _form: '\Drupal\nys_dashboard\Form\EditProfileForm'
+  requirements:
+    _user_is_logged_in: 'TRUE'

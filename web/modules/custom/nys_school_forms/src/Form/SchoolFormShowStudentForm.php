@@ -196,6 +196,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
             $submission_timestamp = $submission->getCreatedTime();
             $school_form_type = '';
 
+            /** @var \Drupal\node\NodeInterface $node */
             if ($node && $node->hasField('field_school_form_type') && !$node->get('field_school_form_type')->isEmpty()) {
               $school_form_type = $node->get('field_school_form_type')->entity->label();
               $alias = str_replace([' ', '-', '\''], '_', strtolower($school_form_type));

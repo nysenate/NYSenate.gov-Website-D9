@@ -402,40 +402,70 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
 
         case 'Thankful':
           $nodeValues['title'] = '2021 Thanksgiving Day Creative Celebration';
-          // Creates thankful block to be attached to the microsite content.
-          $thankfulBlock = BlockContent::create([
-            'info' => $senator_name . ' - Thankful Letter Block',
-            'type' => 'senator_microsite_school_forms',
-            'revision_user' => 1,
-            'field_microsite_school_form' => [
-              'plugin_id' => 'nys_senators_microsite_school_forms',
-              'settings' => [],
+          // Creates blocks to be attached to the microsite content.
+          $thankful_blocks = [
+            [
+              'info' => $senator_name . ' - Thankful Letter Block',
+              'type' => 'thankful_letter',
+              'revision_user' => 1,
             ],
-          ]);
-          $thankfulBlock->save();
-          $nodeValues['field_block'][] = [
-            'target_id' => $thankfulBlock->id(),
-            'target_revision_id' => $thankfulBlock->getRevisionId(),
+            [
+              'info' => $senator_name . ' - Sincerely Block',
+              'type' => 'sincerely',
+              'revision_user' => 1,
+            ],
+            [
+              'info' => $senator_name . ' - Submission Results Block',
+              'type' => 'senator_microsite_school_forms',
+              'revision_user' => 1,
+              'field_microsite_school_form' => [
+                'plugin_id' => 'nys_senators_microsite_school_forms',
+                'settings' => [],
+              ],
+            ],
           ];
+          foreach ($thankful_blocks as $thankful_block) {
+            $thankfulBlock = BlockContent::create($thankful_block);
+            $thankfulBlock->save();
+            $nodeValues['field_block'][] = [
+              'target_id' => $thankfulBlock->id(),
+              'target_revision_id' => $thankfulBlock->getRevisionId(),
+            ];
+          }
           break;
 
         case 'Earth Day':
           $nodeValues['title'] = '2021 Earth Day Poster Contest Celebration';
-          // Creates earth day block to be attached to the microsite content.
-          $earthDayBlock = BlockContent::create([
-            'info' => $senator_name . ' - Earth Day Letter Block',
-            'type' => 'senator_microsite_school_forms',
-            'revision_user' => 1,
-            'field_microsite_school_form' => [
-              'plugin_id' => 'nys_senators_microsite_school_forms',
-              'settings' => [],
+          // Creates submission block to be attached to the microsite content.
+          $earthday_blocks = [
+            [
+              'info' => $senator_name . ' - Earth Day Letter Block',
+              'type' => 'earth_day_letter',
+              'revision_user' => 1,
             ],
-          ]);
-          $earthDayBlock->save();
-          $nodeValues['field_block'][] = [
-            'target_id' => $earthDayBlock->id(),
-            'target_revision_id' => $earthDayBlock->getRevisionId(),
+            [
+              'info' => $senator_name . ' - Sincerely Block',
+              'type' => 'sincerely',
+              'revision_user' => 1,
+            ],
+            [
+              'info' => $senator_name . ' - Submission Results Block',
+              'type' => 'senator_microsite_school_forms',
+              'revision_user' => 1,
+              'field_microsite_school_form' => [
+                'plugin_id' => 'nys_senators_microsite_school_forms',
+                'settings' => [],
+              ],
+            ],
           ];
+          foreach ($earthday_blocks as $earthday_block) {
+            $earthDayBlock = BlockContent::create($earthday_block);
+            $earthDayBlock->save();
+            $nodeValues['field_block'][] = [
+              'target_id' => $earthDayBlock->id(),
+              'target_revision_id' => $earthDayBlock->getRevisionId(),
+            ];
+          }
           break;
 
       }
@@ -1052,6 +1082,164 @@ function _nys_senators_update_microsites(EntityInterface $entity) {
               }
             }
           }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Rearrange the Earth Day & Thankful Microsite pages blocks order.
+ */
+function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $senatorMicrosites = [
+    'Earth Day',
+    'Thankful',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+
+      $microsite_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+        'type' => 'microsite_page',
+        'field_senator_multiref' => $entity->id(),
+        'field_microsite_page_type' => $micrositeType->id(),
+      ]);
+
+      $page = NULL;
+      if (!empty($microsite_page)) {
+        $page = reset($microsite_page);
+
+        if ($page->hasField('field_block') && !$page->get('field_block')->isEmpty()) {
+          foreach ($page->get('field_block') as $key => $value) {
+            /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+            $block_content = $value->entity ?? NULL;
+
+            // Revert the Letter blocks.
+            if ($key == 2) {
+              switch ($micrositeType->getName()) {
+                case 'Thankful':
+                  $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                    'type' => 'thankful_letter',
+                    'info' => $senator_name . ' - Thankful Letter Block',
+                  ]);
+                  if (!empty($block)) {
+                    $thankfulBlock = reset($block);
+                  }
+                  else {
+                    $thankfulBlock = BlockContent::create([
+                      'info' => $senator_name . ' - Thankful Letter Block',
+                      'type' => 'thankful_letter',
+                      'revision_user' => 1,
+                    ]);
+                    $thankfulBlock->save();
+                  }
+                  $page->field_block[$key] = [
+                    'target_id' => $thankfulBlock->id(),
+                    'target_revision_id' => $thankfulBlock->getRevisionId(),
+                  ];
+                  break;
+
+                case 'Earth Day':
+                  $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                    'type' => 'earth_day_letter',
+                    'info' => $senator_name . ' - Earth Day Letter Block',
+                  ]);
+                  if (!empty($block)) {
+                    $earthDayBlock = reset($block);
+                  }
+                  else {
+                    $earthDayBlock = BlockContent::create([
+                      'info' => $senator_name . ' - Earth Day Letter Block',
+                      'type' => 'earth_day_letter',
+                      'revision_user' => 1,
+                    ]);
+                    $earthDayBlock->save();
+                  }
+                  $page->field_block[$key] = [
+                    'target_id' => $earthDayBlock->id(),
+                    'target_revision_id' => $earthDayBlock->getRevisionId(),
+                  ];
+                  break;
+
+                default:
+                  break;
+              }
+            }
+          }
+
+          // Re-add the Submission Results Block.
+          switch ($micrositeType->getName()) {
+            case 'Thankful':
+              $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                'type' => 'senator_microsite_school_forms',
+                'info' => $senator_name . ' - Thankful Letter Block',
+              ]);
+              if (!empty($block)) {
+                $thankfulBlock = reset($block);
+                $thankfulBlock->info = $senator_name . ' - Submission Results Block';
+                $thankfulBlock->save();
+              }
+              else {
+                $thankfulBlock = BlockContent::create([
+                  'info' => $senator_name . ' - Submission Results Block',
+                  'type' => 'senator_microsite_school_forms',
+                  'revision_user' => 1,
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
+                  ],
+                ]);
+                $thankfulBlock->save();
+              }
+              $page->field_block[] = [
+                'target_id' => $thankfulBlock->id(),
+                'target_revision_id' => $thankfulBlock->getRevisionId(),
+              ];
+              break;
+
+            case 'Earth Day':
+              $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                'type' => 'senator_microsite_school_forms',
+                'info' => $senator_name . ' - Earth Day Letter Block',
+              ]);
+              if (!empty($block)) {
+                $earthDayBlock = reset($block);
+                $earthDayBlock->info = $senator_name . ' - Submission Results Block';
+                $earthDayBlock->save();
+              }
+              else {
+                $earthDayBlock = BlockContent::create([
+                  'info' => $senator_name . ' - Submission Results Block',
+                  'type' => 'senator_microsite_school_forms',
+                  'revision_user' => 1,
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
+                  ],
+                ]);
+                $earthDayBlock->save();
+              }
+              $page->field_block[] = [
+                'target_id' => $earthDayBlock->id(),
+                'target_revision_id' => $earthDayBlock->getRevisionId(),
+              ];
+              break;
+
+            default:
+              break;
+          }
+
+          // Save the node.
+          $page->save();
         }
       }
     }

@@ -954,3 +954,9 @@ if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('
 if ((file_exists(__DIR__ . '/settings.ddev.redis.php') && getenv('IS_DDEV_PROJECT') == 'true')) {
   include __DIR__ . '/settings.ddev.redis.php';
 }
+
+# When on Pantheon, connect to a D7 database.
+$migrate_settings = __DIR__ . "/settings.migrate-on-pantheon.php";
+if (file_exists($migrate_settings) && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
+  include $migrate_settings;
+}

@@ -100,14 +100,14 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         'senator' => $senator_term->id(),
         'school' => NULL,
         'teacher_name' => NULL,
-        'from_date' => date('Y-m-d', strtotime('first day of january this year')),
+        'from_date' => strtotime('this year January 1st'),
         'to_date' => NULL,
         'sort_by' => NULL,
         'sort_order' => NULL,
       ];
 
       $last_year_params['from_date'] = NULL;
-      $last_year_params['to_date'] = date('Y-m-d', strtotime('first day of december last year'));
+      $last_year_params['to_date'] = strtotime('last year December 31st');
 
       $filter_options = [];
       $past_submissions = $this->schoolFormsService->getResults($last_year_params, FALSE);
@@ -147,6 +147,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         ],
       ];
     }
+
     return $build;
   }
 

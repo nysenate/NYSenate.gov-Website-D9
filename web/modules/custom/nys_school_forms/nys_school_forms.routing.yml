@@ -41,3 +41,11 @@ nys_school_forms.show_student_submission:
   requirements:
     _permission: 'administer site configuration'
     id: ^\d+$
+nys_school_forms.webform.archives:
+  path: '/admin/create/archived/submissions/{form_type}'
+  defaults:
+    _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::generateArchiveWebformSubmissions'
+  requirements:
+    _permission: "access all webform results"
+  options:
+      _admin_route: TRUE

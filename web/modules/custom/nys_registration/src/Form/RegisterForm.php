@@ -169,6 +169,47 @@ class RegisterForm extends UserRegisterForm {
       ],
     ];
 
+    // Check if redirected from Senator's Page.
+    if (\Drupal::request()->headers->get('referer')) {
+      $referrer = explode('/', \Drupal::request()->headers->get('referer'));
+
+      if ($referrer[3] == 'senators') {
+        $form['#theme'] = 'register_form_step1_message_senator';
+        $title_text = 'Message a Senator';
+        $help_text = 'To send a message to any NY State Senator, please creating a profile or <a href="/user/login">login</a>.';
+
+        $query_parameters = \Drupal::request()->query->all();
+
+        if (isset($query_parameters['senator'])) {
+          $senator = \Drupal::entityTypeManager()
+            ->getStorage('taxonomy_term')
+            ->load($query_parameters['senator']);
+
+          if ($senator->field_senator_name) {
+            $given = $senator->field_senator_name->given ?? '';
+            $family = $senator->field_senator_name->family ?? '';
+            $senator_name = trim($given . ' ' . $family);
+
+            $title_text = 'Message Sen. ' . $senator_name;
+            $help_text = t('To send a message to NY State Sen.') .
+              ' ' . trim($family) . ', ' .
+              t('please create a profile using the form below or <a href="/user/login">login</a>.');
+          }
+
+          $form['registration_teaser'] = [
+            '#markup' => '<div class="c-login">
+                            <h2 class="nys-title">' . $title_text . '</h2>
+                            <p class="body">' . $help_text . '</p>',
+            '#weight' => -100,
+          ];
+          $form['actions']['#suffix'] = '</div>';
+
+          $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
+        }
+
+      }
+    }
+
     return $form;
   }
 

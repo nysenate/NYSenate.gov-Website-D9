@@ -7,8 +7,18 @@
     <div class="c-tab--arrow u-mobile-only"></div>
     {% for panel in panels %}
       {% if panel.years|length > 0 %}
-      <div class="c-tab {% if loop.first %}active{% endif %}">
-        <input type="radio" name="language" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
+        <div class="c-tab 
+        {% if panel.filter == true and loop.index == 2 %}
+          active
+        {% elseif panel.filter == false and loop.index == 1 %}
+          active 
+        {% endif %}">
+        <input class="form-radio" type="radio" name="language" value="#panel{{ loop.index }}" 
+         {% if panel.filter == true and loop.index == 2 %}
+          checked = "checked" 
+        {% elseif panel.filter == false and loop.index == 1%}
+          checked = "checked"
+        {% endif %}>
         <label class="c-tab-link">{{ panel.title }}</label>
       </div>
       {% endif %}
@@ -21,7 +31,9 @@
         is_bulleted: TRUE,
         title: panel.title,
         years: panel.years,
-        filter_item: panel.filter_item
+        filter: panel.filter,
+        filter_item: panel.filter_item,
+        panel_number: loop.index
       } only
       %}
     {% endfor %}

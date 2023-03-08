@@ -1,8 +1,12 @@
 {% if years|length > 0 %}
-<div class="c-committees-container {% if is_bulleted %} c-committees-container--bulleted {% endif %}">
+<div id="panel{{ panel_number }}" class="content c-committees-container {% if is_bulleted %} c-committees-container--bulleted {% endif %} 
+  {% if panel_number == 2 and filter == true %}
+    active
+  {% elseif panel_number == 1 and filter == false %}
+    active 
+  {% endif %}"> 
   <h2 class="c-container-title">{{ title }}</h2>
   {% if filter_item %}
-
     <form {{ form_attr }}>
       <label for="edit-type">
         {{ filter_item.label }}
@@ -46,6 +50,7 @@
           {% endfor %}
         </div>
       {% endfor %}
+     </div> 
     {% endfor %}
   </div>
 </div>

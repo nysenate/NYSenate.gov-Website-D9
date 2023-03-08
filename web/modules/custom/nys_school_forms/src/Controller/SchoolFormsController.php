@@ -139,8 +139,8 @@ class SchoolFormsController extends ControllerBase {
       'senator' => urldecode($senator),
       'school' => urldecode($school),
       'teacher_name' => urldecode($teacher_name),
-      'from_date' => urldecode($from_date),
-      'to_date' => urldecode($to_date),
+      'from_date' => strtotime(urldecode($from_date)),
+      'to_date' => strtotime(urldecode($to_date)),
       'sort_by' => urldecode($sort_by),
       'sort_order' => urldecode($sort_order),
     ];

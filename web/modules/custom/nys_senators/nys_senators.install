@@ -16,6 +16,13 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
+ * Implements hook_install().
+ */
+function nys_senators_install() {
+  module_set_weight('nys_senators', -500);
+}
+
+/**
  * Implements hook_update_N().
  */
 function nys_senators_update_9001() {
@@ -466,4 +473,11 @@ function nys_senators_update_9016() {
       _nys_senators_update_microsites($senator_term);
     }
   }
+}
+
+/**
+ * Adjusts module weight to make sure access is controlled properly.
+ */
+function nys_senators_update_9017() {
+  module_set_weight('nys_senators', -500);
 }

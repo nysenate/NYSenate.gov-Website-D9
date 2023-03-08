@@ -147,7 +147,7 @@ class SenatorMessageForm extends FormBase {
           'senator' => $senator->id(),
         ],
       ];
-      $url = Url::fromUserInput('/registration/nojs/form/start/message-senator', $query)->toString();
+      $url = Url::fromUserInput('/user/register', $query)->toString();
       $response = new RedirectResponse($url);
       $response->send();
       return;
@@ -241,7 +241,7 @@ class SenatorMessageForm extends FormBase {
     }
 
     if (!$this->currentUser->id()) {
-      $url = Url::fromUserInput('registration/nojs/form/start/message-senator');
+      $url = Url::fromUserInput('/user/register');
       $response = new RedirectResponse($url);
       $response->send();
       return;

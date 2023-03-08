@@ -19,38 +19,4 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    */
   public function __construct() {
   }
-
-  public function spin ($lambda, $wait = 60)
-  {
-    for ($i = 0; $i < $wait; $i++)
-    {
-      try {
-        if ($lambda($this)) {
-          return true;
-        }
-      } catch (Exception $e) {
-        // do nothing
-      }
-
-      sleep(1);
-    }
-
-    $backtrace = debug_backtrace();
-
-    throw new Exception(
-      "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()\n" .
-      $backtrace[1]['file'] . ", line " . $backtrace[1]['line']
-    );
-  }
-
-  /**
-   * Waits to see the login form.
-   *
-   * @Given I see the login form
-   */
-  public function iSeeLoginForm($selector) {
-    $this->spin(function($context) {
-      return ($context->getSession()->getPage()->findById('user-login-form')->isVisible());
-    });
-  }
 }

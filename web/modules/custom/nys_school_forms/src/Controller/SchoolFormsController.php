@@ -241,7 +241,7 @@ class SchoolFormsController extends ControllerBase {
   /**
    * Controller method for generating webform submissions.
    */
-  public function generateArchiveWebformSubmissions($form_type) {
+  public function generateArchiveWebformSubmissions($form_type = 'earth_day', $year = '2019') {
 
     $webformSubmissionStorage = $this->entityTypeManager->getStorage('webform_submission');
     $webform_type = match ($form_type) {
@@ -254,7 +254,7 @@ class SchoolFormsController extends ControllerBase {
       ->range(0, 5)
       ->sort('created', 'DESC');
     $submission_ids = $query->execute();
-    $start = '2018';
+    $start = $year;
     foreach ($submission_ids as $submission_id) {
       if ($start >= '2022') {
         $start = '2022';

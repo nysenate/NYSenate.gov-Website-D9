@@ -184,14 +184,17 @@ class SchoolFormsService {
         else {
           if ($scheme === 'public') {
             $grade = $this->mapGrades($submission_data['grade']);
-            $results[$school_node->id()]['grade_levels'][$grade['weight']]['submissions'][] = [
+
+            $completed_time = $submission->getCompletedTime();
+            $year = date('Y', $completed_time);
+            $results[$year][$school_node->id()]['grade_levels'][$grade['weight']]['submissions'][] = [
               'url' => $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri()),
               'title' => [
                 '#markup' => $student['student_name'] . ' <sub>(' . explode('/', $file->getMimeType())[1] . ')</sub>',
               ],
             ];
-            $results[$school_node->id()]['grade_levels'][$grade['weight']]['title'] = $grade['value'];
-            $results[$school_node->id()]['title'] = $school_node->label();
+            $results[$year][$school_node->id()]['grade_levels'][$grade['weight']]['title'] = $grade['value'];
+            $results[$year][$school_node->id()]['title'] = $school_node->label();
           }
         }
       }
@@ -244,25 +247,28 @@ class SchoolFormsService {
    * @return array
    *   Re-order the results so that they are in the right grade level order.
    */
-  public function orderGrades(array $schools): array {
-    foreach ($schools as &$school) {
-      $grade_levels = $school['grade_levels'];
-      // Sort by grade level in ascending order.
-      ksort($grade_levels);
-      $school['grade_levels'] = $grade_levels;
+  public function orderGrades(array $year_schools): array {
+    foreach ($year_schools as &$schools) {
+      foreach ($schools as &$school) {
+        $grade_levels = $school['grade_levels'];
+        // Sort by grade level in ascending order.
+        ksort($grade_levels);
+        $school['grade_levels'] = $grade_levels;
 
-      // Sort submissions within each grade level.
-      foreach ($grade_levels as &$grade_level) {
-        $submissions = $grade_level['submissions'];
-        usort($submissions, fn($a, $b) => $a['title']['#markup'] <=> $b['title']['#markup']);
-        $grade_level['submissions'] = $submissions;
+        // Sort submissions within each grade level.
+        foreach ($grade_levels as &$grade_level) {
+          $submissions = $grade_level['submissions'];
+          usort($submissions, fn($a, $b) => $a['title']['#markup'] <=> $b['title']['#markup']);
+          $grade_level['submissions'] = $submissions;
+        }
+      }
+
+      if (!empty($schools)) {
+        // Sort schools by title in ascending order.
+        usort($schools, fn($a, $b) => $a['title'] <=> $b['title']);
       }
     }
-
-    // Sort schools by title in ascending order.
-    usort($schools, fn($a, $b) => $a['title'] <=> $b['title']);
-
-    return $schools;
+    return $year_schools;
   }
 
 }

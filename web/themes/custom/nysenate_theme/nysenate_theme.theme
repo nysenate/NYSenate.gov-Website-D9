@@ -1273,11 +1273,13 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
   // Newsroom.
   elseif (($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content' ||
-    $view->id() == 'committee_content' && $view->current_display == 'news' ||
+    $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer' ||
     $view->id() == 'newsroom' && $view->current_display == 'all_news' ||
     $view->id() == 'newsroom' && $view->current_display == 'press_releases' ||
-    $view->id() == 'committee_content' && $view->current_display == 'news_meetings' ||
-    $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer')) {
+    $view->id() == 'committee_content' && $view->current_display == 'all_updates' ||
+    $view->id() == 'committee_content' && $view->current_display == 'meetings' ||
+    $view->id() == 'committee_content' && $view->current_display == 'news' ||
+    $view->id() == 'committee_content' && $view->current_display == 'news_meetings')) {
     $contents = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
@@ -1322,14 +1324,22 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         }
       }
 
+      $date = NULL;
+      if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y');
+      }
+      elseif ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
+        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'F j, Y');
+      }
+
       $contents[] = [
-        'title' => ucwords($bundle),
+        'title' => ucwords(strtolower(str_replace('_', ' ', $bundle))),
         'topics' => $issues,
         'description' => [
           'text' => $node->label(),
           'url' => $node->toUrl()->toString(),
         ],
-        'date' => $node->field_date->value ? \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y') : NULL,
+        'date' => $date,
         'img_src' => $image_main,
       ];
     }

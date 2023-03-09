@@ -2,17 +2,17 @@
 
 namespace Drupal\nys_school_forms\Plugin\Block;
 
+use Drupal\node\NodeInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\NodeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\nys_school_forms\SchoolFormsService;
 use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\nys_school_forms\SchoolFormsService;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Submission results block on the School Forms for Senator Microsite Pages.
@@ -88,47 +88,67 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
+    $build = [];
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
       $form_type = $term->getName();
-      $senator_terms = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->getValue() : [];
-      $tids = [];
-      foreach ($senator_terms as $tid) {
-        $tids[] = (int) $tid['target_id'];
-      }
-      $senator = $tids[0];
-      $params = [
+      $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->entity : [];
+
+      $last_year_params = $params = [
         'form_type' => $form_type,
-        'senator' => urldecode($senator),
+        'senator' => $senator_term->id(),
         'school' => NULL,
         'teacher_name' => NULL,
-        'from_date' => NULL,
+        'from_date' => strtotime('this year January 1st'),
         'to_date' => NULL,
         'sort_by' => NULL,
         'sort_order' => NULL,
       ];
-      $results = $this->schoolFormsService->getResults($params);
-      // Results come back in this format. First key is the school' name,
-      // second key is the grade.
-      /*["SUCCESS ACADEMY BERGEN BEACH"]=> array(1) {
-      [5]=> array(1) {
-      ["file] => [file object]
-      ["student"]=> array(4) {
-      ["show_student"]=> string(2) "No"
-      ["student_name"]=> string(5) "test5"
-      ["student_submission"]=> string(7) "1900918"
-      ["submission_type"]=> string(1) "0"
+
+      $last_year_params['from_date'] = NULL;
+      $last_year_params['to_date'] = strtotime('last year December 31st');
+
+      $filter_options = [];
+      $past_submissions = $this->schoolFormsService->getResults($last_year_params, FALSE);
+
+      $filter_options[] = [
+        'value' => 'All',
+        'text' => '- Year -',
+      ];
+
+      foreach (array_keys($past_submissions) as $option) {
+        $filter_options[] = [
+          'value' => $option,
+          'text' => $option,
+        ];
       }
-      }
-      }
-      }*/
-      return [
-        '#theme' => 'senator_microsite_school_form_submission',
-        '#results' => $results,
+
+      $build = [
+        '#theme' => 'nys_school_forms__results_block',
+        '#content' => [
+          'panels' => [
+            [
+              'tab_text' => 'Current Year',
+              'title' => date('Y') . ' Poster Submissions',
+              'years' => $this->schoolFormsService->getResults($params, FALSE),
+            ],
+            [
+              'tab_text' => 'Past Submissions',
+              'title' => 'Archived Submissions',
+              'filter_item' => [
+                'label' => 'Select Year',
+                'desc' => 'Archive only goes back to ' . end($filter_options)['text'],
+                'select_options' => $filter_options,
+              ],
+              'years' => $past_submissions,
+            ],
+          ],
+        ],
       ];
     }
-    return [];
+
+    return $build;
   }
 
   /**

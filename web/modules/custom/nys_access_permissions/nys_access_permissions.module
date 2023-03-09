@@ -60,7 +60,6 @@ function nys_access_permissions_entity_create_access(AccountInterface $account, 
  * Grant access to content on unique content basis.
  */
 function nys_access_permissions_node_access(NodeInterface $node, $operation, AccountInterface $account) {
-  $is_mcp = in_array('microsite_content_producer', $account->getRoles());
   if (is_object($node) && is_object($account)) {
     $edit_own = 'edit own ' . $node->bundle() . ' content';
     // If user has access to edit own content.
@@ -80,32 +79,6 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
           }
         }
       }
-    }
-
-    if ($is_mcp && $operation == 'update') {
-      if ($node->hasField('field_committee') && !empty($node->field_committee->getValue())) {
-        $committee = $node->field_committee->entity;
-        if (isset($committee->field_chair) && !empty($committee->field_chair->target_id)) {
-          if (_nys_access_permissions_user_is_senators_microsite_producer($committee->field_chair->target_id, $account->id())) {
-            return AccessResult::allowed();
-          }
-        }
-      }
-      elseif (in_array($node->bundle(), _nys_access_permissions_microsite_content_producer_node_types())) {
-        if ($node->hasField('field_senator_multiref') && $senator_multirefs = $node->field_senator_multiref->getValue()) {
-          foreach ($senator_multirefs as $senator_multiref) {
-            if (_nys_access_permissions_user_is_senators_microsite_producer($senator_multiref['target_id'], $account->id())) {
-              return AccessResult::allowed();
-            }
-          }
-        }
-        elseif ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
-          if (_nys_access_permissions_user_is_senators_microsite_producer($node->field_ol_sponsor->target_id, $account->id())) {
-            return AccessResult::allowed();
-          }
-        }
-      }
-      return AccessResult::forbidden();
     }
 
     // Allow access to bulk operation's manipulation

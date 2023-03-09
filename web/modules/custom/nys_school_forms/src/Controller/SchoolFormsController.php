@@ -139,8 +139,8 @@ class SchoolFormsController extends ControllerBase {
       'senator' => urldecode($senator),
       'school' => urldecode($school),
       'teacher_name' => urldecode($teacher_name),
-      'from_date' => urldecode($from_date),
-      'to_date' => urldecode($to_date),
+      'from_date' => strtotime(urldecode($from_date)),
+      'to_date' => strtotime(urldecode($to_date)),
       'sort_by' => urldecode($sort_by),
       'sort_order' => urldecode($sort_order),
     ];
@@ -236,6 +236,49 @@ class SchoolFormsController extends ControllerBase {
     $response->headers->set('Content-Disposition', 'attachment; filename="student-export.csv"');
     $response->setContent($csv_data);
     return $response;
+  }
+
+  /**
+   * Controller method for generating webform submissions.
+   */
+  public function generateArchiveWebformSubmissions($form_type = 'earth_day', $year = '2019') {
+
+    $webformSubmissionStorage = $this->entityTypeManager->getStorage('webform_submission');
+    $webform_type = match ($form_type) {
+      'thankful' => 'school_form_thanksgiving',
+      'earth_day' => 'school_form_earth_day',
+    };
+    // Query the last 5 webform submissions with webform ID = form type.
+    $query = $webformSubmissionStorage->getQuery()
+      ->condition('webform_id', $webform_type)
+      ->range(0, 5)
+      ->sort('created', 'DESC');
+    $submission_ids = $query->execute();
+    $start = $year;
+    foreach ($submission_ids as $submission_id) {
+      if ($start >= '2022') {
+        $start = '2022';
+      }
+      $new_created_date = strtotime($start . '-01-01 00:00:00');
+      // Load the submission entity.
+      $submission = $webformSubmissionStorage->load($submission_id);
+      // Modify the submission as needed.
+      if (!empty($submission)) {
+        $submission->setCreatedTime($new_created_date);
+        $submission->save();
+      }
+      // Save the submission.
+      $submission->save();
+      $start++;
+    }
+    $markup = 'The last 5 webform submissions successfully modified created dates.';
+
+    $build = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+    ];
+
+    return $build;
   }
 
 }

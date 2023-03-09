@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\Entity\Term;
@@ -229,6 +230,27 @@ class SenatorsHelper {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Validates if passed in user is an Admin or not.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user account.
+   *
+   * @return bool
+   *   Returns TRUE if user is an admin account.
+   */
+  public function senatorUserIsAdmin(AccountInterface $current_user) {
+    if ($current_user->id() == 1) {
+      return TRUE;
+    }
+    elseif (in_array('administrator', $current_user->getRoles()) || in_array('content_admin', $current_user->getRoles())) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**

@@ -8,6 +8,7 @@
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
@@ -52,12 +53,6 @@ function nys_senators_node_grants(AccountInterface $account, $op) {
     'content_admin',
   ];
 
-  // What administrative roles need non-senator based edit access.
-  $admin_roles = [
-    'content_admin',
-    'administrator',
-  ];
-
   // Fetch the User's roles.
   $user_roles = $account->getRoles();
 
@@ -65,8 +60,9 @@ function nys_senators_node_grants(AccountInterface $account, $op) {
   // Second check if they are a role we want to give Microsite edit access to.
   if ($account->isAuthenticated() && !empty(array_intersect($granted_member_roles, $user_roles))) {
 
+    $senator_helper = \Drupal::service('nys_senators.senators_helper');
     // If user is an admin we need to give full access to the content.
-    if (!empty(array_intersect($admin_roles, $user_roles))) {
+    if ($senator_helper->senatorUserIsAdmin($account)) {
 
       // User is an Admin. Grant access to all microsite content.
       // Group 2 will be a representation of our admins.
@@ -107,12 +103,21 @@ function nys_senators_node_access_records(NodeInterface $node) {
   $microsite_cts = [
     'article',
     'event',
+    'in_the_news',
     'petition',
+    'promotional_banner',
     'microsite_page',
+    'webform',
+    'video',
+  ];
+
+  $sponsor_cts = [
+    'bill',
+    'resolution',
   ];
 
   // If the node is in a bundle that could be microsite content.
-  if (in_array($node->bundle(), $microsite_cts, TRUE)) {
+  if (in_array($node->bundle(), $microsite_cts, TRUE) || in_array($node->bundle(), $sponsor_cts, TRUE)) {
 
     // Add the appropriate gids to the proper realms for each level of access.
     // Start with all and administrative users.
@@ -140,7 +145,7 @@ function nys_senators_node_access_records(NodeInterface $node) {
     ];
 
     // Now check for a filled out Senator field.
-    if ($node->hasField('field_senator_multiref') && !empty($senators = $node->field_senator_multiref->getValue())) {
+    if (in_array($node->bundle(), $microsite_cts, TRUE) && $node->hasField('field_senator_multiref') && !empty($senators = $node->field_senator_multiref->getValue())) {
 
       // For all Senators on Node, grant producers access based on Senator.
       foreach ($senators as $senator) {
@@ -149,6 +154,24 @@ function nys_senators_node_access_records(NodeInterface $node) {
         $access[] = [
           'realm' => 'microsite_producers',
           'gid' => $senator['target_id'],
+          'grant_view' => 1,
+          'grant_update' => 1,
+          'grant_delete' => 0,
+          'priority' => 0,
+        ];
+      }
+    }
+
+    // Now check for a filled out Sponsor field.
+    if (in_array($node->bundle(), $sponsor_cts, TRUE) && $node->hasField('field_ol_sponsor') && !empty($sponsors = $node->field_ol_sponsor->getValue())) {
+
+      // For all Senators on Node, grant producers access based on Senator.
+      foreach ($sponsors as $sponsor) {
+
+        // Add edit access to producers based on Senator ID.
+        $access[] = [
+          'realm' => 'microsite_producers',
+          'gid' => $sponsor['target_id'],
           'grant_view' => 1,
           'grant_update' => 1,
           'grant_delete' => 0,
@@ -167,38 +190,51 @@ function nys_senators_node_access_records(NodeInterface $node) {
  */
 function nys_senators_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
 
-  // Only fire when updating a Senator Term.
-  if ($entity->getEntityType()->id() === 'taxonomy_term' && $entity->bundle() === 'senator' && $operation === 'update') {
+  // Fetch the User's roles.
+  $user_roles = $account->getRoles();
+  $senator_helper = \Drupal::service('nys_senators.senators_helper');
 
-    // Fetch the User's roles.
-    $user_roles = $account->getRoles();
+  // Don't need to waste any performance if user is not MCP.
+  if (!$senator_helper->senatorUserIsAdmin($account) && in_array('microsite_content_producer', $user_roles, FALSE)) {
 
-    // What administrative roles need checking.
-    $admin_roles = [
-      'content_admin',
-      'administrator',
-    ];
+    // Find out all of the User's senators. To do so, load full user entity.
+    $user = User::load($account->id());
 
-    // Only check for MCPs.
-    if (in_array('microsite_content_producer', $user_roles, FALSE) && empty(array_intersect($admin_roles, $user_roles))) {
+    // Make sure the user has the field and that there is a value.
+    if ($user->hasField('field_senator_multiref') && !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id'))) {
 
-      // The User falls within a Senator based producer.
-      // Find out all of the User's senators. To do so, load user entity.
-      $user = User::load($account->id());
+      // Only fire when a Senator or Committee Term.
+      if ($entity->getEntityType()->id() === 'taxonomy_term' && $operation == 'update') {
 
-      // Make sure the user has the field and that there is a value.
-      if ($user->hasField('field_senator_multiref') && !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id'))) {
-
-        // Lastly check if term is in MCPs senator values.
-        if (in_array($entity->id(), $senators, FALSE)) {
-
+        // Check if term is in MCPs senator values for Senator terms.
+        if ($entity->bundle() === 'senator' && in_array($entity->id(), $senators, FALSE)) {
           // Matched value. You shall pass.
           return AccessResultAllowed::allowed()->setCacheMaxAge(0);
         }
-      }
 
-      // Either they don't have a senator or not the right Senator.
+        // Check if chair term is in MCPs senator values.
+        if ($entity->bundle() === 'committees') {
+          if (!empty($entity->field_chair->target_id) && in_array($entity->field_chair->target_id, $senators, FALSE)) {
+            // Matched value. You shall pass.
+            return AccessResultAllowed::allowed()->setCacheMaxAge(0);
+          }
+
+          return AccessResult::neutral();
+        }
+
+        // Either they don't have a senator or not the right Senator.
+        return AccessResult::forbidden()->setCacheMaxAge(0);
+      }
+    }
+    elseif ($entity->getEntityType()->id() === 'taxonomy_term' && $operation == 'update') {
+      // They don't have a senator, deny everything..
       return AccessResult::forbidden()->setCacheMaxAge(0);
+    }
+
+    // Hide Admin routes from Content Bases for non-update access items.
+    if ($operation == 'view all revisions' && $entity->getEntityType()->id() === 'node') {
+      // Returns true if they have update access.
+      return AccessResult::allowedIf($entity->access('update', $account))->setCacheMaxAge(0);
     }
   }
 
@@ -1086,6 +1122,14 @@ function _nys_senators_update_microsites(EntityInterface $entity) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function nys_senators_query_nys_senators_access_alter(AlterableInterface $query) {
+  // Add op metadata so node_access is used.
+  $query->addMetaData('op', 'update');
 }
 
 /**

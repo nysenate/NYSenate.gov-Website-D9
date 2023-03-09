@@ -127,19 +127,19 @@ class SchoolFormsService {
       }
     }
     $query->condition('webform_id', $webform_id);
-    if ($params['from_date']) {
-      $query->condition('completed', strtotime($params['from_date']), '>');
+    if (!empty($params['from_date'])) {
+      $query->condition('created', $params['from_date'], '>');
     }
-    if ($params['to_date']) {
+    if (!empty($params['to_date'])) {
       // Make to date filter inclusive of the day.
-      $query->condition('completed', strtotime($params['to_date']) + 86399, '<');
+      $query->condition('created', (int) $params['to_date'] + 86399, '<');
     }
     if ($params['sort_by'] === 'date') {
       if ($params['sort_order']) {
-        $query->sort('completed', $params['sort_order']);
+        $query->sort('created', $params['sort_order']);
       }
       else {
-        $query->sort('completed', 'DESC');
+        $query->sort('created', 'DESC');
       }
     }
 
@@ -185,8 +185,8 @@ class SchoolFormsService {
           if ($scheme === 'public') {
             $grade = $this->mapGrades($submission_data['grade']);
 
-            $completed_time = $submission->getCompletedTime();
-            $year = date('Y', $completed_time);
+            $created_time = $submission->getCreatedTime();
+            $year = date('Y', $created_time);
             $results[$year][$school_node->id()]['grade_levels'][$grade['weight']]['submissions'][] = [
               'url' => $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri()),
               'title' => [

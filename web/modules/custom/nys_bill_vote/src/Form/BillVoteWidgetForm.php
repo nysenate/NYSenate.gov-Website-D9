@@ -193,7 +193,7 @@ class BillVoteWidgetForm extends FormBase {
     // We want to process the vote if the user is logged in.
     if ($this->currentUser->isAuthenticated()) {
       $this->billVoteHelper->processVote($build_info['entity_type'], $build_info['entity_id'], $value);
-      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($build_info['entity_type'], $build_info['entity_id'], TRUE));
+      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($build_info['entity_type'], $build_info['entity_id']));
       $form['nys_bill_vote']['#options'] = $this->billVoteHelper->getOptions();
     }
 

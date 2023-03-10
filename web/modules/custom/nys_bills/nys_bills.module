@@ -101,6 +101,7 @@ function nys_bills_node_view_alter(array &$build, EntityInterface $entity, Entit
       throw new NotFoundHttpException();
     }
 
+    // @phpstan-ignore-next-line
     $build['bill_form'] = \Drupal::formBuilder()->getForm('Drupal\nys_bills\Form\BillForm', $entity);
 
     // Add settings to javascript that will help with processing vote from

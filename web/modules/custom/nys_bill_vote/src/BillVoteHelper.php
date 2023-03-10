@@ -252,10 +252,13 @@ class BillVoteHelper {
         $needs_processing = TRUE;
       }
       else {
-        $user_votes = $this->entityTypeManager->getStorage('vote')->getUserVotes($this->currentUser->id(), 'nys_bill_vote', 'node', $entity_id);
+        /** @var \Drupal\votingapi\VoteStorage $vote_storage */
+        $vote_storage = $this->entityTypeManager->getStorage('vote');
+        $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), 'nys_bill_vote', 'node', $entity_id);
         $vote_check = NULL;
         if (!empty($user_votes)) {
-          $vote_entity = $this->entityTypeManager->getStorage('vote')->load(end($user_votes));
+          /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
+          $vote_entity = $vote_storage->load(end($user_votes));
           $vote_check = (int) $vote_entity->getValue();
         }
 
@@ -320,6 +323,7 @@ class BillVoteHelper {
           $vote_entity->save();
         }
         else {
+          /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
           $vote_entity->setValue($vote_index);
           $vote_entity->save();
         }
@@ -379,16 +383,19 @@ class BillVoteHelper {
    *   The default values.
    */
   public function getDefault($entity_type, $entity_id) {
+    /** @var \Drupal\votingapi\VoteStorage $vote_storage */
+    $vote_storage = $this->entityTypeManager->getStorage('vote');
     if ($this->currentUser->id() > 0) {
-      $user_votes = $this->entityTypeManager->getStorage('vote')->getUserVotes($this->currentUser->id(), 'nys_bill_vote', $entity_type, $entity_id);
+      $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), 'nys_bill_vote', $entity_type, $entity_id);
     }
     else {
-      $user_votes = $this->entityTypeManager->getStorage('vote')->getUserVotes($this->currentUser->id(), 'nys_bill_vote', $entity_type, $entity_id, \Drupal::request()->getClientIp());
+      $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), 'nys_bill_vote', $entity_type, $entity_id, \Drupal::request()->getClientIp());
     }
 
     if (!empty($user_votes)) {
-      $vote = $this->entityTypeManager->getStorage('vote')->load(end($user_votes));
-      return $vote->getValue();
+      /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
+      $vote_entity = $vote_storage->load(end($user_votes));
+      return $vote_entity->getValue();
     }
 
     return NULL;
@@ -410,11 +417,7 @@ class BillVoteHelper {
   public function getVotes($entity_type, $entity_id, $clear = FALSE) {
     $entities = &drupal_static(__FUNCTION__, NULL, $clear);
     if (empty($entities[$entity_type][$entity_id])) {
-      $results = $this->voteResultFunctionManager->getResults([
-        'tag' => 'nys_bill_vote',
-        'entity_id' => $entity_id,
-        'entity_type' => 'node',
-      ]);
+      $results = $this->voteResultFunctionManager->getResults('node', $entity_id);
       $entities[$entity_type][$entity_id] = $results['nys_bill_vote']['vote_sum'];
     }
 

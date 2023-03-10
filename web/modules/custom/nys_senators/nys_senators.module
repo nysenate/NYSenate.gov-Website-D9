@@ -441,11 +441,6 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           // Creates blocks to be attached to the microsite content.
           $thankful_blocks = [
             [
-              'info' => $senator_name . ' - Thankful Letter Block',
-              'type' => 'thankful_letter',
-              'revision_user' => 1,
-            ],
-            [
               'info' => $senator_name . ' - Sincerely Block',
               'type' => 'sincerely',
               'revision_user' => 1,
@@ -474,11 +469,6 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
           $nodeValues['title'] = '2021 Earth Day Poster Contest Celebration';
           // Creates submission block to be attached to the microsite content.
           $earthday_blocks = [
-            [
-              'info' => $senator_name . ' - Earth Day Letter Block',
-              'type' => 'earth_day_letter',
-              'revision_user' => 1,
-            ],
             [
               'info' => $senator_name . ' - Sincerely Block',
               'type' => 'sincerely',

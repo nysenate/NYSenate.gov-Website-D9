@@ -4,3 +4,34 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@cache.default'
+      - '@request_stack'
+      - '@nys_senators.microsites'
+  nys_senators.microsites:
+    class: Drupal\nys_senators\Service\Microsites
+    arguments:
+      - '@entity_type.manager'
+      - '@cache.default'
+      - '@theme_handler'
+  nys_senators.json_feed:
+    class: Drupal\nys_senators\Service\SenatorsJson
+    arguments:
+      - '@nys_senators.senators_helper'
+      - '@nys_senators.microsites'
+      - '@cache.data'
+      - '@address.country_repository'
+      - '@address.subdivision_repository'
+      - '@renderer'
+  nys_senators.route_subscriber:
+    class: Drupal\nys_senators\EventSubscriber\McpRouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  nys_senators.mcp_access_checker:
+    class: Drupal\nys_senators\Access\McpAccessCheck
+    arguments: [ '@current_user' ]
+    tags:
+      - { name: access_check, applies_to: _custom_access }
+  nys_senators.event_subscriber:
+    class: Drupal\nys_senators\EventSubscriber\McpEventSubscriber
+    arguments: [ '@request_stack', '@current_route_match', '@current_user' ]
+    tags:
+      - { name: 'event_subscriber' }

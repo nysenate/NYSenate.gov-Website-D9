@@ -19,5 +19,4 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    */
   public function __construct() {
   }
-
 }

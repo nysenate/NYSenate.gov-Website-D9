@@ -6,9 +6,6 @@ dependencies:
     - field.storage.node.field_microsite_page_type
     - taxonomy.vocabulary.committees
     - taxonomy.vocabulary.senator
-    - user.role.administrator
-    - user.role.frontpage_editor
-    - user.role.web_administrator
   module:
     - node
     - options
@@ -442,12 +439,9 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: role
+        type: perm
         options:
-          role:
-            administrator: administrator
-            web_administrator: web_administrator
-            frontpage_editor: frontpage_editor
+          perm: 'access content overview'
       cache:
         type: none
         options: {  }
@@ -958,7 +952,7 @@ display:
         - url.query_args
         - user
         - 'user.node_grants:view'
-        - user.roles
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_microsite_page_type'
   page_1:
@@ -991,6 +985,6 @@ display:
         - url.query_args
         - user
         - 'user.node_grants:view'
-        - user.roles
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_microsite_page_type'

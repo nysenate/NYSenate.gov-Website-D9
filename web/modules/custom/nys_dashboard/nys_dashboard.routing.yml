@@ -5,6 +5,13 @@ nys_dashboard.issues:
   requirements:
     _permission: 'access content'
 
+nys_dashboard.bills:
+  path: '/users/{user_id}/dashboard/bills'
+  defaults:
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::bills'
+  requirements:
+    _permission: 'access content'
+
 nys_dashboard.committees:
   path: '/users/{user_id}/dashboard/committees'
   defaults:

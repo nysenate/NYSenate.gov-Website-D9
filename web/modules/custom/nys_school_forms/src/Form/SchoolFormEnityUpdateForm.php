@@ -256,7 +256,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $senator = NULL, string $form_type = NULL, string $school = NULL, string $teacher_name = NULL, string $from_date = NULL, string $to_date = NULL, string $sort_by = NULL, string $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $params = []) {
     $form['operations'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Operations'),
@@ -278,7 +278,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
       '#name' => 'apply',
     ];
 
-    $form['table'] = $this->getTable($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $form['table'] = $this->getTable($params);
     $form['pager'] = [
       '#type' => 'pager',
     ];
@@ -291,7 +291,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
    * @return array
    *   The search form and search results build array.
    */
-  public function getTable($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order) {
+  public function getTable($params) {
     // Initialize the pager.
     $page = $this->pagerParam->findPage();
     $num_per_page = 150;
@@ -305,7 +305,7 @@ class SchoolFormEnityUpdateForm extends FormBase {
     ];
     $offset = $num_per_page * $page;
     $num_results = 0;
-    $results = $this->schoolFormsService->getResults($senator, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $results = $this->schoolFormsService->getResults($params);
     $table_results = [];
     // Transform Results into Table.
     $i = 0;
@@ -330,15 +330,14 @@ class SchoolFormEnityUpdateForm extends FormBase {
           1 => 'an essay',
           2 => 'a poem',
         ];
-        if ($result['parent_node']) {
-          $parent_node_id = $result['parent_node']->id();
-          $school_form_type = $result['parent_node']->get('field_school_form_type')->entity->label();
+        if ($params['form_type']) {
+          $school_form_type = $params['form_type'];
         }
         else {
           $parent_node_id = 'none';
           $school_form_type = 'Submitted directly from webform';
         }
-        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id() . '-' . $parent_node_id] = [
+        $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id()] = [
           'school' => new FormattableMarkup('@school_name <br> @street <br> @city, @state, @zipcode', [
             '@school_name' => $school_name,
             '@street' => $school_address['address_line1'],

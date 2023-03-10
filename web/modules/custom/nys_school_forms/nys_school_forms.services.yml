@@ -1,4 +1,11 @@
 services:
   nys_school_forms.school_forms:
     class: Drupal\nys_school_forms\SchoolFormsService
-    arguments: ['@pager.parameters', '@pager.manager', '@entity_type.manager', '@current_route_match']
+    public: true
+    arguments:
+      - '@pager.parameters'
+      - '@pager.manager'
+      - '@entity_type.manager'
+      - '@current_route_match'
+      - '@stream_wrapper_manager'
+      - '@file_url_generator'

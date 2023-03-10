@@ -8,6 +8,7 @@
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
@@ -53,12 +54,6 @@ function nys_senators_node_grants(AccountInterface $account, $op) {
     'content_admin',
   ];
 
-  // What administrative roles need non-senator based edit access.
-  $admin_roles = [
-    'content_admin',
-    'administrator',
-  ];
-
   // Fetch the User's roles.
   $user_roles = $account->getRoles();
 
@@ -66,8 +61,9 @@ function nys_senators_node_grants(AccountInterface $account, $op) {
   // Second check if they are a role we want to give Microsite edit access to.
   if ($account->isAuthenticated() && !empty(array_intersect($granted_member_roles, $user_roles))) {
 
+    $senator_helper = \Drupal::service('nys_senators.senators_helper');
     // If user is an admin we need to give full access to the content.
-    if (!empty(array_intersect($admin_roles, $user_roles))) {
+    if ($senator_helper->senatorUserIsAdmin($account)) {
 
       // User is an Admin. Grant access to all microsite content.
       // Group 2 will be a representation of our admins.
@@ -108,12 +104,21 @@ function nys_senators_node_access_records(NodeInterface $node) {
   $microsite_cts = [
     'article',
     'event',
+    'in_the_news',
     'petition',
+    'promotional_banner',
     'microsite_page',
+    'webform',
+    'video',
+  ];
+
+  $sponsor_cts = [
+    'bill',
+    'resolution',
   ];
 
   // If the node is in a bundle that could be microsite content.
-  if (in_array($node->bundle(), $microsite_cts, TRUE)) {
+  if (in_array($node->bundle(), $microsite_cts, TRUE) || in_array($node->bundle(), $sponsor_cts, TRUE)) {
 
     // Add the appropriate gids to the proper realms for each level of access.
     // Start with all and administrative users.
@@ -141,7 +146,7 @@ function nys_senators_node_access_records(NodeInterface $node) {
     ];
 
     // Now check for a filled out Senator field.
-    if ($node->hasField('field_senator_multiref') && !empty($senators = $node->field_senator_multiref->getValue())) {
+    if (in_array($node->bundle(), $microsite_cts, TRUE) && $node->hasField('field_senator_multiref') && !empty($senators = $node->field_senator_multiref->getValue())) {
 
       // For all Senators on Node, grant producers access based on Senator.
       foreach ($senators as $senator) {
@@ -150,6 +155,24 @@ function nys_senators_node_access_records(NodeInterface $node) {
         $access[] = [
           'realm' => 'microsite_producers',
           'gid' => $senator['target_id'],
+          'grant_view' => 1,
+          'grant_update' => 1,
+          'grant_delete' => 0,
+          'priority' => 0,
+        ];
+      }
+    }
+
+    // Now check for a filled out Sponsor field.
+    if (in_array($node->bundle(), $sponsor_cts, TRUE) && $node->hasField('field_ol_sponsor') && !empty($sponsors = $node->field_ol_sponsor->getValue())) {
+
+      // For all Senators on Node, grant producers access based on Senator.
+      foreach ($sponsors as $sponsor) {
+
+        // Add edit access to producers based on Senator ID.
+        $access[] = [
+          'realm' => 'microsite_producers',
+          'gid' => $sponsor['target_id'],
           'grant_view' => 1,
           'grant_update' => 1,
           'grant_delete' => 0,
@@ -168,39 +191,51 @@ function nys_senators_node_access_records(NodeInterface $node) {
  */
 function nys_senators_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
 
-  // Only fire when updating a Senator Term.
-  if ($entity->getEntityType()->id() === 'taxonomy_term'
-    && $entity->bundle() === 'senator' && $operation === 'update') {
+  // Fetch the User's roles.
+  $user_roles = $account->getRoles();
+  $senator_helper = \Drupal::service('nys_senators.senators_helper');
 
-    // Fetch the User's roles.
-    $user_roles = $account->getRoles();
+  // Don't need to waste any performance if user is not MCP.
+  if (!$senator_helper->senatorUserIsAdmin($account) && in_array('microsite_content_producer', $user_roles, FALSE)) {
 
-    // What administrative roles need checking.
-    $admin_roles = [
-      'content_admin',
-      'administrator',
-    ];
+    // Find out all of the User's senators. To do so, load full user entity.
+    $user = User::load($account->id());
 
-    // Only check for MCPs.
-    if (in_array('microsite_content_producer', $user_roles, FALSE) && empty(array_intersect($admin_roles, $user_roles))) {
+    // Make sure the user has the field and that there is a value.
+    if ($user->hasField('field_senator_multiref') && !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id'))) {
 
-      // The User falls within a Senator based producer.
-      // Find out all of the User's senators. To do so, load user entity.
-      $user = User::load($account->id());
+      // Only fire when a Senator or Committee Term.
+      if ($entity->getEntityType()->id() === 'taxonomy_term' && $operation == 'update') {
 
-      // Make sure the user has the field and that there is a value.
-      if ($user->hasField('field_senator_multiref') && !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id'))) {
-
-        // Lastly check if term is in MCPs senator values.
-        if (in_array($entity->id(), $senators, FALSE)) {
-
+        // Check if term is in MCPs senator values for Senator terms.
+        if ($entity->bundle() === 'senator' && in_array($entity->id(), $senators, FALSE)) {
           // Matched value. You shall pass.
           return AccessResultAllowed::allowed()->setCacheMaxAge(0);
         }
-      }
 
-      // Either they don't have a senator or not the right Senator.
+        // Check if chair term is in MCPs senator values.
+        if ($entity->bundle() === 'committees') {
+          if (!empty($entity->field_chair->target_id) && in_array($entity->field_chair->target_id, $senators, FALSE)) {
+            // Matched value. You shall pass.
+            return AccessResultAllowed::allowed()->setCacheMaxAge(0);
+          }
+
+          return AccessResult::neutral();
+        }
+
+        // Either they don't have a senator or not the right Senator.
+        return AccessResult::forbidden()->setCacheMaxAge(0);
+      }
+    }
+    elseif ($entity->getEntityType()->id() === 'taxonomy_term' && $operation == 'update') {
+      // They don't have a senator, deny everything..
       return AccessResult::forbidden()->setCacheMaxAge(0);
+    }
+
+    // Hide Admin routes from Content Bases for non-update access items.
+    if ($operation == 'view all revisions' && $entity->getEntityType()->id() === 'node') {
+      // Returns true if they have update access.
+      return AccessResult::allowedIf($entity->access('update', $account))->setCacheMaxAge(0);
     }
   }
 
@@ -408,10 +443,70 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
 
         case 'Thankful':
           $nodeValues['title'] = '2021 Thanksgiving Day Creative Celebration';
+          // Creates blocks to be attached to the microsite content.
+          $thankful_blocks = [
+            [
+              'info' => $senator_name . ' - Thankful Letter Block',
+              'type' => 'thankful_letter',
+              'revision_user' => 1,
+            ],
+            [
+              'info' => $senator_name . ' - Sincerely Block',
+              'type' => 'sincerely',
+              'revision_user' => 1,
+            ],
+            [
+              'info' => $senator_name . ' - Submission Results Block',
+              'type' => 'senator_microsite_school_forms',
+              'revision_user' => 1,
+              'field_microsite_school_form' => [
+                'plugin_id' => 'nys_senators_microsite_school_forms',
+                'settings' => [],
+              ],
+            ],
+          ];
+          foreach ($thankful_blocks as $thankful_block) {
+            $thankfulBlock = BlockContent::create($thankful_block);
+            $thankfulBlock->save();
+            $nodeValues['field_block'][] = [
+              'target_id' => $thankfulBlock->id(),
+              'target_revision_id' => $thankfulBlock->getRevisionId(),
+            ];
+          }
           break;
 
         case 'Earth Day':
           $nodeValues['title'] = '2021 Earth Day Poster Contest Celebration';
+          // Creates submission block to be attached to the microsite content.
+          $earthday_blocks = [
+            [
+              'info' => $senator_name . ' - Earth Day Letter Block',
+              'type' => 'earth_day_letter',
+              'revision_user' => 1,
+            ],
+            [
+              'info' => $senator_name . ' - Sincerely Block',
+              'type' => 'sincerely',
+              'revision_user' => 1,
+            ],
+            [
+              'info' => $senator_name . ' - Submission Results Block',
+              'type' => 'senator_microsite_school_forms',
+              'revision_user' => 1,
+              'field_microsite_school_form' => [
+                'plugin_id' => 'nys_senators_microsite_school_forms',
+                'settings' => [],
+              ],
+            ],
+          ];
+          foreach ($earthday_blocks as $earthday_block) {
+            $earthDayBlock = BlockContent::create($earthday_block);
+            $earthDayBlock->save();
+            $nodeValues['field_block'][] = [
+              'target_id' => $earthDayBlock->id(),
+              'target_revision_id' => $earthDayBlock->getRevisionId(),
+            ];
+          }
           break;
 
       }
@@ -984,7 +1079,8 @@ function _nys_senators_rules_title_all_caps(NodeInterface $entity): void {
     'petition',
     'promotional_banner',
   ];
-  if (in_array($entity->bundle(), $bundles_to_check)
+  if (
+    in_array($entity->bundle(), $bundles_to_check)
     && strtoupper($entity->getTitle()) === $entity->getTitle()
   ) {
     // Generate the message (with embedded links).
@@ -998,6 +1094,85 @@ function _nys_senators_rules_title_all_caps(NodeInterface $entity): void {
     ];
     $msg_text = t("The title of this piece of content includes words typeset in ALL CAPS. This style is inconsistent with @link_1, and it is not supported well by NYSenate.gov's header typeface. For readability purposes, please consider posting in @link_2 instead. If you would like assistance bulk converting all of your content headlines to title case, please send a request to @link_3.", $links);
     \Drupal::messenger()->addWarning($msg_text);
+  }
+}
+
+/**
+ * Updates the Earth Day & Thankful Microsite pages on existing senators.
+ */
+function _nys_senators_update_microsites(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $senatorMicrosites = [
+    'Earth Day',
+    'Thankful',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+
+      $microsite_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+        'type' => 'microsite_page',
+        'field_senator_multiref' => $entity->id(),
+        'field_microsite_page_type' => $micrositeType->id(),
+      ]);
+
+      $page = NULL;
+      if (!empty($microsite_page)) {
+        $page = reset($microsite_page);
+
+        if ($page->hasField('field_block') && !$page->get('field_block')->isEmpty()) {
+          foreach ($page->get('field_block') as $key => $value) {
+            /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+            $block_content = $value->entity ?? NULL;
+            if ($block_content instanceof BlockContent) {
+              if ($block_content->bundle() == 'earth_day_letter') {
+                $block = BlockContent::create([
+                  'info' => $senator_name . ' - Earth Day Letter Block',
+                  'type' => 'senator_microsite_school_forms',
+                  'revision_user' => 1,
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
+                  ],
+                ]);
+                $block->save();
+
+                $page->field_block[$key] = [
+                  'target_id' => $block->id(),
+                  'target_revision_id' => $block->getRevisionId(),
+                ];
+                $page->save();
+              }
+              elseif ($block_content->bundle() == 'thankful_letter') {
+                $block = BlockContent::create([
+                  'info' => $senator_name . ' - Thankful Letter Block',
+                  'type' => 'senator_microsite_school_forms',
+                  'revision_user' => 1,
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
+                  ],
+                ]);
+                $block->save();
+
+                $page->field_block[$key] = [
+                  'target_id' => $block->id(),
+                  'target_revision_id' => $block->getRevisionId(),
+                ];
+                $page->save();
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -1020,5 +1195,171 @@ function _nys_senators_rules_no_issues(NodeInterface $entity): void {
     $link = $link_gen->generate(t('issues'), Url::fromUri('internal:/explore-issues', ['absolute' => TRUE]));
     $msg = t('No @link have been associated with this piece of content. Add up to three issue tags to help users discover this content.', ['@link' => $link]);
     \Drupal::messenger()->addWarning($msg);
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function nys_senators_query_nys_senators_access_alter(AlterableInterface $query) {
+  // Add op metadata so node_access is used.
+  $query->addMetaData('op', 'update');
+}
+
+/**
+ * Rearrange the Earth Day & Thankful Microsite pages blocks order.
+ */
+function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $senatorMicrosites = [
+    'Earth Day',
+    'Thankful',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+
+      $microsite_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+        'type' => 'microsite_page',
+        'field_senator_multiref' => $entity->id(),
+        'field_microsite_page_type' => $micrositeType->id(),
+      ]);
+
+      $page = NULL;
+      if (!empty($microsite_page)) {
+        $page = reset($microsite_page);
+
+        if ($page->hasField('field_block') && !$page->get('field_block')->isEmpty()) {
+          foreach ($page->get('field_block') as $key => $value) {
+            /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+            $block_content = $value->entity ?? NULL;
+
+            // Revert the Letter blocks.
+            if ($key == 2) {
+              switch ($micrositeType->getName()) {
+                case 'Thankful':
+                  $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                    'type' => 'thankful_letter',
+                    'info' => $senator_name . ' - Thankful Letter Block',
+                  ]);
+                  if (!empty($block)) {
+                    $thankfulBlock = reset($block);
+                  }
+                  else {
+                    $thankfulBlock = BlockContent::create([
+                      'info' => $senator_name . ' - Thankful Letter Block',
+                      'type' => 'thankful_letter',
+                      'revision_user' => 1,
+                    ]);
+                    $thankfulBlock->save();
+                  }
+                  $page->field_block[$key] = [
+                    'target_id' => $thankfulBlock->id(),
+                    'target_revision_id' => $thankfulBlock->getRevisionId(),
+                  ];
+                  break;
+
+                case 'Earth Day':
+                  $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                    'type' => 'earth_day_letter',
+                    'info' => $senator_name . ' - Earth Day Letter Block',
+                  ]);
+                  if (!empty($block)) {
+                    $earthDayBlock = reset($block);
+                  }
+                  else {
+                    $earthDayBlock = BlockContent::create([
+                      'info' => $senator_name . ' - Earth Day Letter Block',
+                      'type' => 'earth_day_letter',
+                      'revision_user' => 1,
+                    ]);
+                    $earthDayBlock->save();
+                  }
+                  $page->field_block[$key] = [
+                    'target_id' => $earthDayBlock->id(),
+                    'target_revision_id' => $earthDayBlock->getRevisionId(),
+                  ];
+                  break;
+
+                default:
+                  break;
+              }
+            }
+          }
+
+          // Re-add the Submission Results Block.
+          switch ($micrositeType->getName()) {
+            case 'Thankful':
+              $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                'type' => 'senator_microsite_school_forms',
+                'info' => $senator_name . ' - Thankful Letter Block',
+              ]);
+              if (!empty($block)) {
+                $thankfulBlock = reset($block);
+                $thankfulBlock->info = $senator_name . ' - Submission Results Block';
+                $thankfulBlock->save();
+              }
+              else {
+                $thankfulBlock = BlockContent::create([
+                  'info' => $senator_name . ' - Submission Results Block',
+                  'type' => 'senator_microsite_school_forms',
+                  'revision_user' => 1,
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
+                  ],
+                ]);
+                $thankfulBlock->save();
+              }
+              $page->field_block[] = [
+                'target_id' => $thankfulBlock->id(),
+                'target_revision_id' => $thankfulBlock->getRevisionId(),
+              ];
+              break;
+
+            case 'Earth Day':
+              $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+                'type' => 'senator_microsite_school_forms',
+                'info' => $senator_name . ' - Earth Day Letter Block',
+              ]);
+              if (!empty($block)) {
+                $earthDayBlock = reset($block);
+                $earthDayBlock->info = $senator_name . ' - Submission Results Block';
+                $earthDayBlock->save();
+              }
+              else {
+                $earthDayBlock = BlockContent::create([
+                  'info' => $senator_name . ' - Submission Results Block',
+                  'type' => 'senator_microsite_school_forms',
+                  'revision_user' => 1,
+                  'field_microsite_school_form' => [
+                    'plugin_id' => 'nys_senators_microsite_school_forms',
+                    'settings' => [],
+                  ],
+                ]);
+                $earthDayBlock->save();
+              }
+              $page->field_block[] = [
+                'target_id' => $earthDayBlock->id(),
+                'target_revision_id' => $earthDayBlock->getRevisionId(),
+              ];
+              break;
+
+            default:
+              break;
+          }
+
+          // Save the node.
+          $page->save();
+        }
+      }
+    }
   }
 }

@@ -121,7 +121,6 @@ class BulkMessageForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $user_id = NULL, $recipient_uids = NULL) {
-    $values = parent::getInitialValues($form_state);
     if ($recipient_uids) {
       $recipient_uids = explode(',', $recipient_uids);
     }

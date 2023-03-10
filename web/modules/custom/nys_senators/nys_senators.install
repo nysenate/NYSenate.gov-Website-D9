@@ -508,3 +508,30 @@ function nys_senators_update_9018() {
     }
   }
 }
+
+/**
+ * Remove letter blocks on Earth Day & Thankful Microsite pages.
+ */
+function nys_senators_update_9019() {
+  // Import Senator Microsite School Forms Custom Block type.
+  nys_senators_import_config();
+
+  // Queries all senator terms.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+  ]);
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->condition('field_microsite_page_type.entity:taxonomy_term.name',
+        ['Earth Day', 'Thankful'], 'IN')
+      ->execute();
+
+    if (!empty($query)) {
+      _nys_senators_remove_letter_blocks($senator_term);
+    }
+  }
+}

@@ -1289,3 +1289,59 @@ function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
     }
   }
 }
+
+/**
+ * Remove the Earth Day & Thankful Letter blocks.
+ */
+function _nys_senators_remove_letter_blocks(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $senatorMicrosites = [
+    'Earth Day',
+    'Thankful',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+
+      $microsite_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+        'type' => 'microsite_page',
+        'field_senator_multiref' => $entity->id(),
+        'field_microsite_page_type' => $micrositeType->id(),
+      ]);
+
+      $page = NULL;
+      if (!empty($microsite_page)) {
+        $page = reset($microsite_page);
+
+        if ($page->hasField('field_block') && !$page->get('field_block')->isEmpty()) {
+          foreach ($page->get('field_block') as $key => $value) {
+            /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+            $block_content = $value->entity ?? NULL;
+
+            if ($block_content instanceof BlockContent) {
+              // Remove the Letter blocks.
+              if ($key == 2) {
+                if ($block_content->bundle() == 'thankful_letter') {
+                  unset($page->field_block[$key]);
+                }
+                elseif ($block_content->bundle() == 'earth_day_letter') {
+                  unset($page->field_block[$key]);
+                }
+
+                // Save the node.
+                $page->save();
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

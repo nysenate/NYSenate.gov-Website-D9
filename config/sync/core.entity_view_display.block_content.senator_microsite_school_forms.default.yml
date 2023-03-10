@@ -1,0 +1,24 @@
+uuid: 540631bc-b1dd-4d3b-ad19-8fac60bb9b9f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.senator_microsite_school_forms
+    - field.field.block_content.senator_microsite_school_forms.field_microsite_school_form
+  module:
+    - block_field
+id: block_content.senator_microsite_school_forms.default
+targetEntityType: block_content
+bundle: senator_microsite_school_forms
+mode: default
+content:
+  field_microsite_school_form:
+    type: block_field
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

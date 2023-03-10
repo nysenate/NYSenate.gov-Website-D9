@@ -8,6 +8,7 @@
 #}
 {{ attach_library('nysenate_theme/newsroom-content') }}
 {{ attach_library('nysenate_theme/nysenate-issues') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
 
 <div class="content-list__wrapper">
   {% for issue in issue_cards %}
@@ -27,9 +28,11 @@
 {% set limit = 6 %}
 
 {% if issue_cards|length > limit %}
-  <div class="pager pager-load-more" data-limit="{{ limit }}">
-    <span class="pager-next first last">
-      <a class="load-more">See more issues</a>
-    </span>
+  <div class="item-list" data-limit="{{ limit }}">
+    <div class="pager pager-load-more">
+      <span class="pager-next first last">
+        <a class="load-more">See more issues</a>
+      </span>
+    </div>
   </div>
 {% endif %}

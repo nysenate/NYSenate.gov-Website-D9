@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Theme implementation to display school form submission results.
+ *
+ * @see SenatorMicrositeSchoolFormSubmissions block plugin
+ *
+ * @ingroup themeable
+ */
+#}
+{# block-content--senator-microsite-school-forms.html.twig #}
+
+{% include "@nysenate_theme/submission-results/submission-results.twig" with {
+  panels: content.panels
+} only %}

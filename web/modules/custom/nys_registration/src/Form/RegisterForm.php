@@ -61,7 +61,15 @@ class RegisterForm extends UserRegisterForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state): ContentEntityInterface {
     $this->compileValues($form_state);
+
     return parent::validateForm($form, $form_state);
+  }
+
+  /**
+   * Validation algorithm for zip code.
+   */
+  protected function validateZipCode(string $zip): bool {
+    return preg_match('/^[0-9]{5}([- ]?[0-9]{4})?$/', $zip);
   }
 
   /**
@@ -169,6 +177,47 @@ class RegisterForm extends UserRegisterForm {
       ],
     ];
 
+    // Check if redirected from Senator's Page.
+    if (\Drupal::request()->headers->get('referer')) {
+      $referrer = explode('/', \Drupal::request()->headers->get('referer'));
+
+      if ($referrer[3] == 'senators') {
+        $form['#theme'] = 'register_form_step1_message_senator';
+        $title_text = 'Message a Senator';
+        $help_text = 'To send a message to any NY State Senator, please creating a profile or <a href="/user/login">login</a>.';
+
+        $query_parameters = \Drupal::request()->query->all();
+
+        if (isset($query_parameters['senator'])) {
+          $senator = \Drupal::entityTypeManager()
+            ->getStorage('taxonomy_term')
+            ->load($query_parameters['senator']);
+
+          if ($senator->field_senator_name) {
+            $given = $senator->field_senator_name->given ?? '';
+            $family = $senator->field_senator_name->family ?? '';
+            $senator_name = trim($given . ' ' . $family);
+
+            $title_text = 'Message Sen. ' . $senator_name;
+            $help_text = t('To send a message to NY State Sen.') .
+              ' ' . trim($family) . ', ' .
+              t('please create a profile using the form below or <a href="/user/login">login</a>.');
+          }
+
+          $form['registration_teaser'] = [
+            '#markup' => '<div class="c-login">
+                            <h2 class="nys-title">' . $title_text . '</h2>
+                            <p class="body">' . $help_text . '</p>',
+            '#weight' => -100,
+          ];
+          $form['actions']['#suffix'] = '</div>';
+
+          $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
+        }
+
+      }
+    }
+
     return $form;
   }
 
@@ -176,8 +225,39 @@ class RegisterForm extends UserRegisterForm {
    * Step 1 validation handler.
    *
    * This should satisfy the "entity must be validated" requirement.
+   *
+   * Due to multiple attacks which generated spam user accounts, the below
+   * conditions result in rejection of the account request:
+   *   - if email, first name, or last name contains cyrillic characters, or
+   *   - the email address specifies the .ru TLD.
    */
   public function formValidateStep1(array &$form, FormStateInterface $form_state) {
+    $this->compileValues($form_state);
+
+    // Prep some values.
+    $mail = $form_state->getValue('mail', '');
+    $first_name = $form_state->getValue(['field_first_name', '0', 'value'], '');
+    $last_name = $form_state->getValue(['field_last_name', '0', 'value'], '');
+    $full_check = $mail . $first_name . $last_name;
+
+    // Nuclear option for russian accounts: disallow all non-Latin characters.
+    // $has_non_latin = preg_match('/[^\\p{Common}\\p{Latin}]/u', $full_check)
+    $is_ru = (str_ends_with($mail, '.ru'));
+    $has_cyrillic = (boolean) preg_match('/\p{Cyrillic}/u', $full_check);
+
+    // Enforce ban on .ru email addresses and cyrillic characters.
+    if ($is_ru || $has_cyrillic) {
+      $form_state->setError($form['account']['mail'], $this->t('Please enter a valid email address.'));
+    }
+
+    // Ensure the zip code matches US standards.
+    $field = &$form['field_address']['widget']['0']['address']['postal_code'];
+    $value = $form_state
+      ->getValue(['field_address', '0', 'address', 'postal_code'], '');
+    if (!$this->validateZipCode($value)) {
+      $form_state->setError($field, $this->t('Please enter a valid zip code.'));
+    }
+
     parent::validateForm($form, $form_state);
   }
 
@@ -225,7 +305,8 @@ class RegisterForm extends UserRegisterForm {
       $file = File::load($fid);
       $senator['image'] = empty($file) ?
         '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
-        \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        \Drupal::service('file_url_generator')
+          ->generateAbsoluteString($file->getFileUri());
       $senator['party'] = $this->helper->getPartyAffilation($senator_party);
       $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
       $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];

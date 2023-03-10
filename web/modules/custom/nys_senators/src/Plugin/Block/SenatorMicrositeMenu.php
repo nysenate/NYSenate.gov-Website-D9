@@ -65,7 +65,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   $plugin_id,
   $plugin_definition,
   CacheBackendInterface $cache_backend,
-                              EntityTypeManagerInterface $entity_type_manager,
+  EntityTypeManagerInterface $entity_type_manager,
   CurrentRouteMatch $route_match) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->cache = $cache_backend;

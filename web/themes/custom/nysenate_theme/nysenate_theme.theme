@@ -1277,7 +1277,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $view->id() == 'newsroom' && $view->current_display == 'all_news' ||
     $view->id() == 'newsroom' && $view->current_display == 'press_releases' ||
     $view->id() == 'committee_content' && $view->current_display == 'news_meetings' ||
-    $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer')) {
+    $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer' ||
+    $view->id() == 'committee_meetings' && $view->current_display == 'news')) {
     $contents = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
@@ -1322,8 +1323,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         }
       }
 
+      if ($view->id() == 'committee_meetings' && $view->current_display == 'news') {
+        $image_main = NULL;
+      }
+
       $contents[] = [
-        'title' => ucwords($bundle),
+        'title' => ucwords(strtolower(str_replace('_', ' ', $bundle))),
         'topics' => $issues,
         'description' => [
           'text' => $node->label(),
@@ -1456,58 +1461,84 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   }
 
   // Committee Meetings.
-  if ($view->id() == 'committee_meetings' && $view->current_display == 'past') {
-    $results = $view->result;
-    if (!empty($results)) {
-      $meetings = [];
-      foreach ($results as $row) {
-        $node = $row->_entity;
+  if ($view->id() == 'committee_meetings') {
+    if ($view->current_display == 'past') {
+      $results = $view->result;
+      if (!empty($results)) {
+        $meetings = [];
+        foreach ($results as $row) {
+          $node = $row->_entity;
 
-        $issues = [];
-        if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-          $node->field_issues->entity;
-          foreach ($node->field_issues as $value) {
-            $term = $value->entity;
-            $issues[] = [
-              'name' => $term->getName(),
-              'url' => $term->toUrl()->toString(),
+          $issues = [];
+          if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+            $node->field_issues->entity;
+            foreach ($node->field_issues as $value) {
+              $term = $value->entity;
+              $issues[] = [
+                'name' => $term->getName(),
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
+          }
+
+          $event_online_link = '';
+          if ($node->hasField('field_event_online_link') && !$node->get('field_event_online_link')->isEmpty()) {
+            $event_online_link = Url::fromUri($node->field_event_online_link[0]->uri)->toString();
+          }
+
+          $meeting_location = '';
+          if ($node->hasField('field_meeting_location') && !$node->get('field_meeting_location')->isEmpty()) {
+            $meeting_location = $node->field_meeting_location->value;
+          }
+
+          $start_date = NULL;
+          $end_date = NULL;
+          if ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
+            $start_date = $node->get('field_date_range')->getValue()[0]['value'];
+            $end_date = $node->get('field_date_range')->getValue()[0]['end_value'];
+          }
+
+          $meetings[] = [
+            'title' => $node->getTitle(),
+            'cta' => [
+              'url' => $node->toUrl()->toString(),
+            ],
+            'issues' => $issues,
+            'event_online_link' => $event_online_link,
+            'meeting_location' => $meeting_location,
+            'event_date' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'd') : '',
+            'event_month' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'M') : '',
+            'event_time_start' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'g:i A') : '',
+            'event_time_end' => !empty($end_date) ? \Drupal::service('date.formatter')->format(strtotime($end_date), '', 'g:i A') : '',
+          ];
+        }
+
+        $variables['past_meetings'] = $meetings;
+      }
+    }
+    elseif ($view->current_display == 'committee') {
+      $results = $view->result;
+      if (!empty($results)) {
+        $committees = [];
+        foreach ($results as $row) {
+          $node = $row->_entity;
+          if ($node->hasField('field_committee') && !empty($node->field_committee->getValue())) {
+            $field_committee = $node->field_committee[0]->target_id;
+            /** @var \Drupal\taxonomy\Entity\Term $committee */
+            $committee = !empty($field_committee) ? $term_storage->load($field_committee) : NULL;
+            $committee_type = $committee->field_committee_types->value;
+            $types = $committee->field_committee_types->getSetting('allowed_values');
+
+            $committees[] = [
+              'url' => $committee->toUrl()->toString(),
+              'title' => $committee->label(),
+              'type' => $types[$committee_type],
             ];
           }
         }
 
-        $event_online_link = '';
-        if ($node->hasField('field_event_online_link') && !$node->get('field_event_online_link')->isEmpty()) {
-          $event_online_link = Url::fromUri($node->field_event_online_link[0]->uri)->toString();
-        }
-
-        $meeting_location = '';
-        if ($node->hasField('field_meeting_location') && !$node->get('field_meeting_location')->isEmpty()) {
-          $meeting_location = $node->field_meeting_location->value;
-        }
-
-        $start_date = NULL;
-        $end_date = NULL;
-        if ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
-          $start_date = $node->get('field_date_range')->getValue()[0]['value'];
-          $end_date = $node->get('field_date_range')->getValue()[0]['end_value'];
-        }
-
-        $meetings[] = [
-          'title' => $node->getTitle(),
-          'cta' => [
-            'url' => $node->toUrl()->toString(),
-          ],
-          'issues' => $issues,
-          'event_online_link' => $event_online_link,
-          'meeting_location' => $meeting_location,
-          'event_date' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'd') : '',
-          'event_month' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'M') : '',
-          'event_time_start' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'g:i A') : '',
-          'event_time_end' => !empty($end_date) ? \Drupal::service('date.formatter')->format(strtotime($end_date), '', 'g:i A') : '',
-        ];
+        $variables['committees'] = $committees;
       }
-
-      $variables['past_meetings'] = $meetings;
     }
   }
 
@@ -1751,6 +1782,11 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
   // Add suggestion to form hook.
   if ($hook == 'form' && !empty($variables['element']['#theme'])) {
     $suggestions[] = 'form__' . $variables['element']['#theme'][0];
+  }
+
+  // Add suggestion to details hook.
+  if ($hook == 'details' && !empty($variables['element']['#parents'])) {
+    $suggestions[] = $hook . '__' . $variables['element']['#parents'][0];
   }
 
   // Add suggestion to private_message_inbox form hook.
@@ -4012,11 +4048,17 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
     if (isset($variables['result']) && !empty($variables['result'])) {
       foreach ($variables['result'] as $key => $result) {
         $row_id = $result->_entity->id();
-        $field_to = $result->_entity->field_to->target_id;
         $subject = $result->_entity->field_subject->value;
         $owner = User::load($result->_entity->owner[0]->target_id);
         $owner_name = $owner->name->value ?? '';
         $message = $result->_entity->message->value ?? '';
+        $field_to = $result->_entity->field_to->target_id;
+
+        $user = \Drupal::entityTypeManager()->getStorage('user')
+          ->load($field_to);
+        $field_to_link = $user->toUrl()->toString();
+        $field_to_parts = explode('/', $field_to_link);
+        $user_name = $field_to_parts[1] ?? $field_to;
 
         $link_options = [
           'attributes' => [
@@ -4027,7 +4069,7 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
           ],
         ];
 
-        $url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/reply/' . $row_id);
+        $url = Url::fromUserInput('/users/' . $user_name . '/dashboard/inbox/reply/' . $row_id);
         $link = Link::fromTextAndUrl($subject, $url);
         $owner_link = Link::fromTextAndUrl($owner_name, $url)->toString();
         $message_link = Link::fromTextAndUrl($message, $url)->toString();
@@ -4038,7 +4080,7 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
 
         $url->setOptions($link_options);
         $reply_link = Link::fromTextAndUrl(t('Reply'), $url)->toString();
-        $forward_url = Url::fromUserInput('/users/' . $field_to . '/dashboard/inbox/forward/' . $row_id);
+        $forward_url = Url::fromUserInput('/users/' . $user_name . '/dashboard/inbox/forward/' . $row_id);
         $forward_url->setOptions($link_options);
         $forward_link = Link::fromTextAndUrl(t('Forward'), $forward_url)->toString();
         $actions_attributes = new Attribute([
@@ -4061,13 +4103,21 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
 }
 
 /**
- * Implements hook_form_element_alter().
+ * Implements hook_preprocess_form_element().
  */
 function nysenate_theme_preprocess_form_element(&$variables) {
   if (!empty($variables['element']['#parents'])) {
     if (array_intersect(['type_1', 'type'], $variables['element']['#parents'])) {
       $variables['attributes']['class'][] = 'c-tab';
       $variables['label']['#attributes']['class'][] = 'c-tab-link';
+    }
+  }
+
+  if (!empty($variables['element']['#id'])) {
+    if ($variables['element']['#id'] == 'edit-field-address-0-address-address-line2') {
+      $variables['label_display'] = 'before';
+      $variables['label']['#title'] = t('APT/SUITE/FLOOR (OPTIONAL)');
+      $variables['label']['#title_display'] = 'before';
     }
   }
 }
@@ -4122,29 +4172,35 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
-  $variables['dashboard_link'] = '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues';
-  $variables['edit_account_link'] = '/users/' . \Drupal::currentUser()->id() . '/edit';
+  $user = \Drupal::entityTypeManager()->getStorage('user')
+    ->load(\Drupal::currentUser()->id());
+  $user_link = $user->toUrl()->toString();
+  $user_parts = explode('/', $user_link);
+  $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
+
+  $variables['dashboard_link'] = '/users/' . $user_name . '/dashboard/issues';
+  $variables['edit_account_link'] = '/users/' . $user_name . '/edit';
   $variables['sidebar'] = [
     'links' => [
       [
         'text' => 'Inbox',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox',
+        'url' => '/users/' . $user_name . '/dashboard/inbox',
       ],
       [
         'text' => 'Bills',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/bills',
+        'url' => '/users/' . $user_name . '/dashboard/bills',
       ],
       [
         'text' => 'Issues',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/issues',
+        'url' => '/users/' . $user_name . '/dashboard/issues',
       ],
       [
         'text' => 'Committees',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/committees',
+        'url' => '/users/' . $user_name . '/dashboard/committees',
       ],
       [
         'text' => 'Petitions & Questionnaires',
-        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/petitions',
+        'url' => '/users/' . $user_name . '/dashboard/petitions',
       ],
     ],
   ];

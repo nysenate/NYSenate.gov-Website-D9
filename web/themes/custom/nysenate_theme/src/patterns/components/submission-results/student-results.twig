@@ -33,10 +33,9 @@
       {% for key, year_schools in years %}
         <div class="c-group-year" data-attributes-year="{{ key }}">
           {% for school in year_schools %}
-            <h3 class="c-group-title">{{ school.title }}</h3>
+            <h3 class="c-group-title">{{ school.title }}{% if panel_number == 2 and filter == false %} {{ key }}{% endif %}</h3>
             <div class="c-committees-wrapper">
               {% for grade_level in school.grade_levels %}
-
                 <h4 class="c-subgroup-title">{{ grade_level.title }}</h4>
                 <ul>
                   {% for submission in grade_level.submissions %}

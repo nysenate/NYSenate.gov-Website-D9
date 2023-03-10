@@ -68,7 +68,7 @@ class BillForm extends FormBase {
   /**
    * The flag service.
    *
-   * @var \Drupal\Flag\FlagServiceInterface
+   * @var \Drupal\flag\FlagServiceInterface
    */
   protected $flagService;
 
@@ -380,19 +380,21 @@ class BillForm extends FormBase {
    */
   public function justVoted($entity_id) {
     $uid = $this->currentUser->id();
-
+    /** @var \Drupal\votingapi\VoteStorage $vote_storage */
+    $vote_storage = $this->entityTypeManager->getStorage('vote');
     if ($uid === 0) {
       // Anonymous user.
-      $user_votes = $this->entityTypeManager->getStorage('vote')->getUserVotes($uid, 'nys_bill_vote', 'node', $entity_id, \Drupal::request()->getClientIp());
+      $user_votes = $vote_storage->getUserVotes($uid, 'nys_bill_vote', 'node', $entity_id, \Drupal::request()->getClientIp());
     }
     elseif ($uid > 0) {
       // Registered user.
-      $user_votes = $this->entityTypeManager->getStorage('vote')->getUserVotes($uid, 'nys_bill_vote', 'node', $entity_id);
+      $user_votes = $vote_storage->getUserVotes($uid, 'nys_bill_vote', 'node', $entity_id);
     }
 
     $vote_value = NULL;
     if (!empty($user_votes)) {
-      $vote_entity = $this->entityTypeManager->getStorage('vote')->load(end($user_votes));
+      /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
+      $vote_entity = $vote_storage->load(end($user_votes));
       $created = $vote_entity->getCreatedTime();
       // 4 secs buffer.
       if ($created > (time() - 4)) {

@@ -2878,20 +2878,17 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['is_substituted'] = FALSE;
   $state_node = NULL;
   if ($bill_sub_by) {
-    $sub_temp = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node);
-    $subst_versions = array_combine(
-        array_map(function ($v) {
-          return $v['title'];
-        }, $sub_temp),
-        array_map(function ($v) {
-          return $v['nid'];
-        }, $sub_temp)
-    );
-    krsort($subst_versions);
-    if (!empty($subst_versions)) {
+    $temp_node = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties([
+        'field_ol_base_print_no' => $bill_sub_by,
+        'field_ol_session' => $bill_session_year,
+      ]);
+    $sub_temp = \Drupal::service('nys_bill.bills_helper')->getBillVersions(reset($temp_node));
+    if (!empty($sub_temp)) {
       $subst_node = \Drupal::entityTypeManager()
         ->getStorage('node')
-        ->load(reset($subst_versions));
+        ->load(reset($sub_temp));
       if ($subst_node) {
         $variables['is_substituted'] = TRUE;
         $state_node = $subst_node;
@@ -3073,6 +3070,9 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   ];
 
   $current_status_name = $node->field_ol_last_status->value;
+  if ($variables['is_substituted']) {
+    $current_status_name = $state_node->field_ol_last_status->value;
+  }
   $current_status = '';
   $committee = '';
 
@@ -3172,10 +3172,16 @@ function nysenate_bill_positions($node) {
     if ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty()) {
       $ol_session = $node->field_ol_session->value;
     }
-    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions($node);
+    $temp_node = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties([
+        'field_ol_base_print_no' => $sub_bill_base_print_no,
+        'field_ol_session' => $ol_session,
+      ]);
+    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions(reset($temp_node));
     if (!empty($sub_bill_versions)) {
       $node = \Drupal::entityTypeManager()->getStorage('node')
-        ->load(end($sub_bill_versions)['nid']);
+        ->load(reset($sub_bill_versions));
     }
   }
 

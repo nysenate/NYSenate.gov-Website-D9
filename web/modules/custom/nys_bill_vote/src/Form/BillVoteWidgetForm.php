@@ -77,11 +77,9 @@ class BillVoteWidgetForm extends FormBase {
     $form_state->setBuildInfo(array_merge($this->billVoteHelper->widgetBuildSettings($form_state), $form_state->getBuildInfo()));
 
     // Now get the canonical information.
-    $node_type = $form_state->getBuildInfo()['entity_type'];
     $node_id = $form_state->getBuildInfo()['entity_id'];
 
-    // Discover if a vote already exists.
-    $default_vote = $this->billVoteHelper->getDefault($node_type, $node_id);
+    $default_vote = $this->billVoteHelper->getDefault('node', $node_id);
     $default_value = $this->billVoteHelper->getVal($default_vote);
 
     // Discover if a vote has been submitted.
@@ -177,6 +175,8 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
+    $form['#cache'] = ['max-age' => 0];
+
     return $form;
   }
 
@@ -235,7 +235,7 @@ class BillVoteWidgetForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // @todo This method comes from nys_accumulator custom module.
     // @phpstan-ignore-next-line
-    nyslog();
+    // nyslog();
     $node = $form_state->getFormObject();
     $build_info = $form_state->getBuildInfo();
     $element = $form_state->getTriggeringElement();

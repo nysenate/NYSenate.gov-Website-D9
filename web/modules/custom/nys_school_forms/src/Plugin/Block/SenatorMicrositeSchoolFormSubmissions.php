@@ -121,7 +121,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
 
       $filter_options = [];
       $past_submissions = $this->schoolFormsService->getResults($last_year_params, FALSE);
-
+      ksort($past_submissions);
       $filter_options[] = [
         'value' => 'All',
         'text' => '- Year -',
@@ -145,6 +145,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
           }
         }
       }
+
       $build = [
         '#theme' => 'nys_school_forms__results_block',
         '#content' => [

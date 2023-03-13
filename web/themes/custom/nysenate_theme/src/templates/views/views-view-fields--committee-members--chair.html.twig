@@ -31,13 +31,14 @@
  * @ingroup themeable
  */
 #}
+{{ attach_library('nysenate_theme/nysenate-committee-card') }}
 
 <div class="c-block c-block--chair c-block--chair__has-img lgt-bg">
   <img src="{{ fields.field_image.content|striptags|trim }}" width="280" height="280">
   <div class="c-chair--content">
     <div class="c-chair--inner">
       <p class="c-chair-block--position">Committee {{ fields.field_committee_member_role.content|striptags|trim }}</p>
-      <h4 class="c-chair--title">{{ fields.field_senator_name_1.content|striptags('<a>')|trim }}</h4>
+      <h4 class="c-chair--title">{{ fields.field_senator_name_1.content|raw }}</h4>
       <div class="c-party-conf">
         {% if not fields.field_party.content|render|striptags|trim is empty %}
           ({{ fields.field_party.content|render|striptags|trim }})

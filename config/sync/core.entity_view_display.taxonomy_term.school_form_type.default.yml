@@ -1,0 +1,33 @@
+uuid: a1daa846-1aab-4dfe-85e8-6a20e7ad1d64
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.school_form_type.field_school_form
+    - taxonomy.vocabulary.school_form_type
+  module:
+    - text
+    - webform
+id: taxonomy_term.school_form_type.default
+targetEntityType: taxonomy_term
+bundle: school_form_type
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_school_form:
+    type: webform_entity_reference_entity_view
+    label: above
+    settings:
+      source_entity: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

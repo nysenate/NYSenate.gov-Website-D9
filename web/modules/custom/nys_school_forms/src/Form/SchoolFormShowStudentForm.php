@@ -138,7 +138,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('nys_school_forms.school_forms');
+    return \Drupal::request()->headers->get('referer');
   }
 
   /**
@@ -154,8 +154,14 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->files = $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->get($this->currentUser->id());
     if (empty($this->files)) {
-      return new RedirectResponse($this->getCancelUrl()->setAbsolute()->toString());
+      return new RedirectResponse($this->getCancelUrl());
     }
+    $from_referrer = $this->getCancelUrl();
+    $form['field_referrer'] = [
+      '#type' => 'hidden',
+      '#title' => $this->t('Form Referrer'),
+      '#default_value' => $from_referrer,
+    ];
 
     $form['files'] = [
       '#theme' => 'item_list',
@@ -170,35 +176,38 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+
     if ($form_state->getValue('confirm') && !empty($this->files)) {
       $count = count($this->files);
       foreach ($this->files as $file) {
         if ($file instanceof FileInterface) {
           $query = \Drupal::database()->select('webform_submission_data')
             ->fields('webform_submission_data', ['sid'])
-            ->condition('webform_id', 'school_form')
             ->condition('value', $file->get('fid')->value)
             ->distinct();
 
           $sids = $query->execute()->fetchCol();
           $sid = $sids[0];
+
           if (!empty($sid)) {
             $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
-            $entity_id = $submission->getSourceEntity();
+            $node = $submission->getSourceEntity();
+            $webform = $submission->getWebform();
             $submission_timestamp = $submission->getCreatedTime();
             $school_form_type = '';
-            if ($entity_id) {
-              $nid = $entity_id->id();
-              $node = $this->entityTypeManager->getStorage('node')->load($nid);
+
+            /** @var \Drupal\node\NodeInterface $node */
+            if ($node && $node->hasField('field_school_form_type') && !$node->get('field_school_form_type')->isEmpty()) {
               $school_form_type = $node->get('field_school_form_type')->entity->label();
-              $directory = 'public://' . $school_form_type . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
+              $alias = str_replace([' ', '-', '\''], '_', strtolower($school_form_type));
+              $directory = 'public://' . $alias . '/' . $node->id() . '/' . $sid . '/';
             }
             else {
-              $webform = $submission->getWebform();
               $directory = 'public://' . 'webform' . '/' . $webform->id() . '/' . $sid . '/';
             }
             $file_uri = $file->getFileUri();
             $file_exists_error = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_ERROR);
+
             if (!$file_exists_error) {
               $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
               $destination = $directory . $file->getFilename();
@@ -209,18 +218,19 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
               $this->messenger()->addMessage($this->stringTranslation->formatPlural($count,
                 '1 file does not exist in the file system. Cannot show student submission file.',
                 'A file you selected do not exits in the file system. Cannot show student submission file.'));
-              $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
+              $url = Url::fromUri($form_state->getValue('field_referrer'));
               $form_state->setRedirectUrl($url);
             }
           }
         }
+        $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->delete($this->currentUser->id());
+        $this->logger('School Forms')->notice('@count student submissions have been moved to public access.', ['@count' => $count]);
+        $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Show 1 submissions.', 'Show @count student submissions.'));
+        $url = Url::fromUri($form_state->getValue('field_referrer'));
+        $form_state->setRedirectUrl($url);
       }
-      $this->privateTempStoreFactory->get('school_form_multiple_show_student_confirm')->delete($this->currentUser->id());
-      $this->logger('School Forms')->notice('@count student submissions have been moved to public access.', ['@count' => $count]);
-      $this->messenger()->addMessage($this->stringTranslation->formatPlural($count, 'Show 1 submissions.', 'Show @count student submissions.'));
-      $url = Url::fromRoute('nys_school_forms.school_forms', [], []);
-      $form_state->setRedirectUrl($url);
     }
+
   }
 
 }

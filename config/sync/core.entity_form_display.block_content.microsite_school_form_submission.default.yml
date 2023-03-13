@@ -1,0 +1,39 @@
+uuid: ff294dfe-bbc3-48de-bcfb-28cec195a8e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_school_form_submission
+    - field.field.block_content.microsite_school_form_submission.field_microsite_school_form
+  module:
+    - block_field
+id: block_content.microsite_school_form_submission.default
+targetEntityType: block_content
+bundle: microsite_school_form_submission
+mode: default
+content:
+  field_microsite_school_form:
+    type: block_field_default
+    weight: 27
+    region: content
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

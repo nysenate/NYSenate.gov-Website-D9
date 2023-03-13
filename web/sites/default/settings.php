@@ -787,9 +787,8 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
     case 'test':
     case 'develop':
       // Search API Solr.
-      $config['search_api.server.pantheon_solr8']['dependencies']['module'][] = 'search_api_pantheon';
-      $config['search_api.server.pantheon_solr8']['backend_config']['connector'] = 'pantheon';
-      $config['search_api.server.pantheon_solr8']['backend_config']['connector_config']['solr_version'] = '8';
+      $config['search_api.server.pantheon_solr8']['status'] = TRUE;
+      $config['search_api.index.core_search']['status'] = TRUE;
       break;
   }
 
@@ -878,6 +877,10 @@ else {
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
   }
 
+  // Local Solr search.
+  $config['search_api.server.ddev_solr_server']['status'] = TRUE;
+  $config['search_api.index.core_search_local']['status'] = TRUE;
+
   // Turn off TFA.
   $config['email_tfa.settings']['status'] = FALSE;
 }
@@ -928,26 +931,6 @@ if (file_exists($app_root . '/' . $site_path . '/private_settings.php')) {
  */
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
-}
-
-// Customizations for ddev; separated from the segment above to avoid problems.
-if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
-
-  // Search API Solr.
-  $config['search_api.server.pantheon_solr8']['backend_config']['connector'] = 'standard';
-  $config['search_api.server.pantheon_solr8']['backend_config']['connector_config'] = [
-    'scheme' => 'http',
-    'host' => 'solr',
-    'port' => 8983,
-    'path' => '/',
-    'core' => 'Solr',
-    'timeout' => 5,
-    'index_timeout' => 5,
-    'optimize_timeout' => 10,
-    'commit_within' => 1000,
-    'solr_version' => '8',
-    'http_method' => 'AUTO',
-  ];
 }
 
 // Include settings required for Redis cache.

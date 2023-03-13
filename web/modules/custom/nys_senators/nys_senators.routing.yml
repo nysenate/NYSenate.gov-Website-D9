@@ -1,0 +1,7 @@
+nys_senators.json_feed:
+  path: /senators.json
+  defaults:
+    _controller: '\Drupal\nys_senators\Controller\SenatorJsonFeed::getFeed'
+    _title: 'NYSS Active Senators Feed'
+  requirements:
+    _permission: 'access content'

@@ -2,21 +2,10 @@
 
 namespace Drupal\nys_school_forms\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\Core\Pager\PagerParametersInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Drupal\Core\Form\FormBuilder;
-use Drupal\path_alias\AliasManagerInterface;
-use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\nys_school_forms\SchoolFormsService;
-use Symfony\Component\HttpFoundation\Response;
 use Drupal\file\Entity\File;
+use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Route controller for School Form submissions.
@@ -101,73 +90,30 @@ class SchoolFormsController extends ControllerBase {
   protected $schoolFormsService;
 
   /**
-   * Class constructor.
+   * The file URL generator.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request
-   *   Request stack.
-   * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
-   *   Module Handler.
-   * @param \Drupal\Core\Database\Connection $database
-   *   Database connection.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   Drupal Messenger.
-   * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
-   *   Pager.
-   * @param \Drupal\Core\Pager\PagerManagerInterface $pager_manager
-   *   Pager manager.
-   * @param \Drupal\Core\Form\FormBuilder $form_builder
-   *   Form Builder.
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
-   *   Alias Manager.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $streamWrapperManager
-   *   The StreamWrapperManager.
-   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\nys_school_forms\SchoolFormsService $schoolFormsService
-   *   The School Forms Service.
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  public function __construct(
-    RequestStack $request,
-    ModuleHandler $moduleHandler,
-    Connection $database,
-    MessengerInterface $messenger,
-    PagerParametersInterface $pager_param,
-    PagerManagerInterface $pager_manager,
-    FormBuilder $form_builder,
-    AliasManagerInterface $alias_manager,
-    StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager,
-    SchoolFormsService $schoolFormsService) {
-    $this->request = $request;
-    $this->moduleHandler = $moduleHandler;
-    $this->database = $database;
-    $this->messenger = $messenger;
-    $this->pagerParam = $pager_param;
-    $this->pagerManager = $pager_manager;
-    $this->formBuilder = $form_builder;
-    $this->aliasManager = $alias_manager;
-    $this->streamWrapperManager = $streamWrapperManager;
-    $this->entityTypeManager = $entityTypeManager;
-    $this->schoolFormsService = $schoolFormsService;
-  }
+  protected $fileUrlGenerator;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('request_stack'),
-      $container->get('module_handler'),
-      $container->get('database'),
-      $container->get('messenger'),
-      $container->get('pager.parameters'),
-      $container->get('pager.manager'),
-      $container->get('form_builder'),
-      $container->get('path_alias.manager'),
-      $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager'),
-      $container->get('nys_school_forms.school_forms')
-    );
+    $instance = new static();
+    $instance->request = $container->get('request_stack');
+    $instance->moduleHandler = $container->get('module_handler');
+    $instance->database = $container->get('database');
+    $instance->messenger = $container->get('messenger');
+    $instance->pagerParam = $container->get('pager.parameters');
+    $instance->pagerManager = $container->get('pager.manager');
+    $instance->formBuilder = $container->get('form_builder');
+    $instance->aliasManager = $container->get('path_alias.manager');
+    $instance->streamWrapperManager = $container->get('stream_wrapper_manager');
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->schoolFormsService = $container->get('nys_school_forms.school_forms');
+    $instance->fileUrlGenerator = $container->get('file_url_generator');
+    return $instance;
   }
 
   /**
@@ -176,22 +122,32 @@ class SchoolFormsController extends ControllerBase {
    * @return array
    *   The search form and search results build array.
    */
-  public function view() {
+  public function view($form_type = NULL) {
     // Fetch, sanitize, and build the query from parameters.
     $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
-    $form_type = $this->sanitizeQuery($this->request->getCurrentRequest()->get('form_type'));
     $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
     $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
     $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
     $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
     $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
-    $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
+    $sort_order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_order'));
     $build = [];
     $build['#theme'] = 'school_forms';
 
-    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
-    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', urldecode($senator), urldecode($form_type), urldecode($school), urldecode($teacher_name), urldecode($from_date), urldecode($to_date), urldecode($sort_by), urldecode($order));
-    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . urldecode($form_type) . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&from_date=' . urldecode($from_date) . '&to_date=' . urldecode($to_date) . '&sort_by=' . urldecode($sort_by) . '&order=' . urldecode($order);
+    $params = [
+      'form_type' => $form_type,
+      'senator' => urldecode($senator),
+      'school' => urldecode($school),
+      'teacher_name' => urldecode($teacher_name),
+      'from_date' => strtotime(urldecode($from_date)),
+      'to_date' => strtotime(urldecode($to_date)),
+      'sort_by' => urldecode($sort_by),
+      'sort_order' => urldecode($sort_order),
+    ];
+
+    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', $params);
+    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', $params);
+    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . $form_type . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&from_date=' . urldecode($from_date) . '&to_date=' . urldecode($to_date) . '&sort_by=' . urldecode($sort_by) . '&sort_order=' . urldecode($sort_order);
     return $build;
   }
 
@@ -222,8 +178,19 @@ class SchoolFormsController extends ControllerBase {
     $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
     $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
     $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
-    $order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('order'));
-    $results = $this->schoolFormsService->getResults($senator, $form_type, $school, $teacher_name, $from_date, $to_date, $sort_by, $order);
+    $sort_order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_order'));
+
+    $params = [
+      'form_type' => $form_type,
+      'senator' => urldecode($senator),
+      'school' => urldecode($school),
+      'teacher_name' => urldecode($teacher_name),
+      'from_date' => urldecode($from_date),
+      'to_date' => urldecode($to_date),
+      'sort_by' => urldecode($sort_by),
+      'sort_order' => urldecode($sort_order),
+    ];
+    $results = $this->schoolFormsService->getResults($params);
     $handle = fopen('php://temp', 'w+');
     fputcsv($handle, [
       'Date submitted',
@@ -243,8 +210,7 @@ class SchoolFormsController extends ControllerBase {
     foreach ($results as $result) {
       $file = File::load($result['student']['student_submission']);
       $uri = $file->getFileUri();
-      $url = \Drupal::service('file_url_generator')->generate($uri);
-      $file_string = $url->toString();
+      $file_string = $this->fileUrlGenerator->generateAbsoluteString($uri);
       $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
       $line = [
         date('F j, Y', $result['submission']->getCreatedTime()),
@@ -270,6 +236,49 @@ class SchoolFormsController extends ControllerBase {
     $response->headers->set('Content-Disposition', 'attachment; filename="student-export.csv"');
     $response->setContent($csv_data);
     return $response;
+  }
+
+  /**
+   * Controller method for generating webform submissions.
+   */
+  public function generateArchiveWebformSubmissions($form_type = 'earth_day', $year = '2019') {
+
+    $webformSubmissionStorage = $this->entityTypeManager->getStorage('webform_submission');
+    $webform_type = match ($form_type) {
+      'thankful' => 'school_form_thanksgiving',
+      'earth_day' => 'school_form_earth_day',
+    };
+    // Query the last 5 webform submissions with webform ID = form type.
+    $query = $webformSubmissionStorage->getQuery()
+      ->condition('webform_id', $webform_type)
+      ->range(0, 5)
+      ->sort('created', 'DESC');
+    $submission_ids = $query->execute();
+    $start = $year;
+    foreach ($submission_ids as $submission_id) {
+      if ($start >= '2022') {
+        $start = '2022';
+      }
+      $new_created_date = strtotime($start . '-01-01 00:00:00');
+      // Load the submission entity.
+      $submission = $webformSubmissionStorage->load($submission_id);
+      // Modify the submission as needed.
+      if (!empty($submission)) {
+        $submission->setCreatedTime($new_created_date);
+        $submission->save();
+      }
+      // Save the submission.
+      $submission->save();
+      $start++;
+    }
+    $markup = 'The last 5 webform submissions successfully modified created dates.';
+
+    $build = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+    ];
+
+    return $build;
   }
 
 }

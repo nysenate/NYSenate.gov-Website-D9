@@ -21,12 +21,10 @@
       const win = $(window);
       const origNav = $('#js-sticky--dashboard', context);
       const self = this;
+      const debounceTime = 250;
 
       origNav.once('navigation').each(function () {
-        const nav = origNav
-          .clone()
-          .attr('id', 'js-sticky--dashboard--clone')
-          .addClass('fixed');
+        const nav = origNav.clone().attr('id', 'js-sticky--dashboard--clone');
 
         const headerBar = nav.find('.c-header-bar');
 
@@ -37,11 +35,24 @@
         nav.prependTo('.page').css({
           'z-index': '100'
         });
+        const navTop = nav.offset().top;
 
-        self.alignPosition(origNav, nav);
+        self.alignPosition(origNav, nav, navTop);
 
         win.scroll(
           Drupal.debounce(() => self.checkTopBarState(nav, headerBar), 300)
+        );
+        win.scroll(
+          Drupal.debounce(
+            () => self.alignPosition(origNav, nav, navTop),
+            debounceTime
+          )
+        );
+        win.resize(
+          Drupal.debounce(
+            () => self.alignPosition(origNav, nav, navTop),
+            debounceTime
+          )
         );
 
         self.initToolbarObserver(origNav, nav, self.alignPosition);
@@ -62,10 +73,31 @@
         headerBar.removeClass('collapsed');
       }
     },
-    alignPosition: function (orig, clone) {
+    alignPosition: function (orig, clone, cloneTop) {
       try {
-        const origTop = orig.position().top;
-        clone.css('top', `${typeof origTop === 'number' ? origTop : 0}px`);
+        const win = $(window);
+        const isMobile = win.width() < 576;
+        const winScrollTop = win.scrollTop();
+
+        if (isMobile) {
+          clone.removeAttr('style');
+          orig.addClass('fixed');
+          if (winScrollTop > cloneTop) {
+            clone.addClass('fixed');
+            orig.removeClass('fixed');
+          }
+          else {
+            clone.removeClass('fixed');
+            orig.addClass('fixed');
+          }
+        }
+        else {
+          const origTop = orig.position().top;
+          clone.css('top', `${typeof origTop === 'number' ? origTop : 0}px`);
+          clone.addClass('fixed');
+          orig.removeClass('fixed');
+          orig.removeAttr('style');
+        }
       }
       catch (err) {
         return err;

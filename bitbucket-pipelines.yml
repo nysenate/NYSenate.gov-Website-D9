@@ -105,6 +105,8 @@ pipelines:
             # - CMD=$(./tests/pa11y/pa11y-review.sh http://127.0.0.1:8080/themes/contrib/rain_theme/dist/style-guide/section-components.html 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h mc-alerts-nysenate -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
             # Drupal behat tests
             - echo "Behat tests"
+            - ./vendor/bin/drush cr
+            - curl http://127.0.0.1:8080/user -L
             - ./tests/behat/behat-run.sh http://127.0.0.1:8080
             # - CMD=$(./tests/behat/behat-run.sh http://127.0.0.1:8080 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h mc-alerts-nysenate -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           services:

@@ -2,8 +2,16 @@
   'use strict';
   Drupal.behaviors.submissionResults = {
     attach: function () {
+      let yearFilter = new URLSearchParams(window.location.search);
+      if (yearFilter.has('edit-type')) {
+        let param = yearFilter.get('edit-type');
+        let selectBox = $('#edit-type-');
+        let matchedOption = selectBox.find('option[value="' + param + '"]');
+        if (matchedOption.length) {
+          matchedOption.prop('selected', true); 
+        }
+      }
       const filterButton = $('.filter-btn');
-
       if (filterButton) {
         filterButton.each(function () {
           $(this).on('click', function () {

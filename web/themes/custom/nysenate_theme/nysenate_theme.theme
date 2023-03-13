@@ -2955,78 +2955,19 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     }
   }
 
-  // Temporary Votes Content.
-  if ($node->hasField('field_ol_votes') && !empty($node->field_ol_votes)) {
-    $votes_list = [];
-    foreach ($node->field_ol_votes as $key => $item) {
-      if (!is_numeric($key)) {
-        continue;
-      }
-
-      $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
-      $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-
-      /** @var \Drupal\paragraphs\Entity\Paragraph $votes */
-      $votes = $paragraph_storage->load($item->target_id);
-
-      $member_keys = [
-        'field_ol_aye_members' => 'aye_members',
-        'field_ol_nay_members' => 'nay_members',
-        'field_ol_aye_wr_members' => 'aye_wr_members',
-        'field_ol_absent_members' => 'absent_members',
-        'field_ol_excused_members' => 'excused_members',
-        'field_ol_abstained_members' => 'abstained_members',
-      ];
-
-      $all_members = [];
-      foreach ($member_keys as $index => $key) {
-        if ($votes->hasField($index) && !empty($votes->$index)) {
-          $members = [];
-          foreach ($votes->$index as $vote_key => $vote_item) {
-            if (!is_numeric($vote_key)) {
-              continue;
-            }
-
-            $term = $term_storage->load($vote_item->target_id);
-            if ($term) {
-              $members[] = [
-                'name' => $term->field_senator_name->family ?? '',
-                'url' => $term->toUrl()->toString(),
-              ];
-            }
-          }
-
-          if (!empty($members)) {
-            asort($members);
-            $all_members[$key] = $members;
-          }
-        }
-      }
-
-      $type = $votes->field_ol_vote_type->value ?? NULL;
-      if ($type == 'COMMITTEE') {
-        $vote_committee = $term_storage->load($votes->field_ol_committee[0]->getValue()['target_id']);
-        if ($vote_committee) {
-          $type = ($vote_committee->name->value ?? '') . ' ' . $type;
-        }
-      }
-
-      $votes_list[$votes->field_ol_vote_type->value] = [
-        'aye_count' => $votes->field_ol_aye_count->value ?? 0,
-        'nay_count' => $votes->field_ol_nay_count->value ?? 0,
-        'aye_reservations_count' => $votes->field_ol_aye_wr_count->value ?? 0,
-        'absent_count' => $votes->field_ol_absent_count->value ?? 0,
-        'excused_count' => $votes->field_ol_excused_count->value ?? 0,
-        'abstained_count' => $votes->field_ol_abstained_count->value ?? 0,
-        'all_members' => $all_members,
-        'type' => ucwords(strtolower(trim($type))),
-        'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
-      ];
+  // Votes Content.
+  $votes_list = nysenate_bill_votes($node);
+  if ($variables['is_substituted']) {
+    // If the bill was substituted,
+    // add the subbed bill's votes.
+    $sub_votes = NULL;
+    if (!empty($state_node) && $state_node->hasField('field_ol_votes') && !empty($state_node->field_ol_votes)) {
+      $sub_votes = nysenate_bill_votes($state_node);
+      $votes_list = array_merge($votes_list, $sub_votes);
     }
-
-    krsort($votes_list);
-    $variables['votes_block'] = $votes_list;
   }
+  krsort($votes_list);
+  $variables['votes_block'] = $votes_list;
 
   // Create the HTML for the bill's session.
   $variables['legislative_session'] = '<div class="c-bill--session-year">' .
@@ -3279,6 +3220,91 @@ function nysenate_bill_positions($node) {
     }
   }
   return $positions;
+}
+
+/**
+ * Generate the bill votes array.
+ *
+ * @param object $node
+ *   The node object.
+ *
+ * @return array
+ *   The votes array.
+ */
+function nysenate_bill_votes($node) {
+
+  $votes_list = [];
+  if ($node->hasField('field_ol_votes') && !empty($node->field_ol_votes)) {
+    foreach ($node->field_ol_votes as $key => $item) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+
+      $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+      $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+      /** @var \Drupal\paragraphs\Entity\Paragraph $votes */
+      $votes = $paragraph_storage->load($item->target_id);
+
+      $member_keys = [
+        'field_ol_aye_members' => 'aye_members',
+        'field_ol_nay_members' => 'nay_members',
+        'field_ol_aye_wr_members' => 'aye_wr_members',
+        'field_ol_absent_members' => 'absent_members',
+        'field_ol_excused_members' => 'excused_members',
+        'field_ol_abstained_members' => 'abstained_members',
+      ];
+
+      $all_members = [];
+      foreach ($member_keys as $index => $key) {
+        if ($votes->hasField($index) && !empty($votes->$index)) {
+          $members = [];
+          foreach ($votes->$index as $vote_key => $vote_item) {
+            if (!is_numeric($vote_key)) {
+              continue;
+            }
+
+            $term = $term_storage->load($vote_item->target_id);
+            if ($term) {
+              $members[] = [
+                'name' => $term->field_senator_name->family ?? '',
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
+          }
+
+          if (!empty($members)) {
+            asort($members);
+            $all_members[$key] = $members;
+          }
+        }
+      }
+
+      $type = $votes->field_ol_vote_type->value ?? NULL;
+      if ($type == 'COMMITTEE') {
+        $vote_committee = $term_storage->load($votes->field_ol_committee[0]->getValue()['target_id']);
+        if ($vote_committee) {
+          $type = ($vote_committee->name->value ?? '') . ' ' . $type;
+        }
+      }
+
+      $votes_list[$votes->field_ol_vote_type->value] = [
+        'aye_count' => $votes->field_ol_aye_count->value ?? 0,
+        'nay_count' => $votes->field_ol_nay_count->value ?? 0,
+        'aye_reservations_count' => $votes->field_ol_aye_wr_count->value ?? 0,
+        'absent_count' => $votes->field_ol_absent_count->value ?? 0,
+        'excused_count' => $votes->field_ol_excused_count->value ?? 0,
+        'abstained_count' => $votes->field_ol_abstained_count->value ?? 0,
+        'all_members' => $all_members,
+        'type' => ucwords(strtolower(trim($type))),
+        'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
+      ];
+    }
+
+    krsort($votes_list);
+  }
+
+  return $votes_list;
 }
 
 /**

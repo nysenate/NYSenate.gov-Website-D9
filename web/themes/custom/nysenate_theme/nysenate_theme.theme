@@ -3979,6 +3979,23 @@ function nysenate_theme_preprocess_form__views_exposed_form__private_message_inb
 }
 
 /**
+ * Implements hook_preprocess_form__views_form_private_message_inbox__list().
+ */
+function nysenate_theme_preprocess_form__views_form_private_message_inbox__list(&$variables) {
+  $has_message_button = FALSE;
+
+  $current_user = \Drupal::entityTypeManager()->getStorage('user')
+    ->load(\Drupal::currentUser()->id());
+
+  if (in_array('legislative_correspondent', $current_user->getRoles()) ||
+    in_array('senator', $current_user->getRoles())) {
+    $has_message_button = TRUE;
+  }
+
+  $variables['has_message_button'] = $has_message_button;
+}
+
+/**
  * Implements hook_views_pre_render().
  */
 function nysenate_theme_views_pre_render(ViewExecutable $view) {

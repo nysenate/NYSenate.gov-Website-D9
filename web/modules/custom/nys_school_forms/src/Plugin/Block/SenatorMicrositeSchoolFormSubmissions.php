@@ -13,6 +13,7 @@ use Drupal\nys_school_forms\SchoolFormsService;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Submission results block on the School Forms for Senator Microsite Pages.
@@ -54,14 +55,22 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
   protected $routeMatch;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SchoolFormsService $schoolFormsService, CacheBackendInterface $cache_backend, EntityTypeManagerInterface $entity_type_manager, CurrentRouteMatch $route_match) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SchoolFormsService $schoolFormsService, CacheBackendInterface $cache_backend, EntityTypeManagerInterface $entity_type_manager, CurrentRouteMatch $route_match, RequestStack $requestStack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->schoolFormsService = $schoolFormsService;
     $this->cache = $cache_backend;
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -75,7 +84,8 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         $container->get('nys_school_forms.school_forms'),
         $container->get('cache.default'),
         $container->get('entity_type.manager'),
-        $container->get('current_route_match')
+        $container->get('current_route_match'),
+        $container->get('request_stack')
     );
   }
 
@@ -111,17 +121,29 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
 
       $filter_options = [];
       $past_submissions = $this->schoolFormsService->getResults($last_year_params, FALSE);
-
+      ksort($past_submissions);
       $filter_options[] = [
         'value' => 'All',
         'text' => '- Year -',
       ];
-
+      $request = $this->requestStack->getCurrentRequest();
+      $edit_type = $request->query->get('edit-type');
+      $filter = FALSE;
       foreach (array_keys($past_submissions) as $option) {
+        if (!empty($edit_type) && $option == $edit_type) {
+          $filter = TRUE;
+        }
         $filter_options[] = [
           'value' => $option,
           'text' => $option,
         ];
+      }
+      if ($filter === TRUE) {
+        foreach (array_keys($past_submissions) as $option) {
+          if ($option != $edit_type) {
+            unset($past_submissions[$option]);
+          }
+        }
       }
 
       $build = [
@@ -131,11 +153,13 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
             [
               'tab_text' => 'Current Year',
               'title' => date('Y') . ' Poster Submissions',
+              'filter' => $filter,
               'years' => $this->schoolFormsService->getResults($params, FALSE),
             ],
             [
               'tab_text' => 'Past Submissions',
               'title' => 'Archived Submissions',
+              'filter' => $filter,
               'filter_item' => [
                 'label' => 'Select Year',
                 'desc' => 'Archive only goes back to ' . end($filter_options)['text'],

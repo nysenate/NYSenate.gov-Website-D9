@@ -787,9 +787,8 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
     case 'test':
     case 'develop':
       // Search API Solr.
-      $config['search_api.server.pantheon_solr8']['dependencies']['module'][] = 'search_api_pantheon';
-      $config['search_api.server.pantheon_solr8']['backend_config']['connector'] = 'pantheon';
-      $config['search_api.server.pantheon_solr8']['backend_config']['connector_config']['solr_version'] = '8';
+      $config['search_api.server.pantheon_solr8']['status'] = TRUE;
+      $config['search_api.index.core_search']['status'] = TRUE;
       break;
   }
 
@@ -877,6 +876,10 @@ else {
     $config['environment_indicator.indicator']['bg_color'] = '#00294F';
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
   }
+
+  // Local Solr search.
+  $config['search_api.server.ddev_solr_server']['status'] = TRUE;
+  $config['search_api.index.core_search_local']['status'] = TRUE;
 
   // Turn off TFA.
   $config['email_tfa.settings']['status'] = FALSE;

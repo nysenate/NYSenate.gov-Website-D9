@@ -62,18 +62,18 @@
         var animationDelay = 200;
         var animationDuration = 400;
         loadMore.each(function () {
-          var pagerContainer = $(this).closest('.pager-load-more');
+          var pagerContainer = $(this).closest('.item-list');
           var items = pagerContainer.parent().find('.content__item');
           var limit = parseInt(pagerContainer.data('limit')) || 5;
           items.css('display', 'none');
           items.slice(0, limit).show();
-          var itemsHidden = $(this).closest('.pager-load-more').parent().find('.content__item:hidden');
+          var itemsHidden = $(this).closest('.item-list').parent().find('.content__item:hidden');
           $(this).on('click', function (e) {
             var _this = this;
 
             e.preventDefault();
             itemsHidden.slice(0, limit).delay(animationDelay).slideDown(animationDuration, function () {
-              itemsHidden = $(_this).closest('.pager-load-more').parent().find('.content__item:hidden');
+              itemsHidden = $(_this).closest('.item-list').parent().find('.content__item:hidden');
 
               if (itemsHidden.length === 0) {
                 $(_this).css('display', 'none');
@@ -87,7 +87,7 @@
       e.preventDefault();
       var tab = $(this).parent('.c-tab');
       var tabBar = $(this).parents('.l-tab-bar');
-      var billVersion = tab.data('version').split('-');
+      var billVersion = tab.data('version') ? tab.data('version').split('-') : null;
       var newUrl = tab.data('target');
 
       if (billVersion && newUrl) {

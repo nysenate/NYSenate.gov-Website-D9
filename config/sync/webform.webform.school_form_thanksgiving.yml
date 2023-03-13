@@ -56,7 +56,6 @@ elements: |-
       10: '10th Grade'
       11: '11th Grade'
       12: '12th Grade'
-      Homeschool: Homeschool
     '#empty_option': '- Select a value -'
     '#required': true
     '#width': 100
@@ -101,14 +100,12 @@ elements: |-
           '#sanitize': true
           '#button': true
           '#button__title': 'Select file to add'
-          '#upload_location': 
+          '#upload_location': null
         show_student:
           '#type': radios
-          '#options':
-            - N/A
-            - 'NO'
-            - 'YES'
+          '#options': yes_no
           '#title': 'Show Student?'
+          '#default_value': 'No'
           '#private': true
   actions:
     '#type': webform_actions
@@ -257,7 +254,9 @@ access:
     users: {  }
     permissions: {  }
   view_any:
-    roles: {  }
+    roles:
+      - anonymous
+      - authenticated
     users: {  }
     permissions: {  }
   update_any:

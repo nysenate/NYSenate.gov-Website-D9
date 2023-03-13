@@ -1,0 +1,41 @@
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/submission-results') }}
+
+<div class="submissions-content l-row">
+
+  <div class="l-tab-bar">
+    <div class="c-tab--arrow u-mobile-only"></div>
+    {% for panel in panels %}
+      {% if panel.years|length > 0 %}
+        <div class="c-tab 
+        {% if panel.filter == true and loop.index == 2 %}
+          active
+        {% elseif panel.filter == false and loop.index == 1 %}
+          active 
+        {% endif %}">
+        <input class="form-radio" type="radio" name="language" value="#panel{{ loop.index }}" 
+         {% if panel.filter == true and loop.index == 2 %}
+          checked = "checked" 
+        {% elseif panel.filter == false and loop.index == 1%}
+          checked = "checked"
+        {% endif %}>
+        <label class="c-tab-link">{{ panel.title }}</label>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="tabs-content">
+    {% for panel in panels %}
+      {% include '@nysenate_theme/submission-results/student-results.twig' with {
+        is_bulleted: TRUE,
+        title: panel.title,
+        years: panel.years,
+        filter: panel.filter,
+        filter_item: panel.filter_item,
+        panel_number: loop.index
+      } only
+      %}
+    {% endfor %}
+  </div>
+</div>

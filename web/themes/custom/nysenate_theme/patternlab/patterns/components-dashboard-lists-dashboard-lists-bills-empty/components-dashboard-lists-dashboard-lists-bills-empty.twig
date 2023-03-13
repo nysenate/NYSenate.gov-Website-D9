@@ -77,10 +77,12 @@
 
       {% endif %}
       {% if article_items|length > 5 %}
-        <div class="pager pager-load-more">
-          <span class="pager-next first last">
-            <a class="load-more">{{ pagination_link_text }}</a>
-          </span>
+        <div class="item-list">
+          <div class="pager pager-load-more">
+            <span class="pager-next first last">
+              <a class="load-more">{{ pagination_link_text }}</a>
+            </span>
+          </div>
         </div>
       {% endif %}
 

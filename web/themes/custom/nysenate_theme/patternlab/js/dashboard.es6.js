@@ -21,8 +21,9 @@
       var win = $(window);
       var origNav = $('#js-sticky--dashboard', context);
       var self = this;
+      var debounceTime = 250;
       origNav.once('navigation').each(function () {
-        var nav = origNav.clone().attr('id', 'js-sticky--dashboard--clone').addClass('fixed');
+        var nav = origNav.clone().attr('id', 'js-sticky--dashboard--clone');
         var headerBar = nav.find('.c-header-bar');
         var sidebarToggle = nav.find('.sidebar-toggle');
         sidebarToggle.each(Drupal.behaviors.sidebar.sidebarToggleInit); // place clone
@@ -30,10 +31,17 @@
         nav.prependTo('.page').css({
           'z-index': '100'
         });
-        self.alignPosition(origNav, nav);
+        var navTop = nav.offset().top;
+        self.alignPosition(origNav, nav, navTop);
         win.scroll(Drupal.debounce(function () {
           return self.checkTopBarState(nav, headerBar);
         }, 300));
+        win.scroll(Drupal.debounce(function () {
+          return self.alignPosition(origNav, nav, navTop);
+        }, debounceTime));
+        win.resize(Drupal.debounce(function () {
+          return self.alignPosition(origNav, nav, navTop);
+        }, debounceTime));
         self.initToolbarObserver(origNav, nav, self.alignPosition);
       });
     },
@@ -47,10 +55,30 @@
         headerBar.removeClass('collapsed');
       }
     },
-    alignPosition: function alignPosition(orig, clone) {
+    alignPosition: function alignPosition(orig, clone, cloneTop) {
       try {
-        var origTop = orig.position().top;
-        clone.css('top', "".concat(typeof origTop === 'number' ? origTop : 0, "px"));
+        var win = $(window);
+        var isMobile = win.width() < 576;
+        var winScrollTop = win.scrollTop();
+
+        if (isMobile) {
+          clone.removeAttr('style');
+          orig.addClass('fixed');
+
+          if (winScrollTop > cloneTop) {
+            clone.addClass('fixed');
+            orig.removeClass('fixed');
+          } else {
+            clone.removeClass('fixed');
+            orig.addClass('fixed');
+          }
+        } else {
+          var origTop = orig.position().top;
+          clone.css('top', "".concat(typeof origTop === 'number' ? origTop : 0, "px"));
+          clone.addClass('fixed');
+          orig.removeClass('fixed');
+          orig.removeAttr('style');
+        }
       } catch (err) {
         return err;
       }

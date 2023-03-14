@@ -258,7 +258,28 @@
     clear: both;
     margin-top: 24px;
   }
+
+  .c-event--list-by-group {
+    .c-event-date {
+      font-family: $font-serif-semibold;
+      font-size: 16px;
+    }
+
+    .c-event-location {
+      @extend .lgt-text;
+      font-family: $font-sans-bold;
+      font-size: 20px;
+    }
+
+    .c-senator {
+      color: $yellow01;
+      font-size: 18px;
+      font-family: $font-sans-bold;
+      text-transform: uppercase;
+    }
+  }
 }
+
 .first {
   .c-event-block--list {
     border-top: none;
@@ -539,6 +560,17 @@
       float: right;
       width: 460px;
       margin: 12px 6px 10px 0px;
+    }
+
+    .c-event--list-by-group {
+      .c-event-name,
+      .c-senator,
+      .c-event-location,
+      .c-event-time {
+        float: right;
+        margin-right: 120px;
+        width: 460px;
+      }
     }
 
     .c-event-location {

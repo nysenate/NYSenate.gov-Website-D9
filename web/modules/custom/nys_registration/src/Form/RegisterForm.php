@@ -328,7 +328,7 @@ class RegisterForm extends UserRegisterForm {
       'next' => [
         '#type' => 'submit',
         '#button_type' => 'primary',
-        '#value' => $this->t('Next'),
+        '#value' => $this->t('Finish'),
         '#submit' => ['::formSubmitStep2'],
       ],
     ];

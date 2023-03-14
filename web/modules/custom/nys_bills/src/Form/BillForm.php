@@ -302,18 +302,22 @@ class BillForm extends FormBase {
 
     // Validate the email address.
     if (!$this->emailValidator->isValid($email)) {
-      $form_state->setError('email', $this->t('Please enter a valid email address.'));
+      $form_state->setErrorByName('email', $this->t('Please enter a valid email address.'));
     }
     elseif (user_load_by_mail($email) && !$this->currentUser->isAuthenticated()) {
       $href = '/user/login' . $return_destination;
-      $form_state->setError('email', t('Our records show you already have an account. Please <a href="@href">log in</a> to continue', ['@href' => $href]));
+      $form_state->setErrorByName('email', t('Our records show you already have an account. Please <a href="@href">log in</a> to continue', ['@href' => $href]));
     }
     elseif ($this->currentUser->isAuthenticated()) {
       $node = $form['#node'];
       $flag = $this->flagService->getFlagById('follow_this_bill');
       $current_user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
       if (!empty($this->flagService->getFlagging($flag, $node, $current_user))) {
-        $form_state->setError('email', $this->t('You have already supported or opposed this bill.'));
+        // @todo Detemine if authenticated users are not allowed
+        // to change vote and can only vote once.
+        // @phpstan-ignore-next-line
+        // $form_state->setErrorByName('email',
+        // $this->t('You have already supported or opposed this bill.'));
       }
     }
 

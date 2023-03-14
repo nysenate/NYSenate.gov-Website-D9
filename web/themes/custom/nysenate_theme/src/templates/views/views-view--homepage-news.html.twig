@@ -30,8 +30,7 @@
  * @see template_preprocess_views_view()
  */
 #}
-{{ attach_library('nysenate_theme/nysenate-student-programs') }}
-{{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/featured-story') }}
 
 {%
   set classes = [
@@ -46,11 +45,11 @@
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if title %}
-    <h2 class="pane-title">{{ title }}</h2>
+    {{ title }}
   {% endif %}
   {{ title_suffix }}
   {% if header %}
-    <div class="view-header">
+    <div class="view-header c-container--header__top-border">
       {{ header }}
     </div>
   {% endif %}

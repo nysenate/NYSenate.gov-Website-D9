@@ -1273,12 +1273,13 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
   // Newsroom.
   elseif (($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_newsroom_content' ||
-    $view->id() == 'committee_content' && $view->current_display == 'news' ||
+    $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer' ||
     $view->id() == 'newsroom' && $view->current_display == 'all_news' ||
     $view->id() == 'newsroom' && $view->current_display == 'press_releases' ||
-    $view->id() == 'committee_content' && $view->current_display == 'news_meetings' ||
-    $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer' ||
-    $view->id() == 'committee_meetings' && $view->current_display == 'news')) {
+    $view->id() == 'committee_content' && $view->current_display == 'all_updates' ||
+    $view->id() == 'committee_content' && $view->current_display == 'meetings' ||
+    $view->id() == 'committee_content' && $view->current_display == 'news' ||
+    $view->id() == 'committee_content' && $view->current_display == 'news_meetings')) {
     $contents = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
@@ -1323,6 +1324,14 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         }
       }
 
+      $date = NULL;
+      if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y');
+      }
+      elseif ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
+        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'F j, Y');
+      }
+
       if ($view->id() == 'committee_meetings' && $view->current_display == 'news') {
         $image_main = NULL;
       }
@@ -1334,7 +1343,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           'text' => $node->label(),
           'url' => $node->toUrl()->toString(),
         ],
-        'date' => $node->field_date->value ? \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y') : NULL,
+        'date' => $date,
         'img_src' => $image_main,
       ];
     }
@@ -1543,7 +1552,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   }
 
   // Student Program News Main.
-  if ($view->id() == 'student_programs_news' && $view->current_display == 'main') {
+  if ($view->id() == 'student_programs_news' &&
+    in_array($view->current_display, ['main', 'news_nolink'])) {
     $results = $view->result;
 
     $news = [];
@@ -1652,6 +1662,14 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_views_view_fields__VIEW_ID().
+ */
+function nysenate_theme_preprocess_views_view_fields__events(&$variables) {
+  $node = $variables['row']->_entity;
+  $variables['url'] = $node->toUrl()->toString();
+}
+
+/**
  * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
  */
 function nysenate_theme_preprocess_views_view__explore_issues_tabs__constituents_issues_followed(&$variables) {
@@ -1727,6 +1745,14 @@ function nysenate_theme_preprocess_views_view__student_programs_news__main(&$var
 }
 
 /**
+ * Implements hook_preprocess_views_view__VIEW_ID__DISPLAY_ID().
+ */
+function nysenate_theme_preprocess_views_view__student_programs_news__news_nolink(&$variables) {
+  $view = $variables['view'];
+  $variables['title'] = $view->getTitle();
+}
+
+/**
  * Implements hook_theme_suggestions_HOOK().
  */
 function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
@@ -1745,7 +1771,13 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     $view = $variables['view'];
     $display_id = $view->getDisplay();
     $display_id = $display_id->display['id'];
+    $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $display_id;
+  }
+
+  if ($hook == 'views_view_field') {
+    $field = $variables['field'];
+    $suggestions[] = $hook . '__' . $field->field;
   }
 
   if ($hook == 'container' && !empty($variables['element']['submit']['#id'])) {
@@ -1769,6 +1801,7 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
   // Add suggestion to views_view_unformatted hook.
   if ($hook == 'views_view_unformatted') {
     $view = $variables['view'];
+    $suggestions[] = $hook . '__' . $view->id();
     $suggestions[] = $hook . '__' . $view->id() . '__' . $view->current_display;
   }
 
@@ -3893,6 +3926,25 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
       'url' => $url,
       'text' => $allowed_values[$banner_cta_value],
       'value' => $banner_cta_value,
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_node__view__homepage_news__hp_featured_stories(&$variables) {
+  $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
+
+  $field_issues = $variables['content']['field_issues'];
+  foreach ($field_issues as $key => $issue) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $variables['tags'][] = [
+      'url' => $issue['#url'],
+      'text' => $issue['#title'],
     ];
   }
 }

@@ -1314,7 +1314,7 @@ display:
           label: ''
           exclude: false
           alter:
-            alter_text: false
+            alter_text: true
             text: 'District {{ field_district_number }}'
             make_link: false
             path: ''
@@ -1520,7 +1520,11 @@ display:
             striping_classes: 'odd even'
       row:
         type: fields
-        options: {  }
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
       defaults:
         style: false
         row: false

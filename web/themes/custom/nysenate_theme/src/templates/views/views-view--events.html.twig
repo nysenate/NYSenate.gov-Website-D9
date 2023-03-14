@@ -30,9 +30,6 @@
  * @see template_preprocess_views_view()
  */
 #}
-{{ attach_library('nysenate_theme/nysenate-student-programs') }}
-{{ attach_library('nysenate_theme/nysenate-tabs') }}
-
 {%
   set classes = [
     'view',
@@ -41,17 +38,24 @@
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
     'container',
+    'c-upcoming-container',
   ]
 %}
+{{ attach_library('nysenate_theme/event') }}
+
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if title %}
-    <h2 class="pane-title">{{ title }}</h2>
+    {{ title }}
   {% endif %}
   {{ title_suffix }}
   {% if header %}
     <div class="view-header">
-      {{ header }}
+      <div id="datepicker">
+        <div class="mobile-calendar-toggle icon-after__calendar-view">{{ view_text }}</div>
+        <input type="text" />
+        <div id="container"></div>
+      </div>
     </div>
   {% endif %}
   {% if exposed %}

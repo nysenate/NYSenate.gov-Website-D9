@@ -187,19 +187,6 @@ function nys_senators_node_access_records(NodeInterface $node) {
 }
 
 /**
- * Implements hook_module_implements_alter().
- */
-function nys_senators_module_implements_alter(&$implementations, $hook) {
-
-  if ($hook == 'views_query_alter') {
-    // Change the weight of the my_hook implementation provided by nys_senators.
-    $group = $implementations['nys_senators'];
-    unset($implementations['nys_senators']);
-    $implementations['nys_senators'] = $group;
-  }
-}
-
-/**
  * Implements hook_entity_access().
  */
 function nys_senators_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {

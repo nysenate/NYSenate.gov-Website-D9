@@ -19,7 +19,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Implements hook_install().
  */
 function nys_senators_install() {
-  module_set_weight('nys_senators', -500);
+  module_set_weight('nys_senators', 5);
 }
 
 /**
@@ -534,4 +534,11 @@ function nys_senators_update_9019() {
       _nys_senators_remove_letter_blocks($senator_term);
     }
   }
+}
+
+/**
+ * Adjusts module weight back.
+ */
+function nys_senators_update_9020() {
+  module_set_weight('nys_senators', 5);
 }

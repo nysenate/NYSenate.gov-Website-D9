@@ -790,7 +790,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       $variables['homepage_hero'] = [
         'type' => $node->bundle(),
         'date' => $date ?? '',
-        'url_calendar' => $url_calendar ?? '#',
+        'url_calendar' => $url_calendar ?? $node->toUrl()->toString(),
         'media_id' => $media_id ?? [],
       ];
     }
@@ -944,6 +944,15 @@ function nysenate_theme_preprocess_block_content__media(&$variables) {
       $variables['content']['field_title'] = [];
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_field__node__field_ustream(&$variables) {
+  // Set value based on the ustream id.
+  $node = $variables['element']['#object'];
+  $variables['items'][0]['value'] = $node->field_ustream->value ?? $variables['items'][0]['content']['#markup'];
 }
 
 /**

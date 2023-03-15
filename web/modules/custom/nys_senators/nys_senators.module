@@ -9,6 +9,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
@@ -1193,7 +1194,7 @@ function _nys_senators_rules_no_issues(NodeInterface $entity): void {
  */
 function nys_senators_query_nys_senators_access_alter(AlterableInterface $query) {
 
-  if (is_a($query, 'Drupal\Core\Database\Query\SelectInterface')) {
+  if ($query instanceof SelectInterface) {
     // Add op metadata so node_access is used.
     $user = User::load(\Drupal::currentUser()->id());
     $senator_helper = \Drupal::service('nys_senators.senators_helper');

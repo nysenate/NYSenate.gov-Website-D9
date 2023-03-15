@@ -17,13 +17,24 @@
 #}
 
 {{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
 
-<div class="tabs-content">
-  <div class="view-content">
-    {% for content in contents %}
+<div class="view-content">
+  {% for content in contents %}
+    <div class="content__item">
       {% include "@nysenate_theme/nysenate-press-release/nysenate-press-release.twig" with {
         article: content
       } only %}
-    {% endfor %}
-  </div>
+    </div>
+  {% endfor %}
 </div>
+
+{% if contents|length > 5 %}
+  <div class="item-list">
+    <div class="pager pager-load-more">
+      <span class="pager-next first last">
+        <a class="load-more">See More News</a>
+      </span>
+    </div>
+  </div>
+{% endif %}

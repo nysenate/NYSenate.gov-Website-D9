@@ -7,7 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 /**
  * Returns responses for nys_dashboard routes.
  */
-class NysDashboardIssuesController extends ControllerBase {
+class DashboardIssuesController extends ControllerBase {
 
   /**
    * Response for the issues page.

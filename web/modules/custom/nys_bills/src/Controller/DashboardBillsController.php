@@ -7,7 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 /**
  * Returns responses for nys_dashboard routes.
  */
-class NysDashboardBillsController extends ControllerBase {
+class DashboardBillsController extends ControllerBase {
 
   /**
    * Response for the bills page.

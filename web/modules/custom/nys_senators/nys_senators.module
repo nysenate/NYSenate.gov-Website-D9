@@ -8,6 +8,7 @@
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -206,7 +207,8 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
     if ($user->hasField('field_senator_multiref') && !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id'))) {
 
       // Only fire when a Senator or Committee Term.
-      if ($entity->getEntityType()->id() === 'taxonomy_term' && $operation == 'update') {
+      if ($entity->getEntityType()
+        ->id() === 'taxonomy_term' && $operation == 'update') {
 
         // Check if term is in MCPs senator values for Senator terms.
         if ($entity->bundle() === 'senator' && in_array($entity->id(), $senators, FALSE)) {
@@ -228,15 +230,18 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
         return AccessResult::forbidden()->setCacheMaxAge(0);
       }
     }
-    elseif ($entity->getEntityType()->id() === 'taxonomy_term' && $operation == 'update') {
+    elseif ($entity->getEntityType()
+      ->id() === 'taxonomy_term' && $operation == 'update') {
       // They don't have a senator, deny everything..
       return AccessResult::forbidden()->setCacheMaxAge(0);
     }
 
     // Hide Admin routes from Content Bases for non-update access items.
-    if ($operation == 'view all revisions' && $entity->getEntityType()->id() === 'node') {
+    if ($operation == 'view all revisions' && $entity->getEntityType()
+      ->id() === 'node') {
       // Returns true if they have update access.
-      return AccessResult::allowedIf($entity->access('update', $account))->setCacheMaxAge(0);
+      return AccessResult::allowedIf($entity->access('update', $account))
+        ->setCacheMaxAge(0);
     }
   }
 
@@ -1096,7 +1101,8 @@ function _nys_senators_update_microsites(EntityInterface $entity) {
   // Gets the senator name value.
   $senator_name = $entity->label();
 
-  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
   $micrositeTypes = $termEntityManager->loadByProperties([
     'vid' => 'microsite_page_type',
   ]);
@@ -1109,17 +1115,20 @@ function _nys_senators_update_microsites(EntityInterface $entity) {
   foreach ($micrositeTypes as $micrositeType) {
     if (in_array($micrositeType->getName(), $senatorMicrosites)) {
 
-      $microsite_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
-        'type' => 'microsite_page',
-        'field_senator_multiref' => $entity->id(),
-        'field_microsite_page_type' => $micrositeType->id(),
-      ]);
+      $microsite_page = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          'field_senator_multiref' => $entity->id(),
+          'field_microsite_page_type' => $micrositeType->id(),
+        ]);
 
       $page = NULL;
       if (!empty($microsite_page)) {
         $page = reset($microsite_page);
 
-        if ($page->hasField('field_block') && !$page->get('field_block')->isEmpty()) {
+        if ($page->hasField('field_block') && !$page->get('field_block')
+          ->isEmpty()) {
           foreach ($page->get('field_block') as $key => $value) {
             /** @var \Drupal\block_content\Entity\BlockContent $block_content */
             $block_content = $value->entity ?? NULL;
@@ -1229,7 +1238,8 @@ function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
   // Gets the senator name value.
   $senator_name = $entity->label();
 
-  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
   $micrositeTypes = $termEntityManager->loadByProperties([
     'vid' => 'microsite_page_type',
   ]);
@@ -1242,17 +1252,20 @@ function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
   foreach ($micrositeTypes as $micrositeType) {
     if (in_array($micrositeType->getName(), $senatorMicrosites)) {
 
-      $microsite_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
-        'type' => 'microsite_page',
-        'field_senator_multiref' => $entity->id(),
-        'field_microsite_page_type' => $micrositeType->id(),
-      ]);
+      $microsite_page = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          'field_senator_multiref' => $entity->id(),
+          'field_microsite_page_type' => $micrositeType->id(),
+        ]);
 
       $page = NULL;
       if (!empty($microsite_page)) {
         $page = reset($microsite_page);
 
-        if ($page->hasField('field_block') && !$page->get('field_block')->isEmpty()) {
+        if ($page->hasField('field_block') && !$page->get('field_block')
+          ->isEmpty()) {
           foreach ($page->get('field_block') as $key => $value) {
             /** @var \Drupal\block_content\Entity\BlockContent $block_content */
             $block_content = $value->entity ?? NULL;
@@ -1261,10 +1274,12 @@ function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
             if ($key == 2) {
               switch ($micrositeType->getName()) {
                 case 'Thankful':
-                  $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
-                    'type' => 'thankful_letter',
-                    'info' => $senator_name . ' - Thankful Letter Block',
-                  ]);
+                  $block = \Drupal::entityTypeManager()
+                    ->getStorage('block_content')
+                    ->loadByProperties([
+                      'type' => 'thankful_letter',
+                      'info' => $senator_name . ' - Thankful Letter Block',
+                    ]);
                   if (!empty($block)) {
                     $thankfulBlock = reset($block);
                   }
@@ -1283,10 +1298,12 @@ function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
                   break;
 
                 case 'Earth Day':
-                  $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
-                    'type' => 'earth_day_letter',
-                    'info' => $senator_name . ' - Earth Day Letter Block',
-                  ]);
+                  $block = \Drupal::entityTypeManager()
+                    ->getStorage('block_content')
+                    ->loadByProperties([
+                      'type' => 'earth_day_letter',
+                      'info' => $senator_name . ' - Earth Day Letter Block',
+                    ]);
                   if (!empty($block)) {
                     $earthDayBlock = reset($block);
                   }
@@ -1313,10 +1330,12 @@ function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
           // Re-add the Submission Results Block.
           switch ($micrositeType->getName()) {
             case 'Thankful':
-              $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
-                'type' => 'senator_microsite_school_forms',
-                'info' => $senator_name . ' - Thankful Letter Block',
-              ]);
+              $block = \Drupal::entityTypeManager()
+                ->getStorage('block_content')
+                ->loadByProperties([
+                  'type' => 'senator_microsite_school_forms',
+                  'info' => $senator_name . ' - Thankful Letter Block',
+                ]);
               if (!empty($block)) {
                 $thankfulBlock = reset($block);
                 $thankfulBlock->info = $senator_name . ' - Submission Results Block';
@@ -1341,10 +1360,12 @@ function _nys_senators_rearrange_microsites_blocks(EntityInterface $entity) {
               break;
 
             case 'Earth Day':
-              $block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
-                'type' => 'senator_microsite_school_forms',
-                'info' => $senator_name . ' - Earth Day Letter Block',
-              ]);
+              $block = \Drupal::entityTypeManager()
+                ->getStorage('block_content')
+                ->loadByProperties([
+                  'type' => 'senator_microsite_school_forms',
+                  'info' => $senator_name . ' - Earth Day Letter Block',
+                ]);
               if (!empty($block)) {
                 $earthDayBlock = reset($block);
                 $earthDayBlock->info = $senator_name . ' - Submission Results Block';
@@ -1387,7 +1408,8 @@ function _nys_senators_remove_letter_blocks(EntityInterface $entity) {
   // Gets the senator name value.
   $senator_name = $entity->label();
 
-  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
   $micrositeTypes = $termEntityManager->loadByProperties([
     'vid' => 'microsite_page_type',
   ]);
@@ -1400,17 +1422,20 @@ function _nys_senators_remove_letter_blocks(EntityInterface $entity) {
   foreach ($micrositeTypes as $micrositeType) {
     if (in_array($micrositeType->getName(), $senatorMicrosites)) {
 
-      $microsite_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
-        'type' => 'microsite_page',
-        'field_senator_multiref' => $entity->id(),
-        'field_microsite_page_type' => $micrositeType->id(),
-      ]);
+      $microsite_page = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          'field_senator_multiref' => $entity->id(),
+          'field_microsite_page_type' => $micrositeType->id(),
+        ]);
 
       $page = NULL;
       if (!empty($microsite_page)) {
         $page = reset($microsite_page);
 
-        if ($page->hasField('field_block') && !$page->get('field_block')->isEmpty()) {
+        if ($page->hasField('field_block') && !$page->get('field_block')
+          ->isEmpty()) {
           foreach ($page->get('field_block') as $key => $value) {
             /** @var \Drupal\block_content\Entity\BlockContent $block_content */
             $block_content = $value->entity ?? NULL;
@@ -1434,4 +1459,58 @@ function _nys_senators_remove_letter_blocks(EntityInterface $entity) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function nys_senators_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  if (str_starts_with($route_name, 'nys_senators.dashboard.senator')) {
+    // The user must own at least one of these roles to see this menu.
+    $roles = ['microsite_content_producer', 'legislative_correspondent'];
+
+    // Get the current user.  Verify role-based access.
+    $user_id = \Drupal::currentUser()->id();
+    /** @var \Drupal\user\Entity\User $user */
+    $user = \Drupal::entityTypeManager()->getStorage('user')->load($user_id);
+    if (!array_intersect($roles, $user->getRoles())) {
+      $data = [];
+      return;
+    }
+    $senators = array_merge(
+      $user->get('field_senator_inbox_access')->referencedEntities() ?? [],
+      $user->get('field_senator_management')->referencedEntities() ?? []
+    );
+
+    // Create pre-built entries for each senator.
+    // Taken from LocalTaskManager::getTasksBuild()
+    $target = &$data['tabs'][];
+    $current = \Drupal::service('path.current')->getPath();
+    $active_first = ($route_name == 'nys_senators.dashboard.senators');
+    foreach ($senators as $weight => $senator) {
+      $plugin_id = 'nys_senators.task.senator.' . $senator->id();
+      if (!isset($target[$plugin_id])) {
+        $link = [
+          'title' => $senator->getName(),
+          'url' => Url::fromRoute(
+            'nys_senators.dashboard.senator',
+            ['senator' => $senator->id(), 'tab' => 'overview']
+          ),
+        ];
+        $is_active = ($active_first || ($current == $link['url']->toString()));
+        $target[$plugin_id] = [
+          '#theme' => 'menu_local_task',
+          '#link' => $link,
+          '#weight' => $weight,
+          '#active' => $is_active,
+          '#access' => TRUE,
+        ];
+      }
+      $active_first = FALSE;
+    }
+
+    // Enforce a cache tag based on the user.
+    $cacheability->addCacheTags($user->getCacheTagsToInvalidate());
+  }
+
 }

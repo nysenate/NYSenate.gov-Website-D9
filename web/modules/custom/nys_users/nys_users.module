@@ -7,6 +7,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_form_alter().
@@ -47,5 +48,19 @@ function nys_users_entity_bundle_field_info_alter(&$fields, EntityTypeInterface 
 
     $fields['field_senator_multiref']->addConstraint('RequiredSenator');
 
+  }
+}
+
+/**
+ * Adds/removes the 'constituent' role based on user's address.
+ */
+function nys_users_user_presave(UserInterface $user): void {
+  if ($state = ($user->field_address->administrative_area ?? '')) {
+    if ($state === 'NY') {
+      $user->addRole('constituent');
+    }
+    else {
+      $user->removeRole('constituent');
+    }
   }
 }

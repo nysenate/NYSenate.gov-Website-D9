@@ -68,13 +68,16 @@
         <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1">
           {{ drupal_view('committee_content', 'all_updates') }}
         </div>
-        <div class="panel-pane pane-views pane-news-by-issue content active" id="panel2">
+        <div class="panel-pane pane-views pane-news-by-issue content" id="panel2">
           {{ drupal_view('committee_content', 'news') }}
         </div>
         <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
           {{ drupal_view('committee_content', 'meetings') }}
         </div>
       </div>
+      {{ drupal_view('committee_members', 'chair') }}
+      {{ drupal_view('committee_members', 'members') }}
+      {{ drupal_view('committee_members', 'assembly_members') }}
       {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
     </div>
   </div>

@@ -9,9 +9,11 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\pathauto\Entity\PathautoPattern;
@@ -258,7 +260,8 @@ function nys_senators_user_presave(UserInterface $user) {
   // The contact your senator component relies on field_address
   // of the user entity. Invalidate the issues taxonomy
   // term when updating the users.
-  \Drupal::service('cache_tags.invalidator')->invalidateTags(['taxonomy_term_list:issues']);
+  \Drupal::service('cache_tags.invalidator')
+    ->invalidateTags(['taxonomy_term_list:issues']);
 }
 
 /**
@@ -349,7 +352,8 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
   $menuBlock->save();
 
   // Loads microsite page type terms.
-  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
   $micrositeTypes = $termEntityManager->loadByProperties([
     'vid' => 'microsite_page_type',
   ]);
@@ -422,11 +426,13 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
 
         case 'Contact':
           $nodeValues['title'] = 'Contact ' . $senator_name . "'s office";
-          $senatorContactBlock = \Drupal::service('entity_type.manager')->getStorage('block_content')->loadByProperties([
-            'type' => 'microsite_contact_webform',
-            'status' => 1,
-            'info' => 'Senator contact form - Microsite Contact block',
-          ]);
+          $senatorContactBlock = \Drupal::service('entity_type.manager')
+            ->getStorage('block_content')
+            ->loadByProperties([
+              'type' => 'microsite_contact_webform',
+              'status' => 1,
+              'info' => 'Senator contact form - Microsite Contact block',
+            ]);
           if (!empty($senatorContactBlock)) {
             $senatorContactBlock = reset($senatorContactBlock);
             $nodeValues['field_block'][] = [
@@ -529,7 +535,9 @@ function nys_senators_taxonomy_term_update(EntityInterface $entity) {
 
   // Checks if Senator status is being updated.
   if ($term->hasField('field_active_senator')) {
-    _nys_senators_validate_microsite_term($entity, $term->get('field_active_senator')->first()->getValue()['value'], $updatedValue);
+    _nys_senators_validate_microsite_term($entity, $term->get('field_active_senator')
+      ->first()
+      ->getValue()['value'], $updatedValue);
   }
 }
 
@@ -569,7 +577,8 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
     foreach ($nodes as $node) {
       // Acts on every new senator taxonomy term that's updated.
       if ($term->bundle() === 'senator') {
-        if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+        if ($node->hasField('field_microsite_page_type')
+          && !$node->get('field_microsite_page_type')->isEmpty()) {
           $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
           $micrositeTerm = Term::load($tid);
           $validateLanding = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing';
@@ -594,7 +603,8 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
 
     // Checks if the senator has an Inactive microsite page or not.
     if (!$updatedValue) {
-      $hasInactivePage = \Drupal::service('nys_senators.senators_helper')->hasMicroSiteInactive($nodes);
+      $hasInactivePage = \Drupal::service('nys_senators.senators_helper')
+        ->hasMicroSiteInactive($nodes);
       if (!$hasInactivePage && !empty($aboutNode)) {
         _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
       }
@@ -617,10 +627,12 @@ function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity
   $term = $entity;
 
   // Loads the Inactive term.
-  $inactiveTerm = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
-    'vid' => 'microsite_page_type',
-    'name' => 'Inactive',
-  ]);
+  $inactiveTerm = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term')
+    ->loadByProperties([
+      'vid' => 'microsite_page_type',
+      'name' => 'Inactive',
+    ]);
   $inactiveTerm = reset($inactiveTerm);
 
   // Creates hero block to be attached to the microsite content.
@@ -682,7 +694,9 @@ function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity
       if ($block_content instanceof BlockContent) {
         // Sets inactiveText for former Senator page.
         if ($block_content->bundle() === 'text') {
-          $existingText = !$block_content->get('field_body_left')->isEmpty() ? $block_content->get('field_body_left')->getValue() : '';
+          $existingText = !$block_content->get('field_body_left')
+            ->isEmpty() ? $block_content->get('field_body_left')
+            ->getValue() : '';
           $existingText = !empty($existingText) ? $existingText[0]['value'] : '';
           $inactiveHeader = '<h2>About Former Senator ' . $term->getName() . '\'s</h2>';
           $inactiveFooter = '<div><p><em>Last edited by Senator ' . $term->getName() . '\'s staff prior to last day in office.</em></p></div>';
@@ -727,13 +741,15 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
     $node = $context['data']['node'];
 
     $replacements = [];
-    if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+    if ($node->hasField('field_microsite_page_type')
+      && !$node->get('field_microsite_page_type')->isEmpty()) {
       $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
       $term = Term::load($tid);
       if ($term instanceof TermInterface && !empty($term->getName())) {
         switch ($term->getName()) {
           case 'Landing':
-            if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+            if ($node->hasField('field_senator_multiref')
+              && !$node->get('field_senator_multiref')->isEmpty()) {
               $sid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
               $senator = Term::load($sid);
               // Checks if the senator isn't active.
@@ -766,7 +782,8 @@ function nys_senators_pathauto_pattern_alter(PathautoPattern &$pattern, array $c
             break;
 
           case 'Inactive':
-            if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+            if ($node->hasField('field_senator_multiref')
+              && !$node->get('field_senator_multiref')->isEmpty()) {
               $sid = $node->field_senator_multiref->getValue()[0]['target_id'] ?? '';
               $senator = Term::load($sid);
               // Check if the senator is active.
@@ -968,7 +985,8 @@ function _nys_senators_create_microsites(EntityInterface $entity) {
   ]);
   $sincerelyBlock->save();
 
-  $termEntityManager = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
   $micrositeTypes = $termEntityManager->loadByProperties([
     'vid' => 'microsite_page_type',
   ]);
@@ -1032,6 +1050,42 @@ function _nys_senators_create_microsites(EntityInterface $entity) {
       $node = Node::create($nodeValues);
       $node->save();
     }
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function nys_senators_node_presave(NodeInterface $entity): void {
+  _nys_senators_rules_title_all_caps($entity);
+  _nys_senators_rules_no_issues($entity);
+}
+
+/**
+ * Posts a warning message if an entity's title is all capital letters.
+ */
+function _nys_senators_rules_title_all_caps(NodeInterface $entity): void {
+  $bundles_to_check = [
+    'article',
+    'petition',
+    'promotional_banner',
+    'in_the_news',
+  ];
+  if (
+    in_array($entity->bundle(), $bundles_to_check)
+    && strtoupper($entity->getTitle()) === $entity->getTitle()
+  ) {
+    // Generate the message (with embedded links).
+    $link_gen = \Drupal::linkGenerator();
+    // Link 1 ("best practices") was a link, but the URL is no longer valid.
+    // Replace if one is ever found.
+    $links = [
+      '@link_1' => t('best practices'),
+      '@link_2' => $link_gen->generate(t('title case'), Url::fromUri('http://www.titlecase.com')),
+      '@link_3' => $link_gen->generate('helpline@nysenate.gov', Url::fromUri('mailto:helpline@nysenate.gov?Subject=Bulk headline conversion request')),
+    ];
+    $msg_text = t("The title of this piece of content includes words typeset in ALL CAPS. This style is inconsistent with @link_1, and it is not supported well by NYSenate.gov's header typeface. For readability purposes, please consider posting in @link_2 instead. If you would like assistance bulk converting all of your content headlines to title case, please send a request to @link_3.", $links);
+    \Drupal::messenger()->addWarning($msg_text);
   }
 }
 
@@ -1115,11 +1169,56 @@ function _nys_senators_update_microsites(EntityInterface $entity) {
 }
 
 /**
+ * Posts a warning message if no related issues have been set on an entity.
+ */
+function _nys_senators_rules_no_issues(NodeInterface $entity): void {
+  $bundles_to_check = [
+    'article',
+    'event',
+    'petition',
+    'public_hearing',
+    'video',
+  ];
+  if (in_array($entity->bundle(), $bundles_to_check)
+    && ($field = $entity->get('field_issues'))
+    && (!count($field->referencedEntities()))
+  ) {
+    $link_gen = \Drupal::linkGenerator();
+    $link = $link_gen->generate(t('issues'), Url::fromUri('internal:/explore-issues', ['absolute' => TRUE]));
+    $msg = t('No @link have been associated with this piece of content. Add up to three issue tags to help users discover this content.', ['@link' => $link]);
+    \Drupal::messenger()->addWarning($msg);
+  }
+}
+
+/**
  * Implements hook_query_TAG_alter().
  */
 function nys_senators_query_nys_senators_access_alter(AlterableInterface $query) {
-  // Add op metadata so node_access is used.
-  $query->addMetaData('op', 'update');
+
+  if ($query instanceof SelectInterface) {
+    // Add op metadata so node_access is used.
+    $user = User::load(\Drupal::currentUser()->id());
+    $senator_helper = \Drupal::service('nys_senators.senators_helper');
+
+    // Check for MCP.
+    if (!$senator_helper->senatorUserIsAdmin($user) &&
+      $user->hasField('field_senator_multiref') &&
+      !empty($senators = $user->field_senator_multiref->getValue())) {
+
+      // Format a nice array for query conditions.
+      $senator_tids = [];
+
+      foreach ($senators as $senator) {
+        $senator_tids[] = $senator['target_id'];
+      }
+
+      // Adding in join to access table to see only editable materials for MCPs.
+      $query->join('node_access', 'na', 'node_field_data.nid = na.nid');
+      $query->condition('na.realm', 'microsite_producers');
+      $query->condition('na.gid', $senator_tids, 'IN');
+
+    }
+  }
 }
 
 /**

@@ -8,6 +8,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\private_message\Entity\PrivateMessage;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The Bill Form class.
@@ -73,6 +75,20 @@ class BillForm extends FormBase {
   protected $flagService;
 
   /**
+   * Default object for messenger serivce.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messengerService;
+
+  /**
+   * Default object for private_message.thread_manager service.
+   *
+   * @var \Drupal\private_message\Service\PrivateMessageThreadManagerInterface
+   */
+  protected $privateMessageThreadManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -85,6 +101,8 @@ class BillForm extends FormBase {
     $instance->nysUserHelper = $container->get('nys_users.user_helper');
     $instance->emailValidator = $container->get('email.validator');
     $instance->flagService = $container->get('flag');
+    $instance->messengerService = $container->get('messenger');
+    $instance->privateMessageThreadManager = $container->get('private_message.thread_manager');
     return $instance;
   }
 
@@ -327,8 +345,9 @@ class BillForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $user_storage = $this->entityTypeManager->getStorage('user');
     // Need the global user object.
-    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    $user = $user_storage->load($this->currentUser->id());
 
     // Set up some easy references for later.
     $node = $form['#node'];
@@ -345,7 +364,60 @@ class BillForm extends FormBase {
     $this->billVoteHelper->processVote('node', $node->id(), $vote_index);
     $form_state->setRedirectUrl(Url::fromUserInput(\Drupal::request()->get('pass_thru_url')));
 
-    // @todo handle private message, subscription and account creation.
+    // Send Private Message.
+    if ($this->currentUser->isAuthenticated() && !empty($values['message'])) {
+      // Only in-state users will have a senator assigned.
+      if (!$this->nysUserHelper->isOutOfState()) {
+        $senator = $this->nysUserHelper->getSenator($user);
+        if ($senator !== NULL) {
+          if ($senator->hasField('field_user_account') && !$senator->get('field_user_account')->isEmpty()) {
+            $senator_user_id = $senator->field_user_account->target_id;
+          }
+
+          if (isset($senator_user_id)) {
+            switch ($vote_index) {
+              case 'yes':
+                $vote_type = 'supported';
+                break;
+
+              case 'no':
+                $vote_type = 'opposed';
+                break;
+
+              default:
+                $vote_type = 'sent a message regarding';
+                break;
+            }
+
+            $subject = $values['first_name'] . ' ' . $values['last_name'] . ' ' .
+              $vote_type . ' ' . $node->label();
+
+            // Create the private message entity.
+            $message = PrivateMessage::create([
+              'message' => $values['message'],
+              'field_subject' => $subject,
+              'field_to' => [$senator_user_id],
+              'field_bill' => [$node->id()],
+            ]);
+            $message->save();
+
+            $recipients = $user_storage->loadMultiple([$senator_user_id]);
+            // Add it to the thread with the senator user.
+            $this->privateMessageThreadManager->saveThread(PrivateMessage::load($message->id()), $recipients);
+
+            if (!empty($message->id())) {
+              $this->messengerService->addStatus($this->t('Your message has been sent!'));
+            }
+
+            $url = Url::fromUserInput('/node/' . $node->id())->toString();
+            $response = new RedirectResponse($url);
+            $response->send();
+          }
+        }
+      }
+    }
+
+    // @todo handle subscription and account creation.
   }
 
   /**

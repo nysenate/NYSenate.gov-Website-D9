@@ -7,13 +7,14 @@ use Drupal\Core\Controller\ControllerBase;
 /**
  * Returns responses for nys_dashboard routes.
  */
-class NysDashboardSenatorsController extends ControllerBase {
+class DashboardSenatorsController extends ControllerBase {
 
   /**
    * Response for the senators page.
    */
   public function senatorManagement(): array {
 
+    $user = $this->currentUser();
     $content['senators'] = ['#markup' => 'Senator Management'];
 
     return $content;
@@ -22,8 +23,9 @@ class NysDashboardSenatorsController extends ControllerBase {
   /**
    * Response for the senators page.
    */
-  public function senatorManagementSecond(): array {
+  public function senatorPage($senator, $tab = ''): array {
 
+    $user = $this->currentUser();
     $content['senators'] = ['#markup' => 'Senator Management Second'];
 
     return $content;

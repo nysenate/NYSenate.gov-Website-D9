@@ -1,36 +1,8 @@
-nys_dashboard.issues:
-  path: '/users/{user_id}/dashboard/issues'
+nys_dashboard.overview:
+  path: '/dashboard'
   defaults:
-    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::issues'
-  requirements:
-    _permission: 'access content'
-
-nys_dashboard.bills:
-  path: '/users/{user_id}/dashboard/bills'
-  defaults:
-    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::bills'
-  requirements:
-    _permission: 'access content'
-
-nys_dashboard.committees:
-  path: '/users/{user_id}/dashboard/committees'
-  defaults:
-    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::committees'
-  requirements:
-    _permission: 'access content'
-
-nys_dashboard.petitions:
-  path: '/users/{user_id}/dashboard/petitions'
-  defaults:
-    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::petitions'
-  requirements:
-    _permission: 'access content'
-
-nys_dashboard.profile:
-  path: '/dashboard/profile'
-  defaults:
-    _title: 'My Profile'
-    _controller: '\Drupal\nys_dashboard\Controller\NysDashboardController::profile'
+    _title: 'Profile Overview'
+    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::overview'
   requirements:
     _user_is_logged_in: 'TRUE'
 

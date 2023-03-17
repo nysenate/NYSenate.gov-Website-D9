@@ -3467,6 +3467,7 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
   }
 
+  $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
 }
 
 /**

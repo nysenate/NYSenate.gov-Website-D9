@@ -31,17 +31,22 @@
  * @ingroup themeable
  */
 #}
-{{ attach_library('nysenate_theme/nysenate-issues') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
 
-{% if issue %}
-  <div class="c-block--issue">
-    <h4 class="c-issue-block--title">
-    <a href="{{ issue.issue_link.url }}">{{ issue.issue_link.text }}</a>
-    </h4>
-    <div class="c-block--btn">
-    {% if issue.flag_follow_issue %}
-      {{ issue.flag_follow_issue }}
-    {% endif %}
+{% for row in rows %}
+  <div class="content__item">
+    {{- row.content -}}
+  </div>
+{% endfor %}
+
+{% set limit = 12 %}
+
+{% if rows|length > limit %}
+  <div class="item-list" data-limit="{{ limit }}">
+    <div class="pager pager-load-more">
+      <span class="pager-next first last">
+        <a class="load-more">Load more</a>
+      </span>
     </div>
   </div>
 {% endif %}

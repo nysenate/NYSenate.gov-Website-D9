@@ -1829,9 +1829,9 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
 
     $senator_message_form_ids = [];
     $senator_sent_form_ids = [];
-    if ($current_user->hasField('field_senator_management') && !$current_user->get('field_senator_management')->isEmpty()) {
-      foreach ($current_user->field_senator_management as $senator_management) {
-        $senator = $senator_management->entity;
+    if ($current_user->hasField('field_senator_inbox_access') && !$current_user->get('field_senator_inbox_access')->isEmpty()) {
+      foreach ($current_user->field_senator_inbox_access as $senator_inbox_access) {
+        $senator = $senator_inbox_access->entity;
         $senator_message_form_ids[] = 'views_form_private_message_inbox_inbox_' . $senator->field_user_account->target_id;
         $senator_sent_form_ids[] = 'views_form_private_message_inbox_sent_' . $senator->field_user_account->target_id;
       }

@@ -3564,27 +3564,7 @@ function nysenate_theme_preprocess_node__meeting(&$variables) {
   $variables['event_status'] = $event_status;
   $variables['event_place'] = $event_place;
 
-  // How a Bill Becomes a law block data.
-  $block = \Drupal::entityTypeManager()
-    ->getStorage('block_content')
-    ->loadByProperties([
-      'type' => 'how_senate_works',
-      'info' => 'How a Bill Becomes Law block',
-      'field_title' => 'How a Bill Becomes Law',
-    ]);
-
-  if (is_array($block)) {
-    $block = reset($block);
-  }
-
-  if (!empty($block)) {
-    /** @var \Drupal\block\BlockViewBuilder $view_builder */
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block_content');
-    $block_content = $view_builder->view($block);
-
-    $bill = $view_builder->build($block_content);
-    $variables['bill'] = $bill;
-  }
+  $variables['bill'] = get_how_a_bill_becomes_law_block();
 }
 
 /**
@@ -4454,6 +4434,48 @@ function nysenate_theme_preprocess_node__transcript__full(&$variables) {
     $title_date = date('F j, Y', $publish_date);
   }
   $variables['transcript_title'] = $tx_type_field . ' - ' . $title_date;
+}
+
+/**
+ * Method for fetching How a Bill Becomes a law block data.
+ */
+function get_how_a_bill_becomes_law_block() {
+  $bill = NULL;
+
+  // Render How a Bill Becomes a law block data.
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'how_senate_works',
+      'info' => 'How a Bill Becomes Law block',
+      'field_title' => 'How a Bill Becomes Law',
+    ]);
+
+  if (is_array($block)) {
+    $block = reset($block);
+  }
+
+  if (!empty($block)) {
+    /** @var \Drupal\block\BlockViewBuilder $view_builder */
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block_content');
+    $block_content = $view_builder->view($block);
+
+    $bill = $view_builder->build($block_content);
+  }
+
+  return $bill;
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__landing(&$variables) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+  if ($path_alias == '/news-and-issues') {
+    $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
+  }
 }
 
 /**

@@ -133,6 +133,93 @@
   .nys-bill-status__drk li {
     margin-top: -14px;
   }
+
+  .cal-nav-wrapper {
+    border-bottom: 1px solid $grey05;
+
+    @include breakpoint($bp-sm) {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 50px;
+      padding: 10px 0 20px 0;
+    }
+
+    .title {
+      font-size: 20px;
+      margin-top: 25px;
+      font-family: $font-serif-semibold;
+      color: $grey10;
+
+      @include breakpoint($bp-sm) {
+        margin: 0;
+        color: $grey08;
+        line-height: 42px;
+      }
+    }
+
+    .cal-nav-list {
+      margin: 0;
+      padding: 0;
+
+      @include breakpoint($bp-sm) {
+        text-align: right;
+      }
+
+      li {
+        background-color: $grey06;
+        list-style: none;
+        display: inline-block;
+        text-align: left;
+        color: #004c71;
+        margin: 10px 0;
+        width: 49%;
+        position: relative;
+
+        &:hover {
+          @extend .med-bg;
+
+          label {
+            color: $color-white;
+          }
+        }
+
+        @include breakpoint($bp-sm) {
+          margin: 0;
+          display: inline-block;
+          width: 182px;
+        }
+
+        label {
+          display: inline-block;
+          width: 100%;
+          height: 42px;
+          line-height: 42px;
+          padding: 0 0 0 14px;
+          font-family: $font-sans-bold;
+          font-size: 12px;
+          text-transform: uppercase;
+          color: $blue02;
+          transition: background 0.2s ease;
+          margin: 0;
+
+          &::after {
+            position: absolute;
+            right: 6%;
+            top: 0px;
+            font-size: 20px;
+          }
+        }
+
+        input {
+          cursor: pointer;
+          opacity: 0;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
 }
 
 .view-senator-events {
@@ -149,7 +236,6 @@
 
 // Legislation/Bills
 .upcoming-legislation-block {
-
   .content__item {
     border-top: 1px solid $grey05;
   }

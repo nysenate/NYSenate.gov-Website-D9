@@ -263,6 +263,13 @@ event:
   dependencies:
     - nysenate_theme/nysenate-featured-event
 
+event-calendar:
+  css:
+    component:
+      dist/css/event-calendar.css: {}
+  dependencies:
+    - nysenate_theme/zebra-datepicker
+
 event-card:
   css:
     component:
@@ -903,3 +910,12 @@ school-form:
   css:
     component:
       dist/css/school-form.css: {}
+
+zebra-datepicker:
+  js:
+    dist/js/zebra_datepicker.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery

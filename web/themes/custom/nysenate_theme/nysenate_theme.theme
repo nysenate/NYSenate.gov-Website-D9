@@ -606,7 +606,7 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
   if (isset($variables['content']['field_featured_legislation']) && !empty($variables['content']['field_featured_legislation'])) {
 
     $current_node = \Drupal::routeMatch()->getParameter('node');
-    if (!empty($current_node->field_senator_multiref->getValue())) {
+    if (!empty($current_node->field_senator_multiref)) {
       $senator = $current_node->field_senator_multiref->entity;
       $party = $senator->field_party->getValue();
       $parties = implode(', ', array_map(function ($item) {
@@ -3804,7 +3804,7 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
   ];
 
   $current_node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($current_node->field_senator_multiref->getValue())) {
+  if (!empty($current_node->field_senator_multiref)) {
     $senator = $current_node->field_senator_multiref->entity;
     $party = $senator->field_party->getValue();
     $parties = implode(', ', array_map(function ($item) {

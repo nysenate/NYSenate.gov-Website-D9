@@ -91,3 +91,26 @@ function nys_migrate_update_8002() {
     AND sd.bundle IN ('bill','resolution');");
 
 }
+
+/**
+ * Remove the junk user field data.
+ */
+function nys_migrate_update_8003() {
+  $db = \Drupal::database();
+  $tables = [
+    'user__field_address',
+    'user__field_agree_to_terms',
+    'user__field_dateofbirth',
+    'user__field_district',
+    'user__field_first_name',
+    'user__field_gender_user',
+  ];
+  $user_ids = $db->select('users', 'table')->fields('table', ['uid'])->execute()->fetchAllAssoc('uid', \PDO::FETCH_ASSOC);
+  foreach ($tables as $table) {
+    $user_field_ids = $db->select($table, 'table')->fields('table', ['entity_id'])->execute()->fetchAllAssoc('entity_id', \PDO::FETCH_ASSOC);
+    $id_diff = array_diff(array_keys($user_field_ids), array_keys($user_ids));
+    if (!empty($id_diff)) {
+      $db->delete($table)->condition('entity_id', $id_diff, 'IN')->execute();
+    }
+  }
+}

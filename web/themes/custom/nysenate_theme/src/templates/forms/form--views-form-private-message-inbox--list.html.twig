@@ -14,7 +14,6 @@
 
 <div class="container">
   <form{{ attributes.addClass('c-container--const-inbox') }}>
-    {# {{ element.header|without('details') }} #}
     <div class="inbox-action-links">
       <div class="select-all-messages">
         <div class="form-item form-type-checkbox form-item-check-all">
@@ -26,8 +25,9 @@
         <div data-drupal-selector="edit-actions" class="js-form-wrapper form-wrapper" id="edit-actions--3">
           <input data-drupal-selector="edit-3" type="submit" id="edit-3--2" name="op" value="Delete" class="button js-form-submit form-submit action-button" disabled />
         </div>
-        {# <button class="action-button" name="delete" value="Delete" type="button">Delete</button> #}
-        <button class="action-button action-button--message" name="op" value="Message" type="submit">Message</button>
+        {% if has_message_button %}
+          <button class="action-button action-button--message" name="op" value="Message" type="submit">Message</button>
+        {% endif %}
       </div>
     </div>
 

@@ -300,8 +300,11 @@
       else {
         buttonText = Drupal.t('Oppose this bill');
       }
-      $('div.nys-bill-vote p.c-bill-polling--cta').text('Do you support this bill?');
-      $('#nys-bills-bill-form input[type="submit"]').val(buttonText);
+
+      if ($('.alert-box-message').length == 0) {
+        $('div.nys-bill-vote p.c-bill-polling--cta').text('Do you support this bill?');
+        $('#nys-bills-bill-form input[type="submit"]').val(buttonText);
+      }
 
 
       // // Handle auto-subscription process.

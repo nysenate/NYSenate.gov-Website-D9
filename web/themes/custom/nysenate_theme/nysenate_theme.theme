@@ -1375,7 +1375,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
       // Last status.
       $last_status = '';
-      if (!empty($node->field_ol_last_status)) {
+      if ($node->hasField('field_ol_last_status') && !$node->get('field_ol_last_status')->isEmpty()) {
         $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
         $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
       }
@@ -4266,7 +4266,7 @@ function nysenate_theme_preprocess_page(&$variables) {
   ];
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!empty($node) && is_object($node) && in_array($node->bundle(), $node_types)) {
-    if (!empty($node->field_senator_multiref)) {
+    if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
       $sid = $node->field_senator_multiref->target_id;
       $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
         ->load($sid);

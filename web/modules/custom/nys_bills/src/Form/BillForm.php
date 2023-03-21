@@ -514,6 +514,9 @@ class BillForm extends FormBase {
    * Checks if there is current thread between senator and user about the bill.
    */
   public function hasThread($entity_id) {
+    if (!$this->currentUser->isAuthenticated()) {
+      return FALSE;
+    }
     $user_storage = $this->entityTypeManager->getStorage('user');
     // Need the global user object.
     $user = $user_storage->load($this->currentUser->id());

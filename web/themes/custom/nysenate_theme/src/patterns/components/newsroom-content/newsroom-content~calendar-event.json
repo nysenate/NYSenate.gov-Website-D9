@@ -1,7 +1,7 @@
 {
-  "calendar_event": false,
+  "calendar_event": true,
   "news": false,
-  "event": true,
+  "event": false,
   "legislation": false,
   "bills": false,
   "date": "July 2022",
@@ -15,7 +15,8 @@
   ],
   "panels": [
     {
-      "tab_text": "All Events",
+      "tab_text": "View By Day",
+      "tab_modifier_class": "icon-after__calendar-day",
       "contents": [
         {
           "date": "08",
@@ -98,11 +99,13 @@
       ]
     },
     {
-      "tab_text": "In Albany",
+      "tab_text": "View By Week",
+      "tab_modifier_class": "icon-after__calendar-week",
       "contents": []
     },
     {
-      "tab_text": "In the district",
+      "tab_text": "View By Month",
+      "tab_modifier_class": "icon-after__calendar-month",
       "contents": []
     }
   ]

@@ -46,7 +46,7 @@
     font-family: "Adelle Regular";
 
     a {
-      &:before {
+      &::before {
         display: none;
       }
 
@@ -68,7 +68,7 @@
     border-bottom: 1px solid $blue04;
     height: 60px;
 
-    &:before {
+    &::before {
       content: "";
       height: 100%;
       width: 1px;
@@ -88,7 +88,7 @@
     }
 
     .c-nav--toggle {
-      &:after {
+      &::after {
         color: $cont_blue_med;
       }
     }
@@ -120,7 +120,7 @@
         top: 9px;
         right: 5px;
 
-        &:after {
+        &::after {
           font-size: 19px;
           line-height: 1;
         }
@@ -134,7 +134,7 @@
           top: 8px;
           transition-property: none;
 
-          &:after {
+          &::after {
             color: $cont_blue_lgt;
           }
         }

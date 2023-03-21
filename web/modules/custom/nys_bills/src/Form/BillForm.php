@@ -120,7 +120,7 @@ class BillForm extends FormBase {
 
     $vote_results = $this->justVoted($node->id());
     if ($vote_results !== FALSE && $vote_results['voted'] === TRUE) {
-      return $this->billVotedForm($form, $form_state, $vote_results);
+      return $this->billVotedForm($form, $form_state, $vote_results, $this->hasThread($node->id()));
     }
 
     $form['#node'] = $node;
@@ -361,14 +361,19 @@ class BillForm extends FormBase {
 
     $vote_index = $values['vote_value'];
     $vote_label = $vote_options[$vote_index];
-    $this->billVoteHelper->processVote('node', $node->id(), $vote_index);
+
     $form_state->setRedirectUrl(Url::fromUserInput(\Drupal::request()->get('pass_thru_url')));
+
+    if ($this->currentUser->isAuthenticated()) {
+      $the_vote = $this->billVoteHelper->processVote('node', $node->id(), $vote_index)['vote'];
+      $senator = $this->nysUserHelper->getSenator($user);
+    }
 
     // Send Private Message.
     if ($this->currentUser->isAuthenticated() && !empty($values['message'])) {
       // Only in-state users will have a senator assigned.
       if (!$this->nysUserHelper->isOutOfState()) {
-        $senator = $this->nysUserHelper->getSenator($user);
+
         if ($senator !== NULL) {
           if ($senator->hasField('field_user_account') && !$senator->get('field_user_account')->isEmpty()) {
             $senator_user_id = $senator->field_user_account->target_id;
@@ -401,9 +406,9 @@ class BillForm extends FormBase {
             ]);
             $message->save();
 
-            $recipients = $user_storage->loadMultiple([$senator_user_id]);
+            $recipients = [$user_storage->load($senator_user_id), $user];
             // Add it to the thread with the senator user.
-            $this->privateMessageThreadManager->saveThread(PrivateMessage::load($message->id()), $recipients);
+            $this->privateMessageThreadManager->saveThread($message, $recipients);
 
             if (!empty($message->id())) {
               $this->messengerService->addStatus($this->t('Your message has been sent!'));
@@ -423,8 +428,8 @@ class BillForm extends FormBase {
   /**
    * Generates the bill vote thank you message form.
    */
-  public function billVotedForm($form, &$form_state, $vote_results) {
-    if ($vote_results === FALSE || $vote_results['voted'] == FALSE) {
+  public function billVotedForm($form, &$form_state, $vote_results, $has_thread) {
+    if (($vote_results === FALSE || $vote_results['voted'] == FALSE) && $has_thread === FALSE) {
       return $form;
     }
 
@@ -437,12 +442,12 @@ class BillForm extends FormBase {
 
     $form['uid'] = [
       '#type' => 'hidden',
-      '#default_value' => $vote_results['uid'],
+      '#default_value' => $vote_results['uid'] ?? NULL,
     ];
 
     $form['vote_value'] = [
       '#type' => 'hidden',
-      '#default_value' => $vote_results['vote_value'],
+      '#default_value' => $vote_results['vote_value'] ?? NULL,
     ];
 
     // Adds the javascript to setup the bill and scroll users to the message.
@@ -493,9 +498,35 @@ class BillForm extends FormBase {
         'vote_value' => '1',
       ];
     }
-    elseif (empty($vote_value) == TRUE && $vote_value !== '0') {
+    elseif (empty($vote_value)) {
+      if ($this->hasThread($entity_id)) {
+        return [
+          'voted' => TRUE,
+          'uid' => $uid,
+          'vote_value' => (int) $vote_entity->getValue(),
+        ];
+      }
       return FALSE;
     }
+  }
+
+  /**
+   * Checks if there is current thread between senator and user about the bill.
+   */
+  public function hasThread($entity_id) {
+    $user_storage = $this->entityTypeManager->getStorage('user');
+    // Need the global user object.
+    $user = $user_storage->load($this->currentUser->id());
+    $senator = $this->nysUserHelper->getSenator($user);
+
+    $message = $this->entityTypeManager->getStorage('private_message')->loadByProperties([
+      'field_to' => $senator->field_user_account->target_id,
+      'owner' => $user->id(),
+      'field_bill' => $entity_id,
+    ]);
+
+    $thread = \Drupal::service('private_message.service')->getThreadFromMessage(end($message))->getMessages();
+    return !empty($thread);
   }
 
 }

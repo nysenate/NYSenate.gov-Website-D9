@@ -72,7 +72,7 @@ class BillVoteController extends ControllerBase {
    *   The vote value.
    */
   public function confirmationAjaxCallback($entity_id, $vote_value) {
-    return $this->billVoteHelper->processVote('node', $entity_id, $vote_value)['message'];
+    return new Response($this->billVoteHelper->processVote('node', $entity_id, $vote_value)['message']);
   }
 
   /**

@@ -9,7 +9,6 @@ use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Symfony\Component\HttpFoundation\Response;
 use Drupal\votingapi\VoteResultFunctionManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -330,10 +329,10 @@ class BillVoteHelper {
       }
     }
 
-    return new Response([
+    return [
       'message' => $message,
       'vote' => $vote_entity,
-    ]);
+    ];
   }
 
   /**

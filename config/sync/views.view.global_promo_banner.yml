@@ -11,7 +11,6 @@ dependencies:
     - field.storage.node.field_link_type
     - node.type.promotional_banner
   module:
-    - block_content
     - entityqueue
     - link
     - node
@@ -890,16 +889,6 @@ display:
         filters: false
         filter_groups: false
       relationships:
-        reverse__block_content__field_promotional_banners:
-          id: reverse__block_content__field_promotional_banners
-          table: node_field_data
-          field: reverse__block_content__field_promotional_banners
-          relationship: none
-          group_type: group
-          admin_label: field_promotional_banners
-          entity_type: node
-          plugin_id: entity_reverse
-          required: true
         field_promotional_content:
           id: field_promotional_content
           table: node__field_promotional_content

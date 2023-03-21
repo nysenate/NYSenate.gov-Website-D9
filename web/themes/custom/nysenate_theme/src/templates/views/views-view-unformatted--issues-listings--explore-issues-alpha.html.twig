@@ -34,9 +34,7 @@
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
 
 {% for row in rows %}
-  <div class="content__item">
-    {{- row.content -}}
-  </div>
+  {{- row.content -}}
 {% endfor %}
 
 {% set limit = 12 %}

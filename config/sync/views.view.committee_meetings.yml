@@ -3501,6 +3501,10 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: none
+        options:
+          offset: 0
       sorts: {  }
       arguments:
         nid:
@@ -3601,6 +3605,7 @@ display:
         groups:
           1: AND
       defaults:
+        pager: false
         relationships: false
         fields: false
         sorts: false
@@ -3626,7 +3631,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -5037,6 +5041,10 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: none
+        options:
+          offset: 0
       sorts:
         field_date_value:
           id: field_date_value
@@ -5281,6 +5289,7 @@ display:
           1: AND
           2: OR
       defaults:
+        pager: false
         relationships: false
         fields: false
         sorts: false
@@ -5306,7 +5315,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -5816,6 +5824,10 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: none
+        options:
+          offset: 0
       arguments:
         tid:
           id: tid
@@ -6002,6 +6014,7 @@ display:
         groups:
           1: AND
       defaults:
+        pager: false
         fields: false
         arguments: false
         filters: false
@@ -6030,7 +6043,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

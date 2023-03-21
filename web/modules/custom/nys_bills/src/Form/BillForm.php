@@ -89,6 +89,13 @@ class BillForm extends FormBase {
   protected $privateMessageThreadManager;
 
   /**
+   * The private message service.
+   *
+   * @var \Drupal\private_message\Service\PrivateMessageServiceInterface
+   */
+  protected $privateMessageService;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -103,6 +110,7 @@ class BillForm extends FormBase {
     $instance->flagService = $container->get('flag');
     $instance->messengerService = $container->get('messenger');
     $instance->privateMessageThreadManager = $container->get('private_message.thread_manager');
+    $instance->privateMessageService = $container->get('private_message.service');
     return $instance;
   }
 
@@ -473,9 +481,9 @@ class BillForm extends FormBase {
     }
 
     $vote_value = NULL;
+    /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
+    $vote_entity = $vote_storage->load(end($user_votes));
     if (!empty($user_votes)) {
-      /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
-      $vote_entity = $vote_storage->load(end($user_votes));
       $created = $vote_entity->getCreatedTime();
       // 4 secs buffer.
       if ($created > (time() - 4)) {
@@ -528,7 +536,7 @@ class BillForm extends FormBase {
       'field_bill' => $entity_id,
     ]);
 
-    $thread = \Drupal::service('private_message.service')->getThreadFromMessage(end($message))->getMessages();
+    $thread = $this->privateMessageService->getThreadFromMessage(end($message))->getMessages();
     return !empty($thread);
   }
 

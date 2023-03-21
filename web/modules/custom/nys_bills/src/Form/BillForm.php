@@ -481,9 +481,10 @@ class BillForm extends FormBase {
     }
 
     $vote_value = NULL;
-    /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
-    $vote_entity = $vote_storage->load(end($user_votes));
+    $vote_entity = NULL;
     if (!empty($user_votes)) {
+      /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
+      $vote_entity = $vote_storage->load(end($user_votes));
       $created = $vote_entity->getCreatedTime();
       // 4 secs buffer.
       if ($created > (time() - 4)) {
@@ -511,7 +512,7 @@ class BillForm extends FormBase {
         return [
           'voted' => TRUE,
           'uid' => $uid,
-          'vote_value' => (int) $vote_entity->getValue(),
+          'vote_value' => $vote_entity ? (int) $vote_entity->getValue() : 0,
         ];
       }
       return FALSE;
@@ -537,6 +538,7 @@ class BillForm extends FormBase {
     ]);
 
     $thread = $this->privateMessageService->getThreadFromMessage(end($message))->getMessages();
+    // @phpstan-ignore-next-line
     return !empty($thread);
   }
 

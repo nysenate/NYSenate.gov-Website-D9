@@ -1,4 +1,4 @@
-@import '../../global/utils/init';
+@import "../../global/utils/init";
 
 .c-block.c-issue--mentions {
   padding-bottom: 20px;
@@ -14,6 +14,10 @@
 
   .nys-btn-more {
     margin-top: 30px;
+  }
+
+  .initial_co-sponsors {
+    display: flow-root;
   }
 
   .nys-senator {
@@ -76,5 +80,21 @@
     color: $grey04;
     text-transform: capitalize;
     font-family: $font-sans-bold;
+  }
+
+  .nysenate-accordion {
+    .nysenate-accordion__content {
+      border: 0;
+      width: 33.3%;
+      float: left;
+
+      .nys-senator {
+        width: 100%;
+      }
+    }
+
+    .content-wrapper {
+      margin-top: 20px;
+    }
   }
 }

@@ -105,9 +105,9 @@ class MessageController extends ControllerBase {
     }
 
     if (in_array('legislative_correspondent', $current_user->getRoles()) && $user_id != $this->currentUser->id()) {
-      if ($current_user->hasField('field_senator_management') && !$current_user->get('field_senator_management')->isEmpty()) {
+      if ($current_user->hasField('field_senator_inbox_access') && !$current_user->get('field_senator_inbox_access')->isEmpty()) {
         // @phpstan-ignore-next-line
-        $senator = $current_user->field_senator_management->first()->entity;
+        $senator = $current_user->field_senator_inbox_access->first()->entity;
 
         if ($user_id != $senator->field_user_account->target_id) {
           $content['error'] = [

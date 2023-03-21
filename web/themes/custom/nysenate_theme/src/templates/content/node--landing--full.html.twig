@@ -105,5 +105,9 @@
     </div>
 
     {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+
+    {% if how_a_bill_block %}
+      {{ how_a_bill_block }}
+    {% endif %}
 {% endif %}
 </article>

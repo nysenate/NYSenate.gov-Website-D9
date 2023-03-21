@@ -332,7 +332,7 @@ display:
           id: uid
           table: users_field_data
           field: uid
-          relationship: reverse__user__field_senator_management
+          relationship: reverse__user__field_senator_multiref
           group_type: group
           admin_label: ''
           entity_type: user
@@ -524,13 +524,13 @@ display:
           admin_label: 'field_senator_multiref: Taxonomy term'
           plugin_id: standard
           required: false
-        reverse__user__field_senator_management:
-          id: reverse__user__field_senator_management
+        reverse__user__field_senator_multiref:
+          id: reverse__user__field_senator_multiref
           table: taxonomy_term_field_data
-          field: reverse__user__field_senator_management
+          field: reverse__user__field_senator_multiref
           relationship: field_senator_multiref
           group_type: group
-          admin_label: field_senator_management
+          admin_label: field_senator_multiref
           entity_type: taxonomy_term
           plugin_id: entity_reverse
           required: false
@@ -3004,7 +3004,7 @@ display:
           id: uid
           table: users_field_data
           field: uid
-          relationship: reverse__user__field_senator_management
+          relationship: reverse__user__field_senator_multiref
           group_type: group
           admin_label: ''
           entity_type: user
@@ -3334,13 +3334,13 @@ display:
           admin_label: 'field_ol_sponsor: Taxonomy term'
           plugin_id: standard
           required: false
-        reverse__user__field_senator_management:
-          id: reverse__user__field_senator_management
+        reverse__user__field_senator_multiref:
+          id: reverse__user__field_senator_multiref
           table: taxonomy_term_field_data
-          field: reverse__user__field_senator_management
+          field: reverse__user__field_senator_multiref
           relationship: field_ol_sponsor
           group_type: group
-          admin_label: field_senator_management
+          admin_label: field_senator_multiref
           entity_type: taxonomy_term
           plugin_id: entity_reverse
           required: false

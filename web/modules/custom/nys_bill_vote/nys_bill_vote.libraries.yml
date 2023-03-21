@@ -1,6 +1,18 @@
 bill_vote:
   js:
     js/nys_bill_vote.js: {}
+  css:
+    theme:
+      css/reveal.css: {}
+  dependencies:
+    - nys_bill_vote/foundation
+    - core/jquery
+    - core/drupalSettings
+    - core/drupal
+
+foundation:
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/foundation/6.7.5/js/foundation.min.js: { type: external, minified: true }
+    # https://cdnjs.cloudflare.com/ajax/libs/foundation/6.7.5/js/plugins/foundation.reveal.min.js: { type: external, minified: true }
   dependencies:
     - core/jquery
-    - core/drupal

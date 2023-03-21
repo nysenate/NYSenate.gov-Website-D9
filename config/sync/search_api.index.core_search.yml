@@ -4,16 +4,16 @@ status: true
 dependencies:
   config:
     - field.storage.node.body
-    - field.storage.taxonomy_term.field_committee_types
     - field.storage.node.field_senator_multiref
     - field.storage.node.field_summary
+    - field.storage.taxonomy_term.field_committee_types
     - search_api.server.pantheon_solr8
     - core.entity_view_mode.block_content.full
     - core.entity_view_mode.node.full
   module:
     - search_api_solr
-    - taxonomy
     - node
+    - taxonomy
     - search_api
     - block_content
 third_party_settings:
@@ -71,7 +71,7 @@ field_settings:
     label: 'Auto aggregated fulltext field'
     property_path: auto_aggregated_fulltext_field
     type: text
-  body_1:
+  body:
     label: Body
     datasource_id: 'entity:node'
     property_path: body
@@ -79,11 +79,11 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.body
-  changed:
-    label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Changed'
+  body_1:
+    label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Body'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_block_content__field_content:changed'
-    type: date
+    property_path: 'search_api_reverse_entity_references_block_content__field_content:body'
+    type: text
   description:
     label: Description
     datasource_id: 'entity:taxonomy_term'
@@ -92,26 +92,32 @@ field_settings:
     dependencies:
       module:
         - taxonomy
+  entity_type:
+    label: 'Entity type'
+    property_path: search_api_entity_type
+    type: text
   field_block:
     label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Block'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_block_content__field_content:field_block'
-    type: string
+    type: text
   field_block_views:
     label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Block Views'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_block_content__field_content:field_block_views'
-    type: string
-  field_body_left_1:
+    type: text
+  field_body_left:
     label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Body (Left)'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_block_content__field_content:field_body_left'
     type: text
-  field_body_right_1:
+    boost: !!float 2
+  field_body_right:
     label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Body (Right)'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_block_content__field_content:field_body_right'
     type: text
+    boost: !!float 2
   field_committee_types:
     label: 'Committee Type'
     datasource_id: 'entity:taxonomy_term'
@@ -124,7 +130,7 @@ field_settings:
     label: Senator
     datasource_id: 'entity:node'
     property_path: field_senator_multiref
-    type: integer
+    type: string
     dependencies:
       config:
         - field.storage.node.field_senator_multiref
@@ -237,6 +243,27 @@ datasource_settings:
       selected:
         - en
   'entity:node':
+    bundles:
+      default: false
+      selected:
+        - article
+        - bill
+        - calendar
+        - honoree
+        - in_the_news
+        - landing
+        - meeting
+        - microsite_page
+        - petition
+        - public_hearing
+        - resolution
+        - session
+        - student_program
+        - video
+        - webform
+    languages:
+      default: true
+      selected: {  }
     default: false
     selected:
       - article
@@ -254,9 +281,6 @@ datasource_settings:
       - student_program
       - video
       - webform
-    languages:
-      default: true
-      selected: {  }
   'entity:taxonomy_term':
     bundles:
       default: false

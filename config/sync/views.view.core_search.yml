@@ -9,7 +9,6 @@ dependencies:
     - field.storage.taxonomy_term.field_current_duties
     - search_api.index.core_search
   module:
-    - node
     - search_api
     - views_autocomplete_filters
 id: core_search
@@ -735,10 +734,15 @@ display:
             - body
             - body_1
             - description
-            - field_body_left_1
-            - field_body_right_1
+            - entity_type
+            - field_block
+            - field_block_views
+            - field_body_left
+            - field_body_right
+            - field_senator_multiref
             - field_summary
             - rendered_item
+            - type
       filters:
         search_api_fulltext:
           id: search_api_fulltext
@@ -794,10 +798,15 @@ display:
             - body
             - body_1
             - description
-            - field_body_left_1
-            - field_body_right_1
+            - entity_type
+            - field_block
+            - field_block_views
+            - field_body_left
+            - field_body_right
+            - field_senator_multiref
             - field_summary
             - rendered_item
+            - type
       filter_groups:
         operator: AND
         groups:
@@ -817,18 +826,7 @@ display:
           skip_access: false
           preserve_facet_query_args: false
           query_tags: {  }
-      relationships:
-        field_content:
-          id: field_content
-          table: search_api_datasource_core_search_entity_block_content
-          field: field_content
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Content'
-          entity_type: block_content
-          plugin_id: search_api
-          required: false
-          skip_access: false
+      relationships: {  }
       header:
         result:
           id: result

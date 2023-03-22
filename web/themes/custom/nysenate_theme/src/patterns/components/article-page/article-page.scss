@@ -21,10 +21,6 @@
   font-weight: 400;
 }
 
-.c-news--head .nys-article-title {
-  font-family: $font-serif-bold;
-}
-
 /*------------------------------------
 /  NEWS:
 /-------------------------------------*/
@@ -38,6 +34,10 @@
   font-family: $font-serif;
   font-size: 22px;
   line-height: 1.2em;
+}
+
+.c-questionnaire--head .nys-associated-topics a {
+  color: $yellow03;
 }
 
 .c-news--title {
@@ -134,10 +134,10 @@
 
     li {
       margin-top: 0;
-    }
 
-    a {
-      color: $yellow03;
+      &::after {
+        content: '';
+      }
     }
   }
 }
@@ -192,10 +192,6 @@
   .nys-article-title {
     margin: 0 0 30px;
     font-size: 48px;
-  }
-
-  .c-news--head .nys-article-title {
-    font-size: 32px;
   }
 
   .c-questionnaire--head .nys-article-title {

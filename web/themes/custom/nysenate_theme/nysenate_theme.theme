@@ -294,7 +294,7 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
 function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
   $node = \Drupal::routeMatch()->getParameter('node');
-  if ($node->bundle() == 'microsite_page') {
+  if (!empty($node) && $node->bundle() == 'microsite_page') {
     $current_path = \Drupal::request()->getRequestUri();
     $arr_path = explode('/', $current_path);
     $variables['message_senator_link'] = '/senators/' . $arr_path[2] . '/message';
@@ -331,7 +331,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $variables['senator_headshot'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'thumbnail');
   }
 
-  if ($node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
+  if (!empty($node) && $node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
     $term = $node->field_microsite_page_type->entity ?? [];
     if ($term instanceof TermInterface) {
       $name = $term->name->value ?? '';
@@ -606,7 +606,7 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
   if (isset($variables['content']['field_featured_legislation']) && !empty($variables['content']['field_featured_legislation'])) {
 
     $current_node = \Drupal::routeMatch()->getParameter('node');
-    if (!empty($current_node->field_senator_multiref->getValue())) {
+    if (!empty($current_node->field_senator_multiref)) {
       $senator = $current_node->field_senator_multiref->entity;
       $party = $senator->field_party->getValue();
       $parties = implode(', ', array_map(function ($item) {
@@ -939,7 +939,7 @@ function nysenate_theme_preprocess_block_content__media(&$variables) {
 
   // Remove field_title for Media Block Content
   // on all Microsite Page.
-  if ($node->bundle() == 'microsite_page') {
+  if (!empty($node) && $node->bundle() == 'microsite_page') {
     if ($variables['content']['field_title']) {
       $variables['content']['field_title'] = [];
     }
@@ -3865,7 +3865,7 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
   ];
 
   $current_node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($current_node->field_senator_multiref->getValue())) {
+  if (!empty($current_node->field_senator_multiref)) {
     $senator = $current_node->field_senator_multiref->entity;
     $party = $senator->field_party->getValue();
     $parties = implode(', ', array_map(function ($item) {
@@ -4317,7 +4317,7 @@ function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variabl
 function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
   $node = \Drupal::routeMatch()->getParameter('node');
 
-  if ($node->hasField('field_microsite_page_type') &&
+  if (!empty($node) && $node->hasField('field_microsite_page_type') &&
     !$node->get('field_microsite_page_type')->isEmpty()) {
     $term = $node->field_microsite_page_type->entity ?? [];
     if ($term instanceof TermInterface) {
@@ -4358,7 +4358,7 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
     }
   }
 
-  if ($node->hasField('field_block') && !$node->get('field_block')->isEmpty()) {
+  if (!empty($node) && $node->hasField('field_block') && !$node->get('field_block')->isEmpty()) {
     foreach ($node->get('field_block') as $key => $value) {
       /** @var \Drupal\block_content\Entity\BlockContent $block_content */
       $block_content = $value->entity;

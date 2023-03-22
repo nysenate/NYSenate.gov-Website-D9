@@ -3,15 +3,19 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_committee
-    - field.storage.taxonomy_term.field_committee_types
+    - field.storage.node.body
     - field.storage.node.field_senator_multiref
+    - field.storage.node.field_summary
+    - field.storage.taxonomy_term.field_committee_types
     - search_api.server.pantheon_solr8
+    - core.entity_view_mode.block_content.full
+    - core.entity_view_mode.node.full
   module:
     - search_api_solr
-    - taxonomy
     - node
+    - taxonomy
     - search_api
+    - block_content
 third_party_settings:
   search_api_solr:
     finalize: false
@@ -52,27 +56,34 @@ third_party_settings:
       collection: ''
       timezone: ''
     multilingual:
-      limit_to_content_language: false
+      limit_to_content_language: true
       include_language_independent: true
       use_language_undefined_as_fallback_language: false
       specific_languages:
-        en: '0'
+        en: en
       use_universal_collation: false
 id: core_search
 name: 'Core Search'
 description: ''
 read_only: false
 field_settings:
-  committe_name:
-    label: 'Committee » Taxonomy term » Name'
+  auto_aggregated_fulltext_field:
+    label: 'Auto aggregated fulltext field'
+    property_path: auto_aggregated_fulltext_field
+    type: text
+  body:
+    label: Body
     datasource_id: 'entity:node'
-    property_path: 'field_committee:entity:name'
-    type: string
+    property_path: body
+    type: text
     dependencies:
       config:
-        - field.storage.node.field_committee
-      module:
-        - taxonomy
+        - field.storage.node.body
+  body_1:
+    label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Body'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_block_content__field_content:body'
+    type: text
   description:
     label: Description
     datasource_id: 'entity:taxonomy_term'
@@ -81,22 +92,32 @@ field_settings:
     dependencies:
       module:
         - taxonomy
-  field_committee:
-    label: Committee
+  entity_type:
+    label: 'Entity type'
+    property_path: search_api_entity_type
+    type: text
+  field_block:
+    label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Block'
     datasource_id: 'entity:node'
-    property_path: field_committee
-    type: integer
-    dependencies:
-      config:
-        - field.storage.node.field_committee
-  field_committee_1:
-    label: Committee
+    property_path: 'search_api_reverse_entity_references_block_content__field_content:field_block'
+    type: text
+  field_block_views:
+    label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Block Views'
     datasource_id: 'entity:node'
-    property_path: field_committee
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_committee
+    property_path: 'search_api_reverse_entity_references_block_content__field_content:field_block_views'
+    type: text
+  field_body_left:
+    label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Body (Left)'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_block_content__field_content:field_body_left'
+    type: text
+    boost: !!float 2
+  field_body_right:
+    label: 'Reverse reference: <em class="placeholder">Custom block</em> using <em class="placeholder">Content</em> » Body (Right)'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_block_content__field_content:field_body_right'
+    type: text
+    boost: !!float 2
   field_committee_types:
     label: 'Committee Type'
     datasource_id: 'entity:taxonomy_term'
@@ -109,10 +130,18 @@ field_settings:
     label: Senator
     datasource_id: 'entity:node'
     property_path: field_senator_multiref
-    type: integer
+    type: string
     dependencies:
       config:
         - field.storage.node.field_senator_multiref
+  field_summary:
+    label: Summary
+    datasource_id: 'entity:node'
+    property_path: field_summary
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_summary
   name:
     label: Name
     datasource_id: 'entity:taxonomy_term'
@@ -121,6 +150,57 @@ field_settings:
     dependencies:
       module:
         - taxonomy
+  rendered_item:
+    label: 'Rendered HTML output'
+    property_path: rendered_item
+    type: text
+    configuration:
+      roles:
+        - anonymous
+      view_mode:
+        'entity:block_content':
+          accordion: default
+          blocks: full
+          earth_day_letter: full
+          embed: ''
+          featured_bill: ''
+          featured_content: full
+          featured_image: ''
+          featured_issue: full
+          featured_legislation: full
+          file_uploads: ''
+          form: ''
+          hero: ''
+          honoree_profile_block: ''
+          how_senate_works: ''
+          inactive_senator_block: ''
+          map: ''
+          media: ''
+          microsite_contact: ''
+          microsite_contact_webform: ''
+          microsite_district_block: ''
+          microsite_hero: ''
+          microsite_school_form_submission: full
+          promotional_banners_list: ''
+          quick_facts: ''
+          quote: ''
+          senator_committees: ''
+          senator_microsite_menu: ''
+          senator_microsite_school_forms: full
+          sincerely: full
+          slider: ''
+          tabs: ''
+          text: full
+          thankful_letter: ''
+          video: ''
+          views: ''
+        'entity:node':
+          microsite_page: full
+        'entity:taxonomy_term':
+          committees: ''
+          districts: ''
+          issues: ''
+          senator: ''
   status:
     label: Published
     datasource_id: 'entity:node'
@@ -154,6 +234,14 @@ field_settings:
       module:
         - node
 datasource_settings:
+  'entity:block_content':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected:
+        - en
   'entity:node':
     bundles:
       default: false
@@ -176,6 +264,23 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
+    default: false
+    selected:
+      - article
+      - bill
+      - calendar
+      - honoree
+      - in_the_news
+      - landing
+      - meeting
+      - microsite_page
+      - petition
+      - public_hearing
+      - resolution
+      - session
+      - student_program
+      - video
+      - webform
   'entity:taxonomy_term':
     bundles:
       default: false
@@ -194,7 +299,14 @@ processor_settings:
   entity_type: {  }
   language_with_fallback: {  }
   rendered_item: {  }
-  solr_date_range: {  }
+  reverse_entity_references: {  }
+  solr_boost_more_recent:
+    weights:
+      preprocess_query: 0
+    boosts: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
 tracker_settings:
   default:
     indexing_order: fifo

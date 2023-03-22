@@ -17,6 +17,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\nys_users\UsersHelper;
 use Drupal\pathauto\Entity\PathautoPattern;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -1477,16 +1478,29 @@ function nys_senators_menu_local_tasks_alter(&$data, $route_name, RefinableCache
       $data = [];
       return;
     }
-    $senators = array_merge(
-      $user->get('field_senator_inbox_access')->referencedEntities() ?? [],
-      $user->get('field_senator_management')->referencedEntities() ?? []
-    );
 
-    // Create pre-built entries for each senator.
-    // Taken from LocalTaskManager::getTasksBuild()
-    $target = &$data['tabs'][];
+    // Collect the senator references needing tabs.
+    $senators = [];
+    $to_add = [
+      'isMcp' => 'field_senator_multiref',
+      'isLc' => 'field_senator_inbox_access',
+    ];
+    foreach ($to_add as $perm => $field) {
+      if (UsersHelper::{$perm}($user)) {
+        $senators = array_merge(
+          $senators,
+          $user->get($field)->referencedEntities() ?? []
+        );
+      }
+    }
+
+    // If current path is the list of senators, the first one should be active.
     $current = \Drupal::service('path.current')->getPath();
     $active_first = ($route_name == 'nys_senators.dashboard.senators');
+
+    // Create pre-built entries for each senator.
+    // Adapted from LocalTaskManager::getTasksBuild()
+    $target = &$data['tabs'][];
     foreach ($senators as $weight => $senator) {
       $plugin_id = 'nys_senators.task.senator.' . $senator->id();
       if (!isset($target[$plugin_id])) {

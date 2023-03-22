@@ -131,13 +131,26 @@ function nys_migrate_update_8005(&$sandbox) {
   $user_ids = $db->select('users', 'table')->fields('table', ['uid'])->execute()->fetchAllAssoc('uid', \PDO::FETCH_ASSOC);
   $user_ids = array_keys($user_ids);
 
-  $user_field_ids = $db->select($tables[$sandbox['progress']], 'table')->fields('table', ['entity_id'])->execute()->fetchAllAssoc('entity_id', \PDO::FETCH_ASSOC);
+  $table = $tables[$sandbox['progress']];
+  $user_field_ids = $db->select($table, 'table')->fields('table', ['entity_id'])->execute()->fetchAllAssoc('entity_id', \PDO::FETCH_ASSOC);
   $id_diff = array_diff(array_keys($user_field_ids), $user_ids);
   if (!empty($id_diff)) {
-    $db->delete($tables[$sandbox['progress']])->condition('entity_id', $id_diff, 'IN')->execute();
+    $db->delete($table)->condition('entity_id', $id_diff, 'IN')->execute();
+    \Drupal::logger('nys_migrate')->notice('Successfully deleted ' . count($id_diff) . ' items from ' . $table);
   }
 
   $sandbox['progress']++;
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
+}
+
+/**
+ * Remove the colliding user against migration.
+ */
+function nys_migrate_update_8006() {
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['name' => 'Christine Gordinier']);
+  if (!empty($users)) {
+    \Drupal::entityTypeManager()->getStorage('user')->delete($users);
+    \Drupal::logger('nys_migrate')->notice('Successfully deleted user with name "Christine Gordinier":');
+  }
 }

@@ -867,8 +867,9 @@ h2.c-subpage-header--title {
   }
 
   a {
-    color: $trad_blue_lgt;
+    @extend .lgt-text;
     text-decoration: none;
+
     &:hover {
       text-decoration: underline;
     }
@@ -939,12 +940,17 @@ h2.c-subpage-header--title {
     }
 
     .c-news--author {
+      @extend .lgt-text;
       text-transform: uppercase;
       display: inline-block;
       margin: 0 10px 0 0;
       font-family: $font-sans;
       font-size: 12px;
       line-height: 1.2em;
+
+      a {
+        @extend .lgt-text;
+      }
 
       @include breakpoint($bp-sm) {
         font-size: 15px;

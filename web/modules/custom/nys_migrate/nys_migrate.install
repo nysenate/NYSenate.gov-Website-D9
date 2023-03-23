@@ -91,3 +91,66 @@ function nys_migrate_update_8002() {
     AND sd.bundle IN ('bill','resolution');");
 
 }
+
+/**
+ * Fix lost modules are missing from the filesystem.
+ */
+function nys_migrate_update_8003() {
+  $modules = [
+    'devel',
+    'rain',
+  ];
+  \Drupal::database()->delete('key_value')
+    ->condition('collection', 'system.schema')
+    ->condition('name', $modules, 'IN')
+    ->execute();
+}
+
+/**
+ * Remove the junk user field data.
+ */
+function nys_migrate_update_8005(&$sandbox) {
+  $db = \Drupal::database();
+  $tables = [
+    'user__field_address',
+    'user__field_agree_to_terms',
+    'user__field_dateofbirth',
+    'user__field_district',
+    'user__field_first_name',
+    'user__field_gender_user',
+  ];
+
+  // Example function body for a batch update. In this example, the values in
+  // a database field are updated.
+  if (!isset($sandbox['progress'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = count($tables);
+  }
+
+  $user_ids = $db->select('users', 'table')->fields('table', ['uid'])->execute()->fetchAllAssoc('uid', \PDO::FETCH_ASSOC);
+  $user_ids = array_keys($user_ids);
+
+  $table = $tables[$sandbox['progress']];
+  $user_field_ids = $db->select($table, 'table')->fields('table', ['entity_id'])->execute()->fetchAllAssoc('entity_id', \PDO::FETCH_ASSOC);
+  $id_diff = array_diff(array_keys($user_field_ids), $user_ids);
+  if (!empty($id_diff)) {
+    $db->delete($table)->condition('entity_id', $id_diff, 'IN')->execute();
+    \Drupal::logger('nys_migrate')->notice('Successfully deleted ' . count($id_diff) . ' items from ' . $table);
+  }
+
+  $sandbox['progress']++;
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+}
+
+/**
+ * Remove the colliding user against migration.
+ */
+function nys_migrate_update_8006() {
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['name' => 'Christine Gordinier']);
+  if (!empty($users)) {
+    \Drupal::entityTypeManager()->getStorage('user')->delete($users);
+    \Drupal::logger('nys_migrate')->notice('Successfully deleted user with name "Christine Gordinier":');
+  }
+}

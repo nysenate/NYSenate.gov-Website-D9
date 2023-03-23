@@ -822,19 +822,6 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
       break;
 
-    case 'migration':
-      // Drupal 7 migrate config.
-      $databases['migrate']['default'] = array(
-        'database' => 'd7senate',
-        'driver' => 'mysql',
-        'host' => $_ENV['DB_HOST'],
-        'password' => $_ENV['DB_PASSWORD'],
-        'port' => $_ENV['DB_PORT'],
-        'prefix' => '',
-        'username' => $_ENV['DB_USER'],
-      );
-      break;
-
     default:
       // Enable a mutlidev environment's config split.
       $config['config_split.config_split.multidev']['status'] = TRUE;
@@ -945,4 +932,10 @@ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 // Include settings required for Redis cache.
 if ((file_exists(__DIR__ . '/settings.ddev.redis.php') && getenv('IS_DDEV_PROJECT') == 'true')) {
   include __DIR__ . '/settings.ddev.redis.php';
+}
+
+# When on Pantheon, connect to a D7 database.
+$migrate_settings = __DIR__ . "/settings.migrate-on-pantheon.php";
+if (file_exists($migrate_settings) && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
+  include $migrate_settings;
 }

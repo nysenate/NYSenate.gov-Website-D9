@@ -1783,6 +1783,11 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
       $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees';
       $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees__' . $variables['elements']['#view_mode'];
     }
+
+    if ($path_alias == '/about') {
+      $suggestions[] = $hook . '__' . $node->bundle() . '__about';
+      $suggestions[] = $hook . '__' . $node->bundle() . '__about__' . $variables['elements']['#view_mode'];
+    }
   }
 
   if ($hook == 'views_view_fields') {
@@ -4566,6 +4571,60 @@ function nysenate_theme_preprocess_node__landing__senators_committees(&$variable
       elseif ($block['#block_content']->field_title->value == 'Committees List') {
         $variables['committees'] = $block['field_views_ref'][0] ?? NULL;
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__landing__about(&$variables) {
+  foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    switch ($block['#block_content']->bundle()) {
+      case 'text':
+        if ($block['#block_content']->field_title->value == 'Opening Text') {
+          $variables['landing_page_hero'] = [
+            "section_id" => "section-0",
+            "background_img" => "<img src='https://source.unsplash.com/PhYq704ffdA/640x360' alt='test image' />",
+            "title" => "About the New York State Senate",
+            "welcome_text" => $block['field_body_left'][0] ?? NULL,
+            "body" => "",
+          ];
+        }
+        elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
+          $variables['how_senate_works_title'] = $block['#block_content']->field_title->value ?? NULL;
+          $variables['how_senate_works_text'] = $block['field_body_left'][0] ?? NULL;
+        }
+        elseif ($block['#block_content']->field_title->value == 'Job of Senate ...') {
+          $variables['job_of_senate'] = $block['field_body_left'][0] ?? NULL;
+        }
+        elseif ($block['#block_content']->field_title->value == 'Senate Rules and Procedures') {
+          $variables['about_rules'] = [
+            "title" => $block['#block_content']->field_title->value ?? NULL,
+            "col_1" => [
+              "content" => $block['field_body_left'][0] ?? NULL,
+            ],
+            "col_2" => [
+              "content" => $block['field_body_right'][0] ?? NULL,
+            ],
+          ];
+        }
+        else {
+          continue 2;
+        }
+        break;
+
+      case 'video':
+        // code..
+        break;
+
+      default:
+        // code...
+        break;
     }
   }
 }

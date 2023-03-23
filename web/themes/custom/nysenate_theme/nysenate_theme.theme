@@ -1662,19 +1662,20 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_views_view_fields__VIEW_ID().
+ * Implements hook_preprocess_views_view_field().
  */
-function nysenate_theme_preprocess_views_view_fields__events(&$variables) {
-  $node = $variables['row']->_entity;
-  $variables['url'] = $node->toUrl()->toString();
-}
+function nysenate_theme_preprocess_views_view_fields(&$variables) {
+  $view = $variables['view'];
 
-/**
- * Implements hook_preprocess_views_view_fields__VIEW_ID().
- */
-function nysenate_theme_preprocess_views_view_fields__issues_listings(&$variables) {
-  $term = $variables['row']->_entity;
-  $variables['issue'] = get_issue_card($term);
+  if ($view->id() == 'events') {
+    $node = $variables['row']->_entity;
+    $variables['url'] = $node->toUrl()->toString();
+  }
+
+  if ($view->id() == 'issues_listings') {
+    $term = $variables['row']->_entity;
+    $variables['issue'] = get_issue_card($term);
+  }
 }
 
 /**
@@ -2425,6 +2426,26 @@ function nysenate_theme_preprocess_semanticviews_style__explore_issues_tabs__con
   }
 
   $variables['issue_cards'] = $issue_cards;
+}
+
+/**
+ * Implements hook_preprocess_HOOK__VIEW_ID__DISPLAYID().
+ */
+function nysenate_theme_preprocess_semanticviews_style__global_promo_banner__senator_microsite_interior_footer(&$variables) {
+  $banners = [];
+  foreach ($variables['rows'] as $row) {
+    $node = $row['content']['#row']->_entity;
+
+    if ($node->hasField('field_call_to_action') &&
+      !$node->field_call_to_action->isEmpty()) {
+      $banners[] = [
+        'label' => $node->label(),
+        'cta' => get_item_cta($node),
+      ];
+    }
+  }
+
+  $variables['banners'] = $banners;
 }
 
 /**
@@ -3467,6 +3488,7 @@ function nysenate_theme_preprocess_node__event(&$variables) {
     $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $start_date, $end_date, $is_multiday, $description, $address);
   }
 
+  $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
 }
 
 /**
@@ -3939,22 +3961,7 @@ function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$
   $variables['banner_image'] = !empty($variables['content']['field_promotional_banner_image'][0]) ? $variables['content']['field_promotional_banner_image'][0] : [];
   $node = $variables['node'];
   if ($node->hasField('field_call_to_action') && !$node->field_call_to_action->isEmpty()) {
-    $banner_cta_value = $node->field_call_to_action->value;
-    $allowed_values = $node->field_call_to_action->getSetting('allowed_values');
-
-    $url = $node->field_link->uri;
-    if ($node->field_link_type->value === 'internal') {
-      $url = $variables['url'];
-      if (!$node->field_promotional_content->isEmpty()) {
-        $promo_content = $node->field_promotional_content->entity;
-        $url = $promo_content->toUrl()->toString();
-      }
-    }
-    $variables['item_cta'] = [
-      'url' => $url,
-      'text' => $allowed_values[$banner_cta_value],
-      'value' => $banner_cta_value,
-    ];
+    $variables['item_cta'] = get_item_cta($node);
   }
 }
 
@@ -4238,6 +4245,7 @@ function nysenate_theme_preprocess_page(&$variables) {
   $node_types = [
     'microsite_page',
     'petition',
+    'event',
   ];
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!empty($node) && is_object($node) && in_array($node->bundle(), $node_types)) {
@@ -4292,23 +4300,32 @@ function nysenate_theme_preprocess_page(&$variables) {
 function nysenate_theme_preprocess_node__promotional_banner__card_list(&$variables) {
   $node = $variables['node'];
   if ($node->hasField('field_call_to_action') && !$node->field_call_to_action->isEmpty()) {
-    $banner_cta_value = $node->field_call_to_action->value;
-    $allowed_values = $node->field_call_to_action->getSetting('allowed_values');
-
-    $url = $node->field_link->uri;
-    if ($node->field_link_type->value === 'internal') {
-      $url = $variables['url'];
-      if (!$node->field_promotional_content->isEmpty() && isset($node->field_promotional_content->entity)) {
-        $promo_content = $node->field_promotional_content->entity;
-        $url = $promo_content->toUrl()->toString();
-      }
-    }
-    $variables['item_cta'] = [
-      'url' => $url,
-      'text' => $allowed_values[$banner_cta_value],
-      'value' => $banner_cta_value,
-    ];
+    $variables['item_cta'] = get_item_cta($node);
   }
+}
+
+/**
+ * Method for fetching field_call_to_action values.
+ */
+function get_item_cta($node) {
+  $banner_cta_value = $node->field_call_to_action->value;
+  $allowed_values = $node->field_call_to_action->getSetting('allowed_values');
+
+  $url = $node->field_link->uri;
+  if ($node->field_link_type->value === 'internal') {
+    $url = $node->toUrl()->setAbsolute()->toString();
+    if (!$node->field_promotional_content->isEmpty() &&
+      isset($node->field_promotional_content->entity)) {
+      $promo_content = $node->field_promotional_content->entity;
+      $url = $promo_content->toUrl()->toString();
+    }
+  }
+
+  return [
+    'url' => $url,
+    'text' => $allowed_values[$banner_cta_value],
+    'value' => $banner_cta_value,
+  ];
 }
 
 /**

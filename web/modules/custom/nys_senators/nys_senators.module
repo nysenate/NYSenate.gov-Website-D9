@@ -8,6 +8,7 @@
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -1458,4 +1459,58 @@ function _nys_senators_remove_letter_blocks(EntityInterface $entity) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function nys_senators_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  if (str_starts_with($route_name, 'nys_senators.dashboard.senator')) {
+    // The user must own at least one of these roles to see this menu.
+    $roles = ['microsite_content_producer', 'legislative_correspondent'];
+
+    // Get the current user.  Verify role-based access.
+    $user_id = \Drupal::currentUser()->id();
+    /** @var \Drupal\user\Entity\User $user */
+    $user = \Drupal::entityTypeManager()->getStorage('user')->load($user_id);
+    if (!array_intersect($roles, $user->getRoles())) {
+      $data = [];
+      return;
+    }
+    $senators = array_merge(
+      $user->get('field_senator_inbox_access')->referencedEntities() ?? [],
+      $user->get('field_senator_management')->referencedEntities() ?? []
+    );
+
+    // Create pre-built entries for each senator.
+    // Taken from LocalTaskManager::getTasksBuild()
+    $target = &$data['tabs'][];
+    $current = \Drupal::service('path.current')->getPath();
+    $active_first = ($route_name == 'nys_senators.dashboard.senators');
+    foreach ($senators as $weight => $senator) {
+      $plugin_id = 'nys_senators.task.senator.' . $senator->id();
+      if (!isset($target[$plugin_id])) {
+        $link = [
+          'title' => $senator->getName(),
+          'url' => Url::fromRoute(
+            'nys_senators.dashboard.senator',
+            ['senator' => $senator->id(), 'tab' => 'overview']
+          ),
+        ];
+        $is_active = ($active_first || ($current == $link['url']->toString()));
+        $target[$plugin_id] = [
+          '#theme' => 'menu_local_task',
+          '#link' => $link,
+          '#weight' => $weight,
+          '#active' => $is_active,
+          '#access' => TRUE,
+        ];
+      }
+      $active_first = FALSE;
+    }
+
+    // Enforce a cache tag based on the user.
+    $cacheability->addCacheTags($user->getCacheTagsToInvalidate());
+  }
+
 }

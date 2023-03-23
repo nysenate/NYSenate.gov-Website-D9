@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Default simple view template to display a list of rows.
+ *
+ * @ingroup views_templates
+ */
+#}
+{% if banners %}
+  {% for banner in banners %}
+    <div class="node__content c-block c-block--initiative">
+      {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
+        title: banner.label,
+        cta: banner.cta
+      } only %}
+    </div>
+  {% endfor %}
+{% endif %}

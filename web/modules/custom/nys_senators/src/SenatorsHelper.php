@@ -319,4 +319,25 @@ class SenatorsHelper {
     return current($loaded) ?: NULL;
   }
 
+  /**
+   * Sorts an array of Senator taxonomy terms by name.  Keys are not preserved.
+   *
+   * @param array $senators
+   *   An array of Term objects belonging to the 'senator' bundle.
+   * @param bool $last_first
+   *   If true, sort by "<last> <first>".  Otherwise sort by "<first> <last>".
+   */
+  public static function sortByName(array &$senators, bool $last_first = TRUE): void {
+    usort($senators, function ($a, $b) use ($last_first) {
+      foreach (['a', 'b'] as $var) {
+        $first = ${$var}->field_senator_name->given ?? '';
+        $last = ${$var}->field_senator_name->family ?? '';
+        ${$var} = $last_first
+          ? $last . ' ' . $first
+          : $first . ' ' . $last;
+      }
+      return $a == $b ? 0 : ($a < $b ? -1 : 0);
+    });
+  }
+
 }

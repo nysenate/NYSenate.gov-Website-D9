@@ -738,7 +738,9 @@ display:
             - field_block
             - field_block_views
             - field_body_left
+            - field_body_left_1
             - field_body_right
+            - field_body_right_1
             - field_ol_add_sponsor_names
             - field_ol_all_statuses
             - field_ol_co_sponsor_names
@@ -747,6 +749,11 @@ display:
             - field_ol_sponsor_name
             - field_ol_summary
             - field_short_title
+            - field_subhead
+            - field_subtitle
+            - field_summary
+            - field_summary_1
+            - rendered_item
       filters:
         search_api_fulltext:
           id: search_api_fulltext
@@ -806,7 +813,9 @@ display:
             - field_block
             - field_block_views
             - field_body_left
+            - field_body_left_1
             - field_body_right
+            - field_body_right_1
             - field_ol_add_sponsor_names
             - field_ol_all_statuses
             - field_ol_co_sponsor_names
@@ -820,6 +829,44 @@ display:
             - field_summary
             - field_summary_1
             - rendered_item
+        status:
+          id: status
+          table: search_api_index_core_search
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:

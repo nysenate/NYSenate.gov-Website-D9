@@ -11,7 +11,7 @@ nys_senators.dashboard.senators:
   path: '/dashboard/senators'
   defaults:
     _title: 'Senator Management'
-    _controller: '\Drupal\nys_senators\Controller\DashboardSenatorsController::senatorManagement'
+    _controller: '\Drupal\nys_senators\Controller\SenatorsDashboardController::senatorManagement'
   requirements:
     _role: legislative_correspondent+microsite_content_producer
   options:
@@ -19,17 +19,17 @@ nys_senators.dashboard.senators:
 
 # for the actual senator management page, might not need this anymore
 # the path will need to change as it is now based on the term's page
-nys_senators.management.dashboard.senator:
-  path: '/dashboard/senator/{senator}/{tab}'
+nys_senators.management:
+  path: '/taxonomy/term/{taxonomy_term}/{tab}'
   defaults:
     _title: 'Senator Management'
-    _controller: '\Drupal\nys_senators\Controller\DashboardSenatorsController::senatorPage'
-    tab: 'overview'
+    _controller: '\Drupal\nys_senators\Controller\SenatorsDashboardController::senatorPage'
+    tab: ''
   requirements:
     _lc_mcp_senator_access: 'TRUE'
   options:
     no_cache: 'TRUE'
     parameters:
-      senator:
+      taxonomy_term:
         type: entity:taxonomy_term
         bundle: ['senator']

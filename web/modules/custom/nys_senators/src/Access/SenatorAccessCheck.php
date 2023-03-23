@@ -54,12 +54,14 @@ class SenatorAccessCheck implements AccessInterface {
   /**
    * Determines if a user has access to a senator's management pages.
    *
-   * This requires that the current route has a parameter named 'senator',
+   * This requires that the current route has a parameter named 'taxonomy_term',
    * which must be a taxonomy_term entity.
+   *
+   * @see taxonomy.links.task.yml:entity.taxonomy_term.canonical
    */
   public function access(AccountInterface $account): AccessResultInterface {
     $ret = new AccessResultForbidden('Could not confirm access');
-    $senator = $this->currentRoute->getParameter('senator') ?? NULL;
+    $senator = $this->currentRoute->getParameter('taxonomy_term') ?? NULL;
     if ($senator instanceof Term) {
       try {
         /** @var \Drupal\user\Entity\User $user */

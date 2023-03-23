@@ -26,10 +26,22 @@ use Drupal\user\UserInterface;
 /**
  * Implements hook_theme().
  */
-function nys_senators_theme($existing, $type, $theme, $path) {
+function nys_senators_theme($existing, $type, $theme, $path): array {
   return [
     'senator_microsite_menu_block' => [
       'variables' => ['menu_links' => NULL],
+    ],
+    'nys_senators_management_overview_stats' => [
+      'variables' => ['title' => NULL, 'stats' => []],
+    ],
+    'nys_senators_management_overview_stat' => [
+      'variables' => [
+        'classes' => [],
+        'url' => NULL,
+        'label' => NULL,
+        'stat' => NULL,
+        'description' => NULL,
+      ],
     ],
   ];
 }

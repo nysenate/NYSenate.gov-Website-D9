@@ -53,14 +53,33 @@ class ManagementPageOverview extends ManagementPageBase {
    */
   public function getContent(TermInterface $senator): array {
 
+    // Discover today's session.
+    $date = date("Y-m-d");
+    $storage = $this->manager->getStorage('node');
+    $results = $storage->getQuery()
+      ->condition('field_date_range.value', $date . '%', 'LIKE')
+      ->condition('type', 'session')
+      ->execute();
+    if (count($results)) {
+      $session = $storage->load(current($results));
+    }
+    else {
+      $session = NULL;
+    }
+    $active_list = $session
+      ? views_embed_view('upcoming_legislation', 'session_active', $session->id())
+      : ['#markup' => 'No session was found for ' . $date];
+    $active_list['#attributes']['class'][] = 'management-overview-active-list';
+
     return [
-      'stats' => [
+      '#theme' => 'nys_senators_management_overview',
+      '#attached' => ['library' => ['nys_senators/nys_senators_management']],
+      '#stats' => [
         '#theme' => 'nys_senators_management_overview_stats',
-        '#attached' => ['library' => ['nys_senators/nys_senators_management']],
         '#stats' => $this->stats->getStats($senator),
-        '#title' => 'Overview',
+        '#title' => 'Year-to-Date Statistics',
       ],
-      'active_list' => views_embed_view('upcoming_legislation', 'session_active'),
+      '#active_list' => $active_list,
     ];
 
   }

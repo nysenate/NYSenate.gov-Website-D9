@@ -15,8 +15,10 @@ function nys_search_views_pre_render(ViewExecutable $view) {
   if ($view->id() == 'core_search') {
     $path_array = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
     $param_value = $path_array[2] ?? '';
-    $view->header['result']->options['content'] =
-      str_replace('""', '"' . strtoupper($param_value) . '"',
+    $param_value = strstr($param_value, '?', TRUE) ?: $param_value;
+    $param_value = str_replace('""', '"' . strtoupper($param_value) . '"', $view->header['result']->options['content']);
+    $view->header['result']->options['content'] = $param_value;
+    str_replace('""', '"' . strtoupper($param_value) . '"',
       $view->header['result']->options['content']);
   }
 }

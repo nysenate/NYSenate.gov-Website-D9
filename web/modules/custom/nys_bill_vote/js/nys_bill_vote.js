@@ -300,8 +300,20 @@
       else {
         buttonText = Drupal.t('Oppose this bill');
       }
-      $('div.nys-bill-vote p.c-bill-polling--cta').text('Do you support this bill?');
-      $('#nys-bills-bill-form input[type="submit"]').val(buttonText);
+
+      if ($('.alert-box-message').length == 0) {
+        $('div.nys-bill-vote p.c-bill-polling--cta').text('Do you support this bill?');
+        $('#nys-bills-bill-form input[type="submit"]').val(buttonText);
+      }
+      else if ($('.alert-box-message').length != 0 && $('.c-bill--vote-attach').length != 0)  {
+        $('#edit-nys-bill-vote-button-wrapper').hide();
+        if (vote_value == 'no') {
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL");
+        }
+        else if (vote_value == 'yes') {
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL");
+        }
+      }
 
 
       // // Handle auto-subscription process.

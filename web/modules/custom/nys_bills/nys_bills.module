@@ -138,3 +138,23 @@ function nys_bills_theme($existing, $type, $theme, $path) {
     ],
   ];
 }
+
+/**
+ * Implements hook_entity_insert().
+ */
+function nys_bills_entity_insert($entity) {
+  // This hook will update nys_bills_anon records for the current session
+  // with the id of the flag being inserted.  It will only act if the
+  // entity being inserted is of type "flagging" and the flag name is
+  // "follow_this_bill".
+  if ($entity->getEntityTypeId() == 'flagging' && $entity->flag_name->value == 'follow_this_bill') {
+    // Add the flagging id to the petition signature of the same session.
+    $flagging_id = $entity->flagging_id;
+    $this_update = \Drupal::database()->update('nys_bills_anon')
+      ->fields(['fid' => $flagging_id])
+      ->condition('session_id', $entity->sid)
+      ->condition('fid', 0)
+      ->condition('bid', $entity->entity_id)
+      ->execute();
+  }
+}

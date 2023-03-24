@@ -154,3 +154,38 @@ function nys_migrate_update_8006() {
     \Drupal::logger('nys_migrate')->notice('Successfully deleted user with name "Christine Gordinier":');
   }
 }
+
+/**
+ * Remove the junk taxonomy field data.
+ */
+function nys_migrate_update_8007(&$sandbox) {
+  $db = \Drupal::database();
+  $tables = [
+    'taxonomy_term__field_about',
+    'taxonomy_term_revision__field_about',
+    'taxonomy_term__field_inactive_senator_message',
+  ];
+
+  // Example function body for a batch update. In this example, the values in
+  // a database field are updated.
+  if (!isset($sandbox['progress'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = count($tables);
+  }
+
+  $user_ids = $db->select('taxonomy_term_data', 'table')->fields('table', ['tid'])->execute()->fetchAllAssoc('tid', \PDO::FETCH_ASSOC);
+  $user_ids = array_keys($user_ids);
+
+  $table = $tables[$sandbox['progress']];
+  $user_field_ids = $db->select($table, 'table')->fields('table', ['entity_id'])->execute()->fetchAllAssoc('entity_id', \PDO::FETCH_ASSOC);
+  $id_diff = array_diff(array_keys($user_field_ids), $user_ids);
+  if (!empty($id_diff)) {
+    $db->delete($table)->condition('entity_id', $id_diff, 'IN')->execute();
+    \Drupal::logger('nys_migrate')->notice('Successfully deleted ' . count($id_diff) . ' items from ' . $table);
+  }
+
+  $sandbox['progress']++;
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+}

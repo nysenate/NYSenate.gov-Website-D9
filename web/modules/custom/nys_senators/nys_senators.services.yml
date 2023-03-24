@@ -40,6 +40,10 @@ services:
     arguments: [ '@request_stack', '@current_route_match', '@current_user' ]
     tags:
       - { name: 'event_subscriber' }
+  nys_senators.dashboard.page_manager:
+    class: Drupal\nys_senators\Service\DashboardPageManager
+    parent: default_plugin_manager
   nys_senators.dashboard.stats_manager:
     class: Drupal\nys_senators\Service\OverviewStatsManager
     parent: default_plugin_manager
+    arguments: [ '@event_dispatcher' ]

@@ -11,7 +11,7 @@ nys_senators.dashboard.senators:
   path: '/dashboard/senators'
   defaults:
     _title: 'Senator Management'
-    _controller: '\Drupal\nys_senators\Controller\SenatorsDashboardController::senatorManagement'
+    _controller: '\Drupal\nys_senators\Controller\DashboardSenatorsController::senatorManagement'
   requirements:
     _role: legislative_correspondent+microsite_content_producer
   options:
@@ -23,8 +23,7 @@ nys_senators.management:
   path: '/taxonomy/term/{taxonomy_term}/{tab}'
   defaults:
     _title: 'Senator Management'
-    _controller: '\Drupal\nys_senators\Controller\SenatorsDashboardController::senatorPage'
-    tab: ''
+    _controller: '\Drupal\nys_senators\Controller\DashboardManagementController::senatorPage'
   requirements:
     _lc_mcp_senator_access: 'TRUE'
   options:

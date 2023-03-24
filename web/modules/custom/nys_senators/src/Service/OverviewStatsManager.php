@@ -5,7 +5,9 @@ namespace Drupal\nys_senators\Service;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\nys_senators\Event\OverviewStatsAlterEvent;
 use Drupal\taxonomy\TermInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Plugin manager for the senator dashboard stats block.
@@ -20,9 +22,16 @@ class OverviewStatsManager extends DefaultPluginManager {
   protected array $instances = [];
 
   /**
+   * Drupal's Event Dispatcher service.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected EventDispatcherInterface $dispatcher;
+
+  /**
    * {@inheritDoc}
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, EventDispatcherInterface $dispatcher) {
     parent::__construct(
       'Plugin/NysDashboard',
       $namespaces,
@@ -31,6 +40,7 @@ class OverviewStatsManager extends DefaultPluginManager {
       'Drupal\nys_senators\Annotation\OverviewStat'
     );
     $this->setCacheBackend($cache_backend, 'nys_senators.dashboard.overview.stats');
+    $this->dispatcher = $dispatcher;
   }
 
   /**
@@ -74,13 +84,16 @@ class OverviewStatsManager extends DefaultPluginManager {
         $ret[$key] = $stat->getDefinition() + ['stat' => $content];
       }
     }
-    usort($ret, function ($a, $b) {
+    $event = new OverviewStatsAlterEvent($ret);
+    $this->dispatcher->dispatch($event);
+
+    usort($event->stats, function ($a, $b) {
       $a = $a['weight'] ?? 0;
       $b = $b['weight'] ?? 0;
       return ($a == $b) ? 0 : ($a < $b ? -1 : 1);
     });
 
-    return $ret;
+    return $event->stats;
   }
 
 }

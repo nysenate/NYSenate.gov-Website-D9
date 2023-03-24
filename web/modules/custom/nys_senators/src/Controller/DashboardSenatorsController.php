@@ -3,7 +3,6 @@
 namespace Drupal\nys_senators\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-
 use Drupal\nys_senators\SenatorsHelper;
 use Drupal\nys_users\UsersHelper;
 
@@ -49,17 +48,6 @@ class DashboardSenatorsController extends ControllerBase {
         'senator' => $viewer->view($senator, 'sponsor_list'),
       ];
     }
-
-    return $content;
-  }
-
-  /**
-   * Response for the senators page.
-   */
-  public function senatorPage($senator, $tab = ''): array {
-
-    $user = $this->currentUser();
-    $content['senators'] = ['#markup' => 'Senator Management Second'];
 
     return $content;
   }

@@ -15,7 +15,6 @@ dependencies:
     - field.field.user.user.field_password_expiration
     - field.field.user.user.field_pending_expire_sent
     - field.field.user.user.field_senator_inbox_access
-    - field.field.user.user.field_senator_management
     - field.field.user.user.field_senator_multiref
     - field.field.user.user.field_top_issue
     - field.field.user.user.field_user_banned_comments
@@ -116,12 +115,6 @@ content:
   field_senator_inbox_access:
     type: options_select
     weight: 12
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_senator_management:
-    type: options_select
-    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }

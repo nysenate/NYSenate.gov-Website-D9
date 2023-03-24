@@ -19,11 +19,13 @@
           </span>
           {{ icons.get('accordion__arrow'|lower) }}
         </button>
-        {% for senator in senators|slice(6) %}
-          <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-see-more" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-see-more">
-            {{ senator }}
-          </div>
-        {% endfor %}
+        <div class="content-wrapper">
+          {% for senator in senators|slice(6) %}
+            <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-see-more" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-see-more">
+              {{ senator }}
+            </div>
+          {% endfor %}
+        </div>
       </article>
     </div>
   {% else %}

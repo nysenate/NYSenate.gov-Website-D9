@@ -23,15 +23,21 @@
   <p>{{ description }}</p>
 
   {% if contact %}
-    <div class="c-tour-contact">
-      <p class="c-tour-contact--title">{{ contact.title }}</p>
-      <p class="c-tour-contact--loc">{{ contact.loc }}</p>
-      <p class="c-tour-contact--phone">{{ contact.phone }}</p>
-    </div>
+    {% if contact.title %}
+      <div class="c-tour-contact">
+        <p class="c-tour-contact--title">{{ contact.title }}</p>
+        <p class="c-tour-contact--loc">{{ contact.loc }}</p>
+        <p class="c-tour-contact--phone">{{ contact.phone }}</p>
+      </div>
+    {% elseif contact.full %}
+      {{ full }}
+    {% endif %}
   {% endif %}
 
-  {% if cta %}
+  {% if cta.text %}
     <a class="nys-btn--gold" href="">{{ cta.text }}</a>
+  {% elseif %}
+    {{ cta.full }}
   {% endif %}
 
 </div>

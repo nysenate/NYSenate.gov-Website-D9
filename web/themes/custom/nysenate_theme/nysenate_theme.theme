@@ -4534,52 +4534,94 @@ function nysenate_theme_preprocess_node__landing__senators_committees(&$variable
  * Implements hook_preprocess_node__NODE_TYPE().
  */
 function nysenate_theme_preprocess_node__landing__about(&$variables) {
-  foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
-    if (!is_numeric($key)) {
-      continue;
-    }
+  if (array_key_exists('field_landing_blocks', $variables['content'])) {
+    foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
+      if (!is_numeric($key)) {
+        continue;
+      }
 
-    switch ($block['#block_content']->bundle()) {
-      case 'text':
-        if ($block['#block_content']->field_title->value == 'Opening Text') {
-          $variables['landing_page_hero'] = [
-            "section_id" => "section-0",
-            "background_img" => "<img src='https://source.unsplash.com/PhYq704ffdA/640x360' alt='test image' />",
-            "title" => "About the New York State Senate",
-            "welcome_text" => $block['field_body_left'][0] ?? NULL,
-            "body" => "",
-          ];
-        }
-        elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
-          $variables['how_senate_works_title'] = $block['#block_content']->field_title->value ?? NULL;
-          $variables['how_senate_works_text'] = $block['field_body_left'][0] ?? NULL;
-        }
-        elseif ($block['#block_content']->field_title->value == 'Job of Senate ...') {
-          $variables['job_of_senate'] = $block['field_body_left'][0] ?? NULL;
-        }
-        elseif ($block['#block_content']->field_title->value == 'Senate Rules and Procedures') {
-          $variables['about_rules'] = [
-            "title" => $block['#block_content']->field_title->value ?? NULL,
-            "col_1" => [
-              "content" => $block['field_body_left'][0] ?? NULL,
-            ],
-            "col_2" => [
-              "content" => $block['field_body_right'][0] ?? NULL,
-            ],
-          ];
-        }
-        else {
-          continue 2;
-        }
-        break;
+      switch ($block['#block_content']->bundle()) {
+        case 'text':
+          if ($block['#block_content']->field_title->value == 'Opening Text') {
+            $variables['landing_page_hero'] = [
+              "section_id" => "section-0",
+              "background_img" => "<img src='https://source.unsplash.com/PhYq704ffdA/640x360' alt='test image' />",
+              "title" => "About the New York State Senate",
+              "welcome_text" => $block['field_body_left'][0] ?? NULL,
+              "body" => "",
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
+            $variables['how_senate_works_title'] = $block['#block_content']->field_title->value ?? NULL;
+            $variables['how_senate_works_text'] = $block['field_body_left'][0] ?? NULL;
+          }
+          elseif ($block['#block_content']->field_title->value == 'Job of Senate ...') {
+            $variables['job_of_senate'] = $block['field_body_left'][0] ?? NULL;
+          }
+          elseif ($block['#block_content']->field_title->value == 'Senate Rules and Procedures') {
+            $variables['about_rules'] = [
+              "title" => $block['#block_content']->field_title->value ?? NULL,
+              "col_1" => [
+                "content" => $block['field_body_left'][0] ?? NULL,
+              ],
+              "col_2" => [
+                "content" => $block['field_body_right'][0] ?? NULL,
+              ],
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Leadership and Majority') {
+            $variables['about_leadership'] = [
+              'title' => $block['#block_content']->field_title->value ?? NULL,
+              'body' => $block['field_body_left'][0] ?? NULL,
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Senate Seal') {
+            $variables['senate_seal'] = [
+              'title' => $block['#block_content']->field_title->value ?? NULL,
+              'description' => $block['field_body_left'][0] ?? NULL,
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Senate Seal text') {
+            $variables['senate_seal']['description']['#text'] .= $block['field_body_left'][0]['#text'];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Visit Capitol text') {
+            $variables['about_tour'] = [
+              'title' => '',
+              'description' => $block['field_body_left'][0] ?? NULL,
+              "carousel" => [],
+              "contact" => [],
+              "cta" => [],
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Visit Capitol Link and Info') {
+            $variables['about_tour']['contact'] = [
+              'title' => FALSE,
+              'full' => $block['field_body_right'][0] ?? NULL,
+            ];
+            $variables['about_tour']['cta'] = [
+              'text' => FALSE,
+              'full' => $block['field_body_left'][0] ?? NULL,
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Student Programs') {
+            $variables['about_student_programs'] = [
+              'title' => $block['#block_content']->field_title->value ?? NULL,
+              'body' => $block['field_body_left'][0] ?? NULL,
+            ];
+          }
+          else {
+            continue 2;
+          }
+          break;
 
-      case 'video':
-        // code..
-        break;
+        case 'video':
+          // code..
+          break;
 
-      default:
-        // code...
-        break;
+        default:
+          // code...
+          break;
+      }
     }
   }
 }

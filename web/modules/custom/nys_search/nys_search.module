@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Provides global and advanced search functionality.
+ */
+
+use Drupal\nys_search\Form\GlobalSearchForm;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function nys_search_views_pre_render(ViewExecutable $view) {
+  if ($view->id() == 'core_search') {
+    $path_array = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+    $param_value = $path_array[2] ?? '';
+    $view->header['result']->options['content'] =
+      str_replace('""', '"' . strtoupper($param_value) . '"',
+      $view->header['result']->options['content']);
+  }
+}
+
+/**
+ * Custom search submit function.
+ */
+function _nys_search_custom_search_submit($form, &$form_state) {
+  $search_keyword = $form_state['values']['keys'];
+  $form_state['redirect'] = '/search/global/' . $search_keyword;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nys_search_preprocess_page(&$variables) {
+  $form = \Drupal::formBuilder()->getForm(GlobalSearchForm::class);
+  $variables['form'] = $form;
+}

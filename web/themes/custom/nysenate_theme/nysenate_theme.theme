@@ -3078,6 +3078,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     'LOST' => 'Lost',
     'SUBSTITUTED' => 'Substituted',
     'ADOPTED' => 'Adopted',
+    'CHAPTERED' => 'Chaptered',
   ];
 
   $current_status_name = $node->field_ol_last_status->value;
@@ -3251,6 +3252,7 @@ function nysenate_bill_positions($node) {
       'DELIVERED_TO_GOV' => 4,
       'SIGNED_BY_GOV' => 5,
       'VETOED' => 5,
+      'CHAPTERED' => 5,
     ];
 
     // Get the current status name and map it.

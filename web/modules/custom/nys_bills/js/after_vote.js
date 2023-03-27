@@ -18,14 +18,14 @@
 
       if ($('.alert-box-message').length != 0 && $('.c-bill--vote-attach').length != 0) {
         $('.c-bill--vote-attach').show();
-        $('#edit-nys-bill-vote-button-wrapper').hide();
+        // $('#edit-nys-bill-vote-button-wrapper').hide();
         var vote_value = $('[name="vote_value"]').val();
         var uid = $('[name="uid"]').val();
         if (vote_value == '0' && uid != "0") {
-          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL");
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL.</br>Do you support this bill?");
         }
         else if (vote_value == '1' && uid != "0") {
-          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL");
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL</br>Do you support this bill?");
         }
       }
 

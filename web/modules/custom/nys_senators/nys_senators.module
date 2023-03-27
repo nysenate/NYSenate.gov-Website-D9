@@ -9,6 +9,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
@@ -1174,6 +1175,7 @@ function _nys_senators_rules_no_issues(NodeInterface $entity): void {
   $bundles_to_check = [
     'article',
     'event',
+    'in_the_news',
     'petition',
     'public_hearing',
     'video',
@@ -1193,8 +1195,31 @@ function _nys_senators_rules_no_issues(NodeInterface $entity): void {
  * Implements hook_query_TAG_alter().
  */
 function nys_senators_query_nys_senators_access_alter(AlterableInterface $query) {
-  // Add op metadata so node_access is used.
-  $query->addMetaData('op', 'update');
+
+  if ($query instanceof SelectInterface) {
+    // Add op metadata so node_access is used.
+    $user = User::load(\Drupal::currentUser()->id());
+    $senator_helper = \Drupal::service('nys_senators.senators_helper');
+
+    // Check for MCP.
+    if (!$senator_helper->senatorUserIsAdmin($user) &&
+      $user->hasField('field_senator_multiref') &&
+      !empty($senators = $user->field_senator_multiref->getValue())) {
+
+      // Format a nice array for query conditions.
+      $senator_tids = [];
+
+      foreach ($senators as $senator) {
+        $senator_tids[] = $senator['target_id'];
+      }
+
+      // Adding in join to access table to see only editable materials for MCPs.
+      $query->join('node_access', 'na', 'node_field_data.nid = na.nid');
+      $query->condition('na.realm', 'microsite_producers');
+      $query->condition('na.gid', $senator_tids, 'IN');
+
+    }
+  }
 }
 
 /**

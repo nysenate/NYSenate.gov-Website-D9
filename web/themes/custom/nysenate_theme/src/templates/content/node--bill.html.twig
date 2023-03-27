@@ -10,8 +10,7 @@
 <!-- BILL TEMPLATE -->
 <div class="{{ classes|join(' ') }}" {{ attributes }}>
   <div class="node node-bill node-promoted view-mode-full clearfix">
-    <div
-      class="c-block c-detail--header c-detail--header__bill">
+    <div class="c-block c-detail--header c-detail--header__bill">
       <!-- Bill Title -->
       <div class="c-bill--heading-block">
         <h2 class="nys-title c-bill-title">
@@ -44,23 +43,23 @@
             </div>
           {% endif %}
         </p>
+        <!-- Bill Pdf Link -->
+        <a href="{{ pdf_link }}" class="c-detail--download" target="_blank">
+          download bill text pdf
+        </a>
       </div>
-      <!-- Bill Pdf Link -->
-      <a href="{{ pdf_link }}" class="c-detail--download" target="_blank">
-        download bill text pdf
-      </a>
-    </div>
+      <!-- Share -->
+      <div class="c-detail--social" style="margin-bottom: 0; padding-bottom: 0">
+        <h3 class="c-detail--subhead">
+          Share this bill
+        </h3>
+        <ul>
+          <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item facebook">Facebook</a></li>
+          <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{content.field_ol_base_print_no[0]['#context']['value']}} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
+          <li><a href="mailto:?&subject=From NYSenate.gov: {{content.field_ol_base_print_no[0]['#context']['value']}}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{active_amend_url}} >." class="c-detail--social-item email">Email</a></li>
+        </ul>
+      </div>
 
-    <!-- Share -->
-    <div class="c-detail--social" style="margin-bottom: 0; padding-bottom: 0">
-      <h3 class="c-detail--subhead">
-        Share this bill
-      </h3>
-      <ul>
-        <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item facebook">Facebook</a></li>
-        <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{content.field_ol_base_print_no[0]['#context']['value']}} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
-        <li><a href="mailto:?&subject=From NYSenate.gov: {{content.field_ol_base_print_no[0]['#context']['value']}}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{active_amend_url}} >." class="c-detail--social-item email">Email</a></li>
-      </ul>
     </div>
   </div>
 
@@ -146,6 +145,16 @@
     </ul>
   </div>
 
+  <!-- Bill Vote Widget -->
+  <div class="c-bill--vote-widget">
+    {{ content.vote_widget }}
+  </div>
+
+  <!-- Bill Message Form -->
+  <div class="c-bill--message-form clearfix">
+    {{ content.bill_form }}
+  </div>
+
   <!-- Bill Actions -->
   <div class="c-block c-bill-section">
     <section class="nysenate-accordion__wrapper nysenate-accordion__wrapper--bills">
@@ -215,37 +224,42 @@
 
   {% if votes_block %}
     <div class="c-block c-bill-section">
-      <h3 class="c-detail--subhead c-detail--section-title">Votes</h3>
+      <section class="nysenate-accordion__wrapper nysenate-accordion__wrapper--bills">
+        <div class="nysenate-accordion__wrapper-title">Votes</div>
 
-      <div>
-        <article class="nysenate-accordion">
-          <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion--votes__content-1" aria-expanded="false" id="nysenate-accordion--votes__toggle-1" aria-selected="false">
-            <span class="nysenate-accordion__heading hide-number">
-              <span class="indicator">View
-              </span>Votes
-            </span>
-            {{ icons.get('accordion__arrow'|lower) }}
-          </button>
-          <div class="nysenate-accordion__content" id="nysenate-accordion--votes__content-1" aria-hidden="true" aria-labelledby="nysenate-accordion--votes__content-1">
-            {% for vote in votes_block %}
-              <div
-                class="content" id="panel-votes">
-                <!-- Bill Votes -->
-                <div class="c-block c-detail--votes-wrapper c-bill-section">
-                  <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
-                    {{ vote.date }}
-                    -  {{ vote.type }} Vote
-                  </h3>
-                  <a href="{{ bill.url }}">
-                    <span class="c-bill-action-version c-bill--flag c-bill-action--orig-bill">
-                      {{ bill.name }}
-                    </span>
-                  </a>
+        <div>
+          <ul class="nysenate-accordion-nested">
+            <li class="nysenate-accordion-nested__item">
+              <button type="button" class="nysenate-accordion-nested__toggle" aria-controls="nysenate-accordion--votes__content-1" aria-expanded="false" id="nysenate-accordion--votes__toggle-1" aria-selected="false">
+                <span class="nysenate-accordion-nested__heading hide-number">
+                  <span class="indicator">View
+                  </span>Votes
+                </span>
+                {{ icons.get('accordion__arrow'|lower) }}
+              </button>
+              <ul class="nysenate-accordion-nested nysenate-accordion-nested--inner" id="nysenate-accordion--votes__content-1" aria-hidden="true" aria-labelledby="nysenate-accordion--votes__content-1">
+                <li class="nysenate-accordion-nested__item">
+                  {% for vote in votes_block %}
+                    <div
+                      class="content" id="panel-votes">
+                      <!-- Bill Votes -->
+                      <div class="c-block c-detail--votes-wrapper c-bill-section">
+                        <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
+                          {{ vote.date }}
+                          -
+                          {{ vote.type }}
+                          Vote
+                        </h3>
+                        <a href="{{ bill.url }}">
+                          <span class="c-bill-action-version c-bill--flag c-bill-action--orig-bill">
+                            {{ bill.name }}
+                          </span>
+                        </a>
 
-                  {% set values = [vote.nay_count|default(0), vote.aye_count|default(0)] %}
-                  {% set colors =  vote.type|lower != 'floor' ? ["#CB8D37", "#F1AF58"] : ["#1F798F", "#04A9C5"] %}
+                        {% set values = [vote.nay_count|default(0), vote.aye_count|default(0)] %}
+                        {% set colors =  vote.type|lower != 'floor' ? ["#CB8D37", "#F1AF58"] : ["#1F798F", "#04A9C5"] %}
 
-                  {% include "@nysenate_theme/chart/chart.twig" with {
+                        {% include "@nysenate_theme/chart/chart.twig" with {
                     chart: {
                       type: "pie",
                       values: values,
@@ -253,81 +267,88 @@
                     }
                   } only %}
 
-                  <div class="c-bill--vote-details">
-                    <div class="c-bill--vote-details-wrapper">
-                      <div class="vote-container">
-                        <div class="aye {{ vote.type|lower != 'floor' ? "committee_vote" : "" }}">
-                          <div class="vote-count">{{ vote.aye_count|default(0) }}</div>
-                          <div class="vote-label">Aye</div>
-                        </div>
-                        <div class="nay {{ vote.type|lower != 'floor' ? "committee_vote" : "" }}">
-                          <div class="vote-count">{{ vote.nay_count|default(0)  }}</div>
-                          <div class="vote-label">Nay</div>
-                        </div>
-                      </div>
-                      <div class="vote-meta">
-                        {% if vote.type|lower != 'floor' %}
-                          <div class="meta-row">
-                            <div class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</div>
-                            <div class="meta-label">Aye with Reservations</div>
+                        <div class="c-bill--vote-details">
+                          <div class="c-bill--vote-details-wrapper">
+                            <div class="vote-container">
+                              <div class="aye {{ vote.type|lower != 'floor' ? " committee_vote" : " " }}">
+                                <div class="vote-count">{{ vote.aye_count|default(0) }}</div>
+                                <div class="vote-label">Aye</div>
+                              </div>
+                              <div class="nay {{ vote.type|lower != 'floor' ? " committee_vote" : " " }}">
+                                <div class="vote-count">{{ vote.nay_count|default(0)  }}</div>
+                                <div class="vote-label">Nay</div>
+                              </div>
+                            </div>
+                            <div class="vote-meta">
+                              {% if vote.type|lower != 'floor' %}
+                                <div class="meta-row">
+                                  <div class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</div>
+                                  <div class="meta-label">Aye with Reservations</div>
+                                </div>
+                              {% endif %}
+                              <div class="meta-row">
+                                <div class="meta-count">{{ vote.absent_count|default(0)  }}</div>
+                                <div class="meta-label">Absent</div>
+                              </div>
+                              <div class="meta-row">
+                                <div class="meta-count">{{ vote.excused_count|default(0)  }}</div>
+                                <div class="meta-label">Excused</div>
+                              </div>
+                              <div class="meta-row">
+                                <div class="meta-count">{{ vote.abstained_count|default(0)  }}</div>
+                                <div class="meta-label">Abstained</div>
+                              </div>
+                            </div>
                           </div>
-                        {% endif %}
-                        <div class="meta-row">
-                          <div class="meta-count">{{ vote.absent_count|default(0)  }}</div>
-                          <div class="meta-label">Absent</div>
-                        </div>
-                        <div class="meta-row">
-                          <div class="meta-count">{{ vote.excused_count|default(0)  }}</div>
-                          <div class="meta-label">Excused</div>
-                        </div>
-                        <div class="meta-row">
-                          <div class="meta-count">{{ vote.abstained_count|default(0)  }}</div>
-                          <div class="meta-label">Abstained</div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
 
-                <ul class="nysenate-accordion-nested">
-                  <li class="nysenate-accordion-nested__item">
-                    <button type="button" class="nysenate-accordion-nested__toggle">
-                      <span class="nysenate-accordion-nested__heading">
-                        <span class="indicator">View</span>
-                        {{ vote.type }} vote details
-                      </span>
-                      {{ icons.get('accordion__arrow'|lower) }}
-                    </button>
-                    <ul class="nysenate-accordion-nested nysenate-accordion-nested--inner">
-                      <li class="nysenate-accordion-nested__item">
-                        <h3 class="c-vote-detail--date">
-                          {{ vote.type }} Vote:
-                          {{ vote.date }}</h3>
-                        {% set count = 0 %}
-                        {% for key,members in vote.all_members %}
-                          {% set title = key|split('_members') %}
-                          {% set title = title[0]|replace({'_': ' '}) %}
-                          {% set count = count + 1 %}
-                          <div class="c-detail--vote-grp {{ ((count % 2) ? 'odd' : 'even') }}">
-                            <div class="c-detail--section-title">{{ title }} ({{ members|length|default(0) }})</div>
-                            <ul class="c-votes--items">
-                              {% for member in members %}
-                                <li>
-                                  <a href="{{ member.url }}">{{ member.name }}</a>
-                                </li>
+                      <ul class="nysenate-accordion-nested">
+                        <li class="nysenate-accordion-nested__item">
+                          <button type="button" class="nysenate-accordion-nested__toggle">
+                            <span class="nysenate-accordion-nested__heading">
+                              <span class="indicator">View</span>
+                              {{ vote.type }}
+                              vote details
+                            </span>
+                            {{ icons.get('accordion__arrow'|lower) }}
+                          </button>
+                          <ul class="nysenate-accordion-nested nysenate-accordion-nested--inner">
+                            <li class="nysenate-accordion-nested__item">
+                              <h3 class="c-vote-detail--date">
+                                {{ vote.type }}
+                                Vote:
+                                {{ vote.date }}</h3>
+                              {% set count = 0 %}
+                              {% for key,members in vote.all_members %}
+                                {% set title = key|split('_members') %}
+                                {% set title = title[0]|replace({'_': ' '}) %}
+                                {% set count = count + 1 %}
+                                <div class="c-detail--vote-grp {{ ((count % 2) ? 'odd' : 'even') }}">
+                                  <div class="c-detail--section-title">{{ title }}
+                                    ({{ members|length|default(0) }})</div>
+                                  <ul class="c-votes--items">
+                                    {% for member in members %}
+                                      <li>
+                                        <a href="{{ member.url }}">{{ member.name }}</a>
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
                               {% endfor %}
-                            </ul>
-                          </div>
-                        {% endfor %}
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-            {% endfor %}
-          </div>
-        </article>
-      </div>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  {% endfor %}
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+        </div>
+      </section>
     </div>
   {% endif %}
 
@@ -381,5 +402,4 @@
       </div>
     </div>
   {% endif %}
-
 </div>

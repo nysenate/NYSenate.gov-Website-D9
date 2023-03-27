@@ -4,14 +4,10 @@ namespace Drupal\nys_bill_vote\Form;
 
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\RedirectCommand;
-use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\nys_bill_vote\BillVoteHelper;
-use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -50,23 +46,13 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(BillVoteHelper $bill_vote_helper, AccountProxy $current_user, AliasManagerInterface $alias_manager, FormBuilder $form_builder) {
-    $this->billVoteHelper = $bill_vote_helper;
-    $this->currentUser = $current_user;
-    $this->aliasManager = $alias_manager;
-    $this->formBuilder = $form_builder;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('nys_bill_vote.bill_vote'),
-      $container->get('current_user'),
-      $container->get('path_alias.manager'),
-      $container->get('form_builder'),
-    );
+    $instance = new static();
+    $instance->billVoteHelper = $container->get('nys_bill_vote.bill_vote');
+    $instance->currentUser = $container->get('current_user');
+    $instance->aliasManager = $container->get('path_alias.manager');
+    $instance->formBuilder = $container->get('form_builder');
+    return $instance;
   }
 
   /**
@@ -91,11 +77,9 @@ class BillVoteWidgetForm extends FormBase {
     $form_state->setBuildInfo(array_merge($this->billVoteHelper->widgetBuildSettings($form_state), $form_state->getBuildInfo()));
 
     // Now get the canonical information.
-    $node_type = $form_state->getBuildInfo()['entity_type'];
     $node_id = $form_state->getBuildInfo()['entity_id'];
 
-    // Discover if a vote already exists.
-    $default_vote = $this->billVoteHelper->getDefault($node_type, $node_id);
+    $default_vote = $this->billVoteHelper->getDefault('node', $node_id);
     $default_value = $this->billVoteHelper->getVal($default_vote);
 
     // Discover if a vote has been submitted.
@@ -148,7 +132,7 @@ class BillVoteWidgetForm extends FormBase {
               'c-half-btn--left',
               'nys-bill-vote-yes',
             ],
-            'type' => 'submit',
+            // 'type' => 'submit',
           ],
           '#id' => 'edit-nys-bill-vote-yes-' . $node_id,
           '#value' => 'Aye',
@@ -168,7 +152,7 @@ class BillVoteWidgetForm extends FormBase {
               'c-half-btn--right',
               'nys-bill-vote-no',
             ],
-            'type' => 'submit',
+            // 'type' => 'submit',
           ],
           '#id' => 'edit-nys-bill-vote-no-' . $node_id,
           '#value' => 'Nay',
@@ -191,6 +175,8 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
+    $form['#cache'] = ['max-age' => 0];
+
     return $form;
   }
 
@@ -207,13 +193,13 @@ class BillVoteWidgetForm extends FormBase {
     // We want to process the vote if the user is logged in.
     if ($this->currentUser->isAuthenticated()) {
       $this->billVoteHelper->processVote($build_info['entity_type'], $build_info['entity_id'], $value);
-      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($build_info['entity_type'], $build_info['entity_id'], TRUE));
+      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($build_info['entity_type'], $build_info['entity_id']));
       $form['nys_bill_vote']['#options'] = $this->billVoteHelper->getOptions();
     }
 
     // If the user is on a page that isn't the bill node, send them there.
     $test_action = $this->formBuilder->renderPlaceholderFormAction()['#markup'];
-    $node_match = $this->aliasManager->getAliasByPath($test_action);
+    $node_match = $this->aliasManager->getPathByAlias($test_action);
     $bill_path = '/node/' . $build_info['entity_id'];
 
     if ($node_match != $bill_path) {
@@ -249,7 +235,7 @@ class BillVoteWidgetForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // @todo This method comes from nys_accumulator custom module.
     // @phpstan-ignore-next-line
-    nyslog();
+    // nyslog();
     $node = $form_state->getFormObject();
     $build_info = $form_state->getBuildInfo();
     $element = $form_state->getTriggeringElement();

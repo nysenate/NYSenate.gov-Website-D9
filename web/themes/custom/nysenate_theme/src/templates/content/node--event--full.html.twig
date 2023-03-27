@@ -95,11 +95,11 @@
       </div>
     {% endif %}
 
-  {% include "@nysenate_theme/nysenate-event-date/nysenate-event-date.twig" with {
-    is_multiday: is_multiday,
-    start_date: start_date,
-    end_date: end_date,
-  } only %}
+    {% include "@nysenate_theme/nysenate-event-date/nysenate-event-date.twig" with {
+      is_multiday: is_multiday,
+      start_date: start_date,
+      end_date: end_date,
+    } only %}
 
     {% if content.field_event_place[0]['#markup'] == "online" %}
       <div class="c-event-location">
@@ -129,7 +129,7 @@
     {% elseif content.field_location[0]['organization']['#value'] %}
       <a href="http://maps.google.com/?q={{ location_url }}" class="c-event-location" target="_blank">
         <span class="icon-before__circle-pin"></span>
-        {{ content.field_location[0]['organization']['#value'] }}
+        {{ content.field_location[0]['organization']['#value']|raw }}
       </a>
     {% endif %}
 
@@ -209,5 +209,11 @@
     cta: cta,
   } only
   %}
+
+  {{ drupal_view('senator_microsite_content', 'article_footer') }}
+
+  {{ drupal_view('global_promo_banner', 'senator_microsite_interior_footer') }}
+
+  {{ how_a_bill_block }}
 </article>
 

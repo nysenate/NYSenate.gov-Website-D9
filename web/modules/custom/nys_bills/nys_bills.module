@@ -89,10 +89,10 @@ function nys_bills_node_delete(Node $node): void {
 }
 
 /**
- * Implements hook_node_view().
+ * Implements hook_ENTITY_TYPE_view().
  */
-function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
-  if ($entity->bundle() == 'bill' && $view_mode == 'full') {
+function nys_bills_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity->bundle() == 'bill' && $display->getMode() === 'default') {
     // If there's no alias for this bill node, redirect to 404.
     $current_path = \Drupal::service('path.current')->getPath();
     $alias = \Drupal::service('path_alias.manager')
@@ -100,6 +100,9 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
     if ($current_path === $alias) {
       throw new NotFoundHttpException();
     }
+
+    // @phpstan-ignore-next-line
+    $build['bill_form'] = \Drupal::formBuilder()->getForm('Drupal\nys_bills\Form\BillForm', $entity);
 
     // Add settings to javascript that will help with processing vote from
     // Javascript.
@@ -109,18 +112,11 @@ function nys_bills_node_view(array &$build, EntityInterface $entity, EntityViewD
     foreach (array_keys($vote_options) as $vote_value) {
       $vote_label_options[$vote_value] = $nys_vote_service->getVotedLabel($vote_value);
     }
-    $js_settings = [
-      'bill_vote' => [
-        'bill_entity_id' => $entity->id(),
-        'bill_name' => \Drupal::service('nys_bill.bills_helper')->formatTitle($entity),
-        'vote_options' => $vote_label_options,
-      ],
-    ];
 
-    $attached = [];
-    $attached['#attached']['js'][] = [
-      'type' => 'setting',
-      'data' => $js_settings,
+    $build['#attached']['drupalSettings']['bill_vote'] = [
+      'bill_entity_id' => $entity->id(),
+      'bill_name' => \Drupal::service('nys_bill.bills_helper')->formatTitle($entity),
+      'vote_options' => $vote_label_options,
     ];
   }
 }
@@ -141,4 +137,24 @@ function nys_bills_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function nys_bills_entity_insert($entity) {
+  // This hook will update nys_bills_anon records for the current session
+  // with the id of the flag being inserted.  It will only act if the
+  // entity being inserted is of type "flagging" and the flag name is
+  // "follow_this_bill".
+  if ($entity->getEntityTypeId() == 'flagging' && $entity->flag_name->value == 'follow_this_bill') {
+    // Add the flagging id to the petition signature of the same session.
+    $flagging_id = $entity->flagging_id;
+    $this_update = \Drupal::database()->update('nys_bills_anon')
+      ->fields(['fid' => $flagging_id])
+      ->condition('session_id', $entity->sid)
+      ->condition('fid', 0)
+      ->condition('bid', $entity->entity_id)
+      ->execute();
+  }
 }

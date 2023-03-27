@@ -280,7 +280,7 @@
     }
 
     nav {
-      .c-site-search--btn {
+      .c-site-search--btn, .search__submit {
         color: $grey08;
         position: absolute;
         background-color: transparent;
@@ -309,7 +309,7 @@
 		width: 40px;
 		@extend .icon-replace__x;
 
-		&:after {
+		&::after {
 			font-size: 24px;
 		}
 	}
@@ -318,7 +318,7 @@
 // class added to .c-nav--wrap through js
 .c-nav--wrap.search-open {
 
-  .c-site-search--btn {
+  .c-site-search--btn, .search__submit  {
     cursor: pointer;
     position: absolute;
     top: 10px;
@@ -326,7 +326,7 @@
   }
 
   .c-site-search {
-    .c-site-search--btn {
+    .c-site-search--btn, .search__submit {
       cursor: pointer;
       position: relative;
       top: -45px;
@@ -590,7 +590,7 @@ nav ul.c-nav--list {
   @extend .med-text;
 }
 
-.c-site-search--btn {
+.c-site-search--btn, .search__submit {
   cursor: pointer;
   position: absolute;
   height: 45px;
@@ -1027,7 +1027,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 
   .c-site-search--btn:focus,
-  .c-site-search--btn {
+  .search__submit:focus,
+  .c-site-search--btn, .search__submit {
     position: absolute;
     top: 17px;
     right: 20px;
@@ -1108,8 +1109,11 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     }
   }
 
-  .search-open .c-site-search .c-site-search--btn,
+  .search-open .c-site-search .c-site-search--btn, 
+  .search-open .c-site-search .search__submit, 
   .search-open .c-site-search .c-site-search--btn:focus,
+  .search-open .c-site-search .search__submit:focus,
+  .search__submit:focus
   .c-site-search--btn:focus {
     position: absolute;
     height: 45px;
@@ -1139,6 +1143,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 0.1em;
+    z-index: 1;
   }
 
   .c-site-search {
@@ -1160,7 +1165,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       background-clip: padding-box;
     }
 
-    .c-site-search--btn {
+    .c-site-search--btn, .search__submit {
       position: relative;
       top: -45px;
       right: auto;

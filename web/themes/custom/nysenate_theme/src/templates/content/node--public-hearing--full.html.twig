@@ -110,11 +110,8 @@
       } only %}
     </div>
   {% endif %}
-
-  {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
 </article>
 
-{# TODO: INTEGRATE FILE DOWNLOAD LIST #}
 {% if file_items is not empty %}
   {% for file_item in file_items %}
     <span class="file">
@@ -131,16 +128,7 @@
   cta: cta
 } only %}
 
-<div class="view-content">
-  <h3 class="nys-title">
-    Related Issues
-  </h3>
-  {# TODO: INTEGRATE ISSUE CARDS - See nysenate-issues.json for sample format #}
-  {% include '@nysenate_theme/nysenate-issues/nysenate-issues.twig' with {
-    issues: issue_cards,
-    is_patternlab: false
-  } only %}
-</div>
+{{ drupal_view('issues_listings', 'meeting_issues') }}
 
 {{ drupal_view('committee_meetings', 'past') }}
 
@@ -149,5 +137,9 @@
 </h2>
 {{ drupal_view('committee_meetings', 'news') }}
 
-{# TODO: ITEMS ARE NOT DISPLAYING - INTEGRATE (Descriptions, Promo Banners, "How a Bill Becomes Law") #}
+{# TODO: ITEMS ARE NOT DISPLAYING - INTEGRATE (Committee Descriptions) #}
 {{ drupal_view('committee_meetings', 'committee') }}
+
+{{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+
+{{ how_a_bill_block }}

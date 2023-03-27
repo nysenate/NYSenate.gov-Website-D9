@@ -20,7 +20,7 @@ class ConditionalFieldSelectMultipleTest extends ConditionalFieldTestBase implem
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
     'options',
@@ -69,7 +69,7 @@ class ConditionalFieldSelectMultipleTest extends ConditionalFieldTestBase implem
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->fieldSelector = "[name=\"field_{$this->fieldName}[]\"]";
     $this->fieldStorageDefinition = [

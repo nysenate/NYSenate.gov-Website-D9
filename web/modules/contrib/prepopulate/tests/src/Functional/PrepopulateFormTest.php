@@ -57,7 +57,7 @@ class PrepopulateFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->user = $this->drupalCreateUser(['administer site configuration']);
     $this->node = $this->drupalCreateNode([
@@ -73,7 +73,7 @@ class PrepopulateFormTest extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
-  public function testAllPrepopulate() {
+  public function testAllPrepopulate(): void {
     foreach ($this->allInputs() as $input) {
       $this->assertPrepopulate($input['uri'], $input['expected']);
     }
@@ -84,7 +84,7 @@ class PrepopulateFormTest extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
-  public function testUnsafePrepopulate() {
+  public function testUnsafePrepopulate(): void {
     $this->container->get('module_installer')->uninstall(['prepopulate_test_unsafe']);
     foreach ($this->unsafeInputs() as $input) {
       $this->assertPrepopulate($input['uri'], $input['expected']);
@@ -97,7 +97,7 @@ class PrepopulateFormTest extends BrowserTestBase {
    * @return array
    *   The test data.
    */
-  public function unsafeInputs() {
+  public function unsafeInputs(): array {
     $data['checkboxes'] = [
       'uri' => 'edit[checkboxes][green]=true',
       'expected' => 'checkboxes: array ( \'black\' => 0, \'blue\' => 0, \'green\' => 0, \'red\' => 0, \'white\' => 0, \'yellow\' => 0, )',
@@ -119,9 +119,9 @@ class PrepopulateFormTest extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
-  protected function assertPrepopulate($query, $expected) {
+  protected function assertPrepopulate($query, $expected): void {
     $this->drupalGet(Url::fromUri('internal:/prepopulate_test/form?' . $query));
-    $this->drupalPostForm(NULL, [], 'Submit');
+    $this->submitForm([], 'Submit');
     $this->assertSession()->pageTextContains($expected);
   }
 
@@ -131,7 +131,7 @@ class PrepopulateFormTest extends BrowserTestBase {
    * @return array
    *   The test data.
    */
-  public function allInputs() {
+  public function allInputs(): array {
     $data['checkboxes'] = [
       'uri' => 'edit[checkboxes][green]=true',
       'expected' => 'checkboxes: array ( \'green\' => \'green\', \'black\' => 0, \'blue\' => 0, \'red\' => 0, \'white\' => 0, \'yellow\' => 0, )',

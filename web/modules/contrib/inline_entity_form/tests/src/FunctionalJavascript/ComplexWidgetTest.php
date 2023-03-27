@@ -6,6 +6,7 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\Entity\Role;
 
 /**
  * IEF complex field widget tests.
@@ -659,6 +660,156 @@ class ComplexWidgetTest extends InlineEntityFormTestBase {
 
     // Check if the referenced content could be edited.
     $assert_session->pageTextNotContains('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
+  }
+
+  /**
+   * Tests reference removal and entity deletion.
+   */
+  public function testRemoveReference() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // The default widget setting should be optional, we don't need to set it.
+    // Create five ief_reference_type entities.
+    $referenceNodes = $this->createReferenceContent(5);
+    $this->drupalCreateNode([
+      'type' => 'ief_test_complex',
+      'title' => 'Some title',
+      'multi' => array_values($referenceNodes),
+    ]);
+    /** @var NodeInterface $node */
+    $parent_node = $this->drupalGetNodeByTitle('Some title');
+
+    // Edit the parent node.
+    $this->drupalGet('node/' . $parent_node->id() . '/edit');
+
+    $title1 = 'Some reference 1';
+    $title2 = 'Some reference 2';
+    $title3 = 'Some reference 3';
+    $title4 = 'Some reference 4';
+    $title5 = 'Some reference 5';
+
+    // Revoke the delete any ief_reference_type entities permission from the
+    // user.
+    /** @var \Drupal\user\Entity\Role $user_role */
+    $user_role = Role::load($this->user->getRoles()[1]);
+    $user_role->revokePermission('delete any ief_reference_type content');
+    $user_role->save();
+
+    // Without delete permission, the checkbox to delete the entity when
+    // removing the reference should not be visible.
+    $delete_checkbox_xpath = $this->getXpathForNthInputByLabelText('Delete this node from the system.', 1);
+    $assert_session->elementsCount('css', 'tr.ief-row-entity', 5);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $assert_session->elementNotExists('xpath', $delete_checkbox_xpath);
+
+    // Grant the delete any ief_reference_type entities permission to the
+    // user and reload the page.
+    $user_role->grantPermission('delete any ief_reference_type content');
+    $user_role->save();
+    $this->getSession()->reload();
+
+    // Delete the reference to the first entity, but keep it in the system.
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->assertNotEmpty($confirm_checkbox = $assert_session->waitForElement('xpath', $delete_checkbox_xpath));
+    $assert_session->pageTextContains('Are you sure you want to remove ' . $title1);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->waitForRowRemovedByTitle($title1);
+
+    // Now unreference the second entity, also deleting it from the system.
+    $assert_session->elementsCount('css', 'tr.ief-row-entity', 4);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->assertNotEmpty($confirm_checkbox = $assert_session->waitForElement('xpath', $delete_checkbox_xpath));
+    $assert_session->pageTextContains('Are you sure you want to remove ' . $title2);
+    $confirm_checkbox->check();
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->waitForRowRemovedByTitle($title2);
+
+    // Now save the parent node and check if both are still gone.
+    $page->pressButton('Save');
+    $assert_session->pageTextContains('IEF test complex Some title has been updated.');
+
+    // Change setting to 'keep always' and revoke permission again and
+    // reload the page.
+    $user_role->revokePermission('delete any ief_reference_type content');
+    $user_role->save();
+    $this->updateSetting('removed_reference', 'keep');
+    $this->drupalGet('node/' . $parent_node->id() . '/edit');
+    $assert_session->pageTextNotContains($title1);
+    $assert_session->pageTextNotContains($title2);
+
+    // Now unreference the third entity and check if it disappeared.
+    // User has access to the Remove button because the widget is configured to
+    // keep the referenced entity and only remove the reference from the node.
+    $assert_session->elementsCount('css', 'tr.ief-row-entity', 3);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->assertEmpty($confirm_checkbox = $assert_session->waitForElement('xpath', $delete_checkbox_xpath));
+    $assert_session->pageTextContains('Are you sure you want to remove ' . $title3);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->waitForRowRemovedByTitle($title3);
+
+    // Save the parent node again and check if the third one is still gone.
+    $page->pressButton('Save');
+    $assert_session->pageTextContains('IEF test complex Some title has been updated.');
+    $this->drupalGet('node/' . $parent_node->id() . '/edit');
+    $assert_session->pageTextNotContains($title3);
+
+    // Change setting to 'delete always' and reload page.
+    $this->updateSetting('removed_reference', 'delete');
+    $this->drupalGet('node/' . $parent_node->id() . '/edit');
+    $assert_session->pageTextNotContains($title1);
+    $assert_session->pageTextNotContains($title2);
+    $assert_session->pageTextNotContains($title3);
+
+    // Now assert the Remove button is not available, since the user has no
+    // permission to delete and the widget is configured for deletion.
+    $assert_session->elementsCount('css', 'tr.ief-row-entity', 2);
+    $assert_session->elementNotExists('xpath', '(//input[@value="Remove"])[1]');
+
+    // Grant the delete any ief_reference_type entities permission to the
+    // user and reload the page.
+    $user_role->grantPermission('delete any ief_reference_type content');
+    $user_role->save();
+    $this->getSession()->reload();
+
+    // Now unreference the fourth entity and check if it disappeared.
+    $assert_session->elementsCount('css', 'tr.ief-row-entity', 2);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->assertEmpty($confirm_checkbox = $assert_session->waitForElement('xpath', $delete_checkbox_xpath));
+    $assert_session->pageTextContains('Are you sure you want to remove ' . $title4);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->waitForRowRemovedByTitle($title4);
+
+    // Save the parent node again and check if the fourth one is still gone.
+    $page->pressButton('Save');
+    $assert_session->pageTextNotContains('field is required.');
+    $assert_session->pageTextContains('IEF test complex Some title has been updated.');
+    $this->drupalGet('node/' . $parent_node->id() . '/edit');
+    $assert_session->pageTextNotContains($title4);
+
+    // Now unreference the fifth entity and check if it disappeared.
+    $assert_session->elementsCount('css', 'tr.ief-row-entity', 1);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->assertEmpty($confirm_checkbox = $assert_session->waitForElement('xpath', $delete_checkbox_xpath));
+    $assert_session->pageTextContains('Are you sure you want to remove ' . $title5);
+    $assert_session->elementExists('xpath', '(//input[@value="Remove"])[1]')->press();
+    $this->waitForRowRemovedByTitle($title5);
+    $assert_session->pageTextNotContains($title5);
+
+    // Save the parent node again and check if deleting the fifth child entity
+    // failed because the node couldn't be saved with empty required fields.
+    $page->pressButton('Save');
+    $assert_session->pageTextNotContains('IEF test complex Some title has been updated.');
+    $assert_session->pageTextNotContains($title5);
+
+    // Finally, check if the second and fourth child entity are completely gone
+    // and the first and third one are still there as expected, while the fifth
+    // one is still there as saving the parent node failed.
+    $this->assertTrue($this->drupalGetNodeByTitle($title1) instanceof NodeInterface, 'First inline entity still exists.');
+    $this->assertTrue(empty($this->drupalGetNodeByTitle($title2)), 'Second inline entity was deleted from the site.');
+    $this->assertTrue($this->drupalGetNodeByTitle($title3) instanceof NodeInterface, 'Third inline entity still exists.');
+    $this->assertTrue(empty($this->drupalGetNodeByTitle($title4)), 'Fourth inline entity was deleted from the site.');
+    $this->assertTrue($this->drupalGetNodeByTitle($title5) instanceof NodeInterface, "Fifth inline entity still exists.");
   }
 
   /**

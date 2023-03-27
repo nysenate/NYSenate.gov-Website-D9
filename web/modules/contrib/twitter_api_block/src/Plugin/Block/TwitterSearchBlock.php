@@ -29,7 +29,7 @@ class TwitterSearchBlock extends TwitterBlockBase {
       '#title' => $this->t('Display'),
       '#options' => [
         'embed' => $this->t('Embed'),
-        'raw' => $this->t('Raw')
+        'raw' => $this->t('Raw'),
       ],
       '#default_value' => $config['options']['display'] ?? 'embed',
       '#required' => TRUE,
@@ -47,15 +47,15 @@ class TwitterSearchBlock extends TwitterBlockBase {
       '#type' => 'textfield',
       '#title' => $this->t("Search"),
       '#description' => $this->t("Enter your query string (ex: <code>#drupal</code> or <code>from:drupal</code>).") . '<br>' .
-        Link::fromTextAndUrl(
+      Link::fromTextAndUrl(
           $this->t('Full documentation here'),
           Url::fromUri('https://developer.twitter.com/en/docs/twitter-api/tweets/search/integrate/build-a-query', [
             'attributes' => [
               'target' => '_blank',
             ],
           ]),
-        )->toString(),
-      '#default_value' => isset($config['options']['search']) ? $config['options']['search'] : NULL,
+      )->toString(),
+      '#default_value' => $config['options']['search'] ?? NULL,
       '#required' => TRUE,
     ];
 
@@ -72,14 +72,14 @@ class TwitterSearchBlock extends TwitterBlockBase {
       '#title' => $this->t('Query Tweets fields'),
       '#default_value' => $config['options']['tweet_fields'] ?? NULL,
       '#description' => $this->t('Comma-separated values. No space after commas.') . '<br>' .
-        $this->t("Use it only if you know what you're doing otherwise, leave this empty."),
+      $this->t("Use it only if you know what you're doing otherwise, leave this empty."),
     ];
 
     $form['options']['sort_order'] = [
       '#type' => 'radios',
       '#options' => [
         'recency' => $this->t('Most recent first'),
-        'relevancy' => $this->t('Most relevant first')
+        'relevancy' => $this->t('Most relevant first'),
       ],
       '#title' => $this->t('Sort order'),
       '#default_value' => $config['options']['sort_order'] ?? 'recency',
@@ -111,4 +111,5 @@ class TwitterSearchBlock extends TwitterBlockBase {
       '#context' => ['query' => $arguments['query']],
     ];
   }
+
 }

@@ -16,7 +16,7 @@ class LinkitFormatAdminTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = ['editor', 'filter', 'linkit'];
+  protected static $modules = ['editor', 'filter', 'linkit'];
 
   /**
    * {@inheritdoc}
@@ -26,7 +26,7 @@ class LinkitFormatAdminTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $account = $this->drupalCreateUser([
@@ -49,15 +49,15 @@ class LinkitFormatAdminTest extends WebDriverTestBase {
     $page->findField('filters[filter_html][status]')->check();
 
     $javascript = "(function (){ return jQuery('p.editor-update-message > strong').text(); })()";
-    $this->assertNotContains('<a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>', $session->evaluateScript($javascript));
+    $this->assertStringNotContainsString('<a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>', $session->evaluateScript($javascript));
 
     // Enable the 'Linkit filter' filter.
     $page->findField('filters[linkit][status]')->check();
-    $this->assertContains('<a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>', $session->evaluateScript($javascript));
+    $this->assertStringContainsString('<a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>', $session->evaluateScript($javascript));
 
     // Disable the 'Linkit filter' filter.
     $page->findField('filters[linkit][status]')->uncheck();
-    $this->assertNotContains('<a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>', $session->evaluateScript($javascript));
+    $this->assertStringNotContainsString('<a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>', $session->evaluateScript($javascript));
   }
 
 }

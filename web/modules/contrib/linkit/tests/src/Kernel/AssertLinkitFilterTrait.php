@@ -29,7 +29,7 @@ trait AssertLinkitFilterTrait {
   protected function assertLinkitFilter(EntityInterface $entity, $langcode = LanguageInterface::LANGCODE_SITE_DEFAULT) {
     if ($entity->getEntityTypeId() === "file") {
       /** @var \Drupal\file\Entity\File $entity */
-      $href = file_create_url($entity->getFileUri());
+      $href = \Drupal::service('file_url_generator')->generateAbsoluteString($entity->getFileUri());
     }
     else {
       $href = $entity->toUrl()->toString();
@@ -51,7 +51,7 @@ trait AssertLinkitFilterTrait {
   protected function assertLinkitFilterWithTitle(EntityInterface $entity, $langcode = LanguageInterface::LANGCODE_SITE_DEFAULT) {
     if ($entity->getEntityTypeId() === "file") {
       /** @var \Drupal\file\Entity\File $entity */
-      $href = file_create_url($entity->getFileUri());
+      $href = \Drupal::service('file_url_generator')->generateAbsoluteString($entity->getFileUri());
     }
     else {
       $href = $entity->toUrl()->toString();

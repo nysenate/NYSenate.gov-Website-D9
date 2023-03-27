@@ -91,7 +91,13 @@ function _email_tfa_mail_text($type, $tfa, $language) {
  * {@inheritdoc}
  */
 function _email_tfa_in_array_any($needles, $haystack) {
-  return !empty(array_intersect($needles, $haystack));
+  $config = \Drupal::config('email_tfa.settings');
+  if ($config->get('role_exclusion_type') == 'force_for') {
+    return empty(array_intersect($needles, $haystack));
+  }
+  else {
+    return !empty(array_intersect($needles, $haystack));
+  }
 }
 
 /**

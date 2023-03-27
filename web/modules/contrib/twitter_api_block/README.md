@@ -4,15 +4,17 @@ This module adds a blocks to search and display/embed tweets in Drupal.
 
 It uses the Twitter API v2.
 
-It loads the necessary [Javascript](https://platform.twitter.com/widgets.js) from Twitter for you.
+It loads the necessary [Javascript](https://platform.twitter.com/widgets.js)
+from Twitter for you.
 
-It requires `drupal/key` module to create a Twitter application and securely save credentials.
+It requires `drupal/key` module to create a Twitter application and securely
+save credentials.
 
 There is no other dependencies.
 
 ## Configuration
 
-Create a Twitter app and save its secret credentials in a new _Key_ in Drupal: 
+Create a Twitter app and save its secret credentials in a new _Key_ in Drupal:
 - Signin/Signup on the Twitter Developer platform
 - Create a new project
 - Create a new application in this project
@@ -35,7 +37,7 @@ Template are is customizable in your theme with;
 - `tweets.html.twig`
 - `tweet.html.twig`
 
-Tweets can be rendered as _oembed_ content (e.g. the default embed Tweet) or as 
+Tweets can be rendered as _oembed_ content (e.g. the default embed Tweet) or as
 raw text.
 
 ## Examples

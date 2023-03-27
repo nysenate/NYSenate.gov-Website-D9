@@ -21,16 +21,18 @@ class MediaInternetFieldValue extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     // We're operating with the source values.
-    $source_values = $row->getSource();
+    $source_value = $row->getSourceProperty('uri') ?? $value;
     $replaced = preg_replace([
       '/^youtube:\/\/v\//i',
       '/^vimeo:\/\/v\//i',
+      '/^https:\/\/www\.youtube\.com\/watch\?v=(.{11}).*/',
     ], [
       'https://www.youtube.com/watch?v=',
       'https://vimeo.com/',
-    ], $source_values['uri']);
+      'https://www.youtube.com/watch?v=$1',
+    ], $value);
 
-    if ($replaced !== $source_values['uri']) {
+    if ($replaced !== $source_value) {
       return $replaced;
     }
 

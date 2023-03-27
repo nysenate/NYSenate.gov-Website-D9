@@ -22,7 +22,7 @@ trait MediaMigrationTestTrait {
    *   Path to the database fixture file.
    */
   protected function getFixtureFilePath() {
-    return drupal_get_path('module', 'media_migration') . '/tests/fixtures/drupal7_media.php';
+    return \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures/drupal7_media.php';
   }
 
   /**
@@ -102,6 +102,22 @@ trait MediaMigrationTestTrait {
       ];
       $source_field->set('dependencies', $dependencies)->save();
     }
+  }
+
+  /**
+   * Get the major and minor version of Drupal i.e. 10.1
+   *
+   * @return string
+   *   The major and minor version of Drupal.
+   */
+  protected function coreMajorMinorVersion(): string {
+    return implode(
+      '.',
+      [
+        explode('.', \Drupal::VERSION)[0],
+        explode('.', \Drupal::VERSION)[1],
+      ]
+    );
   }
 
 }

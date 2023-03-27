@@ -3,6 +3,8 @@
 namespace Drupal\media_migration\Utility;
 
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\media_migration\MediaMigration;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 
 /**
  * Utility for filtering and manipulating migration plugin definitions.
@@ -10,6 +12,33 @@ use Drupal\Core\Plugin\PluginBase;
  * @ingroup utility
  */
 class MigrationPluginTool {
+
+  /**
+   * Discovers all media entity migrations provided my Media Migration.
+   *
+   * @return string[]
+   *   List of media entity migration IDs.
+   */
+  public static function getMediaEntityMigrationIds(): array {
+    static $ids;
+
+    if (!isset($ids)) {
+      $manager = \Drupal::service('plugin.manager.migration');
+      assert($manager instanceof MigrationPluginManagerInterface);
+
+      $media_migrations = array_filter(
+        $manager->getDefinitions(),
+        function (array $definition) {
+          return $definition['destination']['plugin'] === 'entity:media' &&
+            in_array(MediaMigration::MIGRATION_TAG_CONTENT, $definition['migration_tags'] ?? [], TRUE);
+        }
+      );
+
+      $ids = array_keys($media_migrations);
+    }
+
+    return $ids;
+  }
 
   /**
    * Finds and returns the content entity migrations from the given migrations.

@@ -12,7 +12,7 @@ abstract class NameTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stark';
 
   /**
    * Modules to enable.
@@ -52,32 +52,8 @@ abstract class NameTestBase extends BrowserTestBase {
       'access content',
       'access administration pages',
       'administer node fields',
-      'bypass node access'
+      'bypass node access',
     ]);
-  }
-
-  /**
-   * Helper function.
-   *
-   * @todo Replace calls to this method using Mink's NodeElement::isChecked().
-   */
-  protected function assertNoFieldCheckedByName($name, $message = '') {
-    $elements = $this->xpath('//input[@name=:name]', [':name' => $name]);
-    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : t('Checkbox field @name is not checked.', [
-      '@name' => $name,
-    ]), t('Browser'));
-  }
-
-  /**
-   * Helper function.
-   *
-   * @todo Replace calls to this method using Mink's NodeElement::isChecked().
-   */
-  protected function assertFieldCheckedByName($name, $message = '') {
-    $elements = $this->xpath('//input[@name=:name]', [':name' => $name]);
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : t('Checkbox field @name is checked.', [
-      '@name' => $name,
-    ]), t('Browser'));
   }
 
   /**

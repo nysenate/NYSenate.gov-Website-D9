@@ -3,14 +3,16 @@
 namespace Drupal\media_migration\Plugin\migrate\process;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\Entity\File;
 use Drupal\media_migration\MediaMigration;
 use Drupal\media_migration\MediaMigrationUuidOracleInterface;
+use Drupal\media_migration\Utility\MigrationPluginTool;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\Row;
@@ -90,9 +92,14 @@ class MediaWysiwygFilter extends EmbedFilterBase implements ConfigurableInterfac
    *   The migration plugin manager.
    * @param \Drupal\media_migration\MediaMigrationUuidOracleInterface $media_uuid_oracle
    *   The media UUID oracle.
+   *   The entity embed display plugin manager service, if available.
+   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
+   *   The migration lookup service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, $entity_embed_display_manager, MigrationPluginManagerInterface $migration_plugin_manager, MediaMigrationUuidOracleInterface $media_uuid_oracle) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $media_uuid_oracle, $entity_embed_display_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, $entity_embed_display_manager, MigrationPluginManagerInterface $migration_plugin_manager, MediaMigrationUuidOracleInterface $media_uuid_oracle, MigrateLookupInterface $migrate_lookup, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $media_uuid_oracle, $entity_embed_display_manager, $migrate_lookup, $entity_type_manager);
     $this->setConfiguration($configuration);
 
     $this->migrationPluginManager = $migration_plugin_manager;
@@ -109,7 +116,9 @@ class MediaWysiwygFilter extends EmbedFilterBase implements ConfigurableInterfac
       $migration,
       $container->get('plugin.manager.entity_embed.display', ContainerInterface::NULL_ON_INVALID_REFERENCE),
       $container->get('plugin.manager.migration'),
-      $container->get('media_migration.media_uuid_oracle')
+      $container->get('media_migration.media_uuid_oracle'),
+      $container->get('migrate.lookup'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -119,8 +128,8 @@ class MediaWysiwygFilter extends EmbedFilterBase implements ConfigurableInterfac
   public function defaultConfiguration() {
     return [
       'view_mode_matching' => [],
-      'media_migrations' => [],
-      'file_migrations' => [],
+      'media_migrations' => NULL,
+      'file_migrations' => NULL,
     ];
   }
 
@@ -275,28 +284,7 @@ class MediaWysiwygFilter extends EmbedFilterBase implements ConfigurableInterfac
    *   The new ID.
    */
   protected function findDestId($source_id, array $migrations) {
-    try {
-      $lookup_migrations = $this->migrationPluginManager->createInstances($migrations);
-    }
-    catch (PluginException $exception) {
-      return $source_id;
-    }
-
-    foreach ($lookup_migrations as $lookup_migration_id => $lookup_migration) {
-      $source_id_values[$lookup_migration_id] = [$source_id];
-      try {
-        $destination_ids = $lookup_migration->getIdMap()->lookupDestinationIds($source_id_values[$lookup_migration_id]);
-      }
-      catch (MigrateException $exception) {
-        continue;
-      }
-
-      if (!empty($destination_ids)) {
-        return reset($destination_ids)[0];
-      }
-    }
-
-    return $source_id;
+    return $this->getMigratedMediaId($source_id, $migrations) ?? $source_id;
   }
 
   /**
@@ -324,12 +312,13 @@ class MediaWysiwygFilter extends EmbedFilterBase implements ConfigurableInterfac
     $reference_attribute = $reference_method_is_id ?
       'data-entity-id' :
       'data-entity-uuid';
-    if ($reference_method_is_id && $this->configuration['media_migrations']) {
-      $embed_metadata['id'] = $this->findDestId($embed_metadata['id'], $this->configuration['media_migrations']);
-    }
-    $attributes[$reference_attribute] = $reference_method_is_id ?
-      $embed_metadata['id'] :
-      $this->mediaUuidOracle->getMediaUuid((int) $embed_metadata['id']);
+
+    $migrations = $this->configuration['media_migrations'] ?? MigrationPluginTool::getMediaEntityMigrationIds();
+
+    $attributes[$reference_attribute] = $reference_method_is_id
+      ? $this->findDestId($embed_metadata['id'], $migrations)
+      : $this->getExistingMediaUuid($embed_metadata['id'], $migrations) ?? $this->mediaUuidOracle->getMediaUuid((int) $embed_metadata['id']);
+    $embed_metadata['id'] = $this->findDestId($embed_metadata['id'], $migrations);
 
     // Add attribute that controls how the embed media is displayed.
     $display_mode_property = $destination_filter_plugin_id === MediaMigration::MEDIA_TOKEN_DESTINATION_FILTER_ENTITY_EMBED ?

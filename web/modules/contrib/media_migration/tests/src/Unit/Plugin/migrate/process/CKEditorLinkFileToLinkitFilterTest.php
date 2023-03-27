@@ -23,7 +23,9 @@ class CKEditorLinkFileToLinkitFilterTest extends ProcessTestBase {
       'ckeditor_link_file_to_linkit',
       [],
       $this->migration,
-      $this->uuidOracle->reveal()
+      $this->uuidOracle->reveal(),
+      $this->migrateLookup->reveal(),
+      $this->entityTypeManager->reveal()
     );
 
     $this->assertEquals(

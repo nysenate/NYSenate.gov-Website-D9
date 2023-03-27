@@ -2,8 +2,9 @@
 
 namespace Drupal\Tests\name\Functional;
 
+use Behat\Mink\Element\TraversableElement;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -128,12 +129,12 @@ class NameWidgetTest extends NameTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $this->assertFieldByTypeAndName('select', 'field_name_test[0][title]');
-    $this->assertFieldByTypeAndName('input', 'field_name_test[0][given]');
-    $this->assertFieldByTypeAndName('input', 'field_name_test[0][middle]');
-    $this->assertFieldByTypeAndName('input', 'field_name_test[0][family]');
-    $this->assertFieldByTypeAndName('input', 'field_name_test[0][generational]');
-    $this->assertFieldByTypeAndName('input', 'field_name_test[0][credentials]');
+    $this->assertSession()->selectExists('field_name_test[0][title]');
+    $this->inputFieldExists('field_name_test[0][given]');
+    $this->inputFieldExists('field_name_test[0][middle]');
+    $this->inputFieldExists('field_name_test[0][family]');
+    $this->inputFieldExists('field_name_test[0][generational]');
+    $this->inputFieldExists('field_name_test[0][credentials]');
 
     // Checks the existence and positioning of the components.
     foreach (_name_component_keys() as $component) {
@@ -225,7 +226,7 @@ class NameWidgetTest extends NameTestBase {
 
     $this->assertTrue((bool) preg_match($regexp, $content), 'Generational field wrapper classes appear to be in the correct order.');
 
-    // @todo: Tests for settings[credentials_inline] setting.
+    // @todo Tests for settings[credentials_inline] setting.
   }
 
   /**
@@ -322,54 +323,31 @@ class NameWidgetTest extends NameTestBase {
   }
 
   /**
-   * Asserts that the given field exists.
+   * Checks that specific input field exists on the current page.
    *
-   * @param string $type
-   *   The form field type, for example 'input' or 'select'.
    * @param string $name
-   *   The form field full name.
-   * @param mixed $value
-   *   The expected value that the form field has.
-   * @param string $message
-   *   The failure message.
+   *   One of id|name|label|value for the input field.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
    *
-   * @todo Replace calls to this method using Mink's NodeElement::getValue().
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching element.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *   When the element doesn't exist.
    */
-  protected function assertFieldByTypeAndName($type, $name, $value = NULL, $message = NULL) {
-    if (!isset($message)) {
-      if (!isset($value)) {
-        $message = new FormattableMarkup('Found @type field with name @name', [
-          '@name' => var_export($name, TRUE),
-          '@type' => $type,
-        ]);
-      }
-      else {
-        $message = new FormattableMarkup('Found @type field with name @name and value @value', [
-          '@name' => var_export($name, TRUE),
-          '@type' => $type,
-          '@value' => var_export($value, TRUE),
-        ]);
-      }
-    }
-    return $this->assertFieldByXPath($this->constructFieldXpathByTypeAndAttribute($type, 'name', $name), $value, $message);
-  }
+  public function inputFieldExists($name, TraversableElement $container = NULL) {
+    $container = $container ?: $this->getSession()->getPage();
+    $node = $container->find('named', [
+      'field',
+      $name,
+    ]);
 
-  /**
-   * Helper: Constructs an XPath for the given set of attributes and value.
-   *
-   * @param string $type
-   *   Type of element.
-   * @param string $attribute
-   *   Field attributes.
-   * @param string $value
-   *   Value of field.
-   *
-   * @return string
-   *   XPath for specified values.
-   */
-  protected function constructFieldXpathByTypeAndAttribute($type, $attribute, $value) {
-    $xpath = '//' . $type . '[@' . $attribute . '=:value]';
-    return $this->assertSession()->buildXPathQuery($xpath, [':value' => $value]);
+    if ($node === NULL || $node->getTagName() != 'input') {
+      throw new ElementNotFoundException($this->getSession()->getDriver(), 'input', 'id|name|label|value', $name);
+    }
+
+    return $node;
   }
 
 }

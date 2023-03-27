@@ -12,7 +12,7 @@ class EntityMatcherDeriverTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block', 'block_content', 'node', 'field'];
+  protected static $modules = ['block', 'block_content', 'node', 'field'];
 
   /**
    * The matcher manager.
@@ -24,7 +24,7 @@ class EntityMatcherDeriverTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig(['block_content']);

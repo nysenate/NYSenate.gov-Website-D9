@@ -2,9 +2,13 @@
 
 namespace Drupal\Tests\media_migration\Unit\Plugin\migrate\process;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\media_migration\MediaMigrationUuidOracleInterface;
+use Drupal\migrate\MigrateLookupInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 
@@ -66,6 +70,20 @@ abstract class ProcessTestBase extends MigrateProcessTestCase {
   protected $logger;
 
   /**
+   * A migrate lookup prophecy.
+   *
+   * @var \Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $migrateLookup;
+
+  /**
+   * Entity type manager prophecy.
+   *
+   * @var \Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -96,6 +114,16 @@ abstract class ProcessTestBase extends MigrateProcessTestCase {
       ->willReturn($this->migrationConfiguration['destination'] ?? []);
 
     $this->logger = $this->prophesize(LoggerChannelInterface::class);
+
+    $this->migrateLookup = $this->prophesize(MigrateLookupInterface::class);
+
+    $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
+
+    $container = new ContainerBuilder();
+    $migration_manager = $this->prophesize(MigrationPluginManagerInterface::class);
+    $migration_manager->getDefinitions()->willReturn([]);
+    $container->set('plugin.manager.migration', $migration_manager->reveal());
+    \Drupal::setContainer($container);
   }
 
   /**

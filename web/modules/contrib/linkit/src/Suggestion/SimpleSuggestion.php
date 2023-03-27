@@ -76,6 +76,7 @@ class SimpleSuggestion implements SuggestionInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize() {
     return [
       'label' => $this->getLabel(),

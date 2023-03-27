@@ -32,7 +32,7 @@ class ConditionalFieldsUserTest extends ConditionalFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'field_ui',
   ];
@@ -45,7 +45,7 @@ class ConditionalFieldsUserTest extends ConditionalFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->addField($this->dependee, 'boolean', 'boolean_checkbox');
     $this->addField($this->dependent, 'text', 'text_textfield');

@@ -15,7 +15,7 @@ class MigrateFieldTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'text',
   ];

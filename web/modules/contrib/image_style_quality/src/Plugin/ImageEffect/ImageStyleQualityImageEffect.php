@@ -20,24 +20,37 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ImageStyleQualityImageEffect extends ConfigurableImageEffectBase {
 
-  /**
-   * A mutable quality toolkit.
-   *
-   * @var array
-   */
-  protected $mutableQualityToolkit;
+  protected array $mutableQualityToolkit;
+  protected ConfigFactoryInterface $configFactory;
 
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
 
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(ImageInterface $image) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, array $toolkit, ConfigFactoryInterface $config_factory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $logger);
+    $this->mutableQualityToolkit = $toolkit;
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('logger.factory')->get('image'),
+      $container->get('image_style_quality.mutable_quality_toolkit_manager')->getActiveToolkit(),
+      $container->get('config.factory')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyEffect(ImageInterface $image): void {
     $this->configFactory->get($this->mutableQualityToolkit['config_object'])->setModuleOverride([
       $this->mutableQualityToolkit['config_key'] => $this->configuration['quality'],
     ]);
@@ -46,7 +59,7 @@ class ImageStyleQualityImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form['quality'] = [
       '#type' => 'number',
       '#title' => $this->t('Quality'),
@@ -62,14 +75,14 @@ class ImageStyleQualityImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['quality'] = $form_state->getValue('quality');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     return [
       '#markup' => $this->t('(@quality% Quality)', ['@quality' => $this->configuration['quality']]),
     ];
@@ -78,33 +91,10 @@ class ImageStyleQualityImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'quality' => 75,
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, $toolkit, ConfigFactoryInterface $config_factory) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $logger);
-    $this->mutableQualityToolkit = $toolkit;
-    $this->configFactory = $config_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('logger.factory')->get('image'),
-      $container->get('image_style_quality.mutable_quality_toolkit_manager')->getActiveToolkit(),
-      $container->get('config.factory')
-    );
   }
 
 }

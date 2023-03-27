@@ -25,7 +25,7 @@ class ConditionalFieldEntityReferenceTest extends ConditionalFieldTestBase imple
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
   ];
@@ -73,7 +73,7 @@ class ConditionalFieldEntityReferenceTest extends ConditionalFieldTestBase imple
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldSelector = '[name="field_' . $this->fieldName . '[0][target_id]"]';

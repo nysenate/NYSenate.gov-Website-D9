@@ -5,6 +5,7 @@ namespace Drupal\Tests\linkit\Kernel;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\filter\FilterPluginCollection;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
@@ -26,7 +27,7 @@ class LinkitFilterEntityTest extends LinkitKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'filter',
     'entity_test',
     'path',
@@ -38,7 +39,7 @@ class LinkitFilterEntityTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test');
@@ -122,7 +123,7 @@ class LinkitFilterEntityTest extends LinkitKernelTestBase {
       'filename' => 'druplicon.txt',
       'uri' => 'public://druplicon.txt',
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
+      'status' => FileInterface::STATUS_PERMANENT,
     ]);
     $file->save();
 
@@ -161,8 +162,8 @@ class LinkitFilterEntityTest extends LinkitKernelTestBase {
 
     // Make sure original query and fragment are preserved.
     $input = '<a data-entity-type="' . $entity->getEntityTypeId() . '" data-entity-uuid="' . $entity->uuid() . '" href="unimportant/1234?query=string#fragment">Link text</a>';
-    $this->assertContains('?query=string', $this->process($input)->getProcessedText());
-    $this->assertContains('#fragment', $this->process($input)->getProcessedText());
+    $this->assertStringContainsString('?query=string', $this->process($input)->getProcessedText());
+    $this->assertStringContainsString('#fragment', $this->process($input)->getProcessedText());
   }
 
 }

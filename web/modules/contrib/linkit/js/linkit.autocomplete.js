@@ -3,7 +3,7 @@
  * Linkit Autocomplete based on jQuery UI.
  */
 
-(function ($, Drupal, _) {
+(function ($, Drupal, once) {
 
   'use strict';
 
@@ -118,9 +118,14 @@
   function renderMenu(ul, items) {
     var self = this.element.autocomplete('instance');
 
-    var grouped_items = _.groupBy(items, function (item) {
-      return item.hasOwnProperty('group') ? item.group : '';
-    });
+    var grouped_items = {};
+    items.forEach(function (item) {
+      const group = item.hasOwnProperty('group') ? item.group : '';
+      if (!grouped_items.hasOwnProperty(group)) {
+        grouped_items[group] = [];
+      }
+      grouped_items[group].push(item);
+    })
 
     $.each(grouped_items, function (group, items) {
       if (group.length) {
@@ -156,7 +161,7 @@
   Drupal.behaviors.linkit_autocomplete = {
     attach: function (context) {
       // Act on textfields with the "form-linkit-autocomplete" class.
-      var $autocomplete = $(context).find('input.form-linkit-autocomplete').once('linkit-autocomplete');
+      var $autocomplete = $(once('linkit-autocomplete', 'input.form-linkit-autocomplete', context));
       if ($autocomplete.length) {
         $.widget('custom.autocomplete', $.ui.autocomplete, {
           _create: function () {
@@ -185,9 +190,8 @@
     },
     detach: function (context, settings, trigger) {
       if (trigger === 'unload') {
-        $(context).find('input.form-linkit-autocomplete')
-          .removeOnce('linkit-autocomplete')
-          .autocomplete('destroy');
+        once.remove('linkit-autocomplete', 'input.form-linkit-autocomplete', context)
+          .forEach((autocomplete) => $(autocomplete).autocomplete('destroy'));
       }
     }
   };
@@ -212,4 +216,4 @@
     }
   };
 
-})(jQuery, Drupal, _);
+})(jQuery, Drupal, once);

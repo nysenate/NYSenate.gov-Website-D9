@@ -136,7 +136,7 @@ abstract class MediaMigrationTestBase extends MigrateDrupalTestBase {
     // properly migrate the public files.
     $fs_fixture_path = implode(DIRECTORY_SEPARATOR, [
       DRUPAL_ROOT,
-      drupal_get_path('module', 'media_migration'),
+      \Drupal::service('extension.list.module')->getPath('media_migration'),
       'tests',
       'fixtures',
     ]);

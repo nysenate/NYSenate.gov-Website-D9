@@ -14,7 +14,7 @@ abstract class LinkitBrowserTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['linkit', 'linkit_test', 'block'];
+  protected static $modules = ['linkit', 'linkit_test', 'block'];
 
   /**
    * {@inheritdoc}
@@ -38,7 +38,7 @@ abstract class LinkitBrowserTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->placeBlock('page_title_block');

@@ -24,7 +24,7 @@ class LinkitControllerTest extends LinkitBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->linkitProfile = $this->createProfile();

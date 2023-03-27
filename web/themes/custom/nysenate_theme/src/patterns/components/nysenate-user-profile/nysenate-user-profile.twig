@@ -2,7 +2,8 @@
 
 <div class="c-block c-login">
   <h3 class="nys-title">
-    {{ 'This address is in Senate District'|t }} {{ district_number }}
+    {{ 'This address is in Senate District'|t }}
+    {{ district_number }}
   </h3>
   <p class="body">
     {{
@@ -14,8 +15,7 @@
   <div class="content">
     <div class="c-login-left">
       <div class="nys-senator--thumb">
-       <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}"
-         alt="Default avatar" />
+        <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}" alt="Default avatar"/>
       </div>
       <ul class="c-user--info">
         <li>{{ user.name }}</li>
@@ -26,14 +26,15 @@
     </div>
     <div class="c-login-right">
       <div class="nys-senator--thumb">
-       <img src="{{ senator.image }}" alt="Senator {{ senator.name }} avatar" />
+        <img src="{{ senator.image }}" alt="Senator {{ senator.name }} avatar"/>
       </div>
       <ul class="c-senator--info">
         <li>Your Senator</li>
         <li>{{ senator.name }}</li>
         <li>{{ senator.party }}</li>
         <li>
-          NY Senate District {{ district_number }}
+          NY Senate District
+          {{ district_number }}
           {% if senator.location %}
             (<a href="{{ senator.location }}">Map</a>)
           {% endif %}
@@ -41,3 +42,4 @@
       </ul>
     </div>
   </div>
+</div>

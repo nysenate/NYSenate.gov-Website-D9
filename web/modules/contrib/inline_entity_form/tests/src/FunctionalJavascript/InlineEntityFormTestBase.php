@@ -133,7 +133,7 @@ abstract class InlineEntityFormTestBase extends WebDriverTestBase {
     $label_key = $entity_type->getKey('label');
     $bundle_key = $entity_type->getKey('bundle');
 
-    $query = $entity_type_manager->getStorage($entity_type_id)->getQuery();
+    $query = $entity_type_manager->getStorage($entity_type_id)->getQuery()->accessCheck(FALSE);
     $query->condition($label_key, $label);
 
     if ($bundle && $bundle_key) {

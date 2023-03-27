@@ -18,7 +18,7 @@ class DrushWithCoreMigrationsFromFileTest extends DrushTestBase {
    * {@inheritdoc}
    */
   protected function getFixtureFilePath() {
-    return drupal_get_path('module', 'media_migration') . '/tests/fixtures/drupal7_nomedia.php';
+    return \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures/drupal7_nomedia.php';
   }
 
   /**
@@ -29,7 +29,7 @@ class DrushWithCoreMigrationsFromFileTest extends DrushTestBase {
 
     // Modify source site's file public path settings for being able to migrate
     // files. (This is required for the "d7_file" migration.)
-    $source_dir = DRUPAL_ROOT . DIRECTORY_SEPARATOR . drupal_get_path('module', 'media_migration') . '/tests/fixtures/sites/default/files';
+    $source_dir = DRUPAL_ROOT . DIRECTORY_SEPARATOR . \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures/sites/default/files';
     $this->sourceDatabase->upsert('variable')
       ->key('name')
       ->fields([

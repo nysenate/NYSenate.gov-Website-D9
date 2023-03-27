@@ -43,7 +43,7 @@ abstract class MediaMigrationPlainTestBase extends MediaMigrationTestBase {
    * {@inheritdoc}
    */
   protected function getFixtureFilePath() {
-    return drupal_get_path('module', 'media_migration') . '/tests/fixtures/drupal7_nomedia.php';
+    return \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures/drupal7_nomedia.php';
   }
 
   /**
@@ -55,7 +55,7 @@ abstract class MediaMigrationPlainTestBase extends MediaMigrationTestBase {
     // properly migrate the public files.
     $fs_fixture_path = implode(DIRECTORY_SEPARATOR, [
       DRUPAL_ROOT,
-      drupal_get_path('module', 'media_migration'),
+      \Drupal::service('extension.list.module')->getPath('media_migration'),
       'tests',
       'fixtures',
     ]);

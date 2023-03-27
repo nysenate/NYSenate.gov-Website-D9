@@ -4,6 +4,7 @@ namespace Drupal\linkit\Plugin\Linkit\Matcher;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\linkit\Utility\LinkitXss;
 
@@ -57,7 +58,7 @@ class FileMatcher extends EntityMatcher {
   public function defaultConfiguration() {
     return [
       'file_extensions' => '',
-      'file_status' => FILE_STATUS_PERMANENT,
+      'file_status' => FileInterface::STATUS_PERMANENT,
       'images' => [
         'show_dimensions' => FALSE,
         'show_thumbnail' => FALSE,
@@ -226,7 +227,7 @@ class FileMatcher extends EntityMatcher {
    */
   protected function buildPath(EntityInterface $entity) {
     /** @var \Drupal\file\FileInterface $entity */
-    return file_url_transform_relative(file_create_url($entity->getFileUri()));
+    return \Drupal::service('file_url_generator')->generateString($entity->getFileUri());
   }
 
 }

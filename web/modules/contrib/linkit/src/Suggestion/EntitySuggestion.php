@@ -70,6 +70,7 @@ class EntitySuggestion extends DescriptionSuggestion {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize() {
     return parent::jsonSerialize() + [
       'entity_uuid' => $this->entityUuid,

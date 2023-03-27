@@ -45,7 +45,9 @@ class MediaWysiwygFilterTest extends ProcessTestBase {
       $this->migration,
       NULL,
       $migration_plugin_manager->reveal(),
-      $this->uuidOracle->reveal()
+      $this->uuidOracle->reveal(),
+      $this->migrateLookup->reveal(),
+      $this->entityTypeManager->reveal()
     );
 
     $this->assertEquals(

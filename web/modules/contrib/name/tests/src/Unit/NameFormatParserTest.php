@@ -38,7 +38,7 @@ class NameFormatParserTest extends UnitTestCase {
     $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
 
-    $this->parser = new NameFormatParser($config_factory);
+    $this->parser = new NameFormatParser();
   }
 
   /**

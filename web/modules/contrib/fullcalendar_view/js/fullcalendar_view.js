@@ -17,6 +17,8 @@
    * Event render handler
    */
   function eventRender (info) {
+    let viewIndex = parseInt(this.el.getAttribute("calendar-view-index"));
+    let viewSettings = drupalSettings.fullCalendarView[viewIndex];
     // Event title html markup.
     let eventTitleEle = info.el.getElementsByClassName('fc-title');
     if(eventTitleEle.length > 0) {
@@ -30,6 +32,23 @@
       }
       else {
         eventListTitleEle[0].innerHTML = info.event.title;
+      }
+    }
+    // Modal popup
+    if (viewSettings.dialogModal) {
+      if ($(info.el).is('a')) {
+        $(info.el).addClass('use-ajax');
+        $(info.el).attr('data-dialog-type', 'modal');
+        $(info.el).attr('data-dialog-options', viewSettings.dialog_modal_options);
+        $(info.el).attr('href', $(info.el).attr('href').replaceAll('&amp;', '&'));
+      }
+      else {
+        $(info.el).find('a').each(function(){
+          $(this).attr('data-dialog-type', 'modal');
+          $(this).attr('data-dialog-options', viewSettings.dialog_modal_options);
+          $(this).addClass('use-ajax');
+          $(this).attr('href', $(this).attr('href').replaceAll('&amp;', '&'));
+        });
       }
     }
   }
@@ -368,7 +387,8 @@
     // Remove the existing calendars except updating Ajax events.
     if (
         drupalSettings.calendar &&
-        settings.url !== '/fullcalendar-view-event-update'
+        settings.url !== '/fullcalendar-view-event-update' &&
+        settings.url.indexOf('_wrapper_format=drupal_modal') < 0
         ) {
       // Rebuild the calendars.
       drupalSettings.calendar.forEach(function(calendar) {

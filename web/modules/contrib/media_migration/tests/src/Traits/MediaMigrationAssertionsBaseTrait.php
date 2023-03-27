@@ -13,6 +13,7 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_migration\MediaMigration;
+use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use PHPUnit\Framework\ExpectationFailedException;
 
@@ -20,6 +21,8 @@ use PHPUnit\Framework\ExpectationFailedException;
  * Trait for media migration tests.
  */
 trait MediaMigrationAssertionsBaseTrait {
+
+  use MediaMigrationTestTrait;
 
   /**
    * List of media properties whose value shouldn't have to be checked.
@@ -148,6 +151,9 @@ trait MediaMigrationAssertionsBaseTrait {
           $expected_parsed_embed_tags[$delta][$attribute_name] = !empty($embed_tag_domnode->getAttribute($attribute_name));
         }
         else {
+          $attribute_value = $attribute_name === 'data-entity-id'
+            ? $this->getDestinationIdFromSourceId($attribute_value)
+            : $attribute_value;
           $actual_parsed_embed_tags[$delta][$attribute_name] = $attribute_value;
           $expected_parsed_embed_tags[$delta][$attribute_name] = $embed_tag_domnode->getAttribute($attribute_name);
         }
@@ -504,6 +510,13 @@ trait MediaMigrationAssertionsBaseTrait {
         'label' => 'above',
       ];
     }
+
+    if (version_compare(\Drupal::VERSION, '9.4.0-dev', 'ge')) {
+      $view_display_expectation['content'][$source_field_name]['settings']['image_loading'] = [
+        'attribute' => 'lazy',
+      ];
+    }
+
     $this->assertEquals($view_display_expectation, $this->getImportantEntityProperties($entity_view_display));
   }
 
@@ -695,6 +708,15 @@ trait MediaMigrationAssertionsBaseTrait {
         'remote_video',
         'default',
       ]));
+    $settings = [
+      'max_width' => 0,
+      'max_height' => 0,
+    ];
+
+    // Lazy loading was added to Drupal 10.1.
+    if (version_compare($this->coreMajorMinorVersion(), '10.1', '>=')) {
+      $settings['loading'] = ['attribute' => 'lazy'];
+    }
     $this->assertEquals([
       'status' => TRUE,
       'id' => 'media.remote_video.default',
@@ -705,10 +727,7 @@ trait MediaMigrationAssertionsBaseTrait {
         $source_field_name => [
           'type' => 'oembed',
           'weight' => 0,
-          'settings' => [
-            'max_width' => 0,
-            'max_height' => 0,
-          ],
+          'settings' => $settings,
           'third_party_settings' => [],
           'region' => 'content',
           'label' => 'visually_hidden',
@@ -832,6 +851,28 @@ trait MediaMigrationAssertionsBaseTrait {
     $type = MediaType::load($media_type_id);
     assert($type instanceof MediaTypeInterface);
     return $type->getSource()->getConfiguration()['source_field'];
+  }
+
+  /**
+   * Returns the ID of the migrated media entity based on its source identifier.
+   *
+   * @param string|int $source_id
+   *   The media entity's source ID.
+   *
+   * @return string|null
+   *   The ID of the migrated media entity, or NULL if it cannot be found.
+   */
+  protected function getDestinationIdFromSourceId($source_id): ?string {
+    $media_migrations = \Drupal::service('plugin.manager.migration')->createInstancesByTag(MediaMigration::MIGRATION_TAG_CONTENT);
+    $lookup = \Drupal::service('migrate.lookup');
+    assert($lookup instanceof MigrateLookupInterface);
+    foreach (array_keys($media_migrations) as $media_migration_id) {
+      $destination_ids = $lookup->lookup([$media_migration_id], [$source_id]);
+      if (!empty($destination_ids) && isset(reset($destination_ids)['mid'])) {
+        return reset($destination_ids)['mid'];
+      }
+    }
+    return NULL;
   }
 
 }

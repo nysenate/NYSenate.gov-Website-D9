@@ -3,6 +3,7 @@
 namespace Drupal\Tests\linkit\Kernel\Matchers;
 
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\Tests\linkit\Kernel\LinkitKernelTestBase;
 
 /**
@@ -17,7 +18,7 @@ class FileMatcherTest extends LinkitKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file_test', 'file'];
+  protected static $modules = ['file_test', 'file'];
 
   /**
    * The matcher manager.
@@ -29,11 +30,10 @@ class FileMatcherTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('file');
-    $this->installSchema('system', ['key_value_expire']);
     $this->installSchema('file', ['file_usage']);
 
     $this->manager = $this->container->get('plugin.manager.linkit.matcher');
@@ -45,7 +45,7 @@ class FileMatcherTest extends LinkitKernelTestBase {
         'filename' => 'image-test.' . $ext,
         'uri' => 'public://image-test.' . $ext,
         'filemime' => 'text/plain',
-        'status' => FILE_STATUS_PERMANENT,
+        'status' => FileInterface::STATUS_PERMANENT,
       ]);
       $file->save();
     }
@@ -105,8 +105,8 @@ class FileMatcherTest extends LinkitKernelTestBase {
     $suggestions = $suggestionCollection->getSuggestions();
 
     foreach ($suggestions as $suggestion) {
-      $this->assertNotContains('[file:fid]', $suggestion->getDescription(), 'Raw token "[file:fid]" is not present in the description');
-      $this->assertNotContains('[file:field_with_no_value]', $suggestion->getDescription(), 'Raw token "[file:field_with_no_value]" is not present in the description');
+      $this->assertStringNotContainsString('[file:fid]', $suggestion->getDescription(), 'Raw token "[file:fid]" is not present in the description');
+      $this->assertStringNotContainsString('[file:field_with_no_value]', $suggestion->getDescription(), 'Raw token "[file:field_with_no_value]" is not present in the description');
     }
   }
 

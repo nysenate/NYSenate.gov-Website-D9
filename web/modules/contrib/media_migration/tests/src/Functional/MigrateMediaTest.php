@@ -55,7 +55,7 @@ class MigrateMediaTest extends MigrateMediaTestBase {
     // Assert "Blue PNG" image media properties; including alt, title and the
     // custom 'integer' field.
     $this->assertMedia1FieldValues();
-    $this->drupalGet('media/1/edit');
+    $this->drupalGet('media/' . $this->getDestinationIdFromSourceId(1) . '/edit');
     $assert_session->statusCodeEquals(200);
     $this->assertPageTitle('Edit Image Blue PNG');
     $assert_session->hiddenFieldValueEquals('field_media_image[0][fids]', '1');
@@ -81,7 +81,7 @@ class MigrateMediaTest extends MigrateMediaTestBase {
     // that its original alt and title properties from the image field are
     // present.
     $this->assertMedia2FieldValues();
-    $this->drupalGet('media/2/edit');
+    $this->drupalGet('media/' . $this->getDestinationIdFromSourceId(2) . '/edit');
     $assert_session->statusCodeEquals(200);
     $this->assertPageTitle('Edit Image green.jpg');
     $assert_session->hiddenFieldValueEquals('field_media_image[0][fids]', '2');
@@ -103,7 +103,7 @@ class MigrateMediaTest extends MigrateMediaTestBase {
 
     // Assert "red.jpeg" image media properties with alt, title and integer.
     $this->assertMedia3FieldValues();
-    $this->drupalGet('media/3/edit');
+    $this->drupalGet('media/' . $this->getDestinationIdFromSourceId(3) . '/edit');
     $assert_session->statusCodeEquals(200);
     $this->assertPageTitle('Edit Image red.jpeg');
     $assert_session->hiddenFieldValueEquals('field_media_image[0][fids]', '3');
@@ -127,7 +127,7 @@ class MigrateMediaTest extends MigrateMediaTestBase {
     $this->assertMedia5FieldValues();
 
     $this->assertMedia6FieldValues();
-    $this->drupalGet('media/6/edit');
+    $this->drupalGet('media/' . $this->getDestinationIdFromSourceId(6) . '/edit');
     $assert_session->statusCodeEquals(200);
     $this->assertPageTitle('Edit Document LICENSE.txt');
     $assert_session->hiddenFieldValueEquals('field_media_document[0][fids]', '6');
@@ -143,7 +143,7 @@ class MigrateMediaTest extends MigrateMediaTestBase {
     // "yellow.jpg" should be migrated as well, but its alt and title properties
     // should be empty, as well as its integer field.
     $this->assertMedia7FieldValues();
-    $this->drupalGet('media/7/edit');
+    $this->drupalGet('media/' . $this->getDestinationIdFromSourceId(7) . '/edit');
     $assert_session->statusCodeEquals(200);
     $this->assertPageTitle('Edit Image yellow.jpg');
     $assert_session->hiddenFieldValueEquals('field_media_image[0][fids]', '7');

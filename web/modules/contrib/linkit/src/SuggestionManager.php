@@ -54,7 +54,7 @@ class SuggestionManager {
     $suggestion = new DescriptionSuggestion();
     $suggestion->setLabel(Html::escape($search_string))
       ->setGroup($this->t('No results'))
-      ->setDescription($this->t('Linkit could not find any suggestions. This URL will be used as is.'))
+      ->setDescription($this->t('No content suggestions found. This URL will be used as is.'))
       ->setPath($search_string);
     $suggestionCollection->addSuggestion($suggestion);
     return $suggestionCollection;

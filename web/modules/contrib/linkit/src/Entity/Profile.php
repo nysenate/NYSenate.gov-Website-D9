@@ -34,8 +34,8 @@ use Drupal\linkit\ProfileInterface;
  *     "delete-form" = "/admin/config/content/linkit/manage/{linkit_profile}/delete"
  *   },
  *   config_export = {
- *     "id",
  *     "label",
+ *     "id",
  *     "description",
  *     "matchers"
  *   }

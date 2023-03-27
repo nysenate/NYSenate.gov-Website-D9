@@ -153,10 +153,11 @@ class FullCalendarDisplay extends StylePluginBase {
     $options['dialogWindow'] = ['default' => 0];
     $options['createEventLink'] = ['default' => 0];
     $options['openEntityInNewTab'] = ['default' => 1];
+    $options['dialogModal'] = ['default' => 0];
     $options['eventLimit'] = ['default' => 2];
     $options['slotDuration'] = ['default' => '00:30:00'];
-    $options['minTime'] = ['default' => '2000-01-01 00:00:00'];
-    $options['maxTime'] = ['default' => '2000-01-01 23:59:59'];
+    $options['minTime'] = ['default' => '00:00:00'];
+    $options['maxTime'] = ['default' => '23:59:59'];
     return $options;
   }
 
@@ -452,6 +453,13 @@ class FullCalendarDisplay extends StylePluginBase {
       '#default_value' => !isset($this->options['openEntityInNewTab']) ? 1 : $this->options['openEntityInNewTab'],
       '#title' => $this->t('Open entities (calendar items) into new tabs'),
     ];
+    // Open event link target in modal popup.
+    $form['dialogModal'] = [
+      '#type' => 'checkbox',
+      '#fieldset' => 'display',
+      '#default_value' => !isset($this->options['dialogModal']) ? 1 : $this->options['dialogModal'],
+      '#title' => $this->t('Open event title link target in a modal popup'),
+    ];
     // Create new event link.
     $form['createEventLink'] = [
       '#type' => 'checkbox',
@@ -487,7 +495,7 @@ class FullCalendarDisplay extends StylePluginBase {
     $moduleHandler = $this->moduleHandler;
     if ($moduleHandler->moduleExists('taxonomy')) {
       // All vocabularies.
-      $cabNames = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->getQuery()->execute();
+      $cabNames = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->getQuery()->accessCheck(TRUE)->execute();
       // Taxonomy reference field.
       $tax_fields = [];
       // Find out all taxonomy reference fields of this View.
@@ -652,7 +660,7 @@ class FullCalendarDisplay extends StylePluginBase {
     }
     $options['minTime'] = $options['minTime']->format("H:i:s");
     $options['maxTime'] = $options['maxTime']->format("H:i:s");
-    $options['right_buttons'] = isset($options['right_buttons']) ? implode(',', array_filter(array_values($options['right_buttons']))) : '';
+    $options['right_buttons'] = isset($options['right_buttons']) ? implode(',', array_filter(array_values($options['right_buttons']))) : 'dayGridMonth,timeGridWeek,timeGridDay,listYear';
 
     // Sanitize user input.
     $options['timeFormat'] = Xss::filter($options['timeFormat']);

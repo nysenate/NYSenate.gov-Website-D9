@@ -5,7 +5,7 @@ flood_control.settings:
    _title_context: 'With components'
    _form: 'Drupal\flood_control\Form\FloodControlSettingsForm'
  requirements:
-   _permission: 'administer site configuration'
+   _permission: 'administer flood unblock'
 
 flood_control.unblock_form:
   path: '/admin/people/flood-unblock'
@@ -13,4 +13,4 @@ flood_control.unblock_form:
     _form: '\Drupal\flood_control\Form\FloodUnblockAdminForm'
     _title: 'Flood Unblock'
   requirements:
-    _permission: 'access flood unblock'
+    _permission: 'flood unblock ips'

@@ -26,6 +26,8 @@ conditional_fields.settings:
   mapping:
     state:
       type: string
+    reset:
+      type: boolean
     condition:
       type: string
     grouping:
@@ -43,12 +45,12 @@ conditional_fields.settings:
       sequence:
         type: string
     value_form:
-      type: sequence
+      # The value from the field type. Ideally, this would be the field's value
+      # type, i.e.: field.[%parent.field_type].value, but we can't guarantee
+      # that the field the user is trying to control has a properly-defined
+      # schema, so we explicitly say "no data typing is possible".
+      type: ignore
       label: 'Values from widget'
-      sequence:
-        # Since it sub-config of field.widget.third_party, get there.
-        type: field.value.[%parent.%parent.%parent.%parent.%parent.%parent.type]
-        label: 'Value from widget'
     effect:
       type: string
     effect_options:

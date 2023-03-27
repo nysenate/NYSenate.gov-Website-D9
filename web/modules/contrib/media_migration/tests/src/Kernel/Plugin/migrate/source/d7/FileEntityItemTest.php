@@ -489,6 +489,17 @@ class FileEntityItemTest extends MigMagNativeMigrateSqlTestBase {
         'type' => 'audio',
       ],
       [
+        'fid' => 1010,
+        'uid' => 1,
+        'filename' => 'foo',
+        'uri' => '',
+        'filemime' => 'application/octet-stream',
+        'filesize' => 0,
+        'status' => 1,
+        'timestamp' => 1645123649,
+        'type' => 'undefined',
+      ],
+      [
         'fid' => 12,
         'uid' => 2,
         'filename' => 'document.odt',

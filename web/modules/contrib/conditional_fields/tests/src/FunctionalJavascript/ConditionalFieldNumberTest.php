@@ -23,7 +23,7 @@ class ConditionalFieldNumberTest extends ConditionalFieldTestBase implements Con
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
   ];
@@ -57,7 +57,7 @@ class ConditionalFieldNumberTest extends ConditionalFieldTestBase implements Con
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldSelector = '[name="field_' . $this->fieldName . '[0][value]"]';

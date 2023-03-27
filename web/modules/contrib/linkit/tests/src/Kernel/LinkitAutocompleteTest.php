@@ -24,7 +24,7 @@ class LinkitAutocompleteTest extends LinkitKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'language'];
+  protected static $modules = ['entity_test', 'language'];
 
   /**
    * The linkit profile.
@@ -50,7 +50,7 @@ class LinkitAutocompleteTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create user 1 who has special permissions.

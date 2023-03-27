@@ -69,7 +69,6 @@ class TwitterApiAppKeyInput extends KeyInputBase {
     return $form;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -80,4 +79,5 @@ class TwitterApiAppKeyInput extends KeyInputBase {
       'processed_submitted' => $values,
     ];
   }
+
 }

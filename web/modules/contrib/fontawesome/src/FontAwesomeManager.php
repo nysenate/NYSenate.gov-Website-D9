@@ -301,7 +301,7 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
     $metadataFile = $this->fileSystem->realpath(DRUPAL_ROOT . '/libraries/fontawesome/metadata/icons.yml');
     // If we can't load the local file, use the included module icons file.
     if (!file_exists($metadataFile)) {
-      $metadataFile = drupal_get_path('module', 'fontawesome') . '/metadata/icons.yml';
+      $metadataFile = $this->moduleExtensionList->getPath('fontawesome') . '/metadata/icons.yml';
     }
     return $metadataFile;
   }

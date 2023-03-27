@@ -22,7 +22,7 @@ class UserMatcherTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create user 1 who has special permissions.
@@ -130,8 +130,8 @@ class UserMatcherTest extends LinkitKernelTestBase {
     $suggestions = $suggestionCollection->getSuggestions();
 
     foreach ($suggestions as $suggestion) {
-      $this->assertNotContains('[user:uid]', $suggestion->getDescription(), 'Raw token "[user:nid]" is not present in the description');
-      $this->assertNotContains('[user:field_with_no_value]', $suggestion->getDescription(), 'Raw token "[user:field_with_no_value]" is not present in the description');
+      $this->assertStringNotContainsString('[user:uid]', $suggestion->getDescription(), 'Raw token "[user:nid]" is not present in the description');
+      $this->assertStringNotContainsString('[user:field_with_no_value]', $suggestion->getDescription(), 'Raw token "[user:field_with_no_value]" is not present in the description');
     }
   }
 

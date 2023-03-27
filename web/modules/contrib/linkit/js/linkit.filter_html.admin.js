@@ -3,7 +3,7 @@
  * Send events to add or remove a tags to the filter_html allowed tags.
  */
 
-(function ($, Drupal, document) {
+(function ($, Drupal, document, once) {
 
   'use strict';
 
@@ -19,12 +19,15 @@
     attach: function (context) {
       var selector = '[data-drupal-selector="edit-filters-linkit-status"]';
       var feature = editorFeature();
-      $(context).find(selector).once('filters-linkit-status').each(function () {
-        $(this).on('click', function () {
-          var eventName = $(this).is(':checked') ? 'drupalEditorFeatureAdded' : 'drupalEditorFeatureRemoved';
-          $(document).trigger(eventName, feature);
+
+      once('filters-linkit-status', selector, context)
+        .forEach((checkbox) => {
+          const $checkbox = $(checkbox);
+          $checkbox.on('click', function () {
+            var eventName = $(this).is(':checked') ? 'drupalEditorFeatureAdded' : 'drupalEditorFeatureRemoved';
+            $(document).trigger(eventName, feature);
+          });
         });
-      });
     }
   };
 
@@ -48,4 +51,4 @@
     return linkitFeature;
   }
 
-})(jQuery, Drupal, document);
+})(jQuery, Drupal, document, once);

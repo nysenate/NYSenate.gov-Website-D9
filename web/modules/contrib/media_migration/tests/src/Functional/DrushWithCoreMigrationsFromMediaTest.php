@@ -22,7 +22,7 @@ class DrushWithCoreMigrationsFromMediaTest extends DrushTestBase {
 
     // Modify source site's file public path settings for being able to migrate
     // files. (This is required for the "d7_file" migration.)
-    $source_dir = DRUPAL_ROOT . DIRECTORY_SEPARATOR . drupal_get_path('module', 'media_migration') . '/tests/fixtures/sites/default/files';
+    $source_dir = DRUPAL_ROOT . DIRECTORY_SEPARATOR . \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures/sites/default/files';
     $this->sourceDatabase->upsert('variable')
       ->key('name')
       ->fields([

@@ -207,10 +207,6 @@
   padding:.5rem;
 }
 
-.js .field--widget-paragraphs .draggable .tabledrag-handle:hover .handle{
-  transform:scale(1.25);
-}
-
 .js .field--widget-paragraphs .tabledrag-changed{
   text-decoration:none;
 }
@@ -443,10 +439,10 @@ tr:hover .paragraphs-description::after{
 }
 
 .js .field-multiple-table > tbody > tr.draggable > .field-multiple-drag .tabledrag-handle .handle{
-  background:url(../images/icons/move.svg) no-repeat center center;
+  background:#bfbfbf;
   margin:0;
-  height:auto;
-  width:22px;
+  -webkit-mask:url(../images/icons/move.svg) no-repeat center center;
+          mask:url(../images/icons/move.svg) no-repeat center center;
 }
 
 .field-multiple-table > tbody > tr.draggable.drag{
@@ -454,7 +450,7 @@ tr:hover .paragraphs-description::after{
 }
 
 .field-multiple-table > tbody > tr.draggable.drag .field-multiple-drag .tabledrag-handle .handle{
-  background-image:url(../images/icons/move--primary-blue.svg);
+  background:#009fe3;
 }
 
 .field-multiple-table > tbody > tr.draggable:last-of-type{

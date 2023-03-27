@@ -6,7 +6,6 @@ use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\Tests\media_migration\Traits\MediaMigrationAssertionsForMediaSourceTrait;
-use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Tests media migration.
@@ -111,11 +110,22 @@ class MediaMigrationTest extends MediaMigrationTestBase {
       'optional' => [
         'd7_comment_field_instance',
         'd7_field_instance',
+        'd7_file_entity',
+        'd7_file_entity:audio:public',
+        'd7_file_entity:document:public',
+        'd7_file_entity:image:public',
+        'd7_file_entity:video:public',
+        'd7_file_entity:video:vimeo',
+        'd7_file_entity:video:youtube',
+        'd7_file_plain',
+        'd7_file_plain:image:public',
       ],
     ], $dependencies);
 
     // Execute the media migrations.
+    $this->startCollectingMessages();
     $this->executeMediaMigrations($classic_node_migration);
+    $this->assertEmpty($this->migrateMessages);
 
     // Check configurations.
     $this->assertArticleImageFieldsAllowedTypes();
@@ -395,16 +405,9 @@ class MediaMigrationTest extends MediaMigrationTestBase {
 
     // To get clever failure on PHPUnit 9, we need this.
     // @see https://drupal.org/i/3197324
-    try {
-      $this->executeMediaMigrations();
-    }
-    catch (\Exception $exception) {
-      throw new AssertionFailedError(
-        $exception->getMessage() . "\n" .
-        $exception->getLine() . "\n" .
-        $exception->getTraceAsString()
-      );
-    }
+    $this->startCollectingMessages();
+    $this->executeMediaMigrations();
+    $this->assertEmpty($this->migrateMessages);
     $this->assertMedia1FieldValues('Blue PNG changed');
   }
 

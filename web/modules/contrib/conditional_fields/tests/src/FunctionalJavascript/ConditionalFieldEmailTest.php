@@ -21,7 +21,7 @@ class ConditionalFieldEmailTest extends ConditionalFieldTestBase implements Cond
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
   ];
@@ -76,7 +76,7 @@ class ConditionalFieldEmailTest extends ConditionalFieldTestBase implements Cond
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldSelector = '[name="field_' . $this->fieldName . '[0][value]"]';

@@ -1504,37 +1504,23 @@ strong {
       grid-column: 2/span 1; }
     .js-form-wrapper#edit-field-address-0-address .address-container-inline {
       grid-column: 1/span 2; }
-  .nys-registration-register-form {
+  .nys-registration-register-form #edit-field-address-wrapper,
+  .nys-registration-register-form #edit-field-agree-to-terms-wrapper,
+  .nys-registration-register-form #edit-account {
+    grid-column: 1/span 2; }
+  .nys-registration-register-form .js-form-type-email {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     -moz-column-gap: 30px;
     column-gap: 30px; }
-    .nys-registration-register-form #edit-field-address-wrapper,
-    .nys-registration-register-form #edit-field-agree-to-terms-wrapper,
-    .nys-registration-register-form #edit-account {
-      grid-column: 1/span 2; }
-    .nys-registration-register-form .js-form-type-email {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      -moz-column-gap: 30px;
-      column-gap: 30px; }
-    .nys-registration-register-form #edit-mail {
-      grid-column: 1/span 1; }
-    .nys-registration-register-form #edit-mail--description {
-      display: flex;
-      align-items: center;
-      color: #ababab;
-      grid-row: 1/span 2;
-      grid-column: 2/span 1; }
-    .nys-registration-register-form .c-login {
-      grid-column: 1/span 2;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      -moz-column-gap: 30px;
-      column-gap: 30px; }
-      .nys-registration-register-form .c-login h2,
-      .nys-registration-register-form .c-login p {
-        grid-column: 1/span 2; } }
+  .nys-registration-register-form #edit-mail {
+    grid-column: 1/span 1; }
+  .nys-registration-register-form #edit-mail--description {
+    display: flex;
+    align-items: center;
+    color: #ababab;
+    grid-row: 1/span 2;
+    grid-column: 2/span 1; } }
 
 .c-block--about-student-programs {
   margin-top: 60px;
@@ -1593,21 +1579,26 @@ strong {
 /	Student Program and Alumni Testimonial
 /-------------------------------------*/
 .page-student-programs .large-12.columns,
+.page--student_programs .large-12.columns,
 .page-alumni-testimonial .large-12.columns {
   padding: 0; }
 
 .page-student-programs .view-student-programs-news .view-footer,
+.page--student_programs .view-student-programs-news .view-footer,
 .page-alumni-testimonial .view-student-programs-news .view-footer {
   display: none; }
 
 .page-student-programs .view-student-programs-news .js-pager__items.pager,
+.page--student_programs .view-student-programs-news .js-pager__items.pager,
 .page-alumni-testimonial .view-student-programs-news .js-pager__items.pager {
   padding-left: 0; }
   .page-student-programs .view-student-programs-news .js-pager__items.pager .pager__item,
+  .page--student_programs .view-student-programs-news .js-pager__items.pager .pager__item,
   .page-alumni-testimonial .view-student-programs-news .js-pager__items.pager .pager__item {
     padding: 0; }
 
 .page-student-programs .explore-link,
+.page--student_programs .explore-link,
 .page-alumni-testimonial .explore-link {
   font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 14px;
@@ -1617,12 +1608,14 @@ strong {
   display: block;
   text-align: right;
   margin: 40px 0; }
-  .page-student-programs .explore-link:after,
-  .page-alumni-testimonial .explore-link:after {
+  .page-student-programs .explore-link::after,
+  .page--student_programs .explore-link::after,
+  .page-alumni-testimonial .explore-link::after {
     font-size: 20px;
     margin-top: -4px; }
 
 .page-student-programs .gen-wrapper .section-title,
+.page--student_programs .gen-wrapper .section-title,
 .page-alumni-testimonial .gen-wrapper .section-title {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 16px;
@@ -1634,10 +1627,12 @@ strong {
   border-bottom: 1px solid #aaaaaa; }
 
 .page-student-programs .pane-1,
+.page--student_programs .pane-1,
 .page-alumni-testimonial .pane-1 {
   margin-bottom: 40px; }
 
 .page-student-programs .pane-node .pane-title,
+.page--student_programs .pane-node .pane-title,
 .page-alumni-testimonial .pane-node .pane-title {
   font-family: "Adelle Bold", serif;
   font-weight: 400;
@@ -1648,15 +1643,19 @@ strong {
 
 .page-student-programs .pane-node .c-news--body .c-block + .c-block,
 .page-student-programs .pane-node .c-news--body .c-block--social,
+.page--student_programs .pane-node .c-news--body .c-block + .c-block,
+.page--student_programs .pane-node .c-news--body .c-block--social,
 .page-alumni-testimonial .pane-node .c-news--body .c-block + .c-block,
 .page-alumni-testimonial .pane-node .c-news--body .c-block--social {
   display: none; }
 
 .page-student-programs .pane-node .c-news--body .c-block,
+.page--student_programs .pane-node .c-news--body .c-block,
 .page-alumni-testimonial .pane-node .c-news--body .c-block {
   margin-bottom: 30px; }
 
 .page-student-programs .pane-student-programs-news .pane-title,
+.page--student_programs .pane-student-programs-news .pane-title,
 .page-alumni-testimonial .pane-student-programs-news .pane-title {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-weight: 400;
@@ -1669,6 +1668,7 @@ strong {
   border-bottom: 1px solid #7d7c7c; }
 
 .page-student-programs .pane-student-programs-news .view-student-programs-news .view-empty h2,
+.page--student_programs .pane-student-programs-news .view-student-programs-news .view-empty h2,
 .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .view-empty h2 {
   font-family: "Adelle Bold", serif;
   font-size: 14px;
@@ -1678,6 +1678,8 @@ strong {
 
 .page-student-programs .pane-student-programs-news .view-student-programs-news .odd,
 .page-student-programs .pane-student-programs-news .view-student-programs-news .even,
+.page--student_programs .pane-student-programs-news .view-student-programs-news .odd,
+.page--student_programs .pane-student-programs-news .view-student-programs-news .even,
 .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd,
 .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even {
   min-height: 100%;
@@ -1689,6 +1691,10 @@ strong {
   .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .content-title,
   .page-student-programs .pane-student-programs-news .view-student-programs-news .even .content-type,
   .page-student-programs .pane-student-programs-news .view-student-programs-news .even .content-title,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .content-type,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .content-title,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .even .content-type,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .even .content-title,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .content-type,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .content-title,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .content-type,
@@ -1698,6 +1704,8 @@ strong {
     line-height: 22px; }
   .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .content-type,
   .page-student-programs .pane-student-programs-news .view-student-programs-news .even .content-type,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .content-type,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .even .content-type,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .content-type,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .content-type {
     width: 100%;
@@ -1707,6 +1715,8 @@ strong {
     color: #444444; }
   .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .content-title,
   .page-student-programs .pane-student-programs-news .view-student-programs-news .even .content-title,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .content-title,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .even .content-title,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .content-title,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .content-title {
     font-family: "Adelle Light", serif;
@@ -1715,11 +1725,15 @@ strong {
     margin-left: 0; }
     .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .content-title a,
     .page-student-programs .pane-student-programs-news .view-student-programs-news .even .content-title a,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .content-title a,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .even .content-title a,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .content-title a,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .content-title a {
       color: #444444; }
   .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .published-date,
   .page-student-programs .pane-student-programs-news .view-student-programs-news .even .published-date,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .published-date,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .even .published-date,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .published-date,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .published-date {
     margin-left: 0;
@@ -1729,17 +1743,21 @@ strong {
     color: #888888; }
   .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .main-image,
   .page-student-programs .pane-student-programs-news .view-student-programs-news .even .main-image,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .main-image,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .even .main-image,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .main-image,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .main-image {
     display: none; }
 
 .page-student-programs .pane-student-programs-news .view-display-id-block_1 .views-field-field-image-main,
+.page--student_programs .pane-student-programs-news .view-display-id-block_1 .views-field-field-image-main,
 .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_1 .views-field-field-image-main {
   float: left;
   width: 380px;
   margin: 0 20px 20px 0; }
 
 .page-student-programs .pane-student-programs-news .view-display-id-block_1 .views-field-title,
+.page--student_programs .pane-student-programs-news .view-display-id-block_1 .views-field-title,
 .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_1 .views-field-title {
   font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 16px;
@@ -1750,17 +1768,22 @@ strong {
   color: #444444;
   border-bottom: 1px solid #aaaaaa; }
   .page-student-programs .pane-student-programs-news .view-display-id-block_1 .views-field-title a,
+  .page--student_programs .pane-student-programs-news .view-display-id-block_1 .views-field-title a,
   .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_1 .views-field-title a {
     color: #444444; }
 
 .page-student-programs .pane-student-programs-news .view-display-id-block_1 .view-content .odd .nys-arrow-link,
 .page-student-programs .pane-student-programs-news .view-display-id-block_1 .view-content .even .nys-arrow-link,
+.page--student_programs .pane-student-programs-news .view-display-id-block_1 .view-content .odd .nys-arrow-link,
+.page--student_programs .pane-student-programs-news .view-display-id-block_1 .view-content .even .nys-arrow-link,
 .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_1 .view-content .odd .nys-arrow-link,
 .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_1 .view-content .even .nys-arrow-link {
   margin-top: 10px;
   float: none; }
   .page-student-programs .pane-student-programs-news .view-display-id-block_1 .view-content .odd .nys-arrow-link a,
   .page-student-programs .pane-student-programs-news .view-display-id-block_1 .view-content .even .nys-arrow-link a,
+  .page--student_programs .pane-student-programs-news .view-display-id-block_1 .view-content .odd .nys-arrow-link a,
+  .page--student_programs .pane-student-programs-news .view-display-id-block_1 .view-content .even .nys-arrow-link a,
   .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_1 .view-content .odd .nys-arrow-link a,
   .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_1 .view-content .even .nys-arrow-link a {
     color: #cb8d37;
@@ -1769,31 +1792,40 @@ strong {
 
 .page-student-programs .pane-student-programs-news .view-display-id-block_2 .view-content .odd .nys-arrow-link,
 .page-student-programs .pane-student-programs-news .view-display-id-block_2 .view-content .even .nys-arrow-link,
+.page--student_programs .pane-student-programs-news .view-display-id-block_2 .view-content .odd .nys-arrow-link,
+.page--student_programs .pane-student-programs-news .view-display-id-block_2 .view-content .even .nys-arrow-link,
 .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_2 .view-content .odd .nys-arrow-link,
 .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_2 .view-content .even .nys-arrow-link {
   margin-top: 10px; }
   .page-student-programs .pane-student-programs-news .view-display-id-block_2 .view-content .odd .nys-arrow-link a,
   .page-student-programs .pane-student-programs-news .view-display-id-block_2 .view-content .even .nys-arrow-link a,
+  .page--student_programs .pane-student-programs-news .view-display-id-block_2 .view-content .odd .nys-arrow-link a,
+  .page--student_programs .pane-student-programs-news .view-display-id-block_2 .view-content .even .nys-arrow-link a,
   .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_2 .view-content .odd .nys-arrow-link a,
   .page-alumni-testimonial .pane-student-programs-news .view-display-id-block_2 .view-content .even .nys-arrow-link a {
     color: #cb8d37; }
 
 .page-student-programs .c-student-program-contact,
+.page--student_programs .c-student-program-contact,
 .page-alumni-testimonial .c-student-program-contact {
   margin-top: 40px; }
   .page-student-programs .c-student-program-contact .text-layout__title,
+  .page--student_programs .c-student-program-contact .text-layout__title,
   .page-alumni-testimonial .c-student-program-contact .text-layout__title {
     font-size: 16px;
     color: #444444; }
   .page-student-programs .c-student-program-contact .text-layout__body,
+  .page--student_programs .c-student-program-contact .text-layout__body,
   .page-alumni-testimonial .c-student-program-contact .text-layout__body {
     background-color: #eeeeee; }
     .page-student-programs .c-student-program-contact .text-layout__body .content,
+    .page--student_programs .c-student-program-contact .text-layout__body .content,
     .page-alumni-testimonial .c-student-program-contact .text-layout__body .content {
       width: 100%;
       display: block;
       vertical-align: top; }
       .page-student-programs .c-student-program-contact .text-layout__body .content p,
+      .page--student_programs .c-student-program-contact .text-layout__body .content p,
       .page-alumni-testimonial .c-student-program-contact .text-layout__body .content p {
         font-family: "Proxima Nova Regular", "Arial", sans-serif;
         font-size: 16px;
@@ -1801,9 +1833,11 @@ strong {
         color: #444444;
         margin: 0; }
         .page-student-programs .c-student-program-contact .text-layout__body .content p a,
+        .page--student_programs .c-student-program-contact .text-layout__body .content p a,
         .page-alumni-testimonial .c-student-program-contact .text-layout__body .content p a {
           color: #cb8d37; }
         .page-student-programs .c-student-program-contact .text-layout__body .content p:first-child strong,
+        .page--student_programs .c-student-program-contact .text-layout__body .content p:first-child strong,
         .page-alumni-testimonial .c-student-program-contact .text-layout__body .content p:first-child strong {
           font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
           font-size: 14px;
@@ -1811,10 +1845,13 @@ strong {
           font-weight: 400;
           color: #444444; }
       .page-student-programs .c-student-program-contact .text-layout__body .content:first-of-type,
+      .page--student_programs .c-student-program-contact .text-layout__body .content:first-of-type,
       .page-alumni-testimonial .c-student-program-contact .text-layout__body .content:first-of-type {
         margin-right: 0; }
       .page-student-programs .c-student-program-contact .text-layout__body .content h3,
       .page-student-programs .c-student-program-contact .text-layout__body .content h4,
+      .page--student_programs .c-student-program-contact .text-layout__body .content h3,
+      .page--student_programs .c-student-program-contact .text-layout__body .content h4,
       .page-alumni-testimonial .c-student-program-contact .text-layout__body .content h3,
       .page-alumni-testimonial .c-student-program-contact .text-layout__body .content h4 {
         font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
@@ -1823,10 +1860,13 @@ strong {
         text-transform: uppercase; }
         .page-student-programs .c-student-program-contact .text-layout__body .content h3.padded,
         .page-student-programs .c-student-program-contact .text-layout__body .content h4.padded,
+        .page--student_programs .c-student-program-contact .text-layout__body .content h3.padded,
+        .page--student_programs .c-student-program-contact .text-layout__body .content h4.padded,
         .page-alumni-testimonial .c-student-program-contact .text-layout__body .content h3.padded,
         .page-alumni-testimonial .c-student-program-contact .text-layout__body .content h4.padded {
           margin-top: 30px; }
       .page-student-programs .c-student-program-contact .text-layout__body .content h4,
+      .page--student_programs .c-student-program-contact .text-layout__body .content h4,
       .page-alumni-testimonial .c-student-program-contact .text-layout__body .content h4 {
         text-transform: none; }
 
@@ -1953,22 +1993,29 @@ strong {
 
 @media screen and (min-width: 768px) {
   .page-student-programs .c-student-program-contact .text-layout__body .content,
+  .page--student_programs .c-student-program-contact .text-layout__body .content,
   .page-alumni-testimonial .c-student-program-contact .text-layout__body .content {
     width: 45%;
     display: inline-block; }
     .page-student-programs .c-student-program-contact .text-layout__body .content:first-of-type,
+    .page--student_programs .c-student-program-contact .text-layout__body .content:first-of-type,
     .page-alumni-testimonial .c-student-program-contact .text-layout__body .content:first-of-type {
       margin-right: 9%; }
     .page-student-programs .c-student-program-contact .text-layout__body .content .top-col-title,
+    .page--student_programs .c-student-program-contact .text-layout__body .content .top-col-title,
     .page-alumni-testimonial .c-student-program-contact .text-layout__body .content .top-col-title {
       margin-top: 0; }
   .page-student-programs .pane-student-programs-news .view-student-programs-news .odd,
   .page-student-programs .pane-student-programs-news .view-student-programs-news .even,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .odd,
+  .page--student_programs .pane-student-programs-news .view-student-programs-news .even,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd,
   .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even {
     min-height: 150px; }
     .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .content-type,
     .page-student-programs .pane-student-programs-news .view-student-programs-news .even .content-type,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .content-type,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .even .content-type,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .content-type,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .content-type {
       width: 20%;
@@ -1977,16 +2024,22 @@ strong {
       left: 0; }
     .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .content-title,
     .page-student-programs .pane-student-programs-news .view-student-programs-news .even .content-title,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .content-title,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .even .content-title,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .content-title,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .content-title {
       margin-left: 20%; }
     .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .published-date,
     .page-student-programs .pane-student-programs-news .view-student-programs-news .even .published-date,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .published-date,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .even .published-date,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .published-date,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .published-date {
       margin-left: 20%; }
     .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .main-image,
     .page-student-programs .pane-student-programs-news .view-student-programs-news .even .main-image,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .main-image,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .even .main-image,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .main-image,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .main-image {
       display: block;
@@ -1994,6 +2047,8 @@ strong {
       max-width: 220px; }
     .page-student-programs .pane-student-programs-news .view-student-programs-news .odd .date-display-single,
     .page-student-programs .pane-student-programs-news .view-student-programs-news .even .date-display-single,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .odd .date-display-single,
+    .page--student_programs .pane-student-programs-news .view-student-programs-news .even .date-display-single,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .odd .date-display-single,
     .page-alumni-testimonial .pane-student-programs-news .view-student-programs-news .even .date-display-single {
       margin-left: 0;

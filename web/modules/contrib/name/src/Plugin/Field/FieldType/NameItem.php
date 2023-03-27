@@ -263,7 +263,7 @@ class NameItem extends FieldItemBase implements TrustedCallbackInterface {
 
       // Retrieve the ID of all existing users.
       $query = \Drupal::entityQuery('user');
-      $uids = $query->execute();
+      $uids = $query->accessCheck()->execute();
 
       foreach ($uids as $uid) {
         // Invalidate the cache for each user so that

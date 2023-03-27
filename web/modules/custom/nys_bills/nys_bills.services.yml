@@ -14,6 +14,7 @@ services:
       - '@current_route_match'
       - '@logger.factory'
       - '@entity_type.manager'
+      - '@plugin.manager.votingapi.resultfunction'
   nys_bills.twig.filters:
     class: Drupal\nys_bills\CustomTwig
     tags:

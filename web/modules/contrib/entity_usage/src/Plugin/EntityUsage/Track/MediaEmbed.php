@@ -24,6 +24,10 @@ class MediaEmbed extends TextFieldEmbedBase {
     $xpath = new \DOMXPath($dom);
     $entities = [];
     foreach ($xpath->query('//drupal-media[@data-entity-type="media" and @data-entity-uuid]') as $node) {
+      // Skip elements with empty data-entity-uuid attributes.
+      if (empty($node->getAttribute('data-entity-uuid'))) {
+        continue;
+      }
       // Note that this does not cover 100% of the situations. In the (unlikely
       // but possible) use case where the user embeds the same entity twice in
       // the same field, we are just recording 1 usage for this target entity,

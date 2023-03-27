@@ -1,0 +1,39 @@
+privatemsg.messages:
+  path: '/messages'
+  defaults:
+    _title: 'Messages'
+    _form: 'Drupal\privatemsg\Form\MessagesForm'
+  requirements:
+    _permission: 'privatemsg write messages'
+
+privatemsg.user_messages:
+  path: '/user/{user}/messages'
+  defaults:
+    _title: 'Messages'
+    _form: 'Drupal\privatemsg\Form\MessagesForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+privatemsg.view_message:
+  path: '/messages/view/{thread_id}'
+  defaults:
+    _form: 'Drupal\privatemsg\Form\ViewMessageForm'
+    _title_callback: 'Drupal\privatemsg\Form\ViewMessageForm::getTitle'
+  requirements:
+    _permission: 'privatemsg write messages'
+
+privatemsg.new:
+  path: '/messages/new'
+  defaults:
+    _title: 'Write new message'
+    _form: 'Drupal\privatemsg\Form\CreateThreadForm'
+  requirements:
+    _permission: 'privatemsg write messages'
+
+privatemsg.delete_message:
+  path: '/messages/delete/{thread_id}/{mid}'
+  defaults:
+    _title: 'Delete message'
+    _controller: '\Drupal\privatemsg\Controller\PrivatemsgController::removeMessage'
+  requirements:
+    _permission: 'privatemsg use messages actions'

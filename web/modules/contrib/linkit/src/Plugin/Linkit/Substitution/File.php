@@ -24,7 +24,7 @@ class File extends PluginBase implements SubstitutionInterface {
   public function getUrl(EntityInterface $entity) {
     $url = new GeneratedUrl();
     /** @var \Drupal\file\FileInterface $entity */
-    $url->setGeneratedUrl(file_create_url($entity->getFileUri()));
+    $url->setGeneratedUrl(\Drupal::service('file_url_generator')->generateAbsoluteString($entity->getFileUri()));
     $url->addCacheableDependency($entity);
     return $url;
   }

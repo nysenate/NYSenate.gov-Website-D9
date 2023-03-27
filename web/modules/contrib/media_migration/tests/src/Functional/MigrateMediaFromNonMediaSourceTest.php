@@ -26,7 +26,7 @@ class MigrateMediaFromNonMediaSourceTest extends MigrateMediaTestBase {
    * {@inheritdoc}
    */
   protected function getFixtureFilePath() {
-    return drupal_get_path('module', 'media_migration') . '/tests/fixtures/drupal7_nomedia.php';
+    return \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures/drupal7_nomedia.php';
   }
 
   /**

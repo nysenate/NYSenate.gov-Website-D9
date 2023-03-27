@@ -15,7 +15,7 @@ class MigrateFieldInstanceTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'inline_entity_form',
     'node',
     'text',

@@ -20,6 +20,7 @@ $paragraph-preview-thumbnail-mobile-width: 125px;
   .js .field--widget-paragraphs td { padding }
   .js .field--widget-paragraphs .field-multiple-drag { min-width }
   .js .field--widget-paragraphs .draggable .tabledrag-handle { margin-top; min-width; width }
+  .js .field--widget-paragraphs .draggable .tabledrag-handle:hover .handle { transform, -webkit-transform }
 }';
 
 /**
@@ -77,10 +78,9 @@ $paragraph-preview-thumbnail-mobile-width: 125px;
 
             /* 1. Reset tabledrag.module.css */
             .handle {
-              background: url(../images/icons/move.svg) no-repeat center center;
+              background: $gray-light;
               margin: 0; /* 1 */
-              height: auto; /* 1 */
-              width: 22px;
+              mask: url(../images/icons/move.svg) no-repeat center center;
             }
           }
         }
@@ -92,7 +92,7 @@ $paragraph-preview-thumbnail-mobile-width: 125px;
         .field-multiple-drag {
           .tabledrag-handle {
             .handle {
-              background-image: url(../images/icons/move--primary-blue.svg);
+              background: $primary-color-intense;
             }
           }
         }

@@ -932,6 +932,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'Consolidation\\AnnotatedCommand\\Attributes\\FilterDefaultField' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/FilterDefaultField.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\Help' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Help.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\Hook' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Hook.php',
+        'Consolidation\\AnnotatedCommand\\Attributes\\HookSelector' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/HookSelector.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\Misc' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Misc.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\Option' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Option.php',
         'Consolidation\\AnnotatedCommand\\Attributes\\Topics' => __DIR__ . '/..' . '/consolidation/annotated-command/src/Attributes/Topics.php',

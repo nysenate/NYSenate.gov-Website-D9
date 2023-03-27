@@ -190,6 +190,7 @@ abstract class MediaDealerBase extends PluginBase implements ContainerFactoryPlu
     $discovered_extensions = $row->getSourceProperty('file_extensions') ?? '';
     $merged_file_extensions = implode(' ', array_filter(array_unique(array_merge(explode(' ', $default_extensions), explode(ConfigSourceBase::MULTIPLE_SEPARATOR, $discovered_extensions)))));
     $settings['file_extensions'] = $merged_file_extensions;
+    $settings['uri_scheme'] = $this->configuration['scheme'];
     $row->setSourceProperty('settings', $settings);
   }
 

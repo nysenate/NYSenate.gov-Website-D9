@@ -60,33 +60,37 @@ class FileEntityDealerManager extends DefaultPluginManager implements FileEntity
    */
   protected function getDefinitionsByTypeAndScheme(string $type, string $scheme) {
     $definitions = $this->getDefinitions();
+    $list = [];
 
     $strict_list = array_filter($this->getDefinitions(), function ($definition) use ($type, $scheme) {
       return in_array($type, $definition['types'], TRUE) && in_array($scheme, $definition['schemes'], TRUE);
     });
-    if (!empty($strict_list)) {
-      return $strict_list;
-    }
-
-    $only_type_list = array_filter($definitions, function ($definition) use ($type) {
-      return in_array($type, $definition['types'], TRUE) && empty($definition['schemes']);
-    });
-    if (!empty($only_type_list)) {
-      return $only_type_list;
-    }
+    $list = array_merge(
+      $list,
+      $strict_list,
+    );
 
     $only_scheme_list = array_filter($definitions, function ($definition) use ($scheme) {
       return empty($definition['types']) && in_array($scheme, $definition['schemes'], TRUE);
     });
-    if (!empty($only_scheme_list)) {
-      return $only_scheme_list;
-    }
+    $list = array_merge(
+      $list,
+      $only_scheme_list,
+    );
 
-    if (array_key_exists('fallback', $definitions)) {
+    $only_type_list = array_filter($definitions, function ($definition) use ($type) {
+      return in_array($type, $definition['types'], TRUE) && empty($definition['schemes']);
+    });
+    $list = array_merge(
+      $list,
+      $only_type_list,
+    );
+
+    if (empty($list) && array_key_exists('fallback', $definitions)) {
       return ['fallback' => $definitions['fallback']];
     }
 
-    return [];
+    return $list;
   }
 
   /**

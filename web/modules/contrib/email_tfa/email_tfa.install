@@ -28,3 +28,12 @@ function email_tfa_update_8002() {
   $config->set('verification_interrupted_message', 'One-time security code verification interrupted.');
   $config->save();
 }
+
+/**
+ * Add a default value to the new field role_exclusion_type.
+ */
+function email_tfa_update_8003() {
+  $config = \Drupal::configFactory()->getEditable('email_tfa.settings');
+  $config->set('role_exclusion_type', 'disable_for');
+  $config->save();
+}

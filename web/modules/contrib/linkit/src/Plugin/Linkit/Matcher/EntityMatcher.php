@@ -322,6 +322,7 @@ class EntityMatcher extends ConfigurableMatcherBase {
   public function execute($string) {
     $suggestions = new SuggestionCollection();
     $query = $this->buildEntityQuery($string);
+    $query->accessCheck(TRUE);
     $query_result = $query->execute();
     $url_results = $this->findEntityIdByUrl($string);
     $result = array_merge($query_result, $url_results);
@@ -365,6 +366,7 @@ class EntityMatcher extends ConfigurableMatcherBase {
 
     $entity_type = $this->entityTypeManager->getDefinition($this->targetType);
     $query = $this->entityTypeManager->getStorage($this->targetType)->getQuery();
+    $query->accessCheck(TRUE);
     $label_key = $entity_type->getKey('label');
 
     if ($label_key) {

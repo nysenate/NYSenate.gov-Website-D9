@@ -51,7 +51,8 @@
 .accent-bg {
   background-color: #1b5187; }
 
-.accent-text, .c-news--download .file > a {
+.accent-text, .c-news--download .file > a,
+.c-news--download .field__item > a {
   color: #1b5187; }
 
 @media screen and (min-width: 760px) {
@@ -535,6 +536,7 @@ strong {
 .icon-before__search::before,
 .icon-before__presskit::before,
 .c-news--download .file > a::before,
+.c-news--download .field__item > a::before,
 .icon-before__bill::before,
 .icon-before__facebook::before,
 .icon-before__x::before,
@@ -684,7 +686,8 @@ strong {
 
 
 .icon-before__presskit::before,
-.c-news--download .file > a::before {
+.c-news--download .file > a::before,
+.c-news--download .field__item > a::before {
   content: '\6b'; }
 
 .icon-before__questionaire::before {
@@ -1507,37 +1510,23 @@ strong {
       grid-column: 2/span 1; }
     .js-form-wrapper#edit-field-address-0-address .address-container-inline {
       grid-column: 1/span 2; }
-  .nys-registration-register-form {
+  .nys-registration-register-form #edit-field-address-wrapper,
+  .nys-registration-register-form #edit-field-agree-to-terms-wrapper,
+  .nys-registration-register-form #edit-account {
+    grid-column: 1/span 2; }
+  .nys-registration-register-form .js-form-type-email {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     -moz-column-gap: 30px;
     column-gap: 30px; }
-    .nys-registration-register-form #edit-field-address-wrapper,
-    .nys-registration-register-form #edit-field-agree-to-terms-wrapper,
-    .nys-registration-register-form #edit-account {
-      grid-column: 1/span 2; }
-    .nys-registration-register-form .js-form-type-email {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      -moz-column-gap: 30px;
-      column-gap: 30px; }
-    .nys-registration-register-form #edit-mail {
-      grid-column: 1/span 1; }
-    .nys-registration-register-form #edit-mail--description {
-      display: flex;
-      align-items: center;
-      color: #ababab;
-      grid-row: 1/span 2;
-      grid-column: 2/span 1; }
-    .nys-registration-register-form .c-login {
-      grid-column: 1/span 2;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      -moz-column-gap: 30px;
-      column-gap: 30px; }
-      .nys-registration-register-form .c-login h2,
-      .nys-registration-register-form .c-login p {
-        grid-column: 1/span 2; } }
+  .nys-registration-register-form #edit-mail {
+    grid-column: 1/span 1; }
+  .nys-registration-register-form #edit-mail--description {
+    display: flex;
+    align-items: center;
+    color: #ababab;
+    grid-row: 1/span 2;
+    grid-column: 2/span 1; } }
 
 .c-block.c-block--pg-file-uploads {
   margin-bottom: 20px; }
@@ -1549,9 +1538,11 @@ strong {
   display: block; }
   .c-news--download img {
     display: none; }
-  .c-news--download .file {
+  .c-news--download .file,
+  .c-news--download .field__item {
     padding-left: 0; }
-    .c-news--download .file > a {
+    .c-news--download .file > a,
+    .c-news--download .field__item > a {
       display: block;
       margin-top: 15px;
       font-size: 12px;

@@ -60,6 +60,7 @@ class FilePlain extends FieldableEntity implements ContainerFactoryPluginInterfa
    *   The file entity dealer plugin manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager, FileDealerManagerInterface $file_dealer_manager) {
+    $configuration += ['mime' => NULL, 'scheme' => NULL];
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
 
     $this->sourceHasFileEntities = $this->getDatabase()->schema()->fieldExists('file_managed', 'type');

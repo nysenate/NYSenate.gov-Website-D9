@@ -88,7 +88,7 @@ class NodeMatcher extends EntityMatcher {
     if ($this->configuration['include_unpublished'] == FALSE) {
       $query->condition('status', NodeInterface::PUBLISHED);
     }
-    elseif (count($this->moduleHandler->getImplementations('node_grants')) === 0) {
+    elseif (!$this->moduleHandler->hasImplementations('node_grants')) {
       if (($this->currentUser->hasPermission('bypass node access') || $this->currentUser->hasPermission('view any unpublished content'))) {
         // User can see all content, no check necessary.
       }

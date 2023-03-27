@@ -397,7 +397,7 @@ class FullcalendarViewPreprocess {
         'header' => [
           'left' => $left_buttons,
           'center' => 'title',
-          'right' => $right_buttons
+          'right' => $right_buttons ?? 'dayGridMonth,timeGridWeek,timeGridDay,listYear'
         ],
         'eventTimeFormat' => $timeFormat,
         'firstDay' => $first_day,
@@ -428,6 +428,10 @@ class FullcalendarViewPreprocess {
           'font-size' => '1rem'
         ]
       ];
+      // Modal options.
+      $dialog_modal_options = [
+        'width' => '800',
+      ];
 
       // Load the fullcalendar js library.
       $variables['#attached']['library'][] = 'fullcalendar_view/fullcalendar';
@@ -450,6 +454,8 @@ class FullcalendarViewPreprocess {
         // Open event links in dialog window.
         // If it is 1, event links in the calendar will open in a dialog window.
         'dialogWindow' => $options['dialogWindow'],
+        // Open event links in modal dialog.
+        'dialogModal' => $options['dialogModal'],
         // The bundle (content) type of a new event.
         'eventBundleType' => $event_bundle_type,
         // The machine name of start date field.
@@ -470,6 +476,8 @@ class FullcalendarViewPreprocess {
         'calendar_options' => json_encode($calendar_options),
         // The options of the pop-up dialog object.
         'dialog_options' => json_encode($dialog_options),
+        // The options of the pop-up modal dialog object.
+        'dialog_modal_options' => json_encode($dialog_modal_options),
       ];
     }
   }

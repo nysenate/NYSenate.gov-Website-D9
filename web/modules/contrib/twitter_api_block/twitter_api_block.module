@@ -22,7 +22,8 @@ function twitter_api_block_help($route_name, RouteMatchInterface $route_match) {
 
       $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       return $filter->process($readme_content, $langcode);
-    } else {
+    }
+    else {
       return '<pre>' . $readme_content . '</pre>';
     }
   }

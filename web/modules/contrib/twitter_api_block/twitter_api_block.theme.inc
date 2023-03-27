@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains hooks and methods for twitter_api_block module.
+ */
+
 use Drupal\Component\Serialization\Json;
 
 /**
@@ -13,7 +18,7 @@ use Drupal\Component\Serialization\Json;
  *   - oembed: Either true or false.
  *   - context: An array with extra info to please crazy advanced theming logic.
  */
-function template_preprocess_tweets(&$variables) {
+function template_preprocess_tweets(array &$variables) {
   $tweets = $variables['elements']['#tweets'] ?? [];
   $oembed = $variables['oembed'] = $variables['elements']['#oembed'] ?? [];
 
@@ -52,15 +57,15 @@ function template_preprocess_tweets(&$variables) {
  *   - tweet: The original data receive from the Twitter API.
  *   - oembed: Wether or not this tweet needs to be rendered as HTML.
  */
-function template_preprocess_tweet(&$variables) {
+function template_preprocess_tweet(array &$variables) {
   $tweet = $variables['tweet'] = $variables['elements']['#tweet'] ?? [];
 
   // Get OEmbed tweet (HTML).
   if ($variables['elements']['#oembed'] ?? FALSE) {
     $variables['oembed'] = \Drupal::service('twitter_api_block.twitter')
       ->renderTweet($tweet);
-      
+
     // Twitter JS widget script to render OEmbed tweets.
-    $variables['#attached']['library'][] = 'twitter_api_block/embed';      
+    $variables['#attached']['library'][] = 'twitter_api_block/embed';
   }
 }

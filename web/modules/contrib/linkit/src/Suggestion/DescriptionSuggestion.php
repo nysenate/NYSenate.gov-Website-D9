@@ -34,6 +34,7 @@ class DescriptionSuggestion extends SimpleSuggestion implements SuggestionDescri
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize() {
 
     return parent::jsonSerialize() + [

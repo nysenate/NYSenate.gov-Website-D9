@@ -67,8 +67,11 @@ class MediaMigrateUuid extends ProcessPluginBase implements ContainerFactoryPlug
         return $non_generated_uuid;
       }
       // No UUID was found – lets set the destination property to empty before
-      // throwing a skip process exception.
-      $row->setEmptyDestinationProperty($destination_property);
+      // throwing a skip process exception (this is only required for 9.2.x and
+      // below).
+      if (version_compare(\Drupal::VERSION, '9.3.0', 'lt')) {
+        $row->setEmptyDestinationProperty($destination_property);
+      }
       throw new MigrateSkipProcessException();
     }
     // Do not migrate the row if the file ID is empty.

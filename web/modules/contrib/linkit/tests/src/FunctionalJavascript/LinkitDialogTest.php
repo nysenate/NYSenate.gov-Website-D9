@@ -27,9 +27,8 @@ class LinkitDialogTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
-    'ckeditor',
     'filter',
     'linkit',
     'entity_test',
@@ -58,8 +57,14 @@ class LinkitDialogTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
+
+    if (!in_array('ckeditor', $this->container->get('extension.list.module')->reset()->getList(), TRUE)) {
+      $this->markTestSkipped('CKEditor 4 module not available to install, skipping test.');
+    }
+    $this->container->get('module_installer')->install(['ckeditor']);
+    $this->container = \Drupal::getContainer();
 
     $matcherManager = $this->container->get('plugin.manager.linkit.matcher');
     /** @var \Drupal\linkit\MatcherInterface $plugin */
@@ -159,6 +164,9 @@ class LinkitDialogTest extends WebDriverTestBase {
 
     // Wait for the form to load.
     $web_assert->assertWaitOnAjaxRequest();
+
+    // The dialog is not tall enough to allow the autocomplete to be visible.
+    $this->getSession()->executeScript("document.getElementById('drupal-modal').style.height = '200px';");
 
     // Find the href field.
     $href_field = $page->findField('attributes[href]');

@@ -30,7 +30,7 @@ function twitter_api_block_update_8002() {
     $block->set('plugin', 'twitter_api_block_search');
     $block->save();
   }
-  
+
   $blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
     'plugin' => 'twitter_search_block',
   ]);

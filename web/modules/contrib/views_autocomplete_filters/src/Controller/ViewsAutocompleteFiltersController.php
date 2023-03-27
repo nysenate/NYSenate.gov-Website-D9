@@ -68,7 +68,7 @@ class ViewsAutocompleteFiltersController implements ContainerInjectionInterface 
     }
     return AccessResult::forbidden();
   }
-    /**
+  /**
    * Retrieves suggestions for taxonomy term autocompletion.
    *
    * This function outputs text suggestions in response to Ajax requests
@@ -102,7 +102,7 @@ class ViewsAutocompleteFiltersController implements ContainerInjectionInterface 
     }
     // Set display and display handler vars for quick access.
     $display_handler = $view->display_handler;
-  
+
     // Force "Display all values" for arguments set,
     // to get results no matter of Not Contextual filter present settings.
     $arguments = $display_handler->getOption('arguments');
@@ -196,7 +196,7 @@ class ViewsAutocompleteFiltersController implements ContainerInjectionInterface 
     $view->execute();
     $view->postExecute();
     $display_handler = $view->display_handler;
-  
+
     // Render field on each row and fill matches array.
     $use_raw_suggestion = !empty($expose_options['autocomplete_raw_suggestion']);
     $use_raw_dropdown = !empty($expose_options['autocomplete_raw_dropdown']);
@@ -206,7 +206,7 @@ class ViewsAutocompleteFiltersController implements ContainerInjectionInterface 
       $view->row_index = $index;
       /** @var \Drupal\views\Plugin\views\style\StylePluginBase $style_plugin */
       $style_plugin = $display_handler->getPlugin('style');
-  
+
       foreach ($field_names as $field_name) {
         $rendered_field = $raw_field = '';
         // Render field only if suggestion or dropdown item not in RAW format.
@@ -215,7 +215,9 @@ class ViewsAutocompleteFiltersController implements ContainerInjectionInterface 
         }
         // Get the raw field value only if suggestion or dropdown item is in RAW format.
         if ($use_raw_suggestion || $use_raw_dropdown) {
-          $raw_field = $style_plugin->getFieldValue($index, $field_name);
+          $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+          $entity = $view->result[$index]->_entity->getTranslation($langcode);
+          $raw_field = $entity->$field_name->value;
           if (!is_array($raw_field)) {
             $raw_field = [['value' => $raw_field]];
           }
@@ -227,7 +229,7 @@ class ViewsAutocompleteFiltersController implements ContainerInjectionInterface 
             }
           }
         }
-  
+
         if (empty($raw_field) && !empty($rendered_field)) {
           $raw_field = [['value' => $rendered_field]];
         }

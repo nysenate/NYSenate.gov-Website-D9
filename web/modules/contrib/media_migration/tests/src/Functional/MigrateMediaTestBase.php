@@ -66,7 +66,7 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
    * {@inheritdoc}
    */
   protected function getSourceBasePath() {
-    return drupal_get_path('module', 'media_migration') . '/tests/fixtures';
+    return \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures';
   }
 
   /**
@@ -213,20 +213,6 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
         'remote_video' => 'Remote video',
         'video' => 'Video',
       ],
-      'media' => [
-        1 => 'Blue PNG',
-        2 => 'green.jpg',
-        3 => 'red.jpeg',
-        4 => 'DrupalCon Amsterdam 2019: Keynote - Driesnote',
-        5 => 'Responsive Images in Drupal 8',
-        6 => 'LICENSE.txt',
-        7 => 'yellow.jpg',
-        8 => 'video.webm',
-        9 => 'video.mp4',
-        10 => 'yellow.webp',
-        11 => 'audio.m4a',
-        12 => 'document.odt',
-      ],
       'file' => [
         1 => 'Blue PNG',
         2 => 'green.jpg',
@@ -266,6 +252,34 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
       $expected_entities['image_style']['wide'] = 'Wide (1090)';
     }
 
+    // PostgreSQL returns db records in different order, and this means that
+    // also media entities are migrated in differnet order.
+    $expected_entities['media'] = [
+      1 => 'Blue PNG',
+      2 => 'red.jpeg',
+      3 => 'green.jpg',
+      4 => 'yellow.jpg',
+      5 => 'yellow.webp',
+      6 => 'DrupalCon Amsterdam 2019: Keynote - Driesnote',
+      7 => 'Responsive Images in Drupal 8',
+      8 => 'video.webm',
+      9 => 'video.mp4',
+      10 => 'LICENSE.txt',
+      11 => 'document.odt',
+      12 => 'audio.m4a',
+    ];
+    if ($this->connectionIsPostgreSql()) {
+      $expected_entities['media'] = [
+        6 => 'video.webm',
+        7 => 'video.mp4',
+        8 => 'Responsive Images in Drupal 8',
+        9 => 'DrupalCon Amsterdam 2019: Keynote - Driesnote',
+        10 => 'audio.m4a',
+        11 => 'LICENSE.txt',
+        12 => 'document.odt',
+      ] + $expected_entities['media'];
+    }
+
     return $expected_entities;
   }
 
@@ -297,7 +311,6 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
   protected function getAvailablePaths() {
     $available_paths = [
       'block',
-      'color',
       'comment',
       'ctools',
       'dashboard',
@@ -339,7 +352,6 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
       $available_paths = [
         'Block',
         'Chaos tools',
-        'Color',
         'Comment',
         'Contextual links',
         'Dashboard',
@@ -357,7 +369,6 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
         'Number',
         'Options',
         'Path',
-        'RDF',
         'Search',
         'Shortcut',
         'System',
@@ -366,6 +377,10 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
         'Toolbar',
         'User',
       ];
+
+      if (version_compare($this->coreMajorMinorVersion(), '9.5', '<')) {
+        $available_paths[] = 'RDF';
+      }
     }
 
     return $available_paths;
@@ -394,6 +409,7 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
     // Drupal 9.1+ checks the human name of the modules.
     if (version_compare(\Drupal::VERSION, '9.1', '>=')) {
       $missing_paths = [
+        'Color',
         'File Entity',
         'Media',
         'Media Internet Sources',
@@ -403,6 +419,10 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
         'Views',
         'Wysiwyg',
       ];
+    }
+
+    if (version_compare($this->coreMajorMinorVersion(), '9.5', '>=')) {
+      $missing_paths[] = 'RDF';
     }
 
     return $missing_paths;
@@ -430,6 +450,13 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
     $this->loadFixture($this->getFixtureFilePath());
     $this->setEmbedTokenDestinationFilterPlugin($this->embedTokenDestinationFilterPlugin);
     $this->setEmbedMediaReferenceMethod($this->embedMediaReferenceMethod);
+
+    // RDF module was deprecated in Drupal core 9.5.
+    if (version_compare($this->coreMajorMinorVersion(), '9.5', '<')) {
+      self::$modules[] = array_merge(self::$modules, [
+        'rdf',
+      ]);
+    }
   }
 
   /**
@@ -441,7 +468,7 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
     $session = $this->assertSession();
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
 
-    $this->drupalPostForm(NULL, [], $this->t('Continue'));
+    $this->submitForm([], $this->t('Continue'));
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
 
     $driver = $connection_options['driver'];
@@ -465,7 +492,7 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
     }
     $edits = $this->translatePostValues($edit);
 
-    $this->drupalPostForm(NULL, $edits, $this->t('Review upgrade'));
+    $this->submitForm($edits, $this->t('Review upgrade'));
   }
 
   /**
@@ -485,7 +512,7 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
     // @see https://www.drupal.org/node/3105503
     if (version_compare(\Drupal::VERSION, '8.9', '>=') && !Settings::get('migrate_node_migrate_type_classic', FALSE)) {
       $session->buttonExists($this->t('I acknowledge I may lose data. Continue anyway.'));
-      $this->drupalPostForm(NULL, [], $this->t('I acknowledge I may lose data. Continue anyway.'));
+      $this->submitForm([], $this->t('I acknowledge I may lose data. Continue anyway.'));
       $session->statusCodeEquals(200);
     }
 
@@ -497,8 +524,8 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
     }
 
     // Perform the upgrade.
-    $this->drupalPostForm(NULL, [], $this->t('Perform upgrade'));
-    $this->assertText($this->t('Congratulations, you upgraded Drupal!'));
+    $this->submitForm([], $this->t('Perform upgrade'));
+    $this->assertSession()->responseContains($this->t('Congratulations, you upgraded Drupal!'));
 
     // Have to reset all the statics after migration to ensure entities are
     // loadable.
@@ -685,6 +712,16 @@ abstract class MigrateMediaTestBase extends MigrateUpgradeTestBase {
       ];
       $this->writeSettings($settings);
     }
+  }
+
+  /**
+   * Checks whether the actual DB connection is a PostgreSql connection.
+   *
+   * @return bool
+   *   Whether the actual DB connection is a PostgreSql connection.
+   */
+  protected function connectionIsPostgreSql(): bool {
+    return \Drupal::database()->getConnectionOptions()['driver'] === 'pgsql';
   }
 
 }

@@ -202,6 +202,7 @@ return array(
     'Consolidation\\AnnotatedCommand\\Attributes\\FilterDefaultField' => $vendorDir . '/consolidation/annotated-command/src/Attributes/FilterDefaultField.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\Help' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Help.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\Hook' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Hook.php',
+    'Consolidation\\AnnotatedCommand\\Attributes\\HookSelector' => $vendorDir . '/consolidation/annotated-command/src/Attributes/HookSelector.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\Misc' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Misc.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\Option' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Option.php',
     'Consolidation\\AnnotatedCommand\\Attributes\\Topics' => $vendorDir . '/consolidation/annotated-command/src/Attributes/Topics.php',

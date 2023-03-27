@@ -113,11 +113,27 @@ class EmailTfaConfigForm extends ConfigFormBase {
       ],
     ];
 
+    $form['email_tfa_settings']['settings']['role_exclusion_type'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Exclude roles'),
+      '#default_value' => $config->get('role_exclusion_type') ?? 'disable_for',
+      '#options' => [
+        'disable_for' => $this->t('Disable Email TFA for users with any of the following roles.'),
+        'force_for' => $this->t('Force Email TFA for users with any of the following roles.'),
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name="tracks"]' => ['value' => 'globally_enabled'],
+          ':input[name="status"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
     // Load all roles.
     $roles = user_role_names(TRUE);
     $form['email_tfa_settings']['settings']['ignore_role'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Exclude roles'),
+      '#title' => $this->t('Roles'),
       '#default_value' => $config->get('ignore_role'),
       '#options' => $roles,
       '#states' => [
@@ -258,6 +274,7 @@ class EmailTfaConfigForm extends ConfigFormBase {
     $config->set('tracks', $form_state->getValue('tracks'))->save();
     $config->set('user_one', $form_state->getValue('user_one'))->save();
     $config->set('ignore_role', $ignore_role)->save();
+    $config->set('role_exclusion_type', $form_state->getValue('role_exclusion_type'))->save();
     $config->set('routes', $form_state->getValue('routes'))->save();
     $config->set('timeouts', $form_state->getValue('timeouts'))->save();
     $config->set('subject', $form_state->getValue('subject'))->save();

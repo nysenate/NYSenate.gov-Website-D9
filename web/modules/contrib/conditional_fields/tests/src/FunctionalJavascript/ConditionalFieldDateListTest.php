@@ -46,7 +46,7 @@ class ConditionalFieldDateListTest extends ConditionalFieldTestBase implements C
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->fieldSelectors = [
       'day' => "[name=\"{$this->fieldName}[0][value][day]\"]",

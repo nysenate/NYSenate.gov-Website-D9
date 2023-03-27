@@ -29,10 +29,10 @@ class NameAdminTest extends NameTestBase {
       'machine'     => '//tbody/tr[{row}]/td[2]',
       'pattern'     => '//tbody/tr[{row}]/td[3]',
       'formatted'   => '//tbody/tr[{row}]/td[4]',
-      'edit'        => '//tbody/tr[{row}]/td[5]//li[contains(@class, "edit")]/a',
-      'edit link'   => '//tbody/tr[{row}]/td[5]//li[contains(@class, "edit")]/a/@href',
-      'delete'      => '//tbody/tr[{row}]/td[5]//li[contains(@class, "delete")]/a',
-      'delete link' => '//tbody/tr[{row}]/td[5]//li[contains(@class, "delete")]/a/@href',
+      'edit'        => '//tbody/tr[{row}]/td[5]//li/a[text()="Edit"]',
+      'edit link'   => '//tbody/tr[{row}]/td[5]//li/a[text()="Edit"]/@href',
+      'delete'      => '//tbody/tr[{row}]/td[5]//li/a[text()="Delete"]',
+      'delete link' => '//tbody/tr[{row}]/td[5]//li/a[text()="Delete"]/@href',
     ];
     $all_values = [
       1 => [
@@ -209,10 +209,10 @@ class NameAdminTest extends NameTestBase {
       'machine'     => '//tbody/tr[{row}]/td[2]',
       'settings'    => '//tbody/tr[{row}]/td[3]',
       // 'examples'   => '//tbody/tr[{row}]/td[4]',
-      'edit'        => '//tbody/tr[{row}]/td[5]//li[contains(@class, "edit")]/a',
-      'edit link'   => '//tbody/tr[{row}]/td[5]//li[contains(@class, "edit")]/a/@href',
-      'delete'      => '//tbody/tr[{row}]/td[5]//li[contains(@class, "delete")]/a',
-      'delete link' => '//tbody/tr[{row}]/td[5]//li[contains(@class, "delete")]/a/@href',
+      'edit'        => '//tbody/tr[{row}]/td[5]//li/a[text()="Edit"]',
+      'edit link'   => '//tbody/tr[{row}]/td[5]//li/a[text()="Edit"]/@href',
+      'delete'      => '//tbody/tr[{row}]/td[5]//li/a[text()="Delete"]',
+      'delete link' => '//tbody/tr[{row}]/td[5]//li/a[text()="Delete"]/@href',
     ];
     $all_values = [
       1 => [
@@ -334,7 +334,7 @@ class NameAdminTest extends NameTestBase {
         $elements = $this->xpath($xpath);
 
         // Check URLs with or without the ?destination= query parameter.
-        if (strpos($row_template[$cell_code], '/a/@href')) {
+        if (strpos($row_template[$cell_code], '/@href')) {
           $results = isset($elements[0]) ? $elements[0]->getParent()->getAttribute('href') : '';
           $message = "Testing {$cell_code} on row {$id} using '{$xpath}' and expecting '" . Html::escape($value) . "', got '" . Html::escape($results) . "'.";
           if ($results == $value || strpos($results, $value . '?destination=') === 0) {

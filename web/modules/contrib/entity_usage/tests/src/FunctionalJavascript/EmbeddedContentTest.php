@@ -113,6 +113,27 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   }
 
   /**
+   * Tests the Entity Embed plugin parsing does not error with malformed HTML.
+   */
+  public function testEntityEmbedWithMalformedHtml() {
+    $embedded_text = '<drupal-entity data-embed-button="node" data-entity-embed-display="entity_reference:entity_reference_label" data-entity-embed-display-settings="{&quot;link&quot;:1}" data-entity-type="" data-entity-uuid=""></drupal-entity>';
+
+    $node = Node::create([
+      'type' => 'eu_test_ct',
+      'title' => 'This is a node with malformed EntityEmbed HTML',
+      'field_eu_test_rich_text' => [
+        'value' => $embedded_text,
+        'format' => 'eu_test_text_format',
+      ],
+    ]);
+
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
+    $this->assertSession()->pageTextContains('This is a node with malformed EntityEmbed HTML');
+  }
+
+  /**
    * Tests the LinkIt parsing.
    */
   public function testLinkIt() {
@@ -212,6 +233,27 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     // Check that the usage for this source is empty.
     $usage = $usage_service->listTargets($node4);
     $this->assertEquals([], $usage);
+  }
+
+  /**
+   * Tests the LinkIt plugin parsing does not error with malformed HTML.
+   */
+  public function testLinkItdWithMalformedHtml() {
+    $embedded_text = '<p>foo <a data-entity-substitution="canonical" data-entity-type="" data-entity-uuid="">linked text</a> bar</p>';
+
+    $node = Node::create([
+      'type' => 'eu_test_ct',
+      'title' => 'This is a node with malformed LinkIt HTML',
+      'field_eu_test_rich_text' => [
+        'value' => $embedded_text,
+        'format' => 'eu_test_text_format',
+      ],
+    ]);
+
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
+    $this->assertSession()->pageTextContains('This is a node with malformed LinkIt HTML');
   }
 
   /**
@@ -503,6 +545,27 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
       ],
     ];
     $this->assertEquals($expected, $usage);
+  }
+
+  /**
+   * Tests the MediaEmbed plugin parsing does not error with malformed HTML.
+   */
+  public function testMediaEmbeddWithMalformedHtml() {
+    $embedded_text = '<drupal-media data-entity-type="media" data-entity-uuid=""></drupal-media>';
+
+    $node = Node::create([
+      'type' => 'eu_test_ct',
+      'title' => 'This is a node with malformed MediaEmbed HTML',
+      'field_eu_test_rich_text' => [
+        'value' => $embedded_text,
+        'format' => 'eu_test_text_format',
+      ],
+    ]);
+
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
+    $this->assertSession()->pageTextContains('This is a node with malformed MediaEmbed HTML');
   }
 
 }

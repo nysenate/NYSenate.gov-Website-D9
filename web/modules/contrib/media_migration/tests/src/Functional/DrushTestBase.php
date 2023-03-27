@@ -50,7 +50,7 @@ abstract class DrushTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function getFixtureFilePath() {
-    return drupal_get_path('module', 'media_migration') . '/tests/fixtures/drupal7_media.php';
+    return \Drupal::service('extension.list.module')->getPath('media_migration') . '/tests/fixtures/drupal7_media.php';
   }
 
   /**
@@ -148,9 +148,19 @@ abstract class DrushTestBase extends BrowserTestBase {
   }
 
   /**
+   * Checks whether the actual DB connection is a PostgreSql connection.
+   *
+   * @return bool
+   *   Whether the actual DB connection is a PostgreSql connection.
+   */
+  protected function connectionIsPostgreSql(): bool {
+    return \Drupal::database()->getConnectionOptions()['driver'] === 'pgsql';
+  }
+
+  /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     $this->cleanupSourceMigrateConnection($this->sourceDatabase->getKey());
     parent::tearDown();
   }

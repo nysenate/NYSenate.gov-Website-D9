@@ -128,12 +128,17 @@
           'z-index': '100'
         });
 
-        if (self.isOpenData()) {
+        if (self.isOpenData() || self.isIssuePage()) {
           origActionBar = nav.find('.c-actionbar');
           actionBar = origActionBar.clone();
           actionBar.appendTo(nav);
           origActionBar.css('visibility', 'hidden');
           actionBar.appendTo(nav).removeClass('hidden');
+        }
+
+        if (self.isIssuePage()) {
+          origNav.find('.c-actionbar').removeClass('hidden');
+          origNav.find('.c-actionbar').css('visibility', 'hidden');
         }
 
         menu = nav.find('.c-nav--wrap');
@@ -157,7 +162,7 @@
         } else {
           $(window).scroll(function () {
             currentTop = $(this).scrollTop();
-            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, self.isOpenData() ? 'show-actionbar' : 'hide-action-bar');
+            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, self.isOpenData() || self.isIssuePage() ? 'show-actionbar' : 'hide-action-bar', self.isIssuePage());
             previousTop = $(document).scrollTop();
           });
         }
@@ -175,6 +180,8 @@
       this.checkMenuState(menu, currentTop, previousTop);
     },
     basicScroll: function basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, toggleActionBar) {
+      var topBarToggle = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : false;
+
       if (origActionBar) {
         if (this.isMovingDown(currentTop, previousTop) && currentTop + nav.outerHeight() >= origActionBar.offset().top) {
           actionBar.removeClass('hidden');
@@ -185,8 +192,8 @@
         }
       }
 
-      this.checkTopBarState(currentTop, previousTop, headerBar, nav);
-      this.checkMenuState(menu, currentTop, previousTop);
+      this.checkTopBarState(currentTop, previousTop, headerBar, nav, topBarToggle);
+      this.checkMenuState(menu, currentTop, previousTop, topBarToggle);
     },
     senatorLandingScroll: function senatorLandingScroll(currentTop, previousTop, userScroll, origNav, menu, headerBar, nav, actionBar) {
       // Close the nav after scrolling 1/3rd of page.
@@ -237,14 +244,18 @@
       }
     },
     checkMenuState: function checkMenuState(menu, currentTop, previousTop) {
+      var topBarToggle = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
       if (this.isOutOfBounds(currentTop, previousTop)) {
         return;
       }
 
-      if (this.isMovingDown(currentTop, previousTop)) {
-        menu.addClass('closed');
-      } else if (this.isMovingUp(currentTop, previousTop)) {
-        menu.removeClass('closed');
+      if (!topBarToggle) {
+        if (this.isMovingDown(currentTop, previousTop)) {
+          menu.addClass('closed');
+        } else if (this.isMovingUp(currentTop, previousTop)) {
+          menu.removeClass('closed');
+        }
       }
     },
     isMovingUp: function isMovingUp(currentTop, previousTop) {
@@ -254,18 +265,22 @@
       return currentTop > previousTop;
     },
     checkTopBarState: function checkTopBarState(currentTop, previousTop, headerBar, nav) {
+      var topBarToggle = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
       if (this.isOutOfBounds(currentTop, previousTop)) {
         return;
       }
 
-      if (currentTop > nav.outerHeight() && !headerBar.hasClass('collapsed') && !nav.hasClass('l-header__collapsed')) {
-        headerBar.addClass('collapsed');
-        nav.addClass('l-header__collapsed');
-      } else if (currentTop <= nav.outerHeight() && headerBar.hasClass('collapsed') && nav.hasClass('l-header__collapsed')) {
-        headerBar.removeClass('collapsed');
+      if (!topBarToggle) {
+        if (currentTop > nav.outerHeight() && !headerBar.hasClass('collapsed') && !nav.hasClass('l-header__collapsed')) {
+          headerBar.addClass('collapsed');
+          nav.addClass('l-header__collapsed');
+        } else if (currentTop <= nav.outerHeight() && headerBar.hasClass('collapsed') && nav.hasClass('l-header__collapsed')) {
+          headerBar.removeClass('collapsed');
 
-        if (!this.isSenatorCollapsed()) {
-          nav.removeClass('l-header__collapsed');
+          if (!this.isSenatorCollapsed()) {
+            nav.removeClass('l-header__collapsed');
+          }
         }
       }
     },
@@ -323,6 +338,9 @@
     },
     isOpenData: function isOpenData() {
       return $('.open-data-section').length > 0;
+    },
+    isIssuePage: function isIssuePage() {
+      return $('.page--issues').length > 0;
     },
     isSenatorCollapsed: function isSenatorCollapsed() {
       return $('.hero--senator-collapsed').length > 0;

@@ -19,7 +19,9 @@ class MediaImageFieldSettings extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if ($row->getSourceProperty('type') == 'media_image') {
+    $source_type = $this->configuration['expected_source_type'] ?? 'media_image';
+
+    if ($row->getSourceProperty('type') == $source_type) {
       $value['target_type'] = 'media';
     }
     return $value;

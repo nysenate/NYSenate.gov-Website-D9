@@ -18,7 +18,7 @@ class ConditionalFieldLanguageSelectTest extends ConditionalFieldTestBase implem
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'language',
     'node',
@@ -68,7 +68,7 @@ class ConditionalFieldLanguageSelectTest extends ConditionalFieldTestBase implem
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldSelector = "[name=\"{$this->fieldName}[0][value]\"]";

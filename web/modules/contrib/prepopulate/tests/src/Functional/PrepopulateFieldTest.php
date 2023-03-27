@@ -65,7 +65,7 @@ class PrepopulateFieldTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->user = $this->drupalCreateUser([
       'administer content types',
@@ -86,7 +86,7 @@ class PrepopulateFieldTest extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
-  public function testFieldsPrepopulate() {
+  public function testFieldsPrepopulate(): void {
     foreach ($this->allFields() as $input) {
       $this->assertPrepopulate($input['query'], $input['expected']);
     }
@@ -102,13 +102,13 @@ class PrepopulateFieldTest extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
-  protected function assertPrepopulate(array $query, $expected) {
+  protected function assertPrepopulate(array $query, $expected): void {
     // Title is required.
     $query[] = 'edit[title][widget][0][value]=simple title';
     // IEF taxonomy 'name' field is required.
     $query[] = 'edit[field_ief][widget][0][inline_entity_form][name][widget][0][value]=Apples';
     $this->drupalGet(Url::fromUri('internal:/node/add/test_content?' . implode('&', $query)));
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Test Content simple title has been created.');
     $this->assertSession()->pageTextContains($expected);
     $this->assertSession()->pageTextContains('IEF Apples');
@@ -120,7 +120,7 @@ class PrepopulateFieldTest extends BrowserTestBase {
    * @return array
    *   The test data.
    */
-  public function allFields() {
+  public function allFields(): array {
     $data['non existent reference'] = [
       'query' => [
         'edit[body][widget][0]=body text',

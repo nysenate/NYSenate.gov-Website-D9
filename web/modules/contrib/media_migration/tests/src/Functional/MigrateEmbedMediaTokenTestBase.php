@@ -70,7 +70,7 @@ abstract class MigrateEmbedMediaTokenTestBase extends MigrateMediaTestBase {
     $this->assertEmbedTokenHtmlTags($body_text, $embed_code_html_properties);
 
     // Hitting save button should not cause errors.
-    $this->drupalPostForm(NULL, NULL, 'Save');
+    $this->submitForm([], 'Save');
     $assert_session->statusCodeEquals(200);
 
     // Url is node/1.

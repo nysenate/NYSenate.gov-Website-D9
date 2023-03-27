@@ -24,11 +24,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 1 to media 1.
    */
   protected function assertNonMediaToMedia1FieldValues($name = 'blue.png') {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(1);
+    $dest_id = $this->getDestinationIdFromSourceId(1);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '1']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => $name]],
       'uid' => [['target_id' => '2']],
@@ -56,11 +57,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 2 to media 2.
    */
   protected function assertNonMediaToMedia2FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(2);
+    $dest_id = $this->getDestinationIdFromSourceId(2);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '2']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'green.jpg']],
       'uid' => [['target_id' => '2']],
@@ -88,11 +90,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 3 to media 3.
    */
   protected function assertNonMediaToMedia3FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(3);
+    $dest_id = $this->getDestinationIdFromSourceId(3);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '3']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'red.jpeg']],
       'uid' => [['target_id' => '2']],
@@ -120,11 +123,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 6 to media 6.
    */
   protected function assertNonMediaToMedia6FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(6);
+    $dest_id = $this->getDestinationIdFromSourceId(6);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '6']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'document']],
       'name' => [['value' => 'LICENSE.txt']],
       'uid' => [['target_id' => '2']],
@@ -150,11 +154,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 7 to media 7.
    */
   protected function assertNonMediaToMedia7FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(7);
+    $dest_id = $this->getDestinationIdFromSourceId(7);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '7']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'yellow.jpg']],
       'uid' => [['target_id' => '2']],
@@ -182,11 +187,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 8 to media 8.
    */
   protected function assertNonMediaToMedia8FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(8);
+    $dest_id = $this->getDestinationIdFromSourceId(8);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '8']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'video']],
       'name' => [['value' => 'video.webm']],
       'uid' => [['target_id' => '1']],
@@ -212,11 +218,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 9 to media 9.
    */
   protected function assertNonMediaToMedia9FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(9);
+    $dest_id = $this->getDestinationIdFromSourceId(9);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '9']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'video']],
       'name' => [['value' => 'video.mp4']],
       'uid' => [['target_id' => '1']],
@@ -242,11 +249,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 10 to media 10.
    */
   protected function assertNonMediaToMedia10FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(10);
+    $dest_id = $this->getDestinationIdFromSourceId(10);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $expected_entity_properties = [
-      'mid' => [['value' => '10']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'yellow.webp']],
       'uid' => [['target_id' => '2']],
@@ -287,11 +295,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 11 to media 11.
    */
   protected function assertNonMediaToMedia11FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(11);
+    $dest_id = $this->getDestinationIdFromSourceId(11);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '11']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'audio']],
       'name' => [['value' => 'audio.m4a']],
       'uid' => [['target_id' => '1']],
@@ -317,11 +326,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
    * Asserts the migration result from file ID 12 to media 12.
    */
   protected function assertNonMediaToMedia12FieldValues() {
-    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(12);
+    $dest_id = $this->getDestinationIdFromSourceId(12);
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load($dest_id);
     assert($media instanceof MediaInterface);
 
     $this->assertEquals([
-      'mid' => [['value' => '12']],
+      'mid' => [['value' => $dest_id]],
       'bundle' => [['target_id' => 'document']],
       'name' => [['value' => 'document.odt']],
       'uid' => [['target_id' => '2']],
@@ -387,16 +397,20 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
           'format' => 'filtered_html',
         ],
       ],
-      'field_file' => [['target_id' => '6']],
-      'field_file_multi' => [
-        ['target_id' => '12'],
-        ['target_id' => '10'],
+      'field_file' => [
+        ['target_id' => $this->getDestinationIdFromSourceId(6)],
       ],
-      'field_image' => [['target_id' => '1']],
+      'field_file_multi' => [
+        ['target_id' => $this->getDestinationIdFromSourceId(12)],
+        ['target_id' => $this->getDestinationIdFromSourceId(10)],
+      ],
+      'field_image' => [
+        ['target_id' => $this->getDestinationIdFromSourceId(1)],
+      ],
       'field_image_multi' => [
-        ['target_id' => '2'],
-        ['target_id' => '7'],
-        ['target_id' => '3'],
+        ['target_id' => $this->getDestinationIdFromSourceId(2)],
+        ['target_id' => $this->getDestinationIdFromSourceId(7)],
+        ['target_id' => $this->getDestinationIdFromSourceId(3)],
       ],
     ], $props);
 
@@ -409,7 +423,7 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
     ];
     foreach ($media_fields as $field_name => $expected_count) {
       $referred_entities = $this->getReferencedEntities($node, $field_name, $expected_count);
-      assert($referred_entities[0] instanceof MediaInterface);
+      $this->assertInstanceOf(MediaInterface::class, $referred_entities[0]);
     }
   }
 
@@ -457,10 +471,12 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
           'format' => 'filtered_html',
         ],
       ],
-      'field_file' => [['target_id' => '9']],
+      'field_file' => [
+        ['target_id' => $this->getDestinationIdFromSourceId(9)],
+      ],
       'field_file_multi' => [
-        ['target_id' => '8'],
-        ['target_id' => '11'],
+        ['target_id' => $this->getDestinationIdFromSourceId(8)],
+        ['target_id' => $this->getDestinationIdFromSourceId(11)],
       ],
       'field_image' => [],
       'field_image_multi' => [],
@@ -476,7 +492,7 @@ trait MediaMigrationAssertionsForNonMediaSourceTrait {
     foreach ($media_fields as $field_name => $expected_count) {
       $referred_entities = $this->getReferencedEntities($node, $field_name, $expected_count);
       if ($expected_count) {
-        assert($referred_entities[0] instanceof MediaInterface);
+        $this->assertInstanceOf(MediaInterface::class, $referred_entities[0]);
       }
     }
   }

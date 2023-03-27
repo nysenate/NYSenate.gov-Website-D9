@@ -83,9 +83,10 @@ class JobScheduler implements JobSchedulerInterface {
   public function remove(array $job) {
     $storage = $this->jobScheduleStorage;
     $query = $storage->getQuery();
+    $query->accessCheck(FALSE);
     $query->condition('name', $job['name']);
     $query->condition('type', $job['type']);
-    $query->condition('id', isset($job['id']) ? $job['id'] : 0);
+    $query->condition('id', $job['id'] ?? 0);
     $entity_ids = $query->execute();
     if (!empty($entity_ids)) {
       $entities = $storage->loadMultiple($entity_ids);
@@ -99,6 +100,7 @@ class JobScheduler implements JobSchedulerInterface {
   public function removeAll($name, $type) {
     $storage = $this->jobScheduleStorage;
     $query = $storage->getQuery();
+    $query->accessCheck(FALSE);
     $query->condition('name', $name);
     $query->condition('type', $type);
     $entity_ids = $query->execute();
@@ -180,6 +182,7 @@ class JobScheduler implements JobSchedulerInterface {
     $job += ['id' => 0, 'period' => 0, 'crontab' => ''];
 
     $query = $storage->getQuery();
+    $query->accessCheck(FALSE);
     $query->condition('name', $job['name']);
     $query->condition('type', $job['type']);
     $query->condition('id', $job['id']);
@@ -210,6 +213,7 @@ class JobScheduler implements JobSchedulerInterface {
 
     // Reschedule stuck periodic jobs after one hour.
     $query = $storage->getQuery();
+    $query->accessCheck(FALSE);
     $query->condition('scheduled', $timestamp - 3600, '<');
     $query->condition('periodic', 1);
     if (!empty($name)) {
@@ -230,6 +234,7 @@ class JobScheduler implements JobSchedulerInterface {
     $total = 0;
     $failed = 0;
     $query = $storage->getQuery();
+    $query->accessCheck(FALSE);
     $query->condition('scheduled', 0);
     $query->condition('next', $timestamp, '<=');
     if (!empty($name)) {

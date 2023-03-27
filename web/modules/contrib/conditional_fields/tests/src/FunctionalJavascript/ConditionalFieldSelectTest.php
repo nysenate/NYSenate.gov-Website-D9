@@ -20,7 +20,7 @@ class ConditionalFieldSelectTest extends ConditionalFieldTestBase implements Con
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
     'options',
@@ -74,7 +74,7 @@ class ConditionalFieldSelectTest extends ConditionalFieldTestBase implements Con
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     foreach ($this->fieldNames as $fieldName) {

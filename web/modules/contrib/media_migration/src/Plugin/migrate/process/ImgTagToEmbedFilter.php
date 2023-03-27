@@ -4,11 +4,14 @@ namespace Drupal\media_migration\Plugin\migrate\process;
 
 use Drupal\Component\Utility\Variable;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\media_migration\MediaMigration;
 use Drupal\media_migration\MediaMigrationUuidOracleInterface;
+use Drupal\media_migration\Utility\MigrationPluginTool;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
@@ -56,12 +59,18 @@ class ImgTagToEmbedFilter extends EmbedFilterBase {
    *   The logger.
    * @param \Drupal\entity_embed\EntityEmbedDisplay\EntityEmbedDisplayManager|null $entity_embed_display_manager
    *   The entity embed display plugin manager service, if available.
+   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
+   *   The migration lookup service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MediaMigrationUuidOracleInterface $media_uuid_oracle, LoggerChannelInterface $logger, $entity_embed_display_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $media_uuid_oracle, $entity_embed_display_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MediaMigrationUuidOracleInterface $media_uuid_oracle, LoggerChannelInterface $logger, $entity_embed_display_manager, MigrateLookupInterface $migrate_lookup, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $media_uuid_oracle, $entity_embed_display_manager, $migrate_lookup, $entity_type_manager);
 
     $this->logger = $logger;
     $this->destinationFilterPluginId = MediaMigration::getEmbedTokenDestinationFilterPlugin();
+    $this->migrateLookup = $migrate_lookup;
+    $this->mediaStorage = $entity_type_manager->getStorage('media');
   }
 
   /**
@@ -75,7 +84,9 @@ class ImgTagToEmbedFilter extends EmbedFilterBase {
       $migration,
       $container->get('media_migration.media_uuid_oracle'),
       $container->get('logger.channel.media_migration'),
-      $container->get('plugin.manager.entity_embed.display', ContainerInterface::NULL_ON_INVALID_REFERENCE)
+      $container->get('plugin.manager.entity_embed.display', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+      $container->get('migrate.lookup'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -325,11 +336,15 @@ class ImgTagToEmbedFilter extends EmbedFilterBase {
 
     $embed_node = $dom->createElement($tag);
     $embed_node->setAttribute('data-entity-type', 'media');
+    $migrations = $this->configuration['migrations'] ?? MigrationPluginTool::getMediaEntityMigrationIds();
     if (MediaMigration::getEmbedMediaReferenceMethod() === MediaMigration::EMBED_MEDIA_REFERENCE_METHOD_ID) {
-      $embed_node->setAttribute('data-entity-id', $file_id);
+      $destination_id = $this->getMigratedMediaId($file_id, $migrations);
+      $embed_node->setAttribute('data-entity-id', $destination_id);
     }
     else {
-      $embed_node->setAttribute('data-entity-uuid', $this->mediaUuidOracle->getMediaUuid((int) $file_id));
+      $uuid = $this->getExistingMediaUuid($file_id, $migrations) ??
+        $this->mediaUuidOracle->getMediaUuid((int) $file_id);
+      $embed_node->setAttribute('data-entity-uuid', $uuid);
     }
     $embed_node->setAttribute($display_mode_attribute, 'default');
     if ($filter_destination_is_entity_embed) {

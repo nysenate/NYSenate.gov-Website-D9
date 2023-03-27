@@ -24,7 +24,7 @@ function job_scheduler_info($name = NULL) {
     $module_handler->alter('cron_job_scheduler_info', $info);
   }
   if ($name) {
-    return isset($info[$name]) ? $info[$name] : NULL;
+    return $info[$name] ?? NULL;
   }
   else {
     return $info;
@@ -50,7 +50,7 @@ function job_scheduler_queue_info($name = NULL) {
     $module_handler->alter('cron_job_scheduler_queue_info', $info);
   }
   if ($name) {
-    return isset($info[$name]) ? $info[$name] : NULL;
+    return $info[$name] ?? NULL;
   }
   else {
     return $info;

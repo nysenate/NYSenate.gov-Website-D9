@@ -54,7 +54,7 @@ class ConditionalFieldTextfieldTest extends ConditionalFieldTestBase implements
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldSelector = '[name="field_' . $this->fieldName . '[0][value]"]';

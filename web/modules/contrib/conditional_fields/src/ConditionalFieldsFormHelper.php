@@ -114,6 +114,20 @@ class ConditionalFieldsFormHelper {
         continue;
       }
 
+      // If the state is "checked" or "not checked", and the dependent form
+      // field is a container (i.e.: the form field wrapper around a checkbox or
+      // radio button), and there is a checkbox or radio button deeper in the
+      // array, we actually need to use the (deeper) checkbox or radio button
+      // because it is not possible to set a checked state on a container.
+      if (count(array_intersect(['checked', '!checked'], array_keys($states))) > 0
+        && $dependent_form_field['#type'] === 'container'
+        && isset($dependent_form_field['widget']['value']['#type'])
+        && in_array($dependent_form_field['widget']['value']['#type'], ['checkbox', 'radio'])
+      ) {
+        $dependent_location = array_merge($dependent_location, ['widget', 'value']);
+        $dependent_form_field = $dependent_form_field['widget']['value'];
+      }
+
       // Save the modified field back into the form.
       NestedArray::setValue($this->form, $dependent_location, $dependent_form_field);
 
@@ -144,8 +158,21 @@ class ConditionalFieldsFormHelper {
         unset($dependee_info['parents'][$unset]);
       }
 
+      if (isset($this->form[$dependee]['#attributes'])
+        && $this->form[$dependee]['#attributes']['class'][0] == 'field--type-list-string'
+        && $this->form[$dependee]['widget']['#type'] == 'checkboxes') {
+        array_pop($dependee_info['parents']);
+      }
+
       $dependee_form_field = NestedArray::getValue($this->form, $dependee_info['parents']);
       $options = $dependency['options'];
+
+      // Apply reset dependent to default if untriggered behavior.
+      if (!empty($options['reset'])) {
+        // Add property to element so conditional_fields_dependent_validate()
+        // can pick it up.
+        $dependent_form_field['#conditional_fields_reset_if_untriggered'] = TRUE;
+      }
 
       if (!empty($options['values']) && is_string($options['values'])) {
         $options['values'] = explode("\r\n", $options['values']);
@@ -431,6 +458,9 @@ class ConditionalFieldsFormHelper {
     if (!empty($element['#conditional_fields_reset_if_untriggered']) && !$triggered) {
       $form_state_addition['reset'] = TRUE;
     }
+    else {
+      $form_state_addition['reset'] = FALSE;
+    }
 
     // Tag validation errors previously set on this field for removal in
     // ConditionalFieldsFormHelper::formValidate().
@@ -451,6 +481,7 @@ class ConditionalFieldsFormHelper {
 
     if (!empty($field_errors)) {
       $form_state_addition['errors'] = $field_errors;
+      return;
     }
 
     $fiel_state_values_count = count($form_state->getValue('conditional_fields_untriggered_dependents'));
@@ -497,7 +528,9 @@ class ConditionalFieldsFormHelper {
       $dependee_parents_keys = array_flip($dependee_parents);
       $dependee_parent = NestedArray::getValue($form, array_slice($dependee_parents, 0, $dependee_parents_keys[$dependee]));
       $values = self::formFieldGetValues($dependee_parent[$dependee], $form_state);
-
+      if (isset($values['value']) && is_numeric($values['value'])) {
+        $values = $values['value'];
+      }
       // Remove the language key.
       if (isset($dependee_parent[$dependee]['#language'], $values[$dependee_parent[$dependee]['#language']])) {
         $values = $values[$dependee_parent[$dependee]['#language']];
@@ -552,6 +585,7 @@ class ConditionalFieldsFormHelper {
       return;
     }
 
+    $entity = $form_state->getFormObject()->getEntity();
     $untriggered_dependents_errors = [];
 
     foreach ($form_state->getValue('conditional_fields_untriggered_dependents') as $field) {
@@ -559,9 +593,11 @@ class ConditionalFieldsFormHelper {
       $dependent = NestedArray::getValue($form, $parent);
       $field_values_location = self::formFieldGetValues($dependent, $form_state);
 
+      $dependent_field_name = reset($dependent['#array_parents']);
+
       // If we couldn't find a location for the field's submitted values, let
       // the validation errors pass through to avoid security holes.
-      if (!isset($field_values_location[reset($dependent['#array_parents'])])) {
+      if (empty($field_values_location)) {
         if (!empty($field['errors'])) {
           $untriggered_dependents_errors = array_merge($untriggered_dependents_errors, $field['errors']);
         }
@@ -573,8 +609,13 @@ class ConditionalFieldsFormHelper {
       // that the values are located at
       // $form_state['values'][ ... $element['#parents'] ... ], while the
       // documentation of hook_field_widget_form() states that field values are
-      // $form_state['values'][ ... $element['#field_parents'] ... ].
-      NestedArray::setValue($form_state['values'], $dependent['#field_parents'], $field_values_location);
+      // // $form_state['values'][ ... $element['#field_parents'] ... ].
+      // NestedArray::setValue($form_state['values'], $dependent['#field_parents'], $field_values_location);
+      if (!empty($field['reset'])) {
+        $default = $entity->getFieldDefinition($dependent_field_name)->getDefaultValue($entity);
+        // Save the changed array back in place.
+        $form_state->setValue($dependent_field_name, $default);
+      }
 
       if (!empty($field['errors'])) {
         $untriggered_dependents_errors = array_merge($untriggered_dependents_errors, $field['errors']);
@@ -675,7 +716,6 @@ class ConditionalFieldsFormHelper {
           if (is_int($values) && is_numeric($dependency_values)) {
             $dependency_values = (int) $dependency_values;
           }
-
           return $dependency_values === $values;
         }
 

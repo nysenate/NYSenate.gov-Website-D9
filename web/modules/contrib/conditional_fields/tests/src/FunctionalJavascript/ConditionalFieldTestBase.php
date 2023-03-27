@@ -24,7 +24,7 @@ abstract class ConditionalFieldTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
     'datetime',
@@ -35,7 +35,7 @@ abstract class ConditionalFieldTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create Basic page and Article node types.
@@ -74,7 +74,7 @@ abstract class ConditionalFieldTestBase extends WebDriverTestBase {
    *   (Optional) Message to pass to assertJsCondition().
    */
   protected function waitUntilVisible($selector, $timeout = 1000, $message = '') {
-    $condition = "jQuery('{$selector}').is(':visible');console.log(jQuery('{$selector}'))";
+    $condition = "jQuery('{$selector}').is(':visible')";
     $this->assertJsCondition($condition, $timeout, $message);
   }
 

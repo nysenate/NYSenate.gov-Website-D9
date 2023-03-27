@@ -65,7 +65,12 @@ class MediaImage extends MediaMigrationFieldPluginBase {
     $process[] = [
       'plugin' => 'sub_process',
       'process' => [
-        'target_id' => 'fid',
+        'target_id' => [
+          'plugin' => 'migration_lookup',
+          'source' => 'fid',
+          'migration' => ['d7_file_entity', 'd7_file_plain'],
+          'no_stub' => TRUE,
+        ],
       ],
     ];
 

@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Install file for the comments_ban module.
+ */
+
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_uninstall().
+ */
+function comments_ban_uninstall() {
+  \Drupal::configFactory()->getEditable('system.action.ban_user_comment')->delete();
+  \Drupal::configFactory()->getEditable('views.view.users_banned_comments')->delete();
+  \Drupal::configFactory()->getEditable('system.action.unban_user_comment')->delete();
+
+  // Deleting field storage.
+  FieldStorageConfig::loadByName('user', 'field_user_banned_comments')->delete();
+}

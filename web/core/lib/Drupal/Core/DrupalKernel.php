@@ -230,7 +230,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected static $isEnvironmentInitialized = FALSE;
 
   /**
-   * The site directory.
+   * The site path directory.
+   *
+   * Site path is relative to the app root directory.
+   * Usually defined as "sites/default".
+   *
+   * By default, Drupal uses sites/default.
    *
    * @var string
    */
@@ -1584,7 +1589,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
   protected static function setupTrustedHosts(Request $request, $host_patterns) {
-    $request->setTrustedHosts($host_patterns);
+    Request::setTrustedHosts($host_patterns);
 
     // Get the host, which will validate the current request.
     try {

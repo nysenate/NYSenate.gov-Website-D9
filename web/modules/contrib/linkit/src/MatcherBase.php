@@ -87,10 +87,10 @@ abstract class MatcherBase extends PluginBase implements MatcherInterface, Conta
    */
   public function getConfiguration() {
     return [
-      'uuid' => $this->getUuid(),
       'id' => $this->getPluginId(),
-      'weight' => $this->getWeight(),
+      'uuid' => $this->getUuid(),
       'settings' => $this->configuration,
+      'weight' => $this->getWeight(),
     ];
   }
 

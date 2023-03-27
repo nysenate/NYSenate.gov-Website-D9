@@ -3,6 +3,7 @@
 namespace Drupal\fontawesome_iconpicker_widget;
 
 use Drupal\fontawesome\FontAwesomeManagerInterface;
+use Drupal\Core\Config\ConfigFactory;
 
 /**
  * Icon Manager Service for Font Awesome.
@@ -17,13 +18,23 @@ class IconManagerService implements IconManagerServiceInterface {
   protected $fontAwesomeManager;
 
   /**
+   * Drupal configuration service container.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a new IconManagerService object.
    *
-   * @param Drupal\fontawesome\FontAwesomeManagerInterface $font_awesome_manager
+   * @param \Drupal\fontawesome\FontAwesomeManagerInterface $font_awesome_manager
    *   The font awesome manager interface.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
    */
-  public function __construct(FontAwesomeManagerInterface $font_awesome_manager) {
+  public function __construct(FontAwesomeManagerInterface $font_awesome_manager, ConfigFactory $config_factory) {
     $this->fontAwesomeManager = $font_awesome_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -37,26 +48,56 @@ class IconManagerService implements IconManagerServiceInterface {
     $iconData = $this->fontAwesomeManager->getIcons();
     $classes = [];
 
+    // Load the configuration settings.
+    $configuration_settings = $this->configFactory->get('fontawesome.settings');
+
+    // Determine which files we are using.
+    $activeFiles = [
+      'use_solid_file' => is_null($configuration_settings->get('use_solid_file')) === TRUE ? TRUE : $configuration_settings->get('use_solid_file'),
+      'use_regular_file' => is_null($configuration_settings->get('use_regular_file')) === TRUE ? TRUE : $configuration_settings->get('use_regular_file'),
+      'use_light_file' => is_null($configuration_settings->get('use_light_file')) === TRUE ? TRUE : $configuration_settings->get('use_light_file'),
+      'use_brands_file' => is_null($configuration_settings->get('use_brands_file')) === TRUE ? TRUE : $configuration_settings->get('use_brands_file'),
+      'use_duotone_file' => is_null($configuration_settings->get('use_duotone_file')) === TRUE ? TRUE : $configuration_settings->get('use_duotone_file'),
+      'use_thin_file' => is_null($configuration_settings->get('use_thin_file')) === TRUE ? TRUE : $configuration_settings->get('use_thin_file'),
+    ];
+
     foreach ($iconData as $icon => $data) {
       foreach ($iconData[$icon]['styles'] as $style) {
+        $iconPrefix = '';
         switch ($style) {
           case 'brands':
+            if (!$activeFiles['use_brands_file']) {
+
+              break;
+            }
             $iconPrefix = 'fab';
             break;
 
           case 'light':
+            if (!$activeFiles['use_light_file']) {
+              break;
+            }
             $iconPrefix = 'fal';
             break;
 
           case 'regular':
+            if (!$activeFiles['use_regular_file']) {
+              break;
+            }
             $iconPrefix = 'far';
             break;
 
           case 'thin':
+            if (!$activeFiles['use_thin_file']) {
+              break;
+            }
             $iconPrefix = 'fat';
             break;
 
           case 'duotone':
+            if (!$activeFiles['use_duotone_file']) {
+              break;
+            }
             $iconPrefix = 'fad';
             break;
 
@@ -66,16 +107,23 @@ class IconManagerService implements IconManagerServiceInterface {
 
           default:
           case 'solid':
-            $iconPrefix = 'fas';
+          if (!$activeFiles['use_solid_file']) {
+            break;
+          }
+          $iconPrefix = 'fas';
             break;
         }
-        $classes[$icon][] = $iconPrefix . ' fa-' . $icon;
+        if (!empty($iconPrefix)) {
+          $classes[$icon][] = $iconPrefix . ' fa-' . $icon;
+        }
       }
-      $icons[] = [
-        'name' => $iconData[$icon]['name'],
-        'search_terms' => $iconData[$icon]['search_terms'],
-        'classes' => $classes[$icon],
-      ];
+      if (isset($classes[$icon])) {
+        $icons[] = [
+          'name' => $iconData[$icon]['name'],
+          'search_terms' => $iconData[$icon]['search_terms'],
+          'classes' => $classes[$icon],
+        ];
+      }
     }
 
     return $icons;

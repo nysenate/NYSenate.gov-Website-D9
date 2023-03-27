@@ -47,6 +47,7 @@ class SuggestionCollection implements \JsonSerializable {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize() {
     return [
       'suggestions' => $this->suggestions,

@@ -29,7 +29,7 @@ class ConditionalFieldLinkFieldTest extends ConditionalFieldTestBase implements
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
     'link',
@@ -73,7 +73,7 @@ class ConditionalFieldLinkFieldTest extends ConditionalFieldTestBase implements
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldSelector = '[name="' . $this->fieldName . '[0][uri]"]';

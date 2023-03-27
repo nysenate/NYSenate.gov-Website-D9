@@ -17,7 +17,7 @@ class ContactFormMatcherTest extends LinkitKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['contact'];
+  protected static $modules = ['contact'];
 
   /**
    * The matcher manager.
@@ -29,13 +29,13 @@ class ContactFormMatcherTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create user 1 who has special permissions.
     $this->createUser();
 
-    \Drupal::currentUser()->setAccount($this->createUser([], ['access site-wide contact form', 'view test entity translations']));
+    \Drupal::currentUser()->setAccount($this->createUser([], ['access site-wide contact form']));
 
     $this->manager = $this->container->get('plugin.manager.linkit.matcher');
 

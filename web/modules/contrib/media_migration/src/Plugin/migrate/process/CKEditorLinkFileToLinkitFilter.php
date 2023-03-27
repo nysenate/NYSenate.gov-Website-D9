@@ -2,10 +2,14 @@
 
 namespace Drupal\media_migration\Plugin\migrate\process;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\media_migration\MediaMigration;
 use Drupal\media_migration\MediaMigrationUuidOracleInterface;
+use Drupal\media_migration\Traits\MediaLookupTrait;
+use Drupal\media_migration\Utility\MigrationPluginTool;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -21,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class CKEditorLinkFileToLinkitFilter extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+
+  use MediaLookupTrait;
 
   /**
    * The migration entity.
@@ -49,12 +55,18 @@ class CKEditorLinkFileToLinkitFilter extends ProcessPluginBase implements Contai
    *   The migration entity.
    * @param \Drupal\media_migration\MediaMigrationUuidOracleInterface $media_uuid_oracle
    *   The media UUID oracle.
+   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
+   *   The migration lookup service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MediaMigrationUuidOracleInterface $media_uuid_oracle) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MediaMigrationUuidOracleInterface $media_uuid_oracle, MigrateLookupInterface $migrate_lookup, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->migration = $migration;
     $this->mediaUuidOracle = $media_uuid_oracle;
+    $this->migrateLookup = $migrate_lookup;
+    $this->mediaStorage = $entity_type_manager->getStorage('media');
   }
 
   /**
@@ -66,7 +78,9 @@ class CKEditorLinkFileToLinkitFilter extends ProcessPluginBase implements Contai
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get('media_migration.media_uuid_oracle')
+      $container->get('media_migration.media_uuid_oracle'),
+      $container->get('migrate.lookup'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -105,7 +119,9 @@ class CKEditorLinkFileToLinkitFilter extends ProcessPluginBase implements Contai
       if (!preg_match('/^\d+$/', $file_entity_id)) {
         continue;
       }
-      $media_uuid = $this->mediaUuidOracle->getMediaUuid((int) $file_entity_id);
+      $migrations = $this->configuration['migrations'] ?? MigrationPluginTool::getMediaEntityMigrationIds();
+      $media_uuid = $this->getExistingMediaUuid($file_entity_id, $migrations) ??
+        $this->mediaUuidOracle->getMediaUuid((int) $file_entity_id);
 
       // Add the additional attributes to allow the linkit filter to work.
       $node->setAttribute('data-entity-substitution', 'media');

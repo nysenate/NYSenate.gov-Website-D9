@@ -28,7 +28,8 @@ trait MediaMigrationDatabaseTrait {
     ];
     $query = $db->select('file_managed', 'fm', $options);
     $query->distinct($distinct);
-    $query->condition('fm.status', TRUE);
+    $query->condition('fm.status', TRUE)
+      ->condition('fm.uri', '', '<>');
     $query->addExpression($this->getSchemeExpression($db), 'scheme');
     $query->addExpression($this->getMainMimeTypeExpression($db), 'mime');
     $query->where("{$this->getSchemeExpression($db)} <> 'temporary'");
@@ -65,6 +66,7 @@ trait MediaMigrationDatabaseTrait {
     $query->fields('fm', ['type'])
       ->condition('fm.status', TRUE)
       ->condition('fm.uri', 'temporary://%', 'NOT LIKE')
+      ->condition('fm.uri', '', '<>')
       ->condition('fm.type', 'undefined', '<>');
     $query->addExpression($this->getSchemeExpression($db), 'scheme');
 

@@ -34,6 +34,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerFactoryPluginInterface {
 
   /**
+   * Always keep referenced entity when the reference is removed.
+   */
+  const REMOVED_KEEP = 'keep';
+
+  /**
+   * Allow users to choose whether to delete an entity upon removing reference.
+   */
+  const REMOVED_OPTIONAL = 'optional';
+
+  /**
+   * Always delete referenced entity when the reference is removed.
+   */
+  const REMOVED_DELETE = 'delete';
+
+  /**
    * Module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -103,6 +118,7 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
     $defaults += [
       'allow_new' => TRUE,
       'allow_existing' => FALSE,
+      'removed_reference' => self::REMOVED_OPTIONAL,
       'match_operator' => 'CONTAINS',
       'allow_duplicate' => FALSE,
     ];
@@ -146,6 +162,20 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
       '#default_value' => $this->getSetting('allow_duplicate'),
     ];
 
+    $description = $this->t('Select whether a @child should be deleted altogether if removed as a reference here.<br />
+    <em>Delete always</em> is recommended whenever each @child is exclusively managed within a single @parent without creating new revisions.<br />
+    Otherwise <em>Keep always</em> is the safest.', [
+      '@child' => $labels['singular'],
+      '@parent' => $this->entityTypeManager->getDefinition($this->fieldDefinition->getTargetEntityTypeId())->getSingularLabel(),
+    ]);
+    $element['removed_reference'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Keep or delete unreferenced @label', ['@label' => $labels['plural']]),
+      '#default_value' => $this->getSetting('removed_reference'),
+      '#options' => $this->getRemovedReferenceOptions(),
+      '#description' => $description,
+    ];
+
     return $element;
   }
 
@@ -181,6 +211,20 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
       $summary[] = $this->t('@label can not be duplicated.', ['@label' => $labels['plural']]);
     }
 
+    switch ($this->getSetting('removed_reference')) {
+      case self::REMOVED_KEEP:
+        $summary[] = $this->t('Always keep unreferenced @label.', ['@label' => $labels['plural']]);
+        break;
+
+      case self::REMOVED_OPTIONAL:
+        $summary[] = $this->t('Let users decide whether to keep or delete unreferenced @label.', ['@label' => $labels['plural']]);
+        break;
+
+      case self::REMOVED_DELETE:
+        $summary[] = $this->t('Always delete unreferenced @label.', ['@label' => $labels['plural']]);
+        break;
+    }
+
     return $summary;
   }
 
@@ -198,10 +242,23 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
   }
 
   /**
+   * Returns the options for removing references.
+   *
+   * @return array
+   *   List of options.
+   */
+  protected function getRemovedReferenceOptions() {
+    return [
+      self::REMOVED_KEEP => $this->t('Keep always'),
+      self::REMOVED_OPTIONAL => $this->t('Let the user decide'),
+      self::REMOVED_DELETE => $this->t('Delete always'),
+    ];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $settings = $this->getSettings();
     $target_type = $this->getFieldSetting('target_type');
     // Get the entity type labels for the UI strings.
     $labels = $this->getEntityTypeLabels();
@@ -247,9 +304,32 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
       'inline_entity_form', $this->getIefId(),
       'entities',
     ]);
+    $entities_count = count($entities);
+
+    // Determine if there are multiple existing entities that could be referenced.
+    $selection_settings = $this->getFieldSetting('handler_settings') ? $this->getFieldSetting('handler_settings') : [];
+    $options = [
+        'target_type' => $this->getFieldSetting('target_type'),
+        'handler' => $this->getFieldSetting('handler'),
+      ] + $selection_settings;
+
+    // Prepare information about which operations may be available to the user.
+    $settings = $this->getSettings();
+    $allow_existing = $settings['allow_existing'];
+    $allow_duplicate = $settings['allow_duplicate'] && $this->canAddNew();
+    $allow_new = $settings['allow_new'] && $this->canAddNew();
+
+    if (!$allow_new && $allow_existing) {
+      // Only count referencable entities if existing entities are allowed
+      // to be referenced otherwise we set the variable to false.
+      /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $handler */
+      $handler = $this->selectionManager->getInstance($options);
+      $have_multiple_existing_entities = $handler->countReferenceableEntities() > 1;
+    } else {
+      $have_multiple_existing_entities = FALSE;
+    }
 
     // Prepare cardinality information.
-    $entities_count = count($entities);
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
     $cardinality_reached = ($cardinality > 0 && $entities_count == $cardinality);
 
@@ -379,7 +459,7 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
         }
 
         // Add the duplicate button, if allowed.
-        if ($settings['allow_duplicate'] && !$cardinality_reached && $entity->access('create')) {
+        if ($allow_duplicate && !$cardinality_reached) {
           $row['actions']['ief_entity_duplicate'] = [
             '#type' => 'submit',
             '#value' => $this->t('Duplicate'),
@@ -395,10 +475,24 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
           ];
         }
 
-        // If 'allow_existing' is on, the default removal operation is unlink
-        // and the access check for deleting happens inside the controller
-        // removeForm() method.
-        if (empty($entity_id) || $settings['allow_existing'] || $entity->access('delete')) {
+        // Determine if a reference may be removed.
+        // Unless the user has permission to delete the entity, then they should
+        // not be able to remove it if that will lead to its deletion.
+        $may_remove_existing = $settings['removed_reference'] !== self::REMOVED_DELETE || $entity->access('delete');
+
+        // Don't allow a user to remove the only entity if an entity is required
+        // and the user cannot replace the entity if they remove it, because
+        // this would put the form in an unrecoverable state.
+        $can_replace_last_reference = $allow_new || ($allow_existing && $have_multiple_existing_entities);
+        $reference_is_not_required = !$element['#required'] || $entities_count > 1 || $can_replace_last_reference;
+
+        // Unsaved entities may always be removed.
+        $may_remove = empty($entity_id) || ($may_remove_existing && $reference_is_not_required);
+
+        // If an entity may be removed, show the "Remove" button.
+        if ($may_remove) {
+          // The default removal operation is unlink and the access check for
+          // deleting happens inside the controller buildRemoveForm() method
           $row['actions']['ief_entity_remove'] = [
             '#type' => 'submit',
             '#value' => $this->t('Remove'),
@@ -817,14 +911,14 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
       '#markup' => $message,
     ];
 
-    if (!empty($entity_id) && $this->getSetting('allow_existing') && $entity->access('delete')) {
+    if (!empty($entity_id) && $this->getSetting('removed_reference') === self::REMOVED_OPTIONAL && $entity->access('delete')) {
       $form['delete'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Delete this @type_singular from the system.', ['@type_singular' => $labels['singular']]),
       ];
     }
 
-    // Build a deta suffix that's appended to button #name keys for uniqueness.
+    // Build a delta suffix that's appended to button #name keys for uniqueness.
     $delta = $form['#ief_id'] . '-' . $form['#ief_row_delta'];
 
     // Add actions to the form.
@@ -832,6 +926,7 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
       '#type' => 'container',
       '#weight' => 100,
     ];
+
     $form['actions']['ief_remove_confirm'] = [
       '#type' => 'submit',
       '#value' => $this->t('Remove'),
@@ -842,9 +937,11 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
         'wrapper' => 'inline-entity-form-' . $form['#ief_id'],
       ],
       '#allow_existing' => $this->getSetting('allow_existing'),
+      '#removed_reference' => $this->getSetting('removed_reference'),
       '#submit' => [[get_class($this), 'submitConfirmRemove']],
       '#ief_row_delta' => $form['#ief_row_delta'],
     ];
+
     $form['actions']['ief_remove_cancel'] = [
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
@@ -904,13 +1001,18 @@ class InlineEntityFormComplex extends InlineEntityFormBase implements ContainerF
     $form_state->setRebuild();
 
     $widget_state = $form_state->get(['inline_entity_form', $element['#ief_id']]);
-    // This entity hasn't been saved yet, we can just unlink it.
-    if (empty($entity_id) || ($remove_button['#allow_existing'] && empty($form_values['delete']))) {
-      unset($widget_state['entities'][$delta]);
-    }
-    else {
-      $widget_state['delete'][] = $entity;
-      unset($widget_state['entities'][$delta]);
+
+    // The entity hasn't been saved yet, or is being deleted, so remove the reference.
+    unset($widget_state['entities'][$delta]);
+
+    // If the entity has been saved, delete it if either the widget is set to
+    // always delete, or the widget is set to let the user decide and the user
+    // has decided to delete.
+    if ($entity_id) {
+      $removed_reference = $remove_button['#removed_reference'];
+      if ($removed_reference === self::REMOVED_DELETE || ($removed_reference === self::REMOVED_OPTIONAL && $form_values['delete'] === 1)) {
+        $widget_state['delete'][] = $entity;
+      }
     }
     $form_state->set(['inline_entity_form', $element['#ief_id']], $widget_state);
   }

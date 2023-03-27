@@ -112,3 +112,19 @@ ckeditor.plugin.drupallink:
     linkit_profile:
       type: string
       label: 'Linkit profile'
+
+ckeditor5.plugin.linkit_extension:
+  type: mapping
+  label: Linkit
+  constraints:
+    Callback: [\Drupal\linkit\Plugin\CKEditor5Plugin\Linkit, requireProfileIfEnabled]
+  mapping:
+    linkit_enabled:
+      type: boolean
+      label: 'Use Linkit'
+    linkit_profile:
+      type: string
+      label: 'Linkit profile'
+      constraints:
+        Choice:
+          callback: \Drupal\linkit\Plugin\CKEditor5Plugin\Linkit::validChoices

@@ -2,9 +2,12 @@
 
 namespace Drupal\media_migration\Plugin\migrate\process;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\entity_embed\EntityEmbedDisplay\EntityEmbedDisplayManager;
 use Drupal\media_migration\MediaMigrationUuidOracleInterface;
+use Drupal\media_migration\Traits\MediaLookupTrait;
+use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\ProcessPluginBase;
 
@@ -12,6 +15,8 @@ use Drupal\migrate\ProcessPluginBase;
  * Base class for media embed code filter text process plugins.
  */
 abstract class EmbedFilterBase extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+
+  use MediaLookupTrait;
 
   /**
    * The actual migration plugin instance.
@@ -49,13 +54,19 @@ abstract class EmbedFilterBase extends ProcessPluginBase implements ContainerFac
    *   The media UUID oracle.
    * @param \Drupal\entity_embed\EntityEmbedDisplay\EntityEmbedDisplayManager|null $entity_embed_display_manager
    *   The entity embed display plugin manager service, if available.
+   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
+   *   The migration lookup service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MediaMigrationUuidOracleInterface $media_uuid_oracle, $entity_embed_display_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MediaMigrationUuidOracleInterface $media_uuid_oracle, $entity_embed_display_manager, MigrateLookupInterface $migrate_lookup, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->migration = $migration;
     $this->mediaUuidOracle = $media_uuid_oracle;
     $this->entityEmbedDisplayPluginManager = $entity_embed_display_manager;
+    $this->migrateLookup = $migrate_lookup;
+    $this->mediaStorage = $entity_type_manager->getStorage('media');
   }
 
   /**

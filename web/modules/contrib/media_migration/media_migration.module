@@ -118,3 +118,13 @@ function media_migration_migrate_d7_filter_format_prepare_row(Row $row, MigrateS
     $row->setSourceProperty('filters', $filters);
   }
 }
+
+/**
+ * Implements hook_migrate_field_info_alter().
+ *
+ * If destination site has video embed field module enabled then we don't want
+ * to migrate data from source to video embed field so unsetting that.
+ */
+function media_migration_migrate_field_info_alter(array &$definitions) {
+  unset($definitions['video_embed_field']);
+}

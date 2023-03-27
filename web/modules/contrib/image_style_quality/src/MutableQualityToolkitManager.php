@@ -12,12 +12,8 @@ use Drupal\Core\Plugin\Discovery\YamlDiscovery;
  */
 class MutableQualityToolkitManager extends PluginManagerBase implements MutableQualityToolkitManagerInterface {
 
-  /**
-   * Config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
+  protected ?array $activeToolkit = NULL;
 
   /**
    * Constructs a new MutableQualityToolkitManager instance.
@@ -30,8 +26,11 @@ class MutableQualityToolkitManager extends PluginManagerBase implements MutableQ
   /**
    * {@inheritdoc}
    */
-  public function getActiveToolkit() {
-    return $this->getDefinition($this->configFactory->get('system.image')->get('toolkit'));
+  public function getActiveToolkit(): array {
+    if ($this->activeToolkit === NULL) {
+      $this->activeToolkit = $this->getDefinition($this->configFactory->get('system.image')->get('toolkit'));
+    }
+    return $this->activeToolkit;
   }
 
 }

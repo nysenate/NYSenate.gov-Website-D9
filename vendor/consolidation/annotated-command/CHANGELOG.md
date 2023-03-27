@@ -1,5 +1,17 @@
 # Change Log
 
+### 4.8.2 - 11 March 2023
+
+- Fix bug with simple options with dashes in their names. (#295)
+- Add new public ->addOption() method (#294)
+- Attributes - Topic needs path (#293)
+- More robust hook attribute, and misc (#291)
+
+### 4.8.0, 4.8.1 - 28 February 2023
+
+- Add HookSelector attribute and adjust Hook attribute accordingly (#290)
+- Allow for just one param to be passed in Help and Topics Attributes (#289)
+
 ### 4.7.1 - 6 December 2022
 
 - PHP 8.2 fixes

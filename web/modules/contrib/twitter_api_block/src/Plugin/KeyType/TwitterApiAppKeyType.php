@@ -5,7 +5,7 @@ namespace Drupal\twitter_api_block\Plugin\KeyType;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\key\Plugin\KeyTypeBase;
-use Drupal\key\Plugin\KeyTypeMultivalueInterface  ;
+use Drupal\key\Plugin\KeyTypeMultivalueInterface;
 
 /**
  * Defines a custom key type for Twitter API v2 application.
@@ -13,7 +13,7 @@ use Drupal\key\Plugin\KeyTypeMultivalueInterface  ;
  * @KeyType(
  *   id = "twitter_api_app",
  *   label = @Translation("Twitter API app"),
- *   description = @Translation("A set of credentials for a Twitter application. Create a new application at <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com/</a>."), 
+ *   description = @Translation("A set of credentials for a Twitter application. Create a new application at <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com/</a>."),
  *   group = "authentication",
  *   key_value = {
  *     "plugin" = "twitter_api_app",
@@ -78,7 +78,8 @@ class TwitterApiAppKeyType extends KeyTypeBase implements KeyTypeMultivalueInter
 
       if (!isset($key_value[$id])) {
         $form_state->setError($form, $this->t('The key value is missing the field %field.', ['%field' => $id]));
-      } elseif (empty($key_value[$id])) {
+      }
+      elseif (empty($key_value[$id])) {
         $form_state->setError($form, $this->t('The key value field %field is empty.', ['%field' => $id]));
       }
     }
@@ -97,4 +98,5 @@ class TwitterApiAppKeyType extends KeyTypeBase implements KeyTypeMultivalueInter
   public function unserialize($value) {
     return Json::decode($value);
   }
+
 }

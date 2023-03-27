@@ -26,7 +26,7 @@ class JobSchedulerQueueWorker extends DeriverBase {
       else {
         $title = $this->t('Job Scheduler Queue: %name', ['%name' => $queue_name]);
       }
-      $time = isset($info['time']) ? $info['time'] : $base_plugin_definition['cron']['time'];
+      $time = $info['time'] ?? $base_plugin_definition['cron']['time'];
       $this->derivatives[$queue_name] = $base_plugin_definition;
       $this->derivatives[$queue_name]['id'] = $queue_name;
       $this->derivatives[$queue_name]['title'] = $title;

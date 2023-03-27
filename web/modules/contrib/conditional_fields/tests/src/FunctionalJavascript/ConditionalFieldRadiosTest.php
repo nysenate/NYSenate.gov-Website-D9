@@ -50,7 +50,7 @@ class ConditionalFieldRadiosTest extends ConditionalFieldTestBase implements
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create a vocabulary with random name.
     $this->taxonomyName = $this->getRandomGenerator()->word(8);

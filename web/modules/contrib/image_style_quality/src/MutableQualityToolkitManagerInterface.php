@@ -15,6 +15,6 @@ interface MutableQualityToolkitManagerInterface extends PluginManagerInterface {
    * @return array
    *   A plugin definition.
    */
-  public function getActiveToolkit();
+  public function getActiveToolkit(): array;
 
 }

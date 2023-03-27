@@ -293,13 +293,14 @@ class ConditionalFieldEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $condition = $form_state->getValue('condition');
     $allowed_values_set = [
       ConditionalFieldsInterface::CONDITIONAL_FIELDS_DEPENDENCY_VALUES_AND,
       ConditionalFieldsInterface::CONDITIONAL_FIELDS_DEPENDENCY_VALUES_OR,
       ConditionalFieldsInterface::CONDITIONAL_FIELDS_DEPENDENCY_VALUES_XOR,
       ConditionalFieldsInterface::CONDITIONAL_FIELDS_DEPENDENCY_VALUES_NOT,
     ];
-    if ($form_state->getValue('condition') == 'value') {
+    if ($condition == 'value') {
       if (in_array($form_state->getValue('values_set'), $allowed_values_set) &&
         mb_strlen(trim($form_state->getValue('values')) === 0)
       ) {
@@ -309,6 +310,12 @@ class ConditionalFieldEditForm extends FormBase {
         $form_state->setErrorByName('regex', $this->t('Field %name is required.', ['%name' => $this->t('Regular expression')]));
       }
     }
+
+    // Ensure the 'reset' flag is not set for non-target values.
+    if (!in_array($condition, ['!empty', 'empty', 'value', 'checked', '!checked'])) {
+      $form_state->setValue('reset', 0);
+    }
+
     parent::validateForm($form, $form_state);
   }
 
@@ -350,6 +357,13 @@ class ConditionalFieldEditForm extends FormBase {
         else {
           $settings[$key] = $value;
         }
+      }
+
+      if (isset($settings['reset']) && !empty($settings['reset'])) {
+        $settings['reset'] = $values['reset'];
+      }
+      else {
+        $settings['reset'] = 0;
       }
 
       if ($settings['effect'] == 'show') {
@@ -482,6 +496,24 @@ class ConditionalFieldEditForm extends FormBase {
         $form['effects_wrapper']['effect_options'][$effect_name][$effect_option_name] = $effect_option;
       }
     }
+
+    $form['reset'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Reset the target to its default values when the form is submitted if the dependency is not triggered.'),
+      '#default_value' => array_key_exists('reset', $settings) ? $settings['reset'] : 0,
+      '#states' => [
+        'visible' => [
+          ':input[name="condition"]' => [
+            ['value' => '!empty'],
+            ['value' => 'empty'],
+            ['value' => 'value'],
+            ['value' => 'checked'],
+            ['value' => '!checked'],
+          ],
+        ],
+      ],
+      '#description' => $this->t('Note: This setting only applies if the condition is "Value", "Empty", "Checked", "Unchecked", or "Filled" and may not work with some field types. Also, ensure that the default values are valid, since they will not be validated.'),
+    ];
 
     $form['dependency_advanced'] = [
       '#type' => 'details',

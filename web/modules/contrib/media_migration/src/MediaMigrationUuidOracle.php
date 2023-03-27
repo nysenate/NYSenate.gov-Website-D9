@@ -55,12 +55,6 @@ final class MediaMigrationUuidOracle implements MediaMigrationUuidOracleInterfac
    * {@inheritdoc}
    */
   public function getMediaUuid(int $source_id, bool $generate = TRUE): ?string {
-    // If the media entity already exist, return its UUID.
-    if ($media = $this->mediaStorage->load($source_id)) {
-      return $media->uuid();
-    }
-
-    // If the media does not exist, try to get its UUID from our prophecy table.
     if (!($uuid_prophecy = $this->getMediaUuidProphecy($source_id)) && $generate) {
       $uuid_prophecy = $this->setMediaProphecy($source_id);
     }
@@ -78,14 +72,12 @@ final class MediaMigrationUuidOracle implements MediaMigrationUuidOracleInterfac
    *   The UUID, or NULL if it does not exist at the moment.
    */
   private function getMediaUuidProphecy(int $source_id): ?string {
-    $results = $this->database->select(MediaMigration::MEDIA_UUID_PROPHECY_TABLE, 'mupt')
-      ->fields('mupt')
+    $prophecy = $this->database->select(MediaMigration::MEDIA_UUID_PROPHECY_TABLE, 'mupt')
+      ->fields('mupt', [MediaMigration::MEDIA_UUID_PROPHECY_UUID_COL])
       ->condition('mupt.' . MediaMigration::MEDIA_UUID_PROPHECY_SOURCEID_COL, $source_id)
-      ->execute()->fetchAll();
+      ->execute()->fetchField();
 
-    return isset($results[0]->{MediaMigration::MEDIA_UUID_PROPHECY_UUID_COL}) ?
-      $results[0]->{MediaMigration::MEDIA_UUID_PROPHECY_UUID_COL} :
-      NULL;
+    return $prophecy ?: NULL;
   }
 
   /**

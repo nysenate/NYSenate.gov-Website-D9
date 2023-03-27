@@ -141,7 +141,7 @@ trait NameAdditionalPreferredTrait {
       ->getStorage($entity_type_id)
       ->getEntityType();
     $bundle = $field_definition->getTargetBundle();
-    $entity_type_label = $entity_type->getBundleLabel($bundle);
+    $entity_type_label = $entity_type->getBundleLabel();
     if (!$entity_type_label) {
       $entity_type_label = $entity_type->getLabel();
     }

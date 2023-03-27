@@ -144,7 +144,7 @@ Drupal.behaviors.conditionalFields = {
 
 Drupal.behaviors.ckeditorTextareaFix = {
     attach: function (context, settings) {
-        if(CKEDITOR) {
+        if (typeof CKEDITOR !== 'undefined') {
             CKEDITOR.on('instanceReady', function () {
                 $(context).find('.form-textarea-wrapper textarea').each(function () {
                     var $textarea = jQuery(this);

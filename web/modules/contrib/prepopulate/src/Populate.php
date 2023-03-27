@@ -89,7 +89,9 @@ class Populate implements PopulateInterface {
    */
   public function populateForm(array &$form, $request_slice = NULL) {
     if (is_null($request_slice)) {
-      $request_slice = $this->request->getCurrentRequest()->query->get('edit');
+      if ($this->request->getCurrentRequest()->query->has('edit')) {
+        $request_slice = $this->request->getCurrentRequest()->query->all()['edit'];
+      }
     }
     if (is_array($request_slice)) {
       foreach (array_keys($request_slice) as $request_variable) {

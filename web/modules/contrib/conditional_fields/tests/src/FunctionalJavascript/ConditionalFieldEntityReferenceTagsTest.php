@@ -23,7 +23,7 @@ class ConditionalFieldEntityReferenceTagsTest extends ConditionalFieldTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'conditional_fields',
     'node',
   ];
@@ -71,7 +71,7 @@ class ConditionalFieldEntityReferenceTagsTest extends ConditionalFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldSelector = '[name="field_' . $this->fieldName . '[target_id]"]';

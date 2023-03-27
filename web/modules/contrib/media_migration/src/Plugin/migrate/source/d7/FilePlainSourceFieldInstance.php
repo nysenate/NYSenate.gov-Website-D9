@@ -58,7 +58,6 @@ class FilePlainSourceFieldInstance extends FilePlainConfigSourceBase {
       $source_values['source_plugin_id'] = $dealer_plugin->getDestinationMediaSourcePluginId();
       $source_values['source_field_name'] = $dealer_plugin->getDestinationMediaSourceFieldName();
       $source_values['source_field_label'] = $dealer_plugin->getDestinationMediaTypeSourceFieldLabel();
-      $rows[$destination_media_type_id] = $source_values;
       unset($source_values['file_extension']);
       unset($source_values['mime']);
       unset($source_values['scheme']);

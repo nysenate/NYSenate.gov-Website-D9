@@ -1,9 +1,9 @@
 // Import site utilities.
-@import '../../global/utils/init';
+@import "../../global/utils/init";
 
 .newsroom-content {
   max-width: unset;
-  
+
   .container {
     margin: 0;
     max-width: unset;
@@ -25,7 +25,6 @@
   }
 
   .c-upcoming--header {
-
     .c-month-title {
       font-weight: $font-weight-normal;
       color: $grey10;
@@ -54,32 +53,7 @@
     list-style: none;
   }
 
-  .c-legislation-info {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-
-    .c-bill-num a {
-      color: $grey08;
-    }
-
-    @include breakpoint($bp-sm) {
-      flex-direction: row;
-
-      .c-bill-num {
-        width: 25%;
-        max-width: 200px;
-      }
-  
-      & > div {
-        width: 75%;
-        flex: 1;
-      }
-    }
-  }
-
-  .nys-bill-status { 
-    
+  .nys-bill-status {
     hr {
       background: $grey-line;
     }
@@ -88,7 +62,7 @@
   .c-bill-update {
     display: block;
   }
-  
+
   .c-bill-update--date {
     @include font-stack-secondary;
     margin-right: 0.5em;
@@ -106,7 +80,7 @@
     display: inline;
 
     &::before {
-      content: '|';
+      content: "|";
       display: inline-block;
       margin-right: 0.5em;
     }
@@ -135,17 +109,17 @@
       text-decoration: none;
       @extend .icon-after__arrow;
       @extend .link-text;
-    
+
       &::after {
         margin-top: -2px;
         font-size: 17px;
         line-height: 12px;
       }
-    
+
       @include breakpoint($bp-sm) {
         font-size: 16px;
         line-height: 16px;
-    
+
         &::after {
           margin-top: -4px;
           font-size: 23px;
@@ -159,6 +133,97 @@
   .nys-bill-status__drk li {
     margin-top: -14px;
   }
+
+  .cal-nav-wrapper {
+    border-bottom: 1px solid $grey05;
+
+    @include breakpoint($bp-sm) {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 50px;
+      padding: 10px 0 20px 0;
+    }
+
+    .title {
+      font-size: 20px;
+      margin-top: 25px;
+      font-family: $font-serif-semibold;
+      color: $grey10;
+
+      @include breakpoint($bp-sm) {
+        margin: 0;
+        color: $grey08;
+        line-height: 42px;
+      }
+    }
+
+    .cal-nav-list {
+      margin: 0;
+      padding: 0;
+
+      @include breakpoint($bp-sm) {
+        text-align: right;
+      }
+
+      li {
+        background-color: $grey06;
+        list-style: none;
+        display: inline-block;
+        text-align: left;
+        color: #004c71;
+        margin: 10px 0;
+        width: 49%;
+        position: relative;
+
+        &:hover {
+          @extend .med-bg;
+
+          label {
+            color: $color-white;
+          }
+        }
+
+        @include breakpoint($bp-sm) {
+          margin: 0;
+          display: inline-block;
+          width: 182px;
+        }
+
+        label {
+          display: inline-block;
+          width: 100%;
+          height: 42px;
+          line-height: 42px;
+          padding: 0 0 0 14px;
+          font-family: $font-sans-bold;
+          font-size: 12px;
+          text-transform: uppercase;
+          color: $blue02;
+          transition: background 0.2s ease;
+          margin: 0;
+
+          &::after {
+            position: absolute;
+            right: 6%;
+            top: 0px;
+            font-size: 20px;
+          }
+        }
+
+        input {
+          cursor: pointer;
+          opacity: 0;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  .c-container--link {
+    @extend .lgt-text;
+  }
 }
 
 .view-senator-events {
@@ -170,5 +235,78 @@
 
   &.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list {
     border: 0;
+  }
+}
+
+// Legislation/Bills
+.upcoming-legislation-block {
+  .content__item {
+    border-top: 1px solid $grey05;
+  }
+
+  .c-panel--header {
+    padding: 40px 0 10px;
+    display: block;
+    overflow: hidden;
+  }
+
+  .c-press-release--descript {
+    margin-bottom: 10px;
+    font-size: 18px;
+    line-height: 1.3em;
+    font-family: $font-serif;
+    font-weight: $font-weight-normal;
+    text-transform: none;
+
+    a {
+      color: $grey08;
+    }
+  }
+
+  .l-panel-col {
+    display: block;
+    float: left;
+    color: $grey08;
+    text-transform: uppercase;
+    font-family: $font-sans;
+    font-size: 12px;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .l-panel-col--lft {
+    padding-right: 20px;
+    width: 22%;
+
+    a {
+      color: $yellow03;
+      text-transform: uppercase;
+      font-family: $font-sans-bold;
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+
+  .c-listing--bill-num {
+    margin-bottom: 8px;
+
+    a {
+      color: $grey08;
+      text-transform: none;
+      font-family: $font-serif-bold;
+      font-size: 24px;
+      line-height: 25px;
+    }
+  }
+
+  @include breakpoint($bp-sm) {
+    .l-panel-col {
+      font-size: 16px;
+    }
+
+    .c-press-release--descript {
+      font-size: 18px;
+      line-height: 22px;
+    }
   }
 }

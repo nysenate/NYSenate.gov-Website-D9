@@ -18,7 +18,7 @@ class NodeMatcherTest extends LinkitKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'node', 'content_moderation', 'workflows'];
+  protected static $modules = ['field', 'node', 'content_moderation', 'workflows'];
 
   /**
    * The matcher manager.
@@ -30,7 +30,7 @@ class NodeMatcherTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('node');
@@ -175,8 +175,8 @@ class NodeMatcherTest extends LinkitKernelTestBase {
     $suggestions = $suggestionCollection->getSuggestions();
 
     foreach ($suggestions as $suggestion) {
-      $this->assertNotContains('[node:nid]', $suggestion->getDescription(), 'Raw token "[node:nid]" is not present in the description');
-      $this->assertNotContains('[node:field_with_no_value]', $suggestion->getDescription(), 'Raw token "[node:field_with_no_value]" is not present in the description');
+      $this->assertStringNotContainsString('[node:nid]', $suggestion->getDescription(), 'Raw token "[node:nid]" is not present in the description');
+      $this->assertStringNotContainsString('[node:field_with_no_value]', $suggestion->getDescription(), 'Raw token "[node:field_with_no_value]" is not present in the description');
     }
   }
 

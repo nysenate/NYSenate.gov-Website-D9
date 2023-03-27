@@ -49,7 +49,10 @@ class FloodControlSettingsFormTest extends BrowserTestBase {
     parent::setUp();
 
     $this->webUser = $this->createUser();
-    $this->adminUser = $this->createUser(['administer site configuration']);
+
+    $this->adminUser = $this->drupalCreateUser([]);
+    $this->adminUser->addRole($this->createAdminRole('admin', 'admin'));
+    $this->adminUser->save();
 
     $this->moduleInstaller = $this->container->get('module_installer');
   }

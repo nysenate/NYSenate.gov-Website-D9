@@ -10,10 +10,27 @@ idMap:
 source:
   plugin: d7_file_entity_item
 process:
-  uuid:
+  track_changes_uuid:
+    -
+      plugin: migration_lookup
+      source: fid
+      migration: d7_file_entity
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migmag_get_entity_property
+      entity_type_id: 'media'
+      property: 'uuid'
+  oracle_uuid:
     plugin: media_migrate_uuid
     source: fid
-  mid: fid
+  uuid:
+    plugin: null_coalesce
+    source:
+      - '@track_changes_uuid'
+      - '@oracle_uuid'
   uid:
     -
       plugin: migration_lookup

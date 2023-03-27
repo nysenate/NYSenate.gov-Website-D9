@@ -82,8 +82,9 @@ class MediaMigrationWithoutImageTitleTest extends MediaMigrationTestBase {
     $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
     assert($media_storage instanceof EntityStorageInterface);
     // Media 1.
+    $dest_id_1 = $this->getDestinationIdFromSourceId(1);
     $this->assertEquals([
-      'mid' => [['value' => '1']],
+      'mid' => [['value' => $dest_id_1]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'Blue PNG']],
       'uid' => [['target_id' => '1']],
@@ -103,10 +104,11 @@ class MediaMigrationWithoutImageTitleTest extends MediaMigrationTestBase {
           'value' => '1000',
         ],
       ],
-    ], $this->getImportantEntityProperties($media_storage->load(1)));
+    ], $this->getImportantEntityProperties($media_storage->load($dest_id_1)));
     // Media 2.
+    $dest_id_2 = $this->getDestinationIdFromSourceId(2);
     $this->assertEquals([
-      'mid' => [['value' => '2']],
+      'mid' => [['value' => $dest_id_2]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'green.jpg']],
       'uid' => [['target_id' => '1']],
@@ -122,10 +124,11 @@ class MediaMigrationWithoutImageTitleTest extends MediaMigrationTestBase {
         ],
       ],
       'field_media_integer' => [],
-    ], $this->getImportantEntityProperties($media_storage->load(2)));
+    ], $this->getImportantEntityProperties($media_storage->load($dest_id_2)));
     // Media 3.
+    $dest_id_3 = $this->getDestinationIdFromSourceId(3);
     $this->assertEquals([
-      'mid' => [['value' => '3']],
+      'mid' => [['value' => $dest_id_3]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'red.jpeg']],
       'uid' => [['target_id' => '1']],
@@ -145,7 +148,7 @@ class MediaMigrationWithoutImageTitleTest extends MediaMigrationTestBase {
           'value' => '333',
         ],
       ],
-    ], $this->getImportantEntityProperties($media_storage->load(3)));
+    ], $this->getImportantEntityProperties($media_storage->load($dest_id_3)));
     $this->assertMedia4FieldValues();
     $this->assertMedia5FieldValues();
     $this->assertMedia6FieldValues();
@@ -153,8 +156,9 @@ class MediaMigrationWithoutImageTitleTest extends MediaMigrationTestBase {
     $this->assertMedia8FieldValues();
     $this->assertMedia9FieldValues();
     // Media 10.
+    $dest_id_10 = $this->getDestinationIdFromSourceId(10);
     $this->assertEquals([
-      'mid' => [['value' => '10']],
+      'mid' => [['value' => $dest_id_10]],
       'bundle' => [['target_id' => 'image']],
       'name' => [['value' => 'yellow.webp']],
       'uid' => [['target_id' => '2']],
@@ -170,7 +174,7 @@ class MediaMigrationWithoutImageTitleTest extends MediaMigrationTestBase {
         ],
       ],
       'field_media_integer' => [],
-    ], $this->getImportantEntityProperties($media_storage->load(10)));
+    ], $this->getImportantEntityProperties($media_storage->load($dest_id_10)));
     $this->assertMedia11FieldValues();
     $this->assertMedia12FieldValues();
 

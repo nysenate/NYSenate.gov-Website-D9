@@ -23,10 +23,26 @@ linkit.autocomplete:
   dependencies:
     - linkit/linkit.base
     - core/drupal.ajax
-    - core/jquery.ui.autocomplete
-    - core/underscore
+    - core/drupal.autocomplete
+    - core/once
 
 linkit.filter_html.admin:
   version: VERSION
   js:
     js/linkit.filter_html.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+ckeditor5:
+  version: VERSION
+  js:
+    js/build/linkit.js: { minified: true }
+  css:
+    component:
+      css/linkit.autocomplete.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.autocomplete
+    - core/drupal.ajax

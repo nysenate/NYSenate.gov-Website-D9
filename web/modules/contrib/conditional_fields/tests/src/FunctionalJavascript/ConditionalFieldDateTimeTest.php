@@ -48,7 +48,7 @@ class ConditionalFieldDateTimeTest extends ConditionalFieldTestBase implements C
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->fieldSelector = "[name=\"{$this->fieldName}[0][value][date]\"]";
     $fieldStorageDefinition = [

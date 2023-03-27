@@ -80,7 +80,7 @@ class TaxonomyColor {
     if (!isset($terms[$vid])) {
       // Get terms Ids.
       $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
-      $query->condition('vid', $vid);
+      $query->condition('vid', $vid)->accessCheck(TRUE);
       $tids = $query->execute();
       $terms[$vid] = $this->entityTypeManager->getStorage('taxonomy_term')->loadMultiple($tids);
     }

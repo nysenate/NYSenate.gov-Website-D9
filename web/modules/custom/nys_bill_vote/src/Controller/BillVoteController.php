@@ -4,8 +4,9 @@ namespace Drupal\nys_bill_vote\Controller;
 
 use Drupal\Core\Session\AccountProxy;
 use Drupal\nys_bill_vote\BillVoteHelper;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -71,7 +72,7 @@ class BillVoteController extends ControllerBase {
    *   The vote value.
    */
   public function confirmationAjaxCallback($entity_id, $vote_value) {
-    $this->billVoteHelper->processVote('bill', $entity_id, $vote_value);
+    return new Response($this->billVoteHelper->processVote('node', $entity_id, $vote_value)['message']);
   }
 
   /**
@@ -117,9 +118,10 @@ class BillVoteController extends ControllerBase {
 
         // @todo This method comes from nys_subscriptions module.
         // @phpstan-ignore-next-line
-        _real_nys_subscriptions_subscription_signup($data);
+        // _real_nys_subscriptions_subscription_signup($data);
       }
     }
+    return new Response('Subscribe Complete.');
   }
 
 }

@@ -1504,37 +1504,23 @@ strong {
       grid-column: 2/span 1; }
     .js-form-wrapper#edit-field-address-0-address .address-container-inline {
       grid-column: 1/span 2; }
-  .nys-registration-register-form {
+  .nys-registration-register-form #edit-field-address-wrapper,
+  .nys-registration-register-form #edit-field-agree-to-terms-wrapper,
+  .nys-registration-register-form #edit-account {
+    grid-column: 1/span 2; }
+  .nys-registration-register-form .js-form-type-email {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     -moz-column-gap: 30px;
     column-gap: 30px; }
-    .nys-registration-register-form #edit-field-address-wrapper,
-    .nys-registration-register-form #edit-field-agree-to-terms-wrapper,
-    .nys-registration-register-form #edit-account {
-      grid-column: 1/span 2; }
-    .nys-registration-register-form .js-form-type-email {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      -moz-column-gap: 30px;
-      column-gap: 30px; }
-    .nys-registration-register-form #edit-mail {
-      grid-column: 1/span 1; }
-    .nys-registration-register-form #edit-mail--description {
-      display: flex;
-      align-items: center;
-      color: #ababab;
-      grid-row: 1/span 2;
-      grid-column: 2/span 1; }
-    .nys-registration-register-form .c-login {
-      grid-column: 1/span 2;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      -moz-column-gap: 30px;
-      column-gap: 30px; }
-      .nys-registration-register-form .c-login h2,
-      .nys-registration-register-form .c-login p {
-        grid-column: 1/span 2; } }
+  .nys-registration-register-form #edit-mail {
+    grid-column: 1/span 1; }
+  .nys-registration-register-form #edit-mail--description {
+    display: flex;
+    align-items: center;
+    color: #ababab;
+    grid-row: 1/span 2;
+    grid-column: 2/span 1; } }
 
 .text-layout p {
   color: #666666; }
@@ -1622,13 +1608,14 @@ strong {
   font-size: 18px; }
 
 .text-layout__title.container {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
   border-bottom: 1px solid #aaaaaa;
   padding-bottom: 10px;
   margin-bottom: 20px;
-  color: #7d7c7c;
+  color: #444444;
   text-transform: uppercase;
-  font-family: "Proxima Nova Regular", "Arial", sans-serif;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 18px;
   margin-top: -12px;
   text-align: left; }
   .text-layout__title.container .field--name-field-landing-blocks .field__item {

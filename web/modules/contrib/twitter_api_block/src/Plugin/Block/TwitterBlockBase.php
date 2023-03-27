@@ -34,6 +34,13 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
   protected $moduleHandler;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -41,6 +48,7 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
     $instance->logger = $container->get('logger.factory');
     $instance->twitter = $container->get('twitter_api_block.twitter');
     $instance->moduleHandler = $container->get('module_handler');
+    $instance->currentUser = $container->get('current_user');
     return $instance;
   }
 
@@ -59,7 +67,7 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
   public function blockForm($form, FormStateInterface $form_state) {
     $form = parent::blockForm($form, $form_state);
 
-    $config  = $this->getConfiguration();
+    $config = $this->getConfiguration();
 
     $form['application'] = [
       '#type' => 'key_select',
@@ -86,7 +94,7 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
     $form['cache']['max_age'] = [
       '#type' => 'number',
       '#title' => $this->t("Cache max age"),
-      '#default_value' => isset($config['cache']['cache_max_age']) ? $config['cache']['cache_max_age'] : 0,
+      '#default_value' => $config['cache']['max_age'] ?? 0,
       '#required' => TRUE,
     ];
 
@@ -97,7 +105,7 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $values  = $form_state->getValues();
+    $values = $form_state->getValues();
 
     foreach ($values as $key => $value) {
       $this->setConfigurationValue($key, $value);
@@ -106,10 +114,7 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
 
   /**
    * Use this function in child block.
-   * 
-   * @param array $build
-   *   Default render array.
-   * 
+   *
    * @return array
    *   The block content as render array.
    */
@@ -124,7 +129,15 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
     // Instanciate Twitter manager.
     $config = $this->getConfiguration();
     if ($application = $config['application'] ?? NULL) {
-      $this->twitter->init($application);
+      $initialized = $this->twitter->init($application);
+
+      // Stop now if Twitter app not instanciated.
+      if (!$initialized) {
+        return [
+          '#markup' => $this->t('Twitter application not connected.') . '<br>' . $this->t('Please review credentials.'),
+          '#access' => $this->currentUser->hasPermission('administer site configuration')
+        ];
+      }
     }
 
     return $this->blockBuild();
@@ -141,7 +154,7 @@ class TwitterBlockBase extends BlockBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
-    // @todo Can it be cached?
-    return $this->configuration['cache_max_age'] ?? 0;
+    return $this->configuration['cache']['max_age'] ?? 0;
   }
+
 }

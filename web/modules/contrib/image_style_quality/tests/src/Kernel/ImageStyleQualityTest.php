@@ -17,30 +17,18 @@ class ImageStyleQualityTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'image_style_quality',
     'image',
     'system',
   ];
-
-  /**
-   * Test image style.
-   *
-   * @var \Drupal\image\Entity\ImageStyle
-   */
-  protected $styleName = 'test_style';
-
-  /**
-   * The quality to test with.
-   *
-   * @var int
-   */
-  protected $testQuality = 5;
+  protected string $styleName = 'test_style';
+  protected int $testQuality = 5;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('image_style');
     $this->installConfig('system');
@@ -62,7 +50,7 @@ class ImageStyleQualityTest extends KernelTestBase {
    *
    * @dataProvider imageQualityTestCases
    */
-  public function testImageQuality($toolkit) {
+  public function testImageQuality($toolkit): void {
     $this
       ->config('system.image')
       ->set('toolkit', $toolkit)
@@ -81,13 +69,16 @@ class ImageStyleQualityTest extends KernelTestBase {
   /**
    * Test cases for ::testImageQuality.
    */
-  public function imageQualityTestCases() {
+  public function imageQualityTestCases(): array {
     return [
       'GD' => [
         'gd',
       ],
       'Imagemagick' => [
         'imagemagick',
+      ],
+      'Imagick' => [
+        'imagick',
       ],
     ];
   }

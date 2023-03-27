@@ -30,7 +30,7 @@ class ConditionalFieldControllerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $entity_types = [];

@@ -71,7 +71,7 @@ function name_post_update_formatter_settings() {
         ->loadByProperties($properties);
       foreach ($view_displays as $view_display) {
         if ($component = $view_display->getComponent($field_name)) {
-          $settings = (array) $component->settings;
+          $settings = (array) $component['settings'];
           $settings['list_format'] = isset($settings['multiple']) && $settings['multiple'] == 'default' ? '' : 'default';
           $settings = array_intersect_key($settings, $default_settings);
           $settings += $default_settings;

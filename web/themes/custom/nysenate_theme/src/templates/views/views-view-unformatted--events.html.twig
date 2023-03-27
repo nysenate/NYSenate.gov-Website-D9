@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Theme override to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
+ * - view: The view object.
+ * - default_row_class: A flag indicating whether default classes should be
+ *   used on rows.
+ *
+ * @see template_preprocess_views_view_unformatted()
+ */
+#}
+<article class="c-event-block c-event-block--list">
+  {% if title %}
+    {% set day = title|striptags|date('U')|date('d') %}
+    {% set month = title|striptags|date('U')|date('M') %}
+    <div class="c-event-date">
+      {% if view.current_display != 'day_block' %}
+        <span>{{ day }}</span>
+        {{ month }}
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% for row in rows %}
+    <div class="content__item c-event--list-by-group {% if loop.first %}last{% endif %}">
+      {{- row.content -}}
+    </div>
+  {% endfor %}
+</article>
+
+{% set limit = 10 %}
+
+{% if news|length > limit %}
+  <div class="item-list" data-limit="{{ limit }}">
+    <div class="pager pager-load-more">
+      <span class="pager-next first last">
+        <a class="load-more">See More
+          {{ panel.pagination_link_text }}</a>
+      </span>
+    </div>
+  </div>
+{% endif %}

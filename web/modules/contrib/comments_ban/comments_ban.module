@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Custom functionality for the comments_ban module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function comments_ban_entity_type_alter(array &$entity_types) {
+  // Add validation constraint to the comment entity.
+  $entity_types['comment']->addConstraint('userCommentBanned');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function comments_ban_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'user_form') {
+    if (isset($form['field_user_banned_comments'])) {
+      /** @var \Drupal\Core\Session\AccountProxyInterface */
+      $current_user = \Drupal::service('current_user');
+      if (!$current_user->hasPermission('administer users')) {
+        $form['field_user_banned_comments']['#access'] = FALSE;
+      }
+    }
+  }
+}

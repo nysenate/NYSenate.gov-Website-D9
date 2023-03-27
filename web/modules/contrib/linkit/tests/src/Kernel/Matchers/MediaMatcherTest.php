@@ -3,6 +3,7 @@
 namespace Drupal\Tests\linkit\Kernel\Matchers;
 
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\Tests\linkit\Kernel\LinkitKernelTestBase;
@@ -19,7 +20,7 @@ class MediaMatcherTest extends LinkitKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file_test', 'file', 'media', 'image', 'field'];
+  protected static $modules = ['file_test', 'file', 'media', 'image', 'field'];
 
   /**
    * The matcher manager.
@@ -31,13 +32,12 @@ class MediaMatcherTest extends LinkitKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('file');
     $this->installEntitySchema('media');
     $this->installConfig(['media']);
-    $this->installSchema('system', ['key_value_expire']);
     $this->installSchema('file', ['file_usage']);
 
     $this->manager = $this->container->get('plugin.manager.linkit.matcher');
@@ -64,7 +64,7 @@ class MediaMatcherTest extends LinkitKernelTestBase {
         'filename' => 'image-test.' . $ext,
         'uri' => 'public://image-test.' . $ext,
         'filemime' => 'text/plain',
-        'status' => FILE_STATUS_PERMANENT,
+        'status' => FileInterface::STATUS_PERMANENT,
       ]);
       $file->save();
 

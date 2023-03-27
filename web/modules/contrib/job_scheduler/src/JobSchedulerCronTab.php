@@ -77,7 +77,7 @@ class JobSchedulerCronTab implements JobSchedulerCronTabInterface {
    * {@inheritdoc}
    */
   public function nextTime($start_time = NULL, $limit = 366) {
-    $start_time = isset($start_time) ? $start_time : time();
+    $start_time = $start_time ?? time();
 
     // Get minutes, hours, mday, wday, mon, year.
     $start_date = getdate($start_time);
@@ -313,7 +313,7 @@ class JobSchedulerCronTab implements JobSchedulerCronTabInterface {
     }
     elseif (strpos($string, '/')) {
       // Multiple. Example */2, for weekday will expand into 2, 4, 6.
-      list($values, $multiple) = explode('/', $string);
+      [$values, $multiple] = explode('/', $string);
       $values = self::parseElement($type, $values);
       foreach ($values as $value) {
         if (!($value % $multiple)) {
@@ -333,7 +333,7 @@ class JobSchedulerCronTab implements JobSchedulerCronTabInterface {
     }
     elseif (strpos($string, '-')) {
       // This defines a range. Example 1-3, will expand into 1,2,3.
-      list($start, $end) = explode('-', $string);
+      [$start, $end] = explode('-', $string);
       // Double check the range is within possible values.
       $range = range($start, $end);
     }

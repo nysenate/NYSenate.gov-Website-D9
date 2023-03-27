@@ -32,7 +32,9 @@ class ImgTagToEmbedFilterTest extends ProcessTestBase {
       $this->migration,
       $this->uuidOracle->reveal(),
       $this->logger->reveal(),
-      NULL
+      NULL,
+      $this->migrateLookup->reveal(),
+      $this->entityTypeManager->reveal()
     );
   }
 
@@ -68,7 +70,9 @@ class ImgTagToEmbedFilterTest extends ProcessTestBase {
       $this->migration,
       $this->uuidOracle->reveal(),
       $this->logger->reveal(),
-      NULL
+      NULL,
+      $this->migrateLookup->reveal(),
+      $this->entityTypeManager->reveal()
     );
 
     $this->assertEquals(

@@ -4,13 +4,20 @@
   <div class="c-block c-block--about-student-programs">
     <h3 class="nys-subtitle-title">{{ title }}</h3>
     <p class="l-row">{{ body }}</p>
-    <a href="{{ cta.url }}" class="c-container--link">{{ cta.text }}</a>
+    {% if cta.text %}
+      <a href="{{ cta.url }}" class="c-container--link">{{ cta.text }}</a>
+    {% endif %}
   </div>
   <section class="c-block c-student-program-are-you">
     <div class="gen-wrapper">
-      {% for program in programs %}
-        <a class="gen-col--height {{ program.color }}" href="{{ program.url }}">{{ program.text }}</a>
-      {% endfor %}
+      {% if programs %}
+        {% for program in programs %}
+          <a class="gen-col--height {{ program.color }}" href="{{ program.url }}">{{ program.text }}</a>
+        {% endfor %}
+      {% endif %}
     </div>
+    {% if program_block %}
+        {{ program_block }}
+    {% endif %}
   </section>
 </div>

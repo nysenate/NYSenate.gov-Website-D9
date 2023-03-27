@@ -881,6 +881,7 @@ else {
   $config['email_tfa.settings']['status'] = FALSE;
 }
 
+// Pantheon-specific Redis configuration.
 if (defined(
   'PANTHEON_ENVIRONMENT'
 ) && !\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extension_loaded('redis')

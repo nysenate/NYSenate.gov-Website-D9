@@ -75,19 +75,8 @@
 {{ attach_library('nysenate_theme/article-page') }}
 <article id="node-{{ node.id }}" class="landing-node {{ classes }}" {{ attributes }}>
 
-  {# {% include '@nysenate_theme/about/about.twig' with {
-    landing_page_hero: landing_page_hero,
-    how_senate_works_title: how_senate_works_title,
-    how_senate_works_text: how_senate_works_text,
-    job_of_senate: job_of_senate,
-    about_rules: about_rules,
-  } only %} #}
-
-  {{ title_prefix }}
-
   {% if page %}
   <header class="c-news--head">
-    <h1 class="nys-article-title">{{ title }}</h1>
     <div class="c-news--head-meta">
 
       {% if content.field_date and content.field_show_date[0]['#markup'] == 'On' %}
@@ -109,15 +98,30 @@
     <div class="c-news--body">
 
       <div class="c-block">
-        {{ content|without('field_issues', 'field_date', 'field_show_date', 'field_show_issues')}}
-      </div>
+      {% include '@nysenate_theme/about/about.twig' with {
+        landing_page_hero: landing_page_hero,
+        quick_facts_block: quick_facts_block,
+        how_senate_works_block: how_senate_works_block,
+        how_senate_works_title: how_senate_works_title,
+        how_senate_works_text: how_senate_works_text,
+        job_of_senate: job_of_senate,
+        about_rules: about_rules,
+        about_leadership: about_leadership,
+        district_map_title: district_map_title,
+        district_map_embed: district_map_embed,
+        senate_seal: senate_seal,
+        about_tour: about_tour,
+        about_student_programs: about_student_programs,
+        about_access: about_access,
+        sticky_nav: sticky_nav
+      } only %}
     </div>
+  </div>
 
-    {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+  {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
 
-    {% if how_a_bill_block %}
-      {{ how_a_bill_block }}
-    {% endif %}
+  {% if how_a_bill_block %}
+    {{ how_a_bill_block }}
+  {% endif %}
 {% endif %}
-
 </article>

@@ -88,6 +88,16 @@ class MessageController extends ControllerBase {
   }
 
   /**
+   * Path to display the bulk message form.
+   */
+  public function bulkMessage($user_id, $recipient_uids) {
+    // TO DO: Check if there's access.
+    $content['bulk_message_form'] = \Drupal::service('form_builder')->getForm('Drupal\nys_messaging\Form\BulkMessageForm', $user_id, $recipient_uids);
+
+    return $content;
+  }
+
+  /**
    * Method for checking the current user's access.
    */
   private function checkAccess($user_id) {

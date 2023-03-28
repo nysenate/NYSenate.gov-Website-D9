@@ -52,13 +52,17 @@
       </div>
     {% endif %}
 
-    <div class="c-block">
-      {{ content.body }}
-    </div>
+    {% if content.body %}
+      <div class="c-block">
+        {{ content.body }}
+      </div>
+    {% endif %}
 
-    <section class="c-block">
-      {{ content.webform }}
-    </section>
+    {% if content.webform %}
+      <section class="c-block">
+        {{ content.webform }}
+      </section>
+    {% endif %}
 
     {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
       title: node.type.entity.label,

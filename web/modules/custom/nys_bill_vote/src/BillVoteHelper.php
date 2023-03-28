@@ -9,7 +9,6 @@ use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Symfony\Component\HttpFoundation\Response;
 use Drupal\votingapi\VoteResultFunctionManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -212,10 +211,10 @@ class BillVoteHelper {
 
     // If an existing vote (including one submitted now) is detected ...
     if ($value == 'yes') {
-      $label = $this->t('You are in favor of this bill');
+      $label = $this->t('You are in favor of this bill, do you support this bill?');
     }
     elseif ($value == 'no') {
-      $label = $this->t('You are opposed to this bill');
+      $label = $this->t('You are opposed to this bill, do you support this bill?');
     }
 
     return $label;
@@ -239,7 +238,7 @@ class BillVoteHelper {
     $vote_entity = NULL;
     $node = $this->entityTypeManager->getStorage('node')->load($entity_id);
 
-    $message = strtr('Vote process received value = %vote_value, found index = %vote_index',
+    $message = $this->t('Vote process received value = %vote_value, found index = %vote_index',
       ['%vote_value' => $vote_value, '%vote_index' => $vote_index]
     );
     $this->logger->get('nys_bill_vote')->notice($message);
@@ -330,7 +329,10 @@ class BillVoteHelper {
       }
     }
 
-    return new Response($message);
+    return [
+      'message' => $message,
+      'vote' => $vote_entity,
+    ];
   }
 
   /**

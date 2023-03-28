@@ -5,6 +5,9 @@ dependencies:
   config:
     - filter.format.basic_html
     - filter.format.full_html
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
     - node.type.article
     - node.type.event
     - node.type.in_the_news
@@ -15,10 +18,12 @@ dependencies:
     - node.type.webform
   module:
     - block
+    - captcha
     - field_permissions
     - filter
     - flag
     - layout_builder
+    - media
     - node
     - system
     - toolbar
@@ -123,3 +128,17 @@ permissions:
   - 'view the administration theme'
   - 'view webform submissions own node'
   - 'write privatemsg'
+  - 'create file media'
+  - 'create image media'
+  - 'create remote_video media'
+  - 'delete own file media'
+  - 'delete own image media'
+  - 'delete own remote_video media'
+  - 'create media'
+  - 'delete media'
+  - 'update media'
+  - 'view own unpublished media'
+  - 'skip CAPTCHA'
+  - 'edit own file media'
+  - 'edit own image media'
+  - 'edit own remote_video media'

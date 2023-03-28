@@ -1139,6 +1139,7 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
+  $parent_node = \Drupal::routeMatch()->getParameter('node');
   $current_path = \Drupal::service('path.current')->getPath();
   $aliased_path = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
@@ -1289,7 +1290,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $view->id() == 'committee_content' && $view->current_display == 'all_updates' ||
     $view->id() == 'committee_content' && $view->current_display == 'meetings' ||
     $view->id() == 'committee_content' && $view->current_display == 'news' ||
-    $view->id() == 'committee_content' && $view->current_display == 'news_meetings')) {
+    $view->id() == 'committee_content' && $view->current_display == 'news_meetings' ||
+    $view->id() == 'committee_meetings' && $view->current_display == 'news')) {
     $contents = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
@@ -1342,7 +1344,9 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'F j, Y');
       }
 
-      if ($view->id() == 'committee_meetings' && $view->current_display == 'news') {
+      if ($parent_node->bundle() == 'meeting' &&
+        $view->id() == 'committee_meetings' &&
+        $view->current_display == 'news') {
         $image_main = NULL;
       }
 

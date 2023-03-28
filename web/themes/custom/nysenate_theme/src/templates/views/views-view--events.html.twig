@@ -30,6 +30,8 @@
  * @see template_preprocess_views_view()
  */
 #}
+{{ attach_library('nysenate_theme/event') }}
+{{ attach_library('nysenate_theme/event-calendar') }}
 {%
   set classes = [
     'view',
@@ -41,29 +43,37 @@
     'c-upcoming-container',
   ]
 %}
-{{ attach_library('nysenate_theme/event') }}
-{{ attach_library('nysenate_theme/event-calendar') }}
+
+{% if view.current_display in ['day', 'day_block'] %}
+  {% set view_text = 'View by Day' %}
+{% elseif view.current_display in ['week', 'week_block'] %}
+  {% set view_text = 'View by Week' %}
+{% elseif view.current_display in ['month', 'month_block'] %}
+  {% set view_text = 'View by Month' %}
+{% endif %}
 
 <div{{ attributes.addClass(classes) }}>
+  <h2 class="nys-title">Statewide Senate Events Calendar</h2>
   {{ title_prefix }}
   {% if title %}
     {{ title }}
   {% endif %}
   {{ title_suffix }}
   {% if header %}
-    <div class="view-header">
-      <div id="datepicker">
-        <div class="mobile-calendar-toggle icon-after__calendar-view">{{ view_text }}</div>
-        <input type="text" />
-        <div id="container"></div>
+    {{ header }}
+  {% endif %}
+  <div class="view-header event-calendar">
+    <div id="datepicker">
+      <div class="mobile-calendar-toggle icon-after__calendar-view">{{ view_text }}</div>
+      <input type="text" />
+      <div id="container"></div>
+    </div>
+    {% if exposed %}
+      <div class="view-filters">
+        {{ exposed }}
       </div>
-    </div>
-  {% endif %}
-  {% if exposed %}
-    <div class="view-filters">
-      {{ exposed }}
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
   {% if attachment_before %}
     <div class="attachment attachment-before">
       {{ attachment_before }}

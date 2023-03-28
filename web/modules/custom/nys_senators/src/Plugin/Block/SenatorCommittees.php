@@ -66,6 +66,8 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
    */
   public function build() {
     $node = $this->routeMatch->getParameter('node');
+    $committees = [];
+    $memberships = [];
     if (!empty($node)) {
       $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
       $senator_tid = $node->field_senator_multiref->target_id;
@@ -74,8 +76,6 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
         ->condition('field_senator', $senator_tid)
         ->sort('field_committee_member_role', 'DESC')
         ->execute();
-      $committees = [];
-      $memberships = [];
       foreach ($committee_membership_ids as $mpid) {
         /** @var \Drupal\paragraphs\Entity\Paragraph $committee_membership */
         $committee_membership = $paragraph_storage->load($mpid);
@@ -124,10 +124,8 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
           $committees[] = $sorted;
         }
       }
-
-      return $committees;
-
     }
+    return $committees;
   }
 
 }

@@ -1886,6 +1886,9 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
   // Add suggestion to views_exposed_form hook.
   if ($hook == 'views_exposed_form' && !empty($variables['form']['#theme'])) {
     $suggestions[] = $variables['form']['#theme'][0];
+    if (isset($variables['form']['#theme'][4])) {
+      $suggestions[] = $variables['form']['#theme'][4];
+    }
   }
 }
 

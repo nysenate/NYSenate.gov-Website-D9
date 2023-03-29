@@ -324,6 +324,8 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
     ])) {
       $form['date']['#date_format'] = 'm/d/Y';
       $form['date']['#default_value'] = $values['date'] ?? date('m/d/Y');
+      $form['date']['#description'] = 'E.g., ' . date('m/d/Y');
+      $form['date']['#placeholder'] = date('m/d/Y');
     }
     if (in_array($form['#id'], [
       'views-exposed-form-events-page-2',
@@ -331,6 +333,8 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
     ])) {
       $form['date']['#date_format'] = 'm/Y';
       $form['date']['#default_value'] = $values['date'] ?? date('m/d/Y');
+      $form['date']['#description'] = 'E.g., ' . date('m/d/Y');
+      $form['date']['#placeholder'] = date('m/d/Y');
     }
     if (in_array($form['#id'], [
       'views-exposed-form-events-page-3',
@@ -341,6 +345,8 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
       $form['date']['min']['#default_value'] = $start_of_week;
       $form['date']['max']['#date_format'] = 'm/d/Y';
       $form['date']['max']['#default_value'] = $end_of_week;
+      $form['date']['#description'] = 'E.g., ' . date('m/d/Y');
+      $form['date']['#placeholder'] = date('m/d/Y');
     }
   }
 }

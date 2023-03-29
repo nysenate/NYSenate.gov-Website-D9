@@ -66,67 +66,66 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
    */
   public function build() {
     $node = $this->routeMatch->getParameter('node');
-    $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
-    $senator_tid = $node->field_senator_multiref->target_id;
-    $committee_membership_ids = $paragraph_storage->getQuery()
-      ->condition('type', 'members')
-      ->condition('field_senator', $senator_tid)
-      ->sort('field_committee_member_role', 'DESC')
-      ->execute();
-
     $committees = [];
     $memberships = [];
-    foreach ($committee_membership_ids as $mpid) {
-      /** @var \Drupal\paragraphs\Entity\Paragraph $committee_membership */
-      $committee_membership = $paragraph_storage->load($mpid);
-      $parent = $committee_membership->getParentEntity();
+    if (!empty($node)) {
+      $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
+      $senator_tid = $node->field_senator_multiref->target_id;
+      $committee_membership_ids = $paragraph_storage->getQuery()
+        ->condition('type', 'members')
+        ->condition('field_senator', $senator_tid)
+        ->sort('field_committee_member_role', 'DESC')
+        ->execute();
+      foreach ($committee_membership_ids as $mpid) {
+        /** @var \Drupal\paragraphs\Entity\Paragraph $committee_membership */
+        $committee_membership = $paragraph_storage->load($mpid);
+        $parent = $committee_membership->getParentEntity();
 
-      switch ($committee_membership->field_committee_member_role->value) {
-        case '0':
-          $role = $this->t('Member');
-          $label = 'Member';
-          break;
+        switch ($committee_membership->field_committee_member_role->value) {
+          case '0':
+            $role = $this->t('Member');
+            $label = 'Member';
+            break;
 
-        case '1':
-          $role = $this->t('Co-Chair');
-          $label = 'Co-Chair';
-          break;
+          case '1':
+            $role = $this->t('Co-Chair');
+            $label = 'Co-Chair';
+            break;
 
-        case '1':
-          $role = $this->t('Chair');
-          $label = 'Chair';
-          break;
+          case '1':
+            $role = $this->t('Chair');
+            $label = 'Chair';
+            break;
 
-        case '3':
-          $role = $committee_membership->field_other_member_role->value;
-          $label = $committee_membership->field_other_member_role->value;
-          break;
+          case '3':
+            $role = $committee_membership->field_other_member_role->value;
+            $label = $committee_membership->field_other_member_role->value;
+            break;
 
-        default:
-          $role = '';
-          $label = '';
-          break;
-      };
+          default:
+            $role = '';
+            $label = '';
+            break;
+        };
 
-      $memberships[$label][] = [
-        'parent' => $parent->label(),
-        'text' => ['#plain_text' => $parent->label()],
-        'link' => ['#plain_text' => $parent->toUrl()->toString()],
-        'role' => ['#plain_text' => $role],
-      ];
-    }
+        $memberships[$label][] = [
+          'parent' => $parent->label(),
+          'text' => ['#plain_text' => $parent->label()],
+          'link' => ['#plain_text' => $parent->toUrl()->toString()],
+          'role' => ['#plain_text' => $role],
+        ];
+      }
 
-    // Sort based on parent label per role.
-    foreach ($memberships as $roles) {
-      asort($roles);
-      foreach ($roles as $sorted) {
-        unset($sorted['parent']);
-        $committees[] = $sorted;
+      // Sort based on parent label per role.
+      foreach ($memberships as $roles) {
+        asort($roles);
+        foreach ($roles as $sorted) {
+          unset($sorted['parent']);
+          $committees[] = $sorted;
+        }
       }
     }
-
     return $committees;
-
   }
 
 }

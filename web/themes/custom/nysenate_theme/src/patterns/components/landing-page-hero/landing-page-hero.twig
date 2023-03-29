@@ -2,7 +2,9 @@
 
 <section class="landing-page-hero">
   <div id="{{ section_id }}" class="l-row l-row--hero">
-    {{ background_img }}
+    {% if background_img %}
+      {{ background_img }}
+    {% endif %}
 
     <div class="l-row l-row--main c-hero--tout">
       <div class="c-about--welcome">

@@ -790,7 +790,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       $variables['homepage_hero'] = [
         'type' => $node->bundle(),
         'date' => $date ?? '',
-        'url_calendar' => $url_calendar ?? '#',
+        'url_calendar' => $url_calendar ?? $node->toUrl()->toString(),
         'media_id' => $media_id ?? [],
       ];
     }
@@ -944,6 +944,15 @@ function nysenate_theme_preprocess_block_content__media(&$variables) {
       $variables['content']['field_title'] = [];
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_field__node__field_ustream(&$variables) {
+  // Set value based on the ustream id.
+  $node = $variables['element']['#object'];
+  $variables['items'][0]['value'] = $node->field_ustream->value ?? $variables['items'][0]['content']['#markup'];
 }
 
 /**
@@ -1773,6 +1782,11 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     if ($path_alias == '/senators-committees') {
       $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees';
       $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees__' . $variables['elements']['#view_mode'];
+    }
+
+    if ($path_alias == '/about') {
+      $suggestions[] = $hook . '__' . $node->bundle() . '__about';
+      $suggestions[] = $hook . '__' . $node->bundle() . '__about__' . $variables['elements']['#view_mode'];
     }
   }
 
@@ -3078,6 +3092,7 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     'LOST' => 'Lost',
     'SUBSTITUTED' => 'Substituted',
     'ADOPTED' => 'Adopted',
+    'CHAPTERED' => 'Chaptered',
   ];
 
   $current_status_name = $node->field_ol_last_status->value;
@@ -3251,6 +3266,7 @@ function nysenate_bill_positions($node) {
       'DELIVERED_TO_GOV' => 4,
       'SIGNED_BY_GOV' => 5,
       'VETOED' => 5,
+      'CHAPTERED' => 5,
     ];
 
     // Get the current status name and map it.
@@ -4554,6 +4570,171 @@ function nysenate_theme_preprocess_node__landing__senators_committees(&$variable
       }
       elseif ($block['#block_content']->field_title->value == 'Committees List') {
         $variables['committees'] = $block['field_views_ref'][0] ?? NULL;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__landing__about(&$variables) {
+  if (array_key_exists('field_landing_blocks', $variables['content'])) {
+    foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+
+      switch ($block['#block_content']->bundle()) {
+        case 'text':
+          if ($block['#block_content']->field_title->value == 'Opening Text') {
+            $variables['landing_page_hero'] = [
+              "section_id" => "section-0",
+              "background_img" => FALSE,
+              "title" => $variables['title'],
+              "welcome_text" => $block['field_body_left'][0],
+              "body" => "",
+            ];
+            $variables['sticky_nav']['sections'][] = [
+              'title' => 'Welcome',
+              'href' => '#section-1',
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
+            $variables['how_senate_works_title'] = $block['#block_content']->field_title->value;
+            $variables['how_senate_works_text'] = $block['field_body_left'][0];
+            $variables['sticky_nav']['sections'][] = [
+              'title' => $block['#block_content']->field_title->value,
+              'href' => '#section-2',
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Job of Senate ...') {
+            $variables['job_of_senate'] = $block['field_body_left'][0];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Senate Rules and Procedures') {
+            $variables['about_rules'] = [
+              "title" => $block['#block_content']->field_title->value,
+              "col_1" => [
+                "content" => $block['field_body_left'][0],
+              ],
+              "col_2" => [
+                "content" => $block['field_body_right'][0],
+              ],
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Leadership and Majority') {
+            $variables['about_leadership'] = [
+              'title' => $block['#block_content']->field_title->value,
+              'body' => $block['field_body_left'][0],
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Senate Seal') {
+            $variables['senate_seal'] = [
+              'title' => $block['#block_content']->field_title->value,
+              'description' => $block['field_body_left'][0],
+              'media' => FALSE,
+            ];
+            $variables['sticky_nav']['sections'][] = [
+              'title' => $block['#block_content']->field_title->value,
+              'href' => '#section-4',
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Senate Seal text') {
+            $variables['senate_seal']['description']['#text'] .= $block['field_body_left'][0]['#text'];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Visit Capitol text') {
+            $variables['about_tour'] = [
+              'title' => '',
+              'description' => $block['field_body_left'][0],
+              "carousel" => FALSE,
+              "contact" => [],
+              "cta" => [],
+              "carousel_block" => '',
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Visit Capitol Link and Info') {
+            $variables['about_tour']['contact'] = [
+              'title' => FALSE,
+              'full' => $block['field_body_right'][0],
+            ];
+            $variables['about_tour']['cta'] = [
+              'text' => FALSE,
+              'full' => $block['field_body_left'][0],
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Student Programs') {
+            $variables['about_student_programs'] = [
+              'title' => $block['#block_content']->field_title->value,
+              'body' => $block['field_body_left'][0],
+              'program_block' => '',
+              'programs' => FALSE,
+            ];
+            $variables['sticky_nav']['sections'][] = [
+              'title' => $block['#block_content']->field_title->value,
+              'href' => '#section-6',
+            ];
+          }
+          elseif ($block['#block_content']->field_title->value == 'Student Programs Button Links') {
+            $variables['about_student_programs']['program_block'] = $block;
+          }
+          elseif ($block['#block_content']->field_title->value == 'Access to Information') {
+            $variables['about_access'] = [
+              'col_1' => [
+                'content' => $block['field_body_left'][0],
+              ],
+              'col_2' => [
+                'content' => $block['field_body_right'][0],
+              ],
+            ];
+            $variables['sticky_nav']['sections'][] = [
+              'title' => $block['#block_content']->field_title->value,
+              'href' => '#section-7',
+            ];
+          }
+          else {
+            continue 2;
+          }
+          break;
+
+        case 'video':
+          if ($block['#block_content']->info->value == 'Senate Chamber Visit Video') {
+            $variables['landing_page_hero']['body'] = $block;
+          }
+          break;
+
+        case 'quick_facts':
+          if ($block['#block_content']->info->value == 'Senate Quick Facts') {
+            $variables['quick_facts_block'] = $block;
+          }
+          break;
+
+        case 'blocks':
+          if ($block['#block_content']->info->value == 'How A Bill Becomes Law') {
+            $variables['how_senate_works_block'] = $block;
+          }
+          break;
+
+        case 'embed':
+          if ($block['#block_content']->info->value == 'District Map') {
+            $variables['district_map_title'] = $block['#block_content']->info->value;
+            $variables['district_map_embed'] = $block;
+          }
+          $variables['sticky_nav']['sections'][] = [
+            'title' => $block['#block_content']->info->value,
+            'href' => '#section-3',
+          ];
+          break;
+
+        case 'slider':
+          if ($block['#block_content']->field_title->value == 'Visit the Capitol') {
+            $variables['about_tour']['title'] = $block['#block_content']->field_title->value;
+            $variables['about_tour']['carousel_block'] = $block;
+            $variables['sticky_nav']['sections'][] = [
+              'title' => $block['#block_content']->field_title->value,
+              'href' => '#section-5',
+            ];
+          }
+          break;
       }
     }
   }

@@ -8,6 +8,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\private_message\Entity\PrivateMessage;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The Bill Form class.
@@ -73,6 +75,27 @@ class BillForm extends FormBase {
   protected $flagService;
 
   /**
+   * Default object for messenger serivce.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messengerService;
+
+  /**
+   * Default object for private_message.thread_manager service.
+   *
+   * @var \Drupal\private_message\Service\PrivateMessageThreadManagerInterface
+   */
+  protected $privateMessageThreadManager;
+
+  /**
+   * The private message service.
+   *
+   * @var \Drupal\private_message\Service\PrivateMessageServiceInterface
+   */
+  protected $privateMessageService;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -85,6 +108,9 @@ class BillForm extends FormBase {
     $instance->nysUserHelper = $container->get('nys_users.user_helper');
     $instance->emailValidator = $container->get('email.validator');
     $instance->flagService = $container->get('flag');
+    $instance->messengerService = $container->get('messenger');
+    $instance->privateMessageThreadManager = $container->get('private_message.thread_manager');
+    $instance->privateMessageService = $container->get('private_message.service');
     return $instance;
   }
 
@@ -102,7 +128,7 @@ class BillForm extends FormBase {
 
     $vote_results = $this->justVoted($node->id());
     if ($vote_results !== FALSE && $vote_results['voted'] === TRUE) {
-      return $this->billVotedForm($form, $form_state, $vote_results);
+      return $this->billVotedForm($form, $form_state, $vote_results, $this->hasThread($node->id()));
     }
 
     $form['#node'] = $node;
@@ -327,8 +353,9 @@ class BillForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $user_storage = $this->entityTypeManager->getStorage('user');
     // Need the global user object.
-    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    $user = $user_storage->load($this->currentUser->id());
 
     // Set up some easy references for later.
     $node = $form['#node'];
@@ -342,17 +369,75 @@ class BillForm extends FormBase {
 
     $vote_index = $values['vote_value'];
     $vote_label = $vote_options[$vote_index];
-    $this->billVoteHelper->processVote('node', $node->id(), $vote_index);
+
     $form_state->setRedirectUrl(Url::fromUserInput(\Drupal::request()->get('pass_thru_url')));
 
-    // @todo handle private message, subscription and account creation.
+    if ($this->currentUser->isAuthenticated()) {
+      $the_vote = $this->billVoteHelper->processVote('node', $node->id(), $vote_index)['vote'];
+      $senator = $this->nysUserHelper->getSenator($user);
+    }
+
+    // Send Private Message.
+    if ($this->currentUser->isAuthenticated() && !empty($values['message'])) {
+      // Only in-state users will have a senator assigned.
+      if (!$this->nysUserHelper->isOutOfState()) {
+
+        if ($senator !== NULL) {
+          if ($senator->hasField('field_user_account') && !$senator->get('field_user_account')->isEmpty()) {
+            $senator_user_id = $senator->field_user_account->target_id;
+          }
+
+          if (isset($senator_user_id)) {
+            switch ($vote_index) {
+              case 'yes':
+                $vote_type = 'supported';
+                break;
+
+              case 'no':
+                $vote_type = 'opposed';
+                break;
+
+              default:
+                $vote_type = 'sent a message regarding';
+                break;
+            }
+
+            $subject = $values['first_name'] . ' ' . $values['last_name'] . ' ' .
+              $vote_type . ' ' . $node->label();
+
+            // Create the private message entity.
+            $message = PrivateMessage::create([
+              'message' => $values['message'],
+              'field_subject' => $subject,
+              'field_to' => [$senator_user_id],
+              'field_bill' => [$node->id()],
+            ]);
+            $message->save();
+
+            $recipients = [$user_storage->load($senator_user_id), $user];
+            // Add it to the thread with the senator user.
+            $this->privateMessageThreadManager->saveThread($message, $recipients);
+
+            if (!empty($message->id())) {
+              $this->messengerService->addStatus($this->t('Your message has been sent!'));
+            }
+
+            $url = Url::fromUserInput('/node/' . $node->id())->toString();
+            $response = new RedirectResponse($url);
+            $response->send();
+          }
+        }
+      }
+    }
+
+    // @todo handle subscription and account creation.
   }
 
   /**
    * Generates the bill vote thank you message form.
    */
-  public function billVotedForm($form, &$form_state, $vote_results) {
-    if ($vote_results === FALSE || $vote_results['voted'] == FALSE) {
+  public function billVotedForm($form, &$form_state, $vote_results, $has_thread) {
+    if (($vote_results === FALSE || $vote_results['voted'] == FALSE) && $has_thread === FALSE) {
       return $form;
     }
 
@@ -365,12 +450,12 @@ class BillForm extends FormBase {
 
     $form['uid'] = [
       '#type' => 'hidden',
-      '#default_value' => $vote_results['uid'],
+      '#default_value' => $vote_results['uid'] ?? NULL,
     ];
 
     $form['vote_value'] = [
       '#type' => 'hidden',
-      '#default_value' => $vote_results['vote_value'],
+      '#default_value' => $vote_results['vote_value'] ?? NULL,
     ];
 
     // Adds the javascript to setup the bill and scroll users to the message.
@@ -396,6 +481,7 @@ class BillForm extends FormBase {
     }
 
     $vote_value = NULL;
+    $vote_entity = NULL;
     if (!empty($user_votes)) {
       /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
       $vote_entity = $vote_storage->load(end($user_votes));
@@ -421,9 +507,43 @@ class BillForm extends FormBase {
         'vote_value' => '1',
       ];
     }
-    elseif (empty($vote_value) == TRUE && $vote_value !== '0') {
+    elseif (empty($vote_value)) {
+      if ($this->hasThread($entity_id)) {
+        return [
+          'voted' => TRUE,
+          'uid' => $uid,
+          'vote_value' => $vote_entity ? (int) $vote_entity->getValue() : 0,
+        ];
+      }
       return FALSE;
     }
+  }
+
+  /**
+   * Checks if there is current thread between senator and user about the bill.
+   */
+  public function hasThread($entity_id) {
+    if (!$this->currentUser->isAuthenticated()) {
+      return FALSE;
+    }
+    $user_storage = $this->entityTypeManager->getStorage('user');
+    // Need the global user object.
+    $user = $user_storage->load($this->currentUser->id());
+    $senator = $this->nysUserHelper->getSenator($user);
+
+    $messages = $this->entityTypeManager->getStorage('private_message')->loadByProperties([
+      'field_to' => $senator->field_user_account->target_id,
+      'owner' => $user->id(),
+      'field_bill' => $entity_id,
+    ]);
+
+    $thread = NULL;
+    // @phpstan-ignore-next-line
+    if (!empty($messages)) {
+      $thread = $this->privateMessageService->getThreadFromMessage(end($messages))->getMessages();
+    }
+    // @phpstan-ignore-next-line
+    return !empty($thread);
   }
 
 }

@@ -102,15 +102,20 @@
     background: none;
     padding-left: 0;
 
-  & > a {
-    display: block;
-    margin-top: 15px;
-    //text-transform: uppercase;
-    font-size: 12px;
-    font-family: $font-sans-bold;
-    text-decoration: none;
-    @extend .lgt-text;
-    @extend .icon-before__presskit;
+    & > a {
+      display: block;
+      margin-top: 15px;
+      //text-transform: uppercase;
+      font-size: 12px;
+      font-family: $font-sans-bold;
+      text-decoration: none;
+      @extend .lgt-text;
+      @extend .icon-before__presskit;
+
+      &::before {
+        font-size: 21px;
+        line-height: 12px;
+      }
     }
   }
 }
@@ -255,5 +260,15 @@
   button[type="submit"] {
     background-color: $blue01;
     margin: 15px 0 40px 0;
+  }
+}
+
+.landing-node {
+  .field--name-field-landing-blocks > .field__item {
+    margin: 0;
+  }
+
+  .view-global-promo-banner {
+    padding-top: 0;
   }
 }

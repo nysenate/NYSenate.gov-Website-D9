@@ -397,7 +397,7 @@ class BillVoteWidgetForm extends FormBase {
       'target' => $node_bill,
       'source' => $node_bill,
     ]);
-
+    $subscription->save();
     return $subscription;
   }
 

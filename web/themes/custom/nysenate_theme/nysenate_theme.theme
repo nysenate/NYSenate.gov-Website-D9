@@ -4615,7 +4615,7 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
           if ($block['#block_content']->field_title->value == 'Opening Text') {
             $variables['landing_page_hero'] = [
               "section_id" => "section-0",
-              "background_img" => FALSE,
+              "background_img" => '',
               "title" => $variables['title'],
               "welcome_text" => $block['field_body_left'][0],
               "body" => "",
@@ -4624,6 +4624,9 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
               'title' => 'Welcome',
               'href' => '#section-1',
             ];
+          }
+          if ($block['#block_content']->field_title->value == 'test') {
+            $variables['landing_page_hero']['background_img'] = $block['field_body_left'][0];
           }
           elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
             $variables['how_senate_works_title'] = $block['#block_content']->field_title->value;

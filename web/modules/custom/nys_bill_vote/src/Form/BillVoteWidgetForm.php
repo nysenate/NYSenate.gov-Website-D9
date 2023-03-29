@@ -43,6 +43,27 @@ class BillVoteWidgetForm extends FormBase {
   protected $formBuilder;
 
   /**
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
+   * Entity type manager.
+   *
+   * @var \Drupal\core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The email validator.
+   *
+   * @var \Drupal\Component\Utility\EmailValidatorInterface
+   */
+  protected $emailValidator;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -51,6 +72,9 @@ class BillVoteWidgetForm extends FormBase {
     $instance->currentUser = $container->get('current_user');
     $instance->aliasManager = $container->get('path_alias.manager');
     $instance->formBuilder = $container->get('form_builder');
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->routeMatch = $container->get('current_route_match');
+    $instance->emailValidator = $container->get('email.validator');
     return $instance;
   }
 
@@ -174,9 +198,98 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
+    $this->addSubscriptionForm($form, $form_state);
+
     $form['#cache'] = ['max-age' => 0];
 
     return $form;
+  }
+
+  /**
+   * Insert Subsciption form fields.
+   */
+  public function addSubscriptionForm(&$form, FormStateInterface $form_state) {
+    $settings = $form_state->getBuildInfo();
+    $nid = $settings['entity_id'];
+
+    // If we have a node id, load that node.  Otherwise, use the current.
+    $ref_node = $nid ? $this->entityTypeManager->getStorage('node')->load($nid) : $this->routeMatch->getParameter('node');
+
+    // If the nid matches the current node's id, then this is not an embed.
+    $is_embed = FALSE;
+    if ($ref_node->id() !== $nid) {
+      $is_embed = TRUE;
+      $form_state->addBuildInfo('is_embed', TRUE);
+    }
+
+    $tid = $ref_node->field_bill_multi_session_root->target_id;
+
+    // Act only if there's a node id and a taxonomy term id.
+    if ($tid && $ref_node) {
+      $form_state->addBuildInfo('tid', $tid);
+
+      // Construct the new form controls.
+      $nys_subscribe_form = [
+        'nys_bill_subscribe' => [
+          '#type' => 'button',
+          '#attributes' => [
+            'class' => ['c-block--btn', 'nys-subscribe-button'],
+            'value' => 'subscribe',
+            'type' => 'submit',
+          ],
+          '#id' => 'edit-nys-bill-subscribe-' . $nid,
+          '#value' => 'Subscribe',
+          '#ajax' => [
+            'callback' => [$this, 'subscribeAjaxSubmit'],
+            'wrapper' => 'edit-nys-bill-subscribe-' . $nid,
+          ],
+          '#weight' => $is_embed ? 2 : 5,
+        ],
+        'nid' => [
+          '#type' => 'hidden',
+          '#value' => $nid,
+        ],
+        'tid' => [
+          '#type' => 'hidden',
+          '#value' => $tid,
+        ],
+      ];
+
+      // For embedded forms, modify the form style to support
+      // the additional button.
+      if ($is_embed) {
+        $form['#attributes']['class'][] = 'nys-bill-vote-form-embedded';
+        $form['nys_bill_vote_container']['nys_bill_vote_label']['#weight'] = 1;
+        $form['nys_bill_vote_container']['nys_bill_vote_yes']['#weight'] = 3;
+        $form['nys_bill_vote_container']['nys_bill_vote_no']['#weight'] = 4;
+        $form['nys_bill_vote_container'] += $nys_subscribe_form;
+      }
+      // For bill pages, set a new container to hold the subscribe controls.
+      else {
+        $newform = [
+          '#type' => 'container',
+          '#attributes' => ['class' => ['nys-bill-subscribe']],
+          '#id' => 'edit-nys-bill-subscribe-container-' . $nid,
+          'nys_bill_subscribe_title' => [
+            '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
+          ],
+        ];
+        if (!$this->currentUser->isAuthenticated()) {
+          $newform['email_form'] = [
+            '#type' => 'container',
+            '#attributes' => ['class' => ['subscribe_email_container']],
+            'email_address_entry' => [
+              '#type' => 'textfield',
+              '#title' => t('Email Address'),
+              '#name' => 'email',
+              '#size' => 20,
+              '#id' => 'edit-email-address-entry-' . $nid,
+            ],
+          ];
+        }
+        $form['nys_bill_subscribe_container'] = $newform + $nys_subscribe_form;
+      }
+    }
   }
 
   /**
@@ -196,9 +309,6 @@ class BillVoteWidgetForm extends FormBase {
       $form['nys_bill_vote']['#options'] = $this->billVoteHelper->getOptions();
     }
 
-    // If the user is on a page that isn't the bill node, send them there.
-    $test_action = $this->formBuilder->renderPlaceholderFormAction()['#markup'];
-    $node_match = $this->aliasManager->getPathByAlias($test_action);
     $bill_path = '/node/' . $build_info['entity_id'];
 
     $options['query'] = [
@@ -215,17 +325,86 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function subscribeSubmit(&$form, FormStateInterface $form_state) {
-    kint($form_state->getValues());
-    exit();
+  public function subscribeAjaxSubmit(&$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    $values = $form_state->getValues();
+    $settings = $form_state->getBuildInfo();
+
+    // Also create the parent ID we'll use to target elements
+    // in the AJAX return.
+    $parent_id = '#nys-bill-vote-vote-widget-' . $nid;
+
+    // Get the entered email address, nid, and tid.  We need to use input here
+    // because the two email controls were added dynamically through AJAX.  They
+    // are not part of the original form definition.
+    $email_address = trim($values['email'] ?? '');
+    $tid = (int) ($values['tid'] ?? 0);
+    $nid = (int) ($values['nid'] ?? 0);
+
+    // If the user is logged in, revert to that email address.
+    if (!empty($user->mail)) {
+      $email_address = $user->getEmail();
+    }
+
+    // Check for an embedded form.
+    $is_embed = $settings['is_embed'] ?? TRUE;
+
+    if ($tid && $nid) {
+      // If this is an embedded form, and no email address is available,
+      // redirect to the bill node instead.  This mimics bill voting behavior.
+      if (empty($email_address) && $is_embed) {
+        $bill_path = '/node/' . $settings['entity_id'];
+        $url = Url::fromUserInput($bill_path, $options);
+        $command = new RedirectCommand($url->toString());
+        $response->addCommand($command);
+        return $response;
+      }
+
+      // If the email address is not valid, return an error.
+      if (!$this->emailValidator->isValid($email_address)) {
+        $form_error = [
+          'email_error_markup' => [
+            '#type' => 'markup',
+            '#markup' => '<div class="subscribe_email_error">Invalid email address. Please use a valid email address.</div>',
+          ],
+        ];
+
+        $response->addCommand(new RemoveCommand($parent_id . ' .subscribe_email_error'));
+        $response->addCommand(new BeforeCommand($parent_id . ' .nys-subscribe-button', $form_error));
+
+        return $response;
+      }
+
+      // Everything is awesome.  Generate the subscription.
+      $why = 2;
+      $subscription = $this->subscriptionSignup($tid, $nid, $email_address, $why);
+    }
+
+    return $response;
+  }
+
+  /**
+   * Sign up a subscripion for the bill.
+   */
+  public function subscriptionSignup($tid, $nid, $email_address, $why) {
+    $user = user_load_by_mail($email_address);
+    $node_bill = $this->entityTypeManager->getStorage('node')->load($nid);
+    $subscription = $this->entityTypeManager->getStorage('subscription')->create([
+      'type' => 'bill_notifications',
+      'uid' => $user ? $user->id() : 0,
+      'email' => $email_address,
+      'target' => $node_bill,
+      'source' => $node_bill,
+    ]);
+
+    return $subscription;
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    kint($form_state->getValues());
-    exit();
     // @todo This method comes from nys_accumulator custom module.
     // @phpstan-ignore-next-line
     // nyslog();

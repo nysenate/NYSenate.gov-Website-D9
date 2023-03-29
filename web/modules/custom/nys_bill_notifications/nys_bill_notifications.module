@@ -10,7 +10,6 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\nys_bill_vote\Form\BillVoteWidgetForm;
 use Drupal\nys_bill_notifications\BillLineageHelper;
 
 /**
@@ -49,100 +48,4 @@ function nys_bill_notifications_mail_alter(&$message): void {
     $queue_item = $message['params']['queue_item'];
     $message['params']['GA_CampaignContent'] = $queue_item->mailKey ?? '';
   }
-}
-
-/**
- * Implements hook_form_<FORM>_alter() for nys_bill_vote_vote_widget.
- *
- * @param array $form A Drupal Forms API array
- * @param array $form_state A Drupal form state array
- * @param string $form_id The form's ID
- */
-function nys_bill_notifications_form_nys_bill_vote_widget_alter(&$form, &$form_state, $form_id) {
-  $settings = $form_state->getBuildInfo();
-  $nid = $settings['entity_id'];
-
-  $entity_type_manager = \Drupal::entityTypeManager();
-  // If we have a node id, load that node.  Otherwise, use the current.
-  $ref_node = $nid ? $entity_type_manager->getStorage('node')->load($nid) : \Drupal::routeMatch()->getParameter('node');
-
-  // If the nid matches the current node's id, then this is not an embed.
-  $is_embed = FALSE;
-  if ($ref_node->id() !== $nid) {
-    $is_embed = TRUE;
-    $form_state->addBuildInfo('is_embed', TRUE);
-  }
-
-  $tid = $ref_node->field_bill_multi_session_root->target_id;
-
-  // Act only if there's a node id and a taxonomy term id.
-  if ($tid && $ref_node) {
-    $form_state->addBuildInfo('tid', $tid);
-
-    // Construct the new form controls.
-    $nys_subscribe_form = [
-      'nys_bill_subscribe' => [
-        '#type' => 'submit',
-        '#attributes' => [
-          'class' => ['c-block--btn', 'nys-subscribe-button'],
-          'value' => 'subscribe',
-          'type' => 'submit',
-        ],
-        '#id' => 'edit-nys-bill-subscribe-' . $nid,
-        '#value' => 'Subscribe',
-        '#submit' => [
-          '_nys_subscriptions_subscribe_ajax_callback',
-        ],
-        // '#ajax' => [
-        //   'callback' => 'nys_subscriptions_subscribe_ajax_callback',
-        // ],
-        '#weight' => $is_embed ? 2 : 5,
-      ],
-      'nid' => [
-        '#type' => 'hidden',
-        '#value' => $nid,
-      ],
-      'tid' => [
-        '#type' => 'hidden',
-        '#value' => $tid,
-      ],
-    ];
-
-    // For embedded forms, modify the form style to support
-    // the additional button.
-    if ($is_embed) {
-      $form['#attributes']['class'][] = 'nys-bill-vote-form-embedded';
-      $form['nys_bill_vote_container']['nys_bill_vote_label']['#weight'] = 1;
-      $form['nys_bill_vote_container']['nys_bill_vote_yes']['#weight'] = 3;
-      $form['nys_bill_vote_container']['nys_bill_vote_no']['#weight'] = 4;
-      $form['nys_bill_vote_container'] += $nys_subscribe_form;
-    }
-    // For bill pages, set a new container to hold the subscribe controls.
-    else {
-      $newform = [
-        '#type' => 'container',
-        '#attributes' => ['class' => ['nys-bill-subscribe']],
-        '#id' => 'edit-nys-bill-subscribe-container-' . $nid,
-        'nys_bill_subscribe_title' => [
-          '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA</a></div><div class="nys-bill-subscribe-title">' .
-            'Get Status Alerts for ' . $ref_node->label() . '</div>',
-        ],
-      ];
-      if (!\Drupal::currentUser()->isAuthenticated()) {
-        $newform['email_form'] = [
-          '#type' => 'container',
-          '#attributes' => ['class' => ['subscribe_email_container']],
-          'email_address_entry' => [
-            '#type' => 'textfield',
-            '#title' => t('Email Address'),
-            '#name' => 'email',
-            '#size' => 20,
-            '#id' => 'edit-email-address-entry-' . $nid,
-          ],
-        ];
-      }
-      $form['nys_bill_subscribe_container'] = $newform + $nys_subscribe_form;
-    }
-  }
-
 }

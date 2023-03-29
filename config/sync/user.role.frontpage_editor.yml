@@ -5,6 +5,9 @@ dependencies:
   config:
     - filter.format.basic_html
     - filter.format.full_html
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
     - node.type.article
     - node.type.event
     - node.type.landing
@@ -12,8 +15,10 @@ dependencies:
     - node.type.public_hearing
   module:
     - captcha
+    - entityqueue
     - field_permissions
     - filter
+    - media
     - node
     - nys_access_permissions
     - system
@@ -110,3 +115,23 @@ permissions:
   - 'view own field_members'
   - 'view own unpublished content'
   - 'view the administration theme'
+  - 'create file media'
+  - 'create image media'
+  - 'create remote_video media'
+  - 'delete own file media'
+  - 'delete own image media'
+  - 'delete own remote_video media'
+  - 'create media'
+  - 'delete media'
+  - 'update media'
+  - 'view own unpublished media'
+  - 'update frontpage_news entityqueue'
+  - 'update global_promo_banner entityqueue'
+  - 'update happening_now entityqueue'
+  - 'update homepage_featured_story entityqueue'
+  - 'update homepage_hero entityqueue'
+  - 'manipulate all entityqueues'
+  - 'manipulate entityqueues'
+  - 'edit own file media'
+  - 'edit own image media'
+  - 'edit own remote_video media'

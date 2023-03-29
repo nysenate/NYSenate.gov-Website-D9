@@ -5,7 +5,6 @@ namespace Drupal\nys_bill_vote\Form;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -202,30 +201,14 @@ class BillVoteWidgetForm extends FormBase {
     $node_match = $this->aliasManager->getPathByAlias($test_action);
     $bill_path = '/node/' . $build_info['entity_id'];
 
-    if ($node_match != $bill_path) {
-      $options = [];
-      // Only attach the value if the user is anonymous, otherwise it is
-      // processed above.
-      if (!$this->currentUser->isAuthenticated()) {
-        $options['query'] = [
-          'intent' => $this->billVoteHelper->getIntentFromVote($value),
-        ];
-      }
-      $url = Url::fromUserInput($bill_path, $options);
-      $command = new RedirectCommand($url->toString());
-      $response->addCommand($command);
-
-      return $response;
-    }
-
-    $intent = $this->billVoteHelper->getIntentFromVote($value);
-    $vote_args = [
-      '#' . $id,
-      $this->billVoteHelper->getVotedLabel($intent)->__toString(),
-      $intent,
+    $options['query'] = [
+      'intent' => $this->billVoteHelper->getIntentFromVote($value),
     ];
 
-    $response->addCommand(new InvokeCommand($id, 'nysBillVoteUpdate', $vote_args));
+    $url = Url::fromUserInput($bill_path, $options);
+    $command = new RedirectCommand($url->toString());
+    $response->addCommand($command);
+
     return $response;
   }
 

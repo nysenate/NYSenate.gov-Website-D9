@@ -232,7 +232,17 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  public static function subscribeSubmit(&$form, FormStateInterface $form_state) {
+    kint($form_state->getValues());
+    exit();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    kint($form_state->getValues());
+    exit();
     // @todo This method comes from nys_accumulator custom module.
     // @phpstan-ignore-next-line
     // nyslog();

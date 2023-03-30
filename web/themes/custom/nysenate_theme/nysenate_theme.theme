@@ -1352,7 +1352,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'F j, Y');
       }
 
-      if ($parent_node->bundle() == 'meeting' &&
+      if (!empty($parent_node) && $parent_node->bundle() == 'meeting' &&
         $view->id() == 'committee_meetings' &&
         $view->current_display == 'news') {
         $image_main = NULL;

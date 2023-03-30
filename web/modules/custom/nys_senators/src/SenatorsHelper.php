@@ -319,4 +319,34 @@ class SenatorsHelper {
     return current($loaded) ?: NULL;
   }
 
+  /**
+   * Translates party abbreviations to full name, per the available options.
+   *
+   * @return array
+   *   In the form ['abbreviation' => 'full party name', ...]
+   */
+  public function getPartyNames(Term $senator): array {
+    /*
+     * This version ignores bad/unknown selections.  Commenting for reference.
+     * @code
+     *   $values = array_flip(array_map(
+     *     function($v) { return $v['value']; },
+     *     $senator->field_party->getValue()
+     *   ));
+     *   return array_intersect_key(
+     *     $b->field_party->getSetting('allowed_values'),
+     *     $values
+     *   );
+     */
+
+    // This version returns "unknown" for a bad/unknown selection.
+    $field = $senator->field_party;
+    $allowed = $field->getSetting('allowed_values');
+    $parties = [];
+    foreach ($field->getValue() as $val) {
+      $parties[$val['value']] = $allowed[$val['value']] ?? 'unknown';
+    }
+    return $parties;
+  }
+
 }

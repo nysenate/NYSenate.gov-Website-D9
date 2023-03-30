@@ -162,6 +162,7 @@
       e.preventDefault();
       // Close modal.
       $(e.target).closest('.reveal-modal').foundation('close');
+      $('.nys-bill-vote').addClass('confirmed');
     },
 
     callbackAutosubHandler: function (e) {

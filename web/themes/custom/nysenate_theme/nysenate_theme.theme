@@ -14,6 +14,7 @@ use Drupal\user\Entity\User;
 use Drupal\nys_users\UsersHelper;
 use Drupal\views\Views;
 use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\views\ViewExecutable;
@@ -1138,6 +1139,7 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
+  $parent_node = \Drupal::routeMatch()->getParameter('node');
   $current_path = \Drupal::service('path.current')->getPath();
   $aliased_path = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
@@ -1288,7 +1290,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $view->id() == 'committee_content' && $view->current_display == 'all_updates' ||
     $view->id() == 'committee_content' && $view->current_display == 'meetings' ||
     $view->id() == 'committee_content' && $view->current_display == 'news' ||
-    $view->id() == 'committee_content' && $view->current_display == 'news_meetings')) {
+    $view->id() == 'committee_content' && $view->current_display == 'news_meetings' ||
+    $view->id() == 'committee_meetings' && $view->current_display == 'news')) {
     $contents = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
@@ -1321,7 +1324,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
         }
       }
-      elseif ($node->bundle() === 'video') {
+      elseif (!empty($node) && $node->bundle() === 'video') {
         $video_id = $node->field_yt->target_id;
         $video = $video_id ? $media_storage->load($video_id) : NULL;
         if ($video) {
@@ -1341,7 +1344,9 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'F j, Y');
       }
 
-      if ($view->id() == 'committee_meetings' && $view->current_display == 'news') {
+      if ($parent_node->bundle() == 'meeting' &&
+        $view->id() == 'committee_meetings' &&
+        $view->current_display == 'news') {
         $image_main = NULL;
       }
 
@@ -1551,6 +1556,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
               'url' => $committee->toUrl()->toString(),
               'title' => $committee->label(),
               'type' => $types[$committee_type],
+              'description' => $committee->description->value ?? NULL,
             ];
           }
         }
@@ -3557,6 +3563,7 @@ function nysenate_theme_preprocess_node__session(&$variables) {
  * Implements hook_preprocess_node__NODE_TYPE().
  */
 function nysenate_theme_preprocess_node__public_hearing(&$variables) {
+  $node = $variables['node'];
   $date_value = get_date_range_values($variables);
   $video_status = get_video_status_values($variables);
   $location = get_location_values($variables);
@@ -3564,7 +3571,7 @@ function nysenate_theme_preprocess_node__public_hearing(&$variables) {
   // Only generate the calendar invite
   // if there's start_date.
   if (isset($date_value['start_date_raw'])) {
-    $title = $variables['node']->getTitle();
+    $title = $node->getTitle();
     // Set up reference variables indicating if this event spans multiple days.
     $is_multiday = !($date_value['start_date_raw']->format('Ymd') == $date_value['end_date_raw']->format('Ymd'));
     $description = $variables['content']['body'][0]['#text'] ?? '';
@@ -3575,6 +3582,24 @@ function nysenate_theme_preprocess_node__public_hearing(&$variables) {
   $variables['date_value'] = $date_value;
   $variables['video_status'] = $video_status;
   $variables['location'] = $location['address'];
+
+  if (!$node->get('field_attachment')->isEmpty()) {
+    foreach ($node->field_attachment as $item) {
+      $media = Media::load($item->target_id);
+      $fid = $media->get('field_media_file')->target_id;
+      $file = File::load($fid);
+      if ($file) {
+        $file_url_generator = \Drupal::service('file_url_generator');
+        $variables['file_items'][] = [
+          'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
+          'text' => $media->get('field_media_file')->description ?? $file->getFilename(),
+          'type' => $file->getMimeType(),
+        ];
+      }
+    }
+  }
+
+  $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
 }
 
 /**
@@ -4590,7 +4615,7 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
           if ($block['#block_content']->field_title->value == 'Opening Text') {
             $variables['landing_page_hero'] = [
               "section_id" => "section-0",
-              "background_img" => FALSE,
+              "background_img" => '',
               "title" => $variables['title'],
               "welcome_text" => $block['field_body_left'][0],
               "body" => "",
@@ -4599,6 +4624,9 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
               'title' => 'Welcome',
               'href' => '#section-1',
             ];
+          }
+          if ($block['#block_content']->field_title->value == 'test') {
+            $variables['landing_page_hero']['background_img'] = $block['field_body_left'][0];
           }
           elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
             $variables['how_senate_works_title'] = $block['#block_content']->field_title->value;

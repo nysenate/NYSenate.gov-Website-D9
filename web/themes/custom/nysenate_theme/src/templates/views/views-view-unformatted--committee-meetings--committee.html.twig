@@ -26,6 +26,9 @@
           <a href="{{ content.url }}">{{ content.title }} Committee</a>
         </h2>
         <h3 class="c-committee-type">{{ content.type }}</h3>
+        {% if content.description %}
+          <p>{{ content.description }}</p>
+        {% endif %}
       </div>
     </div>
   {% endfor %}

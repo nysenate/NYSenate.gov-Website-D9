@@ -40,7 +40,20 @@ class DashboardManagementController extends ControllerBase {
    */
   public function senatorPage($taxonomy_term, $tab = 'overview'): array {
     $page = $this->pageManager->getPage($tab);
-    return $page ? $page->getContent($taxonomy_term) : [];
+    $ret = $page ? $page->getContent($taxonomy_term) : [];
+    if ($ret) {
+      $ret = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            'nys-senators-management-dashboard',
+            'nys-senators-management-dashboard-' . $tab,
+          ],
+        ],
+        'tab_content' => $ret,
+      ];
+    }
+    return $ret;
   }
 
 }

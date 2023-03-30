@@ -53,11 +53,11 @@
             </a>
           {% endif %}
 
-          <div class="c-meeting-detail--location">
+          <p class="c-meeting-detail--location">
             {% if content.field_meeting_location.0 %}
               {{ content.field_meeting_location.0 }}
             {% endif %}
-          </div>
+          </p>
 
           <p class="c-meeting-detail--time">
             {{ date_value.from_time }}

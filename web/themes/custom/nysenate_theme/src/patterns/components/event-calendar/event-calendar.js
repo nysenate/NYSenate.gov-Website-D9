@@ -18,13 +18,13 @@
   // Set calendar filters labels
   Drupal.behaviors.eventCalendar = {
     attach: function () {
-      if ($('#edit-field-date-value-value input').val()) {
+      if ($('.form-item-date input').val()) {
         $('#datepicker input').val(
-          $('#edit-field-date-value-value input').val()
+          $('.form-item-date input').val()
         );
       }
-      if ($('#edit-field-date-value-min input').val()) {
-        $('#datepicker input').val($('#edit-field-date-value-min input').val());
+      if ($('#edit-date-min').val()) {
+        $('#datepicker input').val($('#edit-date-min').val());
       }
 
       // Init variables
@@ -32,14 +32,14 @@
       var formatType = 'm/d/Y';
 
       // Check the type of view i.e day/week/month and initialize datepicker options
-      if ($('.view-calendar-page.view-display-id-page').length > 0) {
+      if ($('.view-events.view-display-id-day_block').length > 0) {
         viewType = 'day';
       }
-      if ($('.view-calendar-page.view-display-id-month').length > 0) {
+      if ($('.view-events.view-display-id-page_2').length > 0) {
         viewType = 'month';
         formatType = 'm/Y';
       }
-      if ($('.view-calendar-page.view-display-id-week').length > 0) {
+      if ($('.view-events.view-display-id-page_3').length > 0) {
         viewType = 'week';
       }
 
@@ -54,10 +54,10 @@
         onSelect: function (format) {
           var inputElement = '';
           if (viewType === 'week') {
-            inputElement = $('#edit-field-date-value-min input');
+            inputElement = $('#edit-date-min');
           }
           else {
-            inputElement = $('#edit-field-date-value-value input');
+            inputElement = $('.form-item-date input');
           }
           inputElement.val(format);
           inputElement.parents('form').submit();
@@ -77,35 +77,19 @@
           }
           if (viewType === 'week') {
             var lastDayOfMonth = '';
-            $('.currentweek td').each(function () {
-              if (!$(this).hasClass('dp_not_in_month')) {
+            $('.currentweek td').each(function() {
+              if(!$(this).hasClass('dp_not_in_month')) {
                 lastDayOfMonth = $(this).html();
                 return false;
               }
               else {
                 var selectedDate = new Date(_text);
-                previousMonth = new Date(
-                  selectedDate.setMonth(selectedDate.getMonth() - 1)
-                );
-                _month[0] = previousMonth.toLocaleString('default', {
-                  month: 'long'
-                });
+                previousMonth = new Date(selectedDate.setMonth(selectedDate.getMonth() - 1));
+                _month[0] = previousMonth.toLocaleString('default', { month: 'long' });
               }
             });
-            $('.mobile-calendar-toggle').html(
-              'Viewing Week of ' +
-                _month[0] +
-                ' ' +
-                $('.currentweek td:first').html()
-            );
-            $('.cal-nav-wrapper span.title').html(
-              'Week of ' +
-                _month[0] +
-                ' ' +
-                $('.currentweek td:first').html() +
-                ',' +
-                _month[1]
-            );
+            $('.mobile-calendar-toggle').html('Viewing Week of '+_month[0]+' '+$('.currentweek td:first').html());
+            $('.cal-nav-wrapper span.title').html('Week of '+_month[0]+' '+$('.currentweek td:first').html()+','+_month[1]);
           }
           if (viewType === 'month') {
             $('.mobile-calendar-toggle').html('Viewing month of ' + _month[0]);

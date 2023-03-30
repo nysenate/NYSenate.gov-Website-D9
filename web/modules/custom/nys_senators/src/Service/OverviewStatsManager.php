@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\nys_senators\Event\OverviewStatsAlterEvent;
+use Drupal\nys_senators\Events;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -80,12 +81,12 @@ class OverviewStatsManager extends DefaultPluginManager {
     /** @var \Drupal\nys_senators\OverviewStatInterface $stat */
     foreach ($a as $key => $stat) {
       $content = $stat->getContent($senator);
-      if ($content) {
+      if (!is_null($content)) {
         $ret[$key] = $stat->getDefinition() + ['stat' => $content];
       }
     }
     $event = new OverviewStatsAlterEvent($ret);
-    $this->dispatcher->dispatch($event);
+    $this->dispatcher->dispatch($event, Events::OVERVIEW_STATS_ALTER);
 
     usort($event->stats, function ($a, $b) {
       $a = $a['weight'] ?? 0;

@@ -20,9 +20,28 @@ class NewConstituents extends OverviewStatBase {
 
   /**
    * {@inheritDoc}
+   *
+   * A count of user accounts for whom:
+   *   - the creation date is after the beginning of the year,
+   *   - the assigned district is the passed senator's district.
    */
-  protected function buildContent(TermInterface $senator): string {
-    return '10';
+  protected function buildContent(TermInterface $senator): ?string {
+
+    $soy = mktime(0, 0, 0, 1, 1, date('Y'));
+    $district = $this->helper->loadDistrict($senator);
+    try {
+      $ret = $this->manager->getStorage('user')
+        ->getQuery()
+        ->condition('created', $soy, '>=')
+        ->condition('status', 1)
+        ->condition('field_district.entity.tid', $district->id())
+        ->count()
+        ->execute() ?? 0;
+    }
+    catch (\Throwable) {
+      $ret = NULL;
+    }
+    return $ret;
   }
 
 }

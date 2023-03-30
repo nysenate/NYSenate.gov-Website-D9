@@ -2,14 +2,15 @@
 
 namespace Drupal\nys_senators;
 
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A base class for senator dashboard overview stat blocks.
  */
-abstract class OverviewStatBase implements OverviewStatInterface, ContainerFactoryPluginInterface {
+abstract class OverviewStatBase implements OverviewStatInterface {
 
   /**
    * The plugin definition.
@@ -21,22 +22,51 @@ abstract class OverviewStatBase implements OverviewStatInterface, ContainerFacto
   /**
    * The HTML or plain text content.
    *
-   * @var string
+   * @var string|null
    */
-  protected string $content = '';
+  protected ?string $content = '';
+
+  /**
+   * Drupal's Entity Type Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $manager;
+
+  /**
+   * NYS Senators Helper service.
+   *
+   * @var \Drupal\nys_senators\SenatorsHelper
+   */
+  protected SenatorsHelper $helper;
+
+  /**
+   * Drupal's Database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected Connection $database;
 
   /**
    * Constructor.
    */
-  public function __construct(array $definition) {
+  public function __construct(array $definition, EntityTypeManagerInterface $manager, SenatorsHelper $helper, Connection $database) {
     $this->definition = $definition;
+    $this->manager = $manager;
+    $this->helper = $helper;
+    $this->database = $database;
   }
 
   /**
    * {@inheritDoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
-    return new static($plugin_definition);
+    return new static(
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('nys_senators.senators_helper'),
+      $container->get('database')
+    );
   }
 
   /**
@@ -48,8 +78,13 @@ abstract class OverviewStatBase implements OverviewStatInterface, ContainerFacto
 
   /**
    * {@inheritDoc}
+   *
+   * @param \Drupal\taxonomy\TermInterface $senator
+   *   The senator for whom stats should be generated.
+   * @param bool $refresh
+   *   Forces the content to be rebuilt.
    */
-  public function getContent(TermInterface $senator): string {
+  public function getContent(TermInterface $senator, bool $refresh = FALSE): ?string {
     if (!$this->content) {
       $this->content = $this->buildContent($senator);
     }
@@ -59,7 +94,7 @@ abstract class OverviewStatBase implements OverviewStatInterface, ContainerFacto
   /**
    * Override to build the HTML/plain-text content.
    */
-  abstract protected function buildContent(TermInterface $senator): string;
+  abstract protected function buildContent(TermInterface $senator): ?string;
 
   /**
    * Indicates if this stat block will be a link.

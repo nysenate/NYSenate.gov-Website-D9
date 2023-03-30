@@ -86,6 +86,7 @@ class OverviewStatsManager extends DefaultPluginManager {
       }
     }
     $event = new OverviewStatsAlterEvent($ret);
+    // @phpstan-ignore-next-line
     $this->dispatcher->dispatch($event, Events::OVERVIEW_STATS_ALTER);
 
     usort($event->stats, function ($a, $b) {

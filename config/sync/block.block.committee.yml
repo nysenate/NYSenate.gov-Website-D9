@@ -1,27 +1,27 @@
-uuid: b2d97b24-dbc3-467f-8745-c2181aefe60c
+uuid: 33ac6abd-af19-4975-b673-4f52006f751d
 langcode: en
 status: true
 dependencies:
   config:
-    - facets.facet.senator
+    - facets.facet.committee
   module:
     - facets
     - system
   theme:
     - nysenate_theme
-id: senator
+id: committee
 theme: nysenate_theme
 region: content
-weight: -3
+weight: -2
 provider: null
-plugin: 'facet_block:senator'
+plugin: 'facet_block:committee'
 settings:
-  id: 'facet_block:senator'
-  label: Senator
-  label_display: visible
+  id: 'facet_block:committee'
+  label: Committee
+  label_display: '0'
   provider: facets
   context_mapping: {  }
-  block_id: senator
+  block_id: committee
 visibility:
   request_path:
     id: request_path

@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\nys_registration\RegistrationHelper;
+use Drupal\nys_senators\SenatorsHelper;
 use Drupal\user\RegisterForm as UserRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\media\Entity\Media;
@@ -27,11 +28,19 @@ class RegisterForm extends UserRegisterForm {
   protected RegistrationHelper $helper;
 
   /**
+   * NYS Senators Helper service.
+   *
+   * @var \Drupal\nys_senators\SenatorsHelper
+   */
+  protected SenatorsHelper $senatorsHelper;
+
+  /**
    * {@inheritDoc}
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, RegistrationHelper $helper, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, RegistrationHelper $helper, SenatorsHelper $senatorsHelper, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->helper = $helper;
+    $this->senatorsHelper = $senatorsHelper;
   }
 
   /**
@@ -42,6 +51,7 @@ class RegisterForm extends UserRegisterForm {
       $container->get('entity.repository'),
       $container->get('language_manager'),
       $container->get('nys_registration.helper'),
+      $container->get('nys_senators.senators_helper'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time')
     );
@@ -298,7 +308,6 @@ class RegisterForm extends UserRegisterForm {
 
     if ($senator_term) {
       $senator_name = $senator_term->get('field_senator_name')->getValue();
-      $senator_party = $senator_term->get('field_party')->getValue();
       $mid = $senator_term->get('field_member_headshot')->target_id;
       $media = Media::load($mid);
       $fid = $media->get('field_image')->target_id;
@@ -307,7 +316,7 @@ class RegisterForm extends UserRegisterForm {
         '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
         \Drupal::service('file_url_generator')
           ->generateAbsoluteString($file->getFileUri());
-      $senator['party'] = $this->helper->getPartyAffilation($senator_party);
+      $senator['party'] = $this->senatorsHelper->getPartyNames($senator_term);
       $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
       $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
       $first_name = $form_state->getValue('field_first_name');

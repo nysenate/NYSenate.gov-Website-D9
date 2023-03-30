@@ -341,6 +341,14 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
         'Inactive',
       ];
       $variables['is_senator_landing'] = in_array($name, $micrositeType) ? TRUE : FALSE;
+      if ($name === 'Inactive') {
+        $variables['inactive_senator_message'] = !empty($senator->field_inactive_senator_message->value) ?
+        $senator->field_inactive_senator_message->value : FALSE;
+        $variables['is_active'] = FALSE;
+      }
+      else {
+        $variables['is_active'] = TRUE;
+      }
     }
   }
 

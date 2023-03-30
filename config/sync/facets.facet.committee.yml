@@ -1,4 +1,4 @@
-uuid: 5e0c03d2-9421-47ea-9b21-da71011018cb
+uuid: 1fbc6ceb-c63a-486a-b9f2-5a7d268abe9b
 langcode: en
 status: true
 dependencies:
@@ -7,17 +7,17 @@ dependencies:
     - views.view.core_search
   module:
     - search_api
-id: committee_type
-name: 'Committee Type'
+id: committee
+name: Committee
 weight: 0
 min_count: 1
-missing: false
+missing: true
 missing_label: others
-url_alias: committee_type
+url_alias: committee
 facet_source_id: 'search_api:views_page__core_search__page_search'
-field_identifier: field_committee_types
-query_operator: or
-hard_limit: 0
+field_identifier: field_committee
+query_operator: and
+hard_limit: 50
 exclude: false
 use_hierarchy: false
 keep_hierarchy_parents_active: false
@@ -29,12 +29,12 @@ enable_parent_when_child_gets_disabled: true
 widget:
   type: dropdown
   config:
-    show_numbers: false
-    default_option_label: Choose
+    show_numbers: true
+    default_option_label: 'Filter By Committe'
 empty_behavior:
   behavior: none
-only_visible_when_facet_source_is_visible: true
-show_only_one_result: true
+only_visible_when_facet_source_is_visible: false
+show_only_one_result: false
 show_title: false
 processor_configs:
   active_widget_order:
@@ -58,11 +58,27 @@ processor_configs:
   hierarchy_processor:
     processor_id: hierarchy_processor
     weights:
-      build: 100
+      build: 5
+    settings: {  }
+  list_item:
+    processor_id: list_item
+    weights:
+      build: -6
+    settings: {  }
+  show_siblings_processor:
+    processor_id: show_siblings_processor
+    weights:
+      build: -5
+    settings:
+      show_parent_siblings: false
+  translate_entity:
+    processor_id: translate_entity
+    weights:
+      build: -10
     settings: {  }
   url_processor_handler:
     processor_id: url_processor_handler
     weights:
       pre_query: 50
-      build: 15
+      build: -4
     settings: {  }

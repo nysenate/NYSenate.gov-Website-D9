@@ -71,3 +71,11 @@ The initial pass of the build script downloads several dependencies and an inter
 * [DDEV-Local Documentation](https://ddev.readthedocs.io/en/stable/)
 * This repository created from [Composer template for Drupal projects](https://github.com/drupal-composer/drupal-project/blob/9.x/README.md) which has some addition information on usage.
 * [Using Composer](https://www.drupal.org/docs/develop/using-composer) with Drupal.
+
+## Re-index Search API
+* Due to the amount of content, there are some tips on how to get the site to re-index without timing out:
+* If you have changes to search API configuration run `drush search-api-reset-tracker`
+* Check `admin/config/search/search-api/index/core_search` to make sure that the tracking info has been reset if
+not, click the button that says "track info" - you may need to do this a couple times to run all the way through.
+* Run `drush sapi-i` to re-index and watch for any errors. 
+* If the re-index times out you can pick it back up where it left off by running `drush sapi-i` again.

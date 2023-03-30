@@ -1,4 +1,4 @@
-uuid: 5b8a4326-ca87-4e74-ad63-6a78f8ab9f3f
+uuid: 5e0c03d2-9421-47ea-9b21-da71011018cb
 langcode: en
 status: true
 dependencies:
@@ -15,9 +15,9 @@ missing: false
 missing_label: others
 url_alias: committee_type
 facet_source_id: 'search_api:views_page__core_search__page_search'
-field_identifier: field_committee_1
-query_operator: and
-hard_limit: 50
+field_identifier: field_committee_types
+query_operator: or
+hard_limit: 0
 exclude: false
 use_hierarchy: false
 keep_hierarchy_parents_active: false
@@ -29,12 +29,12 @@ enable_parent_when_child_gets_disabled: true
 widget:
   type: dropdown
   config:
-    show_numbers: true
-    default_option_label: 'Filter By Committe'
+    show_numbers: false
+    default_option_label: Choose
 empty_behavior:
   behavior: none
 only_visible_when_facet_source_is_visible: true
-show_only_one_result: false
+show_only_one_result: true
 show_title: false
 processor_configs:
   active_widget_order:
@@ -59,16 +59,6 @@ processor_configs:
     processor_id: hierarchy_processor
     weights:
       build: 100
-    settings: {  }
-  list_item:
-    processor_id: list_item
-    weights:
-      build: 5
-    settings: {  }
-  translate_entity:
-    processor_id: translate_entity
-    weights:
-      build: 5
     settings: {  }
   url_processor_handler:
     processor_id: url_processor_handler

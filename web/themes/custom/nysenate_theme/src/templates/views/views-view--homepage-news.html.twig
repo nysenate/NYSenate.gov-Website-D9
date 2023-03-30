@@ -49,7 +49,11 @@
   {% endif %}
   {{ title_suffix }}
   {% if header %}
-    <div class="view-header c-container--header__top-border">
+    {%
+      set header_class = (view.current_display == 'hp_featured_stories') ?
+        'c-container--header__top-border' : 'c-container--header'
+    %}
+    <div class="view-header {{ header_class }}">
       {{ header }}
     </div>
   {% endif %}

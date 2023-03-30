@@ -1424,6 +1424,61 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $variables['contents'] = $contents;
   }
 
+  // Homepage News.
+  elseif ($view->id() == 'homepage_news' && $view->current_display == 'hp_news_updates') {
+    $items = [];
+    foreach ($view->result as $row) {
+      /** @var \Drupal\node\Entity\Node $node */
+      $node = $row->_entity;
+      $allowed_values = [];
+      if ($node->hasField('field_category')) {
+        $allowed_values = $node->field_category->getSetting('allowed_values');
+      }
+      $issues = NULL;
+      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+        $node->field_issues->entity;
+        foreach ($node->field_issues as $value) {
+          /** @var \Drupal\taxonomy\Entity\Term $term */
+          $term = $value->entity;
+          $issues[] = [
+            'text' => $term->getName(),
+            'url' => $term->toUrl()->toString(),
+          ];
+        }
+      }
+
+      $news_image = NULL;
+      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
+        if (!empty($media)) {
+          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+          if (!empty($file)) {
+            $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
+        }
+      }
+
+      $news_senator_count = 0;
+      if ($node->hasField('field_associated_senators') && !$node->get('field_associated_senators')->isEmpty()) {
+        $news_senator_count = count($node->field_associated_senators);
+      }
+
+      $items[] = [
+        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'],
+        'news_url' => $node->toUrl()->toString(),
+        'news_image' => $news_image,
+        'news_name' => $node->getTitle(),
+        'news_topics' => $issues,
+        'news_senator_count' => $news_senator_count,
+      ];
+    }
+
+    $variables['cta_name'] = 'Recent Updates';
+    $variables['cta_url'] = '/news-and-issues';
+    $variables['cta_label'] = 'Go to News';
+    $variables['items'] = $items;
+  }
+
   // Featured issue EVA.
   if ($view->id() == 'featured_issue' && $view->current_display == 'featured_issue') {
     $results = $view->result;
@@ -3948,16 +4003,21 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
   $current_node = \Drupal::routeMatch()->getParameter('node');
   if (!empty($current_node->field_senator_multiref)) {
     $senator = $current_node->field_senator_multiref->entity;
-    $party = $senator->field_party->getValue();
-    $parties = implode(', ', array_map(function ($item) {
-      return $item['value'];
-    }, $party));
-    $variables['senator_name'] = $senator->getName();
-    $variables['senator_link'] = $senator->toUrl()->toString();
-    $variables['party'] = '(' . $parties . ')';
+    if ($senator) {
+      $variables['senator_name'] = $senator->getName();
+      $variables['senator_link'] = $senator->toUrl()->toString();
 
-    if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
-      $variables['senator_image'] = $senator->field_member_headshot->view('full')[0] ?? NULL;
+      if ($senator->hasField('field_party') && !$senator->get('field_party')->isEmpty()) {
+        $party = $senator->field_party->getValue();
+        $parties = implode(', ', array_map(function ($item) {
+          return $item['value'];
+        }, $party));
+        $variables['party'] = '(' . $parties . ')';
+      }
+
+      if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
+        $variables['senator_image'] = $senator->field_member_headshot->view('full')[0] ?? NULL;
+      }
     }
 
   }

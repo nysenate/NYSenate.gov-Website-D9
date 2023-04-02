@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Questionnaires.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nys_questionnaires_theme($existing, $type, $theme, $path): array {
+  return [
+    'nys_questionnaires_management_questionnaires' => [
+      'variables' => [
+        'your_questionnaires' => NULL,
+        'other_questionnaires' => NULL,
+      ],
+    ],
+    'nys_questionnaires_district_submissions_highchart' => [
+      'variables' => [
+        'qid' => NULL,
+        'title' => NULL,
+        'total' => NULL,
+        'in_district' => NULL,
+        'out_district' => NULL,
+      ],
+    ],
+  ];
+}

@@ -1,0 +1,36 @@
+{#
+/**
+ * @file nys-questionnaires-management-questionnaires.html.twig
+ *
+ * @var array your_questionnaires
+ *   An array of the senator's questionnaire definitions.
+ * @var array other_questionnaires
+ *   An array of other senators' questionnaire definitions.
+ *
+ * @see nys-questionnaires-district-submissions-highchart.html.twig
+ */
+#}
+<ul class="tabs">
+  <li class="active tab">
+    <a class="tab-link first" href="#panel1">Your Questionnaires</a>
+  </li>
+  <li class="tab">
+    <a class="tab-link" href="#panel2">Other Questionnaires</a>
+  </li>
+</ul>
+<div id="panel1" class="nys-senators-management-questionnaires-yours tab-content">
+  <div class="your_questionnaires_list">
+    {% if your_questionnaires is iterable and your_questionnaires|length > 0 %}
+      {% for val in your_questionnaires %}
+        {{ include('nys-questionnaires-district-submissions-highchart.html.twig', val) }}
+      {% endfor %}
+    {% else %}
+      No open questionnaires were found.
+    {% endif %}
+  </div>
+  <div class="questionnaire-user-list"></div>
+</div>
+<div id="panel2" class="nys-senators-management-questionnaires-others tab-content">
+  {{ other_questionnaires }}
+  <div class="questionnaire-user-list"></div>
+</div>

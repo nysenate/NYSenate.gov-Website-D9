@@ -1,0 +1,108 @@
+/***************
+ * for tabs
+ */
+.nys-senators-management-dashboard-questionnaires ul.tabs {
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 0;
+}
+.nys-senators-management-dashboard-questionnaires ul.tabs li.tab {
+  border: 2px solid lightgray;
+  border-bottom: 0 none;
+  border-top-left-radius: 0.7em;
+  border-top-right-radius: 0.7em;
+}
+.nys-senators-management-dashboard-questionnaires ul.tabs li.tab.active {
+  border-color: darkblue;
+}
+.nys-senators-management-dashboard-questionnaires ul.tabs li.tab:hover {
+  background-color: rgb(0, 41, 79);
+  border-color: darkblue;
+}
+
+.nys-senators-management-dashboard-questionnaires ul.tabs li.tab a {
+  background: transparent !important;
+}
+.nys-senators-management-dashboard-questionnaires ul.tabs li.tab:hover a {
+  color: #fff;
+}
+
+/***************
+ * to mimic D7 tables
+ */
+.nys-senators-management-dashboard-questionnaires table {
+  background: #ffffff;
+  margin-bottom: 1.25rem;
+  border: solid 1px #dddddd;
+  table-layout: auto;
+}
+.nys-senators-management-dashboard-questionnaires table thead {
+  background: #f5f5f5;
+}
+.nys-senators-management-dashboard-questionnaires table thead tr th,
+.nys-senators-management-dashboard-questionnaires table tfoot tr th,
+.nys-senators-management-dashboard-questionnaires table tfoot tr td,
+.nys-senators-management-dashboard-questionnaires table tbody tr th,
+.nys-senators-management-dashboard-questionnaires table tbody tr td,
+.nys-senators-management-dashboard-questionnaires table tr td {
+  display: table-cell;
+  line-height: 1.125rem;
+}
+.nys-senators-management-dashboard-questionnaires table thead tr th,
+.nys-senators-management-dashboard-questionnaires table thead tr td {
+  padding: 0.5rem 0.625rem 0.625rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #222222;
+}
+.nys-senators-management-dashboard-questionnaires tbody {
+  border-top: 1px solid #ccc;
+}
+.nys-senators-management-dashboard-questionnaires tr.even,
+.nys-senators-management-dashboard-questionnaires tr.odd {
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+  padding: 0.1em 0.6em;
+}
+.nys-senators-management-dashboard-questionnaires tr.even {
+  background-color: #f9f9f9;
+}
+.nys-senators-management-dashboard-questionnaires table tbody tr td {
+  padding: .5em 1em;
+  height: auto;
+}
+
+/***********
+ * Your Questionnaires
+ */
+.your-questionnaires-list {
+  max-height: 280px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding: 1em 0;
+}
+
+.sponsored-questionnaire {
+  display: inline-block;
+  max-width: 48%;
+  position: relative;
+  vertical-align: top;
+  max-height: 250px;
+  border: 2px solid #04A9C5;
+  border-radius: 1.4em;
+  margin-right: 1em;
+}
+.sponsored-questionnaire:hover {
+  border-color: darkblue;
+}
+
+.questionnaire-user-list {
+  margin-top:2em;
+  max-height:30em;
+  overflow-y: scroll;
+}
+
+.senator-dashboard-questionnaires .questionnaire-user-list table tbody tr td {
+  padding: .5em 1em;
+  height: auto;
+}

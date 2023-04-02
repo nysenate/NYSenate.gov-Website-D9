@@ -1,0 +1,25 @@
+{#
+/**
+ * @file nys-questionnaires-other-submissions.html.twig
+ *
+ * @var string|integer qid
+ *   The questionnaire ID.
+ * @var string title
+ *   The questionnaire title.
+ * @var string sponsor
+ *   Shortname of the questionnaire's sponsor
+ * @var integer in_district
+ *   Number of submissions from users within the district.
+ */
+#}
+<div class="other-questionnaire"
+     id="other-questionnaire-{{ qid }}"
+     data-qid="{{ qid }}">
+  <div class="other-questionnaire-submission"
+       data-in-district="{{ in_district }}"
+       data-out-district="{{ out_district }}"
+       data-submissions="{{ total }}"
+       data-title="{{ title }}">
+    {{ qid }}<br />{{ title }}<br />{{ total }} - {{ in_district }} - {{ out_district }}
+  </div>
+</div>

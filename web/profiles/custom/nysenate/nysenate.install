@@ -5,6 +5,7 @@
  * Install, update and uninstall hooks for the mcprofile install profile.
  */
 
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -65,4 +66,42 @@ function nysenate_update_9003() {
     'name' => 'Message',
     'vid' => 'microsite_page_type',
   ])->save();
+}
+
+/**
+ * Add links to Social Menu.
+ */
+function nysenate_update_9004() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'socials';
+
+  $links = [
+    'facebook' => 'https://www.facebook.com/nysenate',
+    'twitter' => 'https://www.twitter.com/nysenate',
+    'youtube-2' => 'https://www.youtube.com/user/NYSenate',
+  ];
+
+  foreach ($links as $title => $url) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $title,
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update socials menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $url]);
+      $menu_link->save();
+    }
+
+    // Create socials menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $title,
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $url],
+      ]);
+      $menu_link->save();
+    }
+  }
 }

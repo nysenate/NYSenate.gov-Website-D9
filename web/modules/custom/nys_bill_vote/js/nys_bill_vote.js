@@ -64,7 +64,6 @@
       $(opts.attach_target).append(parent);
       // Make sure Foundation knows about the new modal.
       parent.foundation();
-      parent.foundation('open');
     }
     return parent;
   };
@@ -137,12 +136,10 @@
       };
 
       var confirmationModal = Drupal.theme('createConfirmationModal', options);
-      if ($(element).parents('.c-bill--vote-attach').length && $('#confirm-vote-intent-modal').length == 0) {
-        // Ask user for confirmation and then record vote.
-        setTimeout(function () {
-          $('#confirm-vote-intent-modal').foundation('open');
-        }, 1000);
+      if ($('.nys-bill-vote.confirmed').length == 0) {
+        confirmationModal.foundation('open');
       }
+
     },
 
     callbackIntentConfirm: function (e) {
@@ -154,6 +151,7 @@
           if (status === 'success') {
             // Close modal.
             $(e.target).closest('.reveal-modal').foundation('close');
+            $('.nys-bill-vote').addClass('confirmed');
             Drupal.behaviors.nysBillVote.voteOnBill(settings.element, settings.response, settings.intentValue);
           }
         }
@@ -164,6 +162,7 @@
       e.preventDefault();
       // Close modal.
       $(e.target).closest('.reveal-modal').foundation('close');
+      $('.nys-bill-vote').addClass('confirmed');
     },
 
     callbackAutosubHandler: function (e) {
@@ -306,12 +305,12 @@
         $('#nys-bills-bill-form input[type="submit"]').val(buttonText);
       }
       else if ($('.alert-box-message').length != 0 && $('.c-bill--vote-attach').length != 0)  {
-        $('#edit-nys-bill-vote-button-wrapper').hide();
+        // $('#edit-nys-bill-vote-button-wrapper').hide();
         if (vote_value == 'no') {
-          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL");
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL, Do you support this bill?");
         }
         else if (vote_value == 'yes') {
-          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL");
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL, Do you support this bill?");
         }
       }
 

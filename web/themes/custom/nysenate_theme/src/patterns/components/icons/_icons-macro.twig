@@ -9,5 +9,5 @@
  */
 #}
 {% macro get(name) %}
-  {% include '@rain_theme/icons/assets/' ~ name ~ '.svg' %}
+  {% include '@rain_theme/icons/assets/' ~ name|lower ~ '.svg' %}
 {% endmacro %}

@@ -53,11 +53,11 @@
             </a>
           {% endif %}
 
-          <div class="c-meeting-detail--location">
+          <p class="c-meeting-detail--location">
             {% if content.field_meeting_location.0 %}
               {{ content.field_meeting_location.0 }}
             {% endif %}
-          </div>
+          </p>
 
           <p class="c-meeting-detail--time">
             {{ date_value.from_time }}
@@ -65,7 +65,7 @@
               to
               {{ date_value.to_time }}
             {% endif %}
-            {% if video_status.key != 'streaming_redirect' and content.field_yt.0 %}
+            {% if video_status.key != 'streaming_redirect' and content.field_yt.0 and video_status.value %}
               <span class="c-meeting-video--status icon-before__youtube">
                 {{ video_status.value }}
               </span>
@@ -137,10 +137,8 @@
 
 {{ committee_events }}
 
-<h2>Related News</h2>
 {{ drupal_view('committee_meetings', 'news') }}
 
-<h2>Related Committee</h2>
 {{ drupal_view('committee_meetings', 'committee') }}
 
 {{ drupal_view('senator_microsite_content', 'promo_footer') }}

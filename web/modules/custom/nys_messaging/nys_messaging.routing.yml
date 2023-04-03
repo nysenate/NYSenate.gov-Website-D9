@@ -11,3 +11,10 @@ nys_messaging.forward:
     _controller: '\Drupal\nys_messaging\Controller\MessageController::forward'
   requirements:
     _permission: 'access content'
+
+nys_messaging.bulk_message:
+  path: '/users/{user_id}/dashboard/inbox/new?recipients={recipient_uids}'
+  defaults:
+    _controller: '\Drupal\nys_messaging\Controller\MessageController::bulkMessage'
+  requirements:
+    _permission: 'access content'

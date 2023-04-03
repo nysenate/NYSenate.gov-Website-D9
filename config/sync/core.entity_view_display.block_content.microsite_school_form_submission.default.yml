@@ -1,0 +1,24 @@
+uuid: 9a6cb40e-9118-44cb-9baa-34907e5a3371
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.microsite_school_form_submission
+    - field.field.block_content.microsite_school_form_submission.field_microsite_school_form
+  module:
+    - block_field
+id: block_content.microsite_school_form_submission.default
+targetEntityType: block_content
+bundle: microsite_school_form_submission
+mode: default
+content:
+  field_microsite_school_form:
+    type: block_field
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

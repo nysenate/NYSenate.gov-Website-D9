@@ -44,13 +44,17 @@
       </div>
     {% endif %}
 
-    <div class="c-block">
-      {{ content.field_form_summary }}
-    </div>
+    {% if content.field_form_summary %}
+      <div class="c-block">
+        {{ content.field_form_summary }}
+      </div>
+    {% endif %}
 
-    <section class="c-block">
-      {{ content.field_school_form }}
-    </section>
+    {% if content.field_school_form %}
+      <section class="c-block">
+        {{ content.field_school_form }}
+      </section>
+    {% endif %}
 
     {% if content.field_senator_multiref['#items'] %}
       {{ drupal_view('senator_microsite_content', 'promo_footer') }}

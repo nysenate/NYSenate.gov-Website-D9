@@ -5,25 +5,28 @@ dependencies:
   config:
     - filter.format.basic_html
     - filter.format.full_html
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
     - node.type.article
     - node.type.event
-    - node.type.honoree
     - node.type.in_the_news
     - node.type.petition
     - node.type.promotional_banner
     - node.type.public_hearing
     - node.type.video
     - node.type.webform
-    - taxonomy.vocabulary.senator
   module:
     - block
+    - captcha
+    - content_moderation
     - field_permissions
     - filter
     - flag
     - layout_builder
+    - media
     - node
     - system
-    - taxonomy
     - toolbar
     - webform
     - webform_node
@@ -49,7 +52,6 @@ permissions:
   - 'access webform overview'
   - 'add media from remote sources'
   - 'administer blocks'
-  - 'administer nodes'
   - 'allow disabling privatemsg'
   - 'create advpoll content'
   - 'create and edit custom blocks'
@@ -59,61 +61,51 @@ permissions:
   - 'create field_advpoll_featured'
   - 'create field_featured'
   - 'create field_form_description'
+  - 'create file media'
   - 'create files'
+  - 'create image media'
   - 'create in_the_news content'
   - 'create initiative content'
+  - 'create media'
   - 'create petition content'
   - 'create photo content'
   - 'create press_release content'
   - 'create promotional_banner content'
   - 'create public_hearing content'
   - 'create questionnaire content'
+  - 'create remote_video media'
   - 'create video content'
   - 'create webform'
   - 'create webform content'
-  - 'delete any promotional_banner content'
-  - 'delete any public_hearing content'
+  - 'delete media'
   - 'delete own advpoll content'
-  - 'delete own article content'
   - 'delete own chapter content'
-  - 'delete own in_the_news content'
+  - 'delete own file media'
+  - 'delete own image media'
   - 'delete own initiative content'
-  - 'delete own petition content'
   - 'delete own photo content'
   - 'delete own press_release content'
-  - 'delete own promotional_banner content'
-  - 'delete own public_hearing content'
   - 'delete own questionnaire content'
-  - 'delete own video content'
-  - 'delete own webform content'
+  - 'delete own remote_video media'
   - 'delete own webform submissions'
   - 'edit any chapter content'
-  - 'edit any promotional_banner content'
-  - 'edit any public_hearing content'
   - 'edit any senator content'
   - 'edit meta tags'
   - 'edit own advpoll content'
-  - 'edit own article content'
   - 'edit own chapter content'
-  - 'edit own event content'
   - 'edit own field_advpoll_featured'
   - 'edit own field_featured'
   - 'edit own field_form_description'
-  - 'edit own honoree content'
-  - 'edit own in_the_news content'
+  - 'edit own file media'
+  - 'edit own image media'
   - 'edit own initiative content'
-  - 'edit own petition content'
   - 'edit own photo content'
   - 'edit own press_release content'
-  - 'edit own promotional_banner content'
-  - 'edit own public_hearing content'
   - 'edit own questionnaire content'
+  - 'edit own remote_video media'
   - 'edit own senator content'
-  - 'edit own video content'
   - 'edit own webform'
-  - 'edit own webform content'
   - 'edit own webform submissions'
-  - 'edit terms in senator'
   - 'execute node_publish_action'
   - 'execute node_save_action'
   - 'execute node_unpublish_action'
@@ -124,18 +116,18 @@ permissions:
   - 'flag sign_petition'
   - 'read privatemsg'
   - 'search content'
+  - 'skip CAPTCHA'
   - 'unflag follow_committee'
   - 'unflag follow_group'
   - 'unflag follow_issue'
   - 'unflag follow_this_bill'
   - 'unflag sign_petition'
+  - 'update media'
   - 'use advanced search'
   - 'use media wysiwyg'
   - 'use text format basic_html'
   - 'use text format full_html'
-  - 'view article revisions'
   - 'view disqus comments'
-  - 'view event revisions'
   - 'view field_chair'
   - 'view field_form_description'
   - 'view field_members'
@@ -147,6 +139,8 @@ permissions:
   - 'view own field_members'
   - 'view own field_senator_multiref'
   - 'view own unpublished content'
+  - 'view own unpublished media'
   - 'view the administration theme'
   - 'view webform submissions own node'
   - 'write privatemsg'
+  - 'view any unpublished content'

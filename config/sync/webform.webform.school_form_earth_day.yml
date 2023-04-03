@@ -56,7 +56,6 @@ elements: |-
       10: '10th Grade'
       11: '11th Grade'
       12: '12th Grade'
-      Homeschool: Homeschool
     '#empty_option': '- Select a value -'
     '#required': true
     '#width': 100
@@ -98,7 +97,7 @@ elements: |-
           '#type': radios
           '#options': yes_no
           '#title': 'Show Student?'
-          '#default_value': No
+          '#default_value': 'No'
           '#private': true
   actions:
     '#type': webform_actions
@@ -247,7 +246,9 @@ access:
     users: {  }
     permissions: {  }
   view_any:
-    roles: {  }
+    roles:
+      - anonymous
+      - authenticated
     users: {  }
     permissions: {  }
   update_any:

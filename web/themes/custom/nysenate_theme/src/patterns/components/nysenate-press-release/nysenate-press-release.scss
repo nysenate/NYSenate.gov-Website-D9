@@ -4,17 +4,29 @@
 / PRESS RELEASES
 /----------------------------------------*/
 
+.page-node-type-meeting {
+  .c-block {
+    &.c-block-press-release {
+      border-top: 0;
+    }
+  }
+}
+
 .c-block {
   &.c-block-press-release {
     padding-top: 20px;
     padding-bottom: 30px;
     margin-bottom: 0;
     border-top: 1px solid $grey05;
+
+    &:first-child {
+      border-top: 0;
+    }
   }
 
   .first:first-child {
     .c-block-press-release {
-      border-top: none;
+      border-top: 0;
     }
   }
 
@@ -39,10 +51,10 @@
     font-size: 12px;
     line-height: 1em;
     letter-spacing: 0.05em;
-    @extend .link-text;
+    @extend .lgt-text;
 
     &:hover {
-      @extend .link-text;
+      @extend .lgt-text;
       text-decoration: underline;
     }
   }

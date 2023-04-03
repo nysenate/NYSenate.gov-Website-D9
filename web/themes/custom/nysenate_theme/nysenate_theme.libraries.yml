@@ -263,6 +263,13 @@ event:
   dependencies:
     - nysenate_theme/nysenate-featured-event
 
+event-calendar:
+  css:
+    component:
+      dist/css/event-calendar.css: {}
+  dependencies:
+    - nysenate_theme/zebra-datepicker
+
 event-card:
   css:
     component:
@@ -532,6 +539,11 @@ nysenate-featured-event:
     component:
       dist/css/nysenate-featured-event.css: {}
 
+nysenate-legislative-event:
+  css:
+    component:
+      dist/css/nysenate-legislative-event.css: {}
+
 nysenate-open-data:
   css:
     component:
@@ -668,6 +680,11 @@ nysenate-senators-talking-about-this-issue:
     component:
       dist/css/nysenate-senators-talking-about-this-issue.css: {}
 
+nysenate-committee-card:
+  css:
+    component:
+      dist/css/nysenate-committee-card.css: {}
+
 nysenate-committee-detail:
   css:
     component:
@@ -696,6 +713,7 @@ nysenate-user-profile:
   css:
     component:
       dist/css/nysenate-user-profile.css: {}
+
 nysenate-chapters:
   css:
     component:
@@ -832,6 +850,17 @@ sticky-nav-2:
     component:
       dist/css/sticky-nav-2.css: {}
 
+submission-results:
+  css:
+    theme:
+      dist/css/submission-results.css: {}
+  js:
+    dist/js/submission-results.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
 tabs:
   css:
     component:
@@ -881,3 +910,12 @@ school-form:
   css:
     component:
       dist/css/school-form.css: {}
+
+zebra-datepicker:
+  js:
+    dist/js/zebra_datepicker.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery

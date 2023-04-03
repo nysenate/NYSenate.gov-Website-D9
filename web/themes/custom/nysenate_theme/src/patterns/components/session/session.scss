@@ -37,6 +37,12 @@
     line-height: 43px;
     margin-bottom: 10px;
     color: $grey08;
+
+    a {
+      color: $color-nys-blue;
+      text-decoration: none;
+      line-height: inherit;
+    }
   }
   .c-committee-type {
     font-family: $font-sans-bold;
@@ -73,10 +79,11 @@
     color: $orange01;
     font-size: 28px;
     line-height: 16px;
-    padding: 5px 3px 0 10px;
+    padding: 0 3px 0 10px;
     vertical-align: top;
     margin-left: 10px;
     border-left: 1px solid $grey05;
+    margin-top: -3px;
   }
 }
 
@@ -879,7 +886,6 @@ p.c-meeting-detail--location {
   .c-meeting-video--status {
     font-size: 20px;
     &::before {
-      padding-top: 7px;
       font-size: 30px;
     }
   }
@@ -1029,4 +1035,15 @@ p.c-meeting-detail--location {
   .field__label {
     display: none;
   }
+}
+
+.file > a {
+  display: block;
+  margin-top: 15px;
+  //text-transform: uppercase;
+  font-size: 12px;
+  font-family: $font-sans-bold;
+  text-decoration: none;
+  @extend .accent-text;
+  @extend .icon-before__presskit;
 }

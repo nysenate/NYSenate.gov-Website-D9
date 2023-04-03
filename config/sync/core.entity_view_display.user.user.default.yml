@@ -15,7 +15,6 @@ dependencies:
     - field.field.user.user.field_password_expiration
     - field.field.user.user.field_pending_expire_sent
     - field.field.user.user.field_senator_inbox_access
-    - field.field.user.user.field_senator_management
     - field.field.user.user.field_senator_multiref
     - field.field.user.user.field_top_issue
     - field.field.user.user.field_user_banned_comments
@@ -105,14 +104,6 @@ content:
     third_party_settings: {  }
     weight: 13
     region: content
-  field_senator_management:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 14
-    region: content
   field_senator_multiref:
     type: entity_reference_label
     label: above
@@ -167,4 +158,6 @@ hidden:
   field_pending_expire_sent: true
   field_user_banned_comments: true
   langcode: true
+  linked_username: true
+  private_message_link: true
   search_api_excerpt: true

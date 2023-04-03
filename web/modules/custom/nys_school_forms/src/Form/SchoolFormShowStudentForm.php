@@ -176,6 +176,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+
     if ($form_state->getValue('confirm') && !empty($this->files)) {
       $count = count($this->files);
       foreach ($this->files as $file) {
@@ -187,23 +188,27 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
 
           $sids = $query->execute()->fetchCol();
           $sid = $sids[0];
+
           if (!empty($sid)) {
             $submission = $this->entityTypeManager->getStorage('webform_submission')->load($sid);
-            $entity_id = $submission->getSourceEntity();
+            $node = $submission->getSourceEntity();
             $webform = $submission->getWebform();
             $submission_timestamp = $submission->getCreatedTime();
             $school_form_type = '';
-            if ($entity_id) {
-              $nid = $entity_id->id();
-              $node = $this->entityTypeManager->getStorage('node')->load($nid);
+
+            /** @var \Drupal\node\NodeInterface $node */
+            if ($node && $node->hasField('field_school_form_type') && !$node->get('field_school_form_type')->isEmpty() &&
+            $node->get('field_school_form_type')->entity) {
               $school_form_type = $node->get('field_school_form_type')->entity->label();
-              $directory = 'public://' . $school_form_type . '/' . $node->id() . '/' . date('Y', $submission_timestamp) . '/';
+              $alias = str_replace([' ', '-', '\''], '_', strtolower($school_form_type));
+              $directory = 'public://' . $alias . '/' . $node->id() . '/' . $sid . '/';
             }
             else {
               $directory = 'public://' . 'webform' . '/' . $webform->id() . '/' . $sid . '/';
             }
             $file_uri = $file->getFileUri();
             $file_exists_error = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_ERROR);
+
             if (!$file_exists_error) {
               $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
               $destination = $directory . $file->getFilename();
@@ -226,6 +231,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
         $form_state->setRedirectUrl($url);
       }
     }
+
   }
 
 }

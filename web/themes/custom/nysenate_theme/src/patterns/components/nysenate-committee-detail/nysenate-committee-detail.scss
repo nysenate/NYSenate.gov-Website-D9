@@ -63,13 +63,14 @@
 			color: $grey10;
 			margin: 40px 0 20px;
 			padding: 0;
+			font-size: 30px;
 		}
 
 		.c-subgroup-title {
 			margin: 12px 0 6px;
 			font-family: "Semibold";
 			color: $grey03;
-			font-size: 14px;
+			font-size: 24px;
 			font-weight: $font-weight-normal;
 		}
 
@@ -84,6 +85,57 @@
 				font-size: 16px;
 			}
 		}
+	}
+
+	// Filter Stylings
+	.filter-btn {
+		border-style: solid;
+    border-width: 0px;
+    border-color: #007095;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: normal;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    padding: 1rem 2rem 1.0625rem;
+    background-color: $color-nys-blue;
+    color: $color-white;
+    transition: background-color 300ms;
+
+    &:focus {
+      background-color: #007095;
+      outline: 0;
+    }
+	}
+
+	label {
+		font-weight: $font-weight-bold;
+	}
+
+	.description {
+		font-size: 62.5%;
+		font-weight: $font-weight-normal;
+    line-height: 1.5;
+	}
+
+	.view-filters {
+		display: flex;
+		align-items: center;
+		margin: 0 0 1rem;
+
+		select {
+			width: auto;
+			margin: 0;
+			min-width: 136.5px;
+		}	
+	}
+
+	.js-form-type-select::after {
+		display: none;
 	}
 }
 
@@ -151,6 +203,11 @@
 					line-height: 32px;
 				}
 			}
+		}
+
+		.js-form-type-select {
+			width: auto;
+			margin: 0;
 		}
 	}
 }

@@ -1,0 +1,287 @@
+@import "../../global/utils/init";
+
+.event-calendar {
+  display: flex;
+  flex-direction: column;
+  
+  @include breakpoint($bp-sm) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .view-filters {
+    margin: 20px 0 0 0;
+
+    @include breakpoint($bp-sm) {
+      width: 280px;
+    }
+
+    select {
+      margin: 0 0 1rem 0;
+    }
+  }
+}
+
+// STYLES FOR CALENDAR
+#datepicker {
+  input {
+    display: none;
+  }
+
+  #container {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .mobile-calendar-toggle {
+    display: block;
+    background: $yellow01;
+    font-family: "Proxima Nova SemiBold";
+    width: 100%;
+    padding: 15px 20px;
+    text-transform: uppercase;
+    text-align: left;
+    color: $color-white;
+    font-size: 14px;
+    cursor: pointer;
+
+    &::after {
+      float: right;
+      font-size: 28px;
+      position: relative;
+      top: -10px;
+      color: $color-white;
+    }
+  }
+
+  .Zebra_DatePicker td,
+  .Zebra_DatePicker th {
+    text-align: center;
+    padding: 5px 0;
+    line-height: 1.125rem;
+}
+
+  .Zebra_DatePicker {
+    position: relative;
+    display: none;
+    width: 100%;
+    padding: 0 20px 5px;
+    border: 0;
+    border-radius: 0;
+    background: $yellow01;
+
+    .dp_header {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+      background: $yellow01;
+      width: 100% !important;
+      width: calc(100% + 40px) !important;
+      max-width: 400px;
+      table-layout: fixed;
+
+      .dp_caption {
+        width: 85%;
+        padding: 10px 0;
+        font-family: "Adelle SemiBold";
+        color: $color-white;
+        font-size: 23px;
+        letter-spacing: 0.05em;
+        transition: background 0.2s ease;
+
+        &.dp_hover {
+          background: $yellow02;
+          border-radius: 0;
+        }
+      }
+
+      .dp_previous,
+      .dp_next {
+        position: relative;
+        background: $yellow02;
+        font-size: 21px;
+        width: 7.5%;
+
+        &.dp_hover {
+          background: $yellow01;
+          border-radius: 0;
+        }
+      }
+    }
+
+    .dp_daypicker,
+    .dp_monthpicker {
+      margin-top: 40px;
+
+      > tbody {
+        width: 100%;
+      }
+    }
+
+    .dp_daypicker {
+      width: 100%;
+
+      th,
+      td,
+      tr:nth-of-type(even) {
+        background: transparent;
+      }
+
+      tr:hover {
+				td {
+					background: $yellow02 !important;
+				}
+			}		
+
+      th,
+      td {
+        width: 14.2%;
+        border: 0;
+        background: transparent;
+        font-size: 14px;
+        line-height: 2em;
+        font-family: "Proxima Nova Regular";
+      }
+
+      // days 'o the week
+      th {
+        padding-top: 20px;
+        color: $color-white;
+        text-transform: uppercase;
+      }
+
+      // dates
+      td {
+        color: #000;
+      }
+
+      .dp_selected {
+        position: relative;
+        color: #fff !important;
+        z-index: 3;
+      }
+
+      .dp_current {
+        background: $grey-line;
+
+        &.dp_selected {
+          background: none;
+        }
+      }
+
+      .currentweek {
+        position: relative;
+
+        td {
+          background: $yellow03;
+        }
+      }
+
+      .dp_not_in_month {
+        visibility: hidden;
+        height: 1px;
+        padding: 0;
+      }
+    }
+
+    .dp_monthpicker {
+      width: 100% !important;
+
+      tr:nth-of-type(even) {
+        background: transparent;
+
+        &.currentweek {
+          background: $yellow02;
+        }
+      }
+
+      td {
+        border: none;
+        background: transparent;
+        transition: background 0.2s ease;
+
+        &.dp_hover {
+          background: $yellow02;
+        }
+      }
+    }
+  }
+
+  @include breakpoint($bp-sm) {
+    position: relative;
+    float: left;
+    width: 400px;
+
+    .mobile-calendar-toggle {
+      display: none;
+    }
+
+    .Zebra_DatePicker {
+      display: inline-block;
+      overflow: visible;
+
+      .dp_header {
+        background: $yellow02;
+        height: 48px;
+
+        .dp_caption {
+          padding: 15px 0;
+          font-size: 25px;
+
+          &.dp_hover {
+            background: $yellow01;
+          }
+        }
+
+        .dp_previous,
+        .dp_next {
+          font-size: 28px;
+
+          &.dp_hover {
+            background: $yellow01;
+          }
+        }
+      }
+
+      .dp_monthpicker,
+      .dp_daypicker {
+        margin-top: 50px;
+
+        th {
+          font-size: 12px;
+        }
+
+        td {
+          font-size: 16px;
+          line-height: 2em;
+
+          &.dp_not_in_month {
+            line-height: 1;
+          }
+        }
+      }
+
+      .dp_monthpicker {
+        margin-bottom: 18px;
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 30px;
+        bottom: -10px;
+        margin: auto;
+        height: 20px;
+        width: 20px;
+        background: $yellow01;
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg); /* IE 9 */
+        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+        transform: rotate(45deg);
+      }
+    }
+  }
+}

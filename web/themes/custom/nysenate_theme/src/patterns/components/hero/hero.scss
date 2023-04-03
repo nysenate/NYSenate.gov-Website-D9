@@ -46,6 +46,12 @@
       max-width: 420px;
     }
   }
+
+  &.hero--public-hearing {
+    .l-row.l-row--hero.c-actionbar {
+      max-width: 1500px;
+    }
+  }
 }
 
 .c-hero--welcome {
@@ -175,6 +181,12 @@
       &.c-actionbar {
         padding: 0 40px;
         max-width: 760px;
+      }
+    }
+
+    &.hero--public-hearing {
+      .l-row.l-row--hero.c-actionbar {
+        max-width: 1500px;
       }
     }
   }
@@ -1247,7 +1259,7 @@
       margin-bottom: 20px;
       margin-top: 20px;
       padding-left: 15px;
-      border-left: 1px solid #AAAAAA;
+      border-left: 1px solid $grey05;
       text-transform: uppercase;
       font-family: $font-sans-bold;
       color: #CB8D37;

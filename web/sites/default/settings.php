@@ -781,18 +781,6 @@ $_ENV['site_url'] = 'https://' . $_ENV['site_host'];
 // Pantheon environment-specific config.
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
-  switch ($_ENV['PANTHEON_ENVIRONMENT']) {
-    case 'live':
-    case 'dev':
-    case 'test':
-    case 'develop':
-      // Search API Solr.
-      $config['search_api.server.pantheon_solr8']['dependencies']['module'][] = 'search_api_pantheon';
-      $config['search_api.server.pantheon_solr8']['backend_config']['connector'] = 'pantheon';
-      $config['search_api.server.pantheon_solr8']['backend_config']['connector_config']['solr_version'] = '8';
-      break;
-  }
-
   switch($_ENV['PANTHEON_ENVIRONMENT']) {
      case 'develop':
       // Enable the Develop environment's config split.
@@ -834,19 +822,6 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
       break;
 
-    case 'migration':
-      // Drupal 7 migrate config.
-      $databases['migrate']['default'] = array(
-        'database' => 'd7senate',
-        'driver' => 'mysql',
-        'host' => $_ENV['DB_HOST'],
-        'password' => $_ENV['DB_PASSWORD'],
-        'port' => $_ENV['DB_PORT'],
-        'prefix' => '',
-        'username' => $_ENV['DB_USER'],
-      );
-      break;
-
     default:
       // Enable a mutlidev environment's config split.
       $config['config_split.config_split.multidev']['status'] = TRUE;
@@ -865,6 +840,10 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
   }
 }
 else {
+  // By default, disable Pantheon server/core search index for local environments.
+  $config['search_api.server.pantheon_solr8']['status'] = FALSE;
+  $config['search_api.index.core_search']['status'] = FALSE;
+
   // Automatically generated include for settings managed by ddev.
   if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
     include $app_root . '/' . $site_path . '/settings.ddev.php';
@@ -876,6 +855,26 @@ else {
     $config['environment_indicator.indicator']['name'] = 'Local';
     $config['environment_indicator.indicator']['bg_color'] = '#00294F';
     $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+
+    // Local solr search - enable for DDEV.
+    $config['search_api.server.pantheon_solr8']['status'] = TRUE;
+    $config['search_api.index.core_search']['status'] = TRUE;
+
+    // Local solr search Pantheon config overrides.
+    $config['search_api.server.pantheon_solr8']['backend_config']['connector'] = 'standard';
+    $config['search_api.server.pantheon_solr8']['backend_config']['connector_config'] = [
+      'scheme' => 'http',
+      'host' => 'solr',
+      'port' => 8983,
+      'path' => '/',
+      'core' => 'dev',
+      'timeout' => 5,
+      'index_timeout' => 5,
+      'optimize_timeout' => 10,
+      'commit_within' => 1000,
+      'solr_version' => '8',
+      'http_method' => 'AUTO',
+    ];
   }
 
   // Turn off TFA.
@@ -883,24 +882,75 @@ else {
 }
 
 // Pantheon-specific Redis configuration.
-if (!empty($_ENV['PANTHEON_ENVIRONMENT']) && !empty($_ENV['CACHE_HOST'])) {
-  // Include the Redis services.yml file. Adjust the path if you installed to a contrib or other subdirectory.
-  $settings['container_yamls'][] = 'modules/redis/example.services.yml';
+if (defined(
+  'PANTHEON_ENVIRONMENT'
+) && !\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extension_loaded('redis')
+) {
+  // Set Redis as the default backend for any cache bin not otherwise specified.
+  $settings['cache']['default'] = 'cache.backend.redis';
 
   //phpredis is built into the Pantheon application container.
   $settings['redis.connection']['interface'] = 'PhpRedis';
+
   // These are dynamic variables handled by Pantheon.
-  $settings['redis.connection']['host']      = $_ENV['CACHE_HOST'];
-  $settings['redis.connection']['port']      = $_ENV['CACHE_PORT'];
-  $settings['redis.connection']['password']  = $_ENV['CACHE_PASSWORD'];
+  $settings['redis.connection']['host'] = $_ENV['CACHE_HOST'];
+  $settings['redis.connection']['port'] = $_ENV['CACHE_PORT'];
+  $settings['redis.connection']['password'] = $_ENV['CACHE_PASSWORD'];
 
   $settings['redis_compress_length'] = 100;
   $settings['redis_compress_level'] = 1;
 
-  $settings['cache']['default'] = 'cache.backend.redis'; // Use Redis as the default cache.
   $settings['cache_prefix']['default'] = 'pantheon-redis';
 
   $settings['cache']['bins']['form'] = 'cache.backend.database'; // Use the database for forms
+
+  // Apply changes to the container configuration to make better use of Redis.
+  // This includes using Redis for the lock and flood control systems, as well
+  // as the cache tag checksum. Alternatively, copy the contents of that file
+  // to your project-specific services.yml file, modify as appropriate, and
+  // remove this line.
+  $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+
+  // Allow the services to work before the Redis module itself is enabled.
+  $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
+
+  // Manually add the classloader path, this is required for the container
+  // cache bin definition below.
+  $class_loader->addPsr4('Drupal\\redis\\', 'modules/contrib/redis/src');
+
+  // Use redis for container cache.
+  // The container cache is used to load the container definition itself, and
+  // thus any configuration stored in the container itself is not available
+  // yet. These lines force the container cache to use Redis rather than the
+  // default SQL cache.
+  $settings['bootstrap_container_definition'] = [
+    'parameters' => [],
+    'services' => [
+      'redis.factory' => [
+        'class' => 'Drupal\redis\ClientFactory',
+      ],
+      'cache.backend.redis' => [
+        'class' => 'Drupal\redis\Cache\CacheBackendFactory',
+        'arguments' => [
+          '@redis.factory',
+          '@cache_tags_provider.container',
+          '@serialization.phpserialize',
+        ],
+      ],
+      'cache.container' => [
+        'class' => '\Drupal\redis\Cache\PhpRedis',
+        'factory' => ['@cache.backend.redis', 'get'],
+        'arguments' => ['container'],
+      ],
+      'cache_tags_provider.container' => [
+        'class' => 'Drupal\redis\Cache\RedisCacheTagsChecksum',
+        'arguments' => ['@redis.factory'],
+      ],
+      'serialization.phpserialize' => [
+        'class' => 'Drupal\Component\Serialization\PhpSerialize',
+      ],
+    ],
+  ];
 }
 
 // If a private settings file exists within the files directory, load it.
@@ -930,27 +980,13 @@ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
 
-// Customizations for ddev; separated from the segment above to avoid problems.
-if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
-
-  // Search API Solr.
-  $config['search_api.server.pantheon_solr8']['backend_config']['connector'] = 'standard';
-  $config['search_api.server.pantheon_solr8']['backend_config']['connector_config'] = [
-    'scheme' => 'http',
-    'host' => 'solr',
-    'port' => 8983,
-    'path' => '/',
-    'core' => 'Solr',
-    'timeout' => 5,
-    'index_timeout' => 5,
-    'optimize_timeout' => 10,
-    'commit_within' => 1000,
-    'solr_version' => '8',
-    'http_method' => 'AUTO',
-  ];
-}
-
 // Include settings required for Redis cache.
 if ((file_exists(__DIR__ . '/settings.ddev.redis.php') && getenv('IS_DDEV_PROJECT') == 'true')) {
   include __DIR__ . '/settings.ddev.redis.php';
+}
+
+# When on Pantheon, connect to a D7 database.
+$migrate_settings = __DIR__ . "/settings.migrate-on-pantheon.php";
+if (file_exists($migrate_settings) && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
+  include $migrate_settings;
 }

@@ -8,6 +8,19 @@
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Config\StorageComparer;
+use Drupal\language\Entity\ConfigurableLanguage;
+
+/**
+ * Implements hook_install().
+ */
+function nys_senators_install() {
+  module_set_weight('nys_senators', 5);
+}
 
 /**
  * Implements hook_update_N().
@@ -378,4 +391,154 @@ function nys_senators_update_9015() {
       _nys_senators_create_microsites($senator_term);
     }
   }
+}
+
+/**
+ * Helper function to import config files.
+ */
+function nys_senators_import_config() {
+  // Get the storage for the install directory.
+  $config_path = Settings::get('config_sync_directory');
+  $install_storage = new FileStorage($config_path);
+  // Get the storage for the active configuration.
+  $active_storage = \Drupal::service('config.storage');
+
+  // Compare the storage.
+  $storage_comparer = new StorageComparer($install_storage, $active_storage);
+
+  // Get the configuration changes.
+  $changelist = $storage_comparer->createChangelist();
+
+  // Import the changes.
+  if ($storage_comparer->hasChanges()) {
+    $config_importer = new ConfigImporter(
+      $storage_comparer,
+      \Drupal::service('event_dispatcher'),
+      \Drupal::service('config.manager'),
+      \Drupal::service('lock.persistent'),
+      \Drupal::service('config.typed'),
+      \Drupal::service('module_handler'),
+      \Drupal::service('module_installer'),
+      \Drupal::service('theme_handler'),
+      \Drupal::service('string_translation'),
+      \Drupal::service('extension.list.module'),
+      \Drupal::service('extension.list.theme')
+    );
+    try {
+      $config_importer->import();
+    }
+    catch (ConfigImporterException $e) {
+      $messenger = \Drupal::messenger();
+      // There are validation errors.
+      $messenger->addError(t('The configuration synchronization failed validation.'));
+      foreach ($config_importer->getErrors() as $message) {
+        $messenger->addError($message);
+      }
+    }
+
+    if (\Drupal::moduleHandler()->moduleExists('language')) {
+      if (ConfigurableLanguage::load('en')) {
+        $install_state['profile_info']['keep_english'] = TRUE;
+      }
+    }
+  }
+
+  // Clear the cache.
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['config']);
+}
+
+/**
+ * Update Earth Day & Thankful Microsite pages on existing senators.
+ */
+function nys_senators_update_9016() {
+  // Import Senator Microsite School Forms Custom Block type.
+  nys_senators_import_config();
+
+  // Queries all senator terms.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+  ]);
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->condition('field_microsite_page_type.entity:taxonomy_term.name',
+        ['Earth Day', 'Thankful'], 'IN')
+      ->execute();
+
+    // Creates the senator microsites pages if the query return empty.
+    if (!empty($query)) {
+      _nys_senators_update_microsites($senator_term);
+    }
+  }
+}
+
+/**
+ * Adjusts module weight to make sure access is controlled properly.
+ */
+function nys_senators_update_9017() {
+  module_set_weight('nys_senators', -500);
+}
+
+/**
+ * Rearrange blocks on Earth Day & Thankful Microsite pages for all senators.
+ */
+function nys_senators_update_9018() {
+  // Import Senator Microsite School Forms Custom Block type.
+  nys_senators_import_config();
+
+  // Queries all senator terms.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+  ]);
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->condition('field_microsite_page_type.entity:taxonomy_term.name',
+        ['Earth Day', 'Thankful'], 'IN')
+      ->execute();
+
+    if (!empty($query)) {
+      _nys_senators_rearrange_microsites_blocks($senator_term);
+    }
+  }
+}
+
+/**
+ * Remove letter blocks on Earth Day & Thankful Microsite pages.
+ */
+function nys_senators_update_9019() {
+  // Import Senator Microsite School Forms Custom Block type.
+  nys_senators_import_config();
+
+  // Queries all senator terms.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+  ]);
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->condition('field_microsite_page_type.entity:taxonomy_term.name',
+        ['Earth Day', 'Thankful'], 'IN')
+      ->execute();
+
+    if (!empty($query)) {
+      _nys_senators_remove_letter_blocks($senator_term);
+    }
+  }
+}
+
+/**
+ * Adjusts module weight back.
+ */
+function nys_senators_update_9020() {
+  module_set_weight('nys_senators', 5);
 }

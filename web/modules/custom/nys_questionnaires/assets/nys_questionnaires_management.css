@@ -1,38 +1,44 @@
+.nys-senators-management-dashboard-questionnaires {
+  min-height: 40rem;
+}
+
 /***************
  * for tabs
  */
 .nys-senators-management-dashboard-questionnaires ul.tabs {
   border-bottom: 1px solid lightgray;
-  padding-bottom: 0;
+  font-size: 0;
+  margin-bottom: 0.5rem;
 }
 .nys-senators-management-dashboard-questionnaires ul.tabs li.tab {
   border: 2px solid lightgray;
   border-bottom: 0 none;
   border-top-left-radius: 0.7em;
   border-top-right-radius: 0.7em;
+  cursor: pointer;
+  padding: 0.3em 0.8em;
+  margin: 0 -1px 0 0;
 }
-.nys-senators-management-dashboard-questionnaires ul.tabs li.tab.active {
-  border-color: darkblue;
-}
+.nys-senators-management-dashboard-questionnaires ul.tabs li.tab.active,
 .nys-senators-management-dashboard-questionnaires ul.tabs li.tab:hover {
   background-color: rgb(0, 41, 79);
   border-color: darkblue;
-}
-
-.nys-senators-management-dashboard-questionnaires ul.tabs li.tab a {
-  background: transparent !important;
-}
-.nys-senators-management-dashboard-questionnaires ul.tabs li.tab:hover a {
   color: #fff;
+}
+.nys-senators-management-dashboard-questionnaires .tab-content {
+  display: none;
+}
+.nys-senators-management-dashboard-questionnaires .tab-content.active {
+  display: block;
 }
 
 /***************
  * to mimic D7 tables
  */
 .nys-senators-management-dashboard-questionnaires table {
-  background: #ffffff;
+  background: #fff;
   margin-bottom: 1.25rem;
-  border: solid 1px #dddddd;
+  border: solid 1px #ddd;
   table-layout: auto;
 }
 .nys-senators-management-dashboard-questionnaires table thead {
@@ -52,7 +58,7 @@
   padding: 0.5rem 0.625rem 0.625rem;
   font-size: 0.875rem;
   font-weight: bold;
-  color: #222222;
+  color: #222;
 }
 .nys-senators-management-dashboard-questionnaires tbody {
   border-top: 1px solid #ccc;
@@ -75,33 +81,44 @@
  * Your Questionnaires
  */
 .your-questionnaires-list {
-  max-height: 280px;
+  max-height: 290px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
   padding: 1em 0;
+  line-height: 15.625em;
+  vertical-align: middle;
 }
-
 .sponsored-questionnaire {
   display: inline-block;
-  max-width: 48%;
   position: relative;
-  vertical-align: top;
-  max-height: 250px;
-  border: 2px solid #04A9C5;
-  border-radius: 1.4em;
+  min-width: 30%;
+  max-width: 48%;
+  max-height: 15.625em;
+  height: 15.625em;
+  line-height: 15.625em;
+  vertical-align: middle;
   margin-right: 1em;
+  border: 2px solid #04a9c5;
+  border-radius: 1.4em;
+  text-align: center;
 }
 .sponsored-questionnaire:hover {
   border-color: darkblue;
 }
-
+.questionnaire-submission-chart {
+  display: inline-block;
+  vertical-align: middle;
+  border: 1px solid red;
+  text-align: center;
+  line-height: 1.4em;
+  margin-top: -0.9em;
+}
 .questionnaire-user-list {
-  margin-top:2em;
-  max-height:30em;
+  margin-top: 2em;
+  max-height: 30em;
   overflow-y: scroll;
 }
-
 .senator-dashboard-questionnaires .questionnaire-user-list table tbody tr td {
   padding: .5em 1em;
   height: auto;

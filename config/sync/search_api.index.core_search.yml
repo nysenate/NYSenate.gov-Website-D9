@@ -12,6 +12,7 @@ dependencies:
     - field.storage.node.body
     - field.storage.node.field_calendar_number
     - field.storage.node.field_comments
+    - field.storage.node.field_committee
     - field.storage.node.field_ol_co_sponsor_names
     - field.storage.node.field_ol_co_sponsors
     - field.storage.node.field_ol_full_text
@@ -174,6 +175,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_comments
+  field_committee:
+    label: Committee
+    datasource_id: 'entity:node'
+    property_path: field_committee
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_committee
   field_committee_types:
     label: 'Committee Type'
     datasource_id: 'entity:taxonomy_term'
@@ -318,14 +327,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_summary
-  field_summary_1:
-    label: Summary
-    datasource_id: 'entity:node'
-    property_path: field_summary
-    type: text
-    dependencies:
-      config:
-        - field.storage.node.field_summary
   name:
     label: Name
     datasource_id: 'entity:taxonomy_term'
@@ -420,14 +421,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: title
     type: text
-    dependencies:
-      module:
-        - node
-  title_1:
-    label: Title
-    datasource_id: 'entity:node'
-    property_path: title
-    type: string
     dependencies:
       module:
         - node

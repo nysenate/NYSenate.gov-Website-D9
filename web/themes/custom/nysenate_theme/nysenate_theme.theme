@@ -341,6 +341,14 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
         'Inactive',
       ];
       $variables['is_senator_landing'] = in_array($name, $micrositeType) ? TRUE : FALSE;
+      if ($name === 'Inactive') {
+        $variables['inactive_senator_message'] = !empty($senator->field_inactive_senator_message->value) ?
+        $senator->field_inactive_senator_message->value : FALSE;
+        $variables['is_active'] = FALSE;
+      }
+      else {
+        $variables['is_active'] = TRUE;
+      }
     }
   }
 
@@ -1324,7 +1332,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
         }
       }
-      elseif ($node->bundle() === 'video') {
+      elseif (!empty($node) && $node->bundle() === 'video') {
         $video_id = $node->field_yt->target_id;
         $video = $video_id ? $media_storage->load($video_id) : NULL;
         if ($video) {
@@ -1344,7 +1352,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date_range->value), '', 'F j, Y');
       }
 
-      if ($parent_node->bundle() == 'meeting' &&
+      if (!empty($parent_node) && $parent_node->bundle() == 'meeting' &&
         $view->id() == 'committee_meetings' &&
         $view->current_display == 'news') {
         $image_main = NULL;
@@ -4615,7 +4623,7 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
           if ($block['#block_content']->field_title->value == 'Opening Text') {
             $variables['landing_page_hero'] = [
               "section_id" => "section-0",
-              "background_img" => FALSE,
+              "background_img" => '',
               "title" => $variables['title'],
               "welcome_text" => $block['field_body_left'][0],
               "body" => "",
@@ -4624,6 +4632,9 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
               'title' => 'Welcome',
               'href' => '#section-1',
             ];
+          }
+          if ($block['#block_content']->field_title->value == 'test') {
+            $variables['landing_page_hero']['background_img'] = $block['field_body_left'][0];
           }
           elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
             $variables['how_senate_works_title'] = $block['#block_content']->field_title->value;

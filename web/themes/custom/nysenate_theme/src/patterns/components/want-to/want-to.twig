@@ -1,5 +1,6 @@
 {{ attach_library('nysenate_theme/want-to') }}
 
+{% if not logged_in %}
 <div class="c-block c-container c-container--want-to">
   <div class="c-container--header">
     <h2 class="c-container--title">{{ title }}</h2>
@@ -14,3 +15,4 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}

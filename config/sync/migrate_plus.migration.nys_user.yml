@@ -135,11 +135,13 @@ process:
         target_id: target_id
   field_senator_inbox_access:
     -
-      plugin: get
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator_inbox_access
   field_senator_multiref:
     -
-      plugin: get
+      plugin: senator_migrate_map_lookup
+      migration: nys_senate_gov_taxonomy_term_senator
       source: field_senator_management
 destination:
   plugin: 'entity:user'

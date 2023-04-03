@@ -31,6 +31,7 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
         'library' => [
           'nys_questionnaires/nys_questionnaires_management',
           'nysenate_theme/tabs',
+          'nysenate_theme/highcharts',
         ],
       ],
     ];

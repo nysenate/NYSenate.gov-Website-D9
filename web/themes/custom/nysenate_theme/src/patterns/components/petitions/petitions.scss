@@ -282,3 +282,14 @@ p {
 .trad_red .c-btn--cta a {
   color: $color-white;
 }
+
+.c-block.c-detail--summary {
+  @include breakpoint($bp-sm) {
+    margin-bottom: 0;
+  }
+
+  & p {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}

@@ -277,9 +277,20 @@ function nys_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $
     }
 
     if ($view->id() == 'homepage_events' && $view->current_display == 'block_1') {
+      // Fix node__field_date_range join query.
+      $table_date_range = $query->getTableInfo('node__field_date_range');
+      if (isset($table_date_range['join']->extra[2])) {
+        unset($table_date_range['join']->extra[2]);
+      }
+      // Fix node__field_accessible_sitewide join query.
+      $table_accessible_sitewide = $query->getTableInfo('node__field_accessible_sitewide');
+      if (isset($table_accessible_sitewide['join']->extra[2])) {
+        unset($table_accessible_sitewide['join']->extra[2]);
+      }
+      // Fix field_accessible_sitewide query condition.
       if ($query->where[1]['conditions'][4]['field'] = 'node__field_accessible_sitewide.field_accessible_sitewide_value') {
         $query->where[1]['conditions'][4] = [
-          'field' => 'node__field_accessible_sitewide.field_accessible_sitewide_value IS NOT NULL',
+          'field' => 'node__field_accessible_sitewide.field_accessible_sitewide_value IS NULL OR node__field_accessible_sitewide.field_accessible_sitewide_value = 0',
           'value' => [],
           'operator' => 'formula',
         ];

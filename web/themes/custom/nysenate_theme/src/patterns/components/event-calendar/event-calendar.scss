@@ -70,6 +70,20 @@
     border-radius: 0;
     background: $yellow01;
 
+    td.dp_selected {
+      position: relative;
+      color: #fff !important;
+      z-index: 3;
+    }
+
+    td.dp_current {
+      background: $grey-line;
+
+      &.dp_selected {
+        background: none;
+      }
+    }
+
     .dp_header {
       position: absolute;
       top: 0;
@@ -124,7 +138,6 @@
       width: 100%;
 
       th,
-      td,
       tr:nth-of-type(even) {
         background: transparent;
       }
@@ -139,7 +152,6 @@
       td {
         width: 14.2%;
         border: 0;
-        background: transparent;
         font-size: 14px;
         line-height: 2em;
         font-family: "Proxima Nova Regular";
@@ -155,20 +167,6 @@
       // dates
       td {
         color: #000;
-      }
-
-      .dp_selected {
-        position: relative;
-        color: #fff !important;
-        z-index: 3;
-      }
-
-      .dp_current {
-        background: $grey-line;
-
-        &.dp_selected {
-          background: none;
-        }
       }
 
       .currentweek {
@@ -199,7 +197,6 @@
 
       td {
         border: none;
-        background: transparent;
         transition: background 0.2s ease;
 
         &.dp_hover {

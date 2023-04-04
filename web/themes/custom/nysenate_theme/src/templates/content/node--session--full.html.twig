@@ -64,21 +64,23 @@
 
       <div class="c-meeting-detail--info">
         <h1 class="c-meeting-detail--title">Session</h1>
-        <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank" >{{ content.field_location[0].organization['#value'] }}</a>
-        <div class="c-meeting-detail--location">
+        {% if location_url %}
+          <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank" >{{ content.field_location[0].organization['#value'] }}</a>
+        {% endif %}
+        <p class="c-meeting-detail--location">
           {% if content.field_meeting_location %}
             {{ content.field_meeting_location }}
           {% endif %}
           {% if location %}
             {{ location }}
           {% endif %}
-        </div>
+        </p>
         <p class="c-meeting-detail--time">
           {{ date_value.from_time }}
           {% if date_value.from_time != date_value.to_time %}
           to {{ date_value.to_time }}
           {% endif %}
-          {% if video_status.key != "streaming_redirect" %}
+          {% if video_status.key != "streaming_redirect" and video_status.value %}
             <span class="c-meeting-video--status icon-before__youtube">{{ video_status.value }}</span>
           {% endif %}
         </p>

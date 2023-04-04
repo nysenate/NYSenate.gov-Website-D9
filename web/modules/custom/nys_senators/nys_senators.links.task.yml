@@ -1,0 +1,12 @@
+nys_senators.task.dashboard.management:
+  route_name: nys_senators.dashboard.senators
+  base_route: nys_dashboard.overview
+  title: 'Senator Management'
+
+nys_senators.task.management.overview:
+  route_name: nys_senators.management
+  base_route: entity.taxonomy_term.canonical
+  title: 'Overview'
+  route_parameters:
+    tab: 'overview'
+  weight: -100

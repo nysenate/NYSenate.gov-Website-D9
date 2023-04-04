@@ -1,0 +1,7 @@
+nys_committees.dashboard.committees:
+  path: '/dashboard/committees'
+  defaults:
+    _title: 'Committees I''m Following'
+    _controller: '\Drupal\nys_committees\Controller\DashboardCommitteesController::followedCommittees'
+  requirements:
+    _user_is_logged_in: 'TRUE'

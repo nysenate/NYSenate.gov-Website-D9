@@ -319,4 +319,55 @@ class SenatorsHelper {
     return current($loaded) ?: NULL;
   }
 
+  /**
+   * Sorts an array of Senator taxonomy terms by name.  Keys are not preserved.
+   *
+   * @param array $senators
+   *   An array of Term objects belonging to the 'senator' bundle.
+   * @param bool $last_first
+   *   If true, sort by "<last> <first>".  Otherwise sort by "<first> <last>".
+   */
+  public static function sortByName(array &$senators, bool $last_first = TRUE): void {
+    usort($senators, function ($a, $b) use ($last_first) {
+      foreach (['a', 'b'] as $var) {
+        $first = ${$var}->field_senator_name->given ?? '';
+        $last = ${$var}->field_senator_name->family ?? '';
+        ${$var} = $last_first
+          ? $last . ' ' . $first
+          : $first . ' ' . $last;
+      }
+      return $a == $b ? 0 : ($a < $b ? -1 : 0);
+    });
+  }
+
+  /**
+   * Translates party abbreviations to full name, per the available options.
+   *
+   * @return array
+   *   In the form ['abbreviation' => 'full party name', ...]
+   */
+  public function getPartyNames(Term $senator): array {
+    /*
+     * This version ignores bad/unknown selections.  Commenting for reference.
+     * @code
+     *   $values = array_flip(array_map(
+     *     function($v) { return $v['value']; },
+     *     $senator->field_party->getValue()
+     *   ));
+     *   return array_intersect_key(
+     *     $b->field_party->getSetting('allowed_values'),
+     *     $values
+     *   );
+     */
+
+    // This version returns "unknown" for a bad/unknown selection.
+    $field = $senator->field_party;
+    $allowed = $field->getSetting('allowed_values');
+    $parties = [];
+    foreach ($field->getValue() as $val) {
+      $parties[$val['value']] = $allowed[$val['value']] ?? 'unknown';
+    }
+    return $parties;
+  }
+
 }

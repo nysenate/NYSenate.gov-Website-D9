@@ -1,0 +1,23 @@
+{#
+/**
+ * @file nys-senators-management-overview-stat.html.twig
+ *
+ * @var url string
+ *   If populated, encloses the stat in a link to this URL.
+ * @var classes array
+ *   An optional array of strings of classes to add to the container.
+ * @var label string
+ *   The short title of the block
+ * @var stat string
+ *   The content of the statistic.
+ * @var description string
+ *   A brief description of the stat's significance.
+ */
+#}
+<div class="nys-senators-management-overview-stat{% if classes %} {{ attributes.addClass(classes) }}{% endif %}">
+  {% if url is not empty %}<a href="{{ url }}">{% endif %}
+    <div class="nys-senators-management-overview-stat-label">{{ label }}</div>
+    <div class="nys-senators-management-overview-stat-content">{{ stat }}</div>
+    <div class="nys-senators-management-overview-stat-description">{{ description }}</div>
+  {% if url is not empty %}</a>{% endif %}
+</div>

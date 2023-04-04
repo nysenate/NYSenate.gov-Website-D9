@@ -1,10 +1,15 @@
 {{ attach_library('nysenate_theme/session') }}
+{{ attach_library('nysenate_theme/nysenate-issues') }}
 
-{% if video_status.key == 'streaming_live_now' and content.field_video_redirect.0 %}
+{% if
+  video_status.key == 'streaming_live_now'
+    and content.field_video_redirect[0] %}
   <div class="c-meeting-detail--descript">
     {{ content.field_ustream }}
   </div>
-{% elseif video_status.key == 'streaming_redirect' and content.field_video_redirect.0 %}
+{% elseif
+  video_status.key == 'streaming_redirect'
+    and content.field_video_redirect[0] %}
   {{ content.field_ustream }}
 {% endif %}
 
@@ -37,24 +42,29 @@
         <h1 class="c-meeting-detail--title">
           {{ title }}
         </h1>
-        <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank">
-          {{ content.field_location[0].organization['#value'] }}
-        </a>
-        <div class="c-meeting-detail--location">
-          {% if content.field_meeting_location.0 %}
-            {{ content.field_meeting_location.0 }}
+        {% if location_url %}
+          <a class="c-meeting-detail--location-link"
+            href="http://maps.google.com/?q={{ location_url }}"
+            title="{{ content.field_location[0].organization['#value'] }}"
+            target="_blank">
+            {{ content.field_location[0].organization['#value'] }}
+          </a>
+        {% endif %}
+        <p class="c-meeting-detail--location">
+          {% if content.field_meeting_location[0] %}
+            {{ content.field_meeting_location[0] }}
           {% endif %}
           {% if location %}
             {{ location }}
           {% endif %}
-        </div>
+        </p>
         <p class="c-meeting-detail--time">
           {{ date_value.from_time }}
           {% if date_value.from_time != date_value.to_time %}
             to
             {{ date_value.to_time }}
           {% endif %}
-          {% if video_status.key != 'streaming_redirect' %}
+          {% if video_status.key != 'streaming_redirect' and video_status.value %}
             <span class="c-meeting-video--status icon-before__youtube">
               {{ video_status.value }}
             </span>
@@ -63,8 +73,8 @@
 
         {% if calendar_links %}
           {% include '@nysenate_theme/add-to-calendar/add-to-calendar.twig' with {
-        calendar_links: calendar_links
-      } only %}
+            calendar_links: calendar_links
+          } only %}
         {% endif %}
       </div>
     </div>
@@ -83,8 +93,10 @@
   {% if content.field_issues[0] %}
     <div class="c-meeting-detail--related">
       <ul class="c-meeting-detail--related">
-        <p>related issues:</p>
-        {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
+        <p>
+          related issues:
+        </p>
+        {% for key, issue in content.field_issues if key matches '/^\\d+$/' %}
           <li>{{ issue }}</li>
         {% endfor %}
       </ul>
@@ -98,22 +110,32 @@
       } only %}
     </div>
   {% endif %}
-
-  {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
 </article>
+
+{% if file_items is not empty %}
+  {% for file_item in file_items %}
+    <span class="file">
+      <a href="{{ file_item.url }}" target="_blank" type="{{ file_item.type }}">
+        {{ file_item.text }}
+      </a>
+    </span>
+  {% endfor %}
+{% endif %}
 
 {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
   title: node.type.entity.label,
   node_url: absolute_url,
-  cta: cta,
-} only
-%}
-<h2>Related Issues</h2>
-{{ drupal_view('committee_meetings', 'flags') }}
-<h2>Meetings</h2>
+  cta: cta
+} only %}
+
+{{ drupal_view('issues_listings', 'meeting_issues') }}
+
 {{ drupal_view('committee_meetings', 'past') }}
-<h2>news</h2>
+
 {{ drupal_view('committee_meetings', 'news') }}
 
-<h2>Committee</h2>
 {{ drupal_view('committee_meetings', 'committee') }}
+
+{{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+
+{{ how_a_bill_block }}

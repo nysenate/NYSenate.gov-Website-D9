@@ -1,0 +1,7 @@
+nys_issues.dashboard.issues:
+  path: '/dashboard/issues'
+  defaults:
+    _title: 'Issues I''m Following'
+    _controller: '\Drupal\nys_issues\Controller\DashboardIssuesController::followedIssues'
+  requirements:
+    _user_is_logged_in: 'TRUE'

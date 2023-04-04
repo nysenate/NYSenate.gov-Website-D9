@@ -98,6 +98,18 @@
       cta: cta,
     } only
     %}
+
+    {% if content.field_associated_senators %}
+      <section class="c-block c-block--associated-senators">
+          <div class="c-container--header__top-border">
+              <h2 class="c-container--title">Senators Involved</h2>
+          </div>
+
+          <div class="c-block">
+              {{ content.field_associated_senators }}
+          </div>
+      </section>
+    {% endif %}
   </div>
 
   {{ drupal_view('senator_microsite_content', 'article_footer') }}

@@ -347,6 +347,7 @@ class SenatorsHelper {
       $parties[$val['value']] = $allowed[$val['value']] ?? 'unknown';
     }
     return $parties;
+
   }
 
   /**

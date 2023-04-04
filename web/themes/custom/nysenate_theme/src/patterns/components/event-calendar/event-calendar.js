@@ -47,10 +47,17 @@
           $('#datepicker input').val(`${splitDate[0]}/${splitDate[2]}`);
         }
       }
-      if ($('#edit-date-min').val()) {
-        const splitDate = $('#edit-date-min').val().split('-');
-        $('#edit-date-min').val(`${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`);
-        $('#datepicker input').val(`${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`);
+      if ($('.js-form-item-date-min input').val()) {
+        const splitDate = $('.js-form-item-date-min input').val().split('-');
+
+        if (splitDate.length > 1) {
+          $('.js-form-item-date-min input').val(`${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`);
+          $('#datepicker input').val(`${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`);
+        }
+        else {
+          $('.js-form-item-date-min input').val(splitDate[0]);
+          $('#datepicker input').val(splitDate[0]);
+        }
       }
       if ($('.js-form-item-date-max input').val()) {
         const splitDate = $('.js-form-item-date-max input').val().split('-');
@@ -74,7 +81,7 @@
         onSelect: function (format) {
           var inputElement = '';
           if (viewType === 'week') {
-            inputElement = $('#edit-date-min');
+            inputElement = $('.js-form-item-date-min input');
           }
           else {
             inputElement = $('.form-item-date.js-form-type-textfield input');
@@ -107,13 +114,8 @@
             }
           }
           if (viewType === 'week') {
-            var lastDayOfMonth = '';
             $('.currentweek td').each(function () {
-              if (!$(this).hasClass('dp_not_in_month')) {
-                lastDayOfMonth = $(this).html();
-                return false;
-              }
-              else {
+              if ($(this).hasClass('dp_not_in_month')) {
                 var selectedDate = new Date(_text);
                 var previousMonth = new Date(
                   selectedDate.setMonth(selectedDate.getMonth() - 1)

@@ -36,10 +36,12 @@
 </div>
 
 {% if news|length > 5 %}
-  <div class="pager pager-load-more">
-    <span class="pager-next first last">
-      <a class="load-more">See More
-        {{ panel.pagination_link_text }}</a>
-    </span>
+  <div class="item-list">
+    <div class="pager pager-load-more">
+      <span class="pager-next first last">
+        <a class="load-more">Load More
+          {{ panel.pagination_link_text }}</a>
+      </span>
+    </div>
   </div>
 {% endif %}

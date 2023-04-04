@@ -30,7 +30,7 @@
  * @see template_preprocess_views_view()
  */
 #}
-{{ attach_library('nysenate_theme/featured-story') }}
+{{ attach_library('nysenate_theme/nysenate-legislative-events') }}
 
 {%
   set classes = [
@@ -42,61 +42,65 @@
     'container',
   ]
 %}
-<div{{ attributes.addClass(classes) }}>
-  {{ title_prefix }}
-  {% if title %}
-    {{ title }}
-  {% endif %}
-  {{ title_suffix }}
-  {% if header %}
-    {%
-      set header_class = (view.current_display == 'hp_featured_stories') ?
-        'c-container--header__top-border' : 'c-container--header'
-    %}
-    <div class="view-header {{ header_class }}">
-      {{ header }}
-    </div>
-  {% endif %}
-  {% if exposed %}
-    <div class="view-filters">
-      {{ exposed }}
-    </div>
-  {% endif %}
-  {% if attachment_before %}
-    <div class="attachment attachment-before">
-      {{ attachment_before }}
-    </div>
-  {% endif %}
+<div class="panel-pane pane-views pane-legislative-events">
+  <h2 class="pane-title">
+    Upcoming Legislative Events
+  </h2>
 
-  {% if rows %}
-    <div class="view-content">
-      {{ rows }}
-    </div>
-  {% elseif empty %}
-    <div class="view-empty">
-      {{ empty }}
-    </div>
-  {% endif %}
+  <div class="pane-content">
+    <div{{ attributes.addClass(classes) }}>
+      {{ title_prefix }}
+      {% if title %}
+        {{ title }}
+      {% endif %}
+      {{ title_suffix }}
+      {% if header %}
+        <div class="view-header">
+          {{ header }}
+        </div>
+      {% endif %}
+      {% if exposed %}
+        <div class="view-filters">
+          {{ exposed }}
+        </div>
+      {% endif %}
+      {% if attachment_before %}
+        <div class="attachment attachment-before">
+          {{ attachment_before }}
+        </div>
+      {% endif %}
 
-  {% if pager %}
-    {{ pager }}
-  {% endif %}
-  {% if attachment_after %}
-    <div class="attachment attachment-after">
-      {{ attachment_after }}
+      {% if rows %}
+        <div class="view-content">
+          {{ rows }}
+        </div>
+      {% elseif empty %}
+        <div class="view-empty">
+          {{ empty }}
+        </div>
+      {% endif %}
+
+      {% if pager %}
+        {{ pager }}
+      {% endif %}
+      {% if attachment_after %}
+        <div class="attachment attachment-after">
+          {{ attachment_after }}
+        </div>
+      {% endif %}
+      {% if more %}
+        {{ more }}
+      {% endif %}
+      {% if footer %}
+        <div class="view-footer">
+          {{ footer }}
+        </div>
+      {% endif %}
+      {% if feed_icons %}
+        <div class="feed-icons">
+          {{ feed_icons }}
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
-  {% if more %}
-    {{ more }}
-  {% endif %}
-  {% if footer %}
-    <div class="view-footer">
-      {{ footer }}
-    </div>
-  {% endif %}
-  {% if feed_icons %}
-    <div class="feed-icons">
-      {{ feed_icons }}
-    </div>
-  {% endif %}
+  </div>
 </div>

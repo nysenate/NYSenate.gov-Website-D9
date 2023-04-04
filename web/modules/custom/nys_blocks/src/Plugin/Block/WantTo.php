@@ -5,6 +5,7 @@ namespace Drupal\nys_blocks\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\user\Entity\User;
 use Drupal\Core\Url;
+use Drupal\nys_senators\Service\Microsites;
 
 /**
  * Block for How a Bill Becomes a Law.
@@ -31,8 +32,8 @@ class WantTo extends BlockBase {
     if ($logged_in) {
       $current_user = \Drupal::currentUser();
       $user = User::load($current_user->id());
-      $senator = $user->field_district->entity->field_senator;
-      $senator_link = \Drupal::service('nys_senators.microsites')->getMicrosites($senator);
+      $senator = $user->field_district->entity->field_senator->entity;
+      $senator_link = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
       $headshot_id = $user->field_district->entity->field_senator
         ->entity->field_member_headshot->target_id;
       $headshot = \Drupal::entityTypeManager()->getStorage('media')

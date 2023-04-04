@@ -9,17 +9,14 @@
             <p class="c-want-to--cta">...see what’s going on in my district.</p>
 
             {% if logged_in %}
-            <a href="#" class="c-block--btn loggedin">
+            <a href="{{ senator_link }}" class="c-block--btn loggedin">
                 <span class="nys-senator--thumb">
                 {{ headshot }}
                 </span>
                 <span class="c-senator--cta">go to your senator's page</span>
             </a>
             {% else %}
-                {#
-                <a class="use-ajax c-block--btn" data-dialog-type="modal" href="/user/login" data-once="ajax" title="find your senator">find your senator</a>
-            #}
-                <a href="{{ register }}" class="ctools-use-modal c-block--btn ctools-modal-login-modal ctools-use-modal-processed GoogleAnalyticsET-processed" title="find your senator">find your senator</a>
+                <a href="{{ register }}" class="use-ajax c-block--btn" data-dialog-type="modal" data-once="ajax" title="find your senator">find your senator</a>
             {% endif %}
         </div>
 

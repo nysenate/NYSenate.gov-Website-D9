@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_users;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 
@@ -15,23 +16,37 @@ use Drupal\user\Entity\User;
 class UsersHelper {
 
   /**
+   * Constant indicating a test if a user owns all of the tested roles.
+   */
+  const NYS_USERS_OWNS_ALL = 1;
+
+  /**
+   * Constant indicating a test if a user owns any of the tested roles.
+   */
+  const NYS_USERS_OWNS_ANY = 2;
+
+  /**
    * Simple wrapper to identify the User entity on which to work.
    *
    * @param mixed|null $user
-   *   Can be a user entity, a numeric user ID, or NULL.
+   *   Can be any object implementing AccountInterface, a numeric user ID,
+   *   or NULL.
    *
    * @return \Drupal\user\Entity\User
    *   If $user was NULL, Drupal's currentUser() is used.
    */
-  protected static function resolveUser(mixed $user = NULL): User {
+  public static function resolveUser(mixed $user = NULL): User {
     if (is_null($user)) {
       $user = \Drupal::currentUser()->id();
+    }
+    if ($user instanceof AccountInterface) {
+      $user = $user->id();
     }
     if (is_numeric($user)) {
       $user = User::load($user);
     }
     if (!($user instanceof User)) {
-      throw new \InvalidArgumentException("resolveUser() requires a User entity, a numeric UID, or NULL as the first parameter");
+      throw new \InvalidArgumentException("resolveUser() requires an AccountInterface, a numeric id, or NULL as the first parameter");
     }
     return $user;
   }
@@ -86,13 +101,71 @@ class UsersHelper {
   }
 
   /**
-   * Check if a user is also a senator.
+   * Check if a user reference owns a particular role.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   * @param array|string $check_roles
+   *   The name of a role, or an array of names.
+   * @param int $test
+   *   The type of test to conduct.
+   *
+   * @see static::NYS_USERS_OWNS_ALL
+   * @see static::NYS_USERS_OWNS_ANY
+   */
+  public static function hasRoles(mixed $user, array|string $check_roles, int $test = self::NYS_USERS_OWNS_ALL): bool {
+    $user_roles = static::resolveUser($user)->getRoles();
+    if (!is_array($check_roles)) {
+      $check_roles = [$check_roles];
+    }
+    return match ($test) {
+      self::NYS_USERS_OWNS_ALL => (array_intersect($check_roles, $user_roles) === $check_roles),
+      self::NYS_USERS_OWNS_ANY => (bool) (count(array_intersect($check_roles, $user_roles)))
+    };
+  }
+
+  /**
+   * Check if a user is assigned the senator role.
    *
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
   public static function isSenator(mixed $user): bool {
-    return static::resolveUser($user)->hasRole('senator');
+    return static::hasRoles($user, ['senator']);
+  }
+
+  /**
+   * Check if a user is assigned the microsite content producer role.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function isMcp(mixed $user): bool {
+    return static::hasRoles($user, ['microsite_content_producer']);
+  }
+
+  /**
+   * Check if a user is assigned the legislative correspondent role.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function isLc(mixed $user): bool {
+    return static::hasRoles($user, ['legislative_correspondent']);
+  }
+
+  /**
+   * Checks if a user has been assigned LC or MCP roles.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function isLcOrMcp(mixed $user): bool {
+    return static::hasRoles(
+      $user,
+      ['microsite_content_producer', 'legislative_correspondent'],
+      static::NYS_USERS_OWNS_ANY
+    );
   }
 
 }

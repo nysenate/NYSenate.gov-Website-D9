@@ -1,0 +1,20 @@
+{#
+/**
+ * @file nys-senators-management-overview-stats.html.twig
+ *
+ * @var title string
+ *   The title of the stat section
+ * @var stats array
+ *   An array of stat definitions.
+ *
+ * @see nys-senators-management-overview-stat.html.twig
+ */
+#}
+{% if stats is iterable and stats|length > 0 %}
+<div class="nys-senators-management-overview-stats">
+  <h1>{{ title }}</h1>
+  {% for val in stats %}
+    {{ include('nys-senators-management-overview-stat.html.twig', val) }}
+  {% endfor %}
+</div>
+{% endif %}

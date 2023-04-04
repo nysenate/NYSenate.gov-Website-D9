@@ -1,0 +1,12 @@
+nys_petitions.task.dashboard.petitions:
+  route_name: nys_petitions.dashboard.petitions
+  base_route: nys_dashboard.overview
+  title: 'Petitions'
+
+nys_petitions.task.management.petitions:
+  route_name: nys_senators.management
+  base_route: entity.taxonomy_term.canonical
+  title: 'Petitions'
+  route_parameters:
+    tab: 'petitions'
+  weight: -70

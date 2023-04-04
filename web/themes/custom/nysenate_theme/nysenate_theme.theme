@@ -2653,7 +2653,7 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     else {
       $title = t('Contact your Senator about this issue');
       $link = [
-        'url' => '/user/dashboard/inbox/new?context=issue&issue_id=' . $variables['term']->id(),
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox/new/issue/' . $variables['term']->id(),
         'text' => t('Contact') . ' ' . $senator_name,
       ];
     }

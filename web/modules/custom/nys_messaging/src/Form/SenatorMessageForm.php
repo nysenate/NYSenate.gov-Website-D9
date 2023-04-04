@@ -3,18 +3,19 @@
 namespace Drupal\nys_messaging\Form;
 
 use Drupal\Core\Url;
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\private_message\Service\PrivateMessageThreadManagerInterface;
+use Drupal\nys_users\UsersHelper;
 
 /**
  * Form for sending private message to a senator.
@@ -120,14 +121,20 @@ class SenatorMessageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $user_id = NULL, $context = NULL, $item_id = NULL) {
     $node = $this->routeMatch->getParameter('node');
-
+    $user_storage = $this->entityTypeManager->getStorage('user');
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $senator = NULL;
     if (!empty($node) && $node->bundle() == 'microsite_page') {
       if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
         $senator = $node->field_senator_multiref->first()->entity;
       }
+    }
+    elseif (!empty($user_id)) {
+      // Get User's District Senator.
+      $user = $user_storage->load($user_id);
+      $senator = UsersHelper::getSenator($user);
     }
 
     if (!empty($senator)) {
@@ -170,11 +177,6 @@ class SenatorMessageForm extends FormBase {
       '#weight' => -9,
     ];
 
-    $form['context'] = [
-      '#type'  => 'hidden',
-      '#value' => 'nys_messaging_senator_message_form',
-    ];
-
     $form['subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
@@ -189,6 +191,44 @@ class SenatorMessageForm extends FormBase {
       '#default_value' => '',
       '#weight' => -7,
     ];
+
+    $form['context'] = [
+      '#type'  => 'hidden',
+      '#value' => $context ?? 'nys_messaging_senator_message_form',
+    ];
+
+    // Set Entity IDs based on context.
+    switch ($context) {
+      case 'bill_vote':
+      case 'following_bill':
+        $form['bill_id'] = [
+          '#type'  => 'hidden',
+          '#value' => $item_id,
+        ];
+        break;
+
+      case 'issue':
+        $form['issue_id'] = [
+          '#type'  => 'hidden',
+          '#value' => $item_id,
+        ];
+
+        $issue = $term_storage->load($item_id);
+
+        $form['subject']['#default_value'] = $issue->label();
+        $form['subject']['#disabled'] = TRUE;
+        break;
+
+      case 'following_committee':
+        $form['committee_id'] = [
+          '#type'  => 'hidden',
+          '#value' => $item_id,
+        ];
+        break;
+
+      default:
+        break;
+    }
 
     $form['submit'] = [
       '#type' => 'submit',

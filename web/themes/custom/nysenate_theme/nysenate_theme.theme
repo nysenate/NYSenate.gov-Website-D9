@@ -4621,6 +4621,10 @@ function get_how_a_bill_becomes_law_block() {
 
     $bill = $view_builder->build($block_content);
   }
+  else {
+    $block_manager = \Drupal::service('plugin.manager.block');
+    $bill = $block_manager->createInstance('nys_blocks_senate_works', [])->build();
+  }
 
   return $bill;
 }

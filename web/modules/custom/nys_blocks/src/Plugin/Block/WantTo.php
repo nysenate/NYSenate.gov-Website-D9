@@ -5,7 +5,6 @@ namespace Drupal\nys_blocks\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\user\Entity\User;
 use Drupal\Core\Url;
-use Drupal\nys_senators\Service\Microsites;
 
 /**
  * Block for How a Bill Becomes a Law.

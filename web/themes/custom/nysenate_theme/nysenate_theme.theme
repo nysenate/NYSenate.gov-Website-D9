@@ -1848,14 +1848,21 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     $current_path = \Drupal::service('path.current')->getPath();
     $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
 
-    if ($path_alias == '/senators-committees') {
-      $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees';
-      $suggestions[] = $hook . '__' . $node->bundle() . '__senators_committees__' . $variables['elements']['#view_mode'];
-    }
+    $pages = [
+      '/senators-committees',
+      '/about',
+      '/events',
+    ];
 
-    if ($path_alias == '/about') {
-      $suggestions[] = $hook . '__' . $node->bundle() . '__about';
-      $suggestions[] = $hook . '__' . $node->bundle() . '__about__' . $variables['elements']['#view_mode'];
+    if (in_array($path_alias, $pages)) {
+      $formatted_label = str_replace(
+        ['/', '-'],
+        ['', '_'],
+        $path_alias
+      );
+
+      $suggestions[] = $hook . '__' . $node->bundle() . '__' . $formatted_label;
+      $suggestions[] = $hook . '__' . $node->bundle() . '__' . $formatted_label . '__' . $variables['elements']['#view_mode'];
     }
   }
 
@@ -1948,6 +1955,9 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
   // Add suggestion to views_exposed_form hook.
   if ($hook == 'views_exposed_form' && !empty($variables['form']['#theme'])) {
     $suggestions[] = $variables['form']['#theme'][0];
+    if (isset($variables['form']['#theme'][4])) {
+      $suggestions[] = $variables['form']['#theme'][4];
+    }
   }
 }
 

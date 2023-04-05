@@ -46,6 +46,8 @@ class DashboardPageManager extends DefaultPluginManager implements FallbackPlugi
 
   /**
    * Gets a page by plugin name.
+   *
+   * @todo Create "default page" mechanism.
    */
   public function getPage(string $plugin_id, bool $or_default = TRUE): ?ManagementPageInterface {
     try {

@@ -18,29 +18,56 @@
   // Set calendar filters labels
   Drupal.behaviors.eventCalendar = {
     attach: function () {
-      if ($('#edit-field-date-value-value input').val()) {
-        $('#datepicker input').val(
-          $('#edit-field-date-value-value input').val()
-        );
-      }
-      if ($('#edit-field-date-value-min input').val()) {
-        $('#datepicker input').val($('#edit-field-date-value-min input').val());
-      }
-
       // Init variables
       var viewType = '';
       var formatType = 'm/d/Y';
 
       // Check the type of view i.e day/week/month and initialize datepicker options
-      if ($('.view-calendar-page.view-display-id-page').length > 0) {
+      if ($('.view-events.view-display-id-day_block').length > 0) {
         viewType = 'day';
       }
-      if ($('.view-calendar-page.view-display-id-month').length > 0) {
+      if ($('.view-events.view-display-id-page_2').length > 0) {
         viewType = 'month';
         formatType = 'm/Y';
       }
-      if ($('.view-calendar-page.view-display-id-week').length > 0) {
+      if ($('.view-events.view-display-id-page_3').length > 0) {
         viewType = 'week';
+      }
+
+      if ($('.form-item-date.js-form-type-textfield input').val()) {
+        if (viewType === 'day') {
+          $('#datepicker input').val($('.form-item-date.js-form-type-textfield input').val());
+        }
+        else if (viewType === 'month') {
+          const splitDate = $('.form-item-date.js-form-type-textfield  input')
+            .val()
+            .split('/');
+
+          $('.form-item-date.js-form-type-textfield input').val(`${splitDate[0]}/${splitDate[2]}`);
+          $('#datepicker input').val(`${splitDate[0]}/${splitDate[2]}`);
+        }
+      }
+      if ($('.js-form-item-date-min input').val()) {
+        const splitDate = $('.js-form-item-date-min input').val().split('-');
+
+        if (splitDate.length > 1) {
+          $('.js-form-item-date-min input').val(`${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`);
+          $('#datepicker input').val(`${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`);
+        }
+        else {
+          $('.js-form-item-date-min input').val(splitDate[0]);
+          $('#datepicker input').val(splitDate[0]);
+        }
+      }
+      if ($('.js-form-item-date-max input').val()) {
+        const splitDate = $('.js-form-item-date-max input').val().split('-');
+
+        if (splitDate.length > 1) {
+          $('.js-form-item-date-max input').val(`${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`);
+        }
+        else {
+          $('.js-form-item-date-max input').val(splitDate[0]);
+        }
       }
 
       // Initialize Zebra Datepicker
@@ -54,10 +81,10 @@
         onSelect: function (format) {
           var inputElement = '';
           if (viewType === 'week') {
-            inputElement = $('#edit-field-date-value-min input');
+            inputElement = $('.js-form-item-date-min input');
           }
           else {
-            inputElement = $('#edit-field-date-value-value input');
+            inputElement = $('.form-item-date.js-form-type-textfield input');
           }
           inputElement.val(format);
           inputElement.parents('form').submit();
@@ -66,25 +93,31 @@
           this.trigger('change');
           var _text = $('.dp_header .dp_caption').html();
           var _selected = $('.dp_selected').html();
+          var _current = $('.dp_current').html();
           var _month = _text.split(',');
           if (viewType === 'day') {
-            $('.mobile-calendar-toggle').html(
-              'Viewing Day of ' + _month[0] + ' ' + _selected
-            );
-            $('.cal-nav-wrapper span.title').html(
-              _month[0] + ' ' + _selected + ',' + _month[1]
-            );
+            if (_selected) {
+              $('.mobile-calendar-toggle').html(
+                'Viewing Day of ' + _month[0] + ' ' + _selected
+              );
+              $('.cal-nav-wrapper span.title').html(
+                _month[0] + ' ' + _selected + ',' + _month[1]
+              );
+            }
+            else {
+              $('.mobile-calendar-toggle').html(
+                'Viewing Day of ' + _month[0] + ' ' + _current
+              );
+              $('.cal-nav-wrapper span.title').html(
+                _month[0] + ' ' + _current + ',' + _month[1]
+              );
+            }
           }
           if (viewType === 'week') {
-            var lastDayOfMonth = '';
             $('.currentweek td').each(function () {
-              if (!$(this).hasClass('dp_not_in_month')) {
-                lastDayOfMonth = $(this).html();
-                return false;
-              }
-              else {
+              if ($(this).hasClass('dp_not_in_month')) {
                 var selectedDate = new Date(_text);
-                previousMonth = new Date(
+                var previousMonth = new Date(
                   selectedDate.setMonth(selectedDate.getMonth() - 1)
                 );
                 _month[0] = previousMonth.toLocaleString('default', {
@@ -115,8 +148,10 @@
         },
         onChange: function (view, elements) {
           var _selected = $('.dp_selected').html();
+
           if (_selected === null) {
             _selected = localStorage.getItem('selected');
+
             $('.dp_daypicker td').each(function () {
               if ($(this).html() === _selected) {
                 $(this).addClass('dp_selected');
@@ -131,7 +166,7 @@
           elements.each(function () {
             if (
               viewType === 'week' &&
-              $(this)[0].className.match(/dp_selected$/)
+              $(this).hasClass('dp_selected')
             ) {
               $(this).closest('tr').addClass('currentweek');
               $(this).addClass('dp_selected');

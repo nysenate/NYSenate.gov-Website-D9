@@ -349,24 +349,38 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
       'views-exposed-form-events-week-block',
     ])) {
       $form['date']['#date_format'] = 'm/d/Y';
-      $form['date']['#default_value'] = $values['date'] ?? date('m/d/Y');
+      $form['date']['#default_value'] = date('m/d/Y');
+      $form['date']['#description'] = 'E.g., ' . date('m/d/Y');
+      $form['date']['#placeholder'] = date('m/d/Y');
     }
     if (in_array($form['#id'], [
       'views-exposed-form-events-page-2',
       'views-exposed-form-events-month-block',
     ])) {
       $form['date']['#date_format'] = 'm/Y';
-      $form['date']['#default_value'] = $values['date'] ?? date('m/d/Y');
+      $form['date']['#default_value'] = date('m/Y');
+      $form['date']['#description'] = 'E.g., ' . date('m/Y');
+      $form['date']['#placeholder'] = date('m/Y');
     }
     if (in_array($form['#id'], [
       'views-exposed-form-events-page-3',
       'views-exposed-form-events-week-block',
     ])) {
       [$start_of_week, $end_of_week] = nys_dashboard_get_date('week');
+      if (isset($form['date_wrapper'])) {
+        $form['date'] = $form['date_wrapper']['date'];
+        unset($form['date_wrapper']);
+      }
       $form['date']['min']['#date_format'] = 'm/d/Y';
-      $form['date']['min']['#default_value'] = $start_of_week;
       $form['date']['max']['#date_format'] = 'm/d/Y';
+      $form['date']['min']['#default_value'] = $start_of_week;
       $form['date']['max']['#default_value'] = $end_of_week;
+      $form['date']['min']['#description'] = 'E.g., ' . date('m/d/Y');
+      $form['date']['max']['#description'] = 'E.g., ' . date('m/d/Y');
+      $form['date']['min']['#placeholder'] = $start_of_week;
+      $form['date']['max']['#placeholder'] = $end_of_week;
+      $form['date']['min']['#title'] = [];
+      $form['date']['max']['#title'] = [];
     }
   }
 }

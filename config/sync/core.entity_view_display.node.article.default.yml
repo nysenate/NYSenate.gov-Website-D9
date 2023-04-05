@@ -61,10 +61,11 @@ content:
     weight: 2
     region: content
   field_associated_senators:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      link: true
+      view_mode: senators_involved
+      link: false
     third_party_settings: {  }
     weight: 11
     region: content

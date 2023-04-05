@@ -2682,46 +2682,60 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
 
   $senator_name = '';
   $senator_image = NULL;
-  if ($user->hasField('field_senator_multiref') && !$user->get('field_senator_multiref')->isEmpty()) {
-    $tid = $user->get('field_senator_multiref')->first()->getString() ?? '';
-    $senator = NULL;
-    if (!empty($tid)) {
-      $senator = Term::load($tid);
-    }
-    $variables['senator'] = $senator;
+  // Get User's District Senator.
+  $senator = UsersHelper::getSenator($user);
+  $variables['senator'] = $senator;
 
-    // Senator name.
-    if (!empty($senator)) {
-      if (isset($senator->name->value) && !empty($senator->name->value)) {
-        $senator_name = $senator->name->value;
-      }
-
-      // Senator image.
-      if ($senator->hasField('field_image_headshot') && !$senator->get('field_image_headshot')->isEmpty()) {
-        $senator_image = $senator->field_member_headshot->entity;
-      }
+  // Senator name.
+  if (!empty($senator)) {
+    if (isset($senator->name->value) && !empty($senator->name->value)) {
+      $senator_name = $senator->name->value;
     }
 
+    // Senator image.
+    if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
+      $headshot_id = $senator->field_member_headshot->target_id;
+      $headshot = \Drupal::entityTypeManager()->getStorage('media')
+        ->load($headshot_id);
+
+      $senator_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'thumbnail');
+    }
   }
 
   // Generate the contact your senator variables.
   $url = '';
   $title = '';
   $link = [];
-  $is_out_of_state = \Drupal::service('nys_users.user_helper')->isOutOfState($user);
-  if ($is_out_of_state) {
-    $title = t('Contact the Senate about this issue');
-    $link = [
-      'url' => '/form/contact',
-      'text' => t('Contact Senate'),
-    ];
+  if (\Drupal::currentUser()->isAuthenticated()) {
+    $is_out_of_state = \Drupal::service('nys_users.user_helper')->isOutOfState($user);
+    if ($is_out_of_state) {
+      $title = t('Contact the Senate about this issue');
+      $link = [
+        'url' => '/form/contact',
+        'text' => t('Contact Senate'),
+      ];
+    }
+    else {
+      $title = t('Contact your Senator about this issue');
+      $link = [
+        'url' => '/users/' . \Drupal::currentUser()->id() . '/dashboard/inbox/new/issue/' . $variables['term']->id(),
+        'text' => t('Contact') . ' ' . $senator_name,
+      ];
+    }
   }
   else {
-    $title = t('Contact your Senator about this issue');
-    $link = [
-      'url' => '/user/dashboard/inbox/new?context=issue&issue_id=' . $variables['term']->id(),
-      'text' => t('Contact %senator', ['%senator' => $senator_name]),
+    $current_path = \Drupal::service('path.current')->getPath();
+    $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+    if (!$path_alias) {
+      throw new NotFoundHttpException();
+    }
+    $params = [
+      'destination' => $path_alias,
     ];
+    $link = Link::fromTextAndUrl(
+      t('Find your Senator'),
+      Url::fromUserInput('/user/login', ['query' => $params])
+    );
   }
 
   $variables['contact_your_senator'] = [
@@ -4630,6 +4644,10 @@ function get_how_a_bill_becomes_law_block() {
     $block_content = $view_builder->view($block);
 
     $bill = $view_builder->build($block_content);
+  }
+  else {
+    $block_manager = \Drupal::service('plugin.manager.block');
+    $bill = $block_manager->createInstance('nys_blocks_senate_works', [])->build();
   }
 
   return $bill;

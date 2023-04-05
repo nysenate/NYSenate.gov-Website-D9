@@ -80,17 +80,16 @@
     {% endif %}
 
 
-      {% if file_items is not empty %}
-      <div class="c-block c-news--download">
-          <h2 class="c-initiative--subtitle">More Information:</h2>
-          {% if content.field_attachment[0] %}
-              {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
-                  title: title,
-                  attachment: content.field_attachment,
-              } only %}
-          {% endif %}
-      </div>
+    <div class="c-block">
+      <h2 class="c-initiative--subtitle">More Information:</h2>
+      {% if content.field_attachment[0] %}
+          {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+              title: title,
+              attachment: content.field_attachment,
+          } only %}
       {% endif %}
+    </div>
+
 
     {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
       title: node.type.entity.label,

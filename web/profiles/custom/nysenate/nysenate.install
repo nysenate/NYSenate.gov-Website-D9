@@ -7,6 +7,8 @@
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\media\Entity\Media;
+use Drupal\file\Entity\File;
 
 /**
  * NYSD9-372: Set the label of List Views block content type.
@@ -104,4 +106,44 @@ function nysenate_update_9004() {
       $menu_link->save();
     }
   }
+}
+
+/**
+ * NYSD9-622: Upload Bill Share image.
+ */
+function nysenate_update_9007() {
+  // Load the file from a local path.
+  $file_path = '/sites/default/files/ny_senate_bill_share2.png';
+  $file = File::create([
+    'uri' => $file_path,
+  ]);
+  $file->save();
+
+  // Create a new media entity for the uploaded image.
+  $media = Media::create([
+    'bundle' => 'image',
+    'uid' => 1,
+    'status' => 1,
+    'name' => 'ny_senate_bill_share2.png',
+    'field_image' => [
+      'target_id' => $file->id(),
+    ],
+  ]);
+
+  // Save the media entity to the database.
+  $media->save();
+
+  $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+  if (!empty($file)) {
+    $image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+  }
+
+  // Load the node metatag config entity.
+  $config = \Drupal::configFactory()->getEditable('metatag.metatag_defaults.node__bill');
+
+  // Set the image field to reference the media entity.
+  $config->set('tags.image_src', $image);
+
+  // Save the changes to the config entity.
+  $config->save();
 }

@@ -31,7 +31,7 @@ class WantTo extends BlockBase {
     if ($logged_in) {
       $current_user = \Drupal::currentUser();
       $user = User::load($current_user->id());
-      $senator = $user->field_district->entity->field_senator->entity;
+      $senator = $user->get('field_district')->entity->field_senator->entity;
       $senator_link = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
       $headshot_id = $user->field_district->entity->field_senator
         ->entity->field_member_headshot->target_id;

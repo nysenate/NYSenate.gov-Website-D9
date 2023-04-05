@@ -88,6 +88,16 @@ class MessageController extends ControllerBase {
   }
 
   /**
+   * Path to display the Message Senator Form (Issue).
+   */
+  public function issue($user_id, $context, $issue_id) {
+
+    $content['message_form'] = \Drupal::service('form_builder')->getForm('Drupal\nys_messaging\Form\SenatorMessageForm', $user_id, $context, $issue_id);
+
+    return $content;
+  }
+
+  /**
    * Path to display the bulk message form.
    */
   public function bulkMessage($user_id, $recipient_uids) {

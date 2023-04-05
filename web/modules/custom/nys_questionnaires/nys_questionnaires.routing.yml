@@ -1,0 +1,16 @@
+nys_questionnaires.management.ajax.questionnaire.submissions:
+  path: '/taxonomy/term/{taxonomy_term}/questionnaires/{qid}'
+  defaults:
+    _title: 'Questionnaire Submissions'
+    _controller: '\Drupal\nys_questionnaires\Controller\QuestionnairesManagementController::ajaxGetSubmissions'
+  requirements:
+    _lc_mcp_senator_access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+    parameters:
+      taxonomy_term:
+        type: entity:taxonomy_term
+        bundle: ['senator']
+      qid:
+        type: entity:node
+        bundle: ['webform']

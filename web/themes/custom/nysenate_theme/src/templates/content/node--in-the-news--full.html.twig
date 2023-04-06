@@ -79,17 +79,15 @@
       </section>
     {% endif %}
 
-
-    <div class="c-block">
-      <h2 class="c-initiative--subtitle">More Information:</h2>
-      {% if content.field_attachment[0] %}
+    {% if content.field_attachment[0] %}
+        <div class="c-block">
+            <h2 class="c-initiative--subtitle">More Information:</h2>
           {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
               title: title,
               attachment: content.field_attachment,
           } only %}
-      {% endif %}
-    </div>
-
+        </div>
+    {% endif %}
 
     {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
       title: node.type.entity.label,

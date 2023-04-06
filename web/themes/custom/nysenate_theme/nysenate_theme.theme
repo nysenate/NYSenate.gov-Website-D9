@@ -4443,7 +4443,8 @@ function nysenate_theme_preprocess_page(&$variables) {
     ],
   ];
 
-  //Variables for logged-in user's senator, link and headshot for my senator in header
+  // Variables for logged-in user's senator,
+  // link and headshot for my senator in header.
   $logged_in = \Drupal::currentUser()->isAuthenticated();
   if ($logged_in) {
     $district = $user->field_district;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\nys_questionnaires\Controller;
+namespace Drupal\nys_petitions\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
@@ -14,9 +14,9 @@ use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Manages AJAX callbacks for senator management questionnaires tab.
+ * Manages AJAX callbacks for senator management petitions tab.
  */
-class QuestionnairesManagementController extends ControllerBase {
+class PetitionsManagementController extends ControllerBase {
 
   /**
    * NYS Senators Helper service.
@@ -60,20 +60,20 @@ class QuestionnairesManagementController extends ControllerBase {
   }
 
   /**
-   * Gets a list of submissions for a senator's questionnaire.
+   * Gets a list of signatures for a senator's questionnaire.
    *
    * The context is always in the current user viewing the senator term passed
-   * in $taxonomy_term.  The return will be all submissions, if the requested
-   * questionnaire is owned by the senator.  Otherwise, only submissions from
-   * the senator's district are returned.
+   * in $taxonomy_term.  The return will be all signatures, if the requested
+   * petition is owned by the senator.  Otherwise, only signatures from the
+   * senator's district are returned.
    *
    * @return \Drupal\Core\Render\HtmlResponse
    *   A pre-rendered table of submissions.
    */
-  public function ajaxGetSubmissions(Term $taxonomy_term, Node $qid): HtmlResponse {
+  public function ajaxGetSignatories(Term $taxonomy_term, Node $node): HtmlResponse {
 
     // Get the questionnaire owner.  If not, stop here.
-    $owner = $qid->field_senator_multiref->entity ?? NULL;
+    $owner = $node->field_senator_multiref->entity ?? NULL;
     if (!$owner) {
       return $this->errorResponse("An error occurred while loading the owner.");
     }
@@ -86,19 +86,19 @@ class QuestionnairesManagementController extends ControllerBase {
     // Build each row based on the query return.
     $rows = array_map(
       [$this, 'buildSubmissionRow'],
-      $this->getSubmissions($qid, $district)
+      $this->getSignatories($node, $district)
     );
 
     // Finish the render array, and render it.
     if (count($rows)) {
       $ret = [
         '#theme' => 'table',
-        '#header' => ['User Name', 'Date of Submission', 'District'],
+        '#header' => ['User Name', 'Signing Date', 'District'],
         '#rows' => $rows,
       ];
     }
     else {
-      $ret = ['#markup' => 'Could not find any submissions'];
+      $ret = ['#markup' => 'Could not find any signatures'];
     }
     $ret = $this->renderer->renderPlain($ret);
 
@@ -106,7 +106,7 @@ class QuestionnairesManagementController extends ControllerBase {
   }
 
   /**
-   * Builds a row meant for a table's render array for submissions.
+   * Builds a row meant for a table's render array for petitions.
    *
    * @param array $row
    *   A row as returned from getSubmissions()
@@ -117,36 +117,27 @@ class QuestionnairesManagementController extends ControllerBase {
     $name = $row['first_name'] . ' ' . $row['last_name'];
     $name_link = Link::fromTextAndUrl($name, $url)->toString();
 
-    // Get the link for the submission.
-    $url = Url::fromRoute('entity.webform.user.submission', [
-      'webform' => $row['qid'],
-      'webform_submission' => $row['sid'],
-    ]);
-    $sub_link = Link::fromTextAndUrl(date("Y-m-d H:i:s", $row['submitted']), $url)
-      ->toString();
-
     // Build the row.
     return [
-      ['data' => $name_link, 'class' => 'questionnaire-username'],
-      ['data' => $sub_link, 'class' => 'questionnaire-submit-date'],
-      ['data' => $row['district'], 'class' => 'questionnaire-district'],
+      ['data' => $name_link, 'class' => 'signature-username'],
+      ['data' => date("Y-m-d", $row['created']), 'class' => 'signature-date'],
+      ['data' => $row['district'], 'class' => 'signature-district'],
     ];
   }
 
   /**
-   * Returns an array of submissions for a questionnaire.
+   * Returns an array of signatures for a petition.
    *
-   * @param \Drupal\node\Entity\Node $qid
-   *   A node of type 'webform' (questionnaire).
+   * @param \Drupal\node\Entity\Node $node
+   *   A node of type 'petition'.
    * @param \Drupal\taxonomy\Entity\Term|null $district
    *   The district to use as a filter on the return.  If populated, only
    *   submissions from this district will be included.
    *
    * @return array
    *   Each element is an array with these keys:
-   *     qid: questionnaire's nid
-   *     sid: submission's sid
-   *     created: timestamp of submission
+   *     nid: petition's nid
+   *     created: timestamp of signature
    *     uid: user's uid
    *     mail: user's email
    *     first_name: user's first name
@@ -154,10 +145,9 @@ class QuestionnairesManagementController extends ControllerBase {
    *     district: user's district number
    *     district_tid: term id of the user's district
    */
-  protected function getSubmissions(Node $qid, ?Term $district): array {
-    $webform = $qid->webform->target_id;
-    $query = $this->connection->select('webform_submission', 'ws');
-    $query->join('users_field_data', 'u', 'u.uid=ws.uid');
+  protected function getSignatories(Node $node, ?Term $district): array {
+    $query = $this->connection->select('flagging', 'f');
+    $query->join('users_field_data', 'u', 'u.uid=f.uid');
     $query->join('user__field_first_name', 'ufn', 'u.uid=ufn.entity_id');
     $query->join('user__field_last_name', 'uln', 'u.uid=uln.entity_id');
     $query->join('user__field_district', 'ud', 'u.uid=ud.entity_id');
@@ -167,11 +157,11 @@ class QuestionnairesManagementController extends ControllerBase {
     );
 
     // Fields to be returned.
-    $query->addExpression($qid->id(), 'qid');
-    $query->addField('ws', 'sid');
-    $query->addField('ws', 'created', 'submitted');
-    $query->addField('ws', 'uid');
-    $query->addFIeld('u', 'mail');
+    $query->addExpression($node->id(), 'nid');
+    $query->addField('f', 'id');
+    $query->addField('f', 'created');
+    $query->addField('f', 'uid');
+    $query->addField('u', 'mail');
     $query->addField('ufn', 'field_first_name_value', 'first_name');
     $query->addField('uln', 'field_last_name_value', 'last_name');
     $query->addField('fdn', 'field_district_number_value', 'district');
@@ -181,19 +171,27 @@ class QuestionnairesManagementController extends ControllerBase {
     if ($district) {
       $query->condition('fdn.entity_id', $district->id());
     }
-    $query->condition('ws.webform_id', $webform)
-      ->orderBy('ws.created');
+    $query->condition('f.flag_id', 'sign_petition')
+      ->condition('f.entity_type', 'node')
+      ->condition('f.entity_id', $node->id())
+      ->orderBy('f.created');
 
     // Fetch and return.
     try {
-      $ret = $query->execute()->fetchAllAssoc('sid', \PDO::FETCH_ASSOC);
+      $ret = $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+      $this->getLogger('nys_petitions')
+        ->debug('Query for petition signatures', [
+          '@query' => (string) $query,
+          '@nid' => $node->id(),
+          '@district' => $district ? $district->id() : 'none',
+        ]);
     }
     catch (\Throwable $e) {
-      $this->getLogger('nys_questionnaires')->error(
-        "Failed to query for questionnaire submissions",
+      $this->getLogger('nys_petitions')->error(
+        "Failed to query for petition signatures",
         [
           '@query' => (string) $query,
-          '@qid' => $qid->id(),
+          '@nid' => $node->id(),
           '@district' => $district ? $district->id() : 'none',
           '@excp' => $e->getMessage(),
         ]
@@ -209,7 +207,7 @@ class QuestionnairesManagementController extends ControllerBase {
    */
   protected function errorResponse(string $msg = ''): HtmlResponse {
     if (!$msg) {
-      $msg = 'An error occurred while loading this questionnaire.';
+      $msg = 'An error occurred while loading this petition.';
     }
     return new HtmlResponse($msg, 500);
   }

@@ -21,16 +21,16 @@ class McpRouteSubscriber extends RouteSubscriberBase {
 
     // Custom access to block admin routes.
     if ($route = $collection->get('block.admin_display')) {
-      $route->setRequirement('_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
+      $route->setRequirement('_mcp_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
     }
     if ($route = $collection->get('block_content.add_page')) {
-      $route->setRequirement('_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
+      $route->setRequirement('_mcp_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
     }
     if ($route = $collection->get('entity.block_content_type.collection')) {
-      $route->setRequirement('_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
+      $route->setRequirement('_mcp_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
     }
     if ($route = $collection->get('entity.block_content.collection')) {
-      $route->setRequirement('_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
+      $route->setRequirement('_mcp_custom_access', 'Drupal\nys_senators\Access\McpAccessCheck::access');
     }
   }
 

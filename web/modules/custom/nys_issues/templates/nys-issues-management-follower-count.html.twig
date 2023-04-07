@@ -1,0 +1,17 @@
+{#
+/**
+ * @file nys-issues-management-follower-count.html.twig
+ *
+ * @var integer tid
+ *   Taxonomy term id of the issue.
+ * @var string name
+ *   Name of the issue.
+ * @var string canonical
+ *   A rendered link to the issue's canonical view.
+ * @var integer total
+ *   How many consitutents are following this issue.
+ */
+#}
+<div class="nys-senators-management-issue-follow-count" data-tid="{{ tid }}" data-name="{{ name }}" data-total="{{ total }}">
+  <div class="issue-name">{{  canonical }}</div><div class="follower-count">{{ total }}</div>
+</div>

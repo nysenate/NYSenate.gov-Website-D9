@@ -51,6 +51,13 @@
       </div>
     {% endif %}
 
+    {% if content.field_attachment[0] %}
+      {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+        title: title,
+        attachment: content.field_attachment,
+      } only %}
+    {% endif %}
+
     <div class="c-block">
       {{ content.body }}
     </div>

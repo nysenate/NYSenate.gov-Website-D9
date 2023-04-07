@@ -1,5 +1,7 @@
 {{ attach_library('nysenate_theme/article-page') }}
 {{ attach_library('nysenate_theme/file-uploads') }}
+{{ attach_library('nysenate_theme/session') }}
+
 
 <article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
   {{ title_prefix }}
@@ -42,12 +44,15 @@
           </ul>
         {% endif %}
 
-        {% if content.field_attachment.0 %}
-          <div class="c-news--download">
-            {{ content.field_attachment }}
-          </div>
+        {% if content.field_attachment[0] %}
+          {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+              title: title,
+              attachment: content.field_attachment,
+          } only %}
         {% endif %}
       </div>
+
+
     </header>
   {% endif %}
 

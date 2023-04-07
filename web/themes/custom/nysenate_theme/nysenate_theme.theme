@@ -4447,7 +4447,7 @@ function nysenate_theme_preprocess_page(&$variables) {
   // link and headshot for my senator in header.
   $logged_in = \Drupal::currentUser()->isAuthenticated();
   if ($logged_in) {
-    if($user->hasField('field_district') && !$user->get('field_district')->isEmpty()) {
+    if ($user->hasField('field_district') && !$user->get('field_district')->isEmpty()) {
       $variables['has_senator'] = TRUE;
     }
     $senator = $user->field_district->entity->field_senator->entity;

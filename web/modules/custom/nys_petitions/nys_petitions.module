@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Petitions.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nys_petitions_theme($existing, $type, $theme, $path): array {
+  return [
+    'nys_petitions_management_petitions' => [
+      'variables' => [
+        'your_petitions' => NULL,
+        'other_petitions' => NULL,
+      ],
+    ],
+    'nys_petitions_management_signature_highchart' => [
+      'variables' => [
+        'nid' => NULL,
+        'title' => NULL,
+        'created' => NULL,
+        'total' => NULL,
+        'in_district' => NULL,
+        'out_district' => NULL,
+      ],
+    ],
+  ];
+}

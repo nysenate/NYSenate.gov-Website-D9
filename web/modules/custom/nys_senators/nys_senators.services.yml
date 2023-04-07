@@ -29,7 +29,7 @@ services:
     class: Drupal\nys_senators\Access\McpAccessCheck
     arguments: [ '@current_user' ]
     tags:
-      - { name: access_check, applies_to: _custom_access }
+      - { name: access_check, applies_to: _mcp_custom_access }
   nys_senators.senator_access_checker:
     class: Drupal\nys_senators\Access\SenatorAccessCheck
     arguments: [ '@current_route_match', '@entity_type.manager' ]

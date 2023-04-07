@@ -99,7 +99,8 @@
     } only
     %}
 
-    {% if content.field_associated_senators %}
+    {% if content.field_category[0]['#markup'] == "Press release" %}
+    {% if content.field_associated_senators.0 %}
       <section class="c-block c-block--associated-senators">
           <div class="c-container--header__top-border">
               <h2 class="c-container--title">Senators Involved</h2>
@@ -109,6 +110,7 @@
               {{ content.field_associated_senators }}
           </div>
       </section>
+    {% endif %}
     {% endif %}
   </div>
 

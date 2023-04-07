@@ -4448,7 +4448,7 @@ function nysenate_theme_preprocess_page(&$variables) {
   $logged_in = \Drupal::currentUser()->isAuthenticated();
   if ($logged_in) {
     $district = $user->field_district;
-    if (!empty($district)) {
+    if (isset($district)) {
       $variables['has_senator'] = TRUE;
     }
     $senator = $user->field_district->entity->field_senator->entity;

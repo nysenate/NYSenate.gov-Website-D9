@@ -183,7 +183,7 @@ class PetitionsManagementController extends ControllerBase {
         ->debug('Query for petition signatures', [
           '@query' => (string) $query,
           '@nid' => $node->id(),
-          '@district' => $district->id() ?? 0,
+          '@district' => $district ? $district->id() : 'none',
         ]);
     }
     catch (\Throwable $e) {
@@ -192,7 +192,7 @@ class PetitionsManagementController extends ControllerBase {
         [
           '@query' => (string) $query,
           '@nid' => $node->id(),
-          '@district' => $district->id(),
+          '@district' => $district ? $district->id() : 'none',
           '@excp' => $e->getMessage(),
         ]
       );

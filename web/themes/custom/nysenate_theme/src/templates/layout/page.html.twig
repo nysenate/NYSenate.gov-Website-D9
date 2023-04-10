@@ -67,6 +67,9 @@
     "is_logged": logged_in,
     "dashboard_link": dashboard_link,
     "edit_account_link": edit_account_link,
+    "senator_microsite_link": senator_link,
+    "has_senator": has_senator,
+    "senator_image": headshot,
     "socials": socials,
     "form": form,
     "search": {
@@ -96,6 +99,7 @@
   <main role="main" class="container l-row l-row--main l-main">
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
     <div {{ attributes.addClass(layout_classes) }}>
+
       {{ page.content }}
 
       {% if page.sidebar_right %}

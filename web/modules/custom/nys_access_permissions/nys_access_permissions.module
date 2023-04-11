@@ -110,7 +110,7 @@ function nys_access_permissions_menu_local_tasks_alter(&$data, $route_name) {
     'entity.webform.references',
     'entity.webform.canonical',
     'entity.webform.test_form',
-    ];
+  ];
   if (in_array('microsite_content_producer', $user_roles, FALSE) and !in_array('administrator', $user_roles, FALSE)) {
     if (in_array($route_name, $routes)) {
       unset($data['tabs'][0]['entity.webform.settings']);

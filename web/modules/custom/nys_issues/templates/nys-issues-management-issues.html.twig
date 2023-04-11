@@ -1,0 +1,18 @@
+{#
+/**
+ * @file nys-issues-management-issues.html.twig
+ *
+ * @var array issues
+ *   An array of the issue counts.
+ */
+#}
+<div class="nys-senators-management-issues-list">
+  {% if issues is iterable and issues|length > 0 %}
+    {% for val in issues %}
+      {{ include('nys-issues-management-follower-count.html.twig', val) }}
+    {% endfor %}
+  {% else %}
+    No issues are being followed by your constituents.
+  {% endif %}
+</div>
+<div class="issues-user-list"></div>

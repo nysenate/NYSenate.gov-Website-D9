@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Issues.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nys_issues_theme($existing, $type, $theme, $path): array {
+  return [
+    'nys_issues_management_issues' => [
+      'variables' => [
+        'issues' => NULL,
+      ],
+    ],
+    'nys_issues_management_follower_count' => [
+      'variables' => [
+        'tid' => NULL,
+        'name' => NULL,
+        'canonical' => NULL,
+        'total' => NULL,
+      ],
+    ],
+  ];
+}

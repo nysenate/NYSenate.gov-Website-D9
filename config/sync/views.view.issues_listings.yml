@@ -637,9 +637,10 @@ display:
           empty_zero: false
           hide_alter_empty: true
       pager:
-        type: none
+        type: some
         options:
           offset: 0
+          items_per_page: 12
       sorts:
         name:
           id: name
@@ -772,28 +773,10 @@ display:
     position: 1
     display_options:
       pager:
-        type: load_more
+        type: some
         options:
           offset: 0
           items_per_page: 12
-          id: '0'
-          total_pages: '9'
-          expose:
-            items_per_page: 0
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
-            items_per_page_options_all_label: '- All -'
-            offset: 0
-            offset_label: Offset
-          more_button_text: 'Load more'
-          end_text: ''
-          advanced:
-            content_selector: ''
-            pager_selector: ''
-          effects:
-            type: ''
-            speed: slow
       sorts:
         created:
           id: created
@@ -820,7 +803,6 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url.query_args
         - user.permissions
       tags: {  }
   meeting_issues:
@@ -1296,28 +1278,10 @@ display:
           empty_zero: false
           hide_alter_empty: true
       pager:
-        type: load_more
+        type: some
         options:
           offset: 0
           items_per_page: 21
-          id: '0'
-          total_pages: ''
-          expose:
-            items_per_page: 0
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
-            items_per_page_options_all_label: '- All -'
-            offset: 0
-            offset_label: Offset
-          more_button_text: 'Load more'
-          end_text: ''
-          advanced:
-            content_selector: ''
-            pager_selector: ''
-          effects:
-            type: ''
-            speed: slow
       sorts:
         count:
           id: count
@@ -1447,7 +1411,6 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url.query_args
         - user.permissions
       tags: {  }
   news_issues_listing:
@@ -1614,56 +1577,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        link_flag:
-          id: link_flag
-          table: flagging
-          field: link_flag
-          relationship: flag_relationship
-          group_type: group
-          admin_label: ''
-          entity_type: flagging
-          plugin_id: flag_link
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
         title:
           id: title
           table: node_field_data
@@ -1794,50 +1707,6 @@ display:
           expose:
             operator_limit_selection: false
             operator_list: {  }
-        count:
-          id: count
-          table: flag_counts
-          field: count
-          relationship: flag_relationship
-          group_type: group
-          admin_label: ''
-          plugin_id: numeric
-          operator: '>'
-          value:
-            min: ''
-            max: ''
-            value: '100'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            min_placeholder: ''
-            max_placeholder: ''
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
       filter_groups:
         operator: AND
         groups:
@@ -1861,18 +1730,6 @@ display:
         filter_groups: false
         header: false
       relationships:
-        flag_relationship:
-          id: flag_relationship
-          table: taxonomy_term_field_data
-          field: flag_relationship
-          relationship: none
-          group_type: group
-          admin_label: Flags
-          entity_type: taxonomy_term
-          plugin_id: flag_relationship
-          required: true
-          flag: follow_issue
-          user_scope: any
         nid:
           id: nid
           table: taxonomy_index

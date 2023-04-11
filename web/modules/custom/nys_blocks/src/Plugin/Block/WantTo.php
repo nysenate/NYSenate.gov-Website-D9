@@ -32,7 +32,7 @@ class WantTo extends BlockBase {
       $current_user = \Drupal::currentUser();
       $user = User::load($current_user->id());
       if ($user->hasField('field_district') && !$user->get('field_district')
-          ->isEmpty()) {
+        ->isEmpty()) {
         // @phpstan-ignore-next-line
         $senator = $user->field_district->entity->field_senator->entity ?? NULL;
         // @phpstan-ignore-next-line

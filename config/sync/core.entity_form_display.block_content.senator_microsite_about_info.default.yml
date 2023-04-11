@@ -1,0 +1,39 @@
+uuid: 88dd15b1-2fcc-4312-bea4-1923086c4885
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.senator_microsite_about_info
+    - field.field.block_content.senator_microsite_about_info.field_microsite_about_info
+  module:
+    - block_field
+id: block_content.senator_microsite_about_info.default
+targetEntityType: block_content
+bundle: senator_microsite_about_info
+mode: default
+content:
+  field_microsite_about_info:
+    type: block_field_default
+    weight: 26
+    region: content
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

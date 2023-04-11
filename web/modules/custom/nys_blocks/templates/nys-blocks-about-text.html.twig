@@ -1,0 +1,5 @@
+{% if about_text %}
+  {% include "@nysenate_theme/text-layout/text-layout.twig" with {
+    contents: about_text,
+  } only %}
+{% endif %}

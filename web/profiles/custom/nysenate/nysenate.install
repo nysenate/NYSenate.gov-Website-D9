@@ -113,7 +113,7 @@ function nysenate_update_9004() {
  */
 function nysenate_update_9005() {
   // Load the file from a local path.
-  $file_path = '/sites/default/files/ny_senate_bill_share2.png';
+  $file_path = 'public://ny_senate_bill_share2.png';
   $file = File::create([
     'uri' => $file_path,
   ]);
@@ -133,9 +133,9 @@ function nysenate_update_9005() {
   // Save the media entity to the database.
   $media->save();
 
-  $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-  if (!empty($file)) {
-    $image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+  $media_file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+  if (!empty($media_file)) {
+    $image = \Drupal::service('file_url_generator')->generateAbsoluteString($media_file->getFileUri());
 
     // Load the node metatag config entity.
     $config = \Drupal::configFactory()->getEditable('metatag.metatag_defaults.node__bill');

@@ -4544,12 +4544,6 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
         }
       }
     }
-
-    if ($variables['microsite_type'] == 'about') {
-      $block_manager = \Drupal::service('plugin.manager.block');
-      $about_text = $block_manager->createInstance('nys_blocks_about_text', [])->build();
-      $variables['content']['field_block'][] = $about_text;
-    }
   }
 }
 

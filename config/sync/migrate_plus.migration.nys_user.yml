@@ -19,6 +19,9 @@ label: 'User accounts'
 source:
   plugin: d7_user
   key: migrate
+  high_water_property:
+    name: changed
+    alias: u
 process:
   uid:
     -

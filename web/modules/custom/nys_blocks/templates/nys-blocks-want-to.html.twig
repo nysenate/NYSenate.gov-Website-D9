@@ -1,0 +1,33 @@
+
+<div class="c-block c-container c-container--want-to">
+    <div class="c-container--header">
+        <h2 class="c-container--title">I want to...</h2>
+    </div>
+
+    <div class="c-container--body">
+        <div class="c-want-to--item c-want-to--item__senator">
+            <p class="c-want-to--cta">...see what’s going on in my district.</p>
+
+            {% if logged_in %}
+            <a href="{{ senator_link }}" class="c-block--btn loggedin">
+                <span class="nys-senator--thumb">
+                {{ headshot }}
+                </span>
+                <span class="c-senator--cta">go to your senator's page</span>
+            </a>
+            {% else %}
+                <a href="{{ register }}" class="use-ajax c-block--btn" data-dialog-type="modal" data-once="ajax" title="find your senator">find your senator</a>
+            {% endif %}
+        </div>
+
+        <div class="c-want-to--item c-want-to--item__explore">
+            <p class="c-want-to--cta">...find out more about issues that matter to me.</p>
+            <a href="/explore-issues" class="c-block--btn">explore issues</a>
+        </div>
+
+        <div class="c-want-to--item c-want-to--item__news">
+            <p class="c-want-to--cta">...keep up with Senate news</p>
+            <a href="/news-and-issues" class="c-block--btn">see all news</a>
+        </div>
+    </div>
+</div>

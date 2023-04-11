@@ -1,0 +1,32 @@
+{#
+/**
+ * @file nys-petitions-management-petitions.html.twig
+ *
+ * @var array your_petitions
+ *   An array of the senator's petition definitions.
+ * @var array other_petitions
+ *   An array of other senators' petition definitions.
+ *
+ * @see nys-petitions-management-signature-highchart.html.twig
+ */
+#}
+<ul class="tabs">
+  <li class="active tab" data-target="panel1">Your Petitions</li>
+  <li class="tab" data-target="panel2">Other Petitions</li>
+</ul>
+<div id="panel1" class="nys-senators-management-petitions-yours tab-content active">
+  <div class="your-petitions-list">
+    {% if your_petitions is iterable and your_petitions|length > 0 %}
+      {% for val in your_petitions %}
+        {{ include('nys-petitions-management-signature-highchart.html.twig', val) }}
+      {% endfor %}
+    {% else %}
+      No petition signatures were found.
+    {% endif %}
+  </div>
+  <div class="petition-user-list"></div>
+</div>
+<div id="panel2" class="nys-senators-management-petitions-others tab-content">
+  <div class="other-petitions-list">{{ other_petitions }}</div>
+  <div class="petition-user-list"></div>
+</div>

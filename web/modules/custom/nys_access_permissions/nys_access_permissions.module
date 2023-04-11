@@ -94,3 +94,7 @@ function nys_access_permissions_form_alter(&$form, FormStateInterface $form_stat
     }
   }
 }
+
+function your_module_local_tasks_alter(&$local_tasks) {
+  unset($local_tasks['id_of_local_tasks']);
+}

@@ -53,9 +53,9 @@ class BillVoteWidgetForm extends FormBase {
   protected $routeMatch;
 
   /**
-   * Entity type manager.
+   * The entity type manager.
    *
-   * @var \Drupal\core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -341,6 +341,7 @@ class BillVoteWidgetForm extends FormBase {
 
     // If the user is logged in, revert to that email address.
     if (!empty($user->mail)) {
+      /** @var \Drupal\user\UserInterface $user */
       $email_address = $user->getEmail();
     }
 
@@ -358,7 +359,7 @@ class BillVoteWidgetForm extends FormBase {
       // This mimics bill voting behavior.
       if (empty($email_address) && $is_embed) {
         $bill_path = '/node/' . $settings['entity_id'];
-        $url = Url::fromUserInput($bill_path, $options);
+        $url = Url::fromUserInput($bill_path);
         $command = new RedirectCommand($url->toString());
         $response->addCommand($command);
         return $response;

@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder_browser\Form;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockManagerInterface;
@@ -71,6 +72,7 @@ class BlockListingForm extends FormBase {
       'block_provider' => $this->t('Block provider'),
       'category' => $this->t('Category'),
       'weight' => $this->t('Weight'),
+      'status' => $this->t('Status'),
       'operations' => $this->t('Operations'),
     ];
     return $header;
@@ -93,7 +95,9 @@ class BlockListingForm extends FormBase {
 
     foreach ($categories as $category) {
       $category_id = $category["category"]->id;
-      $form['categories'][$category_id] = $this->buildBlockCategoryRow($category["category"]);
+
+      $form['categories']['category_' . $category_id] = $this->buildBlockCategoryRow($category["category"]);
+
       $form['categories']['#tabledrag'][] = [
         'action' => 'order',
         'relationship' => 'sibling',
@@ -133,6 +137,7 @@ class BlockListingForm extends FormBase {
     $form['#attached']['library'][] = 'layout_builder_browser/admin';
     $form['#attached']['library'][] = 'block/drupal.block';
     $form['#attached']['library'][] = 'block/drupal.block.admin';
+
     return $form;
   }
 
@@ -200,10 +205,14 @@ class BlockListingForm extends FormBase {
       ],
     ];
 
+    $row['status'] = [
+      '#type' => 'markup',
+      '#markup' => $block['status'] ? $this->t('Enabled') : $this->t('Disabled'),
+    ];
 
     $row['operations'] = [
       '#type' => 'link',
-      '#title' => $this->t('edit'),
+      '#title' => $this->t('Edit'),
       '#url' => Url::fromRoute('entity.layout_builder_browser_block.edit_form', ['layout_builder_browser_block' => $block['id']]),
       '#attributes' => [
         'class' => ['use-ajax', 'button', 'button--small'],
@@ -247,7 +256,6 @@ class BlockListingForm extends FormBase {
       '#attributes' => [
         'class' => ['region-title', 'region-title-' . $block_category->id()],
       ],
-
     ];
   }
 
@@ -306,15 +314,33 @@ class BlockListingForm extends FormBase {
       ]);
 
       foreach ($blocks as $block) {
+        try {
+          $block_definition = \Drupal::service('plugin.manager.block')->getDefinition($block->block_id);
 
-        $blockdefinition = \Drupal::service('plugin.manager.block')->getDefinition($block->block_id);
-        $item = [];
-        $item['id'] = $block->id;
-        $item['weight'] = $block->weight;
-        $item['label'] = $block->label();
-        $item['block_provider'] =  $blockdefinition['admin_label'] . " - " . $blockdefinition["category"];
-        $item['block_id'] = $block->block_id;
-        $block_categories_group[$key]['blocks'][] = $item;
+          $item = [];
+          $item['id'] = $block->id;
+          $item['weight'] = $block->weight;
+          $item['label'] = $block->label();
+          $item['status'] = $block->status();
+          $item['block_provider'] = $block_definition['admin_label'] . " - " . $block_definition["category"];
+          $item['block_id'] = $block->block_id;
+
+          $block_categories_group[$key]['blocks'][] = $item;
+        }
+        catch (PluginNotFoundException $e) {
+          $message = $this->t('Configuration contains a block "%label" (@id) in "%category_name" category but the block definition is missing. You should <a href="@url">remove</a> the block from the configuration or fix the definition issue.', [
+            '%label' => $block->label(),
+            '@id' => $block->block_id,
+            '%category_name' => $block_category->label(),
+            '@url' => $block->toUrl('delete-form')->toString(),
+          ]);
+          $this->messenger()->addError([
+            '#type' => 'html_tag',
+            '#tag' => 'span',
+            '#value' => $message,
+          ]);
+          $this->logger('layout_builder_browser')->error($message);
+        }
       }
 
     }

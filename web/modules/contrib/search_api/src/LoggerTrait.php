@@ -42,10 +42,10 @@ trait LoggerTrait {
   }
 
   /**
-   * Logs an exception.
+   * Logs an exception or error.
    *
-   * @param \Exception $exception
-   *   The exception that is going to be logged.
+   * @param \Throwable $exception
+   *   The exception or error that is going to be logged.
    * @param string|null $message
    *   (optional) The message to display in the log, which can use variables
    *   retrieved from the exception (like "%type" or "@message"). Or NULL to use
@@ -62,7 +62,7 @@ trait LoggerTrait {
    * @see watchdog_exception()
    * @see \Drupal\Core\Utility\Error::decodeException()
    */
-  protected function logException(\Exception $exception, $message = NULL, array $variables = [], $severity = RfcLogLevel::ERROR, $link = NULL) {
+  protected function logException(\Throwable $exception, $message = NULL, array $variables = [], $severity = RfcLogLevel::ERROR, $link = NULL) {
     // Use a default value if $message is not set.
     if (empty($message)) {
       $message = '%type: @message in %function (line %line of %file).';

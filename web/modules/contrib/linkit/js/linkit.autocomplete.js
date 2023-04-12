@@ -63,21 +63,36 @@
    *   False to prevent further handlers.
    */
   function selectHandler(event, ui) {
-    var $form = $(event.target).closest('form');
+    var $context = $(event.target).closest('form,fieldset,tr');
+
     if (!ui.item.path) {
       throw 'Missing path param.' + JSON.stringify(ui.item);
     }
 
-    $('input[name="href_dirty_check"]', $form).val(ui.item.path);
+    $('input[name="href_dirty_check"]', $context).val(ui.item.path);
 
     if (ui.item.entity_type_id || ui.item.entity_uuid || ui.item.substitution_id) {
       if (!ui.item.entity_type_id || !ui.item.entity_uuid || !ui.item.substitution_id) {
         throw 'Missing path param.' + JSON.stringify(ui.item);
       }
+    }
+    $('input[name="attributes[href]"], input[name$="[attributes][href]"]', $context).val(ui.item.path);
+    $('input[name="attributes[data-entity-type]"], input[name$="[attributes][data-entity-type]"]', $context).val(ui.item.entity_type_id);
+    $('input[name="attributes[data-entity-uuid]"], input[name$="[attributes][data-entity-uuid]"]', $context).val(ui.item.entity_uuid);
+    $('input[name="attributes[data-entity-substitution]"], input[name$="[attributes][data-entity-substitution]"]', $context).val(ui.item.substitution_id);
 
-      $('input[name="attributes[data-entity-type]"]', $form).val(ui.item.entity_type_id);
-      $('input[name="attributes[data-entity-uuid]"]', $form).val(ui.item.entity_uuid);
-      $('input[name="attributes[data-entity-substitution]"]', $form).val(ui.item.substitution_id);
+    if (ui.item.label) {
+      // Automatically set the link title.
+      var $linkTitle = $('*[data-linkit-widget-title-autofill-enabled]', $context);
+      if ($linkTitle.length > 0) {
+        if (!$linkTitle.val() || $linkTitle.hasClass('link-widget-title--auto')) {
+          // Set value to the label.
+          $linkTitle.val(ui.item.label);
+
+          // Flag title as being automatically set.
+          $linkTitle.addClass('link-widget-title--auto');
+        }
+      }
     }
 
     event.target.value = ui.item.path;
@@ -163,7 +178,7 @@
       // Act on textfields with the "form-linkit-autocomplete" class.
       var $autocomplete = $(once('linkit-autocomplete', 'input.form-linkit-autocomplete', context));
       if ($autocomplete.length) {
-        $.widget('custom.autocomplete', $.ui.autocomplete, {
+        $.widget('ui.autocomplete', $.ui.autocomplete, {
           _create: function () {
             this._super();
             this.widget().menu('option', 'items', '> :not(.linkit-result-line--group)');
@@ -172,19 +187,38 @@
           _renderItem: autocomplete.options.renderItem
         });
 
-        // Use jQuery UI Autocomplete on the textfield.
-        $autocomplete.autocomplete(autocomplete.options);
-        $autocomplete.autocomplete('widget').addClass('linkit-ui-autocomplete');
+        // Process each item.
+        $autocomplete.each(function () {
+          var $uri = $(this);
 
-        $autocomplete.click(function () {
-          $autocomplete.autocomplete('search', $autocomplete.val());
-        });
+          // Use jQuery UI Autocomplete on the textfield.
+          $uri.autocomplete(autocomplete.options);
+          $uri.autocomplete('widget').addClass('linkit-ui-autocomplete');
 
-        $autocomplete.on('compositionstart.autocomplete', function () {
-          autocomplete.options.isComposing = true;
-        });
-        $autocomplete.on('compositionend.autocomplete', function () {
-          autocomplete.options.isComposing = false;
+          $uri.click(function () {
+            $uri.autocomplete('search', $uri.val());
+          });
+
+          $uri.on('compositionstart.autocomplete', function () {
+            autocomplete.options.isComposing = true;
+          });
+          $uri.on('compositionend.autocomplete', function () {
+            autocomplete.options.isComposing = false;
+          });
+
+          $uri.closest('.form-item').siblings('.form-type-textfield').find('.linkit-widget-title')
+            .each(function() {
+              // Set automatic title flag if title is the same as uri text.
+              var $title  = $(this);
+              var uriValue = $uri.val();
+              if (uriValue && uriValue === $title.val()) {
+                $title.addClass('link-widget-title--auto');
+              }
+            })
+            .change(function () {
+              // Remove automatic title flag.
+              $(this).removeClass('link-widget-title--auto');
+            });
         });
       }
     },

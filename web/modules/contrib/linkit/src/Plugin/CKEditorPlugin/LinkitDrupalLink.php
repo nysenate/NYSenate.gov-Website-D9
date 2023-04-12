@@ -58,7 +58,7 @@ class LinkitDrupalLink extends DrupalLink implements CKEditorPluginConfigurableI
     $form['linkit_enabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Linkit enabled'),
-      '#default_value' => isset($settings['plugins']['drupallink']['linkit_enabled']) ? $settings['plugins']['drupallink']['linkit_enabled'] : '',
+      '#default_value' => $settings['plugins']['drupallink']['linkit_enabled'] ?? '',
       '#description' => $this->t('Enable Linkit for this text format.'),
     ];
 
@@ -66,7 +66,7 @@ class LinkitDrupalLink extends DrupalLink implements CKEditorPluginConfigurableI
       '#type' => 'select',
       '#title' => $this->t('Linkit profile'),
       '#options' => $options,
-      '#default_value' => isset($settings['plugins']['drupallink']['linkit_profile']) ? $settings['plugins']['drupallink']['linkit_profile'] : '',
+      '#default_value' => $settings['plugins']['drupallink']['linkit_profile'] ?? '',
       '#empty_option' => $this->t('- Select -'),
       '#description' => $this->t('Select the Linkit profile you wish to use with this text format.'),
       '#states' => [

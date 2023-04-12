@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\linkit\Kernel;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\file\Entity\File;
@@ -55,6 +56,18 @@ class LinkitFilterEntityTest extends LinkitKernelTestBase {
     $manager = $this->container->get('plugin.manager.filter');
     $bag = new FilterPluginCollection($manager, []);
     $this->filter = $bag->get('linkit');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+
+    // Undo what the parent did, to allow testing path aliases in kernel tests.
+    $container->getDefinition('path_alias.path_processor')
+      ->addTag('path_processor_inbound')
+      ->addTag('path_processor_outbound');
   }
 
   /**

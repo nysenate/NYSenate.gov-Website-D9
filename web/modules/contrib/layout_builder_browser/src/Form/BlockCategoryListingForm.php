@@ -24,6 +24,7 @@ class BlockCategoryListingForm extends DraggableListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Name');
+    $header['status'] = $this->t('Status');
     return $header + parent::buildHeader();
   }
 
@@ -32,6 +33,7 @@ class BlockCategoryListingForm extends DraggableListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = Html::escape($entity->label());
+    $row['status'] = ['#markup' => $entity->status() ? $this->t('Enabled') : $this->t('Disabled'),];
     return $row + parent::buildRow($entity);
   }
 

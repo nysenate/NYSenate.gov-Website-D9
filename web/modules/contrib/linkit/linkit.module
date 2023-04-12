@@ -83,7 +83,7 @@ function linkit_form_editor_link_dialog_alter(&$form, FormStateInterface $form_s
 
   $form['href_dirty_check'] = [
     '#type' => 'hidden',
-    '#default_value' => isset($input['href']) ? $input['href'] : '',
+    '#default_value' => $input['href'] ?? '',
   ];
 
   $form['attributes']['href'] = array_merge($form['attributes']['href'], [
@@ -94,7 +94,7 @@ function linkit_form_editor_link_dialog_alter(&$form, FormStateInterface $form_s
       'linkit_profile_id' => $linkit_profile_id,
     ],
     "#weight" => -10,
-    '#default_value' => isset($input['href']) ? $input['href'] : '',
+    '#default_value' => $input['href'] ?? '',
   ]);
 
   $fields = [
@@ -109,7 +109,7 @@ function linkit_form_editor_link_dialog_alter(&$form, FormStateInterface $form_s
     $form['attributes'][$field_name] = [
       '#title' => $field_name,
       '#type' => 'hidden',
-      '#default_value' => isset($input[$field_name]) ? $input[$field_name] : '',
+      '#default_value' => $input[$field_name] ?? '',
     ];
   }
 

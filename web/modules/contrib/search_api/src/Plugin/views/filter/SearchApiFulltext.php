@@ -403,12 +403,11 @@ class SearchApiFulltext extends FilterPluginBase {
       && (array_diff($old_fields, $fields) || array_diff($fields, $old_fields));
 
     if ($use_conditions) {
-      $conditions = $query->createConditionGroup('OR');
+      $conditions = $query->createAndAddConditionGroup('OR');
       $op = $this->operator === 'not' ? '<>' : '=';
       foreach ($fields as $field) {
         $conditions->addCondition($field, $this->value, $op);
       }
-      $query->addConditionGroup($conditions);
       return;
     }
 

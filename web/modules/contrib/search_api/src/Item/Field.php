@@ -481,6 +481,10 @@ class Field implements \IteratorAggregate, FieldInterface {
         $index_label = $this->getIndex()->label();
         throw new SearchApiException("Could not retrieve data definition for field '$field_label' on index '$index_label'.");
       }
+      elseif ($definition instanceof ConfigurablePropertyInterface) {
+        $definition = clone $definition;
+        $definition->setConfiguration($this->configuration);
+      }
       $this->dataDefinition = $definition;
     }
     return $this->dataDefinition;

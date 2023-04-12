@@ -39,7 +39,7 @@ function fullcalendar_view_form_node_form_alter(&$form, FormStateInterface $form
       // Only handle datetime field.
       if ($form[$start_field]['widget'][0]['value']['#type'] === 'datetime') {
         // Prepopulate the start date field as the event date.
-        $form[$start_field]['widget'][0]['value']['#default_value'] = new DrupalDateTime($start, 'UTC');
+        $form[$start_field]['widget'][0]['value']['#default_value'] = new DrupalDateTime($start);
       }
     }
   }

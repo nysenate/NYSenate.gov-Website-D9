@@ -9,6 +9,7 @@ use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -58,6 +59,13 @@ class BrowserController extends ControllerBase {
   protected $currentUser;
 
   /**
+   * The module handler to invoke the alter hook.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * BrowserController constructor.
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
@@ -66,13 +74,16 @@ class BrowserController extends ControllerBase {
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(BlockManagerInterface $block_manager, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, AccountInterface $current_user = NULL) {
+  public function __construct(BlockManagerInterface $block_manager, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ModuleHandlerInterface $module_handler, AccountInterface $current_user = NULL) {
     $this->blockManager = $block_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
   }
 
@@ -84,6 +95,7 @@ class BrowserController extends ControllerBase {
       $container->get('plugin.manager.block'),
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
+      $container->get('module_handler'),
       $container->get('current_user')
     );
   }
@@ -92,13 +104,14 @@ class BrowserController extends ControllerBase {
    * Overrides the core ChooseBlockController::build.
    */
   public function browse(SectionStorageInterface $section_storage, $delta, $region) {
-
     $config = $this->config('layout_builder_browser.settings');
     $enabled_section_storages = $config->get('enabled_section_storages');
+
     if (!in_array($section_storage->getPluginId(), $enabled_section_storages)) {
       $default_choose_block_controller = new ChooseBlockController($this->blockManager, $this->entityTypeManager, $this->currentUser);
       return $default_choose_block_controller->build($section_storage, $delta, $region);
     }
+
     $build['filter'] = [
       '#type' => 'search',
       '#title' => $this->t('Filter by block name'),
@@ -120,7 +133,7 @@ class BrowserController extends ControllerBase {
     //   https://www.drupal.org/project/drupal/issues/2984509.
     $delta = (int) $delta;
 
-    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getAvailableContexts($section_storage), [
+    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getPopulatedContexts($section_storage), [
       'section_storage' => $section_storage,
       'delta' => $delta,
       'region' => $region,
@@ -130,20 +143,22 @@ class BrowserController extends ControllerBase {
 
     $blockcats = $this->entityTypeManager
       ->getStorage('layout_builder_browser_blockcat')
-      ->loadMultiple();
+      ->loadByProperties(['status' => TRUE]);
     uasort($blockcats, ['Drupal\Core\Config\Entity\ConfigEntityBase', 'sort']);
 
+    /** @var \Drupal\layout_builder_browser\Entity\LayoutBuilderBrowserBlockCategory $blockcat */
     foreach ($blockcats as $blockcat) {
-
       $blocks = [];
 
-      $query = \Drupal::entityQuery('layout_builder_browser_block')
-        ->condition('category', $blockcat->id);
       $items = $this->entityTypeManager
         ->getStorage('layout_builder_browser_block')
-        ->loadMultiple($query->execute());
+        ->loadByProperties([
+          'category' => $blockcat->id,
+          'status' => TRUE,
+        ]);
       uasort($items, ['Drupal\Core\Config\Entity\ConfigEntityBase', 'sort']);
 
+      /** @var \Drupal\layout_builder_browser\Entity\LayoutBuilderBrowserBlock $item */
       foreach ($items as $item) {
         $key = $item->block_id;
         if (isset($definitions[$key])) {
@@ -151,6 +166,7 @@ class BrowserController extends ControllerBase {
           $blocks[$key]['layout_builder_browser_data'] = $item;
         }
       }
+
       $block_categories[$blockcat->id()]['links'] = $this->getBlocks($section_storage, $delta, $region, $blocks);
       if ($block_categories[$blockcat->id()]['links']) {
         // Only add the information if the category has links.
@@ -163,7 +179,6 @@ class BrowserController extends ControllerBase {
         // Since the category doesn't have links, remove it to avoid confusion.
         unset($block_categories[$blockcat->id()]);
       }
-
     }
 
     // Special case for auto adding of reusable content blocks by bundle.
@@ -207,6 +222,15 @@ class BrowserController extends ControllerBase {
     if ($config->get('use_modal')) {
       $build['#attached']['library'][] = 'layout_builder_browser/modal';
     }
+
+    // Allow modules to alter the browser. Provide the context of the current
+    // browser in case module want to act differently.
+    $contexts = [
+      'section_storage' => $section_storage,
+      'delta' => $delta,
+      'region' => $region
+    ];
+    $this->moduleHandler->alter('layout_builder_browser', $build, $contexts);
 
     return $build;
   }

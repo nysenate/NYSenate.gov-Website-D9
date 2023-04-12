@@ -300,6 +300,12 @@
       calendarOptions.datesDestroy = datesDestroy;
       // Language select element.
       var localeSelectorEl = document.getElementById('locale-selector-' + viewIndex);
+      // Allow passing a default date via query string.
+      const params = (new URL(document.location)).searchParams;
+      const initialDate = params.get('initialDate')
+      if (initialDate) {
+        calendarOptions.defaultDate = initialDate;
+      }
       // Initial the calendar.
       if (calendarEl) {
         if (drupalSettings.calendar) {

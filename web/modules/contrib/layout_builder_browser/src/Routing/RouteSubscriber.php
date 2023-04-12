@@ -24,7 +24,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Ensure we alter the controller after other modules, see
     // https://www.drupal.org/node/3129158.
     $events[RoutingEvents::ALTER] = ['onAlterRoutes', -110];

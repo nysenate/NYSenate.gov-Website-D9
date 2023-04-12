@@ -54,7 +54,7 @@ class VoteDeletionTest extends BrowserTestBase {
   /**
    * Tests deleting a vote.
    */
-  public function testVoteDeletion() {
+  public function testVoteDeletion(): void {
     $session = $this->assertSession();
     $vote_storage = $this->container->get('entity_type.manager')->getStorage('vote');
 
@@ -79,6 +79,7 @@ class VoteDeletionTest extends BrowserTestBase {
     // Get vote id.
     $vote_id = \Drupal::entityQuery('vote')
       ->condition('vote_source', 'source_1')
+      ->accessCheck(TRUE)
       ->execute();
 
     $vote = $vote_storage->load(reset($vote_id));

@@ -1,7 +1,7 @@
 {{ attach_library('nysenate_theme/hero') }}
 {{ attach_library('rain_theme/media') }}
 
-<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == "default" %} hero--default{% endif %}">
+<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == "default" %} hero--default{% endif %} {% if type == "session" or type == "public_hearing" %}hero--public-hearing{% endif %}">
   {% if type == "senator" %}
     {# start of senator hero #}
     <div class="l-header-region l-row l-row--hero c-senator-hero">
@@ -41,12 +41,12 @@
               {% endif %}
             </p>
             <p class="c-senator-hero--district">
-              {% if senator_party %}
+              {% if senator_party and is_active %}
                 <span class="c-senator-hero--party">
                   {{ senator_party }}
                 </span>
               {% endif %}
-              {% if district_number %}
+              {% if district_number and is_active %}
                 <a href="{{ district_number.url }}">{{ district_number.text }}
                   Senate District</a>
               {% endif %}

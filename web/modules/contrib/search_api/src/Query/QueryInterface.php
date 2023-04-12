@@ -160,10 +160,21 @@ interface QueryInterface extends ConditionSetInterface {
    *
    * @return \Drupal\search_api\Query\ConditionGroupInterface
    *   A condition group object that is set to use the specified conjunction.
-   *
-   * @todo Add $add_directly = TRUE parameter.
    */
   public function createConditionGroup($conjunction = 'AND', array $tags = []);
+
+  /**
+   * Creates a new condition group and adds it to this query object.
+   *
+   * @param string $conjunction
+   *   The conjunction to use for the condition group – either 'AND' or 'OR'.
+   * @param string[] $tags
+   *   (optional) Tags to set on the condition group.
+   *
+   * @return \Drupal\search_api\Query\ConditionGroupInterface
+   *   The newly added condition group object.
+   */
+  public function createAndAddConditionGroup(string $conjunction = 'AND', array $tags = []): ConditionGroupInterface;
 
   /**
    * Sets the keys to search for.
@@ -518,6 +529,8 @@ interface QueryInterface extends ConditionSetInterface {
 
   /**
    * Retrieves the tags set on this query.
+   *
+   * See README.md for a list of all known query tags.
    *
    * @return string[]
    *   The tags associated with this search query, as both the array keys and

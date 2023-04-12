@@ -1,0 +1,23 @@
+nys_issues.dashboard.issues:
+  path: '/dashboard/issues'
+  defaults:
+    _title: 'Issues I''m Following'
+    _controller: '\Drupal\nys_issues\Controller\DashboardIssuesController::followedIssues'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+nys_issues.management.ajax.following_issue:
+  path: '/taxonomy/term/{taxonomy_term}/issues/{tid}'
+  defaults:
+    _title: 'Following Issue'
+    _controller: '\Drupal\nys_issues\Controller\IssuesManagementController::ajaxGetFollows'
+  requirements:
+    _lc_mcp_senator_access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+    parameters:
+      taxonomy_term:
+        type: entity:taxonomy_term
+        bundle: ['senator']
+      tid:
+        type: entity:taxonomy_term
+        bundle: ['issues']

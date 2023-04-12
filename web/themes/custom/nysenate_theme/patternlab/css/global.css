@@ -540,13 +540,16 @@ strong {
 .icon-before__quotes::before,
 .c-pullquote p::before,
 .icon-before__find-senator::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__senator .c-block--btn::before,
 .icon-before__recruit-friends::before,
 .c-news-container .c-news-block .nys-senator--involved::before,
 .icon-before__left::before,
 .icon-before__right::before,
 .icon-before__arrow::before,
 .icon-before__search::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__explore .c-block--btn::before,
 .icon-before__presskit::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__news .c-block--btn::before,
 .c-block .c-view--link::before,
 .icon-before__bill::before,
 .c-block .c-detail--download::before,
@@ -656,7 +659,9 @@ strong {
 .icon-before__facebook::before {
   content: '\21'; }
 
-.icon-before__find-senator::before {
+
+.icon-before__find-senator::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__senator .c-block--btn::before {
   content: '\24'; }
 
 .icon-before__hamburger::before {
@@ -708,6 +713,7 @@ strong {
 
 
 .icon-before__presskit::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__news .c-block--btn::before,
 .c-block .c-view--link::before {
   content: '\6b'; }
 
@@ -727,7 +733,9 @@ strong {
 .icon-before__right::before {
   content: '\3e'; }
 
-.icon-before__search::before {
+
+.icon-before__search::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__explore .c-block--btn::before {
   content: '\6d'; }
 
 .icon-before__see-less::before {
@@ -1931,7 +1939,7 @@ body .block-content--type-gallery {
     color: #fff;
     font-size: 36px; }
 
-.c-senate-works-step-description {
+p.c-senate-works-step-description {
   margin: 25px 0 20px 0;
   line-height: 100%;
   text-align: center;
@@ -2225,6 +2233,104 @@ body .block-content--type-gallery {
     bottom: 0;
     right: 0;
     left: 0; } }
+
+.pane-nys-blocks-want-to {
+  display: none; }
+  @media screen and (min-width: 768px) {
+    .pane-nys-blocks-want-to {
+      display: block; } }
+
+.c-block.c-container--want-to {
+  display: none; }
+  @media screen and (min-width: 768px) {
+    .c-block.c-container--want-to {
+      display: block; } }
+  .c-block.c-container--want-to .c-container--header {
+    padding-bottom: 15px; }
+  .c-block.c-container--want-to .c-container--title {
+    font-family: "Adelle SemiBold", serif;
+    color: #444444;
+    text-transform: none;
+    font-size: 32px;
+    letter-spacing: normal; }
+  .c-block.c-container--want-to .c-want-to--item {
+    position: relative;
+    width: 100%;
+    margin: 0 auto; }
+    .c-block.c-container--want-to .c-want-to--item .c-want-to--cta {
+      margin: 35px 0 20px;
+      padding-right: 50px;
+      font-family: "Adelle Light", serif;
+      font-size: 16px;
+      width: 100%; }
+    .c-block.c-container--want-to .c-want-to--item .c-block--btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      background: #f1af58;
+      height: 70px;
+      line-height: 1;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 2.6px;
+      padding-left: 20px;
+      text-align: left;
+      transition: background-color 0.2s ease;
+      color: #fff; }
+      .c-block.c-container--want-to .c-want-to--item .c-block--btn:hover {
+        background: #cb8d37; }
+      .c-block.c-container--want-to .c-want-to--item .c-block--btn::before {
+        height: auto; }
+    .c-block.c-container--want-to .c-want-to--item .nys-senator--thumb {
+      height: 45px;
+      width: 46px;
+      margin: 0 10px; }
+    .c-block.c-container--want-to .c-want-to--item.c-want-to--item__senator .c-block--btn.loggedin {
+      line-height: 1;
+      text-align: left;
+      padding-left: 0; }
+      .c-block.c-container--want-to .c-want-to--item.c-want-to--item__senator .c-block--btn.loggedin::before {
+        content: '';
+        width: 1px;
+        height: 100%;
+        display: inline-block;
+        vertical-align: middle; }
+      .c-block.c-container--want-to .c-want-to--item.c-want-to--item__senator .c-block--btn.loggedin .c-senator--cta {
+        display: inline-block;
+        vertical-align: middle;
+        width: 140px;
+        font-size: 12px;
+        line-height: 16px; }
+  @media screen and (min-width: 768px) {
+    .c-block.c-container--want-to {
+      margin: 40px 0; }
+      .c-block.c-container--want-to .c-container--title {
+        font-size: 38px; }
+      .c-block.c-container--want-to .c-want-to--item {
+        width: 32%;
+        float: left;
+        height: 190px;
+        margin: 0;
+        padding-bottom: 70px; }
+        .c-block.c-container--want-to .c-want-to--item + .c-want-to--item {
+          margin-left: 2%; }
+        .c-block.c-container--want-to .c-want-to--item .c-want-to--cta {
+          margin-top: 25px;
+          padding: 0 20px;
+          display: inline-block;
+          vertical-align: middle;
+          font-size: 17px;
+          text-align: center; }
+        .c-block.c-container--want-to .c-want-to--item .c-block--btn {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          padding-left: 0;
+          text-align: center; }
+          .c-block.c-container--want-to .c-want-to--item .c-block--btn.loggedin {
+            text-align: left; } }
 
 .layout-builder-form .layout-builder__message > .container {
   max-width: 100%; }
@@ -2596,7 +2702,9 @@ main.l-row--main {
         object-fit: cover; }
   .nys-senator--thumb img {
     height: 100%;
-    width: 100%; }
+    width: 100%;
+    -o-object-fit: cover;
+    object-fit: cover; }
 
 .nys-senator--info {
   display: inline-block;
@@ -3555,13 +3663,16 @@ strong {
 .icon-before__quotes::before,
 .c-pullquote p::before,
 .icon-before__find-senator::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__senator .c-block--btn::before,
 .icon-before__recruit-friends::before,
 .c-news-container .c-news-block .nys-senator--involved::before,
 .icon-before__left::before,
 .icon-before__right::before,
 .icon-before__arrow::before,
 .icon-before__search::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__explore .c-block--btn::before,
 .icon-before__presskit::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__news .c-block--btn::before,
 .c-block .c-view--link::before,
 .icon-before__bill::before,
 .c-block .c-detail--download::before,
@@ -3671,7 +3782,9 @@ strong {
 .icon-before__facebook::before {
   content: '\21'; }
 
-.icon-before__find-senator::before {
+
+.icon-before__find-senator::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__senator .c-block--btn::before {
   content: '\24'; }
 
 .icon-before__hamburger::before {
@@ -3723,6 +3836,7 @@ strong {
 
 
 .icon-before__presskit::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__news .c-block--btn::before,
 .c-block .c-view--link::before {
   content: '\6b'; }
 
@@ -3742,7 +3856,9 @@ strong {
 .icon-before__right::before {
   content: '\3e'; }
 
-.icon-before__search::before {
+
+.icon-before__search::before,
+.c-block.c-container--want-to .c-want-to--item.c-want-to--item__explore .c-block--btn::before {
   content: '\6d'; }
 
 .icon-before__see-less::before {

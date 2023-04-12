@@ -542,3 +542,30 @@ function nys_senators_update_9019() {
 function nys_senators_update_9020() {
   module_set_weight('nys_senators', 5);
 }
+
+/**
+ * Add About Information block on About Microsite page.
+ */
+function nys_senators_update_9021() {
+  // Import Senator Microsite About Text Custom Block type.
+  nys_senators_import_config();
+
+  // Queries all senator terms.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+  ]);
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->condition('field_microsite_page_type.entity:taxonomy_term.name',
+        ['About'], 'IN')
+      ->execute();
+
+    if (!empty($query)) {
+      _nys_senators_add_about_text_blocks($senator_term);
+    }
+  }
+}

@@ -2,17 +2,17 @@
 
 namespace Drupal\fullcalendar_view\Plugin\views\style;
 
-use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\fullcalendar_view\TaxonomyColor;
-use Drupal\core\form\FormStateInterface;
-use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityTypeBundleInfo;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\core\form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfo;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\fullcalendar_view\TaxonomyColor;
+use Drupal\views\Plugin\views\style\StylePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -47,7 +47,7 @@ class FullCalendarDisplay extends StylePluginBase {
   /**
    * The module handler service.
    *
-   * @var \Drupal\Core\Extension\ModuleHandler
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
@@ -76,7 +76,7 @@ class FullCalendarDisplay extends StylePluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\fullcalendar_view\TaxonomyColor $taxonomyColorService
    *   The Taxonomy Color Service object.
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The Module Handler Service object.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -88,7 +88,7 @@ class FullCalendarDisplay extends StylePluginBase {
     $plugin_id,
     $plugin_definition,
     TaxonomyColor $taxonomyColorService,
-    ModuleHandler $module_handler,
+    ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
     EntityTypeBundleInfo $entity_type_bundle_info
   ) {

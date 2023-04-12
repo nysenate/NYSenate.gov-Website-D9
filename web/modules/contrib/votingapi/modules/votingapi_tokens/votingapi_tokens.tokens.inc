@@ -128,6 +128,7 @@ function _votingapi_tokens_get_votes_per_entity($entity_type_id, $entity_id, $vo
     ->condition('entity_type', $entity_type_id)
     ->condition('entity_id', $entity_id)
     ->condition('type', $vote_type)
+    ->accessCheck(TRUE)
     ->execute();
   $vote_storage = \Drupal::entityTypeManager()->getStorage('vote');
   $values = [];

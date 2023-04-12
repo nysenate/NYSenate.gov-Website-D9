@@ -160,8 +160,8 @@ class FullcalendarViewPreprocess {
     $start_field_option = $fields[$start_field]->options;
     $end_field_option = empty($end_field) ? NULL : $fields[$end_field]->options;
     // Custom timezone or user timezone.
-    $timezone = !empty($start_field_option['settings']['timezone_override']) ?
-    $start_field_option['settings']['timezone_override'] : date_default_timezone_get();
+    $timezone = !empty($start_field_option['settings']['timezone']) ?
+    $start_field_option['settings']['timezone'] : date_default_timezone_get();
     // Set the first day setting.
     $first_day = isset($options['firstDay']) ? intval($options['firstDay']) : 0;
     // Left side buttons.
@@ -362,7 +362,7 @@ class FullcalendarViewPreprocess {
             }
             else {
               // Without end date field, this event can't be resized.
-              $entry['eventDurationEditable'] = FALSE;
+              $entry['durationEditable'] = FALSE;
             }
             // Set the color for this event.
             if (isset($event_type) && isset($color_tax[$event_type])) {

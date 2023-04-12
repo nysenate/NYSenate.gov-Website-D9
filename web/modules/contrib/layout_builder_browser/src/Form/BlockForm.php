@@ -39,7 +39,6 @@ class BlockForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-
     $definitions = \Drupal::service('plugin.manager.block')
       ->getFilteredDefinitions('layout_builder', NULL, ['list' => 'inline_blocks']);
 
@@ -47,20 +46,23 @@ class BlockForm extends EntityForm {
     $provider_options = [];
     $block_provider_map = [];
 
-
     foreach ($definitions as $id => $definition) {
-      if ($definition["category"] instanceof TranslatableMarkup) {
-        $catid = $definition["category"]->getUntranslatedString();
-        $catlabel = $definition["category"]->render();
+      $category_id = $category_label = $definition['category'];
+      if ($definition['category'] instanceof TranslatableMarkup) {
+        $category_id = $category_label = $definition['category']->render();
       }
-      else {
-        $catid = $catlabel = $definition["category"];
+
+      $blocks[$category_id][$id] = $definition['admin_label'];
+      if (str_contains($id, 'field_block:')) {
+        $entity_id = ucwords(str_replace('_', ' ', explode(':', $id)[2]));
+        $blocks[$category_id][$id] = $definition['admin_label'] . ' (' . $entity_id . ')';
       }
-      $blocks[$catid][$id] = $definition['admin_label'];
-      $provider_options[$catid] = $catlabel;
-      $block_provider_map[$id] = $catid;
+
+      $provider_options[$category_id] = $category_label;
+      $block_provider_map[$id] = $category_id;
     }
 
+    /** @var \Drupal\layout_builder_browser\Entity\LayoutBuilderBrowserBlock $browser_block */
     $browser_block = $this->entity;
 
     $block_id = $browser_block->block_id;
@@ -154,6 +156,12 @@ class BlockForm extends EntityForm {
       '#required' => TRUE,
     ];
 
+    $form['status'] = [
+      '#title' => $this->t('Enabled'),
+      '#type' => 'checkbox',
+      '#default_value' => $browser_block->status(),
+    ];
+
     return $form;
   }
 
@@ -192,6 +200,7 @@ class BlockForm extends EntityForm {
   public function exist($id) {
     $entity = $this->entityTypeManager->getStorage('layout_builder_browser_block')
       ->getQuery()
+      ->accessCheck()
       ->condition('id', $id)
       ->execute();
     return (bool) $entity;

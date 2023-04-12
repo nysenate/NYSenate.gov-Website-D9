@@ -16,13 +16,25 @@
     attach: function attach() {
       var self = this;
       var heroContainer = $('.hero--homepage');
+      var landingHeroContainer = $('.landing-page-hero');
       var pageMargin = ($('main').outerWidth(true) - $('main').outerWidth()) / 2;
       var pagePadding = ($('main').innerWidth() - $('main').width()) / 2;
-      self.heroMargin(heroContainer, pageMargin, pagePadding);
+
+      if (heroContainer.length > 0) {
+        self.heroMargin(heroContainer, pageMargin, pagePadding);
+      } else if (landingHeroContainer.length > 0) {
+        self.heroMargin(landingHeroContainer, pageMargin, pagePadding);
+      }
+
       $(window).on('resize', function () {
         pageMargin = ($('main').outerWidth(true) - $('main').outerWidth()) / 2;
         pagePadding = ($('main').innerWidth() - $('main').width()) / 2;
-        self.heroMargin(heroContainer, pageMargin, pagePadding);
+
+        if (heroContainer.length > 0) {
+          self.heroMargin(heroContainer, pageMargin, pagePadding);
+        } else if (landingHeroContainer.length > 0) {
+          self.heroMargin(landingHeroContainer, pageMargin, pagePadding);
+        }
       });
     },
     heroMargin: function heroMargin(heroContainer, pageMargin, pagePadding) {

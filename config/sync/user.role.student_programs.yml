@@ -5,11 +5,15 @@ dependencies:
   config:
     - filter.format.basic_html
     - filter.format.full_html
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
     - node.type.student_program
   module:
     - captcha
     - field_permissions
     - filter
+    - media
     - node
     - system
     - toolbar
@@ -29,15 +33,26 @@ permissions:
   - 'add media from remote sources'
   - 'create chapter content'
   - 'create field_featured'
+  - 'create file media'
   - 'create files'
+  - 'create image media'
+  - 'create media'
+  - 'create remote_video media'
   - 'create student_program content'
   - 'delete any student_program content'
+  - 'delete media'
   - 'delete own chapter content'
+  - 'delete own file media'
+  - 'delete own image media'
+  - 'delete own remote_video media'
   - 'delete own student_program content'
   - 'delete own webform submissions'
   - 'edit any student_program content'
   - 'edit own chapter content'
   - 'edit own field_featured'
+  - 'edit own file media'
+  - 'edit own image media'
+  - 'edit own remote_video media'
   - 'edit own student_program content'
   - 'edit own webform submissions'
   - 'execute node_publish_action'
@@ -45,6 +60,7 @@ permissions:
   - 'execute node_unpublish_action'
   - 'execute views_bulk_operations_modify_action'
   - 'skip CAPTCHA'
+  - 'update media'
   - 'use media wysiwyg'
   - 'use text format basic_html'
   - 'use text format full_html'
@@ -52,4 +68,5 @@ permissions:
   - 'view own field_featured'
   - 'view own files'
   - 'view own private files'
+  - 'view own unpublished media'
   - 'view the administration theme'

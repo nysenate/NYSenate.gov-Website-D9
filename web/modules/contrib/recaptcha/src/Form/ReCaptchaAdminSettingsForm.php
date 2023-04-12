@@ -105,14 +105,6 @@ class ReCaptchaAdminSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Size'),
       '#type' => 'select',
     ];
-    $form['widget']['recaptcha_tabindex'] = [
-      '#default_value' => $config->get('widget.tabindex'),
-      '#description' => $this->t('Set the <a href=":tabindex">tabindex</a> of the widget and challenge (Default = 0). If other elements in your page use tabindex, it should be set to make user navigation easier.', [':tabindex' => Url::fromUri('https://www.w3.org/TR/html4/interact/forms.html', ['fragment' => 'adef-tabindex'])->toString()]),
-      '#maxlength' => 4,
-      '#title' => $this->t('Tabindex'),
-      '#type' => 'number',
-      '#min' => -1,
-    ];
     $form['widget']['recaptcha_noscript'] = [
       '#default_value' => $config->get('widget.noscript'),
       '#description' => $this->t('If JavaScript is a requirement for your site, you should <strong>not</strong> enable this feature. With this enabled, a compatibility layer will be added to the captcha to support non-js users.'),
@@ -136,7 +128,6 @@ class ReCaptchaAdminSettingsForm extends ConfigFormBase {
       ->set('widget.theme', $form_state->getValue('recaptcha_theme'))
       ->set('widget.type', $form_state->getValue('recaptcha_type'))
       ->set('widget.size', $form_state->getValue('recaptcha_size'))
-      ->set('widget.tabindex', $form_state->getValue('recaptcha_tabindex'))
       ->set('widget.noscript', $form_state->getValue('recaptcha_noscript'))
       ->save();
 

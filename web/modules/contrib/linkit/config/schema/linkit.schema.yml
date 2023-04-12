@@ -113,6 +113,27 @@ ckeditor.plugin.drupallink:
       type: string
       label: 'Linkit profile'
 
+# Schema for the Linkit widget.
+field.widget.settings.linkit:
+  type: field.widget.settings.link_default
+  label: 'Linkit widget settings'
+  mapping:
+    linkit_profile:
+      type: string
+      label: 'Linkit profile'
+    linkit_auto_link_text:
+      type: boolean
+      label: 'Automatically populate link text from entity label'
+
+# Schema for the Linkit formatter.
+field.formatter.settings.linkit:
+  type: field.formatter.settings.link
+  label: 'Linkit format settings'
+  mapping:
+    linkit_profile:
+      type: string
+      label: 'Linkit profile'
+
 ckeditor5.plugin.linkit_extension:
   type: mapping
   label: Linkit

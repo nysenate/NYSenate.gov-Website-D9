@@ -53,10 +53,8 @@ class ContentEntity extends DatasourcePluginBase implements PluginFormInterface 
 
   /**
    * The key for accessing last tracked ID information in site state.
-   *
-   * @todo Make protected once we depend on PHP 7.1+.
    */
-  const TRACKING_PAGE_STATE_KEY = 'search_api.datasource.entity.last_ids';
+  protected const TRACKING_PAGE_STATE_KEY = 'search_api.datasource.entity.last_ids';
 
   /**
    * The database connection.

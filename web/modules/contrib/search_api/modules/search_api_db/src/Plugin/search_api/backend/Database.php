@@ -17,11 +17,13 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\search_api\Backend\BackendPluginBase;
 use Drupal\search_api\Contrib\AutocompleteBackendInterface;
 use Drupal\search_api\DataType\DataTypePluginManager;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\Field;
 use Drupal\search_api\Item\FieldInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Plugin\PluginFormTrait;
@@ -34,6 +36,7 @@ use Drupal\search_api_autocomplete\SearchInterface;
 use Drupal\search_api_autocomplete\Suggestion\SuggestionFactory;
 use Drupal\search_api_db\DatabaseCompatibility\DatabaseCompatibilityHandlerInterface;
 use Drupal\search_api_db\DatabaseCompatibility\GenericDatabase;
+use Drupal\search_api_db\DatabaseCompatibility\LocationAwareDatabaseInterface;
 use Drupal\search_api_db\Event\QueryPreExecuteEvent;
 use Drupal\search_api_db\Event\SearchApiDbEvents;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -606,6 +609,14 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
   /**
    * {@inheritdoc}
    */
+  public function supportsDataType($type): bool {
+    return $type === 'location'
+      && $this->dbmsCompatibility instanceof LocationAwareDatabaseInterface;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postUpdate() {
     if (empty($this->server->original)) {
       // When in doubt, opt for the safer route and reindex.
@@ -791,9 +802,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
    * @throws \Drupal\search_api\SearchApiException
    *   Thrown if creating the table failed.
    */
-  protected function createFieldTable(FieldInterface $field = NULL, array $db = [], $type = 'field') {
-    // @todo Make $field required but nullable (and $db required again) once we
-    //   depend on PHP 7.1+.
+  protected function createFieldTable(?FieldInterface $field, array $db, string $type = 'field'): void {
     $new_table = !$this->database->schema()->tableExists($db['table']);
     if ($new_table) {
       $table = [
@@ -869,13 +878,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
     try {
       $this->database->schema()->addIndex($db['table'], '_' . $column, $index_spec, $table_spec);
     }
-    // @todo Use multi-catch once we depend on PHP 7.1+.
-    catch (\PDOException $e) {
-      $variables['%column'] = $column;
-      $variables['%table'] = $db['table'];
-      $this->logException($e, '%type while trying to add a database index for column %column to table %table: @message in %function (line %line of %file).', $variables, RfcLogLevel::WARNING);
-    }
-    catch (DatabaseException $e) {
+    catch (\PDOException | DatabaseException $e) {
       $variables['%column'] = $column;
       $variables['%table'] = $db['table'];
       $this->logException($e, '%type while trying to add a database index for column %column to table %table: @message in %function (line %line of %file).', $variables, RfcLogLevel::WARNING);
@@ -919,6 +922,13 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
 
       case 'boolean':
         return ['type' => 'int', 'size' => 'tiny'];
+
+      /** @noinspection PhpMissingBreakStatementInspection */
+      case 'location':
+        if ($this->dbmsCompatibility instanceof LocationAwareDatabaseInterface) {
+          return $this->dbmsCompatibility->getLocationFieldSqlType();
+        }
+        // Fall-through.
 
       default:
         try {
@@ -1552,6 +1562,13 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       case 'boolean':
         return $value ? 1 : 0;
 
+      /** @noinspection PhpMissingBreakStatementInspection */
+      case 'location':
+        if ($this->dbmsCompatibility instanceof LocationAwareDatabaseInterface) {
+          return $this->dbmsCompatibility->convertValue($value, $original_type);
+        }
+        // Fall-through.
+
       default:
         try {
           $data_type = $this->getDataTypePluginManager()->createInstance($type);
@@ -1702,9 +1719,12 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
 
         $result = $db_query->execute();
 
+        $indexed_fields = $index->getFields(TRUE);
+        $retrieved_field_names = $query->getOption('search_api_retrieved_field_values', []);
         foreach ($result as $row) {
           $item = $this->getFieldsHelper()->createItem($index, $row->item_id);
           $item->setScore($row->score / self::SCORE_MULTIPLIER);
+          $this->extractRetrievedFieldValuesWhereAvailable($row, $indexed_fields, $retrieved_field_names, $item);
           $results->addResultItem($item);
         }
         if ($skip_count && !empty($item)) {
@@ -1712,14 +1732,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         }
       }
     }
-    // @todo Replace with multi-catch once we depend on PHP 7.1+.
-    catch (DatabaseException $e) {
-      if ($query instanceof RefinableCacheableDependencyInterface) {
-        $query->mergeCacheMaxAge(0);
-      }
-      throw new SearchApiException('A database exception occurred while searching.', $e->getCode(), $e);
-    }
-    catch (\PDOException $e) {
+    catch (\PDOException | DatabaseException $e) {
       if ($query instanceof RefinableCacheableDependencyInterface) {
         $query->mergeCacheMaxAge(0);
       }
@@ -1735,6 +1748,30 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       foreach (array_keys($this->$property) as $value) {
         $results->$method($value);
       }
+    }
+  }
+
+  /**
+   * Adds retrieved field values to a result item.
+   *
+   * The query result may include values of *some* indexed fields listed in the
+   * "search_api_retrieved_field_values" query option.  When such a field value
+   * is spotted, we add these to the given result item.
+   */
+  public function extractRetrievedFieldValuesWhereAvailable(object $result_row, array $indexed_fields, array $retrieved_fields, ItemInterface $item): void {
+    foreach ($retrieved_fields as $retrieved_field_name) {
+      $retrieved_field_value = $result_row->{$retrieved_field_name} ?? NULL;
+      if (!isset($retrieved_field_value)) {
+        continue;
+      }
+
+      if (!array_key_exists($retrieved_field_name, $indexed_fields)) {
+        continue;
+      }
+      $retrieved_field = clone $indexed_fields[$retrieved_field_name];
+
+      $retrieved_field->addValue($retrieved_field_value);
+      $item->setField($retrieved_field_name, $retrieved_field);
     }
   }
 
@@ -1809,8 +1846,20 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
 
     $condition_group = $query->getConditionGroup();
     $this->addLanguageConditions($condition_group, $query);
+    // @todo #2877319 Maybe, like addLanguageConditions(), add a method here
+    //   checking for the "search_api_location" option on the query and, if
+    //   present, add new conditions based on the option(s) to the query.
+    //   Or place the conditions directly on the query below this if block -
+    //   in that case, you might need to remove any conditions on those fields
+    //   from the query.
+    if ($this->dbmsCompatibility instanceof LocationAwareDatabaseInterface) {
+      $index_table = $this->getIndexDbInfo($query->getIndex())['index_table'];
+      $index_table_alias = $this->getTableAlias(['table' => $index_table], $db_query);
+      $this->dbmsCompatibility->addLocationFilter($index_table_alias, $query, $db_query);
+    }
+
     if ($condition_group->getConditions()) {
-      $condition = $this->createDbCondition($condition_group, $fields, $db_query, $query->getIndex());
+      $condition = $this->createDbCondition($condition_group, $fields, $db_query, $query->getIndex(), $query);
       if ($condition) {
         $db_query->condition($condition);
       }
@@ -2051,7 +2100,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       }
       elseif ($match_parts) {
         $db_query->fields('t', ['item_id']);
-        $db_query->addExpression('SUM(t.score)', 'score');
+        $db_query->addExpression('SUM([t].[score])', 'score');
       }
       elseif ($not_nested) {
         $db_query->fields('t', ['item_id', 'score']);
@@ -2082,7 +2131,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
           // afterwards verify that each word matched at least once.
           $alias = 'w' . ++$this->expressionCounter;
           $like = '%' . $this->database->escapeLike($word) . '%';
-          $alias = $db_query->addExpression("CASE WHEN t.word LIKE :like_$alias THEN 1 ELSE 0 END", $alias, [":like_$alias" => $like]);
+          $alias = $db_query->addExpression("CASE WHEN [t].[word] LIKE :like_$alias THEN 1 ELSE 0 END", $alias, [":like_$alias" => $like]);
           $db_query->groupBy($alias);
           $keyword_hits[] = $alias;
         }
@@ -2109,7 +2158,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
           if (!$match_parts) {
             $word .= ' ';
             $var = ':word' . strlen($word);
-            $query->addExpression($var, 't.word', [$var => $word]);
+            $query->addExpression($var, NULL, [$var => $word]);
           }
           else {
             $i += $word_count;
@@ -2135,7 +2184,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       $db_query = $this->database->select($db_query, 't');
       $db_query->addField('t', 'item_id', 'item_id');
       if (!$neg) {
-        $db_query->addExpression('SUM(t.score)', 'score');
+        $db_query->addExpression('SUM([t].[score])', 'score');
         $db_query->groupBy('t.item_id');
       }
       if ($conj == 'AND' && $subs > 1) {
@@ -2145,10 +2194,10 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         }
         if (!$match_parts) {
           if ($mul_words) {
-            $db_query->having('COUNT(DISTINCT t.word) >= ' . $var, [$var => $subs]);
+            $db_query->having('COUNT(DISTINCT [t].[word]) >= ' . $var, [$var => $subs]);
           }
           else {
-            $db_query->having('COUNT(t.word) >= ' . $var, [$var => $subs]);
+            $db_query->having('COUNT([t].[word]) >= ' . $var, [$var => $subs]);
           }
         }
         else {
@@ -2237,6 +2286,8 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
    *   The database query to which the condition will be added.
    * @param \Drupal\search_api\IndexInterface $index
    *   The index we're searching on.
+   * @param \Drupal\search_api\Query\QueryInterface $query
+   *   The Search API query that is the source of the conditions.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface|null
    *   The condition to set on the query, or NULL if none is necessary.
@@ -2245,7 +2296,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
    *   Thrown if an unknown field or operator was used in one of the contained
    *   conditions.
    */
-  protected function createDbCondition(ConditionGroupInterface $conditions, array $fields, SelectInterface $db_query, IndexInterface $index) {
+  protected function createDbCondition(ConditionGroupInterface $conditions, array $fields, SelectInterface $db_query, IndexInterface $index, QueryInterface $query) {
     $conjunction = $conditions->getConjunction();
     $db_condition = $db_query->conditionGroupFactory($conjunction);
     $db_info = $this->getIndexDbInfo($index);
@@ -2255,7 +2306,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
     $wildcard_count = 0;
     foreach ($conditions->getConditions() as $condition) {
       if ($condition instanceof ConditionGroupInterface) {
-        $sub_condition = $this->createDbCondition($condition, $fields, $db_query, $index);
+        $sub_condition = $this->createDbCondition($condition, $fields, $db_query, $index, $query);
         if ($sub_condition) {
           $db_condition->condition($sub_condition);
         }
@@ -2285,6 +2336,13 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
             $method = $not_equals ? 'isNotNull' : 'isNull';
             $db_condition->$method($column);
           }
+          elseif (($field_info['type'] ?? '') === 'location'
+              && $this->dbmsCompatibility instanceof LocationAwareDatabaseInterface) {
+            // @todo #2877319 Place filter on query, possibly also taking the
+            //   options into account. Or, if this is handled somewhere else,
+            //   simply ignore this condition.
+            $this->dbmsCompatibility->addLocationDbCondition($field_info['column'], $value, $operator, $query, $db_query);
+          }
           elseif ($not_between) {
             $nested_condition = $db_query->conditionGroupFactory('OR');
             $nested_condition->condition($column, $value[0], '<');
@@ -2310,12 +2368,12 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
           if (!isset($keys)) {
             continue;
           }
-          $query = $this->createKeysQuery($keys, [$field => $field_info], $fields, $index);
+          $fulltext_query = $this->createKeysQuery($keys, [$field => $field_info], $fields, $index);
           // We only want the item IDs, so we use the keys query as a nested
           // query.
-          $query = $this->database->select($query, 't')
+          $fulltext_query = $this->database->select($fulltext_query, 't')
             ->fields('t', ['item_id']);
-          $db_condition->condition('t.item_id', $query, $not_equals ? 'NOT IN' : 'IN');
+          $db_condition->condition('t.item_id', $fulltext_query, $not_equals ? 'NOT IN' : 'IN');
         }
         elseif ($not_equals) {
           // The situation is more complicated for negative conditions on
@@ -2445,6 +2503,11 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
           continue;
         }
 
+        if ($this->dbmsCompatibility instanceof LocationAwareDatabaseInterface
+            && $this->dbmsCompatibility->addLocationSort($field_name, $order, $query, $db_query)) {
+          continue;
+        }
+
         if (!isset($fields[$field_name])) {
           throw new SearchApiException("Trying to sort on unknown field '$field_name'.");
         }
@@ -2497,6 +2560,12 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         continue;
       }
       $field = $fields[$facet['field']];
+
+      if (($field['type'] ?? '') === 'location') {
+        $msg = $this->t('Facets on location fields are currently not supported.');
+        $this->warnings[(string) $msg] = 1;
+        continue;
+      }
 
       if (($facet['operator'] ?? 'and') != 'or') {
         // First, check whether this can even possibly have any results.
@@ -2559,7 +2628,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       if (!$facet['missing'] && !$is_text_type) {
         $select->isNotNull($alias . '.value');
       }
-      $select->addExpression('COUNT(DISTINCT t.item_id)', 'num');
+      $select->addExpression('COUNT(DISTINCT [t].[item_id])', 'num');
       $select->groupBy('value');
       $select->orderBy('num', 'DESC');
       $select->orderBy('value', 'ASC');
@@ -2569,7 +2638,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         $select->range(0, $limit);
       }
       if ($facet['min_count'] > 1) {
-        $select->having('COUNT(DISTINCT t.item_id) >= :count', [':count' => $facet['min_count']]);
+        $select->having('COUNT(DISTINCT [t].[item_id]) >= :count', [':count' => $facet['min_count']]);
       }
 
       $terms = [];
@@ -2660,12 +2729,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
     try {
       $result = $this->database->queryTemporary((string) $db_query, $args);
     }
-    // @todo Use a multi-catch once we depend on PHP 7.1+.
-    catch (\PDOException $e) {
-      $this->logException($e, '%type while trying to create a temporary table: @message in %function (line %line of %file).');
-      return FALSE;
-    }
-    catch (DatabaseException $e) {
+    catch (\PDOException | DatabaseException $e) {
       $this->logException($e, '%type while trying to create a temporary table: @message in %function (line %line of %file).');
       return FALSE;
     }
@@ -2809,10 +2873,10 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         return [];
       }
       $db_query = $this->database->select($word_query, 't');
-      $db_query->addExpression('COUNT(DISTINCT t.item_id)', 'results');
+      $db_query->addExpression('COUNT(DISTINCT [t].[item_id])', 'results');
       $db_query->fields('t', ['word'])
         ->groupBy('t.word')
-        ->having('COUNT(DISTINCT t.item_id) <= :max', [':max' => $max_occurrences])
+        ->having('COUNT(DISTINCT [t].[item_id]) <= :max', [':max' => $max_occurrences])
         ->orderBy('results', 'DESC')
         ->range(0, $limit);
       $incomp_len = strlen($incomplete_key);
@@ -2864,6 +2928,39 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       return [];
     }
     return $db_info;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBackendDefinedFields(IndexInterface $index): array {
+    $backend_defined_fields = [];
+    if (!($this->dbmsCompatibility instanceof LocationAwareDatabaseInterface)) {
+      return [];
+    }
+
+    foreach ($index->getFields() as $field) {
+      if ($field->getType() === 'location'
+          || $field->getFieldIdentifier() === 'field_geofield') {
+        $distance_field_name = $field->getFieldIdentifier() . '__distance';
+        $property_path_name = $field->getPropertyPath() . '__distance';
+        $distance_field = new Field($index, $distance_field_name);
+        $distance_field->setLabel($field->getLabel() . ' (distance)');
+        $distance_field->setDataDefinition(DataDefinition::create('decimal'));
+        try {
+          $distance_field->setType('decimal');
+        }
+        catch (SearchApiException $e) {
+          // Cannot happen.
+        }
+        $distance_field->setDatasourceId($field->getDatasourceId());
+        $distance_field->setPropertyPath($property_path_name);
+
+        $backend_defined_fields[$distance_field_name] = $distance_field;
+      }
+    }
+
+    return $backend_defined_fields;
   }
 
   /**

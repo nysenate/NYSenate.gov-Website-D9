@@ -26,6 +26,29 @@ class Vote extends DrupalSqlBase {
         $query->condition("v.$db_field_name", $value, 'IN');
       }
     }
+
+    if (
+      !empty($this->configuration['entity_type']) &&
+      !empty($this->configuration['bundle'])
+    ) {
+      $entity_type = $this->configuration['entity_type'];
+      $bundle = $this->configuration['bundle'];
+      switch ($entity_type) {
+        case 'node':
+          $query->innerJoin('node', 'n', 'v.entity_id = n.nid');
+          $query->condition('n.type', $bundle);
+          $query->fields('n', ['type']);
+          break;
+
+        case 'comment':
+          $query->innerJoin('comment', 'c', 'v.entity_id = c.cid');
+          $query->innerJoin('node', 'n', 'c.nid = n.nid');
+          $query->condition('n.type', $bundle);
+          $query->fields('n', ['type']);
+          break;
+      }
+    }
+
     return $query;
   }
 

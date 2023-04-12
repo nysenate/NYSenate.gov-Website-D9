@@ -110,9 +110,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
             'data-theme' => $config->get('widget.theme'),
             'data-type' => $config->get('widget.type'),
             'data-size' => $config->get('widget.size'),
-            'data-tabindex' => $config->get('widget.tabindex'),
           ];
-          // Filter out empty tabindex/size.
+          // Filter out any empty elements from the attributes.
           $attributes = array_filter($attributes);
 
           $captcha['form']['recaptcha_widget'] = [

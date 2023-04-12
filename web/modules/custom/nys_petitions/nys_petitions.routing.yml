@@ -1,0 +1,23 @@
+nys_petitions.dashboard.petitions:
+  path: '/dashboard/petitions'
+  defaults:
+    _title: 'Petitions I''ve Signed'
+    _controller: '\Drupal\nys_petitions\Controller\DashboardPetitionsController::signedPetitions'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+nys_petitions.management.ajax.signed_petitions:
+  path: '/taxonomy/term/{taxonomy_term}/petitions/{node}'
+  defaults:
+    _title: 'Following Issue'
+    _controller: '\Drupal\nys_petitions\Controller\PetitionsManagementController::ajaxGetSignatories'
+  requirements:
+    _lc_mcp_senator_access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+    parameters:
+      taxonomy_term:
+        type: entity:taxonomy_term
+        bundle: ['senator']
+      node:
+        type: entity:node
+        bundle: ['petition']

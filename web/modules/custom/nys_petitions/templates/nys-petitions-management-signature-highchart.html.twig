@@ -1,0 +1,31 @@
+{#
+/**
+ * @file nys-petitions-management-signature-highchart.html.twig
+ *
+ * @var string|integer nid
+ *   The node id.
+ * @var string title
+ *   The petition title.
+ * @var integer created
+ *   The timestamp of when the petition was created.
+ * @var integer total
+ *   Total number of signatures.
+ * @var integer in_district
+ *   Number of signatures from users within the district.
+ * @var integer out_district
+ *   Number of signatures from users outside the district.
+ */
+#}
+<div class="sponsored-petition"
+     id="sponsored-petition-{{ nid }}"
+     data-nid="{{ nid }}">
+  <div class="petition-signature-chart"
+       data-in-district="{{ in_district }}"
+       data-out-district="{{ out_district }}"
+       data-signatures="{{ total }}"
+       data-title="{{ title }}"
+       data-created="{{ created|date("F j, Y") }}">
+    {{ nid }}<br />{{ title }}<br />{{ created|date("F j, Y") }}<br />
+    {{ total }} - {{ in_district }} - {{ out_district }}
+  </div>
+</div>

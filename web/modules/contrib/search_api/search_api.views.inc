@@ -233,7 +233,7 @@ function _search_api_views_get_handlers(FieldInterface $field) {
     foreach ($types as $type) {
       $sub_type = NULL;
       if (is_array($type)) {
-        list($type, $sub_type) = $type;
+        [$type, $sub_type] = $type;
       }
       if (isset($mapping[$type])) {
         _search_api_views_handler_adjustments($type, $field, $mapping[$type], $sub_type);
@@ -242,12 +242,7 @@ function _search_api_views_get_handlers(FieldInterface $field) {
     }
   }
   // @todo Replace with multi-catch once we depend on PHP 7.1+.
-  catch (SearchApiException $e) {
-    $vars['%index'] = $field->getIndex()->label();
-    $vars['%field'] = $field->getPrefixedLabel();
-    watchdog_exception('search_api', $e, '%type while adding Views handlers for field %field on index %index: @message in %function (line %line of %file).', $vars);
-  }
-  catch (PluginNotFoundException $e) {
+  catch (SearchApiException | PluginNotFoundException $e) {
     $vars['%index'] = $field->getIndex()->label();
     $vars['%field'] = $field->getPrefixedLabel();
     watchdog_exception('search_api', $e, '%type while adding Views handlers for field %field on index %index: @message in %function (line %line of %file).', $vars);

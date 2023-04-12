@@ -99,7 +99,7 @@
               {% endblock %}
               {# {{ drupal_menu('main') }}#}
               <div class="u-mobile-only">
-              {{ form }} 
+              {{ form }}
                 <div>
                   <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
                 </div>
@@ -122,10 +122,10 @@
             </nav>
           </div>
         </div>
-        <div class="u-tablet-plus">
+        <div class="u-tablet-plus c-site-search--container">
           <div>
-            {{ form }} 
-           </div> 
+            {{ form }}
+          </div>
           <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
         </div>
       {% endif %}
@@ -133,7 +133,7 @@
     {% if type != 'senator' %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
-          is_logged: is_logged
+          is_logged: logged_in
         } only
       %}
     {% endif %}

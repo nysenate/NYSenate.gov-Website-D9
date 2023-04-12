@@ -2366,6 +2366,12 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: 100%; }
     .c-site-search .c-site-search--box::-ms-clear {
       display: none; }
+  .u-mobile-only .c-site-search.nys-searchglobal-form .search__submit {
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 0; }
+  .u-mobile-only .c-site-search.nys-searchglobal-form .form-item {
+    margin-top: 0; }
   .c-site-search .c-site-search--title {
     display: none; }
   .c-site-search .c-block-advanced-search-link {
@@ -2501,4 +2507,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       display: none; }
     .c-site-search.open {
       height: 225px;
-      padding: 25px 9%; } }
+      padding: 25px 9%; }
+  .c-site-search--container {
+    max-width: 1500px;
+    margin: 0 auto;
+    position: relative; } }

@@ -123,7 +123,7 @@ class IgnoreCharacters extends FieldsProcessorPluginBase {
     }
 
     // Loop over the character sets and strip the characters from the text.
-    foreach ($this->configuration['ignorable_classes'] as $character_set) {
+    foreach ($this->configuration['ignorable_classes'] ?? [] as $character_set) {
       $regex = $this->getFormatRegularExpression($character_set);
       if ($regex) {
         $value = preg_replace('/[' . $regex . ']+/u', '', $value);

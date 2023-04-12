@@ -25,10 +25,13 @@
 .linkit-ui-autocomplete {
   max-height: calc((100vh - 80px)/2);
   overflow: auto;
+  position: relative;
 }
 
 .linkit-ui-autocomplete.ui-widget {
   font-size: .9em;
+  max-width: inherit;
+  position: absolute;
 }
 
 .linkit-ui-autocomplete.ui-menu .linkit-result-line-wrapper {

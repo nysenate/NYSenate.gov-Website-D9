@@ -18,8 +18,24 @@ class ResultRow extends ViewsResultRow {
 
   /**
    * The lazy-loaded properties, as property names mapped to item methods.
+   */
+  public const LAZY_LOAD_PROPERTIES = [
+    'search_api_id' => 'getId',
+    'search_api_datasource' => 'getDatasourceId',
+    'search_api_language' => 'getLanguage',
+    'search_api_relevance' => 'getScore',
+    'search_api_excerpt' => 'getExcerpt',
+  ];
+
+  /**
+   * The lazy-loaded properties, as property names mapped to item methods.
    *
    * @var string[]
+   *
+   * @deprecated in search_api:8.x-1.29 and is removed from search_api:2.0.0.
+   *   Use static::LAZY_LOAD_PROPERTIES instead.
+   *
+   * @see https://www.drupal.org/node/3342910
    */
   protected static $lazyLoad = [
     'search_api_id' => 'getId',
@@ -69,7 +85,7 @@ class ResultRow extends ViewsResultRow {
   public function __isset($name) {
     $properties = get_object_vars($this);
     return isset($properties[$name])
-      || (isset(static::$lazyLoad[$name]) && $this->_item);
+      || (isset(static::LAZY_LOAD_PROPERTIES[$name]) && $this->_item);
   }
 
   /**
@@ -81,8 +97,8 @@ class ResultRow extends ViewsResultRow {
       return $properties[$name];
     }
 
-    if (isset(static::$lazyLoad[$name]) && $this->_item) {
-      $method = static::$lazyLoad[$name];
+    if (isset(static::LAZY_LOAD_PROPERTIES[$name]) && $this->_item) {
+      $method = static::LAZY_LOAD_PROPERTIES[$name];
       return $this->_item->$method();
     }
 

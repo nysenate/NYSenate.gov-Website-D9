@@ -5,5 +5,7 @@
     <h2 class="c-container--title">{{ title }}</h2>
   </div>
   {{ body }}
-  <a href="{{ cta.href }}" class="c-container--link">{{ cta.text }}</a>
+  {% if cta.text %}
+    <a href="{{ cta.href }}" class="c-container--link">{{ cta.text }}</a>
+  {% endif %}
 </div>

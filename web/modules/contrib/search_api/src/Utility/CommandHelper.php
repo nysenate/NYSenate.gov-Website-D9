@@ -381,14 +381,14 @@ class CommandHelper implements LoggerAwareInterface {
         $event = new ReindexScheduledEvent($index, FALSE);
         $this->eventDispatcher->dispatch($event, $event_name);
         $arguments = [
-          '!index' => $index->label(),
-          '!datasources' => implode(', ', $reindexed_datasources),
+          '@index' => $index->label(),
+          '@datasources' => implode(', ', $reindexed_datasources),
         ];
-        $this->logger->info($this->t('The following datasources of !index were successfully scheduled for reindexing: !datasources.', $arguments));
+        $this->logger->info($this->t('The following datasources of @index were successfully scheduled for reindexing: @datasources.', $arguments));
       }
       else {
         $index->reindex();
-        $this->logger->info($this->t('!index was successfully scheduled for reindexing.', ['!index' => $index->label()]));
+        $this->logger->info($this->t('@index was successfully scheduled for reindexing.', ['@index' => $index->label()]));
       }
     }
 

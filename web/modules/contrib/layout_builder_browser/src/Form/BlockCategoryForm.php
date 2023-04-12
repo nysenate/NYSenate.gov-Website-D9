@@ -38,6 +38,7 @@ class BlockCategoryForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    /** @var \Drupal\layout_builder_browser\Entity\LayoutBuilderBrowserBlockCategory $layout_builder_browser */
     $layout_builder_browser = $this->entity;
 
     $form['label'] = [
@@ -55,6 +56,12 @@ class BlockCategoryForm extends EntityForm {
         'exists' => [$this, 'exist'],
       ],
       '#disabled' => !$layout_builder_browser->isNew(),
+    ];
+
+    $form['status'] = [
+      '#title' => $this->t('Enabled'),
+      '#type' => 'checkbox',
+      '#default_value' => $layout_builder_browser->status(),
     ];
 
     // You will need additional form elements for your custom properties.
@@ -93,6 +100,7 @@ class BlockCategoryForm extends EntityForm {
    */
   public function exist($id) {
     $entity = $this->entityTypeManager->getStorage('layout_builder_browser_blockcat')->getQuery()
+      ->accessCheck()
       ->condition('id', $id)
       ->execute();
     return (bool) $entity;

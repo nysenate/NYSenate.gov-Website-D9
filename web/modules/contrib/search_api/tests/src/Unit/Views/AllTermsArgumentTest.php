@@ -164,7 +164,7 @@ class AllTermsArgumentTest extends UnitTestCase {
     $expected = [
       new Condition('field_voc_a', 1, '<>'),
       new Condition('field_voc_a', 2, '<>'),
-      (new ConditionGroup('AND'))
+      (new ConditionGroup())
         ->addCondition('field_voc_b_1', 3, '<>')
         ->addCondition('field_voc_b_2', 3, '<>'),
     ];

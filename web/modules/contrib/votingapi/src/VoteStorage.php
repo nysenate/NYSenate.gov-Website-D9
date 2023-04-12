@@ -15,6 +15,7 @@ class VoteStorage extends SqlContentEntityStorage implements VoteStorageInterfac
    */
   public function getUserVotes($uid, $vote_type_id = NULL, $entity_type_id = NULL, $entity_id = NULL, $vote_source = NULL) {
     $query = \Drupal::entityQuery('vote')
+      ->accessCheck(TRUE)
       ->condition('user_id', $uid);
     if ($vote_type_id) {
       $query->condition('type', $vote_type_id);
@@ -73,6 +74,7 @@ class VoteStorage extends SqlContentEntityStorage implements VoteStorageInterfac
    */
   public function deleteVotesForDeletedEntity($entity_type_id, $entity_id) {
     $votes = \Drupal::entityQuery('vote')
+      ->accessCheck(TRUE)
       ->condition('entity_type', $entity_type_id)
       ->condition('entity_id', $entity_id)
       ->execute();

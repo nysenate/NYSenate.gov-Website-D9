@@ -36,8 +36,7 @@ class RoleAccess extends ProcessorPluginBase {
   /**
    * The property added for the role-based access data.
    */
-  // @todo Make protected once we depend on PHP 7.1+.
-  const ROLE_ACCESS_FIELD = 'search_api_role_access';
+  protected const ROLE_ACCESS_FIELD = 'search_api_role_access';
 
   /**
    * The current user service used by this plugin.

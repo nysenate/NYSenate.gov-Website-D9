@@ -95,36 +95,6 @@ class VoteResult extends ContentEntityBase implements VoteResultInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOwner() {
-    return $this->get('user_id')->entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwner(UserInterface $account) {
-    $this->set('user_id', $account->id());
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOwnerId() {
-    return $this->get('user_id')->target_id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwnerId($uid) {
-    $this->set('user_id', $uid);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFunction() {
     return $this->get('function')->value;
   }

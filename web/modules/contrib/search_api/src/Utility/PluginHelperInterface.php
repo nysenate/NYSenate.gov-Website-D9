@@ -37,7 +37,7 @@ interface PluginHelperInterface {
    * @param array $configuration
    *   (optional) The configuration to set for the plugin.
    *
-   * @return \Drupal\search_api\processor\ProcessorInterface
+   * @return \Drupal\search_api\Processor\ProcessorInterface
    *   The new processor plugin object.
    *
    * @throws \Drupal\search_api\SearchApiException
@@ -55,7 +55,7 @@ interface PluginHelperInterface {
    * @param array $configuration
    *   (optional) The configuration to set for the plugin.
    *
-   * @return \Drupal\search_api\tracker\TrackerInterface
+   * @return \Drupal\search_api\Tracker\TrackerInterface
    *   The new tracker plugin object.
    *
    * @throws \Drupal\search_api\SearchApiException
@@ -97,7 +97,7 @@ interface PluginHelperInterface {
    *   Missing configurations are either taken from the index's stored settings,
    *   if they are present there, or default to an empty array.
    *
-   * @return \Drupal\search_api\processor\ProcessorInterface[]
+   * @return \Drupal\search_api\Processor\ProcessorInterface[]
    *   The created processor plugin objects.
    *
    * @throws \Drupal\search_api\SearchApiException
@@ -118,7 +118,7 @@ interface PluginHelperInterface {
    *   Missing configurations are either taken from the index's stored settings,
    *   if they are present there, or default to an empty array.
    *
-   * @return \Drupal\search_api\tracker\TrackerInterface[]
+   * @return \Drupal\search_api\Tracker\TrackerInterface[]
    *   The created tracker plugin objects.
    *
    * @throws \Drupal\search_api\SearchApiException

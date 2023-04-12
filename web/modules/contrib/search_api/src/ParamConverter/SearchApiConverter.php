@@ -56,7 +56,7 @@ class SearchApiConverter extends EntityConverter implements ParamConverterInterf
     // For backwards-compatibility, we still support passing just
     // ($entity_manager, $temp_store_factory, $user).
     if (!$user) {
-      @trigger_error('Constructing \Drupal\search_api\ParamConverter\SearchApiConverter with ($entity_manager, $temp_store_factory, $user) is deprecated in search_api 8.x-1.18 and will stop working in 2.0.0. Pass ($entity_type_manager, $entity_repository, $temp_store_factory, $user) instead. See https://www.drupal.org/node/3164248', E_USER_DEPRECATED);
+      @trigger_error('Constructing \Drupal\search_api\ParamConverter\SearchApiConverter with ($entity_manager, $temp_store_factory, $user) is deprecated in search_api:8.x-1.18 and will stop working in search_api:2.0.0. Pass ($entity_type_manager, $entity_repository, $temp_store_factory, $user) instead. See https://www.drupal.org/node/3164248', E_USER_DEPRECATED);
       $user = $temp_store_factory;
       $temp_store_factory = $entity_repository;
       $entity_repository = \Drupal::getContainer()->get('entity.repository');
@@ -89,11 +89,8 @@ class SearchApiConverter extends EntityConverter implements ParamConverterInterf
     try {
       $storage = $this->entityTypeManager->getStorage('search_api_index');
     }
-    // @todo Use a multi-catch once we depend on PHP 7.1+.
-    catch (InvalidPluginDefinitionException $e) {
-      return NULL;
-    }
-    catch (PluginNotFoundException $e) {
+    // @todo Remove $e once we depend on PHP 8.0+.
+    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
       return NULL;
     }
     if (!($storage instanceof ConfigEntityStorageInterface)) {

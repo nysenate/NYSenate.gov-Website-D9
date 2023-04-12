@@ -72,7 +72,7 @@ class VoteTokenTest extends KernelTestBase {
   /**
    * Tests token replacements.
    */
-  public function testVoteTokens() {
+  public function testVoteTokens(): void {
     $vote_type = 'vote';
 
     // First check for non-existing votes.

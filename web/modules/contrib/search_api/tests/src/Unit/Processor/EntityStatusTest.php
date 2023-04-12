@@ -80,7 +80,7 @@ class EntityStatusTest extends UnitTestCase {
    *
    * @dataProvider supportsIndexDataProvider
    */
-  public function testSupportsIndex(array $datasource_ids = NULL, $expected) {
+  public function testSupportsIndex(?array $datasource_ids, bool $expected): void {
     if ($datasource_ids !== NULL) {
       $datasource_ids = array_flip($datasource_ids);
       $this->datasources = array_intersect_key($this->datasources, $datasource_ids);
@@ -93,11 +93,10 @@ class EntityStatusTest extends UnitTestCase {
     // check whether it implements \Drupal\Core\Entity\EntityPublishedInterface.
     // We therefore need to ensure each of these calls returns an appropriate
     // value.
-    $self = $this;
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->method('getDefinition')
-      ->willReturnCallback(function ($entity_type_id) use ($self) {
-        $entity_type = $self->createMock(EntityTypeInterface::class);
+      ->willReturnCallback(function ($entity_type_id) {
+        $entity_type = $this->createMock(EntityTypeInterface::class);
         $publishable = in_array($entity_type_id, ['node', 'comment']);
         $entity_type->method('entityClassImplements')
           ->willReturnMap([
@@ -116,7 +115,7 @@ class EntityStatusTest extends UnitTestCase {
    * @return array[]
    *   Array of parameter arrays for testSupportsIndex().
    */
-  public function supportsIndexDataProvider() {
+  public function supportsIndexDataProvider(): array {
     return [
       'all datasources' => [NULL, TRUE],
       'node datasource' => [['entity:node'], TRUE],

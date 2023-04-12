@@ -137,7 +137,7 @@ abstract class DisplayPluginBase extends HideablePluginBase implements DisplayIn
    * {@inheritdoc}
    */
   public function getUrl() {
-    @trigger_error('\Drupal\search_api\Display\DisplayInterface::getUrl() is deprecated in Search API 8.x-1.0 Beta 5. Use ::getPath() instead. See https://www.drupal.org/node/2856050', E_USER_DEPRECATED);
+    @trigger_error('\Drupal\search_api\Display\DisplayInterface::getUrl() is deprecated in search_api:8.x-1.0-beta5 and is removed from search_api:2.0.0. Use ::getPath() instead. See https://www.drupal.org/node/2856050', E_USER_DEPRECATED);
     if ($path = $this->getPath()) {
       return Url::fromUserInput($path);
     }

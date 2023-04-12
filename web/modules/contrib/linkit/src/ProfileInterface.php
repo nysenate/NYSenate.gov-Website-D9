@@ -39,6 +39,17 @@ interface ProfileInterface extends ConfigEntityInterface {
   public function getMatcher($instance_id);
 
   /**
+   * Returns the first enabled matcher for the given entity type ID.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return \Drupal\linkit\Plugin\Linkit\Matcher\EntityMatcher|null
+   *   An entity matcher instance or null if not found.
+   */
+  public function getMatcherByEntityType($entity_type_id);
+
+  /**
    * Returns the matchers for this profile.
    *
    * @return \Drupal\linkit\MatcherCollection|\Drupal\linkit\MatcherInterface[]

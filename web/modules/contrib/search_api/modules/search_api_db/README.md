@@ -31,7 +31,7 @@ split for all parse modes, as searching for phrases is currently not supported.
 [facets]: https://www.drupal.org/project/facets
 
 If you feel some backend option is missing, or have other ideas for improving
-this implementation, please file a feature request in the project's [issue queue] [], using the "Database search" component.
+this implementation, please file a feature request in the project's [issue queue], using the "Database search" component.
 
 [issue queue]: https://www.drupal.org/project/issues/search_api
 
@@ -40,6 +40,12 @@ this implementation, please file a feature request in the project's [issue queue
 Using facets and autocomplete suggestions with a database server will only work
 if the database user Drupal is using has the `CREATE TEMPORARY TABLES`
 permission (or similar, in DBMSs other than MySQL).
+
+Location search is available when MySQL version 5.7+ or one of its equivalents
+are in use. This usually requires the [search_api_location] module. Location
+search is unavailable for PostgreSQL and SQLite at the moment.
+
+[search_api_location]: https://www.drupal.org/project/search_api_location
 
 ## Developer information
 

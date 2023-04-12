@@ -63,7 +63,7 @@ class VoteCreationTest extends BrowserTestBase {
   /**
    * Test voting with non-existent Vote Type Id.
    */
-  public function testVoteCreationWithInvalidVoteType() {
+  public function testVoteCreationWithInvalidVoteType(): void {
 
     $vote = Vote::create(['type' => 'vote']);
     // $vote = Vote::create(['type' => 'fake_vote_type']);.

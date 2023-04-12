@@ -402,6 +402,7 @@ class ViewsTest extends SearchApiBrowserTestBase {
     $this->regressionTest3031991();
     $this->regressionTest3136277();
     $this->regressionTest3029582();
+    $this->regressionTest3343250();
   }
 
   /**
@@ -649,6 +650,40 @@ class ViewsTest extends SearchApiBrowserTestBase {
       'strawberry',
       'search-api-test-3029582',
     );
+  }
+
+  /**
+   * Tests that arguments play well with multiple filter groups combined by OR.
+   *
+   * @see https://www.drupal.org/node/3343250
+   */
+  protected function regressionTest3343250(): void {
+    $yesterday = date('Y-m-d', strtotime('-1DAY'));
+    $today = date('Y-m-d');
+    $query = [
+      'search_api_fulltext' => 'foo test',
+      'search_api_fulltext_op' => 'or',
+      'created[min]' => $today,
+      'created[max]' => $today,
+      'created_op' => 'between',
+    ];
+    $this->checkResults($query, [1, 2, 3, 4, 5], 'Search with "Created between TODAY and TODAY" filter');
+    $query = [
+      'search_api_fulltext' => 'foo test',
+      'search_api_fulltext_op' => 'or',
+      'created[min]' => $yesterday,
+      'created[max]' => $today,
+      'created_op' => 'between',
+    ];
+    $this->checkResults($query, [1, 2, 3, 4, 5], 'Search with "Created between YESTERDAY and TODAY" filter');
+    $query = [
+      'search_api_fulltext' => 'foo test',
+      'search_api_fulltext_op' => 'or',
+      'created[min]' => $yesterday,
+      'created[max]' => $yesterday,
+      'created_op' => 'between',
+    ];
+    $this->checkResults($query, [], 'Search with "Created between YESTERDAY and YESTERDAY" filter');
   }
 
   /**
@@ -956,7 +991,13 @@ class ViewsTest extends SearchApiBrowserTestBase {
     // Add new fields. First check that the listing seems correct.
     $this->clickLink('Add fields');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Test entity - revisions and data table datasource');
+    // The entity type's label was changed in 10.1.x, so need to keep it
+    // variable as long as we support versions older than 10.1.0.
+    // @todo Hardcode again once we depend on Drupal 10.1.0.
+    $entity_type_label = $this->container->get('entity_type.manager')
+      ->getDefinition('entity_test_mulrev_changed')
+      ->getLabel();
+    $this->assertSession()->pageTextContains("$entity_type_label datasource");
     $this->assertSession()->pageTextContains('Authored on');
     $this->assertSession()->pageTextContains('Body (indexed field)');
     $this->assertSession()->pageTextContains('Index Test index');

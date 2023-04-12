@@ -295,7 +295,7 @@ class RenderedItem extends ProcessorPluginBase {
           }
         }
       }
-      catch (\Exception $e) {
+      catch (\Throwable $e) {
         // This could throw all kinds of exceptions in specific scenarios, so we
         // just catch all of them here. Not having a field value for this field
         // probably makes sense in that case, so we just log an error and

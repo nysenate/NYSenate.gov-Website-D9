@@ -76,22 +76,6 @@ class SearchApiTagCache extends Tag {
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags() {
-    $tags = $this->view->storage->getCacheTags();
-    // Add the list cache tag of the search index, so that the view will be
-    // invalidated whenever the index is updated.
-    $tag = 'search_api_list:' . $this->getQuery()->getIndex()->id();
-    $tags = Cache::mergeTags([$tag], $tags);
-    // Also add the cache tags of the index itself, so that the view will be
-    // invalidated if the configuration of the index changes.
-    $index_tags = $this->getQuery()->getIndex()->getCacheTagsToInvalidate();
-    $tags = Cache::mergeTags($index_tags, $tags);
-    return $tags;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getRowId(ResultRow $row) {
     return $row->search_api_id;
   }

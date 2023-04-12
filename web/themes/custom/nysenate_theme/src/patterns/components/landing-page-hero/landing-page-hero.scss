@@ -3,6 +3,13 @@
 
 .landing-page-hero {
   margin-bottom: 48px;
+  width: 100vw;
+  max-width: 1500px;
+  margin-top: -40px;
+
+  @include breakpoint($bp-sm) {
+    margin-top: -80px;
+  }
 
   img {
     width: 100%;

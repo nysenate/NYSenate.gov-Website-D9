@@ -14,16 +14,27 @@
     attach: function () {
       const self = this;
       const heroContainer = $('.hero--homepage');
+      const landingHeroContainer = $('.landing-page-hero');
       let pageMargin = ($('main').outerWidth(true) - $('main').outerWidth()) / 2;
       let pagePadding = ($('main').innerWidth() - $('main').width()) / 2;
 
-      self.heroMargin(heroContainer, pageMargin, pagePadding);
+      if (heroContainer.length > 0) {
+        self.heroMargin(heroContainer, pageMargin, pagePadding);
+      }
+      else if (landingHeroContainer.length > 0) {
+        self.heroMargin(landingHeroContainer, pageMargin, pagePadding);
+      }
 
       $(window).on('resize', function () {
         pageMargin = ($('main').outerWidth(true) - $('main').outerWidth()) / 2;
         pagePadding = ($('main').innerWidth() - $('main').width()) / 2;
 
-        self.heroMargin(heroContainer, pageMargin, pagePadding);
+        if (heroContainer.length > 0) {
+          self.heroMargin(heroContainer, pageMargin, pagePadding);
+        }
+        else if (landingHeroContainer.length > 0) {
+          self.heroMargin(landingHeroContainer, pageMargin, pagePadding);
+        }
       });
     },
     heroMargin: function (heroContainer, pageMargin, pagePadding) {

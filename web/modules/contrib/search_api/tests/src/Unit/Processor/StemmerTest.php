@@ -132,7 +132,7 @@ class StemmerTest extends UnitTestCase {
    *
    * @dataProvider preprocessSearchQueryDataProvider
    */
-  public function testPreprocessSearchQuery(array $languages = NULL, $should_process) {
+  public function testPreprocessSearchQuery(?array $languages, bool $should_process): void {
     /** @var \Drupal\search_api\Query\QueryInterface|\PHPUnit\Framework\MockObject\MockObject $query */
     $query = $this->createMock(QueryInterface::class);
     $query->method('getLanguages')->willReturn($languages);
@@ -157,7 +157,7 @@ class StemmerTest extends UnitTestCase {
    * @return array[]
    *   Arrays of arguments for testPreprocessSearchQuery().
    */
-  public function preprocessSearchQueryDataProvider() {
+  public function preprocessSearchQueryDataProvider(): array {
     return [
       'language-less query' => [NULL, TRUE],
       'English query' => [['en'], TRUE],
@@ -179,7 +179,7 @@ class StemmerTest extends UnitTestCase {
    *
    * @dataProvider processDataProvider
    */
-  public function testProcess($passed_value, $expected_value) {
+  public function testProcess(string $passed_value, string $expected_value) {
     $this->invokeMethod('process', [&$passed_value]);
     $this->assertEquals($passed_value, $expected_value);
   }
@@ -190,7 +190,7 @@ class StemmerTest extends UnitTestCase {
    * @return array[]
    *   Arrays of arguments for testProcess().
    */
-  public function processDataProvider() {
+  public function processDataProvider(): array {
     return [
       ['Yo', 'yo'],
       ['ties', 'tie'],

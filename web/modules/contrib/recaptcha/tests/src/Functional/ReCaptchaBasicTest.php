@@ -99,14 +99,12 @@ class ReCaptchaBasicTest extends BrowserTestBase {
     // Save form with valid values.
     $edit['recaptcha_site_key'] = $site_key;
     $edit['recaptcha_secret_key'] = $secret_key;
-    $edit['recaptcha_tabindex'] = 0;
     $this->drupalGet('admin/config/people/captcha/recaptcha');
     $this->submitForm($edit, $this->t('Save configuration'));
     $this->assertSession()->responseContains($this->t('The configuration options have been saved.'));
 
     $this->assertSession()->responseNotContains($this->t('Site key field is required.'));
     $this->assertSession()->responseNotContains($this->t('Secret key field is required.'));
-    $this->assertSession()->responseNotContains($this->t('The tabindex must be an integer.'));
 
     $this->drupalLogout();
   }
@@ -185,18 +183,6 @@ class ReCaptchaBasicTest extends BrowserTestBase {
     $this->drupalGet('user/login');
     $element = $this->xpath('//div[@class=:class and @data-size=:size]', [':class' => 'g-recaptcha', ':size' => 'small']);
     $this->assertNotEmpty($element, 'Tag contains data-size attribute and value.');
-
-    // Check that data-tabindex attribute does not exists.
-    $this->config('recaptcha.settings')->set('widget.tabindex', 0)->save();
-    $this->drupalGet('user/login');
-    $element = $this->xpath('//div[@class=:class and @data-tabindex=:index]', [':class' => 'g-recaptcha', ':index' => 0]);
-    $this->assertEmpty($element, 'Tag contains no data-tabindex attribute.');
-
-    // Check that data-tabindex attribute exists.
-    $this->config('recaptcha.settings')->set('widget.tabindex', 5)->save();
-    $this->drupalGet('user/login');
-    $element = $this->xpath('//div[@class=:class and @data-tabindex=:index]', [':class' => 'g-recaptcha', ':index' => 5]);
-    $this->assertNotEmpty($element, 'Tag contains data-tabindex attribute and value.');
 
     // Try to log in, which should fail.
     $edit['name'] = $this->normalUser->getAccountName();

@@ -184,7 +184,7 @@ class SenatorsJson {
       $ret['email'] = $senator->field_email->value;
       $ret['party'] = $this->getFlatValue($senator->field_party);
       $ret['role'] = $senator->field_current_duties->value;
-      $ret['summary'] = $senator->body->value['safe_summary'] ?? '';
+      $ret['summary'] = $senator->field_about->value ?? '';
 
       // Generate the URLs.
       try {

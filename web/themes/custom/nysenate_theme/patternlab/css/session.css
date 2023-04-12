@@ -51,7 +51,7 @@
 .accent-bg {
   background-color: #1b5187; }
 
-.accent-text {
+.accent-text, .file > a {
   color: #1b5187; }
 
 @media screen and (min-width: 760px) {
@@ -534,6 +534,7 @@ strong {
 .icon-before__arrow::before,
 .icon-before__search::before,
 .icon-before__presskit::before,
+.file > a::before,
 .icon-before__bill::before,
 .icon-before__facebook::before,
 .icon-before__x::before,
@@ -684,7 +685,9 @@ strong {
 .icon-before__plus::before {
   content: '\2b'; }
 
-.icon-before__presskit::before {
+
+.icon-before__presskit::before,
+.file > a::before {
   content: '\6b'; }
 
 .icon-before__questionaire::before {
@@ -1585,10 +1588,11 @@ strong {
     color: #cb8d37;
     font-size: 28px;
     line-height: 16px;
-    padding: 5px 3px 0 10px;
+    padding: 0 3px 0 10px;
     vertical-align: top;
     margin-left: 10px;
-    border-left: 1px solid #aaaaaa; }
+    border-left: 1px solid #aaaaaa;
+    margin-top: -3px; }
 
 .c-meeting-detail--overview .c-meeting-detail--date {
   margin-right: 80px; }
@@ -2266,7 +2270,6 @@ p.c-meeting-detail--location {
   .c-meeting-video--status {
     font-size: 20px; }
     .c-meeting-video--status::before {
-      padding-top: 7px;
       font-size: 30px; }
   .view-meeting-agenda .view-header {
     padding-bottom: 10px; }
@@ -2359,3 +2362,10 @@ p.c-meeting-detail--location {
   overflow: hidden; }
   .flex-video .field__label {
     display: none; }
+
+.file > a {
+  display: block;
+  margin-top: 15px;
+  font-size: 12px;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  text-decoration: none; }

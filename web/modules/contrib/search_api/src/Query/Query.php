@@ -220,7 +220,7 @@ class Query implements QueryInterface, RefinableCacheableDependencyInterface {
     $this->index = $index;
     $this->results = new ResultSet($this);
     $this->options = $options;
-    $this->conditionGroup = $this->createConditionGroup('AND');
+    $this->conditionGroup = $this->createConditionGroup();
   }
 
   /**
@@ -416,6 +416,15 @@ class Query implements QueryInterface, RefinableCacheableDependencyInterface {
    */
   public function createConditionGroup($conjunction = 'AND', array $tags = []) {
     return new ConditionGroup($conjunction, $tags);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createAndAddConditionGroup(string $conjunction = 'AND', array $tags = []): ConditionGroupInterface {
+    $condition_group = $this->createConditionGroup($conjunction, $tags);
+    $this->addConditionGroup($condition_group);
+    return $condition_group;
   }
 
   /**

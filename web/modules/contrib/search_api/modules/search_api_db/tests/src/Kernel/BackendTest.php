@@ -361,10 +361,9 @@ class BackendTest extends BackendTestBase {
     $this->assertResults([2, 1], $results, 'Partial search for »foo« with additional filter');
 
     $query = $this->buildSearch();
-    $conditions = $query->createConditionGroup('OR');
+    $conditions = $query->createAndAddConditionGroup('OR');
     $conditions->addCondition('name', 'test');
     $conditions->addCondition('body', 'test');
-    $query->addConditionGroup($conditions);
     $results = $query->execute();
     $this->assertResults([1, 2, 3, 4], $results, 'Partial search with multi-field fulltext filter');
   }
@@ -412,10 +411,9 @@ class BackendTest extends BackendTestBase {
     $this->assertResults([2, 1], $results, 'Prefix search for »foo« with additional filter');
 
     $query = $this->buildSearch();
-    $conditions = $query->createConditionGroup('OR');
+    $conditions = $query->createAndAddConditionGroup('OR');
     $conditions->addCondition('name', 'test');
     $conditions->addCondition('body', 'test');
-    $query->addConditionGroup($conditions);
     $results = $query->execute();
     $this->assertResults([1, 2, 3, 4], $results, 'Prefix search with multi-field fulltext filter');
   }
@@ -449,10 +447,9 @@ class BackendTest extends BackendTestBase {
     $this->assertEmpty($results->getWarnings());
 
     $query = $this->buildSearch();
-    $conditions = $query->createConditionGroup('OR');
+    $conditions = $query->createAndAddConditionGroup('OR');
     $conditions->addCondition('name', 'test');
     $conditions->addCondition('body', 'test');
-    $query->addConditionGroup($conditions);
     $results = $query->execute();
     $this->assertResults([1, 2, 3, 4], $results, 'Search with multi-field fulltext filter');
 
@@ -768,9 +765,8 @@ class BackendTest extends BackendTestBase {
     $this->assertEquals($expected, $category_facets, 'Correct facets were returned for minimum count 0');
 
     $query = $this->buildSearch('nonexistent_search_term');
-    $conditions = $query->createConditionGroup('AND', ['facet:category']);
+    $conditions = $query->createAndAddConditionGroup('AND', ['facet:category']);
     $conditions->addCondition('category', 'article_category');
-    $query->addConditionGroup($conditions);
     $facets['category'] = [
       'field' => 'category',
       'limit' => 0,
@@ -1230,7 +1226,7 @@ class BackendTest extends BackendTestBase {
     $db_info = $this->getIndexDbInfo();
     $table = $db_info['index_table'];
     $column = $db_info['field_tables']['name']['column'];
-    $sql = "SELECT $column FROM {{$table}} WHERE item_id = :id";
+    $sql = "SELECT [$column] FROM {{$table}} WHERE [item_id] = :id";
 
     $id = 0;
     date_default_timezone_set('Asia/Seoul');

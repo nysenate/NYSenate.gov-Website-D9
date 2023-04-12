@@ -24,7 +24,7 @@ class VoteTest extends BrowserTestBase {
   /**
    * Tests casting a vote on an entity.
    */
-  public function testVotes() {
+  public function testVotes(): void {
     $vote_query = \Drupal::entityQuery('vote');
     $vote_storage = $this->container->get('entity_type.manager')->getStorage('vote');
     $node = $this->drupalCreateNode(['type' => 'article']);
@@ -32,7 +32,8 @@ class VoteTest extends BrowserTestBase {
 
     // There are no votes on this entity yet.
     $query = $vote_query->condition('entity_type', 'node')
-      ->condition('entity_id', $node->id());
+      ->condition('entity_id', $node->id())
+      ->accessCheck(TRUE);
     $votes = $query->execute();
     $this->assertCount(0, $votes, 'Vote count for a node is initially zero.');
 
@@ -64,7 +65,8 @@ class VoteTest extends BrowserTestBase {
 
     $vote_query = \Drupal::entityQuery('vote');
     $query = $vote_query->condition('entity_type', 'user')
-      ->condition('entity_id', $user->id());
+      ->condition('entity_id', $user->id())
+      ->accessCheck(TRUE);
     $votes = $query->execute();
     $this->assertCount(1, $votes, 'After a vote is cast on a user, it can be retrieved.');
     $vote = $vote_storage->load(reset($votes));
@@ -83,7 +85,7 @@ class VoteTest extends BrowserTestBase {
   /**
    * Test vote results.
    */
-  public function testVoteResults() {
+  public function testVoteResults(): void {
     $vote_storage = $this->container->get('entity_type.manager')->getStorage('vote');
     $node = $this->drupalCreateNode();
     $user = $this->drupalCreateUser();
@@ -134,7 +136,7 @@ class VoteTest extends BrowserTestBase {
   /**
    * Test voting by anonymous users.
    */
-  public function testAnonymousVoting() {
+  public function testAnonymousVoting(): void {
     $vote_storage = $this->container->get('entity_type.manager')->getStorage('vote');
     $node = $this->drupalCreateNode();
 

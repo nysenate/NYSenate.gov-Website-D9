@@ -142,6 +142,7 @@ class ViewsCacheabilityMetadataExportTest extends KernelTestBase {
       $expected_view_metadata[$display_id]['tags'][] = 'search_api:test_tag';
       [$plugin_id] = explode('_', $display_id, 2);
       $expected_view_metadata[$display_id]['tags'][] = "search_api:test_views_$plugin_id:search_api_test_node_view__$display_id";
+      $expected_view_metadata[$display_id]['tags'][] = 'search_api_list:test_node_index';
       $expected_view_metadata[$display_id]['max-age'] = 100;
     }
 

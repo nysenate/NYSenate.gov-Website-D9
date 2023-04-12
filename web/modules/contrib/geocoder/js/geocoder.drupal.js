@@ -1,12 +1,19 @@
+/**
+ * @file
+ * Javascript for the Geocoder Origin Autocomplete.
+ */
+
 (function($, Drupal, drupalSettings) {
+
+  'use strict';
 
   Drupal.behaviors.geocode_origin_autocomplete = {
     attach: function(context, settings) {
 
       function geocode (address, providers, address_format) {
-        var base_url = drupalSettings.path.baseUrl;
-        var geocode_path = base_url + 'geocoder/api/geocode';
-        var address_format_query_url = address_format === null ? '' : '&address_format=' + address_format;
+        const base_url = drupalSettings.path.baseUrl;
+        const geocode_path = base_url + 'geocoder/api/geocode';
+        const address_format_query_url = address_format === null ? '' : '&address_format=' + address_format;
         return $.ajax({
           url: geocode_path + '?address=' +  encodeURIComponent(address) + '&geocoder=' + providers + address_format_query_url,
           type:"GET",
@@ -16,12 +23,12 @@
       }
 
       // Run filters on page load if state is saved by browser.
-      $('.origin-address-autocomplete .address-input', context).once('autocomplete-enabled').each(function () {
-        var providers = settings.geocode_origin_autocomplete.providers.toString();
-        var address_format = settings.geocode_origin_autocomplete.address_format;
-        $(this).autocomplete({
+      once('autocomplete-enabled', '.origin-address-autocomplete .address-input', context).forEach(function (element) {
+        const providers = settings.geocode_origin_autocomplete['providers'].toString();
+        const address_format = settings.geocode_origin_autocomplete['address_format'];
+        $(element).autocomplete({
           autoFocus: true,
-          minLength: settings.geocode_origin_autocomplete.minTerms || 4,
+          minLength: settings.geocode_origin_autocomplete['minTerms'] || 4,
           delay: settings.geocode_origin_autocomplete.delay || 800,
           // This bit uses the geocoder to fetch address values.
           source: function (request, response) {
@@ -35,7 +42,7 @@
                   thisElement.removeClass('ui-autocomplete-loading');
                   return {
                     // the value property is needed to be passed to the select.
-                    value: item.formatted_address,
+                    value: item['formatted_address'],
                   };
                 }));
               },

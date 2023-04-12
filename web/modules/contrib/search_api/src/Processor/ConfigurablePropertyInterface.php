@@ -71,4 +71,14 @@ interface ConfigurablePropertyInterface extends ProcessorPropertyInterface {
    */
   public function getFieldDescription(FieldInterface $field);
 
+  /**
+   * Sets the active configuration for this property.
+   *
+   * @param array|null $configuration
+   *   The new active configuration for this property.
+   *
+   * @return $this
+   */
+  public function setConfiguration(?array $configuration): self;
+
 }

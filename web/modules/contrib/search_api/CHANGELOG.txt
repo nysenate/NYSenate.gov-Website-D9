@@ -1,3 +1,59 @@
+Search API 1.29 (2023-03-27):
+-----------------------------
+- #3328714 by acbramley, drunken monkey: Fixed namespaces in
+  PluginHelperInterface doc comments.
+- #3346911 by jmaerckaert, drunken monkey: Fixed errors with Symfony 6 when the
+  Views "Preserve facets" option is enabled.
+- #3340305 by drunken monkey: Fixed all aggregated fields being reported as
+  multi-valued.
+- #3346185 by drunken monkey: Fixed test fails on PHP 8.2.
+- #3338296 by yoerioptr, drunken monkey: Fixed error in Views filters in edge
+  cases with empty filter values.
+- #3343250 by BenStallings, drunken monkey: Fixed the Views date "between"
+  filters to make the range inclusive.Fixed the Views date "between" filters to
+  make the range inclusive.
+- #3264239 by drunken monkey, DieterHolvoet: Fixed the regular expression used
+  for HTML in the Highlight processor.
+- #3252430 by drunken monkey: Fixed error in render code breaking indexing.
+- #3342791 by jhedstrom, drunken monkey: Fixed bug in highlighting processor
+  when "excerpt_always" is enabled.
+- #3340611 by pfrenssen, drunken monkey: Fixed left-over !placeholder instances
+  in CommandHelper.
+- #3343092 by drunken monkey: Fixed deprecation warning in NodeTrackingTest with
+  PHP 8.2.
+- #3120612 by drunken monkey: Fixed identifiers to be quoted in database
+  queries.
+- #3077570 by pfrenssen, drunken monkey: Removed Drush 8 support.
+- #3132911 by drunken monkey: Updated code to reflect our PHP 7.3 requirement.
+- #3260862 by drunken monkey, mkalkbrenner: Added new method
+  QueryInterface::createAndAddConditionGroup().
+- #3296848 by drunken monkey: Added a list of known query tags to README.md.
+- #3343104 by drunken monkey: Fixed test fails on Drupal 10.1.x.
+- #2877319 by progga, drunken monkey, ndf, hswong3i, scothiam, marabak,
+  jmdeleon, borisson_: Added support for location search to the Database
+  backend.
+- #3226415 by akalam, drunken monkey, mkalkbrenner, miteshmap: Fixed facets not
+  showing when search view is placed via Layout Builder.
+- #3262975 by marlon.buella, drunken monkey: Fixed warning for empty
+  "ignorable_classes" option in IGnore Characters processor.
+- #3339332 by drunken monkey: Fixed deprecated syntax for passing a static
+  method.
+- #3339351 by drunken monkey: Fixed Javascript code style.
+- #3262507 by rlmumford, kalpaitch, drunken monkey, acbramley: Fixed bug when
+  rendering entity fields in Views with search_api_opensearch.
+- #3341151 by drunken monkey: Fixed non-standard deprecation messages.
+- #2905497 by idebr, webflo, drunken monkey, rjacobs, borisson_: Fixed
+  compatibility of search views with internal page cache.
+- #3316665 by drunken monkey, carolpettirossi, dxvargas: Fixed OR conjunction
+  ignored for Views contextual filters.
+- #3339357 by drunken monkey: Fixed use of deprecated
+  assertObjectHasAttribute() method.
+- #3323594 by bogdan.dinu, drunken monkey: Fixed deprecation warning in
+  Highlight processor.
+- #3319384 by drunken monkey: Fixed code style issues in EntityStatusTest and
+  StemmerTest.
+- #3265881 by ressa, drunken monkey: Fixed and expanded README.md.
+
 Search API 1.28 (2022-11-07):
 -----------------------------
 - #3317319 by drunken monkey, mkalkbrenner: Reverted the required PHP version

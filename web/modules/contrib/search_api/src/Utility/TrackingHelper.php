@@ -94,11 +94,8 @@ class TrackingHelper implements TrackingHelperInterface {
       $indexes = $this->entityTypeManager->getStorage('search_api_index')
         ->loadMultiple();
     }
-    // @todo Replace with multi-catch once we depend on PHP 7.1+.
-    catch (InvalidPluginDefinitionException $e) {
-      // Can't really happen, but play it safe to appease static code analysis.
-    }
-    catch (PluginNotFoundException $e) {
+    // @todo Remove $e once we depend on PHP 8.0+.
+    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
       // Can't really happen, but play it safe to appease static code analysis.
     }
 

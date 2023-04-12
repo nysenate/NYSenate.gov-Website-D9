@@ -9,6 +9,7 @@ use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\DataType\DataTypeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\Field;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Plugin\search_api\processor\AggregatedFields;
 use Drupal\search_api\Plugin\search_api\processor\Property\AggregatedFieldProperty;
@@ -310,11 +311,60 @@ class AggregatedFieldsTest extends UnitTestCase {
     $this->assertEquals($translation->translate('Aggregated field'), $properties['aggregated_field']->getLabel(), 'Correct label set in the data definition.');
     $expected_description = $translation->translate('An aggregation of multiple other fields.');
     $this->assertEquals($expected_description, $properties['aggregated_field']->getDescription(), 'Correct description set in the data definition.');
+    $this->assertTrue($properties['aggregated_field']->isList());
 
     // Verify that there are no properties if a datasource is given.
     $datasource = $this->createMock(DatasourceInterface::class);
     $properties = $this->processor->getPropertyDefinitions($datasource);
     $this->assertEmpty($properties, 'Datasource-specific properties did not get changed.');
+  }
+
+  /**
+   * Makes sure that the property's isList() method works correctly.
+   *
+   * The property should report itself as a list only if its type is either set
+   * to "union" or is unknown.
+   *
+   * @param string $type
+   *   The aggregation type configured for the field.
+   * @param bool $expect_list
+   *   The expected return value of isList().
+   *
+   * @covers \Drupal\search_api\Plugin\search_api\processor\Property\AggregatedFieldProperty::isList
+   * @dataProvider propertyIsListTestDataProvider
+   */
+  public function testPropertyIsList(string $type, bool $expect_list): void {
+    $this->processor->setStringTranslation($this->getStringTranslationStub());
+
+    $index = $this->createMock(IndexInterface::class);
+    $index->method('getPropertyDefinitions')->willReturnMap([
+      [NULL, $this->processor->getPropertyDefinitions(NULL)],
+    ]);
+
+    $field = (new Field($index, 'aggregated'))
+      ->setDatasourceId(NULL)
+      ->setPropertyPath('aggregated_field')
+      ->setConfiguration([
+        'type' => $type,
+      ]);
+    $this->assertEquals($expect_list, $field->getDataDefinition()->isList());
+  }
+
+  /**
+   * Provides test data for testPropertyIsList().
+   *
+   * @return array
+   *   An array containing test data sets, with each being an array of arguments
+   *   to pass to the test method.
+   *
+   * @see static::testPropertyIsList()
+   */
+  public function propertyIsListTestDataProvider(): array {
+    return [
+      ['union', TRUE],
+      ['sum', FALSE],
+      ['concat', FALSE],
+    ];
   }
 
   /**

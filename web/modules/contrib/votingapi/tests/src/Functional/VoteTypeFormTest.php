@@ -39,7 +39,7 @@ class VoteTypeFormTest extends BrowserTestBase {
   /**
    * Tests that a Vote Type can be created properly through the UI.
    */
-  public function testVoteTypeCreation() {
+  public function testVoteTypeCreation(): void {
     // First verify that a user can't access the Vote Type form without having
     // the proper permissions.
     $this->drupalGet('admin/structure/vote-types/add');

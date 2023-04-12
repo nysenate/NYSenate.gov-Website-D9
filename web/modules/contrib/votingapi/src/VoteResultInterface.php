@@ -3,12 +3,11 @@
 namespace Drupal\votingapi;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an interface defining a vote entity.
  */
-interface VoteResultInterface extends ContentEntityInterface, EntityOwnerInterface {
+interface VoteResultInterface extends ContentEntityInterface {
 
   /**
    * Returns the type of entity that the vote was cast on.

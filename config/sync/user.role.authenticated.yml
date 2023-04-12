@@ -6,6 +6,7 @@ dependencies:
     - comment
     - field_permissions
     - google_analytics
+    - honeypot
     - media
     - system
 _core:
@@ -17,6 +18,7 @@ is_admin: false
 permissions:
   - 'access comments'
   - 'access content'
+  - 'bypass honeypot protection'
   - 'opt-in or out of google analytics tracking'
   - 'post comments'
   - 'view field_associated_senators'

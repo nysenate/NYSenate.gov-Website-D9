@@ -265,7 +265,7 @@ class Highlight extends ProcessorPluginBase implements PluginFormInterface {
     if ($this->configuration['excerpt']) {
       $this->addExcerpts($result_items, $excerpt_fulltext_fields, $keys);
     }
-    if ($this->configuration['highlight'] != 'never') {
+    if ($this->configuration['highlight'] !== 'never' && !empty($keys)) {
       $highlighted_fields = $this->highlightFields($result_items, $keys);
       foreach ($highlighted_fields as $item_id => $item_fields) {
         $item = $result_items[$item_id];
@@ -655,8 +655,9 @@ class Highlight extends ProcessorPluginBase implements PluginFormInterface {
    *   The given text with all occurrences of search keywords highlighted.
    */
   protected function highlightField($text, array $keys, $html = TRUE) {
+    $text = "$text";
     if ($html) {
-      $texts = preg_split('#((?:</?[[:alpha:]](?:[^>"\']*|"[^"]*"|\'[^\']\')*>)+)#i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+      $texts = preg_split('#(\s*(?:</?[[:alpha:]](?:[^>"\']*+|"[^"]*+"|\'[^\']*+\')*+>)+\s*)#i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
       if ($texts === FALSE) {
         $args = [
           '%error_num' => preg_last_error(),

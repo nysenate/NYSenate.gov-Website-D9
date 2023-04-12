@@ -111,6 +111,11 @@
       text-decoration: none;
       @extend .lgt-text;
       @extend .icon-before__presskit;
+
+      &::before {
+        font-size: 21px;
+        line-height: 12px;
+      }
     }
   }
 }
@@ -265,5 +270,22 @@
 
   .view-global-promo-banner {
     padding-top: 0;
+  }
+}
+
+.page--student_programs {
+
+  .text-layout__body {
+    .content {
+      margin-bottom: 60px;
+    }
+  }
+
+  .text-layout--2-col {
+    margin: 20px 0 36px;
+  }
+
+  .text-layout__title.container {
+    margin-top: 0;
   }
 }

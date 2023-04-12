@@ -57,10 +57,15 @@ trait SearchApiFilterTrait {
    * @see \Drupal\views\Plugin\views\filter\ManyToOne::opHelper()
    */
   protected function opHelper() {
+    if (empty($this->value)) {
+      return;
+    }
+
     // Form API returns unchecked options in the form of option_id => 0. This
     // breaks the generated query for "is all of" filters so we remove them.
-    $this->value = array_filter($this->value, 'static::arrayFilterZero');
+    $this->value = array_filter($this->value, [static::class, 'arrayFilterZero']);
 
+    // Potentially, the value is now empty.
     if (empty($this->value)) {
       return;
     }
@@ -72,10 +77,10 @@ trait SearchApiFilterTrait {
     }
 
     $condition_group = $this->getQuery()->createConditionGroup();
+    $this->getQuery()->addConditionGroup($condition_group, $this->options['group']);
     foreach ($this->value as $value) {
       $condition_group->addCondition($this->realField, $value, '=');
     }
-    $this->getQuery()->addConditionGroup($condition_group, $this->options['group']);
   }
 
 }

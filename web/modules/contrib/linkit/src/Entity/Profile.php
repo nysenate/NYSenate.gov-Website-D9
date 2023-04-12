@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\linkit\MatcherCollection;
 use Drupal\linkit\MatcherInterface;
+use Drupal\linkit\Plugin\Linkit\Matcher\EntityMatcher;
 use Drupal\linkit\ProfileInterface;
 
 /**
@@ -106,6 +107,19 @@ class Profile extends ConfigEntityBase implements ProfileInterface, EntityWithPl
    */
   public function getMatcher($instance_id) {
     return $this->getMatchers()->get($instance_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMatcherByEntityType($entity_type_id) {
+    foreach ($this->getMatchers() as $matcher) {
+      if ($matcher instanceof EntityMatcher && $matcher->getPluginDefinition()['target_entity'] === $entity_type_id) {
+        return $matcher;
+      }
+    }
+
+    return NULL;
   }
 
   /**

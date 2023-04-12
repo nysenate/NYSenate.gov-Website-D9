@@ -28,4 +28,18 @@ class SearchApiTimeCache extends Time {
 
   use SearchApiCachePluginTrait;
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getCacheTags(): array {
+    $tags = parent::getCacheTags();
+    // Do not invalidate time-based cache if any items on the index are indexed
+    // or deleted.
+    $key = array_search('search_api_list:' . $this->getQuery()->getIndex()->id(), $tags, TRUE);
+    if ($key !== FALSE) {
+      unset($tags[$key]);
+    }
+    return array_values($tags);
+  }
+
 }

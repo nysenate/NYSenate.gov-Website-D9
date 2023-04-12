@@ -79,12 +79,13 @@ class SearchApiDate extends SearchApiStandard {
     }
 
     if (!empty($this->value)) {
-      $outer_conditions = $this->query->createConditionGroup($outer_conjunction);
+      $outer_conditions = $this->query->createConditionGroup($outer_conjunction, [], TRUE);
       // @todo Refactor to use only a single nested filter, and only if
       //   necessary. $value_conditions will currently only ever contain a
       //   single child – a condition or a nested filter with two conditions.
       foreach ($this->value as $value) {
-        $value_conditions = $this->query->createConditionGroup($inner_conjunction);
+        $value_conditions = $this->query->createConditionGroup($inner_conjunction, [], FALSE);
+        $outer_conditions->addConditionGroup($value_conditions);
         $values = explode(';', $value);
         $values = array_map([$this, 'getTimestamp'], $values);
         if (in_array(FALSE, $values, TRUE)) {
@@ -93,7 +94,7 @@ class SearchApiDate extends SearchApiStandard {
         }
         $is_range = (count($values) > 1);
 
-        $inner_conditions = ($is_range ? $this->query->createConditionGroup('AND') : $value_conditions);
+        $inner_conditions = $is_range ? $this->query->createConditionGroup() : $value_conditions;
         $range_op = (empty($this->options['not']) ? '>=' : '<');
         $inner_conditions->addCondition($this->realField, $values[0], $is_range ? $range_op : $condition_operator);
         if ($is_range) {
@@ -101,10 +102,7 @@ class SearchApiDate extends SearchApiStandard {
           $inner_conditions->addCondition($this->realField, $values[1], $range_op);
           $value_conditions->addConditionGroup($inner_conditions);
         }
-        $outer_conditions->addConditionGroup($value_conditions);
       }
-
-      $this->query->addConditionGroup($outer_conditions);
     }
   }
 

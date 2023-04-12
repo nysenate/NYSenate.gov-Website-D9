@@ -125,6 +125,7 @@ class VoteResultFunctionManager extends DefaultPluginManager {
       ->condition('entity_id', $entity_id)
       ->condition('type', $vote_type)
       ->sort('type')
+      ->accessCheck(TRUE)
       ->execute();
 
     if (!empty($vote_ids)) {

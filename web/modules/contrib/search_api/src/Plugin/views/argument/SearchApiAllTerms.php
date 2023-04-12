@@ -123,8 +123,7 @@ class SearchApiAllTerms extends SearchApiTerm {
     // present (to simplify the code below a bit).
     $vocabulary_fields += ['' => []];
     $values = $multi_field_values = [];
-    $term_conditions = $this->query->createConditionGroup($conjunction);
-    $this->query->addConditionGroup($term_conditions);
+    $term_conditions = $this->query->createConditionGroup($conjunction, [], TRUE);
     foreach ($terms as $term) {
       // Set filters for all term reference fields which don't specify a
       // vocabulary, as well as for all fields specifying the term's vocabulary.
@@ -182,7 +181,7 @@ class SearchApiAllTerms extends SearchApiTerm {
     }
     foreach ($multi_field_values as $value => $fields) {
       $flipped_conjunction = $conjunction === 'AND' ? 'OR' : 'AND';
-      $group = $this->query->createConditionGroup($flipped_conjunction);
+      $group = $this->query->createConditionGroup($flipped_conjunction, [], FALSE);
       $term_conditions->addConditionGroup($group);
       foreach ($fields as $field) {
         $group->addCondition($field, $value, $not_negated ? '=' : '<>');

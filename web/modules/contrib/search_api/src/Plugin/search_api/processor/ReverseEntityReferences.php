@@ -310,11 +310,8 @@ class ReverseEntityReferences extends ProcessorPluginBase {
         $storage = $this->getEntityTypeManager()
           ->getStorage($property_info['entity_type']);
       }
-      // @todo Replace with multi-catch once we depend on PHP 7.1+.
-      catch (InvalidPluginDefinitionException $e) {
-        continue;
-      }
-      catch (PluginNotFoundException $e) {
+      // @todo Remove $e once we depend on PHP 8.0+.
+      catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
         continue;
       }
       $entity_ids = $storage->getQuery()

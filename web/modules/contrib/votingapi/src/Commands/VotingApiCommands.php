@@ -106,7 +106,7 @@ class VotingApiCommands extends DrushCommands {
       $cache = \Drupal::database()->delete('votingapi_result');
       $votes = \Drupal::database()->delete('votingapi_vote');
 
-      if (!empty($entity_type)) {
+      if ($entity_type !== 'all') {
         $cache->condition('entity_type', $entity_type);
         $votes->condition('entity_type', $entity_type);
       }

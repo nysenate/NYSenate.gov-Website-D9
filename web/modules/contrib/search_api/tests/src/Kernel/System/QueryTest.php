@@ -168,7 +168,7 @@ class QueryTest extends KernelTestBase {
     $query->keys('foo bar')
       ->addCondition('field1', 'value', '<')
       ->addCondition('field2', [15, 25], 'BETWEEN')
-      ->addConditionGroup($query->createConditionGroup('OR', $tags)
+      ->addConditionGroup($query->createConditionGroup('OR', $tags, FALSE)
         ->addCondition('field2', 'foo')
         ->addCondition('field3', 1, '<>')
       )

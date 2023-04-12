@@ -21,17 +21,25 @@
       // Init variables
       var viewType = '';
       var formatType = 'm/d/Y';
+      var submit = '';
 
       // Check the type of view i.e day/week/month and initialize datepicker options
       if ($('.view-events.view-display-id-day_block').length > 0) {
         viewType = 'day';
+        submit = $('#views-exposed-form-events-day-block input[type="submit"]');
+      }
+      if ($('.view-events.view-display-id-page_1').length > 0) {
+        viewType = 'day';
+        submit = $('#views-exposed-form-events-page_1 input[type="submit"]');
       }
       if ($('.view-events.view-display-id-page_2').length > 0) {
         viewType = 'month';
         formatType = 'm/Y';
+        submit = $('#views-exposed-form-events-page-2 input[type="submit"]');
       }
       if ($('.view-events.view-display-id-page_3').length > 0) {
         viewType = 'week';
+        submit = $('#views-exposed-form-events-page-3 input[type="submit"]');
       }
 
       if ($('.form-item-date.js-form-type-textfield input').val()) {
@@ -86,8 +94,17 @@
           else {
             inputElement = $('.form-item-date.js-form-type-textfield input');
           }
-          inputElement.val(format);
-          inputElement.parents('form').submit();
+          if (viewType === 'month') {
+            // Temporarily set date value to avoid conflict with the views form.
+            const splitDate = format.split('/');
+            inputElement.val(`${splitDate[0]}/01/${splitDate[1]}`);
+            submit.click();
+            inputElement.val(`${splitDate[0]}/${splitDate[1]}`);
+          }
+          else {
+            inputElement.val(format);
+            submit.click();
+          }
         },
         onOpen: function () {
           this.trigger('change');

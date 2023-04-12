@@ -20,11 +20,9 @@
 
 <div class="view-content">
   {% for content in contents %}
-    <div class="content__item">
-      {% include "@nysenate_theme/nysenate-press-release/nysenate-press-release.twig" with {
-        article: content
-      } only %}
-    </div>
+    {% include "@nysenate_theme/nysenate-press-release/nysenate-press-release.twig" with {
+      article: content
+    } only %}
   {% endfor %}
 </div>
 

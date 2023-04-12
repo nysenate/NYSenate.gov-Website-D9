@@ -110,6 +110,10 @@ class BillVoteWidgetForm extends FormBase {
       $default_value = $form_state->getValue('nys_bill_vote');
     }
 
+    if (!$this->currentUser->isAuthenticated()) {
+      return $form;
+    }
+
     // Add the distinct class.
     $form['#attributes'] = [
       'class' => [

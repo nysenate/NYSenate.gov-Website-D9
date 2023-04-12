@@ -1,0 +1,30 @@
+{#
+/**
+ * @file nys-bill-vote-management-bills.html.twig
+ *
+ * @var array sponsored_bills
+ *   An array of the senator's sponsored bills definitions.
+ * @var array bill_messages
+ *   An array of messages tagged with a bill context.
+ *
+ * @see nys-bill-vote-summary-highchart.html.twig
+ */
+#}
+<ul class="tabs">
+  <li class="active tab" data-target="panel1">Bills You Sponsored</li>
+  <li class="tab" data-target="panel2">Constituent Messages</li>
+</ul>
+<div id="panel1" class="nys-senators-management-sponsored-bills tab-content active">
+  <div class="sponsored-bills-list">
+    {% if sponsored_bills is iterable and sponsored_bills|length > 0 %}
+      {% for val in sponsored_bills %}
+        {{ include('nys-bill-vote-summary-highchart.html.twig', val) }}
+      {% endfor %}
+    {% else %}
+      No sponsored bills were found.
+    {% endif %}
+  </div>
+</div>
+<div id="panel2" class="nys-senators-management-bill-messages tab-content">
+  {{ bill_messages }}
+</div>

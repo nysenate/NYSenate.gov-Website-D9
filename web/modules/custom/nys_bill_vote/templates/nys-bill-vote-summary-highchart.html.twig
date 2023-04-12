@@ -1,0 +1,43 @@
+{#
+/**
+ * @file nys-bill-vote-summary-highchart.html.twig
+ *
+ *   @var integer nid
+ *     Node id
+ *   @var string title
+ *     Node title
+ *   @var string summary
+ *     An abridged bill summary text (first 100 characters)
+ *   @var string issues_tid
+ *     A comma-delimited list of issue taxonomy ids
+ *   @var string issues
+ *     A comma-delimited list of issue names
+ *   @var integer in_district_nay
+ *     Number of "nay" votes in the sponsor's district
+ *   @var integer in_district_aye
+ *     Number of "aye" votes in the sponsor's district
+ *   @var integer out_district_nay
+ *     Number of "nay" votes outside the sponsor's district
+ *   @var integer out_district_aye
+ *     Number of "aye" votes outside the sponsor's district
+ */
+#}
+<div class="sponsored-bill"
+     id="sponsored-bill-{{ nid }}"
+     data-nid="{{ nid }}">
+  <div class="sponsored-bill-description">
+    <div class="sponsored-bill-title">
+      <a href="{{ path('entity.node.canonical', {'node': nid}) }}" target="_blank">{{ title }}</a></div>
+    <div class="sponsored-bill-issues">{{ issues|replace({',':'&nbsp; | &nbsp;'})|raw }}</div>
+    <div class="sponsored-bill-summary">{{ summary }}</div>
+  </div>
+  <div class="sponsored-bill-chart"
+       data-title="{{ title }}"
+       data-in-district-aye="{{ in_district_aye }}"
+       data-in-district-nay="{{ in_district_nay }}"
+       data-out-district-aye="{{ out_district_aye }}"
+       data-out-district-nay="{{ out_district_nay }}">
+    {{ nid }}<br/>{{ title }}<br/>
+    IA:{{ in_district_aye }} - IN:{{ in_district_nay }} - OA:{{ out_district_aye }} - ON:{{ out_district_nay }}
+  </div>
+</div>

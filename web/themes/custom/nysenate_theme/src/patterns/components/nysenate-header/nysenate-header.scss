@@ -1012,6 +1012,19 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     }
   }
 
+  .u-mobile-only &.nys-searchglobal-form {
+
+    .search__submit {
+      top: 50%;
+      transform: translateY(-50%);
+      margin-right: 0;
+    }
+
+    .form-item {
+      margin-top: 0;
+    }
+  }
+
   .c-site-search--title {
     display: none;
   }
@@ -1189,5 +1202,11 @@ a:hover.c-header--btn.c-header--btn__taking_action {
       height: 225px;
       padding: 25px 9%;
     }
+  }
+
+  .c-site-search--container {
+    max-width: 1500px;
+    margin: 0 auto;
+    position: relative;
   }
 }

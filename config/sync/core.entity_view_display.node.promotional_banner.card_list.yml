@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.card_list
-    - field.field.node.promotional_banner.body
     - field.field.node.promotional_banner.field_call_to_action
     - field.field.node.promotional_banner.field_date
     - field.field.node.promotional_banner.field_link
@@ -52,11 +51,11 @@ content:
     weight: 0
     region: content
 hidden:
-  body: true
   field_date: true
   field_link_type: true
   field_promotional_banner_image: true
   field_promotional_content: true
   field_senator_multiref: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

@@ -5,6 +5,9 @@ namespace Drupal\nys_bill_vote\Form;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\BeforeCommand;
+use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -306,22 +309,16 @@ class BillVoteWidgetForm extends FormBase {
     $value = $triggering_element['#value'];
     $id = $triggering_element['#id'];
 
-    // We want to process the vote if the user is logged in.
-    if ($this->currentUser->isAuthenticated()) {
-      $this->billVoteHelper->processVote($build_info['entity_type'], $build_info['entity_id'], $value);
-      $form['nys_bill_vote']['#default_value'] = $this->billVoteHelper->getVal($this->billVoteHelper->getDefault($build_info['entity_type'], $build_info['entity_id']));
-      $form['nys_bill_vote']['#options'] = $this->billVoteHelper->getOptions();
-    }
-
     $bill_path = '/node/' . $build_info['entity_id'];
 
-    $options['query'] = [
-      'intent' => $this->billVoteHelper->getIntentFromVote($value),
-    ];
+    $intent = $this->billVoteHelper->getIntentFromVote($value);
 
-    $url = Url::fromUserInput($bill_path, $options);
-    $command = new RedirectCommand($url->toString());
-    $response->addCommand($command);
+    $vote_args = [
+      '#' . $id,
+      $this->billVoteHelper->getVotedLabel($intent)->__toString(),
+      $intent,
+    ];
+    $response->addCommand(new InvokeCommand($id, 'nysBillVoteUpdate', $vote_args));
 
     return $response;
   }
@@ -334,10 +331,6 @@ class BillVoteWidgetForm extends FormBase {
     $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     $values = $form_state->getValues();
     $settings = $form_state->getBuildInfo();
-
-    // Also create the parent ID we'll use to target elements
-    // in the AJAX return.
-    $parent_id = '#nys-bill-vote-vote-widget-' . $nid;
 
     // Get the entered email address, nid, and tid.  We need to use input here
     // because the two email controls were added dynamically through AJAX.  They
@@ -355,8 +348,14 @@ class BillVoteWidgetForm extends FormBase {
     $is_embed = $settings['is_embed'] ?? TRUE;
 
     if ($tid && $nid) {
+
+      // Also create the parent ID we'll use to target elements
+      // in the AJAX return.
+      $parent_id = '#nys-bill-vote-vote-widget-' . $nid;
+
       // If this is an embedded form, and no email address is available,
-      // redirect to the bill node instead.  This mimics bill voting behavior.
+      // redirect to the bill node instead.
+      // This mimics bill voting behavior.
       if (empty($email_address) && $is_embed) {
         $bill_path = '/node/' . $settings['entity_id'];
         $url = Url::fromUserInput($bill_path, $options);
@@ -381,8 +380,19 @@ class BillVoteWidgetForm extends FormBase {
       }
 
       // Everything is awesome.  Generate the subscription.
-      $why = 2;
-      $subscription = $this->subscriptionSignup($tid, $nid, $email_address, $why);
+      $subscription = $this->subscriptionSignup($nid, $email_address);
+
+      $form_is_awesome = [
+        'sub_ok' => [
+          '#type' => 'markup',
+          '#markup' => '<hr /><div class="subscribe_result">Your subscription has been processed</div>',
+        ],
+      ];
+
+      $response->addCommand(new BeforeCommand($parent_id . ' .nys-subscribe-button', $form_is_awesome));
+      $response->addCommand(new RemoveCommand($parent_id . ' .subscribe_email_error'));
+      $response->addCommand(new RemoveCommand($parent_id . ' .nys-subscribe-button'));
+      return $response;
     }
 
     return $response;
@@ -391,11 +401,11 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * Sign up a subscripion for the bill.
    */
-  public function subscriptionSignup($tid, $nid, $email_address, $why) {
+  public function subscriptionSignup($nid, $email_address) {
     $user = user_load_by_mail($email_address);
     $node_bill = $this->entityTypeManager->getStorage('node')->load($nid);
     $subscription = $this->entityTypeManager->getStorage('subscription')->create([
-      'type' => 'bill_notifications',
+      'sub_type' => 'bill_notifications',
       'uid' => $user ? $user->id() : 0,
       'email' => $email_address,
       'target' => $node_bill,

@@ -211,10 +211,10 @@ class BillVoteHelper {
 
     // If an existing vote (including one submitted now) is detected ...
     if ($value == 'yes') {
-      $label = $this->t('You are in favor of this bill, do you support this bill?');
+      $label = $this->t('You are in favor of this bill');
     }
     elseif ($value == 'no') {
-      $label = $this->t('You are opposed to this bill, do you support this bill?');
+      $label = $this->t('You are opposed to this bill');
     }
 
     return $label;

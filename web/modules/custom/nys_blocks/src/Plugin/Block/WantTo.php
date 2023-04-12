@@ -31,19 +31,23 @@ class WantTo extends BlockBase {
     if ($logged_in) {
       $current_user = \Drupal::currentUser();
       $user = User::load($current_user->id());
-      // @phpstan-ignore-next-line
-      $senator = $user->field_district->entity->field_senator->entity ?? NULL;
-      // @phpstan-ignore-next-line
-      $senator_link = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
-      // @phpstan-ignore-next-line
-      $headshot_id = $user->field_district->entity->field_senator
-        ->entity->field_member_headshot->target_id;
-      // @phpstan-ignore-next-line
-      $headshot = \Drupal::entityTypeManager()->getStorage('media')
-        ->load($headshot_id);
-      $headshot = \Drupal::entityTypeManager()
-        ->getViewBuilder('media')
-        ->view($headshot, 'thumbnail');
+      if ($user->hasField('field_district') && !$user->get('field_district')
+        ->isEmpty()) {
+        // @phpstan-ignore-next-line
+        $senator = $user->field_district->entity->field_senator->entity ?? NULL;
+        // @phpstan-ignore-next-line
+        $senator_link = \Drupal::service('nys_senators.microsites')
+          ->getMicrosite($senator);
+        // @phpstan-ignore-next-line
+        $headshot_id = $user->field_district->entity->field_senator
+          ->entity->field_member_headshot->target_id;
+        // @phpstan-ignore-next-line
+        $headshot = \Drupal::entityTypeManager()->getStorage('media')
+          ->load($headshot_id);
+        $headshot = \Drupal::entityTypeManager()
+          ->getViewBuilder('media')
+          ->view($headshot, 'thumbnail');
+      }
     }
     $register = Url::fromRoute('user.register')->toString();
 

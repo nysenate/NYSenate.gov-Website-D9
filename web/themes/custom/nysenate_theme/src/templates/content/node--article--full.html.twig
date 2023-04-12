@@ -1,5 +1,7 @@
 {{ attach_library('nysenate_theme/article-page') }}
 {{ attach_library('nysenate_theme/file-uploads') }}
+{{ attach_library('nysenate_theme/session') }}
+
 
 <article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
   {{ title_prefix }}
@@ -42,12 +44,15 @@
           </ul>
         {% endif %}
 
-        {% if content.field_attachment.0 %}
-          <div class="c-news--download">
-            {{ content.field_attachment }}
-          </div>
+        {% if content.field_attachment[0] %}
+          {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+              title: title,
+              attachment: content.field_attachment,
+          } only %}
         {% endif %}
       </div>
+
+
     </header>
   {% endif %}
 
@@ -98,6 +103,20 @@
       cta: cta,
     } only
     %}
+
+    {% if content.field_category[0]['#markup'] == "Press release" %}
+    {% if content.field_associated_senators.0 %}
+      <section class="c-block c-block--associated-senators">
+          <div class="c-container--header__top-border">
+              <h2 class="c-container--title">Senators Involved</h2>
+          </div>
+
+          <div class="c-block">
+              {{ content.field_associated_senators }}
+          </div>
+      </section>
+    {% endif %}
+    {% endif %}
   </div>
 
   {{ drupal_view('senator_microsite_content', 'article_footer') }}

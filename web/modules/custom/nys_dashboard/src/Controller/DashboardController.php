@@ -10,42 +10,15 @@ use Drupal\Core\Controller\ControllerBase;
 class DashboardController extends ControllerBase {
 
   /**
-   * Path to display the issues views.
+   * Controller method for the entrance page.
    */
-  public function issues() {
-    $content['issues_updates'] = views_embed_view('constituent_updates', 'constituent_all_issue_updates');
-    $content['issues_following'] = views_embed_view('explore_issues_tabs', 'constituents_issues_followed');
+  public function overview() {
+    $build['content'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('Profile page'),
+    ];
 
-    return $content;
-  }
-
-  /**
-   * Path to display the bills views.
-   */
-  public function bills() {
-    $content['bills_updates'] = views_embed_view('constituent_updates', 'constituent_all_bill_updates');
-    $content['bills_voted_on'] = views_embed_view('constituent_bills', 'constituent_bills_voted_on');
-
-    return $content;
-  }
-
-  /**
-   * Path to display the committee views.
-   */
-  public function committees() {
-    $content['committees_updates'] = views_embed_view('constituent_updates', 'constituent_all_committees_updates');
-    $content['committees_following'] = views_embed_view('constituent_committees_following', 'block');
-
-    return $content;
-  }
-
-  /**
-   * Path to display the petitions and questionnaires views.
-   */
-  public function petitions() {
-    $content['petitions_signed'] = views_embed_view('constituent_petitions_and_questionnaires', 'constituent_petitions_signed');
-
-    return $content;
+    return $build;
   }
 
 }

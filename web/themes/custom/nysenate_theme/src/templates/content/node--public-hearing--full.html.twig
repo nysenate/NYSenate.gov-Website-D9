@@ -50,14 +50,14 @@
             {{ content.field_location[0].organization['#value'] }}
           </a>
         {% endif %}
-        <div class="c-meeting-detail--location">
+        <p class="c-meeting-detail--location">
           {% if content.field_meeting_location[0] %}
             {{ content.field_meeting_location[0] }}
           {% endif %}
           {% if location %}
             {{ location }}
           {% endif %}
-        </div>
+        </p>
         <p class="c-meeting-detail--time">
           {{ date_value.from_time }}
           {% if date_value.from_time != date_value.to_time %}
@@ -112,14 +112,11 @@
   {% endif %}
 </article>
 
-{% if file_items is not empty %}
-  {% for file_item in file_items %}
-    <span class="file">
-      <a href="{{ file_item.url }}" target="_blank" type="{{ file_item.type }}">
-        {{ file_item.text }}
-      </a>
-    </span>
-  {% endfor %}
+{% if content.field_attachment[0] %}
+  {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+    title: title,
+    attachment: content.field_attachment,
+  } only %}
 {% endif %}
 
 {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {

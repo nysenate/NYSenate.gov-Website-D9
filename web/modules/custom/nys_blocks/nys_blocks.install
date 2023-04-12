@@ -279,3 +279,62 @@ function nys_blocks_update_9003() {
     }
   }
 }
+
+/**
+ * Create/Update the Senate Directories block.
+ */
+function nys_blocks_update_9004() {
+  $block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->loadByProperties([
+      'type' => 'text',
+      'field_title' => 'Senate Directories',
+    ]);
+
+  if (empty($block)) {
+    $senate_directories_block = BlockContent::create([
+      'info' => 'Senate Directories',
+      'type' => 'text',
+      'revision_user' => 1,
+      'field_title' => 'Senate Directories',
+      'field_body_left' => [
+        'value' => '<div class="c-senate-directory">
+        <div class="l-col l-col-2 c-directory--section c-directory--members">
+        <h4 class="c-directory--title">Member Directory</h4>
+        <a class="c-directory--link c-download--link c-view--link" href="/sites/default/files/pdfs/member-directory-10-27-22.pdf" target="_blank">download pdf</a>
+        </div>
+        <div class="l-col l-col-2 c-directory--section c-directory--leadership-list">
+        <h4 class="c-directory--title">Senate Leadership List</h4>
+        <a class="c-directory--link c-view--link" href="/senate-leadership" target="_blank">view list</a>
+        </div>
+        </div>',
+        'format' => 'full_html',
+      ],
+      'field_is_full_bleed' => 0,
+      'field_show_title' => 1,
+      'field_with_background' => 0,
+    ]);
+    $senate_directories_block->save();
+  }
+  else {
+    if (is_array($block)) {
+      $block = reset($block);
+    }
+
+    $block->field_title = 'Senate Directories';
+    $block->field_body_left = [
+      'value' => '<div class="c-senate-directory">
+      <div class="l-col l-col-2 c-directory--section c-directory--members">
+      <h4 class="c-directory--title">Member Directory</h4>
+      <a class="c-directory--link c-download--link c-view--link" href="/sites/default/files/pdfs/member-directory-10-27-22.pdf" target="_blank">download pdf</a>
+      </div>
+      <div class="l-col l-col-2 c-directory--section c-directory--leadership-list">
+      <h4 class="c-directory--title">Senate Leadership List</h4>
+      <a class="c-directory--link c-view--link" href="/senate-leadership" target="_blank">view list</a>
+      </div>
+      </div>',
+      'format' => 'full_html',
+    ];
+    $block->save();
+  }
+}

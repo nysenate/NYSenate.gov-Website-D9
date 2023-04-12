@@ -1,0 +1,25 @@
+uuid: a3111124-1e72-468d-bb55-2278510de3da
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.senator_microsite_about_info
+    - field.storage.block_content.field_microsite_about_info
+  module:
+    - block_field
+id: block_content.senator_microsite_about_info.field_microsite_about_info
+field_name: field_microsite_about_info
+entity_type: block_content
+bundle: senator_microsite_about_info
+label: 'Microsite About Information'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      nys_blocks_about_text: nys_blocks_about_text
+field_type: block_field

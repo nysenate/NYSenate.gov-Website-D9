@@ -2,12 +2,39 @@
 
 /**
  * @file
- * Contains custom code for Events and their Microsite Content.
+ * Contains custom code for Bill Votes module.
  */
 
 use Drupal\node\Entity\NodeType;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function nys_bill_vote_theme($existing, $type, $theme, $path): array {
+  return [
+    'nys_bill_vote_management_bills' => [
+      'variables' => [
+        'sponsored_bills' => NULL,
+        'bill_messages' => NULL,
+      ],
+    ],
+    'nys_bill_vote_summary_highchart' => [
+      'variables' => [
+        'nid' => NULL,
+        'title' => NULL,
+        'summary' => NULL,
+        'issues_tid' => NULL,
+        'issues' => NULL,
+        'in_district_aye' => NULL,
+        'in_district_nay' => NULL,
+        'out_district_aye' => NULL,
+        'out_district_nay' => NULL,
+      ],
+    ],
+  ];
+}
 
 /**
  * Implements hook_ENTITY_TYPE_view().

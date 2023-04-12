@@ -1,9 +1,9 @@
 bill_vote:
   js:
-    js/nys_bill_vote.js: {}
+    assets/nys_bill_vote.js: {}
   css:
     theme:
-      css/reveal.css: {}
+      assets/reveal.css: {}
   dependencies:
     - nys_bill_vote/foundation
     - core/jquery
@@ -16,3 +16,10 @@ foundation:
     # https://cdnjs.cloudflare.com/ajax/libs/foundation/6.7.5/js/plugins/foundation.reveal.min.js: { type: external, minified: true }
   dependencies:
     - core/jquery
+
+nys_bill_vote_management:
+  js:
+    assets/nys_bill_vote_management.js: {}
+  css:
+    theme:
+      assets/nys_bill_vote_management.css: {}

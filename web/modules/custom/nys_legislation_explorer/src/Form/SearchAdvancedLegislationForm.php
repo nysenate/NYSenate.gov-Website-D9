@@ -4,6 +4,7 @@ namespace Drupal\nys_legislation_explorer\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * The Search advanced legislation form class.
@@ -193,9 +194,6 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    /** @var \Drupal\nys_openleg\Service\ApiManager $openApiService */
-    $openApiService = \Drupal::service('manager.openleg_api');
-
     $values = $form_state->getValues();
 
     $type = $values['type'];
@@ -207,24 +205,18 @@ class SearchAdvancedLegislationForm extends FormBase {
     $bill_committee = $values['bill_committee'];
     $bill_issue = $values['bill_issue'];
 
-    $search_term = '';
-    !empty($bill_print_no) ? $search_term .= 'printNo:' . $bill_print_no . ' @ ' : $search_term .= '';
-    !empty($bill_session_year) ? $search_term .= 'session:' . $bill_session_year . ' @ ' : $search_term .= '';
-    !empty($bill_text) ? $search_term .= 'title:' . $bill_text . ' @ ' : $search_term .= ' ';
-    !empty($bill_sponsor) ? $search_term .= 'sponsor.member.sessionMemberId:' . $bill_sponsor . ' @ ' :
-      $search_term .= '';
-    !empty($bill_status) ? $search_term .= 'status.statusType:' . $bill_status . ' @ ' : $search_term .= '';
-    !empty($bill_committee) ? $search_term .= 'status.committeeName:' . $bill_committee . ' @ ' : $search_term .= '';
-    !empty($bill_issue) ?? $search_term = 'status.statusType:' . $bill_issue;
-
-    $search_term_replaced = substr(str_replace('@', 'AND', $search_term), 0, -4);
-
-    // Search information will search in service.
-    $api_result = $openApiService->getSearch('bill', $search_term_replaced);
-    $results = $api_result->result()->items;
-
-    \Drupal::messenger()->addMessage(t('Form submitted successfully.'));
-
+    $url = Url::fromRoute('view.advanced_search.advanced_search', [
+      'arg_0' => $type,
+      'arg_1' => $bill_print_no,
+      'arg_2' => $bill_session_year,
+      'arg_3' => $bill_text,
+      'arg_4' => $bill_text,
+      'arg_5' => $bill_sponsor,
+      'arg_6' => $bill_status,
+      'arg_7' => $bill_committee,
+      'arg_8' => $bill_issue,
+    ]);
+    $form_state->setRedirectUrl($url);
     return $form;
 
   }

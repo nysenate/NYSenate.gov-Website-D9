@@ -33,7 +33,7 @@ class SenatorMigrateMapLookup extends ProcessPluginBase {
     $query->condition('s.sourceid1', $value['target_id']);
     $result = $query->execute()->fetchAssoc();
 
-    return $result['destid1'];
+    return $result['destid1'] ?? NULL;
   }
 
 }

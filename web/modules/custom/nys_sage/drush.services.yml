@@ -1,0 +1,6 @@
+services:
+  nys_sage.commands:
+    class: \Drupal\nys_sage\Commands\SageCommands
+    arguments: ['@sage_logger']
+    tags:
+      - { name: drush.command }

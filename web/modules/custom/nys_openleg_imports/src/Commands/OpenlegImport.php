@@ -121,7 +121,7 @@ class OpenlegImport extends DrushCommands {
     // The --ids option can be specified multiple times (array), and each item
     // can be a comma-delimited list.  Collapse it all into a flat array.
     $list = [];
-    foreach ($options['ids'] as $val) {
+    foreach (($options['ids'] ?? []) as $val) {
       $list = array_merge($list, explode(',', $val));
     }
 
@@ -134,6 +134,97 @@ class OpenlegImport extends DrushCommands {
     );
 
     return $options;
+  }
+
+  /**
+   * Processes the lock state, considering the command line options.
+   *
+   * @return bool
+   *   Returns FALSE if a lock exists and no bypass is directed.
+   */
+  protected function processLock() : bool {
+    $has_lock = $this->getState('locked', 0);
+    if ($has_lock) {
+      $this->logger()->warning("Process lock detected ...");
+      if (!$this->options['force']) {
+        $message = "Process lock in place since " .
+          date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
+          ".  Wait for it to release, or use option --force to reset.";
+        $this->logger()->critical($message);
+        return FALSE;
+      }
+      $this->logger()->info("Ignoring lock because --force was used.");
+    }
+    return TRUE;
+  }
+
+  /**
+   * Import objects from OpenLeg based on a timeframe of updates.
+   *
+   * @param string $type
+   *   The type of resource to import.  Must match an existing importer plugin.
+   * @param array $options
+   *   An associative array of command-line options.
+   *
+   * @option from
+   *   A timestamp (in any format recognized by strtotime()) indicating the
+   *   beginning of the update window.  Defaults to the last run saved state.
+   * @option to
+   *   A timestamp (in any format recognized by strtotime()) indicating the
+   *   end of the update window.  Defaults to current time.
+   * @option force
+   *   Ignore the process lock, if it has been set.
+   * @usage drush nys_openleg_import:import-updates bills
+   *   Imports bills based on update blocks issued since the last run, up to
+   *   right now.
+   * @usage drush nys_openleg_import:import-updates bills --from=2020-02-01
+   *   --to=2020-02-04 Imports bills based on update blocks issued between Feb.
+   *   1, 2020 and Feb. 4, 2020, inclusive.
+   *
+   * @command nys_openleg_imports:import-updates
+   * @aliases nysol-import-updates, nysol-iu
+   *
+   * @throws \Drush\Exceptions\CommandFailedException
+   */
+  public function importUpdates(string $type, array $options = [
+    'from' => NULL,
+    'to' => NULL,
+    'force' => FALSE,
+  ]): int {
+
+    // If the import plugin is not found, report and quit.
+    try {
+      /** @var \Drupal\nys_openleg_imports\ImporterBase $importer */
+      $importer = $this->manager->getImporter($type);
+    }
+    catch (\Throwable $e) {
+      throw new CommandFailedException("Could not instantiate importer for '$type'.");
+    }
+
+    // Populate all options.
+    $this->type = $type;
+    // Ensure the 'from' option is populated from 'last_run.updates'.  The
+    // default behavior uses 'last_run'.
+    $options['from'] = $options['from'] ?? $this->getState('last_run.updates', 0);
+    $this->options = $this->resolveOptions($options);
+
+    // Process the lock.
+    if (!$this->processLock()) {
+      return DRUSH_FRAMEWORK_ERROR;
+    }
+    $this->setState('locked', time());
+
+    $result = $importer->importUpdates($this->options['from'], $this->options['to']);
+    $result->report($this->logger());
+
+    // Release the lock.  Set the last_run marker if no 'to' time was passed.
+    $this->setState('locked', 0);
+    if (!($options['to'] ?? 0)) {
+      $this->setState('last_run.updates', time());
+    }
+
+    return DRUSH_SUCCESS;
+
   }
 
   /**
@@ -191,18 +282,10 @@ class OpenlegImport extends DrushCommands {
     $this->options = $this->resolveOptions($options);
 
     // Check for a lock, and set the lock.
-    $has_lock = $this->getState('locked', 0);
-    if ($has_lock) {
-      $this->logger()->warning("Process lock detected ...");
-      if (!$this->options['force']) {
-        $message = "Process lock in place since " .
-          date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
-          ".  Wait for it to release, or use option --force to reset.";
-        $this->logger()->critical($message);
-        return DRUSH_FRAMEWORK_ERROR;
-      }
-      $this->logger()->info("Ignoring lock because --force was used.");
+    if (!$this->processLock()) {
+      return DRUSH_FRAMEWORK_ERROR;
     }
+
     // @todo Locks per type may not be needed anymore.  One global lock?
     $this->setState('locked', time());
     $this->setState('last_run', time());
@@ -223,18 +306,9 @@ class OpenlegImport extends DrushCommands {
 
     // Get the list of items being imported.  The 'ids' option takes precedence.
     $result = $importer->import($this->options['ids']);
+    $result->report($this->logger());
 
-    // Report the results and leave.
-    $msg = "Import finished";
-    $func = 'info';
-    if ($result->getSuccess()) {
-      $msg .= " successfully";
-    }
-    if ($result->getFail() || $result->getSkipped()) {
-      $msg = " with some failures/skipped";
-      $func = 'warning';
-    }
-    $this->logger()->$func($msg);
+    // Release the lock.
     $this->setState('locked', 0);
 
     return DRUSH_SUCCESS;

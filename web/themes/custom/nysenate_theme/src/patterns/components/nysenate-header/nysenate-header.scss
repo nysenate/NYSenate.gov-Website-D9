@@ -24,11 +24,16 @@
 / SITE WIDE TOP BAR
 /-------------------------------*/
 .c-header-bar {
+  height: 60px;
   background: $color-white;
   z-index: 10;
   overflow: hidden;
   position: relative;
   transition: height 0.3s ease 0s;
+
+  @include breakpoint($bp-sm) {
+    height: 100px;
+  }
 }
 
 .c-topbar {

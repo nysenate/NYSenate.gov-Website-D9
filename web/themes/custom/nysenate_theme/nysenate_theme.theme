@@ -2726,6 +2726,23 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$var
 /**
  * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
+function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$variables) {
+  $term = $variables['term'];
+  if ($term) {
+    $party = $term->field_party->getValue();
+    $parties = implode(', ', array_map(function ($item) {
+      return $item['value'];
+    }, $party));
+
+    $variables['party'] = $parties;
+    $variables['district'] = (int) get_senator_district($term->id());
+    $variables['active_senator'] = (bool) $term->get('field_active_senator')->value;
+  }
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
 function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$variables) {
   $term = $variables['term'];
   $variables['district'] = get_senator_district($term->id());

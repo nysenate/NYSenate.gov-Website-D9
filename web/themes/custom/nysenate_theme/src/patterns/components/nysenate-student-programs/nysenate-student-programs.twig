@@ -2,22 +2,26 @@
 
 <div class="pane-content">
   <div class="c-block c-block--about-student-programs">
-    <h3 class="nys-subtitle-title">{{ title }}</h3>
-    <p class="l-row">{{ body }}</p>
+    {% if title %}
+      <h3 class="nys-subtitle-title">{{ title }}</h3>
+    {% endif %}
+    {% if body %}
+      <p class="l-row">{{ body }}</p>
+    {% endif %}
     {% if cta.text %}
       <a href="{{ cta.url }}" class="c-container--link">{{ cta.text }}</a>
     {% endif %}
   </div>
   <section class="c-block c-student-program-are-you">
-    <div class="gen-wrapper">
-      {% if programs %}
+    {% if programs %}
+      <div class="gen-wrapper">
         {% for program in programs %}
           <a class="gen-col--height {{ program.color }}" href="{{ program.url }}">{{ program.text }}</a>
         {% endfor %}
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
     {% if program_block %}
-        {{ program_block }}
+      {{ program_block }}
     {% endif %}
   </section>
 </div>

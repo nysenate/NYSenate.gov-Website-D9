@@ -19,6 +19,11 @@ class SageLogger {
   use LoggerChannelTrait;
 
   /**
+   * Number of seconds in one day.
+   */
+  const SAGE_ONE_DAY = 60 * 60 * 24;
+
+  /**
    * The fields of the logging table, with default value if applicable.
    *
    * @var string[]
@@ -82,7 +87,7 @@ class SageLogger {
    * Wrapper method for cron-based log table maintenance.
    */
   public function cron() {
-    $this->expireEntries($this->config->get('maximum_retention'));
+    $this->expireEntries($this->config->get('maximum_retention') * self::SAGE_ONE_DAY);
   }
 
   /**

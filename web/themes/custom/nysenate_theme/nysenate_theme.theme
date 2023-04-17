@@ -2671,6 +2671,23 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
 /**
  * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
+function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$variables) {
+  $term = $variables['term'];
+  if ($term) {
+    $party = $term->field_party->getValue();
+    $parties = implode(', ', array_map(function ($item) {
+      return $item['value'];
+    }, $party));
+
+    $variables['party'] = $parties;
+    $variables['district'] = (int) get_senator_district($term->id());
+    $variables['active_senator'] = (bool) $term->get('field_active_senator')->value;
+  }
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
 function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$variables) {
   $term = $variables['term'];
   $variables['district'] = get_senator_district($term->id());
@@ -5052,7 +5069,7 @@ function nysenate_theme_preprocess_user__dashboard_profile(&$variables) {
 
   $variables['name'] = $name;
   $variables['email'] = $user->getEmail();
-  $variables['address'] = $user->field_address || NULL;
+  $variables['address'] = $address;
   $variables['image_src'] = $image_src;
   $variables['edit_url'] = '/dashboard/edit';
 }

@@ -31,7 +31,20 @@
   </div>
   <div class="c-container--body">
     <div class="c-dash-user-addr">
-      {{ elements.field_address|render }}
+      <p class="address" translate="no">
+        {% if address.address_line1 %}
+          <span class="address-line1">{{ address.address_line1 }}</span><br>
+	      {% endif %}
+        {% if address.locality %}
+          <span class="locality">{{ address.locality }}</span>,&nbsp;
+	      {% endif %}
+        {% if address.administrative_area %}
+          <span class="administrative-area">{{ address.administrative_area }}</span>&nbsp;
+	      {% endif %}
+        {% if address.postal_code %}
+          <span class="postal-code">{{ address.postal_code }}</span>
+	      {% endif %}
+      </p>
     </div>
     <div class="c-container--email vcard">
       {{ email }}

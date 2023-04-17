@@ -47,9 +47,11 @@ class SearchAdvancedLegislationForm extends FormBase {
     $query->addExpression("CONCAT(s.field_senator_name_given,' ',s.field_senator_name_family)", 'senator_full_name');
     $query->orderBy('s.field_senator_name_family');
 
-    $result = [];
-    $result[0] = 'Any';
-    return $query->execute()->fetchAllKeyed(0, 1);
+    $results = [];
+    $results = $query->execute()->fetchAllKeyed(0, 1);
+    $results['all'] = 'Any';
+    ksort($results);
+    return $results;
   }
 
   /**
@@ -64,7 +66,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       ->loadByProperties(['vid' => 'committees']);
 
     $result = [];
-    $result[NULL] = 'Any';
+    $result['all'] = 'Any';
     foreach ($committees as $committe) {
       $result[$committe->label()] = $committe->label();
     }
@@ -121,7 +123,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     ];
 
     $bill_years = [];
-    $bill_years[NULL] = 'Any';
+    $bill_years['0'] = 'Any';
     foreach ($this->getSessionYearList() as $year) {
       $bill_years[$year] = $year . '-' . ($year + 1);
     }
@@ -146,7 +148,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => t('BILL STATUS'),
       '#options' => [
-        '' => t('Any'),
+        'all' => t('Any'),
         'INTRODUCED' => t('Introduced'),
         'IN_ASSEMBLY_COMM' => t('In Assembly Committee'),
         'IN_SENATE_COMM' => t('In Senate Committee'),
@@ -193,18 +195,6 @@ class SearchAdvancedLegislationForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
-    $values = $form_state->getValues();
-    $type = $values['type'];
-    $bill_print_no = $values['bill_printno'];
-    $bill_session_year = $values['bill_session_year'];
-    $bill_text = $values['bill_text'];
-    $bill_title = $values['bill_text'];
-    $bill_sponsor = $values['bill_sponsor'];
-    $bill_status = $values['bill_status'];
-    $bill_committee = $values['bill_committee'];
-    $bill_issue = $values['bill_issue'];
-
     $values = $form_state->getValues();
     $type = (!empty($values['type'])) ? $values['type'] : 'all';
     $bill_print_no = (!empty($values['bill_printno'])) ? $values['bill_printno'] : 'all';
@@ -233,7 +223,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       return $value !== '';
     });
 
-    $url = Url::fromRoute('view.advanced_search.advanced_search', $params);
+    $url = Url::fromRoute('view.advanced_legislation_search.page_1', $params);
     $form_state->setRedirectUrl($url);
   }
 

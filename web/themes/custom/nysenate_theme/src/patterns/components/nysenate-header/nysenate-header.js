@@ -136,11 +136,7 @@
         origActionBar = nav.find('.c-actionbar');
         actionBar = origActionBar.clone();
 
-        if (self.isInSession()) {
-          actionBar.appendTo(nav);
-          origActionBar.css('visibility', 'hidden');
-        }
-        else {
+        if (!self.isInSession()) {
           actionBar.appendTo(nav).addClass('hidden');
         }
 

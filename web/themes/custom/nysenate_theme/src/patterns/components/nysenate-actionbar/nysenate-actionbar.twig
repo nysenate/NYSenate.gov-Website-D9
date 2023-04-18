@@ -1,18 +1,61 @@
 {{ attach_library('nysenate_theme/nysenate-actionbar') }}
+{{ attach_library('nysenate_theme/hero') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
-<div class="l-row l-row--hero c-actionbar hidden">
+<div class="l-row l-row--hero c-actionbar {% if actionbar_type is empty %}hidden{% endif %}">
+  {% if actionbar_type == 'committee' %}
+    <div class="c-actionbar--info">
+      <p class="actionbar--cta">Get updates on important news and legislation from this Committee.</p>
+    </div>
+    <span class="c-block--btn">
+      <a href="/registration/nojs/login" class="icon-before__committee-follow" title="follow this committee">follow this committee</a>
+    </span>
+  {% elseif actionbar_type == 'microsite' %}
+    {% if senator_microsite_link %}
+      <a href="{{ senator_microsite_link }}">
+      {% endif %}
+      <div class="c-senator-hero--img" id="senatorImage">
+        {% if image_hero %}
+          {{ image_hero }}
+        {% else %}
+          <img src="{{ default_image }}">
+        {% endif %}
+      </div>
+      <div id="smallShotImage">
+        {{ senator_headshot }}
+      </div>
+      {% if senator_microsite_link %}
+      </a>
+    {% endif %}
+    <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
+      <div>
+        <h2 class="c-senator-hero--title">
+          {% if not is_active %}former
+          {% endif %}new york state senator<br>
+          {% if senator_microsite_link %}
+            <a href="{{ senator_microsite_link }}" class="c-senator-hero--name">{{ senator_name }}</a>
+          {% else %}
+            <span class="c-senator-hero--name">{{ senator_name }}</span>
+          {% endif %}
+        </h2>
+      </div>
+    </div>
+    {% if is_active %}
+      <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
+    {% else %}
+      <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
+    {% endif %}
+  {% elseif actionbar_type == 'default' %}
     <div class="c-actionbar--info {{ is_logged ? 'content-logged' }}">
       <p class="actionbar--cta">{{ is_logged ? "See activity on Issues, Bills and Committees you're following."|t :
         "Find your Senator and share your views on important issues." }}</p>
     </div>
     <span class="c-block--btn {{ is_logged ? 'logged' }}">
-      <a class="{{ is_logged ? 'icon-before__arrow' : 'icon-before__find-senator' }}"
-         href="{{ is_logged ? '/users/nysadmin/dashboard/issues' : '/registration/nojs/form/start/find-my-senator' }}">
+      <a class="{{ is_logged ? 'icon-before__arrow' : 'icon-before__find-senator' }}" href="{{ is_logged ? '/users/nysadmin/dashboard/issues' : '/registration/nojs/form/start/find-my-senator' }}">
         <label class="{{ is_logged ? 'logged-text' : '' }}" for="">
-        {{ is_logged ? "your dashboard"|t : "find your senator"|t }}</a>
+          {{ is_logged ? "your dashboard"|t : "find your senator"|t }}
         </label>
+      </a>
     </span>
-  <!-- <a href="/user/login?destination=" class="c-block-btn ctools-use-modal ctools-use-modal-processed"
-  title="Start">find your senator</a> -->
+  {% endif %}
 </div>

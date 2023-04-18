@@ -1,28 +1,32 @@
 {{ attach_library('nysenate_theme/nysenate-about-tour') }}
 
 <div class="c-block c-block--about c-block--full-bleed c-block--about-tour">
-  <h3 class="nys-subtitle-title">{{ title }}</h3>
+  {% if title %}
+    <h3 class="nys-subtitle-title">{{ title }}</h3>
+  {% endif %}
+  {% if carousel or carousel_block %}
+    <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}" {{- attributes ? attributes|without(class) -}}>
+      <ul class="carousel__list carousel__slick">
+        {% if carousel %}
+          {% block carousel_items %}
+            {% for item in carousel.list %}
+              {%
+            include '@rain_theme/carousel/_carousel-item.twig' with {
+              "item": item
+            } only
+          %}
+            {% endfor %}
+          {% endblock %}
+        {% else %}
+          {{ carousel_block }}
+        {% endif %}
+      </ul>
+    </section>
+  {% endif %}
 
-  <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}" {{- attributes ? attributes|without(class) -}}>
-    <ul class="carousel__list carousel__slick">
-      {% if carousel %}
-        {% block carousel_items %}
-          {% for item in carousel.list %}
-            {%
-          include '@rain_theme/carousel/_carousel-item.twig' with {
-            "item": item
-          } only
-        %}
-          {% endfor %}
-        {% endblock %}
-      {% else %}
-        {{ carousel_block }}
-      {% endif %}
-    </ul>
-  </section>
-
-
-  <p>{{ description }}</p>
+  {% if description %}
+    <p>{{ description }}</p>
+  {% endif %}
 
   {% if contact %}
     {% if contact.title %}

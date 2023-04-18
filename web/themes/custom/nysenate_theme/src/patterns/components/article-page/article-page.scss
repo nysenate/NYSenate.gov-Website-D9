@@ -273,6 +273,23 @@
   }
 }
 
+.landing-node.page--about {
+  .c-news--body > .c-block {
+    @include breakpoint($bp-sm) {
+      margin: 0;
+    }
+  }
+
+  main.l-row--main {
+    padding: 0;
+
+    @include breakpoint($bp-sm) {
+      padding: 0;
+      margin-bottom: 60px;
+    }
+  }
+}
+
 .page--student_programs {
 
   .text-layout__body {

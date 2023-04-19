@@ -721,10 +721,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false
@@ -753,10 +753,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false
@@ -785,10 +785,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false
@@ -817,10 +817,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false
@@ -849,10 +849,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false
@@ -881,21 +881,21 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false
-        field_ol_latest_status:
-          id: field_ol_latest_status
+        search_api_fulltext_6:
+          id: search_api_fulltext_6
           table: search_api_index_core_search
-          field: field_ol_latest_status
+          field: search_api_fulltext
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api
+          plugin_id: search_api_fulltext
           default_action: default
           exception:
             value: all
@@ -913,21 +913,24 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
-          break_phrase: true
+          break_phrase: false
           not: false
-        field_committee:
-          id: field_committee
+          parse_mode: terms
+          conjunction: AND
+          fields: {  }
+        field_committee_types:
+          id: field_committee_types
           table: search_api_index_core_search
-          field: field_committee
+          field: field_committee_types
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_term
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -945,10 +948,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false
@@ -977,10 +980,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: empty
           validate_options: {  }
           break_phrase: true
           not: false

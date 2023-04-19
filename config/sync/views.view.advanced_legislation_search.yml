@@ -696,14 +696,14 @@ display:
       empty: {  }
       sorts: {  }
       arguments:
-        search_api_fulltext:
-          id: search_api_fulltext
+        type_1:
+          id: type_1
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: type_1
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -726,20 +726,16 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - type_1
-        search_api_fulltext_1:
-          id: search_api_fulltext_1
+        field_ol_base_print_no:
+          id: field_ol_base_print_no
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: field_ol_base_print_no
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -762,20 +758,16 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - field_ol_base_print_no
-        search_api_fulltext_2:
-          id: search_api_fulltext_2
+        field_date_range_1:
+          id: field_date_range_1
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: field_date_range_1
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -798,20 +790,16 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - field_date_range_1
-        search_api_fulltext_3:
-          id: search_api_fulltext_3
+        field_ol_memo:
+          id: field_ol_memo
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: field_ol_memo
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -834,20 +822,16 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - field_ol_memo
-        search_api_fulltext_4:
-          id: search_api_fulltext_4
+        title:
+          id: title
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: title
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -870,20 +854,16 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - title
-        search_api_fulltext_5:
-          id: search_api_fulltext_5
+        field_ol_co_sponsor_names:
+          id: field_ol_co_sponsor_names
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: field_ol_co_sponsor_names
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -906,12 +886,8 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - field_ol_co_sponsor_names
         search_api_fulltext_6:
           id: search_api_fulltext_6
           table: search_api_index_core_search
@@ -947,14 +923,14 @@ display:
           parse_mode: terms
           conjunction: AND
           fields: {  }
-        search_api_fulltext_7:
-          id: search_api_fulltext_7
+        field_committee_types:
+          id: field_committee_types
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: field_committee_types
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -977,20 +953,16 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - field_committee_types_1
-        search_api_fulltext_8:
-          id: search_api_fulltext_8
+        field_issues:
+          id: field_issues
           table: search_api_index_core_search
-          field: search_api_fulltext
+          field: field_issues
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_fulltext
+          plugin_id: search_api_term
           default_action: default
           exception:
             value: all
@@ -1013,12 +985,8 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          break_phrase: false
+          break_phrase: true
           not: false
-          parse_mode: terms
-          conjunction: AND
-          fields:
-            - field_issues
       filters:
         status:
           id: status

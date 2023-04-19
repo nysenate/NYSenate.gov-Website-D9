@@ -1,6 +1,13 @@
 @import '../../global/utils/init';
 
 .taxonomy-term {
+  .nys-title {
+    margin: 0;
+
+    @include breakpoint($bp-sm) {
+      margin: 0 0 20px 0;
+    }
+  }
 
   .c-block {
     .c-issue--followers {
@@ -8,6 +15,11 @@
       text-transform: uppercase;
       font-family: $font-sans;
       font-size: 14px;
+      margin-bottom: 20px;
+
+      @include breakpoint($bp-sm) {
+        margin-bottom: 0;
+      }
     
       > span {
         color: $grey08;
@@ -27,10 +39,15 @@
   
   .c-detail--header-meta {
     position: relative;
-    width: 71%;
+    width: 100%;
     float: left;
-    margin-bottom: 60px;
-    padding-right: 40px;
+    margin-bottom: 0;
+
+    @include breakpoint($bp-sm) {
+      width: 71%;
+      margin-bottom: 60px;
+      padding-right: 40px;
+    }
   
     .eyebrow {
       margin: 0;

@@ -75,8 +75,10 @@
       if ($('#nys-bills-bill-form input[name=register]', context).prop('checked') === false && !drupalSettings.settings.is_logged_in) {
         $('.c-bill--message-form .form-item-message', context).hide();
       }
+      $(window).on('load', function() {
+        self.processIntentVote(context, settings);
+      });
 
-      self.processIntentVote(context, settings);
       // Add a click event handler for hiding the message form if 'Create an
       // account checkbox is unchecked. We need to delegate this event so that:
       //   - it can be added using $.once()
@@ -86,7 +88,6 @@
           var $func = (e.target.checked) ? 'show' : 'hide';
           $('.c-bill--message-form .form-item-message')[$func]();
         });
-        // self.processIntentVote(context, settings);
       });
     },
 
@@ -117,12 +118,11 @@
         intentValue: intentValue
       });
 
-      // If the user is not logged in, just process the selection (no modal).
+      // Just process the selection (no modal).
       if (!drupalSettings.settings.is_logged_in) {
         self.voteOnBill(element, response, intentValue);
         return;
       }
-
 
       // Create confirmation modal and append it to footer. It is hidden
       // by default.
@@ -307,13 +307,22 @@
       else if ($('.alert-box-message').length != 0 && $('.c-bill--vote-attach').length != 0)  {
         // $('#edit-nys-bill-vote-button-wrapper').hide();
         if (vote_value == 'no') {
-          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL, Do you support this bill?");
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL");
         }
         else if (vote_value == 'yes') {
-          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL, Do you support this bill?");
+          $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL");
         }
       }
 
+      var settings = drupalSettings.bill_vote;
+      $.ajax({
+        url: '/bill_vote_confirmation/callback/' + settings.bill_entity_id + '/' + vote_value,
+        complete: function (jqXHR, status) {
+          if (status === 'success') {
+            // Do nothing.
+          }
+        }
+      });
 
       // // Handle auto-subscription process.
       // if (drupalSettings.settings.auto_subscribe === false && drupalSettings.settings.is_logged_in || true) {

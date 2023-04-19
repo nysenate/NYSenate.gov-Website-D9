@@ -2665,6 +2665,24 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
 }
 
 /**
+ * Implements hook_theme_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list_bill_detail(&$variables) {
+  $term = $variables['term'];
+  $district = get_senator_district($term->id());
+  $party = $term->field_party->getValue();
+  $parties = implode(', ', array_map(function ($item) {
+    return $item['value'];
+  }, $party));
+  $variables['party'] = t('@party <span>@district Senate District</span>',
+    [
+      '@party' => $parties ? '(' . $parties . ')' : '',
+      '@district' => $district,
+    ]
+  );
+}
+
+/**
  * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$variables) {

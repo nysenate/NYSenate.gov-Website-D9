@@ -33,6 +33,7 @@ class EditProfileForm extends ProfileForm {
 
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->moduleHandler = $moduleHandler;
+    $this->setOperation('default');
   }
 
   /**
@@ -61,14 +62,35 @@ class EditProfileForm extends ProfileForm {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $form = parent::buildForm($form, $form_state);
 
-    return $form;
-  }
+    // These account fields are not editable by the user.
+    $form['account']['pass']['#access'] = FALSE;
+    $form['account']['current_pass']['#access'] = FALSE;
+    $form['account']['status']['#access'] = FALSE;
+    $form['account']['roles']['#access'] = FALSE;
 
-  /**
-   * {@inheritDoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    // @todo Implement submitForm() method.
+    // These fields are not editable by the user.
+    $disable = [
+      'language',
+      'timezone',
+      'email_tfa_status',
+      'field_agree_to_terms',
+      'field_district',
+      'field_last_password_reset',
+      'field_ldap_username',
+      'field_password_expiration',
+      'field_senator_inbox_access',
+      'field_senator_multiref',
+      'field_top_issue',
+      'field_user_banned_comments',
+      'field_user_phone_no',
+      'field_voting_auto_subscribe',
+      'path',
+    ];
+    foreach ($disable as $name) {
+      $form[$name]['#access'] = FALSE;
+    }
+
+    return $form;
   }
 
 }

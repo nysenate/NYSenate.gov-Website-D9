@@ -4123,6 +4123,16 @@ function nysenate_theme_preprocess_node__view__homepage_news__hp_featured_storie
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function nysenate_theme_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Remove the Private Message fieldset from the User Profile Edit Form.
+  if ($form_id == 'nys_dashboard_edit_profile_form') {
+    $form['private_messages'] = [];
+  }
+}
+
+/**
  * Implements hook_form_views_exposed_form_alter().
  */
 function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {

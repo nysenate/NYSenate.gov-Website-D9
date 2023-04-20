@@ -1,0 +1,28 @@
+@import "../../global/utils/init";
+
+.dashboard-profile-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  .form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    @include breakpoint($bp-sm) {
+      flex-direction: row;
+    }
+
+    .left,
+    .center,
+    .right {
+      flex: 1;
+    }
+  }
+
+  .dashboard-edit-submit {
+    cursor: pointer;
+    width: max-content;
+  }
+}

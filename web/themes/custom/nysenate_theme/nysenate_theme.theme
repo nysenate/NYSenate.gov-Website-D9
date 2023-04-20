@@ -4400,9 +4400,19 @@ function nysenate_theme_preprocess_page(&$variables) {
   $user_parts = explode('/', $user_link);
   $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
 
-  $variables['dashboard_link'] = '/users/' . $user_name . '/dashboard/issues';
-  $variables['edit_account_link'] = '/users/' . $user_name . '/edit';
+  $variables['dashboard_link'] = '/dashboard/issues';
+  $variables['edit_account_link'] = '/dashboard/edit';
   $variables['sidebar'] = [
+    'upper_links' => [
+      [
+        'text' => 'Profile',
+        'url' => '/dashboard',
+      ],
+      [
+        'text' => 'Edit Profile',
+        'url' => '/dashboard/edit',
+      ],
+    ],
     'links' => [
       [
         'text' => 'Inbox',
@@ -4410,19 +4420,19 @@ function nysenate_theme_preprocess_page(&$variables) {
       ],
       [
         'text' => 'Bills',
-        'url' => '/users/' . $user_name . '/dashboard/bills',
+        'url' => '/dashboard/bills',
       ],
       [
         'text' => 'Issues',
-        'url' => '/users/' . $user_name . '/dashboard/issues',
+        'url' => '/dashboard/issues',
       ],
       [
         'text' => 'Committees',
-        'url' => '/users/' . $user_name . '/dashboard/committees',
+        'url' => '/dashboard/committees',
       ],
       [
         'text' => 'Petitions & Questionnaires',
-        'url' => '/users/' . $user_name . '/dashboard/petitions',
+        'url' => '/dashboard/petitions',
       ],
     ],
   ];

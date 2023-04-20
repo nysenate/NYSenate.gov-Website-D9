@@ -197,7 +197,7 @@ class SearchAdvancedLegislationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $type = (!empty($values['type'])) ? $values['type'] : 'all';
-    $bill_print_no = (!empty($values['bill_printno'])) ? $values['bill_printno'] : 'all';
+    $bill_printno = (!empty($values['bill_printno'])) ? $values['bill_printno'] : 'all';
     $bill_session_year = (!empty($values['bill_session_year'])) ? $values['bill_session_year'] : 'all';
     $bill_text = (!empty($values['bill_text'])) ? $values['bill_text'] : 'all';
     $bill_title = (!empty($values['bill_text'])) ? $values['bill_text'] : 'all';
@@ -207,15 +207,15 @@ class SearchAdvancedLegislationForm extends FormBase {
     $bill_issue = (!empty($values['bill_issue'])) ? $values['bill_issue'] : 'all';
 
     $params = [
-      'arg_0' => $type,
-      'arg_1' => $bill_print_no,
-      'arg_2' => $bill_session_year,
-      'arg_3' => $bill_text,
-      'arg_4' => $bill_title,
-      'arg_5' => $bill_sponsor,
-      'arg_6' => $bill_status,
-      'arg_7' => $bill_committee,
-      'arg_8' => $bill_issue,
+      'type' => $type,
+      'bill_session_year' => $bill_session_year,
+      'bill_issue' => $bill_issue,
+      'bill_printno' => $bill_printno,
+      'bill_status' => $bill_status,
+      'bill_sponsor' => $bill_sponsor,
+      'title' => $bill_title,
+      'memo' => $bill_text,
+      'bill_committee' => $bill_committee,
     ];
 
     // Filter out any empty values.
@@ -223,7 +223,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       return $value !== '';
     });
 
-    $url = Url::fromRoute('view.advanced_legislation_search.page_1', $params);
+    $url = Url::fromRoute('view.advanced_legislation_search.page_1', [], ['query' => $params]);
     $form_state->setRedirectUrl($url);
   }
 

@@ -673,6 +673,7 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
             'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
             'update_location' => $last_status,
             'positions' => nysenate_bill_positions($bill),
+            'action' => \Drupal::service('path.current')->getPath(),
           ],
           'quote' => $quote,
         ];
@@ -1009,7 +1010,7 @@ function nysenate_theme_preprocess_views_view__constituent_updates(&$variables) 
     if (!empty($microsite_legislation)) {
       $legislation = reset($microsite_legislation);
       $legislation_link = $legislation->toUrl()->toString();
-      $senator_microsite_link = ' or <a href="/' . $legislation_link . '"> browse legislation that your Senator\'s been working on</a>';
+      $senator_microsite_link = ' or <a href="' . $legislation_link . '"> browse legislation that your Senator\'s been working on</a>';
     }
 
     $variables['empty'] = [
@@ -2372,11 +2373,32 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_bills(&$vari
       $sponsor_name = Link::fromTextAndUrl($sponsor_name, $sponsor->toURL());
     }
 
+    /** @var \Drupal\votingapi\VoteStorage $vote_storage */
+    $vote_storage = \Drupal::entityTypeManager()->getStorage('vote');
+
+    $user_votes = $vote_storage->getUserVotes(\Drupal::currentUser()->id(), 'nys_bill_vote', 'node', $node->id());
+
+    $poll_text = NULL;
+    if (!empty($user_votes)) {
+      /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
+      $vote_entity = $vote_storage->load(end($user_votes));
+      $vote_value = (int) $vote_entity->getValue();
+
+      if ($vote_value == 1) {
+        $poll_text = 'YOU ARE IN FAVOR OF THIS BILL';
+      }
+      else {
+        $poll_text = 'YOU ARE OPPOSED TO THIS BILL';
+      }
+    }
+
     $bills[] = [
       'featured' => TRUE,
       'small' => FALSE,
       'is_poll' => TRUE,
       'resolution' => TRUE,
+      'hide_subscribe' => TRUE,
+      'node_id' => $node->id(),
       'link' => $node->toUrl()->toString(),
       'number' => $node->getTitle(),
       'description_position' => 'top',
@@ -2387,6 +2409,8 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_bills(&$vari
       'issues' => $issues,
       'sponsor' => $sponsor_name,
       'sponsor_text' => 'SPONSORS',
+      'poll_text' => $poll_text,
+      'action' => \Drupal::service('path.current')->getPath(),
     ];
   }
 
@@ -3267,6 +3291,7 @@ function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
     'update_location' => $last_status ?? '',
     'sponsor' => $sponsor_name ?? '',
     'positions' => $positions,
+    'action' => \Drupal::service('path.current')->getPath(),
   ];
 
   $variables['bills'] = $bills;
@@ -4259,7 +4284,7 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
 function nysenate_theme_preprocess_views_view_table(&$variables) {
   $view = $variables['view'];
 
-  if ($variables['view']->id() == 'private_message_inbox') {
+  if ($view->id() == 'private_message_inbox') {
     // Add column for the action links.
     $variables['header']['actions'] = [
       'content' => '',
@@ -4275,11 +4300,16 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
         $message = $result->_entity->message->value ?? '';
         $field_to = $result->_entity->field_to->target_id;
 
-        $user = \Drupal::entityTypeManager()->getStorage('user')
-          ->load($field_to);
+        $user = User::load($field_to);
         $field_to_link = $user->toUrl()->toString();
         $field_to_parts = explode('/', $field_to_link);
         $user_name = $field_to_parts[1] ?? $field_to;
+        if ($view->current_display == 'sent') {
+          $user = $owner;
+          $field_to_link = $user->toUrl()->toString();
+          $field_to_parts = explode('/', $field_to_link);
+          $user_name = $field_to_parts[2] ?? $field_to;
+        }
 
         $link_options = [
           'attributes' => [

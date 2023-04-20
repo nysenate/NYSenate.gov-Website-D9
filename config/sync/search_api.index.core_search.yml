@@ -19,13 +19,17 @@ dependencies:
     - field.storage.node.field_ol_full_text
     - field.storage.node.field_image_caption
     - field.storage.node.field_issues
+    - field.storage.node.field_ol_last_status
+    - field.storage.node.field_ol_latest_status_committee
     - field.storage.node.field_ol_latest_status
     - field.storage.node.field_date_range
     - field.storage.node.field_ol_memo
     - field.storage.node.field_ol_print_no
     - field.storage.node.field_ol_program_info
     - field.storage.node.field_senator_multiref
+    - field.storage.node.field_ol_session
     - field.storage.node.field_short_title
+    - field.storage.node.field_ol_sponsor
     - field.storage.node.field_ol_sponsor_name
     - field.storage.node.field_subhead
     - field.storage.node.field_subtitle
@@ -247,7 +251,7 @@ field_settings:
     label: Issues
     datasource_id: 'entity:node'
     property_path: field_issues
-    type: text
+    type: integer
     dependencies:
       config:
         - field.storage.node.field_issues
@@ -299,6 +303,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_full_text
+  field_ol_last_status:
+    label: 'Last Status'
+    datasource_id: 'entity:node'
+    property_path: field_ol_last_status
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_ol_last_status
   field_ol_latest_status:
     label: 'Latest Status'
     datasource_id: 'entity:node'
@@ -315,6 +327,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_latest_status
+  field_ol_latest_status_committee:
+    label: 'Latest Committee Status'
+    datasource_id: 'entity:node'
+    property_path: field_ol_latest_status_committee
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_ol_latest_status_committee
   field_ol_memo:
     label: Memo
     datasource_id: 'entity:node'
@@ -339,6 +359,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_program_info
+  field_ol_session:
+    label: 'Session Year'
+    datasource_id: 'entity:node'
+    property_path: field_ol_session
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_ol_session
+  field_ol_sponsor:
+    label: Sponsor
+    datasource_id: 'entity:node'
+    property_path: field_ol_sponsor
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_ol_sponsor
   field_ol_sponsor_name:
     label: 'Sponsor Name'
     datasource_id: 'entity:node'
@@ -521,6 +557,7 @@ datasource_settings:
     bundles:
       default: false
       selected:
+        - agenda
         - article
         - bill
         - calendar
@@ -534,6 +571,7 @@ datasource_settings:
         - resolution
         - session
         - student_program
+        - transcript
         - video
         - webform
     languages:

@@ -15,6 +15,9 @@
  * @see template_preprocess_views_view_unformatted()
  */
 #}
+
+{{ attach_library('nysenate_theme/nysenate-press-release') }}
+
 {% if title %}
   <h3>{{ title }}</h3>
 {% endif %}
@@ -27,7 +30,8 @@
       ]
     %}
 
-    <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
+    <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}
+    {% if result.search_results %}c-search--body{% endif %}">
       {% include '@nysenate_theme/nysenate-press-release/nysenate-press-release.twig' with {
         article: result,
       }only

@@ -3,7 +3,8 @@
 
 <article class="c-block c-block-press-release content__item">
   <div class="c-press-release--header">
-    <p class="c-press-release--title">{{ article.title }}
+    <p class="c-press-release--title {% if article.search_results %} c-bill-search {% endif %}">
+       {{ article.title }}
        {% if article.print_no %} {{ article.print_no }}{% endif %}
     </p>
     {% for topic in article.topics %}
@@ -14,9 +15,9 @@
       {% endif %}
     {% endfor %}
   </div>
-  <div class="c-press-release--body {% if article.img_src %}c-press-release--body__has-img {% endif %}">
+  <div class="c-press-release--body">
     <div>
-      {% if not article.bill_description is defined %}
+      {% if not article.bill %}
         <h3 class="c-press-release--descript">
           <a href="{{ article.description.url }}">{{ article.description.text }}</a>
         </h3>

@@ -1691,7 +1691,23 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $topics = [];
           $date = '';
           $senator_multiref = [];
-
+          $bill = ($bundle == 'bill') ? TRUE : NULL;
+          $print_no = NULL;
+          $positions = NULL;
+          $bill_description = NULL;
+          if ($entity->hasField('field_ol_print_no') && !$entity->field_ol_print_no->isEmpty()) {
+            $print_no = $entity->field_ol_print_no->first()->value;
+          }
+          if ($entity->hasField('field_ol_all_statuses') && !$entity->get('field_ol_all_statuses')->isEmpty()) {
+            $positions = nysenate_bill_positions($entity);
+          }
+          if ($entity->hasField('field_ol_name') && !$entity->get('field_ol_name')->isEmpty()) {
+            $bill_description = $entity->field_ol_name->first()->value;
+          }
+          if ($entity->hasField('field_ol_last_status_date') && !$entity->field_ol_last_status_date->isEmpty()) {
+            $date = $entity->field_ol_last_status_date->first()->value;
+            $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
+          }
           if ($entity->hasField('field_issues') && !$entity->field_issues->isEmpty()) {
             $issues = $entity->field_issues->getValue();
             foreach ($issues as $issue) {
@@ -1708,7 +1724,6 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             $date = $entity->field_date->first()->value;
             $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
           }
-
           if ($entity->hasField('field_senator_multiref') && !$entity->field_senator_multiref->isEmpty()) {
             $senator_list = $entity->field_senator_multiref->getValue();
             foreach ($senator_list as $senator) {
@@ -1723,7 +1738,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
           $search_result[] = [
             'title' => $type->label(),
+            'print_no' => $print_no,
+            'bill' => $bill,
+            'search_results' => TRUE,
+            'positions' => $positions,
             'topics' => $topics,
+            'bill_description' => $bill_description,
             'description' => [
               'text' => $title,
               'url' => $entity->toUrl(),

@@ -36,6 +36,26 @@
       }
     }
   }
+
+  .c-committee-header {
+    padding-bottom: 40px;
+
+    @include breakpoint($bp-sm) {
+      padding: 10px 40px 60px;
+      overflow: hidden;
+    }
+
+    @include breakpoint($bp-md) {
+      padding: 10px 60px 60px;
+    }
+  }
+
+  .c-committee-type {
+    font-family: $font-sans-bold;
+    font-size: 14px;
+    color: $yellow03;
+    text-transform: uppercase;
+  }
   
   .c-detail--header-meta {
     position: relative;

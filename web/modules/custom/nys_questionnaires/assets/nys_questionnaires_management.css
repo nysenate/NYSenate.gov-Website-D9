@@ -31,6 +31,15 @@
 .nys-senators-management-dashboard-questionnaires .tab-content.active {
   display: block;
 }
+.nys-senators-management-dashboard-questionnaires .l-tab-bar {
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .nys-senators-management-dashboard-questionnaires .l-tab-bar .c-tab {
+    width: 50%;
+  }
+}
 
 /***************
  * to mimic D7 tables
@@ -59,6 +68,7 @@
   font-size: 0.875rem;
   font-weight: bold;
   color: #222;
+  text-align: left;
 }
 .nys-senators-management-dashboard-questionnaires tbody {
   border-top: 1px solid #ccc;
@@ -72,9 +82,15 @@
 .nys-senators-management-dashboard-questionnaires tr.even {
   background-color: #f9f9f9;
 }
+.nys-senators-management-dashboard-questionnaires table thead tr th {
+  padding: .5em 1em;
+}
 .nys-senators-management-dashboard-questionnaires table tbody tr td {
   padding: .5em 1em;
   height: auto;
+}
+.nys-senators-management-dashboard-questionnaires a {
+  color: #008CBA;
 }
 
 /***********
@@ -86,7 +102,6 @@
   overflow-y: hidden;
   white-space: nowrap;
   padding: 1em 0;
-  line-height: 15.625em;
   vertical-align: middle;
 }
 .sponsored-questionnaire {

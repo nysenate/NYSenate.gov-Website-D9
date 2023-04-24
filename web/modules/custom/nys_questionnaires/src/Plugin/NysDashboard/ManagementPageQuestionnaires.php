@@ -144,6 +144,10 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
     // Join the submissions table.
     $query->join('webform_submission', 'ws', 'ws.webform_id=nw.webform_target_id');
 
+    // Join for the owning senator's name.
+    // ttfd.name = the name of the senator.
+    $query->join('taxonomy_term_field_data', 'ttfd', 'ttfd.tid=smr.field_senator_multiref_target_id');
+
     // Join for the owning senator's shortname.
     // fsn.field_senator_name_family = the last name of the node owner.
     $query->join('taxonomy_term__field_senator_name', 'fsn', 'fsn.entity_id=smr.field_senator_multiref_target_id');
@@ -164,6 +168,7 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
       ->fields('n', ['nid', 'title'])
       ->fields('ws', ['webform_id'])
       ->fields('fsn', ['field_senator_name_family'])
+      ->fields('ttfd', ['name'])
       ->condition('n.type', 'webform')
       ->condition('smr.field_senator_multiref_target_id', $senator->id(), '<>')
       ->groupBy('n.nid')
@@ -195,7 +200,7 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
       $ret[] = [
         'data' => [
           [
-            'data' => new FormattableMarkup($link . '<br />(' . $row['field_senator_name_family'] . ')', []),
+            'data' => new FormattableMarkup($link . '<br />(' . $row['name'] . ')', []),
             'class' => 'questionnaire-link',
           ],
           ['data' => $row['in_district'], 'class' => 'questionnaire-sub-count'],

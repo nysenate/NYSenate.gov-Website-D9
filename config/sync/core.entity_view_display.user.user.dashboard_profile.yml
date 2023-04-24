@@ -1,9 +1,9 @@
-uuid: 26024165-7d0b-4086-9a57-46cf666f8812
+uuid: bc8c41fe-8eb4-4605-b82c-83f6e1b85686
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.user.private_message_author
+    - core.entity_view_mode.user.dashboard_profile
     - field.field.user.user.field_address
     - field.field.user.user.field_agree_to_terms
     - field.field.user.user.field_dateofbirth
@@ -24,40 +24,75 @@ dependencies:
     - field.field.user.user.field_user_receive_emails
     - field.field.user.user.field_voting_auto_subscribe
   module:
+    - address
+    - layout_builder
     - user
-_core:
-  default_config_hash: 5VkjdDDe_kM-giLC61z36ACn6Z2eMjaH63Rh6adWWpw
-id: user.user.private_message_author
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: user.user.dashboard_profile
 targetEntityType: user
 bundle: user
-mode: private_message_author
+mode: dashboard_profile
 content:
-  linked_username:
+  field_address:
+    type: address_default
+    label: hidden
     settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_first_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
     third_party_settings: {  }
     weight: 0
     region: content
+  field_last_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_profile_picture:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
 hidden:
-  field_address: true
   field_agree_to_terms: true
   field_dateofbirth: true
   field_district: true
-  field_first_name: true
   field_gender_user: true
-  field_last_name: true
   field_last_password_reset: true
   field_ldap_username: true
   field_password_expiration: true
   field_pending_expire_sent: true
-  field_profile_picture: true
   field_senator_inbox_access: true
-  field_senator_multiref: true
   field_top_issue: true
   field_user_banned_comments: true
   field_user_phone_no: true
   field_user_receive_emails: true
   field_voting_auto_subscribe: true
   langcode: true
+  linked_username: true
   member_for: true
   private_message_link: true
   search_api_excerpt: true

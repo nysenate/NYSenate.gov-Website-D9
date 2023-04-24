@@ -51,10 +51,8 @@
     font-size: 12px;
     line-height: 1em;
     letter-spacing: 0.05em;
-    @extend .lgt-text;
 
     &:hover {
-      @extend .lgt-text;
       text-decoration: underline;
     }
   }
@@ -96,7 +94,7 @@
   }
 
   .c-press-release--body__has-img {
-    padding-right: 120px;
+    display: flex;
   }
 
   .c-press-release--descript {
@@ -144,9 +142,6 @@
   .c-press-release--img {
     max-width: 100px;
     margin-left: 20px;
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 
   @include breakpoint($bp-sm) {
@@ -186,11 +181,6 @@
 
     .c-press-release--date {
       font-size: 14px;
-    }
-
-    .c-press-release--body__has-img {
-      padding-right: 220px;
-      min-height: 125px;
     }
 
     .c-press-release--img {

@@ -1865,6 +1865,10 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     }
   }
 
+  if ($hook == 'user') {
+    $suggestions[] = $hook . '__' . $variables['elements']['#view_mode'];
+  }
+
   if ($hook == 'views_view_fields') {
     $view = $variables['view'];
     $display_id = $view->getDisplay();
@@ -2680,6 +2684,23 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list_bill_det
       '@district' => $district,
     ]
   );
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$variables) {
+  $term = $variables['term'];
+  if ($term) {
+    $party = $term->field_party->getValue();
+    $parties = implode(', ', array_map(function ($item) {
+      return $item['value'];
+    }, $party));
+
+    $variables['party'] = $parties;
+    $variables['district'] = (int) get_senator_district($term->id());
+    $variables['active_senator'] = (bool) $term->get('field_active_senator')->value;
+  }
 }
 
 /**
@@ -4120,6 +4141,16 @@ function nysenate_theme_preprocess_node__view__homepage_news__hp_featured_storie
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function nysenate_theme_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Remove the Private Message fieldset from the User Profile Edit Form.
+  if ($form_id == 'nys_dashboard_edit_profile_form') {
+    $form['private_messages'] = [];
+  }
+}
+
+/**
  * Implements hook_form_views_exposed_form_alter().
  */
 function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -4418,9 +4449,19 @@ function nysenate_theme_preprocess_page(&$variables) {
   $user_parts = explode('/', $user_link);
   $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
 
-  $variables['dashboard_link'] = '/users/' . $user_name . '/dashboard/issues';
-  $variables['edit_account_link'] = '/users/' . $user_name . '/edit';
+  $variables['dashboard_link'] = '/dashboard/issues';
+  $variables['edit_account_link'] = '/dashboard/edit';
   $variables['sidebar'] = [
+    'upper_links' => [
+      [
+        'text' => 'Profile',
+        'url' => '/dashboard',
+      ],
+      [
+        'text' => 'Edit Profile',
+        'url' => '/dashboard/edit',
+      ],
+    ],
     'links' => [
       [
         'text' => 'Inbox',
@@ -4428,19 +4469,19 @@ function nysenate_theme_preprocess_page(&$variables) {
       ],
       [
         'text' => 'Bills',
-        'url' => '/users/' . $user_name . '/dashboard/bills',
+        'url' => '/dashboard/bills',
       ],
       [
         'text' => 'Issues',
-        'url' => '/users/' . $user_name . '/dashboard/issues',
+        'url' => '/dashboard/issues',
       ],
       [
         'text' => 'Committees',
-        'url' => '/users/' . $user_name . '/dashboard/committees',
+        'url' => '/dashboard/committees',
       ],
       [
         'text' => 'Petitions & Questionnaires',
-        'url' => '/users/' . $user_name . '/dashboard/petitions',
+        'url' => '/dashboard/petitions',
       ],
     ],
   ];
@@ -5028,6 +5069,47 @@ function nysenate_theme_preprocess_tweets(&$variables) {
       'week' => $variables['date'],
     ];
   }
+}
+
+/**
+ * Implements hook_preprocess_user().
+ */
+function nysenate_theme_preprocess_user__dashboard_profile(&$variables) {
+  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $user = $user_storage->load(\Drupal::currentUser()->id());
+
+  $image_src = NULL;
+  if ($user->hasField('field_profile_picture') && !$user->get('field_profile_picture')->isEmpty()) {
+    $media = !empty($user->field_profile_picture->target_id) ? $media_storage->load($user->field_profile_picture->target_id) : NULL;
+    if (!empty($media)) {
+      $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
+      if (!empty($file)) {
+        $image_src = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      }
+    }
+  }
+
+  $address = [];
+  if (!$user->field_address->isEmpty()) {
+    foreach ($user->field_address->getValue()[0] as $key => $value) {
+      $address[$key] = $value;
+    }
+  }
+
+  $name = '';
+  if (!$user->field_first_name->isEmpty()) {
+    $name = $user->field_first_name->value;
+  }
+  if (!$user->field_last_name->isEmpty()) {
+    $name = $name . ' ' . $user->field_last_name->value;
+  }
+
+  $variables['name'] = $name;
+  $variables['email'] = $user->getEmail();
+  $variables['address'] = $address;
+  $variables['image_src'] = $image_src;
+  $variables['edit_url'] = '/dashboard/edit';
 }
 
 /**

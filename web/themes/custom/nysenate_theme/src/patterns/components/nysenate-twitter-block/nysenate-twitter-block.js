@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 !((document, Drupal, $) => {
   'use strict';
   Drupal.behaviors.nysenateTwitterBlock = {

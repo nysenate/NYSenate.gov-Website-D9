@@ -1250,7 +1250,7 @@ display:
           title: ''
           default_argument_type: query_parameter
           default_argument_options:
-            query_param: bill_session_year
+            query_param: session_year
             fallback: all
             multiple: and
           default_argument_skip_url: false
@@ -1283,7 +1283,7 @@ display:
           title: ''
           default_argument_type: query_parameter
           default_argument_options:
-            query_param: bill_issue
+            query_param: issue
             fallback: all
             multiple: and
           default_argument_skip_url: false
@@ -1349,7 +1349,7 @@ display:
           title: ''
           default_argument_type: query_parameter
           default_argument_options:
-            query_param: bill_status
+            query_param: status
             fallback: all
             multiple: and
           default_argument_skip_url: false
@@ -1382,7 +1382,7 @@ display:
           title: ''
           default_argument_type: query_parameter
           default_argument_options:
-            query_param: bill_sponsor
+            query_param: sponsor
             fallback: all
             multiple: and
           default_argument_skip_url: false
@@ -1415,7 +1415,7 @@ display:
           title: ''
           default_argument_type: query_parameter
           default_argument_options:
-            query_param: bill_committee
+            query_param: committee
             fallback: all
             multiple: and
           default_argument_skip_url: false
@@ -1449,7 +1449,7 @@ display:
           default_argument_type: query_parameter
           default_argument_options:
             query_param: title
-            fallback: ''
+            fallback: all
             multiple: and
           default_argument_skip_url: false
           summary_options: {  }
@@ -1457,10 +1457,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: ignore
           validate_options: {  }
           break_phrase: false
           not: false
@@ -1490,10 +1490,10 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: false
+          specify_validation: true
           validate:
             type: none
-            fail: 'not found'
+            fail: ignore
           validate_options: {  }
           break_phrase: false
           not: false

@@ -36,6 +36,18 @@ class SearchAdvancedLegislationForm extends FormBase {
   }
 
   /**
+   * Generate months options for basic select.
+   */
+  public function getMonthsOptions() {
+    $months = [];
+    for ($i = 0; $i < 12; $i++) {
+      $time = strtotime(sprintf('%d months', $i));
+      $months[$i] = date('F', $time);
+    }
+    return $months;
+  }
+
+  /**
    * Returns a list of Senators.
    *
    * @return array
@@ -115,36 +127,117 @@ class SearchAdvancedLegislationForm extends FormBase {
       ],
     ];
 
-    // Bill search form.
-    $form['bill_printno'] = [
+    $form['printno'] = [
       '#type' => 'textfield',
       '#title' => t('PRINT NO'),
       '#size' => 10,
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+            ['value' => 'resolution'],
+          ],
+        ],
+      ],
     ];
 
     $bill_years = [];
     $bill_years['0'] = 'Any';
     foreach ($this->getSessionYearList() as $year) {
       $bill_years[$year] = $year . '-' . ($year + 1);
+      $years_option[$year] = $year;
     }
-    $form['bill_session_year'] = [
+
+    $form['session_year'] = [
       '#type' => 'select',
       '#title' => ('SESSION YEAR'),
       '#options' => $bill_years,
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+            ['value' => 'resolution'],
+          ],
+        ],
+      ],
     ];
 
-    $form['bill_text'] = [
+    $form['session_year'] = [
+      '#type' => 'select',
+      '#title' => ('SESSION YEAR'),
+      '#options' => $bill_years,
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+            ['value' => 'resolution'],
+          ],
+        ],
+      ],
+    ];
+
+    $form['month'] = [
+      '#type' => 'select',
+      '#title' => ('Month'),
+      '#options' => $this->getMonthsOptions(),
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'agenda'],
+            ['value' => 'calendar'],
+            ['value' => 'transcript'],
+            ['value' => 'public_hearing'],
+          ],
+        ],
+      ],
+    ];
+
+    $form['year'] = [
+      '#type' => 'select',
+      '#title' => ('YEAR'),
+      '#options' => $years_option,
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'agenda'],
+            ['value' => 'calendar'],
+            ['value' => 'transcript'],
+            ['value' => 'public_hearing'],
+          ],
+        ],
+      ],
+    ];
+
+    $form['text_memo'] = [
       '#type' => 'textfield',
       '#title' => t('TITLE / SPONSOR MEMO / FULL TEXT'),
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+            ['value' => 'resolution'],
+            ['value' => 'transcript'],
+            ['value' => 'public_hearing'],
+          ],
+        ],
+      ],
     ];
 
-    $form['bill_sponsor'] = [
+    $form['sponsor'] = [
       '#type' => 'select',
       '#title' => ('SENATE SPONSOR'),
       '#options' => $this->getSenatorsList(),
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+            ['value' => 'resolution'],
+          ],
+        ],
+      ],
     ];
 
-    $form['bill_status'] = [
+    $form['status'] = [
       '#type' => 'select',
       '#title' => t('BILL STATUS'),
       '#options' => [
@@ -164,21 +257,43 @@ class SearchAdvancedLegislationForm extends FormBase {
         'SUBSTITUTED' => t('Substituted'),
         'ADOPTED' => t('Adopted'),
       ],
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+          ],
+        ],
+      ],
     ];
 
-    $form['bill_committee'] = [
+    $form['committee'] = [
       '#type' => 'select',
       '#title' => ('IN COMMITTEE'),
       '#options' => $this->getCommitteeList(),
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+            ['value' => 'agenda'],
+          ],
+        ],
+      ],
     ];
 
-    $form['bill_issue'] = [
+    $form['issue'] = [
       '#type' => 'entity_autocomplete',
       '#title' => ('ISSUE'),
       '#target_type' => 'taxonomy_term',
       '#selection_handler' => 'default',
       '#selection_settings' => [
         'target_bundles' => ['issues'],
+      ],
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+          ],
+        ],
       ],
     ];
 
@@ -196,26 +311,19 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-    $type = (!empty($values['type'])) ? $values['type'] : 'all';
-    $bill_printno = (!empty($values['bill_printno'])) ? $values['bill_printno'] : 'all';
-    $bill_session_year = (!empty($values['bill_session_year'])) ? $values['bill_session_year'] : 'all';
-    $bill_text = (!empty($values['bill_text'])) ? $values['bill_text'] : 'all';
-    $bill_title = (!empty($values['bill_text'])) ? $values['bill_text'] : 'all';
-    $bill_sponsor = (!empty($values['bill_sponsor'])) ? $values['bill_sponsor'] : 'all';
-    $bill_status = (!empty($values['bill_status'])) ? $values['bill_status'] : 'all';
-    $bill_committee = (!empty($values['bill_committee'])) ? $values['bill_committee'] : 'all';
-    $bill_issue = (!empty($values['bill_issue'])) ? $values['bill_issue'] : 'all';
 
     $params = [
-      'type' => $type,
-      'bill_session_year' => $bill_session_year,
-      'bill_issue' => $bill_issue,
-      'bill_printno' => $bill_printno,
-      'bill_status' => $bill_status,
-      'bill_sponsor' => $bill_sponsor,
-      'title' => $bill_title,
-      'memo' => $bill_text,
-      'bill_committee' => $bill_committee,
+      'type' => $values['type'] ?: '',
+      'session_year' => $values['session_year'] ?: '',
+      'issue' => $values['status'] ?: '',
+      'printno' => $values['printno'] ?: '',
+      'status' => $values['status'] ?: '',
+      'sponsor' => $values['sponsor'] ?: '',
+      'title' => $values['text_memo'] ?: '',
+      'memo' => $values['text_memo'] ?: '',
+      'committee' => $values['committee'] ?: '',
+      'year' => $values['year'] ?: '',
+      'month' => $values['month'] ?: '',
     ];
 
     // Filter out any empty values.

@@ -26,6 +26,14 @@
           {% include "@nysenate_theme/dashboard-petitions-questionnaires/dashboard-petitions-questionnaires.twig" with petitions_questionnaires only %}
         {% endif %}
 
+        {% if dashboard_profile_edit %}
+          {% include "@nysenate_theme/dashboard-profile-edit/dashboard-profile-edit.twig" with dashboard_profile_edit %}
+        {% endif %}
+
+        {% if dashboard_profile %}
+          {% include "@nysenate_theme/dashboard-profile/dashboard-profile.twig" with dashboard_profile %}
+        {% endif %}
+
       </div>
       {% include "@nysenate_theme/sidebar/sidebar.twig" with sidebar only %}
     </div>

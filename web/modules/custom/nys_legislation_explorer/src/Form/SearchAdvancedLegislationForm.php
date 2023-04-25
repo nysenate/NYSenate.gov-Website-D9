@@ -2,14 +2,32 @@
 
 namespace Drupal\nys_legislation_explorer\Form;
 
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Form\FormBase;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The Search advanced legislation form class.
  */
 class SearchAdvancedLegislationForm extends FormBase {
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = new static();
+    $instance->requestStack = $container->get('request_stack');
+    return $instance;
+  }
 
   /**
    * Returns a list of session years in descending order.
@@ -39,11 +57,21 @@ class SearchAdvancedLegislationForm extends FormBase {
    * Generate months options for basic select.
    */
   public function getMonthsOptions() {
-    $months = [];
-    for ($i = 0; $i < 12; $i++) {
-      $time = strtotime(sprintf('%d months', $i));
-      $months[$i] = date('F', $time);
-    }
+    $months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
     return $months;
   }
 
@@ -55,14 +83,12 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public function getSenatorsList(): array {
     $query = \Drupal::database()->select('taxonomy_term__field_senator_name', 's');
-    $query->fields('s', ['entity_id']);
+    $query->fields('s', ['entity_id', 'field_senator_name_given']);
     $query->addExpression("CONCAT(s.field_senator_name_given,' ',s.field_senator_name_family)", 'senator_full_name');
-    $query->orderBy('s.field_senator_name_family');
+    $query->orderBy('s.field_senator_name_given');
 
     $results = [];
-    $results = $query->execute()->fetchAllKeyed(0, 1);
-    $results['all'] = 'Any';
-    ksort($results);
+    $results = $query->execute()->fetchAllKeyed(0, 2);
     return $results;
   }
 
@@ -80,7 +106,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     $result = [];
     $result['all'] = 'Any';
     foreach ($committees as $committe) {
-      $result[$committe->label()] = $committe->label();
+      $result[ucwords($committe->label())] = $committe->label();
     }
     return $result;
   }
@@ -96,6 +122,7 @@ class SearchAdvancedLegislationForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $args = $this->requestStack->getCurrentRequest()->query->all();
 
     $form['my_block'] = [
       '#type' => 'block',
@@ -125,12 +152,14 @@ class SearchAdvancedLegislationForm extends FormBase {
         'transcript' => t('Session Transcripts'),
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
+      '#default_value' => $args['type'] ?? NULL,
     ];
 
     $form['printno'] = [
       '#type' => 'textfield',
       '#title' => t('PRINT NO'),
       '#size' => 10,
+      '#default_value' => $args['printno'] ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -143,6 +172,7 @@ class SearchAdvancedLegislationForm extends FormBase {
 
     $bill_years = [];
     $bill_years['0'] = 'Any';
+    $years_option['0'] = 'Any';
     foreach ($this->getSessionYearList() as $year) {
       $bill_years[$year] = $year . '-' . ($year + 1);
       $years_option[$year] = $year;
@@ -152,20 +182,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('SESSION YEAR'),
       '#options' => $bill_years,
-      '#states' => [
-        'visible' => [
-          'select[name="type"]' => [
-            ['value' => 'bill'],
-            ['value' => 'resolution'],
-          ],
-        ],
-      ],
-    ];
-
-    $form['session_year'] = [
-      '#type' => 'select',
-      '#title' => ('SESSION YEAR'),
-      '#options' => $bill_years,
+      '#default_value' => $args['session_year'] ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -179,7 +196,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     $form['month'] = [
       '#type' => 'select',
       '#title' => ('Month'),
-      '#options' => $this->getMonthsOptions(),
+      '#options' => ['all' => 'Any'] + $this->getMonthsOptions(),
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -208,9 +225,10 @@ class SearchAdvancedLegislationForm extends FormBase {
       ],
     ];
 
-    $form['text_memo'] = [
+    $form['full_text'] = [
       '#type' => 'textfield',
       '#title' => t('TITLE / SPONSOR MEMO / FULL TEXT'),
+      '#default_value' => $args['full_text'] ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -226,7 +244,8 @@ class SearchAdvancedLegislationForm extends FormBase {
     $form['sponsor'] = [
       '#type' => 'select',
       '#title' => ('SENATE SPONSOR'),
-      '#options' => $this->getSenatorsList(),
+      '#options' => ['all' => 'Any'] + $this->getSenatorsList(),
+      '#default_value' => $args['sponsor'] ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -257,6 +276,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'SUBSTITUTED' => t('Substituted'),
         'ADOPTED' => t('Adopted'),
       ],
+      '#default_value' => $args['status'] ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -270,6 +290,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('IN COMMITTEE'),
       '#options' => $this->getCommitteeList(),
+      '#default_value' => $args['committee'] ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -288,6 +309,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#selection_settings' => [
         'target_bundles' => ['issues'],
       ],
+      '#default_value' => !empty($args['issue']) ? Term::load($args['issue']) : NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -312,26 +334,68 @@ class SearchAdvancedLegislationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
 
-    $params = [
-      'type' => $values['type'] ?: '',
-      'session_year' => $values['session_year'] ?: '',
-      'issue' => $values['status'] ?: '',
-      'printno' => $values['printno'] ?: '',
-      'status' => $values['status'] ?: '',
-      'sponsor' => $values['sponsor'] ?: '',
-      'title' => $values['text_memo'] ?: '',
-      'memo' => $values['text_memo'] ?: '',
-      'committee' => $values['committee'] ?: '',
-      'year' => $values['year'] ?: '',
-      'month' => $values['month'] ?: '',
-    ];
+    switch ($values['type']) {
+      case 'bill':
+        $params = [
+          'type' => $values['type'] ?: '',
+          'session_year' => $values['session_year'] ?: '',
+          'issue' => $values['issue'] ?: '',
+          'printno' => $values['printno'] ?: '',
+          'status' => $values['status'] ?: '',
+          'sponsor' => $values['sponsor'] ?: '',
+          'full_text' => $values['full_text'] ?: '',
+          'committee' => $values['committee'] ?: '',
+        ];
+        break;
+
+      case 'resolution':
+        $params = [
+          'type' => $values['type'] ?: '',
+          'session_year' => $values['session_year'] ?: '',
+          'printno' => $values['printno'] ?: '',
+          'sponsor' => $values['sponsor'] ?: '',
+          'full_text' => $values['full_text'] ?: '',
+        ];
+        break;
+
+      case 'agenda':
+        $params = [
+          'type' => $values['type'] ?: '',
+          'month' => $values['month'] ?: '',
+          'year' => $values['year'] ?: '',
+          'committee' => $values['committee'] ?: '',
+        ];
+        break;
+
+      case 'calendar':
+        $params = [
+          'type' => $values['type'] ?: '',
+          'month' => $values['month'] ?: '',
+          'year' => $values['year'] ?: '',
+        ];
+        break;
+
+      case 'transcript':
+      case 'public_hearing':
+        $params = [
+          'type' => $values['type'] ?: '',
+          'month' => $values['month'] ?: '',
+          'year' => $values['year'] ?: '',
+          'full_text' => $values['full_text'] ?: '',
+        ];
+        break;
+
+      default:
+        break;
+    }
 
     // Filter out any empty values.
     $params = array_filter($params, function ($value) {
       return $value !== '';
     });
 
-    $url = Url::fromRoute('view.advanced_legislation_search.page_1', [], ['query' => $params]);
+    $url = Url::fromRoute('nys_legislation_explorer.searchLegislation', [], ['query' => $params]);
+
     $form_state->setRedirectUrl($url);
   }
 

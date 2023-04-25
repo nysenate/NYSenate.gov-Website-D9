@@ -1,8 +1,7 @@
 nys_legislation_explorer.searchLegislation:
   path: '/search/legislation'
   defaults:
-    _form: '\Drupal\nys_legislation_explorer\Form\SearchAdvancedLegislationForm'
-    _title: 'Search Legislation2'
+    _controller: '\Drupal\nys_legislation_explorer\Controller\SearchLegislationController::page'
   requirements:
     _permission: 'access content'
     _access: 'TRUE'

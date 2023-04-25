@@ -15,6 +15,7 @@ dependencies:
     - node
     - options
     - user
+    - views_infinite_scroll
 id: newsroom
 label: Newsroom
 module: views
@@ -396,9 +397,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: none
+        type: infinite_scroll
         options:
-          offset: 0
+          offset: null
+          items_per_page: 2
+          total_pages: 5
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '2, 5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'See more news'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: basic
         options:
@@ -547,6 +566,12 @@ display:
           query_tags: {  }
       relationships: {  }
       use_ajax: true
+      group_by: false
+      use_more: false
+      use_more_always: false
+      use_more_text: more
+      link_display: '0'
+      link_url: /news-and-issues
       header: {  }
       footer: {  }
       display_extenders: {  }
@@ -555,6 +580,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -574,11 +600,14 @@ display:
       display_description: ''
       display_extenders: {  }
       block_description: 'Sitewide All News'
+      allow:
+        items_per_page: false
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -744,6 +773,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

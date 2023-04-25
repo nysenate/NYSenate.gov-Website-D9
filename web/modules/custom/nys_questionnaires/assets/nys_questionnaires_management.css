@@ -90,7 +90,7 @@
   height: auto;
 }
 .nys-senators-management-dashboard-questionnaires a {
-  color: #008CBA;
+  color: #008cba;
 }
 
 /***********
@@ -137,4 +137,43 @@
 .senator-dashboard-questionnaires .questionnaire-user-list table tbody tr td {
   padding: .5em 1em;
   height: auto;
+}
+
+.questionnaire-submission-data .entry-title,
+.questionnaire-submission-data .author a {
+  color: #008cba;
+}
+.questionnaire-submission-data .entry-title,
+.questionnaire-submission-data .pet-type {
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+.questionnaire-submission-data .pet-type a {
+  font-size: 12px;
+  line-height: 18px;
+  color: #cb8d37;
+}
+.questionnaire-submission-data .author {
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 12px;
+  line-height: 18px;
+  color: #666666;
+  margin: 15px 0 4px 0;
+}
+
+@media screen and (min-width: 1024px) {
+  .questionnaire-submission-data .entry-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  .questionnaire-submission-data .pet-type {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .questionnaire-submission-data .author {
+    font-size: 14px;
+  }
 }

@@ -4616,7 +4616,8 @@ function nysenate_theme_preprocess_page(&$variables) {
       $term_path = '/taxonomy/term/' . $arr_path[3];
     }
 
-    if (isset($variables['is_senator_dashboard']) && $variables['is_senator_dashboard']) {
+    if (isset($variables['is_senator_dashboard']) && $variables['is_senator_dashboard']
+      && isset($senator) && isset($term_path)) {
       $display_name = $senator->name->value . "'s";
       $senator_account = $user_storage->load($senator->field_user_account->target_id);
       $senator_link = $senator_account->toUrl()->toString();

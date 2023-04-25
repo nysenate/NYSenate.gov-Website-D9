@@ -23,7 +23,9 @@
 
       <div class="pane-content">
         <div id="section-2" class="c-block c-block--about c-block--full-bleed c-block--about-how text-layout text-layout--full-bleed text-layout--with-bg">
-          <h3 class="nys-subtitle-title">{{ how_senate_works_title }}</h3>
+          {% if how_senate_works_title %}
+            <h3 class="nys-subtitle-title">{{ how_senate_works_title }}</h3>
+          {% endif %}
 
           {% if media %}
             {% include "@nysenate_theme/media/media.twig" with media only %}
@@ -51,7 +53,9 @@
 
       <div class="pane-content">
         <div id="section-3" class="c-block c-block--about c-block--about-map">
-          <h3 class="nys-subtitle-title">{{ district_map_title }}</h3>
+          {% if district_map_title %}
+            <h3 class="nys-subtitle-title">{{ district_map_title }}</h3>
+          {% endif %}
           {% if district_map_embed %}
             {{ district_map_embed }}
           {% else %}

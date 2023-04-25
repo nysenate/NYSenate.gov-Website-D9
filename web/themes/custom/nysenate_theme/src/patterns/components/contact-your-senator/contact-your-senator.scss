@@ -4,7 +4,6 @@
   position: relative;
   display: flex;
   align-items: center;
-  width: fit-content;
   height: 55px;
   padding: 0;
   margin: 15px 0 30px;
@@ -16,6 +15,13 @@
   font-size: 14px;
   letter-spacing: 0.1em;
   border: 0;
+  width: 100%;
+  justify-content: center;
+
+  @include breakpoint($bp-sm) {
+    width: fit-content;
+    justify-content: flex-start;
+  }
 
   &::before {
     content: '';

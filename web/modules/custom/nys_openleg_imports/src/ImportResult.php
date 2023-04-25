@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg_imports;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Provides for reporting import result statistics.
  */
@@ -108,6 +110,22 @@ class ImportResult {
    */
   public function getExceptions(): array {
     return $this->exceptions;
+  }
+
+  /**
+   * Reports the result, using the passed logger.
+   */
+  public function report(LoggerInterface $logger) {
+    $msg = "Import finished";
+    $func = 'info';
+    if ($this->getSuccess()) {
+      $msg .= " successfully";
+    }
+    if ($this->getFail() || $this->getSkipped()) {
+      $msg = " with some failures/skipped";
+      $func = 'warning';
+    }
+    $logger->$func($msg);
   }
 
 }

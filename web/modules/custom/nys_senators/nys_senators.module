@@ -1474,3 +1474,58 @@ function _nys_senators_remove_letter_blocks(EntityInterface $entity) {
     }
   }
 }
+
+/**
+ * Add the About Information blocks.
+ */
+function _nys_senators_add_about_text_blocks(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $senatorMicrosites = [
+    'About',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+
+      $microsite_page = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          'field_senator_multiref' => $entity->id(),
+          'field_microsite_page_type' => $micrositeType->id(),
+        ]);
+
+      $page = NULL;
+      if (!empty($microsite_page)) {
+        $page = reset($microsite_page);
+
+        $aboutBlock = BlockContent::create([
+          'info' => $senator_name . ' - About Information Block',
+          'type' => 'senator_microsite_about_info',
+          'revision_user' => 1,
+          'field_microsite_about_info' => [
+            'plugin_id' => 'nys_blocks_about_text',
+            'settings' => [],
+          ],
+        ]);
+        $aboutBlock->save();
+
+        $page->field_block[] = [
+          'target_id' => $aboutBlock->id(),
+          'target_revision_id' => $aboutBlock->getRevisionId(),
+        ];
+
+        // Save the node.
+        $page->save();
+      }
+    }
+  }
+}

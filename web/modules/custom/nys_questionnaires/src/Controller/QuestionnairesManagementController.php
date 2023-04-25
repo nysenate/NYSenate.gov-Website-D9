@@ -194,7 +194,7 @@ class QuestionnairesManagementController extends ControllerBase {
         [
           '@query' => (string) $query,
           '@qid' => $qid->id(),
-          '@district' => $district->id(),
+          '@district' => $district ? $district->id() : 'none',
           '@excp' => $e->getMessage(),
         ]
       );

@@ -1,0 +1,73 @@
+/***************
+ * for tabs
+ */
+.nys-senators-management-dashboard-bills ul.tabs {
+  border-bottom: 1px solid lightgray;
+  font-size: 0;
+  margin-bottom: 0.5rem;
+}
+.nys-senators-management-dashboard-bills ul.tabs li.tab {
+  border: 2px solid lightgray;
+  border-bottom: 0 none;
+  border-top-left-radius: 0.7em;
+  border-top-right-radius: 0.7em;
+  cursor: pointer;
+  padding: 0.3em 0.8em;
+  margin: 0 -1px 0 0;
+}
+.nys-senators-management-dashboard-bills ul.tabs li.tab.active,
+.nys-senators-management-dashboard-bills ul.tabs li.tab:hover {
+  background-color: rgb(0, 41, 79);
+  border-color: darkblue;
+  color: #fff;
+}
+.nys-senators-management-dashboard-bills .tab-content {
+  display: none;
+}
+.nys-senators-management-dashboard-bills .tab-content.active {
+  display: block;
+}
+
+/*******************
+ * Bill Vote charts
+ */
+div.sponsored-bill:hover {
+  border-color: darkblue;
+}
+div.sponsored-bill {
+  border: 2px solid lightblue;
+  border-radius: 2em;
+  margin-bottom: 1em;
+}
+.sponsored-bill-description {
+  display: inline-block;
+  vertical-align: top;
+  max-width: 44%;
+  min-width: 34%;
+  padding: 0.3em 0.5em;
+}
+.sponsored-bill-chart {
+  display: inline-block;
+  vertical-align: top;
+  max-width: 65%;
+  min-width: 55%;
+  border-left: 2px solid lightgray;
+  border-top-right-radius: 2em;
+  border-bottom-right-radius: 2em;
+}
+.sponsored-bill-title {
+  font-family: 'Adelle SemiBold', serif;
+  font-size: 1.5em;
+}
+.sponsored-bill-issues {
+  font-family: 'Proxima Nova Regular', sans-serif;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #04a9c5;
+  margin-top: 1em;
+}
+.sponsored-bill-summary {
+  line-height: 1.2em;
+  text-align: justify;
+  margin-top: 1em;
+}

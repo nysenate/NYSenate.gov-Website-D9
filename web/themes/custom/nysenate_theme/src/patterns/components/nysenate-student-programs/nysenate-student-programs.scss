@@ -2,7 +2,12 @@
 
 .c-block--about-student-programs {
   margin-top: 60px;
+	margin-bottom: 0;
 	padding-bottom: 20px;
+
+	@include breakpoint($bp-sm) {
+		margin-bottom: 0;
+	}
 
   .c-container--link {
     position: absolute;
@@ -171,7 +176,7 @@
 			padding-bottom: 20px;
 			margin-bottom: 25px;
 			text-transform: uppercase;
-			color: $grey02;
+			color: $grey08;
 			border-bottom: 1px solid $grey02;
 		}
 

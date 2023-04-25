@@ -12,6 +12,12 @@
   }
 }
 
+.c-search--body {
+  color: $grey03;
+  padding: 20px 0px 20px 0px;
+  border-top: 1px solid $grey03;
+} 
+
 .c-block {
   &.c-block-press-release {
     padding-top: 20px;
@@ -51,10 +57,8 @@
     font-size: 12px;
     line-height: 1em;
     letter-spacing: 0.05em;
-    @extend .lgt-text;
 
     &:hover {
-      @extend .lgt-text;
       text-decoration: underline;
     }
   }
@@ -86,17 +90,17 @@
         margin-top: -3px;
       }
     }
-
+    
     .date-display-single {
       font-family: $font-sans-bold;
       font-size: 14px;
       line-height: 30px;
       color: $grey08;
     }
-  }
+  } 
 
   .c-press-release--body__has-img {
-    padding-right: 120px;
+    display: flex;
   }
 
   .c-press-release--descript {
@@ -144,9 +148,6 @@
   .c-press-release--img {
     max-width: 100px;
     margin-left: 20px;
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 
   @include breakpoint($bp-sm) {
@@ -154,6 +155,11 @@
       margin-bottom: 0;
       padding-top: 30px;
       padding-bottom: 60px;
+    }
+    
+    .c-search--body .c-block-press-release {
+      padding-bottom: 0px;
+      padding-top: 0px;
     }
 
     .c-press-release--header {
@@ -167,6 +173,10 @@
     .c-press-release--title {
       font-size: 16px;
       line-height: 30px;
+    }
+
+    .c-bill-search  {
+      font-size: 23px;
     }
 
     .c-press-release--body {
@@ -186,11 +196,6 @@
 
     .c-press-release--date {
       font-size: 14px;
-    }
-
-    .c-press-release--body__has-img {
-      padding-right: 220px;
-      min-height: 125px;
     }
 
     .c-press-release--img {

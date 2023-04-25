@@ -8,7 +8,7 @@
         let selectBox = $('#edit-type-');
         let matchedOption = selectBox.find('option[value="' + param + '"]');
         if (matchedOption.length) {
-          matchedOption.prop('selected', true); 
+          matchedOption.prop('selected', true);
         }
       }
       const filterButton = $('.filter-btn');

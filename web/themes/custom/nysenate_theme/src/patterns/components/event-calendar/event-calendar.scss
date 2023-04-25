@@ -22,6 +22,14 @@
   }
 }
 
+.c-event-time {
+  color: $grey05;
+}
+
+.c-event-name a {
+  color: $grey08;
+}
+
 // STYLES FOR CALENDAR
 #datepicker {
   input {
@@ -36,7 +44,7 @@
   .mobile-calendar-toggle {
     display: block;
     background: $yellow01;
-    font-family: "Proxima Nova SemiBold";
+    font-family: $font-sans-bold;
     width: 100%;
     padding: 15px 20px;
     text-transform: uppercase;
@@ -59,7 +67,7 @@
     text-align: center;
     padding: 5px 0;
     line-height: 1.125rem;
-}
+  }
 
   .Zebra_DatePicker {
     position: relative;
@@ -72,34 +80,23 @@
 
     td.dp_selected {
       position: relative;
+      background: #5A4B4B;
       color: #fff !important;
       z-index: 3;
     }
 
-    td.dp_current {
-      background: $grey-line;
-
-      &.dp_selected {
-        background: none;
-      }
-    }
-
     .dp_header {
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
       margin: auto;
       background: $yellow01;
-      width: 100% !important;
       width: calc(100% + 40px) !important;
+      margin-left: -20px;
       max-width: 400px;
       table-layout: fixed;
 
       .dp_caption {
         width: 85%;
         padding: 10px 0;
-        font-family: "Adelle SemiBold";
+        font-family: $font-serif-semibold;
         color: $color-white;
         font-size: 23px;
         letter-spacing: 0.05em;
@@ -127,7 +124,6 @@
 
     .dp_daypicker,
     .dp_monthpicker {
-      margin-top: 40px;
 
       > tbody {
         width: 100%;
@@ -154,7 +150,7 @@
         border: 0;
         font-size: 14px;
         line-height: 2em;
-        font-family: "Proxima Nova Regular";
+        font-family: $font-sans;
       }
 
       // days 'o the week
@@ -166,21 +162,33 @@
 
       // dates
       td {
+        background: transparent;
         color: #000;
-      }
-
-      .currentweek {
-        position: relative;
-
-        td {
-          background: $yellow03;
-        }
       }
 
       .dp_not_in_month {
         visibility: hidden;
         height: 1px;
         padding: 0;
+      }
+
+      td.dp_current {
+        background: $grey-line;
+
+        &.dp_selected {
+          background: none;
+        }
+      }
+
+      &.week {
+
+        .currentweek {
+          background: $yellow02;
+
+          .dp_current {
+            background: transparent;
+          }
+        }
       }
     }
 
@@ -196,12 +204,29 @@
       }
 
       td {
+        background: transparent;
         border: none;
         transition: background 0.2s ease;
 
         &.dp_hover {
           background: $yellow02;
         }
+
+        &.dp_current {
+          color: $color-white;
+        }
+      }
+    }
+
+    .dp_yearpicker {
+
+      td.dp_selected,
+      td.dp_current {
+        background-color: #5A4B4B;
+      }
+
+      td.dp_hover {
+        background-color: #482424;
       }
     }
   }
@@ -244,7 +269,6 @@
 
       .dp_monthpicker,
       .dp_daypicker {
-        margin-top: 50px;
 
         th {
           font-size: 12px;
@@ -301,7 +325,7 @@
     font-size: 20px;
     margin-top: 25px;
     display: none;
-    font-family: "Adelle SemiBold";
+    font-family: $font-serif-semibold;
   }
 
   .cal-nav-list {
@@ -324,7 +348,7 @@
         height: 42px;
         line-height: 42px;
         padding: 0 0 0 14px;
-        font-family: "Proxima Nova Semibold";
+        font-family: $font-sans-bold;
         font-size: 12px;
         text-transform: uppercase;
         color: #004C71;
@@ -351,14 +375,14 @@
   margin: 0;
 }
 
-@media #{$tablet} {
+@include breakpoint($bp-sm) {
 	.cal-nav-wrapper {
 		margin-top: 50px;
 
 		span.title {
 			margin: 0;
 			color: $grey02;
-			font-family: "Adelle SemiBold";
+			font-family: $font-serif-semibold;
 			font-size: 20px;
 			line-height: 42px;
 		}

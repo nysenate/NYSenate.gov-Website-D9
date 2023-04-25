@@ -1529,9 +1529,6 @@ strong {
   position: relative;
   display: flex;
   align-items: center;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
   height: 55px;
   padding: 0;
   margin: 15px 0 30px;
@@ -1542,7 +1539,15 @@ strong {
   font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 14px;
   letter-spacing: 0.1em;
-  border: 0; }
+  border: 0;
+  width: 100%;
+  justify-content: center; }
+  @media screen and (min-width: 768px) {
+    .c-block .c-issue--contact-btn {
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+      justify-content: flex-start; } }
   .c-block .c-issue--contact-btn::before {
     content: '';
     display: inline-block;

@@ -1668,11 +1668,15 @@ strong {
 / SITE WIDE TOP BAR
 /-------------------------------*/
 .c-header-bar {
+  height: 60px;
   background: #fff;
   z-index: 10;
   overflow: hidden;
   position: relative;
   transition: height 0.3s ease 0s; }
+  @media screen and (min-width: 768px) {
+    .c-header-bar {
+      height: 100px; } }
 
 .c-topbar {
   position: relative;
@@ -1938,7 +1942,7 @@ strong {
         padding: 0;
         text-align: center;
         line-height: 14px; }
-      .c-nav--list li.active-trail::after {
+      .c-nav--list li.leaf--active-trail::after {
         content: '';
         display: block;
         position: absolute;
@@ -2330,7 +2334,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   @media screen and (min-width: 1024px) {
     .c-nav--list li {
       width: auto; } }
-  .c-nav--list li.active-trail::after {
+  .c-nav--list li.leaf--active-trail::after {
     content: '';
     display: block;
     position: absolute;
@@ -2383,9 +2387,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .c-site-search .c-site-search--btn:focus,
   .c-site-search .search__submit:focus,
   .c-site-search .c-site-search--btn, .c-site-search .search__submit {
-    position: absolute;
-    top: 17px;
-    right: 20px;
+    position: relative;
+    top: -45px;
+    left: 20px;
+    right: auto;
     padding: 0;
     height: 45px;
     width: 45px;
@@ -2495,6 +2500,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     .c-site-search .c-site-search--btn, .c-site-search .search__submit {
       position: relative;
       top: -45px;
+      left: 20px;
       right: auto;
       float: right; }
   .c-site-search {

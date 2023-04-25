@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 !function (document, Drupal, $) {
   'use strict';
 

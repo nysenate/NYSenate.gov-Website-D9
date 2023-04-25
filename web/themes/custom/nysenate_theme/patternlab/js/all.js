@@ -450,6 +450,39 @@
 
 /**
  * @file
+ * Behaviors for the Dashboard Profile.
+ */
+!function (document, Drupal, $) {
+  'use strict';
+  /**
+   * Setup and attach the Dashboard Profile behaviors.
+   *
+   * @type {Drupal~behavior}
+   */
+
+  Drupal.behaviors.dashboardProfile = {
+    attach: function attach() {
+      var modal = $('.msg-senator-modal');
+      var modalToggle = $('.c-dash-msg-senator');
+      var closeBtn = $('.close');
+      modalToggle.on('click', function () {
+        modal.css('display', 'block');
+      });
+      closeBtn.on('click', function () {
+        modal.css('display', 'none');
+      });
+      $(window).on('click', function (event) {
+        if (event.target === modal[0]) {
+          modal.css('display', 'none');
+        }
+      });
+    }
+  };
+}(document, Drupal, jQuery);
+//# sourceMappingURL=dashboard-profile.js.map
+
+/**
+ * @file
  * Behaviors for the Dashboard Header.
  */
 
@@ -744,13 +777,35 @@
         onChange: function onChange(view, elements) {
           var _selected = $('.dp_selected').html();
 
-          if (_selected === null) {
+          if (_selected === null || _selected === undefined) {
             _selected = localStorage.getItem('selected');
+            $('.dp_current').addClass('dp_selected');
             $('.dp_daypicker td').each(function () {
               if ($(this).html() === _selected) {
-                $(this).addClass('dp_selected');
+                var inputElement = '';
+
+                if (viewType === 'week') {
+                  inputElement = $('.js-form-item-date-min input');
+                } else {
+                  inputElement = $('.form-item-date.js-form-type-textfield input');
+                }
+
+                if (inputElement.val() === '') {
+                  var placeholder = inputElement.attr('placeholder');
+
+                  var _splitDate4 = placeholder.split('/');
+
+                  inputElement.val("".concat(_splitDate4[0], "/").concat(_selected, "/").concat(_splitDate4[2]));
+                }
+
+                if (!$(this).hasClass('dp_current')) {
+                  $(this).addClass('dp_selected');
+                }
+
                 $(this).closest('tr').addClass('currentweek');
                 return;
+              } else {
+                $(this).removeClass('dp_selected');
               }
             });
           } else {
@@ -17939,6 +17994,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 }(document, Drupal, jQuery);
 //# sourceMappingURL=nysenate-tabs.js.map
 
+/* eslint-disable max-len */
 !function (document, Drupal, $) {
   'use strict';
 

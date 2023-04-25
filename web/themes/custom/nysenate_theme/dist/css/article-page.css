@@ -1649,6 +1649,12 @@ strong {
 .c-news--body .c-block p:only-child {
   margin: 0; }
 
+.c-news--body .c-block .field__item p {
+  margin-bottom: 1em; }
+
+.c-news--body .c-block .field__item:last-child p {
+  margin: 0; }
+
 .c-news--body-title {
   border-top: 1px solid #aaaaaa;
   padding: 10px 0 20px;
@@ -1704,6 +1710,17 @@ strong {
 
 .landing-node .view-global-promo-banner {
   padding-top: 0; }
+
+@media screen and (min-width: 768px) {
+  .landing-node.page--about .c-news--body > .c-block {
+    margin: 0; } }
+
+.landing-node.page--about main.l-row--main {
+  padding: 0; }
+  @media screen and (min-width: 768px) {
+    .landing-node.page--about main.l-row--main {
+      padding: 0;
+      margin-bottom: 60px; } }
 
 .page--student_programs .text-layout__body .content {
   margin-bottom: 60px; }

@@ -24,11 +24,16 @@
 / SITE WIDE TOP BAR
 /-------------------------------*/
 .c-header-bar {
+  height: 60px;
   background: $color-white;
   z-index: 10;
   overflow: hidden;
   position: relative;
   transition: height 0.3s ease 0s;
+
+  @include breakpoint($bp-sm) {
+    height: 100px;
+  }
 }
 
 .c-topbar {
@@ -412,7 +417,7 @@
         line-height: 14px;
       }
 
-      &.active-trail {
+      &.leaf--active-trail {
         &::after {
           content: '';
           display: block;
@@ -968,7 +973,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: auto;
   }
 
-  &.active-trail::after {
+  &.leaf--active-trail::after {
     content: '';
     display: block;
     position: absolute;
@@ -1042,9 +1047,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .c-site-search--btn:focus,
   .search__submit:focus,
   .c-site-search--btn, .search__submit {
-    position: absolute;
-    top: 17px;
-    right: 20px;
+    position: relative;
+    top: -45px;
+    left: 20px;
+    right: auto;
     padding: 0;
     height: 45px; // font-size;
     width: 45px;
@@ -1181,6 +1187,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     .c-site-search--btn, .search__submit {
       position: relative;
       top: -45px;
+      left: 20px;
       right: auto;
       float: right;
     }

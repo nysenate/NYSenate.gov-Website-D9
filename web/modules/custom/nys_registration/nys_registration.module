@@ -11,7 +11,9 @@
  * Replace the core user registration form with our custom multi-step version.
  */
 function nys_registration_entity_type_alter(array &$entity_types): void {
-  if ($user = ($entity_types['user'] ?? NULL)) {
+  $route_match = \Drupal::routeMatch();
+  $current_route_name = $route_match->getRouteName();
+  if ($current_route_name !== 'user.admin_create' && $user = ($entity_types['user'] ?? NULL)) {
     $user->setFormClass('register', 'Drupal\nys_registration\Form\RegisterForm');
   }
 }

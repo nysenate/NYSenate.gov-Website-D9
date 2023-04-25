@@ -138,12 +138,6 @@
         background: transparent;
       }
 
-      tr:hover {
-				td {
-					background: $yellow02 !important;
-				}
-			}
-
       th,
       td {
         width: 14.2%;
@@ -183,10 +177,16 @@
       &.week {
 
         .currentweek {
-          background: $yellow02;
+          background: $yellow03;
 
           .dp_current {
             background: transparent;
+          }
+        }
+
+        tr:hover {
+          td {
+            background: $yellow02 !important;
           }
         }
       }

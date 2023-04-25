@@ -25,8 +25,18 @@
     margin-bottom: 0;
     border-top: 1px solid $grey05;
 
-    &:first-child {
-      border-top: 0;
+    &.content__item {
+      display: flex;
+      flex-direction: column;
+
+      @include breakpoint($bp-sm) {
+        flex-direction: row;
+        column-gap: 20px;
+      }
+
+      &::after {
+        display: none;
+      }
     }
   }
 
@@ -34,20 +44,6 @@
     .c-block-press-release {
       border-top: 0;
     }
-  }
-
-  .c-press-release--header {
-    margin-bottom: 15px;
-    line-height: 1em;
-    z-index: $zi-lowest;
-  }
-
-  .c-press-release--title {
-    margin-bottom: 3px;
-    font-family: $font-serif-bold;
-    font-size: 16px;
-    line-height: 1em;
-    color: $grey10;
   }
 
   .c-press-release--topic,
@@ -63,8 +59,61 @@
     }
   }
 
+  .c-press-release {
+      
+    &--header {
+      margin-bottom: 15px;
+      line-height: 1em;
+  
+      @include breakpoint($bp-sm) {
+          flex: 20%;
+      }
+
+      .c-press-release--title {
+        margin-bottom: 3px !important;
+        font-family: $font-serif-bold;
+        font-size: 16px;
+        line-height: 1em;
+        color: $grey10;
+      }
+    }
+  }
+
   .c-press-release--body {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 50%;
+
+    @include breakpoint($bp-sm) {
+      flex-direction: row;
+    }
+
+    .c-press-release {
+
+      &--descript-wrapper {
+        margin-right: 20px;
+
+      }
+
+      &--descript {
+        font-weight: $font-weight-normal;
+        margin-bottom: 10px;
+        font-size: 18px;
+        line-height: 1.3em;
+        font-family: $font-serif;
+
+        @include breakpoint($bp-sm) {
+          font-size: 24px;
+          line-height: 30px;
+          font-family: $font-serif;
+        }
+    
+        a {
+          color: $grey08;
+        }
+      }
+    }
 
     .author {
       align-items: center;
@@ -103,18 +152,6 @@
     display: flex;
   }
 
-  .c-press-release--descript {
-    font-weight: $font-weight-normal;
-    margin-bottom: 10px;
-    font-size: 18px;
-    line-height: 1.3em;
-    font-family: $font-serif;
-
-    a {
-      color: $grey08;
-    }
-  }
-
   .c-press-release--senator {
     @include font-stack-secondary;
     margin: 10px 0;
@@ -146,8 +183,11 @@
   }
 
   .c-press-release--img {
-    max-width: 100px;
-    margin-left: 20px;
+    width: 100%;
+
+    @include breakpoint($bp-sm) {
+      flex: 30%;
+    }
   }
 
   @include breakpoint($bp-sm) {
@@ -162,14 +202,6 @@
       padding-top: 0px;
     }
 
-    .c-press-release--header {
-      position: absolute;
-      top: 30px;
-      left: 0;
-      width: 180px;
-      padding-right: 15px;
-    }
-
     .c-press-release--title {
       font-size: 16px;
       line-height: 30px;
@@ -179,28 +211,12 @@
       font-size: 23px;
     }
 
-    .c-press-release--body {
-      padding-left: 180px;
-      padding-right: 40px;
-    }
-
-    .c-press-release--descript {
-      font-size: 24px;
-      line-height: 30px;
-      font-family: $font-serif;
-    }
-
     .c-press-release--senator {
       font-size: 14px;
     }
 
     .c-press-release--date {
       font-size: 14px;
-    }
-
-    .c-press-release--img {
-      max-width: 200px;
-      margin-left: 20px;
     }
   }
 }

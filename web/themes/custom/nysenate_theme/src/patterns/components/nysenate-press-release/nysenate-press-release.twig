@@ -16,7 +16,7 @@
     {% endfor %}
   </div>
   <div class="c-press-release--body">
-    <div>
+    <div class="c-press-release--descript-wrapper">
       {% if not article.bill %}
         <h3 class="c-press-release--descript">
           <a href="{{ article.description.url }}">{{ article.description.text }}</a>
@@ -86,10 +86,11 @@
         </div>
       {% endif %}
     </div>
+  </div>
 
+  <div class="c-press-release--img">
     {% if article.img_src %}
-      <!-- if has video thumbnail it would go here -->
-      <div class="c-press-release--img"><img src="{{ article.img_src }}" width="200" height="125" alt=""></div>
+      <img src="{{ article.img_src }}">
     {% endif %}
   </div>
 </article>

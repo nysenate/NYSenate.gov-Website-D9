@@ -170,6 +170,18 @@
   }
 }
 
+.c-news--body .c-block .field__item {
+
+  p {
+    margin-bottom: 1em;
+  }
+   
+  &:last-child p {
+    margin: 0;
+  }
+}
+
+
 .c-news--body-title {
   border-top: 1px solid $grey05;
   padding: 10px 0 20px;
@@ -270,6 +282,23 @@
 
   .view-global-promo-banner {
     padding-top: 0;
+  }
+}
+
+.landing-node.page--about {
+  .c-news--body > .c-block {
+    @include breakpoint($bp-sm) {
+      margin: 0;
+    }
+  }
+
+  main.l-row--main {
+    padding: 0;
+
+    @include breakpoint($bp-sm) {
+      padding: 0;
+      margin-bottom: 60px;
+    }
   }
 }
 

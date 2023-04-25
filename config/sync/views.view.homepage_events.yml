@@ -1964,7 +1964,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '{{ field_date_range_2  | split('' - '')[0] | striptags}}'
+            text: '<span class="date-display-single">{{ field_date_range_2  | split('' - '')[0] | striptags}}</span>'
             make_link: false
             path: ''
             absolute: false
@@ -2029,7 +2029,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '{{ field_date_range_3  | split('' - '')[0] | striptags}}'
+            text: '<span class="date-display-single">{{ field_date_range_3  | split('' - '')[0] | striptags}}</span>'
             make_link: false
             path: ''
             absolute: false

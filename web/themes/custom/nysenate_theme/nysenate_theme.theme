@@ -770,7 +770,7 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
   if (!empty($results)) {
     foreach ($results as $node) {
       $node = $node->_entity;
-      if ($node instanceof NodeInterface && !empty($node)) {
+      if ($node instanceof NodeInterface) {
         $variables['event_name'] = $node->getTitle();
         if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
           $media = !empty($node->get('field_image_main')->target_id) ? $media_storage->load($node->get('field_image_main')->target_id) : NULL;

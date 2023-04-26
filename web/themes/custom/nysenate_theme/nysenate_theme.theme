@@ -2011,8 +2011,10 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     if ($current_user->hasField('field_senator_inbox_access') && !$current_user->get('field_senator_inbox_access')->isEmpty()) {
       foreach ($current_user->field_senator_inbox_access as $senator_inbox_access) {
         $senator = $senator_inbox_access->entity;
-        $senator_message_form_ids[] = 'views_form_private_message_inbox_inbox_' . $senator->field_user_account->target_id;
-        $senator_sent_form_ids[] = 'views_form_private_message_inbox_sent_' . $senator->field_user_account->target_id;
+        if ($senator) {
+          $senator_message_form_ids[] = 'views_form_private_message_inbox_inbox_' . $senator->field_user_account->target_id;
+          $senator_sent_form_ids[] = 'views_form_private_message_inbox_sent_' . $senator->field_user_account->target_id;
+        }
       }
     }
 
@@ -4355,9 +4357,19 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
 
   if ($view->id() == 'constituent_petitions_and_questionnaires' && $view->current_display == 'constituent_questionnaires_submitted') {
     $results = $view->result;
+    $unique_node_ids = [];
     foreach ($results as $index => $row) {
       $node = $row->_entity;
       $nid = $row->nid ?? NULL;
+
+      // Remove duplicate node.
+      if (!in_array($nid, $unique_node_ids)) {
+        $unique_node_ids[] = $nid;
+      }
+      else {
+        unset($view->result[$index]);
+        continue;
+      }
 
       if (\Drupal::currentUser()->id() && isset($node->webform[0]->target_id)) {
         $result = \Drupal::database()
@@ -4473,6 +4485,7 @@ function nysenate_theme_preprocess_form_element(&$variables) {
  * Implements hook_preprocess_page().
  */
 function nysenate_theme_preprocess_page(&$variables) {
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
   $menu_tree = \Drupal::menuTree();
   // Build the typical default set of menu tree parameters.
   $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('socials');
@@ -4520,8 +4533,7 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
-  $user = \Drupal::entityTypeManager()->getStorage('user')
-    ->load(\Drupal::currentUser()->id());
+  $user = $user_storage->load(\Drupal::currentUser()->id());
   $user_link = $user->toUrl()->toString();
   $user_parts = explode('/', $user_link);
   $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
@@ -4562,6 +4574,94 @@ function nysenate_theme_preprocess_page(&$variables) {
       ],
     ],
   ];
+
+  $current_path = \Drupal::request()->getRequestUri();
+  $arr_path = explode('/', $current_path);
+
+  if ($arr_path && is_array($arr_path)) {
+    $display_name = 'My';
+
+    if ($arr_path[1] == 'dashboard') {
+      $variables['is_dashboard'] = TRUE;
+    }
+    elseif ($arr_path[1] == 'users') {
+      $current_path = \Drupal::service('path.current')->getPath();
+      $args = explode('/', $current_path);
+      // Get the Dashboard user.
+      if (is_numeric($args[2])) {
+        $user = $user_storage->load($args[2]);
+      }
+      else {
+        $path = \Drupal::service('path_alias.manager')->getPathByAlias('/users/' . $args[2]);
+        $path_args = explode('/', $path);
+        $user = $user_storage->load($path_args[2]);
+      }
+
+      if (\Drupal::currentUser()->id() != $user->id() && isset($user->name->value)) {
+        $variables['is_senator_dashboard'] = TRUE;
+        $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+          ->loadByProperties([
+            'field_user_account' => $user->id(),
+          ]);
+        $senator = reset($senator);
+
+        $term_path = '/taxonomy/term/' . $senator->id();
+      }
+    }
+    elseif ($arr_path[1] == 'taxonomy' && isset($arr_path[4])) {
+      $variables['is_senator_dashboard'] = TRUE;
+      $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+        ->load($arr_path[3]);
+
+      $term_path = '/taxonomy/term/' . $arr_path[3];
+    }
+
+    if (isset($variables['is_senator_dashboard']) && $variables['is_senator_dashboard']
+      && isset($senator) && isset($term_path)) {
+      $display_name = $senator->name->value . "'s";
+      $senator_account = $user_storage->load($senator->field_user_account->target_id);
+      $senator_link = $senator_account->toUrl()->toString();
+      $senator_parts = explode('/', $senator_link);
+      $senator_name = $senator_parts[2] ?? $senator_account->id();
+
+      $variables['sidebar'] = [
+        'upper_links' => [
+          [
+            'text' => 'Overview',
+            'url' => $term_path . '/overview',
+          ],
+        ],
+        'links' => [
+          [
+            'text' => 'Inbox',
+            'url' => '/users/' . $senator_name . '/dashboard/inbox',
+          ],
+          [
+            'text' => 'Constituents',
+            'url' => $term_path . '/constituents',
+          ],
+          [
+            'text' => 'Bills',
+            'url' => $term_path . '/bills',
+          ],
+          [
+            'text' => 'Issues',
+            'url' => $term_path . '/issues',
+          ],
+          [
+            'text' => 'Petitions',
+            'url' => $term_path . '/petitions',
+          ],
+          [
+            'text' => 'Questionnaires',
+            'url' => $term_path . '/questionnaires',
+          ],
+        ],
+      ];
+    }
+
+    $variables['dashboard_display_name'] = $display_name;
+  }
 
   // Variables for logged-in user's senator,
   // link and headshot for my senator in header.

@@ -31,7 +31,9 @@
       <ul class="c-senator--info">
         <li>Your Senator</li>
         <li>{{ senator.name }}</li>
-        <li>{{ senator.party }}</li>
+        {% for key, value in senator.party %}
+          <li>{{ value }}</li>
+        {% endfor %}
         <li>
           NY Senate District
           {{ district_number }}

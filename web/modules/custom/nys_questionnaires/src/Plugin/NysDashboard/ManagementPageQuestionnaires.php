@@ -5,6 +5,7 @@ namespace Drupal\nys_questionnaires\Plugin\NysDashboard;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 use Drupal\nys_senators\ManagementPageBase;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -67,7 +68,7 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
 
     // Join the submissions table.  LEFT join because there may not
     // be any submissions.
-    $query->leftJoin('webform_submission', 'ws', 'ws.webform_id=nw.webform_target_id');
+    $query->leftJoin('webform_submission', 'ws', 'ws.webform_id=nw.webform_target_id AND ws.entity_id=nw.entity_id');
 
     // Join for the owning senator's district.
     // ttfs.entity_id = tid of the district to which $senator is assigned.
@@ -144,6 +145,10 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
     // Join the submissions table.
     $query->join('webform_submission', 'ws', 'ws.webform_id=nw.webform_target_id');
 
+    // Join for the owning senator's name.
+    // ttfd.name = the name of the senator.
+    $query->join('taxonomy_term_field_data', 'ttfd', 'ttfd.tid=smr.field_senator_multiref_target_id');
+
     // Join for the owning senator's shortname.
     // fsn.field_senator_name_family = the last name of the node owner.
     $query->join('taxonomy_term__field_senator_name', 'fsn', 'fsn.entity_id=smr.field_senator_multiref_target_id');
@@ -163,7 +168,9 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
     $query
       ->fields('n', ['nid', 'title'])
       ->fields('ws', ['webform_id'])
+      ->fields('ws', ['completed'])
       ->fields('fsn', ['field_senator_name_family'])
+      ->fields('ttfd', ['name'])
       ->condition('n.type', 'webform')
       ->condition('smr.field_senator_multiref_target_id', $senator->id(), '<>')
       ->groupBy('n.nid')
@@ -192,10 +199,46 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
     foreach ($rows as $row) {
       $url = Url::fromRoute('entity.webform.canonical', ['webform' => $row['nid']]);
       $link = Link::fromTextAndUrl($row['title'], $url)->toString();
+      $node = Node::load($row['nid']);
+      $url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+
+      $issues = '';
+      $tids = [];
+      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+        $node->field_issues->entity;
+        foreach ($node->field_issues as $key => $value) {
+          $term = $value->entity;
+          $issue_link = Link::fromTextAndUrl($term->getName(), $term->toUrl())->toString();
+
+          if ($key == count($node->field_issues) - 1) {
+            $issues .= $issue_link;
+          }
+          else {
+            $issues .= $issue_link . ', ';
+          }
+
+          $tids[] = '&f[' . ($key + 1) . ']=im_field_issues%3A' . $term->id();
+        }
+      }
+
+      $author = '';
+      if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+        /** @var \Drupal\taxonomy\Entity\Term $senator */
+        $senator = $node->field_senator_multiref->entity;
+        if ($senator) {
+          $author = Link::fromTextAndUrl($senator->getName(), $senator->toUrl())->toString();
+        }
+      }
+
       $ret[] = [
         'data' => [
           [
-            'data' => new FormattableMarkup($link . '<br />(' . $row['field_senator_name_family'] . ')', []),
+            'data' => new FormattableMarkup(
+              '<h3 class="entry-title">' . $link . '</h3>
+              <div class="pet-type">' . $issues . '</div>
+              <div class="author"><span>By: ' . $author . '</span></div>',
+              []
+            ),
             'class' => 'questionnaire-link',
           ],
           ['data' => $row['in_district'], 'class' => 'questionnaire-sub-count'],

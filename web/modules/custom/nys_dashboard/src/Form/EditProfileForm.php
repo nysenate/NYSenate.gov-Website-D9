@@ -90,6 +90,91 @@ class EditProfileForm extends ProfileForm {
       $form[$name]['#access'] = FALSE;
     }
 
+    $form['dashboard_profile_edit'] = [
+      // Main form attributes.
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'dashboard-profile-edit',
+        ],
+      ],
+
+      'form_wrapper' => [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            'form-wrapper',
+          ],
+        ],
+
+        'left' => [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => [
+              'left',
+            ],
+          ],
+          'full_name' => [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => [
+                'name',
+              ],
+            ],
+            'field_first_name' => $form['field_first_name'],
+            'field_last_name' => $form['field_last_name'],
+          ],
+          'name' => $form['account']['name'],
+          'mail' => $form['account']['mail'],
+          'field_address' => $form['field_address'],
+        ],
+
+        'center' => [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => [
+              'center',
+            ],
+          ],
+          'field_profile_picture' => $form['field_profile_picture'],
+        ],
+
+        'right' => [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => [
+              'right',
+            ],
+          ],
+          'field_dateofbirth' => $form['field_dateofbirth'],
+          'field_gender_user' => $form['field_gender_user'],
+          'field_user_receive_emails' => $form['field_user_receive_emails'],
+        ],
+      ],
+      '#attached' => [
+        'library' => [
+          'nysenate_theme/dashboard-profile-edit',
+        ],
+      ],
+    ];
+
+    // Hide these fields.
+    $form['account']['mail']['#type'] = 'hidden';
+    $form['account']['name']['#type'] = 'hidden';
+
+    $hidden = [
+      'field_first_name',
+      'field_last_name',
+      'field_address',
+      'field_profile_picture',
+      'field_dateofbirth',
+      'field_gender_user',
+      'field_user_receive_emails',
+    ];
+    foreach ($hidden as $name) {
+      $form[$name]['#type'] = 'hidden';
+    }
+
     return $form;
   }
 

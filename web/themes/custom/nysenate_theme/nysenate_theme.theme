@@ -2776,9 +2776,17 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$var
       return $item['value'];
     }, $party));
 
+    $headshot_id = $term->field_member_headshot->target_id;
+    $headshot = \Drupal::entityTypeManager()->getStorage('media')
+      ->load($headshot_id);
+    $variables['senator_image'] = \Drupal::entityTypeManager()
+      ->getViewBuilder('media')
+      ->view($headshot, '160x160');
+
+    $variables['current_duties'] = $term->field_current_duties->getValue();
+    $variables['link'] = $term->toUrl()->toString();
     $variables['party'] = $parties;
     $variables['district'] = (int) get_senator_district($term->id());
-    $variables['active_senator'] = (bool) $term->get('field_active_senator')->value;
   }
 }
 

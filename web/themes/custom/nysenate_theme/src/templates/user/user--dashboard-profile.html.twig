@@ -16,43 +16,39 @@
  * @see template_preprocess_user()
  */
 #}
-<article{{ attributes.addClass('profile', 'container') }}>
+<div class="c-block c-container c-container--dash-user-card">
   <div class="c-user--header">
-    {% if image_src %}
-	    <img src="{{ image_src }}" width="200" height="125" alt="">
-	  {% else %}
-      <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}" alt="Default avatar"/>
-	  {% endif %}
-	  <div class="dash-user-info">
-      <h2 class="c-container--title">
-        {{ name }}
-      </h2>
-	  </div>
+    <h2 class="c-container--title">
+      {{ name }}
+    </h2>
   </div>
-  <div class="c-container--body">
-    <div class="c-dash-user-addr">
-      <p class="address" translate="no">
-        {% if address.address_line1 %}
-          <span class="address-line1">{{ address.address_line1 }}</span><br>
-	      {% endif %}
-        {% if address.locality %}
-          <span class="locality">{{ address.locality }}</span>,&nbsp;
-	      {% endif %}
-        {% if address.administrative_area %}
-          <span class="administrative-area">{{ address.administrative_area }}</span>&nbsp;
-	      {% endif %}
-        {% if address.postal_code %}
-          <span class="postal-code">{{ address.postal_code }}</span>
-	      {% endif %}
-      </p>
+  <div class="dash-user-info">
+    <div class="dash-user-img">
+      {% if image_src %}
+        <img src="{{ image_src }}" width="200" height="125" alt="avatar">
+      {% else %}
+        <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}" alt="Default avatar"/>
+      {% endif %}
     </div>
-    <div class="c-container--email vcard">
-      {{ email }}
-    </div>
-    {% if edit_url %}
-      <div class="c-dash-user-action-links">
-        <a href="{{ edit_url }}" class="c-dash-edit-profile icon-before__petition">Edit</a>
+    <div class="c-container--body">
+      <div class="c-dash-user-addr">
+        <div class="location vcard" itemscope="" itemtype="http://schema.org/PostalAddress">
+          <div class="adr">
+            <div class="street-address">
+              <span itemprop="streetAddress">{{ address.address_line1 }}</span>
+            </div>
+            <span class="locality" itemprop="addressLocality">{{ address.locality }},</span>
+            <span class="region" itemprop="addressRegion">{{ address.administrative_area }}</span>
+            <span class="postal-code" itemprop="postalCode">{{ address.postal_code }}</span>
+          </div>
+        </div>
       </div>
-	  {% endif %}
+      <div class="c-container--email vcard">
+        <a href="mailto:{{ email }}">{{ email }}</a>
+      </div>
+    </div>
+    <div class="c-dash-user-action-links">
+      <a href="{{ edit_url }}" class="c-dash-edit-profile icon-before__petition">Edit</a>
+    </div>
   </div>
-</article>
+</div>

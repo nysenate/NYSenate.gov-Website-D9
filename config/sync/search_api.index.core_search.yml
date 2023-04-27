@@ -26,6 +26,7 @@ dependencies:
     - field.storage.node.field_ol_memo
     - field.storage.node.field_ol_print_no
     - field.storage.node.field_ol_program_info
+    - field.storage.node.field_ol_publish_date
     - field.storage.node.field_senator_multiref
     - field.storage.node.field_ol_session
     - field.storage.node.field_short_title
@@ -359,6 +360,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_program_info
+  field_ol_publish_date:
+    label: 'Publish Date'
+    datasource_id: 'entity:node'
+    property_path: field_ol_publish_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_ol_publish_date
   field_ol_session:
     label: 'Session Year'
     datasource_id: 'entity:node'

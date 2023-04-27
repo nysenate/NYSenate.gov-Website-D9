@@ -36,11 +36,17 @@
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
-  {% block content %}
-    {% include '@nysenate_theme/nysenate-happening-now/nysenate-happening-now.twig' with {
-      event_name: event_name,
-      main_image: main_image,
-      livestream_cta: livestream_cta,
-    } only %}
-  {% endblock %}
+  {% if rows %}
+    {% block content %}
+      {% include '@nysenate_theme/nysenate-happening-now/nysenate-happening-now.twig' with {
+        event_name: event_name,
+        main_image: main_image,
+        livestream_cta: livestream_cta,
+      } only %}
+    {% endblock %}
+  {% elseif empty %}
+    <div class="view-empty">
+      {{ empty }}
+    </div>
+  {% endif %}
 </div>

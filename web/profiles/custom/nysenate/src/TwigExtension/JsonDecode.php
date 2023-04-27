@@ -35,7 +35,7 @@ class JsonDecode extends AbstractExtension {
    * {@inheritdoc}
    */
   public static function jsonDecodeString($json_string) {
-    $array = json_decode($json_string);
+    $array = json_decode($json_string, TRUE);
     return $array;
   }
 

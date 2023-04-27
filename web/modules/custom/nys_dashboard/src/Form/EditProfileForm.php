@@ -124,8 +124,8 @@ class EditProfileForm extends ProfileForm {
             'field_first_name' => $form['field_first_name'],
             'field_last_name' => $form['field_last_name'],
           ],
-          'name' => $form['account']['name'],
-          'mail' => $form['account']['mail'],
+          'field_username' => $form['account']['name'],
+          'field_email' => $form['account']['mail'],
           'field_address' => $form['field_address'],
         ],
 
@@ -151,6 +151,7 @@ class EditProfileForm extends ProfileForm {
           'field_user_receive_emails' => $form['field_user_receive_emails'],
         ],
       ],
+      'actions' => $form['actions'],
       '#attached' => [
         'library' => [
           'nysenate_theme/dashboard-profile-edit',
@@ -161,6 +162,7 @@ class EditProfileForm extends ProfileForm {
     // Hide these fields.
     $form['account']['mail']['#type'] = 'hidden';
     $form['account']['name']['#type'] = 'hidden';
+    $form['actions']['submit']['#access'] = FALSE;
 
     $hidden = [
       'field_first_name',
@@ -175,7 +177,37 @@ class EditProfileForm extends ProfileForm {
       $form[$name]['#type'] = 'hidden';
     }
 
+    // Clean-up fields.
+    unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_username']['#description']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_email']['#description']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_address']['widget'][0]['#title']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#title']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#description']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_dateofbirth']['widget']['#title']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#description']);
+    $form['dashboard_profile_edit']['form_wrapper']['right']['field_gender_user']['widget']['#title'] = 'GENDER (OPTIONAL)';
+    $form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#title'] = 'LET MY SENATOR CONTACT ME.';
+
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+
+    // Set mail and name values.
+    if ($values['mail'] != $values['field_email']) {
+      $values['mail'] = $values['field_email'];
+    }
+    if ($values['name'] != $values['field_username']) {
+      $values['name'] = $values['field_username'];
+    }
+
+    $form_state->setValues($values);
+
+    return parent::validateForm($form, $form_state);
   }
 
 }

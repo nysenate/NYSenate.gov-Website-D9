@@ -32,7 +32,9 @@
         <li>Your Senator</li>
         <li>{{ senator.name }}</li>
         {% for key, value in senator.party %}
-          <li>{{ value }}</li>
+          {% if loop.first %}
+            <li>{{ value }}</li>
+          {% endif %}
         {% endfor %}
         <li>
           NY Senate District

@@ -2776,9 +2776,17 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$var
       return $item['value'];
     }, $party));
 
+    $headshot_id = $term->field_member_headshot->target_id;
+    $headshot = \Drupal::entityTypeManager()->getStorage('media')
+      ->load($headshot_id);
+    $variables['senator_image'] = \Drupal::entityTypeManager()
+      ->getViewBuilder('media')
+      ->view($headshot, '160x160');
+
+    $variables['current_duties'] = $term->field_current_duties->getValue();
+    $variables['link'] = $term->toUrl()->toString();
     $variables['party'] = $parties;
     $variables['district'] = (int) get_senator_district($term->id());
-    $variables['active_senator'] = (bool) $term->get('field_active_senator')->value;
   }
 }
 
@@ -4462,6 +4470,18 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_datetime_wrapper().
+ */
+function nysenate_theme_preprocess_datetime_wrapper(&$variables) {
+  if (!empty($variables['element']['#id'])) {
+    // Dashboard Profile Edit design fix.
+    if ($variables['element']['#id'] == 'edit-field-dateofbirth-0-value--2') {
+      unset($variables['title']);
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_form_element().
  */
 function nysenate_theme_preprocess_form_element(&$variables) {
@@ -4476,6 +4496,22 @@ function nysenate_theme_preprocess_form_element(&$variables) {
     if ($variables['element']['#id'] == 'edit-field-address-0-address-address-line2') {
       $variables['label_display'] = 'before';
       $variables['label']['#title'] = t('APT/SUITE/FLOOR (OPTIONAL)');
+      $variables['label']['#title_display'] = 'before';
+    }
+    if ($variables['element']['#id'] == 'edit-field-address-0-address-address-line1--2') {
+      $variables['label']['#title'] = t('STREET');
+    }
+    if ($variables['element']['#id'] == 'edit-field-address-0-address-address-line2--2') {
+      $variables['label_display'] = 'before';
+      $variables['label']['#title'] = t('ADDITIONAL');
+      $variables['label']['#title_display'] = 'before';
+    }
+    if ($variables['element']['#id'] == 'edit-field-address-0-address-administrative-area--2') {
+      $variables['label']['#title'] = t('STATE/PROVINCE');
+    }
+    if ($variables['element']['#id'] == 'edit-field-dateofbirth-0-value-date--2') {
+      $variables['label_display'] = 'before';
+      $variables['label']['#title'] = t('DATE OF BIRTH');
       $variables['label']['#title_display'] = 'before';
     }
   }

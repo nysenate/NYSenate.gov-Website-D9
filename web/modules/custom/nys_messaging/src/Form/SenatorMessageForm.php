@@ -162,6 +162,11 @@ class SenatorMessageForm extends FormBase {
 
     $form = [];
 
+    $form['title'] = [
+      '#markup' => '<h2 class="c-page-header--title">Message Senator</h2>',
+      '#weight' => -15,
+    ];
+
     $form['to'] = [
       '#type' => 'textfield',
       '#title' => $this->t('To'),
@@ -226,6 +231,11 @@ class SenatorMessageForm extends FormBase {
         ];
         break;
 
+      case 'profile':
+        $form['title']['#type'] = 'hidden';
+        $form['to']['#type'] = 'hidden';
+        break;
+
       default:
         break;
     }
@@ -287,10 +297,11 @@ class SenatorMessageForm extends FormBase {
       return;
     }
 
-    $dashboard_link = Url::fromUserInput('/user/%userid/dashboard', ['%userid' => $this->currentUser->id()])->toString();
+    $message_link = Url::fromUserInput('/user/%userid/dashboard', ['%userid' => $this->currentUser->id()])->toString();
+    $dashboard_link = 'dashboard';
     if ($values['recipient_uid'] == 'query') {
       $form_state['redirect'] = [
-        $dashboard_link . '/inbox',
+        $message_link . '/inbox',
         [
           'query' => [],
         ],
@@ -391,6 +402,9 @@ class SenatorMessageForm extends FormBase {
         break;
 
       case 'following_committee': $redirect_url = 'taxonomy/term/' . $values['committee_id'];
+        break;
+
+      case 'profile': $redirect_url = $dashboard_link;
         break;
 
       case 'nys_messaging_senator_message_form':

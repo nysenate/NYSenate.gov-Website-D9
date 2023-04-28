@@ -166,14 +166,36 @@
         onChange: function (view, elements) {
           var _selected = $('.dp_selected').html();
 
-          if (_selected === null) {
+          if (_selected === null || _selected === undefined) {
             _selected = localStorage.getItem('selected');
-
+            $('.dp_current').addClass('dp_selected');
             $('.dp_daypicker td').each(function () {
               if ($(this).html() === _selected) {
-                $(this).addClass('dp_selected');
+                var inputElement = '';
+
+                if (viewType === 'week') {
+                  inputElement = $('.js-form-item-date-min input');
+                }
+                else {
+                  inputElement = $('.form-item-date.js-form-type-textfield input');
+                }
+
+                if (inputElement.val() === '') {
+                  const placeholder = inputElement.attr('placeholder');
+                  const splitDate = placeholder.split('/');
+
+                  inputElement.val(`${splitDate[0]}/${_selected}/${splitDate[2]}`);
+                }
+
+                if (!$(this).hasClass('dp_current')) {
+                  $(this).addClass('dp_selected');
+                }
+
                 $(this).closest('tr').addClass('currentweek');
                 return;
+              }
+              else {
+                $(this).removeClass('dp_selected');
               }
             });
           }

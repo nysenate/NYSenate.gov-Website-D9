@@ -19,6 +19,7 @@ dependencies:
     - node.type.bill
     - node.type.event
     - node.type.honoree
+    - node.type.in_the_news
     - node.type.petition
     - node.type.promotional_banner
     - node.type.resolution
@@ -33,6 +34,7 @@ dependencies:
     - options
     - taxonomy
     - user
+    - views_infinite_scroll
 id: senator_microsite_content
 label: 'Microsite Content'
 module: views
@@ -638,9 +640,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: none
+        type: infinite_scroll
         options:
           offset: 0
+          items_per_page: 2
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'See more news'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: bef
         options:
@@ -872,6 +892,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -3267,9 +3288,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: none
+        type: infinite_scroll
         options:
           offset: 0
+          items_per_page: 2
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'See more news'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: bef
         options:
@@ -3383,6 +3422,9 @@ display:
           operator: in
           value:
             article: article
+            honoree: honoree
+            in_the_news: in_the_news
+            petition: petition
             video: video
           group: 1
           exposed: false
@@ -3538,6 +3580,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

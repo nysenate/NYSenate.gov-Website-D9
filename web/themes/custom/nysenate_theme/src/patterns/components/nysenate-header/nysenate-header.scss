@@ -1046,9 +1046,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .c-site-search--btn:focus,
   .search__submit:focus,
   .c-site-search--btn, .search__submit {
-    position: absolute;
-    top: 17px;
-    right: 20px;
+    position: relative;
+    top: -45px;
+    left: 20px;
+    right: auto;
     padding: 0;
     height: 45px; // font-size;
     width: 45px;
@@ -1185,6 +1186,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     .c-site-search--btn, .search__submit {
       position: relative;
       top: -45px;
+      left: 20px;
       right: auto;
       float: right;
     }

@@ -7,7 +7,11 @@
   </div>
   <div class="nysenate-happening-now__container">
     <div class="item-logo">
-      <img src="https://via.placeholder.com/250">
+      {% if main_image %}
+        {{ main_image }}
+      {% else %}
+        <img src="https://via.placeholder.com/250">
+      {% endif %}
     </div>
     <div class="item-content">
       <h2 class="event-name">{{ event_name }}</h2>

@@ -59,11 +59,15 @@ process:
           plugin: format_date
           from_format: U
           to_format: 'Y-m-d\TH:i:s'
+          from_timezone: UTC
+          to_timezone: UTC
           source: value
         end_value:
           plugin: format_date
           from_format: U
           to_format: 'Y-m-d\TH:i:s'
+          from_timezone: UTC
+          to_timezone: UTC
           source: value2
   field_featured:
     -

@@ -132,8 +132,8 @@
     {% if type != 'senator' %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
-          is_logged: logged_in,
-          actionbar_type
+          is_logged: is_logged,
+          actionbar,
         } only
       %}
     {% endif %}

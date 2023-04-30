@@ -12,11 +12,6 @@
   }
 }
 
-.c-search--body {
-  color: $grey03;
-  padding: 20px 0px 20px 0px;
-  border-top: 1px solid $grey03;
-} 
 
 .c-block {
   &.c-block-press-release {
@@ -75,6 +70,12 @@
         font-size: 16px;
         line-height: 1em;
         color: $grey10;
+
+        @include breakpoint($bp-sm) {
+          &.c-bill-search {
+            font-size: 22px;
+          }
+        }
       }
     }
   }
@@ -205,6 +206,10 @@
     .c-press-release--title {
       font-size: 16px;
       line-height: 30px;
+
+      &.c-bill-search {
+        font-size: 22px;
+      }
     }
 
     .c-bill-search  {
@@ -220,3 +225,14 @@
     }
   }
 }
+
+.c-search--body {
+  color: $grey05;
+  padding: 20px 0px 20px 0px;
+  border-top: 1px solid $grey05;
+
+  .c-block.c-block-press-release {
+    padding: 0;
+    border: 0;
+  }
+} 

@@ -238,6 +238,7 @@ class BillVoteWidgetForm extends FormBase {
       // Construct the new form controls.
       $nys_subscribe_form = [
         'nys_bill_subscribe' => [
+          '#uses_button_tag' => TRUE,
           '#type' => 'button',
           '#attributes' => [
             'class' => ['c-block--btn', 'nys-subscribe-button'],

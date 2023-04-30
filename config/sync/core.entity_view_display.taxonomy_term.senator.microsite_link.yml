@@ -1,9 +1,9 @@
-uuid: 85f9806b-9ab5-46fa-957c-0b5fce264027
+uuid: f3f96044-dbfd-4ba2-9c04-9b56ba86fe46
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.taxonomy_term.agenda_senator_sponsors
+    - core.entity_view_mode.taxonomy_term.microsite_link
     - field.field.taxonomy_term.senator.field_about
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_autoreply_text
@@ -44,20 +44,11 @@ third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-id: taxonomy_term.senator.agenda_senator_sponsors
+id: taxonomy_term.senator.microsite_link
 targetEntityType: taxonomy_term
 bundle: senator
-mode: agenda_senator_sponsors
+mode: microsite_link
 content:
-  field_member_headshot:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: thumbnail
-      link: false
-    third_party_settings: {  }
-    weight: 1
-    region: content
   field_senator_name:
     type: microsite_link
     label: hidden
@@ -88,6 +79,7 @@ hidden:
   field_media_email: true
   field_media_fax: true
   field_media_phone: true
+  field_member_headshot: true
   field_message_notification_email: true
   field_microsite_theme: true
   field_office_contacts: true

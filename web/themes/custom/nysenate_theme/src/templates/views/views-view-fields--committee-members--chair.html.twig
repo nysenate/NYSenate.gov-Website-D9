@@ -38,7 +38,7 @@
   <div class="c-chair--content">
     <div class="c-chair--inner">
       <p class="c-chair-block--position">Committee {{ fields.field_committee_member_role.content|striptags|trim }}</p>
-      <h4 class="c-chair--title">{{ fields.field_senator_name_1.content|raw }}</h4>
+      <h4 class="c-chair--title">{{ fields.field_senator_name_1.content }}</h4>
       <div class="c-party-conf">
         {% if not fields.field_party.content|render|striptags|trim is empty %}
           ({{ fields.field_party.content|render|striptags|trim }})
@@ -47,5 +47,5 @@
       </div>
     </div>
   </div>
-  <a href="{{ fields.field_senator_name.content|striptags|trim }}/message" class="c-block--btn icon-before__mail med-bg">Contact Senator</a>
+  <a href="{{ senator_link }}/message" class="c-block--btn icon-before__mail med-bg">Contact Senator</a>
 </div>

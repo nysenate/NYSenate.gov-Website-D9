@@ -1735,6 +1735,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $bundle = $entity->bundle();
         $type = '';
         $title = '';
+        $senator_link = [];
         if ($entity instanceof NodeInterface) {
           $type = $entity_type_manager->getStorage('node_type')->load($bundle);
           $title = $entity->label();

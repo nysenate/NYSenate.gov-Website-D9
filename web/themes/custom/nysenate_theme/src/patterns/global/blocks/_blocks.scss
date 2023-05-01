@@ -811,6 +811,15 @@ p.c-senate-works-step-description {
     .c-carousel {
       width: 90%;
       margin: 0 auto;
+
+      &.with-icon {
+
+        .c-carousel--item {
+          display: block;
+          height: 216px;
+          border-left: 0;
+        }
+      }
     }
 
     .c-senate-quick-facts__button {
@@ -829,12 +838,6 @@ p.c-senate-works-step-description {
 
       &:not(:first-child) {
         border-left: 1px solid $color-white;
-      }
-
-      &.with-icon {
-        display: block;
-        height: 216px;
-        border-left: 0;
       }
     }
 

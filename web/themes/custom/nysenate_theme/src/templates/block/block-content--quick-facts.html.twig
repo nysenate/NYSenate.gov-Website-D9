@@ -21,5 +21,7 @@
   classes: classes|join(' '),
   title: title,
   facts: facts,
+  columns: content.field_pg_quick_facts_cols.0,
+  hide_icons: content.field_quick_facts_icons ? content.field_quick_facts_icons|field_raw('value') : '',
   modifier: 'with-hover'
 } only %}

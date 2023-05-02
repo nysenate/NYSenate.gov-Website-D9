@@ -1,0 +1,54 @@
+{#
+/**
+ * @file
+ * Theme override to present all user data.
+ *
+ * This template is used when viewing a registered user's page,
+ * e.g., example.com/user/123. 123 being the user's ID.
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.field_example'. Fields attached to a user
+ *   such as 'user_picture' are available as 'content.user_picture'.
+ * - attributes: HTML attributes for the container element.
+ * - user: A Drupal User entity.
+ *
+ * @see template_preprocess_user()
+ */
+#}
+<div class="c-block c-container c-container--dash-user-card">
+  <div class="c-user--header">
+    <h2 class="c-container--title">
+      {{ name }}
+    </h2>
+  </div>
+  <div class="dash-user-info">
+    <div class="dash-user-img">
+      {% if image_src %}
+        <img src="{{ image_src }}" width="200" height="125" alt="avatar">
+      {% else %}
+        <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}" alt="Default avatar"/>
+      {% endif %}
+    </div>
+    <div class="c-container--body">
+      <div class="c-dash-user-addr">
+        <div class="location vcard" itemscope="" itemtype="http://schema.org/PostalAddress">
+          <div class="adr">
+            <div class="street-address">
+              <span itemprop="streetAddress">{{ address.address_line1 }}</span>
+            </div>
+            <span class="locality" itemprop="addressLocality">{{ address.locality }},</span>
+            <span class="region" itemprop="addressRegion">{{ address.administrative_area }}</span>
+            <span class="postal-code" itemprop="postalCode">{{ address.postal_code }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="c-container--email vcard">
+        <a href="mailto:{{ email }}">{{ email }}</a>
+      </div>
+    </div>
+    <div class="c-dash-user-action-links">
+      <a href="{{ edit_url }}" class="c-dash-edit-profile icon-before__petition">Edit</a>
+    </div>
+  </div>
+</div>

@@ -238,6 +238,7 @@ class BillVoteWidgetForm extends FormBase {
       // Construct the new form controls.
       $nys_subscribe_form = [
         'nys_bill_subscribe' => [
+          '#uses_button_tag' => TRUE,
           '#type' => 'button',
           '#attributes' => [
             'class' => ['c-block--btn', 'nys-subscribe-button'],
@@ -278,7 +279,7 @@ class BillVoteWidgetForm extends FormBase {
           '#attributes' => ['class' => ['nys-bill-subscribe']],
           '#id' => 'edit-nys-bill-subscribe-container-' . $nid,
           'nys_bill_subscribe_title' => [
-            '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
+            '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA ⓘ</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
           ],
         ];
         if (!$this->currentUser->isAuthenticated()) {

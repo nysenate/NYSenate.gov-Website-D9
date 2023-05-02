@@ -30,7 +30,7 @@
  */
 #}
 
-<a href="/senators/{{ fields.field_senator_name.content|lower|replace({'a. ':"",' ':"-",'.':"",'ú':"u",'\'':""})|striptags }}">
+<a href="{{ senator_link }}">
   <div class="c-senator-block">
     <div class="nys-senator--thumb">
       {{ fields.field_member_headshot_1.content|render|striptags('<img>')|raw }}

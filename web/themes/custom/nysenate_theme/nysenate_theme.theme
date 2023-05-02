@@ -4278,6 +4278,7 @@ function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bi
     'sponsor_text' => 'SPONSORS',
     'poll_text' => $poll_text,
     'action' => \Drupal::service('path.current')->getPath(),
+    // @phpstan-ignore-next-line
     'vote_widget' => \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings),
   ];
 

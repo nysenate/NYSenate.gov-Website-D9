@@ -23,7 +23,7 @@ dependencies:
     - field.field.user.user.field_user_receive_emails
     - field.field.user.user.field_voting_auto_subscribe
   module:
-    - address_autocomplete
+    - address
     - datetime
     - media_library
     - path
@@ -47,7 +47,7 @@ content:
       display_label: true
     third_party_settings: {  }
   field_address:
-    type: address_autocomplete
+    type: address_default
     weight: 5
     region: content
     settings: {  }

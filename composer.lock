@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "619f66946691b2cf97656b96c4e11de5",
+    "content-hash": "1bd01fc2db6c86ec44098cac71bb8c70",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8206,23 +8206,17 @@
         },
         {
             "name": "drupal/private_message",
-            "version": "3.0.0-beta2",
+            "version": "dev-3.0.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/private_message.git",
-                "reference": "3.0.0-beta2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/private_message-3.0.0-beta2.zip",
-                "reference": "3.0.0-beta2",
-                "shasum": "218e3d1e1eaba4103fbf16136e86b009ac512a91"
+                "reference": "19f7dc87c189e93eadeaafa8a2cb790b3e635cab"
             },
             "require": {
-                "drupal/core": "^8.8.0 || ^9.0",
+                "drupal/core": "^8.8.0 || ^9.0 || ^10.0",
                 "drupal/message": "^1.0",
                 "drupal/message_notify": "^1.0",
-                "php": ">=7.1"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "drupal/message_notify": "*"
@@ -8232,12 +8226,15 @@
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-3.0.x": "3.0.x-dev"
+                },
                 "drupal": {
-                    "version": "3.0.0-beta2",
-                    "datestamp": "1645433297",
+                    "version": "3.0.0-beta2+13-dev",
+                    "datestamp": "1682681465",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 },
                 "drush": {
@@ -24871,7 +24868,7 @@
         "drupal/migrate_devel": 15,
         "drupal/name": 5,
         "drupal/node_export": 15,
-        "drupal/private_message": 10,
+        "drupal/private_message": 20,
         "drupal/privatemsg": 15,
         "drupal/site_verify": 20,
         "drupal/twitter_block": 15,

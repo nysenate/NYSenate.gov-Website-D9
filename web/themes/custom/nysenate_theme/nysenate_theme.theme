@@ -2669,6 +2669,17 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
 /**
  * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
+function nysenate_theme_preprocess_taxonomy_term__senator__full(&$variables) {
+  $term = $variables['term'];
+  $variables['district'] = get_senator_district($term->id());
+  $senator_link = \Drupal::service('nys_senators.microsites')
+    ->getMicrosite($term);
+  $variables['senator_link'] = $senator_link;
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
 function nysenate_theme_preprocess_taxonomy_term__senator__agenda_senator_sponsors(&$variables) {
   $term = $variables['term'];
   $variables['district'] = get_senator_district($term->id());
@@ -2696,6 +2707,24 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($term);
   $variables['senator_link'] = $senator_link;
+}
+
+/**
+ * Implements hook_theme_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__senator__dashboard(&$variables) {
+  $term = $variables['term'];
+  $district = get_senator_district($term->id());
+  $party = $term->field_party->getValue();
+  $parties = implode(', ', array_map(function ($item) {
+    return $item['value'];
+  }, $party));
+  $variables['party'] = t('@party <span>@district Senate District</span>',
+    [
+      '@party' => $parties ? '(' . $parties . ')' : '',
+      '@district' => $district,
+    ]
+  );
 }
 
 /**

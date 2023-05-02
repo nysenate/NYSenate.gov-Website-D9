@@ -23,39 +23,35 @@
  * @see template_preprocess_taxonomy_term()
  */
 #}
-{%
-  set classes = [
-    'taxonomy-term',
-    'vocabulary-' ~ term.bundle|clean_class,
-  ]
-%}
-{% if not active_senator %}
-  {% set senator_copy = 'Your district’s state senate seat is currently vacant. For constituent services, please visit:' %}
-{% elseif no_district %}
-  {% set senator_copy = 'Your address does not match a NY State Senate District' %}
-{% endif %}
-
 <div class="c-block c-container c-container--dash-senator-card">
   <div class="c-user--header">
-    {% if content.field_member_headshot %}
-      {{ content.field_member_headshot }}
-	  {% else %}
-      <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}" alt="Default avatar"/>
-	  {% endif %}
-    <div class="dash-senator-info">
-      {% if active_senator %}
-        <div class="c-container--your-s">My Senator</div>
-        <h2 class="c-container--title">{{ content.field_senator_name }}</h2>
-        <span class="nys-senator--party">
-          {{ party }}
-        </span>
-
-        <p>{{ content.field_current_duties }}</p>
-        <h3 class="c-container--district">{{ 'District ' ~ district }}</h3>
-	    {% else %}
-        {% set inactive_class = 'inactive' %}
-        <div class="c-container--your-s">{{ senator_copy }}<a href="/district/{{ district }}"><br>NY State District {{ district }} Page</a></div>
-	    {% endif %}
+    <div class="c-container--title c-container--your-senator">
+      My Senator
+      <div class="c-container--body">
+        <div class="c-dash-senator-action-links">
+          <button class="c-dash-msg-senator icon-before__contact">
+            Message
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="dash-senator-info">
+    <div class="dash-senator-img">
+      <a href="{{ link }}">{{ senator_image }}</a>
+    </div>
+    <a href="{{ link }}">
+      <h2 class="c-container--title">
+        {{ content.field_senator_name }}
+      </h2>
+      <p>
+        {{ field_current_duties }}
+        <span class="duties">{{ '(' ~ party ~ ')' }}</span>
+      </p>
+      <h3 class="c-container--district">
+        District
+        {{ district }}
+      </h3>
+    </a>
   </div>
 </div>

@@ -160,6 +160,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
       catch (ProviderException $e) {
         // Skip invalid providers, but log the exception message to help with
         // debugging.
+        // https://www.drupal.org/project/drupal/issues/2972846
         $this->logger->warning($e->getMessage());
       }
     }

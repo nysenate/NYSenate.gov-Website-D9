@@ -23,6 +23,6 @@ class PrivateMessageThreadMemberConstraint extends Constraint {
    *
    * @var string
    */
-  public $userPrivateMessagePermissionError = 'User %user not found';
+  public string $userPrivateMessagePermissionError = 'User %user not found';
 
 }

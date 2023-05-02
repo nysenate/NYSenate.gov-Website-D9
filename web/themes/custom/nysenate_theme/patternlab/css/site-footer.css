@@ -1520,7 +1520,30 @@ strong {
     align-items: center;
     color: #ababab;
     grid-row: 1/span 2;
-    grid-column: 2/span 1; } }
+    grid-column: 2/span 1; }
+  .nys-registration-register-form .button-group--step-two {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    padding-bottom: 60px; } }
+  @media screen and (min-width: 768px) and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two {
+      padding-bottom: 80px; } }
+
+@media screen and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two .button {
+      display: flex;
+      align-items: center;
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      padding: 0 30px;
+      height: 45px; } }
+    @media screen and (min-width: 768px) and (min-width: 768px) {
+      .nys-registration-register-form .button-group--step-two .button {
+        padding: 0 40px;
+        height: 55px; } }
 
 .site-footer {
   color: #fff;

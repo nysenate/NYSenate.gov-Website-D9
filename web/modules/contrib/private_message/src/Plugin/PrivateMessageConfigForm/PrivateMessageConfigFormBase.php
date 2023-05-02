@@ -17,7 +17,7 @@ abstract class PrivateMessageConfigFormBase extends PluginBase implements Privat
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * Constructs a PrivateMessageForm object.

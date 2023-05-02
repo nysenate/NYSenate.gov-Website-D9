@@ -21,7 +21,7 @@ class PrivateMessageUnreadCountTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'private_message'];
+  protected static $modules = ['block', 'private_message'];
 
   /**
    * The first User used for the test.
@@ -40,7 +40,7 @@ class PrivateMessageUnreadCountTest extends BrowserTestBase {
   /**
    * SetUp the test class.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->userA = $this->drupalCreateUser([
       'use private messaging system',
@@ -61,12 +61,12 @@ class PrivateMessageUnreadCountTest extends BrowserTestBase {
     $this->drupalLogin($this->userA);
 
     $this->drupalGet('/private-message/create');
-    $this->assertResponse(200);
-    $this->drupalPostForm(NULL, [
+    $this->assertSession()->statusCodeEquals(200);
+    $this->submitForm([
       'members[0][target_id]' => $this->userB->getDisplayName(),
       'message[0][value]' => $this->getRandomGenerator()->sentences(5),
     ], 'Send');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // I should not see a notification for my own message.
     $this->assertSession()->elementTextContains('css', 'a.private-message-page-link', 0);
     // When going to a different page, I should still not see a notification for
@@ -80,14 +80,14 @@ class PrivateMessageUnreadCountTest extends BrowserTestBase {
 
     // We visit the thread directly.
     $this->drupalGet('private-messages/1');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementTextContains('css', 'a.private-message-page-link', 0);
 
     // We are not already looking at the thread.
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'message[0][value]' => $this->getRandomGenerator()->sentences(5),
     ], 'Send');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // I should not see a notification for my own message.
     $this->assertSession()->elementTextContains('css', 'a.private-message-page-link', 0);
 

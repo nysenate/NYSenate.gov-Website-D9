@@ -6,7 +6,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -25,83 +24,54 @@ class PrivateMessageThreadViewBuilder extends EntityViewBuilder {
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
-  /**
-   * The class resolver service.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The form builder service.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * Constructs a PrivateMessageThreadViewBuilder object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager service.
-   * @param \Drupal\Core\Theme\Registry $themeRegistry
+   * @param \Drupal\Core\Theme\Registry $theme_registry
    *   The theme register.
-   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
-   *   The current user.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
    */
   public function __construct(
-    EntityTypeInterface $entityType,
-    EntityRepositoryInterface $entityRepository,
-    LanguageManagerInterface $languageManager,
-    Registry $themeRegistry,
-    AccountProxyInterface $currentUser,
-    EntityDisplayRepositoryInterface $entity_display_repository
+    EntityTypeInterface $entity_type,
+    EntityRepositoryInterface $entity_repository,
+    LanguageManagerInterface $language_manager,
+    Registry $theme_registry,
+    EntityDisplayRepositoryInterface $entity_display_repository,
+    AccountProxyInterface $current_user
   ) {
-    parent::__construct($entityType, $entityRepository, $languageManager, $themeRegistry, $entity_display_repository);
-
-    $this->currentUser = $currentUser;
+    parent::__construct($entity_type, $entity_repository, $language_manager, $theme_registry, $entity_display_repository);
+    $this->currentUser = $current_user;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entityType) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type): PrivateMessageThreadViewBuilder {
     return new static(
-      $entityType,
+      $entity_type,
       $container->get('entity.repository'),
       $container->get('language_manager'),
       $container->get('theme.registry'),
-      $container->get('current_user'),
-      $container->get('entity_display.repository')
+      $container->get('entity_display.repository'),
+      $container->get('current_user')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL): array {
     $build = parent::view($entity, $view_mode, $langcode);
 
     $classes = ['private-message-thread'];

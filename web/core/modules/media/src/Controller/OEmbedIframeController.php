@@ -212,9 +212,17 @@ class OEmbedIframeController implements ContainerInjectionInterface {
       // The oEmbed system makes heavy use of exception wrapping, so log the
       // entire exception chain to help with troubleshooting.
       do {
-        // @todo Log additional information from ResourceException, to help with
-        // debugging, in https://www.drupal.org/project/drupal/issues/2972846.
-        $this->logger->error($e->getMessage());
+        $message = $e->getMessage();
+        $context = [];
+        if ($e->getUrl()) {
+          $message .= ' URL: {url}.';
+          $context['url'] = $e->getUrl();
+        }
+        if ($e->getData()) {
+          $message .= ' Data:<br><pre>{data}</pre>';
+          $context['data'] = var_export($e->getData(), TRUE);
+        }
+        $this->logger->error($message, $context);
         $e = $e->getPrevious();
       } while ($e);
     }

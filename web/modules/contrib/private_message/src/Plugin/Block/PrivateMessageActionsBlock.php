@@ -2,10 +2,13 @@
 
 namespace Drupal\private_message\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,14 +31,14 @@ class PrivateMessageActionsBlock extends BlockBase implements BlockPluginInterfa
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * Configuration Factory.
    *
    * @var \Drupal\Core\Config\ConfigFactory
    */
-  protected $configFactory;
+  protected ConfigFactory $configFactory;
 
   /**
    * Constructs a PrivateMessageForm object.
@@ -67,7 +70,7 @@ class PrivateMessageActionsBlock extends BlockBase implements BlockPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): PrivateMessageActionsBlock {
     return new static(
       $configuration,
       $plugin_id,
@@ -80,24 +83,30 @@ class PrivateMessageActionsBlock extends BlockBase implements BlockPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function build() {
-    if ($this->currentUser->hasPermission('use private messaging system')) {
-      $config = $config = $this->configFactory->get('private_message.settings');
-      $url = Url::fromRoute('private_message.private_message_create');
-      $block['links'] = [
-        '#type' => 'link',
-        '#title' => $config->get("create_message_label"),
-        '#url' => $url,
-      ];
+  protected function blockAccess(AccountInterface $account): AccessResultInterface {
+    return AccessResult::allowedIf($account->hasPermission('use private messaging system'))
+      ->cachePerPermissions();
+  }
 
-      // Add the default classes, as these are not added when the block output
-      // is overridden with a template.
-      $block['#attributes']['class'][] = 'block';
-      $block['#attributes']['class'][] = 'block-private-message';
-      $block['#attributes']['class'][] = 'block-private-message-actions-block';
+  /**
+   * {@inheritdoc}
+   */
+  public function build(): array {
+    $config = $this->configFactory->get('private_message.settings');
+    $url = Url::fromRoute('private_message.private_message_create');
+    $block['links'] = [
+      '#type' => 'link',
+      '#title' => $config->get("create_message_label"),
+      '#url' => $url,
+    ];
 
-      return $block;
-    }
+    // Add the default classes, as these are not added when the block output
+    // is overridden with a template.
+    $block['#attributes']['class'][] = 'block';
+    $block['#attributes']['class'][] = 'block-private-message';
+    $block['#attributes']['class'][] = 'block-private-message-actions-block';
+
+    return $block;
   }
 
 }

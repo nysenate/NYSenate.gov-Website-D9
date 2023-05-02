@@ -1520,18 +1520,36 @@ strong {
     align-items: center;
     color: #ababab;
     grid-row: 1/span 2;
-    grid-column: 2/span 1; } }
+    grid-column: 2/span 1; }
+  .nys-registration-register-form .button-group--step-two {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    padding-bottom: 60px; } }
+  @media screen and (min-width: 768px) and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two {
+      padding-bottom: 80px; } }
+
+@media screen and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two .button {
+      display: flex;
+      align-items: center;
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      padding: 0 30px;
+      height: 45px; } }
+    @media screen and (min-width: 768px) and (min-width: 768px) {
+      .nys-registration-register-form .button-group--step-two .button {
+        padding: 0 40px;
+        height: 55px; } }
 
 /*----------------------------------------
 / PRESS RELEASES
 /----------------------------------------*/
 .page-node-type-meeting .c-block.c-block-press-release {
   border-top: 0; }
-
-.c-search--body {
-  color: #666666;
-  padding: 20px 0px 20px 0px;
-  border-top: 1px solid #666666; }
 
 .c-block.c-block-press-release {
   padding-top: 20px;
@@ -1575,6 +1593,9 @@ strong {
     font-size: 16px;
     line-height: 1em;
     color: #222222; }
+    @media screen and (min-width: 768px) {
+      .c-block .c-press-release--header .c-press-release--title.c-bill-search {
+        font-size: 22px; } }
 
 .c-block .c-press-release--body {
   position: relative;
@@ -1664,9 +1685,19 @@ strong {
   .c-block .c-press-release--title {
     font-size: 16px;
     line-height: 30px; }
+    .c-block .c-press-release--title.c-bill-search {
+      font-size: 22px; }
   .c-block .c-bill-search {
     font-size: 23px; }
   .c-block .c-press-release--senator {
     font-size: 14px; }
   .c-block .c-press-release--date {
     font-size: 14px; } }
+
+.c-search--body {
+  color: #aaaaaa;
+  padding: 20px 0px 20px 0px;
+  border-top: 1px solid #aaaaaa; }
+  .c-search--body .c-block.c-block-press-release {
+    padding: 0;
+    border: 0; }

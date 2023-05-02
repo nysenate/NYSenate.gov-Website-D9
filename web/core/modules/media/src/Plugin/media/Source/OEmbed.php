@@ -247,7 +247,13 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $resource = $this->resourceFetcher->fetchResource($resource_url);
     }
     catch (ResourceException $e) {
-      $this->messenger->addError($e->getMessage());
+      if ($media->access('update')) {
+        $this->messenger->addError($e->getMessage() . ' Media ID: ' . $media->id());
+      }
+      $this->logger->error(
+        $e->getMessage() . ' Resource URL: %resource_url | Media ID: %media_id',
+        ['%resource_url' => $resource_url, '%media_id' => $media->id()]
+      );
       return NULL;
     }
 
@@ -447,7 +453,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       }
     }
     catch (TransferException $e) {
-      $this->logger->warning('Failed to download remote thumbnail file due to "%error".', [
+      $this->logger->warning('Failed to download remote thumbnail from {url} due to "%error".', [
+        'url' => $remote_thumbnail_url,
         '%error' => $e->getMessage(),
       ]);
     }

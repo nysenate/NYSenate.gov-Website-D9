@@ -60,10 +60,10 @@ interface PrivateMessageThreadInterface extends ContentEntityInterface {
   /**
    * Add a private message to the list of messages in this thread.
    *
-   * @param Drupal\private_message\Entity\PrivateMessageInterface $privateMessage
+   * @param \Drupal\private_message\Entity\PrivateMessageInterface $privateMessage
    *   The private message to be added to the thread.
    *
-   * @return Drupal\private_message\Entity\PrivateMessageThread
+   * @return \Drupal\private_message\Entity\PrivateMessageThread
    *   The private message thread.
    */
   public function addMessage(PrivateMessageInterface $privateMessage);

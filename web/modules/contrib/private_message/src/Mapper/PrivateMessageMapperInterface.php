@@ -140,9 +140,25 @@ interface PrivateMessageMapperInterface {
   public function getUnreadThreadCount($uid, $lastCheckTimestamp);
 
   /**
+   * Get the current user's unread message count.
+   *
+   * Retrieves the number of the current user's messages that have been updated
+   * since the last time this number was checked.
+   *
+   * @param int $uid
+   *   The user ID of the user whose count should be retrieved.
+   * @param int $lastCheckTimestamp
+   *   A UNIX timestamp indicating the time after which to check.
+   *
+   * @return int
+   *   The number of threads updated since the given timestamp
+   */
+  public function getUnreadMessageCount($uid, $lastCheckTimestamp);
+
+  /**
    * Load the thread id of the thread that a private message belongs to.
    *
-   * @param Drupal\private_message\Entity\PrivateMessageInterface $privateMessage
+   * @param \Drupal\private_message\Entity\PrivateMessageInterface $privateMessage
    *   The private message for which the thread ID of the thread it belongs to
    *   should be returned.
    *

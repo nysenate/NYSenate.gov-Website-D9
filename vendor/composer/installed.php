@@ -3,7 +3,7 @@
         'name' => 'mediacurrent/drupal-project',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c027412241512a310f738742cfef1c0336569b1a',
+        'reference' => '4c878e95848a402fc74e3de0eedb0eb020ce9356',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1297,12 +1297,14 @@
             'dev_requirement' => false,
         ),
         'drupal/private_message' => array(
-            'pretty_version' => '3.0.0-beta2',
-            'version' => '3.0.0.0-beta2',
-            'reference' => '3.0.0-beta2',
+            'pretty_version' => 'dev-3.0.x',
+            'version' => 'dev-3.0.x',
+            'reference' => '19f7dc87c189e93eadeaafa8a2cb790b3e635cab',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../web/modules/contrib/private_message',
-            'aliases' => array(),
+            'aliases' => array(
+                0 => '3.0.x-dev',
+            ),
             'dev_requirement' => false,
         ),
         'drupal/privatemsg' => array(
@@ -2038,7 +2040,7 @@
         'mediacurrent/drupal-project' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c027412241512a310f738742cfef1c0336569b1a',
+            'reference' => '4c878e95848a402fc74e3de0eedb0eb020ce9356',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
@@ -15,6 +16,7 @@ use Drupal\private_message\Entity\PrivateMessageThreadInterface;
 use Drupal\private_message\Mapper\PrivateMessageMapperInterface;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserStorageInterface;
 
 /**
  * The Private Message service for the private message module.
@@ -26,56 +28,56 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
    *
    * @var \Drupal\private_message\Mapper\PrivateMessageMapperInterface
    */
-  protected $mapper;
+  protected PrivateMessageMapperInterface $mapper;
 
   /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * The configuration factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * The user data service.
    *
    * @var \Drupal\user\UserDataInterface
    */
-  protected $userData;
+  protected UserDataInterface $userData;
 
   /**
    * Cache Tags Invalidator.
    *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
    */
-  protected $cacheTagsInvalidator;
+  protected CacheTagsInvalidatorInterface $cacheTagsInvalidator;
 
   /**
    * The private message thread manager.
    *
    * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage
    */
-  protected $pmThreadManager;
+  protected EntityStorageInterface $pmThreadManager;
 
   /**
    * The user entity manager.
    *
    * @var \Drupal\user\UserStorageInterface
    */
-  protected $userManager;
+  protected UserStorageInterface $userManager;
 
   /**
    * The time service.
    *
    * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
    * Constructs a PrivateMessageService object.
@@ -112,9 +114,9 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
     $this->configFactory = $configFactory;
     $this->userData = $userData;
     $this->cacheTagsInvalidator = $cacheTagsInvalidator;
+    $this->time = $time;
     $this->pmThreadManager = $entityTypeManager->getStorage('private_message_thread');
     $this->userManager = $entityTypeManager->getStorage('user');
-    $this->time = $time;
   }
 
   /**
@@ -299,6 +301,17 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
     $last_check_timestamp = is_numeric($last_check_timestamp) ? $last_check_timestamp : 0;
 
     return (int) $this->mapper->getUnreadThreadCount($uid, $last_check_timestamp);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUnreadMessageCount() {
+    $uid = $this->currentUser->id();
+    $last_check_timestamp = $this->userData->get(self::MODULE_KEY, $uid, self::LAST_CHECK_KEY);
+    $last_check_timestamp = is_numeric($last_check_timestamp) ? $last_check_timestamp : 0;
+
+    return (int) $this->mapper->getUnreadMessageCount($uid, $last_check_timestamp);
   }
 
   /**

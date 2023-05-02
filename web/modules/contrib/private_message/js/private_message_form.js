@@ -32,7 +32,7 @@
    * @param {Object} context The context.
    */
   function submitButtonListener(context) {
-    $(context).find('.private-message-add-form textarea').once('private-message-form-submit-button-listener').each(function () {
+    $(context).parent().find('.private-message-add-form textarea').once('private-message-form-submit-button-listener').each(function () {
       $(this).keyup(submitKeyPress);
     });
   }

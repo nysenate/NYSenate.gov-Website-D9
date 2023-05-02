@@ -264,10 +264,98 @@ function private_message_update_8006(&$sandbox) {
  * Enable notifications submodule.
  */
 function private_message_update_8007() {
+  // Delete the configs that will be migrated to private_message_notify.
+  // Only delete configurations if private_message_notify is not installed
+  // already.
+  if (!\Drupal::moduleHandler()->moduleExists('private_message_notify')) {
+    // We should delete configurations that will be migrated to
+    // private_message_notify to prevent database update errors.
+    $configs = [
+      'core.entity_form_display.message.private_message_notification.default',
+      'core.entity_view_display.message.private_message_notification.default',
+      'core.entity_view_display.message.private_message_notification.mail_body',
+      'core.entity_view_display.message.private_message_notification.mail_subject',
+      'field.field.message.private_message_notification.field_message_pm_thread',
+      'field.field.message.private_message_notification.field_message_private_message',
+      'field.storage.message.field_message_pm_thread',
+      'field.storage.message.field_message_private_message',
+      'message.template.private_message_notification',
+    ];
+
+    $config_factory = \Drupal::configFactory();
+
+    // Some users could edit the configuration, so we need to save it temporarily
+    // and update after private_message_notify will be enabled
+    // @see private_message_update_8010
+    foreach ($configs as $name) {
+      $config = $config_factory->getEditable($name);
+      if ($config->isNew()) {
+        continue;
+      }
+
+      // Set config data to a new temporary config.
+      $config_tmp = $config_factory->getEditable("{$name}.tmp");
+      $config_tmp->setData($config->getRawData())->save();
+
+      // Delete config.
+      $config->delete();
+    }
+  }
+
+  // Enable notifications submodule.
   $module = 'private_message_notify';
   if (!\Drupal::moduleHandler()->moduleExists($module)) {
     /** @var \Drupal\Core\Extension\ModuleInstallerInterface $installer */
     $installer = \Drupal::service('module_installer');
-    $installer->install(['private_message_notify']);
+    $installer->install([$module]);
   }
+
+  // Update the configs that were migrated to private_message_notify.
+  try {
+    $config_factory = \Drupal::configFactory();
+
+    foreach ($configs as $name) {
+      // Load temporary config.
+      $config_tmp = $config_factory->getEditable("{$name}.tmp");
+
+      // If there is not exist a temporary config, do nothing.
+      if ($config_tmp->isNew()) {
+        continue;
+      }
+
+      // Load temporary config and update original one.
+      $config = $config_factory->getEditable($name);
+      $config->setData($config_tmp->getRawData())->save();
+
+      // Delete temporary config.
+      $config_tmp->delete();
+    }
+  }
+  catch (Exception $e) {
+    \Drupal::logger('private_message')->error($e->getMessage());
+  }
+}
+
+/**
+ * Skip update because of unnecessary.
+ */
+function private_message_update_8008() {
+  // Leave this hook update empty because it already passed who applied patch
+  // from issue https://www.drupal.org/project/private_message/issues/3265901
+}
+
+/**
+ * Skip update because of unnecessary.
+ */
+function private_message_update_8009() {
+  // Leave this hook update empty because it already passed who applied patch
+  // from issue https://www.drupal.org/project/private_message/issues/3265901
+}
+
+/**
+ * Skip update because of unnecessary.
+ */
+function private_message_update_8010() {
+  // Leave this hook update empty because it already passed who applied patch
+  // from issue https://www.drupal.org/project/private_message/issues/3265901
 }

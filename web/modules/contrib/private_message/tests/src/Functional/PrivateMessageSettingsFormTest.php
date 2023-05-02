@@ -20,7 +20,7 @@ class PrivateMessageSettingsFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['private_message'];
+  protected static $modules = ['private_message'];
 
   /**
    * The User used for the test.
@@ -39,7 +39,7 @@ class PrivateMessageSettingsFormTest extends BrowserTestBase {
   /**
    * SetUp the test class.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->user = $this->DrupalCreateUser();
     $this->adminUser = $this->DrupalCreateUser([
@@ -54,11 +54,11 @@ class PrivateMessageSettingsFormTest extends BrowserTestBase {
   public function testSettingsPageExists() {
     $this->drupalLogin($this->user);
     $this->drupalGet('admin/config/private-message/config');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/private-message/config');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -67,13 +67,11 @@ class PrivateMessageSettingsFormTest extends BrowserTestBase {
   public function testConfigForm() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/private-message/config');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test form submission.
-    $this->drupalPostForm(NULL, [], t('Save configuration'));
-    $this->assertText(
-      'The configuration options have been saved.'
-    );
+    $this->submitForm([], t('Save configuration'));
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
   }
 
 }

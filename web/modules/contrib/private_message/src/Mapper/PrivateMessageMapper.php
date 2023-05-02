@@ -22,7 +22,7 @@ class PrivateMessageMapper implements PrivateMessageMapperInterface {
   /**
    * The current user.
    *
-   * @var \Drupal\Session\AccountProxyInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
@@ -31,7 +31,7 @@ class PrivateMessageMapper implements PrivateMessageMapperInterface {
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\Session\AccountProxyInterface $currentUser
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user.
    */
   public function __construct(Connection $database, AccountProxyInterface $currentUser) {
@@ -289,6 +289,42 @@ class PrivateMessageMapper implements PrivateMessageMapperInterface {
         ':timestamp' => $lastCheckTimestamp,
       ]
     )->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUnreadMessageCount($uid, $lastCheckTimestamp) {
+    $query = $this->database->select('private_messages', 'message');
+    $query->join(
+      'private_message_thread__private_messages',
+      'thread_message',
+      'message.id = thread_message.private_messages_target_id'
+    );
+    $query->join(
+      'private_message_threads',
+      'thread',
+      'thread_message.entity_id = thread.id'
+    );
+    $query->join(
+      'pm_thread_history',
+      'thread_history',
+      'thread_history.thread_id = thread.id AND thread_history.uid = :uid',
+      [':uid' => $uid]
+    );
+    $query->join(
+      'private_message_thread__members',
+      'thread_member',
+      'thread_member.entity_id = thread.id AND thread_member.members_target_id = :uid',
+      [':uid' => $uid]
+    );
+    $query
+      ->condition('thread.updated ', $lastCheckTimestamp, '>')
+      ->condition('message.created', $lastCheckTimestamp, '>')
+      ->condition('message.owner', $uid, '<>')
+      ->where('thread_history.access_timestamp < thread.updated');
+    $query = $query->countQuery();
+    return $query->execute()->fetchField();
   }
 
   /**

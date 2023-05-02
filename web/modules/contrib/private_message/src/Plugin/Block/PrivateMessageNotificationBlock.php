@@ -2,12 +2,16 @@
 
 namespace Drupal\private_message\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\private_message\Service\PrivateMessageServiceInterface;
@@ -30,28 +34,28 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * The CSRF token generator service.
    *
    * @var \Drupal\Core\Access\CsrfTokenGenerator
    */
-  protected $csrfToken;
+  protected CsrfTokenGenerator $csrfToken;
 
   /**
    * The private message service.
    *
    * @var \Drupal\private_message\Service\PrivateMessageServiceInterface
    */
-  protected $privateMessageService;
+  protected PrivateMessageServiceInterface $privateMessageService;
 
   /**
    * The private message configuration.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\Config
    */
-  protected $privateMessageConfig;
+  protected Config $privateMessageConfig;
 
   /**
    * Constructs a PrivateMessageForm object.
@@ -71,7 +75,15 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccountProxyInterface $currentUser, CsrfTokenGenerator $csrfToken, PrivateMessageServiceInterface $privateMessageService, ConfigFactoryInterface $config) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    AccountProxyInterface $currentUser,
+    CsrfTokenGenerator $csrfToken,
+    PrivateMessageServiceInterface $privateMessageService,
+    ConfigFactoryInterface $config
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->currentUser = $currentUser;
@@ -83,7 +95,7 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): PrivateMessageNotificationBlock {
     return new static(
       $configuration,
       $plugin_id,
@@ -98,48 +110,57 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function build() {
-    if ($this->currentUser->isAuthenticated() && $this->currentUser->hasPermission('use private messaging system')) {
-      $block = [
-        '#theme' => 'private_message_notification_block',
-        '#new_message_count' => $this->privateMessageService->getUnreadThreadCount(),
-      ];
+  protected function blockAccess(AccountInterface $account): AccessResultInterface {
+    return AccessResult::allowedIf(
+      $account->isAuthenticated() &&
+      $account->hasPermission('use private messaging system')
+    )->cachePerPermissions();
+  }
 
-      $url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_new_unread_thread_count']);
-      $token = $this->csrfToken->get($url->getInternalPath());
-      $url->setOptions(['query' => ['token' => $token]]);
-      $block['#attached']['drupalSettings']['privateMessageNotificationBlock']['newMessageCountCallback'] = $url->toString();
 
-      $config = $this->getConfiguration();
-      $block['#attached']['drupalSettings']['privateMessageNotificationBlock']['ajaxRefreshRate'] = $config['ajax_refresh_rate'];
+  /**
+   * {@inheritdoc}
+   */
+  public function build(): array {
+    $block = [
+      '#theme' => 'private_message_notification_block',
+      '#new_message_count' => $this->privateMessageService->getUnreadThreadCount(),
+    ];
 
-      $block['#attached']['library'][] = 'private_message/notification_block_script';
-      $style_disabled = $this->privateMessageConfig->get('remove_css');
-      if (!$style_disabled) {
-        $block['#attached']['library'][] = 'private_message/notification_block_style';
-      }
+    $url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_new_unread_thread_count']);
+    $token = $this->csrfToken->get($url->getInternalPath());
+    $url->setOptions(['query' => ['token' => $token]]);
+    $block['#attached']['drupalSettings']['privateMessageNotificationBlock']['newMessageCountCallback'] = $url->toString();
 
-      // Add the default classes, as these are not added when the block output
-      // is overridden with a template.
-      $block['#attributes']['class'][] = 'block';
-      $block['#attributes']['class'][] = 'block-private-message';
-      $block['#attributes']['class'][] = 'block-private-message-notification-block';
+    $config = $this->getConfiguration();
+    $block['#attached']['drupalSettings']['privateMessageNotificationBlock']['ajaxRefreshRate'] = $config['ajax_refresh_rate'];
 
-      return $block;
+    $block['#attached']['library'][] = 'private_message/notification_block_script';
+    $style_disabled = $this->privateMessageConfig->get('remove_css');
+    if (!$style_disabled) {
+      $block['#attached']['library'][] = 'private_message/notification_block_style';
     }
+
+    // Add the default classes, as these are not added when the block output
+    // is overridden with a template.
+    $block['#attributes']['class'][] = 'block';
+    $block['#attributes']['class'][] = 'block-private-message';
+    $block['#attributes']['class'][] = 'block-private-message-notification-block';
+
+    return $block;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags() {
+  public function getCacheTags(): array {
     return Cache::mergeTags(parent::getCacheTags(), ['private_message_notification_block:uid:' . $this->currentUser->id()]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheContexts() {
+  public function getCacheContexts(): array {
     // Vary caching of this block per user.
     return Cache::mergeContexts(parent::getCacheContexts(), ['user']);
   }
@@ -147,7 +168,7 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'ajax_refresh_rate' => 15,
     ];
@@ -156,7 +177,7 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function blockForm($form, FormStateInterface $form_state) {
+  public function blockForm($form, FormStateInterface $form_state): array {
     $form = parent::blockForm($form, $form_state);
 
     $config = $this->getConfiguration();
@@ -175,7 +196,7 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, FormStateInterface $form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state): void {
     $this->configuration['ajax_refresh_rate'] = $form_state->getValue('ajax_refresh_rate');
   }
 

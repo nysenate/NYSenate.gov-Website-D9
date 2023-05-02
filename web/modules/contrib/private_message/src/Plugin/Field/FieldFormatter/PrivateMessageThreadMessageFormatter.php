@@ -3,6 +3,7 @@
 namespace Drupal\private_message\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -12,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 
@@ -33,42 +35,42 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * The CSRF token generator.
    *
    * @var \Drupal\Core\Access\CsrfTokenGenerator
    */
-  protected $csrfTokenGenerator;
+  protected CsrfTokenGenerator $csrfTokenGenerator;
 
   /**
    * The user manager service.
    *
    * @var \Drupal\user\UserStorageInterface
    */
-  protected $userManager;
+  protected UserStorageInterface $userManager;
 
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ImmutableConfig
+   * @var \Drupal\Core\Config\Config
    */
-  protected $config;
+  protected Config $config;
 
   /**
    * The entity display repository.
    *
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
-  protected $entityDisplayRepository;
+  protected EntityDisplayRepositoryInterface $entityDisplayRepository;
 
   /**
    * Construct a PrivateMessageThreadFormatter object.
@@ -89,7 +91,7 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
    *   The third party settings.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity manager service.
-   * @param |Drupal\Core\Session\AccountProxyInterface $currentUser
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfTokenGenerator
    *   The CSRF token generator.
@@ -116,15 +118,15 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
     $this->entityTypeManager = $entityTypeManager;
     $this->currentUser = $currentUser;
     $this->csrfTokenGenerator = $csrfTokenGenerator;
-    $this->userManager = $entityTypeManager->getStorage('user');
     $this->config = $configFactory->get('private_message.settings');
+    $this->userManager = $entityTypeManager->getStorage('user');
     $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): PrivateMessageThreadMessageFormatter {
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -144,14 +146,14 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+  public static function isApplicable(FieldDefinitionInterface $field_definition): bool {
     return ($field_definition->getFieldStorageDefinition()->getTargetEntityTypeId() == 'private_message_thread' && $field_definition->getFieldStorageDefinition()->getSetting('target_type') == 'private_message');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     return [
       'message_count' => 5,
       'ajax_previous_load_count' => 5,
@@ -164,7 +166,7 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary() {
+  public function settingsSummary(): array {
     $summary = [];
     $settings = $this->getSettings();
 
@@ -186,7 +188,7 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $element['message_count'] = [
       '#title' => $this->t('Message Count'),
       '#type' => 'number',
@@ -232,9 +234,7 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = [];
-
+  public function viewElements(FieldItemListInterface $items, $langcode): array {
     $private_message_thread = $items->getEntity();
 
     $element = [
@@ -313,7 +313,7 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
         'desc' => $this->t('Descending'),
       ];
 
-      return isset($keys[$value]) ? $keys[$value] : $value;
+      return $keys[$value] ?? $value;
     }
 
     return $value;

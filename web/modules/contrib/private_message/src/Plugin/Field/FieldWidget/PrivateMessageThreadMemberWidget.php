@@ -2,17 +2,22 @@
 
 namespace Drupal\private_message\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -34,35 +39,42 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
    *
    * @var \Drupal\Core\Access\CsrfTokenGenerator
    */
-  protected $csrfTokenGenerator;
+  protected CsrfTokenGenerator $csrfTokenGenerator;
 
   /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * The request stack.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $requestStack;
+  protected RequestStack $requestStack;
+
+  /**
+   * Key-value storage.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
+   */
+  protected KeyValueFactoryInterface $keyValue;
 
   /**
    * The user manager service.
    *
    * @var \Drupal\user\UserStorageInterface
    */
-  protected $userManager;
+  protected UserStorageInterface $userManager;
 
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ImmutableConfig
+   * @var \Drupal\Core\Config\Config
    */
-  protected $config;
+  protected Config $config;
 
   /**
    * Constructs a PrivateMessageThreadMemberWidget object.
@@ -83,9 +95,9 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
    *   The current user.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
   public function __construct(
@@ -97,22 +109,24 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
     CsrfTokenGenerator $csrfTokenGenerator,
     AccountProxyInterface $currentUser,
     RequestStack $requestStack,
-    EntityTypeManagerInterface $entityTypeManager,
-    ConfigFactoryInterface $configFactory
+    EntityTypeManagerInterface $entity_type_manager,
+    ConfigFactoryInterface $config_factory,
+    KeyValueFactoryInterface $key_value_factory
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
 
     $this->csrfTokenGenerator = $csrfTokenGenerator;
     $this->currentUser = $currentUser;
     $this->requestStack = $requestStack;
-    $this->userManager = $entityTypeManager->getStorage('user');
-    $this->config = $configFactory->get('private_message.settings');
+    $this->keyValue = $key_value_factory;
+    $this->userManager = $entity_type_manager->getStorage('user');
+    $this->config = $config_factory->get('private_message.settings');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): PrivateMessageThreadMemberWidget {
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -123,21 +137,22 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
       $container->get('current_user'),
       $container->get('request_stack'),
       $container->get('entity_type.manager'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('keyvalue')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+  public static function isApplicable(FieldDefinitionInterface $field_definition): bool {
     return $field_definition->getFieldStorageDefinition()->getTargetEntityTypeId() == 'private_message_thread' && $field_definition->getFieldStorageDefinition()->getSetting('target_type') == 'user';
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     return [
       'max_members' => 0,
     ] + parent::defaultSettings();
@@ -149,7 +164,7 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
    * The settings summary is returned empty, as the parent settings have no
    * effect on this form.
    */
-  public function settingsSummary() {
+  public function settingsSummary(): array {
     $summary = parent::settingsSummary();
 
     unset($summary[0]);
@@ -162,11 +177,10 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $form = parent::settingsForm($form, $form_state);
     // This setting has no bearing on this widget, so it is removed.
     unset($form['match_operator']);
-    unset($form['match_limit']);
 
     $form['max_members'] = [
       '#type' => 'number',
@@ -182,7 +196,7 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state): array {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $recipient = FALSE;
@@ -211,7 +225,27 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
     if (!$style_disabled) {
       $element['#attached']['library'][] = 'private_message/members_widget_style';
     }
-    $url = Url::fromRoute('private_message.members_widget_callback');
+
+    $target_type = $element['target_id']['#target_type'];
+    $selection_handler = $element['target_id']['#selection_handler'];
+
+    // Store the selection settings in the key/value store and pass a hashed key
+    // in the route parameters.
+    $selection_settings = $element['target_id']['#selection_settings'] ?? [];
+    $data = serialize($selection_settings) . $target_type . $selection_handler;
+    $selection_settings_key = Crypt::hmacBase64($data, Settings::getHashSalt());
+
+    $key_value_storage = $this->keyValue->get('entity_autocomplete');
+    if (!$key_value_storage->has($selection_settings_key)) {
+      $key_value_storage->set($selection_settings_key, $selection_settings);
+    }
+
+    $url = Url::fromRoute('private_message.members_widget_callback', [
+      'target_type' => $target_type,
+      'selection_handler' => $selection_handler,
+      'selection_settings_key' => $selection_settings_key,
+    ]);
+
     $token = $this->csrfTokenGenerator->get($url->getInternalPath());
     $url->setOptions(['query' => ['token' => $token]]);
 
@@ -236,7 +270,7 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
    * created as an unlimited cardinality field, but the widget allows for
    * setting a maximum number of users.
    */
-  public static function validateFormElement(array $element, FormStateInterface $form_state) {
+  public static function validateFormElement(array $element, FormStateInterface $form_state): void {
     $input_exists = FALSE;
     $parents = $element['#parents'];
     array_pop($parents);

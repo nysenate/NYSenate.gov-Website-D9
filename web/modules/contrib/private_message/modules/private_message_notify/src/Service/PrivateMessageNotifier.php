@@ -61,6 +61,13 @@ class PrivateMessageNotifier implements PrivateMessageNotifierInterface {
   protected $messageNotifier;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new PrivateMessageNotifier object.
    *
    * @param \Drupal\private_message\Service\PrivateMessageServiceInterface $privateMessageService
@@ -115,6 +122,7 @@ class PrivateMessageNotifier implements PrivateMessageNotifierInterface {
           ]);
           $notification->set('field_message_private_message', $message);
           $notification->set('field_message_pm_thread', $thread);
+          $notification->setLanguage($member->getPreferredLangcode());
           $notification->save();
 
           $this->messageNotifier->send($notification);

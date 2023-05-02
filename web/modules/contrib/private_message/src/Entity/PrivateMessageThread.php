@@ -147,7 +147,7 @@ class PrivateMessageThread extends ContentEntityBase implements PrivateMessageTh
     $last_timestamp = 0;
     foreach ($messages as $message) {
       $creation_date = $message->get('created')->value;
-      $last_timestamp = $creation_date > $last_timestamp ? $creation_date : $last_timestamp;
+      $last_timestamp = max($creation_date, $last_timestamp);
     }
 
     return $last_timestamp;
@@ -231,7 +231,7 @@ class PrivateMessageThread extends ContentEntityBase implements PrivateMessageTh
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function clearAccountHistory(AccountInterface $account = NULL) {
     if (!$account) {

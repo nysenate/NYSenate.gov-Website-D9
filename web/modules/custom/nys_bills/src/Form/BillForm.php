@@ -131,7 +131,7 @@ class BillForm extends FormBase {
       return $this->billVotedForm($form, $form_state, $vote_results, $this->hasThread($node->id()));
     }
 
-    $form['#node'] = $node;
+    $form_state->setStorage(['node' => $node]);
     $form['pass_thru_url'] = [
       '#type' => 'hidden',
       '#default_value' => Url::fromRoute('<current>')->toString(),
@@ -311,6 +311,7 @@ class BillForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
+    $form_storage = $form_state->getStorage();
 
     if ($this->currentUser->isAuthenticated()) {
       $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
@@ -334,8 +335,8 @@ class BillForm extends FormBase {
       $href = '/user/login' . $return_destination;
       $form_state->setErrorByName('email', t('Our records show you already have an account. Please <a href="@href">log in</a> to continue', ['@href' => $href]));
     }
-    elseif ($this->currentUser->isAuthenticated()) {
-      $node = $form['#node'];
+    elseif ($this->currentUser->isAuthenticated() && !empty($form_storage['node'])) {
+      $node = $form_storage['node'];
       $flag = $this->flagService->getFlagById('follow_this_bill');
       $current_user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
       if (!empty($this->flagService->getFlagging($flag, $node, $current_user))) {
@@ -353,12 +354,13 @@ class BillForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $form_storage = $form_state->getStorage();
     $user_storage = $this->entityTypeManager->getStorage('user');
     // Need the global user object.
     $user = $user_storage->load($this->currentUser->id());
 
     // Set up some easy references for later.
-    $node = $form['#node'];
+    $node = $form_storage['node'];
     $values = $form_state->getValues();
     $user_id = (int) ($this->currentUser->isAuthenticated() ? $user->id() : 0);
     $user_mail = $this->currentUser->isAuthenticated() ? $user->getEmail() : $values['email'];

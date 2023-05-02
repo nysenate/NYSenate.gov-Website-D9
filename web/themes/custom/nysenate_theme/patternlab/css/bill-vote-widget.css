@@ -1537,7 +1537,30 @@ strong {
     align-items: center;
     color: #ababab;
     grid-row: 1/span 2;
-    grid-column: 2/span 1; } }
+    grid-column: 2/span 1; }
+  .nys-registration-register-form .button-group--step-two {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    padding-bottom: 60px; } }
+  @media screen and (min-width: 768px) and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two {
+      padding-bottom: 80px; } }
+
+@media screen and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two .button {
+      display: flex;
+      align-items: center;
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      padding: 0 30px;
+      height: 45px; } }
+    @media screen and (min-width: 768px) and (min-width: 768px) {
+      .nys-registration-register-form .button-group--step-two .button {
+        padding: 0 40px;
+        height: 55px; } }
 
 .nys-bill-vote-form .nys-bill-vote {
   font-size: 0; }
@@ -1560,6 +1583,8 @@ strong {
     padding: 0.5em;
     text-align: center;
     background-color: #f1af58 !important; }
+    .nys-bill-vote-form .nys-bill-subscribe .nys-bill-subscribe-beta a {
+      color: #fff; }
   .nys-bill-vote-form .nys-bill-subscribe .nys-bill-subscribe-title {
     padding: 1em 2em;
     text-transform: uppercase;
@@ -1604,6 +1629,12 @@ strong {
   .nys-bill-vote-form .c-block--btn.selected {
     color: #fff; }
 
+.nys-bill-vote-form.nys-bill-vote-form-embedded .button-wrapper {
+  display: flex; }
+  .nys-bill-vote-form.nys-bill-vote-form-embedded .button-wrapper .button-wrapper {
+    display: flex;
+    align-items: center; }
+
 .nys-bill-vote-form.nys-bill-vote-form-embedded .c-block--btn {
   width: 25%;
   box-sizing: border-box;
@@ -1611,10 +1642,15 @@ strong {
   position: relative;
   border-top: 0;
   border-bottom: 0;
-  border-right: 0; }
+  border-right: 0;
+  cursor: pointer; }
   .nys-bill-vote-form.nys-bill-vote-form-embedded .c-block--btn.nys-subscribe-button {
     border-width: 0;
     width: 50%; }
+  .nys-bill-vote-form.nys-bill-vote-form-embedded .c-block--btn::before {
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content; }
 
 .nys-bill-vote-form .bill-vote-message-prompt {
   position: absolute;

@@ -46,7 +46,7 @@ class PrivateMessageThreadMembersTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->userA = $this->drupalCreateUser([
       'use private messaging system',

@@ -39,7 +39,7 @@ class PrivateMessageNotificationTest extends BrowserTestBase {
   /**
    * SetUp the test class.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->userA = $this->drupalCreateUser([
       'use private messaging system',
@@ -60,16 +60,16 @@ class PrivateMessageNotificationTest extends BrowserTestBase {
     $this->drupalLogin($this->userA);
 
     $this->drupalGet('/private-message/create');
-    $this->assertResponse(200);
-    $this->drupalPostForm(NULL, [
+    $this->assertSession()->statusCodeEquals(200);
+    $this->submitForm([
       'members[0][target_id]' => $this->userB->getDisplayName(),
       'message[0][value]' => $this->getRandomGenerator()->sentences(5),
     ], 'Send');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalLogin($this->userB);
     $this->drupalGet('private-message/create');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementTextContains('css', 'a.private-message-page-link', 1);
   }
 

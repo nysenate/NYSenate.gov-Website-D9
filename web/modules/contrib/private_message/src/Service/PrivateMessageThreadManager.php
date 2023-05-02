@@ -17,28 +17,28 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
    *
    * @var \Drupal\private_message\Service\PrivateMessageServiceInterface
    */
-  private $privateMessageService;
+  private PrivateMessageServiceInterface $privateMessageService;
 
   /**
    * The private message.
    *
-   * @var \Drupal\private_message\Entity\PrivateMessageInterface
+   * @var \Drupal\private_message\Entity\PrivateMessageInterface|null
    */
-  private $message;
+  private ?PrivateMessageInterface $message;
 
   /**
    * The message recipients.
    *
    * @var \Drupal\Core\Session\AccountInterface[]
    */
-  private $recipients = [];
+  private array $recipients = [];
 
   /**
    * The private message thread.
    *
    * @var \Drupal\private_message\Entity\PrivateMessageThreadInterface|null
    */
-  private $thread;
+  private ?PrivateMessageThreadInterface $thread;
 
   /**
    * PrivateMessageThreadManager constructor.
@@ -55,7 +55,7 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
   /**
    * {@inheritdoc}
    */
-  public function saveThread(PrivateMessageInterface $message, array $recipients = [], PrivateMessageThreadInterface $thread = NULL) {
+  public function saveThread(PrivateMessageInterface $message, array $recipients = [], PrivateMessageThreadInterface $thread = NULL): void {
     $this->message = $message;
     $this->thread = $thread;
     $this->recipients = $recipients;
@@ -68,7 +68,7 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
    *
    * @return $this
    */
-  private function getThread() {
+  private function getThread(): PrivateMessageThreadManagerInterface {
     if (is_null($this->thread)) {
       $this->thread = $this->privateMessageService->getThreadForMembers($this->recipients);
     }
@@ -81,9 +81,11 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
    *
    * @return $this
    */
-  private function addMessage() {
-    $this->thread->addMessage($this->message);
-    $this->thread->save();
+  private function addMessage(): PrivateMessageThreadManagerInterface {
+    if ($this->thread) {
+      $this->thread->addMessage($this->message);
+      $this->thread->save();
+    }
 
     return $this;
   }

@@ -1520,7 +1520,30 @@ strong {
     align-items: center;
     color: #ababab;
     grid-row: 1/span 2;
-    grid-column: 2/span 1; } }
+    grid-column: 2/span 1; }
+  .nys-registration-register-form .button-group--step-two {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    padding-bottom: 60px; } }
+  @media screen and (min-width: 768px) and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two {
+      padding-bottom: 80px; } }
+
+@media screen and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two .button {
+      display: flex;
+      align-items: center;
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      padding: 0 30px;
+      height: 45px; } }
+    @media screen and (min-width: 768px) and (min-width: 768px) {
+      .nys-registration-register-form .button-group--step-two .button {
+        padding: 0 40px;
+        height: 55px; } }
 
 .node--event-full .nys-associated-topics {
   display: block; }
@@ -1546,9 +1569,9 @@ strong {
   font-family: "Proxima Nova Regular", "Arial", sans-serif; }
 
 .c-event-name {
-  color: #7d7c7c; }
+  color: #444444; }
   .c-event-name a {
-    color: #7d7c7c; }
+    color: #444444; }
 
 .c-event-block .c-event-date-multiday > div {
   display: inline-block; }

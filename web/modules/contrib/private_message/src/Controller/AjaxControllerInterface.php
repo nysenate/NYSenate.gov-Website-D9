@@ -21,9 +21,16 @@ interface AjaxControllerInterface {
   /**
    * Create AJAX response containing usernames for an autocomplete callback.
    *
+   * @param $target_type
+   *    Target type of autocomplete.
+   * @param $selection_handler
+   *    Selection handler of autocomplete.
+   * @param $selection_settings_key
+   *    Key to the hashed settings.
+   *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The ajax response
    */
-  public function privateMessageMembersAutocomplete();
+  public function privateMessageMembersAutocomplete($target_type, $selection_handler, $selection_settings_key);
 
 }

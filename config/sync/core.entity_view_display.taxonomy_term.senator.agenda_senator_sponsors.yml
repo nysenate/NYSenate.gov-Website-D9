@@ -39,7 +39,7 @@ dependencies:
     - taxonomy.vocabulary.senator
   module:
     - layout_builder
-    - name
+    - nys_senators
 third_party_settings:
   layout_builder:
     enabled: false
@@ -59,17 +59,9 @@ content:
     weight: 1
     region: content
   field_senator_name:
-    type: name_default
+    type: microsite_link
     label: hidden
-    settings:
-      format: default
-      markup: none
-      list_format: ''
-      link_target: ''
-      preferred_field_reference: ''
-      preferred_field_reference_separator: ', '
-      alternative_field_reference: ''
-      alternative_field_reference_separator: ', '
+    settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content

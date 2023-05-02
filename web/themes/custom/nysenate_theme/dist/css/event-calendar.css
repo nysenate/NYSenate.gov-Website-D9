@@ -1520,7 +1520,30 @@ strong {
     align-items: center;
     color: #ababab;
     grid-row: 1/span 2;
-    grid-column: 2/span 1; } }
+    grid-column: 2/span 1; }
+  .nys-registration-register-form .button-group--step-two {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    padding-bottom: 60px; } }
+  @media screen and (min-width: 768px) and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two {
+      padding-bottom: 80px; } }
+
+@media screen and (min-width: 768px) {
+    .nys-registration-register-form .button-group--step-two .button {
+      display: flex;
+      align-items: center;
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      padding: 0 30px;
+      height: 45px; } }
+    @media screen and (min-width: 768px) and (min-width: 768px) {
+      .nys-registration-register-form .button-group--step-two .button {
+        padding: 0 40px;
+        height: 55px; } }
 
 .event-calendar {
   display: flex;
@@ -1539,9 +1562,6 @@ strong {
 
 .c-event-time {
   color: #aaaaaa; }
-
-.c-event-name a {
-  color: #444444; }
 
 #datepicker input {
   display: none; }
@@ -1733,7 +1753,8 @@ strong {
   font-size: 20px;
   margin-top: 25px;
   display: none;
-  font-family: "Adelle SemiBold", serif; }
+  font-family: "Adelle SemiBold", serif;
+  color: #444444; }
 
 .cal-nav-wrapper .cal-nav-list {
   margin: 0;
@@ -1775,8 +1796,6 @@ strong {
     margin-top: 50px; }
     .cal-nav-wrapper span.title {
       margin: 0;
-      color: #7d7c7c;
-      font-family: "Adelle SemiBold", serif;
       font-size: 20px;
       line-height: 42px; }
     .cal-nav-wrapper .cal-nav-list {

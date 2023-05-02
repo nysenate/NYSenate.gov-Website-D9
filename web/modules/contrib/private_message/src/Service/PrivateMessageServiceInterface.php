@@ -40,7 +40,7 @@ interface PrivateMessageServiceInterface {
   /**
    * Get the most recently updated thread for the given user.
    *
-   * @param \Drupal\user\Entity\UserInterface $user
+   * @param \Drupal\user\UserInterface $user
    *   The user whose most recently updated thread should be retrieved.
    */
   public function getFirstThreadForUser(UserInterface $user);
@@ -169,6 +169,14 @@ interface PrivateMessageServiceInterface {
    *   The number of updated threads
    */
   public function getUnreadThreadCount();
+
+  /**
+   * Get the current user's unread messages count.
+   *
+   * @return int
+   *   The number of updated threads
+   */
+  public function getUnreadMessageCount();
 
   /**
    * Marks a timestamp at which all threads are considered read.

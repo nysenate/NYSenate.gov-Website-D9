@@ -2,12 +2,15 @@
 
 namespace Drupal\private_message\Controller;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\private_message\Ajax\PrivateMessageInboxUpdateCommand;
 use Drupal\private_message\Ajax\PrivateMessageInsertNewMessagesCommand;
 use Drupal\private_message\Ajax\PrivateMessageInboxInsertThreadsCommand;
@@ -20,6 +23,7 @@ use Drupal\private_message\Entity\PrivateMessageThread;
 use Drupal\private_message\Service\PrivateMessageServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Controller to handle Ajax requests.
@@ -78,6 +82,13 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   protected $privateMessageService;
 
   /**
+   * The key/value storage collection.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $keyValueStore;
+
+  /**
    * Constructs a AjaxController object.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -99,7 +110,8 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
     EntityTypeManagerInterface $entityTypeManager,
     ConfigFactoryInterface $configFactory,
     AccountProxyInterface $currentUser,
-    PrivateMessageServiceInterface $privateMessageService
+    PrivateMessageServiceInterface $privateMessageService,
+    KeyValueStoreInterface $keyValueStore
   ) {
     $this->renderer = $renderer;
     $this->requestStack = $requestStack;
@@ -108,6 +120,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
     $this->configFactory = $configFactory;
     $this->currentUser = $currentUser;
     $this->privateMessageService = $privateMessageService;
+    $this->keyValueStore = $keyValueStore;
   }
 
   /**
@@ -120,7 +133,8 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
       $container->get('entity_type.manager'),
       $container->get('config.factory'),
       $container->get('current_user'),
-      $container->get('private_message.service')
+      $container->get('private_message.service'),
+      $container->get('keyvalue')->get('entity_autocomplete')
     );
   }
 
@@ -176,11 +190,29 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function privateMessageMembersAutocomplete() {
+  public function privateMessageMembersAutocomplete($target_type, $selection_handler, $selection_settings_key) {
     $response = new AjaxResponse();
 
+    // Selection settings are passed in as a hashed key of a serialized array
+    // stored in the key/value store.
+    $selection_settings = $this->keyValueStore->get($selection_settings_key, FALSE);
+    if ($selection_settings !== FALSE) {
+      $selection_settings_hash = Crypt::hmacBase64(serialize($selection_settings) . $target_type . $selection_handler, Settings::getHashSalt());
+      if (!hash_equals($selection_settings_hash, $selection_settings_key)) {
+        // Disallow access when the selection settings hash does not match the
+        // passed-in key.
+        throw new AccessDeniedHttpException('Invalid selection settings key.');
+      }
+    }
+    else {
+      // Disallow access when the selection settings key is not found in the
+      // key/value store.
+      throw new AccessDeniedHttpException();
+    }
+
+    $match_limit = isset($selection_settings['match_limit']) ? (int) $selection_settings['match_limit'] : self::AUTOCOMPLETE_COUNT;
     $username = $this->requestStack->getCurrentRequest()->get('username');
-    $accounts = $this->privateMessageService->getUsersFromString($username, self::AUTOCOMPLETE_COUNT);
+    $accounts = $this->privateMessageService->getUsersFromString($username, $match_limit);
     $user_info = [];
     foreach ($accounts as $account) {
       if ($account->access('view', $this->currentUser) && $account->isActive()) {
@@ -199,7 +231,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   /**
    * Creates an Ajax Command containing new private message.
    *
-   * @param Drupal\Core\Ajax\AjaxResponse $response
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
    *   The response to which any commands should be attached.
    */
   protected function getNewPrivateMessages(AjaxResponse $response) {
@@ -236,7 +268,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   /**
    * Create an Ajax Command containing old private messages.
    *
-   * @param Drupal\Core\Ajax\AjaxResponse $response
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
    *   The response to which any commands should be attached.
    */
   protected function getOldPrivateMessages(AjaxResponse $response) {
@@ -270,7 +302,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   /**
    * Creates and Ajax Command containing old threads for the inbox.
    *
-   * @param Drupal\Core\Ajax\AjaxResponse $response
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
    *   The response to which any commands should be attached.
    */
   protected function getOldInboxThreads(AjaxResponse $response) {
@@ -299,7 +331,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   /**
    * Creates an Ajax Command with new threads for the private message inbox.
    *
-   * @param Drupal\Core\Ajax\AjaxResponse $response
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
    *   The response to which any commands should be attached.
    */
   protected function getNewInboxThreads(AjaxResponse $response) {
@@ -338,7 +370,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   /**
    * Create Ajax Command determining whether a given username is valid.
    *
-   * @param Drupal\Core\Ajax\AjaxResponse $response
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
    *   The response to which any commands should be attached.
    */
   protected function validatePrivateMessageMemberUsername(AjaxResponse $response) {
@@ -354,7 +386,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
    * Only messages created since the current user last visited the private
    * message page are shown.
    *
-   * @param Drupal\Core\Ajax\AjaxResponse $response
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
    *   The response to which any commands should be attached.
    */
   protected function getNewUnreadThreadCount(AjaxResponse $response) {
@@ -366,7 +398,7 @@ class AjaxController extends ControllerBase implements AjaxControllerInterface {
   /**
    * Load a private message thread to be dynamically inserted into the page.
    *
-   * @param Drupal\Core\Ajax\AjaxResponse $response
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
    *   The response to which any commands should be attached.
    */
   protected function loadThread(AjaxResponse $response) {

@@ -13,11 +13,14 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\private_message\Ajax\PrivateMessageInboxTriggerUpdateCommand;
 use Drupal\private_message\Ajax\PrivateMessageLoadNewMessagesCommand;
+use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\private_message\Entity\PrivateMessageThread;
 use Drupal\private_message\Entity\PrivateMessageThreadInterface;
 use Drupal\private_message\Service\PrivateMessageServiceInterface;
@@ -94,6 +97,13 @@ class PrivateMessageForm extends ContentEntityForm {
   protected $userManager;
 
   /**
+   * The Form Builder service.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * Constructs a PrivateMessageForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
@@ -116,8 +126,22 @@ class PrivateMessageForm extends ContentEntityForm {
    *   The private message service.
    * @param \Drupal\private_message\Service\PrivateMessageThreadManagerInterface $privateMessageThreadManager
    *   The private message thread manager service.
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
+   *   The Form Builder service.
    */
-  public function __construct(EntityRepositoryInterface $entityRepository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, EntityTypeManagerInterface $entityTypeManager, AccountProxyInterface $currentUser, TypedDataManagerInterface $typedDataManager, UserDataInterface $userData, ConfigFactoryInterface $configFactory, PrivateMessageServiceInterface $privateMessageService, PrivateMessageThreadManagerInterface $privateMessageThreadManager) {
+  public function __construct(
+    EntityRepositoryInterface $entityRepository,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    TimeInterface $time,
+    EntityTypeManagerInterface $entityTypeManager,
+    AccountProxyInterface $currentUser,
+    TypedDataManagerInterface $typedDataManager,
+    UserDataInterface $userData,
+    ConfigFactoryInterface $configFactory,
+    PrivateMessageServiceInterface $privateMessageService,
+    PrivateMessageThreadManagerInterface $privateMessageThreadManager,
+    FormBuilderInterface $formBuilder
+  ) {
     parent::__construct($entityRepository, $entity_type_bundle_info, $time);
     $this->entityTypeManager = $entityTypeManager;
     $this->currentUser = $currentUser;
@@ -127,6 +151,7 @@ class PrivateMessageForm extends ContentEntityForm {
     $this->privateMessageService = $privateMessageService;
     $this->privateMessageThreadManager = $privateMessageThreadManager;
     $this->userManager = $entityTypeManager->getStorage('user');
+    $this->formBuilder = $formBuilder;
   }
 
   /**
@@ -143,7 +168,8 @@ class PrivateMessageForm extends ContentEntityForm {
       $container->get('user.data'),
       $container->get('config.factory'),
       $container->get('private_message.service'),
-      $container->get('private_message.thread_manager')
+      $container->get('private_message.thread_manager'),
+      $container->get('form_builder'),
     );
   }
 
@@ -177,7 +203,6 @@ class PrivateMessageForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state, PrivateMessageThreadInterface $privateMessageThread = NULL) {
     $form = parent::buildForm($form, $form_state);
-
 
     if ($privateMessageThread) {
       $form_state->set('thread', $privateMessageThread);
@@ -270,6 +295,10 @@ class PrivateMessageForm extends ContentEntityForm {
       }
     }
 
+    if ((count($members) === 1 && $this->currentUser->id() === $members[0]->id()) || empty($members)) {
+      $formState->setError($form['members'], $this->t('You can not send a message to yourself only.'));
+    }
+
     if (count($members) <> count($selectedMembers)) {
       $formState->setError($form['members'], $this->t('You can not send a message because there are inactive users selected for this thread.'));
     }
@@ -291,11 +320,40 @@ class PrivateMessageForm extends ContentEntityForm {
 
   /**
    * Ajax callback for the PrivateMessageForm.
+   *
+   * Re-render form after submission, so user could write new message.
    */
   public function ajaxCallback(array $form, FormStateInterface $formState) {
     $response = new AjaxResponse();
-    $form['message']['widget'][0]['value']['#value'] = '';
-    $response->addCommand(new ReplaceCommand('.private-message-add-form', $form));
+
+    /** @var \Drupal\private_message\Entity\PrivateMessageInterface $message */
+    $message = $formState->getFormObject()->getEntity();
+
+    // @todo move to message method
+    $threads = $this->entityTypeManager
+      ->getStorage('private_message_thread')
+      ->loadByProperties(['private_messages' => $message->id()]);
+    $thread = reset($threads);
+
+    $private_message = PrivateMessage::create();
+
+    /** @var \Drupal\private_message\Form\PrivateMessageForm $form_object */
+    $form_object = $this->entityTypeManager
+      ->getFormObject('private_message', 'add')
+      ->setEntity($private_message);
+
+    // We create form State manually so that Drupal won't fill it and
+    // submit automatically.
+    $new_form_state = new FormState();
+    $new_form_state->addBuildInfo('args', [$thread]);
+    $new_form_state->setUserInput([]);
+
+    $new_form = $this->formBuilder
+      ->buildForm($form_object, $new_form_state);
+
+    $response->setAttachments($new_form['#attached']);
+
+    $response->addCommand(new ReplaceCommand('.private-message-add-form', $new_form));
     $response->addCommand(new PrivateMessageLoadNewMessagesCommand());
     $response->addCommand(new PrivateMessageInboxTriggerUpdateCommand());
 

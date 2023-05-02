@@ -8,21 +8,17 @@
 #}
 {{ attach_library('nysenate_theme/newsroom-content') }}
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
-
 <div class="content-list__wrapper">
-  {% for bill in bills %}
+  {% for key,row in rows if key matches '/^\\d+$/'  %}
     <div class="content__item">
-      {% include "@nysenate_theme/bill-item/bill-item.twig" with {
-        bill: bill,
-        body: body
-      } only %}
+      {{ row.content }}
     </div>
   {% endfor %}
 </div>
 
 {% set limit = 4 %}
 
-{% if bills|length > limit %}
+{% if rows|length > limit %}
   <div class="item-list" data-limit="{{ limit }}">
     <div class="pager pager-load-more">
       <span class="pager-next first last">

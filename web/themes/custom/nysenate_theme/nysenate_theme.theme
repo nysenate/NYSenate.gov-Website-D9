@@ -4256,7 +4256,7 @@ function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bi
   $bill_vote_form_settings = [
     'entity_type' => $node->bundle(),
     'entity_id' => $node->id(),
-    'is_embed' => empty($route_node) || $route_node->id() !== $entity->id(),
+    'is_embed' => empty($route_node) || $route_node->id() !== $node->id(),
   ];
 
   $variables['content']['bill'] = [

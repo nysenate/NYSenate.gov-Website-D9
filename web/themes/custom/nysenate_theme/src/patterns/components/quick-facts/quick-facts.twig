@@ -15,10 +15,15 @@
   <ul id="js-carousel-about-stats" class="js-carousel c-carousel {% if not hide_icons %}show-icons{% endif %}">
     {% for fact in facts %}
       <li class="c-carousel--item c-stats--item">
+        {% if fact.link %}
         <a href="{{ fact.link }}" class="c-senate-quick-facts__button" data-tab="{{ fact.panel_id }}">
           <h4 class="c-stat">{{ fact.statistic }}</h4>
           <p class="c-stat--descript">{{ fact.description }}</p>
         </a>
+        {% else %}
+            <h4 class="c-stat">{{ fact.statistic }}</h4>
+            <p class="c-stat--descript">{{ fact.description }}</p>
+        {% endif %}
         {% if not hide_icons %}
           <span class="c-stat--illus c-illus__{{ fact.status }}"></span>
         {% endif %}

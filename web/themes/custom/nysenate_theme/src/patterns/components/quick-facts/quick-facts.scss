@@ -98,7 +98,6 @@
 		left: 0;
 		display: block;
 		transition: left 0.3s ease;
-		@include clearfix;
 
 		&.show-icons {
 			.c-carousel--item {
@@ -149,7 +148,14 @@
 		margin-top: 0;
 
 		.c-carousel {
-			display: flex;
+
+			@include breakpoint($bp-sm) {
+				display: flex;
+			}
+
+			&::after {
+				display: none;
+			}
 		}
 	}
 }

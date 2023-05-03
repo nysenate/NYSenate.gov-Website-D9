@@ -694,10 +694,9 @@ function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity
   $term = $entityTypeManager->getStorage('taxonomy_term')->load($currentTid);
   $fieldAboutValue = $term->get('field_about')->value;
   if (!empty($fieldAboutValue)) {
-    $existingText = !empty($fieldAboutValue) ? $fieldAboutValue : '';
     $inactiveHeader = '<h2>About Former Senator ' . $term->getName() . '\'s</h2>';
     $inactiveFooter = '<div><p><em>Last edited by Senator ' . $term->getName() . '\'s staff prior to last day in office.</em></p></div>';
-    $inactiveText = $inactiveHeader . $existingText . $inactiveFooter;
+    $inactiveText = $inactiveHeader . $fieldAboutValue . $inactiveFooter;
   }
 
   // Checks if inactiveText is set.

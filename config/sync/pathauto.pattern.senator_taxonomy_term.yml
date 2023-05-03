@@ -1,0 +1,22 @@
+uuid: 30ae1d14-55c6-4471-b74c-35f9fa8e3c51
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: senator_taxonomy_term
+label: 'Senator Taxonomy Term'
+type: 'canonical_entities:taxonomy_term'
+pattern: 'dashboard/senators/[term:name]'
+selection_criteria:
+  3a900004-4387-4e84-a9ae-57b3360002b1:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: 3a900004-4387-4e84-a9ae-57b3360002b1
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      senator: senator
+selection_logic: and
+weight: -5
+relationships: {  }

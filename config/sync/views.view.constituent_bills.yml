@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.bill_list_item
     - field.storage.node.field_issues
     - field.storage.node.field_ol_all_statuses
     - field.storage.node.field_ol_chamber
@@ -890,16 +891,10 @@ display:
             last_class: last
             striping_classes: 'odd even'
       row:
-        type: semanticviews_row
+        type: 'entity:node'
         options:
-          skip_blank: 0
-          semantic_html:
-            title:
-              element_type: div
-              attributes: ''
-            value:
-              element_type: div
-              attributes: ''
+          relationship: none
+          view_mode: bill_list_item
       query:
         type: views_query
         options:

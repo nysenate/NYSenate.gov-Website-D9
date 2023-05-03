@@ -94,7 +94,9 @@
     {% endif %}
 
       <div class="c-meeting-detail--descript">
-        {{ content.body }}
+        {% if content.body %}
+          {{ content.body }}
+        {% endif %}
       </div>
 
       {% if content.field_chapters %}

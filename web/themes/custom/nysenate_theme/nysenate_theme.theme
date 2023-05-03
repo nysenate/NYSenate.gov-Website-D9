@@ -4669,25 +4669,21 @@ function nysenate_theme_preprocess_page(&$variables) {
     $variables['dashboard_display_name'] = $display_name;
 
     $variables['actionbar']['type'] = 'default';
-    if ($arr_path[1] == 'committees') {
-      $variables['actionbar']['type'] = 'committee';
-      $path = \Drupal::service('path_alias.manager')->getPathByAlias($current_path);
-      $arr_base_path = explode('/', $path);
-      if (isset($arr_base_path[3])) {
-        $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-          ->load($arr_base_path[3]);
-        $variables['actionbar']['flag_follow_committee'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
-      }
-    }
-    elseif (in_array($arr_path[1], ['issues', 'majority-issues'])) {
-      $variables['actionbar']['type'] = 'issue';
-      $path = \Drupal::service('path_alias.manager')->getPathByAlias($current_path);
-      $arr_base_path = explode('/', $path);
-      if (isset($arr_base_path[3])) {
-        $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-          ->load($arr_base_path[3]);
+    // Variables for issues and committees header action bar.
+    $parameters = \Drupal::routeMatch()->getParameters()->all();
+    if (isset($parameters['taxonomy_term'])) {
+      $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
+      $vid = $term->bundle();
+      $vocabulary = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->load($vid);
+
+      if ($vocabulary->label() == "Issues") {
+        $variables['actionbar']['type'] = 'issue';
         $variables['actionbar']['flag_follow_issue'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
-        $variables['actionbar']['issue_title'] = $term->name->value;
+        $variables['actionbar']['issue_title'] = $term->getName();
+      }
+      if ($vocabulary->label() == "Committees") {
+        $variables['actionbar']['type'] = 'committee';
+        $variables['actionbar']['flag_follow_committee'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
       }
     }
   }

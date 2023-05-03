@@ -12,7 +12,7 @@
       font-family: $font-serif-semibold;
       font-size: 18px;
       line-height: 32px;
-      color: #444444;
+      color: $grey08;
       text-transform: capitalize;
       margin-bottom: 20px;
     }
@@ -125,6 +125,15 @@
           margin-bottom: 0;
         }
       }
+    }
+  }
+}
+
+.dashboard-bills-list {
+
+  @include breakpoint($bp-sm) {
+    .nys-bill-status__sml li, .nys-bill-status__drk li {
+      margin-top: -15.5px;
     }
   }
 }

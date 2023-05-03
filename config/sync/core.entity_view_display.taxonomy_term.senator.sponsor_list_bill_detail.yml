@@ -40,8 +40,8 @@ dependencies:
   module:
     - layout_builder
     - media
-    - name
     - nys_list_formatter
+    - nys_senators
     - options
 third_party_settings:
   layout_builder:
@@ -52,16 +52,6 @@ targetEntityType: taxonomy_term
 bundle: senator
 mode: sponsor_list_bill_detail
 content:
-  admin_microsite_questionnaires_senator_admin_q_eva:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
-    region: content
-  admin_microsite_questionnaires_senator_admin_q_eva_form:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 9
-    region: content
   field_conference:
     type: list_key
     label: hidden
@@ -99,17 +89,9 @@ content:
     weight: 0
     region: content
   field_senator_name:
-    type: name_default
+    type: microsite_link
     label: hidden
-    settings:
-      format: default
-      markup: none
-      list_format: ''
-      link_target: ''
-      preferred_field_reference: ''
-      preferred_field_reference_separator: ', '
-      alternative_field_reference: ''
-      alternative_field_reference_separator: ', '
+    settings: {  }
     third_party_settings: {  }
     weight: 1
     region: content
@@ -118,6 +100,8 @@ hidden:
   admin_microsite_content_senator_admin_content_eva_form: true
   admin_microsite_legislation_senator_admin_legislation_eva: true
   admin_microsite_legislation_senator_admin_legislation_eva_form: true
+  admin_microsite_questionnaires_senator_admin_q_eva: true
+  admin_microsite_questionnaires_senator_admin_q_eva_form: true
   description: true
   field_about: true
   field_active_senator: true

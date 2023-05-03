@@ -1,7 +1,9 @@
 {{ attach_library('nysenate_theme/nysenate-senate-seal') }}
 
 <div class="c-block c-block--about c-block--about-seal">
-  <h3 class="nys-subtitle-title">{{ title }}</h3>
+  {% if title %}
+    <h3 class="nys-subtitle-title">{{ title }}</h3>
+  {% endif %}
   {% if media %}
     {{ media }}
   {% endif %}

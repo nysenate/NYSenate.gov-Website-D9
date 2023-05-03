@@ -57,7 +57,7 @@ class FindMySenatorForm extends FormBase {
   protected function getAddressDefinition(): array {
     return [
       '#after_build' => ['::hideCountryField'],
-      '#type' => 'address_autocomplete',
+      '#type' => 'address',
       '#default_value' => [
         'country_code' => 'US',
         'administrative_area' => 'NY',

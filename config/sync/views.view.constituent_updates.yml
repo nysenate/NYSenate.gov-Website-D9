@@ -2049,21 +2049,20 @@ display:
         filters: false
         filter_groups: false
       relationships:
-        reverse__node__field_bills:
-          id: reverse__node__field_bills
-          table: node_field_data
-          field: reverse__node__field_bills
+        field_bills:
+          id: field_bills
+          table: node__field_bills
+          field: field_bills
           relationship: none
           group_type: group
-          admin_label: field_bills
-          entity_type: node
-          plugin_id: entity_reverse
+          admin_label: 'field_bills: Content'
+          plugin_id: standard
           required: false
         flag_relationship:
           id: flag_relationship
           table: node_field_data
           field: flag_relationship
-          relationship: reverse__node__field_bills
+          relationship: field_bills
           group_type: group
           admin_label: Flags
           entity_type: node

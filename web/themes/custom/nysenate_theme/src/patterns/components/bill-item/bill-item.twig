@@ -102,8 +102,8 @@
       {% endif %}
 
       {% if bill.is_poll %}
-        <div class="c-bill-polling med-bg">
-          {% include '@nysenate_theme/bill-vote-widget/bill-vote-widget.twig' with bill only %}
+        <div class="c-bill-polling med-bg embed">
+          {{ bill.vote_widget }}
         </div>
       {% endif %}
     </div>

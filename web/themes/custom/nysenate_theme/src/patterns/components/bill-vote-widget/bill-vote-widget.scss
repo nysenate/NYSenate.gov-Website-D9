@@ -32,14 +32,16 @@
 
     .nys-bill-subscribe-beta {
       padding: 0.5em;
-      font-size: 1.5em;
       text-align: center;
       background-color: $yellow01 !important;
+
+      a {
+        color: $color-white;
+      }
     }
 
     .nys-bill-subscribe-title {
       padding: 1em 2em;
-      font-size: 1.5em;
       text-transform: uppercase;
       text-align: center;
     }
@@ -108,6 +110,15 @@
   }
 
   &.nys-bill-vote-form-embedded {
+
+    .button-wrapper {
+      display: flex;
+      .button-wrapper {
+        display: flex;
+        align-items: center;
+      }
+    }
+
     .c-block--btn {
       width: 25%;
       box-sizing: border-box;
@@ -116,10 +127,16 @@
       border-top: 0;
       border-bottom: 0;
       border-right: 0;
+      cursor: pointer;
 
       &.nys-subscribe-button {
         border-width: 0;
         width: 50%;
+
+      }
+
+      &::before {
+        height: fit-content;
       }
     }
   }

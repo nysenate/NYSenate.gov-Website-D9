@@ -12,6 +12,7 @@
   }
 }
 
+
 .c-block {
   &.c-block-press-release {
     padding-top: 20px;
@@ -19,8 +20,18 @@
     margin-bottom: 0;
     border-top: 1px solid $grey05;
 
-    &:first-child {
-      border-top: 0;
+    &.content__item {
+      display: flex;
+      flex-direction: column;
+
+      @include breakpoint($bp-sm) {
+        flex-direction: row;
+        column-gap: 20px;
+      }
+
+      &::after {
+        display: none;
+      }
     }
   }
 
@@ -30,20 +41,6 @@
     }
   }
 
-  .c-press-release--header {
-    margin-bottom: 15px;
-    line-height: 1em;
-    z-index: $zi-lowest;
-  }
-
-  .c-press-release--title {
-    margin-bottom: 3px;
-    font-family: $font-serif-bold;
-    font-size: 16px;
-    line-height: 1em;
-    color: $grey10;
-  }
-
   .c-press-release--topic,
   .c-featured-story-issue-tag a {
     text-transform: uppercase;
@@ -51,16 +48,73 @@
     font-size: 12px;
     line-height: 1em;
     letter-spacing: 0.05em;
-    @extend .lgt-text;
 
     &:hover {
-      @extend .lgt-text;
       text-decoration: underline;
+    }
+  }
+
+  .c-press-release {
+      
+    &--header {
+      margin-bottom: 15px;
+      line-height: 1em;
+  
+      @include breakpoint($bp-sm) {
+          flex: 20%;
+      }
+
+      .c-press-release--title {
+        margin-bottom: 3px !important;
+        font-family: $font-serif-bold;
+        font-size: 16px;
+        line-height: 1em;
+        color: $grey10;
+
+        @include breakpoint($bp-sm) {
+          &.c-bill-search {
+            font-size: 22px;
+          }
+        }
+      }
     }
   }
 
   .c-press-release--body {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 50%;
+
+    @include breakpoint($bp-sm) {
+      flex-direction: row;
+    }
+
+    .c-press-release {
+
+      &--descript-wrapper {
+        margin-right: 20px;
+
+      }
+
+      &--descript {
+        font-weight: $font-weight-normal;
+        margin-bottom: 10px;
+        font-size: 18px;
+        line-height: 1.3em;
+        font-family: $font-serif;
+
+        @include breakpoint($bp-sm) {
+          font-size: 24px;
+          line-height: 30px;
+          font-family: $font-serif;
+        }
+    
+        a {
+          color: $grey08;
+        }
+      }
+    }
 
     .author {
       align-items: center;
@@ -86,29 +140,17 @@
         margin-top: -3px;
       }
     }
-
+    
     .date-display-single {
       font-family: $font-sans-bold;
       font-size: 14px;
       line-height: 30px;
       color: $grey08;
     }
-  }
+  } 
 
   .c-press-release--body__has-img {
-    padding-right: 120px;
-  }
-
-  .c-press-release--descript {
-    font-weight: $font-weight-normal;
-    margin-bottom: 10px;
-    font-size: 18px;
-    line-height: 1.3em;
-    font-family: $font-serif;
-
-    a {
-      color: $grey08;
-    }
+    display: flex;
   }
 
   .c-press-release--senator {
@@ -142,11 +184,11 @@
   }
 
   .c-press-release--img {
-    max-width: 100px;
-    margin-left: 20px;
-    position: absolute;
-    top: 0;
-    right: 0;
+    width: 100%;
+
+    @include breakpoint($bp-sm) {
+      flex: 30%;
+    }
   }
 
   @include breakpoint($bp-sm) {
@@ -155,29 +197,23 @@
       padding-top: 30px;
       padding-bottom: 60px;
     }
-
-    .c-press-release--header {
-      position: absolute;
-      top: 30px;
-      left: 0;
-      width: 180px;
-      padding-right: 15px;
+    
+    .c-search--body .c-block-press-release {
+      padding-bottom: 0px;
+      padding-top: 0px;
     }
 
     .c-press-release--title {
       font-size: 16px;
       line-height: 30px;
+
+      &.c-bill-search {
+        font-size: 22px;
+      }
     }
 
-    .c-press-release--body {
-      padding-left: 180px;
-      padding-right: 40px;
-    }
-
-    .c-press-release--descript {
-      font-size: 24px;
-      line-height: 30px;
-      font-family: $font-serif;
+    .c-bill-search  {
+      font-size: 23px;
     }
 
     .c-press-release--senator {
@@ -187,15 +223,16 @@
     .c-press-release--date {
       font-size: 14px;
     }
-
-    .c-press-release--body__has-img {
-      padding-right: 220px;
-      min-height: 125px;
-    }
-
-    .c-press-release--img {
-      max-width: 200px;
-      margin-left: 20px;
-    }
   }
 }
+
+.c-search--body {
+  color: $grey05;
+  padding: 20px 0px 20px 0px;
+  border-top: 1px solid $grey05;
+
+  .c-block.c-block-press-release {
+    padding: 0;
+    border: 0;
+  }
+} 

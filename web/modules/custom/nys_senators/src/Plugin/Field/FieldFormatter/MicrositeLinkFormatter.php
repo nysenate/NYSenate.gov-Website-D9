@@ -73,10 +73,12 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
     }
 
     return [
-      '#type' => 'link',
-      '#url' => Url::fromUri($this->helper->getMicrositeUrl($entity)),
-      '#title' => $entity->getName(),
-      '#attributes' => ['class' => ['microsite-link']],
+      0 => [
+        '#type' => 'link',
+        '#url' => Url::fromUri($this->helper->getMicrositeUrl($entity)),
+        '#title' => $entity->getName(),
+        '#attributes' => ['class' => ['microsite-link']],
+      ],
     ];
   }
 

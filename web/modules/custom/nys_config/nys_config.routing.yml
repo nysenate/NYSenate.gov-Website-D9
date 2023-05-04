@@ -1,0 +1,9 @@
+nys_config.config:
+  path: /admin/settings/nysenate
+  defaults:
+    _form: '\Drupal\nys_config\Form\ConfigForm'
+    _title: "Global settings for NY State Senate"
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

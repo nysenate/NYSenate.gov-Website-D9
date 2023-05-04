@@ -31,9 +31,29 @@ class SearchLegislationController extends ControllerBase {
    * Response for the bills page.
    */
   public function page() {
-    $view = Views::getView('advanced_legislation_search');
-    $content['search_legislation_results'] = $view->buildRenderable('search_results_block');
-
+    $request = \Drupal::service('request_stack')->getCurrentRequest();
+    if ($request->query->get('type') ||
+      $request->query->get('session_year') ||
+      $request->query->get('issue') ||
+      $request->query->get('printno') ||
+      $request->query->get('status') ||
+      $request->query->get('sponsor') ||
+      $request->query->get('full_text') ||
+      $request->query->get('committee') ||
+      $request->query->get('month')) {
+      try {
+        $view = Views::getView('advanced_legislation_search');
+        $content['search_legislation_results'] = $view->buildRenderable('search_results_block');
+      }
+      catch (\Exception $e) {
+        $message = 'An unexpected error has occurred while searching. Please try again later.';
+        $variables = [
+          'msg' => $e->getMessage(),
+          'search' => $search,
+        ];
+        \Drupal::service('logger.channel.nys_legislation_explorer')->error($message, $variables);
+      }
+    }
     $content['search_legislation_form'] = $this->formBuilder->getForm('Drupal\nys_legislation_explorer\Form\SearchAdvancedLegislationForm');
     return $content;
   }

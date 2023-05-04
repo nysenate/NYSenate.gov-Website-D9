@@ -333,7 +333,7 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-
+    $params = [];
     switch ($values['type']) {
       case 'bill':
         $params = [

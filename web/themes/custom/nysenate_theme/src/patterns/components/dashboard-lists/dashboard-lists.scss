@@ -129,6 +129,15 @@
   }
 }
 
+.dashboard-bills-list {
+
+  @include breakpoint($bp-sm) {
+    .nys-bill-status__sml li, .nys-bill-status__drk li {
+      margin-top: -15.5px;
+    }
+  }
+}
+
 .facet {
   margin: 0 0 20px 0;
 
@@ -209,5 +218,18 @@
     color: $grey08;
     font-weight: $font-weight-bold;
     text-transform: none;
+  }
+}
+
+.view-constituent-bills {
+
+  .content-list__wrapper {
+
+    @include breakpoint($bp-sm) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      margin-bottom: 40px;
+    }
   }
 }

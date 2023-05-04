@@ -45,7 +45,7 @@ class DashboardSenatorsController extends ControllerBase {
       $content['senator_' . $senator->id()] = [
         '#attributes' => ['class' => ['senator_management_link']],
         '#type' => 'container',
-        'senator' => $viewer->view($senator, 'sponsor_list'),
+        'senator' => $viewer->view($senator, 'dashboard'),
       ];
     }
 

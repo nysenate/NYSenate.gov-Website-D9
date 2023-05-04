@@ -90,7 +90,124 @@ class EditProfileForm extends ProfileForm {
       $form[$name]['#access'] = FALSE;
     }
 
+    $form['dashboard_profile_edit'] = [
+      // Main form attributes.
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'dashboard-profile-edit',
+        ],
+      ],
+
+      'form_wrapper' => [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            'form-wrapper',
+          ],
+        ],
+
+        'left' => [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => [
+              'left',
+            ],
+          ],
+          'full_name' => [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => [
+                'name',
+              ],
+            ],
+            'field_first_name' => $form['field_first_name'],
+            'field_last_name' => $form['field_last_name'],
+          ],
+          'field_username' => $form['account']['name'],
+          'field_email' => $form['account']['mail'],
+          'field_address' => $form['field_address'],
+        ],
+
+        'center' => [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => [
+              'center',
+            ],
+          ],
+          'field_profile_picture' => $form['field_profile_picture'],
+        ],
+
+        'right' => [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => [
+              'right',
+            ],
+          ],
+          'field_dateofbirth' => $form['field_dateofbirth'],
+          'field_gender_user' => $form['field_gender_user'],
+          'field_user_receive_emails' => $form['field_user_receive_emails'],
+        ],
+      ],
+      'actions' => $form['actions'],
+      '#attached' => [
+        'library' => [
+          'nysenate_theme/dashboard-profile-edit',
+        ],
+      ],
+    ];
+
+    // Hide these fields.
+    $form['account']['mail']['#type'] = 'hidden';
+    $form['account']['name']['#type'] = 'hidden';
+    $form['actions']['submit']['#access'] = FALSE;
+
+    $hidden = [
+      'field_first_name',
+      'field_last_name',
+      'field_address',
+      'field_profile_picture',
+      'field_dateofbirth',
+      'field_gender_user',
+      'field_user_receive_emails',
+    ];
+    foreach ($hidden as $name) {
+      $form[$name]['#type'] = 'hidden';
+    }
+
+    // Clean-up fields.
+    unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_username']['#description']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_email']['#description']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_address']['widget'][0]['#title']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#title']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#description']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_dateofbirth']['widget']['#title']);
+    unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#description']);
+    $form['dashboard_profile_edit']['form_wrapper']['right']['field_gender_user']['widget']['#title'] = 'GENDER (OPTIONAL)';
+    $form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#title'] = 'LET MY SENATOR CONTACT ME.';
+
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+
+    // Set mail and name values.
+    if ($values['mail'] != $values['field_email']) {
+      $values['mail'] = $values['field_email'];
+    }
+    if ($values['name'] != $values['field_username']) {
+      $values['name'] = $values['field_username'];
+    }
+
+    $form_state->setValues($values);
+
+    return parent::validateForm($form, $form_state);
   }
 
 }

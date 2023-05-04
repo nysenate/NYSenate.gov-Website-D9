@@ -10,11 +10,27 @@
  * @see nys-questionnaires-district-submissions-highchart.html.twig
  */
 #}
-<ul class="tabs">
+{{ attach_library('nysenate_theme/dashboard-petitions-questionnaires') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+
+<dl class="l-tab-bar">
+  <div class="c-tab--arrow u-mobile-only"></div>
+  <dd class="c-tab active">
+    <input class="c-tab-link form-radio" type="radio" name="petitions" value="#panel1"/>
+    <label class="c-tab-link" for="petitions">Your Questionnaires</label>
+  </dd>
+  <dd class="c-tab">
+    <input class="c-tab-link form-radio" type="radio" name="questionnaires" value="#panel2"/>
+    <label class="c-tab-link" for="questionnaires">
+      Other Questionnaires
+    </label>
+  </dd>
+</dl>
+{# <ul class="tabs">
   <li class="active tab" data-target="panel1">Your Questionnaires</li>
   <li class="tab" data-target="panel2">Other Questionnaires</li>
-</ul>
-<div id="panel1" class="nys-senators-management-questionnaires-yours tab-content active">
+</ul> #}
+{# <div id="panel1" class="nys-senators-management-questionnaires-yours tab-content active">
   <div class="your-questionnaires-list">
     {% if your_questionnaires is iterable and your_questionnaires|length > 0 %}
       {% for val in your_questionnaires %}
@@ -29,4 +45,24 @@
 <div id="panel2" class="nys-senators-management-questionnaires-others tab-content">
   {{ other_questionnaires }}
   <div class="questionnaire-user-list"></div>
+</div> #}
+
+<div class="tabs-content">
+  <div class="nys-senators-management-questionnaires-yours tab-content active" id="panel1">
+    <div class="your-questionnaires-list">
+      {% if your_questionnaires is iterable and your_questionnaires|length > 0 %}
+        {% for val in your_questionnaires %}
+          {{ include('nys-questionnaires-district-submissions-highchart.html.twig', val) }}
+        {% endfor %}
+      {% else %}
+        No open questionnaires were found.
+      {% endif %}
+    </div>
+    <div class="questionnaire-user-list"></div>
+  </div>
+
+  <div class="nys-senators-management-questionnaires-others tab-content" id="panel2">
+    {{ other_questionnaires }}
+    <div class="questionnaire-user-list"></div>
+  </div>
 </div>

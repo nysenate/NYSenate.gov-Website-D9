@@ -226,7 +226,7 @@ class BulkMessageForm extends FormBase {
       return;
     }
 
-    $dashboard_link = Url::fromUserInput('/user/%userid/dashboard', ['%userid' => $this->currentUser->id()])->toString();
+    $dashboard_link = Url::fromUserInput('/dashboard', ['%userid' => $this->currentUser->id()])->toString();
     if ($values['recipient_uid'] == 'query') {
       $form_state['redirect'] = [
         $dashboard_link . '/inbox',

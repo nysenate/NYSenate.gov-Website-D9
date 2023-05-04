@@ -124,6 +124,8 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
+    $form_state->addBuildInfo('is_embed', $parameter['is_embed'] ?? FALSE);
+
     $form['#id'] = 'nys-bill-vote-vote-widget-' . $node_id;
 
     $label = $this->billVoteHelper->getVotedLabel($default_value);
@@ -220,11 +222,11 @@ class BillVoteWidgetForm extends FormBase {
     $nid = $settings['entity_id'];
 
     // If we have a node id, load that node.  Otherwise, use the current.
-    $ref_node = $nid ? $this->entityTypeManager->getStorage('node')->load($nid) : $this->routeMatch->getParameter('node');
+    $ref_node = $this->routeMatch->getParameter('node') ?: $this->entityTypeManager->getStorage('node')->load($nid);
 
     // If the nid matches the current node's id, then this is not an embed.
     $is_embed = FALSE;
-    if ($ref_node->id() !== $nid) {
+    if ($settings['is_embed']) {
       $is_embed = TRUE;
       $form_state->addBuildInfo('is_embed', TRUE);
     }
@@ -238,6 +240,7 @@ class BillVoteWidgetForm extends FormBase {
       // Construct the new form controls.
       $nys_subscribe_form = [
         'nys_bill_subscribe' => [
+          '#uses_button_tag' => TRUE,
           '#type' => 'button',
           '#attributes' => [
             'class' => ['c-block--btn', 'nys-subscribe-button'],
@@ -266,10 +269,10 @@ class BillVoteWidgetForm extends FormBase {
       // the additional button.
       if ($is_embed) {
         $form['#attributes']['class'][] = 'nys-bill-vote-form-embedded';
-        $form['nys_bill_vote_container']['nys_bill_vote_label']['#weight'] = 1;
-        $form['nys_bill_vote_container']['nys_bill_vote_yes']['#weight'] = 3;
-        $form['nys_bill_vote_container']['nys_bill_vote_no']['#weight'] = 4;
-        $form['nys_bill_vote_container'] += $nys_subscribe_form;
+        $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['#weight'] = 1;
+        $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_yes']['#weight'] = 3;
+        $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_no']['#weight'] = 4;
+        $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper'] += $nys_subscribe_form;
       }
       // For bill pages, set a new container to hold the subscribe controls.
       else {
@@ -278,7 +281,7 @@ class BillVoteWidgetForm extends FormBase {
           '#attributes' => ['class' => ['nys-bill-subscribe']],
           '#id' => 'edit-nys-bill-subscribe-container-' . $nid,
           'nys_bill_subscribe_title' => [
-            '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
+            '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA ⓘ</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
           ],
         ];
         if (!$this->currentUser->isAuthenticated()) {
@@ -304,14 +307,21 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $build_info = $form_state->getBuildInfo();
+    $settings = $form_state->getBuildInfo();
     $triggering_element = $form_state->getTriggeringElement();
     $value = $triggering_element['#value'];
     $id = $triggering_element['#id'];
 
-    $bill_path = '/node/' . $build_info['entity_id'];
+    $bill_path = '/node/' . $settings['entity_id'];
 
     $intent = $this->billVoteHelper->getIntentFromVote($value);
+
+    if ($settings['is_embed']) {
+      $url = Url::fromUserInput($bill_path);
+      $command = new RedirectCommand($url->toString() . '?intent=' . $intent);
+      $response->addCommand($command);
+      return $response;
+    }
 
     $vote_args = [
       '#' . $id,

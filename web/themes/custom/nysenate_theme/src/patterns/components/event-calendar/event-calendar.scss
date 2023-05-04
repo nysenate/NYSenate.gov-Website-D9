@@ -26,10 +26,6 @@
   color: $grey05;
 }
 
-.c-event-name a {
-  color: $grey08;
-}
-
 // STYLES FOR CALENDAR
 #datepicker {
   input {
@@ -138,12 +134,6 @@
         background: transparent;
       }
 
-      tr:hover {
-				td {
-					background: $yellow02 !important;
-				}
-			}
-
       th,
       td {
         width: 14.2%;
@@ -183,10 +173,16 @@
       &.week {
 
         .currentweek {
-          background: $yellow02;
+          background: $yellow03;
 
           .dp_current {
             background: transparent;
+          }
+        }
+
+        tr:hover {
+          td {
+            background: $yellow02 !important;
           }
         }
       }
@@ -326,6 +322,7 @@
     margin-top: 25px;
     display: none;
     font-family: $font-serif-semibold;
+    color: $grey08;
   }
 
   .cal-nav-list {
@@ -381,8 +378,6 @@
 
 		span.title {
 			margin: 0;
-			color: $grey02;
-			font-family: $font-serif-semibold;
 			font-size: 20px;
 			line-height: 42px;
 		}

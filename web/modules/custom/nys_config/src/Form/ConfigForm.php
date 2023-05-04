@@ -91,6 +91,32 @@ class ConfigForm extends ConfigFormBase {
       '#default_value' => $config->get('nys_access_permissions_prev_query_ttl'),
     ];
 
+    /*
+     * Session Status.
+     */
+    $form['session_state'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Session Status'),
+      '#description' => $this->t('Data points related to state of the Session and streaming.'),
+    ];
+
+    $form['session_state']['nys_session_status'] = [
+      '#title' => $this->t('Current NY State Senate Status'),
+      '#type'  => 'select',
+      '#default_value' => $config->get('nys_session_status'),
+      '#options' => [
+        'in_session' => $this->t('In Session'),
+        'out_session' => $this->t('Out of Session'),
+        'budget_week' => $this->t('Budget Week'),
+      ],
+    ];
+    $form['session_state']['nys_session_year'] = [
+      '#title' => $this->t('Current NY State Senate Session Year'),
+      '#type'  => 'textfield',
+      '#size' => 4,
+      '#default_value' => $config->get('nys_session_year'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -102,6 +128,8 @@ class ConfigForm extends ConfigFormBase {
     $config->set('governor_full_name', $form_state->getValue('governor_full_name'));
     $config->set('governor_last_name', $form_state->getValue('governor_last_name'));
     $config->set('nys_access_permissions_prev_query_ttl', $form_state->getValue('nys_access_permissions_prev_query_ttl'));
+    $config->set('nys_session_status', $form_state->getValue('nys_session_status'));
+    $config->set('nys_session_year', $form_state->getValue('nys_session_year'));
     $config->save();
     parent::submitForm($form, $form_state);
   }

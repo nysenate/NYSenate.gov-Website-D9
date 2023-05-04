@@ -62,9 +62,11 @@
         </div>
       </div>
       {% if is_active %}
-        <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
+        <a class="icon-before__contact c-block--btn c-senator-hero--contact-btn med-bg" href="{{ is_logged ? your_dashboard_link : message_senator_link }}">
+          {{ is_logged ? "your dashboard"|t : "message senator"|t }}</a>
       {% else %}
-        <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
+        <a class="{{ is_logged ? 'icon-before__contact' : 'icon-before__find-senator' }} c-block--btn c-senator-hero--contact-btn med-bg" href="{{ is_logged ? your_dashboard_link : '/find-my-senator' }}">
+          {{ is_logged ? "your dashboard"|t : "find your senator"|t }}</a>
       {% endif %}
     </div>
     {# end of senator hero #}
@@ -143,7 +145,7 @@
         {% if image_hero %}
           {{ image_hero }}
         {% else %}
-          <img src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg" />
+          <img src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg"/>
         {% endif %}
         {% if title %}
           <div class="l-row c-hero--tout c-hero--featured">
@@ -157,7 +159,12 @@
           </div>
         {% else %}
           <div class="l-row l-row--main c-hero--tout">
-            <p class="c-hero--welcome" >Share your opinion on the <a href="/explore-issues">issues</a> facing our state, say aye or nay to the <a href="/legislation">bills</a> before our legislature, and let your voice <a href="/user/login">be heard</a>.</p>
+            <p class="c-hero--welcome">Share your opinion on the
+              <a href="/explore-issues">issues</a>
+              facing our state, say aye or nay to the
+              <a href="/legislation">bills</a>
+              before our legislature, and let your voice
+              <a href="/user/login">be heard</a>.</p>
           </div>
         {% endif %}
       </div>

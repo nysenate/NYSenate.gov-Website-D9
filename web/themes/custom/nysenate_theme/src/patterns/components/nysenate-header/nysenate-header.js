@@ -183,7 +183,7 @@
           'z-index': '100'
         });
 
-        if (self.isOpenData() || self.isIssuePage()) {
+        if (self.isOpenData() && self.isIssuePage()) {
           origActionBar = nav.find('.c-actionbar');
           actionBar = origActionBar.clone();
 
@@ -194,7 +194,7 @@
 
         if (self.isIssuePage()) {
           origNav.find('.c-actionbar').removeClass('hidden');
-          origNav.find('.c-actionbar').css('visibility', 'hidden');
+          origNav.find('.c-actionbar').css('visibility', '');
         }
 
         menu = nav.find('.c-nav--wrap');
@@ -273,6 +273,7 @@
           currentTop + nav.outerHeight() >= origActionBar.offset().top
         ) {
           actionBar.removeClass('hidden');
+          origActionBar.addClass('hidden');
         }
         else if (
           this.isMovingUp(currentTop, previousTop) &&
@@ -280,6 +281,7 @@
         ) {
           if (toggleActionBar !== 'show-actionbar') {
             actionBar.addClass('hidden');
+            origActionBar.removeClass('hidden');
           }
         }
       }

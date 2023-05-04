@@ -1551,6 +1551,38 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $variables['items'] = $items;
   }
 
+  // Committee Featured Story.
+  elseif ($view->id() == 'committee_content' && $view->current_display == 'featured_story') {
+    if (isset($view->result[0])) {
+      $node = $view->result[0]->_entity;
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+
+      $image = NULL;
+      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
+        $image = $media_storage->load($node->field_image_main->target_id);
+        $image = $view_builder->view($image, 'featured_content');
+      }
+      $variables['image_main'] = $image ?? [];
+
+      $issues = [];
+      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+        foreach ($node->field_issues as $value) {
+          /** @var \Drupal\taxonomy\Entity\Term $term */
+          $term = $value->entity;
+          $issues[] = [
+            'text' => $term->getName(),
+            'url' => $term->toUrl()->toString(),
+          ];
+        }
+      }
+      asort($issues);
+      $variables['tags'] = $issues;
+
+      $variables['label'] = $node->label();
+      $variables['url'] = $node->toUrl()->toString();
+    }
+  }
+
   // Featured issue EVA.
   if ($view->id() == 'featured_issue' && $view->current_display == 'featured_issue') {
     $results = $view->result;
@@ -1950,6 +1982,7 @@ function nysenate_theme_preprocess_views_view__student_programs_news__news_nolin
 function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
   if ($hook == 'node') {
     $node = \Drupal::routeMatch()->getParameter('node');
+    $element_node = $variables['elements']['#node'];
     $current_path = \Drupal::service('path.current')->getPath();
     $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
 
@@ -1959,7 +1992,7 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
       '/events',
     ];
 
-    if (in_array($path_alias, $pages)) {
+    if (in_array($path_alias, $pages) && $node == $element_node) {
       $formatted_label = str_replace(
         ['/', '-'],
         ['', '_'],
@@ -2679,6 +2712,13 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
   // Display the microsite node with altered contents.
   $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()->getViewBuilder('node')
     ->view($node, 'full');
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__committees(&$variables) {
+  $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
 }
 
 /**
@@ -5077,6 +5117,8 @@ function nysenate_theme_preprocess_node__landing__senators_committees(&$variable
       }
     }
   }
+
+  $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
 }
 
 /**

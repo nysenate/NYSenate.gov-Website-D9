@@ -1,0 +1,46 @@
+{#
+/**
+ * @file
+ * Theme implementation for a 'webform' element.
+ *
+ * This is an copy of the webform.html.twig theme_wrapper which includes the
+ * 'title_prefix' and 'title_suffix' variables needed for
+ * contextual links to appear.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the webform.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_webform()
+ * @see _webform_form_after_build()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('nysenate_theme/contact-form') }}
+
+<div class="container">
+  <h2 class="nys-title">Contact the New York State Senate</h2>
+  <form{{attributes}}>
+    <div id="edit-inquiry-type" class="form-radios">
+      <div class="form-item form-type-radio form-item-inquiry-type">
+        <input type="radio" id="edit-inquiry-type-general-inquiry" name="inquiry_type" value="General Inquiry" checked="checked" class="form-radio">
+        <label class="option" for="edit-inquiry-type-general-inquiry">General Inquiry
+        </label>
+
+      </div>
+      <div class="form-item form-type-radio form-item-inquiry-type">
+        <input type="radio" id="edit-inquiry-type-press-inquiry" name="inquiry_type" value="Press Inquiry" class="form-radio">
+        <label class="option" for="edit-inquiry-type-press-inquiry">Press Inquiry
+        </label>
+      </div>
+    </div>
+    {{ title_prefix }}
+    {{ children }}
+    {{ title_suffix }}
+  </form>
+</div>

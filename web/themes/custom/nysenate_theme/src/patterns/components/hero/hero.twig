@@ -1,7 +1,7 @@
 {{ attach_library('nysenate_theme/hero') }}
 {{ attach_library('rain_theme/media') }}
 
-<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == "default" %} hero--default{% endif %} {% if type == "session" or type == "public_hearing" %}hero--public-hearing{% endif %}">
+<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == "default" %} hero--default{% endif %} {% if type == "press_conference" or type == "public_hearing" or type == "session" %}hero--public-hearing{% endif %}">
   {% if type == "senator" %}
     {# start of senator hero #}
     <div class="l-header-region l-row l-row--hero c-senator-hero">
@@ -68,7 +68,7 @@
       {% endif %}
     </div>
     {# end of senator hero #}
-  {% elseif type == "session" or type == "public_hearing" %}
+  {% elseif type == "press_conference" or type == "public_hearing" or type == "session" %}
     {%
       include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
         is_logged: is_logged
@@ -87,7 +87,13 @@
           <div class="c-hero-livestream-meta">
             <label>{{ 'Live Broadcast'|t }}</label>
             <h3>
-              <a href="{{ url_calendar }}">{{ 'Session'|t }}</a>
+              <a href="{{ url_calendar }}">
+                {% if title %}
+                  {{ title }}
+                {% else %}
+                  {{ 'Session'|t }}
+                {% endif %}
+              </a>
             </h3>
             <div class="livestream-date">
               <span class="date-display-single">{{ date }}</span>

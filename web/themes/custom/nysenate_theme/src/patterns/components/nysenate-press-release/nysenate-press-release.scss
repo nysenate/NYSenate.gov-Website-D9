@@ -189,6 +189,11 @@
     @include breakpoint($bp-sm) {
       flex: 30%;
     }
+
+    img {
+      aspect-ratio: 3/2;
+      object-fit: cover;
+    }
   }
 
   @include breakpoint($bp-sm) {

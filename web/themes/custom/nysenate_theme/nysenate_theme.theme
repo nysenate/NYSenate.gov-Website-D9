@@ -822,17 +822,19 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
 function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_hero(&$variables) {
   $media_storage = \Drupal::entityTypeManager()->getStorage('media');
   $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $bundle_info = \Drupal::service("entity_type.bundle.info")->getAllBundleInfo();
 
   $result = $variables["content"]["#view"]->result;
 
   foreach ($result as $node) {
     $node = $node->_entity;
+    $type = $node->field_event_type->value ?? NULL;
     $streaming = [
-      'session',
       'public_hearing',
+      'session',
     ];
 
-    if ($node instanceof NodeInterface && in_array($node->bundle(), $streaming)) {
+    if ($node instanceof NodeInterface && (in_array($node->bundle(), $streaming) || ($node->bundle() == 'event' && $type == 'press_conference'))) {
       $date = NULL;
       if (isset($node->field_date_range)) {
         $date_range = $node->field_date_range;
@@ -852,9 +854,22 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       if (!$node->field_ustream->isEmpty()) {
         $media_id = $node->field_ustream->value ?? [];
       }
+      if ($node->bundle() != 'event') {
+        $type = $node->bundle();
+        $title = $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'];
+      }
+      else {
+        $allowed_values = [];
+        if ($node->hasField('field_event_type')) {
+          $allowed_values = $node->field_event_type->getSetting('allowed_values');
+        }
+
+        $title = $allowed_values[$node->field_event_type->value];
+      }
 
       $variables['homepage_hero'] = [
-        'type' => $node->bundle(),
+        'type' => $type,
+        'title' => $title,
         'date' => $date ?? '',
         'url_calendar' => $url_calendar ?? $node->toUrl()->toString(),
         'media_id' => $media_id ?? [],
@@ -1230,10 +1245,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-          if (!empty($file)) {
-            $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-          }
+          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
         }
       }
 
@@ -1384,9 +1396,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $image_main = NULL;
       if (isset($node->field_image_main) && !empty($node->field_image_main->target_id)) {
         $media = $media_storage->load($node->field_image_main->target_id);
-        if ($media) {
-          $file = File::load($media->field_image->target_id);
-          $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        if (!empty($media)) {
+          $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
         }
       }
       elseif (!empty($node) && $node->bundle() === 'video') {
@@ -1397,7 +1408,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $media_storage->save($video);
           $image_file = File::load($video->thumbnail->target_id);
           $image_uri = $image_file->uri->value;
-          $image_main = \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri);
+          $video_image = \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri);
         }
       }
 
@@ -1423,7 +1434,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           'url' => $node->toUrl()->toString(),
         ],
         'date' => $date,
-        'img_src' => $image_main,
+        'image' => $image_main,
+        'img_src' => !empty($video_image) ? $video_image : FALSE,
       ];
     }
 
@@ -1508,10 +1520,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-          if (!empty($file)) {
-            $news_image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-          }
+          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
         }
       }
 
@@ -1699,10 +1708,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-          if (!empty($file)) {
-            $image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-          }
+          $image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
         }
       }
 
@@ -1715,7 +1721,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       $news[] = [
         'title' => $node->getTitle(),
         'url' => $node->toUrl()->toString(),
-        'image_src' => $image,
+        'image' => $image,
         'date' => $date,
         'type' => $row['content']['#view']->field['type']->last_render,
       ];
@@ -2153,10 +2159,7 @@ function nysenate_theme_preprocess_semanticviews_row__committee_content__news(&$
   if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
     $media = \Drupal::entityTypeManager()->getStorage('media')->load($node->field_image_main->target_id);
     if (!empty($media)) {
-      $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-      if (!empty($file)) {
-        $variables['img_src'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-      }
+      $variables['img_src'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
     }
   }
 }
@@ -2224,10 +2227,7 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates(&$vari
   if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
     $media = \Drupal::entityTypeManager()->getStorage('media')->load($node->field_image_main->target_id);
     if (!empty($media)) {
-      $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-      if (!empty($file)) {
-        $variables['article']['img_src'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-      }
+      $variables['article']['image'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
     }
   }
 
@@ -2296,10 +2296,7 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__news(&$vari
   if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
     $media = \Drupal::entityTypeManager()->getStorage('media')->load($node->field_image_main->target_id);
     if (!empty($media)) {
-      $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-      if (!empty($file)) {
-        $variables['img_src'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-      }
+      $variables['img_src'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
     }
   }
 

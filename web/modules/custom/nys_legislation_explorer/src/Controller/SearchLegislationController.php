@@ -49,7 +49,7 @@ class SearchLegislationController extends ControllerBase {
         $message = 'An unexpected error has occurred while searching. Please try again later.';
         $variables = [
           'msg' => $e->getMessage(),
-          'search' => $search,
+          'search' => $request,
         ];
         \Drupal::service('logger.channel.nys_legislation_explorer')->error($message, $variables);
       }

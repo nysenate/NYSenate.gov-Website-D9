@@ -601,13 +601,7 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
           $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
           $micrositeTerm = Term::load($tid);
           $validateLanding = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing';
-          $validateAbout = $term->get('field_active_senator')->value === 0 && $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About';
           $validateInactive = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive';
-
-          if ($validateAbout) {
-            /** @var \Drupal\node\Entity\Node $aboutNode */
-            $aboutNode = $node;
-          }
 
           if ($validateLanding) {
             $activeSenator === 1 ? $node->setPublished() : $node->setUnpublished();
@@ -624,8 +618,8 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
     if (!$updatedValue) {
       $hasInactivePage = \Drupal::service('nys_senators.senators_helper')
         ->hasMicroSiteInactive($nodes);
-      if (!$hasInactivePage && !empty($aboutNode)) {
-        _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
+      if (!$hasInactivePage) {
+        _nys_senators_create_senator_microsite_inactive($term, $currentTid);
       }
     }
   }
@@ -636,12 +630,10 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The original entity object.
- * @param \Drupal\node\NodeInterface $aboutNode
- *   The entity About microsite.
  * @param string $currentTid
  *   The Tid variable from the term.
  */
-function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity, NodeInterface $aboutNode, string $currentTid) {
+function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity, string $currentTid) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $entity;
 
@@ -698,31 +690,13 @@ function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity
       ],
     ],
   ];
-
-  // Checks if aboutNode is set and has blocks to iterate with.
-  if ($aboutNode instanceof NodeInterface
-    && $aboutNode->hasField('field_block')
-    && !$aboutNode->get('field_block')->isEmpty()) {
-    // Iterates through each field block.
-    foreach ($aboutNode->get('field_block') as $key => $value) {
-      /** @var \Drupal\Core\Entity\Plugin\DataType\EntityReference $entityReference */
-      $entityReference = $value->get('entity');
-      /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-      $block_content = $entityReference->getTarget()->getValue();
-
-      if ($block_content instanceof BlockContent) {
-        // Sets inactiveText for former Senator page.
-        if ($block_content->bundle() === 'text') {
-          $existingText = !$block_content->get('field_body_left')
-            ->isEmpty() ? $block_content->get('field_body_left')
-            ->getValue() : '';
-          $existingText = !empty($existingText) ? $existingText[0]['value'] : '';
-          $inactiveHeader = '<h2>About Former Senator ' . $term->getName() . '\'s</h2>';
-          $inactiveFooter = '<div><p><em>Last edited by Senator ' . $term->getName() . '\'s staff prior to last day in office.</em></p></div>';
-          $inactiveText = $inactiveHeader . $existingText . $inactiveFooter;
-        }
-      }
-    }
+  $entityTypeManager = \Drupal::entityTypeManager();
+  $term = $entityTypeManager->getStorage('taxonomy_term')->load($currentTid);
+  $fieldAboutValue = $term->get('field_about')->value;
+  if (!empty($fieldAboutValue)) {
+    $inactiveHeader = '<h2>About Former Senator ' . $term->getName() . '\'s</h2>';
+    $inactiveFooter = '<div><p><em>Last edited by Senator ' . $term->getName() . '\'s staff prior to last day in office.</em></p></div>';
+    $inactiveText = $inactiveHeader . $fieldAboutValue . $inactiveFooter;
   }
 
   // Checks if inactiveText is set.

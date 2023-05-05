@@ -1,0 +1,7 @@
+nys_legislation_explorer.searchLegislation:
+  path: '/search/legislation'
+  defaults:
+    _controller: '\Drupal\nys_legislation_explorer\Controller\SearchLegislationController::page'
+  requirements:
+    _permission: 'access content'
+    _access: 'TRUE'

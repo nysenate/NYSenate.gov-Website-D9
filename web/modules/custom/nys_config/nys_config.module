@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Provides alterations for Drupal contrib modules.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK() for node templates.
+ */
+function nys_config_preprocess_node__landing(&$variables) {
+  $node = $variables['node'];
+  $node_override = NULL;
+  // Exit the preprocess if not Homepage Landing page.
+  if ($node->label() === 'Home') {
+
+    $variables['content']['field_landing_blocks'];
+
+    $session_status = \Drupal::configFactory()->get('nys_config.settings')->get('nys_session_status');
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+
+    switch ($session_status) {
+
+      case 'out_session':
+        $node_override = $node_storage->loadByProperties([
+          'type' => 'landing',
+          'title' => 'Home - Out of Session',
+        ]);
+        break;
+
+      case 'budget_week':
+        $node_override = $node_storage->loadByProperties([
+          'type' => 'landing',
+          'title' => 'Home - Budget Week',
+        ]);
+        break;
+
+      case 'in_session':
+      default:
+        // Do nothing. This is default.
+        break;
+    }
+
+    if ($node_override !== NULL) {
+      $entity = reset($node_override);
+      if (!$entity->field_landing_blocks->isEmpty()) {
+        $variables['content']['field_landing_blocks'] = $entity->field_landing_blocks->view('default');
+      }
+    }
+  }
+
+}

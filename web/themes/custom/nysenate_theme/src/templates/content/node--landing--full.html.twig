@@ -78,6 +78,11 @@
 
   {% if page %}
     <header class="c-news--head">
+    {% if node.label != 'Home' %}
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+    {% endif %}
       <div class="c-news--head-meta">
         {% if
           content.field_date

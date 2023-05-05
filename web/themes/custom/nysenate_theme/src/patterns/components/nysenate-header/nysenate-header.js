@@ -231,10 +231,10 @@
               menu,
               actionBar,
               origActionBar,
-              self.isOpenData() || self.isIssuePage()
+              self.isOpenData() && self.isIssuePage()
                 ? 'show-actionbar'
                 : 'hide-action-bar',
-              self.isIssuePage()
+              self.isOpenData() && self.isIssuePage()
             );
 
             previousTop = $(document).scrollTop();

@@ -1,26 +1,20 @@
 {{ attach_library('nysenate_theme/hero') }}
 {{ attach_library('rain_theme/media') }}
 
-<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == "default" %} hero--default{% endif %} {% if type == "press_conference" or type == "public_hearing" or type == "session" %}hero--public-hearing{% endif %}">
+<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == " default" %} hero--default{% endif %} {% if type == " press_conference" or type == " public_hearing" or type == " session" %}hero--public-hearing{% endif %}">
   {% if type == "senator" %}
     {# start of senator hero #}
     <div class="l-header-region l-row l-row--hero c-senator-hero">
-      {% if senator_microsite_link %}
-        <a href="{{ senator_microsite_link }}">
+      <div class="c-senator-hero--img" id="senatorImage">
+        {% if image_hero %}
+          {{ image_hero }}
+        {% else %}
+          <img src="{{ default_image }}">
         {% endif %}
-        <div class="c-senator-hero--img" id="senatorImage">
-          {% if image_hero %}
-            {{ image_hero }}
-          {% else %}
-            <img src="{{ default_image }}">
-          {% endif %}
-        </div>
-        <div id="smallShotImage">
-          {{ senator_headshot }}
-        </div>
-        {% if senator_microsite_link %}
-        </a>
-      {% endif %}
+      </div>
+      <div id="smallShotImage">
+        {{ senator_headshot }}
+      </div>
       <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
         <div>
           <h2 class="c-senator-hero--title">
@@ -62,9 +56,11 @@
         </div>
       </div>
       {% if is_active %}
-        <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
+        <a class="icon-before__contact c-block--btn c-senator-hero--contact-btn med-bg" href="{{ is_logged ? your_dashboard_link : message_senator_link }}">
+          {{ is_logged ? "your dashboard"|t : "message senator"|t }}</a>
       {% else %}
-        <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
+        <a class="{{ is_logged ? 'icon-before__contact' : 'icon-before__find-senator' }} c-block--btn c-senator-hero--contact-btn med-bg" href="{{ is_logged ? your_dashboard_link : '/find-my-senator' }}">
+          {{ is_logged ? "your dashboard"|t : "find your senator"|t }}</a>
       {% endif %}
     </div>
     {# end of senator hero #}
@@ -143,7 +139,7 @@
         {% if image_hero %}
           {{ image_hero }}
         {% else %}
-          <img src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg" />
+          <img src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg"/>
         {% endif %}
         {% if title %}
           <div class="l-row c-hero--tout c-hero--featured">
@@ -157,7 +153,12 @@
           </div>
         {% else %}
           <div class="l-row l-row--main c-hero--tout">
-            <p class="c-hero--welcome" >Share your opinion on the <a href="/explore-issues">issues</a> facing our state, say aye or nay to the <a href="/legislation">bills</a> before our legislature, and let your voice <a href="/user/login">be heard</a>.</p>
+            <p class="c-hero--welcome">Share your opinion on the
+              <a href="/explore-issues">issues</a>
+              facing our state, say aye or nay to the
+              <a href="/legislation">bills</a>
+              before our legislature, and let your voice
+              <a href="/user/login">be heard</a>.</p>
           </div>
         {% endif %}
       </div>

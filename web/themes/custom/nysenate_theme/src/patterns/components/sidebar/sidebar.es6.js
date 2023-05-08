@@ -23,9 +23,14 @@
       $this.onResize(header);
     },
     onResize: function (header) {
-      const headerBottom = header.offset().top + header.outerHeight();
-      const sidebar = $('.sidebar');
-      sidebar.css('--top', `${headerBottom}px`);
+      try {
+        const headerBottom = header.offset().top + header.outerHeight();
+        const sidebar = $('.sidebar');
+        sidebar.css('--top', `${headerBottom}px`);
+      }
+      catch (err) {
+        return err;
+      }
     },
     debounce: function (func, timeout = 300) {
       let timer;

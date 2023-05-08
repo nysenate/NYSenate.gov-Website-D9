@@ -256,3 +256,72 @@ function nysenate_update_9007() {
     }
   }
 }
+
+/**
+ * Add links to Policies Menu.
+ */
+function nysenate_update_9008() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'policies';
+
+  $links = [
+    '0' => [
+      'title' => 'Accessibility Statement',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+    '1' => [
+      'title' => 'Contact the Senate',
+      'url' => 'internal:/contact',
+    ],
+    '2' => [
+      'title' => 'Creative Commons',
+      'url' => 'https://creativecommons.org/licenses/by-nc-nd/3.0/us/',
+    ],
+    '3' => [
+      'title' => 'Developers',
+      'url' => 'internal:/nysenategov-source-code',
+    ],
+    '4' => [
+      'title' => 'Home Rule Form',
+      'url' => 'internal:/home-rule-form',
+    ],
+    '5' => [
+      'title' => 'Policies & Waivers',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+    '6' => [
+      'title' => 'Privacy Policy',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+    '7' => [
+      'title' => 'Terms of Participation',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+  ];
+
+  foreach ($links as $weight => $menu) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $menu['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update Policies menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $menu['url']]);
+      $menu_link->set('weight', $weight);
+      $menu_link->save();
+    }
+
+    // Create Policies menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $menu['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $menu['url']],
+        'weight' => $weight,
+      ]);
+      $menu_link->save();
+    }
+  }
+}

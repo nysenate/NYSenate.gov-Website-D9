@@ -231,7 +231,7 @@ class BillVoteWidgetForm extends FormBase {
       $form_state->addBuildInfo('is_embed', TRUE);
     }
 
-    $tid = $ref_node->field_bill_multi_session_root->target_id;
+    $tid = $ref_node->field_bill_multi_session_root->target_id ?? NULL;
 
     // Act only if there's a node id and a taxonomy term id.
     if ($tid && $ref_node) {

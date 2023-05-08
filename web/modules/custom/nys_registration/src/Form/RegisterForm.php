@@ -177,6 +177,7 @@ class RegisterForm extends UserRegisterForm {
       'field_user_phone_no',
       'field_user_receive_emails',
       'field_voting_auto_subscribe',
+      'field_profile_picture',
     ];
     foreach ($disable as $name) {
       $form[$name]['#access'] = FALSE;

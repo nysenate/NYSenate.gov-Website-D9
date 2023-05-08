@@ -569,3 +569,21 @@ function nys_senators_update_9021() {
     }
   }
 }
+
+/**
+ * Resave "senator" taxonomy vocabulary. This will generate inactive pages.
+ */
+function nys_senators_update_9022() {
+  $vid = 'senator';
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
+
+  foreach ($terms as $term) {
+    $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->tid);
+    if ($term->hasField('field_active_senator')) {
+      $value = (bool) $term->get('field_active_senator')->value;
+      if (!$value) {
+        _nys_senators_validate_microsite_term($term, $value, 0);
+      }
+    }
+  }
+}

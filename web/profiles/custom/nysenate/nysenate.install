@@ -147,3 +147,182 @@ function nysenate_update_9005() {
     $config->save();
   }
 }
+
+/**
+ * NYSD9-686: Resolve the title and buttons in Student Programs.
+ */
+function nysenate_update_9006(&$sandbox) {
+  // Update the title of Overview Text in Student Program.
+  $text_block_1 = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->load(3756);
+
+  if (!empty($text_block_1)) {
+    $text_block_1->set('field_title', 'Student Programs');
+    $text_block_1->set('field_show_title', 1);
+    $text_block_1->save();
+  }
+  // Update the body fields of Program Links in Student Program.
+  $text_block_2 = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->load(3757);
+
+  if (!empty($text_block_2)) {
+    // For field_body_left values.
+    $body_left = [
+      'value' => '
+        <p><a class="nys-btn--gold" href="/newsroom/articles/undergraduate-program">Undergraduate Session<br />
+        Assistants Program</a></p>
+        
+        <p><a class="nys-btn--blue" href="/newsroom/articles/2022/work-based-learning-assistant-springfall">Work-based Learning Assistant<br />
+        (Spring/Fall)</a></p>
+        ',
+      'format' => 'full_html',
+      'summary' => '',
+    ];
+    $body_right = [
+      'value' => '
+      <p><a class="nys-btn--gold" href="/newsroom/articles/graduate-program">Graduate Fellowships<br />
+      &nbsp;</a></p>
+      
+      <p><a class="nys-btn--blue" href="/newsroom/articles/2022/senate-production-internship-summer">Senate Production Internship<br />
+      (Summer)</a></p>
+      ',
+      'format' => 'full_html',
+      'summary' => '',
+    ];
+    $text_block_2->set('field_body_left', $body_left);
+    $text_block_2->set('field_body_right', $body_right);
+    $text_block_2->save();
+  }
+}
+
+/**
+ * Add links to Footer Menu.
+ */
+function nysenate_update_9007() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'footer';
+
+  $links = [
+    '0' => [
+      'title' => 'News & Issues',
+      'url' => 'internal:/news-and-issues',
+    ],
+    '1' => [
+      'title' => 'Senators & Committees',
+      'url' => 'internal:/senators-committees',
+    ],
+    '2' => [
+      'title' => 'Bills & Laws',
+      'url' => 'internal:/legislation',
+    ],
+    '3' => [
+      'title' => 'Budget',
+      'url' => 'internal:/2020-new-york-state-budget',
+    ],
+    '4' => [
+      'title' => 'Events',
+      'url' => 'internal:/events',
+    ],
+    '5' => [
+      'title' => 'About the Senate',
+      'url' => 'internal:/about',
+    ],
+  ];
+
+  foreach ($links as $weight => $menu) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $menu['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update footer menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $menu['url']]);
+      $menu_link->set('weight', $weight);
+      $menu_link->save();
+    }
+
+    // Create footer menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $menu['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $menu['url']],
+        'weight' => $weight,
+      ]);
+      $menu_link->save();
+    }
+  }
+}
+
+/**
+ * Add links to Policies Menu.
+ */
+function nysenate_update_9008() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'policies';
+
+  $links = [
+    '0' => [
+      'title' => 'Accessibility Statement',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+    '1' => [
+      'title' => 'Contact the Senate',
+      'url' => 'internal:/contact',
+    ],
+    '2' => [
+      'title' => 'Creative Commons',
+      'url' => 'https://creativecommons.org/licenses/by-nc-nd/3.0/us/',
+    ],
+    '3' => [
+      'title' => 'Developers',
+      'url' => 'internal:/nysenategov-source-code',
+    ],
+    '4' => [
+      'title' => 'Home Rule Form',
+      'url' => 'internal:/home-rule-form',
+    ],
+    '5' => [
+      'title' => 'Policies & Waivers',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+    '6' => [
+      'title' => 'Privacy Policy',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+    '7' => [
+      'title' => 'Terms of Participation',
+      'url' => 'internal:/policies-and-waivers',
+    ],
+  ];
+
+  foreach ($links as $weight => $menu) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $menu['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update Policies menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $menu['url']]);
+      $menu_link->set('weight', $weight);
+      $menu_link->save();
+    }
+
+    // Create Policies menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $menu['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $menu['url']],
+        'weight' => $weight,
+      ]);
+      $menu_link->save();
+    }
+  }
+}

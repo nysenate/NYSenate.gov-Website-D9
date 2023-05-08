@@ -43,10 +43,12 @@ function nys_bill_vote_node_view_alter(array &$build, EntityInterface $entity, E
   $type = $entity->bundle();
 
   // If the entity is a bill, get the form and save it to content.
+  $route_node = \Drupal::routeMatch()->getParameter('node');
   if ($type == 'bill') {
     $bill_vote_form_settings = [
       'entity_type' => $entity->bundle(),
       'entity_id' => $entity->id(),
+      'is_embed' => empty($route_node) || $route_node->id() !== $entity->id(),
     ];
 
     if ($display->getComponent('vote_widget')) {

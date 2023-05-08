@@ -220,3 +220,16 @@
     text-transform: none;
   }
 }
+
+.view-constituent-bills {
+
+  .content-list__wrapper {
+
+    @include breakpoint($bp-sm) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+  }
+}

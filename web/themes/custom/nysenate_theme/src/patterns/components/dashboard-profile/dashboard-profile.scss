@@ -14,6 +14,7 @@
       height: 70px;
       width: 70px;
       overflow: hidden;
+      border-radius: 70px;
 
       img {
         object-fit: cover;
@@ -35,10 +36,15 @@
     }
 
     .dash-user-info {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr;
       align-items: center;
       gap: 20px;
       margin-top: 20px;
+
+      @include breakpoint($bp-xsm) {
+        display: flex;
+      }
 
       .c-container--title {
         font-family: $font-serif-semibold;
@@ -85,14 +91,18 @@
         color: $grey08;
         margin: 0;
 
-        .duties {
-          color: $yellow03;
-          text-transform: uppercase;
-        }
-
         a {
           text-transform: uppercase;
         }
+      }
+
+      .duties {
+        color: $yellow03;
+        text-transform: uppercase;
+      }
+
+      .c-container--title {
+        display: inline-block;
       }
 
       .c-container--district {

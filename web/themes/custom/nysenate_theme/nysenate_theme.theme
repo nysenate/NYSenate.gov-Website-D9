@@ -4554,55 +4554,6 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
     }
   }
 
-  if ($view->id() == 'upcoming_legislation') {
-    $results = $view->result;
-    $unique_node_ids = [];
-    foreach ($results as $key => $item) {
-      $node = $item->_entity;
-      $a_s_replace_view = NULL;
-      $view->result[$key]->overridden = NULL;
-
-      if (isset($node->field_ol_chamber[0]) && $node->field_ol_chamber[0]->value == 'assembly') {
-        // Assembly bills should show their Senate same-as's.
-        $same_as_info = json_decode($item->node__field_ol_same_as_field_ol_same_as_value)[0];
-
-        // Query DB for correct bill to display.
-        $query = \Drupal::database()->select('node__field_ol_print_no', 'pn');
-        $query->addField('pn', 'entity_id');
-        $query->leftJoin('node__field_ol_session', 's', 'pn.entity_id = s.entity_id');
-        $query->condition('pn.field_ol_print_no_value', ($same_as_info->printNo ?? ''));
-        $query->condition('s.field_ol_session_value', ($same_as_info->session ?? ''));
-        $sa_bill_nid = $query->execute()->fetchField();
-
-        // Load replacement result record.
-        $a_s_replace_view = NULL;
-        $a_s_replace_view = Views::getView('upcoming_legislation');
-        $a_s_replace_view->setArguments([$sa_bill_nid]);
-        $a_s_replace_view->setDisplay('a_s_replace_record');
-        $a_s_replace_view->preExecute();
-        $a_s_replace_view->execute();
-
-        $node = $a_s_replace_view->result[0]->_entity;
-
-        $assembly_status = $item->node__field_ol_last_status_field_ol_last_status_value;
-        $assembly_status_date = $item->node__field_ol_last_status_date_field_ol_last_status_date_va;
-
-        $view->result[$key] = $a_s_replace_view->result[0];
-        $view->result[$key]->index = $item->index;
-        $view->result[$key]->node_field_data_title = $node->title->value ?? NULL;
-        $view->result[$key]->node__field_issues_field_issues_target_id = $node->field_issues[0]->target_id ?? NULL;
-        $view->result[$key]->node__field_ol_name_field_ol_name_value = $node->field_ol_name[0]->value ?? NULL;
-        $view->result[$key]->node__field_ol_name_field_ol_name_value = $node->field_ol_name[0]->value ?? NULL;
-        $view->result[$key]->node__field_ol_sponsor_field_ol_sponsor_target_id = $node->field_ol_sponsor[0]->target_id ?? NULL;
-        $view->result[$key]->node__field_ol_sponsor_name_field_ol_sponsor_name_value = $node->field_ol_sponsor_name[0]->value ?? NULL;
-        $view->result[$key]->field_field_ol_last_status = $assembly_status;
-        $view->result[$key]->field_field_ol_last_status_date = $assembly_status_date;
-
-        $view->result[$key]->overridden = $item->nid;
-      }
-    }
-  }
-
 }
 
 /**

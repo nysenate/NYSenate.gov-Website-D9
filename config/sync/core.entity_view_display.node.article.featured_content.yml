@@ -26,12 +26,7 @@ dependencies:
     - field.field.node.article.field_subtitle
     - node.type.article
   module:
-    - layout_builder
     - user
-third_party_settings:
-  layout_builder:
-    enabled: false
-    allow_custom: false
 id: node.article.featured_content
 targetEntityType: node
 bundle: article
@@ -79,4 +74,5 @@ hidden:
   field_social_teaser: true
   field_subtitle: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

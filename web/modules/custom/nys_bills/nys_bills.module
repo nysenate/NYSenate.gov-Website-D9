@@ -147,14 +147,16 @@ function nys_bills_entity_insert($entity) {
   // with the id of the flag being inserted.  It will only act if the
   // entity being inserted is of type "flagging" and the flag name is
   // "follow_this_bill".
-  if ($entity->getEntityTypeId() == 'flagging' && $entity->flag_name->value == 'follow_this_bill') {
+  if ($entity->getEntityTypeId() == 'flagging' && (isset($entity->flag_name) && $entity->flag_name->value == 'follow_this_bill')) {
     // Add the flagging id to the petition signature of the same session.
-    $flagging_id = $entity->flagging_id;
-    $this_update = \Drupal::database()->update('nys_bills_anon')
-      ->fields(['fid' => $flagging_id])
-      ->condition('session_id', $entity->sid)
-      ->condition('fid', 0)
-      ->condition('bid', $entity->entity_id)
-      ->execute();
+    if (isset($entity->flagging_id)) {
+      $flagging_id = $entity->flagging_id;
+      $this_update = \Drupal::database()->update('nys_bills_anon')
+        ->fields(['fid' => $flagging_id])
+        ->condition('session_id', $entity->sid ?? NULL)
+        ->condition('fid', 0)
+        ->condition('bid', $entity->entity_id ?? NULL)
+        ->execute();
+    }
   }
 }

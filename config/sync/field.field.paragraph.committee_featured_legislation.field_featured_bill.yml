@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_featured_bill
+    - node.type.bill
     - paragraphs.paragraphs_type.committee_featured_legislation
 id: paragraph.committee_featured_legislation.field_featured_bill
 field_name: field_featured_bill
@@ -18,7 +19,8 @@ default_value_callback: ''
 settings:
   handler: 'default:node'
   handler_settings:
-    target_bundles: {  }
+    target_bundles:
+      bill: bill
     sort:
       field: _none
       direction: ASC

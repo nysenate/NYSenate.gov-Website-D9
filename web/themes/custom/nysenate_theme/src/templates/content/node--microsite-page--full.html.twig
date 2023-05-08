@@ -93,10 +93,8 @@
     <p class="c-subpage-header--subtitle01">{{ (short_title) ? short_title : ((media_title) ? media_title : '') }}</p>
     <p class="c-subpage-header--subtitle02 lgt-text">
       {% if parties %}
-        {% for party in parties %}
-          <span class="u-mobile-only">{{ party }}</span>
-          <span class="u-tablet-plus">{{ party }}</span>
-        {% endfor %}
+        <span class="u-mobile-only">{{ parties }}</span>
+        <span class="u-tablet-plus">{{ parties }}</span>
       {% endif %}
     </p>
     <p class="c-subpage-header--subtitle03">{{ district_name }}</p>

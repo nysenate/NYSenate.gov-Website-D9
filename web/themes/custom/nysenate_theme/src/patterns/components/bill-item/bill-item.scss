@@ -141,6 +141,19 @@ h3.c-bill-num {
       width: auto;
     }
   }
+
+  &.c-block-constituent-bill {
+
+    .nys-bill-status.nys-bill-status__drk {
+
+      li {
+
+        &.passed {
+          background: $grey05;
+        }
+      }
+    }
+  }
 }
 
 .c-legislation-info {

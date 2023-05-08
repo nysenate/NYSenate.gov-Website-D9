@@ -4971,7 +4971,7 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
             foreach ($parties as $party) {
               $senator_parties[] = $party_values[$party['value']];
             }
-            $variables['parties'] = $senator_parties;
+            $variables['parties'] = implode(", ", $senator_parties);
           }
 
           $district_name = '';

@@ -1,7 +1,7 @@
 {{ attach_library('nysenate_theme/hero') }}
 {{ attach_library('rain_theme/media') }}
 
-<section class="hero {% if type == " senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == " default" %} hero--default{% endif %} {% if type == " press_conference" or type == " public_hearing" or type == " session" %}hero--public-hearing{% endif %}">
+<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == " default" %} hero--default{% endif %} {% if type == " press_conference" or type == " public_hearing" or type == " session" %}hero--public-hearing{% endif %}">
   {% if type == "senator" %}
     {# start of senator hero #}
     <div class="l-header-region l-row l-row--hero c-senator-hero">

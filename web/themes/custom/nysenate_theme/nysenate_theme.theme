@@ -427,6 +427,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
   $variables['district_number'] = $district_number;
   $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
   $variables['socials'] = $socials;
+  $variables['actionbar']['type'] = 'microsite';
 }
 
 /**
@@ -927,6 +928,8 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
 
     }
   }
+
+  $variables['actionbar']['type'] = 'default';
 
   if (!$result) {
     // Get the default homepage hero image.
@@ -2024,6 +2027,24 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
     }
   }
 
+  if ($hook == 'page') {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $microsite_pages = [
+      'article',
+      'event',
+      'honoree',
+      'in_the_news',
+      'petition',
+      'webform',
+      'video',
+    ];
+    if ($node && in_array($node->bundle(), $microsite_pages)) {
+      if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+        $suggestions[] = $hook . '__node__microsite_page';
+      }
+    }
+  }
+
   if ($hook == 'user') {
     $suggestions[] = $hook . '__' . $variables['elements']['#view_mode'];
   }
@@ -2670,6 +2691,8 @@ function get_issue_card($term) {
 function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
   $node = $variables['node'];
 
+  $variables['actionbar']['type'] = 'microsite';
+
   if ($node->hasField('field_block') && !$node->get('field_block')->isEmpty()) {
     $block_types = [
       'microsite_hero',
@@ -2722,6 +2745,36 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     if (!empty($tid)) {
       $senator = Term::load($tid);
       $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
+
+      // Set menu and hero block contents.
+      if (!isset($variables['microsite_menu'])) {
+        // Render Microsite Menu block data.
+        $block_manager = \Drupal::service('plugin.manager.block');
+        $variables['microsite_menu'] = $block_manager->createInstance('nys_senators_microsite_menu', [])->build();
+      }
+
+      if (!isset($variables['microsite_hero'])) {
+        // Render Microsite Hero block data.
+        $block = \Drupal::entityTypeManager()
+          ->getStorage('block_content')
+          ->loadByProperties([
+            'type' => 'microsite_hero',
+            'field_senator' => $tid,
+          ]);
+
+        if (is_array($block)) {
+          $block = reset($block);
+        }
+
+        if (!empty($block)) {
+          /** @var \Drupal\block\BlockViewBuilder $view_builder */
+          $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block_content');
+          $block_content = $view_builder->view($block);
+
+          $variables['microsite_hero'] = $view_builder->build($block_content);
+          $variables['is_senator_landing'] = FALSE;
+        }
+      }
     }
   }
 
@@ -4759,6 +4812,7 @@ function nysenate_theme_preprocess_form_element(&$variables) {
  */
 function nysenate_theme_preprocess_page(&$variables) {
   $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $flag_link_service = \Drupal::service('flag.link_builder');
   $menu_tree = \Drupal::menuTree();
   // Build the typical default set of menu tree parameters.
   $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('socials');
@@ -4790,8 +4844,13 @@ function nysenate_theme_preprocess_page(&$variables) {
   // Microsite theme settings.
   $node_types = [
     'microsite_page',
-    'petition',
+    'article',
     'event',
+    'honoree',
+    'in_the_news',
+    'petition',
+    'webform',
+    'video',
   ];
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!empty($node) && is_object($node) && in_array($node->bundle(), $node_types)) {
@@ -4806,6 +4865,7 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
+  // Set Dashboard variables.
   $user = $user_storage->load(\Drupal::currentUser()->id());
   $user_link = $user->toUrl()->toString();
   $user_parts = explode('/', $user_link);
@@ -4934,6 +4994,25 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
 
     $variables['dashboard_display_name'] = $display_name;
+
+    $variables['actionbar']['type'] = 'default';
+    // Variables for issues and committees header action bar.
+    $parameters = \Drupal::routeMatch()->getParameters()->all();
+    if (isset($parameters['taxonomy_term'])) {
+      $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
+      $vid = $term->bundle();
+      $vocabulary = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->load($vid);
+
+      if ($vocabulary->label() == "Issues") {
+        $variables['actionbar']['type'] = 'issue';
+        $variables['actionbar']['flag_follow_issue'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
+        $variables['actionbar']['issue_title'] = $term->getName();
+      }
+      if ($vocabulary->label() == "Committees") {
+        $variables['actionbar']['type'] = 'committee';
+        $variables['actionbar']['flag_follow_committee'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+      }
+    }
   }
 
   // Variables for logged-in user's senator,

@@ -82,7 +82,18 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   public function build() {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $this->routeMatch->getParameter('node');
-    if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
+
+    $microsite_pages = [
+      'microsite_page',
+      'article',
+      'event',
+      'honoree',
+      'in_the_news',
+      'petition',
+      'webform',
+      'video',
+    ];
+    if ($node instanceof NodeInterface && in_array($node->getType(), $microsite_pages)) {
       $senator_terms = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->getValue() : [];
       $tids = [];
       foreach ($senator_terms as $tid) {

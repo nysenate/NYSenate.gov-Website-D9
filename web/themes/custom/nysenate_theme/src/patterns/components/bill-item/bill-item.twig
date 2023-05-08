@@ -1,6 +1,6 @@
 {{ attach_library('nysenate_theme/bill-item') }}
 
-<div class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %}">
+<div class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %} {{ modifier ? '' ~ modifier }}">
   <div class="c-legislation-info">
     <h3 class="c-bill-num {{ bill.number_large ? 'c-bill-num--large' : '' }}">
       <a href="{{ bill.link }}">{{ bill.number }}</a>

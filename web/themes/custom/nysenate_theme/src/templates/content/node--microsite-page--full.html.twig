@@ -92,8 +92,12 @@
 
     <p class="c-subpage-header--subtitle01">{{ (short_title) ? short_title : ((media_title) ? media_title : '') }}</p>
     <p class="c-subpage-header--subtitle02 lgt-text">
-      <span class="u-mobile-only">{{ party }}</span>
-      <span class="u-tablet-plus">{{ party }}</span>
+      {% if parties %}
+        {% for party in parties %}
+          <span class="u-mobile-only">{{ party }}</span>
+          <span class="u-tablet-plus">{{ party }}</span>
+        {% endfor %}
+      {% endif %}
     </p>
     <p class="c-subpage-header--subtitle03">{{ district_name }}</p>
   {% elseif microsite_type == 'events' or microsite_type == 'legislation' or microsite_type == 'newsroom' or microsite_type == 'thankful' or microsite_type == 'earth day' %}

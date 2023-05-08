@@ -6,3 +6,10 @@ nys_homepage_hero.hero_status:
     _permission: 'access content'
   options:
     no_cache: TRUE
+nys_homepage_hero.settings:
+  path: '/admin/config/content/homepage_hero'
+  defaults:
+    _form: '\Drupal\nys_homepage_hero\Form\HomepageHeroForm'
+    _title: 'Home Hero'
+  requirements:
+    _permission: 'administer site configuration'

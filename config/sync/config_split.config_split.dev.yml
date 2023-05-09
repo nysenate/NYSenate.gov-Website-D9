@@ -3,7 +3,7 @@ langcode: en
 status: false
 dependencies: {  }
 id: dev
-label: Develop
+label: Dev
 description: 'Dev Pantheon Site'
 weight: 0
 folder: profiles/custom/nysenate/config/dev
@@ -12,6 +12,7 @@ module:
 theme: {  }
 blacklist:
   - system.logging
+  - clamav.settings
 graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true

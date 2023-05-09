@@ -1201,7 +1201,8 @@ function nys_senators_query_nys_senators_access_alter(AlterableInterface $query)
     // Check for MCP.
     if (!$senator_helper->senatorUserIsAdmin($user) &&
       $user->hasField('field_senator_multiref') &&
-      !empty($senators = $user->field_senator_multiref->getValue())) {
+      !empty($senators = $user->field_senator_multiref->getValue()) &&
+      (count($senators) > 1 || $senators[0]['target_id'] != 0)) {
 
       // Format a nice array for query conditions.
       $senator_tids = [];

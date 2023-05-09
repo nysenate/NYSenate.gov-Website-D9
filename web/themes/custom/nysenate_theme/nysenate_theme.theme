@@ -4238,6 +4238,8 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
     'update_location' => $last_status,
     'positions' => nysenate_bill_positions($node),
+    'action' => \Drupal::request()->getUri(),
+    'node_id' => $node->id(),
   ];
 }
 

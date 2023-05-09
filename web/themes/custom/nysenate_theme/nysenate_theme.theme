@@ -293,16 +293,31 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
  */
 function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
+  $node_types = [
+    'article',
+    'event',
+    'honoree',
+    'in_the_news',
+    'petition',
+    'webform',
+    'video',
+  ];
+
+  $sid = $variables['content']['field_senator'][0]['#plain_text'];
+  $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+    ->load($sid);
+
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!empty($node) && $node->bundle() == 'microsite_page') {
     $current_path = \Drupal::request()->getRequestUri();
     $arr_path = explode('/', $current_path);
     $variables['message_senator_link'] = '/senators/' . $arr_path[2] . '/message';
   }
-
-  $sid = $variables['content']['field_senator'][0]['#plain_text'];
-  $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-    ->load($sid);
+  elseif (!empty($node) && in_array($node->bundle(), $node_types)) {
+    $senator_link = \Drupal::service('nys_senators.microsites')
+      ->getMicrosite($senator);
+    $variables['message_senator_link'] = $senator_link . '/message';
+  }
 
   // Senator name.
   $senator_name = '';

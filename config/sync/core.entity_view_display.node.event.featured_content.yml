@@ -31,13 +31,8 @@ dependencies:
   module:
     - address
     - datetime_range
-    - layout_builder
     - link
     - user
-third_party_settings:
-  layout_builder:
-    enabled: false
-    allow_custom: false
 id: node.event.featured_content
 targetEntityType: node
 bundle: event
@@ -114,4 +109,5 @@ hidden:
   field_video_status: true
   field_yt: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

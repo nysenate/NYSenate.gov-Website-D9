@@ -25,6 +25,9 @@
  * brackets, the label element, slashes and whitespace.
 #}
 
+{{ attach_library('nysenate_theme/meeting-detail') }}
+{{ attach_library('nysenate_theme/nysenate-legislation') }}
+
 {% set aye_count = vote.aye_count ? vote.aye_count : 0 %}
 {% set nay_count = vote.nay_count ? vote.nay_count : 0 %}
 {% set aye_reservations_count = vote.aye_reservations_count ? vote.aye_reservations_count : 0 %}

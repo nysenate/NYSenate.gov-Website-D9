@@ -4912,6 +4912,11 @@ function nysenate_theme_preprocess_page(&$variables) {
         $variables['actionbar']['flag_follow_issue'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
         $variables['actionbar']['issue_title'] = $term->getName();
       }
+      if ($vocabulary->label() == "Majority Issues") {
+        $variables['actionbar']['type'] = 'issue';
+        $variables['actionbar']['flag_follow_issue'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue');
+        $variables['actionbar']['issue_title'] = $term->getName();
+      }
       if ($vocabulary->label() == "Committees") {
         $variables['actionbar']['type'] = 'committee';
         $variables['actionbar']['flag_follow_committee'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');

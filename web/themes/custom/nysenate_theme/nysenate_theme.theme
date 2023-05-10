@@ -293,16 +293,31 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
  */
 function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
+  $node_types = [
+    'article',
+    'event',
+    'honoree',
+    'in_the_news',
+    'petition',
+    'webform',
+    'video',
+  ];
+
+  $sid = $variables['content']['field_senator'][0]['#plain_text'];
+  $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+    ->load($sid);
+
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!empty($node) && $node->bundle() == 'microsite_page') {
     $current_path = \Drupal::request()->getRequestUri();
     $arr_path = explode('/', $current_path);
     $variables['message_senator_link'] = '/senators/' . $arr_path[2] . '/message';
   }
-
-  $sid = $variables['content']['field_senator'][0]['#plain_text'];
-  $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-    ->load($sid);
+  elseif (!empty($node) && in_array($node->bundle(), $node_types)) {
+    $senator_link = \Drupal::service('nys_senators.microsites')
+      ->getMicrosite($senator);
+    $variables['message_senator_link'] = $senator_link . '/message';
+  }
 
   // Senator name.
   $senator_name = '';
@@ -789,22 +804,23 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
           'url' => '',
           'stream_title' => '',
         ];
-        if ($node->hasField('field_video_status') && !$node->get('field_video_status')->isEmpty()) {
-          $statuses = [
-            'will_stream_live' => 'Will Stream Live',
-            'streaming_live_now' => 'Streaming Live Now',
-            'archived_video' => 'Archived Video',
-            'streaming_redirect' => 'Streaming (Redirect)',
-            'cancelled' => 'To resume at the call of the Temporary President',
-          ];
-          $video_status = $node->get('field_video_status')->value;
-          if (!empty($video_status)) {
-            if (array_key_exists($video_status, $statuses)) {
-              $livestream_cta['text'] = $statuses[$video_status];
+
+        if ($node->hasField('field_yt') && !$node->get('field_yt')->isEmpty()) {
+          if ($node->hasField('field_video_status') && !$node->get('field_video_status')->isEmpty()) {
+            $statuses = [
+              'will_stream_live' => 'Will Stream Live',
+              'streaming_live_now' => 'Streaming Live Now',
+              'archived_video' => 'Archived Video',
+              'streaming_redirect' => 'Streaming (Redirect)',
+              'cancelled' => 'To resume at the call of the Temporary President',
+            ];
+            $video_status = $node->get('field_video_status')->value;
+            if (!empty($video_status)) {
+              if (array_key_exists($video_status, $statuses)) {
+                $livestream_cta['text'] = $statuses[$video_status];
+              }
             }
           }
-        }
-        if ($node->hasField('field_yt') && !$node->get('field_yt')->isEmpty()) {
           $media = !empty($node->get('field_yt')->target_id) ? $media_storage->load($node->get('field_yt')->target_id) : NULL;
           if (!empty($media)) {
             $livestream_cta['url'] = $media->field_media_oembed_video->value;
@@ -4257,6 +4273,8 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
     'update_location' => $last_status,
     'positions' => nysenate_bill_positions($node),
+    'action' => \Drupal::request()->getUri(),
+    'node_id' => $node->id(),
   ];
 }
 

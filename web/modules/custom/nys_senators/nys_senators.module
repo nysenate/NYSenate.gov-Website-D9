@@ -377,6 +377,10 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
     'vid' => 'microsite_page_type',
   ]);
 
+  // Sincerely Letter text content.
+  $earth_day_letter_body = "<p>Dear Students,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the New York State Senate’s Earth Day Poster Contest. This year we received many outstanding posters that exemplify the creativity of the young people in our Senatorial District.</p>\r\n\r\n<p>Each entry from my District displayed tremendous originality and vision as well as obvious concern for the ecological future of our communities and our state. I am proud of your work and that of your classmates, and encourage you to continue to study and learn more about the serious challenges that face our environment.</p>\r\n\r\n<p>I would like to offer my wholehearted congratulations to all of the participants in this year’s Contest. I also want to thank your family and give special thanks to your teachers, whose dedication and involvement in this event provided the encouragement for you to be creative and participate in the 2017 Earth Day Poster Contest.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+  $thankful_letter_body = "<p>Dear Participant,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the Thanksgiving Day Creative Celebration. We received outstanding poems, essays, and artwork that exemplify the creativity of New York State’s young people.</p>\r\n\r\n<p>The submissions received are remarkable in what they represent – showing gratitude and respect for family, friends, our troops fighting overseas, and many other important subjects and activities. I am humbled and honored to see such inspiring contributions in response to what is a deceptively difficult question: “What are you thankful for?”</p>\r\n\r\n<p>On behalf of the New York State Senate, I would like to offer my wholehearted congratulations to all of the participants in this year’s Thanksgiving Day Creative Celebration.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+
   $senatorMicrosites = [
     'Landing',
     'About',
@@ -468,6 +472,10 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
             [
               'info' => $senator_name . ' - Sincerely Block',
               'type' => 'sincerely',
+              'body' => [
+                'value' => $thankful_letter_body,
+                'format' => 'full_html',
+              ],
               'revision_user' => 1,
             ],
             [
@@ -497,6 +505,10 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
             [
               'info' => $senator_name . ' - Sincerely Block',
               'type' => 'sincerely',
+              'body' => [
+                'value' => $earth_day_letter_body,
+                'format' => 'full_html',
+              ],
               'revision_user' => 1,
             ],
             [
@@ -1500,6 +1512,80 @@ function _nys_senators_add_about_text_blocks(EntityInterface $entity) {
 
         // Save the node.
         $page->save();
+      }
+    }
+  }
+}
+
+/**
+ * Populate the letter body content to the Sincerely blocks.
+ */
+function _nys_senators_populate_sincerely_blocks(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $earth_day_letter_body = "<p>Dear Students,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the New York State Senate’s Earth Day Poster Contest. This year we received many outstanding posters that exemplify the creativity of the young people in our Senatorial District.</p>\r\n\r\n<p>Each entry from my District displayed tremendous originality and vision as well as obvious concern for the ecological future of our communities and our state. I am proud of your work and that of your classmates, and encourage you to continue to study and learn more about the serious challenges that face our environment.</p>\r\n\r\n<p>I would like to offer my wholehearted congratulations to all of the participants in this year’s Contest. I also want to thank your family and give special thanks to your teachers, whose dedication and involvement in this event provided the encouragement for you to be creative and participate in the 2017 Earth Day Poster Contest.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+  $thankful_letter_body = "<p>Dear Participant,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the Thanksgiving Day Creative Celebration. We received outstanding poems, essays, and artwork that exemplify the creativity of New York State’s young people.</p>\r\n\r\n<p>The submissions received are remarkable in what they represent – showing gratitude and respect for family, friends, our troops fighting overseas, and many other important subjects and activities. I am humbled and honored to see such inspiring contributions in response to what is a deceptively difficult question: “What are you thankful for?”</p>\r\n\r\n<p>On behalf of the New York State Senate, I would like to offer my wholehearted congratulations to all of the participants in this year’s Thanksgiving Day Creative Celebration.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+
+  $senatorMicrosites = [
+    'Earth Day',
+    'Thankful',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+
+      $microsite_page = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          'field_senator_multiref' => $entity->id(),
+          'field_microsite_page_type' => $micrositeType->id(),
+        ]);
+
+      $page = NULL;
+      if (!empty($microsite_page)) {
+        $page = reset($microsite_page);
+
+        if ($page->hasField('field_block') && !$page->get('field_block')
+          ->isEmpty()) {
+          foreach ($page->get('field_block') as $key => $value) {
+            /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+            $block_content = $value->entity ?? NULL;
+
+            if ($block_content instanceof BlockContent) {
+              if ($block_content->bundle() == 'sincerely') {
+                // Save the body content.
+                switch ($micrositeType->getName()) {
+                  case 'Thankful':
+                    $block_content->body = [
+                      'value' => $thankful_letter_body,
+                      'format' => 'full_html',
+                    ];
+                    $block_content->save();
+                    break;
+
+                  case 'Earth Day':
+                    $block_content->body = [
+                      'value' => $earth_day_letter_body,
+                      'format' => 'full_html',
+                    ];
+                    $block_content->save();
+                    break;
+
+                  default:
+                    break;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

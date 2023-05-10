@@ -333,6 +333,9 @@ class RegisterForm extends UserRegisterForm {
       $user['name'] = $first_name[0]['value'] . ' ' . $last_name[0]['value'];
       $user['address_1'] = $address['address_line1'];
       $user['address_2'] = $address['address_line2'];
+      $user['locality'] = $address['locality'];
+      $user['administrative_area'] = $address['administrative_area'];
+      $user['postal_code'] = $address['postal_code'];
       $user['mail'] = $form_state->getValue('mail');
     }
     $form['actions'] = [

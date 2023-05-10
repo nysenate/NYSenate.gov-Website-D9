@@ -1404,6 +1404,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $view->id() == 'senator_microsite_content' && $view->current_display == 'article_footer' ||
     $view->id() == 'newsroom' && $view->current_display == 'all_news' ||
     $view->id() == 'newsroom' && $view->current_display == 'press_releases' ||
+    $view->id() == 'majority_issues' && $view->current_display == 'maj_news' ||
     $view->id() == 'committee_content' && $view->current_display == 'all_updates' ||
     $view->id() == 'committee_content' && $view->current_display == 'meetings' ||
     $view->id() == 'committee_content' && $view->current_display == 'news' ||
@@ -1491,7 +1492,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   }
 
   // Legislation.
-  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_legislation_content') {
+  elseif (($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_legislation_content') ||
+    ($view->id() == 'majority_issues' && $view->current_display == 'bills')) {
     $contents = [];
     $bill = [];
     foreach ($view->result as $row) {
@@ -3004,6 +3006,18 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
   // Set the cache tags for the issues taxonomy.
   // Invalidation will occur on nys_senators_user_presave method.
   $variables['#cache']['tags'][] = 'taxonomy_term_list:issues';
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
+function nysenate_theme_preprocess_taxonomy_term__majority_issues(&$variables) {
+  // Get the Follower count flag.
+  $flag_service = \Drupal::service('flag.count');
+  $flag = $flag_service->getEntityFlagCounts($variables['term']);
+  if ($flag) {
+    $variables['flag_count'] = $flag['follow_issue'];
+  }
 }
 
 /**

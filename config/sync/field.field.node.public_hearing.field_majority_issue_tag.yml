@@ -1,0 +1,29 @@
+uuid: c8151ff4-1902-472c-83fa-621958959d78
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_majority_issue_tag
+    - node.type.public_hearing
+    - taxonomy.vocabulary.majority_issues
+id: node.public_hearing.field_majority_issue_tag
+field_name: field_majority_issue_tag
+entity_type: node
+bundle: public_hearing
+label: 'Majority Issue Tag'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      majority_issues: majority_issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

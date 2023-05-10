@@ -326,3 +326,35 @@ function nysenate_update_9008() {
     }
   }
 }
+
+/**
+ * Update the Contacts in Student Program.
+ */
+function nysenate_update_9009(&$sandbox) {
+  $contact_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->load(3765);
+
+  if (!empty($contact_block)) {
+    // For field_body_left values.
+    $body_left = [
+      'value' => '
+      <div class="c-block--background">
+      <strong>NEW YORK STATE SENATE OFFICE OF<br />
+      STUDENT PROGRAMS</strong>
+      
+      <p>208 Legislative Office Building<br />
+      Albany, NY 12247<br />
+      <br />
+      <strong>Tel:</strong>&nbsp;(518) 455-2611<br />
+      <strong>Fax:</strong>&nbsp;(518) 426-6827<br />
+      <strong>E-mail:</strong>&nbsp;students@nysenate.gov</p>
+      </div>
+      ',
+      'format' => 'full_html',
+      'summary' => '',
+    ];
+    $contact_block->set('field_body_left', $body_left);
+    $contact_block->save();
+  }
+}

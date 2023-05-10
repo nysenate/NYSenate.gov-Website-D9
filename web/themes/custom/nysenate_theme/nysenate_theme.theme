@@ -804,22 +804,23 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
           'url' => '',
           'stream_title' => '',
         ];
-        if ($node->hasField('field_video_status') && !$node->get('field_video_status')->isEmpty()) {
-          $statuses = [
-            'will_stream_live' => 'Will Stream Live',
-            'streaming_live_now' => 'Streaming Live Now',
-            'archived_video' => 'Archived Video',
-            'streaming_redirect' => 'Streaming (Redirect)',
-            'cancelled' => 'To resume at the call of the Temporary President',
-          ];
-          $video_status = $node->get('field_video_status')->value;
-          if (!empty($video_status)) {
-            if (array_key_exists($video_status, $statuses)) {
-              $livestream_cta['text'] = $statuses[$video_status];
+
+        if ($node->hasField('field_yt') && !$node->get('field_yt')->isEmpty()) {
+          if ($node->hasField('field_video_status') && !$node->get('field_video_status')->isEmpty()) {
+            $statuses = [
+              'will_stream_live' => 'Will Stream Live',
+              'streaming_live_now' => 'Streaming Live Now',
+              'archived_video' => 'Archived Video',
+              'streaming_redirect' => 'Streaming (Redirect)',
+              'cancelled' => 'To resume at the call of the Temporary President',
+            ];
+            $video_status = $node->get('field_video_status')->value;
+            if (!empty($video_status)) {
+              if (array_key_exists($video_status, $statuses)) {
+                $livestream_cta['text'] = $statuses[$video_status];
+              }
             }
           }
-        }
-        if ($node->hasField('field_yt') && !$node->get('field_yt')->isEmpty()) {
           $media = !empty($node->get('field_yt')->target_id) ? $media_storage->load($node->get('field_yt')->target_id) : NULL;
           if (!empty($media)) {
             $livestream_cta['url'] = $media->field_media_oembed_video->value;

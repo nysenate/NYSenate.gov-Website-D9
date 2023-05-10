@@ -146,15 +146,32 @@
 
 	&.four-columns {
 		margin-top: 0;
+		pointer-events: none;
+
+		.c-stats--highlight {
+			display: none;
+		}
 
 		.c-carousel {
+			width: 400%;
 
 			@include breakpoint($bp-sm) {
 				display: flex;
+				width: 90%;
 			}
 
 			&::after {
 				display: none;
+			}
+
+			.c-carousel--item {
+
+				@include breakpoint($bp-under-sm) {
+					width: 25%;
+					display: block;
+					height: auto;
+					border-left: 0;
+				}
 			}
 		}
 	}

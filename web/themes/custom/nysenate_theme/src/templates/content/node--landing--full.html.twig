@@ -78,6 +78,11 @@
 
   {% if page %}
     <header class="c-news--head">
+    {% if url != '/home' %}
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+    {% endif %}
       <div class="c-news--head-meta">
         {% if
           content.field_date
@@ -111,7 +116,9 @@
             'field_show_issues'
           )
         }}
-        {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+        {% if not is_front %}
+          {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+        {% endif %}
         {% if how_a_bill_block %}
           {{ how_a_bill_block }}
         {% endif %}

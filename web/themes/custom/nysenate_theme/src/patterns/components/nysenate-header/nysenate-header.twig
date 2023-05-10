@@ -1,5 +1,4 @@
 {{ attach_library('nysenate_theme/nysenate-header') }}
-{{ attach_library('nysenate_theme/nysenate-actionbar') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
 <header
@@ -133,7 +132,8 @@
     {% if type != 'senator' %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
-          is_logged: logged_in
+          is_logged: is_logged,
+          actionbar,
         } only
       %}
     {% endif %}

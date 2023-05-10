@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install file for nys_config.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Removes database entries for deleted field.
+ */
+function nys_config_update_9001() {
+  // Load database connection.
+  $con = Database::getConnection();
+
+  // Remove key_value records for layout_builder__layout and
+  // landing.layout_builder__layout.
+  $query = "DELETE FROM key_value
+    WHERE (name = 'field.field.deleted'
+      OR name = 'field.storage.deleted')
+    AND (value LIKE '%layout_builder__layout%'
+      OR value LIKE '%node.landing.layout_builder__layout%')";
+  $con->query($query);
+}

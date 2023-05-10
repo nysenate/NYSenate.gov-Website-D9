@@ -30,6 +30,8 @@ function nys_dashboard_theme($existing, $type, $theme, $path): array {
  * Implements hook_views_query_alter().
  */
 function nys_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+
   if ($query instanceof Sql) {
     if ($view->id() == 'private_message_inbox') {
       foreach ($query->where as $key => $where) {
@@ -114,6 +116,12 @@ function nys_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $
                     if (preg_match('/user\/(\d+)/', $path, $matches)) {
                       $query->where[$key]['conditions'][$c_key]['value'][':private_message__field_to_field_to_target_id'] = $matches[1];
                     }
+                    else {
+                      // Get user data from username.
+                      $user = $user_storage->loadByProperties(['name' => $value]);
+                      $user = reset($user);
+                      $query->where[$key]['conditions'][$c_key]['value'][':private_message__field_to_field_to_target_id'] = $user->id();
+                    }
                   }
                 }
               }
@@ -153,6 +161,12 @@ function nys_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $
 
                     if (preg_match('/user\/(\d+)/', $path, $matches)) {
                       $query->where[$key]['conditions'][$c_key]['value'][':private_messages_owner'] = $matches[1];
+                    }
+                    else {
+                      // Get user data from username.
+                      $user = $user_storage->loadByProperties(['name' => $value]);
+                      $user = reset($user);
+                      $query->where[$key]['conditions'][$c_key]['value'][':private_message__field_to_field_to_target_id'] = $user->id();
                     }
                   }
                 }

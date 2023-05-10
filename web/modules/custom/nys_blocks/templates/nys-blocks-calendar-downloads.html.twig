@@ -1,0 +1,31 @@
+{{ attach_library('nysenate_theme/calendar-downloads') }}
+
+<section class="c-block calendar-dls">
+  <h2 class="block-title">Download Specific Calendars</h2>
+
+  {% if public_hearing_schedule_href is not empty or session_calendar_pdf_href is not empty %}
+    <div class="cal-dl-wrapper c-block">
+      {% if session_calendar_pdf_href is not empty %}
+        <div class="l-col l-col-2">
+          <h3>Session Calendar</h3>
+          <ul class="cal-dl-list">
+            <li>
+              <a href="{{ session_calendar_pdf_href }}" class="cal-dl-link pdf-dl icon-before__bill">Download PDF</a>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if public_hearing_schedule_href is not empty %}
+        <div class="l-col l-col-2">
+          <h3>Public Hearing Schedule</h3>
+          <ul class="cal-dl-list">
+            <li>
+              <a href="{{ public_hearing_schedule_href }}" class="cal-dl-link pdf-dl icon-before__bill">Download PDF</a>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>

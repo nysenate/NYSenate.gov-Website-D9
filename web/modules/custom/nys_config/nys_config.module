@@ -41,7 +41,7 @@ function nys_config_preprocess_node__landing(&$variables) {
         break;
     }
 
-    if ($node_override !== NULL) {
+    if (!empty($node_override)) {
       $entity = reset($node_override);
       if (!$entity->field_landing_blocks->isEmpty()) {
         $variables['content']['field_landing_blocks'] = $entity->field_landing_blocks->view('default');

@@ -12,6 +12,17 @@ footer {
     @include breakpoint($bp-sm) {
       padding: 35px 40px 30px;
     }
+
+    a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      font-family: $font-sans-bold;
+      text-transform: uppercase;
+
+      @include breakpoint($bp-sm) {
+        font-size: 12px;
+      }
+    }
   }
 
   .l-row {
@@ -26,6 +37,10 @@ footer {
       justify-content: center;
       max-width: 840px;
     }
+  }
+
+  .menu {
+    margin-left: unset;
   }
 }
 
@@ -119,6 +134,11 @@ footer {
     margin-bottom: 0;
   }
 
+  @include breakpoint($bp-md) {
+    width: 31%;
+    padding-right: 35px;
+  }
+
   a {
     float: left;
     text-transform: uppercase;
@@ -130,6 +150,15 @@ footer {
     margin-top: 25px;
     letter-spacing: 0.1em;
 
+    span {
+      color: $grey08;
+      padding-left: 20px;
+
+      &:before {
+        display: none;
+      }
+    }
+
     @include breakpoint($bp-sm) {
       display: flex;
       align-items: center;
@@ -139,6 +168,12 @@ footer {
       float: none;
       margin-top: 0;
       line-height: 18px;
+      text-align: center;
+
+      > span {
+        display: block;
+        padding: 0;
+      }
     }
   }
 
@@ -161,6 +196,28 @@ footer {
     @include breakpoint($bp-md) {
       width: 112px;
       height: 112px;
+    }
+
+    &.c-seal-footer {
+      width: 42px;
+      height: 42px;
+      float: left;
+      margin-top: -15px;
+      background: none;
+
+      @include breakpoint($bp-md) {
+        display: inline-block;
+        float: none;
+        width: 100px;
+        height: 100px;
+        margin-top: 25px;
+      }
+
+      @include breakpoint($bp-md) {
+        float: none;
+        width: 112px;
+        height: 112px;
+      }
     }
   }
 }
@@ -210,29 +267,29 @@ footer {
 }
 
 .senator-inactive {
-	.c-senator-footer-col__nav {
-		.c-nav--list {
-			li {
-				display: inline-block;
-				width: auto;
-				padding-right: 0;
+  .c-senator-footer-col__nav {
+    .c-nav--list {
+      li {
+        display: inline-block;
+        width: auto;
+        padding-right: 0;
 
-				&:nth-child(1),
-				&:nth-child(2),
-				&:nth-child(3) {
-					display: none;
-				}
+        &:nth-child(1),
+        &:nth-child(2),
+        &:nth-child(3) {
+          display: none;
+        }
 
-				a {
-					display: none;
+        a {
+          display: none;
 
-					&.visible {
-						display: block;
-					}
-				}
-			}
-		}
-	}
+          &.visible {
+            display: block;
+          }
+        }
+      }
+    }
+  }
 }
 
 /* SOCIALS */
@@ -264,7 +321,7 @@ footer {
       display: block;
     }
   }
-  
+
   ul {
     list-style: none;
     display: flex;

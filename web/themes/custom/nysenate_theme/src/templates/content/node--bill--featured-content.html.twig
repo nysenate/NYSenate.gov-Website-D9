@@ -79,20 +79,16 @@
   ]
 %}
 {{ attach_library('classy/node') }}
-<article{{ attributes.addClass(classes) }}>
+{{ attach_library('nysenate_theme/featured-bills') }}
+
+<article{{attributes.addClass(classes)}}>
 
   {{ title_prefix }}
   {{ title_suffix }}
 
-  <div{{ content_attributes.addClass('node__content') }}>
-    {% include "@nysenate_theme/featured-legislation/featured-legislation.twig" with {
-      bill: bill,
-      sponsor: 'Sponsor',
-      quote: 'Placeholder quote.',
-      senator_name: senator_name,
-      senator_link: senator_link,
-      senator_image: senator_image,
-      party: party
+  <div{{content_attributes.addClass('node__content')}}>
+    {% include "@nysenate_theme/bill-item/bill-item.twig" with {
+      bill: bill
     } only %}
   </div>
 

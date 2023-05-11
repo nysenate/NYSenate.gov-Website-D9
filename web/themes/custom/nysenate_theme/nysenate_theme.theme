@@ -5324,22 +5324,41 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
       }
 
       switch ($block['#block_content']->bundle()) {
+        case 'hero':
+          $variables['landing_page_hero'] = [
+            "section_id" => "section-0",
+            "background_img" => $block['field_media'],
+            "title" => $block['#block_content']->field_title->value,
+            "welcome_text" => $block['field_summary'][0],
+            "body" => "",
+          ];
+          $variables['sticky_nav']['sections'][] = [
+            'title' => 'Welcome',
+            'href' => '#section-1',
+          ];
         case 'text':
           if ($block['#block_content']->field_title->value == 'Opening Text') {
-            $variables['landing_page_hero'] = [
-              "section_id" => "section-0",
-              "background_img" => '',
-              "title" => $variables['title'],
-              "welcome_text" => $block['field_body_left'][0],
-              "body" => "",
-            ];
-            $variables['sticky_nav']['sections'][] = [
-              'title' => 'Welcome',
-              'href' => '#section-1',
-            ];
+            if (empty($variables['landing_page_hero'])) {
+              $variables['landing_page_hero'] = [
+                "section_id" => "section-0",
+                "background_img" => '',
+                "title" => $variables['title'],
+                "welcome_text" => $block['field_body_left'][0],
+                "body" => "",
+              ];
+            }
+            if (empty($variables['sticky_nav'])) {
+              $variables['sticky_nav']['sections'][] = [
+                'title' => 'Welcome',
+                'href' => '#section-1',
+              ];
+            }
           }
+          // Will have to remove this.
           if ($block['#block_content']->field_title->value == 'test') {
-            $variables['landing_page_hero']['background_img'] = $block['field_body_left'][0];
+            if (empty($variables['landing_page_hero'])) {
+              $variables['landing_page_hero']['background_img'] = $block['field_body_left'][0];
+            }
           }
           elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
             $variables['how_senate_works_title'] = $block['#block_content']->field_title->value;

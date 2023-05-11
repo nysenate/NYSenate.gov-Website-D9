@@ -8,11 +8,12 @@ description: 'Multidev Pantheon Sites (other than Develop)'
 weight: 0
 folder: profiles/custom/nysenate/config/multidev
 module:
+  stage_file_proxy: 0
   clamav: 0
 theme: {  }
 blacklist:
-  - clamav.settings
   - system.logging
+  - clamav.settings
 graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true

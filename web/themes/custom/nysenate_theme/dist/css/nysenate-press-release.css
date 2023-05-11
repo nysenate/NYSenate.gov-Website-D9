@@ -1483,6 +1483,8 @@ strong {
       margin-left: 2.5%; }
     .js-form-type-select select {
       margin-bottom: 40px; }
+  .nys-search-legislation-form .js-form-type-select {
+    float: none; }
   .address-container-inline {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1597,6 +1599,9 @@ strong {
       .c-block .c-press-release--header .c-press-release--title.c-bill-search {
         font-size: 22px; } }
 
+.c-block .c-press-release--descript a {
+  color: #444444; }
+
 .c-block .c-press-release--body {
   position: relative;
   display: flex;
@@ -1618,8 +1623,6 @@ strong {
         font-size: 24px;
         line-height: 30px;
         font-family: "Adelle Light", serif; } }
-    .c-block .c-press-release--body .c-press-release--descript a {
-      color: #444444; }
   .c-block .c-press-release--body .author {
     align-items: center;
     margin-bottom: 0;
@@ -1673,6 +1676,10 @@ strong {
   @media screen and (min-width: 768px) {
     .c-block .c-press-release--img {
       flex: 30%; } }
+  .c-block .c-press-release--img img {
+    aspect-ratio: 3/2;
+    -o-object-fit: cover;
+    object-fit: cover; }
 
 @media screen and (min-width: 768px) {
   .c-block.c-block-press-release {

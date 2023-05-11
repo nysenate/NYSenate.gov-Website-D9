@@ -8,11 +8,12 @@ description: 'Develop Pantheon Site'
 weight: 0
 folder: profiles/custom/nysenate/config/develop
 module:
+  stage_file_proxy: 0
   clamav: 0
 theme: {  }
 blacklist:
-  - clamav.settings
   - system.logging
+  - clamav.settings
 graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true

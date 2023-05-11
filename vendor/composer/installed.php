@@ -3,7 +3,7 @@
         'name' => 'mediacurrent/drupal-project',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '51032b97f3f9e82e97dbb70e437f35472c64834d',
+        'reference' => '8dfcf93f3494f5fe1d07752f31b883fa0e6f9d2c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1051,6 +1051,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/media_library_form_element' => array(
+            'pretty_version' => '2.0.6',
+            'version' => '2.0.6.0',
+            'reference' => '2.0.6',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/media_library_form_element',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/media_library_theme_reset' => array(
             'pretty_version' => '1.5.0',
             'version' => '1.5.0.0',
@@ -2040,7 +2049,7 @@
         'mediacurrent/drupal-project' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '51032b97f3f9e82e97dbb70e437f35472c64834d',
+            'reference' => '8dfcf93f3494f5fe1d07752f31b883fa0e6f9d2c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

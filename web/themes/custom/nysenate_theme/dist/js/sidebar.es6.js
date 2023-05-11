@@ -24,9 +24,13 @@
       $this.onResize(header);
     },
     onResize: function onResize(header) {
-      var headerBottom = header.offset().top + header.outerHeight();
-      var sidebar = $('.sidebar');
-      sidebar.css('--top', "".concat(headerBottom, "px"));
+      try {
+        var headerBottom = header.offset().top + header.outerHeight();
+        var sidebar = $('.sidebar');
+        sidebar.css('--top', "".concat(headerBottom, "px"));
+      } catch (err) {
+        return err;
+      }
     },
     debounce: function debounce(func) {
       var _this = this;

@@ -98,7 +98,14 @@
 		left: 0;
 		display: block;
 		transition: left 0.3s ease;
-		@include clearfix;
+
+		&.show-icons {
+			.c-carousel--item {
+				display: block;
+				height: 216px;
+				border-left: 0;
+			}
+		}
 	}
 
 	.c-carousel--item {
@@ -135,6 +142,38 @@
 
 	.c-carousel {
 		margin-top: -20px;
+	}
+
+	&.four-columns {
+		margin-top: 0;
+		pointer-events: none;
+
+		.c-stats--highlight {
+			display: none;
+		}
+
+		.c-carousel {
+			width: 400%;
+
+			@include breakpoint($bp-sm) {
+				display: flex;
+				width: 90%;
+			}
+
+			&::after {
+				display: none;
+			}
+
+			.c-carousel--item {
+
+				@include breakpoint($bp-under-sm) {
+					width: 25%;
+					display: block;
+					height: auto;
+					border-left: 0;
+				}
+			}
+		}
 	}
 }
 
@@ -255,12 +294,6 @@
 			&:not(:first-child) {
 				border-left: 1px solid $color-white;
 			}
-
-			&.with-icon {
-				display: block;
-				height: 216px;
-				border-left: 0;
-			}
 		}
 
 		&.with-hover {
@@ -286,9 +319,5 @@
 			right: 0;
 			left: 0;
 		}
-	}
-
-	.c-stats--container--about {
-		margin-top: 0;
 	}
 }

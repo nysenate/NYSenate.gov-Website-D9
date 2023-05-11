@@ -17553,10 +17553,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         origActionBar = nav.find('.c-actionbar');
         actionBar = origActionBar.clone();
 
-        if (self.isInSession()) {
-          actionBar.appendTo(nav);
-          origActionBar.css('visibility', 'hidden');
-        } else {
+        if (!self.isInSession()) {
           actionBar.appendTo(nav).addClass('hidden');
         }
 
@@ -17591,7 +17588,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           'z-index': '100'
         });
 
-        if (self.isOpenData() || self.isIssuePage()) {
+        if (self.isOpenData() && self.isIssuePage()) {
           origActionBar = nav.find('.c-actionbar');
           actionBar = origActionBar.clone();
           actionBar.appendTo(nav);
@@ -17601,7 +17598,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
         if (self.isIssuePage()) {
           origNav.find('.c-actionbar').removeClass('hidden');
-          origNav.find('.c-actionbar').css('visibility', 'hidden');
+          origNav.find('.c-actionbar').css('visibility', '');
         }
 
         menu = nav.find('.c-nav--wrap');
@@ -17625,7 +17622,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         } else {
           $(window).scroll(function () {
             currentTop = $(this).scrollTop();
-            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, self.isOpenData() || self.isIssuePage() ? 'show-actionbar' : 'hide-action-bar', self.isIssuePage());
+            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, self.isOpenData() && self.isIssuePage() ? 'show-actionbar' : 'hide-action-bar', self.isOpenData() && self.isIssuePage());
             previousTop = $(document).scrollTop();
           });
         }
@@ -17648,9 +17645,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       if (origActionBar) {
         if (this.isMovingDown(currentTop, previousTop) && currentTop + nav.outerHeight() >= origActionBar.offset().top) {
           actionBar.removeClass('hidden');
+          origActionBar.addClass('hidden');
         } else if (this.isMovingUp(currentTop, previousTop) && currentTop <= origActionBar.offset().top) {
           if (toggleActionBar !== 'show-actionbar') {
             actionBar.addClass('hidden');
+            origActionBar.removeClass('hidden');
           }
         }
       }
@@ -18264,9 +18263,13 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       $this.onResize(header);
     },
     onResize: function onResize(header) {
-      var headerBottom = header.offset().top + header.outerHeight();
-      var sidebar = $('.sidebar');
-      sidebar.css('--top', "".concat(headerBottom, "px"));
+      try {
+        var headerBottom = header.offset().top + header.outerHeight();
+        var sidebar = $('.sidebar');
+        sidebar.css('--top', "".concat(headerBottom, "px"));
+      } catch (err) {
+        return err;
+      }
     },
     debounce: function debounce(func) {
       var _this = this;

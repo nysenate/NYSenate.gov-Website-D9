@@ -19,7 +19,7 @@
       </h3>
       <div class="c-featured-story-issue-tag">
         {% for tag in tags %}
-          <a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a>
+          <a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a>{% if not loop.last %}, {% endif %}
         {% endfor %}
       </div>
     </div>

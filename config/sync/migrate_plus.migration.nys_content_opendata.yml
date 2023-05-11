@@ -50,7 +50,21 @@ process:
           plugin: format_date
           from_format: U
           to_format: 'Y-m-d\TH:i:s'
+          from_timezone: UTC
+          to_timezone: UTC
           source: value
+  field_end_date:
+    -
+      plugin: format_date
+      from_format: U
+      to_format: 'Y-m-d\TH:i:s'
+      source: field_date/0/value2
+  field_publication_date:
+    -
+      plugin: format_date
+      from_format: 'Y-m-d H:i:s'
+      to_format: Y-m-d
+      source: field_publication_date/0/value
   field_open_data_file:
     -
       plugin: sub_process
@@ -68,16 +82,6 @@ process:
     -
       plugin: get
       source: field_open_date_type
-  field_publication_date:
-    -
-      plugin: sub_process
-      source: field_publication_date
-      process:
-        value:
-          plugin: format_date
-          from_format: 'Y-m-d H:i:s'
-          to_format: 'Y-m-d\TH:i:s'
-          source: value
   field_body:
     -
       plugin: get

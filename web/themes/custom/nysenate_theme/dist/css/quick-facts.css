@@ -1493,6 +1493,8 @@ strong {
       margin-left: 2.5%; }
     .js-form-type-select select {
       margin-bottom: 40px; }
+  .nys-search-legislation-form .js-form-type-select {
+    float: none; }
   .address-container-inline {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1620,10 +1622,10 @@ strong {
     left: 0;
     display: block;
     transition: left 0.3s ease; }
-    .c-stats--container .c-carousel::after {
-      content: '';
-      display: table;
-      clear: both; }
+    .c-stats--container .c-carousel.show-icons .c-carousel--item {
+      display: block;
+      height: 216px;
+      border-left: 0; }
   .c-stats--container .c-carousel--item {
     width: 33.3%;
     float: left;
@@ -1652,6 +1654,26 @@ strong {
 
 .c-senate-quick-facts--container .c-carousel {
   margin-top: -20px; }
+
+.c-senate-quick-facts--container.four-columns {
+  margin-top: 0;
+  pointer-events: none; }
+  .c-senate-quick-facts--container.four-columns .c-stats--highlight {
+    display: none; }
+  .c-senate-quick-facts--container.four-columns .c-carousel {
+    width: 400%; }
+    @media screen and (min-width: 768px) {
+      .c-senate-quick-facts--container.four-columns .c-carousel {
+        display: flex;
+        width: 90%; } }
+    .c-senate-quick-facts--container.four-columns .c-carousel::after {
+      display: none; }
+    @media screen and (max-width: 767px) {
+      .c-senate-quick-facts--container.four-columns .c-carousel .c-carousel--item {
+        width: 25%;
+        display: block;
+        height: auto;
+        border-left: 0; } }
 
 .c-quick-facts--container .c-stats--highlight {
   top: 40px; }
@@ -1733,10 +1755,6 @@ strong {
       padding: 0; }
       .c-stats--container .c-carousel--item:not(:first-child) {
         border-left: 1px solid #fff; }
-      .c-stats--container .c-carousel--item.with-icon {
-        display: block;
-        height: 216px;
-        border-left: 0; }
     .c-stats--container.with-hover .c-stats--highlight {
       display: block; }
     .c-stats--container--about {
@@ -1747,6 +1765,4 @@ strong {
     position: absolute;
     bottom: 0;
     right: 0;
-    left: 0; }
-  .c-stats--container--about {
-    margin-top: 0; } }
+    left: 0; } }

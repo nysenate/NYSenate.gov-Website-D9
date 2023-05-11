@@ -20,6 +20,7 @@
 {% include "@nysenate_theme/hero/hero.twig" with {
   type: 'senator',
   is_senator_landing: is_senator_landing,
+  is_logged: logged_in,
   senator_microsite_link: senator_microsite_link,
   image_hero: image_hero,
   senator_headshot: senator_headshot,
@@ -33,5 +34,5 @@
   socials: socials,
   user_id: user_id,
   message_senator_link: message_senator_link,
-  your_dashboard_link: "#"
+  your_dashboard_link: "/dashboard/issues"
 } only %}

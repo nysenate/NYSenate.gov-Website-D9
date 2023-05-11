@@ -91,6 +91,8 @@
   <div class="c-press-release--img">
     {% if article.img_src %}
       <img src="{{ article.img_src }}">
+    {% elseif article.image %}
+      {{ article.image }}
     {% endif %}
   </div>
 </article>

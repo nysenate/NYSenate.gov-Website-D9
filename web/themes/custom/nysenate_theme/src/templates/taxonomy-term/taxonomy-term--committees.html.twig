@@ -36,19 +36,17 @@
 <div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
   <div class="content">
     <div class="c-committee-header">
-      <h2 class="nys-title">{{ name }}</h2>
+      <h2 class="nys-title">{{ name|render|striptags|trim ~ ' Committee' }}</h2>
       <div class="c-committee-type">
         <a href="/senators-committees" title="Senators & Committees">{{ content.field_committee_types }}</a>
-      </div>
-      {{ content.flag_follow_committee }}
-      <div class="c-event-featured-story c-committee">
-        {{ drupal_view('committee_content', 'featured_story') }}
       </div>
     </div>
 
     <div class="newsroom-content l-row">
-      <h2 class="c-tab-block--title"
-        id="issuesUpdatesHeader">{{ name[0]['#context']['value'] ~ ' Updates' }}</h2>
+      {{ drupal_view('committee_content', 'featured_story') }}
+    </div>
+
+    <div class="newsroom-content l-row">
       <dl class="l-tab-bar">
         <div class="c-tab--arrow u-mobile-only"></div>
         <div class="c-tab active">
@@ -79,6 +77,9 @@
       {{ drupal_view('committee_members', 'members') }}
       {{ drupal_view('committee_members', 'assembly_members') }}
       {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+      {% if how_a_bill_block %}
+        {{ how_a_bill_block }}
+      {% endif %}
     </div>
   </div>
 </div>

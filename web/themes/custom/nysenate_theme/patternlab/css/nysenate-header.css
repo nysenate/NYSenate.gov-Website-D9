@@ -1598,6 +1598,8 @@ strong {
       margin-left: 2.5%; }
     .js-form-type-select select {
       margin-bottom: 40px; }
+  .nys-search-legislation-form .js-form-type-select {
+    float: none; }
   .address-container-inline {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1843,13 +1845,13 @@ strong {
   height: 100vh;
   width: 100vw;
   z-index: 6;
-  transition: top 0.3s ease-out 0s;
+  transition: all 0.3s ease-out 0s;
   padding: 0; }
   @media screen and (min-width: 768px) {
     .c-nav--wrap {
       position: relative;
       width: 100%;
-      height: auto;
+      height: 55px;
       overflow: hidden;
       top: auto; } }
   .c-nav--wrap.closed {
@@ -1919,7 +1921,6 @@ strong {
     top: 0;
     bottom: auto;
     width: 100%;
-    transition: height 0.3s ease;
     overflow: hidden; }
     .c-nav--wrap.closed {
       height: 0; }

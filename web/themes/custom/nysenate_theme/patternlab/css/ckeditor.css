@@ -1486,6 +1486,8 @@ strong {
       margin-left: 2.5%; }
     .js-form-type-select select {
       margin-bottom: 40px; }
+  .nys-search-legislation-form .js-form-type-select {
+    float: none; }
   .address-container-inline {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1585,7 +1587,9 @@ strong {
 a.nys-btn--gold {
   transition: background-color 0.2s ease;
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px 10px;
   background: #f1af58;
   color: #fff;
@@ -1595,7 +1599,8 @@ a.nys-btn--gold {
   font-size: 14px;
   letter-spacing: 0.1em;
   line-height: 24px;
-  margin-top: 20px; }
+  margin-top: 20px;
+  height: 100px; }
   a.nys-btn--gold:hover {
     color: #fff;
     background: #cb8d37; }
@@ -1603,7 +1608,9 @@ a.nys-btn--gold {
 a.nys-btn--blue {
   transition: background-color 0.2s ease;
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px 10px;
   background: #04a9c5;
   color: #fff;
@@ -1612,7 +1619,8 @@ a.nys-btn--blue {
   font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 14px;
   letter-spacing: 0.1em;
-  line-height: 24px; }
+  line-height: 24px;
+  height: 100px; }
   a.nys-btn--blue:hover {
     color: #fff;
     background: #004c71; }

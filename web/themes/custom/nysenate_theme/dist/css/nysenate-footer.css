@@ -1483,6 +1483,8 @@ strong {
       margin-left: 2.5%; }
     .js-form-type-select select {
       margin-bottom: 40px; }
+  .nys-search-legislation-form .js-form-type-select {
+    float: none; }
   .address-container-inline {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1555,6 +1557,14 @@ footer {
     @media screen and (min-width: 768px) {
       footer .c-senator-footer {
         padding: 35px 40px 30px; } }
+    footer .c-senator-footer a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+      text-transform: uppercase; }
+      @media screen and (min-width: 768px) {
+        footer .c-senator-footer a {
+          font-size: 12px; } }
   footer .l-row {
     position: relative;
     clear: both;
@@ -1566,6 +1576,8 @@ footer {
         display: flex;
         justify-content: center;
         max-width: 840px; } }
+  footer .menu {
+    margin-left: unset; }
 
 .c-senator-footer-col {
   float: left; }
@@ -1638,6 +1650,10 @@ footer {
       padding-bottom: 0;
       border-bottom: 0;
       margin-bottom: 0; } }
+  @media screen and (min-width: 1024px) {
+    .c-senator-footer-col__home {
+      width: 31%;
+      padding-right: 35px; } }
   .c-senator-footer-col__home a {
     float: left;
     text-transform: uppercase;
@@ -1648,6 +1664,11 @@ footer {
     width: 100%;
     margin-top: 25px;
     letter-spacing: 0.1em; }
+    .c-senator-footer-col__home a span {
+      color: #444444;
+      padding-left: 20px; }
+      .c-senator-footer-col__home a span:before {
+        display: none; }
     @media screen and (min-width: 768px) {
       .c-senator-footer-col__home a {
         display: flex;
@@ -1657,7 +1678,11 @@ footer {
         font-size: 12px;
         float: none;
         margin-top: 0;
-        line-height: 18px; } }
+        line-height: 18px;
+        text-align: center; }
+        .c-senator-footer-col__home a > span {
+          display: block;
+          padding: 0; } }
   .c-senator-footer-col__home img {
     display: block;
     float: left;
@@ -1676,6 +1701,24 @@ footer {
       .c-senator-footer-col__home img {
         width: 112px;
         height: 112px; } }
+    .c-senator-footer-col__home img.c-seal-footer {
+      width: 42px;
+      height: 42px;
+      float: left;
+      margin-top: -15px;
+      background: none; }
+      @media screen and (min-width: 1024px) {
+        .c-senator-footer-col__home img.c-seal-footer {
+          display: inline-block;
+          float: none;
+          width: 100px;
+          height: 100px;
+          margin-top: 25px; } }
+      @media screen and (min-width: 1024px) {
+        .c-senator-footer-col__home img.c-seal-footer {
+          float: none;
+          width: 112px;
+          height: 112px; } }
 
 /* LINKS */
 .c-senator-footer-col__nav {
@@ -1750,7 +1793,9 @@ footer {
     display: flex;
     padding: 0;
     justify-content: center;
-    flex-direction: column; }
+    flex-direction: column;
+    gap: 15px;
+    margin: 0; }
     @media screen and (min-width: 768px) {
       .c-senator-footer-col__social ul {
         flex-direction: row;
@@ -1760,13 +1805,11 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px; }
+    margin: 0; }
     @media screen and (min-width: 768px) {
       .c-senator-footer-col__social li {
-        margin-bottom: 0;
-        margin-right: 30px; } }
-    .c-senator-footer-col__social li:last-child {
-      margin-bottom: 0;
-      margin-right: 0; }
+        width: 40px; } }
   .c-senator-footer-col__social svg path {
     fill: #2B6A91; }
+  .c-senator-footer-col__social a {
+    display: flex; }

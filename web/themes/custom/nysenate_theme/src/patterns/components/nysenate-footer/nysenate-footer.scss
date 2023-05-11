@@ -328,6 +328,8 @@ footer {
     padding: 0;
     justify-content: center;
     flex-direction: column;
+    gap: 15px;
+    margin: 0;
 
     @include breakpoint($bp-sm) {
       flex-direction: row;
@@ -340,20 +342,18 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
+    margin: 0;
 
     @include breakpoint($bp-sm) {
-      margin-bottom: 0;
-      margin-right: 30px;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-      margin-right: 0;
+      width: 40px;
     }
   }
 
   svg path {
     fill: #2B6A91;
+  }
+
+  a {
+    display: flex;
   }
 }

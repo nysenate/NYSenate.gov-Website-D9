@@ -5354,12 +5354,6 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
               ];
             }
           }
-          // Will have to remove this.
-          if ($block['#block_content']->field_title->value == 'test') {
-            if (empty($variables['landing_page_hero'])) {
-              $variables['landing_page_hero']['background_img'] = $block['field_body_left'][0];
-            }
-          }
           elseif ($block['#block_content']->field_title->value == 'How the Senate Works') {
             $variables['how_senate_works_title'] = $block['#block_content']->field_title->value;
             $variables['how_senate_works_text'] = $block['field_body_left'][0];

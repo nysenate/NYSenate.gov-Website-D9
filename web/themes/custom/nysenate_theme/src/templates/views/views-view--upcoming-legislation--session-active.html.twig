@@ -31,6 +31,10 @@
  */
 #}
 {{ attach_library('nysenate_theme/session') }}
+{{ attach_library('nysenate_theme/meeting-detail') }}
+{{ attach_library('nysenate_theme/nysenate-legislation') }}
+{{ attach_library('nysenate_theme/nysenate-committee-updates') }}
+
 {%
   set classes = [
     'view',
@@ -40,6 +44,10 @@
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
     'container',
+    'l-row',
+    'l-row--main',
+    'l-main',
+    'c-updates-container',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>

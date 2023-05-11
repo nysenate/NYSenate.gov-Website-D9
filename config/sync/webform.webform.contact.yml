@@ -17,7 +17,16 @@ id: contact
 title: Contact
 description: 'Basic email contact webform.'
 category: ''
-elements: |
+elements: |-
+  inquiry:
+    '#type': radios
+    '#title': Inquiry
+    '#title_display': invisible
+    '#options':
+      general_inquiry: 'General Inquiry'
+      website_feedback: 'Website Feedback'
+    '#options_display': side_by_side
+    '#default_value': general_inquiry
   name:
     '#title': 'Your Name'
     '#type': textfield

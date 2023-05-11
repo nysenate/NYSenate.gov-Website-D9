@@ -54,7 +54,9 @@
 a.nys-btn--gold {
   transition: background-color 0.2s ease;
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px 10px;
   background: $yellow01;
   color: $color-white;
@@ -65,6 +67,7 @@ a.nys-btn--gold {
   letter-spacing: 0.1em;
   line-height: 24px;
   margin-top: 20px;
+  height: 100px;
 
   &:hover {
     color: #fff;
@@ -75,7 +78,9 @@ a.nys-btn--gold {
 a.nys-btn--blue {
   transition: background-color 0.2s ease;
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px 10px;
   background: $blue03;
   color: $color-white;
@@ -85,6 +90,7 @@ a.nys-btn--blue {
   font-size: 14px;
   letter-spacing: 0.1em;
   line-height: 24px;
+  height: 100px;
 
   &:hover {
     color: #fff;

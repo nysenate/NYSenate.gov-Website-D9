@@ -11,6 +11,10 @@
   .nys-bill-status hr {
     top: 2px;
   }
+
+  .c-block.node--type-bill {
+    margin-bottom: 0;
+  }
 }
 
 .nys-article-title {
@@ -187,10 +191,6 @@
     border-left: 5px solid $grey06;
     padding-left: 10px;
   }
-}
-
-.c-questionnaire--body .c-block a {
-  @extend .lgt-text;
 }
 
 @include breakpoint($bp-sm) {

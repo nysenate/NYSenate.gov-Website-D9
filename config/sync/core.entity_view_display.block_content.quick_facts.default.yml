@@ -7,6 +7,7 @@ dependencies:
     - field.field.block_content.quick_facts.field_pg_full_width_bleed
     - field.field.block_content.quick_facts.field_pg_quick_facts_cols
     - field.field.block_content.quick_facts.field_quick_facts
+    - field.field.block_content.quick_facts.field_quick_facts_icons
   module:
     - entity_reference_revisions
     - options
@@ -40,6 +41,16 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_quick_facts_icons:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
     region: content
 hidden:
   langcode: true

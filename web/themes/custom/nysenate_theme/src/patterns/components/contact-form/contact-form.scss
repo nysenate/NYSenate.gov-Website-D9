@@ -6,7 +6,8 @@
 /	CONTACT PAGE STYLES
 /
 /-----------------------------------------*/
-.contact-form {
+.contact-form,
+.webform-submission-contact-form {
 	max-width: 1600px;
 	
 	.columns {
@@ -38,7 +39,7 @@
   .form-item,
   .form-actions {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1em;	
 
 		.webform-button--submit {
 			margin: 20px 0 5px;
@@ -55,6 +56,16 @@
 		}
   }
 
+	.form-type-radio {
+		display: flex;
+    align-items: center;
+    gap: 5px;
+
+		label {
+			margin: 0;
+		}
+	}
+
   .form-checkboxes .form-item, 
   .form-radios .form-item {
     margin-top: 0.4em;
@@ -64,7 +75,8 @@
 
 @include breakpoint($bp-sm) {
 
-	.contact-form {
+	.contact-form,
+	.webform-submission-contact-form {
 		.form-type-radio {
 			display: block;
 			float: left;
@@ -95,6 +107,11 @@
 			.webform-button--submit {
 				font-size: 16px;
 			}
+		}
+
+		.form-radios {
+			display: flex;
+			column-gap: 20px;
 		}
 	}
 }

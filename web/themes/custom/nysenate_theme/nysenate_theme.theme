@@ -2529,8 +2529,10 @@ function nysenate_theme_preprocess_semanticviews_row__upcoming_legislation(&$var
   }
 
   // Votes Content.
-  $votes_list = nysenate_bill_votes($node);
-  $variables['vote'] = $votes_list['FLOOR'] ?? [];
+  if (!empty($node) && $node->hasField('field_ol_votes') && !empty($node->field_ol_votes)) {
+    $votes_list = nysenate_bill_votes($node);
+    $variables['vote'] = $votes_list['FLOOR'] ?? [];
+  }
 
   $variables['fields']['field_ol_last_status_date']['content'] = $variables['row']->node__field_ol_last_status_date_field_ol_last_status_date_va ?? NULL;
 }
@@ -2547,6 +2549,7 @@ function nysenate_theme_preprocess_semanticviews_row__upcoming_legislation__sess
   // Votes Content.
   $votes_list = nysenate_bill_votes($node);
   $variables['vote'] = $votes_list['FLOOR'] ?? [];
+  $variables['current_year'] = date('Y');
 
   if ($node->hasField('field_ol_last_status_date') && !$node->get('field_ol_last_status_date')->isEmpty()) {
     $last_status_date = $node->field_ol_last_status_date->value;
@@ -3752,6 +3755,17 @@ function nysenate_bill_votes($node) {
         }
       }
 
+      $session_year = $node->field_ol_session->value ?? 0;
+      $vote_year = date("Y", strtotime($votes->field_publication_date->value));
+
+      $bill_in_current_session = FALSE;
+      if (($vote_year % 2 == 0) && (($vote_year - 1) == $session_year)) {
+        $bill_in_current_session = TRUE;
+      }
+      elseif ($vote_year == $session_year) {
+        $bill_in_current_session = TRUE;
+      }
+
       $votes_list[$votes->field_ol_vote_type->value] = [
         'aye_count' => $votes->field_ol_aye_count->value ?? 0,
         'nay_count' => $votes->field_ol_nay_count->value ?? 0,
@@ -3762,6 +3776,8 @@ function nysenate_bill_votes($node) {
         'all_members' => $all_members,
         'type' => ucwords(strtolower(trim($type))),
         'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
+        'vote_year' => $vote_year,
+        'bill_in_current_session' => $bill_in_current_session,
       ];
     }
 

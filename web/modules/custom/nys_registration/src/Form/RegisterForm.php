@@ -97,16 +97,22 @@ class RegisterForm extends UserRegisterForm {
    * collected from all steps, and use a director to decide which step to build.
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    // Initialize the form's entity.
-    if (!$form_state->has('entity_form_initialized')) {
-      $this->init($form_state);
+    $route_match = \Drupal::routeMatch();
+    $current_route_name = $route_match->getRouteName();
+    if ($current_route_name === 'user.admin_create') {
+      // Return the standard registration form for the user.admin_create route.
+      return parent::buildForm($form, $form_state);
     }
-
-    // Ensure incoming values are saved in state.
-    $this->compileValues($form_state);
-
-    // Retrieve the appropriate form for this step.
-    return $this->buildFormStep($form, $form_state);
+    else {
+      // Initialize the form's entity.
+      if (!$form_state->has('entity_form_initialized')) {
+        $this->init($form_state);
+      }
+      // Ensure incoming values are saved in state.
+      $this->compileValues($form_state);
+      // Retrieve the appropriate form for this step.
+      return $this->buildFormStep($form, $form_state);
+    }
   }
 
   /**
@@ -171,6 +177,7 @@ class RegisterForm extends UserRegisterForm {
       'field_user_phone_no',
       'field_user_receive_emails',
       'field_voting_auto_subscribe',
+      'field_profile_picture',
     ];
     foreach ($disable as $name) {
       $form[$name]['#access'] = FALSE;
@@ -326,6 +333,9 @@ class RegisterForm extends UserRegisterForm {
       $user['name'] = $first_name[0]['value'] . ' ' . $last_name[0]['value'];
       $user['address_1'] = $address['address_line1'];
       $user['address_2'] = $address['address_line2'];
+      $user['locality'] = $address['locality'];
+      $user['administrative_area'] = $address['administrative_area'];
+      $user['postal_code'] = $address['postal_code'];
       $user['mail'] = $form_state->getValue('mail');
     }
     $form['actions'] = [

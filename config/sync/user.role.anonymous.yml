@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - comment
     - field_permissions
     - media
     - system
@@ -14,9 +13,7 @@ label: 'Anonymous user'
 weight: 0
 is_admin: false
 permissions:
-  - 'access comments'
   - 'access content'
-  - 'post comments'
   - 'view field_associated_senators'
   - 'view field_inactive_senator_message'
   - 'view media'

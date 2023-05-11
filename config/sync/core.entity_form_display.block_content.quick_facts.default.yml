@@ -7,6 +7,7 @@ dependencies:
     - field.field.block_content.quick_facts.field_pg_full_width_bleed
     - field.field.block_content.quick_facts.field_pg_quick_facts_cols
     - field.field.block_content.quick_facts.field_quick_facts
+    - field.field.block_content.quick_facts.field_quick_facts_icons
   module:
     - paragraphs
 id: block_content.quick_facts.default
@@ -29,7 +30,7 @@ content:
     third_party_settings: {  }
   field_quick_facts:
     type: paragraphs
-    weight: 3
+    weight: 4
     region: content
     settings:
       title: Paragraph
@@ -44,6 +45,13 @@ content:
       features:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
+    third_party_settings: {  }
+  field_quick_facts_icons:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   info:
     type: string_textfield

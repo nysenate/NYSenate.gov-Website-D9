@@ -377,6 +377,10 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
     'vid' => 'microsite_page_type',
   ]);
 
+  // Sincerely Letter text content.
+  $earth_day_letter_body = "<p>Dear Students,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the New York State Senate’s Earth Day Poster Contest. This year we received many outstanding posters that exemplify the creativity of the young people in our Senatorial District.</p>\r\n\r\n<p>Each entry from my District displayed tremendous originality and vision as well as obvious concern for the ecological future of our communities and our state. I am proud of your work and that of your classmates, and encourage you to continue to study and learn more about the serious challenges that face our environment.</p>\r\n\r\n<p>I would like to offer my wholehearted congratulations to all of the participants in this year’s Contest. I also want to thank your family and give special thanks to your teachers, whose dedication and involvement in this event provided the encouragement for you to be creative and participate in the 2017 Earth Day Poster Contest.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+  $thankful_letter_body = "<p>Dear Participant,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the Thanksgiving Day Creative Celebration. We received outstanding poems, essays, and artwork that exemplify the creativity of New York State’s young people.</p>\r\n\r\n<p>The submissions received are remarkable in what they represent – showing gratitude and respect for family, friends, our troops fighting overseas, and many other important subjects and activities. I am humbled and honored to see such inspiring contributions in response to what is a deceptively difficult question: “What are you thankful for?”</p>\r\n\r\n<p>On behalf of the New York State Senate, I would like to offer my wholehearted congratulations to all of the participants in this year’s Thanksgiving Day Creative Celebration.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+
   $senatorMicrosites = [
     'Landing',
     'About',
@@ -468,6 +472,10 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
             [
               'info' => $senator_name . ' - Sincerely Block',
               'type' => 'sincerely',
+              'body' => [
+                'value' => $thankful_letter_body,
+                'format' => 'full_html',
+              ],
               'revision_user' => 1,
             ],
             [
@@ -497,6 +505,10 @@ function _nys_senators_create_senator_microsites(EntityInterface $entity) {
             [
               'info' => $senator_name . ' - Sincerely Block',
               'type' => 'sincerely',
+              'body' => [
+                'value' => $earth_day_letter_body,
+                'format' => 'full_html',
+              ],
               'revision_user' => 1,
             ],
             [
@@ -601,13 +613,7 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
           $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
           $micrositeTerm = Term::load($tid);
           $validateLanding = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Landing';
-          $validateAbout = $term->get('field_active_senator')->value === 0 && $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'About';
           $validateInactive = $micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive';
-
-          if ($validateAbout) {
-            /** @var \Drupal\node\Entity\Node $aboutNode */
-            $aboutNode = $node;
-          }
 
           if ($validateLanding) {
             $activeSenator === 1 ? $node->setPublished() : $node->setUnpublished();
@@ -624,8 +630,8 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
     if (!$updatedValue) {
       $hasInactivePage = \Drupal::service('nys_senators.senators_helper')
         ->hasMicroSiteInactive($nodes);
-      if (!$hasInactivePage && !empty($aboutNode)) {
-        _nys_senators_create_senator_microsite_inactive($term, $aboutNode, $currentTid);
+      if (!$hasInactivePage) {
+        _nys_senators_create_senator_microsite_inactive($term, $currentTid);
       }
     }
   }
@@ -636,12 +642,10 @@ function _nys_senators_validate_microsite_term(EntityInterface $entity, int $act
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The original entity object.
- * @param \Drupal\node\NodeInterface $aboutNode
- *   The entity About microsite.
  * @param string $currentTid
  *   The Tid variable from the term.
  */
-function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity, NodeInterface $aboutNode, string $currentTid) {
+function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity, string $currentTid) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $entity;
 
@@ -698,31 +702,13 @@ function _nys_senators_create_senator_microsite_inactive(EntityInterface $entity
       ],
     ],
   ];
-
-  // Checks if aboutNode is set and has blocks to iterate with.
-  if ($aboutNode instanceof NodeInterface
-    && $aboutNode->hasField('field_block')
-    && !$aboutNode->get('field_block')->isEmpty()) {
-    // Iterates through each field block.
-    foreach ($aboutNode->get('field_block') as $key => $value) {
-      /** @var \Drupal\Core\Entity\Plugin\DataType\EntityReference $entityReference */
-      $entityReference = $value->get('entity');
-      /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-      $block_content = $entityReference->getTarget()->getValue();
-
-      if ($block_content instanceof BlockContent) {
-        // Sets inactiveText for former Senator page.
-        if ($block_content->bundle() === 'text') {
-          $existingText = !$block_content->get('field_body_left')
-            ->isEmpty() ? $block_content->get('field_body_left')
-            ->getValue() : '';
-          $existingText = !empty($existingText) ? $existingText[0]['value'] : '';
-          $inactiveHeader = '<h2>About Former Senator ' . $term->getName() . '\'s</h2>';
-          $inactiveFooter = '<div><p><em>Last edited by Senator ' . $term->getName() . '\'s staff prior to last day in office.</em></p></div>';
-          $inactiveText = $inactiveHeader . $existingText . $inactiveFooter;
-        }
-      }
-    }
+  $entityTypeManager = \Drupal::entityTypeManager();
+  $term = $entityTypeManager->getStorage('taxonomy_term')->load($currentTid);
+  $fieldAboutValue = $term->get('field_about')->value;
+  if (!empty($fieldAboutValue)) {
+    $inactiveHeader = '<h2>About Former Senator ' . $term->getName() . '\'s</h2>';
+    $inactiveFooter = '<div><p><em>Last edited by Senator ' . $term->getName() . '\'s staff prior to last day in office.</em></p></div>';
+    $inactiveText = $inactiveHeader . $fieldAboutValue . $inactiveFooter;
   }
 
   // Checks if inactiveText is set.
@@ -1227,7 +1213,8 @@ function nys_senators_query_nys_senators_access_alter(AlterableInterface $query)
     // Check for MCP.
     if (!$senator_helper->senatorUserIsAdmin($user) &&
       $user->hasField('field_senator_multiref') &&
-      !empty($senators = $user->field_senator_multiref->getValue())) {
+      !empty($senators = $user->field_senator_multiref->getValue()) &&
+      (count($senators) > 1 || $senators[0]['target_id'] != 0)) {
 
       // Format a nice array for query conditions.
       $senator_tids = [];
@@ -1525,6 +1512,80 @@ function _nys_senators_add_about_text_blocks(EntityInterface $entity) {
 
         // Save the node.
         $page->save();
+      }
+    }
+  }
+}
+
+/**
+ * Populate the letter body content to the Sincerely blocks.
+ */
+function _nys_senators_populate_sincerely_blocks(EntityInterface $entity) {
+  // Gets the senator name value.
+  $senator_name = $entity->label();
+
+  $termEntityManager = \Drupal::service('entity_type.manager')
+    ->getStorage('taxonomy_term');
+  $micrositeTypes = $termEntityManager->loadByProperties([
+    'vid' => 'microsite_page_type',
+  ]);
+
+  $earth_day_letter_body = "<p>Dear Students,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the New York State Senate’s Earth Day Poster Contest. This year we received many outstanding posters that exemplify the creativity of the young people in our Senatorial District.</p>\r\n\r\n<p>Each entry from my District displayed tremendous originality and vision as well as obvious concern for the ecological future of our communities and our state. I am proud of your work and that of your classmates, and encourage you to continue to study and learn more about the serious challenges that face our environment.</p>\r\n\r\n<p>I would like to offer my wholehearted congratulations to all of the participants in this year’s Contest. I also want to thank your family and give special thanks to your teachers, whose dedication and involvement in this event provided the encouragement for you to be creative and participate in the 2017 Earth Day Poster Contest.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+  $thankful_letter_body = "<p>Dear Participant,</p>\r\n\r\n<p>Thank you for your wonderful contribution to the Thanksgiving Day Creative Celebration. We received outstanding poems, essays, and artwork that exemplify the creativity of New York State’s young people.</p>\r\n\r\n<p>The submissions received are remarkable in what they represent – showing gratitude and respect for family, friends, our troops fighting overseas, and many other important subjects and activities. I am humbled and honored to see such inspiring contributions in response to what is a deceptively difficult question: “What are you thankful for?”</p>\r\n\r\n<p>On behalf of the New York State Senate, I would like to offer my wholehearted congratulations to all of the participants in this year’s Thanksgiving Day Creative Celebration.</p>\r\n\r\n<p>Sincerely,</p>\r\n\r\n<p>" . $senator_name . "</p>";
+
+  $senatorMicrosites = [
+    'Earth Day',
+    'Thankful',
+  ];
+
+  foreach ($micrositeTypes as $micrositeType) {
+    if (in_array($micrositeType->getName(), $senatorMicrosites)) {
+
+      $microsite_page = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          'field_senator_multiref' => $entity->id(),
+          'field_microsite_page_type' => $micrositeType->id(),
+        ]);
+
+      $page = NULL;
+      if (!empty($microsite_page)) {
+        $page = reset($microsite_page);
+
+        if ($page->hasField('field_block') && !$page->get('field_block')
+          ->isEmpty()) {
+          foreach ($page->get('field_block') as $key => $value) {
+            /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+            $block_content = $value->entity ?? NULL;
+
+            if ($block_content instanceof BlockContent) {
+              if ($block_content->bundle() == 'sincerely') {
+                // Save the body content.
+                switch ($micrositeType->getName()) {
+                  case 'Thankful':
+                    $block_content->body = [
+                      'value' => $thankful_letter_body,
+                      'format' => 'full_html',
+                    ];
+                    $block_content->save();
+                    break;
+
+                  case 'Earth Day':
+                    $block_content->body = [
+                      'value' => $earth_day_letter_body,
+                      'format' => 'full_html',
+                    ];
+                    $block_content->save();
+                    break;
+
+                  default:
+                    break;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

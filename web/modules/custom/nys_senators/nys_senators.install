@@ -569,3 +569,45 @@ function nys_senators_update_9021() {
     }
   }
 }
+
+/**
+ * Resave "senator" taxonomy vocabulary. This will generate inactive pages.
+ */
+function nys_senators_update_9022() {
+  $vid = 'senator';
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
+
+  foreach ($terms as $term) {
+    $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->tid);
+    if ($term->hasField('field_active_senator')) {
+      $value = (bool) $term->get('field_active_senator')->value;
+      if (!$value) {
+        _nys_senators_validate_microsite_term($term, $value, 0);
+      }
+    }
+  }
+}
+
+/**
+ * Populate the Sincerely block body on Earth Day & Thankful Microsite pages.
+ */
+function nys_senators_update_9023() {
+  // Queries all senator terms.
+  $senator_terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'senator',
+  ]);
+  // Iterates through each senator term.
+  foreach ($senator_terms as $senator_term) {
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'microsite_page')
+      ->condition('field_senator_multiref', [$senator_term->id()], 'IN')
+      ->condition('field_microsite_page_type.entity:taxonomy_term.name',
+        ['Earth Day', 'Thankful'], 'IN')
+      ->execute();
+
+    if (!empty($query)) {
+      _nys_senators_populate_sincerely_blocks($senator_term);
+    }
+  }
+}

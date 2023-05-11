@@ -31,15 +31,10 @@ dependencies:
   module:
     - address
     - datetime_range
-    - layout_builder
     - link
     - options
     - text
     - user
-third_party_settings:
-  layout_builder:
-    enabled: false
-    allow_custom: false
 id: node.event.upcoming_event
 targetEntityType: node
 bundle: event
@@ -232,4 +227,5 @@ hidden:
   field_senator_multiref: true
   field_ustream: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

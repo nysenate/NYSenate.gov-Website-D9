@@ -990,3 +990,11 @@ $migrate_settings = __DIR__ . "/settings.migrate-on-pantheon.php";
 if (file_exists($migrate_settings) && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
   include $migrate_settings;
 }
+
+/**
+ * Drupal
+ * Define appropriate location for tmp directory
+ */
+if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
+  $settings['file_temp_path'] = 'sites/default/files/private/tmp';
+}

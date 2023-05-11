@@ -43,6 +43,12 @@
 		@extend .lgt-text;
 	}
 
+	.c-featured-story-issue-tag {
+		@extend .link-text;
+    font-family: $font-sans-bold;
+    font-size: 12px;
+	}
+
   .c-featured-story-issue-tag a {
     text-transform: uppercase;
     font-family: $font-sans-bold;
@@ -78,4 +84,8 @@
 			gap: 40px;
 		}
   }
+}
+
+.c-block.c-event-featured-story {
+	margin-bottom: 0;
 }

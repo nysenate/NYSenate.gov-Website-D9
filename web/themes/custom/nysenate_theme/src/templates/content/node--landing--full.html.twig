@@ -116,7 +116,9 @@
             'field_show_issues'
           )
         }}
-        {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+        {% if not is_front %}
+          {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+        {% endif %}
         {% if how_a_bill_block %}
           {{ how_a_bill_block }}
         {% endif %}

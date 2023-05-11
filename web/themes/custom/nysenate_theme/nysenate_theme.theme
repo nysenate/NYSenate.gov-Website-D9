@@ -3871,7 +3871,7 @@ function nysenate_theme_preprocess_node__event(&$variables) {
  */
 function nysenate_theme_preprocess_node__honoree(&$variables) {
   $variables['vet_archive_list'] = views_embed_view('honoree_profiles', 'vets_senator');
-  $variables['women_archive_list'] = views_embed_view('honoree_profiles', 'block_3');
+  $variables['women_archive_list'] = views_embed_view('honoree_profiles', 'women_bysen');
 
   $variables['title'] = $variables['label'][0]['#context']['value'];
 

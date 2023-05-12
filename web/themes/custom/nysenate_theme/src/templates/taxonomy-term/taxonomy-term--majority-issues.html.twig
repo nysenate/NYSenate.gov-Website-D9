@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ * Theme override to display a taxonomy term.
+ *
+ * Available variables:
+ * - url: URL of the current term.
+ * - name: (optional) Name of the current term.
+ * - content: Items for the content of the term (fields and description).
+ *   Use 'content' to print them all, or print a subset such as
+ *   'content.description'. Use the following code to exclude the
+ *   printing of a given child element:
+ *   @code
+ *   {{ content|without('description') }}
+ *   @endcode
+ * - attributes: HTML attributes for the wrapper.
+ * - page: Flag for the full page state.
+ * - term: The taxonomy term entity, including:
+ *   - id: The ID of the taxonomy term.
+ *   - bundle: Machine name of the current vocabulary.
+ * - view_mode: View mode, e.g. 'full', 'teaser', etc.
+ *
+ * @see template_preprocess_taxonomy_term()
+ */
+#}
+{{ attach_library('nysenate_theme/newsroom-content') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+{{ attach_library('nysenate_theme/nysenate-accordion') }}
+{{ attach_library('nysenate_theme/taxonomy-term-issues') }}
+
+{%
+  set classes = [
+    'taxonomy-term',
+    'vocabulary-' ~ term.bundle|clean_class,
+  ]
+%}
+<div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
+
+    <div class="content">
+        <div class="c-block c-detail--header">
+            <h2 class="nys-title">{{ name }}</h2>
+            {% if flag_count %}
+              <p class="c-issue--followers">
+                <span>{{ flag_count }}</span> {{ 'followers'|t }}
+              </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="c-news--body">
+        {% if content.field_image_main.0 %}
+            <div class="c-block c-block--img">
+                {{ content.field_image_main }}
+            </div>
+        {% endif %}
+
+        <div class="c-block">
+            {{ content.description }}
+            {{ content.field_blocks }}
+        </div>
+    </div>
+
+        {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+        {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+</div>

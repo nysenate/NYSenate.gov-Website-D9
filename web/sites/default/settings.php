@@ -794,7 +794,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
     case 'dev':
       // Enable the Dev environment's config split.
-      $config['config_split.config_split.develop']['status'] = TRUE;
+      $config['config_split.config_split.dev']['status'] = TRUE;
 
       // Configure the Dev environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Dev';

@@ -114,7 +114,7 @@ display:
         type: bef
         options:
           submit_button: Apply
-          reset_button: true
+          reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -127,7 +127,7 @@ display:
               autosubmit: true
               autosubmit_exclude_textfield: false
               autosubmit_textfield_delay: 500
-              autosubmit_hide: false
+              autosubmit_hide: true
               input_required: false
               allow_secondary: false
               secondary_label: 'Advanced options'
@@ -397,6 +397,7 @@ display:
           plugin_id: bundle
           value:
             honoree: honoree
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
@@ -603,63 +604,6 @@ display:
                   value: '2010'
                   type: date
           granularity: year
-        field_senator_multiref_target_id:
-          id: field_senator_multiref_target_id
-          table: node__field_senator_multiref
-          field: field_senator_multiref_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_senator_multiref_target_id_op
-            label: Senator
-            description: ''
-            use_operator: false
-            operator: field_senator_multiref_target_id_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: senator
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          vid: senator
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
         title:
           id: title
           table: node_field_data
@@ -720,6 +664,63 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        field_senator_multiref_target_id:
+          id: field_senator_multiref_target_id
+          table: node__field_senator_multiref
+          field: field_senator_multiref_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_senator_multiref_target_id_op
+            label: Senator
+            description: ''
+            use_operator: false
+            operator: field_senator_multiref_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: senator
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: senator
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
       filter_groups:
         operator: AND
         groups:
@@ -769,7 +770,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: false
-          content: "<div class=\"c-initiative c-container--header__top-border\">\r\n            <h2 class=\"c-container--title\">Veterans' Hall of Fame Honorees</h2>\r\n </div>"
+          content: '<h2>Veterans'' Hall of Fame Honorees</h2>'
           tokenize: false
       display_extenders: {  }
       block_description: 'All Veterans List'
@@ -946,6 +947,7 @@ display:
           plugin_id: bundle
           value:
             honoree: honoree
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
@@ -1152,63 +1154,6 @@ display:
                   value: '2010'
                   type: date
           granularity: year
-        field_senator_multiref_target_id:
-          id: field_senator_multiref_target_id
-          table: node__field_senator_multiref
-          field: field_senator_multiref_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_senator_multiref_target_id_op
-            label: Senator
-            description: ''
-            use_operator: false
-            operator: field_senator_multiref_target_id_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: senator
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          vid: senator
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
         title:
           id: title
           table: node_field_data
@@ -1269,6 +1214,63 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        field_senator_multiref_target_id:
+          id: field_senator_multiref_target_id
+          table: node__field_senator_multiref
+          field: field_senator_multiref_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_senator_multiref_target_id_op
+            label: Senator
+            description: ''
+            use_operator: false
+            operator: field_senator_multiref_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: senator
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              web_administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              senate_services: '0'
+              student_contest_judge: '0'
+              experimental_content_producer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: senator
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
       filter_groups:
         operator: AND
         groups:
@@ -1318,7 +1320,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: false
-          content: "<div class=\"c-initiative c-container--header__top-border\">\r\n            <h2 class=\"c-container--title\">Women of Distinction Honorees</h2>\r\n </div>"
+          content: '<h2>Women of Distinction Honorees</h2>'
           tokenize: false
       display_extenders: {  }
       block_description: 'All Women List'

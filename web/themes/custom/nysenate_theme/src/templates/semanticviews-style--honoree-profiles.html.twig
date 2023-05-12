@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Default simple view template to display a list of rows.
+ *
+ * @ingroup views_templates
+ */
+#}
+
+{{ attach_library('nysenate_theme/initiatives') }}
+
+<h3 class="title">
+  <span class="date-display-single">{{ title }}</span>
+</h3>
+
+<div class="flex-container">
+
+  {% for id, row in rows %}
+
+    <div{{ row.attributes }}>
+      {{- row.content -}}
+    </div>
+
+  {% endfor %}
+
+</div>

@@ -2054,7 +2054,7 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
       'webform',
       'video',
     ];
-    if ($node && in_array($node->bundle(), $microsite_pages)) {
+    if ($node instanceof NodeInterface && in_array($node->bundle(), $microsite_pages)) {
       if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
         $suggestions[] = $hook . '__node__microsite_page';
       }

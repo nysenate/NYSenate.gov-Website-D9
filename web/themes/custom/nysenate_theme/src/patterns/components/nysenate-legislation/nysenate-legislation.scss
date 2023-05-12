@@ -1,0 +1,216 @@
+@import '../../global/utils/init';
+
+.page--legislation {
+
+  // may be able to further abstract
+  .c-legislation--descript {
+    margin-bottom: 20px;
+  }
+
+  .block-nys-blocks-how-senate-works-block {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .c-block-legislative-search-intro {
+    margin-bottom: 0;
+
+    > div {
+      margin-bottom: 5px;
+    }
+  }
+
+  .pane-upcoming-legislation {
+
+    .nys-accordion--title {
+      color: $grey08;
+    }
+
+    .nys-arrow-link {
+      color: $yellow03;
+    }
+
+    .accordion dd {
+      margin-bottom: 20px !important;
+    }
+  }
+
+  .view-upcoming-legislation {
+
+    .l-panel-col--lft {
+      padding-right: 20px;
+      width: 22%;
+
+      a {
+        color: $yellow03;
+        text-transform: uppercase;
+        font-family: $font-sans-bold;
+        font-size: 12px;
+        line-height: 18px;
+      }
+    }
+
+    .c-listing--bill-num {
+      margin-bottom: 8px;
+
+      a {
+        color: $grey08;
+        text-transform: none;
+        font-family: $font-serif-bold;
+        font-size: 24px;
+        line-height: 25px;
+      }
+    }
+
+    .c-panel--header.views-row-odd,
+    .c-panel--header.views-row-even {
+      display: none !important;
+    }
+
+    .c-panel--header.views-row-first {
+      display: block !important;
+    }
+  }
+
+  .tabs-content {
+
+    .view-upcoming-legislation {
+
+      .even,
+      .odd {
+        border-top: 1px solid $grey05;
+      }
+
+      .first>.c-update-block {
+        border-top: none;
+      }
+    }
+  }
+
+  .pane-nys-blocks-legislation-search {
+    position: relative;
+
+    .u-tablet-plus {
+      display: block;
+      color: $yellow03;
+      text-transform: uppercase;
+      font-size: 11px;
+      float: right;
+      padding-top: 5px;
+      font-weight: bold;
+      line-height: 1.2em;
+
+      @media #{$tablet} {
+        font-size: 14px;
+        font-weight: normal;
+      }
+    }
+
+    .c-legislation-search-links {
+      position: absolute;
+      bottom: 20px;
+      left: 15px;
+      width: 88%;
+
+      li {
+        list-style: none;
+        display: inline-block;
+
+        &:before {
+          content: "";
+          margin: 0 10px;
+          text-transform: uppercase;
+          background-color: $grey05;
+          font-size: 16px;
+          display: inline-block;
+          height: 13px;
+          width: 1px;
+        }
+
+        &:nth-child(1) {
+
+          &:before {
+            content: "Go To:";
+            margin-right: 20px;
+            text-transform: uppercase;
+            color: $grey08;
+            font-size: 16px;
+            display: inline;
+            background: none;
+          }
+        }
+
+        a {
+          color: $yellow03;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .c-site-search {
+      padding: 25px 20px;
+      margin-bottom: 40px;
+      min-height: 100px;
+      position: relative;
+      top: inherit;
+      background-color: $grey06;
+
+      &:before,
+      &:after {
+        display: none;
+      }
+
+      .c-site-search--title {
+        color: $grey08;
+      }
+
+      .c-site-search--box {
+        border-radius: 0;
+        border: 1px solid $grey05;
+      }
+
+      .c-site-search--btn {
+        top: 24px;
+      }
+    }
+  }
+}
+
+.c-press-release--descript {
+  color: $grey08;
+  font-family: $font-serif;
+  font-weight: normal;
+  font-size: 18px;
+  margin-bottom: 10px;
+
+  @include breakpoint($bp-sm) {
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  a {
+    color: $grey08;
+  }
+
+}
+
+.c-panel--header {
+  display: none;
+  overflow: hidden;
+
+  @include breakpoint($bp-sm) {
+    display: block;
+    padding: 40px 0 10px;
+
+    .l-panel-col {
+      margin: 0;
+      color: $grey08;
+      text-transform: uppercase;
+      font-family: $font-sans;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 400;
+    }
+  }
+}

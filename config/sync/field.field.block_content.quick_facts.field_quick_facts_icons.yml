@@ -1,0 +1,23 @@
+uuid: ca250168-5ad4-47f3-851c-5449fb38437f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.quick_facts
+    - field.storage.block_content.field_quick_facts_icons
+id: block_content.quick_facts.field_quick_facts_icons
+field_name: field_quick_facts_icons
+entity_type: block_content
+bundle: quick_facts
+label: 'Hide icons'
+description: 'If checked, the Quick Facts block icons will be hidden.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'on'
+  off_label: 'off'
+field_type: boolean

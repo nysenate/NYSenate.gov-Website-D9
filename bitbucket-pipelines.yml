@@ -188,75 +188,75 @@ pipelines:
             - mysql
           artifacts:
             - tests/visual-regression/backstop_data/**
-  pull-requests:
-    '{feature/**,clu-*}':
-      - step:
-          caches:
-            - composer
-            - composer-project-vendor
-          script:
-            - TERMINUS_SITE="nysenate-2022"
-            - ADMIN_USERNAME="admin"
-            - ADMIN_EMAIL="admin@example.com"
+  #pull-requests:
+    #'{feature/**,clu-*}':
+      #- step:
+          #caches:
+           #- composer
+              #- composer-project-vendor
+          #script:
+            #- TERMINUS_SITE="nysenate-2022"
+            #- ADMIN_USERNAME="admin"
+            #- ADMIN_EMAIL="admin@example.com"
             # Passwords set in Bitbucket Pipelines UI
-            - ADMIN_PASSWORD="$MULTIDEV_ADMIN_PASSWORD"
-            - git config --global user.email "it@mediacurrent.com"
-            - git config --global user.name "Mediacurrent IT"
-            - mkdir -p $HOME/.ssh
-            - echo "bitbucket.org,104.192.143.2 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==" >> /root/.ssh/known_hosts
+            #- ADMIN_PASSWORD="$MULTIDEV_ADMIN_PASSWORD"
+            #- git config --global user.email "it@mediacurrent.com"
+            #- git config --global user.name "Mediacurrent IT"
+            #- mkdir -p $HOME/.ssh
+            #- echo "bitbucket.org,104.192.143.2 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==" >> /root/.ssh/known_hosts
             # Avoid ssh prompting when connecting to new ssh hosts
-            - echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
-            - echo -e "$SSH_ID_RSA" >> ~/.ssh/id_rsa
-            - chmod 600 ~/.ssh/id_rsa
-            - echo -e "$SSH_ID_RSA_PUB" >> ~/.ssh/id_rsa.pub
-            - chmod 600 ~/.ssh/id_rsa.pub
-            - chmod 700 ~/.ssh
-            - composer selfupdate
-            - export PATH="$(composer config -g home)/vendor/bin:$PATH"
-            - composer global require -n "pantheon-systems/terminus:~3"
-            - terminus --version
+            #- echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
+            #- echo -e "$SSH_ID_RSA" >> ~/.ssh/id_rsa
+            #- chmod 600 ~/.ssh/id_rsa
+            #- echo -e "$SSH_ID_RSA_PUB" >> ~/.ssh/id_rsa.pub
+            #- chmod 600 ~/.ssh/id_rsa.pub
+            #- chmod 700 ~/.ssh
+            #- composer selfupdate
+            #- export PATH="$(composer config -g home)/vendor/bin:$PATH"
+            #- composer global require -n "pantheon-systems/terminus:~3"
+            #- terminus --version
             # Install the copy of the Build Tools Plugin cloned by Bitbucket as a plugin
             # in Terminus, so that all build-env commands run the System-Under-Test.
-            - terminus self:plugin:install pantheon-systems/terminus-build-tools-plugin
-            - terminus auth:login -n --machine-token="$TERMINUS_TOKEN"
-            - terminus build-env:list ${TERMINUS_SITE}
-            - composer --verbose install
+            #- terminus self:plugin:install pantheon-systems/terminus-build-tools-plugin
+            #- terminus auth:login -n --machine-token="$TERMINUS_TOKEN"
+            #- terminus build-env:list ${TERMINUS_SITE}
+            #- composer --verbose install
             # Build and deploy to Pantheon
-            - DDEV_PROJECT=false ./scripts/hobson release:build Pantheon ${BITBUCKET_BRANCH}
-            - cd ./build/release_repo
-            - PANTHEON_BRANCH=$( echo "ci-$(echo ${BITBUCKET_BRANCH} | sed 's/[^0-9]*//g' | cut -c 1-4)${BITBUCKET_BUILD_NUMBER//[[:space:]]}" | cut -c 1-11)
-            - echo ${PANTHEON_BRANCH}
+            #- DDEV_PROJECT=false ./scripts/hobson release:build Pantheon ${BITBUCKET_BRANCH}
+            #- cd ./build/release_repo
+            #- PANTHEON_BRANCH=$( echo "ci-$(echo ${BITBUCKET_BRANCH} | sed 's/[^0-9]*//g' | cut -c 1-4)${BITBUCKET_BUILD_NUMBER//[[:space:]]}" | cut -c 1-11)
+            #- echo ${PANTHEON_BRANCH}
             # Remove older "ci-" multidev environments
-            - MULTIDEV_KEEP=3
-            - MULTIDEV_LIST=$(terminus build-env:list ${TERMINUS_SITE} --format=string --fields=id)
-            - set -- $MULTIDEV_LIST; while [ $# -gt $MULTIDEV_KEEP ]; do terminus multidev:delete ${TERMINUS_SITE}.$1 --delete-branch -y;  shift;  done
-            - terminus env:wake -n "${TERMINUS_SITE}.develop"
-            - SITE_ENV=$(echo "${TERMINUS_SITE}.${PANTHEON_BRANCH}")
-            - echo ${SITE_ENV}
-            - MULTIDEV_SITE=https://${PANTHEON_BRANCH}-${TERMINUS_SITE}.pantheonsite.io
-            - echo visit ${MULTIDEV_SITE}
+            #- MULTIDEV_KEEP=3
+            #- MULTIDEV_LIST=$(terminus build-env:list ${TERMINUS_SITE} --format=string --fields=id)
+            #- set -- $MULTIDEV_LIST; while [ $# -gt $MULTIDEV_KEEP ]; do terminus multidev:delete ${TERMINUS_SITE}.$1 --delete-branch -y;  shift;  done
+            #- terminus env:wake -n "${TERMINUS_SITE}.develop"
+            #- SITE_ENV=$(echo "${TERMINUS_SITE}.${PANTHEON_BRANCH}")
+            #- echo ${SITE_ENV}
+            #- MULTIDEV_SITE=https://${PANTHEON_BRANCH}-${TERMINUS_SITE}.pantheonsite.io
+            #- echo visit ${MULTIDEV_SITE}
             # Install new site for each multidev
             # - terminus build-env:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH}
             # - terminus connection:set "${SITE_ENV}" git
             # - terminus drush -n "${SITE_ENV}" -- site-install nysenate -y --site-name="${SITE_ENV}" --account-name="${ADMIN_USERNAME}" --account-mail="${ADMIN_EMAIL}" --account-pass="${ADMIN_PASSWORD}" --site-mail="${ADMIN_EMAIL}"
             # Alternately update existing site for each multidev
-            - cd web/themes/custom/nysenate_theme
-            - nvm install
-            - cd ../../../../
-            - DDEV_PROJECT=false ./scripts/hobson release:build Pantheon ${BITBUCKET_BRANCH} --release_branch=${PANTHEON_BRANCH} --no_nvm --theme_build=themes/custom/nysenate_theme --gitignore=themes/custom/nysenate_theme/node_modules
-            - DDEV_PROJECT=false ./scripts/hobson release:deploy Pantheon ${PANTHEON_BRANCH} -y
-            - terminus multidev:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH} --no-files
-            - terminus env:wake -n ${SITE_ENV}
-            - terminus connection:set "${SITE_ENV}" git
-            - terminus remote:drush ${SITE_ENV} -- deploy -y
-            - terminus drush -n "${SITE_ENV}" -- status
-            - terminus drush -n "${SITE_ENV}" -- uli
-            - terminus lock:enable ${SITE_ENV} ${LOCK_USERNAME} ${LOCK_PASSWORD}
+            #- cd web/themes/custom/nysenate_theme
+            #- nvm install
+            #- cd ../../../../
+            #- DDEV_PROJECT=false ./scripts/hobson release:build Pantheon ${BITBUCKET_BRANCH} --release_branch=${PANTHEON_BRANCH} --no_nvm --theme_build=themes/custom/nysenate_theme --gitignore=themes/custom/nysenate_theme/node_modules
+            #- DDEV_PROJECT=false ./scripts/hobson release:deploy Pantheon ${PANTHEON_BRANCH} -y
+            #- terminus multidev:create ${TERMINUS_SITE}.develop ${PANTHEON_BRANCH} --no-files
+            #- terminus env:wake -n ${SITE_ENV}
+            #- terminus connection:set "${SITE_ENV}" git
+            #- terminus remote:drush ${SITE_ENV} -- deploy -y
+            #- terminus drush -n "${SITE_ENV}" -- status
+            #- terminus drush -n "${SITE_ENV}" -- uli
+            #- terminus lock:enable ${SITE_ENV} ${LOCK_USERNAME} ${LOCK_PASSWORD}
             # link to multidev posted to Bitbucket
-            - export BUILD_STATUS="{\"key\":\"${PANTHEON_BRANCH}\", \"state\":\"SUCCESSFUL\", \"name\":\"PR Multidev\", \"url\":\"${MULTIDEV_SITE}\"}"
-            - curl -H "Content-Type:application/json" -X POST --user "${BB_AUTH_STRING}" -d "${BUILD_STATUS}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/commit/${BITBUCKET_COMMIT}/statuses/build"
+            #- export BUILD_STATUS="{\"key\":\"${PANTHEON_BRANCH}\", \"state\":\"SUCCESSFUL\", \"name\":\"PR Multidev\", \"url\":\"${MULTIDEV_SITE}\"}"
+            #- curl -H "Content-Type:application/json" -X POST --user "${BB_AUTH_STRING}" -d "${BUILD_STATUS}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/commit/${BITBUCKET_COMMIT}/statuses/build"
             # - slackcli -h mc-alerts-nysenate -e ":robot_face:" -m "CI multidev for ${BITBUCKET_BRANCH} available. visit ${MULTIDEV_SITE}" > /dev/null
-            - echo visit ${MULTIDEV_SITE}
+            #- echo visit ${MULTIDEV_SITE}
 
 definitions:
   caches:

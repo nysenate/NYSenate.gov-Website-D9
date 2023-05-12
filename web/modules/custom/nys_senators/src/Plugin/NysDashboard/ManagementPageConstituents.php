@@ -4,6 +4,7 @@ namespace Drupal\nys_senators\Plugin\NysDashboard;
 
 use Drupal\nys_senators\ManagementPageBase;
 use Drupal\taxonomy\TermInterface;
+use Drupal\views\Views;
 
 /**
  * Creates the overview page for the senator management dashboard.
@@ -19,10 +20,19 @@ class ManagementPageConstituents extends ManagementPageBase {
    */
   public function getContent(TermInterface $senator): array {
 
-    $view = views_embed_view('constituents', 'default', '48');
+    $district_number = NULL;
+    if ($senator) {
+      $district = $this->helper->loadDistrict($senator);
+      $district_number = (int) $district->field_district_number->value;
+    }
+
+    $constituent_view = Views::getView('constituents');
+    $view = $constituent_view->buildRenderable('by_district', [$district_number]);
+    $view2 = views_embed_view('constituents', 'by_district', $district_number);
 
     return [
-      'constituent_view' => $view,
+      '#theme' => 'nys_senators_management_constituents',
+      '#constituent_view' => $view,
     ];
 
   }

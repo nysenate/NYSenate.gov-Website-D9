@@ -167,7 +167,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: 'Last Name'
+          label: Name
           exclude: false
           alter:
             alter_text: true
@@ -762,16 +762,15 @@ display:
           group_type: group
           admin_label: 'District Number'
           plugin_id: numeric
-          default_action: empty
+          default_action: default
           exception:
             value: ''
             title_enable: false
             title: All
           title_enable: true
           title: 'Constituents in District {{ arguments.field_district_number_value }}'
-          default_argument_type: fixed
-          default_argument_options:
-            argument: ''
+          default_argument_type: node
+          default_argument_options: {  }
           default_argument_skip_url: false
           summary_options:
             base_path: ''
@@ -934,6 +933,30 @@ display:
           empty: false
           content: 'Displaying @start - @end of @total'
       footer: {  }
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'url.query_args:sort_by'
+        - 'url.query_args:sort_order'
+        - user.permissions
+      tags:
+        - 'config:field.storage.user.field_address'
+        - 'config:field.storage.user.field_dateofbirth'
+        - 'config:field.storage.user.field_district'
+        - 'config:field.storage.user.field_first_name'
+        - 'config:field.storage.user.field_last_name'
+  by_district:
+    id: by_district
+    display_title: 'Constituents By District'
+    display_plugin: block
+    position: 1
+    display_options:
+      display_description: ''
       display_extenders: {  }
     cache_metadata:
       max-age: -1

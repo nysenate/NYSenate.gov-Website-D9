@@ -37,6 +37,18 @@
         No sponsored bills were found.
       {% endif %}
     </div>
+
+    {% set limit = 5 %}
+
+    {% if sponsored_bills|length > limit %}
+      <div class="item-list" data-limit="{{ limit }}">
+        <div class="pager pager-load-more">
+          <span class="pager-next first last">
+            <a class="load-more">See more</a>
+          </span>
+        </div>
+      </div>
+    {% endif %}
   </div>
 
   <div id="panel2" class="nys-senators-management-bill-messages tab-content">

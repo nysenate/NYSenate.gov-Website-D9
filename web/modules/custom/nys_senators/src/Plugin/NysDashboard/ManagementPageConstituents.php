@@ -34,6 +34,7 @@ class ManagementPageConstituents extends ManagementPageBase {
 
     return [
       '#theme' => 'nys_senators_management_constituents',
+      '#attached' => ['library' => ['nysenate_theme/dashboard']],
       '#constituent_view' => $constituent_view->render(),
     ];
 

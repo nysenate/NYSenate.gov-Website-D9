@@ -1,4 +1,5 @@
 {{ attach_library('nysenate_theme/session') }}
+{{ attach_library('nysenate_theme/meeting-detail') }}
 
 <div class="node--session-full">
   {% if content.field_live_message_override[0] %}
@@ -127,6 +128,10 @@
             } only
           %}
         </div>
+      {% endif %}
+
+      {% if content.field_upcoming_legislation %}
+        {{ content.field_upcoming_legislation }}
       {% endif %}
 
       {% if content.field_transcript %}

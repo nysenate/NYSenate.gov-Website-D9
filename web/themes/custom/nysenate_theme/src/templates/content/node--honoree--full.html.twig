@@ -102,6 +102,8 @@
       {% if content.field_image_main %}
         <div class="c-block c-block--img">
           {{ content.field_image_main }}
+            <figcaption class="c-img--caption">{{ title }}</figcaption>
+
         </div>
       {% endif %}
 
@@ -136,12 +138,14 @@
     <div class="c-block--honorees">
       {% if content.field_honoree_type[0]['#markup'] == 'veterans' %}
         {{ vet_archive_list }}
-      {% elseif content.field_honoree_type.value[0]['#markup']  == 'women' %}
+      {% elseif content.field_honoree_type[0]['#markup']  == 'women' %}
         {{ women_archive_list }}
       {% endif %}
     </div>
 
   {% endif %}
+
+    {{ drupal_view('senator_microsite_content', 'article_footer') }}
 
   {% if content.field_senator_multiref['#items'] %}
     {{ drupal_view('senator_microsite_content', 'promo_footer') }}

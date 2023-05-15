@@ -794,7 +794,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
     case 'dev':
       // Enable the Dev environment's config split.
-      $config['config_split.config_split.develop']['status'] = TRUE;
+      $config['config_split.config_split.dev']['status'] = TRUE;
 
       // Configure the Dev environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Dev';
@@ -840,6 +840,14 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
   }
 }
 else {
+  // Config split configuration overrides.
+  $config['config_split.config_split.local']['status'] = TRUE;
+
+  // Local Environment indicator.
+  $config['environment_indicator.indicator']['name'] = 'Local';
+  $config['environment_indicator.indicator']['bg_color'] = '#00294F';
+  $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+
   // By default, disable Pantheon server/core search index for local environments.
   $config['search_api.server.pantheon_solr8']['status'] = FALSE;
   $config['search_api.index.core_search']['status'] = FALSE;
@@ -847,14 +855,6 @@ else {
   // Automatically generated include for settings managed by ddev.
   if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
     include $app_root . '/' . $site_path . '/settings.ddev.php';
-
-    // Config split configuration overrides.
-    $config['config_split.config_split.local']['status'] = TRUE;
-
-    // Local Environment indicator.
-    $config['environment_indicator.indicator']['name'] = 'Local';
-    $config['environment_indicator.indicator']['bg_color'] = '#00294F';
-    $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
 
     // Local solr search - enable for DDEV.
     $config['search_api.server.pantheon_solr8']['status'] = TRUE;

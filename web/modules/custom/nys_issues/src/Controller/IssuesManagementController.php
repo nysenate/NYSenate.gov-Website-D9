@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_issues\Controller;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Link;
@@ -72,6 +73,8 @@ class IssuesManagementController extends ControllerBase {
       $this->getIssueFollowers($taxonomy_term, $tid)
     );
 
+    $link = Link::fromTextAndUrl($tid->getName(), $tid->toUrl())->toString();
+
     // Finish the render array, and render it.
     if (count($rows)) {
       $ret = [
@@ -83,7 +86,7 @@ class IssuesManagementController extends ControllerBase {
           '#theme' => 'table',
           '#header' => ['User Name', 'Address'],
           '#rows' => $rows,
-          '#caption' => "Following " . $tid->getName(),
+          '#caption' => new FormattableMarkup("Following " . $link, []),
         ],
       ];
     }

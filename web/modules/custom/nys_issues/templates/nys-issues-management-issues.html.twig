@@ -6,13 +6,24 @@
  *   An array of the issue counts.
  */
 #}
+<div class="nys-senators-management-issues-header">
+  <h2 class="c-container--title">Issues Your Constituents Are Following</h2>
+  <p class="c-container--description">Below is a list of all issues which have been flagged by your constituents.  Select any issue to see a detail.</p>
+</div>
+<div class="nys-senators-management-issues-list-count">
+  {{ issues|length }} Issues found
+</div>
 <div class="nys-senators-management-issues-list">
-  {% if issues is iterable and issues|length > 0 %}
-    {% for val in issues %}
-      {{ include('nys-issues-management-follower-count.html.twig', val) }}
-    {% endfor %}
-  {% else %}
-    No issues are being followed by your constituents.
-  {% endif %}
+  <div class="c-container--body">
+    <div class="container--senator-issues-list">
+      {% if issues is iterable and issues|length > 0 %}
+        {% for val in issues %}
+          {{ include('nys-issues-management-follower-count.html.twig', val) }}
+        {% endfor %}
+      {% else %}
+        No issues are being followed by your constituents.
+      {% endif %}
+    </div>
+  </div>
 </div>
 <div class="issues-user-list"></div>

@@ -167,7 +167,6 @@
           var _selected = $('.dp_selected').html();
 
           if (_selected === null || _selected === undefined) {
-            _selected = localStorage.getItem('selected');
             $('.dp_current').addClass('dp_selected');
             $('.dp_daypicker td').each(function () {
               if ($(this).html() === _selected) {
@@ -198,9 +197,6 @@
                 $(this).removeClass('dp_selected');
               }
             });
-          }
-          else {
-            localStorage.setItem('selected', $('.dp_selected').html());
           }
           elements.each(function () {
             if (

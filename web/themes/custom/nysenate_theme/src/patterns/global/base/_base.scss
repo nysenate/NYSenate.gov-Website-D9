@@ -874,6 +874,10 @@ h2.c-subpage-header--title {
     &:hover {
       text-decoration: underline;
     }
+
+    .landing-node & {
+      color: $orange01;
+    }
   }
 }
 
@@ -904,6 +908,10 @@ h2.c-subpage-header--title {
 
     @include breakpoint($bp-sm) {
       font-size: 48px;
+    }
+
+    .landing-node & {
+      margin-bottom: 0;
     }
   }
 

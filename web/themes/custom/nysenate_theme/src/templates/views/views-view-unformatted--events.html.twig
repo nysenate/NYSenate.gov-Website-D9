@@ -28,7 +28,7 @@
   {% endif %}
 
   {% for row in rows %}
-    <div class="content__item c-event--list-by-group {% if loop.first %}last{% endif %}">
+    <div class="content__item c-event--list-by-group {% if loop.last %}last{% endif %}">
       {{- row.content -}}
     </div>
   {% endfor %}

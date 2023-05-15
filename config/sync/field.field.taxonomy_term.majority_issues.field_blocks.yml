@@ -1,0 +1,45 @@
+uuid: ea3b3e8b-0c1d-4385-be93-27f45c8e67c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.accordion
+    - block_content.type.blocks
+    - block_content.type.quick_facts
+    - block_content.type.slider
+    - block_content.type.tabs
+    - block_content.type.text
+    - block_content.type.video
+    - block_content.type.views
+    - field.storage.taxonomy_term.field_blocks
+    - taxonomy.vocabulary.majority_issues
+  module:
+    - entity_reference_revisions
+id: taxonomy_term.majority_issues.field_blocks
+field_name: field_blocks
+entity_type: taxonomy_term
+bundle: majority_issues
+label: Blocks
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:block_content'
+  handler_settings:
+    target_bundles:
+      accordion: accordion
+      blocks: blocks
+      views: views
+      quick_facts: quick_facts
+      slider: slider
+      tabs: tabs
+      text: text
+      video: video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: blocks
+field_type: entity_reference_revisions

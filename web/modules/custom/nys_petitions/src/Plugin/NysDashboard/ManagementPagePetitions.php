@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 use Drupal\nys_senators\ManagementPageBase;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -175,10 +176,46 @@ class ManagementPagePetitions extends ManagementPageBase {
     foreach ($rows as $row) {
       $url = Url::fromRoute('entity.node.canonical', ['node' => $row['nid']]);
       $link = Link::fromTextAndUrl($row['title'], $url)->toString();
+      $node = Node::load($row['nid']);
+      $url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+
+      $issues = '';
+      $tids = [];
+      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+        $node->field_issues->entity;
+        foreach ($node->field_issues as $key => $value) {
+          $term = $value->entity;
+          $issue_link = Link::fromTextAndUrl($term->getName(), $term->toUrl())->toString();
+
+          if ($key == count($node->field_issues) - 1) {
+            $issues .= $issue_link;
+          }
+          else {
+            $issues .= $issue_link . ', ';
+          }
+
+          $tids[] = '&f[' . ($key + 1) . ']=im_field_issues%3A' . $term->id();
+        }
+      }
+
+      $author = '';
+      if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+        /** @var \Drupal\taxonomy\Entity\Term $senator */
+        $senator = $node->field_senator_multiref->entity;
+        if ($senator) {
+          $author = Link::fromTextAndUrl($senator->getName(), $senator->toUrl())->toString();
+        }
+      }
+
       $ret[] = [
         'data' => [
           [
-            'data' => new FormattableMarkup($link . '<br />(' . $row['field_senator_name_family'] . ')', []),
+            'data' => new FormattableMarkup(
+              '<h3 class="entry-title">' . $link . '</h3>
+              <div class="pet-type">' . $issues . '</div>
+              <div class="author"><span>By: ' . $author . '</span></div>',
+              []
+            ),
             'class' => 'petition-link',
           ],
           ['data' => $row['in_district'], 'class' => 'signing-count'],

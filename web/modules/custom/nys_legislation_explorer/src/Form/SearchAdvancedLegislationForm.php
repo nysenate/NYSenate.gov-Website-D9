@@ -149,7 +149,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'resolution' => t('Resolutions'),
         'agenda' => t('Committee Meeting Agendas'),
         'calendar' => t('Session Calendars'),
-        'transcript' => t('Session Transcripts'),
+        'floor' => t('Session Transcripts'),
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
       '#default_value' => $args['type'] ?? NULL,
@@ -202,7 +202,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'select[name="type"]' => [
             ['value' => 'agenda'],
             ['value' => 'calendar'],
-            ['value' => 'transcript'],
+            ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
         ],
@@ -218,7 +218,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'select[name="type"]' => [
             ['value' => 'agenda'],
             ['value' => 'calendar'],
-            ['value' => 'transcript'],
+            ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
         ],
@@ -234,7 +234,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'select[name="type"]' => [
             ['value' => 'bill'],
             ['value' => 'resolution'],
-            ['value' => 'transcript'],
+            ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
         ],
@@ -375,13 +375,14 @@ class SearchAdvancedLegislationForm extends FormBase {
         ];
         break;
 
-      case 'transcript':
+      case 'floor':
       case 'public_hearing':
         $params = [
-          'type' => $values['type'] ?: '',
+          'type' => 'transcript' ?: '',
           'month' => $values['month'] ?: '',
           'year' => $values['year'] ?: '',
           'full_text' => $values['full_text'] ?: '',
+          'transcript_type' => $values['type'] ?: '',
         ];
         break;
 

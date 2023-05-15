@@ -36,6 +36,7 @@ dependencies:
     - field.storage.node.field_subtitle
     - field.storage.node.field_ol_summary
     - field.storage.node.field_summary
+    - field.storage.node.field_ol_transcript_type
     - field.storage.taxonomy_term.field_committee_types
     - search_api.server.pantheon_solr8
   module:
@@ -400,6 +401,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_summary
+  field_ol_transcript_type:
+    label: 'Transcript Type'
+    datasource_id: 'entity:node'
+    property_path: field_ol_transcript_type
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_ol_transcript_type
   field_senator_multiref:
     label: Senator
     datasource_id: 'entity:node'

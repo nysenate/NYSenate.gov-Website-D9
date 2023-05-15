@@ -7,10 +7,12 @@ dependencies:
     - field.storage.user.field_dateofbirth
     - field.storage.user.field_district
     - field.storage.user.field_first_name
+    - field.storage.user.field_gender_user
     - field.storage.user.field_last_name
   module:
     - address
     - datetime
+    - options
     - taxonomy
     - user
     - views_autocomplete_filters
@@ -41,7 +43,7 @@ display:
           entity_field: uid
           plugin_id: field
           label: 'User ID'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -359,7 +361,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: Address
-          exclude: false
+          exclude: true
           alter:
             alter_text: true
             text: '{{ field_address__address_line1}}{% if field_address__address_line2 %}, {{ field_address__address_line2 }}{% endif %}{% if field_address__locality %}, {{ field_address__locality }}{% endif %}{% if field_address__postal_code %}, {{ field_address__postal_code }}{% endif %}'
@@ -421,7 +423,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: District
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -582,7 +584,7 @@ display:
           admin_label: ''
           plugin_id: subdivision
           label: City
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -632,7 +634,7 @@ display:
           admin_label: ''
           plugin_id: standard
           label: Zip
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -672,6 +674,68 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+        field_gender_user:
+          id: field_gender_user
+          table: user__field_gender_user
+          field: field_gender_user
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Gender
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: list_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       pager:
         type: full
         options:
@@ -737,7 +801,7 @@ display:
           expose:
             label: 'Name (Last, First)'
             field_identifier: field_last_name_value
-          exposed: true
+          exposed: false
         uid:
           id: uid
           table: users_field_data
@@ -752,7 +816,7 @@ display:
           expose:
             label: 'User ID'
             field_identifier: uid
-          exposed: true
+          exposed: false
       arguments:
         field_district_number_value:
           id: field_district_number_value
@@ -941,36 +1005,11 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - user.permissions
       tags:
         - 'config:field.storage.user.field_address'
         - 'config:field.storage.user.field_dateofbirth'
         - 'config:field.storage.user.field_district'
         - 'config:field.storage.user.field_first_name'
-        - 'config:field.storage.user.field_last_name'
-  by_district:
-    id: by_district
-    display_title: 'Constituents By District'
-    display_plugin: block
-    position: 1
-    display_options:
-      display_description: ''
-      display_extenders: {  }
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
-        - user.permissions
-      tags:
-        - 'config:field.storage.user.field_address'
-        - 'config:field.storage.user.field_dateofbirth'
-        - 'config:field.storage.user.field_district'
-        - 'config:field.storage.user.field_first_name'
+        - 'config:field.storage.user.field_gender_user'
         - 'config:field.storage.user.field_last_name'

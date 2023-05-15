@@ -27,12 +27,14 @@ class ManagementPageConstituents extends ManagementPageBase {
     }
 
     $constituent_view = Views::getView('constituents');
-    $view = $constituent_view->buildRenderable('by_district', [$district_number]);
-    $view2 = views_embed_view('constituents', 'by_district', $district_number);
+    $constituent_view->setArguments([$district_number]);
+    $constituent_view->setDisplay('default');
+    $constituent_view->preExecute();
+    $constituent_view->execute();
 
     return [
       '#theme' => 'nys_senators_management_constituents',
-      '#constituent_view' => $view,
+      '#constituent_view' => $constituent_view->render(),
     ];
 
   }

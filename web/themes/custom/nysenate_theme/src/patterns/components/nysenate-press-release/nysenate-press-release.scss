@@ -195,8 +195,11 @@
     img {
       aspect-ratio: 3/2;
       object-fit: cover;
-      max-width: 216px;
-      height: 144px;
+
+      @include breakpoint($bp-sm) {
+        max-width: 216px;
+        height: 144px;
+      }
     }
   }
 

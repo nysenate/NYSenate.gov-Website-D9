@@ -127,7 +127,9 @@
       {{ feed_icons }}
     </div>
   {% endif %}
+  {% if calendar_downloads %}
+    {{ calendar_downloads }}
+  {% endif %}
 </div>
 
-{{ calendar_downloads }}
 {{ drupal_view('global_promo_banner', 'global_promo_banner') }}

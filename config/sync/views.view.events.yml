@@ -472,7 +472,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_location_locality }}, {{ field_location_administrative_area }} '
+            text: '{% if field_location_locality %}{{ field_location_locality }}, {% endif %}{{ field_location_administrative_area }} '
             make_link: false
             path: ''
             absolute: false

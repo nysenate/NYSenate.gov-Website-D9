@@ -866,6 +866,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
 
       if ($node->hasField('field_session_calendars') && !$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
         $url_calendar = $node->field_session_calendars->entity->toUrl()->toString();
+        $url_calendar = $node->toUrl()->toString();
       }
 
       if (!$node->field_ustream->isEmpty()) {

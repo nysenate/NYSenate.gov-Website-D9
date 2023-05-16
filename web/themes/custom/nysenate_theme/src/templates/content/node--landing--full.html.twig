@@ -79,7 +79,7 @@
   {% if page %}
     <header class="c-news--head">
     {% if url != '/home' %}
-      <h1 class="nys-article-title">
+      <h1 class="nys-title">
         {{ title }}
       </h1>
     {% endif %}
@@ -96,9 +96,7 @@
 
         {% if issues and content.field_show_issues[0]['#markup'] == 'On' %}
           <ul class="nys-associated-topics">
-            <div class="nys-associated-topics--label">
-              issue:
-            </div>
+            ISSUE:
             {% for issue in issues %}
               <li>{{ issue }}</li>
             {% endfor %}

@@ -3,12 +3,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.majority_issues.field_blocks
     - field.field.taxonomy_term.majority_issues.field_featured_home_issue
     - field.field.taxonomy_term.majority_issues.field_image_main
     - field.field.taxonomy_term.majority_issues.field_metatags
     - field.field.taxonomy_term.majority_issues.field_summary
     - taxonomy.vocabulary.majority_issues
   module:
+    - entity_reference_revisions
     - metatag
     - text
 id: taxonomy_term.majority_issues.default
@@ -22,6 +24,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 0
+    region: content
+  field_blocks:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_featured_home_issue:
     type: boolean
@@ -47,14 +58,19 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_summary:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 4
+    region: content
+  flag_follow_issue:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
     region: content
 hidden:
   langcode: true

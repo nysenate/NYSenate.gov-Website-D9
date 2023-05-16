@@ -177,6 +177,8 @@
   }
 
   .c-event-date {
+    display: flex;
+    flex-direction: column;
     text-transform: uppercase;
     font-size: 18px;
     //position: absolute;
@@ -277,6 +279,19 @@
       font-family: $font-sans-bold;
       text-transform: uppercase;
     }
+
+    .c-event-time {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid $grey05;
+    }
+
+    &.last {
+      .c-event-time {
+        border-bottom: none;
+      }
+    }
+  
   }
 }
 
@@ -562,41 +577,25 @@
       margin: 12px 6px 10px 0px;
     }
 
-    .c-event--list-by-group {
       .c-event-name,
       .c-senator,
       .c-event-location,
       .c-event-time {
         float: right;
-        margin-right: 120px;
-        width: 460px;
+        margin-right: 0;
+        width: 580px;
+        clear: right;
       }
-    }
 
     .c-event-location {
-      float: right;
-      width: 460px;
-      clear: right;
-      margin-right: 6px;
-      margin-left: 0;
+
       .icon-before__circle-pin:before {
         vertical-align: top;
       }
     }
 
-    .c-event-address {
-      float: right;
-      width: 460px;
-      clear: right;
-      margin-right: 6px;
-      display: block;
-    }
-
+    .c-event-address,
     .c-event-time {
-      float: right;
-      width: 460px;
-      clear: right;
-      margin-right: 6px;
       display: block;
     }
 
@@ -617,6 +616,11 @@
       right: 0;
       clear: none;
       margin-top: 0;
+    }
+    .c-senator {
+      float: right;
+      margin-right: 120px;
+      width: 460px;
     }
   }
 

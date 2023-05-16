@@ -1,0 +1,98 @@
+{#
+ * @file
+ * Default simple view template to display all the fields as a row. The template
+ * outputs a full row by looping through the $fields array, printing the field's
+ * HTML element (as configured in the UI) and the class attributes. If a label
+ * is specified for the field, it is printed wrapped in a <label> element with
+ * the same class attributes as the field's HTML element.
+ *
+ * - $view: The view in use.
+ * - $fields: an array of $field objects. Each one contains:
+ *   - $field.content: The output of the field.
+ *   - $field.raw: The raw data for the field, if it exists. This is NOT output
+ *     safe.
+ *   - $field.element_type: The HTML element wrapping the field content and
+ *     label.
+ *   - $field.attributes: An array of attributes for the field wrapper.
+ *   - $field.handler: The Views field handler object controlling this field.
+ *     Do not use var_export to dump this object, as it can't handle the
+ *     recursion.
+ * - $row: The raw result object from the query, with all data it fetched.
+ *
+ * @see template_preprocess_semanticviews_view_fields()
+ * @ingroup views_templates
+ * @todo Justify this template. Excluding the PHP, this template outputs angle
+ * brackets, the label element, slashes and whitespace.
+#}
+{% set aye_count = vote.aye_count ? vote.aye_count : 0 %}
+{% set nay_count = vote.nay_count ? vote.nay_count : 0 %}
+{% set aye_reservations_count = vote.aye_reservations_count ? vote.aye_reservations_count : 0 %}
+{% set excused_count = vote.excused_count ? vote.excused_count : 0 %}
+{% set abstained_count = vote.abstained_count ? vote.abstained_count : 0 %}
+{% set absent_count = vote.absent_count ? vote.absent_count : 0 %}
+{% set cal_number_array = fields.field_ol_bill_cal_number.content|striptags|split(',') %}
+
+<article class="c-update-block">
+  <div class="l-panel-col l-panel-col--lft">
+    <h4 class="c-listing--bill-num">{{ fields.title.content }}</h4>
+		<div class="c-listing--related-issues">{{ fields.field_issues.content }}</div>
+  </div>
+  <div class="l-panel-col l-panel-col--ctr">
+    <h4 class="c-press-release--descript">{{ fields.field_ol_name.content }}</h4>
+    {% if fields.field_ol_sponsor.content %}
+      {{ fields.field_ol_sponsor.content }}
+    {% elseif not fields.field_ol_sponsor.content and fields.field_ol_sponsor_name.content %}
+      <br />
+      <label>Sponsor: {{ fields.field_ol_sponsor_name.content }}</label>
+    {% else %}
+      <br />
+      <label>{{ fields.field_ol_sponsor_name.content }}</label>
+    {% endif %}
+  </div>
+  <div class="l-right-actions">
+    {% if not vote.aye_count or (vote.aye_count and (vote.vote_year != current_year) and bill_in_current_session) %}
+      <p class="c-calendar--num">
+        <span class="c-calendar--num-mark">cal no.</span>
+        {% if cal_number_array[fields.counter.content|striptags] %}
+          {{ cal_number_array[fields.counter.content|striptags] }}
+        {% endif %}
+      </p>
+    {% endif %}
+    <div class="vote-container">
+			<div class="aye">
+				<div class="vote-count">{{ aye_count }}</div>
+				<div class="vote-label">Aye</div>
+			</div>
+			<div class="nay">
+				<div class="vote-count">{{ nay_count }}</div>
+				<div class="vote-label">Nay</div>
+			</div>
+		</div>
+    <div class="vote-meta">
+			<div class="meta-row">
+				<div class="meta-count">{{ aye_reservations_count }}</div><div class="meta-label">aye with reservations</div>
+			</div>
+      <div class="meta-row">
+          <div class="meta-count">{{ absent_count }}</div><div class="meta-label">absent</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-count">{{ excused_count }}</div><div class="meta-label">excused</div>
+      </div>
+			<div class="meta-row">
+				<div class="meta-count">{{ abstained_count }}</div><div class="meta-label">abstained</div>
+			</div>
+		</div>
+    <div class="vote-meta">
+			<div class="meta-row">
+				<div class="meta-comm-referral">
+          <label>{{ fields.field_ol_last_status.content }}:</label>
+          <span class="date-display-single">
+            {% if fields.field_ol_last_status_date.content %}
+              {{ fields.field_ol_last_status_date.content }}
+            {% endif %}
+          </span>
+				</div>
+			</div>
+		</div>
+  </div>
+</article>

@@ -10,21 +10,48 @@
  * @see nys-bill-vote-summary-highchart.html.twig
  */
 #}
-<ul class="tabs">
-  <li class="active tab" data-target="panel1">Bills You Sponsored</li>
-  <li class="tab" data-target="panel2">Constituent Messages</li>
-</ul>
-<div id="panel1" class="nys-senators-management-sponsored-bills tab-content active">
-  <div class="sponsored-bills-list">
-    {% if sponsored_bills is iterable and sponsored_bills|length > 0 %}
-      {% for val in sponsored_bills %}
-        {{ include('nys-bill-vote-summary-highchart.html.twig', val) }}
-      {% endfor %}
-    {% else %}
-      No sponsored bills were found.
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+
+<dl class="l-tab-bar">
+  <div class="c-tab--arrow u-mobile-only"></div>
+  <dd class="c-tab active">
+    <input class="c-tab-link form-radio" type="radio" name="bills" value="#panel1"/>
+    <label class="c-tab-link" for="bills">Bills You Sponsored</label>
+  </dd>
+  <dd class="c-tab">
+    <input class="c-tab-link form-radio" type="radio" name="messages" value="#panel2"/>
+    <label class="c-tab-link" for="messages">
+      Constituent Messages
+    </label>
+  </dd>
+</dl>
+
+<div class="tabs-content">
+  <div id="panel1" class="nys-senators-management-sponsored-bills tab-content active">
+    <div class="sponsored-bills-list">
+      {% if sponsored_bills is iterable and sponsored_bills|length > 0 %}
+        {% for val in sponsored_bills %}
+          {{ include('nys-bill-vote-summary-highchart.html.twig', val) }}
+        {% endfor %}
+      {% else %}
+        No sponsored bills were found.
+      {% endif %}
+    </div>
+
+    {% set limit = 5 %}
+
+    {% if sponsored_bills|length > limit %}
+      <div class="item-list" data-limit="{{ limit }}">
+        <div class="pager pager-load-more">
+          <span class="pager-next first last">
+            <a class="load-more">See more</a>
+          </span>
+        </div>
+      </div>
     {% endif %}
   </div>
-</div>
-<div id="panel2" class="nys-senators-management-bill-messages tab-content">
-  {{ bill_messages }}
+
+  <div id="panel2" class="nys-senators-management-bill-messages tab-content">
+    {{ bill_messages }}
+  </div>
 </div>

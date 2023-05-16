@@ -78,11 +78,14 @@ class OverviewStatsManager extends DefaultPluginManager {
   public function getStats(TermInterface $senator): array {
     $ret = [];
     $a = $this->getInstances();
+    $url = $senator->toUrl()->toString();
     /** @var \Drupal\nys_senators\OverviewStatInterface $stat */
     foreach ($a as $key => $stat) {
       $content = $stat->getContent($senator);
       if (!is_null($content)) {
         $ret[$key] = $stat->getDefinition() + ['stat' => $content];
+        // Insert the base senator dashboard url.
+        $ret[$key]['url'] = $url . $ret[$key]['url'];
       }
     }
     $event = new OverviewStatsAlterEvent($ret);

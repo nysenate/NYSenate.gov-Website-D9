@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.public_hearing.field_event_place
     - field.field.node.public_hearing.field_issues
     - field.field.node.public_hearing.field_location
+    - field.field.node.public_hearing.field_majority_issue_tag
     - field.field.node.public_hearing.field_meeting_location
     - field.field.node.public_hearing.field_transcript
     - field.field.node.public_hearing.field_ustream
@@ -108,6 +109,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 105
+    region: content
+  field_majority_issue_tag:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 117
     region: content
   field_meeting_location:
     type: string

@@ -177,7 +177,7 @@
   }
 }
 
-p.c-meeting-detail--location {
+div.c-meeting-detail--location {
   margin: 0 0 10px 0;
   color: $grey04;
   font-family: $font-sans;
@@ -1046,4 +1046,18 @@ p.c-meeting-detail--location {
   text-decoration: none;
   @extend .accent-text;
   @extend .icon-before__presskit;
+}
+
+.c-calendar--num {
+	color: $grey02;
+	font-family: $font-serif-bold;
+	text-align: left;
+	padding-right: 20px;
+}
+.c-calendar--num-mark {
+	display: inline-block;
+	margin-right: 5px;
+	text-transform: uppercase;
+	font-family: $font-sans;
+	font-size: 12px;
 }

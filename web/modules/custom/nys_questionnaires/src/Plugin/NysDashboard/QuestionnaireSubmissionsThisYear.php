@@ -12,7 +12,7 @@ use Drupal\taxonomy\TermInterface;
  *   id = "questionnaire_submissions",
  *   label = @Translation("Questionnaires"),
  *   description = @Translation("New Responses"),
- *   url = "/",
+ *   url = "/questionnaires",
  *   weight = 40
  * )
  */

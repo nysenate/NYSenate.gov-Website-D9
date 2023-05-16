@@ -24,7 +24,7 @@
     },
     onResize: function (header) {
       try {
-        const headerBottom = header.offset().top + header.outerHeight();
+        const headerBottom = parseInt(header.css('top'), 10) + header.height();
         const sidebar = $('.sidebar');
         sidebar.css('--top', `${headerBottom}px`);
       }

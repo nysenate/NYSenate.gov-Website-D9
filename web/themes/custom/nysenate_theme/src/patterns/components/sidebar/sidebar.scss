@@ -15,12 +15,14 @@
   background-color: #f7f8f9;
   /* hide on default */
   display: none;
+  max-height: calc(100vh - var(--top));
+  transition-property: top;
+  transition-duration: 0.25s;
 
 
   @include breakpoint($bp-sm) {
-    position: relative;
+    position: fixed;
     max-width: 400px;
-    top: 0;
   }
 
   &.show {

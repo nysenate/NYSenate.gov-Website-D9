@@ -3,7 +3,7 @@
         'name' => 'mediacurrent/drupal-project',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c1d2027851a8ee04fd36060d37273c35bd9abcb6',
+        'reference' => '0e667d3007f1c58e197fe870c179c9ee6216bbaa',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -2057,7 +2057,7 @@
         'mediacurrent/drupal-project' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c1d2027851a8ee04fd36060d37273c35bd9abcb6',
+            'reference' => '0e667d3007f1c58e197fe870c179c9ee6216bbaa',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -2243,15 +2243,15 @@
         'php-http/async-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/discovery' => array(
@@ -2375,8 +2375,8 @@
         'psr/http-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'psr/http-factory' => array(
@@ -2392,8 +2392,8 @@
             'dev_requirement' => false,
             'provided' => array(
                 0 => '^1.0',
-                1 => '*',
-                2 => '1.0',
+                1 => '1.0',
+                2 => '*',
             ),
         ),
         'psr/http-message' => array(

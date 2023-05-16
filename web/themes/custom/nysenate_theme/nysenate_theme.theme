@@ -866,6 +866,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
 
       if ($node->hasField('field_session_calendars') && !$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
         $url_calendar = $node->field_session_calendars->entity->toUrl()->toString();
+        $url_calendar = $node->toUrl()->toString();
       }
 
       if (!$node->field_ustream->isEmpty()) {
@@ -1422,20 +1423,24 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
       $issues = [];
       if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-        if ($node->field_issues->target_id) {
-          /** @var \Drupal\taxonomy\Entity\Term $term */
-          $term = $term_storage->load($node->field_issues->target_id);
-          if ($term instanceof TermInterface) {
-            $issues[] = [
-              'name' => $term->label(),
-              'url' => $term->toUrl()->toString(),
-            ];
+        $term_issues = $node->get('field_issues')->getValue();
+        if ($term_issues) {
+          foreach ($term_issues as $issue) {
+            /** @var \Drupal\taxonomy\Entity\Term $term */
+            $term = $term_storage->load($issue['target_id']);
+            if ($term instanceof TermInterface) {
+              $issues[] = [
+                'name' => $term->label(),
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
           }
         }
       }
 
       $image_main = NULL;
-      if (isset($node->field_image_main) && !empty($node->field_image_main->target_id)) {
+      $video_image = NULL;
+      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = $media_storage->load($node->field_image_main->target_id);
         if (!empty($media)) {
           $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
@@ -1476,7 +1481,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         ],
         'date' => $date,
         'image' => $image_main,
-        'img_src' => !empty($video_image) ? $video_image : FALSE,
+        'img_src' => $video_image,
       ];
     }
 
@@ -3920,7 +3925,7 @@ function nysenate_theme_preprocess_node__event(&$variables) {
  */
 function nysenate_theme_preprocess_node__honoree(&$variables) {
   $variables['vet_archive_list'] = views_embed_view('honoree_profiles', 'vets_senator');
-  $variables['women_archive_list'] = views_embed_view('honoree_profiles', 'block_3');
+  $variables['women_archive_list'] = views_embed_view('honoree_profiles', 'women_bysen');
 
   $variables['title'] = $variables['label'][0]['#context']['value'];
 

@@ -2948,7 +2948,7 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$var
       ->getViewBuilder('media')
       ->view($headshot, '160x160');
 
-    $variables['current_duties'] = $term->field_current_duties->getValue();
+    $variables['current_duties'] = $term->field_current_duties->value ?? '';
     $variables['link'] = $term->toUrl()->toString();
     $variables['party'] = $parties;
     $variables['district'] = (int) get_senator_district($term->id());

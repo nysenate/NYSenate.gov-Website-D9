@@ -68,7 +68,26 @@ class EditProfileForm extends ProfileForm {
     $form['account']['current_pass']['#access'] = FALSE;
     $form['account']['status']['#access'] = FALSE;
     $form['account']['roles']['#access'] = FALSE;
-    $form['actions']['delete']['#access'] = FALSE;
+
+    if (isset($form['actions']['delete'])) {
+      $form['actions']['delete']['#access'] = FALSE;
+    }
+
+    // Profile Image placeholder.
+    if (isset($form['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'])) {
+      $form['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'] =
+        new FormattableMarkup(
+          '<div class="nys-senator--thumb nys-senator--thumb--placeholder">
+            <img src="/themes/custom/nysenate_theme/src/assets/default-avatar.png" alt="Default avatar"/>
+          </div>',
+          []
+        );
+    }
+
+    // Profile Picture button label.
+    if (isset($form['field_profile_picture']['widget']['open_button']['#value'])) {
+      $form['field_profile_picture']['widget']['open_button']['#value'] = $this->t('Upload Image');
+    }
 
     // These fields are not editable by the user.
     $disable = [
@@ -160,16 +179,6 @@ class EditProfileForm extends ProfileForm {
         ],
       ],
     ];
-
-    // Profile Image placeholder
-    if (isset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'])) {
-      $form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'] =
-        new FormattableMarkup('<div class="nys-senator--thumb nys-senator--thumb--placeholder"><img src="/themes/custom/nysenate_theme/src/assets/default-avatar.png" alt="Default avatar"/></div>', []);
-    }
-
-    if (isset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['open_button']['#value'])) {
-      $form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['open_button']['#value'] = $this->t('Upload Image');
-    }
 
     // Hide these fields.
     $form['account']['mail']['#type'] = 'hidden';

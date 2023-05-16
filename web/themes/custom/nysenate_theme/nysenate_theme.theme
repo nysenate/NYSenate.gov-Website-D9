@@ -1924,7 +1924,7 @@ function nysenate_theme_preprocess_views_view_fields(&$variables) {
   }
 
   if ($view->id() == "committee_members" && $view->current_display == "chair") {
-    $term = $variables['row']->_entity->field_chair->entity;
+    $term = $variables['row']->_entity;
     $senator_link = \Drupal::service('nys_senators.microsites')
       ->getMicrosite($term);
     $variables['senator_link'] = $senator_link;

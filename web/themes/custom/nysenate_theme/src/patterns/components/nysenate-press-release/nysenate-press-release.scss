@@ -94,6 +94,8 @@
 
     @include breakpoint($bp-sm) {
       flex-direction: row;
+      flex: 74%;
+      gap: 2%;
     }
 
     .c-press-release {
@@ -205,9 +207,15 @@
 
   @include breakpoint($bp-sm) {
     &.c-block-press-release {
+      display: flex;
+      gap: 2%;
       margin-bottom: 0;
       padding-top: 30px;
       padding-bottom: 60px;
+    }
+
+    &.c-press-release--header {
+      flex: 24%;
     }
     
     .c-search--body .c-block-press-release {

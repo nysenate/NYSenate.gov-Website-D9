@@ -964,6 +964,23 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
 }
 
 /**
+ * Implements hook_preprocess_block_ID().
+ */
+function nysenate_theme_preprocess_views_view__senator_microsite_content__promo_footer(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $nid = $node->id();
+  $node = Node::load($nid);
+  if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+    $tid = $node->get('field_senator_multiref')->first()->getString() ?? '';
+    $senator = NULL;
+    if (!empty($tid)) {
+      $senator = Term::load($tid);
+      $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_block_content_TYPE().
  */
 function nysenate_theme_preprocess_block_content__promotional_banner(&$variables) {
@@ -2793,9 +2810,11 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
 
       // Set menu and hero block contents.
       if (!isset($variables['microsite_menu'])) {
-        // Render Microsite Menu block data.
-        $block_manager = \Drupal::service('plugin.manager.block');
-        $variables['microsite_menu'] = $block_manager->createInstance('nys_senators_microsite_menu', [])->build();
+        if ($senator->field_active_senator->value == 1) {
+          // Render Microsite Menu block data.
+          $block_manager = \Drupal::service('plugin.manager.block');
+          $variables['microsite_menu'] = $block_manager->createInstance('nys_senators_microsite_menu', [])->build();
+        }
       }
 
       if (!isset($variables['microsite_hero'])) {

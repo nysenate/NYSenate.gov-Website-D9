@@ -452,7 +452,7 @@ main.l-row--main {
     font-weight: $font-weight-normal;
 
 	a {
-		color: $grey08;
+		color: $grey08 !important;
 	}
 }
 
@@ -874,6 +874,10 @@ h2.c-subpage-header--title {
     &:hover {
       text-decoration: underline;
     }
+
+    .landing-node & {
+      color: $orange01;
+    }
   }
 }
 
@@ -904,6 +908,10 @@ h2.c-subpage-header--title {
 
     @include breakpoint($bp-sm) {
       font-size: 48px;
+    }
+
+    .landing-node & {
+      margin-bottom: 0;
     }
   }
 

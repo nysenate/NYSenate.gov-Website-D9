@@ -1,0 +1,121 @@
+uuid: 9b828c2f-19b0-4cdd-849d-42eb9c7e7b50
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_upcoming_legislation
+    - node.type.session
+    - views.view.upcoming_legislation
+  module:
+    - viewsreference
+id: node.session.field_upcoming_legislation
+field_name: field_upcoming_legislation
+entity_type: node
+bundle: session
+label: 'Upcoming Legislation'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    options:
+      title: 0
+      argument: ''
+    display_id: session_active
+    argument: null
+    title: 0
+    data: null
+    target_uuid: 90944cd3-dfdf-4b78-9b80-eed1e930ca8e
+  -
+    options:
+      title: 0
+      argument: ''
+    display_id: session_floor_cal
+    argument: null
+    title: 0
+    data: null
+    target_uuid: 90944cd3-dfdf-4b78-9b80-eed1e930ca8e
+  -
+    options:
+      title: 0
+      argument: ''
+    display_id: session_sup_cal
+    argument: null
+    title: 0
+    data: null
+    target_uuid: 90944cd3-dfdf-4b78-9b80-eed1e930ca8e
+default_value_callback: ''
+settings:
+  handler: 'default:view'
+  handler_settings:
+    target_bundles: null
+    auto_create: 0
+  plugin_types:
+    block: block
+    default: 0
+    entity_reference: 0
+    entity_view: 0
+    page: 0
+    feed: 0
+    embed: 0
+  preselect_views:
+    upcoming_legislation: upcoming_legislation
+    active_senators_reference: 0
+    admin_microsite_content: 0
+    admin_microsite_legislation: 0
+    admin_microsite_questionnaires: 0
+    advanced_legislation_search: 0
+    block_content: 0
+    comment: 0
+    comments_recent: 0
+    committee_chair_admin: 0
+    committee_content: 0
+    committee_meetings: 0
+    committee_members: 0
+    constituents: 0
+    constituent_bills: 0
+    constituent_committees_following: 0
+    constituent_petitions_and_questionnaires: 0
+    constituent_updates: 0
+    content: 0
+    content_recent: 0
+    core_search: 0
+    events: 0
+    explore_issues_tabs: 0
+    fancy_file_delete: 0
+    fancy_file_list_unmanaged: 0
+    featured_content_entref: 0
+    featured_issue: 0
+    files: 0
+    frontpage: 0
+    global_promo_banner: 0
+    homepage_events: 0
+    homepage_hero: 0
+    homepage_news: 0
+    honoree_profiles: 0
+    issues_listings: 0
+    login_history: 0
+    mcp_content_admin: 0
+    media: 0
+    media_library: 0
+    moderated_content: 0
+    my_senator_termlist: 0
+    newsroom: 0
+    news_by_issue: 0
+    private_message_inbox: 0
+    questionnaires: 0
+    redirect: 0
+    scheduler_scheduled_content: 0
+    senators_admin_list: 0
+    senator_and_committee_lists: 0
+    senator_content_admin: 0
+    senator_events: 0
+    senator_microsite_content: 0
+    student_programs_news: 0
+    user_admin_people: 0
+    votingapi_votes: 0
+    watchdog: 0
+    webform_submissions: 0
+    who_s_new: 0
+    who_s_online: 0
+field_type: viewsreference

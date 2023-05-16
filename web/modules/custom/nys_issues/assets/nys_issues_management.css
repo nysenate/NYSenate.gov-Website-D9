@@ -6,6 +6,7 @@
   margin-bottom: 1.25rem;
   border: solid 1px #ddd;
   table-layout: auto;
+  width: 100%;
 }
 .nys-senators-management-dashboard-issues table thead {
   background: #f5f5f5;
@@ -25,6 +26,7 @@
   font-size: 0.875rem;
   font-weight: bold;
   color: #222;
+  text-align: left;
 }
 .nys-senators-management-dashboard-issues tbody {
   border-top: 1px solid #ccc;
@@ -39,8 +41,27 @@
   background-color: #f9f9f9;
 }
 .nys-senators-management-dashboard-issues table tbody tr td {
-  padding: .5em 1em;
+  padding: 0.5rem 0.625rem;
   height: auto;
+}
+.nys-senators-management-dashboard-issues table tbody tr td a {
+  color: #008CBA;
+}
+.nys-senators-management-issues-header .c-container--title {
+  font-family: "Adelle SemiBold";
+  font-size: 24px;
+  line-height: 32px;
+  color: #444444;
+}
+.nys-senators-management-issues-header .c-container--description {
+  font-family: "Adelle Light";
+  font-size: 20px;
+  line-height: 32px;
+}
+.nys-senators-management-issues-list-count {
+  font-size: 62.5%;
+  font-family: "Proxima Nova Regular";
+  -webkit-font-smoothing: antialiased;
 }
 
 /***************
@@ -61,6 +82,8 @@
 }
 .nys-senators-management-issue-follow-count > div {
   display: inline-block;
+  font-size: 1.25em;
+  font-family: "Proxima Nova SemiBold";
 }
 .nys-senators-management-issue-follow-count .issue-name {
   margin-right: 1em;
@@ -71,8 +94,11 @@
   padding: 1.5em 1em;
 }
 .nys-senators-management-dashboard-issues .issues-user-list caption {
-  text-align: left;
+  text-align: center;
   font-size: 1.2em;
   font-weight: 900;
   margin-bottom: 0.4em;
+}
+.nys-senators-management-dashboard-issues .issues-user-list caption a {
+  color: #008CBA;
 }

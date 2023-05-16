@@ -778,7 +778,6 @@
           var _selected = $('.dp_selected').html();
 
           if (_selected === null || _selected === undefined) {
-            _selected = localStorage.getItem('selected');
             $('.dp_current').addClass('dp_selected');
             $('.dp_daypicker td').each(function () {
               if ($(this).html() === _selected) {
@@ -808,8 +807,6 @@
                 $(this).removeClass('dp_selected');
               }
             });
-          } else {
-            localStorage.setItem('selected', $('.dp_selected').html());
           }
 
           elements.each(function () {
@@ -826,7 +823,14 @@
       $('.mobile-calendar-toggle').on('click', function () {
         $(this).hide();
         $(this).parent().find('#container .Zebra_DatePicker').show();
-      });
+      }); // set default date value on load
+
+      var editDate = $('#edit-date');
+
+      if (editDate && !editDate.val()) {
+        var placeholder = editDate.attr('placeholder');
+        editDate.val(placeholder);
+      }
     }
   };
 }(document, Drupal, jQuery);
@@ -17634,6 +17638,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       searchToggle.once('nySenateHeader').on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
+      $(window).on('load', function () {
+        self.moveMessage();
+      });
     },
     microSiteScroll: function microSiteScroll(currentTop, previousTop, headerBar, nav, menu) {
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
@@ -17806,6 +17813,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     },
     isSenatorCollapsed: function isSenatorCollapsed() {
       return $('.hero--senator-collapsed').length > 0;
+    },
+    moveMessage: function moveMessage() {
+      var statusMessage = $('.message').parent();
+      var blockTabs = $('#block-tabs');
+
+      if (statusMessage && blockTabs) {
+        blockTabs.after(statusMessage);
+      }
     }
   };
 }(document, Drupal, jQuery);

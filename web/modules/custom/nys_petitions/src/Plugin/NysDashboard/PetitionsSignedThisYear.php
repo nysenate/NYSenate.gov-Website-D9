@@ -12,7 +12,7 @@ use Drupal\taxonomy\TermInterface;
  *   id = "petitions_signed",
  *   label = @Translation("Petitions"),
  *   description = @Translation("New Signatures"),
- *   url = "/",
+ *   url = "/petitions",
  *   weight = 10
  * )
  */

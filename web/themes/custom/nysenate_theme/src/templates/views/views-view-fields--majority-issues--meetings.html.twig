@@ -1,0 +1,123 @@
+{#
+/**
+ * @file
+ * Default view template to display all the fields in a row.
+ *
+ * Available variables:
+ * - view: The view in use.
+ * - fields: A list of fields, each one contains:
+ *   - content: The output of the field.
+ *   - raw: The raw data for the field, if it exists. This is NOT output safe.
+ *   - class: The safe class ID to use.
+ *   - handler: The Views field handler controlling this field.
+ *   - inline: Whether or not the field should be inline.
+ *   - wrapper_element: An HTML element for a wrapper.
+ *   - wrapper_attributes: List of attributes for wrapper element.
+ *   - separator: An optional separator that may appear before a field.
+ *   - label: The field's label text.
+ *   - label_element: An HTML element for a label wrapper.
+ *   - label_attributes: List of attributes for label wrapper.
+ *   - label_suffix: Colon after the label.
+ *   - element_type: An HTML element for the field content.
+ *   - element_attributes: List of attributes for HTML element for field content.
+ *   - has_label_colon: A boolean indicating whether to display a colon after
+ *     the label.
+ *   - element_type: An HTML element for the field content.
+ *   - element_attributes: List of attributes for HTML element for field content.
+ * - row: The raw result from the query, with all data it fetched.
+ *
+ * @see template_preprocess_views_view_fields()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set url = fields.view_node.content|striptags %}
+
+<article class="c-event-block c-event-block--list">
+<div class="c-event-date">
+   <span> {{ fields.field_date_range_3.content }}</span>
+  {{ fields.field_date_range_1.content }}</br>
+  {{ fields.field_date_range.content }}
+</div>
+<div class="content__item c-event--list-by-group last">
+<h3 class="c-event-name">{{ fields.title.content }}</h3>
+
+{% if fields.field_location_organization.content and (fields.field_event_place.content|striptags|trim in ['in_albany', 'in_district']) %}
+  <a class="c-event-location"
+      href="http://maps.google.com/?q={{ fields.field_location_address_line1.content }}+{{ fields.field_location_administrative_area.content }}%2C+{{ fields.field_location_postal_code.content }}"
+      target="_blank">
+    <span class="icon-before__circle-pin"></span>{{ fields.field_location_organization.content }}
+  </a>
+{% endif %}
+
+{% if fields.field_event_place.content|striptags|trim == 'online' %}
+  {% if fields.type.content|striptags|trim == 'Public Hearing' %}
+    {% if fields.field_event_online_link.content %}
+      <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
+        <span class="icon-before__circle-pin"></span><span>Online Hearing</span>
+      </a>
+    {% else %}
+      <div class="c-event-location">
+        <span class="icon-before__circle-pin"></span>
+        <span>Online Hearing</span>
+      </div>
+    {% endif %}
+  {% elseif fields.type.content|striptags|trim == 'Meeting' %}
+    {% if fields.field_event_online_link.content %}
+      <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
+        <span class="icon-before__circle-pin"></span><span>Online Meeting</span>
+      </a>
+    {% else %}
+      <div class="c-event-location">
+        <span class="icon-before__circle-pin"></span>
+        <span>Online Meeting</span>
+      </div>
+    {% endif %}
+  {% elseif fields.type.content|striptags|trim == 'Event' %}
+    <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
+      <span class="icon-before__circle-pin"></span><span>Online Event</span>
+    </a>
+  {% endif %}
+{% elseif fields.field_event_place.content|striptags|trim == 'teleconference' %}
+  <a class="c-event-location" href="{{ url }}">
+    <span class="icon-before__circle-pin"></span>
+    <span>Teleconference Event</span>
+  </a>
+{% elseif fields.field_event_place.content|striptags|trim == 'cap' %}
+  <a class="c-event-location" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >
+    <span class="icon-before__circle-pin"></span>
+    <span>NYS Capitol Building</span>
+  </a>
+{% elseif fields.field_event_place.content|striptags|trim == 'lob' %}
+  <a class="c-event-location" href="https://www.google.com/maps/place/Legislative+Office+Building/@42.6526202,-73.7614498,17z/data=!3m1!4b1!4m5!3m4!1s0x89de0a24d3a304b5:0x1012cb31c839dfe9!8m2!3d42.6526202!4d-73.7592611?hl=en" title="Legislative Office Building" target="_blank" >
+    <span class="icon-before__circle-pin"></span>
+    <span>Legislative Office Building</span>
+  </a>
+{% endif %}
+
+<div class="c-event-time">
+  {% if fields.field_meeting_location.content|striptags|trim is not empty %}
+    <div class="c-location">{{ fields.field_meeting_location.content }}</div>
+  {% endif %}
+
+  {% if fields.field_event_place.content|striptags|trim not in ['online', 'teleconference'] %}
+    <div class="c-location">
+      {% if fields.field_location_administrative_area.content is not empty %}
+        {{ fields.field_location_administrative_area.content }}
+      {% endif %}
+    </div>
+    <div class="icon-before__calendar-month">
+      {{ fields.field_date_range_4.content }} @ {{ fields.field_date_range_2.content }}
+    </div>
+  {% endif %}
+
+    {% if fields.field_video_status.content is defined and fields.field_video_status.content|striptags|trim is not empty  %}
+      <div>
+        <a class="c-video-status icon-before__youtube" href="{{ url }}">
+          {{ fields.field_video_status_1.content }}
+        </a>
+      </div>
+    {% endif %}
+</div>
+</div>
+</article>

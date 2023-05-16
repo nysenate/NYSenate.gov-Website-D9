@@ -154,7 +154,6 @@
           var _selected = $('.dp_selected').html();
 
           if (_selected === null || _selected === undefined) {
-            _selected = localStorage.getItem('selected');
             $('.dp_current').addClass('dp_selected');
             $('.dp_daypicker td').each(function () {
               if ($(this).html() === _selected) {
@@ -184,8 +183,6 @@
                 $(this).removeClass('dp_selected');
               }
             });
-          } else {
-            localStorage.setItem('selected', $('.dp_selected').html());
           }
 
           elements.each(function () {
@@ -202,7 +199,14 @@
       $('.mobile-calendar-toggle').on('click', function () {
         $(this).hide();
         $(this).parent().find('#container .Zebra_DatePicker').show();
-      });
+      }); // set default date value on load
+
+      var editDate = $('#edit-date');
+
+      if (editDate && !editDate.val()) {
+        var placeholder = editDate.attr('placeholder');
+        editDate.val(placeholder);
+      }
     }
   };
 }(document, Drupal, jQuery);

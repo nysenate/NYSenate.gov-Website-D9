@@ -27,6 +27,9 @@
 .nys-senators-management-dashboard-bills .tab-content.active {
   display: block;
 }
+.nys-senators-management-dashboard-bills .l-tab-bar {
+  margin-top: 20px;
+}
 
 /*******************
  * Bill Vote charts
@@ -39,21 +42,26 @@ div.sponsored-bill {
   border-radius: 2em;
   margin-bottom: 1em;
 }
+.sponsored-bills-list {
+  padding: 1em 0;
+}
 .sponsored-bill-description {
   display: inline-block;
   vertical-align: top;
-  max-width: 44%;
-  min-width: 34%;
+  /* max-width: 44%;
+  min-width: 34%; */
+  width: 100%;
   padding: 0.3em 0.5em;
 }
 .sponsored-bill-chart {
   display: inline-block;
   vertical-align: top;
-  max-width: 65%;
-  min-width: 55%;
-  border-left: 2px solid lightgray;
+  /* max-width: 65%;
+  min-width: 55%; */
+  width: 100%;
   border-top-right-radius: 2em;
   border-bottom-right-radius: 2em;
+  border-bottom-left-radius: 2em;
 }
 .sponsored-bill-title {
   font-family: 'Adelle SemiBold', serif;
@@ -70,4 +78,18 @@ div.sponsored-bill {
   line-height: 1.2em;
   text-align: justify;
   margin-top: 1em;
+}
+
+@media screen and (min-width: 768px) {
+  .nys-senators-management-dashboard-bills .l-tab-bar .c-tab {
+    width: 50%;
+  }
+  .sponsored-bill-description {
+    width: 49.7%;
+  }
+  .sponsored-bill-chart {
+    width: 50%;
+    border-left: 2px solid lightgray;
+    border-bottom-left-radius: 0;
+  }
 }

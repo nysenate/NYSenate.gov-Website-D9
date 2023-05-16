@@ -12,7 +12,7 @@ use Drupal\taxonomy\TermInterface;
  *   id = "new_users_in_district",
  *   label = @Translation("Sign Ups"),
  *   description = @Translation("New Constituents"),
- *   url = "/",
+ *   url = "/constituents",
  *   weight = 5
  * )
  */

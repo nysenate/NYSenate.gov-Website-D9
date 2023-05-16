@@ -12,6 +12,7 @@ use Drupal\taxonomy\TermInterface;
  *   id = "constituent_votes",
  *   label = @Translation("Bill Activity"),
  *   description = @Translation("Votes from Constituents"),
+ *   url = "/bills",
  *   weight = 20
  * )
  */

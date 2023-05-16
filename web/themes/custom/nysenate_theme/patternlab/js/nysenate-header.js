@@ -171,6 +171,9 @@
       searchToggle.once('nySenateHeader').on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
+      $(window).on('load', function () {
+        self.moveMessage();
+      });
     },
     microSiteScroll: function microSiteScroll(currentTop, previousTop, headerBar, nav, menu) {
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
@@ -343,6 +346,14 @@
     },
     isSenatorCollapsed: function isSenatorCollapsed() {
       return $('.hero--senator-collapsed').length > 0;
+    },
+    moveMessage: function moveMessage() {
+      var statusMessage = $('.message').parent();
+      var blockTabs = $('#block-tabs');
+
+      if (statusMessage && blockTabs) {
+        blockTabs.after(statusMessage);
+      }
     }
   };
 }(document, Drupal, jQuery);

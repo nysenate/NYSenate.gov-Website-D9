@@ -10,23 +10,39 @@
  * @see nys-petitions-management-signature-highchart.html.twig
  */
 #}
-<ul class="tabs">
-  <li class="active tab" data-target="panel1">Your Petitions</li>
-  <li class="tab" data-target="panel2">Other Petitions</li>
-</ul>
-<div id="panel1" class="nys-senators-management-petitions-yours tab-content active">
-  <div class="your-petitions-list">
-    {% if your_petitions is iterable and your_petitions|length > 0 %}
-      {% for val in your_petitions %}
-        {{ include('nys-petitions-management-signature-highchart.html.twig', val) }}
-      {% endfor %}
-    {% else %}
-      No petition signatures were found.
-    {% endif %}
+{{ attach_library('nysenate_theme/dashboard-petitions-questionnaires') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
+
+<dl class="l-tab-bar">
+  <div class="c-tab--arrow u-mobile-only"></div>
+  <dd class="c-tab active">
+    <input class="c-tab-link form-radio" type="radio" name="your_petitions" value="#panel1"/>
+    <label class="c-tab-link" for="your_petitions">Your Petitions</label>
+  </dd>
+  <dd class="c-tab">
+    <input class="c-tab-link form-radio" type="radio" name="other_petitions" value="#panel2"/>
+    <label class="c-tab-link" for="other_petitions">
+      Other Petitions
+    </label>
+  </dd>
+</dl>
+
+<div class="tabs-content">
+  <div class="nys-senators-management-petitions-yours tab-content active" id="panel1">
+    <div class="your-petitions-list">
+      {% if your_petitions is iterable and your_petitions|length > 0 %}
+        {% for val in your_petitions %}
+          {{ include('nys-petitions-management-signature-highchart.html.twig', val) }}
+        {% endfor %}
+      {% else %}
+        No petition signatures were found.
+      {% endif %}
+    </div>
+    <div class="petition-user-list"></div>
   </div>
-  <div class="petition-user-list"></div>
-</div>
-<div id="panel2" class="nys-senators-management-petitions-others tab-content">
-  <div class="other-petitions-list">{{ other_petitions }}</div>
-  <div class="petition-user-list"></div>
+
+  <div class="nys-senators-management-petitions-others tab-content" id="panel2">
+    {{ other_petitions }}
+    <div class="petition-user-list"></div>
+  </div>
 </div>

@@ -1,10 +1,229 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.page--open_data {
+  .pager {
+    height: 51px;
+    background-color: $grey06;
+    margin-bottom: 40px;
+    border-bottom: 1px solid $grey-dot;
+    border-left: 1px solid $grey-dot;
+    border-right: 1px solid $grey-dot;
+    margin-top: 0;
+
+    .pager__items {
+      gap: 10px;
+      float: right;
+      margin: 0;
+      height: 100%;
+
+      li {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        background: none;
+        height: 100%;
+
+        a {
+          color: $cont_blue_med;
+          background: none;
+          line-height: 22px;
+          font-size: 14px;
+          width: 25px;
+
+          &.pager__control svg {
+            display: none;
+          }
+        }
+
+        &.is-active {
+          a {
+            background: none;
+            color: $cont_blue_drk;
+          }
+        }
+
+        &.pager__item--previous a,
+        &.pager__item--next a {
+          text-indent: -9999em;
+          font-size: 0;
+          height: 24px;
+          display: flex;
+          align-items: center;
+
+          &::before {
+            display: block;
+            width: 28px;
+            height: 24px;
+            font-size: 18px;
+            font-family: 'senate_icons';
+            line-height: 24px;
+          }
+        }
+
+        &.pager__item--next {
+          right: 0;
+
+          a::before {
+            content: '\3e';
+          }
+        }
+
+        &.pager__item--previous {
+          left: 0;
+
+          a::before {
+            content: '\3c';
+          }
+        }
+      }
+    }
+  }
+
+  .view-open-data {
+    margin-bottom: 80px;
+
+    .view-filters {
+      margin: 30px 0;
+
+      select,
+      input[type='text'] {
+        height: 55px;
+        width: 100%;
+      }
+
+      .js-form-item,
+      .search-form-group__wrapper {
+        width: 100%;
+      }
+
+      .form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin: 0;
+      }
+
+      .search__submit {
+        position: initial;
+        margin-top: 4%;
+        width: 100%;
+        height: auto;
+        font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+        text-align: center;
+        display: inline-block;
+        padding-top: 1rem;
+        padding-bottom: 1.0625rem;
+        font-size: 1rem;
+        background-color: $color-nys-blue;
+        border-color: #007095;
+        color: $color-white;
+        transition: background-color 300ms ease-out;
+      }
+
+      .search__submit-icon,
+      .search-form-group__button {
+        display: none;
+      }
+
+      .search-form-group__inner {
+        position: relative;
+        height: 55px;
+
+        &::after {
+          font-family: 'senate_icons';
+          display: inline-block;
+          vertical-align: middle;
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          padding-left: 3px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          content: '\6d';
+          position: absolute;
+          right: 20px;
+          top: 8px;
+          font-size: 25px;
+          color: $blue01;
+        }
+      }
+    }
+
+    .views-table {
+      width: 100%;
+      border: 1px solid $grey-dot;
+
+      thead {
+        background: $grey16;
+
+        tr {
+
+          th {
+            font-family: $font-sans-bold;
+            color: $grey03;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 15px;
+            border-bottom: 1px solid $grey-dot;
+            text-align: left;
+            
+            &:nth-child(1) {
+              width: 36%;
+            }
+          }
+        }
+      }
+
+      tbody {
+        border-top: none;
+
+        tr {
+          border-bottom: 1px solid $grey-dot;
+
+          &:nth-child(even) {
+            background: #f9f9fb;
+          }
+
+          td {
+            padding: 15px 10px;
+
+            a {
+              color: $color-nys-blue;
+            }
+
+            &.views-field-title {
+
+              h2 {
+                font-size: 12px;
+                
+                a {
+                  font-family: $font-sans-bold;
+                  color: $grey08;
+                }
+              }
+            }
+            
+            &.views-field-field-publication-date {
+              font-family: $font-sans-bold;
+              color: $grey08;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .c-news--download {
   display: block;
 
-  img { display: none; }
+  img {
+    display: none;
+  }
 
   // download styles
   .file > a {
@@ -14,8 +233,8 @@
     font-size: 12px;
     font-family: $font-sans-bold;
     text-decoration: none;
-		@extend .accent-text;
-		@extend .icon-before__presskit;
+    @extend .accent-text;
+    @extend .icon-before__presskit;
 
     &::before {
       font-size: 21px;
@@ -34,7 +253,6 @@
 .dataTables_length {
   margin-bottom: 1em;
 
-
   label {
     color: $grey04;
     text-transform: uppercase;
@@ -45,7 +263,7 @@
   select {
     width: 100%;
     appearance: none;
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+');
     background-position: 100% center;
     background-repeat: no-repeat;
@@ -121,31 +339,52 @@
 }
 
 @include breakpoint($bp-sm) {
-  .open-data-page {
-    .view-display-id-page_1 {
+  .page--open_data {
+
+    .c-news--head {
+      margin-bottom: 20px;
+    }
+
+    .pager__items {
+      gap: 15px;
+
+      li a {
+        width: 30px;
+      }
+    }
+
+    .view-open-data {
       .view-filters {
+        form .form--inline {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 2%;
+        }
+
         select,
         input[type='text'] {
           height: 55px;
           width: 100%;
         }
 
-        .views-exposed-widget {
-          width: 49%;
+        .js-form-item {
+          grid-column: 1 / span 1;
+          margin: 0;
+        }
 
-          &.views-submit-button {
-            width: 100%;
-            margin-top: 0;
-            text-align: right;
+        .search-form-group__wrapper {
+          grid-column: 2 / span 1;
+        }
 
-            button {
-              width: auto;
-            }
-          }
+        .form-actions {
+          grid-row: 2;
+          grid-column: 1 / span 2;
+        }
 
-          &:first-of-type {
-            margin-right: 2%;
-          }
+        .search__submit {
+          margin-top: 0;
+          text-align: right;
+          width: auto;
         }
       }
 

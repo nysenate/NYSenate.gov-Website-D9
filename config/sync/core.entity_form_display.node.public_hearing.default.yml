@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.public_hearing.field_event_place
     - field.field.node.public_hearing.field_issues
     - field.field.node.public_hearing.field_location
+    - field.field.node.public_hearing.field_majority_issue_tag
     - field.field.node.public_hearing.field_meeting_location
     - field.field.node.public_hearing.field_transcript
     - field.field.node.public_hearing.field_ustream
@@ -69,6 +70,7 @@ third_party_settings:
       children:
         - field_committee_featured
         - field_issues
+        - field_majority_issue_tag
       label: Discoverability
       region: content
       parent_name: ''
@@ -114,7 +116,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 9
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -220,6 +222,12 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_majority_issue_tag:
+    type: options_select
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_meeting_location:
     type: string_textfield
     weight: 8

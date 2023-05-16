@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.session.field_meeting_location
     - field.field.node.session.field_session_calendars
     - field.field.node.session.field_transcript
+    - field.field.node.session.field_upcoming_legislation
     - field.field.node.session.field_ustream
     - field.field.node.session.field_video_redirect
     - field.field.node.session.field_video_status
@@ -27,6 +28,7 @@ dependencies:
     - path
     - scheduler
     - text
+    - viewsreference
 third_party_settings:
   field_group:
     group_location:
@@ -73,10 +75,24 @@ third_party_settings:
       label: Video
       region: content
       parent_name: ''
-      weight: 4
+      weight: 6
       format_type: fieldset
       format_settings:
         classes: 'group-video field-group-fieldset'
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_upcoming_legislation:
+      children:
+        - field_upcoming_legislation
+      label: 'Upcoming Legislation'
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: fieldset
+      format_settings:
+        classes: ''
         show_empty_fields: false
         id: ''
         description: ''
@@ -98,7 +114,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 7
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -173,6 +189,16 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_upcoming_legislation:
+    type: viewsreference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: '10'
+      size: '60'
+      placeholder: ''
+    third_party_settings: {  }
   field_ustream:
     type: options_select
     weight: 34
@@ -208,24 +234,24 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   simple_sitemap:
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 5
+    weight: 7
     region: content
     settings:
       display_label: true
@@ -240,7 +266,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 6
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -250,12 +276,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }

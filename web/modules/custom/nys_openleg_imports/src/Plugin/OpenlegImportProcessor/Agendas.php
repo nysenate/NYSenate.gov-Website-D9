@@ -93,8 +93,8 @@ class Agendas extends ImportProcessorBase {
       'field_ol_committee' => $committee ?: NULL,
       'field_ol_committee_name' => $comm_name,
       'field_ol_meeting_date' => strtotime($item->meeting->meetingDateTime),
-      'field_ol_week' => $item->agendaId->year,
-      'field_ol_year' => $item->agendaId->number,
+      'field_ol_week' => $item->agendaId->number,
+      'field_ol_year' => $item->agendaId->year,
       'field_from_openleg' => TRUE,
     ];
 

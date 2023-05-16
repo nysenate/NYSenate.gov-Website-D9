@@ -167,7 +167,6 @@
           var _selected = $('.dp_selected').html();
 
           if (_selected === null || _selected === undefined) {
-            _selected = localStorage.getItem('selected');
             $('.dp_current').addClass('dp_selected');
             $('.dp_daypicker td').each(function () {
               if ($(this).html() === _selected) {
@@ -199,9 +198,6 @@
               }
             });
           }
-          else {
-            localStorage.setItem('selected', $('.dp_selected').html());
-          }
           elements.each(function () {
             if (
               viewType === 'week' &&
@@ -220,6 +216,13 @@
         $(this).hide();
         $(this).parent().find('#container .Zebra_DatePicker').show();
       });
+
+      // set default date value on load
+      const editDate = $('#edit-date');
+      if (editDate && !editDate.val()) {
+        const placeholder = editDate.attr('placeholder');
+        editDate.val(placeholder);
+      }
     }
   };
 })(document, Drupal, jQuery);

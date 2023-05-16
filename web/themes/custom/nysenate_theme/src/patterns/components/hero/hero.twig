@@ -41,7 +41,7 @@
                 </span>
               {% endif %}
               {% if district_number and is_active %}
-                <a href="{{ district_number.url }}">{{ district_number.text }}
+                <a href="{{ senator_microsite_link }}/district">{{ district_number.text }}
                   Senate District</a>
               {% endif %}
             </p>
@@ -64,11 +64,6 @@
     </div>
     {# end of senator hero #}
   {% elseif type == "press_conference" or type == "public_hearing" or type == "session" %}
-    {%
-      include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
-        is_logged: is_logged
-      } only
-    %}
     <div class="l-header-region l-row c-hero">
       <div class="c-hero-livestream-wrapper">
         <div class="c-hero-livestream-video">

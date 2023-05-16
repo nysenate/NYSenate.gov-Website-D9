@@ -3,6 +3,7 @@
 namespace Drupal\nys_dashboard\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -67,6 +68,7 @@ class EditProfileForm extends ProfileForm {
     $form['account']['current_pass']['#access'] = FALSE;
     $form['account']['status']['#access'] = FALSE;
     $form['account']['roles']['#access'] = FALSE;
+    $form['actions']['delete']['#access'] = FALSE;
 
     // These fields are not editable by the user.
     $disable = [
@@ -158,6 +160,16 @@ class EditProfileForm extends ProfileForm {
         ],
       ],
     ];
+
+    // Profile Image placeholder
+    if (isset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'])) {
+      $form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'] =
+        new FormattableMarkup('<div class="nys-senator--thumb nys-senator--thumb--placeholder"><img src="/themes/custom/nysenate_theme/src/assets/default-avatar.png" alt="Default avatar"/></div>', []);
+    }
+
+    if (isset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['open_button']['#value'])) {
+      $form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['open_button']['#value'] = $this->t('Upload Image');
+    }
 
     // Hide these fields.
     $form['account']['mail']['#type'] = 'hidden';

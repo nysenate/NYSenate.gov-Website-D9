@@ -87,6 +87,8 @@ class MediaSourceTest extends KernelTestBase {
       'class' => 'Drupal\oembed_providers\Plugin\media\Source\OEmbed',
       'default_name_metadata_attribute' => 'default_name',
       'thumbnail_uri_metadata_attribute' => 'thumbnail_uri',
+      'thumbnail_width_metadata_attribute' => 'thumbnail_width',
+      'thumbnail_height_metadata_attribute' => 'thumbnail_height',
       'forms' => [
         'media_library_add' => 'Drupal\media_library\Form\OEmbedForm',
       ],
@@ -119,6 +121,20 @@ class MediaSourceTest extends KernelTestBase {
       'oembed_providers',
     ];
     $this->assertSame($expected, $dependencies['module']);
+
+    // Verify dependencies are not added to 'oembed:video' media source.
+    $provider_bucket = ProviderBucket::create([
+      'id' => 'video',
+      'label' => 'Video Provider Bucket',
+      'description' => 'Override core oembed:video media source',
+      'providers' => [
+        'YouTube',
+      ],
+    ]);
+    $provider_bucket->save();
+    $this->assertEmpty($provider_bucket->getDependencies());
+
+    $provider_bucket->delete();
 
     // Verify dependencies are not added to media sources, which are not
     // provided by the oembed_providers module.

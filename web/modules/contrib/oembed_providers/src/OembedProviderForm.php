@@ -79,6 +79,7 @@ class OembedProviderForm extends EntityForm {
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Provider name'),
+      '#description' => $this->t("The 'Provider name' must match the <code>provider_name</code> value returned by the provider's endpoint."),
       '#default_value' => $entity->label(),
       '#required' => TRUE,
     ];

@@ -42,6 +42,8 @@ class LengthFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     return [
       'min' => NULL,
 	  'max' => NULL,
+      'strip_tags' => FALSE,
+      'trim' => FALSE,
     ];
   }
 
@@ -60,6 +62,16 @@ class LengthFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       '#title' => $this->t('Max'),
       '#default_value' => $this->configuration['max'],
       '#required' => TRUE,
+    ];
+    $form['strip_tags'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Strip tags'),
+      '#default_value' => $this->configuration['strip_tags'],
+    ];
+    $form['trim'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Trim'),
+      '#default_value' => $this->configuration['trim'],
     ];	
     return $form;
   }
@@ -72,6 +84,8 @@ class LengthFieldValidationRule extends ConfigurableFieldValidationRuleBase {
 
     $this->configuration['min'] = $form_state->getValue('min');
 	$this->configuration['max'] = $form_state->getValue('max');
+    $this->configuration['strip_tags'] = $form_state->getValue('strip_tags');
+    $this->configuration['trim'] = $form_state->getValue('trim');
   }
   
   public function validate($params) {
@@ -85,6 +99,14 @@ class LengthFieldValidationRule extends ConfigurableFieldValidationRuleBase {
 	//$settings = $this->rule->settings;
     if ($value != '') {
       $flag = TRUE;
+
+      if(!empty($settings['strip_tags'])){
+        $value = strip_tags($value);		  
+	  }
+      if(!empty($settings['trim'])){
+        $value = trim($value);		  
+	  }
+
       $length = mb_strlen($value, 'UTF-8');
       if (isset($settings['min']) && $settings['min'] != '') {
         //$min = token_replace($settings['min'], array($this->get_token_type() => $this->entity));

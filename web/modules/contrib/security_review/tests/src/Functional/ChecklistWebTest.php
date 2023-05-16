@@ -13,11 +13,16 @@ use Drupal\Tests\BrowserTestBase;
 class ChecklistWebTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'security_review',
   ];
 
@@ -43,16 +48,9 @@ class ChecklistWebTest extends BrowserTestBase {
   protected $checklist;
 
   /**
-   * The default theme.
-   *
-   * @var string
-   */
-  protected $defaultTheme = 'claro';
-
-  /**
    * Sets up the testing environment.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->checklist = \Drupal::getContainer()
@@ -84,11 +82,11 @@ class ChecklistWebTest extends BrowserTestBase {
    */
   public function testRun() {
     foreach ($this->checks as $check) {
-      $this->assertEqual(0, $check->lastRun(), $check->getTitle() . ' has not been run yet.');
+      $this->assertEquals(0, $check->lastRun(), $check->getTitle() . ' has not been run yet.');
     }
     $this->checklist->runChecklist();
     foreach ($this->checks as $check) {
-      $this->assertNotEqual(0, $check->lastRun(), $check->getTitle() . ' has been run.');
+      $this->assertNotEquals(0, $check->lastRun(), $check->getTitle() . ' has been run.');
     }
   }
 
@@ -101,7 +99,7 @@ class ChecklistWebTest extends BrowserTestBase {
     }
     $this->checklist->runChecklist();
     foreach ($this->checks as $check) {
-      $this->assertEqual(0, $check->lastRun(), $check->getTitle() . ' has not been run.');
+      $this->assertEquals(0, $check->lastRun(), $check->getTitle() . ' has not been run.');
     }
   }
 

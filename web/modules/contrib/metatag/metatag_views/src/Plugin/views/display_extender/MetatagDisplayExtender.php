@@ -235,8 +235,8 @@ class MetatagDisplayExtender extends DisplayExtenderPluginBase {
     }
 
     if ($this->options['tokenize'] && !$raw) {
-      if (self::$firstRowTokens) {
-        self::setFirstRowTokensOnStylePlugin($view, self::$firstRowTokens);
+      if (!empty(self::$firstRowTokens[$view->current_display])) {
+        self::setFirstRowTokensOnStylePlugin($view, self::$firstRowTokens[$view->current_display]);
       }
       // This is copied from TokenizeAreaPluginBase::tokenizeValue().
       $style = $view->getStyle();
@@ -266,7 +266,7 @@ class MetatagDisplayExtender extends DisplayExtenderPluginBase {
    * avoid rebuilding and re-rendering it, preserve the first row tokens.
    */
   public function setFirstRowTokens(array $first_row_tokens) {
-    self::$firstRowTokens = $first_row_tokens;
+    self::$firstRowTokens[$this->view->current_display] = $first_row_tokens;
   }
 
   /**

@@ -118,16 +118,16 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Geocoder $geocoder, ProviderPluginManager $providerPluginManager, FormatterPluginManager $formatterPluginManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->originAddress = isset($configuration['origin_address']) ? $configuration['origin_address'] : '';
-    $this->useAutocomplete = isset($configuration['use_autocomplete']) ? $configuration['use_autocomplete'] : 0;
+    $this->originAddress = $configuration['origin_address'] ?? '';
+    $this->useAutocomplete = $configuration['use_autocomplete'] ?? 0;
     $this->geocoder = $geocoder;
     $this->providerPluginManager = $providerPluginManager;
-    $this->options = isset($configuration['settings']['options']) ? $configuration['settings']['options'] : '';
+    $this->options = $configuration['settings']['options'] ?? '';
     $this->formatterPluginManager = $formatterPluginManager;
     $this->origin = $this->getAddressOrigin($this->originAddress);
-    $this->minTerms = isset($configuration['settings']['autocomplete']['min_terms']) ? $configuration['settings']['autocomplete']['min_terms'] : 4;
-    $this->delay = isset($configuration['settings']['autocomplete']['delay']) ? $configuration['settings']['autocomplete']['delay'] : 800;
-    $this->addressFormat = isset($configuration['settings']['autocomplete']['address_format']) ? $configuration['settings']['autocomplete']['address_format'] : 'default_formatted_address';
+    $this->minTerms = $configuration['settings']['autocomplete']['min_terms'] ?? 4;
+    $this->delay = $configuration['settings']['autocomplete']['delay'] ?? 800;
+    $this->addressFormat = $configuration['settings']['autocomplete']['address_format'] ?? 'default_formatted_address';
   }
 
   /**
@@ -207,7 +207,7 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
         'geocoder/general',
       ];
 
-      $plugins_settings = isset($this->configuration['plugins']) ? $this->configuration['plugins'] : [];
+      $plugins_settings = $this->configuration['plugins'] ?? [];
 
       // Get the enabled/selected plugins.
       $enabled_plugins = [];
@@ -332,7 +332,7 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
    */
   public function getEnabledProviderPlugins() {
     $geocoder_plugins = $this->providerPluginManager->getPlugins();
-    $plugins_settings = isset($this->configuration['plugins']) ? $this->configuration['plugins'] : [];
+    $plugins_settings = $this->configuration['plugins'] ?? [];
 
     // Filter out unchecked plugins.
     $provider_plugin_ids = array_filter($plugins_settings, function ($plugin) {

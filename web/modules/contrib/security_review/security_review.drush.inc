@@ -177,7 +177,7 @@ function _security_review_drush_get_check($check_name) {
 
   // Set namespace and title if explicitly defined.
   if (strpos($check_name, ':') !== FALSE) {
-    list($namespace, $title) = explode(':', $check_name);
+    [$namespace, $title] = explode(':', $check_name);
   }
 
   // Return the found check if any.

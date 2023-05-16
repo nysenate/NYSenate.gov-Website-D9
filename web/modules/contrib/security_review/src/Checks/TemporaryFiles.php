@@ -37,7 +37,7 @@ class TemporaryFiles extends Check {
     $dir = scandir($site_path);
     foreach ($dir as $file) {
       // Set full path to only files.
-      if (!is_dir($file)) {
+      if (!in_array($file, ['.', '..'], TRUE) && !is_dir($file)) {
         $files[] = $site_path . $file;
       }
     }

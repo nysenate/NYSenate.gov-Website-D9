@@ -2,6 +2,7 @@
 
 namespace Drupal\field_validation\Form;
 
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -21,7 +22,7 @@ class FieldValidationRuleSetAddForm extends FieldValidationRuleSetFormBase {
 
 	foreach($entity_types as $key => $entitytype){
 
-	  if($entitytype instanceof \Drupal\Core\Entity\ContentEntityTypeInterface){
+	  if($entitytype instanceof ContentEntityTypeInterface){
 	    $entity_type_options[$key] = $entitytype->getLabel();
 	  }
 	  if($key =='block_content'){

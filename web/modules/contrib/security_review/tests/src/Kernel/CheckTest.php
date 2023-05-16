@@ -17,7 +17,7 @@ class CheckTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['security_review', 'security_review_test'];
+  protected static $modules = ['security_review', 'security_review_test'];
 
   /**
    * The security checks defined by Security Review and Security Review Test.
@@ -43,7 +43,7 @@ class CheckTest extends KernelTestBase {
   /**
    * Sets up the environment, populates the $checks variable.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->realChecks = security_review_security_review_checks();
     $this->testChecks = security_review_test_security_review_checks();

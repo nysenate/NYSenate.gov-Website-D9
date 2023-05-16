@@ -12,7 +12,7 @@ use CommerceGuys\Addressing\Formatter\DefaultFormatter;
 use CommerceGuys\Addressing\Formatter\PostalLabelFormatter;
 
 /**
- * Class AddressService.
+ * Generate an AddressService.
  *
  * @package Drupal\geocoder_address
  */
@@ -118,7 +118,6 @@ class AddressService extends ServiceProviderBase {
   public function addressArrayToGeoString(array $values) {
 
     // Make sure the address_array has all values populated.
-    /** @var \Drupal\address\Element\Address::applyDefaults() */
     $values = ElementAddress::applyDefaults($values);
 
     // Without a country code this won't work.
@@ -128,7 +127,6 @@ class AddressService extends ServiceProviderBase {
 
     // Use the Address formatter to create a string ordered appropriately
     // for the country in the address.
-    /** @var CommerceGuys\Addressing\Address */
     $address = new AddressingAddress();
     $address = $address
       ->withCountryCode($values['country_code'])
@@ -139,11 +137,11 @@ class AddressService extends ServiceProviderBase {
       ->withAddressLine1($values['address_line1'])
       ->withAddressLine2($values['address_line2']);
 
-    $countrycode = isset($values['country_code']) ? $values['country_code'] : NULL;
+    $countrycode = $values['country_code'] ?? NULL;
     $langcode = !empty($values['langcode']) ? $values['langcode'] : 'en';
 
     // Get the formatted address.
-    /** @var CommerceGuys\Addressing\Formatter\PostalLabelFormatter */
+    /** @var \CommerceGuys\Addressing\Formatter\PostalLabelFormatter $formatter */
     $formatter = $this->getFormatter($langcode, $countrycode, 'postal');
     $address_string = $formatter->format($address);
 

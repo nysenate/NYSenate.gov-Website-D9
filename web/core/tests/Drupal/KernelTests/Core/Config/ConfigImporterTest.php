@@ -57,8 +57,7 @@ class ConfigImporterTest extends KernelTestBase {
   }
 
   /**
-   * Tests that trying to import from an empty sync configuration directory
-   * fails.
+   * Tests that trying to import from empty sync configuration directory fails.
    */
   public function testEmptyImportFails() {
     $this->expectException(ConfigImporterException::class);
@@ -856,6 +855,48 @@ class ConfigImporterTest extends KernelTestBase {
     $this->configImporter()->doSyncStep(\Closure::fromCallable([self::class, 'customStep']), $context);
     $this->assertTrue($context['is_syncing'], 'Inside a custom step \Drupal::isConfigSyncing() returns TRUE');
     $this->assertFalse(\Drupal::isConfigSyncing(), 'After an valid custom step \Drupal::isConfigSyncing() returns FALSE');
+  }
+
+  /**
+   * Tests that uninstall a theme in config import correctly imports all config.
+   */
+  public function testUninstallThemeIncrementsCount(): void {
+    $theme_installer = $this->container->get('theme_installer');
+    // Install our theme.
+    $theme = 'test_basetheme';
+    $theme_installer->install([$theme]);
+
+    $this->assertTrue($this->container->get('theme_handler')->themeExists($theme));
+
+    $sync = $this->container->get('config.storage.sync');
+
+    // Update 2 pieces of config in sync.
+    $systemSiteName = 'system.site';
+    $system = $sync->read($systemSiteName);
+    $system['name'] = 'Foo';
+    $sync->write($systemSiteName, $system);
+
+    $cronName = 'system.cron';
+    $cron = $sync->read($cronName);
+    $this->assertEquals(1, $cron['logging']);
+    $cron['logging'] = 0;
+    $sync->write($cronName, $cron);
+
+    // Uninstall the theme in sync.
+    $extensions = $sync->read('core.extension');
+    unset($extensions['theme'][$theme]);
+    $sync->write('core.extension', $extensions);
+
+    $this->configImporter()->import();
+
+    // The theme should be uninstalled.
+    $this->assertFalse($this->container->get('theme_handler')->themeExists($theme));
+
+    // Both pieces of config should be updated.
+    \Drupal::configFactory()->reset($systemSiteName);
+    \Drupal::configFactory()->reset($cronName);
+    $this->assertEquals('Foo', $this->config($systemSiteName)->get('name'));
+    $this->assertEquals(0, $this->config($cronName)->get('logging'));
   }
 
   /**

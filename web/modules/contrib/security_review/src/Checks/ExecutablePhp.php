@@ -81,7 +81,8 @@ class ExecutablePhp extends Check {
     // Only perform .htaccess checks if the webserver is Apache.
     $str = isset($_SERVER['SERVER_SOFTWARE']) ? substr($_SERVER['SERVER_SOFTWARE'], 0, 6) : '';
     if ($str == 'Apache') {
-      // Check for presence of the .htaccess file and if the contents are correct.
+      // Check for presence of the .htaccess file and if the contents are
+      // correct.
       $htaccess_path = PublicStream::basePath() . '/.htaccess';
       if (!file_exists($htaccess_path)) {
         $result = CheckResult::FAIL;

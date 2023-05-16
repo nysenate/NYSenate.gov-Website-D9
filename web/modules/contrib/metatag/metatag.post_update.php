@@ -180,7 +180,6 @@ function metatag_post_update_convert_author_data(&$sandbox) {
       '@total' => $sandbox['total_records'],
     ]);
   }
-  else {
-    return (string) t("There were no overridden Metatag records.");
-  }
+
+  return (string) t('There were no overridden Metatag records.');
 }

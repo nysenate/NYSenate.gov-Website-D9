@@ -85,7 +85,7 @@ class PreprocessorPluginManager extends GeocoderPluginManagerBase {
       $geocoder_fields[$field_name] = [
         'field_name' => $field_name,
         'field_value' => $field,
-        'weight' => isset($geocoder['weight']) ? $geocoder['weight'] : 0,
+        'weight' => $geocoder['weight'] ?? 0,
       ];
     }
 
@@ -121,12 +121,12 @@ class PreprocessorPluginManager extends GeocoderPluginManagerBase {
 
     if (isset($source_value[0]) && !isset($source_value[0]['value']) && isset($source_value[0]['target_id'])) {
       foreach ($source_value as $i => $value) {
-        $source_value[$i] = isset($value['target_id']) ? $value['target_id'] : '';
+        $source_value[$i] = $value['target_id'] ?? '';
       }
     }
     if (isset($original_value[0]) && !isset($original_value[0]['value']) && isset($original_value[0]['target_id'])) {
       foreach ($original_value as $i => $value) {
-        $original_value[$i] = isset($value['target_id']) ? $value['target_id'] : '';
+        $original_value[$i] = $value['target_id'] ?? '';
       }
     }
 

@@ -10,18 +10,22 @@ use Drupal\Core\Url;
 use Drupal\security_review\Check;
 use Drupal\security_review\CheckResult;
 use Drupal\security_review\Checks\AdminPermissions;
+use Drupal\security_review\Checks\AdminUser;
 use Drupal\security_review\Checks\ErrorReporting;
 use Drupal\security_review\Checks\ExecutablePhp;
 use Drupal\security_review\Checks\FailedLogins;
 use Drupal\security_review\Checks\Field;
 use Drupal\security_review\Checks\FilePermissions;
 use Drupal\security_review\Checks\InputFormats;
+use Drupal\security_review\Checks\LastCronRun;
 use Drupal\security_review\Checks\PrivateFiles;
 use Drupal\security_review\Checks\QueryErrors;
 use Drupal\security_review\Checks\TemporaryFiles;
 use Drupal\security_review\Checks\TrustedHosts;
 use Drupal\security_review\Checks\UploadExtensions;
+use Drupal\security_review\Checks\VendorDirectory;
 use Drupal\security_review\Checks\ViewsAccess;
+use Drupal\security_review\Checks\NamePasswords;
 
 /**
  * Implements hook_security_review_checks().
@@ -29,18 +33,22 @@ use Drupal\security_review\Checks\ViewsAccess;
 function security_review_security_review_checks() {
   return [
     new AdminPermissions(),
+    new AdminUser(),
     new ErrorReporting(),
     new ExecutablePhp(),
     new FailedLogins(),
     new Field(),
     new FilePermissions(),
     new InputFormats(),
+    new LastCronRun(),
+    new NamePasswords(),
     new PrivateFiles(),
     new QueryErrors(),
     new TemporaryFiles(),
     new TrustedHosts(),
     new UploadExtensions(),
     new ViewsAccess(),
+    new VendorDirectory(),
   ];
 }
 
@@ -90,6 +98,7 @@ function security_review_theme($existing, $type, $theme, $path) {
       'variables' => [
         'paragraphs' => [],
         'items' => [],
+        'hushed_items' => [],
       ],
     ],
     'check_help' => [
@@ -180,6 +189,10 @@ function security_review_cron() {
 function _security_review_batch_run_op(Check $check, array &$context) {
   // Inform the user about the progress.
   $context['message'] = $check->getTitle();
+
+  /** @var \Drupal\security_review\SecurityReview $security_review */
+  $security_review = Drupal::service('security_review');
+  $security_review->log($check, '@name check has started', ['@name' => $context['message']], RfcLogLevel::NOTICE);
 
   // Run the check.
   $results = Drupal::service('security_review.checklist')

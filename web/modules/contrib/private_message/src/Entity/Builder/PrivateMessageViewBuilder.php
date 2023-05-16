@@ -82,6 +82,11 @@ class PrivateMessageViewBuilder extends EntityViewBuilder {
         'data-message-id' => $entity->id(),
         'class' => $classes,
       ],
+      '#contextual_links' => [
+        'private_message' => [
+          'route_parameters' => ['private_message' => $entity->id()],
+        ],
+      ],
     ];
     $build['wrapper']['message'] = $message;
 

@@ -4,6 +4,7 @@ namespace Drupal\password_policy;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 
 /**
@@ -37,6 +38,13 @@ class PasswordPolicyValidationManager implements PasswordPolicyValidationManager
   protected $userSettingsConfig;
 
   /**
+   * Current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * PasswordPolicyVisibilityManager constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
@@ -45,21 +53,24 @@ class PasswordPolicyValidationManager implements PasswordPolicyValidationManager
    *   The current logged in user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The current route match.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(ConfigFactoryInterface $configFactory, AccountProxyInterface $currentUser, EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(ConfigFactoryInterface $configFactory, AccountProxyInterface $currentUser, EntityTypeManagerInterface $entityTypeManager, RouteMatchInterface $routeMatch) {
     $this->currentUser = $currentUser;
     $this->passwordPolicyStorage = $entityTypeManager->getStorage('password_policy');
     $this->userSettingsConfig = $configFactory->get('user.settings');
+    $this->routeMatch = $routeMatch;
   }
 
   /**
    * {@inheritdoc}
    */
   public function tableShouldBeVisible() {
-    if ($this->currentUser->isAnonymous() && $this->userSettingsConfig->get('verify_mail')) {
+    if ($this->currentUser->isAnonymous() && $this->userSettingsConfig->get('verify_mail') && $this->routeMatch->getRouteName() !== 'user.reset') {
       return FALSE;
     }
 
@@ -74,7 +85,7 @@ class PasswordPolicyValidationManager implements PasswordPolicyValidationManager
    * {@inheritdoc}
    */
   public function validationShouldRun() {
-    if ($this->currentUser->isAnonymous() && $this->userSettingsConfig->get('verify_mail')) {
+    if ($this->currentUser->isAnonymous() && $this->userSettingsConfig->get('verify_mail') && $this->routeMatch->getRouteName() !== 'user.reset') {
       return FALSE;
     }
 

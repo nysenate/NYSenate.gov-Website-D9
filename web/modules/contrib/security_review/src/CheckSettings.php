@@ -19,7 +19,7 @@ class CheckSettings implements CheckSettingsInterface {
   /**
    * The configuration storage of the parent Check.
    *
-   * @var \Drupal\Core\Config\Config $config
+   * @var \Drupal\Core\Config\Config
    */
   protected $config;
 

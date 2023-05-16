@@ -36,10 +36,10 @@ security_review.check.*:
       # This way type-strict per-check settings storage can be created.
       type: security_review.check_settings.[%parent.id]
 
-# Setting storage for Base URL check.
-security_review.check_settings.security_review-base_url_set:
+# Setting storage for the Trusted Hosts check.
+security_review.check_settings.security_review-trusted_hosts:
   type: mapping
   mapping:
     method:
       type: string
-      label: 'Base URL identification method'
+      label: 'Trusted hosts identification method'

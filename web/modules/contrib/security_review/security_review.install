@@ -82,3 +82,12 @@ function security_review_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Remove trust host config.
+ */
+function security_review_update_10101() {
+  $config = \Drupal::configFactory()->getEditable('security_review.check.security_review-trusted_hosts');
+  $config->clear('settings');
+  $config->save(TRUE);
+}

@@ -5,6 +5,8 @@
  * Document all supported APIs.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
+
 /**
  * Provides a ability to integrate alternative routes with metatags.
  *
@@ -17,7 +19,7 @@
  * @return \Drupal\Core\Entity\EntityInterface|null
  *   Return an entity, if the route should use metatags.
  */
-function hook_metatag_route_entity(\Drupal\Core\Routing\RouteMatchInterface $route_match) {
+function hook_metatag_route_entity(RouteMatchInterface $route_match) {
   if ($route_match->getRouteName() === 'example.test_route') {
     if ($node = $route_match->getParameter('node')) {
       return $node;

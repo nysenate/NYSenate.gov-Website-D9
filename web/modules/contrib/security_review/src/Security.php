@@ -132,7 +132,7 @@ class Security {
     // Fill up the administrative roles' permissions too.
     foreach ($role_ids as $role_id) {
       $role = Role::load($role_id);
-      /** @var Role $role */
+      /** @var \Drupal\user\Entity\Role $role */
       if ($role->isAdmin()) {
         $permissions_grouped[$role_id] = $this->permissions();
       }
@@ -206,7 +206,6 @@ class Security {
   public function trustedPermissions($group_by_role_id = FALSE) {
     return $this->rolePermissions($this->trustedRoles(), $group_by_role_id);
   }
-
 
   /**
    * Gets all the permissions.
@@ -351,6 +350,9 @@ class Security {
       $gids = $this->securityReview->getServerGids();
 
       foreach ($files as $file) {
+        if (is_link($file)) {
+          $file = realpath($file);
+        }
         $perms = 0777 & fileperms($file);
         // Check write permissions for others.
         $ow = ($perms >> 1) & 1;

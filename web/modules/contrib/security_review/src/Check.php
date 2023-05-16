@@ -18,7 +18,7 @@ abstract class Check {
   /**
    * The configuration storage for this check.
    *
-   * @var \Drupal\Core\Config\Config $config
+   * @var \Drupal\Core\Config\Config
    */
   protected $config;
 
@@ -32,7 +32,7 @@ abstract class Check {
   /**
    * Settings handler for this check.
    *
-   * @var \Drupal\security_review\CheckSettingsInterface $settings
+   * @var \Drupal\security_review\CheckSettingsInterface
    */
   protected $settings;
 
@@ -98,7 +98,7 @@ abstract class Check {
    * @return string
    *   Human-readable namespace of the check.
    */
-  public abstract function getNamespace();
+  abstract public function getNamespace();
 
   /**
    * Returns the machine name of the check.
@@ -125,7 +125,7 @@ abstract class Check {
    * @return string
    *   Title of check.
    */
-  public abstract function getTitle();
+  abstract public function getTitle();
 
   /**
    * Returns the identifier constructed using the namespace and title values.
@@ -133,7 +133,7 @@ abstract class Check {
    * @return string
    *   Unique identifier of the check.
    */
-  public final function id() {
+  final public function id() {
     return $this->getMachineNamespace() . '-' . $this->getMachineTitle();
   }
 
@@ -169,7 +169,7 @@ abstract class Check {
    * @return \Drupal\security_review\CheckResult
    *   The result of running the check.
    */
-  public abstract function run();
+  abstract public function run();
 
   /**
    * Same as run(), but used in CLI context such as Drush.
@@ -187,7 +187,7 @@ abstract class Check {
    * @return array
    *   The render array of the check's help page.
    */
-  public abstract function help();
+  abstract public function help();
 
   /**
    * Returns the evaluation page of a result.
@@ -226,7 +226,7 @@ abstract class Check {
    * @return string
    *   The human-readable result message.
    */
-  public abstract function getMessage($result_const);
+  abstract public function getMessage($result_const);
 
   /**
    * Returns the last stored result of the check.
@@ -243,8 +243,10 @@ abstract class Check {
     // Get stored data from State system.
     $state_prefix = $this->statePrefix . 'last_result.';
     $result = $this->state->get($state_prefix . 'result');
+    $hushed = [];
     if ($get_findings) {
       $findings = $this->state->get($state_prefix . 'findings');
+      $hushed = $this->state->get($state_prefix . 'hushed_findings');
     }
     else {
       $findings = [];
@@ -266,7 +268,7 @@ abstract class Check {
     }
 
     // Construct the CheckResult.
-    $last_result = new CheckResult($this, $result, $findings, $visible, $time);
+    $last_result = new CheckResult($this, $result, $findings, $visible, $time, $hushed);
 
     // Do a check run for acquiring findings if required.
     if ($get_findings && !$this->storesFindings()) {
@@ -412,11 +414,13 @@ abstract class Check {
     }
 
     $findings = $this->storesFindings() ? $result->findings() : [];
+    $hushed_findings = $this->storesFindings() ? $result->hushedFindings() : [];
     $this->state->setMultiple([
       $this->statePrefix . 'last_result.result' => $result->result(),
       $this->statePrefix . 'last_result.time' => $result->time(),
       $this->statePrefix . 'last_result.visible' => $result->isVisible(),
       $this->statePrefix . 'last_result.findings' => $findings,
+      $this->statePrefix . 'last_result.hushed_findings' => $hushed_findings,
     ]);
   }
 
@@ -431,12 +435,14 @@ abstract class Check {
    *   The visibility of the result.
    * @param int $time
    *   The time the test was run.
+   * @param array $hushed_findings
+   *   The hushed findings.
    *
    * @return \Drupal\security_review\CheckResult
    *   The created CheckResult.
    */
-  public function createResult($result, array $findings = [], $visible = TRUE, $time = NULL) {
-    return new CheckResult($this, $result, $findings, $visible, $time);
+  public function createResult($result, array $findings = [], $visible = TRUE, $time = NULL, array $hushed_findings = []) {
+    return new CheckResult($this, $result, $findings, $visible, $time, $hushed_findings);
   }
 
   /**

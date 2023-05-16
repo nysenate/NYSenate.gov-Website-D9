@@ -49,7 +49,7 @@ class AdminPermissions extends Check {
     foreach ($untrusted_permissions as $rid => $permissions) {
       $intersect = array_intersect($all_permission_strings, $permissions);
       foreach ($intersect as $permission) {
-        if (isset($all_permissions[$permission]['restrict access'])) {
+        if (!empty($all_permissions[$permission]['restrict access'])) {
           $findings[$rid][] = $permission;
         }
       }
@@ -83,7 +83,7 @@ class AdminPermissions extends Check {
 
     foreach ($result->findings() as $rid => $permissions) {
       $role = Role::load($rid);
-      /** @var Role $role */
+      /** @var \Drupal\user\Entity\Role $role */
       $paragraphs = [];
       $paragraphs[] = $this->t(
         "@role has the following restricted permissions:",
@@ -114,7 +114,7 @@ class AdminPermissions extends Check {
 
     foreach ($result->findings() as $rid => $permissions) {
       $role = Role::load($rid);
-      /** @var Role $role */
+      /** @var \Drupal\user\Entity\Role $role */
 
       $output .= $this->t(
         '@role has @permissions',

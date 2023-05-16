@@ -39,7 +39,7 @@ abstract class FieldValidationRuleBase extends EntityKernelTestBase {
   /**
    * {@inheritDoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->nodeStorage = $this->entityTypeManager->getStorage('node');
     $this->ruleSetStorage = $this->entityTypeManager->getStorage(

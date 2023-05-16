@@ -58,26 +58,68 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
     }
 
     $data = $config->getRawData();
-    $plugin_parts = explode(':', $data['source']);
-    // Only process oEmbed plugins that are not provided by a Provider Bucket.
-    if ($plugin_parts[0] === "oembed"
-      && is_null($this->entityTypeManager->getStorage('oembed_provider_bucket')->load($plugin_parts[1]))
+    $source = $data['source'];
+    $plugin_parts = explode(':', $source);
+    if ($plugin_parts[0] === "oembed") {
+      // Remove dependencies from 'oembed:video' media source. This media source
+      // is provided by core Media and can be overridden with the oEmbed
+      // Providers module. When an override is removed, the dependnecy chain
+      // would result in the media type being deleted, as well.
+      if ($source == 'oembed:video') {
+        $this->removeModuleDependency($data);
+        $this->removeProviderBucketDependency($data);
+
+        $config->setData($data);
+        $config->oembedProvidersProcessed = TRUE;
+        $config->save();
+      }
+      // Remove 'oembed_providers' module dependency for oEmbed plugins that
+      // are not provided by a Provider Bucket.
+      elseif (is_null($this->entityTypeManager->getStorage('oembed_provider_bucket')->load($plugin_parts[1]))) {
+        $this->removeModuleDependency($data);
+
+        $config->setData($data);
+        $config->oembedProvidersProcessed = TRUE;
+        $config->save();
+      }
+    }
+  }
+
+  /**
+   * Removes the 'oembed_providers' module dependency.
+   *
+   * @param array $data
+   *   Media type configuration data.
+   */
+  protected function removeModuleDependency(array &$data): void {
+    // Remove the oembed_providers module dependency.
+    if (isset($data['dependencies']['module'])
+      && ($key = array_search('oembed_providers', $data['dependencies']['module'])) !== FALSE
       ) {
 
-      // Remove the oembed_providers module dependency.
-      if (isset($data['dependencies']['module'])
-        && ($key = array_search('oembed_providers', $data['dependencies']['module'])) !== FALSE
-        ) {
+      unset($data['dependencies']['module'][$key]);
+      if (empty($data['dependencies']['module'])) {
+        unset($data['dependencies']['module']);
+      }
+    }
+  }
 
-        unset($data['dependencies']['module'][$key]);
-        if (empty($data['dependencies']['module'])) {
-          unset($data['dependencies']['module']);
+  /**
+   * Removes the provider bucket config dependency.
+   *
+   * @param array $data
+   *   Media type configuration data.
+   */
+  protected function removeProviderBucketDependency(array &$data): void {
+    if (isset($data['dependencies']['config'])) {
+      foreach ($data['dependencies']['config'] as $key => $config) {
+        if (str_starts_with($config, 'oembed_providers.bucket.')) {
+          unset($data['dependencies']['config'][$key]);
+          if (empty($data['dependencies']['config'])) {
+            unset($data['dependencies']['config']);
+          }
         }
       }
-
-      $config->setData($data);
-      $config->oembedProvidersProcessed = TRUE;
-      $config->save();
     }
   }
 

@@ -19,6 +19,7 @@ use Drupal\user\UserInterface;
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
  *       "add" = "Drupal\private_message\Form\PrivateMessageForm",
+ *       "delete" = "Drupal\private_message\Form\PrivateMessageDeleteForm",
  *     },
  *     "access" = "Drupal\private_message\Entity\Access\PrivateMessageAccessControlHandler",
  *   },

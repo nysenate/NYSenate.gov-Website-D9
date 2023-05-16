@@ -15,37 +15,44 @@ class CheckResult {
   /**
    * Stores the parent Check.
    *
-   * @var \Drupal\security_review\Check $check
+   * @var \Drupal\security_review\Check
    */
   private $check;
 
   /**
    * Stores the outcome of the check.
    *
-   * @var int $result
+   * @var int
    */
   private $result;
 
   /**
    * Stores findings.
    *
-   * @var array $findings
+   * @var array
    */
   private $findings;
 
   /**
    * Stores the timestamp of the check run.
    *
-   * @var int $time
+   * @var int
    */
   private $time;
 
   /**
    * Whether the result should be shown on the UI.
    *
-   * @var bool $visible
+   * @var bool
    */
   private $visible;
+
+  /**
+   * Stores hushed findings.
+   *
+   * @var array
+   */
+  private $hushedFindings;
 
   /**
    * Constructs an immutable CheckResult.
@@ -56,12 +63,14 @@ class CheckResult {
    *   The result integer (see the constants defined above).
    * @param array $findings
    *   The findings.
-   * @param int $time
-   *   The timestamp of the check run.
    * @param bool $visible
    *   The visibility of the result.
+   * @param int $time
+   *   The timestamp of the check run.
+   * @param array $hushedFindings
+   *   The hushed findings.
    */
-  public function __construct(Check $check, $result, array $findings, $visible = TRUE, $time = NULL) {
+  public function __construct(Check $check, $result, array $findings, bool $visible = TRUE, int $time = NULL, array $hushedFindings = []) {
     // Set the parent check.
     $this->check = $check;
 
@@ -75,6 +84,9 @@ class CheckResult {
     // Set the findings.
     $this->findings = $findings;
 
+    // Set the hushed findings.
+    $this->hushedFindings = $hushedFindings;
+
     // Set the visibility.
     $this->visible = $visible;
 
@@ -83,7 +95,7 @@ class CheckResult {
       $this->time = time();
     }
     else {
-      $this->time = intval($time);
+      $this->time = $time;
     }
   }
 
@@ -102,7 +114,7 @@ class CheckResult {
    *   The combined result.
    */
   public static function combine(CheckResult $old, CheckResult $fresh) {
-    return new CheckResult($old->check, $old->result, $fresh->findings, $old->visible, $old->time);
+    return new CheckResult($old->check, $old->result, $fresh->findings, $old->visible, $old->time, $fresh->hushedFindings);
   }
 
   /**
@@ -131,8 +143,18 @@ class CheckResult {
    * @return array
    *   The findings. Contents of this depends on the actual check.
    */
-  public function findings() {
+  public function findings(): array {
     return $this->findings;
+  }
+
+  /**
+   * Returns the hushed findings.
+   *
+   * @return array
+   *   The hushed findings. Contents of this depends on the actual check.
+   */
+  public function hushedFindings(): array {
+    return $this->hushedFindings;
   }
 
   /**

@@ -312,7 +312,7 @@ function private_message_form_user_form_alter(array &$form, FormStateInterface $
       // service.
       $user_data = \Drupal::service('user.data');
       $user_setting = $user_data->get('private_message', $user->id(), 'receive_notification');
-      $default_value = is_null($user_setting) ?  : $user_setting;
+      $default_value = is_null($user_setting) ?: $user_setting;
     }
 
     $form['private_messages']['receive_notification'] = [
@@ -353,7 +353,7 @@ function private_message_form_user_form_alter(array &$form, FormStateInterface $
       43200 => t('12 hours'),
       86400 => t('1 day'),
     ];
-    
+
     if (!empty($user_data)) {
       $user_setting = (int) $user_data->get('private_message', $user->id(), 'number_of_seconds_considered_away');
     }

@@ -6,6 +6,7 @@ use Drupal\Core\Link;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\security_review\Check;
 use Drupal\security_review\CheckResult;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Checks whether the private files' directory is under the web root.
@@ -32,12 +33,34 @@ class PrivateFiles extends Check {
   public function run() {
     $file_directory_path = PrivateStream::basePath();
     $visible = TRUE;
+
+    /** @var \Symfony\Component\Filesystem\Filesystem A Symfony Filesystem */
+    $filesystem = new Filesystem();
+
     if (empty($file_directory_path)) {
       // Private files feature is not enabled.
       $result = CheckResult::SUCCESS;
       $visible = FALSE;
     }
-    elseif (strpos(realpath($file_directory_path), DRUPAL_ROOT) === 0) {
+    elseif (
+      // Make a relative path from the Drupal root to the private files path; if
+      // the relative path doesn't start with '../', it's most likely contained
+      // in the Drupal root.
+      \strpos($filesystem->makePathRelative(
+        \realpath($file_directory_path),
+        \DRUPAL_ROOT
+      ), '../') !== 0 &&
+      // Double check that the private files path does not start with the Drupal
+      // root path in case no relative path could be generated, e.g. the private
+      // files path is on another drive or network share. In those cases, the
+      // Filesystem component will just return an absolute path. Also note the
+      // use of \DIRECTORY_SEPARATOR to ensure we don't match an adjacent
+      // private files directory that starts with the Drupal directory name.
+      \strpos(
+        \realpath($file_directory_path),
+        \DRUPAL_ROOT . \DIRECTORY_SEPARATOR
+      ) === 0
+    ) {
       // Path begins at root.
       $result = CheckResult::FAIL;
     }

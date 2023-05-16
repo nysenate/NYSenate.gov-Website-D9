@@ -58,8 +58,10 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
     $form['rules'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Rule'),
-        $this->t('Weight'),
+        $this->t('Title'),
+        $this->t('Weight'),		
+        $this->t('Plugin'),		
+        $this->t('Field'),		
         $this->t('Operations'),
       ],
       '#tabledrag' => [
@@ -91,13 +93,18 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
           ],
         ],
       ];
+	  
+      //$form['rules'][$key]['field_name'] = [
+      //  '#markup' => $field_validation_rule->getFieldName(),
+      //];
 
-      $summary = $field_validation_rule->getSummary();
+	  
+      //$summary = $field_validation_rule->getSummary();
 
-      if (!empty($summary)) {
-        $summary['#prefix'] = ' ';
-        $form['rules'][$key]['rule']['data']['summary'] = $summary;
-      }
+      //if (!empty($summary)) {
+      //  $summary['#prefix'] = ' ';
+      //  $form['rules'][$key]['rule']['data']['summary'] = $summary;
+      //}
 
       $form['rules'][$key]['weight'] = [
         '#type' => 'weight',
@@ -108,7 +115,16 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
           'class' =>['rule-order-weight'],
         ],
       ];
-
+	  
+      $form['rules'][$key]['id'] = [
+        '#markup' => $field_validation_rule->getPluginId(),
+      ];
+	  
+      $form['rules'][$key]['field'] = [
+	    '#type' => 'markup',
+        '#markup' => $field_validation_rule->getFieldName(),
+      ];
+	  
       $links = [];
       $is_configurable = $field_validation_rule instanceof ConfigurableFieldValidationRuleInterface;
       if ($is_configurable) {
@@ -131,6 +147,7 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
         '#type' => 'operations',
         '#links' => $links,
       ];
+	  
     }
 
     // Build the new field_validation_rule addition form and add it to the field_validation_rule list.

@@ -98,6 +98,10 @@ https://www.drupal.org/project/drupal/issues/3276845.
 Custom oEmbed providers can be added, edited, and deleted on the *Custom oEmbed
 Providers* page (/admin/config/media/oembed-providers/custom-providers).
 
+The 'Provider name' must match the `provider_name` value returned by the
+endpoint until this core bug is resolved:
+https://www.drupal.org/project/drupal/issues/3134433
+
 When adding a custom provider, the provider must either 1) support discovery
 or 2) explicitly define one or more formats.
 

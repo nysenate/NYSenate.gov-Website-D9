@@ -36,6 +36,8 @@ function oembed_providers_media_source_info_alter(array &$sources) {
       'class' => 'Drupal\oembed_providers\Plugin\media\Source\OEmbed',
       'default_name_metadata_attribute' => 'default_name',
       'thumbnail_uri_metadata_attribute' => 'thumbnail_uri',
+      'thumbnail_width_metadata_attribute' => 'thumbnail_width',
+      'thumbnail_height_metadata_attribute' => 'thumbnail_height',
       'forms' => [
         'media_library_add' => 'Drupal\media_library\Form\OEmbedForm',
       ],

@@ -9,6 +9,13 @@ declare(strict_types = 1);
 
 use Drupal\Core\Routing\RouteMatchInterface;
 
+// Ludwig module integration.
+if (\Drupal::hasService('ludwig.require_once')) {
+  $ludwig_require_once = \Drupal::service('ludwig.require_once');
+  $ludwig_require_once->requireOnce('clue/stream-filter', 'src/functions_include.php', dirname(__FILE__));
+  $ludwig_require_once->requireOnce('php-http/message', 'src/filters.php', dirname(__FILE__));
+}
+
 /**
  * Implements hook_theme().
  */

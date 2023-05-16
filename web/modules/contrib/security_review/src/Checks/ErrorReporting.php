@@ -35,8 +35,8 @@ class ErrorReporting extends Check {
 
     // Determine the result.
     if ($error_level == 'verbose') {
-        $result = CheckResult::INFO;
-      }
+      $result = CheckResult::INFO;
+    }
     elseif (is_null($error_level) || $error_level != 'hide') {
       $result = CheckResult::FAIL;
     }

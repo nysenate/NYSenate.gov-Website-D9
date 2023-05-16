@@ -95,6 +95,21 @@ class OembedProvidersSettingsForm extends ConfigFormBase {
       ],
     ];
 
+    $form['provider_store_reset'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Provider caching'),
+    ];
+
+    $form['provider_store_reset']['button'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Clear Provider Cache'),
+      '#name' => 'provider_store_reset',
+    ];
+
+    $form['provider_store_reset']['markup'] = [
+      '#markup' => $this->t('<p>Drupal caches the oEmbed provider list with KeyValue storage, so normal cache clears won\'t clear the provider list.</p>'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -102,6 +117,10 @@ class OembedProvidersSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    if ($form_state->getTriggeringElement()['#name'] == 'provider_store_reset') {
+      return;
+    }
+
     parent::validateForm($form, $form_state);
 
     if ($form_state->getValue('oembed_providers_url') === ''
@@ -115,16 +134,21 @@ class OembedProvidersSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->configFactory->getEditable('media.settings')
-      ->set('oembed_providers_url', $form_state->getValue('oembed_providers_url'))
-      ->save();
+    if ($form_state->getTriggeringElement()['#name'] == 'provider_store_reset') {
+      \Drupal::service('keyvalue')->get('media')->delete('oembed_providers');
+    }
+    else {
+      $this->configFactory->getEditable('media.settings')
+        ->set('oembed_providers_url', $form_state->getValue('oembed_providers_url'))
+        ->save();
 
-    $this->configFactory->getEditable(static::SETTINGS)
-      ->set('external_fetch', (bool) $form_state->getValue('external_fetch'))
-      ->save();
+      $this->configFactory->getEditable(static::SETTINGS)
+        ->set('external_fetch', (bool) $form_state->getValue('external_fetch'))
+        ->save();
 
-    parent::submitForm($form, $form_state);
-    $this->defaultCache->delete('oembed_providers:oembed_providers');
+      parent::submitForm($form, $form_state);
+      $this->defaultCache->delete('oembed_providers:oembed_providers');
+    }
   }
 
 }

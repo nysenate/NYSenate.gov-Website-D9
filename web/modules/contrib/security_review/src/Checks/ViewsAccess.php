@@ -5,12 +5,22 @@ namespace Drupal\security_review\Checks;
 use Drupal\Core\Link;
 use Drupal\security_review\Check;
 use Drupal\security_review\CheckResult;
+use Drupal\security_review\CheckSettings\ViewSettings;
 use Drupal\views\Entity\View;
 
 /**
  * Checks for Views that do not check access.
  */
 class ViewsAccess extends Check {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct() {
+    parent::__construct();
+    $this->settings = new ViewSettings($this, $this->config);
+  }
+
 
   /**
    * {@inheritdoc}
@@ -39,14 +49,19 @@ class ViewsAccess extends Check {
     $findings = [];
 
     $views = View::loadMultiple();
-    /** @var View[] $views */
+    /** @var \Drupal\views\Entity\View[] $views */
 
     // Iterate through views and their displays.
+    $default = NULL;
+    $ignore_defaults = $this->settings()->get('ignore_default', FALSE);
     foreach ($views as $view) {
       if ($view->status()) {
         foreach ($view->get('display') as $display_name => $display) {
-          $access = &$display['display_options']['access'];
-          if (isset($access) && $access['type'] == 'none') {
+          $access = $display['display_options']['access'] ?? $default;
+          if ($display_name == 'default' && $ignore_defaults) {
+            $default = $access;
+          }
+          elseif (isset($access) && $access['type'] == 'none') {
             // Access is not controlled for this display.
             $findings[$view->id()][] = $display_name;
           }
@@ -91,7 +106,7 @@ class ViewsAccess extends Check {
     $items = [];
     foreach ($findings as $view_id => $displays) {
       $view = View::load($view_id);
-      /** @var View $view */
+      /** @var \Drupal\views\Entity\View $view */
 
       foreach ($displays as $display) {
         $label = $view->label() . ': ' . $display;
@@ -124,7 +139,8 @@ class ViewsAccess extends Check {
       return '';
     }
 
-    $output = $this->t('Views without access check:') . ":\n";
+    $output = $this->t('Views without access check:');
+    $output .= ":\n";
     foreach ($findings as $view_id => $displays) {
       $output .= "\t" . $view_id . ": " . implode(', ', $displays) . "\n";
     }

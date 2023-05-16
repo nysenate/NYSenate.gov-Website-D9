@@ -99,9 +99,39 @@ class FilePermissions extends Check {
    * {@inheritdoc}
    */
   public function help() {
+    $markup = <<<HTML
+In addition to inspecting existing directories,
+      this test attempts to create and write to your file system. Look in
+      your security_review module directory on the server for:
+       <ul>
+         <li>
+           A file named: file_write_test.YYYYMMDDHHMMSS
+           <ul>
+             <li>
+               If this file exists the web server can write files to the
+             security_review module directory and perhaps to other directories.
+             You should correct the file permissions on all code directories of
+             your Drupal installation.
+             </li>
+          </ul>
+         </li>
+         <li>
+           Open the file IGNOREME.txt.
+           <ul>
+             <li>
+              If a timestamp is appended at the end of
+              it.  That means the web server has permission to write to your files.
+              This is insecure and the permissions should be corrected.
+             </li>
+           </ul>
+         </li>
+       </ul>
+HTML;
+
     $paragraphs = [];
     $paragraphs[] = $this->t('It is dangerous to allow the web server to write to files inside the document root of your server. Doing so could allow Drupal to write files that could then be executed. An attacker might use such a vulnerability to take control of your site. An exception is the Drupal files, private files, and temporary directories which Drupal needs permission to write to in order to provide features like file attachments.');
     $paragraphs[] = $this->t('In addition to inspecting existing directories, this test attempts to create and write to your file system. Look in your security_review module directory on the server for files named file_write_test.YYYYMMDDHHMMSS and for a file called IGNOREME.txt which gets a timestamp appended to it if it is writeable.');
+    $paragraphs[] = $markup;
     $paragraphs[] = new Link(
       $this->t('Read more about file system permissions in the handbooks.'),
       Url::fromUri('http://drupal.org/node/244924')
@@ -210,6 +240,20 @@ class FilePermissions extends Check {
   }
 
   /**
+   * Get the sites.php file.
+   *
+   * @return array
+   *   Sites file.
+   */
+  private function getSites() {
+    $sites = [];
+    if (file_exists(DRUPAL_ROOT . '/sites/sites.php')) {
+      include DRUPAL_ROOT . '/sites/sites.php';
+    }
+    return $sites;
+  }
+
+  /**
    * Returns an array of relative and canonical paths to ignore.
    *
    * @return string[]
@@ -218,6 +262,12 @@ class FilePermissions extends Check {
   protected function getIgnoreList() {
     $file_path = PublicStream::basePath();
     $ignore = ['..', 'CVS', '.git', '.svn', '.bzr', realpath($file_path)];
+
+    foreach ($this->getSites() as $site) {
+      $ignore[] = realpath(PublicStream::basePath('sites/' . $site));
+    }
+
+    $ignore = array_unique($ignore);
 
     // Add temporary files directory if it's set.
     $temp_path = \Drupal::service('file_system')->getTempDirectory();
@@ -233,6 +283,21 @@ class FilePermissions extends Check {
         $private_files = substr($private_files, strrpos($private_files, '/') + 1);
       }
       $ignore[] = $private_files;
+    }
+
+    // If the assets stream wrapper service exists, get the assets path.
+    //
+    // @see https://www.drupal.org/project/drupal/issues/3027639
+    // Drupal core issue to add this. Planned to be released in Drupal core
+    // 10.1.
+    //
+    // @todo Inject this into the constructor?
+    if ($this->container->has('stream_wrapper.assets')) {
+
+      $assetsPath = $this->container->get('stream_wrapper.assets')->basePath();
+
+      $ignore[] = \realpath($assetsPath);
+
     }
 
     $this->moduleHandler()->alter('security_review_file_ignore', $ignore);

@@ -17,7 +17,7 @@ class ChecklistTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['security_review', 'security_review_test'];
+  protected static $modules = ['security_review', 'security_review_test'];
 
   /**
    * The security_review.checklist service.
@@ -57,7 +57,7 @@ class ChecklistTest extends KernelTestBase {
   /**
    * Sets up the environment, populates the $checks variable.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->checklist = \Drupal::getContainer()

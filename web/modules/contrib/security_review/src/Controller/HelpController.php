@@ -68,7 +68,7 @@ class HelpController extends ControllerBase {
   /**
    * Serves as an entry point for the help pages.
    *
-   * @param string|NULL $namespace
+   * @param string|null $namespace
    *   The namespace of the check (null if general page).
    * @param string $title
    *   The name of the check.

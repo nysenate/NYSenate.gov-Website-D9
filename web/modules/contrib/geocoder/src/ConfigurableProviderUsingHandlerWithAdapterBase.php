@@ -94,7 +94,7 @@ abstract class ConfigurableProviderUsingHandlerWithAdapterBase extends ProviderU
    * {@inheritdoc}
    */
   protected function doGeocode($source) {
-    $this->throttle->waitForAvailability($this->pluginId, isset($this->configuration['throttle']) ? $this->configuration['throttle'] : []);
+    $this->throttle->waitForAvailability($this->pluginId, $this->configuration['throttle'] ?? []);
     return parent::doGeocode($source);
   }
 
@@ -102,7 +102,7 @@ abstract class ConfigurableProviderUsingHandlerWithAdapterBase extends ProviderU
    * {@inheritdoc}
    */
   protected function doReverse($latitude, $longitude) {
-    $this->throttle->waitForAvailability($this->pluginId, isset($this->configuration['throttle']) ? $this->configuration['throttle'] : []);
+    $this->throttle->waitForAvailability($this->pluginId, $this->configuration['throttle'] ?? []);
     return parent::doReverse($latitude, $longitude);
   }
 

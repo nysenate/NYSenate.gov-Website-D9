@@ -247,7 +247,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
           // Allow others modules to adjust the address string.
           Drupal::service('module_handler')->alter('geocode_entity_field_address_string', $value['value'], $field);
 
-          $failure_status_message = t("Unable to geocode '@text'.", ['@text' => isset($value['value']) ? $value['value'] : '']);
+          $failure_status_message = t("Unable to geocode '@text'.", ['@text' => $value['value'] ?? '']);
           $geo_collection = isset($value['value']) ? \Drupal::service('geocoder')->geocode($value['value'], $providers) : NULL;
           break;
 

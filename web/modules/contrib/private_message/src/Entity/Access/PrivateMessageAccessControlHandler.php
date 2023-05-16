@@ -74,19 +74,23 @@ class PrivateMessageAccessControlHandler extends EntityAccessControlHandler impl
             return AccessResult::allowed();
           }
 
+          if ($account->hasPermission('administer private messages')) {
+            return AccessResult::allowed();
+          }
+
           break;
 
         case 'delete':
           if ($entity->getOwnerId() == $account->id()) {
-            return AccessResult::allowed();
+            return AccessResult::allowedIfHasPermissions($account,
+              [
+                'delete own private message',
+                'delete any private message',
+              ], 'OR');
           }
 
-          $private_message_thread = $this->privateMessageService->getThreadFromMessage($entity);
-          if ($private_message_thread->isMember($account->id())) {
-            return AccessResult::allowed();
-          }
+          return AccessResult::allowedIfHasPermission($account, 'delete any private message');
 
-          break;
       }
     }
 

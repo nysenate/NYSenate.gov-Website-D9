@@ -46,7 +46,6 @@ class File extends AbstractProvider implements Provider {
       }
     }
     throw new LogicException(sprintf('Could not find geo data in file: "%s".', basename($filename)));
-    ;
   }
 
   /**
@@ -75,11 +74,9 @@ class File extends AbstractProvider implements Provider {
       }
     }
 
-    list($degrees, $minutes, $seconds) = $coordinate;
+    [$degrees, $minutes, $seconds] = $coordinate;
     $sign = ($hemisphere == 'W' || $hemisphere == 'S') ? -1 : 1;
-    $value = $sign * ($degrees + $minutes / 60 + $seconds / 3600);
-
-    return $value;
+    return $sign * ($degrees + $minutes / 60 + $seconds / 3600);
   }
 
   /**

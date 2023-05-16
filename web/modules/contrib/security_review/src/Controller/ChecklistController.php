@@ -19,7 +19,7 @@ class ChecklistController extends ControllerBase {
   /**
    * The CSRF Token generator.
    *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
    */
   protected $csrfToken;
 

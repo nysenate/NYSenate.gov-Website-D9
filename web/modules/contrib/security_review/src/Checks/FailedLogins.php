@@ -63,7 +63,7 @@ class FailedLogins extends Check {
     // Count the number of failed logins per IP.
     $entries = [];
     foreach ($db_result as $row) {
-      $ip = unserialize($row->variables)['%ip'];
+      $ip = unserialize($row->variables, ['allowed_classes' => FALSE])['%ip'];
       $entry_for_ip = &$entries[$ip];
 
       if (!isset($entry_for_ip)) {
@@ -131,7 +131,8 @@ class FailedLogins extends Check {
       return '';
     }
 
-    $output = $this->t('Suspicious IP addresses:') . ":\n";
+    $output = $this->t('Suspicious IP addresses:');
+    $output .= ":\n";
     foreach ($findings as $ip) {
       $output .= "\t" . $ip . "\n";
     }

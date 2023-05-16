@@ -87,9 +87,11 @@ class PasswordHistory extends PasswordConstraintBase implements ContainerFactory
       if ($this->getPasswordService()->check($password, $hash->pass_hash)) {
         $configuration = $this->getConfiguration();
         if ($configuration['history_repeats'] == 0) {
-          $validation->setErrorMessage($this->t('No one of the old passwords can be reused. Choose a different password'));
+          $validation->setErrorMessage($this->t('Previous passwords cannot be reused. Choose a different password.'));
         }
-        $validation->setErrorMessage($this->formatPlural($configuration['history_repeats'], 'The last @count password cannot be reused. Choose a different password.', 'The last @count passwords cannot be reused. Choose a different password.', ['@count' => $configuration['history_repeats']]));
+        else {
+          $validation->setErrorMessage($this->formatPlural($configuration['history_repeats'], 'The last @count password cannot be reused. Choose a different password.', 'The last @count passwords cannot be reused. Choose a different password.', ['@count' => $configuration['history_repeats']]));
+        }
       }
     }
 

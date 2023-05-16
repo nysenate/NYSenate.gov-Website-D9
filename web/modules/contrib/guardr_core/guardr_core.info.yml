@@ -1,7 +1,7 @@
 name: Guardr Core
 type: module
 description: Custom configuration related to the Guardr distribution.
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 package: Guardr
 dependencies:
 #
@@ -20,8 +20,3 @@ dependencies:
 # Shared accounts are not permitted by PCI v3.0.
   - session_limit:session_limit
   - username_enumeration_prevention:username_enumeration_prevention
-
-# Information added by Drupal.org packaging script on 2022-08-23
-version: '2.0.2'
-project: 'guardr_core'
-datestamp: 1661222828

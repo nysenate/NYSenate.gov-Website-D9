@@ -69,7 +69,14 @@ class ConditionalFieldsElementAlterHelper {
         if (!$dependencies) {
           return $element;
         }
-
+         // We only add requirement on the widget parent and not on child.
+        if (
+          count($field['#array_parents']) > 1 &&
+          $field['#array_parents'][count($field['#array_parents']) - 2] === 'widget' &&
+          is_int($field['#array_parents'][count($field['#array_parents']) - 1])
+        ) {
+          return $element;
+        }
         $field_name = reset($field['#array_parents']);
         // Attach dependent.
         if (isset($dependencies['dependents'][$field_name])) {
@@ -223,7 +230,7 @@ class ConditionalFieldsElementAlterHelper {
       $dependent_parents = $dependent['#parents'];
       // If the field type is Date, we need to remove the last "date" parent key,
       // since it is not part of the $form_state value when we validate it.
-      if ($dependent['#type'] == 'date') {
+      if (isset($dependent['#type']) && $dependent['#type'] === 'date') {
         array_pop($dependent_parents);
       }
     }

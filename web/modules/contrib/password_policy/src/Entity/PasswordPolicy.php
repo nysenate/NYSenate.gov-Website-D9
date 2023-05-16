@@ -34,7 +34,7 @@ use Drupal\password_policy\PasswordPolicyInterface;
  *   },
  *   links = {
  *     "add-form" = "/admin/config/security/password-policy/add",
- *     "edit-form" = "/admin/config/security/password-policy/{machine_name}",
+ *     "edit-form" = "/admin/config/security/password-policy/{password_policy}",
  *     "delete-form" = "/admin/config/security/password-policy/policy/delete/{password_policy}",
  *     "collection" = "/admin/config/security/password-policy"
  *   },

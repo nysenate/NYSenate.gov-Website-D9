@@ -72,7 +72,10 @@ class CustomProvidersUiTest extends WebDriverTestBase {
       ->setValue('Test Provider');
     // For some reason the machine name field won't auto-populate, so make
     // it visible and manually populate it.
+    // D9-D10.0 uses 'visually-hidden'.
     $this->assertJsCondition("jQuery('.js-form-type-machine-name').removeClass('visually-hidden')");
+    // D10.1+ uses 'hidden'.
+    $this->assertJsCondition("jQuery('.js-form-type-machine-name').removeClass('hidden')");
     $page
       ->findField('provider_url')
       ->setValue('https://test-provider.com');

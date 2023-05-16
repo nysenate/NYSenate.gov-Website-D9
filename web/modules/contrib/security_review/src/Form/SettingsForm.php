@@ -169,7 +169,7 @@ class SettingsForm extends ConfigFormBase {
 
       // If not empty, add it to the form.
       if (!empty($check_form)) {
-        // If this is the first non-empty setting page initialize the 'details'
+        // If this is the first non-empty setting page initialize the 'details'.
         if (!isset($form['advanced']['check_specific'])) {
           $form['advanced']['check_specific'] = [
             '#type' => 'details',
@@ -192,7 +192,7 @@ class SettingsForm extends ConfigFormBase {
         $sub_form = [
           '#type' => 'details',
           '#title' => $title,
-          '#open' => TRUE,
+          '#open' => FALSE,
           '#tree' => TRUE,
           'form' => $check_form,
         ];

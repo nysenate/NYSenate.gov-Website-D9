@@ -41,7 +41,7 @@ class GeocodeOriginAutocomplete extends GeocodeOrigin {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Geocoder $geocoder, ProviderPluginManager $providerPluginManager, FormatterPluginManager $formatterPluginManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $geocoder, $providerPluginManager, $formatterPluginManager);
-    $this->useAutocomplete = isset($configuration['use_autocomplete']) ? $configuration['use_autocomplete'] : 1;
+    $this->useAutocomplete = $configuration['use_autocomplete'] ?? 1;
   }
 
   /**

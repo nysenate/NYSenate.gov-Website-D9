@@ -16,7 +16,7 @@ class SecurityReviewTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['security_review'];
+  protected static $modules = ['security_review'];
 
   /**
    * The security_review service.
@@ -28,7 +28,7 @@ class SecurityReviewTest extends KernelTestBase {
   /**
    * Sets up the testing environment.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(static::$modules);
     $this->securityReview = \Drupal::getContainer()->get('security_review');

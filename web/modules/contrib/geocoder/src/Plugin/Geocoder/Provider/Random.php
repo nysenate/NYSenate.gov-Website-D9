@@ -80,7 +80,7 @@ class Random extends ProviderBase {
       return $value;
     }
 
-    return isset($value[$type]) ? $value[$type] : $value;
+    return $value[$type] ?? $value;
   }
 
   /**

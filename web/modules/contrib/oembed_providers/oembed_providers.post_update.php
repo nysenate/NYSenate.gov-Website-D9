@@ -69,3 +69,18 @@ function oembed_providers_post_update_update_media_type_dependencies() {
     }
   }
 }
+
+/**
+ * Update Media Type dependencies on Provider Buckets.
+ */
+function oembed_providers_post_update_update_media_type_dependencies_2() {
+  // Update media types using 'oembed:video' media source to remove dependency
+  // on the oembed_providers module.
+  $media_types = \Drupal::service('entity_type.manager')->getStorage('media_type')->loadMultiple();
+  foreach ($media_types as $media_type) {
+    $plugin_id = $media_type->getSource()->getPluginId();
+    if ($plugin_id == "oembed:video") {
+      $media_type->save();
+    }
+  }
+}

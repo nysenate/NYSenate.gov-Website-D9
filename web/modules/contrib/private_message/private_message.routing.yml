@@ -39,7 +39,7 @@ entity.private_message_thread.clear_personal_history_form:
 private_message.private_message_create:
   path: '/private-message/create'
   defaults:
-  # Calls the form.add controller, defined in the contact entity.
+    # Calls the form.add controller, defined in the contact entity.
     _entity_form: private_message.add
     _title: 'Create Private Message'
   requirements:
@@ -49,13 +49,22 @@ private_message.private_message_create:
 entity.private_message.canonical:
   path: '/private-message/{private_message}'
   defaults:
-  # Calls the view controller, defined in the annotation of the contact entity
+    # Calls the view controller, defined in the annotation of the contact entity
     _entity_view: 'private_message'
     _title: 'View Private Message'
   requirements:
-  # Calls the access controller of the entity, $operation 'view'
+    # Calls the access controller of the entity, $operation 'view'
     _entity_access: 'private_message.view'
     _permission: 'use private messaging system,access user profiles'
+
+entity.private_message.delete:
+  path: '/private-message/{private_message}/delete'
+  defaults:
+    _entity_form: 'private_message.delete'
+    _title: 'Delete Private Message'
+  requirements:
+    private_message: \d+
+    _entity_access: 'private_message.delete'
 
 private_message.admin_structure:
   path: '/admin/structure/private-message'

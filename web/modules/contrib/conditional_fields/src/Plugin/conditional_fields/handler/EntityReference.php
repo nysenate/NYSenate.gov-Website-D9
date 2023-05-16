@@ -4,7 +4,7 @@ namespace Drupal\conditional_fields\Plugin\conditional_fields\handler;
 
 use Drupal\conditional_fields\ConditionalFieldsHandlerBase;
 use Drupal\conditional_fields\ConditionalFieldsInterface;
-use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides states handler for entity reference fields.
@@ -28,20 +28,18 @@ class EntityReference extends ConditionalFieldsHandlerBase {
         if (empty($value_form)) {
           break;
         }
+        $entity_type = \Drupal::entityTypeManager()->getStorage($field["#target_type"]);
         if ($options['field_cardinality'] == 1) {
-          $node = Node::load($value_form[0]['target_id']);
-          if ($node instanceof Node) {
-            // Create an array of valid formats of title for autocomplete.
-            $state[$options['state']][$options['selector']] = $this->getAutocompleteSuggestions($node);
-          }
+          $entity = $entity_type->load($value_form[0]['target_id']);
+          $state[$options['state']][$options['selector']] = $this->getAutocompleteSuggestions($entity);
         }
         else {
           $ids = array_column($value_form, 'target_id');
-          $nodes = Node::loadMultiple($ids);
-          if (!empty($nodes)) {
-            foreach (array_values($nodes) as $key => $node) {
+          $entities = $entity_type->loadMultiple($ids);
+          if (!empty($entities)) {
+            foreach (array_values($entities) as $key => $entity) {
               $selector = str_replace('[0]', "[{$key}]", $options['selector']);
-              $state[$options['state']][$selector] = $this->getAutocompleteSuggestions($node);
+              $state[$options['state']][$selector] = $this->getAutocompleteSuggestions($entity);
             }
           }
         }
@@ -57,19 +55,18 @@ class EntityReference extends ConditionalFieldsHandlerBase {
   /**
    * Get a variants of node title for autocomplete.
    *
-   * @param \Drupal\node\Entity\Node $node
-   *   A node object.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   An entity object.
    *
    * @return array
    *   An array with a few relevant suggestions for autocomplete.
    */
-  private function getAutocompleteSuggestions(Node $node) {
-    /** @var \Drupal\node\Entity\Node $node */
+  private function getAutocompleteSuggestions(EntityInterface $entity) {
     return [
       // Node title (nid).
-      ['value' => $node->label() . ' (' . $node->id() . ')'],
+      ['value' => $entity->label() . ' (' . $entity->id() . ')'],
       // Node title.
-      ['value' => $node->label()],
+      ['value' => $entity->label()],
     ];
   }
 

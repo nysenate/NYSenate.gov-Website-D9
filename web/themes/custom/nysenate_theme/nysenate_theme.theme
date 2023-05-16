@@ -1423,14 +1423,17 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
       $issues = [];
       if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-        if ($node->field_issues->target_id) {
-          /** @var \Drupal\taxonomy\Entity\Term $term */
-          $term = $term_storage->load($node->field_issues->target_id);
-          if ($term instanceof TermInterface) {
-            $issues[] = [
-              'name' => $term->label(),
-              'url' => $term->toUrl()->toString(),
-            ];
+        $term_issues = $node->get('field_issues')->getValue();
+        if ($term_issues) {
+          foreach ($term_issues as $issue) {
+            /** @var \Drupal\taxonomy\Entity\Term $term */
+            $term = $term_storage->load($issue['target_id']);
+            if ($term instanceof TermInterface) {
+              $issues[] = [
+                'name' => $term->label(),
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
           }
         }
       }

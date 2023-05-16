@@ -3,6 +3,7 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImportProcessor;
 
 use Drupal\node\Entity\Node;
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\BillHelper;
 use Drupal\nys_openleg_imports\ImportProcessorBase;
 
@@ -92,7 +93,7 @@ class Agendas extends ImportProcessorBase {
       'field_ol_agenda_notes' => $item->meeting->notes,
       'field_ol_committee' => $committee ?: NULL,
       'field_ol_committee_name' => $comm_name,
-      'field_ol_meeting_date' => strtotime($item->meeting->meetingDateTime),
+      'field_ol_meeting_date' => date(Request::OPENLEG_TIME_SIMPLE, strtotime($item->meeting->meetingDateTime)),
       'field_ol_week' => $item->agendaId->number,
       'field_ol_year' => $item->agendaId->year,
       'field_from_openleg' => TRUE,

@@ -6,6 +6,7 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 
 /**
@@ -336,5 +337,73 @@ function nys_blocks_update_9004() {
       'format' => 'full_html',
     ];
     $block->save();
+  }
+}
+
+/**
+ * Update the Student Programs landing page blocks.
+ *
+ * Update the Contact Us block.
+ * Hide the Student Programs block title.
+ * Remove the Student Program News (title) block.
+ */
+function nys_blocks_update_9005() {
+  // Student Programs landing node.
+  $nid = 12004496;
+
+  $node = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->load($nid);
+
+  if ($node instanceof NodeInterface) {
+    if ($node->hasField('field_landing_blocks') &&
+      !$node->get('field_landing_blocks')->isEmpty()) {
+      foreach ($node->get('field_landing_blocks') as $key => $value) {
+        if (!is_numeric($key)) {
+          continue;
+        }
+
+        /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+        $block_content = $value->entity ?? NULL;
+        $title = $block_content->field_title->value ?? NULL;
+
+        if ($block_content->bundle() == 'text') {
+
+          if ($title == 'Contact Us') {
+            // Create Contact Us block and replace the text block.
+            $contactUsBlock = BlockContent::create([
+              'info' => 'Contact Us',
+              'type' => 'contact_us',
+              'revision_user' => 1,
+              'field_contact_us' => [
+                'plugin_id' => 'nys_blocks_contact_us',
+                'settings' => [],
+              ],
+            ]);
+            $contactUsBlock->save();
+
+            $node->field_landing_blocks[$key] = [
+              'target_id' => $contactUsBlock->id(),
+              'target_revision_id' => $contactUsBlock->getRevisionId(),
+            ];
+
+            // Save the node.
+            $node->save();
+          }
+          elseif ($title == 'Student Programs') {
+            // Hide the Student Programs block title.
+            $block_content->field_show_title = 0;
+            $block_content->save();
+          }
+          elseif ($title == 'Student Program News') {
+            // Remove the Student Program News (title) block.
+            unset($node->field_landing_blocks[$key]);
+
+            // Save the node.
+            $node->save();
+          }
+        }
+      }
+    }
   }
 }

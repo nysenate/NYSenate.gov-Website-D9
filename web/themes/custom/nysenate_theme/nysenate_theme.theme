@@ -866,6 +866,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
 
       if ($node->hasField('field_session_calendars') && !$node->field_session_calendars->isEmpty() && $node->field_session_calendars->entity instanceof NodeInterface) {
         $url_calendar = $node->field_session_calendars->entity->toUrl()->toString();
+        $url_calendar = $node->toUrl()->toString();
       }
 
       if (!$node->field_ustream->isEmpty()) {
@@ -1422,14 +1423,17 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
       $issues = [];
       if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-        if ($node->field_issues->target_id) {
-          /** @var \Drupal\taxonomy\Entity\Term $term */
-          $term = $term_storage->load($node->field_issues->target_id);
-          if ($term instanceof TermInterface) {
-            $issues[] = [
-              'name' => $term->label(),
-              'url' => $term->toUrl()->toString(),
-            ];
+        $term_issues = $node->get('field_issues')->getValue();
+        if ($term_issues) {
+          foreach ($term_issues as $issue) {
+            /** @var \Drupal\taxonomy\Entity\Term $term */
+            $term = $term_storage->load($issue['target_id']);
+            if ($term instanceof TermInterface) {
+              $issues[] = [
+                'name' => $term->label(),
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
           }
         }
       }

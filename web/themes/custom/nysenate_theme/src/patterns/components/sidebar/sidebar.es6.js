@@ -24,7 +24,10 @@
     },
     onResize: function (header) {
       try {
-        const headerBottom = parseInt(header.css('top'), 10) + header.height();
+        const headerBottom =
+          (header.hasClass('fixed')
+            ? parseInt(header.css('top'), 10)
+            : header.offset().top) + header.height();
         const sidebar = $('.sidebar');
         sidebar.css('--top', `${headerBottom}px`);
       }

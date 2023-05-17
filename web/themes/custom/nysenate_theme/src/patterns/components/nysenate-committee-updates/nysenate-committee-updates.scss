@@ -16,6 +16,19 @@
     position: relative;
     border-top: 1px solid $grey05;
 
+    @include breakpoint($bp-under-sm) {
+      display: flex;
+      flex-direction: column;
+
+      .l-panel-col {
+
+        &--lft,
+        &--ctr {
+          width: unset;
+        }
+      }
+    }
+
     .l-left {
       margin-top: 20px;
 

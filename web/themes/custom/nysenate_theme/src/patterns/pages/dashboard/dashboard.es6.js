@@ -25,6 +25,7 @@
 
       origNav.once('navigation').each(function () {
         const nav = origNav.clone().attr('id', 'js-sticky--dashboard--clone');
+        nav.addClass('fixed');
 
         const headerBar = nav.find('.c-header-bar');
 
@@ -58,7 +59,6 @@
         self.initToolbarObserver(origNav, nav, self.alignPosition);
       });
     },
-
     checkTopBarState: function (nav, headerBar) {
       let doc = $(document);
       let currentTop = doc.scrollTop();
@@ -72,6 +72,8 @@
       ) {
         headerBar.removeClass('collapsed');
       }
+
+      setTimeout(() => Drupal.behaviors.sidebar.onResize(nav), 300);
     },
     alignPosition: function (orig, clone, cloneTop) {
       try {

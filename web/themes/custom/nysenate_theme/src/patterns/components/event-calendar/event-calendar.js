@@ -218,7 +218,7 @@
       });
 
       // set default date value on load
-      const editDate = $('#edit-date');
+      const editDate = $('input[data-drupal-selector="edit-date"]');
       if (editDate && !editDate.val()) {
         const placeholder = editDate.attr('placeholder');
         editDate.val(placeholder);

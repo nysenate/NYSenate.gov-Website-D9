@@ -2967,8 +2967,22 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$var
       ->getViewBuilder('media')
       ->view($headshot, '160x160');
 
+    // Get Senator Microsite link.
+    $link = $term->toUrl()->toString();
+    $microsite_home = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+      'type' => 'microsite_page',
+      // Landing page.
+      'field_microsite_page_type' => '200005',
+      'field_senator_multiref' => $term->id(),
+    ]);
+
+    if (!empty($microsite_home)) {
+      $home = reset($microsite_home);
+      $link = $home->toUrl()->toString();
+    }
+
     $variables['current_duties'] = $term->field_current_duties->value ?? '';
-    $variables['link'] = $term->toUrl()->toString();
+    $variables['link'] = $link;
     $variables['party'] = $parties;
     $variables['district'] = (int) get_senator_district($term->id());
   }

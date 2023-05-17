@@ -98,6 +98,23 @@
           orig.removeClass('fixed');
           orig.removeAttr('style');
         }
+
+        setTimeout(() => Drupal.behaviors.dashboard.alignFixedTableHeader(clone), 300);
+      }
+      catch (err) {
+        return err;
+      }
+    },
+    alignFixedTableHeader: function (clone) {
+      try {
+        const pageUserTableTh = $('.sticky-header');
+
+        if (!pageUserTableTh) {
+          return;
+        }
+
+        const cloneTop = clone.position().top + clone.height();
+        pageUserTableTh.css('top', `${typeof cloneTop === 'number' ? cloneTop : 0}px`);
       }
       catch (err) {
         return err;

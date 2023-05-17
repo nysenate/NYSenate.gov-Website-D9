@@ -190,7 +190,6 @@ class EditProfileForm extends ProfileForm {
       'field_last_name',
       'field_address',
       'field_profile_picture',
-      'field_dateofbirth',
       'field_gender_user',
       'field_user_receive_emails',
     ];
@@ -198,13 +197,15 @@ class EditProfileForm extends ProfileForm {
       $form[$name]['#type'] = 'hidden';
     }
 
+    // Remove original field_dateofbirth, to prevent error.
+    unset($form['field_dateofbirth']);
+
     // Clean-up fields.
     unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_username']['#description']);
     unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_email']['#description']);
     unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_address']['widget'][0]['#title']);
     unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#title']);
     unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#description']);
-    unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_dateofbirth']['widget']['#title']);
     unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#description']);
     $form['dashboard_profile_edit']['form_wrapper']['right']['field_gender_user']['widget']['#title'] = 'GENDER (OPTIONAL)';
     $form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#title'] = 'LET MY SENATOR CONTACT ME.';

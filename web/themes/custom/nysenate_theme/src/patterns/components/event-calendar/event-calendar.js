@@ -216,6 +216,13 @@
         $(this).hide();
         $(this).parent().find('#container .Zebra_DatePicker').show();
       });
+
+      // set default date value on load
+      const editDate = $('input[data-drupal-selector="edit-date"]');
+      if (editDate && !editDate.val()) {
+        const placeholder = editDate.attr('placeholder');
+        editDate.val(placeholder);
+      }
     }
   };
 })(document, Drupal, jQuery);

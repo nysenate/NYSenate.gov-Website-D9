@@ -3,6 +3,7 @@
 namespace Drupal\nys_dashboard\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -67,6 +68,26 @@ class EditProfileForm extends ProfileForm {
     $form['account']['current_pass']['#access'] = FALSE;
     $form['account']['status']['#access'] = FALSE;
     $form['account']['roles']['#access'] = FALSE;
+
+    if (isset($form['actions']['delete'])) {
+      $form['actions']['delete']['#access'] = FALSE;
+    }
+
+    // Profile Image placeholder.
+    if (isset($form['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'])) {
+      $form['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'] =
+        new FormattableMarkup(
+          '<div class="nys-senator--thumb nys-senator--thumb--placeholder">
+            <img src="/themes/custom/nysenate_theme/src/assets/default-avatar.png" alt="Default avatar"/>
+          </div>',
+          []
+        );
+    }
+
+    // Profile Picture button label.
+    if (isset($form['field_profile_picture']['widget']['open_button']['#value'])) {
+      $form['field_profile_picture']['widget']['open_button']['#value'] = $this->t('Upload Image');
+    }
 
     // These fields are not editable by the user.
     $disable = [
@@ -169,7 +190,6 @@ class EditProfileForm extends ProfileForm {
       'field_last_name',
       'field_address',
       'field_profile_picture',
-      'field_dateofbirth',
       'field_gender_user',
       'field_user_receive_emails',
     ];
@@ -177,13 +197,15 @@ class EditProfileForm extends ProfileForm {
       $form[$name]['#type'] = 'hidden';
     }
 
+    // Remove original field_dateofbirth, to prevent error.
+    unset($form['field_dateofbirth']);
+
     // Clean-up fields.
     unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_username']['#description']);
     unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_email']['#description']);
     unset($form['dashboard_profile_edit']['form_wrapper']['left']['field_address']['widget'][0]['#title']);
     unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#title']);
     unset($form['dashboard_profile_edit']['form_wrapper']['center']['field_profile_picture']['widget']['#description']);
-    unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_dateofbirth']['widget']['#title']);
     unset($form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#description']);
     $form['dashboard_profile_edit']['form_wrapper']['right']['field_gender_user']['widget']['#title'] = 'GENDER (OPTIONAL)';
     $form['dashboard_profile_edit']['form_wrapper']['right']['field_user_receive_emails']['widget']['value']['#title'] = 'LET MY SENATOR CONTACT ME.';

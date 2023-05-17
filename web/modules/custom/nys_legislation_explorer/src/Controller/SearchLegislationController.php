@@ -41,6 +41,10 @@ class SearchLegislationController extends ControllerBase {
       $request->query->get('full_text') ||
       $request->query->get('committee') ||
       $request->query->get('transcript_type') ||
+      $request->query->get('meeting_month') ||
+      $request->query->get('meeting_year') ||
+      $request->query->get('publish_date_month') || 
+      $request->query->get('publish_date_year') || 
       $request->query->get('month')) {
       try {
         $view = Views::getView('advanced_legislation_search');

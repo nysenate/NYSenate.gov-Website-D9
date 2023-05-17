@@ -72,7 +72,13 @@ class SearchAdvancedLegislationForm extends FormBase {
       'December',
     ];
 
-    return $months;
+    $options = [];
+    for ($i = 0; $i < 12; $i++) {
+      $value = str_pad($i + 1, 2, '0', STR_PAD_LEFT);
+      $options[$value] = $months[$i];
+    }
+
+    return $options;
   }
 
   /**
@@ -361,8 +367,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'agenda':
         $params = [
           'type' => $values['type'] ?: '',
-          'month' => $values['month'] ?: '',
-          'year' => $values['year'] ?: '',
+          'meeting_month' => $values['month'] ?: '',
+          'meeting_year' => $values['year'] ?: '',
           'committee' => $values['committee'] ?: '',
         ];
         break;
@@ -370,8 +376,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'calendar':
         $params = [
           'type' => $values['type'] ?: '',
-          'month' => $values['month'] ?: '',
-          'year' => $values['year'] ?: '',
+          'publish_date_month' => $values['month'] ?: '',
+          'publish_date_year' => $values['year'] ?: '',
         ];
         break;
 
@@ -379,8 +385,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'public_hearing':
         $params = [
           'type' => 'transcript' ?: '',
-          'month' => $values['month'] ?: '',
-          'year' => $values['year'] ?: '',
+          'publish_date_month' => $values['month'] ?: '',
+          'publish_date_year' => $values['year'] ?: '',
           'full_text' => $values['full_text'] ?: '',
           'transcript_type' => $values['type'] ?: '',
         ];

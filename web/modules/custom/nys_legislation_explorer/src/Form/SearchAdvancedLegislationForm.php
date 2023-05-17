@@ -178,7 +178,6 @@ class SearchAdvancedLegislationForm extends FormBase {
 
     $bill_years = [];
     $bill_years['0'] = 'Any';
-    $years_option['0'] = 'Any';
     foreach ($this->getSessionYearList() as $year) {
       $bill_years[$year] = $year . '-' . ($year + 1);
       $years_option[$year] = $year;
@@ -340,6 +339,13 @@ class SearchAdvancedLegislationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $params = [];
+    if ($values['month'] && $values['year']) {
+      $start_month = $values['month'];
+      $start_year = $values['year'];
+      $end_month = $values['month'];
+      $end_year = $values['year'];
+      $date_range = sprintf('%04d-%02d--%04d-%02d', $start_year, $start_month, $end_year, $end_month);
+    }
     switch ($values['type']) {
       case 'bill':
         $params = [
@@ -367,8 +373,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'agenda':
         $params = [
           'type' => $values['type'] ?: '',
-          'meeting_month' => $values['month'] ?: '',
-          'meeting_year' => $values['year'] ?: '',
+          'meeting_date' => $date_range ?: '',
           'committee' => $values['committee'] ?: '',
         ];
         break;
@@ -376,8 +381,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'calendar':
         $params = [
           'type' => $values['type'] ?: '',
-          'publish_date_month' => $values['month'] ?: '',
-          'publish_date_year' => $values['year'] ?: '',
+          'publish_date' => $date_range ?: '',
         ];
         break;
 
@@ -385,10 +389,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'public_hearing':
         $params = [
           'type' => 'transcript' ?: '',
-          'publish_date_month' => $values['month'] ?: '',
-          'publish_date_year' => $values['year'] ?: '',
-          'full_text' => $values['full_text'] ?: '',
-          'transcript_type' => $values['type'] ?: '',
+          'publish_date' => $date_range ?: '',
         ];
         break;
 

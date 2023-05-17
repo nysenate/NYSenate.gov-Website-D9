@@ -1,0 +1,25 @@
+uuid: 758bd2dc-27ad-4693-8cbc-1f7c59462041
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_us
+    - field.storage.block_content.field_contact_us
+  module:
+    - block_field
+id: block_content.contact_us.field_contact_us
+field_name: field_contact_us
+entity_type: block_content
+bundle: contact_us
+label: 'Contact Us'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      nys_blocks_contact_us: nys_blocks_contact_us
+field_type: block_field

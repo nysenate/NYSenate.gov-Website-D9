@@ -16,6 +16,7 @@ dependencies:
     - field.storage.node.field_committee
     - field.storage.node.field_ol_co_sponsor_names
     - field.storage.node.field_ol_co_sponsors
+    - field.storage.node.field_publication_date
     - field.storage.node.field_ol_full_text
     - field.storage.node.field_image_caption
     - field.storage.node.field_issues
@@ -221,7 +222,7 @@ field_settings:
     label: 'Meeting Date'
     datasource_id: 'entity:node'
     property_path: field_date_range
-    type: solr_date_range
+    type: date
     dependencies:
       config:
         - field.storage.node.field_date_range
@@ -357,7 +358,7 @@ field_settings:
     label: 'Publish Date'
     datasource_id: 'entity:node'
     property_path: field_ol_publish_date
-    type: solr_date_range
+    type: date
     dependencies:
       config:
         - field.storage.node.field_ol_publish_date
@@ -401,6 +402,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_transcript_type
+  field_publication_date:
+    label: Date
+    datasource_id: 'entity:node'
+    property_path: field_publication_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_publication_date
   field_senator_multiref:
     label: Senator
     datasource_id: 'entity:node'

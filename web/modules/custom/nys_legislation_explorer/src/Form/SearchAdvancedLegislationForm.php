@@ -339,12 +339,18 @@ class SearchAdvancedLegislationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $params = [];
-    if ($values['month'] && $values['year']) {
-      $start_month = $values['month'];
-      $start_year = $values['year'];
-      $end_month = $values['month'];
-      $end_year = $values['year'];
-      $date_range = sprintf('%04d-%02d--%04d-%02d', $start_year, $start_month, $end_year, $end_month);
+    if (!empty($values['month']) && !empty($values['year']) && $values['month'] !== 'all') {
+      $year = $values['year'];
+      $month = $values['month'];
+      $first_day_month = date('Y-m-01', strtotime("$year-$month-01"));
+      $last_day_month = date('Y-m-t', strtotime("$year-$month-01"));
+      $date_range = $first_day_month . '--' . $last_day_month;
+    }
+    if (!empty($values['year']) && $values['month'] == 'all') {
+      $year = $values['year'];
+      $first_day_year = date('Y-m-d', strtotime("$year-01-01"));
+      $last_day_year = date('Y-m-d', strtotime("$year-12-31"));
+      $date_range = $first_day_year . '--' . $last_day_year;
     }
     switch ($values['type']) {
       case 'bill':
@@ -381,7 +387,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'calendar':
         $params = [
           'type' => $values['type'] ?: '',
-          'publish_date' => $date_range ?: '',
+          'date' => $date_range ?: '',
         ];
         break;
 

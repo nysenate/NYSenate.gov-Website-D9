@@ -41,6 +41,8 @@ div.sponsored-bill {
   border: 2px solid lightblue;
   border-radius: 2em;
   margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
 }
 .sponsored-bills-list {
   padding: 1em 0;
@@ -80,15 +82,25 @@ div.sponsored-bill {
   margin-top: 1em;
 }
 
+@media screen and (max-width: 767px) {
+  .sponsored-bill-chart .highcharts-root,
+  .sponsored-bill-chart .highcharts-container {
+    width: 100% !important;
+  }
+}
+
 @media screen and (min-width: 768px) {
-  .nys-senators-management-dashboard-bills .l-tab-bar .c-tab {
-    width: 50%;
+
+  div.sponsored-bill {
+    flex-direction: unset;
   }
+
   .sponsored-bill-description {
-    width: 49.7%;
+    flex: 1;
   }
+
   .sponsored-bill-chart {
-    width: 50%;
+    flex: 1;
     border-left: 2px solid lightgray;
     border-bottom-left-radius: 0;
   }

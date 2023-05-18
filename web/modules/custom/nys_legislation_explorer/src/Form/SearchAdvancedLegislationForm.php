@@ -178,6 +178,7 @@ class SearchAdvancedLegislationForm extends FormBase {
 
     $bill_years = [];
     $bill_years['0'] = 'Any';
+    $years_option = [];
     foreach ($this->getSessionYearList() as $year) {
       $bill_years[$year] = $year . '-' . ($year + 1);
       $years_option[$year] = $year;
@@ -339,6 +340,7 @@ class SearchAdvancedLegislationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $params = [];
+    $date_range = '';
     if (!empty($values['month']) && !empty($values['year']) && $values['month'] !== 'all') {
       $year = $values['year'];
       $month = $values['month'];
@@ -395,6 +397,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'public_hearing':
         $params = [
           'type' => 'transcript' ?: '',
+          'transcript_type' => $values['type'] ?: '',
           'publish_date' => $date_range ?: '',
         ];
         break;

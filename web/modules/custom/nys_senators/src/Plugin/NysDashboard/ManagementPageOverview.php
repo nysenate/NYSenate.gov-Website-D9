@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\nys_senators\ManagementPageBase;
 use Drupal\nys_senators\ManagementPageInterface;
+use Drupal\nys_senators\SenatorsHelper;
 use Drupal\nys_senators\Service\OverviewStatsManager;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -31,8 +32,8 @@ class ManagementPageOverview extends ManagementPageBase {
    *
    * Adds the overview stats manager.
    */
-  public function __construct(EntityTypeManagerInterface $manager, Connection $connection, OverviewStatsManager $stats, $plugin_id, $definition, array $configuration) {
-    parent::__construct($manager, $connection, $plugin_id, $definition, $configuration);
+  public function __construct(EntityTypeManagerInterface $manager, Connection $connection, SenatorsHelper $helper, OverviewStatsManager $stats, $plugin_id, $definition, array $configuration) {
+    parent::__construct($manager, $connection, $helper, $plugin_id, $definition, $configuration);
     $this->stats = $stats;
   }
 
@@ -43,6 +44,7 @@ class ManagementPageOverview extends ManagementPageBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('database'),
+      $container->get('nys_senators.senators_helper'),
       $container->get('nys_senators.dashboard.stats_manager'),
       $plugin_id,
       $plugin_definition,

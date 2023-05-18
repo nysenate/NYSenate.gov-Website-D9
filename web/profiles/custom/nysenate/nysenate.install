@@ -357,3 +357,44 @@ function nysenate_update_9009(&$sandbox) {
     $contact_block->save();
   }
 }
+
+/**
+ * Update the Budget link in Footer Menu.
+ */
+function nysenate_update_9010() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'footer';
+
+  $links = [
+    '3' => [
+      'title' => 'Budget',
+      'url' => 'internal:/majority-issues/new-york-state-budget',
+    ],
+  ];
+
+  foreach ($links as $weight => $menu) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $menu['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update footer menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $menu['url']]);
+      $menu_link->set('weight', $weight);
+      $menu_link->save();
+    }
+
+    // Create footer menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $menu['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $menu['url']],
+        'weight' => $weight,
+      ]);
+      $menu_link->save();
+    }
+  }
+}

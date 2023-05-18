@@ -2174,7 +2174,8 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
 
   // Add suggestion to form_element hook.
   if ($hook == 'form_element' && !empty($variables['element']['#name'])) {
-    $suggestions[] = 'form_element__' . $variables['element']['#name'];
+    $name = strtolower(Html::cleanCssIdentifier($variables['element']['#name']));
+    $suggestions[] = 'form_element__' . str_replace('-', '_', $name);
   }
 
   // Add suggestion to views_exposed_form hook.
@@ -5692,6 +5693,17 @@ function nysenate_theme_preprocess_node__student_program(&$variables) {
 function nysenate_theme_preprocess_comment(&$variables) {
   $date = $variables['comment']->getCreatedTime();
   $variables['created_relative'] = \Drupal::service('date.formatter')->formatTimeDiffSince($date, ['granularity' => 1]);
+
+  // Set author value based on anonymous flag.
+  $display_author = $variables['author'];
+  if ($variables['comment']->hasField('field_anonymous') && !$variables['comment']->get('field_anonymous')->isEmpty()) {
+    if ($variables['comment']->field_anonymous->value == 1) {
+      $display_author = t('Anonymous');
+      $variables['attributes']['data-comment-user-id'] = 'anon';
+    }
+  }
+
+  $variables['display_author'] = $display_author;
 }
 
 /**

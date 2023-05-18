@@ -5,6 +5,11 @@
   margin-bottom: 48px;
   width: 100vw;
   max-width: 1500px;
+  margin-top: -60px;
+
+  @include breakpoint($bp-sm) {
+    margin-top: -110px;
+  }
 
   img {
     width: 100%;

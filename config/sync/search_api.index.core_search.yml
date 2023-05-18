@@ -16,6 +16,7 @@ dependencies:
     - field.storage.node.field_committee
     - field.storage.node.field_ol_co_sponsor_names
     - field.storage.node.field_ol_co_sponsors
+    - field.storage.node.field_publication_date
     - field.storage.node.field_ol_full_text
     - field.storage.node.field_image_caption
     - field.storage.node.field_issues
@@ -36,6 +37,7 @@ dependencies:
     - field.storage.node.field_subtitle
     - field.storage.node.field_ol_summary
     - field.storage.node.field_summary
+    - field.storage.node.field_ol_transcript_type
     - field.storage.taxonomy_term.field_committee_types
     - search_api.server.pantheon_solr8
   module:
@@ -224,14 +226,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_date_range
-  field_date_range_1:
-    label: 'Meeting Date'
-    datasource_id: 'entity:node'
-    property_path: field_date_range
-    type: text
-    dependencies:
-      config:
-        - field.storage.node.field_date_range
   field_image_caption:
     label: 'Image Caption'
     datasource_id: 'entity:node'
@@ -400,6 +394,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_summary
+  field_ol_transcript_type:
+    label: 'Transcript Type'
+    datasource_id: 'entity:node'
+    property_path: field_ol_transcript_type
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_ol_transcript_type
+  field_publication_date:
+    label: Date
+    datasource_id: 'entity:node'
+    property_path: field_publication_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_publication_date
   field_senator_multiref:
     label: Senator
     datasource_id: 'entity:node'
@@ -648,6 +658,6 @@ tracker_settings:
     indexing_order: fifo
 options:
   cron_limit: 50
-  index_directly: true
+  index_directly: false
   track_changes_in_references: true
 server: pantheon_solr8

@@ -311,7 +311,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
   if (!empty($node) && $node->bundle() == 'microsite_page') {
     $current_path = \Drupal::request()->getRequestUri();
     $arr_path = explode('/', $current_path);
-    $variables['message_senator_link'] = '/senators/' . $arr_path[2] . '/message';
+    $variables['message_senator_link'] = '/senators/' . $arr_path[2] . '/contact';
   }
   elseif (!empty($node) && in_array($node->bundle(), $node_types)) {
     $senator_link = \Drupal::service('nys_senators.microsites')

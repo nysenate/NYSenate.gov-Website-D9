@@ -7,10 +7,13 @@ dependencies:
     - field.storage.user.field_dateofbirth
     - field.storage.user.field_district
     - field.storage.user.field_first_name
+    - field.storage.user.field_gender_user
     - field.storage.user.field_last_name
   module:
     - address
+    - better_exposed_filters
     - datetime
+    - options
     - taxonomy
     - user
     - views_autocomplete_filters
@@ -41,7 +44,7 @@ display:
           entity_field: uid
           plugin_id: field
           label: 'User ID'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -167,7 +170,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: 'Last Name'
+          label: Name
           exclude: false
           alter:
             alter_text: true
@@ -359,7 +362,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: Address
-          exclude: false
+          exclude: true
           alter:
             alter_text: true
             text: '{{ field_address__address_line1}}{% if field_address__address_line2 %}, {{ field_address__address_line2 }}{% endif %}{% if field_address__locality %}, {{ field_address__locality }}{% endif %}{% if field_address__postal_code %}, {{ field_address__postal_code }}{% endif %}'
@@ -421,7 +424,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: District
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -582,7 +585,7 @@ display:
           admin_label: ''
           plugin_id: subdivision
           label: City
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -631,8 +634,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: standard
-          label: Zip
-          exclude: true
+          label: 'Zip Code'
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -672,6 +675,68 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+        field_gender_user:
+          id: field_gender_user
+          table: user__field_gender_user
+          field: field_gender_user
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Gender
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: list_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       pager:
         type: full
         options:
@@ -694,7 +759,7 @@ display:
             offset_label: Offset
           quantity: 9
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
           reset_button: false
@@ -703,6 +768,34 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: full_html
+          bef:
+            general:
+              autosubmit: true
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              combine:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  is_secondary: false
+              field_gender_user_value:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: '- Any -|All'
+                  collapsible: false
+                  is_secondary: false
       access:
         type: perm
         options:
@@ -737,7 +830,7 @@ display:
           expose:
             label: 'Name (Last, First)'
             field_identifier: field_last_name_value
-          exposed: true
+          exposed: false
         uid:
           id: uid
           table: users_field_data
@@ -752,7 +845,7 @@ display:
           expose:
             label: 'User ID'
             field_identifier: uid
-          exposed: true
+          exposed: false
       arguments:
         field_district_number_value:
           id: field_district_number_value
@@ -762,16 +855,15 @@ display:
           group_type: group
           admin_label: 'District Number'
           plugin_id: numeric
-          default_action: empty
+          default_action: default
           exception:
             value: ''
             title_enable: false
             title: All
           title_enable: true
           title: 'Constituents in District {{ arguments.field_district_number_value }}'
-          default_argument_type: fixed
-          default_argument_options:
-            argument: ''
+          default_argument_type: node
+          default_argument_options: {  }
           default_argument_skip_url: false
           summary_options:
             base_path: ''
@@ -860,6 +952,108 @@ display:
             field_first_name: field_first_name
             field_last_name: field_last_name
             mail: mail
+        field_gender_user_value:
+          id: field_gender_user_value
+          table: user__field_gender_user
+          field: field_gender_user_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_gender_user_value_op
+            label: Gender
+            description: ''
+            use_operator: false
+            operator: field_gender_user_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_gender_user_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+        field_address_postal_code:
+          id: field_address_postal_code
+          table: user__field_address
+          field: field_address_postal_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: views_autocomplete_filters_string
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_address_postal_code_op
+            label: 'Zip Code'
+            description: ''
+            use_operator: false
+            operator: field_address_postal_code_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_address_postal_code
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+            placeholder: ''
+            autocomplete_filter: 0
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_field: field_address_postal_code
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
@@ -923,16 +1117,19 @@ display:
           plugin_id: standard
           required: false
       header:
-        result:
-          id: result
+        area:
+          id: area
           table: views
-          field: result
+          field: area
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: result
+          plugin_id: text
           empty: false
-          content: 'Displaying @start - @end of @total'
+          content:
+            value: '<h2 class="c-container--title">Your Constituents</h2>'
+            format: full_html
+          tokenize: false
       footer: {  }
       display_extenders: {  }
     cache_metadata:
@@ -942,12 +1139,11 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - user.permissions
       tags:
         - 'config:field.storage.user.field_address'
         - 'config:field.storage.user.field_dateofbirth'
         - 'config:field.storage.user.field_district'
         - 'config:field.storage.user.field_first_name'
+        - 'config:field.storage.user.field_gender_user'
         - 'config:field.storage.user.field_last_name'

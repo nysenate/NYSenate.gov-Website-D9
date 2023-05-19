@@ -15,7 +15,7 @@
 / SITEWIDE HERO
 /-------------------------------*/
 
-.c-hero--tout {
+.l-row.c-hero--tout {
   position: relative;
   padding: 0;
   max-width: 440px;
@@ -55,7 +55,7 @@
   }
 }
 
-.c-hero--welcome {
+.c-block .c-hero--welcome {
   padding: 30px 20px;
   margin: 0;
   color: $grey02;
@@ -150,13 +150,13 @@
 }
 
 @include breakpoint($bp-sm) {
-  .c-hero--welcome {
+  .c-block .c-hero--welcome {
     font-size: 32px;
     line-height: 60px;
     padding: 40px;
   }
 
-  .c-hero--tout {
+  .l-row.c-hero--tout {
     max-width: 760px;
     margin-top: -15%; //temp
 

@@ -22,8 +22,22 @@
   }
 }
 
+.page--events {
+
+  .c-event-block--list {
+    padding-bottom: 0;
+  }
+}
+
 .c-event-time {
-  color: $grey05;
+
+  .c-location {
+    color: $grey05;
+  }
+
+  .datetime {
+    text-transform: lowercase;
+  }
 }
 
 // STYLES FOR CALENDAR
@@ -206,10 +220,6 @@
 
         &.dp_hover {
           background: $yellow02;
-        }
-
-        &.dp_current {
-          color: $color-white;
         }
       }
     }

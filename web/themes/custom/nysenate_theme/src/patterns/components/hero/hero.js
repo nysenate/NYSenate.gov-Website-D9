@@ -23,6 +23,7 @@
       }
       else if (landingHeroContainer.length > 0) {
         self.heroMargin(landingHeroContainer, pageMargin, pagePadding);
+        landingHeroContainer.closest('main').css('padding', '0');
       }
 
       $(window).on('resize', function () {

@@ -65,11 +65,12 @@ $is_installer_url = (strpos($_SERVER['SCRIPT_NAME'], '/core/install.php') === 0)
  * at https://www.drupal.org/node/2431247
  *
  */
-if ($is_installer_url) {
-  $settings['config_sync_directory'] = 'sites/default/files';
-}
-else {
-  $settings['config_sync_directory'] = getenv('DOCROOT') ? '../config' : 'sites/default/config';
+if (empty($settings['config_sync_directory'])) {
+  if ($is_installer_url) {
+    $settings['config_sync_directory'] = 'sites/default/files';
+  } else {
+    $settings['config_sync_directory'] = getenv('DOCROOT') ? '../config' : 'sites/default/config';
+  }
 }
 
 
@@ -129,7 +130,10 @@ if (isset($_SERVER['PRESSFLOW_SETTINGS'])) {
 /**
  * Handle Hash Salt Value from Drupal
  *
- * Issue: https://github.com/pantheon-systems/drops-8/issues/10
+ * Changing these will invalidate all one-time login links.
+ * Pantheon sets this values for you. If you want to shuffle it you could
+ * use terminus env:rotate-random-seed command:
+ * https://docs.pantheon.io/terminus/commands/env-rotate-random-seed
  *
  */
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {

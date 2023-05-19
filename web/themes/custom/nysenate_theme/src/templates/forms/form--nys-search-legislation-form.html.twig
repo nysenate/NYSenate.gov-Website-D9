@@ -10,8 +10,7 @@
  * @see template_preprocess_form()
  */
 #}
+
 <div class="container">
-  <form{{ attributes }}>
-    {{ children }}
-  </form>
+  {% include '@nysenate_theme/legislation-search-form/legislation-search-form.twig' with { form: children, attributes } only %}
 </div>

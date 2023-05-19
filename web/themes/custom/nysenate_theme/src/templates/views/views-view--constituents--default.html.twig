@@ -30,8 +30,9 @@
  * @see template_preprocess_views_view()
  */
 #}
-{{ attach_library('nysenate_theme/event') }}
-{{ attach_library('nysenate_theme/event-calendar') }}
+
+{{ attach_library('nysenate_theme/dashboard') }}
+
 {%
   set classes = [
     'view',
@@ -40,75 +41,46 @@
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
     'container',
-    'c-upcoming-container',
+    'c-container--senator-constituents',
   ]
 %}
-
-{% if view.current_display in ['page_1', 'day_block'] %}
-  {% set view_text = 'View by Day' %}
-{% elseif view.current_display in ['page_3', 'week_block'] %}
-  {% set view_text = 'View by Week' %}
-{% elseif view.current_display in ['page_2', 'month_block'] %}
-  {% set view_text = 'View by Month' %}
-{% endif %}
-
 <div{{ attributes.addClass(classes) }}>
-  <h2 class="nys-title">Statewide Senate Events Calendar</h2>
   {{ title_prefix }}
   {% if title %}
     {{ title }}
   {% endif %}
   {{ title_suffix }}
   {% if header %}
-    {{ header }}
+    <div class="view-header">
+      {{ header }}
+    </div>
   {% endif %}
-  <div class="view-header event-calendar">
-    <div id="datepicker">
-      <div class="mobile-calendar-toggle icon-after__calendar-view">{{ view_text }}</div>
-      <input type="text" />
-      <div id="container"></div>
+  {% if exposed %}
+    <div class="view-filters">
+      {{ exposed }}
     </div>
-    {% if exposed %}
-      <div class="view-filters">
-        {{ exposed }}
-      </div>
-    {% endif %}
-  </div>
-  <section class="c-block calendar-nav">
-    <div class="cal-nav-wrapper">
-      <span class="title">Upcoming Events</span>
-      <ul class="cal-nav-list">
-        {% if view.current_display not in ['page_1', 'day_block'] %}
-          <li><a href="/events" class="cal-nav-link icon-after__calendar-day">View By Day</a></li>
-        {% endif %}
-        {% if view.current_display not in ['page_3', 'week_block'] %}
-          <li><a href="/events/week" class="cal-nav-link icon-after__calendar-week">View By Week</a></li>
-        {% endif %}
-        {% if view.current_display not in ['page_2', 'month_block'] %}
-          <li><a href="/events/month" class="cal-nav-link icon-after__calendar-month">View By Month</a></li>
-        {% endif %}
-      </ul>
-    </div>
-  </section>
+  {% endif %}
   {% if attachment_before %}
     <div class="attachment attachment-before">
       {{ attachment_before }}
     </div>
   {% endif %}
 
-  {% if rows %}
-    <div class="view-content">
-      {{ rows }}
-    </div>
-  {% elseif empty %}
-    <div class="view-empty">
-      {{ empty }}
-    </div>
-  {% endif %}
+  <div id="senator_constituents_table">
+    {% if rows %}
+      <div class="view-content">
+        {{ rows }}
+      </div>
+    {% elseif empty %}
+      <div class="view-empty">
+        {{ empty }}
+      </div>
+    {% endif %}
 
-  {% if pager %}
-    {{ pager }}
-  {% endif %}
+    {% if pager %}
+      {{ pager }}
+    {% endif %}
+  </div>
   {% if attachment_after %}
     <div class="attachment attachment-after">
       {{ attachment_after }}
@@ -127,9 +99,4 @@
       {{ feed_icons }}
     </div>
   {% endif %}
-  {% if calendar_downloads %}
-    {{ calendar_downloads }}
-  {% endif %}
 </div>
-
-{{ drupal_view('global_promo_banner', 'global_promo_banner') }}

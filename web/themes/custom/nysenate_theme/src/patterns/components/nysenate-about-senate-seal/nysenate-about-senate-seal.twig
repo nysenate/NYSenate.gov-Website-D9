@@ -7,7 +7,9 @@
   {% if media %}
     {{ media }}
   {% endif %}
-  <p>{{ description }}</p>
+  {% if description %}
+    <p>{{ description }}</p>
+  {% endif %}
 
   {% if items|length %}
     <ul>

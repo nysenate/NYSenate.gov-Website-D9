@@ -49,13 +49,13 @@
 
 {% if fields.field_location_organization.content and (fields.field_event_place.content|striptags|trim in ['in_albany', 'in_district']) %}
   <a class="c-event-location"
-      href="http://maps.google.com/?q={{ fields.field_location_address_line1.content }}+{{ fields.field_location_administrative_area.content }}%2C+{{ fields.field_location_postal_code.content }}"
+      href="http://maps.google.com/?q={{ fields.field_location_address_line1.content|striptags|trim }}+{{ fields.field_location_administrative_area.content|striptags|trim }}%2C+{{ fields.field_location_postal_code.content|striptags|trim }}"
       target="_blank">
     <span class="icon-before__circle-pin"></span>{{ fields.field_location_organization.content }}
   </a>
 {% elseif fields.type.content|striptags|trim == 'Session' %}
   <a class="c-event-location"
-      href="http://maps.google.com/?q={{ fields.field_location_address_line1.content }}+{{ fields.field_location_administrative_area.content }}%2C+{{ fields.field_location_postal_code.content }}"
+      href="http://maps.google.com/?q={{ fields.field_location_address_line1.content|striptags|trim }}+{{ fields.field_location_administrative_area.content|striptags|trim }}%2C+{{ fields.field_location_postal_code.content|striptags|trim }}"
       target="_blank">
     <span class="icon-before__circle-pin"></span>{{ fields.field_location_organization.content }}
   </a>

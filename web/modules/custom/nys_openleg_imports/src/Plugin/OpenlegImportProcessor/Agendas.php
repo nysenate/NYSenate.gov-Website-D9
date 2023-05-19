@@ -3,6 +3,7 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImportProcessor;
 
 use Drupal\node\Entity\Node;
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\BillHelper;
 use Drupal\nys_openleg_imports\ImportProcessorBase;
 
@@ -86,15 +87,16 @@ class Agendas extends ImportProcessorBase {
       $this->logger->warning('Committee @name was not found', ['@name' => $comm_name]);
     }
 
+    $meeting_date = $item->meeting->meetingDateTime . ' ' . date_default_timezone_get();
     $values = [
       'field_ol_agenda_addendum' => $item->addendumId,
       'field_ol_agenda_location' => $item->meeting->location,
       'field_ol_agenda_notes' => $item->meeting->notes,
       'field_ol_committee' => $committee ?: NULL,
       'field_ol_committee_name' => $comm_name,
-      'field_ol_meeting_date' => strtotime($item->meeting->meetingDateTime),
-      'field_ol_week' => $item->agendaId->year,
-      'field_ol_year' => $item->agendaId->number,
+      'field_ol_meeting_date' => gmdate(Request::OPENLEG_TIME_SIMPLE, strtotime($meeting_date)),
+      'field_ol_week' => $item->agendaId->number,
+      'field_ol_year' => $item->agendaId->year,
       'field_from_openleg' => TRUE,
     ];
 

@@ -73,3 +73,16 @@
   border-top: 0 none;
   padding-top: 0;
 }
+
+@media screen and (max-width: 767px) {
+  .nys-senators-management-overview-stats {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+  }
+
+  .nys-senators-management-overview-stat {
+    width: auto;
+    max-width: none;
+  }
+}

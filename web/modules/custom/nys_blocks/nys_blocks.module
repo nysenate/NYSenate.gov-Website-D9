@@ -5,6 +5,8 @@
  * Contains custom blocks.
  */
 
+use Drupal\node\NodeInterface;
+
 /**
  * Implements hook_theme().
  */
@@ -42,5 +44,44 @@ function nys_blocks_theme($existing, $type, $theme, $path):array {
         'public_hearing_schedule_href' => NULL,
       ],
     ],
+    'nys_blocks_contact_us' => [
+      'variables' => [
+        'display_name' => NULL,
+      ],
+    ],
   ];
+}
+
+/**
+ * Update the Student Programs Contact Us block.
+ */
+function nys_blocks_deploy_contact_us_block() {
+  // Student Programs landing node.
+  $nid = 12004496;
+
+  $node = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->load($nid);
+
+  if ($node instanceof NodeInterface) {
+    if ($node->hasField('field_landing_blocks') &&
+      !$node->get('field_landing_blocks')->isEmpty()) {
+      foreach ($node->get('field_landing_blocks') as $key => $value) {
+        if (!is_numeric($key)) {
+          continue;
+        }
+
+        /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+        $block_content = $value->entity ?? NULL;
+
+        if ($block_content->bundle() == 'contact_us') {
+          $block_content->field_contact_us = [
+            'plugin_id' => 'nys_blocks_contact_us',
+            'settings' => [],
+          ];
+          $block_content->save();
+        }
+      }
+    }
+  }
 }

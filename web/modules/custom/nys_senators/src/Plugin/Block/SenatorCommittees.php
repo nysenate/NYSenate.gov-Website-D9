@@ -80,40 +80,41 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
         /** @var \Drupal\paragraphs\Entity\Paragraph $committee_membership */
         $committee_membership = $paragraph_storage->load($mpid);
         $parent = $committee_membership->getParentEntity();
+        if (!empty($parent)) {
+          switch ($committee_membership->field_committee_member_role->value) {
+            case '0':
+              $role = $this->t('Member');
+              $label = 'Member';
+              break;
 
-        switch ($committee_membership->field_committee_member_role->value) {
-          case '0':
-            $role = $this->t('Member');
-            $label = 'Member';
-            break;
+            case '1':
+              $role = $this->t('Co-Chair');
+              $label = 'Co-Chair';
+              break;
 
-          case '1':
-            $role = $this->t('Co-Chair');
-            $label = 'Co-Chair';
-            break;
+            case '2':
+              $role = $this->t('Chair');
+              $label = 'Chair';
+              break;
 
-          case '1':
-            $role = $this->t('Chair');
-            $label = 'Chair';
-            break;
+            case '3':
+              $role = $committee_membership->field_other_member_role->value;
+              $label = $committee_membership->field_other_member_role->value;
+              break;
 
-          case '3':
-            $role = $committee_membership->field_other_member_role->value;
-            $label = $committee_membership->field_other_member_role->value;
-            break;
+            default:
+              $role = '';
+              $label = '';
+              break;
+          };
 
-          default:
-            $role = '';
-            $label = '';
-            break;
-        };
-
-        $memberships[$label][] = [
-          'parent' => $parent->label(),
-          'text' => ['#plain_text' => $parent->label()],
-          'link' => ['#plain_text' => $parent->toUrl()->toString()],
-          'role' => ['#plain_text' => $role],
-        ];
+          $memberships[$label][] = [
+            'parent' => $parent->label(),
+            'text' => ['#plain_text' => $parent->label()],
+            'link' => ['#plain_text' => $parent->toUrl()->toString()],
+            'role' => ['#plain_text' => $role],
+          ];
+        }
       }
 
       // Sort based on parent label per role.

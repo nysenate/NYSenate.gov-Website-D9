@@ -83,10 +83,10 @@
   background-color: #f9f9f9;
 }
 .nys-senators-management-dashboard-petitions table thead tr th {
-  padding: .5em 1em;
+  padding: 0.5em 1em;
 }
 .nys-senators-management-dashboard-petitions table tbody tr td {
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   height: auto;
 }
 .nys-senators-management-dashboard-petitions a {
@@ -146,7 +146,7 @@
 }
 .petition-signature-data .entry-title,
 .petition-signature-data .pet-type {
-  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-family: 'Proxima Nova SemiBold', 'Arial', sans-serif;
   font-size: 14px;
   line-height: 24px;
   text-transform: uppercase;
@@ -158,7 +158,7 @@
   color: #cb8d37;
 }
 .petition-signature-data .author {
-  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-family: 'Proxima Nova Regular', 'Arial', sans-serif;
   font-size: 12px;
   line-height: 18px;
   color: #666666;
@@ -168,6 +168,19 @@
 @media screen and (max-width: 767px) {
   .sponsored-petition {
     max-width: none;
+    margin-right: 0;
+  }
+
+  .sponsored-petition .highcharts-root,
+  .sponsored-petition .highcharts-container {
+    width: 100% !important;
+  }
+
+  .your-petitions-list {
+    display: flex;
+    flex-direction: column;
+    max-height: none;
+    row-gap: 24px;
   }
 }
 

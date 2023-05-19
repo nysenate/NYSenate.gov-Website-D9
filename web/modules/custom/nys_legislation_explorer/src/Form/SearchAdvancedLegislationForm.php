@@ -72,7 +72,13 @@ class SearchAdvancedLegislationForm extends FormBase {
       'December',
     ];
 
-    return $months;
+    $options = [];
+    for ($i = 0; $i < 12; $i++) {
+      $value = str_pad($i + 1, 2, '0', STR_PAD_LEFT);
+      $options[$value] = $months[$i];
+    }
+
+    return $options;
   }
 
   /**
@@ -149,7 +155,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'resolution' => t('Resolutions'),
         'agenda' => t('Committee Meeting Agendas'),
         'calendar' => t('Session Calendars'),
-        'transcript' => t('Session Transcripts'),
+        'floor' => t('Session Transcripts'),
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
       '#default_value' => $args['type'] ?? NULL,
@@ -172,7 +178,7 @@ class SearchAdvancedLegislationForm extends FormBase {
 
     $bill_years = [];
     $bill_years['0'] = 'Any';
-    $years_option['0'] = 'Any';
+    $years_option = [];
     foreach ($this->getSessionYearList() as $year) {
       $bill_years[$year] = $year . '-' . ($year + 1);
       $years_option[$year] = $year;
@@ -202,7 +208,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'select[name="type"]' => [
             ['value' => 'agenda'],
             ['value' => 'calendar'],
-            ['value' => 'transcript'],
+            ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
         ],
@@ -218,7 +224,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'select[name="type"]' => [
             ['value' => 'agenda'],
             ['value' => 'calendar'],
-            ['value' => 'transcript'],
+            ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
         ],
@@ -234,7 +240,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'select[name="type"]' => [
             ['value' => 'bill'],
             ['value' => 'resolution'],
-            ['value' => 'transcript'],
+            ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
         ],
@@ -334,6 +340,20 @@ class SearchAdvancedLegislationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $params = [];
+    $date_range = '';
+    if (!empty($values['month']) && !empty($values['year']) && $values['month'] !== 'all') {
+      $year = $values['year'];
+      $month = $values['month'];
+      $first_day_month = date('Y-m-01', strtotime("$year-$month-01"));
+      $last_day_month = date('Y-m-t', strtotime("$year-$month-01"));
+      $date_range = $first_day_month . '--' . $last_day_month;
+    }
+    if (!empty($values['year']) && $values['month'] == 'all') {
+      $year = $values['year'];
+      $first_day_year = date('Y-m-d', strtotime("$year-01-01"));
+      $last_day_year = date('Y-m-d', strtotime("$year-12-31"));
+      $date_range = $first_day_year . '--' . $last_day_year;
+    }
     switch ($values['type']) {
       case 'bill':
         $params = [
@@ -361,8 +381,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'agenda':
         $params = [
           'type' => $values['type'] ?: '',
-          'month' => $values['month'] ?: '',
-          'year' => $values['year'] ?: '',
+          'meeting_date' => $date_range ?: '',
           'committee' => $values['committee'] ?: '',
         ];
         break;
@@ -370,18 +389,16 @@ class SearchAdvancedLegislationForm extends FormBase {
       case 'calendar':
         $params = [
           'type' => $values['type'] ?: '',
-          'month' => $values['month'] ?: '',
-          'year' => $values['year'] ?: '',
+          'date' => $date_range ?: '',
         ];
         break;
 
-      case 'transcript':
+      case 'floor':
       case 'public_hearing':
         $params = [
-          'type' => $values['type'] ?: '',
-          'month' => $values['month'] ?: '',
-          'year' => $values['year'] ?: '',
-          'full_text' => $values['full_text'] ?: '',
+          'type' => 'transcript' ?: '',
+          'transcript_type' => $values['type'] ?: '',
+          'publish_date' => $date_range ?: '',
         ];
         break;
 

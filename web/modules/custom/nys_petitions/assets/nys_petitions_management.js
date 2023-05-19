@@ -7,34 +7,49 @@
       $('.petition-signature-chart').not('.processed').each(function () {
         let $this = $(this);
         $this.highcharts({
-          chart: {type: 'pie', width:350, spacingTop: 10, backgroundColor: "rgba(0,0,0,0)"},
-          title: {
-            text: $this.data('title') + "<br/>(" + $this.data('signatures') + " signatures)",
-            style: {"color": "#333333", "fontSize": "14px", "fontWeight": "bold"},
-            margin: 1
+          chart: {
+            type: 'pie',
+            width: 350,
+            spacingTop: 10,
+            backgroundColor: 'rgba(0,0,0,0)',
           },
-          credits: {enabled: false},
-          tooltip: {enabled: true},
-          legend: {enabled: false},
-          plotOptions: {pie: {startAngle: -90, endAngle: 90}},
-          series: [{
-            name: 'Signatures',
-            showInLegend: true,
-            enableMouseTracking: false,
-            innerSize: "40%",
-            dataLabels: {
-              enabled: true,
-              format: "{point.y} {point.name}",
-              distance: 15,
-              softConnector: false,
-              connectorPadding: 2,
-              y: -6
+          title: {
+            text:
+              $this.data('title') +
+              '<br/>(' +
+              $this.data('signatures') +
+              ' signatures)',
+            style: { color: '#333333', fontSize: '14px', fontWeight: 'bold' },
+            margin: 1,
+          },
+          credits: { enabled: false },
+          tooltip: { enabled: true },
+          legend: { enabled: false },
+          plotOptions: { pie: { startAngle: -90, endAngle: 90 } },
+          series: [
+            {
+              name: 'Signatures',
+              showInLegend: true,
+              enableMouseTracking: false,
+              innerSize: '40%',
+              dataLabels: {
+                enabled: true,
+                format: '{point.y} {point.name}',
+                distance: 15,
+                softConnector: false,
+                connectorPadding: 2,
+                y: -6,
+              },
+              data: [
+                { name: 'In District', y: $this.data('in-district') },
+                {
+                  name: 'Others',
+                  y: $this.data('out-district'),
+                  color: '#ccccd8',
+                },
+              ],
             },
-            data: [
-              {name: 'In District', y: $this.data('in-district')},
-              {name: 'Others', y: $this.data('out-district'), color: "#ccccd8"}
-            ]
-          }]
+          ],
         });
         $this.addClass('processed');
       });

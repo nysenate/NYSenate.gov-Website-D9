@@ -8,3 +8,14 @@ comment.ban_user:
     _permission: 'administer users'
     _csrf_token: 'TRUE'
     comment: \d+
+
+comment.reject:
+  path: '/comment/{comment}/reject'
+  defaults:
+    _title: 'Reject'
+    _controller: '\Drupal\nys_comment\Controller\CommentController::reject'
+    entity_type: 'comment'
+  requirements:
+    _permission: 'administer users'
+    _csrf_token: 'TRUE'
+    comment: \d+

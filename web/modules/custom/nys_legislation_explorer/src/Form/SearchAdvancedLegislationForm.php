@@ -129,22 +129,35 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $args = $this->requestStack->getCurrentRequest()->query->all();
-
-    $form['my_block'] = [
+    $month_default = '';
+    $year_default = '';
+    if (!empty($args['date']) || !empty($args['publish_date']) || !empty($args['meeting_date'])) {
+      $dates['date'] = $args['date'] ?? NULL;
+      $dates['publish_date'] = $args['publish_date'] ?? NULL;
+      $dates['meeting_date'] = $args['meeting_date'] ?? NULL;
+      foreach ($dates as $date) {
+        if ($date !== NULL) {
+          $parts = explode("-", $date);
+          $month_default = $parts[1];
+          $year_default = substr($date, 0, 4);
+        }
+      }
+    }
+    $form['advanced_search'] = [
       '#type' => 'block',
       '#attributes' => [
         'class' => ['my-custom-class'],
       ],
     ];
 
-    $form['my_block']['my_block_text'] = [
+    $form['advanced_searchk']['advanced_search_text'] = [
       '#type' => 'item',
-      '#markup' => $this->t('This is my custom block.'),
+      '#markup' => $this->t('Fill out one or more of the following filter criteria to perform a search.'),
     ];
 
-    $form['my_block']['my_block_title'] = [
+    $form['advanced_search']['advanced_search_title'] = [
       '#type' => 'item',
-      '#markup' => $this->t('My Block Title'),
+      '#markup' => $this->t('Advanced Legislation Search'),
     ];
 
     $form['type'] = [
@@ -203,6 +216,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('Month'),
       '#options' => ['all' => 'Any'] + $this->getMonthsOptions(),
+      '#default_value' => $month_default ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -219,6 +233,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('YEAR'),
       '#options' => $years_option,
+      '#default_value' => $year_default ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [

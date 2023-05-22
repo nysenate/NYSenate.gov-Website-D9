@@ -1804,7 +1804,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
+          $image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '200x125');
         }
       }
 
@@ -5817,4 +5817,11 @@ function nysenate_theme_preprocess_webform_confirmation(&$variables) {
     }
   }
   $variables['student_submissions'] = $submissions;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_form__nys_search_legislation_form(&$variables) {
+  // Preprocess for Advance Legistlation Search form.
 }

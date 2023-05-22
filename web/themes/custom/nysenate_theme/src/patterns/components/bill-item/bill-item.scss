@@ -11,19 +11,20 @@ h3.c-bill-num {
   letter-spacing: 0.05em;
 
   a {
-    color: $grey02;
+    color: $grey08;
   }
 }
 
-.c-bill-descript {
-  margin: 0 0 10px 0;
-  color: $grey02;
-  font-family: $font-serif;
-  font-size: 20px;
-  line-height: 32px;
-}
 
 .c-block {
+  .c-bill-descript {
+    margin: 0 0 10px 0;
+    color: $grey08;
+    font-family: $font-serif;
+    font-size: 20px;
+    line-height: 32px;
+  }
+
   &.c-block-legislation-featured {
     padding: 0;
     border: 0;
@@ -613,6 +614,23 @@ h3.c-bill-num {
       .c-bill-num {
         font-size: 20px;
         margin-bottom: 10px;
+      }
+    }
+
+    .c-legislation-info.with-issues {
+      display: flex;
+
+      .left-col {
+        flex: 23%;
+        padding-right: 2%;
+
+        .c-press-release--topic {
+          color: $color-nys-blue;
+        }
+      }
+
+      .right-col {
+        flex: 75%;
       }
     }
   }

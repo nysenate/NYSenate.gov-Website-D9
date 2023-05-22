@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\nys_bills\BillsHelper;
+use Drupal\nys_subscriptions\SubscriptionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -423,13 +424,14 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * Sign up a subscription for the bill.
    */
-  public function subscriptionSignup($nid, $email_address) {
+  public function subscriptionSignup($nid, $email_address): ?SubscriptionInterface {
     try {
       /** @var \Drupal\node\NodeInterface $bill */
       $bill = $this->entityTypeManager->getStorage('node')->load($nid);
     }
     catch (\Throwable) {
       $this->logger('BillVoteWidgetForm')->error('Could not load node storage');
+      return NULL;
     }
     return $this->billHelper->subscribeToBill($bill);
   }

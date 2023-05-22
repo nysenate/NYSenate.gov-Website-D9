@@ -78,7 +78,7 @@ class BillVoteController extends ControllerBase {
    * @todo Shouldn't this be a JSON response?
    */
   public function confirmationAjaxCallback(Node $bill_node, mixed $vote_value): Response {
-    $vote_result = $this->billVoteHelper->processVote($bill_node, $vote_value);
+    $vote_result = $this->billVoteHelper->processVote($this->currentUser(), $bill_node, $vote_value);
     $response = $this->t(
       'Vote recorded on node %bill_id: %value',
       ['%bill_id' => $bill_node->id(), '%value' => $vote_value]

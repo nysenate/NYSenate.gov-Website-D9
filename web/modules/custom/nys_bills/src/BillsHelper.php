@@ -2,13 +2,19 @@
 
 namespace Drupal\nys_bills;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\flag\FlagServiceInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\nys_senators\SenatorsHelper;
+use Drupal\nys_subscriptions\SubscriptionInterface;
+use Drupal\nys_users\UsersHelper;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Helper class for nys_bills module.
@@ -17,6 +23,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
  *   part of that new class.
  */
 class BillsHelper {
+
+  use LoggerChannelTrait;
 
   /**
    * Defines a prefix for cache entries related to this class.
@@ -52,6 +60,20 @@ class BillsHelper {
   protected $senatorsHelper;
 
   /**
+   * A preconfigured logger channel for 'nys_bills'.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected LoggerInterface $log;
+
+  /**
+   * Flag module's Flag service.
+   *
+   * @var \Drupal\flag\FlagServiceInterface
+   */
+  protected FlagServiceInterface $flagService;
+
+  /**
    * Constructor class for Bills Helper.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -62,12 +84,17 @@ class BillsHelper {
    *   The backend cache.
    * @param \Drupal\nys_senators\SenatorsHelper $senators_helper
    *   The senators helper.
+   * @param \Drupal\flag\FlagServiceInterface $flagService
+   *   The Flag module's Flag service.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper) {
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper, FlagServiceInterface $flagService) {
     $this->connection = $connection;
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
     $this->senatorsHelper = $senators_helper;
+    $this->flagService = $flagService;
+
+    $this->log = $this->getLogger('nys_bills');
   }
 
   /**
@@ -671,6 +698,68 @@ class BillsHelper {
     }
 
     return $amendments;
+  }
+
+  /**
+   * Creates a subscription to a bill.
+   *
+   * Until subscriptions fully replaces flagging, the flagging entries must be
+   * made at the same time as a subscription.
+   *
+   * @param \Drupal\node\NodeInterface $bill
+   *   A bill node, the subscription target.
+   * @param mixed $user
+   *   The user creating the subscription.  Can be an AccountInterface, an
+   *   integer representing a user ID, or NULL for the current user.
+   * @param \Drupal\Core\Entity\EntityInterface|null $source
+   *   An optional source entity.  If NULL, the bill is used.
+   *
+   * @return \Drupal\nys_subscriptions\SubscriptionInterface|null
+   *   If a matching subscription exists, it will be returned.  Otherwise,
+   *   either a newly created subscription, or NULL if it could not be created.
+   *
+   * @see UsersHelper::resolveUser()
+   *
+   * @todo This should not be here.  It should go in nys_bill_notifications.
+   */
+  public function subscribeToBill(NodeInterface $bill, mixed $user = NULL, ?EntityInterface $source = NULL): ?SubscriptionInterface {
+    try {
+      $storage = $this->entityTypeManager->getStorage('subscription');
+      $user = UsersHelper::resolveUser($user);
+    }
+    catch (\Throwable $e) {
+      $this->log->error('Failed to prepare subscription generation', ['@msg' => $e->getMessage()]);
+      return NULL;
+    }
+
+    // Find an existing, matching subscription, or create a new one.
+    $props = [
+      'sub_type' => 'bill_notifications',
+      'uid' => $user->id(),
+      'subscribe_to_type' => 'taxonomy_term',
+      'subscribe_to_id' => $bill->field_bill_multi_session_root->target_id,
+    ];
+    $existing = $storage->loadByProperties($props);
+    /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
+    $subscription = count($existing)
+      ? current($existing)
+      : $storage->create($props + ['source' => $source ?? $bill]);
+    try {
+      $subscription->save();
+    }
+    catch (\Throwable $e) {
+      $this->log->error('Failed to resolve subscription request', ['@msg' => $e->getMessage()]);
+      return NULL;
+    }
+
+    // Create a flagging entry to match the subscription.
+    // This will not be necessary once subscriptions takes over.
+    $flag = $this->flagService->getFlagById('follow_this_bill');
+    if (empty($this->flagService->getFlagging($flag, $bill, $user))) {
+      $this->flagService->flag($flag, $bill, $user);
+    }
+
+    return $subscription;
   }
 
 }

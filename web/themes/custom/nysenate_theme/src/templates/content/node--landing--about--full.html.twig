@@ -76,25 +76,6 @@
 <article id="node-{{ node.id }}" class="landing-node page--about {{ classes }}" {{ attributes }}>
 
   {% if page %}
-    {% if content.field_date[0]['#markup'] or issues %}
-      <header class="c-news--head">
-        <div class="c-news--head-meta">
-          {% if content.field_date and content.field_show_date[0]['#markup'] == 'On' %}
-            <p class="c-news--pub-date">
-              <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
-            </p>
-          {% endif %}
-          {% if issues and content.field_show_issues[0]['#markup'] == 'On' %}
-            <ul class="nys-associated-topics">
-              <div class="nys-associated-topics--label">issue:</div>
-              {% for issue in issues %}
-                <li>{{ issue }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
-      </header>
-    {% endif %}
     <div class="c-news--body">
       <div class="c-block">
         {% include '@nysenate_theme/about/about.twig' with {

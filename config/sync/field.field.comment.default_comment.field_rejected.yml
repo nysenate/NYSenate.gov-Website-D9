@@ -1,0 +1,23 @@
+uuid: fb815c0e-d2b9-47eb-b06d-62ffbce47678
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.default_comment
+    - field.storage.comment.field_rejected
+id: comment.default_comment.field_rejected
+field_name: field_rejected
+entity_type: comment
+bundle: default_comment
+label: Rejected
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Rejected
+  off_label: 'No'
+field_type: boolean

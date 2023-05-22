@@ -67,4 +67,25 @@ class CommentController extends ControllerBase {
     return new RedirectResponse($permalink_uri->toString());
   }
 
+  /**
+   * Rejects the specified comment.
+   *
+   * @param int $comment
+   *   A comment entity.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   The redirect response.
+   */
+  public function reject(int $comment) {
+    $comment = $this->entityTypeManager->getStorage('comment')
+      ->load($comment);
+    $comment->field_rejected = TRUE;
+    $comment->save();
+
+    $this->messenger()->addStatus($this->t('Comment rejected.'));
+    $permalink_uri = $comment->permalink();
+    $permalink_uri->setAbsolute();
+    return new RedirectResponse($permalink_uri->toString());
+  }
+
 }

@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 function nys_comment_uninstall() {
   \Drupal::configFactory()->getEditable('system.action.ban_user_comment')->delete();
   \Drupal::configFactory()->getEditable('system.action.unban_user_comment')->delete();
+  \Drupal::configFactory()->getEditable('system.action.reject_comment')->delete();
 
   // Deleting field storage.
   FieldStorageConfig::loadByName('user', 'field_user_banned_comments')->delete();

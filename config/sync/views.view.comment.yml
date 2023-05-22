@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.comment.comment_body
+    - field.storage.comment.field_rejected
   module:
     - comment
     - node
@@ -961,6 +962,7 @@ display:
           selected_actions:
             - ban_user_comment
             - comment_publish_action
+            - reject_comment
         subject:
           id: subject
           table: comment_field_data
@@ -1339,6 +1341,71 @@ display:
             date_format: short
             custom_date_format: ''
             timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_rejected:
+          id: field_rejected
+          table: comment__field_rejected
+          field: field_rejected
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Rejected
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: boolean
+          settings:
+            format: default
+            format_custom_false: ''
+            format_custom_true: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1759,4 +1826,5 @@ display:
         - user.permissions
       tags:
         - 'config:field.storage.comment.comment_body'
+        - 'config:field.storage.comment.field_rejected'
       cacheable: false

@@ -5,6 +5,7 @@ dependencies:
   config:
     - comment.type.default_comment
     - field.field.comment.default_comment.comment_body
+    - field.field.comment.default_comment.field_rejected
   module:
     - text
 id: comment.default_comment.default
@@ -22,8 +23,10 @@ content:
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 1
     region: content
 hidden:
+  field_rejected: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

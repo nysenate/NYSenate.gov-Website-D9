@@ -150,6 +150,9 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'html_tag',
       '#tag' => 'p',
       '#value' => $this->t('Fill out one or more of the following filter criteria to perform a search.'),
+      '#attributes' => [
+        'class' => ['form-description'],
+      ],
     ];
 
     $form['type'] = [

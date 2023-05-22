@@ -1,24 +1,30 @@
 {{ attach_library('nysenate_theme/bill-item') }}
 
 <div class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %} {{ modifier ? '' ~ modifier }}">
-  <div class="c-legislation-info">
-    <h3 class="c-bill-num {{ bill.number_large ? 'c-bill-num--large' : '' }}">
-      <a href="{{ bill.link }}">{{ bill.number }}</a>
-    </h3>
+  <div class="c-legislation-info {% if bill.issues %} with-issues {% endif %}">
+  {% if bill.issues %}
+    <div class="left-col">
+  {% endif %}
+      <h3 class="c-bill-num {{ bill.number_large ? 'c-bill-num--large' : '' }}">
+        <a href="{{ bill.link }}">{{ bill.number }}</a>
+      </h3>
 
+      {% if bill.issues %}
+        <div class="bill-type">
+          {% for issue in bill.issues %}
+            {% if loop.last %}
+              <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>
+            {% else %}
+              <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>,
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
     {% if bill.issues %}
-      <div class="bill-type">
-        {% for issue in bill.issues %}
-          {% if loop.last %}
-            <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>
-          {% else %}
-            <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>,
-          {% endif %}
-        {% endfor %}
-      </div>
+    </div>
     {% endif %}
 
-    <div>
+    <div class="right-col">
       {% if bill.description_position == "top" %}
         <p class="c-bill-descript">
           {{ bill.description }}

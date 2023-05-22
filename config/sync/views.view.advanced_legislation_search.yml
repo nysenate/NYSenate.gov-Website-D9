@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_committee
-    - field.storage.node.field_date_range
     - field.storage.node.field_issues
     - field.storage.node.field_ol_base_print_no
     - field.storage.node.field_ol_last_status
@@ -19,7 +18,6 @@ dependencies:
   module:
     - contextual_range_filter
     - datetime
-    - datetime_range
     - options
     - search_api
 id: advanced_legislation_search
@@ -1617,47 +1615,6 @@ display:
           validate_options: {  }
           break_phrase: false
           not: false
-        field_date_range:
-          id: field_date_range
-          table: search_api_index_core_search
-          field: field_date_range
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api_date
-          default_action: default
-          exception:
-            value: all
-            title_enable: false
-            title: All
-          title_enable: false
-          title: ''
-          default_argument_type: query_parameter
-          default_argument_options:
-            query_param: meeting_date
-            fallback: all
-            multiple: and
-          default_argument_skip_url: false
-          summary_options:
-            base_path: ''
-            count: true
-            override: false
-            items_per_page: 25
-          summary:
-            sort_order: asc
-            number_of_records: 0
-            format: default_summary
-          specify_validation: true
-          validate:
-            type: 'entity:date_format'
-            fail: 'not found'
-          validate_options:
-            bundles: {  }
-            access: false
-            operation: view
-            multiple: 0
-          break_phrase: false
-          not: false
         field_publication_date:
           id: field_publication_date
           table: search_api_index_core_search
@@ -1695,6 +1652,39 @@ display:
           validate_options: {  }
           break_phrase: false
           not: 0
+        field_ol_meeting_date:
+          id: field_ol_meeting_date
+          table: search_api_index_core_search
+          field: field_ol_meeting_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: numeric_range
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: meeting_date
+            fallback: all
+            multiple: and
+          default_argument_skip_url: false
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
       filters:
         status:
           id: status
@@ -1860,7 +1850,6 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.field_committee'
-        - 'config:field.storage.node.field_date_range'
         - 'config:field.storage.node.field_issues'
         - 'config:field.storage.node.field_ol_base_print_no'
         - 'config:field.storage.node.field_ol_last_status'
@@ -2052,7 +2041,6 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.field_committee'
-        - 'config:field.storage.node.field_date_range'
         - 'config:field.storage.node.field_issues'
         - 'config:field.storage.node.field_ol_base_print_no'
         - 'config:field.storage.node.field_ol_last_status'

@@ -1804,7 +1804,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
+          $image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '200x125');
         }
       }
 
@@ -4298,7 +4298,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
           $file_url_generator = \Drupal::service('file_url_generator');
           $variables['file_items'][] = [
             'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-            'text' => ($item->description !== '') ? $item->description : $file->getFilename(),
+            'text' => ($item->description) ? $item->description : $file->getFilename(),
             'type' => $file->getMimeType(),
           ];
         }
@@ -5038,7 +5038,15 @@ function nysenate_theme_preprocess_page(&$variables) {
       }
       else {
         $user = $user_storage->loadByProperties(['name' => $args[2]]);
-        $user = reset($user);
+        if ($user) {
+          $user = reset($user);
+        }
+        else {
+          // Get user info from pathalias.
+          $path = \Drupal::service('path_alias.manager')->getPathByAlias('/users/' . $args[2]);
+          $path_args = explode('/', $path);
+          $user = $user_storage->load($path_args[2]);
+        }
       }
 
       if (\Drupal::currentUser()->id() != $user->id() && !in_array('administrator', \Drupal::currentUser()->getRoles())) {

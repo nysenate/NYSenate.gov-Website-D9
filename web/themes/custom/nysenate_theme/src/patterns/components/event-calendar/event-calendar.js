@@ -50,9 +50,10 @@
           const splitDate = $('.form-item-date.js-form-type-textfield  input')
             .val()
             .split('/');
+          const lastIndex = splitDate.length - 1;
 
-          $('.form-item-date.js-form-type-textfield input').val(`${splitDate[0]}/${splitDate[2]}`);
-          $('#datepicker input').val(`${splitDate[0]}/${splitDate[2]}`);
+          $('.form-item-date.js-form-type-textfield input').val(`${splitDate[0]}/${splitDate[lastIndex]}`);
+          $('#datepicker input').val(`${splitDate[0]}/${splitDate[lastIndex]}`);
         }
       }
       if ($('.js-form-item-date-min input').val()) {

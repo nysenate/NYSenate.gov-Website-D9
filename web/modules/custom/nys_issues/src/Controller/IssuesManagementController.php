@@ -76,23 +76,23 @@ class IssuesManagementController extends ControllerBase {
     $link = Link::fromTextAndUrl($tid->getName(), $tid->toUrl())->toString();
 
     // Finish the render array, and render it.
-    if (count($rows)) {
-      $ret = [
-        'message_button' => [
-          '#type' => 'button',
-          '#value' => 'Message These Users',
-        ],
-        'user_list' => [
-          '#theme' => 'table',
-          '#header' => ['User Name', 'Address'],
-          '#rows' => $rows,
-          '#caption' => new FormattableMarkup("Following " . $link, []),
-        ],
-      ];
-    }
-    else {
-      $ret = ['#markup' => 'Could not find any followers'];
-    }
+    // if (count($rows)) {
+    //   $ret = [
+    //     'message_button' => [
+    //       '#type' => 'button',
+    //       '#value' => 'Message These Users',
+    //     ],
+    //     'user_list' => [
+    //       '#theme' => 'table',
+    //       '#header' => ['User Name', 'Address'],
+    //       '#rows' => $rows,
+    //       '#caption' => new FormattableMarkup("Following " . $link, []),
+    //     ],
+    //   ];
+    // }
+    // else {
+    //   $ret = ['#markup' => 'Could not find any followers'];
+    // }
     $ret = $this->renderer->renderPlain($ret);
 
     return new HtmlResponse($ret);

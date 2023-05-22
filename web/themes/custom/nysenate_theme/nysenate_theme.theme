@@ -4805,6 +4805,10 @@ function nysenate_theme_preprocess_views_view_table(&$variables) {
           ],
         ];
 
+        $forward_link = '';
+        $reply_link = '';
+        $actions_attributes = '';
+
         $variables['rows'][$key]['columns']['actions']['content'][0]['field_output']['#markup'] = '<div class="message-list__td--issue__toggle"></div>
           <div class="message-list__td--issue__actions">' . $forward_link . ' ' . $reply_link . '</div>';
         $variables['rows'][$key]['columns']['actions']['attributes'] = $actions_attributes;

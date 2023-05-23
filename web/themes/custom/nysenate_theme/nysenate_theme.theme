@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\address\Plugin\Field\FieldType\AddressItem;
 use Drupal\block_content\Entity\BlockContent;
@@ -1953,7 +1954,13 @@ function nysenate_theme_preprocess_views_view_fields(&$variables) {
     $node = $variables['row']->_entity;
 
     if (isset($variables['fields']['field_ol_bill_message']->content)) {
-      $referred_to = trim(strip_tags($variables['fields']['field_ol_bill_message']->content->__toString()));
+      if ($variables['fields']['field_ol_bill_message']->content instanceof Markup) {
+        $referred_to = $variables['fields']['field_ol_bill_message']->content->__toString();
+      }
+      else {
+        $referred_to = $variables['fields']['field_ol_bill_message']->content;
+      }
+      $referred_to = trim(strip_tags($referred_to));
 
       if ($referred_to) {
         $committee_name = str_ireplace('refer to ', '', $referred_to);

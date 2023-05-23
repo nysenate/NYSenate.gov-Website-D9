@@ -436,3 +436,44 @@ function nysenate_update_9011(&$sandbox) {
     $text_block->save();
   }
 }
+
+/**
+ * Update the Contact the Senate link in Policies Menu.
+ */
+function nysenate_update_9012() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'policies';
+
+  $links = [
+    '1' => [
+      'title' => 'Contact the Senate',
+      'url' => 'internal:/form/contact',
+    ],
+  ];
+
+  foreach ($links as $weight => $menu) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $menu['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update Policies menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $menu['url']]);
+      $menu_link->set('weight', $weight);
+      $menu_link->save();
+    }
+
+    // Create Policies menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $menu['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $menu['url']],
+        'weight' => $weight,
+      ]);
+      $menu_link->save();
+    }
+  }
+}

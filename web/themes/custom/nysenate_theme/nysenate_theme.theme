@@ -5611,6 +5611,7 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
           break;
 
         case 'embed':
+          $variables['district_map_title'] = $block['#block_content']->field_title->value;
           if ($block['#block_content']->info->value == 'District Map') {
             $variables['district_map_title'] = $block['#block_content']->info->value;
             $variables['district_map_embed'] = $block;

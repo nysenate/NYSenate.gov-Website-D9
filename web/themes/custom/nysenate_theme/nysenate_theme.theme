@@ -5336,6 +5336,8 @@ function nysenate_theme_preprocess_node__landing(&$variables) {
   if ($path_alias == '/news-and-issues') {
     $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
   }
+
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
 }
 
 /**

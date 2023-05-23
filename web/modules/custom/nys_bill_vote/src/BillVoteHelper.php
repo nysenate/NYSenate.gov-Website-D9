@@ -2,7 +2,15 @@
 
 namespace Drupal\nys_bill_vote;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\flag\FlagService;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\nys_bills\BillsHelper;
 use Drupal\votingapi\Entity\Vote;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
@@ -18,66 +26,99 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 class BillVoteHelper {
 
   use StringTranslationTrait;
+  use LoggerChannelTrait;
+
+  const VOTE_TYPE = 'nys_bill_vote';
 
   /**
    * Default object for current_user service.
    *
    * @var \Drupal\Core\Session\AccountProxy
    */
-  protected $currentUser;
+  protected AccountProxy $currentUser;
 
   /**
    * Default object for path.current service.
    *
    * @var \Drupal\Core\Path\CurrentPathStack
    */
-  protected $currentPath;
+  protected CurrentPathStack $currentPath;
 
   /**
    * Default object for current_route_match service.
    *
    * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
-  protected $currentRouteMatch;
-
-  /**
-   * Default object for logger.factory service.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelFactory
-   */
-  protected $logger;
+  protected CurrentRouteMatch $currentRouteMatch;
 
   /**
    * Default object for entity_type.manager service.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Voting api result function manger.
    *
    * @var \Drupal\votingapi\VoteResultFunctionManager
    */
-  protected $voteResultFunctionManager;
+  protected VoteResultFunctionManager $voteResultFunctionManager;
 
   /**
-   * {@inheritdoc}
+   * A preconfigured logger channel for 'nys_bill_vote'.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected LoggerChannelInterface $log;
+
+  /**
+   * Drupal's DateTime service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected TimeInterface $time;
+
+  /**
+   * NYS Bills Helper service.
+   *
+   * @var \Drupal\nys_bills\BillsHelper
+   */
+  protected BillsHelper $billsHelper;
+
+  /**
+   * Flag module Flag service.
+   *
+   * @var \Drupal\flag\FlagService
+   */
+  protected FlagService $flagService;
+
+  /**
+   * Constructor.
    */
   public function __construct(
     AccountProxy $current_user,
+    TimeInterface $time,
     CurrentPathStack $current_path,
     CurrentRouteMatch $current_route_match,
     LoggerChannelFactory $logger,
     EntityTypeManager $entity_type_manager,
-    VoteResultFunctionManager $vote_result_function_manager
+    FlagService $flagService,
+    VoteResultFunctionManager $vote_result_function_manager,
+    BillsHelper $billsHelper
   ) {
+
     $this->currentUser = $current_user;
+    $this->time = $time;
     $this->currentPath = $current_path;
     $this->currentRouteMatch = $current_route_match;
-    $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
+    $this->flagService = $flagService;
     $this->voteResultFunctionManager = $vote_result_function_manager;
+    $this->billsHelper = $billsHelper;
+
+    $this->setLoggerFactory($logger);
+    $this->log = $logger->get(self::VOTE_TYPE);
   }
 
   /**
@@ -91,15 +132,11 @@ class BillVoteHelper {
    *   or 'oppose'.
    */
   public function getIntentFromVote($vote) {
-    $intent = '';
-    if ($vote == 'Aye') {
-      $intent = 'support';
-    }
-    elseif ($vote == 'Nay') {
-      $intent = 'oppose';
-    }
-
-    return $intent;
+    return match ($vote) {
+      'Aye' => 'support',
+      'Nay' => 'oppose',
+      default => '',
+    };
   }
 
   /**
@@ -221,118 +258,93 @@ class BillVoteHelper {
   }
 
   /**
-   * Process the vote.
+   * Processes a vote being cast on a bill.
    *
-   * @param string $entity_type
-   *   The type of entity receiving a vote.  Should always be 'bill'.
-   * @param int $entity_id
-   *   The entity ID (i.e., node number) of the entity receiving a vote.
-   * @param int $vote_value
-   *   The value of the vote being recorded.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user casting the vote.
+   * @param \Drupal\node\Entity\Node $bill_node
+   *   The bill node on which a vote is being cast.
+   * @param string $vote_value
+   *   The value of the vote being recorded ('yes' or 'no').
    *
-   * @return array|bool
-   *   An array of vote result records affected by the vote.
+   * @return \Drupal\votingapi\Entity\Vote|null
+   *   Either the recorded vote, or NULL if it could not be recorded.
    */
-  public function processVote($entity_type, $entity_id, $vote_value) {
+  public function processVote(AccountInterface $user, Node $bill_node, string $vote_value): ?Vote {
+
+    // Translate the vote value into an index.
     $vote_index = $this->getVal($vote_value);
-    $vote_entity = NULL;
-    $node = $this->entityTypeManager->getStorage('node')->load($entity_id);
 
-    $message = $this->t('Vote process received value = %vote_value, found index = %vote_index',
-      ['%vote_value' => $vote_value, '%vote_index' => $vote_index]
+    // For feature tracking purposes.
+    $this->log->notice(
+      'Received a vote from user %user: %index => %value',
+      ['%value' => $vote_value, '%index' => $vote_index, '%user' => $user->id()]
     );
-    $this->logger->get('nys_bill_vote')->notice($message);
 
-    $ret = FALSE;
-    if ($vote_index !== FALSE) {
-      // Check to see if a vote already exists.
-      // If the user ID is zero, pass it through.
-      if ($this->currentUser->id() === 0) {
-        $needs_processing = TRUE;
+    // If not logged in, or if vote is not valid, just leave.
+    // We no longer allow anonymous voting.
+    if ((!$this->currentUser->id()) || ($vote_index === FALSE)) {
+      return NULL;
+    }
+
+    try {
+      /** @var \Drupal\votingapi\VoteStorageInterface $vote_store */
+      $vote_store = $this->entityTypeManager->getStorage('vote');
+    }
+    catch (\Throwable) {
+      $this->log->error('Failed to instantiate vote storage');
+      return NULL;
+    }
+
+    $existing_vote = current($vote_store->getUserVotes(
+      $user->id(),
+      self::VOTE_TYPE,
+      $bill_node->getEntityTypeId(),
+      $bill_node->id()
+    ));
+
+    /** @var \Drupal\votingapi\Entity\Vote $vote */
+    $vote = $existing_vote
+      ? $vote_store->load($existing_vote)
+      : $vote_store->create([
+        'type' => self::VOTE_TYPE,
+        'entity_type' => $bill_node->getEntityTypeId(),
+        'entity_id' => $bill_node->id(),
+        'value' => $vote_index,
+        'value_type' => 'option',
+        'user_id' => $user->id(),
+        'timestamp' => $this->time->getRequestTime(),
+      ]);
+
+    // If vote is new, or if the vote is different, process the vote.
+    $needs_processing = $vote->isNew() || ($vote_index !== $vote->getValue());
+
+    // If the user auto-subscribes when voting, create the subscription.
+    // This also creates a flagging entry, for now.
+    if ($user->field_voting_auto_subscribe->value ?? TRUE) {
+      $this->billsHelper->subscribeToBill($bill_node, $user);
+    }
+
+    // If needed, set the vote value and save.
+    if ($needs_processing) {
+      $vote->setValue($vote_index);
+      try {
+        $vote->save();
       }
-      else {
-        /** @var \Drupal\votingapi\VoteStorage $vote_storage */
-        $vote_storage = $this->entityTypeManager->getStorage('vote');
-        $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), 'nys_bill_vote', 'node', $entity_id);
-        $vote_check = NULL;
-        if (!empty($user_votes)) {
-          /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
-          $vote_entity = $vote_storage->load(end($user_votes));
-          $vote_check = (int) $vote_entity->getValue();
-        }
-
-        // If no vote exists, or if the vote is different, process the vote.
-        $needs_processing = ($vote_check === NULL || ($vote_check !== $vote_index));
-
-        // Also process auto-subscribe if the user has chosen.
-        $account = $this->entityTypeManager->getStorage('user')
-          ->load($this->currentUser->id());
-
-        // If a subscription was requested, create it.
-        if ($account->field_voting_auto_subscribe->value) {
-          // Need to get the current node ID, it's taxonomy ID,
-          // and user id and email. The entity_id should be
-          // our node ID...look up the tid from there.
-          try {
-            $tid = $node->field_bill_multi_session_root->value;
-          }
-          catch (\Exception $e) {
-            $tid = 0;
-          }
-
-          if ($tid && $entity_id) {
-            $data = [
-              'email' => $account->mail,
-              'tid' => $tid,
-              'nid' => $entity_id,
-              'uid' => $account->id(),
-              'why' => 2,
-              'confirmed' => $this->currentUser->isAuthenticated(),
-            ];
-
-            // @todo This method comes from nys_subscriptions module.
-            // @phpstan-ignore-next-line
-            // _real_nys_subscriptions_subscription_signup($data);
-          }
-        }
-      }
-
-      if ($needs_processing) {
-        // Set the follow flag on this bill for the current user.
-        $flag_service = \Drupal::service('flag');
-        $flag = $flag_service->getFlagById('follow_this_bill');
-        if ($this->currentUser->isAuthenticated()) {
-          $current_user = $this->entityTypeManager->getStorage('user')
-            ->load($this->currentUser->id());
-          if (empty($flag_service->getFlagging($flag, $node, $current_user))) {
-            $flag_service->flag($flag, $node, $current_user);
-          }
-        }
-
-        if (empty($vote_entity)) {
-          $vote_entity = Vote::create(['type' => 'nys_bill_vote']);
-          $vote_entity->setVotedEntityType('node');
-          $vote_entity->setVotedEntityId($entity_id);
-          $vote_entity->setValueType('option');
-          $vote_entity->setValue($vote_index);
-          $vote_entity->setOwnerId($this->currentUser->id());
-          if (!$this->currentUser->isAuthenticated()) {
-            $vote_entity->setSource(\Drupal::request()->getClientIp());
-          }
-          $vote_entity->save();
-        }
-        else {
-          /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
-          $vote_entity->setValue($vote_index);
-          $vote_entity->save();
-        }
+      catch (\Throwable $e) {
+        $this->log->error('Exception while trying to save a vote',
+          [
+            '@msg' => $e->getMessage(),
+            '@is_new' => $vote->isNew(),
+            '@uid' => $vote->getOwnerId(),
+            '@target_id' => $vote->getVotedEntityId(),
+            '@vote' => $vote->getValue(),
+          ]);
+        return NULL;
       }
     }
 
-    return [
-      'message' => $message,
-      'vote' => $vote_entity,
-    ];
+    return $vote;
   }
 
   /**
@@ -387,12 +399,7 @@ class BillVoteHelper {
   public function getDefault($entity_type, $entity_id) {
     /** @var \Drupal\votingapi\VoteStorage $vote_storage */
     $vote_storage = $this->entityTypeManager->getStorage('vote');
-    if ($this->currentUser->id() > 0) {
-      $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), 'nys_bill_vote', $entity_type, $entity_id);
-    }
-    else {
-      $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), 'nys_bill_vote', $entity_type, $entity_id, \Drupal::request()->getClientIp());
-    }
+    $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), self::VOTE_TYPE, $entity_type, $entity_id);
 
     if (!empty($user_votes)) {
       /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
@@ -420,7 +427,7 @@ class BillVoteHelper {
     $entities = &drupal_static(__FUNCTION__, NULL, $clear);
     if (empty($entities[$entity_type][$entity_id])) {
       $results = $this->voteResultFunctionManager->getResults('node', $entity_id);
-      $entities[$entity_type][$entity_id] = $results['nys_bill_vote']['vote_sum'];
+      $entities[$entity_type][$entity_id] = $results[self::VOTE_TYPE]['vote_sum'];
     }
 
     return $entities[$entity_type][$entity_id];

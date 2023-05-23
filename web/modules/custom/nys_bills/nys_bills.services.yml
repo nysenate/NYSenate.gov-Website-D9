@@ -6,15 +6,7 @@ services:
       - '@entity_type.manager'
       - '@cache.default'
       - '@nys_senators.senators_helper'
-  nys_bill_vote.bill_vote:
-    class: Drupal\nys_bill_vote\BillVoteHelper
-    arguments:
-      - '@current_user'
-      - '@path.current'
-      - '@current_route_match'
-      - '@logger.factory'
-      - '@entity_type.manager'
-      - '@plugin.manager.votingapi.resultfunction'
+      - '@flag'
   nys_bills.twig.filters:
     class: Drupal\nys_bills\CustomTwig
     tags:

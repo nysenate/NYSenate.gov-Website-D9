@@ -1,0 +1,14 @@
+uuid: 34edd920-779e-4207-85e0-1a022ce82e2b
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prev_ver
+id: taxonomy_vocabulary_prev_ver
+entity_type_id: taxonomy_vocabulary
+entity_id: prev_ver
+action: page_redirect
+allow_override: 1
+redirect: '<front>'
+redirect_code: 301
+redirect_fallback_action: access_denied

@@ -5553,6 +5553,19 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_node__video(&$variables) {
+  $current_node = \Drupal::routeMatch()->getParameter('node');
+  if (!empty($current_node->field_senator_multiref)) {
+    $senator = $current_node->field_senator_multiref->entity;
+    $senator_link = \Drupal::service('nys_senators.microsites')
+      ->getMicrosite($senator);
+    $variables['senator_link'] = $senator_link;
+  }
+}
+
+/**
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__student_program(&$variables) {

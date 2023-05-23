@@ -90,6 +90,7 @@
     transition: background 0.2s ease;
     border: 0;
     margin: 0;
+    flex: 1;
     @extend .drk-bg;
 
 		&.nys-bill-vote-yes { @extend .icon-before__check; }
@@ -98,6 +99,7 @@
     &.nys-subscribe-button {
       width: 100%;
       @extend .icon-before__notification;
+      flex: 2;
     }
 
     &:hover {

@@ -173,7 +173,7 @@ function nysenate_update_9006(&$sandbox) {
       'value' => '
         <p><a class="nys-btn--gold" href="/newsroom/articles/undergraduate-program">Undergraduate Session<br />
         Assistants Program</a></p>
-        
+
         <p><a class="nys-btn--blue" href="/newsroom/articles/2022/work-based-learning-assistant-springfall">Work-based Learning Assistant<br />
         (Spring/Fall)</a></p>
         ',
@@ -183,7 +183,7 @@ function nysenate_update_9006(&$sandbox) {
     $body_right = [
       'value' => '
       <p><a class="nys-btn--gold" href="/newsroom/articles/graduate-program">Graduate Fellowships</a></p>
-      
+
       <p><a class="nys-btn--blue" href="/newsroom/articles/2022/senate-production-internship-summer">Senate Production Internship<br />
       (Summer)</a></p>
       ',
@@ -341,7 +341,7 @@ function nysenate_update_9009(&$sandbox) {
       <div class="c-block--background">
       <strong>NEW YORK STATE SENATE OFFICE OF<br />
       STUDENT PROGRAMS</strong>
-      
+
       <p>208 Legislative Office Building<br />
       Albany, NY 12247<br />
       <br />
@@ -396,5 +396,43 @@ function nysenate_update_9010() {
       ]);
       $menu_link->save();
     }
+  }
+}
+
+/**
+ * NYSD9-205: Resolve the Program Links in Student Programs.
+ */
+function nysenate_update_9011(&$sandbox) {
+  // Update the body fields of Program Links in Student Program.
+  $text_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->load(3757);
+
+  if (!empty($text_block)) {
+    // For field_body_left values.
+    $body_left = [
+      'value' => '
+        <p><a class="nys-btn--gold" href="/newsroom/articles/2021/undergraduate-program">Undergraduate Session<br />
+        Assistants Program</a></p>
+
+        <p><a class="nys-btn--blue" href="/newsroom/articles/2022/work-based-learning-assistant-springfall">Work-based Learning Assistant<br />
+        (Spring/Fall)</a></p>
+        ',
+      'format' => 'full_html',
+      'summary' => '',
+    ];
+    $body_right = [
+      'value' => '
+      <p><a class="nys-btn--gold" href="/newsroom/articles/2021/new-york-senate-graduate-fellowships">Graduate Fellowships</a></p>
+
+      <p><a class="nys-btn--blue" href="/newsroom/articles/2022/senate-production-internship-summer">Senate Production Internship<br />
+      (Summer)</a></p>
+      ',
+      'format' => 'full_html',
+      'summary' => '',
+    ];
+    $text_block->set('field_body_left', $body_left);
+    $text_block->set('field_body_right', $body_right);
+    $text_block->save();
   }
 }

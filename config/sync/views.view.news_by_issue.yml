@@ -36,6 +36,7 @@ dependencies:
     - semanticviews
     - taxonomy
     - user
+    - views_infinite_scroll
 id: news_by_issue
 label: 'News by Issue'
 module: views
@@ -935,9 +936,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: none
+        type: infinite_scroll
         options:
           offset: 0
+          items_per_page: 5
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       empty:
         area:
           id: area
@@ -1081,7 +1100,7 @@ display:
         sorts: false
         filters: false
         filter_groups: false
-      use_ajax: false
+      use_ajax: true
       display_description: ''
       display_extenders: {  }
     cache_metadata:
@@ -1090,6 +1109,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -1549,9 +1569,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: none
+        type: infinite_scroll
         options:
           offset: 0
+          items_per_page: 5
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       empty:
         area:
           id: area
@@ -1727,7 +1765,7 @@ display:
         filters: false
         filter_groups: false
         footer: false
-      use_ajax: false
+      use_ajax: true
       display_description: ''
       use_more: false
       use_more_always: true
@@ -1753,6 +1791,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -2649,9 +2688,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: none
+        type: infinite_scroll
         options:
           offset: 0
+          items_per_page: 5
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       empty:
         area:
           id: area
@@ -2820,7 +2877,7 @@ display:
         sorts: false
         filters: false
         filter_groups: false
-      use_ajax: false
+      use_ajax: true
       display_description: ''
       display_extenders: {  }
     cache_metadata:
@@ -2829,6 +2886,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

@@ -407,3 +407,55 @@ function nys_blocks_update_9005() {
     }
   }
 }
+
+/**
+ * Update the About landing page How Senate Works block.
+ */
+function nys_blocks_update_9006() {
+  // About The New York State Senate landing node.
+  $nid = 12004487;
+
+  $node = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->load($nid);
+
+  if ($node instanceof NodeInterface) {
+    if ($node->hasField('field_landing_blocks') &&
+      !$node->get('field_landing_blocks')->isEmpty()) {
+      foreach ($node->get('field_landing_blocks') as $key => $value) {
+        if (!is_numeric($key)) {
+          continue;
+        }
+
+        /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+        $block_content = $value->entity ?? NULL;
+        $title = $block_content->field_title->value ?? NULL;
+
+        if ($block_content->bundle() == 'text' &&
+          $title == 'How the Senate Works') {
+          $block_content->field_body_left = [
+            'value' => '<drupal-media data-align="center" data-entity-type="media" data-entity-uuid="a24792e9-3d41-4d90-8eb6-8faef89de651"></drupal-media>
+
+            <p>The Legislature is the law-making branch of state government. It is a bicameral, or two-house, body composed of the Senate and the Assembly. The Constitution authorizes a Senate of varying number, currently 63 members, and an Assembly of 150 members, who are elected from districts throughout the State for two-year terms. Each member of the Legislature must be a United States citizen, a resident of the State for five years and, in most cases, of the Senate or Assembly district for one year preceding the election.</p>
+
+            <p>After each election, the Senate elects from among its members a Temporary President who serves a two-year term. Traditionally, the Temporary President is the ranking Senator of the majority political party — the Majority Leader. It is the duty of the Temporary President to direct and guide the business of the Senate, appoint Senate committees, name Senate employees and perform or delegate to another Senator the duties of the President during the Lieutenant Governor’s absence from the Senate Chamber.</p>
+
+            <p>The Constitution reserves varied and extensive powers for the Legislature. The most important is that which permits the Senate and Assembly to propose laws, within the limits of the Federal Constitution and certain Federal statutes and treaties. These laws first take the form of bills, which may be introduced in either house. A bill passed by one house must be passed in the same form by the other before it can be sent to the Governor for a signature or veto.</p>
+
+            <p>The Senate and Assembly have several additional powers that are reserved solely for them in the Constitution. An important weapon in legislative deliberation is the override of the Governor’s veto. The Legislature can approve a law despite a veto by the Governor with the support of two-thirds of the membership in each house. However, the most common lawmaking procedure is the result of compromise among the Senate, the Assembly and the Governor.</p>
+
+            <p>The Senate alone has the power to confirm the Governor’s appointment of non-elected state officials and court judges. The Constitution provides that such appointments are subject to the advice and consent of the Senate, which approves or disapproves them, after hearings on the candidate’s qualifications.</p>
+
+            <p>The Legislature, through its varied functions, serves as a check upon the executive authority of the Governor and helps ensure that the best interests of the State’s citizens are legislatively represented.</p>
+            ',
+            'format' => 'full_html',
+          ];
+          $block_content->save();
+
+          // Save the node.
+          $node->save();
+        }
+      }
+    }
+  }
+}

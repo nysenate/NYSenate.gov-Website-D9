@@ -5,6 +5,7 @@ dependencies:
   config:
     - comment.type.default_comment
     - field.field.comment.default_comment.comment_body
+    - field.field.comment.default_comment.field_anonymous
     - field.field.comment.default_comment.field_rejected
   module:
     - text
@@ -25,6 +26,13 @@ content:
     settings:
       rows: 5
       placeholder: ''
+    third_party_settings: {  }
+  field_anonymous:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   langcode:
     type: language_select

@@ -4461,8 +4461,10 @@ function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bi
   $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
   $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
 
+  $committee_link = '';
   if ($node->hasField('field_ol_latest_status_committee') &&
-    !$node->get('field_ol_latest_status_committee')->isEmpty()) {
+    !$node->get('field_ol_latest_status_committee')->isEmpty() &&
+    $last_status == 'In Senate Committee') {
     $committee = $node->field_ol_latest_status_committee->value;
     $link = '/committees/' .
       strtolower(str_replace([',', ' '], ['', '-'], $committee));

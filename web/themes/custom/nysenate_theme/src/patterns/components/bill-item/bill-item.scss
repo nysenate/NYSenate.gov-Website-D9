@@ -144,13 +144,32 @@ h3.c-bill-num {
   }
 
   &.c-block-constituent-bill {
-
     .nys-bill-status.nys-bill-status__drk {
 
       li {
 
         &.passed {
           background: $grey05;
+        }
+      }
+    }
+
+    p.c-bill-update--location {
+      a {
+        color: $color-white;
+      }
+    }
+
+    .sponsors {
+      span.sponsor-name {
+        font-size: 16px;
+        line-height: 23px;
+        font-family: "Adelle Light";
+        margin: 0;
+        text-transform: none;
+
+        a {
+          color: #fff;
         }
       }
     }
@@ -300,9 +319,9 @@ h3.c-bill-num {
 /*----------------------------------------
 / BILL STATUS
 / styling for a list denoting a bill's status
-/ list items are circle 
-/ add 'passed' class to illustrate we're 
-/	passed that step	
+/ list items are circle
+/ add 'passed' class to illustrate we're
+/	passed that step
 /----------------------------------------*/
 
 .c-bill-section {
@@ -382,7 +401,7 @@ h3.c-bill-num {
       }
     }
 
-    /* 
+    /*
 			spacer is necessary to pull off
 			justified lists
 		*/

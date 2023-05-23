@@ -803,6 +803,10 @@ petitions:
     component:
       dist/css/petitions.css: {}
 
+popper:
+  js:
+    dist/js/popper.min.js: {}
+
 quick-facts:
   css:
     component:
@@ -883,6 +887,15 @@ slick:
     - core/drupalSettings
     - core/jquery.once
     - core/jquery
+
+tooltip:
+  css:
+    component:
+      dist/css/tooltip.css: {}
+  js:
+    dist/js/tooltip.es6.js: {}
+  dependencies:
+    - nysenate_theme/popper
 
 highcharts:
   js:

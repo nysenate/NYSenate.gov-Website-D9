@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.meeting.field_event_online_link
     - field.field.node.meeting.field_event_place
     - field.field.node.meeting.field_issues
+    - field.field.node.meeting.field_majority_issue_tag
     - field.field.node.meeting.field_meeting_agenda
     - field.field.node.meeting.field_meeting_location
     - field.field.node.meeting.field_meeting_status
@@ -113,6 +114,14 @@ content:
       term_plain: 0
     third_party_settings: {  }
     weight: 117
+    region: content
+  field_majority_issue_tag:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 122
     region: content
   field_meeting_agenda:
     type: entity_reference_label

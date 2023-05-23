@@ -18,6 +18,7 @@ dependencies:
     - field.field.node.event.field_image_main
     - field.field.node.event.field_issues
     - field.field.node.event.field_location
+    - field.field.node.event.field_majority_issue_tag
     - field.field.node.event.field_meeting_location
     - field.field.node.event.field_senator_multiref
     - field.field.node.event.field_social_image
@@ -96,9 +97,9 @@ third_party_settings:
         required_fields: true
     group_promotion:
       children:
+        - group_sitewide_settings
         - group_microsite_settings
         - group__committee_settings
-        - group_sitewide_settings
       label: 'Promotion and Visibility'
       region: content
       parent_name: group_discoverability
@@ -161,8 +162,9 @@ third_party_settings:
     group_sitewide_settings:
       children:
         - field_accessible_sitewide
+        - field_majority_issue_tag
       label: 'Sitewide Settings'
-      region: hidden
+      region: content
       parent_name: group_promotion
       weight: 31
       format_type: tab
@@ -217,6 +219,7 @@ content:
       collapsible: false
       collapsed: false
       revision: false
+      removed_reference: optional
     third_party_settings: {  }
   field_committee:
     type: options_select
@@ -284,7 +287,7 @@ content:
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox
-    weight: 34
+    weight: 9
     region: content
     settings:
       display_label: true
@@ -330,6 +333,12 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_majority_issue_tag:
+    type: options_select
+    weight: 33
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_meeting_location:
     type: string_textfield
     weight: 8
@@ -358,7 +367,7 @@ content:
             selector: ''
   field_senator_multiref:
     type: options_select
-    weight: 33
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -473,7 +482,7 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 7
+    weight: 8
     region: content
     settings:
       display_label: true
@@ -488,7 +497,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS

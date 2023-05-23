@@ -34,7 +34,7 @@ function nys_comment_form_alter(&$form, FormStateInterface $form_state, $form_id
 
   if ($form_id == 'views_form_comment_page_unapproved') {
     $form['header']['comment_bulk_form']['action']['#options']['ban_user_comment'] = t('Ban User');
-    $form['header']['comment_bulk_form']['action']['#options']['comment_delete_action'] = t('Reject');
+    $form['header']['comment_bulk_form']['action']['#options']['reject_comment'] = t('Reject');
     $form['header']['comment_bulk_form']['action']['#options']['comment_publish_action'] = t('Approve');
   }
 }
@@ -76,7 +76,7 @@ function nys_comment_entity_operation_alter(array &$operations, EntityInterface 
     ];
 
     // Reject operation.
-    $rejectCommentUrl = Url::fromRoute('entity.comment.delete_form', ['comment' => $cid]);
+    $rejectCommentUrl = Url::fromRoute('comment.reject', ['comment' => $cid]);
     $operations['reject'] = [
       'title' => t('Reject'),
       'weight' => 20,
@@ -102,5 +102,19 @@ function nys_comment_preprocess_links__comment(&$variables) {
 function nys_comment_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
   if (isset($data['tabs'][1]['comment.admin_approval'])) {
     $data['tabs'][1]['comment.admin_approval']['#weight'] = -1;
+  }
+}
+
+/**
+ * Update the existing comments with the default rejected value.
+ */
+function nys_comment_deploy_default_rejected_value() {
+  $cids = \Drupal::entityQuery('comment')->execute();
+  $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
+  $comments = $comment_storage->loadMultiple($cids);
+
+  foreach ($comments as $id => $comment) {
+    $comment->field_rejected = FALSE;
+    $comment->save();
   }
 }

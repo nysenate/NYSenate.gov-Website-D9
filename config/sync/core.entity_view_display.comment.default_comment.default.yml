@@ -6,6 +6,7 @@ dependencies:
     - comment.type.default_comment
     - field.field.comment.default_comment.comment_body
     - field.field.comment.default_comment.field_anonymous
+    - field.field.comment.default_comment.field_rejected
   module:
     - text
 id: comment.default_comment.default
@@ -27,6 +28,7 @@ content:
     region: content
 hidden:
   field_anonymous: true
+  field_rejected: true
   langcode: true
   private_message_link: true
   search_api_excerpt: true

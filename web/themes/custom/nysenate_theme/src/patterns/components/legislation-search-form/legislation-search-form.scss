@@ -1,0 +1,154 @@
+@import '../../global/utils/init';
+
+.nys-search-legislation-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 17px;
+
+  @include breakpoint($bp-sm) {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20px;
+  }
+
+  .nys-title,
+  .form-item-type,
+  .form-item-full-text,
+  .form-description {
+    grid-column: span 2;
+  }
+
+  .nys-title { 
+    margin: 0;
+    color: $grey10;
+  }
+
+  .form-description {
+    border: solid $color-alto;
+    border-width: 1px 0;
+    clear: both;
+    margin: 0;
+    padding: 1.1875rem 0;
+  }
+
+  .form-item {
+    width: 100%;
+    margin: 0;
+
+    @include breakpoint($bp-under-sm) {
+      grid-column: 1;
+    }
+
+    select {
+      background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
+      background-position: 100% center;
+      background-repeat: no-repeat;
+      font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+      text-transform: capitalize;
+    }
+
+    input,
+    select {
+      font-size: 0.875rem;
+      line-height: normal;
+      height: 2.3125rem;
+      margin: 0;
+      padding: 0.5rem;
+      min-height: auto;
+      color: rgba(0, 0, 0, 0.75);
+    }
+
+  }
+
+  .form-type-select {
+
+    &::after {
+      top: 40%;
+      display: none;
+    }
+  }
+
+  .form-item-type {
+    border: solid $color-alto;
+    border-width: 0 0 1px;
+    padding-bottom: 2.25rem;
+
+    &::after {
+      display: block;
+      top: 50%;
+      transform: translateY(-62%);
+
+      @include breakpoint($bp-sm) {
+        right: 24px;
+      }
+    }
+
+    select {
+      font-family: $font-sans-bold;
+      text-transform: uppercase;
+      color: $blue01;
+      background: transparent;
+      height: 55px;
+    }
+  }
+
+  .js-form-type-select,
+  .js-form-type-select+.js-form-type-select {
+
+    @include breakpoint($bp-sm) {
+      margin: 0;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    grid-column: span 2;
+    border: solid $color-alto;
+    border-width: 1px 0 0;
+    margin-top: 1.25rem;
+    padding-top: 1.1875rem;
+  }
+
+  .search__submit {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: $color-white;
+    font-family: $font-sans-bold;
+    letter-spacing: 0.2em;
+    font-size: 12px;
+    line-height: 40px;
+    height: auto;
+    background-color: $gen_blue_lgt;
+    display: block;
+    outline: none;
+    padding: 0;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    grid-column: span 2;
+
+    @include breakpoint($bp-sm) {
+      max-width: 160px;
+    }
+
+    &:hover,
+    &:active {
+      outline: 0;
+    }
+
+    &-icon {
+      display: none;
+    }
+  }
+}
+
+.page--search-legislation {
+
+  .l-row--main {
+    padding-bottom: 0;
+  }
+}

@@ -3,6 +3,7 @@
 namespace Drupal\nys_bill_vote\Controller;
 
 use Drupal\Core\Session\AccountProxy;
+use Drupal\node\Entity\Node;
 use Drupal\nys_bill_vote\BillVoteHelper;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,13 +67,23 @@ class BillVoteController extends ControllerBase {
    * provides a mechanism for the user to confirm that the intent is correct.
    * This function allows us to make an ajax to confirm that vote.
    *
-   * @param string $entity_id
-   *   The entity ID.
+   * @param \Drupal\node\Entity\Node $bill_node
+   *   The bill on which a vote is being cast.
    * @param mixed $vote_value
    *   The vote value.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The AJAX response.
+   *
+   * @todo Shouldn't this be a JSON response?
    */
-  public function confirmationAjaxCallback($entity_id, $vote_value) {
-    return new Response($this->billVoteHelper->processVote('node', $entity_id, $vote_value)['message']);
+  public function confirmationAjaxCallback(Node $bill_node, mixed $vote_value): Response {
+    $vote_result = $this->billVoteHelper->processVote($this->currentUser(), $bill_node, $vote_value);
+    $response = $this->t(
+      'Vote recorded on node %bill_id: %value',
+      ['%bill_id' => $bill_node->id(), '%value' => $vote_value]
+    );
+    return new Response($response);
   }
 
   /**

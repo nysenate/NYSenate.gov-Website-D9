@@ -3,7 +3,11 @@ services:
     class: Drupal\nys_bill_vote\BillVoteHelper
     arguments:
       - '@current_user'
+      - '@datetime.time'
       - '@path.current'
       - '@current_route_match'
       - '@logger.factory'
       - '@entity_type.manager'
+      - '@flag'
+      - '@plugin.manager.votingapi.resultfunction'
+      - '@nys_bill.bills_helper'

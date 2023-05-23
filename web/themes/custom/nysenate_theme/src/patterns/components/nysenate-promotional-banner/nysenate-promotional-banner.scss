@@ -5,6 +5,7 @@
   padding: 0;
   margin: 0;
   @extend .lgt-bg;
+  grid-column: span 2;
 
   .node__content .c-block {
     margin: 0;
@@ -110,6 +111,7 @@
     float: left;
     clear: none;
     height: 345px;
+    grid-column: span 1;
 
     &.c-block--even {
       margin-right: 6%;
@@ -186,6 +188,7 @@
 
   .view-content {
     display: grid;
-    row-gap: 40px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
   }
 }

@@ -6,6 +6,7 @@ dependencies:
     - comment.type.default_comment
     - field.field.comment.default_comment.comment_body
     - field.field.comment.default_comment.field_anonymous
+    - field.field.comment.default_comment.field_rejected
   module:
     - text
 id: comment.default_comment.default
@@ -41,4 +42,5 @@ content:
       include_locked: true
     third_party_settings: {  }
 hidden:
+  field_rejected: true
   subject: true

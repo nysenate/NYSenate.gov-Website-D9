@@ -31,6 +31,11 @@ global:
 #     - rain_theme/clearfix
 #     - rain_theme/visually-hidden
 
+about:
+  css:
+    component:
+      dist/css/about.css: {}
+
 accordion:
   css:
     component:
@@ -438,6 +443,11 @@ landing-page-hero:
       dist/css/landing-page-hero.css: {}
   dependencies:
     - nysenate_theme/hero
+
+legislation-search-form:
+  css:
+    component:
+      dist/css/legislation-search-form.css: {}
 
 map:
   css:
@@ -896,7 +906,7 @@ sticky-nav:
     component:
       dist/css/sticky-nav.css: {}
   js:
-    dist/js/sticky-nav.js: {}
+    dist/js/sticky-nav.es6.js: {}
   dependencies:
     - core/jquery
     - core/jquery.once
@@ -907,6 +917,12 @@ sticky-nav-2:
   css:
     component:
       dist/css/sticky-nav-2.css: {}
+  js:
+    dist/js/sticky-nav-2.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
 
 submission-results:
   css:

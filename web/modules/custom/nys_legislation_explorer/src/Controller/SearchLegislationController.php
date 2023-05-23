@@ -42,12 +42,31 @@ class SearchLegislationController extends ControllerBase {
       $request->query->get('committee') ||
       $request->query->get('transcript_type') ||
       $request->query->get('meeting_date') ||
-      $request->query->get('publish_date_month') ||
-      $request->query->get('publish_date_year') ||
+      $request->query->get('publish_date') ||
       $request->query->get('date')) {
       try {
         $view = Views::getView('advanced_legislation_search');
-        $content['search_legislation_results'] = $view->buildRenderable('search_results_block');
+        switch ($request->query->get('type')) {
+          case 'bill':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_bills');
+            break;
+
+          case 'calendar':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_calenders');
+            break;
+
+          case 'resolution':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_resolutions');
+            break;
+
+          case 'agenda':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_agendas');
+            break;
+
+          case 'transcript':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_transcripts');
+            break;
+        }
       }
       catch (\Exception $e) {
         $message = 'An unexpected error has occurred while searching. Please try again later.';

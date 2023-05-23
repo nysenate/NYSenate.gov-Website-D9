@@ -414,6 +414,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'type' => 'transcript' ?: '',
           'transcript_type' => $values['type'] ?: '',
           'publish_date' => $date_range ?: '',
+          'full_text' => $values['full_text'] ?: '',
         ];
         break;
 

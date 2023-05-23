@@ -21,6 +21,7 @@ dependencies:
     - field.storage.node.field_image_caption
     - field.storage.node.field_issues
     - field.storage.node.field_ol_last_status
+    - field.storage.node.field_ol_last_status_date
     - field.storage.node.field_ol_latest_status_committee
     - field.storage.node.field_ol_latest_status
     - field.storage.node.field_ol_meeting_date
@@ -290,6 +291,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_last_status
+  field_ol_last_status_date:
+    label: 'Last Status Date'
+    datasource_id: 'entity:node'
+    property_path: field_ol_last_status_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_ol_last_status_date
   field_ol_latest_status:
     label: 'Latest Status'
     datasource_id: 'entity:node'

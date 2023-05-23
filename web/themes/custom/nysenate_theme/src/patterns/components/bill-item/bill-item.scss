@@ -177,13 +177,32 @@ p.c-bill-update--date {
   }
 
   &.c-block-constituent-bill {
-
     .nys-bill-status.nys-bill-status__drk {
 
       li {
 
         &.passed {
           background: $grey05;
+        }
+      }
+    }
+
+    p.c-bill-update--location {
+      a {
+        color: $color-white;
+      }
+    }
+
+    .sponsors {
+      span.sponsor-name {
+        font-size: 16px;
+        line-height: 23px;
+        font-family: "Adelle Light";
+        margin: 0;
+        text-transform: none;
+
+        a {
+          color: #fff;
         }
       }
     }

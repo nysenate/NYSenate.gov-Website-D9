@@ -1643,24 +1643,11 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: search_api
-          order: ASC
-          expose:
-            label: 'Older meetings first'
-            field_identifier: field_ol_meeting_date
-          exposed: true
-        field_ol_meeting_date_1:
-          id: field_ol_meeting_date_1
-          table: search_api_index_core_search
-          field: field_ol_meeting_date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api
           order: DESC
           expose:
-            label: 'Recent meetings first'
-            field_identifier: field_ol_meeting_date_1
-          exposed: true
+            label: ''
+            field_identifier: ''
+          exposed: false
       arguments:
         type:
           id: type
@@ -1934,8 +1921,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.field_committee'
@@ -1959,32 +1944,6 @@ display:
     display_options:
       title: 'Advanced Legislation Search - Bills'
       sorts:
-        field_ol_print_no:
-          id: field_ol_print_no
-          table: search_api_index_core_search
-          field: field_ol_print_no
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api
-          order: ASC
-          expose:
-            label: 'Bill Print Number Ascending'
-            field_identifier: field_ol_print_no
-          exposed: true
-        field_ol_print_no_1:
-          id: field_ol_print_no_1
-          table: search_api_index_core_search
-          field: field_ol_print_no
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api
-          order: DESC
-          expose:
-            label: 'Bill Print Number Descending'
-            field_identifier: field_ol_print_no_1
-          exposed: true
         field_ol_last_status_date:
           id: field_ol_last_status_date
           table: search_api_index_core_search
@@ -1995,9 +1954,9 @@ display:
           plugin_id: search_api
           order: DESC
           expose:
-            label: 'Last Status Change'
-            field_identifier: field_ol_last_status_date
-          exposed: true
+            label: ''
+            field_identifier: ''
+          exposed: false
       arguments:
         type:
           id: type
@@ -2435,8 +2394,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.field_committee'
@@ -2468,24 +2425,11 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: search_api
-          order: ASC
-          expose:
-            label: 'Older sessions first'
-            field_identifier: field_publication_date
-          exposed: true
-        field_publication_date_1:
-          id: field_publication_date_1
-          table: search_api_index_core_search
-          field: field_publication_date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api
           order: DESC
           expose:
-            label: 'Recent sessions first'
-            field_identifier: field_publication_date_1
-          exposed: true
+            label: ''
+            field_identifier: ''
+          exposed: false
       arguments:
         type:
           id: type
@@ -2726,8 +2670,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.field_committee'
@@ -2759,24 +2701,11 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: search_api
-          order: ASC
-          expose:
-            label: 'Resolution Print Number Ascending'
-            field_identifier: field_ol_print_no
-          exposed: true
-        field_ol_print_no_1:
-          id: field_ol_print_no_1
-          table: search_api_index_core_search
-          field: field_ol_print_no
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api
           order: DESC
           expose:
-            label: 'Resolution Print Number Descending'
-            field_identifier: field_ol_print_no_1
-          exposed: true
+            label: ''
+            field_identifier: ''
+          exposed: false
       filters:
         status:
           id: status
@@ -2945,8 +2874,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.field_committee'
@@ -2969,6 +2896,20 @@ display:
     position: 2
     display_options:
       title: 'Advanced Legislation Search - Transcripts'
+      sorts:
+        field_ol_publish_date:
+          id: field_ol_publish_date
+          table: search_api_index_core_search
+          field: field_ol_publish_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
       arguments:
         type:
           id: type
@@ -3264,6 +3205,7 @@ display:
         title: false
         style: false
         row: false
+        sorts: false
         arguments: false
         filters: false
         filter_groups: false

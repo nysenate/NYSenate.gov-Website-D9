@@ -216,7 +216,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('Month'),
       '#options' => ['all' => 'Any'] + $this->getMonthsOptions(),
-      '#default_value' => $month_default ?? NULL,
+      '#default_value' => $month_default,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -233,7 +233,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('YEAR'),
       '#options' => $years_option,
-      '#default_value' => $year_default ?? NULL,
+      '#default_value' => $year_default,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -341,6 +341,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     ];
 
     $form['actions']['#type'] = 'actions';
+    $form['#attached']['library'][] = 'nys_legislation_explorer/nys_legislation_explorer';
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('SEARCH'),
@@ -380,6 +381,8 @@ class SearchAdvancedLegislationForm extends FormBase {
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
           'committee' => $values['committee'] ?: '',
+          'sort_by' => 'field_ol_last_status_date',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -390,6 +393,8 @@ class SearchAdvancedLegislationForm extends FormBase {
           'printno' => $values['printno'] ?: '',
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
+          'sort_by' => 'field_ol_print_no',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -398,6 +403,8 @@ class SearchAdvancedLegislationForm extends FormBase {
           'type' => $values['type'] ?: '',
           'meeting_date' => $date_range ?: '',
           'committee' => $values['committee'] ?: '',
+          'sort_by' => 'field_ol_meeting_date',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -405,6 +412,8 @@ class SearchAdvancedLegislationForm extends FormBase {
         $params = [
           'type' => $values['type'] ?: '',
           'date' => $date_range ?: '',
+          'sort_by' => 'field_publication_date',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -415,6 +424,8 @@ class SearchAdvancedLegislationForm extends FormBase {
           'transcript_type' => $values['type'] ?: '',
           'publish_date' => $date_range ?: '',
           'full_text' => $values['full_text'] ?: '',
+          'sort_by' => 'field_ol_publish_date',
+          'sort_order' => 'DESC',
         ];
         break;
 

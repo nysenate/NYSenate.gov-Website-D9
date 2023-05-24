@@ -37,7 +37,7 @@ elements: |-
     '#type': email
     '#title': 'Teacher Email'
     '#required': true
-    '#pattern': '[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)+[a-z]{2,3}'
+    '#pattern': '[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,3}'
     '#pattern_error': 'Please enter a valid email address'
   grade:
     '#type': select
@@ -56,6 +56,7 @@ elements: |-
       10: '10th Grade'
       11: '11th Grade'
       12: '12th Grade'
+      homeschool: Homeschool
     '#empty_option': '- Select a value -'
     '#required': true
     '#width': 100

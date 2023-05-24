@@ -8,12 +8,13 @@ description: 'Test Pantheonsite'
 weight: 0
 folder: profiles/custom/nysenate/config/test
 module:
+  stage_file_proxy: 0
   clamav: 0
   pantheon_advanced_page_cache: 0
-  stage_file_proxy: 0
 theme: {  }
 blacklist:
   - system.logging
+  - system.performance
   - clamav.settings
   - pantheon_advanced_page_cache.settings
 graylist: {  }

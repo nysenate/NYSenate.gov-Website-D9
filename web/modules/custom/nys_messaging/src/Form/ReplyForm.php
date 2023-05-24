@@ -178,18 +178,6 @@ class ReplyForm extends FormBase {
     ]);
     $message->field_to = [$owner];
 
-    $current_path = $this->currentPath->getPath();
-    if (strpos($current_path, '/dashboard/inbox') !== FALSE) {
-      $current_path = explode('/', $current_path);
-      $current_user = $this->currentUser;
-      $roles = $current_user->getRoles();
-
-      // Check the role and id of the current user.
-      if (in_array('legislative_correspondent', $current_user->getRoles()) && $current_user->id() != $current_path[2]) {
-        $message->owner = $current_path[2];
-      }
-    }
-
     $message->save();
 
     // Set the owner of the original message as the recipient.

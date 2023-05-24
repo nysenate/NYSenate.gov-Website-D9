@@ -146,11 +146,20 @@ class SearchAdvancedLegislationForm extends FormBase {
     $form['advanced_search'] = [
       '#type' => 'block',
       '#attributes' => [
-        'class' => ['my-custom-class'],
+        'class' => ['adv-search-container'],
       ],
     ];
 
-    $form['advanced_searchk']['advanced_search_text'] = [
+    $form['my_block']['my_block_title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h1',
+      '#value' => $this->t('Advanced Legislation Search'),
+      '#attributes' => [
+        'class' => ['nys-title'],
+      ],
+    ];
+
+    $form['advanced_search']['advanced_search_text'] = [
       '#type' => 'item',
       '#markup' => $this->t('Fill out one or more of the following filter criteria to perform a search.'),
     ];
@@ -172,6 +181,9 @@ class SearchAdvancedLegislationForm extends FormBase {
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
       '#default_value' => $args['type'] ?? NULL,
+      '#attributes' => [
+        'class' => ['content-type'],
+      ],
     ];
 
     $form['printno'] = [
@@ -186,6 +198,9 @@ class SearchAdvancedLegislationForm extends FormBase {
             ['value' => 'resolution'],
           ],
         ],
+      ],
+      '#attributes' => [
+        'class' => ['print-no'],
       ],
     ];
 
@@ -210,6 +225,9 @@ class SearchAdvancedLegislationForm extends FormBase {
           ],
         ],
       ],
+      '#attributes' => [
+        'class' => ['session-year'],
+      ],
     ];
 
     $form['month'] = [
@@ -226,6 +244,9 @@ class SearchAdvancedLegislationForm extends FormBase {
             ['value' => 'public_hearing'],
           ],
         ],
+      ],
+      '#attributes' => [
+        'class' => ['month'],
       ],
     ];
 
@@ -244,6 +265,9 @@ class SearchAdvancedLegislationForm extends FormBase {
           ],
         ],
       ],
+      '#attributes' => [
+        'class' => ['year'],
+      ],
     ];
 
     $form['full_text'] = [
@@ -260,6 +284,9 @@ class SearchAdvancedLegislationForm extends FormBase {
           ],
         ],
       ],
+      '#attributes' => [
+        'class' => ['full-text'],
+      ],
     ];
 
     $form['sponsor'] = [
@@ -274,6 +301,9 @@ class SearchAdvancedLegislationForm extends FormBase {
             ['value' => 'resolution'],
           ],
         ],
+      ],
+      '#attributes' => [
+        'class' => ['sponsor'],
       ],
     ];
 
@@ -305,6 +335,9 @@ class SearchAdvancedLegislationForm extends FormBase {
           ],
         ],
       ],
+      '#attributes' => [
+        'class' => ['status'],
+      ],
     ];
 
     $form['committee'] = [
@@ -319,6 +352,9 @@ class SearchAdvancedLegislationForm extends FormBase {
             ['value' => 'agenda'],
           ],
         ],
+      ],
+      '#attributes' => [
+        'class' => ['committee'],
       ],
     ];
 
@@ -338,6 +374,9 @@ class SearchAdvancedLegislationForm extends FormBase {
           ],
         ],
       ],
+      '#attributes' => [
+        'class' => ['issue'],
+      ],
     ];
 
     $form['actions']['#type'] = 'actions';
@@ -345,7 +384,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('SEARCH'),
-      '#button_type' => 'primary',
+      '#button_type' => 'small',
     ];
     return $form;
   }

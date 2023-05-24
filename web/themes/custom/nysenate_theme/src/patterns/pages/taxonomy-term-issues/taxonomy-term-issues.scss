@@ -16,17 +16,17 @@
       @include breakpoint($bp-sm) {
         margin-bottom: 30px;
       }
-    
+
       > span {
         color: $grey08;
         margin-right: 5px;
       }
     }
-  
+
     .js-pager__items.pager {
       padding: 0;
       margin: 0;
-  
+
       .pager__item {
         padding: 0;
       }
@@ -52,7 +52,7 @@
     color: $yellow03;
     text-transform: uppercase;
   }
-  
+
   .c-detail--header-meta {
     position: relative;
     width: 100%;
@@ -64,15 +64,53 @@
       margin-bottom: 60px;
       padding-right: 40px;
     }
-  
+
     .eyebrow {
       margin: 0;
       @include font(16 24);
       color: $grey03;
-  
+
       @include breakpoint($bp-sm) {
         @include font(20 32);
       }
     }
-  }  
+  }
+}
+
+.user-login-modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+
+  .content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 40px 20px;
+    border: 1px solid #888;
+    width: 760px;
+	  height: auto;
+
+    .close {
+      position: absolute;
+      color: #aaa;
+      right: 20px;
+      top: 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
 }

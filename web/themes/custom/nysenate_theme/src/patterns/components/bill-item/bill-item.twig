@@ -68,13 +68,13 @@
               <p class="c-bill-update--location">
                 <span>
                   {{ bill.update_location }}
+                  {% if bill.committee_link %}
+                    <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                  {% endif %}
                 </span>
               </p>
             {% endif %}
           </div>
-          {% if bill.committee_link %}
-            <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
-          {% endif %}
         </div>
       {% else %}
         <div class="c-bill-update">
@@ -90,7 +90,7 @@
           {% endif %}
           {% if bill.ol_sponsor %}
             <p class="c-bill-update--sponsor">
-              Sponsor
+              Sponsor:
               <a href={{ bill.ol_sponsor.url }}>{{ bill.ol_sponsor.text }}</a>
             </p>
           {% endif %}
@@ -112,6 +112,8 @@
           {% include "@nysenate_theme/bill-vote-widget/bill-vote-widget.twig" with {
             action: bill.action,
             node_id: bill.node_id,
+            poll_text: bill.poll_text,
+            hide_subscribe: bill.hide_subscribe,
           } only %}
         </div>
       {% endif %}

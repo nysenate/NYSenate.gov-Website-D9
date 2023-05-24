@@ -352,7 +352,7 @@ div.c-meeting-detail--location {
   .nys-senator {
     margin: 20px 0 28px;
   }
-  .first > .c-update-block {
+  .c-update-block:first-child {
     border-top: 1px solid $grey05;
   }
 }
@@ -926,7 +926,7 @@ div.c-meeting-detail--location {
     .nys-senator {
       margin: 20px 0 0;
     }
-    .first > .c-update-block {
+    .c-update-block:first-child {
       border-top: 1px solid $grey05;
     }
   }
@@ -1001,14 +1001,21 @@ div.c-meeting-detail--location {
   }
 }
 .l-panel-col--lft {
-  width: 24%;
-  max-width: 180px;
+  @include breakpoint($bp-sm) {
+    width: 24%;
+    max-width: 180px;
+  }
 }
 
 .l-panel-col--ctr {
-  width: 56%;
-  padding-right: 2%;
-  max-width: 440px;
+  margin-top: 20px;
+
+  @include breakpoint($bp-sm) {
+    margin-top: 0;
+    width: 56%;
+    padding-right: 2%;
+    max-width: 440px;
+  }
 
   .c-press-release--descript {
     font-size: 18px;

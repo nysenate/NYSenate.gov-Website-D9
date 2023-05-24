@@ -117,6 +117,35 @@ class ConfigForm extends ConfigFormBase {
       '#default_value' => $config->get('nys_session_year'),
     ];
 
+    /*
+     * Login Modal Form.
+     */
+    $form['login_modal'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Login Modal Form'),
+      '#description' => $this->t("Variations for displaying the Login Modal Form content."),
+    ];
+    $form['login_modal']['user_login_header'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Header'),
+      '#default_value' => $config->get('user_login_header'),
+    ];
+    $form['login_modal']['user_login_body'] = [
+      '#type' => 'text_format',
+      '#format' => 'full_html',
+      '#allowed_formats' => ['full_html'],
+      '#title' => $this->t('Body'),
+      '#default_value' => $config->get('user_login_body'),
+    ];
+    $form['login_modal']['user_login_footer'] = [
+      '#type' => 'text_format',
+      '#format' => 'full_html',
+      '#allowed_formats' => ['full_html'],
+      '#title' => $this->t('Footer'),
+      '#default_value' => $config->get('user_login_footer'),
+      '#attributes' => ['class' => ['js-text-full', 'text-full']],
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -130,6 +159,9 @@ class ConfigForm extends ConfigFormBase {
     $config->set('nys_access_permissions_prev_query_ttl', $form_state->getValue('nys_access_permissions_prev_query_ttl'));
     $config->set('nys_session_status', $form_state->getValue('nys_session_status'));
     $config->set('nys_session_year', $form_state->getValue('nys_session_year'));
+    $config->set('user_login_header', $form_state->getValue('user_login_header'));
+    $config->set('user_login_body', $form_state->getValue('user_login_body')['value']);
+    $config->set('user_login_footer', $form_state->getValue('user_login_footer')['value']);
     $config->save();
     parent::submitForm($form, $form_state);
   }

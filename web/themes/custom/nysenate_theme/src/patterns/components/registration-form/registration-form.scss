@@ -15,7 +15,7 @@
     width: 100%;
     float: left;
   }
-  
+
   input#edit-addr-street,
   input#edit-email {
     margin-bottom: 3px;
@@ -92,4 +92,426 @@
       -moz-osx-font-smoothing: grayscale;
     }
   }
+}
+
+.c-login {
+	margin: 0;
+	padding: 40px 0 60px 0;
+	font-family: "Proxima Nova Regular";
+	font-size: 14px;
+
+	.nys-title {
+		margin: 20px 0;
+		text-transform: none;
+	}
+
+	.c-login-left {
+		margin-bottom: 30px;
+	}
+
+	.c-login-right {
+		border-top: 1px solid $grey05;
+	}
+
+	.c-login-benefits {
+		margin: 20px 0 30px 20px;
+		padding-left: 0;
+		color: $grey04;
+		list-style-position: outside;
+
+		li {
+			font-size: 16px;
+			line-height: 24px;
+			font-family: "Proxima Nova Regular";
+		}
+	}
+
+	.c-login-privacy {
+		width: 100%;
+		margin: 20px 0 0 0;
+		text-align: center;
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+
+		> a {
+			color: $orange01;
+		}
+	}
+
+	.c-block--or {
+		clear: both;
+		width: 160px;
+		margin: 10px auto 40px;
+
+		text-align: center;
+		border-bottom: 1px solid $grey09;
+		font-family: "Proxima Nova Regular";
+		font-size: 18px;
+		letter-spacing: 0.1em;
+
+		span {
+			position: relative;
+			top: 16px;
+			background: #fff;
+			padding: 0 12px;
+		}
+	}
+
+	.c-block--field-desc {
+		width: 100%;
+		margin-bottom: 25px;
+		color: $grey07;
+	}
+
+	.form-item-remember-me {
+		float: left;
+		width: 50%;
+		margin: 15px 0 0 0;
+		font-family: "Proxima Nova Regular";
+		line-height: 12px;
+
+		a {
+			color: $yellow02;
+			margin: 0 0 0 5px;
+		}
+
+		label {
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 12px;
+			line-height: 1;
+		}
+
+		.form-checkbox {
+			margin: 0;
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+
+	.c-login--pwd-reset {
+		margin: 15px 0 0 0;
+		float: right;
+		color: $orange01;
+		font-size: 12px;
+		line-height: 1;
+	}
+
+	.c-block--btn {
+		display: block;
+		position: relative;
+		padding: 25px 0;
+		width: 100%;
+		text-align: center;
+		font-size: 14px;
+		line-height: 1;
+	}
+
+	.c-block--btn {
+		&:before {
+			margin-top: -25px;
+		}
+
+		&.c-login-create {
+      color: #fff;
+			@extend .icon-before__recruit-friends;
+		}
+
+		&.c-block--btn-full {
+			width: 100%;
+		}
+
+		&.c-block--btn-half {
+			width: 320px;
+			margin: 0 auto 0;
+			float: none;
+			height: 70px;
+			font-size: 16px;
+
+			&:before {
+				line-height: 68px;
+			}
+		}
+	}
+
+	.page-registration .c-login-create .facebook-button {
+		width:48%;
+		margin: 20px auto 20px;
+		display: block;
+	}
+
+	.c-block--btn,
+	.form-submit {
+		background-color: $blue01;
+
+		text-transform: uppercase;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 14px;
+		letter-spacing: 0.2em;
+	}
+
+	// med button
+	.form-submit {
+		height: 60px;
+		width: 100%;
+		padding:0 20px 0 20px;
+		margin: 20px 0 0 0;
+		text-indent: 0;
+		background-color: $blue01 !important;
+		@extend .icon-before__recruit-friends;
+		width: 100%;
+		text-transform: uppercase;
+
+		&:before {
+			position: relative;
+			left: 0px;
+			right: auto;
+			width: auto;
+			line-height: 60px;
+			margin-right: 10px;
+			font-size: 30px;
+		}
+	}
+
+	.form-actions {
+		width: auto;
+		margin: 0 auto;
+	}
+}
+
+@media #{$tablet} {
+	.c-login {
+		margin: 0;
+		padding-bottom: 80px;
+
+		.nys-title {
+			font-size: 22px;
+			margin: 0px 0 10px 0;
+		}
+
+		.c-login--benefits {
+			li {
+				font-size: 16px;
+				line-height: 24px;
+			}
+		}
+
+		.c-block--full {
+			width: 100%;
+			float: left;
+		}
+
+		.c-block--left {
+			width: 50%;
+			float: left;
+			padding: 0 20px 0 0;
+		}
+
+		.c-block--right {
+			width: 50%;
+			float: left;
+			padding: 0;
+		}
+		.c-login-left {
+			float: left;
+			width: 50%;
+			padding: 0 30px;
+
+			ul {
+				list-style: none;
+
+				&.c-login-benefits {
+					float: none;
+					list-style: disc;
+				}
+			}
+
+			.c-user--info {
+				display: inline-block;
+				vertical-align: middle;
+				list-style: none;
+				padding: 0;
+			}
+		}
+
+		.c-login-right {
+			float:left;
+			width: 50%;
+			padding: 0 30px;
+			border-top: none;
+			border-left: 1px solid $grey05;
+
+			.description{
+				display: none;
+			}
+
+			.c-senator--info {
+				display: inline-block;
+				vertical-align: middle;
+				list-style: none;
+				padding: 0;
+			}
+		}
+
+		.form-item-remember-me,
+		.c-login--pwd-reset {
+			margin-top: 20px;
+		}
+
+		.c-block--field-desc {
+			width: 100%;
+			margin-bottom: 0px;
+
+			&.c-block--field--desc-email {
+				width: 200px;
+				padding: 40px 0 0 0;
+			}
+
+			color: $grey07;
+		}
+
+		.c-block--btn {
+			height: 60px;
+		}
+	}
+
+	#nys-registration-form-start,
+	#nys-registration-form-second,
+	#user-pass {
+		padding: 0px 0 40px;
+
+		.c-login { padding-bottom: 0; }
+
+		.form-actions {
+			padding-top: 40px;
+		}
+	}
+
+	#nys-registration-form-start{
+		.c-block--btn-facebook {
+			width: 48%;
+			display: block;
+			margin: 0 auto 0;
+		}
+
+		.form-actions {
+			margin: 0;
+
+			.form-submit {
+				width: 48%;
+				display: block;
+				margin: 0 auto 0;
+			}
+		}
+	}
+
+	#modalBackdrop{
+		background: #000 !important;
+	}
+
+	#nys-registration-form-second {
+
+		.c-login {
+			margin-bottom: 0;
+
+			.form-actions {
+				padding: 60px 0 0 0;
+			}
+		}
+
+		.form-actions {
+			padding-top: 60px;
+		}
+
+		.c-login-left,
+		.c-login-right {
+			text-align: left;
+		}
+
+		.c-login-left {
+			margin: 0;
+			padding-left: 0;
+
+			li:first-child {
+				font-size: 18px;
+			}
+		}
+
+		.c-login-right {
+			border: none;
+			padding: 0;
+
+			li:nth-child(2) {
+				font-size: 18px;
+			}
+		}
+
+		.nys-senator--thumb {
+			height: 80px;
+			width: 80px;
+			margin: 0 20px 0 0;
+		}
+
+		button#edit-previous {
+			background-color: $grey06;
+			color: $gen_blue_drk;
+
+		}
+
+		button#edit-return {
+			background-color: $gen_blue_drk;
+		}
+	}
+
+	#nys-registration-form-start,
+	#nys-registration-form-second,
+	#user-pass,
+	.c-login {
+		p {
+			font-size: 16px;
+		}
+
+		.form-actions {
+			button {
+				height: 55px;
+				padding: 0 40px;
+			}
+		}
+	}
+
+	#user-pass {
+		.nys-title {
+			margin-top: 0;
+		}
+
+		.form-item,
+		button {
+			display: block;
+			position: relative;
+			margin: 0 auto;
+			max-width: 440px;
+		}
+
+		.form-item {
+			margin-bottom: 40px;
+			margin-top: 30px;
+		}
+	}
+
+	#modalContent {
+	  height: auto !important;
+	  margin: 0 auto 0 !important;
+		top: 10% !important;
+	  width: 760px !important;
+	}
+
+	// Limit max width to 1000px.
+	div.ctools-modal-content {
+		height: auto !important;
+	}
+
+	div.ctools-modal-content .modal-content {
+		height: auto !important;
+	  overflow: hidden;
+	}
 }

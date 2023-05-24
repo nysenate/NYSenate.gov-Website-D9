@@ -10,6 +10,8 @@ use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\nys_bills\BillsHelper;
+use Drupal\nys_subscriptions\SubscriptionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -67,6 +69,13 @@ class BillVoteWidgetForm extends FormBase {
   protected $emailValidator;
 
   /**
+   * NYS Bills Helper service.
+   *
+   * @var \Drupal\nys_bills\BillsHelper
+   */
+  protected BillsHelper $billHelper;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -78,6 +87,7 @@ class BillVoteWidgetForm extends FormBase {
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->routeMatch = $container->get('current_route_match');
     $instance->emailValidator = $container->get('email.validator');
+    $instance->billHelper = $container->get('nys_bill.bills_helper');
     return $instance;
   }
 
@@ -222,7 +232,8 @@ class BillVoteWidgetForm extends FormBase {
     $nid = $settings['entity_id'];
 
     // If we have a node id, load that node.  Otherwise, use the current.
-    $ref_node = $this->routeMatch->getParameter('node') ?: $this->entityTypeManager->getStorage('node')->load($nid);
+    $ref_node = $this->routeMatch->getParameter('node')
+      ?: $this->entityTypeManager->getStorage('node')->load($nid);
 
     // If the nid matches the current node's id, then this is not an embed.
     $is_embed = FALSE;
@@ -338,7 +349,8 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function subscribeAjaxSubmit(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    $user = $this->entityTypeManager->getStorage('user')
+      ->load($this->currentUser->id());
     $values = $form_state->getValues();
     $settings = $form_state->getBuildInfo();
 
@@ -410,20 +422,18 @@ class BillVoteWidgetForm extends FormBase {
   }
 
   /**
-   * Sign up a subscripion for the bill.
+   * Sign up a subscription for the bill.
    */
-  public function subscriptionSignup($nid, $email_address) {
-    $user = user_load_by_mail($email_address);
-    $node_bill = $this->entityTypeManager->getStorage('node')->load($nid);
-    $subscription = $this->entityTypeManager->getStorage('subscription')->create([
-      'sub_type' => 'bill_notifications',
-      'uid' => $user ? $user->id() : 0,
-      'email' => $email_address,
-      'target' => $node_bill,
-      'source' => $node_bill,
-    ]);
-    $subscription->save();
-    return $subscription;
+  public function subscriptionSignup($nid, $email_address): ?SubscriptionInterface {
+    try {
+      /** @var \Drupal\node\NodeInterface $bill */
+      $bill = $this->entityTypeManager->getStorage('node')->load($nid);
+    }
+    catch (\Throwable) {
+      $this->logger('BillVoteWidgetForm')->error('Could not load node storage');
+      return NULL;
+    }
+    return $this->billHelper->subscribeToBill($bill);
   }
 
   /**

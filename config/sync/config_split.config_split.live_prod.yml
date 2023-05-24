@@ -8,12 +8,14 @@ description: 'Live/Production Pantheon Site'
 weight: 0
 folder: profiles/custom/nysenate/config/prod
 module:
-  stage_file_proxy: 0
   clamav: 0
+  pantheon_advanced_page_cache: 0
+  stage_file_proxy: 0
 theme: {  }
 blacklist:
   - system.logging
   - clamav.settings
+  - pantheon_advanced_page_cache.settings
 graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true

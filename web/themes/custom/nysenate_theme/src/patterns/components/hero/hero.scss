@@ -55,7 +55,8 @@
   }
 }
 
-.c-block .c-hero--welcome {
+.c-block .c-hero--welcome,
+p.c-hero--welcome {
   padding: 30px 20px;
   margin: 0;
   color: $grey02;
@@ -150,10 +151,12 @@
 }
 
 @include breakpoint($bp-sm) {
-  .c-block .c-hero--welcome {
+  .c-block .c-hero--welcome,
+  p.c-hero--welcome {
     font-size: 32px;
     line-height: 60px;
     padding: 40px;
+    color: $grey08;
   }
 
   .l-row.c-hero--tout {

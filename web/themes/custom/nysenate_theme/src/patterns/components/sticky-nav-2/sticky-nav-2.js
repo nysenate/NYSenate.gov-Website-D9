@@ -16,9 +16,10 @@
     attach: function () {
       const aboutPageNav = $('.c-about--nav');
       const adminToolbar = $('#toolbar-bar');
+      const adminTray = $('#toolbar-item-administration-tray.toolbar-tray');
 
       if (adminToolbar.length > 0) {
-        aboutPageNav.css('top', '310px');
+        aboutPageNav.css('top', `${270 + adminToolbar.height() + adminTray.height() }px`);
       }
     }
   };

@@ -5,6 +5,9 @@
  * Primary module hooks for NYS Registration module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
 /**
  * Implements hook_entity_type_alter().
  *
@@ -31,4 +34,82 @@ function nys_registration_theme($existing, $type, $theme, $path) {
       'render element' => 'form',
     ],
   ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function nys_registration_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#attributes']['class'][] = 'registration-form';
+
+  $form['registration_block_opener'] = [
+    '#markup' => '<div class="c-block c-login">',
+    '#weight' => 91,
+    '#attached' => [
+      'library' => [
+        'nysenate_theme/registration-form',
+      ],
+    ],
+  ];
+
+  // Get config values.
+  $nys_config = \Drupal::configFactory()->get('nys_config.settings');
+  $header = $nys_config->get('user_login_header');
+  $body = $nys_config->get('user_login_body');
+  $footer = $nys_config->get('user_login_footer');
+
+  $form['registration_teaser'] = [
+    '#markup' => '
+      <div class="c-login-left">
+        <h3 class="nys-title">' . $header . '</h3>
+        ' . $body . '
+        <a href="/user/register" class="c-block--btn c-login-create">Create Account</a>
+        ' . $footer . '
+      </div>',
+    '#weight' => 95,
+  ];
+
+  $form['login_right_top'] = [
+    '#weight' => 96,
+    '#markup' => '<div class="c-login-right"><h3 class="nys-title">' . t('I already have an account...') . '</h3>',
+  ];
+
+  $form['name']['#weight'] = 97;
+  $form['pass']['#weight'] = 98;
+
+  $form['actions']['submit'] = [
+    '#value' => 'Login to account',
+    '#type' => 'submit',
+    '#attributes' => ['class' => ['c-block--btn']],
+    '#weight' => 100,
+  ];
+
+  $form['login_right_bottom'] = [
+    '#weight' => 10001,
+    '#markup' => '</div>',
+  ];
+
+  $form['registration_block_closer'] = [
+    '#weight' => 10002,
+    '#markup' => '</div>',
+  ];
+
+  // Redirect form to referrer if from modal.
+  $form['#submit'][] = 'nys_registration_user_login_form_submit';
+}
+
+/**
+ * Custom submit handler for the login form.
+ */
+function nys_registration_user_login_form_submit($form, FormStateInterface $form_state) {
+  $url = \Drupal::request()->headers->get('referer');
+  $referrer = explode('/', $url);
+
+  if ((isset($referrer[3]) && $referrer[3] == 'user') &&
+    (isset($referrer[4]) && $referrer[4] == 'login')) {
+    // Do nothing.
+  }
+  else {
+    $form_state->setRedirectUrl(Url::fromUri($url));
+  }
 }

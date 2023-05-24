@@ -21,9 +21,10 @@ dependencies:
     - field.storage.node.field_image_caption
     - field.storage.node.field_issues
     - field.storage.node.field_ol_last_status
+    - field.storage.node.field_ol_last_status_date
     - field.storage.node.field_ol_latest_status_committee
     - field.storage.node.field_ol_latest_status
-    - field.storage.node.field_date_range
+    - field.storage.node.field_ol_meeting_date
     - field.storage.node.field_ol_memo
     - field.storage.node.field_ol_print_no
     - field.storage.node.field_ol_program_info
@@ -122,14 +123,6 @@ field_settings:
     dependencies:
       module:
         - taxonomy
-  end_value:
-    label: 'Meeting Date » End date value'
-    datasource_id: 'entity:node'
-    property_path: 'field_date_range:end_value'
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_date_range
   entity_type:
     label: 'Entity type'
     property_path: search_api_entity_type
@@ -218,14 +211,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.taxonomy_term.field_committee_types
-  field_date_range:
-    label: 'Meeting Date'
-    datasource_id: 'entity:node'
-    property_path: field_date_range
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_date_range
   field_image_caption:
     label: 'Image Caption'
     datasource_id: 'entity:node'
@@ -306,6 +291,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_last_status
+  field_ol_last_status_date:
+    label: 'Last Status Date'
+    datasource_id: 'entity:node'
+    property_path: field_ol_last_status_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_ol_last_status_date
   field_ol_latest_status:
     label: 'Latest Status'
     datasource_id: 'entity:node'
@@ -330,6 +323,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_latest_status_committee
+  field_ol_meeting_date:
+    label: 'Meeting Date'
+    datasource_id: 'entity:node'
+    property_path: field_ol_meeting_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_ol_meeting_date
   field_ol_memo:
     label: Memo
     datasource_id: 'entity:node'
@@ -659,5 +660,5 @@ tracker_settings:
 options:
   cron_limit: 50
   index_directly: false
-  track_changes_in_references: true
+  track_changes_in_references: false
 server: pantheon_solr8

@@ -2,4 +2,4 @@
 Feature: As a visitor I should be able to load the user page
 Scenario: User page loads
 Given I am on "/user/login"
-Then I should see "Log in"
+Then I should see "Login to account"

@@ -3090,6 +3090,7 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     ->load(\Drupal::currentUser()->id());
 
   $senator_name = '';
+  $senator_link = NULL;
   $senator_image = NULL;
   // Get User's District Senator.
   $senator = UsersHelper::getSenator($user);
@@ -3100,6 +3101,10 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     if (isset($senator->name->value) && !empty($senator->name->value)) {
       $senator_name = $senator->name->value;
     }
+
+    // Senator microsite link.
+    $senator_link = \Drupal::service('nys_senators.microsites')
+      ->getMicrosite($senator);
 
     // Senator image.
     if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
@@ -3124,6 +3129,13 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
         'text' => t('Contact Senate'),
       ];
     }
+    else {
+      $title = t('Contact your Senator about this issue');
+      $link = [
+        'url' => $senator_link . '/contact',
+        'text' => t('Contact') . ' ' . $senator_name,
+      ];
+    }
   }
   else {
     $current_path = \Drupal::service('path.current')->getPath();
@@ -3138,6 +3150,10 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
       t('Find your Senator'),
       Url::fromUserInput('/user/login', ['query' => $params])
     );
+
+    $block_manager = \Drupal::service('plugin.manager.block');
+    $plugin_block = $block_manager->createInstance('nys_block_user_login_form_block');
+    $variables['login_block'] = $plugin_block->build();
   }
 
   $variables['contact_your_senator'] = [

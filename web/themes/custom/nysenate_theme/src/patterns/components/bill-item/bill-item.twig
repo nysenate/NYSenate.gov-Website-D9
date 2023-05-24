@@ -109,12 +109,16 @@
 
       {% if bill.is_poll %}
         <div class="c-bill-polling med-bg embed">
-          {% include "@nysenate_theme/bill-vote-widget/bill-vote-widget.twig" with {
-            action: bill.action,
-            node_id: bill.node_id,
-            poll_text: bill.poll_text,
-            hide_subscribe: bill.hide_subscribe,
-          } only %}
+          {% if bill.vote_widget %}
++            {{ bill.vote_widget }}
++         {% else %}
+            {% include "@nysenate_theme/bill-vote-widget/bill-vote-widget.twig" with {
+              action: bill.action,
+              node_id: bill.node_id,
+              poll_text: bill.poll_text,
+              hide_subscribe: bill.hide_subscribe,
+            } only %}
+          {% endif %}
         </div>
       {% endif %}
     </div>

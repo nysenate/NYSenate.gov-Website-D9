@@ -1,21 +1,18 @@
-uuid: 7c32b386-8040-44c0-90ee-eda0d00160c9
+uuid: af6250fa-f7e3-4e30-b2c9-5709925be7a0
 langcode: en
 status: true
 dependencies:
   module:
+    - comment
     - field_permissions
-    - node
 third_party_settings:
   field_permissions:
-    permission_type: custom
-id: node.field_title_stub
-field_name: field_title_stub
-entity_type: node
-type: string
-settings:
-  max_length: 128
-  case_sensitive: false
-  is_ascii: false
+    permission_type: public
+id: comment.field_anonymous
+field_name: field_anonymous
+entity_type: comment
+type: boolean
+settings: {  }
 module: core
 locked: false
 cardinality: 1

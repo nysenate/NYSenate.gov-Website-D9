@@ -1,0 +1,23 @@
+uuid: 6e1862a3-be8a-4b76-8b08-67ef3d901ee8
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.default_comment
+    - field.storage.comment.field_anonymous
+id: comment.default_comment.field_anonymous
+field_name: field_anonymous
+entity_type: comment
+bundle: default_comment
+label: 'Display my name as "Anonymous"'
+description: 'This only applies to how the comment appears to the public. For content moderation purposes, your comments are still tied to your account.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

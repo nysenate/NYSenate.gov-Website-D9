@@ -2,7 +2,7 @@
 @import '../../global/utils/init';
 
 h3.c-bill-num {
-  margin: 0 0 0.25em;
+  margin-bottom: 20px;
   color: $grey02;
   font-family: $font-serif-bold;
   font-weight: $font-weight-normal;
@@ -10,9 +10,17 @@ h3.c-bill-num {
   font-size: 20px;
   letter-spacing: 0.05em;
 
+  @include breakpoint($bp-sm) {
+    margin-bottom: 80px;
+  }
+
   a {
     color: $grey08;
   }
+}
+
+p.c-bill-update--date {
+  color: $grey08;
 }
 
 
@@ -31,6 +39,18 @@ h3.c-bill-num {
     margin-bottom: 20px;
     @extend .lgt-bg;
 
+    .c-legislation-info {
+      position: relative;
+      padding: 30px 20px 130px; // 130 = height of polling + visual padding
+      z-index: 3;
+      height: 100%;
+
+      @include breakpoint($bp-sm) {
+        padding: 25px 40px 95px;
+        width: 100%;
+      }
+    }    
+
     .c-block-legislation-featured {
       margin-bottom: 0;
     }
@@ -40,7 +60,12 @@ h3.c-bill-num {
     }
 
     .c-bill-num {
+      margin: 0 0 0.25em;
       color: $color-white;
+
+      @include breakpoint($bp-sm) {
+        margin: 0 0 0.25em;
+      }
 
       a {
         color: $color-white;
@@ -141,10 +166,17 @@ h3.c-bill-num {
     .nys-senator.sponsor-list {
       width: auto;
     }
+
+    .c-bill-update {
+      margin-top: 0;
+
+      @include breakpoint($bp-sm) {
+        margin-top: 0;
+      }
+    }
   }
 
   &.c-block-constituent-bill {
-
     .nys-bill-status.nys-bill-status__drk {
 
       li {
@@ -154,14 +186,34 @@ h3.c-bill-num {
         }
       }
     }
-  }
-}
 
-.c-legislation-info {
-  position: relative;
-  padding: 30px 20px 130px; // 130 = height of polling + visual padding
-  z-index: 3;
-  height: 100%;
+    p.c-bill-update--location {
+      a {
+        color: $color-white;
+      }
+    }
+
+    .sponsors {
+      span.sponsor-name {
+        font-size: 16px;
+        line-height: 23px;
+        font-family: "Adelle Light";
+        margin: 0;
+        text-transform: none;
+
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .c-bill-update--sponsor {
+    display: block;
+    margin: 0;
+    font-family: "Proxima Nova Regular";
+    font-size: 14px;
+  }
 }
 
 .c-bill-polling {
@@ -224,6 +276,11 @@ h3.c-bill-num {
 .c-bill-update {
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
+
+  @include breakpoint($bp-sm) {
+    margin-top: 80px;
+  }
 
   a {
     font-family: $font-sans;
@@ -300,9 +357,9 @@ h3.c-bill-num {
 /*----------------------------------------
 / BILL STATUS
 / styling for a list denoting a bill's status
-/ list items are circle 
-/ add 'passed' class to illustrate we're 
-/	passed that step	
+/ list items are circle
+/ add 'passed' class to illustrate we're
+/	passed that step
 /----------------------------------------*/
 
 .c-bill-section {
@@ -382,7 +439,7 @@ h3.c-bill-num {
       }
     }
 
-    /* 
+    /*
 			spacer is necessary to pull off
 			justified lists
 		*/
@@ -646,11 +703,6 @@ h3.c-bill-num {
 
   .c-bill-descript {
     margin-bottom: 15px;
-  }
-
-  .c-legislation-info {
-    padding: 25px 40px 95px;
-    width: 100%;
   }
 
   .c-block.c-block-legislation-featured {

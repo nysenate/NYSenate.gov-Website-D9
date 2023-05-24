@@ -19,13 +19,14 @@
 
   .nys-title { 
     margin: 0;
+    color: $grey10;
   }
 
   .form-description {
     border: solid $color-alto;
     border-width: 1px 0;
     clear: both;
-    margin-top: 1.25rem;
+    margin: 0;
     padding: 1.1875rem 0;
   }
 
@@ -47,8 +48,11 @@
 
     input,
     select {
-      height: 37px;
+      font-size: 0.875rem;
+      line-height: normal;
+      height: 2.3125rem;
       margin: 0;
+      padding: 0.5rem;
       min-height: auto;
       color: rgba(0, 0, 0, 0.75);
     }
@@ -70,13 +74,19 @@
 
     &::after {
       display: block;
+      top: 50%;
+      transform: translateY(-62%);
+
+      @include breakpoint($bp-sm) {
+        right: 24px;
+      }
     }
 
     select {
       font-family: $font-sans-bold;
       text-transform: uppercase;
       color: $blue01;
-      background-image: none;
+      background: transparent;
       height: 55px;
     }
   }
@@ -133,5 +143,12 @@
     &-icon {
       display: none;
     }
+  }
+}
+
+.page--search-legislation {
+
+  .l-row--main {
+    padding-bottom: 0;
   }
 }

@@ -312,7 +312,20 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'You currently have no results for this content type.'
+            format: full_html
+          tokenize: true
       sorts:
         field_senator_name_family:
           id: field_senator_name_family
@@ -1462,7 +1475,7 @@ display:
             operator: type_1_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: type_1
+            identifier: type
             required: false
             remember: false
             multiple: false
@@ -1470,16 +1483,12 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-              web_administrator: '0'
               frontpage_editor: '0'
               senator: '0'
               microsite_content_producer: '0'
               legislative_correspondent: '0'
               student_programs: '0'
               constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             reduce: true
           is_grouped: false
           group_info:
@@ -1616,7 +1625,7 @@ display:
           field: area_text_custom
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Senator Name'
           plugin_id: text_custom
           empty: true
           content: '<h2>{{ field_senator_multiref }}</h2'
@@ -1627,7 +1636,7 @@ display:
           field: area_text_custom
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Local Actions'
           plugin_id: text_custom
           empty: true
           content: "<div id=\"block-rain-admin-local-actions\">\r\n<ul class=\"action-links\">\r\n<li><a href=\"/node/add\" class=\"button button-action button--primary button--small\" data-drupal-link-system-path=\"node/add\">Add content</a></li>\r\n</ul>\r\n</div>"
@@ -1638,7 +1647,7 @@ display:
           field: result
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Global Summary Result'
           plugin_id: result
           empty: false
           content: 'Displaying @start - @end of @total'

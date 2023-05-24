@@ -78,7 +78,7 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
   $form['pass']['#weight'] = 98;
 
   $form['actions']['submit'] = [
-    '#value' => 'Login to account',
+    '#value' => 'Log in to account',
     '#type' => 'submit',
     '#attributes' => ['class' => ['c-block--btn']],
     '#weight' => 100,

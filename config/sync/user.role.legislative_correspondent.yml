@@ -2,8 +2,12 @@ uuid: 929c37d6-5f48-4162-a6c8-79381d8bb369
 langcode: en
 status: true
 dependencies:
+  config:
+    - filter.format.basic_html
+    - filter.format.full_html
   module:
     - field_permissions
+    - filter
     - private_message
     - system
     - toolbar
@@ -20,6 +24,8 @@ permissions:
   - 'dashboard inbox search names'
   - 'masquerade as user'
   - 'use private messaging system'
+  - 'use text format basic_html'
+  - 'use text format full_html'
   - 'view field_members'
   - 'view own field_members'
   - 'view own field_senator_multiref'

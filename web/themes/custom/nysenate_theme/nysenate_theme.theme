@@ -790,6 +790,7 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
       $node = $node->_entity;
       if ($node instanceof NodeInterface) {
         $variables['event_name'] = $node->getTitle();
+        $variables['event_url'] = $node->toUrl()->toString();
         if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
           $media = !empty($node->get('field_image_main')->target_id) ? $media_storage->load($node->get('field_image_main')->target_id) : NULL;
           if (!empty($media)) {
@@ -806,27 +807,87 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
           'url' => '',
           'stream_title' => '',
         ];
-
-        if ($node->hasField('field_yt') && !$node->get('field_yt')->isEmpty()) {
-          if ($node->hasField('field_video_status') && !$node->get('field_video_status')->isEmpty()) {
-            $statuses = [
-              'will_stream_live' => 'Will Stream Live',
-              'streaming_live_now' => 'Streaming Live Now',
-              'archived_video' => 'Archived Video',
-              'streaming_redirect' => 'Streaming (Redirect)',
-              'cancelled' => 'To resume at the call of the Temporary President',
-            ];
-            $video_status = $node->get('field_video_status')->value;
-            if (!empty($video_status)) {
-              if (array_key_exists($video_status, $statuses)) {
-                $livestream_cta['text'] = $statuses[$video_status];
-              }
+        if ($node->hasField('field_video_status') && !$node->get('field_video_status')->isEmpty()) {
+          $statuses = [
+            'will_stream_live' => 'Will Stream Live',
+            'streaming_live_now' => 'Streaming Live Now',
+            'archived_video' => 'Archived Video',
+            'streaming_redirect' => 'Streaming (Redirect)',
+            'cancelled' => 'To resume at the call of the Temporary President',
+          ];
+          $video_status = $node->get('field_video_status')->value;
+          if (!empty($video_status)) {
+            if (array_key_exists($video_status, $statuses)) {
+              $livestream_cta['text'] = $statuses[$video_status];
             }
           }
+        }
+
+        if ($node->hasField('field_yt') && !$node->get('field_yt')->isEmpty()) {
           $media = !empty($node->get('field_yt')->target_id) ? $media_storage->load($node->get('field_yt')->target_id) : NULL;
           if (!empty($media)) {
             $livestream_cta['url'] = $media->field_media_oembed_video->value;
             $livestream_cta['stream_title'] = $media->name->value;
+          }
+        }
+        else {
+          if ($node->hasField('field_ustream') && !$node->get('field_ustream')->isEmpty()) {
+            $channels = [
+              '513405' => 'NYS Senate Session',
+              '21410571' => 'NYS Senate Session 2',
+              '21410769' => 'NYS Senate Session 3',
+              '21410801' => 'Environmental Conservation',
+              '20255038' => 'TESTING Channel',
+              '21410770' => 'Aging',
+              '21410771' => 'Agriculture',
+              '21410772' => 'Alcoholism And Substance Abuse',
+              '21410773' => 'Banks',
+              '23636811' => 'Budget And Revenue',
+              '214100775' => 'Children And Families',
+              '21410795' => 'Cities 1',
+              '24049479' => 'Cities 2',
+              '21410782' => 'Civil Service And Pensions',
+              '21410783' => 'Codes',
+              '21410784' => 'Commerce, Economic Development And Small Business',
+              '21410785' => 'Consumer Protection',
+              '21410787' => 'Corporations, Authorities And Commissions',
+              '21410789' => 'Crime Victims, Crime And Correction',
+              '21410790' => 'Cultural Affairs, Tourism, Parks And Recreation',
+              '24049478' => 'Disabilities',
+              '21410796' => 'Education',
+              '21410798' => 'Elections',
+              '21410799' => 'Energy And Telecommunications',
+              '21410802' => 'Ethics And Internal Governance',
+              '21410804' => 'Finance',
+              '21410805' => 'Health',
+              '21410808' => 'Higher Education',
+              '21410810' => 'Housing, Construction And Community Development',
+              '21410812' => 'Insurance',
+              '23636819' => 'Internet And Technology',
+              '21410814' => 'Investigations And Government Operations',
+              '21410815' => 'Judiciary',
+              '21410816' => 'Labor',
+              '21410824' => 'Libraries',
+              '21410827' => 'Local Government',
+              '21410828' => 'Mental Health',
+              '21410846' => 'New York City Education',
+              '24049481' => 'Procurement And Contracts',
+              '21410830' => 'Racing, Gaming And Wagering',
+              '21410831' => 'Rules',
+              '21410832' => 'Social Services',
+              '21410834' => 'Transportation',
+              '21410841' => 'Veterans, Homeland Security And Military Affairs',
+              '23634413' => "Women's Issues",
+              '21410844' => 'NY Senate Joint Budget Meetings',
+              '21410847' => 'State-Native American Relations',
+            ];
+            $channel_key = $node->get('field_ustream')->value;
+            if (!empty($channel_key)) {
+              if (array_key_exists($channel_key, $channels)) {
+                $livestream_cta['stream_title'] = $channels[$channel_key];
+                $livestream_cta['url'] = 'https://www.ustream.tv/embed/' . $channel_key;
+              }
+            }
           }
         }
         $variables['livestream_cta'] = $livestream_cta;

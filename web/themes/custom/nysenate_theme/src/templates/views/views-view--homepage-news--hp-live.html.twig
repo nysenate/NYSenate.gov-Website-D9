@@ -40,6 +40,7 @@
     {% block content %}
       {% include '@nysenate_theme/nysenate-happening-now/nysenate-happening-now.twig' with {
         event_name: event_name,
+        event_url: event_url,
         main_image: main_image,
         livestream_cta: livestream_cta,
       } only %}

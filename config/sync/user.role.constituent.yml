@@ -2,8 +2,12 @@ uuid: d951d43f-ad2b-4e7c-9d39-3a0b7e6b33cf
 langcode: en
 status: true
 dependencies:
+  config:
+    - filter.format.basic_html
+    - filter.format.full_html
   module:
     - field_permissions
+    - filter
     - flag
     - private_message
     - system
@@ -35,6 +39,8 @@ permissions:
   - 'unflag follow_issue'
   - 'use advanced search'
   - 'use private messaging system'
+  - 'use text format basic_html'
+  - 'use text format full_html'
   - 'view disqus comments'
   - 'view files'
   - 'view own field_active'

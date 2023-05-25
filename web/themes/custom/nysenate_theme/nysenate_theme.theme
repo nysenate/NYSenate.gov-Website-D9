@@ -2259,23 +2259,6 @@ function nysenate_theme_theme_suggestions_page_alter(array &$suggestions, array 
   if (!empty($node) && is_object($node) && $node->bundle() == 'microsite_page') {
     $suggestions[] = $hook . '__node__' . $node->bundle();
   }
-
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  switch ($route_name) {
-
-    case 'system.403':
-      // Access Denied.
-      $error = 403;
-      break;
-
-    case 'system.404':
-      // Page Not Found.
-      $error = 404;
-      break;
-  }
-  if (isset($error)) {
-    $suggestions[] = 'page__' . $error;
-  }
 }
 
 /**

@@ -178,6 +178,10 @@
           });
         }
       }
+      else if (self.isErrorPage()) {
+        nav.css('display', 'none');
+        return false;
+      }
       else {
         // place clone
         nav.prependTo('.page').css({
@@ -508,6 +512,9 @@
     },
     isSenatorCollapsed: function () {
       return $('.hero--senator-collapsed').length > 0;
+    },
+    isErrorPage: function () {
+      return $('.error-page-header').length > 0;
     },
     moveMessage: function() {
       const statusMessage = $('.message').parent();

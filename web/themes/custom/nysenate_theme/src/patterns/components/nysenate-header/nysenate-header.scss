@@ -291,7 +291,7 @@
         background-color: transparent;
 
         &::after {
-          top: 2px;
+          top: -3px;
         }
       }
     }
@@ -323,11 +323,15 @@
 // class added to .c-nav--wrap through js
 .c-nav--wrap.search-open {
 
-  .c-site-search--btn, .search__submit  {
+  nav .c-site-search--btn, .search__submit  {
     cursor: pointer;
     position: absolute;
     top: 10px;
     @extend .icon-replace__x;
+
+    &::after {
+      top: 4px;
+    }
   }
 
   .c-site-search {

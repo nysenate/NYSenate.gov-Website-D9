@@ -129,8 +129,21 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $args = $this->requestStack->getCurrentRequest()->query->all();
-
-    $form['my_block'] = [
+    $month_default = '';
+    $year_default = '';
+    if (!empty($args['date']) || !empty($args['publish_date']) || !empty($args['meeting_date'])) {
+      $dates['date'] = $args['date'] ?? NULL;
+      $dates['publish_date'] = $args['publish_date'] ?? NULL;
+      $dates['meeting_date'] = $args['meeting_date'] ?? NULL;
+      foreach ($dates as $date) {
+        if ($date !== NULL) {
+          $parts = explode("-", $date);
+          $month_default = $parts[1];
+          $year_default = substr($date, 0, 4);
+        }
+      }
+    }
+    $form['advanced_search'] = [
       '#type' => 'block',
       '#attributes' => [
         'class' => ['adv-search-container'],
@@ -146,13 +159,14 @@ class SearchAdvancedLegislationForm extends FormBase {
       ],
     ];
 
-    $form['my_block']['my_block_text'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'p',
-      '#value' => $this->t('Fill out one or more of the following filter criteria to perform a search.'),
-      '#attributes' => [
-        'class' => ['form-description'],
-      ],
+    $form['advanced_search']['advanced_search_text'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('Fill out one or more of the following filter criteria to perform a search.'),
+    ];
+
+    $form['advanced_search']['advanced_search_title'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('Advanced Legislation Search'),
     ];
 
     $form['type'] = [
@@ -220,6 +234,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('Month'),
       '#options' => ['all' => 'Any'] + $this->getMonthsOptions(),
+      '#default_value' => $month_default,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -239,6 +254,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'select',
       '#title' => ('YEAR'),
       '#options' => $years_option,
+      '#default_value' => $year_default,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -364,6 +380,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     ];
 
     $form['actions']['#type'] = 'actions';
+    $form['#attached']['library'][] = 'nys_legislation_explorer/nys_legislation_explorer';
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('SEARCH'),
@@ -403,6 +420,8 @@ class SearchAdvancedLegislationForm extends FormBase {
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
           'committee' => $values['committee'] ?: '',
+          'sort_by' => 'field_ol_last_status_date',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -413,6 +432,8 @@ class SearchAdvancedLegislationForm extends FormBase {
           'printno' => $values['printno'] ?: '',
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
+          'sort_by' => 'field_ol_print_no',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -421,6 +442,8 @@ class SearchAdvancedLegislationForm extends FormBase {
           'type' => $values['type'] ?: '',
           'meeting_date' => $date_range ?: '',
           'committee' => $values['committee'] ?: '',
+          'sort_by' => 'field_ol_meeting_date',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -428,6 +451,8 @@ class SearchAdvancedLegislationForm extends FormBase {
         $params = [
           'type' => $values['type'] ?: '',
           'date' => $date_range ?: '',
+          'sort_by' => 'field_publication_date',
+          'sort_order' => 'DESC',
         ];
         break;
 
@@ -437,6 +462,9 @@ class SearchAdvancedLegislationForm extends FormBase {
           'type' => 'transcript' ?: '',
           'transcript_type' => $values['type'] ?: '',
           'publish_date' => $date_range ?: '',
+          'full_text' => $values['full_text'] ?: '',
+          'sort_by' => 'field_ol_publish_date',
+          'sort_order' => 'DESC',
         ];
         break;
 

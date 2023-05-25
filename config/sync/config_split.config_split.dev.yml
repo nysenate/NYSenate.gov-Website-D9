@@ -9,10 +9,13 @@ weight: 0
 folder: profiles/custom/nysenate/config/dev
 module:
   clamav: 0
+  pantheon_advanced_page_cache: 0
 theme: {  }
 blacklist:
   - system.logging
+  - system.performance
   - clamav.settings
+  - pantheon_advanced_page_cache.settings
 graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true

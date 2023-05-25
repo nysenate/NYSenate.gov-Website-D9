@@ -164,6 +164,7 @@
           $(window).scroll(function () {
             currentTop = $(this).scrollTop();
             self.basicScroll(
+              origNav,
               currentTop,
               previousTop,
               headerBar,
@@ -224,6 +225,7 @@
             currentTop = $(this).scrollTop();
 
             self.basicScroll(
+              origNav,
               currentTop,
               previousTop,
               headerBar,
@@ -261,6 +263,7 @@
       this.checkMenuState(menu, currentTop, previousTop);
     },
     basicScroll: function (
+      origNav,
       currentTop,
       previousTop,
       headerBar,
@@ -278,6 +281,7 @@
         ) {
           actionBar.removeClass('hidden');
           origActionBar.addClass('hidden');
+          origNav.css('visibility', 'visible');
         }
         else if (
           this.isMovingUp(currentTop, previousTop) &&
@@ -286,6 +290,7 @@
           if (toggleActionBar !== 'show-actionbar') {
             actionBar.addClass('hidden');
             origActionBar.removeClass('hidden');
+            origNav.css('visibility', 'hidden');
           }
         }
       }

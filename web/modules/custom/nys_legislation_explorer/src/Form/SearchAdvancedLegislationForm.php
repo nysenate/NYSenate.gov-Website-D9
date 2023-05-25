@@ -7,11 +7,19 @@ use Drupal\Core\Form\FormBase;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * The Search advanced legislation form class.
  */
 class SearchAdvancedLegislationForm extends FormBase {
+  /**
+   * Search Advanced Legislation helper service.
+   *
+   * @var \Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper
+   */
+  protected SearchAdvancedLegislationHelper $helper;
 
   /**
    * The request stack.
@@ -21,12 +29,32 @@ class SearchAdvancedLegislationForm extends FormBase {
   protected $requestStack;
 
   /**
-   * {@inheritdoc}
+   * Implements the create() method on the form controller.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The Drupal service container.
+   *
+   * @return static
+   *   The form object.
    */
   public static function create(ContainerInterface $container) {
-    $instance = new static();
-    $instance->requestStack = $container->get('request_stack');
-    return $instance;
+    return new static(
+      $container->get('nys_legislation_explorer.helper'),
+      $container->get('request_stack')
+    );
+  }
+
+  /**
+   * Search Advanced Legislation form constructor.
+   *
+   * @param \Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper $helper
+   *   The SearchAdvancedLegislationHelper service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack service.
+   */
+  public function __construct(SearchAdvancedLegislationHelper $helper, RequestStack $request_stack) {
+    $this->helper = $helper;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -128,6 +156,24 @@ class SearchAdvancedLegislationForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // Build your form here.
+    $results_page = $this->helper->isResultsPage();
+    $markup = 'Fill out one or more of the following filter criteria to perform a search.';
+    $form['advanced_search'] = [
+      '#type' => 'block',
+      '#attributes' => [
+        'class' => ['adv-search-container'],
+      ],
+    ];
+    if ($results_page) {
+      $markup = 'Refine your search further or search for something else.';
+    }
+    else {
+      $form['advanced_search']['advanced_search_title'] = [
+        '#type' => 'item',
+        '#markup' => $this->t('Advanced Legislation Search'),
+      ];
+    }
     $args = $this->requestStack->getCurrentRequest()->query->all();
     $month_default = '';
     $year_default = '';
@@ -143,30 +189,10 @@ class SearchAdvancedLegislationForm extends FormBase {
         }
       }
     }
-    $form['advanced_search'] = [
-      '#type' => 'block',
-      '#attributes' => [
-        'class' => ['adv-search-container'],
-      ],
-    ];
-
-    $form['my_block']['my_block_title'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'h1',
-      '#value' => $this->t('Advanced Legislation Search'),
-      '#attributes' => [
-        'class' => ['nys-title'],
-      ],
-    ];
 
     $form['advanced_search']['advanced_search_text'] = [
       '#type' => 'item',
-      '#markup' => $this->t('Fill out one or more of the following filter criteria to perform a search.'),
-    ];
-
-    $form['advanced_search']['advanced_search_title'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Advanced Legislation Search'),
+      '#markup' => $markup,
     ];
 
     $form['type'] = [

@@ -81,7 +81,8 @@
   }
 
   // has img modifications
-  .c-block--initiative__has-img {
+  .c-block--initiative__has-img,
+  .c-block--initiative:first-child {
     overflow: hidden;
 
     img {
@@ -107,7 +108,8 @@
     }
   }
 
-  .c-block--initiative__no-img {
+  .c-block--initiative__no-img,
+  .c-block--initiative + .c-block--initiative {
     float: left;
     clear: none;
     height: 345px;
@@ -170,10 +172,16 @@
 }
 
 .featured-content__banners-list {
-  .c-block--initiative__no-img {
+
+  .c-block--initiative__no-img,
+  .c-block--initiative + .c-block--initiative {
     grid-column: 1 / span 2;
     margin: 0;
     height: auto;
+
+    .c-initiative--img {
+      display: none;
+    }
   }
 
 

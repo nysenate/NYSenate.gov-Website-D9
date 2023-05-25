@@ -5,3 +5,24 @@ nys_subscription.settings:
     _title: 'NYS Subscriptions Configuration'
   requirements:
     _permission: 'administer site configuration'
+nys_subscription.subscribe:
+  path: '/subscriptions/subscribe/%'
+  defaults:
+    _title: 'Subscribe'
+    _controller: '\Drupal\nys_subscriptions\Controller\SubscriptionsController::confirmCreateSubscription'
+  requirements:
+    _role: 'authenticated'
+nys_subscription.unsubscribe:
+  path: '/subscriptions/unsubscribe/%'
+  defaults:
+    _title: 'Unsubscribe'
+    _controller: '\Drupal\nys_subscriptions\Controller\SubscriptionsController::confirmDeleteSubscription'
+  requirements:
+    _role: 'authenticated'
+nys_subscription.global_subscribe:
+  path: 'subscriptions/global-unsubscribe/%'
+  defaults:
+    _title: 'Global Unsubscribe'
+    _controller: '\Drupal\nys_subscriptions\Controller\SubscriptionsController::confirmGlobalUnsubscribe'
+  requirements:
+    _role: 'authenticated'

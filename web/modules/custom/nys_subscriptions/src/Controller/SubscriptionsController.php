@@ -1,47 +1,152 @@
 <?php
 
-namespace Drupal\nys_subsciptions\Controller;
+namespace Drupal\nys_subscriptions\Controller;
 
-use Drupal\nys_bills\BillsHelper;
+use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\nys_subscriptions\SubscriptionInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
 
 /**
- * Route controller for School Form submissions.
+ *
  */
 class SubscriptionsController extends ControllerBase {
 
   /**
-   * NYS Bills Helper service.
+   * The subscription entity.
    *
-   * @var \Drupal\nys_bills\BillsHelper
+   * @var \Drupal\nys_subscriptions\SubscriptionInterface
    */
-  protected BillsHelper $billsHelper;
+  protected $subscription;
 
   /**
-   * Constructor.
+   * The logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
-  public function __construct(BillsHelper $billsHelper) {
-    $this->billsHelper = $billsHelper;
+  protected $logger;
+
+  /**
+   * Constructs a SubscriptionsController object.
+   *
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
+   */
+  public function __construct(LoggerInterface $logger) {
+    $this->logger = $logger;
   }
 
   /**
-   * Controller method to subscribe .
+   * {@inheritdoc}
    */
-  public function confirmCreateSubscription($sid) {
-
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('logger.factory')->get('nys_subscriptions')
+    );
   }
 
   /**
-   * Controller method to unsubscribe .
+   * Confirm create subscription.
+   *
+   * @param string $uuid
+   *   The UUID of the subscription.
+   * @param \Drupal\nys_subscriptions\SubscriptionInterface $subscription
+   *   The subscription entity.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
    */
-  public function confirmDeleteSubscription($sid) {
+  public function confirmCreateSubscription($uuid, SubscriptionInterface $subscription) {
+    try {
+      $subscriptions = $this->subscription->loadByProperties(['uuid' => $uuid]);
 
+      if (!empty($subscriptions)) {
+        $subscription = reset($subscriptions);
+        $subscription->confirm();
+
+        // Additional logic after confirming the subscription.
+        return new Response('Subscription successfully confirmed.');
+      }
+      else {
+        throw new \Exception('Subscription entity not found for the provided UUID.');
+      }
+    }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+      return new Response('Failed to confirm subscription.');
+    }
   }
 
   /**
-   * Controller method to unsubscribe .
+   * Remove a subscription.
+   *
+   * @param string $uuid
+   *   The UUID of the subscription.
+   * @param \Drupal\nys_subscriptions\SubscriptionInterface $subscription
+   *   The subscription entity.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
    */
-  public function confirmGlobalUnsubscribe($sid) {
+  public function removeSubscription($uuid, SubscriptionInterface $subscription) {
+    try {
+      $subscriptions = $this->subscription->loadByProperties(['uuid' => $uuid]);
 
+      if (!empty($subscriptions)) {
+        $subscription = reset($subscriptions);
+        $subscription->cancel();
+        return new Response('Subscription successfully removed.');
+      }
+      else {
+        throw new \Exception('Subscription entity not found for the provided UUID.');
+      }
+    }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+      return new Response('Failed to delete subscription.');
+    }
+  }
+
+  /**
+   * Controller method to unsubscribe globally.
+   *
+   * @param string $uuid
+   *   The UUID of the subscription.
+   * @param \Drupal\nys_subscriptions\SubscriptionInterface $subscription
+   *   The subscription entity.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
+   */
+  public function globalUnsubscribe($uuid, SubscriptionInterface $subscription) {
+    try {
+      $subscriptions = $this->subscription->loadByProperties(['uuid' => $uuid]);
+
+      if (!empty($subscriptions)) {
+        $uids = [];
+
+        foreach ($subscriptions as $subscription) {
+          $uids[] = $subscription->getOwnerId();
+          $subscription->cancel();
+        }
+
+        // Load all subscriptions for the associated UIDs and cancel them.
+        $allSubscriptions = $this->subscription->loadByProperties(['uid' => $uids]);
+        foreach ($allSubscriptions as $subscription) {
+          $subscription->cancel();
+        }
+
+        return new Response('Subscriptions successfully canceled.');
+      }
+      else {
+        throw new \Exception('Subscription entity not found for the provided UUID.');
+      }
+    }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+      return new Response('Failed to resolve subscription request.');
+    }
   }
 
 }

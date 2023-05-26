@@ -229,31 +229,28 @@ class ConfigForm extends ConfigFormBase {
     $config->set('nys_vid_redir_ip_2', $form_state->getValue('nys_vid_redir_ip_2'));
     $config->set('nys_vid_redir_url', $form_state->getValue('nys_vid_redir_url'));
 
-    if ($form_state->getValue('member_listing_pdf')) {
-      $image = $form_state->getValue('member_listing_pdf');
-      $file = File::load($image[0]);
-      if (!empty($file)) {
-        $file->setPermanent();
-        $file->save();
+    if ($form_state->getValue('member_listing_pdf') != $config->get('member_listing_pdf')) {
+      $file = $form_state->getValue('member_listing_pdf');
+      if ($file) {
+        $this->processUploadFile($file);
       }
+
       $config->set('member_listing_pdf', $form_state->getValue('member_listing_pdf'));
     }
-    if ($form_state->getValue('session_calendar_pdf')) {
-      $image = $form_state->getValue('session_calendar_pdf');
-      $file = File::load($image[0]);
-      if (!empty($file)) {
-        $file->setPermanent();
-        $file->save();
+    if ($form_state->getValue('session_calendar_pdf') != $config->get('session_calendar_pdf')) {
+      $file = $form_state->getValue('session_calendar_pdf');
+      if ($file) {
+        $this->processUploadFile($file);
       }
+
       $config->set('session_calendar_pdf', $form_state->getValue('session_calendar_pdf'));
     }
-    if ($form_state->getValue('public_hearing_schedule')) {
-      $image = $form_state->getValue('public_hearing_schedule');
-      $file = File::load($image[0]);
-      if (!empty($file)) {
-        $file->setPermanent();
-        $file->save();
+    if ($form_state->getValue('public_hearing_schedule') != $config->get('public_hearing_schedule')) {
+      $file = $form_state->getValue('public_hearing_schedule');
+      if ($file) {
+        $this->processUploadFile($file);
       }
+
       $config->set('public_hearing_schedule', $form_state->getValue('public_hearing_schedule'));
     }
 
@@ -266,6 +263,27 @@ class ConfigForm extends ConfigFormBase {
     \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Process the upload file.
+   */
+  public function processUploadFile($entity, $destination = 'public://pdfs/') {
+    $file = File::load($entity[0]);
+    if (!empty($file)) {
+      $initial_path = \Drupal::service('file_system')->realpath($file->getFileUri());
+      $file_destination = $destination . $file->getFilename();
+
+      if (file_exists($initial_path)) {
+        $file_repository = \Drupal::service('file.repository');
+        $file_repository->move($file, $file_destination);
+
+        $file->setFileUri($file_destination);
+      }
+
+      $file->setPermanent();
+      $file->save();
+    }
   }
 
 }

@@ -5840,15 +5840,32 @@ function nysenate_theme_preprocess_node__student_program(&$variables) {
  * Implements hook_preprocess_comment().
  */
 function nysenate_theme_preprocess_comment(&$variables) {
-  $date = $variables['comment']->getCreatedTime();
+  $comment = $variables['comment'];
+  $date = $comment->getCreatedTime();
   $variables['created_relative'] = \Drupal::service('date.formatter')->formatTimeDiffSince($date, ['granularity' => 1]);
 
   // Set author value based on anonymous flag.
   $display_author = $variables['author'];
-  if ($variables['comment']->hasField('field_anonymous') && !$variables['comment']->get('field_anonymous')->isEmpty()) {
-    if ($variables['comment']->field_anonymous->value == 1) {
+  if ($comment->hasField('field_anonymous') && !$comment->get('field_anonymous')->isEmpty()) {
+    if ($comment->field_anonymous->value == 1) {
       $display_author = t('Anonymous');
       $variables['attributes']['data-comment-user-id'] = 'anon';
+    }
+  }
+
+  if ($comment->status->value == 0) {
+    $uid = $comment->uid->target_id;
+    $user = \Drupal::entityTypeManager()->getStorage('user')
+      ->load($uid);
+
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node instanceof NodeInterface) {
+      $params = [
+        'author_name' => $user->name->value,
+        'title' => $node->title->value,
+      ];
+      $link = Url::fromUserInput('/admin/content/comment/approval', ['query' => $params])->toString();
+      $variables['approve_link'] = $link;
     }
   }
 

@@ -1009,8 +1009,6 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
     }
   }
 
-  $variables['actionbar']['type'] = 'default';
-
   if (!$result) {
     // Get the default homepage hero image.
     $config = \Drupal::configFactory()->get('nys_homepage_hero.settings');
@@ -1021,6 +1019,10 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
       }
     }
   }
+
+  // Set actionbar values.
+  $variables['actionbar']['type'] = 'default';
+  $variables['actionbar']['status'] = \Drupal::configFactory()->get('nys_config.settings')->get('nys_senate_status');
 
   // Invalidate cache tags on views:homepage_hero.
   $variables['#cache']['tags'][] = 'views:homepage_hero';
@@ -1297,7 +1299,7 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
 
       $title = '';
       $args = [];
-      $url_string = '/legislation/laws/search';
+      $url_string = '/search/legislation';
       $options = [
         'query' => [
           'searched' => 'true',
@@ -1312,17 +1314,17 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
       if ($filter_input == '1') {
         $title = 'View All Bills';
         $args = [
-          'type' => 'f_bill',
-          'bill_session_year' => $session,
-          'bill_sponsor' => $tid,
+          'type' => 'bill',
+          'session_year' => $session,
+          'sponsor' => $tid,
         ];
       }
       elseif ($filter_input == '2') {
         $title = 'View All Resolutions';
         $args = [
-          'type' => 'f_resolution',
-          'resolution_session_year' => $session,
-          'resolution_sponsor' => $tid,
+          'type' => 'resolution',
+          'session_year' => $session,
+          'sponsor' => $tid,
         ];
       }
       $options['query'] = array_merge($options['query'], $args);
@@ -3531,9 +3533,8 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     '#content' => \Drupal::service('nys_senators.senators_helper')->getSenatorSponsors($node),
   ];
 
-  // In D7, this value is being set in a form.
-  // We are getting the current year for the mean time.
-  $current_year = \Drupal::state()->get('nys_session_year', date('Y'));
+  // Fetch the current year from config.
+  $current_year = (int) \Drupal::configFactory()->get('nys_config.settings')->get('nys_session_year');
   $variables['current_session_year'] = $current_year - (1 - $current_year % 2);
 
   // A few immediate references for the bill object.

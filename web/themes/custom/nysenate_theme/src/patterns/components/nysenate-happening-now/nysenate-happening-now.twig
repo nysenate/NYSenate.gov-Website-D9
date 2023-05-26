@@ -14,9 +14,15 @@
       {% endif %}
     </div>
     <div class="item-content">
-      <h2 class="event-name">{{ event_name }}</h2>
+      <h2 class="event-name">
+        {% if event_url %}<a href='{{ event_url }}'>{% endif %}
+          {{ event_name }}
+        {% if event_url %}</a>{% endif %}
+      </h2>
       {% if livestream_cta.text %}
-        <a class="stream-link" href="{{ livestream_cta.url }}">{{ icons.get('youtube-2') }}<span>{{ livestream_cta.text }}</span></a>
+        {% if livestream_cta.url %}<a class="stream-link" href="{{ livestream_cta.url }}">{% endif %}
+          {{ icons.get('youtube-2') }}<span>{{ livestream_cta.text }}</span>
+        {% if livestream_cta.url %}</a>{% endif %}
         <p class="stream-title">{{ livestream_cta.stream_title }}</p>
       {% endif %}
     </div>

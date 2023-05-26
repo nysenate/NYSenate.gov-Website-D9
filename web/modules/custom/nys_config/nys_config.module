@@ -5,6 +5,9 @@
  * Provides alterations for Drupal contrib modules.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_preprocess_HOOK() for node templates.
  */
@@ -49,4 +52,29 @@ function nys_config_preprocess_node__landing(&$variables) {
     }
   }
 
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_config_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Session nodes should always have a uStream redirect URL prepopulated.
+  if ($form_id == 'node_session_form' && empty($form['field_video_redirect']['widget'][0]['#default_value'])) {
+    $redirect_url = \Drupal::configFactory()->get('nys_config.settings')->get('nys_vid_redir_url');
+    $form['field_video_redirect']['widget'][0]['value']['#default_value'] = Xss::filter($redirect_url);
+  }
+}
+
+/**
+ * Implements hook_entity_display_build_alter().
+ *
+ * Directs specified IP's to use an alternate URL for viewing streaming videos.
+ */
+function nys_config_entity_display_build_alter(&$build, $context) {
+  $vid_fields = [
+    'field_ustream',
+    'field_ustream_url',
+    'field_yt',
+  ];
+  // TO DO: D7 nys_access_permissions_field_attach_view_alter() codes here.
 }

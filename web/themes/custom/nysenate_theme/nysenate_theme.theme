@@ -1297,7 +1297,7 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
 
       $title = '';
       $args = [];
-      $url_string = '/legislation/laws/search';
+      $url_string = '/search/legislation';
       $options = [
         'query' => [
           'searched' => 'true',
@@ -1312,17 +1312,17 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
       if ($filter_input == '1') {
         $title = 'View All Bills';
         $args = [
-          'type' => 'f_bill',
-          'bill_session_year' => $session,
-          'bill_sponsor' => $tid,
+          'type' => 'bill',
+          'session_year' => $session,
+          'sponsor' => $tid,
         ];
       }
       elseif ($filter_input == '2') {
         $title = 'View All Resolutions';
         $args = [
-          'type' => 'f_resolution',
-          'resolution_session_year' => $session,
-          'resolution_sponsor' => $tid,
+          'type' => 'resolution',
+          'session_year' => $session,
+          'sponsor' => $tid,
         ];
       }
       $options['query'] = array_merge($options['query'], $args);

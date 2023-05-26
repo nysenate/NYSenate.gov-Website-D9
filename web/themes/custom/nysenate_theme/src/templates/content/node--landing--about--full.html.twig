@@ -73,55 +73,36 @@
 
 
 {{ attach_library('nysenate_theme/article-page') }}
+{{ attach_library('nysenate_theme/about') }}
 <article id="node-{{ node.id }}" class="landing-node page--about {{ classes }}" {{ attributes }}>
 
   {% if page %}
-  <header class="c-news--head">
-    <div class="c-news--head-meta">
-
-      {% if content.field_date and content.field_show_date[0]['#markup'] == 'On' %}
-        <p class="c-news--pub-date">
-          <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
-        </p>
-      {% endif %}
-
-      {% if issues and content.field_show_issues[0]['#markup'] == 'On' %}
-        <ul class="nys-associated-topics">
-          <div class="nys-associated-topics--label">issue:</div>
-          {% for issue in issues %}
-            <li>{{ issue }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
-  </header>
     <div class="c-news--body">
-
       <div class="c-block">
-      {% include '@nysenate_theme/about/about.twig' with {
-        landing_page_hero: landing_page_hero,
-        quick_facts_block: quick_facts_block,
-        how_senate_works_block: how_senate_works_block,
-        how_senate_works_title: how_senate_works_title,
-        how_senate_works_text: how_senate_works_text,
-        job_of_senate: job_of_senate,
-        about_rules: about_rules,
-        about_leadership: about_leadership,
-        district_map_title: district_map_title,
-        district_map_embed: district_map_embed,
-        senate_seal: senate_seal,
-        about_tour: about_tour,
-        about_student_programs: about_student_programs,
-        about_access: about_access,
-        sticky_nav: sticky_nav
-      } only %}
+        {% include '@nysenate_theme/about/about.twig' with {
+          landing_page_hero: landing_page_hero,
+          quick_facts_block: quick_facts_block,
+          how_senate_works_block: how_senate_works_block,
+          how_senate_works_title: how_senate_works_title,
+          how_senate_works_text: how_senate_works_text,
+          job_of_senate: job_of_senate,
+          about_rules: about_rules,
+          about_leadership: about_leadership,
+          district_map_title: district_map_title,
+          district_map_embed: district_map_embed,
+          senate_seal: senate_seal,
+          about_tour: about_tour,
+          about_student_programs: about_student_programs,
+          about_access: about_access,
+          sticky_nav: sticky_nav
+        } only %}
+      </div>
     </div>
-  </div>
 
-  {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
+    {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
 
-  {% if how_a_bill_block %}
-    {{ how_a_bill_block }}
+    {% if how_a_bill_block %}
+      {{ how_a_bill_block }}
+    {% endif %}
   {% endif %}
-{% endif %}
 </article>

@@ -126,6 +126,15 @@
         });
         $('.js-media-library-selected-count').html(selectItemsText);
       }
+      function checkEnabled() {
+        updateSelectionCount(settings.media_library.selection_remaining);
+        if (currentSelection.length === settings.media_library.selection_remaining) {
+          disableItems($mediaItems.not(':checked'));
+          enableItems($mediaItems.filter(':checked'));
+        } else {
+          enableItems($mediaItems);
+        }
+      }
       $(once('media-item-change', $mediaItems)).on('change', function (e) {
         var id = e.currentTarget.value;
         var position = currentSelection.indexOf(id);
@@ -145,14 +154,9 @@
           item.value = currentSelection.join();
         });
       });
+      checkEnabled();
       $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
-        updateSelectionCount(settings.media_library.selection_remaining);
-        if (currentSelection.length === settings.media_library.selection_remaining) {
-          disableItems($mediaItems.not(':checked'));
-          enableItems($mediaItems.filter(':checked'));
-        } else {
-          enableItems($mediaItems);
-        }
+        checkEnabled();
       });
       currentSelection.forEach(function (value) {
         $form.find("input[type=\"checkbox\"][value=\"".concat(value, "\"]")).prop('checked', true).trigger('change');

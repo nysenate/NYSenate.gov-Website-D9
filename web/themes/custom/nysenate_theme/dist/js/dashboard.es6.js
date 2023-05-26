@@ -24,6 +24,7 @@
       var debounceTime = 250;
       origNav.once('navigation').each(function () {
         var nav = origNav.clone().attr('id', 'js-sticky--dashboard--clone');
+        nav.addClass('fixed');
         var headerBar = nav.find('.c-header-bar');
         var sidebarToggle = nav.find('.sidebar-toggle');
         sidebarToggle.each(Drupal.behaviors.sidebar.sidebarToggleInit); // place clone
@@ -54,6 +55,10 @@
       } else if (currentTop <= nav.outerHeight() && headerBar.hasClass('collapsed')) {
         headerBar.removeClass('collapsed');
       }
+
+      setTimeout(function () {
+        return Drupal.behaviors.sidebar.onResize(nav);
+      }, 300);
     },
     alignPosition: function alignPosition(orig, clone, cloneTop) {
       try {
@@ -79,6 +84,24 @@
           orig.removeClass('fixed');
           orig.removeAttr('style');
         }
+
+        setTimeout(function () {
+          return Drupal.behaviors.dashboard.alignFixedTableHeader(clone);
+        }, 300);
+      } catch (err) {
+        return err;
+      }
+    },
+    alignFixedTableHeader: function alignFixedTableHeader(clone) {
+      try {
+        var pageUserTableTh = $('.sticky-header');
+
+        if (!pageUserTableTh) {
+          return;
+        }
+
+        var cloneTop = clone.position().top + clone.height();
+        pageUserTableTh.css('top', "".concat(typeof cloneTop === 'number' ? cloneTop : 0, "px"));
       } catch (err) {
         return err;
       }

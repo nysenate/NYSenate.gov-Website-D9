@@ -13,12 +13,14 @@
     .dash-senator-img {
       height: 70px;
       width: 70px;
+      min-width: 70px;
       overflow: hidden;
       border-radius: 70px;
 
       img {
         object-fit: cover;
-        height: 100%;
+        overflow: hidden;
+        border-radius: 70px;
       }
     }
 
@@ -103,6 +105,17 @@
 
       .c-container--title {
         display: inline-block;
+
+        .field--name-field-senator-name {
+          display: inline-block;
+        }
+
+        .party {
+          font-size: 12px;
+          color: $yellow03;
+          text-transform: uppercase;
+          display: inline-block;
+        }
       }
 
       .c-container--district {

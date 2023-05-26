@@ -24,6 +24,19 @@
   }
 }
 
+table {
+  background: $color-white;
+  margin-bottom: 1.25rem;
+  border: solid 1px $color-alto;
+  table-layout: auto;
+
+  th,
+  td {
+    padding: 0.5rem 0.625rem 0.625rem;
+    font-size: 0.875rem;
+  }
+}
+
 .page-user-dashboard {
 
   .l-header {
@@ -43,7 +56,7 @@
   }
 
   .c-page-title {
-    font-family: "Adelle Regular";
+    font-family: $font-serif-regular;
 
     a {
       &::before {
@@ -78,7 +91,7 @@
     }
 
     .c-dashboard-header--btn {
-      font-family: "Proxima Nova SemiBold";
+      font-family: $font-sans-bold;
       font-size: 15px;
       line-height: 18px;
       color: $blue03;
@@ -100,6 +113,131 @@
 
   #js-sticky--dashboard {
     visibility: hidden;
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 0;
+
+    thead {
+
+      th {
+        border-bottom: none;
+        font-family: $font-sans-bold;
+        font-size: 12px;
+        text-align: left;
+        text-transform: uppercase;
+        color: $grey03;
+        background-color: $grey06;
+        height: 51px;
+        top: 88px;
+        font-weight: bold;
+
+        @include breakpoint($bp-under-sm) {
+          tops: 60px;
+
+          &.verified,
+          &.views-field-field-address-postal-code,
+          &.views-field-field-dateofbirth,
+          &.views-field-field-gender-user,
+          &.bill,
+          &.messaged {
+            display: none;
+          }
+        }
+      }
+    }
+
+    tbody {
+      border-top: 1px solid $grey15;
+
+      tr {
+
+        &:nth-child(odd) {
+          background-color: $grey06;
+          border-bottom: 1px solid $grey15;
+          padding: 0.1em 0.6em;
+        }
+        &:nth-child(even) {
+          background: #F9F9F9;
+        }
+
+        td {
+          font-family: $font-sans;
+          font-size: 12px;
+          color: $grey08;
+          border-bottom: 1px solid $grey13;
+          height: 80px;
+
+          .poll-facebook-share {
+            &:after {
+              color: $cont_blue_med;
+            }
+          }
+
+          &.views-field-field-last-name {
+            font-size: 18px;
+
+            a {
+              color: $grey08;
+            }
+          }
+
+          &.gender,
+          &.messaged,
+          &.vote {
+            text-transform: uppercase;
+
+            .date {
+              color: $grey04;
+            }
+          }
+
+          &.verified {
+            font-size: 25px;
+
+            a {
+              color: $cont_blue_drk;
+            }
+
+            .not-verified {
+              font-size: 10px;
+            }
+          }
+
+          &.pager-cell {
+            background-color: $grey06;
+            height: 50px;
+          }
+
+          @include breakpoint($bp-under-sm) {
+            &.verified,
+            &.views-field-field-address-postal-code,
+            &.views-field-field-dateofbirth,
+            &.views-field-field-gender-user,
+            &.bill,
+            &.messaged {
+              display: none;
+            }
+          }
+        }
+
+        .pager {
+          float: right;
+          margin-right: 20px;
+
+          .pager-item {
+            display: inline-block;
+            margin: 0 15px 0 0;
+          }
+        }
+      }
+    }
+
+  }
+
+  .sticky-header {
+    transition: top 0.3s;
   }
 }
 
@@ -167,5 +305,284 @@
     .c-page-title {
       display: inline-block;
     }
+  }
+}
+
+.c-container--senator-constituents {
+  #views-exposed-form-constituents-default {
+    .filter-wrapper {
+      display: inline;
+      position: relative;
+
+      &:after {
+        @extend .icon-after__see-more;
+        position: absolute;
+        right: 20px;
+        top: -12px;
+        font-size: 25px;
+        color: $cont_blue_lgt;
+        pointer-events: none;
+        cursor: pointer;
+      }
+    }
+
+    .filter {
+      height: 55px;
+      width: 100%;
+      border: 1px solid #C0C0C0;
+      background: none;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      line-height: 18px;
+      text-transform: uppercase;
+      padding: 0 30px 0 20px;
+      margin: 0 10px 20px 0;
+      display: inline-block;
+    }
+
+    .zip-filter {
+      height: 55px;
+      display: inline-block;
+      width: 100%;
+      background: url(../images/svg/search.svg) no-repeat 95% center;
+      background-size: 15px;
+    }
+
+    button.form-submit {
+      float: right;
+      height: 32px;
+      width: 115px;
+      padding: 0 18px;
+      font-family: $font-sans-bold;
+      font-size: 12px;
+      text-transform: uppercase;
+      background-color: $blue03;
+
+      &:before {
+        font-size: 20px;
+        margin-top: -3px;
+      }
+    }
+
+    .form-wrapper {
+      position: relative;
+      width: 100%;
+
+      input[type="text"],
+      input[type="search"] {
+        height: 55px;
+        background: none;
+      }
+
+      .c-site-search--btn {
+        width: 45px;
+        background: none;
+        top: 20px;
+
+        &:after {
+          top: -13px;
+          right: -11px;
+          left: inherit;
+          font-size: 24px;
+        }
+      }
+    }
+
+    .inbox-action-links {
+      .select-all-messages {
+        float: left;
+
+        label {
+          text-transform: none;
+        }
+      }
+
+      .show-in-district {
+        float: left;
+
+        label {
+          text-transform: none;
+        }
+      }
+
+      .action-button-wrapper {
+        float: right;
+
+        button {
+          display: inline-block;
+          height: 32px;
+          width: auto;
+          padding: 0 18px;
+          font-family: $font-sans-bold;
+          font-size: 12px;
+          text-transform: uppercase;
+          background-color: $cont_blue_lgt;
+        }
+      }
+    }
+
+    .form--inline {
+      display: grid;
+      gap: 12px;
+
+      @include breakpoint($bp-sm) {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+
+      .form-item {
+        width: 100%;
+        margin: 0;
+
+        input,
+        select {
+          height: 55px;
+        }
+      }
+
+      .form-type-select {
+        &::after {
+          color: $cont_blue_lgt;
+          top: 55px;
+        }
+
+        select {
+          color: $cont_blue_lgt;
+        }
+      }
+    }
+  }
+
+  .c-container--title {
+    font-family: $font-serif-semibold;
+    font-size: 24px;
+    line-height: 32px;
+    color: $grey08;
+    text-transform: capitalize;
+  }
+
+  #senator_constituents_table {
+    clear: both;
+
+    .pagination-centered {
+      height: 51px;
+      background-color: $grey06;
+      border-bottom: 1px solid $color-alto;
+      border-left: 1px solid $color-alto;
+      border-right: 1px solid $color-alto;
+      margin-top: -20px;
+
+      .pagination {
+        float: right;
+        margin: 12px 10px 0 0;
+        height: 24px;
+
+        li {
+          display: inline-block;
+          margin: 0 15px 0 0;
+          vertical-align: top;
+
+          a {
+            color: $cont_blue_med;
+            background: none;
+            line-height: 22px;
+          }
+
+          &.current {
+            a {
+              background: none;
+              color: $cont_blue_drk;
+            }
+          }
+
+          &.arrow.first,
+          &.arrow.last,
+          &.unavailable {
+            display: none;
+          }
+
+          &.arrow.first + .arrow a {
+            text-indent: -9999em;
+            font-size: 0;
+            height: 24px;
+            display: block !important;
+
+            &:before {
+              content: "\3c";
+              display: block;
+              width: 28px;
+              height: 24px;
+              font-size: 18px;
+              font-family: $senate-icons;
+              line-height: 22px;
+            }
+          }
+
+          &.unavailable + .arrow a,
+          a[title="Go to next page"] {
+            text-indent: -9999em;
+            font-size: 0;
+            height: 24px;
+            display: block;
+
+            &:after {
+              content: "\3e";
+              display: block;
+              width: 28px;
+              height: 24px;
+              font-size: 18px;
+              font-family: $senate-icons;
+              line-height: 22px;
+              margin-top: -22px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  label {
+    margin-top: 20px;
+  }
+
+  .pager {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    min-height: 50px;
+    margin-top: 0;
+    background-color: $grey06;
+    border: 1px solid $color-alto;
+    border-top: none;
+
+    .pager__item {
+
+      &.is-active,
+      &:hover {
+        background-color: unset;
+
+        .pager__control {
+          color: $cont_blue_drk;
+          font-weight: 700;
+        }
+      }
+
+      .pager__control {
+        color: $cont_blue_med;
+        background: none;
+        line-height: 22px;
+        font-weight: 400;
+        font-size: 14px;
+      }
+
+      &--previous,
+      &--next {
+        background-color: unset;
+
+        svg path {
+          fill: $cont_blue_med;
+        }
+      }
+    }
+
   }
 }

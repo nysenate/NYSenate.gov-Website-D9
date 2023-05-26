@@ -27,7 +27,7 @@
         </h2>
         <h3 class="c-committee-type">{{ content.type }}</h3>
         {% if content.description %}
-          <p>{{ content.description }}</p>
+          <div>{{ content.description|raw }}</div>
         {% endif %}
       </div>
     </div>

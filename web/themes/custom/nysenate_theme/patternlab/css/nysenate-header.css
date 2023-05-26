@@ -1035,7 +1035,7 @@ strong {
 .icon-replace__mail,
 .icon-replace__x,
 .nav-open .c-nav--toggle,
-.c-nav--wrap.search-open .c-site-search--btn,
+.c-nav--wrap.search-open nav .c-site-search--btn,
 .c-nav--wrap.search-open .search__submit,
 .icon-replace__hamburger,
 .c-nav--toggle,
@@ -1069,7 +1069,7 @@ strong {
   .icon-replace__mail::after,
   .icon-replace__x::after,
   .nav-open .c-nav--toggle::after,
-  .c-nav--wrap.search-open .c-site-search--btn::after,
+  .c-nav--wrap.search-open nav .c-site-search--btn::after,
   .c-nav--wrap.search-open .search__submit::after,
   .icon-replace__hamburger::after,
   .c-nav--toggle::after,
@@ -1271,7 +1271,7 @@ strong {
 
 .icon-replace__x::after,
 .nav-open .c-nav--toggle::after,
-.c-nav--wrap.search-open .c-site-search--btn::after,
+.c-nav--wrap.search-open nav .c-site-search--btn::after,
 .c-nav--wrap.search-open .search__submit::after {
   content: '\78'; }
 
@@ -1300,7 +1300,7 @@ strong {
 .c-detail--social-item.email::after,
 .icon-replace__x::after,
 .nav-open .c-nav--toggle::after,
-.c-nav--wrap.search-open .c-site-search--btn::after,
+.c-nav--wrap.search-open nav .c-site-search--btn::after,
 .c-nav--wrap.search-open .search__submit::after,
 .l-messages .close::after,
 .c-actionbar [class*='c-btn--follow-'] .flag-success-message .close-message::after,
@@ -1963,6 +1963,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2476,7 +2481,7 @@ h2.c-subpage-header--title {
       width: 20px;
       height: 20px;
       margin-right: 10px;
-      background: transparent url("http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg") center center no-repeat;
+      background: transparent url("../images/nys_logo_header240x240.jpg") center center no-repeat;
       background-size: cover; }
 
 .c-header--btn.c-senator-header--btn {
@@ -2625,7 +2630,7 @@ h2.c-subpage-header--title {
       position: absolute;
       background-color: transparent; }
       .c-nav--wrap .c-nav nav .c-site-search--btn::after, .c-nav--wrap .c-nav nav .search__submit::after {
-        top: 2px; }
+        top: -3px; }
 
 .nav-open {
   max-height: 100vh;
@@ -2639,10 +2644,12 @@ h2.c-subpage-header--title {
     .nav-open .c-nav--toggle::after {
       font-size: 24px; }
 
-.c-nav--wrap.search-open .c-site-search--btn, .c-nav--wrap.search-open .search__submit {
+.c-nav--wrap.search-open nav .c-site-search--btn, .c-nav--wrap.search-open .search__submit {
   cursor: pointer;
   position: absolute;
   top: 10px; }
+  .c-nav--wrap.search-open nav .c-site-search--btn::after, .c-nav--wrap.search-open .search__submit::after {
+    top: 4px; }
 
 .c-nav--wrap.search-open .c-site-search .c-site-search--btn, .c-nav--wrap.search-open .c-site-search .search__submit {
   cursor: pointer;
@@ -3134,9 +3141,14 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     .c-site-search .c-site-search--box::-ms-clear {
       display: none; }
   .u-mobile-only .c-site-search.nys-searchglobal-form .search__submit {
-    top: 50%;
+    top: 55%;
     transform: translateY(-50%);
-    margin-right: 0; }
+    margin-right: 0;
+    left: auto;
+    right: 20px; }
+    .u-mobile-only .c-site-search.nys-searchglobal-form .search__submit::after {
+      top: 0;
+      color: #175b81; }
   .u-mobile-only .c-site-search.nys-searchglobal-form .form-item {
     margin-top: 0; }
   .c-site-search .c-site-search--title {

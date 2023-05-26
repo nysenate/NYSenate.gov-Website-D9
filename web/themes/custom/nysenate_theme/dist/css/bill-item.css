@@ -1848,6 +1848,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2287,19 +2292,25 @@ h2.c-subpage-header--title {
   clear: both; }
 
 h3.c-bill-num {
-  margin: 0 0 0.25em;
+  margin-bottom: 20px;
   color: #7d7c7c;
   font-family: "Adelle Bold", serif;
   font-weight: 400;
   line-height: 1em;
   font-size: 20px;
   letter-spacing: 0.05em; }
+  @media screen and (min-width: 768px) {
+    h3.c-bill-num {
+      margin-bottom: 80px; } }
   h3.c-bill-num a {
-    color: #7d7c7c; }
+    color: #444444; }
 
-.c-bill-descript {
+p.c-bill-update--date {
+  color: #444444; }
+
+.c-block .c-bill-descript {
   margin: 0 0 10px 0;
-  color: #7d7c7c;
+  color: #444444;
   font-family: "Adelle Light", serif;
   font-size: 20px;
   line-height: 32px; }
@@ -2308,12 +2319,25 @@ h3.c-bill-num {
   padding: 0;
   border: 0;
   margin-bottom: 20px; }
+  .c-block.c-block-legislation-featured .c-legislation-info {
+    position: relative;
+    padding: 30px 20px 130px;
+    z-index: 3;
+    height: 100%; }
+    @media screen and (min-width: 768px) {
+      .c-block.c-block-legislation-featured .c-legislation-info {
+        padding: 25px 40px 95px;
+        width: 100%; } }
   .c-block.c-block-legislation-featured .c-block-legislation-featured {
     margin-bottom: 0; }
   .c-block.c-block-legislation-featured .c-block--btn-toggle {
     background: transparent; }
   .c-block.c-block-legislation-featured .c-bill-num {
+    margin: 0 0 0.25em;
     color: #fff; }
+    @media screen and (min-width: 768px) {
+      .c-block.c-block-legislation-featured .c-bill-num {
+        margin: 0 0 0.25em; } }
     .c-block.c-block-legislation-featured .c-bill-num a {
       color: #fff;
       text-decoration: none; }
@@ -2372,15 +2396,32 @@ h3.c-bill-num {
       font-size: 20px; }
   .c-block.c-block-legislation-featured .nys-senator.sponsor-list {
     width: auto; }
+  .c-block.c-block-legislation-featured .c-bill-update {
+    margin-top: 0; }
+    @media screen and (min-width: 768px) {
+      .c-block.c-block-legislation-featured .c-bill-update {
+        margin-top: 0; } }
 
 .c-block.c-block-constituent-bill .nys-bill-status.nys-bill-status__drk li.passed {
   background: #aaaaaa; }
 
-.c-legislation-info {
-  position: relative;
-  padding: 30px 20px 130px;
-  z-index: 3;
-  height: 100%; }
+.c-block.c-block-constituent-bill p.c-bill-update--location a {
+  color: #fff; }
+
+.c-block.c-block-constituent-bill .sponsors span.sponsor-name {
+  font-size: 16px;
+  line-height: 23px;
+  font-family: "Adelle Light";
+  margin: 0;
+  text-transform: none; }
+  .c-block.c-block-constituent-bill .sponsors span.sponsor-name a {
+    color: #fff; }
+
+.c-block .c-bill-update--sponsor {
+  display: block;
+  margin: 0;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px; }
 
 .c-bill-polling {
   position: absolute;
@@ -2419,7 +2460,11 @@ h3.c-bill-num {
 
 .c-bill-update {
   display: flex;
-  flex-direction: column; }
+  flex-direction: column;
+  margin-top: 20px; }
+  @media screen and (min-width: 768px) {
+    .c-bill-update {
+      margin-top: 80px; } }
   .c-bill-update a {
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
     font-size: 12px;
@@ -2498,9 +2543,9 @@ h3.c-bill-num {
 /*----------------------------------------
 / BILL STATUS
 / styling for a list denoting a bill's status
-/ list items are circle 
-/ add 'passed' class to illustrate we're 
-/	passed that step	
+/ list items are circle
+/ add 'passed' class to illustrate we're
+/	passed that step
 /----------------------------------------*/
 .c-bill-section ul.nys-bill-status {
   margin: 90px 0; }
@@ -2520,7 +2565,7 @@ h3.c-bill-num {
     bottom: 0;
     left: 0;
     right: 0;
-    margin: auto;
+    margin: 9px auto;
     height: 2px;
     width: 90%;
     border: 0;
@@ -2535,7 +2580,7 @@ h3.c-bill-num {
     background: #fff;
     border: 0.2em solid #aaaaaa;
     border-radius: 50%;
-    /* 
+    /*
 			spacer is necessary to pull off
 			justified lists
 		*/ }
@@ -2714,15 +2759,21 @@ h3.c-bill-num {
   .c-block-legislation.c-list-item .c-bill-num {
     font-size: 20px;
     margin-bottom: 10px; }
+  .c-block-legislation .c-legislation-info.with-issues {
+    display: flex; }
+    .c-block-legislation .c-legislation-info.with-issues .left-col {
+      flex: 23%;
+      padding-right: 2%; }
+      .c-block-legislation .c-legislation-info.with-issues .left-col .c-press-release--topic {
+        color: #008cba; }
+    .c-block-legislation .c-legislation-info.with-issues .right-col {
+      flex: 75%; }
   h3.c-bill-num {
     font-size: 22px; }
     h3.c-bill-num--large {
       font-size: 32px; }
   .c-bill-descript {
     margin-bottom: 15px; }
-  .c-legislation-info {
-    padding: 25px 40px 95px;
-    width: 100%; }
   .c-block.c-block-legislation-featured p.c-bill-update--date,
   .c-block.c-block-legislation-featured p.c-bill-update--location,
   .c-block.c-block-legislation-featured .c-bill-update--sponsor {

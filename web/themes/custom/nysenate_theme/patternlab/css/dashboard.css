@@ -1851,6 +1851,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2305,6 +2310,16 @@ h2.c-subpage-header--title {
     position: relative;
     z-index: 20; }
 
+table {
+  background: #fff;
+  margin-bottom: 1.25rem;
+  border: solid 1px #ddd;
+  table-layout: auto; }
+  table th,
+  table td {
+    padding: 0.5rem 0.625rem 0.625rem;
+    font-size: 0.875rem; }
+
 .page-user-dashboard .l-header {
   z-index: 20; }
 
@@ -2318,7 +2333,7 @@ h2.c-subpage-header--title {
     margin-right: 10px; }
 
 .page-user-dashboard .c-page-title {
-  font-family: "Adelle Regular"; }
+  font-family: "Adelle Regular", serif; }
   .page-user-dashboard .c-page-title a::before {
     display: none; }
   .page-user-dashboard .c-page-title a:hover {
@@ -2341,7 +2356,7 @@ h2.c-subpage-header--title {
     display: inline-block;
     vertical-align: middle; }
   .page-user-dashboard .c-header-bar .c-dashboard-header--btn {
-    font-family: "Proxima Nova SemiBold";
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
     font-size: 15px;
     line-height: 18px;
     color: #04a9c5;
@@ -2354,6 +2369,71 @@ h2.c-subpage-header--title {
 
 .page-user-dashboard #js-sticky--dashboard {
   visibility: hidden; }
+
+.page-user-dashboard table {
+  width: 100%;
+  margin-bottom: 0; }
+  .page-user-dashboard table thead th {
+    border-bottom: none;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    font-size: 12px;
+    text-align: left;
+    text-transform: uppercase;
+    color: #666666;
+    background-color: #eeeeee;
+    height: 51px;
+    top: 88px;
+    font-weight: bold; }
+    @media screen and (max-width: 767px) {
+      .page-user-dashboard table thead th {
+        tops: 60px; }
+        .page-user-dashboard table thead th.verified, .page-user-dashboard table thead th.views-field-field-address-postal-code, .page-user-dashboard table thead th.views-field-field-dateofbirth, .page-user-dashboard table thead th.views-field-field-gender-user, .page-user-dashboard table thead th.bill, .page-user-dashboard table thead th.messaged {
+          display: none; } }
+  .page-user-dashboard table tbody {
+    border-top: 1px solid #cccccc; }
+    .page-user-dashboard table tbody tr:nth-child(odd) {
+      background-color: #eeeeee;
+      border-bottom: 1px solid #cccccc;
+      padding: 0.1em 0.6em; }
+    .page-user-dashboard table tbody tr:nth-child(even) {
+      background: #F9F9F9; }
+    .page-user-dashboard table tbody tr td {
+      font-family: "Proxima Nova Regular", "Arial", sans-serif;
+      font-size: 12px;
+      color: #444444;
+      border-bottom: 1px solid #e2e8ec;
+      height: 80px; }
+      .page-user-dashboard table tbody tr td .poll-facebook-share:after {
+        color: #008ca6; }
+      .page-user-dashboard table tbody tr td.views-field-field-last-name {
+        font-size: 18px; }
+        .page-user-dashboard table tbody tr td.views-field-field-last-name a {
+          color: #444444; }
+      .page-user-dashboard table tbody tr td.gender, .page-user-dashboard table tbody tr td.messaged, .page-user-dashboard table tbody tr td.vote {
+        text-transform: uppercase; }
+        .page-user-dashboard table tbody tr td.gender .date, .page-user-dashboard table tbody tr td.messaged .date, .page-user-dashboard table tbody tr td.vote .date {
+          color: #888888; }
+      .page-user-dashboard table tbody tr td.verified {
+        font-size: 25px; }
+        .page-user-dashboard table tbody tr td.verified a {
+          color: #1f798f; }
+        .page-user-dashboard table tbody tr td.verified .not-verified {
+          font-size: 10px; }
+      .page-user-dashboard table tbody tr td.pager-cell {
+        background-color: #eeeeee;
+        height: 50px; }
+      @media screen and (max-width: 767px) {
+        .page-user-dashboard table tbody tr td.verified, .page-user-dashboard table tbody tr td.views-field-field-address-postal-code, .page-user-dashboard table tbody tr td.views-field-field-dateofbirth, .page-user-dashboard table tbody tr td.views-field-field-gender-user, .page-user-dashboard table tbody tr td.bill, .page-user-dashboard table tbody tr td.messaged {
+          display: none; } }
+    .page-user-dashboard table tbody tr .pager {
+      float: right;
+      margin-right: 20px; }
+      .page-user-dashboard table tbody tr .pager .pager-item {
+        display: inline-block;
+        margin: 0 15px 0 0; }
+
+.page-user-dashboard .sticky-header {
+  transition: top 0.3s; }
 
 @media screen and (min-width: 760px) {
   .page-user-dashboard .c-header-bar {
@@ -2391,3 +2471,196 @@ h2.c-subpage-header--title {
       height: 40px; }
   .page-user-dashboard .c-page-title {
     display: inline-block; } }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .filter-wrapper {
+  display: inline;
+  position: relative; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .filter-wrapper:after {
+    position: absolute;
+    right: 20px;
+    top: -12px;
+    font-size: 25px;
+    color: #04a9c5;
+    pointer-events: none;
+    cursor: pointer; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .filter {
+  height: 55px;
+  width: 100%;
+  border: 1px solid #C0C0C0;
+  background: none;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+  text-transform: uppercase;
+  padding: 0 30px 0 20px;
+  margin: 0 10px 20px 0;
+  display: inline-block; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .zip-filter {
+  height: 55px;
+  display: inline-block;
+  width: 100%;
+  background: url(../images/svg/search.svg) no-repeat 95% center;
+  background-size: 15px; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default button.form-submit {
+  float: right;
+  height: 32px;
+  width: 115px;
+  padding: 0 18px;
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  background-color: #04a9c5; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default button.form-submit:before {
+    font-size: 20px;
+    margin-top: -3px; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .form-wrapper {
+  position: relative;
+  width: 100%; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .form-wrapper input[type="text"],
+  .c-container--senator-constituents #views-exposed-form-constituents-default .form-wrapper input[type="search"] {
+    height: 55px;
+    background: none; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .form-wrapper .c-site-search--btn {
+    width: 45px;
+    background: none;
+    top: 20px; }
+    .c-container--senator-constituents #views-exposed-form-constituents-default .form-wrapper .c-site-search--btn:after {
+      top: -13px;
+      right: -11px;
+      left: inherit;
+      font-size: 24px; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .inbox-action-links .select-all-messages {
+  float: left; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .inbox-action-links .select-all-messages label {
+    text-transform: none; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .inbox-action-links .show-in-district {
+  float: left; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .inbox-action-links .show-in-district label {
+    text-transform: none; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .inbox-action-links .action-button-wrapper {
+  float: right; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .inbox-action-links .action-button-wrapper button {
+    display: inline-block;
+    height: 32px;
+    width: auto;
+    padding: 0 18px;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #04a9c5; }
+
+.c-container--senator-constituents #views-exposed-form-constituents-default .form--inline {
+  display: grid;
+  gap: 12px; }
+  @media screen and (min-width: 768px) {
+    .c-container--senator-constituents #views-exposed-form-constituents-default .form--inline {
+      grid-template-columns: 2fr 1fr 1fr; } }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .form--inline .form-item {
+    width: 100%;
+    margin: 0; }
+    .c-container--senator-constituents #views-exposed-form-constituents-default .form--inline .form-item input,
+    .c-container--senator-constituents #views-exposed-form-constituents-default .form--inline .form-item select {
+      height: 55px; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .form--inline .form-type-select::after {
+    color: #04a9c5;
+    top: 55px; }
+  .c-container--senator-constituents #views-exposed-form-constituents-default .form--inline .form-type-select select {
+    color: #04a9c5; }
+
+.c-container--senator-constituents .c-container--title {
+  font-family: "Adelle SemiBold", serif;
+  font-size: 24px;
+  line-height: 32px;
+  color: #444444;
+  text-transform: capitalize; }
+
+.c-container--senator-constituents #senator_constituents_table {
+  clear: both; }
+  .c-container--senator-constituents #senator_constituents_table .pagination-centered {
+    height: 51px;
+    background-color: #eeeeee;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    margin-top: -20px; }
+    .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination {
+      float: right;
+      margin: 12px 10px 0 0;
+      height: 24px; }
+      .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li {
+        display: inline-block;
+        margin: 0 15px 0 0;
+        vertical-align: top; }
+        .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li a {
+          color: #008ca6;
+          background: none;
+          line-height: 22px; }
+        .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.current a {
+          background: none;
+          color: #1f798f; }
+        .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.arrow.first, .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.arrow.last, .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.unavailable {
+          display: none; }
+        .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.arrow.first + .arrow a {
+          text-indent: -9999em;
+          font-size: 0;
+          height: 24px;
+          display: block !important; }
+          .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.arrow.first + .arrow a:before {
+            content: "\3c";
+            display: block;
+            width: 28px;
+            height: 24px;
+            font-size: 18px;
+            font-family: "senate_icons";
+            line-height: 22px; }
+        .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.unavailable + .arrow a,
+        .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li a[title="Go to next page"] {
+          text-indent: -9999em;
+          font-size: 0;
+          height: 24px;
+          display: block; }
+          .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li.unavailable + .arrow a:after,
+          .c-container--senator-constituents #senator_constituents_table .pagination-centered .pagination li a[title="Go to next page"]:after {
+            content: "\3e";
+            display: block;
+            width: 28px;
+            height: 24px;
+            font-size: 18px;
+            font-family: "senate_icons";
+            line-height: 22px;
+            margin-top: -22px; }
+
+.c-container--senator-constituents label {
+  margin-top: 20px; }
+
+.c-container--senator-constituents .pager {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  min-height: 50px;
+  margin-top: 0;
+  background-color: #eeeeee;
+  border: 1px solid #ddd;
+  border-top: none; }
+  .c-container--senator-constituents .pager .pager__item.is-active, .c-container--senator-constituents .pager .pager__item:hover {
+    background-color: unset; }
+    .c-container--senator-constituents .pager .pager__item.is-active .pager__control, .c-container--senator-constituents .pager .pager__item:hover .pager__control {
+      color: #1f798f;
+      font-weight: 700; }
+  .c-container--senator-constituents .pager .pager__item .pager__control {
+    color: #008ca6;
+    background: none;
+    line-height: 22px;
+    font-weight: 400;
+    font-size: 14px; }
+  .c-container--senator-constituents .pager .pager__item--previous, .c-container--senator-constituents .pager .pager__item--next {
+    background-color: unset; }
+    .c-container--senator-constituents .pager .pager__item--previous svg path, .c-container--senator-constituents .pager .pager__item--next svg path {
+      fill: #008ca6; }

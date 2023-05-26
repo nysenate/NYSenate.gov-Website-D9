@@ -1862,6 +1862,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2373,13 +2378,16 @@ h2.c-subpage-header--title {
   .c-tab--arrow::after {
     font-size: 26px; }
 
-.c-tabs--related-issues a {
-  text-transform: uppercase;
-  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
-  font-size: 12px;
-  line-height: 1em; }
-  .c-tabs--related-issues a:hover {
-    text-decoration: underline; }
+.c-tabs--related-issues {
+  line-height: 1em;
+  padding-right: 2%; }
+  .c-tabs--related-issues a {
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    font-size: 12px;
+    line-height: 1em; }
+    .c-tabs--related-issues a:hover {
+      text-decoration: underline; }
 
 .c-tab--link-more {
   display: block;

@@ -31,6 +31,11 @@ global:
 #     - rain_theme/clearfix
 #     - rain_theme/visually-hidden
 
+about:
+  css:
+    component:
+      dist/css/about.css: {}
+
 accordion:
   css:
     component:
@@ -439,6 +444,11 @@ landing-page-hero:
   dependencies:
     - nysenate_theme/hero
 
+legislation-search-form:
+  css:
+    component:
+      dist/css/legislation-search-form.css: {}
+
 map:
   css:
     component:
@@ -778,6 +788,13 @@ page-layout:
     component:
       dist/css/page-layout.css: {}
 
+page-not-found:
+  css:
+    component:
+      dist/css/page-not-found.css: {}
+  js:
+    dist/js/page-not-found.js: {}
+
 page-title:
   css:
     component:
@@ -792,6 +809,10 @@ petitions:
   css:
     component:
       dist/css/petitions.css: {}
+
+popper:
+  js:
+    dist/js/popper.min.js: {}
 
 quick-facts:
   css:
@@ -874,6 +895,15 @@ slick:
     - core/jquery.once
     - core/jquery
 
+tooltip:
+  css:
+    component:
+      dist/css/tooltip.css: {}
+  js:
+    dist/js/tooltip.es6.js: {}
+  dependencies:
+    - nysenate_theme/popper
+
 highcharts:
   js:
     dist/js/highcharts.js: {}
@@ -883,7 +913,7 @@ sticky-nav:
     component:
       dist/css/sticky-nav.css: {}
   js:
-    dist/js/sticky-nav.js: {}
+    dist/js/sticky-nav.es6.js: {}
   dependencies:
     - core/jquery
     - core/jquery.once
@@ -894,6 +924,12 @@ sticky-nav-2:
   css:
     component:
       dist/css/sticky-nav-2.css: {}
+  js:
+    dist/js/sticky-nav-2.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
 
 submission-results:
   css:
@@ -915,6 +951,8 @@ taxonomy-term-issues:
   css:
     component:
       dist/css/taxonomy-term-issues.css: {}
+  js:
+    dist/js/taxonomy-term-issues.js: {}
 
 text-layout:
   css:

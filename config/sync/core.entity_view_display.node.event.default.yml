@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.event.field_image_main
     - field.field.node.event.field_issues
     - field.field.node.event.field_location
+    - field.field.node.event.field_majority_issue_tag
     - field.field.node.event.field_meeting_location
     - field.field.node.event.field_senator_multiref
     - field.field.node.event.field_social_image
@@ -162,6 +163,14 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_majority_issue_tag:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 25
+    region: content
   field_meeting_location:
     type: string
     label: above
@@ -210,7 +219,7 @@ content:
     region: content
   field_video_status:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 19
@@ -232,4 +241,5 @@ content:
 hidden:
   field_senator_multiref: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

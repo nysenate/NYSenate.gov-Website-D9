@@ -1848,6 +1848,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2290,6 +2295,9 @@ h2.c-subpage-header--title {
 .c-pg-featured-bills .c-featured-bills-body {
   flex: 1; }
 
+.c-pg-featured-bills .c-block-legislation {
+  border: 0; }
+
 .c-pg-featured-bills.c-block {
   display: flex;
   flex-direction: column; }
@@ -2319,7 +2327,7 @@ h2.c-subpage-header--title {
 @media screen and (min-width: 768px) {
   .nys-bill-status__sml li,
   .nys-bill-status__drk li {
-    margin-top: -7.5px; }
+    margin-top: -15px; }
   .c-featured-bills-body p {
     font-size: 20px;
     line-height: 32px; }
@@ -2333,6 +2341,8 @@ h2.c-subpage-header--title {
   .c-pg-featured-bills .c-block-legislation-featured.c-block--half-wrap {
     margin: 0 24px 28px 0;
     clear: both;
+    width: 100%; }
+  .c-pg-featured-bills .c-block.c-block-legislation-featured .c-legislation-info {
     width: 100%; } }
 
 @media screen and (min-width: 768px) {

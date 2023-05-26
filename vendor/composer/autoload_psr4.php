@@ -66,6 +66,7 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'PantheonSystems\\CDNBehatHelpers\\' => array($baseDir . '/web/modules/contrib/pantheon_advanced_page_cache/tests/behat/helper_classes'),
     'OomphInc\\ComposerInstallersExtender\\' => array($vendorDir . '/oomphinc/composer-installers-extender/src'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
     'Masterminds\\' => array($vendorDir . '/masterminds/html5/src'),

@@ -2,6 +2,11 @@
 {{ attach_library('nysenate_theme/hero') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
+{% if actionbar.status %}
+  <div class="c-senate-status">
+    The New York State Senate is: <span class="c-status-text">{{ actionbar.status|upper }}</span>
+  </div>
+{% endif %}
 <div class="l-row l-row--hero c-actionbar {% if actionbar.type is empty %}hidden{% endif %}">
   {% if actionbar.type == 'committee' %}
     <div class="c-actionbar--info">

@@ -12,6 +12,12 @@
   </a>
 {% else %}
   <p>{{ 'Find and contact your Senator about this issue'|t }}</p>
-  {% set link_url = link.url ?? "registration/nojs/login" %}
-  <a href="{{ link_url }}" class="button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
+  {% if with_modal %}
+    <button class="c-user-login button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">
+      Find your Senator
+    </button>
+  {% else %}
+    {% set link_url = link.url ?? "registration/nojs/login" %}
+    <a href="{{ link_url }}" class="button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
+  {% endif %}
 {% endif %}

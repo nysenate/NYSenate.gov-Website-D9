@@ -1,8 +1,8 @@
 {{ attach_library('nysenate_theme/nysenate-promotional-banner') }}
 
-<div class="c-block c-block--initiative {% if image %}c-block--initiative__has-img {% else %} c-block--initiative__no-img {% endif %}">
+<article class="c-block c-block--initiative">
   {% if image %}
-    <a href="{{ cta.url }}">{{ image }}</a>
+    <a href="{{ cta.url }}" class="c-initiative--img">{{ image }}</a>
   {% endif %}
   <div class="c-initiative--content">
     <div class="c-initiative--inner">
@@ -24,4 +24,4 @@
     }} med-bg">
     {{ cta.text }}
   </a>
-</div>
+</article>

@@ -75,14 +75,14 @@
       width: 20px;
       height: 20px;
       margin-right: 10px;
-      background: transparent url('http://nysenate.gov/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg')
+      background: transparent url('../images/nys_logo_header240x240.jpg')
       center center no-repeat;
       background-size: cover;
     }
   }
 }
 
-.c-header--btn.c-senator-header--btn {  
+.c-header--btn.c-senator-header--btn {
   float: none;
   display: inline-block;
   height: 55px;
@@ -129,7 +129,7 @@
       color: $color-white;
     }
   }
-}	
+}
 
 @include breakpoint($bp-sm) {
   .l-header {
@@ -289,9 +289,9 @@
         color: $grey08;
         position: absolute;
         background-color: transparent;
-        
+
         &::after {
-          top: 2px;
+          top: -3px;
         }
       }
     }
@@ -323,11 +323,15 @@
 // class added to .c-nav--wrap through js
 .c-nav--wrap.search-open {
 
-  .c-site-search--btn, .search__submit  {
+  nav .c-site-search--btn, .search__submit  {
     cursor: pointer;
     position: absolute;
     top: 10px;
     @extend .icon-replace__x;
+
+    &::after {
+      top: 4px;
+    }
   }
 
   .c-site-search {
@@ -741,7 +745,7 @@ ul.c-login--list {
       transition: background 0.2s ease;
     }
   }
-  
+
   li {
     position: relative;
     top: 0;
@@ -1019,9 +1023,16 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .u-mobile-only &.nys-searchglobal-form {
 
     .search__submit {
-      top: 50%;
+      top: 55%;
       transform: translateY(-50%);
       margin-right: 0;
+      left: auto;
+      right: 20px;
+
+      &::after {
+        top: 0;
+        color: $gen_blue_med;
+      }
     }
 
     .form-item {
@@ -1127,8 +1138,8 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     }
   }
 
-  .search-open .c-site-search .c-site-search--btn, 
-  .search-open .c-site-search .search__submit, 
+  .search-open .c-site-search .c-site-search--btn,
+  .search-open .c-site-search .search__submit,
   .search-open .c-site-search .c-site-search--btn:focus,
   .search-open .c-site-search .search__submit:focus,
   .search__submit:focus

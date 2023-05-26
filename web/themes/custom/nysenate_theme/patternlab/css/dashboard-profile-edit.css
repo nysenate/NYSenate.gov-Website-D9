@@ -1848,6 +1848,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2294,7 +2299,7 @@ h2.c-subpage-header--title {
     display: flex;
     flex-direction: column;
     gap: 20px; }
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 1024px) {
       .dashboard-profile-edit .form-wrapper {
         flex-direction: row;
         gap: 40px; } }
@@ -2357,6 +2362,23 @@ h2.c-subpage-header--title {
       .dashboard-profile-edit .form-wrapper .center fieldset,
       .dashboard-profile-edit .form-wrapper .right fieldset {
         border: none; }
+      .dashboard-profile-edit .form-wrapper .left .form-item-field-address-0-address-locality,
+      .dashboard-profile-edit .form-wrapper .left .form-item-field-address-0-address-administrative-area,
+      .dashboard-profile-edit .form-wrapper .center .form-item-field-address-0-address-locality,
+      .dashboard-profile-edit .form-wrapper .center .form-item-field-address-0-address-administrative-area,
+      .dashboard-profile-edit .form-wrapper .right .form-item-field-address-0-address-locality,
+      .dashboard-profile-edit .form-wrapper .right .form-item-field-address-0-address-administrative-area {
+        flex: 2; }
+      .dashboard-profile-edit .form-wrapper .left .form-item-field-address-0-address-postal-code,
+      .dashboard-profile-edit .form-wrapper .center .form-item-field-address-0-address-postal-code,
+      .dashboard-profile-edit .form-wrapper .right .form-item-field-address-0-address-postal-code {
+        flex: 1; }
+    .dashboard-profile-edit .form-wrapper .left {
+      flex: 2; }
+    .dashboard-profile-edit .form-wrapper .center {
+      flex: 1; }
+    .dashboard-profile-edit .form-wrapper .right {
+      flex: 1; }
   .dashboard-profile-edit .name {
     display: flex;
     flex-direction: column;
@@ -2401,4 +2423,4 @@ h2.c-subpage-header--title {
       @media screen and (min-width: 768px) {
         .dashboard-profile-edit .field--type-address .address-container-inline {
           flex-direction: row;
-          gap: 40px; } }
+          gap: 10px; } }

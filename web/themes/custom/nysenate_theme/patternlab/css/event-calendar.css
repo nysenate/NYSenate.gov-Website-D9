@@ -1848,6 +1848,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2301,8 +2306,14 @@ h2.c-subpage-header--title {
     .event-calendar .view-filters select {
       margin: 0 0 1rem 0; }
 
-.c-event-time {
+.page--events .c-event-block--list {
+  padding-bottom: 0; }
+
+.c-event-time .c-location {
   color: #aaaaaa; }
+
+.c-event-time .datetime {
+  text-transform: lowercase; }
 
 #datepicker input {
   display: none; }
@@ -2424,8 +2435,6 @@ h2.c-subpage-header--title {
       transition: background 0.2s ease; }
       #datepicker .Zebra_DatePicker .dp_monthpicker td.dp_hover {
         background: #e29c44; }
-      #datepicker .Zebra_DatePicker .dp_monthpicker td.dp_current {
-        color: #fff; }
   #datepicker .Zebra_DatePicker .dp_yearpicker td.dp_selected,
   #datepicker .Zebra_DatePicker .dp_yearpicker td.dp_current {
     background-color: #5A4B4B; }

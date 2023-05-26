@@ -12,7 +12,7 @@
     <button class="c-carousel--btn prev hidden">prev</button>
     <button class="c-carousel--btn next">next</button>
   </div>
-  <ul id="js-carousel-about-stats" class="js-carousel c-carousel {% if not hide_icons %}show-icons{% endif %}">
+  <ul id="js-carousel-about-stats" class="js-carousel c-carousel {% if not hide_icons and fact.status %}show-icons{% endif %}">
     {% for fact in facts %}
       <li class="c-carousel--item c-stats--item">
         {% if fact.link %}
@@ -24,7 +24,7 @@
             <h4 class="c-stat">{{ fact.statistic }}</h4>
             <p class="c-stat--descript">{{ fact.description }}</p>
         {% endif %}
-        {% if not hide_icons %}
+        {% if not hide_icons and fact.status %}
           <span class="c-stat--illus c-illus__{{ fact.status }}"></span>
         {% endif %}
       </li>

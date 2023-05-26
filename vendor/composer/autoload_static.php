@@ -139,6 +139,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
+            'PantheonSystems\\CDNBehatHelpers\\' => 32,
         ),
         'O' => 
         array (
@@ -469,6 +470,10 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'PantheonSystems\\CDNBehatHelpers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/web/modules/contrib/pantheon_advanced_page_cache/tests/behat/helper_classes',
         ),
         'OomphInc\\ComposerInstallersExtender\\' => 
         array (
@@ -4380,6 +4385,9 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
         'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
+        'PantheonSystems\\CDNBehatHelpers\\AgeTracker' => __DIR__ . '/../..' . '/web/modules/contrib/pantheon_advanced_page_cache/tests/behat/helper_classes/AgeTracker.php',
+        'PantheonSystems\\CDNBehatHelpers\\Contexts\\FeatureContext' => __DIR__ . '/../..' . '/web/modules/contrib/pantheon_advanced_page_cache/tests/behat/helper_classes/Contexts/FeatureContext.php',
+        'PantheonSystems\\CDNBehatHelpers\\tests\\AgeTrackerTest' => __DIR__ . '/../..' . '/web/modules/contrib/pantheon_advanced_page_cache/tests/behat/helper_classes/tests/AgeTrackerTest.php',
         'PhpParser\\Builder' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Builder.php',
         'PhpParser\\BuilderFactory' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/BuilderFactory.php',
         'PhpParser\\BuilderHelpers' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/BuilderHelpers.php',

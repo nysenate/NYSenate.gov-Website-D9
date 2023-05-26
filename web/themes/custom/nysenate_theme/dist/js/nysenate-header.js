@@ -115,10 +115,13 @@
         } else {
           $(window).scroll(function () {
             currentTop = $(this).scrollTop();
-            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, 'hide-actionbar');
+            self.basicScroll(origNav, currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, 'hide-actionbar');
             previousTop = $(document).scrollTop();
           });
         }
+      } else if (self.isErrorPage()) {
+        nav.css('display', 'none');
+        return false;
       } else {
         // place clone
         nav.prependTo('.page').css({
@@ -159,7 +162,7 @@
         } else {
           $(window).scroll(function () {
             currentTop = $(this).scrollTop();
-            self.basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, self.isOpenData() && self.isIssuePage() ? 'show-actionbar' : 'hide-action-bar', self.isOpenData() && self.isIssuePage());
+            self.basicScroll(origNav, currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, self.isOpenData() && self.isIssuePage() ? 'show-actionbar' : 'hide-action-bar', self.isOpenData() && self.isIssuePage());
             previousTop = $(document).scrollTop();
           });
         }
@@ -179,17 +182,19 @@
       this.checkTopBarState(currentTop, previousTop, headerBar, nav);
       this.checkMenuState(menu, currentTop, previousTop);
     },
-    basicScroll: function basicScroll(currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, toggleActionBar) {
-      var topBarToggle = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : false;
+    basicScroll: function basicScroll(origNav, currentTop, previousTop, headerBar, nav, menu, actionBar, origActionBar, toggleActionBar) {
+      var topBarToggle = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : false;
 
       if (origActionBar) {
         if (this.isMovingDown(currentTop, previousTop) && currentTop + nav.outerHeight() >= origActionBar.offset().top) {
           actionBar.removeClass('hidden');
           origActionBar.addClass('hidden');
+          origNav.css('visibility', 'visible');
         } else if (this.isMovingUp(currentTop, previousTop) && currentTop <= origActionBar.offset().top) {
           if (toggleActionBar !== 'show-actionbar') {
             actionBar.addClass('hidden');
             origActionBar.removeClass('hidden');
+            origNav.css('visibility', 'hidden');
           }
         }
       }
@@ -346,6 +351,9 @@
     },
     isSenatorCollapsed: function isSenatorCollapsed() {
       return $('.hero--senator-collapsed').length > 0;
+    },
+    isErrorPage: function isErrorPage() {
+      return $('.error-page-header').length > 0;
     },
     moveMessage: function moveMessage() {
       var statusMessage = $('.message').parent();

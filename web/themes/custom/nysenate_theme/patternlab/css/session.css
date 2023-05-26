@@ -1854,6 +1854,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2541,7 +2546,7 @@ div.c-meeting-detail--location {
 .view-meeting-agenda-block .nys-senator, .view-agenda-block .nys-senator {
   margin: 20px 0 28px; }
 
-.view-meeting-agenda-block .first > .c-update-block, .view-agenda-block .first > .c-update-block {
+.view-meeting-agenda-block .c-update-block:first-child, .view-agenda-block .c-update-block:first-child {
   border-top: 1px solid #aaaaaa; }
 
 .pane-node-field-ustream {
@@ -3055,7 +3060,7 @@ div.c-meeting-detail--location {
       display: block; }
   .view-meeting-agenda-block .nys-senator, .view-agenda-block .nys-senator {
     margin: 20px 0 0; }
-  .view-meeting-agenda-block .first > .c-update-block, .view-agenda-block .first > .c-update-block {
+  .view-meeting-agenda-block .c-update-block:first-child, .view-agenda-block .c-update-block:first-child {
     border-top: 1px solid #aaaaaa; }
   .c-meeting-section--title {
     margin: 20px 0 40px;
@@ -3100,14 +3105,19 @@ div.c-meeting-detail--location {
   .l-panel-col + .l-panel-col {
     margin: 0; }
 
-.l-panel-col--lft {
-  width: 24%;
-  max-width: 180px; }
+@media screen and (min-width: 768px) {
+  .l-panel-col--lft {
+    width: 24%;
+    max-width: 180px; } }
 
 .l-panel-col--ctr {
-  width: 56%;
-  padding-right: 2%;
-  max-width: 440px; }
+  margin-top: 20px; }
+  @media screen and (min-width: 768px) {
+    .l-panel-col--ctr {
+      margin-top: 0;
+      width: 56%;
+      padding-right: 2%;
+      max-width: 440px; } }
   .l-panel-col--ctr .c-press-release--descript {
     font-size: 18px;
     line-height: 22px;

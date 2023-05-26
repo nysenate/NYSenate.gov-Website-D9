@@ -87,6 +87,7 @@ function entity_usage_post_update_regenerate_2x(&$sandbox) {
           ->allRevisions()
           ->condition($entity->getEntityType()->getKey('id'), $entity->id())
           ->sort($entity->getEntityType()->getKey('revision'), 'DESC')
+          ->accessCheck(FALSE)
           ->execute();
         $revision_ids = array_keys($result);
 

@@ -1848,6 +1848,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2297,11 +2302,11 @@ h2.c-subpage-header--title {
 /*------------------------------
 / SITEWIDE HERO
 /-------------------------------*/
-.c-hero--tout {
+.l-row.c-hero--tout {
   position: relative;
   padding: 0;
   max-width: 440px; }
-  .c-hero--tout.c-hero--featured {
+  .l-row.c-hero--tout.c-hero--featured {
     padding: 20px;
     background: #fff; }
 
@@ -2313,6 +2318,31 @@ h2.c-subpage-header--title {
   @media screen and (min-width: 768px) {
     .hero--homepage {
       margin-top: -80px; } }
+  .hero--homepage .c-senate-status {
+    text-align: center;
+    padding: 0;
+    height: 50px;
+    color: white;
+    font-size: 18px;
+    background: #cb8d37;
+    max-width: 420px; }
+    .hero--homepage .c-senate-status .c-status-text {
+      padding: 13px 45px 13px 0px;
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      position: relative; }
+      .hero--homepage .c-senate-status .c-status-text:after {
+        content: "";
+        width: 30px;
+        height: 30px;
+        background: url("../images/gavel.png");
+        background-size: 100%;
+        background-position: 75%;
+        background-repeat: no-repeat;
+        top: 10px;
+        right: 5px;
+        position: absolute; }
   .hero--homepage .l-row.l-row--hero.c-hero {
     padding: 0; }
   .hero--homepage .l-row.l-row--hero.c-actionbar {
@@ -2321,7 +2351,8 @@ h2.c-subpage-header--title {
     max-width: 1500px;
     display: none; }
 
-.c-hero--welcome {
+.c-block .c-hero--welcome,
+p.c-hero--welcome {
   padding: 30px 20px;
   margin: 0;
   color: #7d7c7c;
@@ -2329,11 +2360,13 @@ h2.c-subpage-header--title {
   font-size: 24px;
   line-height: 1.5em;
   background: #fff; }
-  .c-hero--welcome a {
+  .c-block .c-hero--welcome a,
+  p.c-hero--welcome a {
     color: #cb8d37;
     border-bottom: 1px dotted;
     font-style: italic; }
-    .c-hero--welcome a:hover {
+    .c-block .c-hero--welcome a:hover,
+    p.c-hero--welcome a:hover {
       color: #f1af58; }
 
 .c-hero--date {
@@ -2396,18 +2429,31 @@ h2.c-subpage-header--title {
   max-width: none; }
 
 @media screen and (min-width: 768px) {
-  .c-hero--welcome {
+  .c-block .c-hero--welcome,
+  p.c-hero--welcome {
     font-size: 32px;
     line-height: 60px;
-    padding: 40px; }
-  .c-hero--tout {
+    padding: 40px;
+    color: #444444; }
+  .l-row.c-hero--tout {
     max-width: 760px;
     margin-top: -15%; }
-    .c-hero--tout.c-hero--featured {
+    .l-row.c-hero--tout.c-hero--featured {
       padding: 40px 70px 60px;
       background: #fff; }
   .hero--homepage {
     margin-bottom: 80px; }
+    .hero--homepage .c-senate-status {
+      max-width: 760px;
+      padding: 0 40px;
+      margin: 0 auto; }
+      .hero--homepage .c-senate-status .c-actionbar--cta {
+        max-width: 380px;
+        font-size: 16px;
+        line-height: 1.3em;
+        letter-spacing: 0.05em; }
+      .hero--homepage .c-senate-status .c-block--btn {
+        font-size: 14px; }
     .hero--homepage .l-row.l-row--hero.c-hero {
       padding: 0; }
       .hero--homepage .l-row.l-row--hero.c-hero img {
@@ -2438,18 +2484,15 @@ h2.c-subpage-header--title {
   .c-hero--cta-msg {
     width: 65%;
     max-width: 495px; }
-  .hero .c-actionbar,
-  .hero .c-senate-status {
+  .hero .c-actionbar {
     max-width: 1500px;
     padding: 0 9%;
     transition: margin 0.25s ease-in 0s; }
-    .hero .c-actionbar .c-actionbar--cta,
-    .hero .c-senate-status .c-actionbar--cta {
+    .hero .c-actionbar .c-actionbar--cta {
       max-width: 400px;
       font-size: 18px;
       line-height: 1.3em; }
-    .hero .c-actionbar .c-block--btn,
-    .hero .c-senate-status .c-block--btn {
+    .hero .c-actionbar .c-block--btn {
       font-size: 16px; } }
 
 /*------------------------------

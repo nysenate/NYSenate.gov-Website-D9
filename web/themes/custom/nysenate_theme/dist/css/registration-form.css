@@ -532,6 +532,8 @@ strong {
 .icon-before__find-senator::before,
 .icon-before__recruit-friends::before,
 .c-news-container .c-news-block .nys-senator--involved::before,
+.c-login .c-block--btn.c-login-create::before,
+.c-login .form-submit::before,
 .icon-before__left::before,
 .icon-before__right::before,
 .icon-before__arrow::before,
@@ -702,7 +704,9 @@ strong {
 
 
 .icon-before__recruit-friends::before,
-.c-news-container .c-news-block .nys-senator--involved::before {
+.c-news-container .c-news-block .nys-senator--involved::before,
+.c-login .c-block--btn.c-login-create::before,
+.c-login .form-submit::before {
   content: '\66'; }
 
 .icon-before__right::before {
@@ -1848,6 +1852,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2348,3 +2357,273 @@ h2.c-subpage-header--title {
       padding-right: 3px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale; }
+
+.c-login {
+  margin: 0;
+  padding: 40px 0 60px 0;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px; }
+  .c-login .nys-title {
+    margin: 20px 0;
+    text-transform: none; }
+  .c-login .c-login-left {
+    margin-bottom: 30px; }
+  .c-login .c-login-right {
+    border-top: 1px solid #aaaaaa; }
+  .c-login .c-login-benefits {
+    margin: 20px 0 30px 20px;
+    padding-left: 0;
+    color: #888888;
+    list-style-position: outside; }
+    .c-login .c-login-benefits li {
+      font-size: 16px;
+      line-height: 24px;
+      font-family: "Proxima Nova Regular"; }
+  .c-login .c-login-privacy {
+    width: 100%;
+    margin: 20px 0 0 0;
+    text-align: center;
+    font-family: "Proxima Nova Regular";
+    font-size: 14px; }
+    .c-login .c-login-privacy > a {
+      color: #cb8d37; }
+  .c-login .c-block--or {
+    clear: both;
+    width: 160px;
+    margin: 10px auto 40px;
+    text-align: center;
+    border-bottom: 1px solid #d8d8d8;
+    font-family: "Proxima Nova Regular";
+    font-size: 18px;
+    letter-spacing: 0.1em; }
+    .c-login .c-block--or span {
+      position: relative;
+      top: 16px;
+      background: #fff;
+      padding: 0 12px; }
+  .c-login .c-block--field-desc {
+    width: 100%;
+    margin-bottom: 25px;
+    color: #ababab; }
+  .c-login .form-item-remember-me {
+    float: left;
+    width: 50%;
+    margin: 15px 0 0 0;
+    font-family: "Proxima Nova Regular";
+    line-height: 12px; }
+    .c-login .form-item-remember-me a {
+      color: #e29c44;
+      margin: 0 0 0 5px; }
+    .c-login .form-item-remember-me label {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 12px;
+      line-height: 1; }
+    .c-login .form-item-remember-me .form-checkbox {
+      margin: 0;
+      display: inline-block;
+      vertical-align: middle; }
+  .c-login .c-login--pwd-reset {
+    margin: 15px 0 0 0;
+    float: right;
+    color: #cb8d37;
+    font-size: 12px;
+    line-height: 1; }
+  .c-login .c-block--btn {
+    display: block;
+    position: relative;
+    padding: 25px 0;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1; }
+  .c-login .c-block--btn:before {
+    margin-top: -25px; }
+  .c-login .c-block--btn.c-login-create {
+    color: #fff; }
+  .c-login .c-block--btn.c-block--btn-full {
+    width: 100%; }
+  .c-login .c-block--btn.c-block--btn-half {
+    width: 320px;
+    margin: 0 auto 0;
+    float: none;
+    height: 70px;
+    font-size: 16px; }
+    .c-login .c-block--btn.c-block--btn-half:before {
+      line-height: 68px; }
+  .c-login .page-registration .c-login-create .facebook-button {
+    width: 48%;
+    margin: 20px auto 20px;
+    display: block; }
+  .c-login .c-block--btn,
+  .c-login .form-submit {
+    background-color: #2b6990;
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+    letter-spacing: 0.2em; }
+  .c-login .form-submit {
+    height: 60px;
+    width: 100%;
+    padding: 0 20px 0 20px;
+    margin: 20px 0 0 0;
+    text-indent: 0;
+    background-color: #2b6990 !important;
+    width: 100%;
+    text-transform: uppercase; }
+    .c-login .form-submit:before {
+      position: relative;
+      left: 0px;
+      right: auto;
+      width: auto;
+      line-height: 60px;
+      margin-right: 10px;
+      font-size: 30px; }
+  .c-login .form-actions {
+    width: auto;
+    margin: 0 auto; }
+
+@media screen and (min-width: 760px) {
+  .c-login {
+    margin: 0;
+    padding-bottom: 80px; }
+    .c-login .nys-title {
+      font-size: 22px;
+      margin: 0px 0 10px 0; }
+    .c-login .c-login--benefits li {
+      font-size: 16px;
+      line-height: 24px; }
+    .c-login .c-block--full {
+      width: 100%;
+      float: left; }
+    .c-login .c-block--left {
+      width: 50%;
+      float: left;
+      padding: 0 20px 0 0; }
+    .c-login .c-block--right {
+      width: 50%;
+      float: left;
+      padding: 0; }
+    .c-login .c-login-left {
+      float: left;
+      width: 50%;
+      padding: 0 30px; }
+      .c-login .c-login-left ul {
+        list-style: none; }
+        .c-login .c-login-left ul.c-login-benefits {
+          float: none;
+          list-style: disc; }
+      .c-login .c-login-left .c-user--info {
+        display: inline-block;
+        vertical-align: middle;
+        list-style: none;
+        padding: 0; }
+    .c-login .c-login-right {
+      float: left;
+      width: 50%;
+      padding: 0 30px;
+      border-top: none;
+      border-left: 1px solid #aaaaaa; }
+      .c-login .c-login-right .description {
+        display: none; }
+      .c-login .c-login-right .c-senator--info {
+        display: inline-block;
+        vertical-align: middle;
+        list-style: none;
+        padding: 0; }
+    .c-login .form-item-remember-me,
+    .c-login .c-login--pwd-reset {
+      margin-top: 20px; }
+    .c-login .c-block--field-desc {
+      width: 100%;
+      margin-bottom: 0px;
+      color: #ababab; }
+      .c-login .c-block--field-desc.c-block--field--desc-email {
+        width: 200px;
+        padding: 40px 0 0 0; }
+    .c-login .c-block--btn {
+      height: 60px; }
+  #nys-registration-form-start,
+  #nys-registration-form-second,
+  #user-pass {
+    padding: 0px 0 40px; }
+    #nys-registration-form-start .c-login,
+    #nys-registration-form-second .c-login,
+    #user-pass .c-login {
+      padding-bottom: 0; }
+    #nys-registration-form-start .form-actions,
+    #nys-registration-form-second .form-actions,
+    #user-pass .form-actions {
+      padding-top: 40px; }
+  #nys-registration-form-start .c-block--btn-facebook {
+    width: 48%;
+    display: block;
+    margin: 0 auto 0; }
+  #nys-registration-form-start .form-actions {
+    margin: 0; }
+    #nys-registration-form-start .form-actions .form-submit {
+      width: 48%;
+      display: block;
+      margin: 0 auto 0; }
+  #modalBackdrop {
+    background: #000 !important; }
+  #nys-registration-form-second .c-login {
+    margin-bottom: 0; }
+    #nys-registration-form-second .c-login .form-actions {
+      padding: 60px 0 0 0; }
+  #nys-registration-form-second .form-actions {
+    padding-top: 60px; }
+  #nys-registration-form-second .c-login-left,
+  #nys-registration-form-second .c-login-right {
+    text-align: left; }
+  #nys-registration-form-second .c-login-left {
+    margin: 0;
+    padding-left: 0; }
+    #nys-registration-form-second .c-login-left li:first-child {
+      font-size: 18px; }
+  #nys-registration-form-second .c-login-right {
+    border: none;
+    padding: 0; }
+    #nys-registration-form-second .c-login-right li:nth-child(2) {
+      font-size: 18px; }
+  #nys-registration-form-second .nys-senator--thumb {
+    height: 80px;
+    width: 80px;
+    margin: 0 20px 0 0; }
+  #nys-registration-form-second button#edit-previous {
+    background-color: #eeeeee;
+    color: #004d71; }
+  #nys-registration-form-second button#edit-return {
+    background-color: #004d71; }
+  #nys-registration-form-start p,
+  #nys-registration-form-second p,
+  #user-pass p,
+  .c-login p {
+    font-size: 16px; }
+  #nys-registration-form-start .form-actions button,
+  #nys-registration-form-second .form-actions button,
+  #user-pass .form-actions button,
+  .c-login .form-actions button {
+    height: 55px;
+    padding: 0 40px; }
+  #user-pass .nys-title {
+    margin-top: 0; }
+  #user-pass .form-item,
+  #user-pass button {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    max-width: 440px; }
+  #user-pass .form-item {
+    margin-bottom: 40px;
+    margin-top: 30px; }
+  #modalContent {
+    height: auto !important;
+    margin: 0 auto 0 !important;
+    top: 10% !important;
+    width: 760px !important; }
+  div.ctools-modal-content {
+    height: auto !important; }
+  div.ctools-modal-content .modal-content {
+    height: auto !important;
+    overflow: hidden; } }

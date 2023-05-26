@@ -1865,6 +1865,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2364,9 +2369,11 @@ h2.c-subpage-header--title {
   color: #d0d0d0;
   transition: background 0.2s ease;
   border: 0;
-  margin: 0; }
+  margin: 0;
+  flex: 1; }
   .nys-bill-vote-form .c-block--btn.nys-subscribe-button {
-    width: 100%; }
+    width: 100%;
+    flex: 2; }
   .nys-bill-vote-form .c-block--btn.selected {
     color: #fff; }
 

@@ -52,8 +52,9 @@
           $('#datepicker input').val($('.form-item-date.js-form-type-textfield input').val());
         } else if (viewType === 'month') {
           var splitDate = $('.form-item-date.js-form-type-textfield  input').val().split('/');
-          $('.form-item-date.js-form-type-textfield input').val("".concat(splitDate[0], "/").concat(splitDate[2]));
-          $('#datepicker input').val("".concat(splitDate[0], "/").concat(splitDate[2]));
+          var lastIndex = splitDate.length - 1;
+          $('.form-item-date.js-form-type-textfield input').val("".concat(splitDate[0], "/").concat(splitDate[lastIndex]));
+          $('#datepicker input').val("".concat(splitDate[0], "/").concat(splitDate[lastIndex]));
         }
       }
 
@@ -201,7 +202,7 @@
         $(this).parent().find('#container .Zebra_DatePicker').show();
       }); // set default date value on load
 
-      var editDate = $('#edit-date');
+      var editDate = $('input[data-drupal-selector="edit-date"]');
 
       if (editDate && !editDate.val()) {
         var placeholder = editDate.attr('placeholder');

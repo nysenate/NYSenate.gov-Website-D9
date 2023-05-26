@@ -1858,6 +1858,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2308,12 +2313,14 @@ h2.c-subpage-header--title {
   margin: 0;
   background-color: #f7f8f9;
   /* hide on default */
-  display: none; }
+  display: none;
+  max-height: calc(100vh - var(--top));
+  transition-property: top;
+  transition-duration: 0.25s; }
   @media screen and (min-width: 768px) {
     .sidebar {
-      position: relative;
-      max-width: 400px;
-      top: 0; } }
+      position: fixed;
+      max-width: 400px; } }
   .sidebar.show {
     display: block; }
   .sidebar h2 {
@@ -2343,7 +2350,6 @@ h2.c-subpage-header--title {
           color: #2b6a90; }
 
 .sidebar-open {
-  position: fixed;
   overflow: hidden; }
   @media screen and (min-width: 768px) {
     .sidebar-open {

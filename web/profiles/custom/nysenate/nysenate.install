@@ -173,7 +173,7 @@ function nysenate_update_9006(&$sandbox) {
       'value' => '
         <p><a class="nys-btn--gold" href="/newsroom/articles/undergraduate-program">Undergraduate Session<br />
         Assistants Program</a></p>
-        
+
         <p><a class="nys-btn--blue" href="/newsroom/articles/2022/work-based-learning-assistant-springfall">Work-based Learning Assistant<br />
         (Spring/Fall)</a></p>
         ',
@@ -183,7 +183,7 @@ function nysenate_update_9006(&$sandbox) {
     $body_right = [
       'value' => '
       <p><a class="nys-btn--gold" href="/newsroom/articles/graduate-program">Graduate Fellowships</a></p>
-      
+
       <p><a class="nys-btn--blue" href="/newsroom/articles/2022/senate-production-internship-summer">Senate Production Internship<br />
       (Summer)</a></p>
       ',
@@ -341,7 +341,7 @@ function nysenate_update_9009(&$sandbox) {
       <div class="c-block--background">
       <strong>NEW YORK STATE SENATE OFFICE OF<br />
       STUDENT PROGRAMS</strong>
-      
+
       <p>208 Legislative Office Building<br />
       Albany, NY 12247<br />
       <br />
@@ -355,5 +355,125 @@ function nysenate_update_9009(&$sandbox) {
     ];
     $contact_block->set('field_body_left', $body_left);
     $contact_block->save();
+  }
+}
+
+/**
+ * Update the Budget link in Footer Menu.
+ */
+function nysenate_update_9010() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'footer';
+
+  $links = [
+    '3' => [
+      'title' => 'Budget',
+      'url' => 'internal:/majority-issues/new-york-state-budget',
+    ],
+  ];
+
+  foreach ($links as $weight => $menu) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $menu['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update footer menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $menu['url']]);
+      $menu_link->set('weight', $weight);
+      $menu_link->save();
+    }
+
+    // Create footer menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $menu['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $menu['url']],
+        'weight' => $weight,
+      ]);
+      $menu_link->save();
+    }
+  }
+}
+
+/**
+ * NYSD9-205: Resolve the Program Links in Student Programs.
+ */
+function nysenate_update_9011(&$sandbox) {
+  // Update the body fields of Program Links in Student Program.
+  $text_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->load(3757);
+
+  if (!empty($text_block)) {
+    // For field_body_left values.
+    $body_left = [
+      'value' => '
+        <p><a class="nys-btn--gold" href="/newsroom/articles/2021/undergraduate-program">Undergraduate Session<br />
+        Assistants Program</a></p>
+
+        <p><a class="nys-btn--blue" href="/newsroom/articles/2022/work-based-learning-assistant-springfall">Work-based Learning Assistant<br />
+        (Spring/Fall)</a></p>
+        ',
+      'format' => 'full_html',
+      'summary' => '',
+    ];
+    $body_right = [
+      'value' => '
+      <p><a class="nys-btn--gold" href="/newsroom/articles/2021/new-york-senate-graduate-fellowships">Graduate Fellowships</a></p>
+
+      <p><a class="nys-btn--blue" href="/newsroom/articles/2022/senate-production-internship-summer">Senate Production Internship<br />
+      (Summer)</a></p>
+      ',
+      'format' => 'full_html',
+      'summary' => '',
+    ];
+    $text_block->set('field_body_left', $body_left);
+    $text_block->set('field_body_right', $body_right);
+    $text_block->save();
+  }
+}
+
+/**
+ * Update the Contact the Senate link in Policies Menu.
+ */
+function nysenate_update_9012() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'policies';
+
+  $links = [
+    '1' => [
+      'title' => 'Contact the Senate',
+      'url' => 'internal:/form/contact',
+    ],
+  ];
+
+  foreach ($links as $weight => $menu) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $menu['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update Policies menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $menu['url']]);
+      $menu_link->set('weight', $weight);
+      $menu_link->save();
+    }
+
+    // Create Policies menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $menu['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $menu['url']],
+        'weight' => $weight,
+      ]);
+      $menu_link->save();
+    }
   }
 }

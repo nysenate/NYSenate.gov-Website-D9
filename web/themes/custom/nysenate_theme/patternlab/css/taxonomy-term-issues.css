@@ -1848,6 +1848,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2288,9 +2293,6 @@ h2.c-subpage-header--title {
 
 .taxonomy-term .nys-title {
   margin: 0; }
-  @media screen and (min-width: 768px) {
-    .taxonomy-term .nys-title {
-      margin: 0 0 30px 0; } }
 
 .taxonomy-term .c-block .c-issue--followers {
   color: #888888;
@@ -2300,7 +2302,7 @@ h2.c-subpage-header--title {
   margin-bottom: 20px; }
   @media screen and (min-width: 768px) {
     .taxonomy-term .c-block .c-issue--followers {
-      margin-bottom: 0; } }
+      margin-bottom: 30px; } }
   .taxonomy-term .c-block .c-issue--followers > span {
     color: #444444;
     margin-right: 5px; }
@@ -2346,3 +2348,34 @@ h2.c-subpage-header--title {
       .taxonomy-term .c-detail--header-meta .eyebrow {
         font-size: 20px;
         line-height: 32px; } }
+
+.user-login-modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  overflow: auto;
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.4); }
+  .user-login-modal .content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 40px 20px;
+    border: 1px solid #888;
+    width: 760px;
+    height: auto; }
+    .user-login-modal .content .close {
+      position: absolute;
+      color: #aaa;
+      right: 20px;
+      top: 0;
+      font-size: 28px;
+      font-weight: bold; }
+    .user-login-modal .content .close:hover,
+    .user-login-modal .content .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer; }

@@ -133,6 +133,12 @@
       </a>
     {% endif %}
 
+    {% if node.field_video_status.0.value %}
+      <div class="c-event-address">
+        {{ content.field_video_status }}
+      </div>
+    {% endif %}
+
     {% set event_place = content.field_event_place[0]['#markup'] %}
     {% if event_place == "In Albany" or event_place == "In The District" %}
       {% if content.field_meeting_location[0]['#context']['value'] %}

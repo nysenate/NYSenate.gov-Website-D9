@@ -75,9 +75,12 @@ class EntityUsageQueueBatchManager implements ContainerInjectionInterface {
    * @param int $batch_size
    *   (Optional) The batch size to use when executing the batch process to
    *   populate the queue. Defaults to static::BATCH_SIZE.
+   * @param bool $keep_existing_records
+   *   (Optional) If TRUE existing usage records won't be deleted. Defaults to
+   *   FALSE.
    */
-  public function populateQueue($batch_size = 0) {
-    $batch = $this->generateBatch($batch_size);
+  public function populateQueue($batch_size = 0, $keep_existing_records = FALSE) {
+    $batch = $this->generateBatch($batch_size, $keep_existing_records);
     batch_set($batch);
   }
 
@@ -87,11 +90,14 @@ class EntityUsageQueueBatchManager implements ContainerInjectionInterface {
    * @param int $batch_size
    *   (Optional) The batch size to use when executing the batch process to
    *   populate the queue. Defaults to static::BATCH_SIZE.
+   * @param bool $keep_existing_records
+   *   (Optional) If TRUE existing usage records won't be deleted. Defaults to
+   *   FALSE.
    *
    * @return array{operations: array<array{callable-string, array}>, finished: callable-string, title: \Drupal\Core\StringTranslation\TranslatableMarkup, progress_message: \Drupal\Core\StringTranslation\TranslatableMarkup, error_message: \Drupal\Core\StringTranslation\TranslatableMarkup}
    *   The batch array.
    */
-  public function generateBatch($batch_size = 0) {
+  public function generateBatch($batch_size = 0, $keep_existing_records = FALSE) {
     $batch_size = (int) $batch_size > 0 ? (int) $batch_size : static::BATCH_SIZE;
     $operations = [];
     $to_track = $this->config->get('track_enabled_source_entity_types');
@@ -111,7 +117,7 @@ class EntityUsageQueueBatchManager implements ContainerInjectionInterface {
       if ($track_this_entity_type) {
         $operations[] = [
           '\Drupal\entity_usage\EntityUsageQueueBatchManager::queueSourcesBatchWorker',
-          [$entity_type_id, $batch_size],
+          [$entity_type_id, $batch_size, $keep_existing_records],
         ];
       }
     }
@@ -134,11 +140,13 @@ class EntityUsageQueueBatchManager implements ContainerInjectionInterface {
    *   The entity type id, for example 'node'.
    * @param int $batch_size
    *   The batch size.
+   * @param bool $keep_existing_records
+   *   If TRUE existing usage records won't be deleted.
    * @param array{sandbox: array{progress?: int, total?: int, current_item?: int}, results: string[], finished: int, message: string} $context
    *   Batch context. May be an array, or implementing \ArrayObject in the case
    *   of Drush.
    */
-  public static function queueSourcesBatchWorker($entity_type_id, $batch_size, &$context) {
+  public static function queueSourcesBatchWorker($entity_type_id, $batch_size, $keep_existing_records, &$context) {
     $queue = \Drupal::queue('entity_usage_regenerate_queue');
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
@@ -148,8 +156,10 @@ class EntityUsageQueueBatchManager implements ContainerInjectionInterface {
     // First pass, populate the sandbox.
     if (empty($context['sandbox']['total'])) {
       // Delete current usage statistics for these entities.
-      \Drupal::service('entity_usage.usage')
-        ->bulkDeleteSources($entity_type_id);
+      if (!$keep_existing_records) {
+        \Drupal::service('entity_usage.usage')
+          ->bulkDeleteSources($entity_type_id);
+      }
 
       $context['sandbox']['progress'] = 0;
       if ($entity_type->isRevisionable()) {

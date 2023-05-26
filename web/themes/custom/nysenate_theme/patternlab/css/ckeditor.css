@@ -1850,6 +1850,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2392,6 +2397,37 @@ a.c-btn--small-blue {
   background-color: #eee;
   padding: 40px; }
 
+.c-block--about-map .nys-btn--gold {
+  margin-top: 30px; }
+
+.c-block--about-map .c-about-map-wrap {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 80%; }
+  .c-block--about-map .c-about-map-wrap > iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border: none; }
+
+.c-block--about-map .c-map--btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none; }
+
+@media screen and (min-width: 768px) {
+  .c-block--about-map .c-map--btn,
+  .c-block--about-map .nys-btn--gold {
+    display: none; } }
+
 ul.c-block--about-seal {
   list-style: none;
   margin: 30px 0 20px;
@@ -2419,3 +2455,9 @@ ul.c-block--about-seal {
       counter-increment: seal-counter; }
     ul.c-block--about-seal li:first-of-type::before {
       padding-left: 1px; }
+
+@media screen and (min-width: 768px) {
+  .c-seal--img {
+    width: 60%;
+    max-width: 470px;
+    margin: 0 auto; } }

@@ -1858,6 +1858,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2309,6 +2314,7 @@ h2.c-subpage-header--title {
   .dashboard-profile .c-container--dash-senator-card .dash-senator-img {
     height: 70px;
     width: 70px;
+    min-width: 70px;
     overflow: hidden;
     border-radius: 70px; }
     .dashboard-profile .c-container--dash-user-card .dash-user-img img,
@@ -2317,7 +2323,8 @@ h2.c-subpage-header--title {
     .dashboard-profile .c-container--dash-senator-card .dash-senator-img img {
       -o-object-fit: cover;
       object-fit: cover;
-      height: 100%; }
+      overflow: hidden;
+      border-radius: 70px; }
   .dashboard-profile .c-container--dash-user-card .vcard,
   .dashboard-profile .c-container--dash-senator-card .vcard {
     border: none;
@@ -2386,6 +2393,15 @@ h2.c-subpage-header--title {
     .dashboard-profile .c-container--dash-user-card .dash-senator-info .c-container--title,
     .dashboard-profile .c-container--dash-senator-card .dash-senator-info .c-container--title {
       display: inline-block; }
+      .dashboard-profile .c-container--dash-user-card .dash-senator-info .c-container--title .field--name-field-senator-name,
+      .dashboard-profile .c-container--dash-senator-card .dash-senator-info .c-container--title .field--name-field-senator-name {
+        display: inline-block; }
+      .dashboard-profile .c-container--dash-user-card .dash-senator-info .c-container--title .party,
+      .dashboard-profile .c-container--dash-senator-card .dash-senator-info .c-container--title .party {
+        font-size: 12px;
+        color: #cb8d37;
+        text-transform: uppercase;
+        display: inline-block; }
     .dashboard-profile .c-container--dash-user-card .dash-senator-info .c-container--district,
     .dashboard-profile .c-container--dash-senator-card .dash-senator-info .c-container--district {
       font-family: "Proxima Nova Regular", "Arial", sans-serif;

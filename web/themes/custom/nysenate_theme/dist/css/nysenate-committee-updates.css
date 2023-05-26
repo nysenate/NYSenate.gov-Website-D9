@@ -1848,6 +1848,11 @@ main.l-row--main {
   margin-right: 15px;
   border-radius: 50%;
   overflow: hidden; }
+  .nys-senator--thumb--placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 24px; }
   .nys-senator--thumb a {
     display: block;
     position: absolute;
@@ -2297,6 +2302,12 @@ h2.c-subpage-header--title {
   display: block;
   position: relative;
   border-top: 1px solid #aaaaaa; }
+  @media screen and (max-width: 767px) {
+    .c-updates-container .c-update-block {
+      display: flex;
+      flex-direction: column; }
+      .c-updates-container .c-update-block .l-panel-col--lft, .c-updates-container .c-update-block .l-panel-col--ctr {
+        width: unset; } }
   .c-updates-container .c-update-block .l-left {
     margin-top: 20px; }
     .c-updates-container .c-update-block .l-left .c-type {

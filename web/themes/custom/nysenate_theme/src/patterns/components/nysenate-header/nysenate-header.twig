@@ -1,8 +1,10 @@
 {{ attach_library('nysenate_theme/nysenate-header') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
+{% set error_page = false or is_error_page %}
+
 <header
-  id="js-sticky" role="banner" class="l-header" style="z-index: 100;">
+  id="js-sticky" role="banner" class="l-header {{ error_page ? 'error-page-header' : '' }}" style="z-index: 100;">
   <!-- Begin Header -->
   <div class="panel-pane pane-block pane-nys-blocks-sitewide-header-bar-block">
 
@@ -129,7 +131,7 @@
         </div>
       {% endif %}
     </div>
-    {% if type != 'senator' %}
+    {% if type != 'senator' and error_page == false %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
           is_logged: is_logged,

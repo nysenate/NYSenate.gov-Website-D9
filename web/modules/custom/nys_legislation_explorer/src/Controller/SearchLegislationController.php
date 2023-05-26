@@ -4,6 +4,7 @@ namespace Drupal\nys_legislation_explorer\Controller;
 
 use Drupal\views\Views;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,11 +20,19 @@ class SearchLegislationController extends ControllerBase {
   protected $formBuilder;
 
   /**
+   * Search Advanced Legislation helper service.
+   *
+   * @var \Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper
+   */
+  protected SearchAdvancedLegislationHelper $helper;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     $instance = new static();
     $instance->formBuilder = $container->get('form_builder');
+    $instance->helper = $container->get('nys_legislation_explorer.helper');
     return $instance;
   }
 
@@ -31,19 +40,32 @@ class SearchLegislationController extends ControllerBase {
    * Response for the bills page.
    */
   public function page() {
+    $results_page = $this->helper->isResultsPage();
     $request = \Drupal::service('request_stack')->getCurrentRequest();
-    if ($request->query->get('type') ||
-      $request->query->get('session_year') ||
-      $request->query->get('issue') ||
-      $request->query->get('printno') ||
-      $request->query->get('status') ||
-      $request->query->get('sponsor') ||
-      $request->query->get('full_text') ||
-      $request->query->get('committee') ||
-      $request->query->get('month')) {
+    if ($results_page) {
       try {
         $view = Views::getView('advanced_legislation_search');
-        $content['search_legislation_results'] = $view->buildRenderable('search_results_block');
+        switch ($request->query->get('type')) {
+          case 'bill':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_bills');
+            break;
+
+          case 'calendar':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_calenders');
+            break;
+
+          case 'resolution':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_resolutions');
+            break;
+
+          case 'agenda':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_agendas');
+            break;
+
+          case 'transcript':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_transcripts');
+            break;
+        }
       }
       catch (\Exception $e) {
         $message = 'An unexpected error has occurred while searching. Please try again later.';

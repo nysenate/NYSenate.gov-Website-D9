@@ -30,6 +30,13 @@ abstract class ManagementPageBase implements ManagementPageInterface {
   protected array $configuration;
 
   /**
+   * NYS Senators Helper service.
+   *
+   * @var \Drupal\nys_senators\SenatorsHelper
+   */
+  protected SenatorsHelper $helper;
+
+  /**
    * Drupal's Entity Type Manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -53,12 +60,13 @@ abstract class ManagementPageBase implements ManagementPageInterface {
   /**
    * Constructor.
    */
-  public function __construct(EntityTypeManagerInterface $manager, Connection $connection, $plugin_id, $definition, array $configuration) {
+  public function __construct(EntityTypeManagerInterface $manager, Connection $connection, SenatorsHelper $helper, $plugin_id, $definition, array $configuration) {
     $definition['id'] = (string) $plugin_id;
     $this->manager = $manager;
     $this->definition = $definition;
     $this->configuration = $configuration;
     $this->connection = $connection;
+    $this->helper = $helper;
     $this->logger = $this->getLogger('nys_management_dashboard');
   }
 
@@ -69,6 +77,7 @@ abstract class ManagementPageBase implements ManagementPageInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('database'),
+      $container->get('nys_senators.senators_helper'),
       $plugin_id,
       $plugin_definition,
       $configuration

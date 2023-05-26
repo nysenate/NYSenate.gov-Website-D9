@@ -41,6 +41,7 @@
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/config_ignore": "^2.3",
         "drupal/config_split": "^1.7",
+        "drupal/contextual_range_filter": "^1.0",
         "drupal/core-composer-scaffold": "^9.0",
         "drupal/core-recommended": "^9.0@stable",
         "drupal/ctools": "^3.10",
@@ -81,6 +82,7 @@
         "drupal/name": "^1.0@RC",
         "drupal/node_export": "^1.0@alpha",
         "drupal/oembed_providers": "^2.0",
+        "drupal/pantheon_advanced_page_cache": "^2.1",
         "drupal/password_policy": "^4.0",
         "drupal/permissions_filter": "^1.2",
         "drupal/prepopulate": "^2.3",
@@ -113,6 +115,7 @@
         "drupal/views_list_sort": "^1.4",
         "drupal/views_load_more": "^2.0@alpha",
         "drupal/views_send": "^1.6",
+        "drupal/views_year_filter": "^2.1",
         "drupal/votingapi": "^3.0@beta",
         "drupal/webform": "^6.1",
         "drupal/webform_migrate": "^1.2",
@@ -231,7 +234,8 @@
                 "2983456 - Expose triggering update of media metadata + thumbnail to end users": "https://www.drupal.org/files/issues/2022-07-30/drupal-add_update_metadata_for_media-2983456-104-9.4.x.patch",
                 "2701575 - : TypeError: Drupal\\Core\\Routing\\RequestContext::fromRequest() https://www.drupal.org/project/drupal/issues/2701575": "https://www.drupal.org/files/issues/2022-02-28/2701575-14.patch",
                 "3202896 - Don't display OEmbed error to anonymous visitors when resource stops being available: https://www.drupal.org/project/drupal/issues/3202896": "https://www.drupal.org/files/issues/2022-02-23/issue-3202896-6.patch",
-                "2972846 - Improve oEmbed exception logging: https://www.drupal.org/project/drupal/issues/2972846": "https://www.drupal.org/files/issues/2022-12-20/drupal-9.4.x-core-media-oembed-2972846-25.patch"
+                "2972846 - Improve oEmbed exception logging: https://www.drupal.org/project/drupal/issues/2972846": "https://www.drupal.org/files/issues/2022-12-20/drupal-9.4.x-core-media-oembed-2972846-25.patch",
+                "3059955 - It is possible to overflow the number of items allowed in Media Library: https://www.drupal.org/project/drupal/issues/3059955": "https://www.drupal.org/files/issues/2023-03-18/3059955-167.patch"
             },
             "drupal/email_registration": {
                 "2843505 - Add support for Behat tests": "https://www.drupal.org/files/issues/2020-10-21/2843505-39.patch"
@@ -260,6 +264,9 @@
             },
             "drupal/search_api_solr": {
                 "3320713 - Array to string conversion on $doc_fields['hash']": "https://www.drupal.org/files/issues/2022-11-11/fix-array-to-string-conversion.patch"
+            },
+            "drupal/contextual_range_filter": {
+                "3187789 - Search API Views compatibility" : "https://www.drupal.org/files/issues/2023-05-18/3187789-Add-Search-API-filter-support.patch"
             }
         }
     }

@@ -375,7 +375,7 @@ class BillForm extends FormBase {
     $form_state->setRedirectUrl(Url::fromUserInput(\Drupal::request()->get('pass_thru_url')));
 
     if ($this->currentUser->isAuthenticated()) {
-      $the_vote = $this->billVoteHelper->processVote('node', $node->id(), $vote_index)['vote'];
+      $the_vote = $this->billVoteHelper->processVote($user, $node, $vote_index);
       $senator = $this->nysUserHelper->getSenator($user);
     }
 

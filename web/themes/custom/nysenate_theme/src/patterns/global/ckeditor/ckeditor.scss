@@ -1,4 +1,4 @@
-@import "../../global/utils/init";
+@import '../../global/utils/init';
 
 .field--name-field-landing-blocks {
   > .field__item {
@@ -11,7 +11,6 @@
     }
   }
 }
-
 
 .c-paragraph--more-link {
   clear: both;
@@ -120,7 +119,6 @@ a.c-btn--small-blue {
   }
 }
 
-
 .c-pullquote--citation {
   display: block;
   margin-top: 20px;
@@ -135,46 +133,94 @@ a.c-btn--small-blue {
   padding: 40px;
 }
 
+// district map
+.c-block--about-map {
+  .nys-btn--gold {
+    margin-top: 30px;
+  }
 
-// senate seal
+  .c-about-map-wrap {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 80%;
 
-
-  ul.c-block--about-seal {
-    list-style: none;
-    margin: 30px 0 20px;
-    counter-reset: seal-counter;
-
-    li {
-      position: relative;
-      padding-left: 40px;
-
-      & + li {
-        margin-top: 20px;
-      }
-
-      &::before {
-        border-radius: 50%;
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 27px;
-        width: 28px;
-        background: $yellow01;
-        text-align: center;
-        font-size: 18px;
-        line-height: 28px;
-        color: #fff;
-        font-family: $font-sans-bold;
-        content: counter(seal-counter);
-        counter-increment: seal-counter;
-      }
-
-      &:first-of-type {
-        &::before {
-          padding-left: 1px;
-        }
-      }
+    > iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      border: none;
     }
   }
 
+  .c-map--btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .c-block--about-map {
+    .c-map--btn,
+    .nys-btn--gold {
+      display: none;
+    }
+  }
+}
+
+// senate seal
+
+ul.c-block--about-seal {
+  list-style: none;
+  margin: 30px 0 20px;
+  counter-reset: seal-counter;
+
+  li {
+    position: relative;
+    padding-left: 40px;
+
+    & + li {
+      margin-top: 20px;
+    }
+
+    &::before {
+      border-radius: 50%;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 27px;
+      width: 28px;
+      background: $yellow01;
+      text-align: center;
+      font-size: 18px;
+      line-height: 28px;
+      color: #fff;
+      font-family: $font-sans-bold;
+      content: counter(seal-counter);
+      counter-increment: seal-counter;
+    }
+
+    &:first-of-type {
+      &::before {
+        padding-left: 1px;
+      }
+    }
+  }
+}
+
+.c-seal--img {
+  @include breakpoint($bp-sm) {
+    width: 60%;
+    max-width: 470px;
+    margin: 0 auto;
+  }
+}

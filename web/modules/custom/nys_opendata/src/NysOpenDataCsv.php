@@ -268,34 +268,36 @@ class NysOpenDataCsv {
     $this->resetData();
 
     // If the file exists, read as array, and parse each line into fields.
-    if ($this->physicalPath) {
+    if (file_exists($this->physicalPath)) {
       $data = file($this->physicalPath);
 
-      // Data is any row in which the first field does not start with
-      // a hash character.
-      $this->data = array_filter($data, function ($v) {
-        return substr($v, 0, 2) != '"#';
-      });
+      if ($data) {
+        // Data is any row in which the first field does not start with
+        // a hash character.
+        $this->data = array_filter($data, function ($v) {
+          return substr($v, 0, 2) != '"#';
+        });
 
-      // Extra is any other row, because notes in CSV files are a thing now.
-      $this->extra = array_filter($data, function ($v) {
-        return substr($v, 0, 2) == '"#';
-      });
+        // Extra is any other row, because notes in CSV files are a thing now.
+        $this->extra = array_filter($data, function ($v) {
+          return substr($v, 0, 2) == '"#';
+        });
 
-      // Header is the first data row.  Stored weird for parsing.
-      $this->header = [array_shift($this->data)];
+        // Header is the first data row.  Stored weird for parsing.
+        $this->header = [array_shift($this->data)];
 
-      // Parse each part as a CSV line.
-      foreach (['data', 'extra', 'header'] as $val) {
-        $this->{$val} = array_map('str_getcsv', $this->{$val});
-      }
+        // Parse each part as a CSV line.
+        foreach (['data', 'extra', 'header'] as $val) {
+          $this->{$val} = array_map('str_getcsv', $this->{$val});
+        }
 
-      // Get the header row.
-      $this->header = reset($this->header);
+        // Get the header row.
+        $this->header = reset($this->header);
 
-      // Apply a sort, if provided.
-      if (!is_null($sort)) {
-        $this->sortData($sort);
+        // Apply a sort, if provided.
+        if (!is_null($sort)) {
+          $this->sortData($sort);
+        }
       }
     }
   }

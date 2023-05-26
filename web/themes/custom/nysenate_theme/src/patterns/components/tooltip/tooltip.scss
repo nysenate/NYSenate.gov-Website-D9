@@ -1,0 +1,25 @@
+@import '../../global/utils/init';
+
+.tooltip {
+  display: none;
+  width: 300px;
+  max-width: 100%;
+  background-color: $grey06;
+  color: $grey02;
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: 6px;
+
+  &[data-show] {
+    display: block;
+  }
+}
+
+.tooltip-wrapper {
+  display: inline-block;
+}
+
+.tooltip-button {
+  background-color: transparent;
+  border: none;
+}

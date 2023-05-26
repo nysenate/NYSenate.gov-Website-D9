@@ -51,15 +51,11 @@
         <div class="c-tab--arrow u-mobile-only"></div>
         <div class="c-tab active">
           <input class="form-radio" type="radio" name="news" value="#panel1" checked="checked">
-          <label class="c-tab-link" for="news">{{ 'All Updates'|t }}</label>
+          <label class="c-tab-link" for="news">{{ 'Meetings'|t }}</label>
         </div>
         <div class="c-tab">
           <input class="form-radio" type="radio" name="meetings" value="#panel2">
           <label class="c-tab-link" for="events">{{ 'News'|t }}</label>
-        </div>
-        <div class="c-tab">
-          <input class="form-radio" type="radio" name="meetings" value="#panel3">
-          <label class="c-tab-link" for="events">{{ 'Events Archives'|t }}</label>
         </div>
       </dl>
       <div class="tabs-content">
@@ -68,9 +64,6 @@
         </div>
         <div class="panel-pane pane-views pane-news-by-issue content" id="panel2">
           {{ drupal_view('committee_content', 'news') }}
-        </div>
-        <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
-          {{ drupal_view('committee_content', 'meetings') }}
         </div>
       </div>
       {{ drupal_view('committee_members', 'chair') }}

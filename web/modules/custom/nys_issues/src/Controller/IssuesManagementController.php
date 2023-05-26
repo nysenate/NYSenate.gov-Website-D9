@@ -2,7 +2,6 @@
 
 namespace Drupal\nys_issues\Controller;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Link;
@@ -75,24 +74,6 @@ class IssuesManagementController extends ControllerBase {
 
     $link = Link::fromTextAndUrl($tid->getName(), $tid->toUrl())->toString();
 
-    // Finish the render array, and render it.
-    if (count($rows)) {
-      $ret = [
-        'message_button' => [
-          '#type' => 'button',
-          '#value' => 'Message These Users',
-        ],
-        'user_list' => [
-          '#theme' => 'table',
-          '#header' => ['User Name', 'Address'],
-          '#rows' => $rows,
-          '#caption' => new FormattableMarkup("Following " . $link, []),
-        ],
-      ];
-    }
-    else {
-      $ret = ['#markup' => 'Could not find any followers'];
-    }
     $ret = $this->renderer->renderPlain($ret);
 
     return new HtmlResponse($ret);

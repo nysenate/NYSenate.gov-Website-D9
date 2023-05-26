@@ -1,0 +1,23 @@
+uuid: eea682a8-4db1-4350-af82-686237c1d0aa
+langcode: en
+status: true
+dependencies:
+  module:
+    - image_style_quality
+name: 200x125
+label: 200x125
+effects:
+  abfc8c53-b65b-4663-831c-787a910389fc:
+    uuid: abfc8c53-b65b-4663-831c-787a910389fc
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 200
+      height: 125
+      anchor: center-center
+  5cff3ac2-bf65-4c92-8163-8b0ba4e93432:
+    uuid: 5cff3ac2-bf65-4c92-8163-8b0ba4e93432
+    id: image_style_quality
+    weight: 2
+    data:
+      quality: 100

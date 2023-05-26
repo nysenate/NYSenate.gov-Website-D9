@@ -25,7 +25,7 @@
           </p>
         {% elseif content.field_senator_multiref.0 %}
           <p class="c-news--author">
-            {{ content.field_senator_multiref.0 }}
+            <a href="{{ senator_link }}">{{ content.field_senator_multiref[0]['#title'] }}</a>
           </p>
         {% endif %}
         <p class="c-news--pub-date">

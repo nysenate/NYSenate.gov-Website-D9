@@ -242,7 +242,10 @@ handlers:
     label: 'Email confirmation'
     notes: ''
     status: true
-    conditions: {  }
+    conditions:
+      disabled:
+        ':input[name="send_yourself_a_copy_"]':
+          unchecked: true
     weight: 1
     settings:
       states:

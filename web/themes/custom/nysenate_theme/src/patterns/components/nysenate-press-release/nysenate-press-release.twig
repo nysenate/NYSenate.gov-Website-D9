@@ -3,96 +3,135 @@
 
 <article class="c-block c-block-press-release content__item">
   <div class="c-press-release--header">
-    <p class="c-press-release--title {% if article.search_results %} c-bill-search {% endif %}">
-       {{ article.title }}
-       {% if article.print_no %} {{ article.print_no }}{% endif %}
-    </p>
+    {% if article.bill_title %}
+      <h3 class="c-bill-num">
+        <a href={{ article.bill_title.url }}>
+          {{ article.bill_title.text|raw }}
+        </a>
+      </h3>
+    {% else %}
+      <p class="c-press-release--title {% if article.search_results %} c-bill-search {% endif %}">
+        {{ article.title }}
+        {% if article.print_no %}
+          {{ article.print_no }}
+        {% endif %}
+      </p>
+    {% endif %}
     {% for topic in article.topics %}
       {% if loop.last %}
-        <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>
+        {% if topic.url %}
+          <a href="{{ topic.url }}" class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</a>
+        {% else %}
+          <span class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</span>
+        {% endif %}
       {% else %}
-        <a href="{{ topic.url }}" class="c-press-release--topic">{{ topic.name }}</a>,
+        {% if topic.url %}
+          <a href="{{ topic.url }}" class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</a>,
+        {% else %}
+          <span class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</span>,
+        {% endif %}
       {% endif %}
     {% endfor %}
   </div>
-  <div class="c-press-release--body">
-    <div class="c-press-release--descript-wrapper">
-      {% if not article.bill %}
-        <h3 class="c-press-release--descript">
-          <a href="{{ article.description.url }}">{{ article.description.text }}</a>
-        </h3>
-      {% endif %}
-      {% if article.bill_description %}
-        <p class="c-bill-descript">
-          {{ article.bill_description }}
-        </p>
-      {% endif %}
-      {% if article.positions %}
-        <ul class="nys-bill-status nys-bill-status__sml">
-          <hr/>
-          {% for position in article.positions %}
-            {% if position.is_grouped %}
-              <li class="nys-bill-status--assem-sen">
-                <ul class="nys-bill-status">
-                  {% for item in position.items %}
-                    <li {% if item.is_passed %} class="passed" {% endif %} title="{{ item.text }}">
-                      <span class="nys-bill-status--text">{{ item.text }}</span>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </li>
-            {% else %}
-              <li {% if position.is_passed == true %} class="passed" {% endif %} title="{{ position.text }}">
-                <span class="nys-bill-status--text">{{ position.text }}</span>
-              </li>
-            {% endif %}
-          {% endfor %}
-          <li class="spacer"></li>
-        </ul>
-      {% endif %}
-      {% if article.author %}
-        <div class="author">
-          <span>By: <a href="{{ article.author.url }}">{{ article.author.name }}</a></span>
-        </div>
-      {% endif %}
-      {% if article.date or article.issue_type %}
-        <p class="c-press-release--date">
-          {% if article.date %}
-            <span class="date-display-single">{{ article.date }}</span>
+  {% if not is_full_width %}
+    <div class="c-press-release--body">
+      <div class="c-press-release--descript-wrapper">
+        {% if not article.bill %}
+          <h3 class="c-press-release--descript">
+            <a href="{{ article.description.url }}">{{ article.description.text }}</a>
+          </h3>
+        {% endif %}
+        {% if article.bill_description %}
+          {% if article.bill_description.url %}
+            <a class="c-bill-descript" href={{ article.bill_description.url }}>
+              {{ article.bill_description.text }}
+            </a>
+          {% else %}
+            <p class="c-bill-descript">
+              {{ article.bill_description.text }}
+            </p>
           {% endif %}
-          {% if article.issue_type %} |
-            <span class="issue-type">
-              {% if article.issue_type.type %}
-                {{ article.issue_type.type }}
-              {% endif %}
-              {% if article.issue_type.url %}
-                <a href="{{ article.issue_type.url }}">{{ article.issue_type.text }}</a>
+        {% endif %}
+        {% if article.positions %}
+          <ul class="nys-bill-status nys-bill-status__sml">
+            <hr/>
+            {% for position in article.positions %}
+              {% if position.is_grouped %}
+                <li class="nys-bill-status--assem-sen">
+                  <ul class="nys-bill-status">
+                    {% for item in position.items %}
+                      <li {% if item.is_passed %} class="passed" {% endif %} title="{{ item.text }}">
+                        <span class="nys-bill-status--text">{{ item.text }}</span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </li>
               {% else %}
-                {{ article.issue_type }}
+                <li {% if position.is_passed == true %} class="passed" {% endif %} title="{{ position.text }}">
+                  <span class="nys-bill-status--text">{{ position.text }}</span>
+                </li>
               {% endif %}
+            {% endfor %}
+            <li class="spacer"></li>
+          </ul>
+        {% endif %}
+        {% if article.author %}
+          <div class="author">
+            <span>By:
+              <a href="{{ article.author.url }}">{{ article.author.name }}</a>
             </span>
-          {% endif %}
-  {#        {% if article.date %}<span class="date-display-single">{{ article.date }}</span>{% endif %}{% if article.issue_type %} | <span class="issue-type"> <a href="{{ article.issue_type.url }}">{{ article.issue_type.text }}</a></span> {% endif %}#}
-        </p>
-      {% endif %}
+          </div>
+        {% endif %}
+        {% if article.date or article.issue_type %}
+          <p class="c-press-release--date">
+            {% if article.date %}
+              <span class="date-display-single">{{ article.date }}</span>
+            {% endif %}
+            {% if article.issue_type %}
+              |
+              <span class="issue-type">
+                {% if article.issue_type.type %}
+                  {{ article.issue_type.type }}
+                {% endif %}
+                {% if article.issue_type.url %}
+                  <a href="{{ article.issue_type.url }}">{{ article.issue_type.text }}</a>
+                {% else %}
+                  {{ article.issue_type }}
+                {% endif %}
+              </span>
+            {% endif %}
+          </p>
+        {% endif %}
+        {% if article.sponsor %}
+          <p class="c-bill-update--sponsor">
+            Sponsor:
+            {% if article.sponsor.url %}
+              <a href={{ article.sponsor.url }}>{{ article.sponsor.text }}</a>
+            {% else %}
+              <span>{{ article.sponsor.text }}</span>
+            {% endif %}
+          </p>
+        {% endif %}
+        {% if article.location %}
+          <div class="event-location icon-before__circle-pin">{{ article.location }}</div>
+        {% endif %}
 
-      {% if article.location %}
-        <div class="event-location icon-before__circle-pin">{{ article.location }}</div>
-      {% endif %}
+        {% if article.time %}
+          <div class="event-date-time">
+            <span class="date-display-single">{{ article.time }}</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 
-      {% if article.time %}
-        <div class="event-date-time">
-          <span class="date-display-single">{{ article.time }}</span>
-        </div>
+  {% if article.img_src or article.image %}
+    <div class="c-press-release--img">
+      {% if article.img_src %}
+        <img src="{{ article.img_src }}">
+      {% else %}
+        {{ article.image }}
       {% endif %}
     </div>
-  </div>
-
-  <div class="c-press-release--img">
-    {% if article.img_src %}
-      <img src="{{ article.img_src }}">
-    {% else %}
-      {{ article.image }}
-    {% endif %}
-  </div>
+  {% endif %}
 </article>

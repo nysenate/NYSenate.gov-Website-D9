@@ -33,7 +33,7 @@
       {% endif %}
     {% endfor %}
   </div>
-  {% if not is_full_width %}
+  {% if article.is_full_width == false %}
     <div class="c-press-release--body">
       <div class="c-press-release--descript-wrapper">
         {% if not article.bill %}

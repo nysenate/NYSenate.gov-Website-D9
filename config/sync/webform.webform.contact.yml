@@ -51,6 +51,9 @@ elements: |-
     '#type': webform_actions
     '#title': 'Submit button(s)'
     '#submit__label': 'Send message'
+  send_yourself_a_copy_:
+    '#type': checkbox
+    '#title': 'Send yourself a copy.'
 css: ''
 javascript: ''
 settings:
@@ -239,7 +242,10 @@ handlers:
     label: 'Email confirmation'
     notes: ''
     status: true
-    conditions: {  }
+    conditions:
+      disabled:
+        ':input[name="send_yourself_a_copy_"]':
+          unchecked: true
     weight: 1
     settings:
       states:

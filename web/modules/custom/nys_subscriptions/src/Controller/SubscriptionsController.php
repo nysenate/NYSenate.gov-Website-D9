@@ -34,6 +34,7 @@ class SubscriptionsController extends ControllerBase {
    * @var \Psr\Log\LoggerInterface
    */
   protected $messenger;
+
   /**
    * Constructs a SubscriptionsController object.
    *

@@ -4,37 +4,50 @@ namespace Drupal\nys_subscriptions\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\nys_subscriptions\SubscriptionInterface;
-use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Messenger\MessengerInterface;
 use Psr\Log\LoggerInterface;
+use Drupal\node\Entity\Node;
 
 /**
- *
+ * The subscription management action controller.
  */
 class SubscriptionsController extends ControllerBase {
-
   /**
-   * The subscription entity.
+   * The subscription entity storage.
    *
-   * @var \Drupal\nys_subscriptions\SubscriptionInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $subscription;
+  protected $subscriptionStorage;
 
   /**
    * The logger service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
   /**
+   * The messenger service.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $messenger;
+  /**
    * Constructs a SubscriptionsController object.
    *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $subscriptionStorage
+   *   The subscription entity storage.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    */
-  public function __construct(LoggerInterface $logger) {
+  public function __construct(EntityStorageInterface $subscriptionStorage, LoggerInterface $logger, MessengerInterface $messenger) {
+    $this->subscriptionStorage = $subscriptionStorage;
     $this->logger = $logger;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -42,7 +55,9 @@ class SubscriptionsController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('logger.factory')->get('nys_subscriptions')
+      $container->get('entity_type.manager')->getStorage('subscription'),
+      $container->get('logger.factory')->get('nys_subscriptions'),
+      $container->get('messenger')
     );
   }
 
@@ -51,22 +66,33 @@ class SubscriptionsController extends ControllerBase {
    *
    * @param string $uuid
    *   The UUID of the subscription.
-   * @param \Drupal\nys_subscriptions\SubscriptionInterface $subscription
-   *   The subscription entity.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response.
    */
-  public function confirmCreateSubscription($uuid, SubscriptionInterface $subscription) {
+  public function confirmCreateSubscription($uuid) {
     try {
-      $subscriptions = $this->subscription->loadByProperties(['uuid' => $uuid]);
+      $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
 
       if (!empty($subscriptions)) {
         $subscription = reset($subscriptions);
         $subscription->confirm();
 
-        // Additional logic after confirming the subscription.
-        return new Response('Subscription successfully confirmed.');
+        // Get the subscribe_from_id value from the subscription entity.
+        $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
+        // Check if the subscribe_from_id exists and is a valid node.
+        if (!empty($subscribe_from_id) && $node = Node::load($subscribe_from_id)) {
+          $url = $node->toUrl()->toString();
+
+          // Add a message to the Drupal messenger service.
+          $this->messenger->addStatus('Subscription successfully confirmed.');
+
+          // Redirect to the page node.
+          return new RedirectResponse($url, 302, ['Cache-Control' => 'no-cache']);
+        }
+        else {
+          throw new \Exception('Invalid or missing subscribe_from_id.');
+        }
       }
       else {
         throw new \Exception('Subscription entity not found for the provided UUID.');
@@ -74,7 +100,8 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      return new Response('Failed to confirm subscription.');
+      $this->messenger->addError('Failed to confirm subscription.');
+      return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }
   }
 
@@ -83,20 +110,27 @@ class SubscriptionsController extends ControllerBase {
    *
    * @param string $uuid
    *   The UUID of the subscription.
-   * @param \Drupal\nys_subscriptions\SubscriptionInterface $subscription
-   *   The subscription entity.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response.
    */
-  public function removeSubscription($uuid, SubscriptionInterface $subscription) {
+  public function removeSubscription($uuid) {
     try {
-      $subscriptions = $this->subscription->loadByProperties(['uuid' => $uuid]);
-
+      $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if (!empty($subscriptions)) {
         $subscription = reset($subscriptions);
         $subscription->cancel();
-        return new Response('Subscription successfully removed.');
+        // Get the subscribe_from_id value from the subscription entity.
+        $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
+        // Check if the subscribe_from_id exists and is a valid node.
+        if (!empty($subscribe_from_id) && $node = Node::load($subscribe_from_id)) {
+          $url = $node->toUrl()->toString();
+          $this->messenger->addStatus('Subscription successfully removed.');
+          return new RedirectResponse($url, 302, ['Cache-Control' => 'no-cache']);
+        }
+        else {
+          throw new \Exception('Invalid or missing subscribe_from_id.');
+        }
       }
       else {
         throw new \Exception('Subscription entity not found for the provided UUID.');
@@ -104,48 +138,50 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      return new Response('Failed to delete subscription.');
+      $this->messenger->addError('Failed to confirm subscription.');
+      return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }
   }
 
   /**
-   * Controller method to unsubscribe globally.
+   * Global unsubscribe.
    *
    * @param string $uuid
-   *   The UUID of the subscription.
-   * @param \Drupal\nys_subscriptions\SubscriptionInterface $subscription
-   *   The subscription entity.
+   *   The UUID.
    *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   The response.
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   The redirect response.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *   Thrown when the subscription entity is not found.
    */
-  public function globalUnsubscribe($uuid, SubscriptionInterface $subscription) {
+  public function globalUnsubscribe($uuid) {
     try {
-      $subscriptions = $this->subscription->loadByProperties(['uuid' => $uuid]);
-
+      $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if (!empty($subscriptions)) {
         $uids = [];
-
         foreach ($subscriptions as $subscription) {
-          $uids[] = $subscription->getOwnerId();
+          $uids[] = $subscription->get('uid')->target_id;
           $subscription->cancel();
         }
 
-        // Load all subscriptions for the associated UIDs and cancel them.
-        $allSubscriptions = $this->subscription->loadByProperties(['uid' => $uids]);
-        foreach ($allSubscriptions as $subscription) {
+        // Find other subscriptions with matching UIDs and cancel them.
+        $other_subscriptions = $this->subscriptionStorage->loadByProperties(['uid' => $uids]);
+        foreach ($other_subscriptions as $subscription) {
           $subscription->cancel();
         }
 
-        return new Response('Subscriptions successfully canceled.');
+        $this->messenger->addStatus('You have successfully globally unsubscribed.');
+        return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
       }
       else {
-        throw new \Exception('Subscription entity not found for the provided UUID.');
+        throw new NotFoundHttpException();
       }
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      return new Response('Failed to resolve subscription request.');
+      $this->messenger->addError('Failed to confirm global unsubscribe.');
+      return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }
   }
 

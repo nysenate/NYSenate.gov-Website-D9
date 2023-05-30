@@ -86,7 +86,8 @@
   <div{{ content_attributes.addClass('node__content', 'c-block', 'c-block--initiative') }}>
     {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
       title: label,
-      cta: item_cta
+      cta: item_cta,
+      is_landing: true
     } only %}
   </div>
 

@@ -14,7 +14,7 @@ dependencies:
     - taxonomy
     - user
     - views_autocomplete_filters
-    - views_load_more
+    - views_infinite_scroll
 id: issues_listings
 label: 'Issues Listings'
 module: views
@@ -637,10 +637,27 @@ display:
           empty_zero: false
           hide_alter_empty: true
       pager:
-        type: some
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 12
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       sorts:
         name:
           id: name
@@ -763,6 +780,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - user.permissions
       tags:
         - 'config:field.storage.taxonomy_term.field_keywords'
@@ -773,10 +791,27 @@ display:
     position: 1
     display_options:
       pager:
-        type: some
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 12
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       sorts:
         created:
           id: created
@@ -803,6 +838,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - user.permissions
       tags: {  }
   meeting_issues:
@@ -1278,10 +1314,27 @@ display:
           empty_zero: false
           hide_alter_empty: true
       pager:
-        type: some
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 21
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       sorts:
         count:
           id: count
@@ -1411,6 +1464,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - user.permissions
       tags: {  }
   news_issues_listing:
@@ -1643,28 +1697,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: load_more
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 21
-          id: '0'
-          total_pages: ''
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
           expose:
-            items_per_page: 0
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: 0
+            offset: false
             offset_label: Offset
-          more_button_text: 'Load more'
-          end_text: ''
-          advanced:
-            content_selector: ''
-            pager_selector: ''
-          effects:
-            type: ''
-            speed: slow
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       sorts:
         title:
           id: title

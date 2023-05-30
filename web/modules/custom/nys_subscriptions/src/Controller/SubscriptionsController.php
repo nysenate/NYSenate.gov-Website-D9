@@ -60,7 +60,6 @@ class SubscriptionsController extends ControllerBase {
       $container->get('entity_type.manager')->getStorage('subscription'),
       $container->get('logger.factory')->get('nys_subscriptions'),
       $container->get('messenger')
-    );
   }
 
   /**
@@ -84,7 +83,7 @@ class SubscriptionsController extends ControllerBase {
         /** @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id */
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
-        if (!empty($subscribe_from_id) && $node = Node::load($subscribe_from_id)) {
+        if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
           $url = $node->toUrl()->toString();
           /** @var \Drupal\Core\Messenger\MessengerInterface */
           $this->messenger->addStatus('Subscription successfully confirmed.');
@@ -127,7 +126,7 @@ class SubscriptionsController extends ControllerBase {
         /** @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id */
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
-        if (!empty($subscribe_from_id) && $node = Node::load($subscribe_from_id)) {
+        if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
           $url = $node->toUrl()->toString();
           /** @var \Drupal\Core\Messenger\MessengerInterface */
           $this->messenger->addStatus('Subscription successfully removed.');

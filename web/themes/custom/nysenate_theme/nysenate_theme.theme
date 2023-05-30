@@ -3195,7 +3195,7 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     else {
       $title = t('Contact your Senator about this issue');
       $link = [
-        'url' => $senator_link . '/contact',
+        'url' => '/form/senator-contact-webform',
         'text' => t('Contact') . ' ' . $senator_name,
       ];
     }

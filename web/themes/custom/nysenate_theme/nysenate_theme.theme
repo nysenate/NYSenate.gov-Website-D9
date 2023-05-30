@@ -1179,12 +1179,14 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
       ->getMicrosite($term);
     $variables['senator_link'] = $senator_link;
     $variables['senator_name'] = $variables['content']['field_featured_senator'][0]['#title'];
+    // @phpstan-ignore-next-line
     $party = $paragraph->field_featured_senator->entity->field_party->getValue();
     $parties = implode(', ', array_map(function ($item) {
       return $item['value'];
     }, $party));
     $variables['party'] = '(' . $parties . ')';
 
+    // @phpstan-ignore-next-line
     $headshot_id = $paragraph->field_featured_senator->entity->field_member_headshot->target_id;
     // @phpstan-ignore-next-line
     $headshot = \Drupal::entityTypeManager()->getStorage('media')
@@ -1197,12 +1199,15 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
   $bills = [];
   $bill = $paragraph->field_featured_bill->entity;
   $allowed_values = '';
+  // @phpstan-ignore-next-line
   if ($bill->hasField('field_ol_last_status')) {
+    // @phpstan-ignore-next-line
     $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
   }
   $published_date = '';
-  if ($bill->hasField('field_ol_publish_date') &&
-    !$bill->get('field_ol_publish_date')->isEmpty()) {
+  // @phpstan-ignore-next-line
+  if ($bill->hasField('field_ol_publish_date') && !$bill->get('field_ol_publish_date')->isEmpty()) {
+    // @phpstan-ignore-next-line
     $published_date = $bill->field_ol_publish_date->value;
   }
 
@@ -1212,9 +1217,13 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
   }
 
   $last_status = '';
+  // @phpstan-ignore-next-line
   if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
+    // @phpstan-ignore-next-line
     $last_status = $allowed_values[$bill->field_ol_last_status->value];
   }
+  // @phpstan-ignore-next-line
+  $bill_title = $bill->getTitle();
   $bills[] = [
     'bill' => [
       'featured' => TRUE,
@@ -1222,7 +1231,7 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
       'is_poll' => TRUE,
       'resolution' => TRUE,
       'link' => $bill->toUrl()->toString(),
-      'number' => $bill->getTitle(),
+      'number' => $bill_title,
       'description_position' => 'bottom',
       'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
       'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',

@@ -60,6 +60,7 @@ class SubscriptionsController extends ControllerBase {
       $container->get('entity_type.manager')->getStorage('subscription'),
       $container->get('logger.factory')->get('nys_subscriptions'),
       $container->get('messenger')
+    );
   }
 
   /**

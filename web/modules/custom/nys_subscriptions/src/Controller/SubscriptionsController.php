@@ -32,7 +32,7 @@ class SubscriptionsController extends ControllerBase {
   /**
    * The messenger service.
    *
-   * @var \Psr\Log\LoggerInterface
+   * @var \Drupal\Core\Messenger\MessengerInterface
    */
   protected $messenger;
 
@@ -85,7 +85,6 @@ class SubscriptionsController extends ControllerBase {
         // Check if the subscribe_from_id exists and is a valid node.
         if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
           $url = $node->toUrl()->toString();
-          /** @var \Drupal\Core\Messenger\MessengerInterface */
           $this->messenger->addStatus('Subscription successfully confirmed.');
           // Redirect to the page node.
           return new RedirectResponse($url, 302, ['Cache-Control' => 'no-cache']);
@@ -128,7 +127,6 @@ class SubscriptionsController extends ControllerBase {
         // Check if the subscribe_from_id exists and is a valid node.
         if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
           $url = $node->toUrl()->toString();
-          /** @var \Drupal\Core\Messenger\MessengerInterface */
           $this->messenger->addStatus('Subscription successfully removed.');
           return new RedirectResponse($url, 302, ['Cache-Control' => 'no-cache']);
         }
@@ -142,7 +140,6 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      /** @var \Drupal\Core\Messenger\MessengerInterface */
       $this->messenger->addError('Failed to confirm subscription.');
       return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }
@@ -178,7 +175,6 @@ class SubscriptionsController extends ControllerBase {
           /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
           $subscription->cancel();
         }
-        /** @var \Drupal\Core\Messenger\MessengerInterface */
         $this->messenger->addStatus('You have successfully globally unsubscribed.');
         return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
       }
@@ -188,7 +184,6 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      /** @var \Drupal\Core\Messenger\MessengerInterface */
       $this->messenger->addError('Failed to confirm global unsubscribe.');
       return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }

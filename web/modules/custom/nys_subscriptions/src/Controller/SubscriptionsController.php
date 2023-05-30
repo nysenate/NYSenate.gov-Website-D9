@@ -73,21 +73,20 @@ class SubscriptionsController extends ControllerBase {
    */
   public function confirmCreateSubscription($uuid) {
     try {
+      /** @var \Drupal\Core\Entity\EntityStorageInterface $subscriptionStorage */
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
 
       if (!empty($subscriptions)) {
         $subscription = reset($subscriptions);
+        /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
         $subscription->confirm();
-
-        // Get the subscribe_from_id value from the subscription entity.
+        /** @var \Drupal\Core\Entity\EntityStorageInterface $subscriptionStorage */
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
         if (!empty($subscribe_from_id) && $node = Node::load($subscribe_from_id)) {
           $url = $node->toUrl()->toString();
-
-          // Add a message to the Drupal messenger service.
+          /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
           $this->messenger->addStatus('Subscription successfully confirmed.');
-
           // Redirect to the page node.
           return new RedirectResponse($url, 302, ['Cache-Control' => 'no-cache']);
         }
@@ -101,6 +100,7 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
+      /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
       $this->messenger->addError('Failed to confirm subscription.');
       return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }
@@ -117,15 +117,18 @@ class SubscriptionsController extends ControllerBase {
    */
   public function removeSubscription($uuid) {
     try {
+      /** @var \Drupal\Core\Entity\EntityStorageInterface */
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if (!empty($subscriptions)) {
         $subscription = reset($subscriptions);
+        /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
         $subscription->cancel();
-        // Get the subscribe_from_id value from the subscription entity.
+        /** @var \Drupal\Core\Entity\EntityStorageInterface $subscriptionStorage */
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
         if (!empty($subscribe_from_id) && $node = Node::load($subscribe_from_id)) {
           $url = $node->toUrl()->toString();
+          /** @var \Drupal\Core\Messenger\MessengerInterfacee $messenger */
           $this->messenger->addStatus('Subscription successfully removed.');
           return new RedirectResponse($url, 302, ['Cache-Control' => 'no-cache']);
         }
@@ -139,6 +142,7 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
+      /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
       $this->messenger->addError('Failed to confirm subscription.');
       return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }
@@ -158,20 +162,23 @@ class SubscriptionsController extends ControllerBase {
    */
   public function globalUnsubscribe($uuid) {
     try {
+      /** @var \Drupal\Core\Entity\EntityStorageInterface */
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if (!empty($subscriptions)) {
         $uids = [];
         foreach ($subscriptions as $subscription) {
           $uids[] = $subscription->get('uid')->target_id;
+          /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
           $subscription->cancel();
         }
 
         // Find other subscriptions with matching UIDs and cancel them.
         $other_subscriptions = $this->subscriptionStorage->loadByProperties(['uid' => $uids]);
         foreach ($other_subscriptions as $subscription) {
+          /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
           $subscription->cancel();
         }
-
+        /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
         $this->messenger->addStatus('You have successfully globally unsubscribed.');
         return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
       }
@@ -181,6 +188,7 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
+      /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
       $this->messenger->addError('Failed to confirm global unsubscribe.');
       return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }

@@ -100,7 +100,6 @@ class SubscriptionsController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      /** @var \Drupal\Core\Messenger\MessengerInterface */
       $this->messenger->addError('Failed to confirm subscription.');
       return new RedirectResponse('/', 302, ['Cache-Control' => 'no-cache']);
     }

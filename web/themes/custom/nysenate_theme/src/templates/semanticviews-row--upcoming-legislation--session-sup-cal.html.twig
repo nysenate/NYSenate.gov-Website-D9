@@ -1,0 +1,56 @@
+{#
+ * @file
+ * Default simple view template to display all the fields as a row. The template
+ * outputs a full row by looping through the $fields array, printing the field's
+ * HTML element (as configured in the UI) and the class attributes. If a label
+ * is specified for the field, it is printed wrapped in a <label> element with
+ * the same class attributes as the field's HTML element.
+ *
+ * - $view: The view in use.
+ * - $fields: an array of $field objects. Each one contains:
+ *   - $field.content: The output of the field.
+ *   - $field.raw: The raw data for the field, if it exists. This is NOT output
+ *     safe.
+ *   - $field.element_type: The HTML element wrapping the field content and
+ *     label.
+ *   - $field.attributes: An array of attributes for the field wrapper.
+ *   - $field.handler: The Views field handler object controlling this field.
+ *     Do not use var_export to dump this object, as it can't handle the
+ *     recursion.
+ * - $row: The raw result object from the query, with all data it fetched.
+ *
+ * @see template_preprocess_semanticviews_view_fields()
+ * @ingroup views_templates
+ * @todo Justify this template. Excluding the PHP, this template outputs angle
+ * brackets, the label element, slashes and whitespace.
+#}
+{% set cal_number_array = fields.field_ol_bill_cal_number.content|striptags|split(',') %}
+
+<article class="c-update-block">
+  <div class="l-panel-col l-panel-col--lft">
+    <h4 class="c-listing--bill-num">{{ fields.title.content }}</h4>
+		<div class="c-listing--related-issues">{{ fields.field_issues.content }}</div>
+  </div>
+  <div class="l-panel-col l-panel-col--ctr">
+    <h4 class="c-press-release--descript">{{ fields.field_ol_name.content }}</h4>
+    {% if fields.field_ol_sponsor.content %}
+      {{ fields.field_ol_sponsor.content }}
+    {% elseif not fields.field_ol_sponsor.content and fields.field_ol_sponsor_name.content %}
+      <br />
+      <label>Sponsor: {{ fields.field_ol_sponsor_name.content }}</label>
+    {% else %}
+      <br />
+      <label>{{ fields.field_ol_sponsor_name.content }}</label>
+    {% endif %}
+  </div>
+  <div class="l-right-actions">
+    <p class="c-calendar--num">
+      <span class="c-calendar--num-mark">cal no.</span>
+      {% if cal_number_array[fields.counter.content|striptags] %}
+        {{ cal_number_array[fields.counter.content|striptags] }}
+      {% else %}
+        {{ cal_number_array|last }}
+      {% endif %}
+    </p>
+  </div>
+</article>

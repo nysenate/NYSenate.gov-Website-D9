@@ -639,8 +639,11 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
         return $item['value'];
       }, $party));
       $variables['senator_name'] = $senator->getName();
-      $variables['senator_link'] = $senator->toUrl()->toString();
       $variables['party'] = '(' . $parties . ')';
+
+      $senator_link = \Drupal::service('nys_senators.microsites')
+        ->getMicrosite($senator);
+      $variables['senator_link'] = $senator_link;
 
       if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
         $variables['senator_image'] = !empty($senator->field_member_headshot->view('full')) ?
@@ -1157,6 +1160,87 @@ function nysenate_theme_preprocess_field__node__field_ustream(&$variables) {
   // Set value based on the ustream id.
   $node = $variables['element']['#object'];
   $variables['items'][0]['value'] = $node->field_ustream->value ?? $variables['items'][0]['content']['#markup'];
+}
+
+/**
+ * Implements hook_preprocess_paragraph__TYPE().
+ */
+function nysenate_theme_preprocess_paragraph(&$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $bundle = $paragraph->bundle();
+  if ($bundle == 'committee_featured_legislation') {
+    if ($variables['content']['field_featured_quote'][0]['#context']['value']) {
+      $variables['quote'] = $variables['content']['field_featured_quote'][0]['#context']['value'];
+    }
+
+    $term = $paragraph->field_featured_senator->entity;
+    $senator_link = \Drupal::service('nys_senators.microsites')
+      ->getMicrosite($term);
+    $variables['senator_link'] = $senator_link;
+    $variables['senator_name'] = $variables['content']['field_featured_senator'][0]['#title'];
+    // @phpstan-ignore-next-line
+    $party = $paragraph->field_featured_senator->entity->field_party->getValue();
+    $parties = implode(', ', array_map(function ($item) {
+      return $item['value'];
+    }, $party));
+    $variables['party'] = '(' . $parties . ')';
+
+    // @phpstan-ignore-next-line
+    $headshot_id = $paragraph->field_featured_senator->entity->field_member_headshot->target_id;
+    // @phpstan-ignore-next-line
+    $headshot = \Drupal::entityTypeManager()->getStorage('media')
+      ->load($headshot_id);
+    $variables['senator_image'] = \Drupal::entityTypeManager()
+      ->getViewBuilder('media')
+      ->view($headshot, 'thumbnail');
+  }
+
+  $bills = [];
+  $bill = $paragraph->field_featured_bill->entity;
+  $allowed_values = '';
+  // @phpstan-ignore-next-line
+  if ($bill->hasField('field_ol_last_status')) {
+    // @phpstan-ignore-next-line
+    $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
+  }
+  $published_date = '';
+  // @phpstan-ignore-next-line
+  if ($bill->hasField('field_ol_publish_date') && !$bill->get('field_ol_publish_date')->isEmpty()) {
+    // @phpstan-ignore-next-line
+    $published_date = $bill->field_ol_publish_date->value;
+  }
+
+  // If published_date is not timestamp, use strtotime().
+  if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
+    $published_date = strtotime($published_date);
+  }
+
+  $last_status = '';
+  // @phpstan-ignore-next-line
+  if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
+    // @phpstan-ignore-next-line
+    $last_status = $allowed_values[$bill->field_ol_last_status->value];
+  }
+  // @phpstan-ignore-next-line
+  $bill_title = $bill->getTitle();
+  $bills[] = [
+    'bill' => [
+      'featured' => TRUE,
+      'small' => FALSE,
+      'is_poll' => TRUE,
+      'resolution' => TRUE,
+      'link' => $bill->toUrl()->toString(),
+      'number' => $bill_title,
+      'description_position' => 'bottom',
+      'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
+      'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
+      'update_location' => $last_status,
+      'positions' => nysenate_bill_positions($bill),
+      'action' => \Drupal::service('path.current')->getPath(),
+    ],
+  ];
+  $variables['bills'] = $bills;
 }
 
 /**

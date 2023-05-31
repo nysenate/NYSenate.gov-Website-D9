@@ -17,6 +17,10 @@ h3.c-bill-num {
   a {
     color: $grey08;
   }
+
+  &.no-issues {
+    margin-bottom: 20px;
+  }
 }
 
 p.c-bill-update--date {
@@ -274,12 +278,15 @@ p.c-bill-update--date {
 }
 
 .c-bill-update {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 
-  @include breakpoint($bp-sm) {
-    margin-top: 80px;
+  &.bill-status__sml  {
+
+    @include breakpoint($bp-sm) {
+      margin-top: 80px;
+    }
   }
 
   a {
@@ -384,7 +391,7 @@ p.c-bill-update--date {
     bottom: 0;
     left: 0;
     right: 0;
-    margin: 9px auto;
+    margin: auto;
     height: 2px;
     width: 90%;
     border: 0;

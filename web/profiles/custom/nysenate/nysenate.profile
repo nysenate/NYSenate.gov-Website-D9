@@ -5,6 +5,7 @@
  * Enables modules and site configuration for the nysenate profile.
  */
 
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Component\Utility\Xss;
@@ -59,6 +60,62 @@ function nysenate_form_alter(&$form, FormStateInterface $form_state, $form_id) {
           }
         }
       }
+    }
+  }
+}
+
+/**
+ * Add links to Issue Explorer Menu.
+ */
+function nysenate_deploy_explore_issues_menu() {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_name = 'menu-issue-explorer';
+
+  $links = [
+    [
+      'title' => 'Alphabetical',
+      'uri' => 'internal:/explore-issues',
+      'weight' => 0,
+    ],
+    [
+      'title' => 'Most Recent',
+      'uri' => 'internal:/explore-issues/most-recents',
+      'weight' => 1,
+    ],
+    [
+      'title' => 'Popular w/ Senators',
+      'uri' => 'internal:/explore-issues/most-popular',
+      'weight' => 2,
+    ],
+    [
+      'title' => 'Most Followed',
+      'uri' => 'internal:/explore-issues/most-followed',
+      'weight' => 3,
+    ],
+  ];
+
+  foreach ($links as $link) {
+    $menu_link = $menu_storage->loadByProperties([
+      'title' => $link['title'],
+      'menu_name' => $menu_name,
+    ]);
+
+    // Update menu-issue-explorer menu item link.
+    if ($menu_link) {
+      $menu_link = reset($menu_link);
+      $menu_link->set('link', ['uri' => $link['uri']]);
+      $menu_link->save();
+    }
+
+    // Create menu-issue-explorer menu item.
+    else {
+      $menu_link = MenuLinkContent::create([
+        'title' => $link['title'],
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $link['uri']],
+        'weight' => $link['weight'],
+      ]);
+      $menu_link->save();
     }
   }
 }

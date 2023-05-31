@@ -79,7 +79,7 @@ function nysenate_deploy_explore_issues_menu() {
     ],
     [
       'title' => 'Most Recent',
-      'uri' => 'internal:/explore-issues/most-recents',
+      'uri' => 'internal:/explore-issues/most-recent',
       'weight' => 1,
     ],
     [

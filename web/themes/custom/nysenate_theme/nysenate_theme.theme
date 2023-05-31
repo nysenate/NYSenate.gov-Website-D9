@@ -4731,6 +4731,10 @@ function nysenate_theme_form_alter(&$form, FormStateInterface $form_state, $form
   if ($form_id == 'nys_dashboard_edit_profile_form') {
     $form['private_messages'] = [];
   }
+
+  if ($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-issues-listings-explore-issues-alpha') {
+    $form['#action'] = '/explore-issues';
+  }
 }
 
 /**

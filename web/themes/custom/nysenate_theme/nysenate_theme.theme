@@ -1197,49 +1197,51 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
   }
 
   $bills = [];
-  $bill = $paragraph->field_featured_bill->entity;
-  $allowed_values = '';
-  // @phpstan-ignore-next-line
-  if ($bill->hasField('field_ol_last_status')) {
+  $bill = $paragraph->field_featured_bill->entity ?? NULL;
+  if ($bill) {
+    $allowed_values = '';
     // @phpstan-ignore-next-line
-    $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
-  }
-  $published_date = '';
-  // @phpstan-ignore-next-line
-  if ($bill->hasField('field_ol_publish_date') && !$bill->get('field_ol_publish_date')->isEmpty()) {
+    if ($bill->hasField('field_ol_last_status')) {
+      // @phpstan-ignore-next-line
+      $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
+    }
+    $published_date = '';
     // @phpstan-ignore-next-line
-    $published_date = $bill->field_ol_publish_date->value;
-  }
+    if ($bill->hasField('field_ol_publish_date') && !$bill->get('field_ol_publish_date')->isEmpty()) {
+      // @phpstan-ignore-next-line
+      $published_date = $bill->field_ol_publish_date->value;
+    }
 
-  // If published_date is not timestamp, use strtotime().
-  if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
-    $published_date = strtotime($published_date);
-  }
+    // If published_date is not timestamp, use strtotime().
+    if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
+      $published_date = strtotime($published_date);
+    }
 
-  $last_status = '';
-  // @phpstan-ignore-next-line
-  if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
+    $last_status = '';
     // @phpstan-ignore-next-line
-    $last_status = $allowed_values[$bill->field_ol_last_status->value];
+    if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
+      // @phpstan-ignore-next-line
+      $last_status = $allowed_values[$bill->field_ol_last_status->value];
+    }
+    // @phpstan-ignore-next-line
+    $bill_title = $bill->getTitle();
+    $bills[] = [
+      'bill' => [
+        'featured' => TRUE,
+        'small' => FALSE,
+        'is_poll' => TRUE,
+        'resolution' => TRUE,
+        'link' => $bill->toUrl()->toString(),
+        'number' => $bill_title,
+        'description_position' => 'bottom',
+        'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
+        'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
+        'update_location' => $last_status,
+        'positions' => nysenate_bill_positions($bill),
+        'action' => \Drupal::service('path.current')->getPath(),
+      ],
+    ];
   }
-  // @phpstan-ignore-next-line
-  $bill_title = $bill->getTitle();
-  $bills[] = [
-    'bill' => [
-      'featured' => TRUE,
-      'small' => FALSE,
-      'is_poll' => TRUE,
-      'resolution' => TRUE,
-      'link' => $bill->toUrl()->toString(),
-      'number' => $bill_title,
-      'description_position' => 'bottom',
-      'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
-      'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
-      'update_location' => $last_status,
-      'positions' => nysenate_bill_positions($bill),
-      'action' => \Drupal::service('path.current')->getPath(),
-    ],
-  ];
   $variables['bills'] = $bills;
 }
 
@@ -4038,7 +4040,7 @@ function nysenate_bill_votes($node) {
       }
 
       $type = $votes->field_ol_vote_type->value ?? NULL;
-      if ($type == 'COMMITTEE') {
+      if ($type == 'COMMITTEE' && $votes->field_ol_committee && isset($votes->field_ol_committee[0])) {
         $vote_committee = $term_storage->load($votes->field_ol_committee[0]->getValue()['target_id']);
         if ($vote_committee) {
           $type = ($vote_committee->name->value ?? '') . ' ' . $type;
@@ -5720,14 +5722,10 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
             $variables['senate_seal']['description']['#text'] .= $block['field_body_left'][0]['#text'];
           }
           elseif ($block['#block_content']->field_title->value == 'Visit Capitol text') {
-            $variables['about_tour'] = [
-              'title' => '',
-              'description' => $block['field_body_left'][0],
-              "carousel" => FALSE,
-              "contact" => [],
-              "cta" => [],
-              "carousel_block" => '',
-            ];
+            $variables['about_tour']['title'] =
+              $block['field_show_title'][0]['#markup'] == 'On' ? 'Visit the Capitol' :
+                ($variables['about_tour']['title'] ?? '');
+            $variables['about_tour']['description'] = $block['field_body_left'][0];
           }
           elseif ($block['#block_content']->field_title->value == 'Visit Capitol Link and Info') {
             $variables['about_tour']['contact'] = [

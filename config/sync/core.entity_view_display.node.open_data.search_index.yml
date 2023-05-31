@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.search_index
-    - field.field.node.open_data.body
+    - field.field.node.open_data.field_body
     - field.field.node.open_data.field_date
     - field.field.node.open_data.field_end_date
     - field.field.node.open_data.field_open_data_file
@@ -55,7 +55,7 @@ content:
     weight: 1
     region: content
 hidden:
-  body: true
+  field_body: true
   field_end_date: true
   langcode: true
   links: true

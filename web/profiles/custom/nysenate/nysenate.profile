@@ -104,6 +104,7 @@ function nysenate_deploy_explore_issues_menu() {
     if ($menu_link) {
       $menu_link = reset($menu_link);
       $menu_link->set('link', ['uri' => $link['uri']]);
+      $menu_link->set('weight', $link['weight']);
       $menu_link->save();
     }
 

@@ -2247,6 +2247,7 @@ function nysenate_theme_theme_suggestions_alter(array &$suggestions, array $vari
       '/senators-committees',
       '/about',
       '/events',
+      '/explore-issues',
     ];
 
     if (in_array($path_alias, $pages) && $node == $element_node) {
@@ -4814,6 +4815,10 @@ function nysenate_theme_form_alter(&$form, FormStateInterface $form_state, $form
   if ($form_id == 'nys_dashboard_edit_profile_form') {
     $form['private_messages'] = [];
   }
+
+  if ($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-issues-listings-explore-issues-alpha') {
+    $form['#action'] = '/explore-issues';
+  }
 }
 
 /**
@@ -5811,6 +5816,47 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE().
+ */
+function nysenate_theme_preprocess_node__landing__explore_issues(&$variables) {
+  foreach ($variables['content']['field_landing_blocks'] as $key => $item) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    if ($item['#block_content']->bundle() == 'text') {
+      if ($item['#block_content']->field_title->value == 'intro') {
+        $variables['intro_text'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('block_content')
+          ->view($item['#block_content']);
+      }
+    }
+    elseif ($item['#block_content']->bundle() == 'views') {
+      if ($item['#block_content']->field_title->value == 'Issues') {
+        $variables['explore_issues_alpha'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('block_content')
+          ->view($item['#block_content']);
+      }
+    }
+
+  }
+
+  // Fetch the Exposed Form Search block.
+  $search_block = \Drupal::entityTypeManager()->getStorage('block')
+    ->load('exposedformissues_listingsexplore_issues_alpha');
+  $render_search_block = \Drupal::entityTypeManager()
+    ->getViewBuilder('block')->view($search_block);
+  $variables['issues_search'] = $render_search_block;
+
+  // Fetch the Issue Explorer Menu block.
+  $menu_block = \Drupal::entityTypeManager()->getStorage('block')
+    ->load('issueexplorermenu');
+  $render_menu_block = \Drupal::entityTypeManager()
+    ->getViewBuilder('block')->view($menu_block);
+  $variables['issues_menu'] = $render_menu_block;
 }
 
 /**

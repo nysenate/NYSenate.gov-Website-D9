@@ -2,7 +2,7 @@
 @import '../../global/utils/init';
 
 h3.c-bill-num {
-  margin-bottom: 20px;
+  margin-bottom: 3px;
   color: $grey02;
   font-family: $font-serif-bold;
   font-weight: $font-weight-normal;
@@ -17,10 +17,19 @@ h3.c-bill-num {
   a {
     color: $grey08;
   }
+
+  &.no-issues {
+    margin-bottom: 3px;
+  }
 }
 
 p.c-bill-update--date {
   color: $grey08;
+}
+
+.bill-type {
+  line-height: 1em;
+	letter-spacing: 0.05em;
 }
 
 
@@ -274,12 +283,15 @@ p.c-bill-update--date {
 }
 
 .c-bill-update {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 
-  @include breakpoint($bp-sm) {
-    margin-top: 80px;
+  &.bill-status__sml  {
+
+    @include breakpoint($bp-sm) {
+      margin-top: 80px;
+    }
   }
 
   a {
@@ -384,7 +396,7 @@ p.c-bill-update--date {
     bottom: 0;
     left: 0;
     right: 0;
-    margin: 9px auto;
+    margin: auto;
     height: 2px;
     width: 90%;
     border: 0;

@@ -42,4 +42,13 @@
       });
     }
   };
+
+  // Add placeholder to issues search box
+  Drupal.behaviors.exploreIssuesSearch = {
+    attach: function() {
+      $('#edit-combine--3', '.block-views-exposed-filter-blockissues-listings-explore-issues-alpha').attr('placeholder', 'Search for issues that matter to you...');
+      $('#edit-combine', '.block-views-exposed-filter-blockissues-listings-explore-issues-alpha').attr('placeholder', 'Search for issues that matter to you...');
+    }
+  };
+
 })(document, Drupal, jQuery);

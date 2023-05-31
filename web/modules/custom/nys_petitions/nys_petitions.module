@@ -5,6 +5,8 @@
  * Contains custom code for Petitions.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_theme().
  */
@@ -27,4 +29,69 @@ function nys_petitions_theme($existing, $type, $theme, $path): array {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_petitions_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_ids = [
+    'node_petition_form',
+    'node_petition_edit_form',
+    'node_webform_form',
+    'node_webform_edit_form',
+  ];
+
+  if (in_array($form_id, $form_ids)) {
+    // Get the current value, if any.
+    $value = $form['field_title_stub']['widget'][0]['value']['#default_value'] ?? '';
+
+    // Reorganize the title and title_stub fields to display inline.
+    // The title_stub field will be rendered text with a hidden control.
+    $form['title_container'] = [
+      '#type' => 'fieldset',
+      'title' => $form['title'] + [
+        '#prefix' => '<div class="field-title-stub">',
+        '#suffix' => '</div>',
+        '#weight' => 1,
+      ],
+      'field_title_stub_container' => [
+        '#prefix' => '<div class="field-title-stub">Stub: ',
+        '#suffix' => '</div>',
+        '#weight' => 2,
+        '#markup' => $value ? $value : '[generated on save]',
+      ],
+    ];
+
+    // Attach library.
+    $form['#attached']['library'][] = 'nys_petitions/nys_petitions_management';
+
+    // Attach an additional form handler for stub generation.
+    $form['#validate'][] = 'nys_petitions_handle_stub_form_validate';
+    $form['#validate'] = array_reverse($form['#validate']);
+
+    // Hide the old controls so we don't get duplicate display.
+    $form['field_title_stub']['#type'] = 'hidden';
+    $form['title']['#type'] = 'hidden';
+  }
+}
+
+/**
+ * Form validation handler to generate the stub field on first save.
+ *
+ * No work is done if the stub is already populated, i.e., only set once.
+ */
+function nys_petitions_handle_stub_form_validate($form, &$form_state) {
+  $values = $form_state->getValues();
+  // Only do work if the stub is not populated.
+  if (empty($values['field_title_stub'][0]['value'])) {
+    // Allow only alphanum+underscore.  All other characters are changed to '-'.
+    $stub = preg_replace('/[^0-9a-z_]/', '-', strtolower($values['title'][0]['value']));
+
+    // Set the new form value to be saved.  It will include the timestamp
+    // to ensure uniqueness.
+    $values['field_title_stub'][0]['value'] = substr($stub, 0, 115) . '_' . time();
+  }
+
+  $form_state->setValues($values);
 }

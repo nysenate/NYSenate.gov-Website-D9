@@ -89,6 +89,12 @@
       title="{{ created }}">
       {{ created_relative ~ ' ago'|t }}
     </a>
+    {% if approve_link %}
+      <a href="{{ approve_link }}"
+        class="unapproved-comment">
+        <span>Needs Approval</span>
+      </a>
+    {% endif %}
   </div>
 
   <div{{ content_attributes.addClass('content') }}>

@@ -42,6 +42,7 @@ dependencies:
     - semanticviews
     - taxonomy
     - user
+    - views_infinite_scroll
 id: constituent_updates
 label: 'Constituent Content Updates'
 module: views
@@ -3474,9 +3475,27 @@ display:
             school_form_type: '0'
             senator: '0'
       pager:
-        type: none
+        type: infinite_scroll
         options:
           offset: 0
+          items_per_page: 2
+          total_pages: 8
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'See more'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: bef
         options:
@@ -3811,6 +3830,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

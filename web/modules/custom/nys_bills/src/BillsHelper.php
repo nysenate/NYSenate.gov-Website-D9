@@ -644,7 +644,12 @@ class BillsHelper {
     $prev_vers_result = $query->execute();
 
     // Cache data for later use.
-    $this->cache->set($cid, $prev_vers_result);
+    $cache_ttl = \Drupal::configFactory()->get('nys_config.settings')->get('nys_access_permissions_prev_query_ttl');
+    if (empty($cache_ttl)) {
+      $cache_ttl = '+24 hours';
+    }
+    $expire_timestamp = strtotime($cache_ttl, time());
+    $this->cache->set($cid, $prev_vers_result, $expire_timestamp);
 
     return $prev_vers_result;
   }

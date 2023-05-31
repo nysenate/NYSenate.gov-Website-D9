@@ -48,6 +48,7 @@
   color: $color-white;
   font-size: 22px;
   line-height: 1.175em;
+  margin: 0;
 
   a {
     text-decoration: none;
@@ -78,26 +79,29 @@
     font-family: $font-serif;
     font-size: 32px;
     line-height: 37.6px;
+    margin: 0;
   }
 
   // has img modifications
   .c-block--initiative__has-img,
-  .c-block--initiative:first-child {
+  .c-block--initiative__has-img.c-block--initiative__landing:first-child {
     overflow: hidden;
+    display: flex;
+    align-items: flex-end;
 
     img {
-      display: inline-block;
+      display: block;
       height: 280px;
       width: 280px;
       object-fit: cover;
-      vertical-align: middle;
     }
 
     .c-initiative--content {
       position: relative;
-      display: inline-block;
-      vertical-align: middle;
+      display: flex;
+      align-items: center;
       width: 58%;
+      height: 100%;
       max-width: 475px;
       padding-top: 0;
       padding-bottom: 80px;
@@ -184,10 +188,10 @@
     }
   }
 
-
   .c-block .c-initiative--title {
     font-size: 36px;
     line-height: 42.3px;
+    margin: 0;
   }
 }
 

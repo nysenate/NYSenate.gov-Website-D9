@@ -11,6 +11,7 @@ use Drupal\flag\FlagService;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\nys_bills\BillsHelper;
+use Drupal\nys_users\UsersHelper;
 use Drupal\votingapi\Entity\Vote;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Path\CurrentPathStack;
@@ -271,6 +272,8 @@ class BillVoteHelper {
    *   Either the recorded vote, or NULL if it could not be recorded.
    */
   public function processVote(AccountInterface $user, Node $bill_node, string $vote_value): ?Vote {
+    // Load the user.
+    $user = UsersHelper::resolveUser($user);
 
     // Translate the vote value into an index.
     $vote_index = $this->getVal($vote_value);
@@ -322,7 +325,9 @@ class BillVoteHelper {
     // If the user auto-subscribes when voting, create the subscription.
     // This also creates a flagging entry, for now.
     if ($user->field_voting_auto_subscribe->value ?? TRUE) {
-      $this->billsHelper->subscribeToBill($bill_node, $user);
+      if ($subscription = $this->billsHelper->subscribeToBill($bill_node, $user)) {
+        $subscription->confirm()->save();
+      }
     }
 
     // If needed, set the vote value and save.

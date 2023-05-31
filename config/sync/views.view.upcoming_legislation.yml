@@ -3324,7 +3324,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: ''
+          label: 'Cal No.'
           exclude: false
           alter:
             alter_text: false
@@ -3556,6 +3556,42 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: infinite_scroll
+        options:
+          offset: 0
+          items_per_page: 4
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'No Floor Calendar items available.'
+            format: full_html
+          tokenize: false
       sorts: {  }
       arguments:
         nid:
@@ -3696,6 +3732,8 @@ display:
         groups:
           1: AND
       defaults:
+        empty: false
+        pager: false
         group_by: false
         relationships: false
         fields: false
@@ -4886,6 +4924,51 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: infinite_scroll
+        options:
+          offset: 0
+          items_per_page: 4
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
+      empty:
+        messages:
+          id: messages
+          table: views
+          field: messages
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: messages
+          empty: true
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'No Supplemental Calendar Items.'
+            format: full_html
+          tokenize: false
       sorts: {  }
       arguments:
         nid:
@@ -5026,6 +5109,8 @@ display:
         groups:
           1: AND
       defaults:
+        empty: false
+        pager: false
         group_by: false
         relationships: false
         fields: false

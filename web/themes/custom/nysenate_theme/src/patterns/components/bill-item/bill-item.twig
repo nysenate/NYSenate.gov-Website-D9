@@ -5,7 +5,7 @@
   {% if bill.issues %}
     <div class="left-col">
   {% endif %}
-      <h3 class="c-bill-num {{ bill.number_large ? 'c-bill-num--large' : '' }}">
+      <h3 class="c-bill-num {% if bill.issues %}no-issues{% endif %} {{ bill.number_large ? 'c-bill-num--large' : '' }}">
         <a href="{{ bill.link }}">{{ bill.number }}</a>
       </h3>
 
@@ -59,7 +59,7 @@
         </p>
       {% endif %}
       {% if bill.resolution %}
-        <div class="c-bill-update">
+        <div class="c-bill-update {% if bill.small %} bill-status__sml {% endif %}">
           <div>
             <p class="c-bill-update--date">
               <span class="date-display-single">{{ bill.date }}</span>
@@ -109,12 +109,16 @@
 
       {% if bill.is_poll %}
         <div class="c-bill-polling med-bg embed">
-          {% include "@nysenate_theme/bill-vote-widget/bill-vote-widget.twig" with {
-            action: bill.action,
-            node_id: bill.node_id,
-            poll_text: bill.poll_text,
-            hide_subscribe: bill.hide_subscribe,
-          } only %}
+          {% if bill.vote_widget %}
+             {{ bill.vote_widget }}
+          {% else %}
+            {% include "@nysenate_theme/bill-vote-widget/bill-vote-widget.twig" with {
+              action: bill.action,
+              node_id: bill.node_id,
+              poll_text: bill.poll_text,
+              hide_subscribe: bill.hide_subscribe,
+            } only %}
+          {% endif %}
         </div>
       {% endif %}
     </div>

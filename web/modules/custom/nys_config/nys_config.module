@@ -50,6 +50,9 @@ function nys_config_preprocess_node__landing(&$variables) {
         $variables['content']['field_landing_blocks'] = $entity->field_landing_blocks->view('default');
       }
     }
+
+    // Invalidate cache tags on node:homepage.
+    $variables['#cache']['tags'][] = 'node:homepage';
   }
 
 }

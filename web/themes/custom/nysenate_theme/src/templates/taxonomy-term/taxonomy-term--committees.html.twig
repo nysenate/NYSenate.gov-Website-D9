@@ -25,7 +25,9 @@
 #}
 {{ attach_library('nysenate_theme/newsroom-content') }}
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
-{{ attach_library('nysenate_theme/taxonomy-term-issues') }}
+{{ attach_library('nysenate_theme/nysenate-committees') }}
+{{ attach_library('nysenate_theme/nysenate-student-programs') }}
+{{ attach_library('nysenate_theme/landing-page-hero') }}
 
 {%
   set classes = [
@@ -34,16 +36,41 @@
   ]
 %}
 <div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
-  <div class="content">
+
+  {% if  content.field_image_hero %}
+    <div class="landing-page-hero">
+      <div class="l-row l-row--hero">
+        {{ content.field_image_hero }}
+        <div class="l-row l-row--main c-hero--tout">
+          <div class="c-about--welcome">
+            <h2 class="nys-title nys-title--about">{{ name }}</h2>
+            <div class="c-committee-type">
+              <a href="/senators-committees" title="Senators & Committees">{{ content.field_committee_types }}</a>
+            </div>
+            {{ content.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
     <div class="c-committee-header">
-      <h2 class="nys-title">{{ name|render|striptags|trim ~ ' Committee' }}</h2>
+      <h2 class="nys-title">{{ name }}</h2>
       <div class="c-committee-type">
         <a href="/senators-committees" title="Senators & Committees">{{ content.field_committee_types }}</a>
       </div>
     </div>
+  {% endif %}
 
     <div class="newsroom-content l-row">
       {{ drupal_view('committee_content', 'featured_story') }}
+    </div>
+
+    <div class="pane-taxonomy-term-field-featured-legislation-commi">
+      <div class="c-container--header__top-border">
+        <h3 class="c-container--title search">Featured Legislation</h3>
+        <a href="/search" class="nys-arrow-link">See all legislation</a>
+      </div>
+      {{ content.field_featured_legislation_commi }}
     </div>
 
     <div class="newsroom-content l-row">
@@ -74,5 +101,5 @@
         {{ how_a_bill_block }}
       {% endif %}
     </div>
-  </div>
+
 </div>

@@ -767,4 +767,43 @@ class BillsHelper {
     return $subscription;
   }
 
+  /**
+   * Creates a subscription to a bill.
+   *
+   * Until subscriptions fully replaces flagging, the flagging entries must be
+   * made at the same time as a subscription.
+   *
+   * @param \Drupal\node\NodeInterface $bill
+   *   A bill node, the subscription target.
+   * @param mixed $user
+   *   The user creating the subscription.  Can be an AccountInterface, an
+   *   integer representing a user ID, or NULL for the current user.
+   *
+   * @return bool
+   *   If a matching subscription exists, return TRUE, otherwise, FALSE.
+   *
+   * @see UsersHelper::resolveUser()
+   */
+  public function isSubscribedToBill(NodeInterface $bill, mixed $user = NULL): bool {
+    try {
+      $storage = $this->entityTypeManager->getStorage('subscription');
+      $user = UsersHelper::resolveUser($user);
+    }
+    catch (\Throwable $e) {
+      $this->log->error('Failed to prepare subscription generation', ['@msg' => $e->getMessage()]);
+      return FALSE;
+    }
+
+    // Find an existing, matching subscription, or create a new one.
+    $props = [
+      'sub_type' => 'bill_notifications',
+      'uid' => $user->id(),
+      'subscribe_to_type' => 'taxonomy_term',
+      'subscribe_to_id' => $bill->field_bill_multi_session_root->target_id,
+    ];
+    $existing = $storage->loadByProperties($props);
+
+    return count($existing) ? TRUE : FALSE;
+  }
+
 }

@@ -49,7 +49,7 @@
     {{ title_suffix }}
   {% endif %}
 
-  {% if not comment_form %}
+  {% if not comment_form and logged_in %}
     <div class='comment__alert'>
       <span>Comments for this thread are now closed.</span>
     </div>

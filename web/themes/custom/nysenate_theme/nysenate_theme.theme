@@ -4524,7 +4524,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
     $variables['open_date_type'] = $node->field_open_date_type->value ? $node->field_open_date_type
       ->getSetting('allowed_values')[$node->field_open_date_type->value] : "";
     $variables['published_on'] = $publication_date->format('F d, Y');
-    $variables['body'] = $node->body->view();
+    $variables['body'] = $node->field_body->view();
     $variables['title'] = $node->getTitle();
     $variables['title_social'] = $node->toUrl()->toString();
     $variables['url'] = $node->toUrl()->setAbsolute()->toString();

@@ -533,11 +533,14 @@ class BillForm extends FormBase {
     $user = $user_storage->load($this->currentUser->id());
     $senator = $this->nysUserHelper->getSenator($user);
 
-    $messages = $this->entityTypeManager->getStorage('private_message')->loadByProperties([
-      'field_to' => $senator->field_user_account->target_id,
-      'owner' => $user->id(),
-      'field_bill' => $entity_id,
-    ]);
+    $messages = NULL;
+    if ($senator) {
+      $messages = $this->entityTypeManager->getStorage('private_message')->loadByProperties([
+        'field_to' => $senator->field_user_account->target_id ?? [],
+        'owner' => $user->id(),
+        'field_bill' => $entity_id,
+      ]);
+    }
 
     $thread = NULL;
     // @phpstan-ignore-next-line

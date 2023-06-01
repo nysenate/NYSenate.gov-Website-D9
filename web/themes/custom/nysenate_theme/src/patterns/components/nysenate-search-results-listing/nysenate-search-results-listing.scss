@@ -54,10 +54,6 @@
     }
   }
 
-  .c-press-release--topic--dynamic-color {
-    @extend .lgt-text;
-  }
-
   .c-press-release {
       
     &--header {
@@ -80,10 +76,6 @@
             font-size: 22px;
           }
         }
-      }
-
-      .c-bill-num {
-        margin-bottom: 10px;
       }
     }
 
@@ -182,12 +174,12 @@
 
     .date-display-single {
       @include font-stack-secondary;
-      color: $grey03;
+      color: $grey04;
       line-height: 20px;
     }
 
     .issue-type {
-      color: $grey03;
+      color: $grey04;
 
       a {
         color: $yellow03;
@@ -211,10 +203,6 @@
         height: 144px;
       }
     }
-  }
-
-  .c-bill-update--sponsor {
-    color: $grey03;
   }
 
   @include breakpoint($bp-sm) {
@@ -246,15 +234,6 @@
 
     .c-bill-search  {
       font-size: 23px;
-    }
-
-    .c-bill-descript {
-      display: block;
-      color: $grey04;
-
-      a {
-        color: $grey04;
-      }
     }
 
     .c-press-release--senator {

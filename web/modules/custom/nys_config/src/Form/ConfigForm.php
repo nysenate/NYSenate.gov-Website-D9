@@ -261,6 +261,7 @@ class ConfigForm extends ConfigFormBase {
     $config->save();
 
     // Clear the cache.
+    \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:events']);
     \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
     \Drupal::service('cache_tags.invalidator')->invalidateTags(['node:homepage']);
 

@@ -14,7 +14,7 @@
   </div>
   <ul id="js-carousel-about-stats" class="js-carousel c-carousel">
     {% for fact in facts %}
-      <li class="c-carousel--item c-stats--item {% if fact.status %}show-icons{% endif %}">
+      <li class="c-carousel--item c-stats--item {% if not hide_icons and fact.status %}show-icons{% endif %}">
         {% if fact.link %}
         <a href="{{ fact.link }}" class="c-senate-quick-facts__button" data-tab="{{ fact.panel_id }}">
           <h4 class="c-stat">{{ fact.statistic }}</h4>
@@ -24,7 +24,7 @@
             <h4 class="c-stat">{{ fact.statistic }}</h4>
             <p class="c-stat--descript">{{ fact.description }}</p>
         {% endif %}
-        {% if fact.status %}
+        {% if not hide_icons and fact.status %}
           <span class="c-stat--illus c-illus__{{ fact.status }}"></span>
         {% endif %}
       </li>

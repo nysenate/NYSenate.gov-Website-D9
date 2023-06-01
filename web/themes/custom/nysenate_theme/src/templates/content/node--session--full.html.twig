@@ -121,12 +121,9 @@
         {{ content.field_ustream }}
       {% endif %}
 
-      {% if content.field_yt %}
+      {% if content.field_yt[0] %}
         <div class="c-meeting-detail--descript">
-          {% include '@nysenate_theme/video-embed/video-embed.twig' with {
-              video: content.field_yt
-            } only
-          %}
+          {{ content.field_yt }}
         </div>
       {% endif %}
 

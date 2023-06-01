@@ -16,7 +16,7 @@
  */
 #}
 
-{{ attach_library('nysenate_theme/nysenate-press-release') }}
+{{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
 
 {% if title %}
   <h3>{{ title }}</h3>
@@ -32,7 +32,7 @@
 
     <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}
     {% if result.search_results %}c-search--body{% endif %}">
-      {% include '@nysenate_theme/nysenate-press-release/nysenate-press-release.twig' with {
+      {% include '@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig' with {
         article: result,
       }only
       %}

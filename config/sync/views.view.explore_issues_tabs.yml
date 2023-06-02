@@ -12,6 +12,7 @@ dependencies:
     - semanticviews
     - taxonomy
     - user
+    - views_infinite_scroll
 id: explore_issues_tabs
 label: 'Explore Issues Tabs'
 module: views
@@ -160,9 +161,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: none
+        type: infinite_scroll
         options:
           offset: 0
+          items_per_page: 6
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: bef
         options:
@@ -301,6 +320,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - user.permissions
       tags: {  }
   constituents_issues_followed:
@@ -316,5 +336,6 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - user.permissions
       tags: {  }

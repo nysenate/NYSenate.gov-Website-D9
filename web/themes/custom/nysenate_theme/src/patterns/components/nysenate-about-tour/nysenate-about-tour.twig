@@ -18,7 +18,7 @@
             {% endfor %}
           {% endblock %}
         {% else %}
-          {{ carousel_block }}
+          {{ carousel_block|without('field_title') }}
         {% endif %}
       </ul>
     </section>
@@ -36,14 +36,16 @@
         <p class="c-tour-contact--phone">{{ contact.phone }}</p>
       </div>
     {% elseif contact.full %}
-      {{ full }}
+      <div class="c-tour-contact">
+        {{ contact.full }}
+      </div>
     {% endif %}
   {% endif %}
 
   {% if cta.text %}
     <a class="nys-btn--gold" href="">{{ cta.text }}</a>
   {% else %}
-    {{ cta.full }}
+    {{ cta.full|render|striptags('<a>')|raw }}
   {% endif %}
 
 </div>

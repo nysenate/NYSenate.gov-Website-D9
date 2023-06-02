@@ -2340,13 +2340,25 @@ h2.c-subpage-header--title {
 
 .comment__body .button {
   cursor: pointer;
-  font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0.2rem 0.5rem; }
   .comment__body .button:first-child {
     margin-right: 15px; }
   .comment__body .button a {
-    color: #fff; }
+    color: #fff;
+    line-height: 1.2;
+    font-size: 12px; }
   .comment__body .button:hover a {
     color: #003954; }
+
+.comment__body .field--name-comment-body {
+  margin-bottom: 0.5em; }
 
 .comment__reply-form.hidden {
   display: none; }

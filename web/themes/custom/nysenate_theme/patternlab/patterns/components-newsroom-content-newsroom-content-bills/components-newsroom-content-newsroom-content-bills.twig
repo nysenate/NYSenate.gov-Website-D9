@@ -49,7 +49,7 @@
           <div class="content-list__wrapper">
             {% for content in panel.contents %}
               <div class="content__item {% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
-                {% include "@nysenate_theme/nysenate-press-release/nysenate-press-release.twig" with {
+                {% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
                   article: content
                 } only %}
               </div>

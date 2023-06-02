@@ -2292,7 +2292,7 @@ h2.c-subpage-header--title {
   clear: both; }
 
 h3.c-bill-num {
-  margin-bottom: 20px;
+  margin-bottom: 3px;
   color: #7d7c7c;
   font-family: "Adelle Bold", serif;
   font-weight: 400;
@@ -2304,9 +2304,15 @@ h3.c-bill-num {
       margin-bottom: 80px; } }
   h3.c-bill-num a {
     color: #444444; }
+  h3.c-bill-num.no-issues {
+    margin-bottom: 3px; }
 
 p.c-bill-update--date {
   color: #444444; }
+
+.bill-type {
+  line-height: 1em;
+  letter-spacing: 0.05em; }
 
 .c-block .c-bill-descript {
   margin: 0 0 10px 0;
@@ -2459,11 +2465,11 @@ p.c-bill-update--date {
         height: 60px; }
 
 .c-bill-update {
+  margin-top: 20px;
   display: flex;
-  flex-direction: column;
-  margin-top: 20px; }
+  flex-direction: column; }
   @media screen and (min-width: 768px) {
-    .c-bill-update {
+    .c-bill-update.bill-status__sml {
       margin-top: 80px; } }
   .c-bill-update a {
     font-family: "Proxima Nova Regular", "Arial", sans-serif;
@@ -2565,7 +2571,7 @@ p.c-bill-update--date {
     bottom: 0;
     left: 0;
     right: 0;
-    margin: 9px auto;
+    margin: auto;
     height: 2px;
     width: 90%;
     border: 0;

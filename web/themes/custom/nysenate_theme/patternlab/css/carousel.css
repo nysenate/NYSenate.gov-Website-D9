@@ -2294,74 +2294,75 @@ h2.c-subpage-header--title {
 .carousel-item {
   position: relative; }
 
-.carousel__list.slick-slider .slick-slide {
-  height: 200px; }
-  @media screen and (min-width: 768px) {
-    .carousel__list.slick-slider .slick-slide {
-      height: 377px; } }
-  .carousel__list.slick-slider .slick-slide .carousel-item__media {
-    height: 100%;
-    width: 100%; }
-    .carousel__list.slick-slider .slick-slide .carousel-item__media .media-item {
+.carousel__wrapper {
+  padding: 0 20px; }
+
+.carousel__list.slick-slider {
+  padding: 0; }
+  .carousel__list.slick-slider .slick-slide {
+    height: 200px; }
+    @media screen and (min-width: 768px) {
+      .carousel__list.slick-slider .slick-slide {
+        height: 377px; } }
+    .carousel__list.slick-slider .slick-slide .carousel-item__media {
       height: 100%;
       width: 100%; }
-      .carousel__list.slick-slider .slick-slide .carousel-item__media .media-item img {
+      .carousel__list.slick-slider .slick-slide .carousel-item__media .media-item {
         height: 100%;
-        width: 100%;
-        -o-object-fit: cover;
-        object-fit: cover; }
-
-.carousel__list.slick-slider .slick-prev,
-.carousel__list.slick-slider .slick-next {
-  top: 50%;
-  z-index: 1;
-  height: 45px;
-  width: 45px;
-  transform: translateY(-50%);
-  background: #2b6990;
-  color: #eeeeee; }
-  @media screen and (min-width: 768px) {
-    .carousel__list.slick-slider .slick-prev,
-    .carousel__list.slick-slider .slick-next {
-      height: 55px;
-      width: 55px; } }
-  .carousel__list.slick-slider .slick-prev:hover,
-  .carousel__list.slick-slider .slick-next:hover {
+        width: 100%; }
+        .carousel__list.slick-slider .slick-slide .carousel-item__media .media-item img {
+          height: 100%;
+          width: 100%;
+          -o-object-fit: cover;
+          object-fit: cover; }
+  .carousel__list.slick-slider .slick-prev,
+  .carousel__list.slick-slider .slick-next {
+    top: 50%;
+    z-index: 1;
+    height: 45px;
+    width: 45px;
+    transform: translateY(-50%);
+    background: #2b6990;
     color: #eeeeee; }
-  .carousel__list.slick-slider .slick-prev::before,
-  .carousel__list.slick-slider .slick-next::before {
-    opacity: 1;
-    top: 9px;
-    color: #eeeeee;
-    font-size: 28px;
-    height: 100%;
-    width: 100%;
-    text-indent: 0;
-    position: absolute;
-    left: 0;
-    font-family: 'senate_icons';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    padding-left: 3px; }
     @media screen and (min-width: 768px) {
-      .carousel__list.slick-slider .slick-prev::before,
-      .carousel__list.slick-slider .slick-next::before {
-        top: 12px;
-        font-size: 32px; } }
-
-.carousel__list.slick-slider .slick-prev {
-  left: -20px; }
-  .carousel__list.slick-slider .slick-prev::before {
-    content: '\3c'; }
-
-.carousel__list.slick-slider .slick-next {
-  right: -20px; }
-  .carousel__list.slick-slider .slick-next::before {
-    content: '\3e'; }
-
-.carousel__list.slick-slider .slick-disabled {
-  opacity: 0;
-  pointer-events: none; }
+      .carousel__list.slick-slider .slick-prev,
+      .carousel__list.slick-slider .slick-next {
+        height: 55px;
+        width: 55px; } }
+    .carousel__list.slick-slider .slick-prev:hover,
+    .carousel__list.slick-slider .slick-next:hover {
+      color: #eeeeee; }
+    .carousel__list.slick-slider .slick-prev::before,
+    .carousel__list.slick-slider .slick-next::before {
+      opacity: 1;
+      top: 9px;
+      color: #eeeeee;
+      font-size: 28px;
+      height: 100%;
+      width: 100%;
+      text-indent: 0;
+      position: absolute;
+      left: 0;
+      font-family: 'senate_icons';
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px; }
+      @media screen and (min-width: 768px) {
+        .carousel__list.slick-slider .slick-prev::before,
+        .carousel__list.slick-slider .slick-next::before {
+          top: 12px;
+          font-size: 32px; } }
+  .carousel__list.slick-slider .slick-prev {
+    left: -20px; }
+    .carousel__list.slick-slider .slick-prev::before {
+      content: '\3c'; }
+  .carousel__list.slick-slider .slick-next {
+    right: -20px; }
+    .carousel__list.slick-slider .slick-next::before {
+      content: '\3e'; }
+  .carousel__list.slick-slider .slick-disabled {
+    opacity: 0;
+    pointer-events: none; }

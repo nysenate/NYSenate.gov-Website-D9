@@ -90,9 +90,13 @@
             {% for bill_id in content.same_as %}
               {# todo: nid migth not available. #}
               <dd>
-                <a href="/node/{{ bill_id.nid }}">
+                {% if bill_id.url %}
+                <a href="{{ bill_id.url }}">
                   {{ bill_id.basePrintNo }}
                 </a>
+                {% else %}
+                  {{ bill_id.basePrintNo }}
+                {% endif %}
                 {{ loop.index != 0 and loop.length > 1 ? ',' : '' }}
               </dd>
             {% endfor %}

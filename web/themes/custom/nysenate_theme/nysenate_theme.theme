@@ -3734,7 +3734,12 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['amendments_block'] = $amendments_block->build();
 
   // Detect signed/vetoed status.
-  switch ($node->field_ol_last_status->value) {
+  $status_value = $node->field_ol_last_status->value;
+  if ($variables['is_substituted']) {
+    $status_value = $state_node->field_ol_last_status->value;
+  }
+
+  switch ($status_value) {
     case 'SIGNED_BY_GOV':
       $variables['signed_veto_status'] = '<span class="c-bill--flag">Signed By Governor</span>';
       break;
@@ -3984,8 +3989,8 @@ function nysenate_bill_positions($node) {
 /**
  * Generate the bill votes array.
  *
- * @param object $node
- *   The node object.
+ * @param \Drupal\node\Entity\Node $node
+ *   The node entity.
  *
  * @return array
  *   The votes array.
@@ -4070,6 +4075,8 @@ function nysenate_bill_votes($node) {
         'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
         'vote_year' => $vote_year,
         'bill_in_current_session' => $bill_in_current_session,
+        'bill_url' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
+        'bill_name' => $node->hasField('field_ol_print_no') ? $node->field_ol_print_no->value : '',
       ];
     }
 

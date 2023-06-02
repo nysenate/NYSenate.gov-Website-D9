@@ -53,19 +53,36 @@ class Bills extends ImportProcessorBase {
     $ret = TRUE;
     $result = $this->item->result();
     $base_title = BillHelper::formatTitle($result, TRUE);
+    $subbed_by = $result->substitutedBy->basePrintNo ?? '';
     foreach ($result->amendmentVersions->items as $version) {
+      // Get a node for this amendment.  Report and skip on failure.
       $title = $base_title . $version;
-      $item = ($result->amendments->items->{$version}) ?? NULL;
       $type = $result->billType->resolution ? 'resolution' : 'bill';
       $node = $this->resolveNode(['title' => $title, 'type' => $type]);
-      $ret &= ($item && $node && $this->transcribeToNode($item, $node));
-      // At first hint of failure, report and leave.
+      if (!$node) {
+        $this->logger->error('Failed to resolve a node for @title', ['@title' => $title]);
+        break;
+      }
+
+      // Get the amendment item, or report and skip.
+      $item = ($result->amendments->items->{$version}) ?? NULL;
+      if (!$item) {
+        $this->logger->error('Could not read amendment item @title', ['@title' => $title]);
+        break;
+      }
+
+      // Add the substitution, if it exists, and transcribe the rest.
+      if ($subbed_by) {
+        $node->set('field_ol_substituted_by', $subbed_by);
+      }
+      $ret &= $this->transcribeToNode($item, $node);
       if (!$ret) {
         $this->logger->error('Failed to transcribe amendment @title', ['@title' => $title]);
         break;
       }
     }
 
+    // Only save if all transcriptions succeeded.
     if ($ret) {
       try {
         foreach ($this->nodes as $node) {
@@ -136,11 +153,6 @@ class Bills extends ImportProcessorBase {
         if ($milestone->actionDate) {
           $values['field_ol_last_status_date'] = $milestone->actionDate;
         }
-      }
-
-      // Add the substitution, if it exists.
-      if ($subbed_by = ($item->substitutedBy->basePrintNo ?? '')) {
-        $values['field_ol_substituted_by'] = $subbed_by;
       }
 
       // Add program info, if it exists.

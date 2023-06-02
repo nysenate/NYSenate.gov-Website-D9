@@ -6,9 +6,10 @@
  */
 
 use Drupal\Core\Url;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_entity_type_alter().
@@ -86,11 +87,65 @@ function nys_comment_entity_operation_alter(array &$operations, EntityInterface 
 }
 
 /**
+ * Implements hook_preprocess_field__comment().
+ */
+function nys_comment_preprocess_field__comment(&$variables) {
+  foreach ($variables['comments'] as $key => $comment) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    // Hide rejected comments.
+    if ($comment['#comment']->status->value == 0) {
+      if (!empty($comment['#comment']->field_rejected->value) &&
+        $comment['#comment']->field_rejected->value == 1) {
+        unset($variables['comments'][$key]);
+      }
+    }
+  }
+
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
+}
+
+/**
  * Implements hook_preprocess_links__comment().
  */
 function nys_comment_preprocess_links__comment(&$variables) {
-  // Remove the approve button on the links.
-  unset($variables['links']['comment-approve']);
+  $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
+  $links = [];
+
+  if (isset($variables['links']['comment-delete'])) {
+    $route_parameters = $variables['links']['comment-delete']['link']['#url']->getRouteParameters();
+    $cid = $route_parameters['comment'];
+
+    $comment = $comment_storage->load($cid);
+
+    if ($comment->status->value == 0) {
+      $current_path = \Drupal::request()->getRequestUri();
+      $url = Url::fromRoute('comment.reject', ['comment' => $cid]);
+      $url = Url::fromUserInput($url->toString(), ['query' => ['destination' => $current_path]]);
+      $attributes = new Attribute([
+        'class' => ['comment-reject'],
+      ]);
+
+      // Populate the Reject button.
+      $links['comment-reject'] = [
+        'link' => [
+          '#type' => 'link',
+          '#title' => t('Reject'),
+          '#url' => $url,
+        ],
+        'text' => t('Reject'),
+        'attributes' => $attributes,
+      ];
+    }
+  }
+
+  // Keep the reply link.
+  if (isset($variables['links']['comment-reply'])) {
+    $links['comment-reply'] = $variables['links']['comment-reply'];
+  }
+  $variables['links'] = $links;
 }
 
 /**

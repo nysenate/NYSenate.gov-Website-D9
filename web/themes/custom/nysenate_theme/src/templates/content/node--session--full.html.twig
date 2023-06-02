@@ -20,25 +20,25 @@
     {% if video_status.key == "cancelled" %}
       <div class="c-meeting-detail--overview">
         <p class="c-meeting-detail--date">
-        {% if date_value %}
-          <span class="c-meeting-date--num">
-            {{ date_value.day }}
-          </span>
-          <span class="c-meeting-date--month">
-            {{ date_value.month }}
-          </span>
-          <span class="c-meeting-date--year">
-            {{date_value.year }}
-          </span>
-        {% endif %}
+          {% if date_value %}
+            <span class="c-meeting-date--num">
+              {{ date_value.day }}
+            </span>
+            <span class="c-meeting-date--month">
+              {{ date_value.month }}
+            </span>
+            <span class="c-meeting-date--year">
+              {{date_value.year }}
+            </span>
+          {% endif %}
         </p>
       </div>
       <div class="c-meeting-detail--info">
         <h1 class="c-meeting-detail--title">Session</h1>
       </div>
-        <div class="c-meeting-detail--descript">
-          <p>Session will resume at the call of the Temporary President.</p>
-        </div>
+      <div class="c-meeting-detail--descript">
+        <p>Session will resume at the call of the Temporary President.</p>
+      </div>
     {% else %}
       <div class="c-meeting-detail--meta">
         {% if video_status.key == "streaming_live_now" %}
@@ -48,51 +48,52 @@
         {% endif %}
       </div>
 
-    <div class="c-meeting-detail--overview">
-      <p class="c-meeting-detail--date">
-        {% if date_value %}
-          <span class="c-meeting-date--num">
-            {{ date_value.day }}
-          </span>
-          <span class="c-meeting-date--month">
-            {{ date_value.month }}
-          </span>
-          <span class="c-meeting-date--year">
-            {{ date_value.year }}
-          </span>
-        {% endif %}
-      </p>
-
-      <div class="c-meeting-detail--info">
-        <h1 class="c-meeting-detail--title">Session</h1>
-        {% if location_url %}
-          <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank" >{{ content.field_location[0].organization['#value'] }}</a>
-        {% endif %}
-        <div class="c-meeting-detail--location">
-          {% if content.field_meeting_location %}
-            {{ content.field_meeting_location }}
-          {% endif %}
-          {% if location %}
-            {{ location }}
-          {% endif %}
-        </div>
-        <p class="c-meeting-detail--time">
-          {{ date_value.from_time }}
-          {% if date_value.from_time != date_value.to_time %}
-          to {{ date_value.to_time }}
-          {% endif %}
-          {% if video_status.key != "streaming_redirect" and video_status.value %}
-            <span class="c-meeting-video--status icon-before__youtube">{{ video_status.value }}</span>
+      <div class="c-meeting-detail--overview">
+        <p class="c-meeting-detail--date">
+          {% if date_value %}
+            <span class="c-meeting-date--num">
+              {{ date_value.day }}
+            </span>
+            <span class="c-meeting-date--month">
+              {{ date_value.month }}
+            </span>
+            <span class="c-meeting-date--year">
+              {{ date_value.year }}
+            </span>
           {% endif %}
         </p>
 
-        {% if calendar_links %}
-          {% include "@nysenate_theme/add-to-calendar/add-to-calendar.twig" with {
+        <div class="c-meeting-detail--info">
+          <h1 class="c-meeting-detail--title">Session</h1>
+          {% if location_url %}
+            <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank">{{ content.field_location[0].organization['#value'] }}</a>
+          {% endif %}
+          <div class="c-meeting-detail--location">
+            {% if content.field_meeting_location %}
+              {{ content.field_meeting_location }}
+            {% endif %}
+            {% if location %}
+              {{ location }}
+            {% endif %}
+          </div>
+          <p class="c-meeting-detail--time">
+            {{ date_value.from_time }}
+            {% if date_value.from_time != date_value.to_time %}
+              to
+              {{ date_value.to_time }}
+            {% endif %}
+            {% if video_status.key != "streaming_redirect" and video_status.value %}
+              <span class="c-meeting-video--status icon-before__youtube">{{ video_status.value }}</span>
+            {% endif %}
+          </p>
+
+          {% if calendar_links %}
+            {% include "@nysenate_theme/add-to-calendar/add-to-calendar.twig" with {
             calendar_links: calendar_links
           } only %}
-        {% endif %}
-      </div>
-    {% endif %}
+          {% endif %}
+        </div>
+      {% endif %}
 
       <div class="c-meeting-detail--descript">
         {% if content.body %}
@@ -108,7 +109,8 @@
 
       {% if content.field_issues[0] %}
         <div class="c-meeting-detail--related">
-          <p>related issues: </p>
+          <p>related issues:
+          </p>
           {{ content.field_issues }}
         </div>
       {% endif %}
@@ -121,24 +123,21 @@
         {{ content.field_ustream }}
       {% endif %}
 
-      {% if content.field_yt %}
+      {% if content.field_yt[0] %}
         <div class="c-meeting-detail--descript">
-          {% include '@nysenate_theme/video-embed/video-embed.twig' with {
-              video: content.field_yt
-            } only
-          %}
+          {{ content.field_yt }}
         </div>
       {% endif %}
-
-      {% if content.field_upcoming_legislation %}
-        {{ content.field_upcoming_legislation }}
-      {% endif %}
-
-      {% if content.field_transcript %}
-        {{ content.field_transcript }}
-      {% endif %}
-
-      {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
     </div>
   </div>
+
+  {% if content.field_upcoming_legislation %}
+    {{ content.field_upcoming_legislation }}
+  {% endif %}
+
+  {% if content.field_transcript %}
+    {{ content.field_transcript }}
+  {% endif %}
+
+  {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
 </div>

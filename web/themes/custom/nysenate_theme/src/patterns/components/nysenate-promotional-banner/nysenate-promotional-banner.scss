@@ -48,6 +48,7 @@
   color: $color-white;
   font-size: 22px;
   line-height: 1.175em;
+  margin: 0;
 
   a {
     text-decoration: none;
@@ -78,25 +79,29 @@
     font-family: $font-serif;
     font-size: 32px;
     line-height: 37.6px;
+    margin: 0;
   }
 
   // has img modifications
-  .c-block--initiative__has-img {
+  .c-block--initiative__has-img,
+  .c-block--initiative__has-img.c-block--initiative__landing:first-child {
     overflow: hidden;
+    display: flex;
+    align-items: flex-end;
 
     img {
-      display: inline-block;
+      display: block;
       height: 280px;
       width: 280px;
       object-fit: cover;
-      vertical-align: middle;
     }
 
     .c-initiative--content {
       position: relative;
-      display: inline-block;
-      vertical-align: middle;
+      display: flex;
+      align-items: center;
       width: 58%;
+      height: 100%;
       max-width: 475px;
       padding-top: 0;
       padding-bottom: 80px;
@@ -107,11 +112,26 @@
     }
   }
 
-  .c-block--initiative__no-img {
+  .c-block--initiative__no-img,
+  .c-block--initiative + .c-block--initiative {
     float: left;
     clear: none;
     height: 345px;
     grid-column: span 1;
+
+    .c-initiative--img { // 2nd global promo banners should not have image
+      display: none;
+    }
+
+    .c-initiative--content { // 2nd global promo banner content
+      width: 100%;
+      align-items: flex-start;
+      padding-top: 35px;
+    }
+
+    .c-block--btn {  // 2nd global promo banner button should be full-width
+      left: 0;
+    }
 
     &.c-block--even {
       margin-right: 6%;
@@ -170,16 +190,22 @@
 }
 
 .featured-content__banners-list {
-  .c-block--initiative__no-img {
+
+  .c-block--initiative__no-img,
+  .c-block--initiative + .c-block--initiative {
     grid-column: 1 / span 2;
     margin: 0;
     height: auto;
-  }
 
+    .c-initiative--img {
+      display: none;
+    }
+  }
 
   .c-block .c-initiative--title {
     font-size: 36px;
     line-height: 42.3px;
+    margin: 0;
   }
 }
 

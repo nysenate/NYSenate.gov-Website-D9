@@ -268,7 +268,7 @@ class NysOpenDataCsv {
     $this->resetData();
 
     // If the file exists, read as array, and parse each line into fields.
-    if ($this->physicalPath) {
+    if (file_exists($this->physicalPath)) {
       $data = file($this->physicalPath);
 
       if ($data) {

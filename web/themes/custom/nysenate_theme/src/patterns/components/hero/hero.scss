@@ -36,6 +36,37 @@
     margin-top: -80px;
   }
 
+  .c-senate-status {
+    text-align: center;
+    padding: 0;
+    height: 50px;
+    color: white;
+    font-size: 18px;
+    background: $orange01;
+    max-width: 420px;
+
+    .c-status-text {
+      padding: 13px 45px 13px 0px;
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+
+      &:after {
+        content: "";
+        width: 30px;
+        height: 30px;
+        background: url('../images/gavel.png');
+        background-size: 100%;
+        background-position: 75%;
+        background-repeat: no-repeat;
+        top: 10px;
+        right: 5px;
+        position: absolute;
+      }
+    }
+  }
+
   .l-row.l-row--hero {
 
     &.c-hero {
@@ -55,7 +86,8 @@
   }
 }
 
-.c-block .c-hero--welcome {
+.c-block .c-hero--welcome,
+p.c-hero--welcome {
   padding: 30px 20px;
   margin: 0;
   color: $grey02;
@@ -150,10 +182,12 @@
 }
 
 @include breakpoint($bp-sm) {
-  .c-block .c-hero--welcome {
+  .c-block .c-hero--welcome,
+  p.c-hero--welcome {
     font-size: 32px;
     line-height: 60px;
     padding: 40px;
+    color: $grey08;
   }
 
   .l-row.c-hero--tout {
@@ -168,6 +202,23 @@
 
   .hero--homepage {
     margin-bottom: 80px;
+
+    .c-senate-status {
+			max-width: 760px;
+			padding: 0 40px;
+      margin: 0 auto;
+
+			.c-actionbar--cta {
+				max-width: 380px;
+				font-size: 16px;
+				line-height: 1.3em;
+				letter-spacing: 0.05em;
+			}
+
+			.c-block--btn {
+				font-size: 14px;
+			}
+		}
 
     .l-row.l-row--hero {
 
@@ -222,8 +273,7 @@
   }
 
   .hero {
-    .c-actionbar,
-    .c-senate-status {
+    .c-actionbar {
       max-width: 1500px;
       padding: 0 9%;
       transition: margin 0.25s ease-in 0s;

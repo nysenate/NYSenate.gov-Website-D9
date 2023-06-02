@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_config\Form;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -260,7 +261,9 @@ class ConfigForm extends ConfigFormBase {
     $config->save();
 
     // Clear the cache.
+    \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:events']);
     \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
+    \Drupal::service('cache_tags.invalidator')->invalidateTags(['node:homepage']);
 
     parent::submitForm($form, $form_state);
   }
@@ -268,11 +271,15 @@ class ConfigForm extends ConfigFormBase {
   /**
    * Process the upload file.
    */
-  public function processUploadFile($entity, $destination = 'public://pdfs/') {
+  public function processUploadFile($entity, $directory = 'public://pdfs/') {
     $file = File::load($entity[0]);
     if (!empty($file)) {
       $initial_path = \Drupal::service('file_system')->realpath($file->getFileUri());
-      $file_destination = $destination . $file->getFilename();
+      $file_destination = $directory . $file->getFilename();
+
+      // Make sure that the directory is created.
+      $file_system = \Drupal::service('file_system');
+      $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
 
       if (file_exists($initial_path)) {
         $file_repository = \Drupal::service('file.repository');

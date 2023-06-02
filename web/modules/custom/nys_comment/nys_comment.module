@@ -103,6 +103,8 @@ function nys_comment_preprocess_field__comment(&$variables) {
       }
     }
   }
+
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
 }
 
 /**
@@ -140,7 +142,9 @@ function nys_comment_preprocess_links__comment(&$variables) {
   }
 
   // Keep the reply link.
-  $links['comment-reply'] = $variables['links']['comment-reply'];
+  if (isset($variables['links']['comment-reply'])) {
+    $links['comment-reply'] = $variables['links']['comment-reply'];
+  }
   $variables['links'] = $links;
 }
 

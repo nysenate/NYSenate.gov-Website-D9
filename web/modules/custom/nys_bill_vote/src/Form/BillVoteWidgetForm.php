@@ -123,10 +123,6 @@ class BillVoteWidgetForm extends FormBase {
       $default_value = $form_state->getValue('nys_bill_vote');
     }
 
-    if (!$this->currentUser->isAuthenticated()) {
-      return $form;
-    }
-
     // Add the distinct class.
     $form['#attributes'] = [
       'class' => [
@@ -248,9 +244,15 @@ class BillVoteWidgetForm extends FormBase {
     if ($tid && $ref_node) {
       $form_state->addBuildInfo('tid', $tid);
 
-      // Construct the new form controls.
-      $nys_subscribe_form = [
-        'nys_bill_subscribe' => [
+      // Check if already subscribed.
+      if ($this->billHelper->isSubscribedToBill($ref_node)) {
+        $nys_bill_subscribe = [
+          '#type' => 'markup',
+          '#markup' => '<hr /><div class="subscribe_result">You Are Subscribed.</div>',
+        ];
+      }
+      else {
+        $nys_bill_subscribe = [
           '#uses_button_tag' => TRUE,
           '#type' => 'button',
           '#attributes' => [
@@ -265,7 +267,12 @@ class BillVoteWidgetForm extends FormBase {
             'wrapper' => 'edit-nys-bill-subscribe-' . $nid,
           ],
           '#weight' => $is_embed ? 2 : 5,
-        ],
+        ];
+      }
+
+      // Construct the new form controls.
+      $nys_subscribe_form = [
+        'nys_bill_subscribe' => $nys_bill_subscribe,
         'nid' => [
           '#type' => 'hidden',
           '#value' => $nid,
@@ -318,6 +325,16 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
+
+    // Redirec to registration page for anonymous users.
+    if (!$this->currentUser->isAuthenticated()) {
+      $url = Url::fromRoute('user.register');
+      $command = new RedirectCommand($url->toString());
+      $response->addCommand($command);
+
+      return $response;
+    }
+
     $settings = $form_state->getBuildInfo();
     $triggering_element = $form_state->getTriggeringElement();
     $value = $triggering_element['#value'];
@@ -408,7 +425,7 @@ class BillVoteWidgetForm extends FormBase {
       $form_is_awesome = [
         'sub_ok' => [
           '#type' => 'markup',
-          '#markup' => '<hr /><div class="subscribe_result">Your subscription has been processed</div>',
+          '#markup' => '<hr /><div class="subscribe_result">You Are Subscribed.</div>',
         ],
       ];
 

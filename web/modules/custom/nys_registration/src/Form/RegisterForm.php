@@ -260,11 +260,11 @@ class RegisterForm extends UserRegisterForm {
     // Nuclear option for russian accounts: disallow all non-Latin characters.
     // $has_non_latin = preg_match('/[^\\p{Common}\\p{Latin}]/u', $full_check)
     $is_ru = (str_ends_with($mail, '.ru'));
-    // Check if valid email and only contains latin characters.
-    $valid_email = (boolean) preg_match('/^[\w\-\.]+@([A-Za-z0-9]+\.)+[A-Za-z]{2,}$/u', $full_check);
+    // Check if valid email and does not contain any Cyrillic characters.
+    $has_cryllic = (boolean) preg_match('/[\p{Cyrillic}]/u', $full_check);
 
     // Enforce ban on .ru email addresses and cyrillic characters.
-    if ($is_ru || !$valid_email) {
+    if ($is_ru || $has_cryllic) {
       $form_state->setError($form['account']['mail'], $this->t('Please enter a valid email address.'));
     }
 

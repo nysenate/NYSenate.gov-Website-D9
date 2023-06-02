@@ -55,6 +55,10 @@
       {% endif %}
       {% if content.field_tabs_no[0]['#markup'] == "four" %}
         <div class="c-tab">
+          <input class="form-radio" type="radio" name="events" value="#panel3">
+          <label class="c-tab-link" for="events">{{ content.field_tab_names[2] }}</label>
+        </div>
+        <div class="c-tab">
           <input class="form-radio" type="radio" name="events" value="#panel4">
           <label class="c-tab-link" for="events">{{ content.field_tab_names[3] }}</label>
         </div>

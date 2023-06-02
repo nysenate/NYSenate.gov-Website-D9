@@ -1,0 +1,29 @@
+uuid: 040e4858-dbf7-4c48-982e-5b28e4da59be
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.menu-issue-explorer
+  module:
+    - system
+  theme:
+    - nysenate_theme
+id: issueexplorermenu
+theme: nysenate_theme
+region: content
+weight: 0
+provider: null
+plugin: 'system_menu_block:menu-issue-explorer'
+settings:
+  id: 'system_menu_block:menu-issue-explorer'
+  label: 'Issue Explorer Menu'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/explore-issues/*'

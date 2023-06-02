@@ -121,7 +121,15 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
           $bill_prev_versions = $this->billsHelper->getPrevVersions($billid->session, $billid->printNo);
 
           if (!empty($bill_prev_versions)) {
-            $billid->nid = reset($bill_prev_versions);
+            $bill_prev_versions = reset($bill_prev_versions);
+            $billid->nid = $bill_prev_versions;
+
+            $bill = \Drupal::entityTypeManager()
+              ->getStorage('node')->load($bill_prev_versions);
+            if ($bill) {
+              $billid->url = $bill->toUrl()->toString();
+            }
+
           }
         }
 

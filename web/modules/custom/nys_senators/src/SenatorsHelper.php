@@ -61,7 +61,12 @@ class SenatorsHelper {
   public function __construct(EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, RequestStack $request_stack, Microsites $microsites) {
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
-    $this->request = $request_stack->getCurrentRequest();
+    // Adding this condition because for some reason
+    // it throws an error for anonymous users
+    // when viewing a bill.
+    if ($request_stack->getCurrentRequest() !== NULL) {
+      $this->request = $request_stack->getCurrentRequest();
+    }
     $this->microsites = $microsites;
   }
 

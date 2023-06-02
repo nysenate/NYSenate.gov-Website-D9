@@ -2136,6 +2136,9 @@ function nysenate_theme_preprocess_views_view_fields(&$variables) {
 function nysenate_theme_preprocess_views_view__events(&$variables) {
   $block_manager = \Drupal::service('plugin.manager.block');
   $variables['calendar_downloads'] = $block_manager->createInstance('nys_blocks_calendar_downloads', [])->build();
+
+  // Invalidate cache tags on views:events.
+  $variables['#cache']['tags'][] = 'views:events';
 }
 
 /**

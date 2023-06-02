@@ -119,6 +119,20 @@
     height: 345px;
     grid-column: span 1;
 
+    .c-initiative--img { // 2nd global promo banners should not have image
+      display: none;
+    }
+
+    .c-initiative--content { // 2nd global promo banner content
+      width: 100%;
+      align-items: flex-start;
+      padding-top: 35px;
+    }
+
+    .c-block--btn {  // 2nd global promo banner button should be full-width
+      left: 0;
+    }
+
     &.c-block--even {
       margin-right: 6%;
     }

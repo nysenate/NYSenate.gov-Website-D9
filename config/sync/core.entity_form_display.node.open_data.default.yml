@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.open_data.body
+    - field.field.node.open_data.field_body
     - field.field.node.open_data.field_date
     - field.field.node.open_data.field_end_date
     - field.field.node.open_data.field_open_data_file
@@ -21,21 +21,19 @@ targetEntityType: node
 bundle: open_data
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 121
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_body:
+    type: text_textarea
+    weight: 127
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
     third_party_settings: {  }
   field_date:
     type: datetime_default

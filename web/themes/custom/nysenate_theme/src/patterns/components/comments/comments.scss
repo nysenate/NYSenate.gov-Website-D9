@@ -66,6 +66,11 @@
     .button {
       cursor: pointer;
       font-family: $font-sans-bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 0.2rem 0.5rem;
 
       &:first-child {
         margin-right: 15px;
@@ -73,11 +78,17 @@
 
       a {
         color: $color-white;
+        line-height: 1.2;
+        font-size: 12px;
       }
 
       &:hover a {
         color: $color-blue;
       }
+    }
+
+    .field--name-comment-body { 
+      margin-bottom: 0.5em;
     }
   }
 

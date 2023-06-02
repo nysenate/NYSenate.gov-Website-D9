@@ -244,9 +244,15 @@ class BillVoteWidgetForm extends FormBase {
     if ($tid && $ref_node) {
       $form_state->addBuildInfo('tid', $tid);
 
-      // Construct the new form controls.
-      $nys_subscribe_form = [
-        'nys_bill_subscribe' => [
+      // Check if already subscribed.
+      if ($this->billHelper->isSubscribedToBill($ref_node)) {
+        $nys_bill_subscribe = [
+          '#type' => 'markup',
+          '#markup' => '<hr /><div class="subscribe_result">You Are Subscribed.</div>',
+        ];
+      }
+      else {
+        $nys_bill_subscribe = [
           '#uses_button_tag' => TRUE,
           '#type' => 'button',
           '#attributes' => [
@@ -261,7 +267,12 @@ class BillVoteWidgetForm extends FormBase {
             'wrapper' => 'edit-nys-bill-subscribe-' . $nid,
           ],
           '#weight' => $is_embed ? 2 : 5,
-        ],
+        ];
+      }
+
+      // Construct the new form controls.
+      $nys_subscribe_form = [
+        'nys_bill_subscribe' => $nys_bill_subscribe,
         'nid' => [
           '#type' => 'hidden',
           '#value' => $nid,
@@ -414,7 +425,7 @@ class BillVoteWidgetForm extends FormBase {
       $form_is_awesome = [
         'sub_ok' => [
           '#type' => 'markup',
-          '#markup' => '<hr /><div class="subscribe_result">Your subscription has been processed</div>',
+          '#markup' => '<hr /><div class="subscribe_result">You Are Subscribed.</div>',
         ],
       ];
 

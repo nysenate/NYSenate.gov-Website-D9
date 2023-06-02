@@ -391,19 +391,22 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    * @return $this
    */
   protected function validateBody(): self {
-    // If no contents are set, generate a body from the $message.
+    // If no contents are set, try to generate a body from $message.
     if (!$this->mailObj->getContents()) {
-      // First check the message params.
-      $body = $this->message['params']['body'] ?? '';
+      // If the preferred body is not populated, fallback to the alternate
+      // style from D7 legacy.
+      $body = ($this->message['body'] ?? [])
+        ?: ($this->message['params']['body'] ?? []);
 
-      // If params is not populated, try the message.
-      if (!$body) {
-        $message_body = $this->message['body'] ?? [];
-        if (!is_array($message_body)) {
-          $message_body = [$message_body];
-        }
-        $body = implode("\n\n", $message_body);
+      // Typecast each body part to string so addContent() doesn't cry.
+      if (!is_array($body)) {
+        $body = [$body];
       }
+      $body = implode("\n\n",
+        array_map(function ($i) {
+          return (string) $i;
+        }, $body)
+      );
 
       // Use content type from params, or assume HTML email.
       $content_type = $this->message['params']['Content-Type'] ?? MimeType::HTML;

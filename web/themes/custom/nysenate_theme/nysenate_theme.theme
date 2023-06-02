@@ -2136,6 +2136,9 @@ function nysenate_theme_preprocess_views_view_fields(&$variables) {
 function nysenate_theme_preprocess_views_view__events(&$variables) {
   $block_manager = \Drupal::service('plugin.manager.block');
   $variables['calendar_downloads'] = $block_manager->createInstance('nys_blocks_calendar_downloads', [])->build();
+
+  // Invalidate cache tags on views:events.
+  $variables['#cache']['tags'][] = 'views:events';
 }
 
 /**
@@ -3734,7 +3737,12 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $variables['amendments_block'] = $amendments_block->build();
 
   // Detect signed/vetoed status.
-  switch ($node->field_ol_last_status->value) {
+  $status_value = $node->field_ol_last_status->value;
+  if ($variables['is_substituted']) {
+    $status_value = $state_node->field_ol_last_status->value;
+  }
+
+  switch ($status_value) {
     case 'SIGNED_BY_GOV':
       $variables['signed_veto_status'] = '<span class="c-bill--flag">Signed By Governor</span>';
       break;
@@ -3984,8 +3992,8 @@ function nysenate_bill_positions($node) {
 /**
  * Generate the bill votes array.
  *
- * @param object $node
- *   The node object.
+ * @param \Drupal\node\Entity\Node $node
+ *   The node entity.
  *
  * @return array
  *   The votes array.
@@ -4070,6 +4078,8 @@ function nysenate_bill_votes($node) {
         'date' => date("M j, Y", strtotime($votes->field_publication_date->value)),
         'vote_year' => $vote_year,
         'bill_in_current_session' => $bill_in_current_session,
+        'bill_url' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
+        'bill_name' => $node->hasField('field_ol_print_no') ? $node->field_ol_print_no->value : '',
       ];
     }
 
@@ -4524,7 +4534,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
     $variables['open_date_type'] = $node->field_open_date_type->value ? $node->field_open_date_type
       ->getSetting('allowed_values')[$node->field_open_date_type->value] : "";
     $variables['published_on'] = $publication_date->format('F d, Y');
-    $variables['body'] = $node->body->view();
+    $variables['body'] = $node->field_body->view();
     $variables['title'] = $node->getTitle();
     $variables['title_social'] = $node->toUrl()->toString();
     $variables['url'] = $node->toUrl()->setAbsolute()->toString();

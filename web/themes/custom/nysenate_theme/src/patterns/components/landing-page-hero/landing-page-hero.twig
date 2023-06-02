@@ -1,18 +1,17 @@
 {{ attach_library('nysenate_theme/landing-page-hero') }}
 
-<section class="landing-page-hero">
+<section class="landing-page-hero {% if background_img is empty %} no-image {% endif %}">
   <div id="{{ section_id }}" class="l-row l-row--hero">
     {% if background_img %}
       {{ background_img }}
     {% endif %}
 
-    <div class="l-row l-row--main c-hero--tout">
+    <div class="l-row l-row--main c-hero--tout {% if background_img is empty %} no-image {% endif %}">
       <div class="c-about--welcome">
         <h2 class="nys-title nys-title--about">{{ title }}</h2>
-       {{ welcome_text }}
+        {{ welcome_text }}
       </div>
-        {{ body }}
-      </div>
+      {{ body }}
     </div>
-  </div>  
+  </div>
 </section>

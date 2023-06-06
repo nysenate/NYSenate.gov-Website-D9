@@ -2501,7 +2501,9 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates(&$vari
       'url' => $node->toUrl()->toString(),
       'text' => $node->field_ol_name->value,
     ];
-    $variables['article']['issue_type']['text'] = ($node->field_ol_name->value . ' ' ?? '') . 'Committee';
+    if ($node->hasField('field_ol_latest_status_committee') && !$node->get('field_ol_latest_status_committee')->isEmpty()) {
+      $variables['article']['issue_type']['text'] = ($node->field_ol_latest_status_committee->value . ' ' ?? '') . 'Committee';
+    }
   }
   // If other content type...
   else {
@@ -2574,6 +2576,19 @@ function nysenate_theme_preprocess_semanticviews_row__constituent_updates(&$vari
     ];
     if (in_array($node->bundle(), $bundles)) {
       $variables['article']['time'] = \Drupal::service('date.formatter')->format(strtotime($field_date), '', 'g:i a');
+    }
+  }
+  elseif ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
+    $field_date_range = $node->field_date_range->value;
+    $variables['article']['date'] = \Drupal::service('date.formatter')->format(strtotime($field_date_range), '', 'F j, Y');
+    $bundles = [
+      'event',
+      'meeting',
+      'session',
+      'public_hearing',
+    ];
+    if (in_array($node->bundle(), $bundles)) {
+      $variables['article']['time'] = \Drupal::service('date.formatter')->format(strtotime($field_date_range), '', 'g:i a');
     }
   }
   elseif ($node->hasField('field_ol_publish_date') && !$node->get('field_ol_publish_date')->isEmpty()) {

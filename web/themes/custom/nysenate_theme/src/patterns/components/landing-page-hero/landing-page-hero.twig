@@ -2,7 +2,7 @@
 
 <section class="landing-page-hero {% if background_img is empty %} no-image {% endif %}">
   <div id="{{ section_id }}" class="l-row l-row--hero">
-    {% if background_img %}
+    {% if background_img is not empty %}
       {{ background_img }}
     {% endif %}
 

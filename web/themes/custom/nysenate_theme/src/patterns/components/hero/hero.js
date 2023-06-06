@@ -23,7 +23,6 @@
       }
       else if (landingHeroContainer.length > 0) {
         self.heroMargin(landingHeroContainer, pageMargin, pagePadding);
-        landingHeroContainer.closest('main').css('padding-top', '0');
       }
 
       $(window).on('resize', function () {
@@ -39,6 +38,8 @@
       });
     },
     heroMargin: function (heroContainer, pageMargin, pagePadding) {
+      heroContainer.closest('main').css('padding-top', '0');
+
       if ($(window).width() >= 1500) {
         heroContainer.css('margin-left', `-${(1500 / 4) - 5 }px`);
       }

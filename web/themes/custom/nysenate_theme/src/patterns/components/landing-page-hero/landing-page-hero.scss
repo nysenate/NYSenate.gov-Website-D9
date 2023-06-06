@@ -10,6 +10,10 @@
     width: 100%;
   }
 
+  &.no-image {
+    margin-bottom: 0;
+  }
+
   .video-wrapper {
     width: 100%;
     position: relative;
@@ -51,6 +55,16 @@
       .field--name-description p{
         font-weight: bold;
         font-size: 24px;
+      }
+    }
+
+    &.no-image {
+      margin-top: 0;
+
+      .c-about--welcome {
+        @include breakpoint($bp-sm) {
+          padding: 10px 60px 60px;
+        }
       }
     }
   }

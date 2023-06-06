@@ -1,0 +1,6 @@
+services:
+  post_migration_subscriber:
+    class: '\Drupal\nys_migrate\EventSubscriber\ArticleChaptersEventSubscriber'
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: 'event_subscriber' }

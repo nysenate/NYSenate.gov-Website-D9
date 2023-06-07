@@ -322,32 +322,38 @@ p {
 
   .c-btn--cta__sign {
     float: left;
-    padding: 0 30px;
     margin-top: 25px;
 
-    a:before {
-      content: "\70";
-      margin-right: 10px;
-      font-size: 28px;
+    a {
+      display: block;
+      height: 100%;
+      width: 100%;
+      padding: 0 30px;
 
-      @include breakpoint($bp-sm) {
-        font-size: 32px;
+      &:before {
+        content: "\70";
+        margin-right: 10px;
+        font-size: 28px;
 
+        @include breakpoint($bp-sm) {
+          font-size: 32px;
+
+        }
       }
-    }
 
-    a::before {
-      font-family: $senate-icons;
-      display: inline-block;
-      vertical-align: middle;
-      speak: none;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      padding-right: 3px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      &::before {
+        font-family: $senate-icons;
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-right: 3px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
     }
   }
 

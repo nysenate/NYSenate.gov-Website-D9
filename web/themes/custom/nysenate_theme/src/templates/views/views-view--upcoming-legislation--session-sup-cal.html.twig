@@ -39,7 +39,7 @@
 
 <article class="nysenate-accordion">
   <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content" aria-expanded="false" id="nysenate-accordion__toggle" aria-selected="false">
-    <span class="nysenate-accordion__heading">
+    <span class="nysenate-accordion__heading no-count">
       <span class="indicator"></span>Supplemental Calendar
     </span>
     {{ icons.get('accordion__arrow'|lower) }}
@@ -60,7 +60,7 @@
         'c-updates-container',
       ]
     %}
-    <div{{ attributes.addClass(classes) }}>
+    <div class="c-updates-container">
       {{ title_prefix }}
       {% if title %}
         {{ title }}

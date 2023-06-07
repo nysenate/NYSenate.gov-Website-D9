@@ -245,7 +245,7 @@ class BillVoteWidgetForm extends FormBase {
       $form_state->addBuildInfo('tid', $tid);
 
       // Check if already subscribed.
-      if ($this->billHelper->isSubscribedToBill($ref_node)) {
+      if ($this->billHelper->findSubscription($ref_node)) {
         $nys_bill_subscribe = [
           '#type' => 'markup',
           '#markup' => '<hr /><div class="subscribe_result">You Are Subscribed.</div>',

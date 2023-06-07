@@ -2093,7 +2093,17 @@ function nysenate_theme_preprocess_views_view_fields(&$variables) {
   }
 
   if ($view->id() == "committee_members" && $view->current_display == "chair") {
-    $term = $variables['row']->_entity;
+    $senator_tid = '';
+    if (isset($variables['fields']['tid']->content)) {
+      if ($variables['fields']['tid']->content instanceof Markup) {
+        $senator_tid = $variables['fields']['tid']->content->__toString();
+      }
+      else {
+        $senator_tid = $variables['fields']['tid']->content;
+      }
+    }
+    $senator_tid = (int) trim(strip_tags($senator_tid));
+    $term = $term_storage->load($senator_tid);
     $senator_link = \Drupal::service('nys_senators.microsites')
       ->getMicrosite($term);
     $variables['senator_link'] = $senator_link;
@@ -3300,7 +3310,7 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     else {
       $title = t('Contact your Senator about this issue');
       $link = [
-        'url' => '/form/senator-contact-webform',
+        'url' => $senator_link . '/contact',
         'text' => t('Contact') . ' ' . $senator_name,
       ];
     }
@@ -5047,6 +5057,19 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
 
         /* @phpstan-ignore-next-line */
         $view->result[$key]->overridden = $item->nid;
+      }
+    }
+  }
+
+  if ($view->id() == 'committee_members' && $view->current_display == 'chair') {
+    $results = $view->result;
+    $unique_node_ids = [];
+    foreach ($results as $index => $row) {
+      if (isset($row->_relationship_entities['field_senator']) &&
+        $row->_relationship_entities['field_senator'] instanceof TermInterface) {
+        $senator = $row->_relationship_entities['field_senator'];
+        /* @phpstan-ignore-next-line */
+        $view->result[$index]->field_senator_tid = $senator->id();
       }
     }
   }

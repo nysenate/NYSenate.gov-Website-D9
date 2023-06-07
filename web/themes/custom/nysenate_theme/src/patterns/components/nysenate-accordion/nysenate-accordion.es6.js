@@ -28,7 +28,9 @@
           $itemCount = $accordion.find('.nysenate-accordion__content .c-bill--actions-table-col2 span', context).length;
         }
 
-        $(`<span class="count">(${$itemCount})</span>`).appendTo($heading);
+        if (!$heading.hasClass('no-count')) {
+          $(`<span class="count">(${$itemCount})</span>`).appendTo($heading);
+        }
 
         // Attach click handler for accordion.
         const $toggle = $accordion.find('.nysenate-accordion__toggle', context);

@@ -68,8 +68,8 @@ pipelines:
           - /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ../vendor/bin/drush site-install nysenate install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL --verbose --yes --db-url=mysql://drupal:drupal@127.0.0.1:3306/drupal --existing-config
           - ../vendor/bin/drush status
           - ../vendor/bin/drush sget system.test_mail_collector
-          - ../vendor/bin/drush sql-dump > ../vendor/bin/db.sql
           - fi
+          - ../vendor/bin/drush sql-dump > ../vendor/bin/db.sql
           - cd ..
         services:
           - mysql

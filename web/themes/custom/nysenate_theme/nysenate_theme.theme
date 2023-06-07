@@ -5549,19 +5549,20 @@ function nysenate_theme_preprocess_node__petition(&$variables) {
     }
   }
 
-  $current_path = \Drupal::service('path.current')->getPath();
-  $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
-  if (!$path_alias) {
-    throw new NotFoundHttpException();
-  }
   $params = [
-    'destination' => $path_alias,
+    'destination' => Url::fromRoute('<current>')->toString(),
   ];
   $variables['petition_login_link'] = Link::fromTextAndUrl(
     t('Logged-in users can sign with one click.'),
     Url::fromUserInput('/user/login', ['query' => $params])
   );
 
+  if (!\Drupal::currentUser()->isAuthenticated()) {
+    $variables['sign_petition'] = Link::fromTextAndUrl(
+      t('Sign the Petition'),
+      Url::fromUserInput('/user/register', ['query' => $params])
+    );
+  }
 }
 
 /**

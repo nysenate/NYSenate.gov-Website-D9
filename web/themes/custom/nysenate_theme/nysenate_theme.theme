@@ -176,62 +176,64 @@ function nysenate_theme_preprocess_block_content__microsite_contact(&$variables)
     if ($senator->hasField('field_offices') && !$senator->get('field_offices')->isEmpty()) {
       $offices = [];
       foreach ($senator->field_offices as $field_office) {
-        $office = $field_office->entity;
         $name = '';
         $street = '';
         $additional = '';
         $city = '';
         $province = '';
         $postal_code = '';
-        if ($office->hasField('field_office_address') && !$office->get('field_office_address')->isEmpty()) {
-          $address = $office->field_office_address;
-          $loc = '';
-          if (!empty($address->organization)) {
-            $name = $address->organization;
-          }
-
-          if (!empty($address->address_line1)) {
-            $street = $address->address_line1;
-            $loc = $street . ', ';
-          }
-
-          if (!empty($address->address_line2)) {
-            $additional = $address->address_line2;
-            $loc = $additional . ', ';
-          }
-
-          if (!empty($address->locality)) {
-            $city = $address->locality;
-            $loc .= $city . ', ';
-          }
-
-          if (!empty($address->administrative_area)) {
-            $province = $address->administrative_area;
-            $loc .= $province . ', ';
-          }
-
-          if (!empty($address->postal_code)) {
-            $postal_code = $address->postal_code;
-            $loc .= $postal_code;
-          }
-        }
-
-        // Office hours.
+        $loc = '';
         $office_hours = '';
-        if ($office->hasField('field_office_hours') && !$office->get('field_office_hours')->isEmpty()) {
-          $office_hours = $office->field_office_hours->value;
-        }
-
-        // Phone number.
         $phone = '';
-        if ($office->hasField('field_office_contact_phone') && !$office->get('field_office_contact_phone')->isEmpty()) {
-          $phone = $office->field_office_contact_phone->value;
-        }
-
-        // Fax.
         $fax = '';
-        if ($office->hasField('field_fax') && !$office->get('field_fax')->isEmpty()) {
-          $fax = $office->field_fax->value;
+        if (!empty($field_office->entity)) {
+          $office = $field_office->entity;
+          if ($office->hasField('field_office_address') && !$office->get('field_office_address')->isEmpty()) {
+            $address = $office->field_office_address;
+            if (!empty($address->organization)) {
+              $name = $address->organization;
+            }
+
+            if (!empty($address->address_line1)) {
+              $street = $address->address_line1;
+              $loc = $street . ', ';
+            }
+
+            if (!empty($address->address_line2)) {
+              $additional = $address->address_line2;
+              $loc = $additional . ', ';
+            }
+
+            if (!empty($address->locality)) {
+              $city = $address->locality;
+              $loc .= $city . ', ';
+            }
+
+            if (!empty($address->administrative_area)) {
+              $province = $address->administrative_area;
+              $loc .= $province . ', ';
+            }
+
+            if (!empty($address->postal_code)) {
+              $postal_code = $address->postal_code;
+              $loc .= $postal_code;
+            }
+          }
+
+          // Office hours.
+          if ($office->hasField('field_office_hours') && !$office->get('field_office_hours')->isEmpty()) {
+            $office_hours = $office->field_office_hours->value;
+          }
+
+          // Phone number.
+          if ($office->hasField('field_office_contact_phone') && !$office->get('field_office_contact_phone')->isEmpty()) {
+            $phone = $office->field_office_contact_phone->value;
+          }
+
+          // Fax.
+          if ($office->hasField('field_fax') && !$office->get('field_fax')->isEmpty()) {
+            $fax = $office->field_fax->value;
+          }
         }
 
         $offices[] = [
@@ -2093,7 +2095,17 @@ function nysenate_theme_preprocess_views_view_fields(&$variables) {
   }
 
   if ($view->id() == "committee_members" && $view->current_display == "chair") {
-    $term = $variables['row']->_entity;
+    $senator_tid = '';
+    if (isset($variables['fields']['tid']->content)) {
+      if ($variables['fields']['tid']->content instanceof Markup) {
+        $senator_tid = $variables['fields']['tid']->content->__toString();
+      }
+      else {
+        $senator_tid = $variables['fields']['tid']->content;
+      }
+    }
+    $senator_tid = (int) trim(strip_tags($senator_tid));
+    $term = $term_storage->load($senator_tid);
     $senator_link = \Drupal::service('nys_senators.microsites')
       ->getMicrosite($term);
     $variables['senator_link'] = $senator_link;
@@ -3300,7 +3312,7 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     else {
       $title = t('Contact your Senator about this issue');
       $link = [
-        'url' => '/form/senator-contact-webform',
+        'url' => $senator_link . '/contact',
         'text' => t('Contact') . ' ' . $senator_name,
       ];
     }
@@ -5047,6 +5059,19 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
 
         /* @phpstan-ignore-next-line */
         $view->result[$key]->overridden = $item->nid;
+      }
+    }
+  }
+
+  if ($view->id() == 'committee_members' && $view->current_display == 'chair') {
+    $results = $view->result;
+    $unique_node_ids = [];
+    foreach ($results as $index => $row) {
+      if (isset($row->_relationship_entities['field_senator']) &&
+        $row->_relationship_entities['field_senator'] instanceof TermInterface) {
+        $senator = $row->_relationship_entities['field_senator'];
+        /* @phpstan-ignore-next-line */
+        $view->result[$index]->field_senator_tid = $senator->id();
       }
     }
   }

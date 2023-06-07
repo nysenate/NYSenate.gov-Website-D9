@@ -60,7 +60,7 @@
         'c-updates-container',
       ]
     %}
-    <div class="c-updates-container">
+    <div{{ attributes.addClass(classes) }}>
       {{ title_prefix }}
       {% if title %}
         {{ title }}

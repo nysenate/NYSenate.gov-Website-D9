@@ -48,7 +48,6 @@
       const $contents = $accordions.find('#' + $toggle.attr('aria-controls'));
 
       if (!$accordion.hasClass('open')) {
-        $accordions.removeClass('open');
         $toggles.attr('aria-expanded', 'false');
         $contents.attr('aria-hidden', 'true');
         self.changeAllTexts($headings);

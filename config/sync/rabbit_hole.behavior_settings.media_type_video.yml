@@ -1,0 +1,14 @@
+uuid: ac0617b6-b7a9-4253-bfb5-11a5cc5c576f
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.video
+id: media_type_video
+entity_type_id: media_type
+entity_id: video
+action: page_redirect
+allow_override: 1
+redirect: '<front>'
+redirect_code: 301
+redirect_fallback_action: access_denied

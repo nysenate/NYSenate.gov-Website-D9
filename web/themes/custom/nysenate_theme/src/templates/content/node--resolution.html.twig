@@ -1,4 +1,9 @@
+{{ attach_library('nysenate_theme/bill') }}
+{{ attach_library('nysenate_theme/nysenate-accordion') }}
+{{ attach_library('nysenate_theme/nysenate-accordion-nested') }}
+{{ attach_library('nysenate_theme/nysenate-tabs') }}
 {{ attach_library('nysenate_theme/resolution-page') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 
 {%
   set classes = [
@@ -40,7 +45,7 @@
   </div>
 
   <div class="c-block">
-    {% if content.field_image_main %}
+    {% if content.field_image_main is not empty %}
       <div class="c-block c-block--img">
         {{ content.field_image_main }}
       </div>
@@ -51,9 +56,41 @@
     {% if sponsored_by %}
       {{ sponsored_by }}
     {% endif %}
-    {% if sponsor_block %}
-      {{ sponsor_block }}
-    {% endif %}
+
+    <!-- Bill Co/Multi Sponsors -->
+    <div class="c-block c-detail--sponsors c-bill-section">
+      {% if sponsors_array.co|length > 0 or sponsors_array.multi|length > 0 %}
+        {% for key,list in sponsors_array if list|length > 0 %}
+          <div class="c-{{ key }}-sponsors c-sponsors-detail">
+            <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
+            <div class="initial_{{ key }}-sponsors">
+              {% for item in list[0:4] %}
+                {{ item }}
+              {% endfor %}
+            </div>
+            {% if list[4:]|length > 1 %}
+              <div class="other_{{ key }}-sponsors">
+                <article class="nysenate-accordion">
+                  <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-sponsors" aria-expanded="false" id="nysenate-accordion__toggle-1-sponsors" aria-selected="false">
+                    <span class="nysenate-accordion__heading hide-number">
+                      <span class="indicator">View
+                      </span>additional
+                      {{ key }}-sponsors
+                    </span>
+                    {{ icons.get('accordion__arrow'|lower) }}
+                  </button>
+                  <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-sponsors" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-sponsors">
+                    {% for item in list[4:] %}
+                      {{ item }}
+                    {% endfor %}
+                  </div>
+                </article>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
   <!-- .c-block -->
 
@@ -151,17 +188,18 @@
   {% endif %}
 
   <!-- Comments -->
-  <div class="c-block c-detail--summary">
-    <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>
-    <p>Open Legislation is a forum for New York State legislation. All comments are subject to review and community moderation is encouraged.</p>
-    <p>
-      Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity, hate or toxic speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Attempts to intimidate and silence contributors or deliberately deceive the public, including excessive or extraneous posting/posts, or coordinated activity, are prohibited and may result in the temporary or permanent banning of the user. Comment moderation is generally performed Monday through Friday. By contributing or voting you agree to the Terms of Participation and verify you are over 13.
-    </p>
-    {% if content.field_comments %}
-      {{ content.field_comments }}
-    {% endif %}
-    {% if not logged_in %}
-    <p><a href="/user/register">Create an account</a>. An <a href="/citizen-guide ">account</a> allows you to sign petitions with a single click, officially support or oppose key legislation, and follow issues, committees, and bills that matter to you. When you create an account, you agree to this platform's <a href="/policies-and-waivers">terms of participation</a>.</p>
-    {% endif %}
+  <div class="content c-bill-section" id="panel-comments">
+    <div class="c-block c-detail--summary">
+      <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>
+      <p>Open Legislation is a forum for New York State legislation. All comments are subject to review and community moderation is encouraged.</p>
+      <p>
+        Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity, hate or toxic speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Attempts to intimidate and silence contributors or deliberately deceive the public, including excessive or extraneous posting/posts, or coordinated activity, are prohibited and may result in the temporary or permanent banning of the user. Comment moderation is generally performed Monday through Friday. By contributing or voting you agree to the Terms of Participation and verify you are over 13.
+      </p>
+      {% if content.field_comments %}
+        {{ content.field_comments }}
+      {% endif %}
+      {% if not logged_in %}
+      <p><a href="/user/register">Create an account</a>. An <a href="/citizen-guide ">account</a> allows you to sign petitions with a single click, officially support or oppose key legislation, and follow issues, committees, and bills that matter to you. When you create an account, you agree to this platform's <a href="/policies-and-waivers">terms of participation</a>.</p>
+      {% endif %}
+    </div>
   </div>
-</div>

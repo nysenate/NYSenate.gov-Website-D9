@@ -4143,6 +4143,7 @@ function nysenate_theme_preprocess_media(&$variables) {
  */
 function nysenate_theme_preprocess_node__resolution(&$variables) {
   $node = $variables['node'];
+  $chamber = $node->field_ol_chamber->value ?? NULL;
 
   $variables['label'] = $variables['label'][0]['#context']['value'] ?? '';
   $variables['ol_name'] = isset($variables['elements']['field_ol_name'][0]) ? $variables['elements']['field_ol_name'][0]['#context']['value'] : '';
@@ -4154,7 +4155,8 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
     '#content' => \Drupal::service('nys_senators.senators_helper')->getSenatorSponsors($node),
   ];
 
-  $variables['sponsor_block'] = $node->field_ol_co_sponsor_names->value;
+  $variables['sponsors_array'] = \Drupal::service('nys_bill.bills_helper')
+    ->resolveAmendmentSponsors($node, $chamber);
 }
 
 /**

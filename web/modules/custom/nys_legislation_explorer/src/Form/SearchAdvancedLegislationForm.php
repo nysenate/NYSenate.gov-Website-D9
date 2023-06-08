@@ -82,6 +82,29 @@ class SearchAdvancedLegislationForm extends FormBase {
   }
 
   /**
+   * Returns a list of years in descending order.
+   *
+   * Restricts years from the current year to the earliest session that
+   * there is legislation data for (2009).
+   *
+   * @param int $min_year
+   *   Minimum year restriction to fetch session years from.
+   *
+   * @return array
+   *   years.
+   */
+  public function getYearList(int $min_year = 2009): array {
+    $year = date("Y");
+    $years = [];
+    while ($year >= $min_year) {
+
+      $years[] = $year;
+      $year--;
+    }
+    return $years;
+  }
+
+  /**
    * Generate months options for basic select.
    */
   public function getMonthsOptions() {
@@ -235,9 +258,10 @@ class SearchAdvancedLegislationForm extends FormBase {
     $years_option = [];
     foreach ($this->getSessionYearList() as $year) {
       $bill_years[$year] = $year . '-' . ($year + 1);
+    }
+    foreach ($this->getYearList() as $year) {
       $years_option[$year] = $year;
     }
-
     $form['session_year'] = [
       '#type' => 'select',
       '#title' => ('SESSION YEAR'),

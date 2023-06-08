@@ -8,7 +8,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\stage_file_proxy\FetchManagerInterface;
 use Drush\Commands\DrushCommands;
 use GuzzleHttp\Exception\ClientException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
@@ -29,13 +28,6 @@ class StageFileProxyCommands extends DrushCommands {
    * @var \Drupal\stage_file_proxy\FetchManagerInterface
    */
   protected $fetchManager;
-
-  /**
-   * The logger.channel.stage_file_proxy service.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger = NULL;
 
   /**
    * The module config.
@@ -62,8 +54,6 @@ class StageFileProxyCommands extends DrushCommands {
    *   The database service.
    * @param \Drupal\stage_file_proxy\FetchManagerInterface $fetchManager
    *   The stage_file_proxy.fetch_manager service.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The logger.channel.stage_file_proxy service.
    * @param string $root
    *   The app root.
    */
@@ -71,7 +61,6 @@ class StageFileProxyCommands extends DrushCommands {
     ConfigFactoryInterface $configFactory,
     Connection $database,
     FetchManagerInterface $fetchManager,
-    LoggerInterface $logger,
     string $root
   ) {
     parent::__construct();
@@ -79,7 +68,6 @@ class StageFileProxyCommands extends DrushCommands {
     $this->moduleConfig = $configFactory->get('stage_file_proxy.settings');
     $this->database = $database;
     $this->fetchManager = $fetchManager;
-    $this->logger = $logger;
     $this->root = $root;
   }
 

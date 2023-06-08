@@ -27,7 +27,10 @@
           $itemCount = $accordion.find('.nysenate-accordion__content .c-bill--actions-table-col2 span', context).length;
         }
 
-        $("<span class=\"count\">(".concat($itemCount, ")</span>")).appendTo($heading); // Attach click handler for accordion.
+        if (!$heading.hasClass('no-count')) {
+          $("<span class=\"count\">(".concat($itemCount, ")</span>")).appendTo($heading);
+        } // Attach click handler for accordion.
+
 
         var $toggle = $accordion.find('.nysenate-accordion__toggle', context);
         $toggle.on('click', function () {
@@ -42,7 +45,6 @@
       var $contents = $accordions.find('#' + $toggle.attr('aria-controls'));
 
       if (!$accordion.hasClass('open')) {
-        $accordions.removeClass('open');
         $toggles.attr('aria-expanded', 'false');
         $contents.attr('aria-hidden', 'true');
         self.changeAllTexts($headings);

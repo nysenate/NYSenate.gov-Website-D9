@@ -2297,6 +2297,8 @@ h2.c-subpage-header--title {
   max-width: 1500px; }
   .landing-page-hero img {
     width: 100%; }
+  .landing-page-hero.no-image {
+    margin-bottom: 0; }
   .landing-page-hero .video-wrapper {
     width: 100%;
     position: relative;
@@ -2325,6 +2327,11 @@ h2.c-subpage-header--title {
     .landing-page-hero .l-row .c-about--welcome .field--name-description p {
       font-weight: bold;
       font-size: 24px; }
+  .landing-page-hero .l-row.no-image {
+    margin-top: 0; }
+    @media screen and (min-width: 768px) {
+      .landing-page-hero .l-row.no-image .c-about--welcome {
+        padding: 10px 60px 60px; } }
   .landing-page-hero .l-row--hero {
     width: 100%;
     max-width: 100%;

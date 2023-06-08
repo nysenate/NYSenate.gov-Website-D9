@@ -1076,3 +1076,15 @@ div.c-meeting-detail--location {
 .node--session-full .view-global-promo-banner {
   padding: 0;
 }
+
+.field--name-field-upcoming-legislation {
+  margin-bottom: 30px;
+
+  @include breakpoint($bp-sm) {
+    margin-bottom: 60px;
+  }
+
+  .field__label {
+    display: none;
+  }
+}

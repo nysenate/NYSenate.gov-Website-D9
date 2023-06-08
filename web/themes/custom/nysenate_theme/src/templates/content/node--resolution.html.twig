@@ -57,7 +57,7 @@
   </div>
   <!-- .c-block -->
 
-  {% if content.field_featured_quote and content.field_ol_sponsor  %}
+  {% if featured_quote %}
     <div class="c-block c-sponsor-quote">
       <h3 class="c-sponsor-quote--title">sponsor's position</h3>
       <p class="c-sponsor-quote--text">{{ featured_quote }}</p>
@@ -150,14 +150,18 @@
     </div>
   {% endif %}
 
-  <!-- Related Content -->
-  {% if disqus %}
-    <div class="c-block c-detail--summary">
-      <h3 class="c-detail--subhead c-detail--section-title">Comments</h3>
-      <p>Open Legislation comments facilitate discussion of New York State legislation. All comments are subject to moderation. Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity or hate speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Comment moderation is generally performed Monday through Friday.</p>
-      <p>By contributing or voting you agree to the Terms of Participation and verify you are over 13.</p>
-      <p>&nbsp;</p>
-      {{ disqus }}
-    </div>
-  {% endif %}
+  <!-- Comments -->
+  <div class="c-block c-detail--summary">
+    <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>
+    <p>Open Legislation is a forum for New York State legislation. All comments are subject to review and community moderation is encouraged.</p>
+    <p>
+      Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity, hate or toxic speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Attempts to intimidate and silence contributors or deliberately deceive the public, including excessive or extraneous posting/posts, or coordinated activity, are prohibited and may result in the temporary or permanent banning of the user. Comment moderation is generally performed Monday through Friday. By contributing or voting you agree to the Terms of Participation and verify you are over 13.
+    </p>
+    {% if content.field_comments %}
+      {{ content.field_comments }}
+    {% endif %}
+    {% if not logged_in %}
+    <p><a href="/user/register">Create an account</a>. An <a href="/citizen-guide ">account</a> allows you to sign petitions with a single click, officially support or oppose key legislation, and follow issues, committees, and bills that matter to you. When you create an account, you agree to this platform's <a href="/policies-and-waivers">terms of participation</a>.</p>
+    {% endif %}
+  </div>
 </div>

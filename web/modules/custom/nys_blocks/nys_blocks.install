@@ -459,3 +459,44 @@ function nys_blocks_update_9006() {
     }
   }
 }
+
+/**
+ * Update the Homepage Twitter block.
+ */
+function nys_blocks_update_9007() {
+  // Twitter block.
+  $twitter_block = \Drupal::entityTypeManager()
+    ->getStorage('block_content')
+    ->load(5455);
+
+  if (!empty($twitter_block)) {
+    $twitter_block->field_block = [
+      'plugin_id' => 'twitter_block',
+      'settings' => [
+        'id' => 'twitter_block',
+        'label' => 'Twitter block',
+        'label_display' => 'visible',
+        'username' => 'NYSenate',
+        'theme' => '',
+        'link_color' => '',
+        'width' => '',
+        'height' => '700',
+        'chrome' => [
+          'noheader' => 0,
+          'nofooter' => 0,
+          'noborders' => 0,
+          'noscrollbar' => 0,
+          'transparent' => 0,
+        ],
+        'border_color' => '',
+        'language' => '',
+        'tweet_limit' => '4',
+        'related' => '',
+        'polite' => 'polite',
+        'dnt' => 0,
+      ],
+    ];
+
+    $twitter_block->save();
+  }
+}

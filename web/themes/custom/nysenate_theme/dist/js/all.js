@@ -2224,7 +2224,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         self.heroMargin(heroContainer, pageMargin, pagePadding);
       } else if (landingHeroContainer.length > 0) {
         self.heroMargin(landingHeroContainer, pageMargin, pagePadding);
-        landingHeroContainer.closest('main').css('padding-top', '0');
       }
 
       $(window).on('resize', function () {
@@ -2239,6 +2238,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       });
     },
     heroMargin: function heroMargin(heroContainer, pageMargin, pagePadding) {
+      heroContainer.closest('main').css('padding-top', '0');
+
       if ($(window).width() >= 1500) {
         heroContainer.css('margin-left', "-".concat(1500 / 4 - 5, "px"));
       } else {
@@ -17351,7 +17352,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           $itemCount = $accordion.find('.nysenate-accordion__content .c-bill--actions-table-col2 span', context).length;
         }
 
-        $("<span class=\"count\">(".concat($itemCount, ")</span>")).appendTo($heading); // Attach click handler for accordion.
+        if (!$heading.hasClass('no-count')) {
+          $("<span class=\"count\">(".concat($itemCount, ")</span>")).appendTo($heading);
+        } // Attach click handler for accordion.
+
 
         var $toggle = $accordion.find('.nysenate-accordion__toggle', context);
         $toggle.on('click', function () {
@@ -17366,7 +17370,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var $contents = $accordions.find('#' + $toggle.attr('aria-controls'));
 
       if (!$accordion.hasClass('open')) {
-        $accordions.removeClass('open');
         $toggles.attr('aria-expanded', 'false');
         $contents.attr('aria-hidden', 'true');
         self.changeAllTexts($headings);

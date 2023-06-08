@@ -306,7 +306,7 @@ class BillVoteWidgetForm extends FormBase {
           $newform['email_form'] = [
             '#type' => 'container',
             '#attributes' => ['class' => ['subscribe_email_container']],
-            'email_address_entry' => [
+            'email' => [
               '#type' => 'textfield',
               '#title' => t('Email Address'),
               '#name' => 'email',
@@ -379,7 +379,7 @@ class BillVoteWidgetForm extends FormBase {
     $nid = (int) ($values['nid'] ?? 0);
 
     // If the user is logged in, revert to that email address.
-    if (!empty($user->mail)) {
+    if ($this->currentUser->isAuthenticated()) {
       /** @var \Drupal\user\UserInterface $user */
       $email_address = $user->getEmail();
     }

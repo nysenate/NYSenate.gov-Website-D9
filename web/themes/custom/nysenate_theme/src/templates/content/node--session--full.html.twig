@@ -95,11 +95,11 @@
         </div>
       {% endif %}
 
-      <div class="c-meeting-detail--descript">
-        {% if content.body %}
+      {% if content.body %}
+        <div class="c-meeting-detail--descript">
           {{ content.body }}
-        {% endif %}
-      </div>
+        </div>
+      {% endif %}
 
       {% if content.field_chapters %}
         <div class="c-meeting-detail--descript">

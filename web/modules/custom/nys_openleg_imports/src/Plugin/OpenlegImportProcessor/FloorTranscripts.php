@@ -3,6 +3,7 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImportProcessor;
 
 use Drupal\node\Entity\Node;
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg_imports\ImportProcessorBase;
 
 /**
@@ -22,7 +23,7 @@ class FloorTranscripts extends ImportProcessorBase {
    */
   public function transcribeToNode(object $item, Node $node): bool {
     $node->set('field_ol_filename', $this->getId());
-    $node->set('field_ol_publish_date', strtotime($this->getId()));
+    $node->set('field_ol_publish_date', gmdate(Request::OPENLEG_TIME_SIMPLE, strtotime($this->getId())));
     $node->set('field_ol_transcript_type', 'floor');
     $node->set('field_ol_location', $item->location);
     $node->set('field_ol_text', $item->text);

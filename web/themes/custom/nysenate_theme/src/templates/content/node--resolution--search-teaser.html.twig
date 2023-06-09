@@ -1,0 +1,27 @@
+{{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
+{{ attach_library('nysenate_theme/bill-item') }}
+
+{% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
+  "article": {
+    "bill": true,
+    "is_dynamic_color": true,
+    "bill_title": {
+      "url": url,
+      "prefix": "Resolution",
+      "text": content.field_ol_base_print_no[0]
+    },
+    "topics": [
+      {
+        "name": content.field_ol_session[0],
+        "url": url
+      }
+    ],
+    "bill_description": {
+      "text": content.field_ol_name[0],
+      "url": url
+    },
+    "sponsor": {
+      "text": content.field_ol_sponsor_name[0]
+    }
+  }
+} only %}

@@ -6,7 +6,10 @@
     {% if article.bill_title %}
       <h3 class="c-bill-num">
         <a href={{ article.bill_title.url }}>
-          Bill {{ article.bill_title.text|raw }}
+          {% if article.bill_title.prefix %}
+            {{ article.bill_title.prefix }}
+          {% endif %}
+          {{ article.bill_title.text|raw }}
         </a>
       </h3>
     {% else %}

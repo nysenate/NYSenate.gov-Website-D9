@@ -1,8 +1,9 @@
-uuid: 2ddcc710-ca82-4f2b-8332-78f789573025
+uuid: e34b5733-3c22-4a63-863f-db3e703e27d8
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.search_teaser
     - field.field.node.agenda.field_from_openleg
     - field.field.node.agenda.field_ol_agenda_addendum
     - field.field.node.agenda.field_ol_agenda_bills
@@ -16,62 +17,19 @@ dependencies:
     - node.type.agenda
   module:
     - datetime
-    - entity_reference_revisions
     - user
-id: node.agenda.default
+id: node.agenda.search_teaser
 targetEntityType: node
 bundle: agenda
-mode: default
+mode: search_teaser
 content:
-  field_from_openleg:
-    type: boolean
-    label: above
-    settings:
-      format: yes-no
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_ol_agenda_addendum:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 8
-    region: content
-  field_ol_agenda_bills:
-    type: entity_reference_revisions_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    weight: 7
-    region: content
-  field_ol_agenda_location:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 9
-    region: content
-  field_ol_agenda_notes:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
-    region: content
   field_ol_committee:
     type: entity_reference_label
     label: above
     settings:
       link: false
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   field_ol_committee_name:
     type: string
@@ -79,16 +37,16 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 6
+    weight: 5
     region: content
   field_ol_meeting_date:
     type: datetime_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
-      format_type: publish_date
+      format_type: html_date
     third_party_settings: {  }
-    weight: 5
+    weight: 4
     region: content
   field_ol_week:
     type: number_integer
@@ -97,7 +55,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_ol_year:
     type: number_integer
@@ -106,7 +64,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   links:
     settings: {  }
@@ -114,6 +72,11 @@ content:
     weight: 0
     region: content
 hidden:
+  field_from_openleg: true
+  field_ol_agenda_addendum: true
+  field_ol_agenda_bills: true
+  field_ol_agenda_location: true
+  field_ol_agenda_notes: true
   langcode: true
   private_message_link: true
   search_api_excerpt: true

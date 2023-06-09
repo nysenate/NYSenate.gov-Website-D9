@@ -1,0 +1,207 @@
+uuid: cfd005dc-0716-4cb9-8fb3-d4866818a283
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_teaser
+    - field.field.node.meeting.body
+    - field.field.node.meeting.field_bill
+    - field.field.node.meeting.field_committee
+    - field.field.node.meeting.field_committee_featured
+    - field.field.node.meeting.field_date_range
+    - field.field.node.meeting.field_event_online_link
+    - field.field.node.meeting.field_event_place
+    - field.field.node.meeting.field_issues
+    - field.field.node.meeting.field_majority_issue_tag
+    - field.field.node.meeting.field_meeting_agenda
+    - field.field.node.meeting.field_meeting_location
+    - field.field.node.meeting.field_meeting_status
+    - field.field.node.meeting.field_off_the_floor
+    - field.field.node.meeting.field_transcript
+    - field.field.node.meeting.field_ustream
+    - field.field.node.meeting.field_video_redirect
+    - field.field.node.meeting.field_video_status
+    - field.field.node.meeting.field_yt
+    - node.type.meeting
+  module:
+    - datetime_range
+    - link
+    - nys_list_formatter
+    - options
+    - text
+    - user
+id: node.meeting.search_teaser
+targetEntityType: node
+bundle: meeting
+mode: search_teaser
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_bill:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_committee:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_committee_featured:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 116
+    region: content
+  field_date_range:
+    type: daterange_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: html_datetime
+      separator: '-'
+    third_party_settings: {  }
+    weight: 121
+    region: content
+  field_event_online_link:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  field_event_place:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_issues:
+    type: list_formatter
+    label: above
+    settings:
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+    third_party_settings: {  }
+    weight: 117
+    region: content
+  field_majority_issue_tag:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 122
+    region: content
+  field_meeting_agenda:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_meeting_location:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_meeting_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 112
+    region: content
+  field_off_the_floor:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_transcript:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 115
+    region: content
+  field_ustream:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 120
+    region: content
+  field_video_redirect:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_video_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 113
+    region: content
+  field_yt:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 114
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

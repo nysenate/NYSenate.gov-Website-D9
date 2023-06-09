@@ -1,8 +1,41 @@
 @import "../../global/utils/init";
 
 /*----------------------------------------
-/ PRESS RELEASES
+/ Advanced Search
 /----------------------------------------*/
+.view-advanced-legislation-search {
+  
+  h1 {
+    text-transform: capitalize;
+    font-family: $font-serif-regular;
+    font-size: 32px;
+    width: 100%;
+    float: left;
+    margin-bottom: 20px;
+  }
+}
+
+.advanced-search-header {
+  border-top: 1px solid $color-alto;
+  clear: both;
+  padding-top: 1.1875rem;
+
+  h2 {
+    font-family: $font-serif-regular;
+    font-size: 26px;
+    font-weight: normal;
+    line-height: 1;
+    margin: 0 0 10px;
+  }
+
+  .ds-search-extra {
+    text-transform: uppercase;
+    color: $grey04;
+    font-size: 12px;
+    margin-bottom: 30px;
+    font-weight: bold;
+  }
+}
 
 .page-node-type-meeting {
   .c-block {
@@ -12,8 +45,8 @@
   }
 }
 
-
 .c-block {
+
   &.c-block-press-release {
     padding-top: 20px;
     padding-bottom: 30px;
@@ -41,7 +74,15 @@
     }
   }
 
-  .c-press-release--topic,
+  .c-press-release--topic {
+    text-transform: uppercase;
+    font-family: $font-sans-bold;
+    font-size: 10px;
+    line-height: 1em;
+    letter-spacing: 0.05em;
+    color: $gen_blue_lgt;
+  }
+
   .c-featured-story-issue-tag a {
     text-transform: uppercase;
     font-family: $font-sans-bold;
@@ -76,6 +117,10 @@
             font-size: 22px;
           }
         }
+      }
+
+      .c-bill-num {
+        margin-bottom: 10px;
       }
     }
 
@@ -149,7 +194,6 @@
       font-family: $font-sans-bold;
       font-size: 14px;
       line-height: 30px;
-      color: $grey08;
     }
   } 
 
@@ -243,6 +287,10 @@
     .c-press-release--date {
       font-size: 14px;
     }
+  }
+
+  .c-bill-descript {
+    color: $grey04;
   }
 }
 

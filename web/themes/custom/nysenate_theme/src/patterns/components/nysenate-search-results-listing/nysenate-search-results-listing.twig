@@ -6,7 +6,7 @@
     {% if article.bill_title %}
       <h3 class="c-bill-num">
         <a href={{ article.bill_title.url }}>
-          {{ article.bill_title.text|raw }}
+          Bill {{ article.bill_title.text|raw }}
         </a>
       </h3>
     {% else %}

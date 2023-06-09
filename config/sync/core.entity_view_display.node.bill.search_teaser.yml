@@ -49,6 +49,7 @@ dependencies:
     - field.field.node.bill.field_ol_votes
     - node.type.bill
   module:
+    - datetime
     - options
     - user
 id: node.bill.search_teaser
@@ -62,28 +63,28 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
   field_ol_all_actions:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   field_ol_all_statuses:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_ol_amendments:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
   field_ol_base_print_no:
     type: string
@@ -91,41 +92,90 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 8
+    weight: 9
     region: content
   field_ol_chamber:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 7
+    weight: 8
     region: content
   field_ol_full_text:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    weight: 7
+    region: content
+  field_ol_last_status:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 15
+    region: content
+  field_ol_last_status_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: Y-m-d
+    third_party_settings: {  }
+    weight: 12
     region: content
   field_ol_name:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   field_ol_print_no:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_ol_publish_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 14
+    region: content
+  field_ol_session:
+    type: number_integer
+    label: hidden
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_ol_sponsor_name:
     type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 9
+    weight: 10
+    region: content
+  field_ol_summary:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 13
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
 hidden:
   field_bill_multi_session_root: true
@@ -141,8 +191,6 @@ hidden:
   field_ol_has_same_as: true
   field_ol_is_active_version: true
   field_ol_is_amended: true
-  field_ol_last_status: true
-  field_ol_last_status_date: true
   field_ol_latest_status: true
   field_ol_latest_status_committee: true
   field_ol_law_code: true
@@ -153,13 +201,9 @@ hidden:
   field_ol_previous_versions: true
   field_ol_program_info: true
   field_ol_program_info_seq: true
-  field_ol_publish_date: true
   field_ol_same_as: true
-  field_ol_session: true
   field_ol_sponsor: true
-  field_ol_sponsor_name: true
   field_ol_substituted_by: true
-  field_ol_summary: true
   field_ol_version: true
   field_ol_votes: true
   langcode: true

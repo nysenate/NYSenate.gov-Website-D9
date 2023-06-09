@@ -7,9 +7,63 @@
 {{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
 {{ attach_library('nysenate_theme/bill-item') }}
 
-<div>Bill Search teaser is loading.</div>
-{% include "@nysenate_theme/featured-bills/bill-item.twig" with {
-  text: text|default(FALSE),
-  bills: bills,
-  has_sub: false
+{% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
+  "article": {
+    "bill": true,
+    "bill_title": {
+      "url": url,
+      "text": content.field_ol_print_no.0
+    },
+    "is_dynamic_color": true,
+    "topics": [
+      {
+        "name": content.field_ol_session[0],
+      }
+    ],
+    "bill_description": {
+      "text": content.field_ol_summary.0
+    },
+    "sponsor": {
+      "text": content.field_ol_sponsor_name[0]
+    },
+    "date": node.getCreatedTime|format_date('publish_date'),
+    "issue_type": {
+      "text": content.field_ol_last_status.0
+    },
+    "positions": [
+      {
+        "text": "Introduced",
+        "is_passed": true
+      },
+      {
+        "text": "In Committee",
+        "is_passed": true
+      },
+      {
+        "text": "On Floor Calendar",
+        "is_passed": true
+      },
+      {
+        "is_grouped": "true",
+        "items": [
+          {
+            "text": "Passed Senate",
+            "is_passed": true
+          },
+          {
+            "text": "Passed Assembly",
+            "is_passed": true
+          }
+        ]
+      },
+      {
+        "text": "Delivered to Governor",
+        "is_passed": true
+      },
+      {
+        "text": "Signed by Governor",
+        "is_passed": true
+      }
+    ]
+  }
 } only %}

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Module file for nys_accumulator.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\nys_users\UsersHelper;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Any hooks implemented by nys_accumulator should be executed last.  This
+ * removes each entry and re-adds it to the end of the array.
+ */
+function nys_accumulator_module_implements_alter(&$module_list, $context): void {
+  $contexts = ['user_login', 'entity_presave'];
+  if (in_array($context, $contexts) && isset($module_list['nys_accumulator'])) {
+    $temp = $module_list['nys_accumulator'];
+    unset($module_list['nys_accumulator']);
+    $module_list['nys_accumulator'] = $temp;
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function nys_accumulator_user_login(UserInterface $account): void {
+  $user = UsersHelper::resolveUser($account);
+
+  // If access is zero, this is the first login.  Dispatch the event.
+  if ($user->id() && !$user->isNew() && !$user->access->value) {
+    \Drupal::service('nys_accumulator')->dispatch('first_login', $user);
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function nys_accumulator_entity_presave(EntityInterface $entity): void {
+  $event = match ($entity->getEntityTypeId()) {
+    'vote' => 'vote_cast',
+    'user' => 'user_edit',
+    'webform_submission' => 'submit_question',
+    default => NULL,
+  };
+  if ($event) {
+    \Drupal::service('nys_accumulator')->dispatch($event, $entity);
+  }
+}

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.resolution.field_comments
     - field.field.node.resolution.field_featured_quote
     - field.field.node.resolution.field_image_main
     - field.field.node.resolution.field_issues
@@ -33,6 +34,7 @@ dependencies:
     - field.field.node.resolution.field_ol_summary
     - node.type.resolution
   module:
+    - comment
     - datetime
     - media_library
     - path
@@ -45,6 +47,12 @@ content:
   created:
     type: datetime_timestamp
     weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_comments:
+    type: comment_default
+    weight: 36
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -275,6 +283,11 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 32
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

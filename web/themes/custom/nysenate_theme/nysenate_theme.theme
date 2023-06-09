@@ -4144,11 +4144,94 @@ function nysenate_theme_preprocess_media(&$variables) {
 function nysenate_theme_preprocess_node__resolution(&$variables) {
   $node = $variables['node'];
   $chamber = $node->field_ol_chamber->value ?? NULL;
+  $session_year = $node->field_ol_session->value ?? NULL;
+  $base_print_no = $node->field_ol_base_print_no->value ?? NULL;
 
   $variables['label'] = $variables['label'][0]['#context']['value'] ?? '';
   $variables['ol_name'] = isset($variables['elements']['field_ol_name'][0]) ? $variables['elements']['field_ol_name'][0]['#context']['value'] : '';
   $variables['featured_quote'] = isset($variables['elements']['field_featured_quote'][0]) ? $variables['elements']['field_featured_quote'][0]['#context']['value'] : '';
   $variables['ol_law_section'] = isset($variables['elements']['field_ol_law_section'][0]) ? $variables['elements']['field_ol_law_section'][0]['#context']['value'] : '';
+
+  // Statuses.
+  if ($node->hasField('field_ol_all_statuses') && !$node->get('field_ol_all_statuses')->isEmpty()) {
+    $positions = nysenate_bill_positions($node);
+    $statuses = json_decode($node->field_ol_all_statuses->value);
+
+    if (isset($statuses->items)) {
+      $statuses = $statuses->items;
+
+      // Handle legacy statuses.
+      foreach ($statuses as $key => $status) {
+        if (isset($status->actionDate)) {
+          $statuses[$key]->date = $status->actionDate;
+        }
+
+        if (isset($status->statusDesc)) {
+          $$statuses[$key]->text = $status->statusDesc;
+        }
+      }
+    }
+    else {
+      // Handle legacy statuses.
+      $statuses->date = $statuses->actionDate;
+      $statuses->text = $statuses->statusDesc;
+
+      $statuses = [$statuses];
+    }
+
+    // Format date display.
+    foreach ($statuses as $key => $status) {
+      if ($status->date) {
+        $statuses[$key]->date = date('d / M / Y', strtotime($status->date));
+      }
+    }
+    $variables['statuses'] = $statuses;
+  }
+
+  // Same as.
+  if ($node->hasField('field_ol_same_as') && !$node->get('field_ol_same_as')->isEmpty()) {
+    $same_as = json_decode($node->field_ol_same_as->value);
+    $variables['same_as'] = $same_as;
+  }
+
+  // Amended Versions.
+  $temp_node = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->loadByProperties([
+      'field_ol_base_print_no' => $base_print_no,
+      'field_ol_session' => $session_year,
+    ]);
+  $amended_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions(reset($temp_node));
+  foreach ($amended_versions as $title => $nid) {
+    $node_version = \Drupal::entityTypeManager()
+      ->getStorage('node')->load($nid);
+    $main_title = $session_year . '-' . $base_print_no;
+    $version = str_replace($main_title, '', $title);
+    $version = $version == '' ? 'Original' : $version;
+    $is_active_version = $version == $node->field_ol_active_version->value;
+
+    if ($node->id() != $node_version->id()) {
+      $amended_versions[$title] = [
+        'version' => $version,
+        'is_active_version' => $is_active_version,
+        'url' => $node_version->toUrl()->toString(),
+      ];
+    }
+    else {
+      unset($amended_versions[$title]);
+    }
+  }
+  $variables['amended_versions'] = $amended_versions;
+
+  // Explore Issues.
+  $issues_view = Views::getView('issues_listings');
+  if (is_object($issues_view)) {
+    $issues_view->setDisplay('popular_senators');
+    $issues_view->setItemsPerPage(6);
+    $issues_view->preExecute();
+    $issues_view->execute();
+    $variables['issues_view'] = $issues_view->render();
+  }
 
   $variables['sponsored_by'] = [
     '#theme' => 'nysenate_sponsor',

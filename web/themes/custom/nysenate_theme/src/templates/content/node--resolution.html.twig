@@ -68,7 +68,7 @@
                 {{ item }}
               {% endfor %}
             </div>
-            {% if list[4:]|length > 1 %}
+            {% if list[4:]|length > 0 %}
               <div class="other_{{ key }}-sponsors">
                 <article class="nysenate-accordion">
                   <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-sponsors" aria-expanded="false" id="nysenate-accordion__toggle-1-sponsors" aria-selected="false">
@@ -134,9 +134,9 @@
       <ul class="c-action--items">
         {% for status in statuses %}
           <li>
-            <span class="c-action--date">Status Date</span>
+            <span class="c-action--date">{{ status.date }}</span>
             <ul>
-              <li class="c-action--item">Status Text</li>
+              <li class="c-action--item">{{ status.text }}</li>
             </ul>
           </li>
         {% endfor %}
@@ -145,44 +145,50 @@
     <!-- actions -->
   {% endif %}
 
-  {% if same_as %}
-    <div class="c-block c-bill--details">
-      <h3 class="c-detail--subhead c-detail--section-title">Resolution Details</h3>
-      <dl>
-        {% if same_as %}
-          <dt>See Assembly Version of this Bill:</dt>
-          {% for key, item in same_as %}
-            <dd>
-              <a href="/legislation/resolutions/">{{ same_as[key].printNo }}
-                {% if not loop.first %},
-                {% endif %}
-              </a>
-            </dd>
-          {% endfor %}
-        {% endif %}
-
-        {% if amended_versions %}
-          <dt>Versions:</dt>
-          {{ amended_versions}}
-        {% endif %}
-        {% if ol_law_section %}
-          <dt>Law Section:</dt>
+  <div class="c-block c-bill--details">
+    <h3 class="c-detail--subhead c-detail--section-title">Resolution Details</h3>
+    <dl>
+      {% if same_as is not empty %}
+        <dt>See Assembly Version of this Bill:</dt>
+        {% for key, item in same_as %}
           <dd>
-            {{ ol_law_section }}
+            <a href="/legislation/resolutions/{{ content.field_ol_session[0]['#markup'] }}/{{ same_as[key].printNo }}">{{ same_as[key].printNo }}
+              {% if not loop.first %},
+              {% endif %}
+            </a>
           </dd>
-        {% endif %}
-      </dl>
-    </div>
-  {% endif %}
+        {% endfor %}
+      {% endif %}
 
-  {% if result %}
+      {% if amended_versions is not empty %}
+        <dt>Versions:</dt>
+        {% for title, amendment_id in amended_versions %}
+          <dd>
+            <a href="/node/{{ amendment_id }}">{{ title }}
+              {% if not loop.first %},
+              {% endif %}
+            </a>
+          </dd>
+        {% endfor %}
+      {% endif %}
+
+      {% if ol_law_section %}
+        <dt>Law Section:</dt>
+        <dd>
+          {{ ol_law_section }}
+        </dd>
+      {% endif %}
+    </dl>
+  </div>
+
+  {% if issues_view %}
     <div class="c-block c-container">
       <div class="c-container--header">
         <h2 class="c-container--title">Find and Follow Issues</h2>
         <a href="/explore-issues" class="c-container--link">Explore Issues</a>
       </div>
       <div class="c-block">
-        {{ result }}
+        {{ issues_view }}
       </div>
     </div>
   {% endif %}

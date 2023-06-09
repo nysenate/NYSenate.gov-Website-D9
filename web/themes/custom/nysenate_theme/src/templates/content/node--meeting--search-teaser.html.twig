@@ -1,6 +1,6 @@
 {{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
 
-{% set meeting_date = content.date|date('m/d/Y') %}
+{% set meeting_date = content.date|date('F j, Y') %}
 
 {% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
   "article": {
@@ -13,7 +13,7 @@
     },
     "topics": [
       {
-        "name": "Meeting" ~ meeting_date
+        "name": "Meeting " ~ meeting_date
       }
     ]
   }

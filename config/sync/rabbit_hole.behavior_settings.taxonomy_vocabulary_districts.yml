@@ -1,0 +1,14 @@
+uuid: 4c8b85ef-38ab-4385-af79-4da3c5788ecc
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.districts
+id: taxonomy_vocabulary_districts
+entity_type_id: taxonomy_vocabulary
+entity_id: districts
+action: page_redirect
+allow_override: 1
+redirect: '<front>'
+redirect_code: 301
+redirect_fallback_action: access_denied

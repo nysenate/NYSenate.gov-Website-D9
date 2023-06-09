@@ -4956,7 +4956,11 @@ function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bi
  */
 function nysenate_theme_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Remove the Private Message fieldset from the User Profile Edit Form.
-  if ($form_id == 'nys_dashboard_edit_profile_form') {
+  if (in_array($form_id,
+    [
+      'nys_dashboard_edit_profile_form',
+      'nys_registration_password_reset_form',
+    ])) {
     $form['private_messages'] = [];
   }
 
@@ -5531,6 +5535,15 @@ function nysenate_theme_preprocess_page(&$variables) {
         ->view($headshot, 'thumbnail');
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nysenate_theme_preprocess_page__reset_password(&$variables) {
+  $variables['logo_path'] = '/themes/custom/nysenate_theme/dist/images/nys_logo_header240x240.jpg';
+  $variables['form_title'] = 'Change Your Password';
+  $variables['greeting'] = 'Please enter a new password for your account.';
 }
 
 /**

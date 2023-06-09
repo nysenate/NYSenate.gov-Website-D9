@@ -65,14 +65,15 @@
     {{ drupal_view('committee_content', 'featured_story') }}
   </div>
 
-  <div class="pane-taxonomy-term-field-featured-legislation-commi">
-    <div class="c-container--header__top-border">
-      <h3 class="c-container--title search">Featured Legislation</h3>
-      <a href="/search" class="nys-arrow-link">See all legislation</a>
+  {% if content.field_featured_legislation_commi.0 %}
+    <div class="pane-taxonomy-term-field-featured-legislation-commi">
+      <div class="c-container--header__top-border">
+        <h3 class="c-container--title search">Featured Legislation</h3>
+        <a href="/search" class="nys-arrow-link">See all legislation</a>
+      </div>
+      {{ content.field_featured_legislation_commi }}
     </div>
-    {{ content.field_featured_legislation_commi }}
-  </div>
-
+  {% endif %}
   <div class="newsroom-content l-row">
     <dl class="l-tab-bar">
       <div class="c-tab--arrow u-mobile-only"></div>

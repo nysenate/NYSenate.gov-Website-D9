@@ -1,8 +1,41 @@
 @import "../../global/utils/init";
 
 /*----------------------------------------
-/ PRESS RELEASES
+/ Advanced Search
 /----------------------------------------*/
+.view-advanced-legislation-search {
+  
+  h1 {
+    text-transform: capitalize;
+    font-family: $font-serif-regular;
+    font-size: 32px;
+    width: 100%;
+    float: left;
+    margin-bottom: 20px;
+  }
+}
+
+.advanced-search-header {
+  border-top: 1px solid $color-alto;
+  clear: both;
+  padding-top: 1.1875rem;
+
+  h2 {
+    font-family: $font-serif-regular;
+    font-size: 26px;
+    font-weight: normal;
+    line-height: 1;
+    margin: 0 0 10px;
+  }
+
+  .ds-search-extra {
+    text-transform: uppercase;
+    color: $grey04;
+    font-size: 12px;
+    margin-bottom: 30px;
+    font-weight: bold;
+  }
+}
 
 .page-node-type-meeting {
   .c-block {
@@ -11,7 +44,6 @@
     }
   }
 }
-
 
 .c-block {
   &.c-block-press-release {

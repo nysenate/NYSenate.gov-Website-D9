@@ -1604,7 +1604,7 @@ display:
           admin_label: ''
           plugin_id: result
           empty: false
-          content: "<h1>Advanced Legislation Search</h1>\r\n<div class=\"advanced-search-header\">\r\n<h2>Search Results</h2>\r\n<div class='ds-search-extra'>YOUR SEARCH FOR GAVE BACK @total RESULT(S). </div>\r\n</div>"
+          content: "<h1>Advanced Legislation Search</h1>\r\n<div class=\"advanced-search-header\">\r\n<h2>Search Results</h2>\r\n<div class='ds-search-extra'>Your search gave back @total result(s). </div>\r\n</div>"
       footer: {  }
       display_extenders: {  }
     cache_metadata:
@@ -2992,48 +2992,11 @@ display:
         type: search_api
         options:
           view_modes:
-            'entity:block_content':
-              accordion: default
-              blocks: default
-              earth_day_letter: default
-              embed: default
-              featured_bill: default
-              featured_content: default
-              featured_image: default
-              featured_issue: default
-              featured_legislation: default
-              file_uploads: default
-              form: default
-              hero: default
-              honoree_profile_block: default
-              how_senate_works: default
-              inactive_senator_block: default
-              map: default
-              media: default
-              microsite_contact: default
-              microsite_contact_webform: default
-              microsite_district_block: default
-              microsite_hero: default
-              microsite_school_form_submission: default
-              promotional_banners_list: default
-              quick_facts: default
-              quote: default
-              senator_committees: default
-              senator_microsite_about_info: default
-              senator_microsite_menu: default
-              senator_microsite_school_forms: default
-              sincerely: default
-              slider: default
-              tabs: default
-              text: default
-              thankful_letter: default
-              video: default
-              views: default
             'entity:node':
               agenda: teaser
               article: default
               bill: teaser
-              calendar: teaser
+              event: default
               honoree: default
               in_the_news: teaser
               landing: default
@@ -3044,7 +3007,7 @@ display:
               resolution: default
               session: default
               student_program: default
-              transcript: teaser
+              transcript: search_teaser
               video: default
               webform: default
             'entity:taxonomy_term':

@@ -4,15 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_promotional_content
-    - node.type.article
-    - node.type.bill
-    - node.type.event
-    - node.type.honoree
-    - node.type.landing
-    - node.type.open_data
-    - node.type.petition
     - node.type.promotional_banner
-    - node.type.webform
 id: node.promotional_banner.field_promotional_content
 field_name: field_promotional_content
 entity_type: node
@@ -24,20 +16,10 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: views
   handler_settings:
-    target_bundles:
-      article: article
-      bill: bill
-      event: event
-      honoree: honoree
-      landing: landing
-      open_data: open_data
-      petition: petition
-      webform: webform
-    sort:
-      field: _none
-      direction: ASC
-    auto_create: false
-    auto_create_bundle: article
+    view:
+      view_name: featured_content_entref
+      display_name: pb_internal_links
+      arguments: {  }
 field_type: entity_reference

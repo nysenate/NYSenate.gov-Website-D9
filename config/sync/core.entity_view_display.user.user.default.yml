@@ -26,6 +26,7 @@ dependencies:
     - address
     - datetime
     - options
+    - svg_image
     - telephone
     - user
 id: user.user.default
@@ -99,13 +100,19 @@ content:
     weight: 10
     region: content
   field_profile_picture:
-    type: entity_reference_entity_view
+    type: image
     label: above
     settings:
-      view_mode: default
-      link: false
+      image_link: ''
+      image_style: ''
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
-    weight: 12
+    weight: 16
     region: content
   field_senator_inbox_access:
     type: entity_reference_label

@@ -123,10 +123,6 @@ class BillVoteWidgetForm extends FormBase {
       $default_value = $form_state->getValue('nys_bill_vote');
     }
 
-    if (!$this->currentUser->isAuthenticated()) {
-      return $form;
-    }
-
     // Add the distinct class.
     $form['#attributes'] = [
       'class' => [
@@ -314,7 +310,7 @@ class BillVoteWidgetForm extends FormBase {
           $newform['email_form'] = [
             '#type' => 'container',
             '#attributes' => ['class' => ['subscribe_email_container']],
-            'email_address_entry' => [
+            'email' => [
               '#type' => 'textfield',
               '#title' => t('Email Address'),
               '#name' => 'email',
@@ -333,6 +329,16 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
+
+    // Redirec to registration page for anonymous users.
+    if (!$this->currentUser->isAuthenticated()) {
+      $url = Url::fromRoute('user.register');
+      $command = new RedirectCommand($url->toString());
+      $response->addCommand($command);
+
+      return $response;
+    }
+
     $settings = $form_state->getBuildInfo();
     $triggering_element = $form_state->getTriggeringElement();
     $value = $triggering_element['#value'];
@@ -377,7 +383,7 @@ class BillVoteWidgetForm extends FormBase {
     $nid = (int) ($values['nid'] ?? 0);
 
     // If the user is logged in, revert to that email address.
-    if (!empty($user->mail)) {
+    if ($this->currentUser->isAuthenticated()) {
       /** @var \Drupal\user\UserInterface $user */
       $email_address = $user->getEmail();
     }

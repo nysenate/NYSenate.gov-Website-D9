@@ -29,7 +29,7 @@ class Chapters extends SqlBase {
       'nid',
       'title',
     ])
-      ->condition('type', $content_types, 'IN');
+      ->condition('bundle', $content_types, 'IN');
     $query->groupBy('n.nid');
     return $query;
   }

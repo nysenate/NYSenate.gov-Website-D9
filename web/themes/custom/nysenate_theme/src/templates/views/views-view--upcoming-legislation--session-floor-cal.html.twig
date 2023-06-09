@@ -39,7 +39,7 @@
 
 <article class="nysenate-accordion">
   <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content" aria-expanded="false" id="nysenate-accordion__toggle" aria-selected="false">
-    <span class="nysenate-accordion__heading">
+    <span class="nysenate-accordion__heading no-count">
       <span class="indicator"></span>Floor Calendar
     </span>
     {{ icons.get('accordion__arrow'|lower) }}
@@ -54,9 +54,6 @@
         'view-display-id-' ~ display_id,
         dom_id ? 'js-view-dom-id-' ~ dom_id,
         'container',
-        'l-row',
-        'l-row--main',
-        'l-main',
         'c-updates-container',
       ]
     %}

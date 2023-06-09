@@ -137,11 +137,8 @@ p.petition-small-text {
   margin-bottom: 20px;
 
   a {
-    @extend .lgt-bg;
-    color: $color-white !important;
-    text-transform: uppercase;
     font-size: 0.875rem;
-    padding: 0.5rem 1rem;
+    // padding: 0.5rem 1rem;
   }
 }
 
@@ -303,6 +300,61 @@ p {
 .c-block.c-detail--summary {
   @include breakpoint($bp-sm) {
     margin-bottom: 0;
+  }
+
+  .description {
+    margin-top: 0;
+    width: 90%;
+    font-size: 0.8rem;
+
+    @include breakpoint($bp-sm) {
+      margin-top: -30px;
+
+    }
+  }
+
+  & p.petition-small-text {
+    font-size: 12px;
+    margin-top: 30px;
+    float: left;
+    clear: left;
+  }
+
+  .c-btn--cta__sign {
+    float: left;
+    margin-top: 25px;
+
+    a {
+      display: block;
+      height: 100%;
+      width: 100%;
+      padding: 0 30px;
+
+      &:before {
+        content: "\70";
+        margin-right: 10px;
+        font-size: 28px;
+
+        @include breakpoint($bp-sm) {
+          font-size: 32px;
+
+        }
+      }
+
+      &::before {
+        font-family: $senate-icons;
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-right: 3px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    }
   }
 
   & p {

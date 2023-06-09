@@ -18,7 +18,11 @@ process:
   fid: fid
   uid: uid
   filename: filename
-  uri: uri
+  uri:
+    -
+      plugin: skip_on_empty
+      method: row
+      source: uri
   filemime: filemime
   filesize: filesize
   status: status

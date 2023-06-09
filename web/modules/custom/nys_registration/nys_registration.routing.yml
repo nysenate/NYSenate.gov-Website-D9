@@ -7,3 +7,22 @@ nys_registration.find_my_senator:
     _permission: 'access content'
   options:
     no_cache: 'TRUE'
+
+nys_registration.user.reset.login:
+  path: '/nys/user/reset/{uid}/{timestamp}/{hash}/login'
+  defaults:
+    _controller: '\Drupal\nys_registration\Controller\NysUserController::resetPassLogin'
+    _title: 'Reset password'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE
+
+nys_registration.password_reset:
+  path: '/reset-password'
+  defaults:
+    _title: 'Edit Profile'
+    _form: '\Drupal\nys_registration\Form\PasswordResetForm'
+  requirements:
+    _user_is_logged_in: 'TRUE'

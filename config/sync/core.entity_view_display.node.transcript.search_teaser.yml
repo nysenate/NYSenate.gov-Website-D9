@@ -1,8 +1,9 @@
-uuid: b4ae280e-c372-447c-b08b-0885bbe26b6c
+uuid: 04cb6250-6ee9-4b0c-9a87-061e123fe9d5
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.search_teaser
     - field.field.node.transcript.field_ol_committee
     - field.field.node.transcript.field_ol_committee_names
     - field.field.node.transcript.field_ol_filename
@@ -16,37 +17,14 @@ dependencies:
     - datetime
     - options
     - user
-id: node.transcript.default
+id: node.transcript.search_teaser
 targetEntityType: node
 bundle: transcript
-mode: default
+mode: search_teaser
 content:
-  field_ol_committee:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: false
-    third_party_settings: {  }
-    weight: 7
-    region: content
-  field_ol_committee_names:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 8
-    region: content
   field_ol_filename:
     type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 6
-    region: content
-  field_ol_location:
-    type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -59,14 +37,6 @@ content:
       timezone_override: ''
       format_type: html_datetime
     third_party_settings: {  }
-    weight: 2
-    region: content
-  field_ol_session_type:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
     weight: 1
     region: content
   field_ol_text:
@@ -74,21 +44,21 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 2
     region: content
   field_ol_transcript_type:
-    type: list_key
+    type: list_default
     label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  links:
     settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
 hidden:
+  field_ol_committee: true
+  field_ol_committee_names: true
+  field_ol_location: true
+  field_ol_session_type: true
   langcode: true
+  links: true
   private_message_link: true
   search_api_excerpt: true

@@ -2309,7 +2309,7 @@ display:
     display_plugin: block
     position: 2
     display_options:
-      title: 'Advanced Legislation Search - Agendas'
+      title: 'Advanced Legislation Search - Meetings'
       sorts:
         field_date_range:
           id: field_date_range
@@ -2398,7 +2398,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api_date
+          plugin_id: numeric_range
           default_action: default
           exception:
             value: all
@@ -2412,7 +2412,11 @@ display:
             fallback: all
             multiple: and
           default_argument_skip_url: false
-          summary_options: {  }
+          summary_options:
+            base_path: ''
+            count: true
+            override: false
+            items_per_page: 25
           summary:
             sort_order: asc
             number_of_records: 0
@@ -2423,7 +2427,7 @@ display:
             fail: 'not found'
           validate_options: {  }
           break_phrase: false
-          not: false
+          not: 0
       filters:
         status:
           id: status

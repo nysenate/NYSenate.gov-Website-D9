@@ -247,7 +247,7 @@ class AccumulatorEntry {
         case 'user:user':
           /** @var \Drupal\taxonomy\Entity\Term $district */
           $district = $entity->field_district->entity;
-          $senator = $district->field_senator->entity;
+          $senator = $district?->field_senator?->entity;
           break;
 
         case 'taxonomy_term:senator':

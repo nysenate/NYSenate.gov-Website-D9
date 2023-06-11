@@ -172,7 +172,7 @@ class AccumulatorEntry {
     // If the entity is not a senator or district, throw an exception.
     if (!(
       ($target instanceof ContentEntityBase)
-      || (in_array($this->getEntityKey($target), $require_entity))
+      && (in_array($this->getEntityKey($target), $require_entity))
     )) {
       throw new \InvalidArgumentException('Target must resolve to a taxonomy term (senator or district bundles)');
     }

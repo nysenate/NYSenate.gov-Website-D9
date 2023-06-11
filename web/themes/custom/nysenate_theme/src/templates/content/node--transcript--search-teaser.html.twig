@@ -1,0 +1,35 @@
+{{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
+
+{% set meeting_date = content.field_ol_publish_date['#items'].value|date('F j, Y') %}
+{% set transcript_type = content.field_ol_transcript_type['#items'].value %}
+
+{#
+  Sets Transcript Title
+#}
+{% if transcript_type == 'floor' %}
+  {% set transcript_title = 'Session Transcript' %}
+{% elseif transcript_type == 'public_hearing' %}
+  {% set transcript_title = 'Public Hearing ' %}
+  {#
+    Currently removed for displaying the transcript filename
+     ~ content.field_ol_filename['#items'].value
+    Add to end of above line
+  #}
+{% endif %}
+
+{% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
+  "article": {
+    "bill": true,
+    "is_full_width": true,
+    "is_dynamic_color": true,
+    "bill_title": {
+      "url": url,
+      "text": transcript_title
+    },
+    "topics": [
+      {
+        "name": meeting_date
+      }
+    ]
+  }
+} only %}

@@ -163,16 +163,17 @@ class AccumulatorEntry {
    *   bundle.  If NULL, the user's district will be used.
    */
   public function setTarget(?Term $target = NULL): self {
+    $require_entity = ['taxonomy_term:senator', 'taxonomy_term:districts'];
     // If NULL, get the user's district.  User must be populated already.
     if (is_null($target)) {
       $target = $this->getUser()->field_district->entity;
     }
 
     // If the entity is not a senator or district, throw an exception.
-    if (!(in_array(
-      $this->getEntityKey($target),
-      ['taxonomy_term:senator', 'taxonomy_term:districts']
-    ))) {
+    if (!(
+      ($target instanceof ContentEntityBase)
+      || (in_array($this->getEntityKey($target), $require_entity))
+    )) {
       throw new \InvalidArgumentException('Target must resolve to a taxonomy term (senator or district bundles)');
     }
 

@@ -35,9 +35,9 @@ class AccumulatorEntry {
    * the other facet will be discovered and populated.  This defaults to the
    * district/senator assigned to $this->user.
    *
-   * @var \Drupal\taxonomy\Entity\Term
+   * @var \Drupal\taxonomy\Entity\Term|null
    */
-  protected Term $target;
+  protected ?Term $target;
 
   /**
    * The message type.  Defaults to 'misc'.
@@ -103,8 +103,11 @@ class AccumulatorEntry {
   /**
    * Utility method to extract a "key" from an entity.
    */
-  protected function getEntityKey(ContentEntityBase $entity): string {
-    return $entity->getEntityTypeId() . ':' . $entity->bundle();
+  protected function getEntityKey(?ContentEntityBase $entity): string {
+    if ($entity instanceof ContentEntityBase) {
+      return $entity->getEntityTypeId() . ':' . $entity->bundle();
+    }
+    return '';
   }
 
   /**
@@ -169,12 +172,21 @@ class AccumulatorEntry {
       $target = $this->getUser()->field_district->entity;
     }
 
-    // If the entity is not a senator or district, throw an exception.
+    // If the entity is not a senator or district, report something traceable.
     if (!(
       ($target instanceof ContentEntityBase)
       && (in_array($this->getEntityKey($target), $require_entity))
     )) {
-      throw new \InvalidArgumentException('Target must resolve to a taxonomy term (senator or district bundles)');
+      $this->log->warning(
+        'Failed to resolve a valid target',
+        [
+          '@type' => $this->type,
+          '@action' => $this->action,
+          '@uid' => $this->getUser()->id(),
+          '@info' => $this->info,
+        ]
+      );
+      $target = NULL;
     }
 
     // Set the target and return.
@@ -215,43 +227,47 @@ class AccumulatorEntry {
   /**
    * Discovers the district and shortname, given a user, senator, or district.
    *
-   * @param \Drupal\Core\Entity\ContentEntityBase $entity
+   * @param \Drupal\Core\Entity\ContentEntityBase|null $entity
    *   An entity with field_district.
    *
    * @return array
    *   An array with two keys: district and shortname.  Values will be zero and
    *   empty string, respectively, if $entity does not resolve to as expected.
+   *   Shortname will be "NONE_LOADED" if a senator cannot be identified from
+   *   an otherwise valid entity.
    */
-  protected function resolveDistrictInfo(ContentEntityBase $entity): array {
+  protected function resolveDistrictInfo(?ContentEntityBase $entity): array {
     // Default return.
     $ret = ['district' => 0, 'shortname' => ''];
 
     // Detect the entity type.  If it is unexpected, report.
-    switch ($key = $this->getEntityKey($entity)) {
-      case 'user:user':
-        /** @var \Drupal\taxonomy\Entity\Term $district */
-        $district = $entity->field_district->entity;
-        $senator = $district->field_senator->entity;
-        break;
+    $senator = $district = NULL;
+    if ($entity) {
+      switch ($key = $this->getEntityKey($entity)) {
+        case 'user:user':
+          /** @var \Drupal\taxonomy\Entity\Term $district */
+          $district = $entity->field_district->entity;
+          $senator = $district->field_senator->entity;
+          break;
 
-      case 'taxonomy_term:senator':
-        /** @var \Drupal\taxonomy\Entity\Term $entity */
-        $district = $this->helper->loadDistrict($entity);
-        $senator = $entity;
-        break;
+        case 'taxonomy_term:senator':
+          /** @var \Drupal\taxonomy\Entity\Term $entity */
+          $district = $this->helper->loadDistrict($entity);
+          $senator = $entity;
+          break;
 
-      case 'taxonomy_term:districts':
-        $district = $entity;
-        $senator = $entity->field_senator->entity;
-        break;
+        case 'taxonomy_term:districts':
+          $district = $entity;
+          $senator = $entity->field_senator->entity;
+          break;
 
-      default:
-        $this->log->error(
-          "Invalid entity (@key), could not resolve district/shortname",
-          ['@key' => $key]
-        );
-        $senator = $district = NULL;
-        break;
+        default:
+          $this->log->error(
+            "Invalid entity (@key), could not resolve district/shortname",
+            ['@key' => $key]
+          );
+          break;
+      }
     }
 
     if ($senator && $district) {

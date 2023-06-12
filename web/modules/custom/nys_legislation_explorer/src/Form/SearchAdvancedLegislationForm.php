@@ -194,7 +194,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     else {
       $form['advanced_search']['advanced_search_title'] = [
         '#type' => 'item',
-        '#markup' => $this->t('Advanced Legislation Search'),
+        '#markup' => $this->t('<h1>Advanced Legislation Search</h1>'),
       ];
     }
     $args = $this->requestStack->getCurrentRequest()->query->all();

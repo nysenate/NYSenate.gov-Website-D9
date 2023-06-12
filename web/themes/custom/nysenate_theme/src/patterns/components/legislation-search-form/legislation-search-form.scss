@@ -10,6 +10,18 @@
     column-gap: 20px;
   }
 
+  .js-form-item-advanced-search-title {
+    grid-column: span 2;
+    
+    h1 {
+      text-transform: capitalize;
+      font-family: $font-serif-regular;
+      font-size: 32px;
+      width: 100%;
+      float: left;
+    }
+  }
+
   .nys-title,
   .form-item-type,
   .form-item-full-text,
@@ -151,8 +163,9 @@
     line-height: 32px;
     grid-column: span 2;
     color: $grey03;
-    padding-bottom: 1.26rem;
+    padding: 1.26rem 0;
     border-bottom: solid 1px $color-alto;
+    border-top: solid 1px $color-alto;
   }
 }
 

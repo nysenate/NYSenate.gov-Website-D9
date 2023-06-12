@@ -23,7 +23,6 @@
       @include breakpoint($bp-sm) {
         flex-direction: row;
         column-gap: 20px;
-        padding: 60px 30px;
       }
 
       &::after {
@@ -38,15 +37,7 @@
     }
   }
 
-  .c-press-release--topic {
-    text-transform: uppercase;
-    font-family: $font-sans-bold;
-    font-size: 10px;
-    line-height: 1em;
-    letter-spacing: 0.05em;
-    color: $gen_blue_lgt;
-  }
-
+  .c-press-release--topic,
   .c-featured-story-issue-tag a {
     text-transform: uppercase;
     font-family: $font-sans-bold;
@@ -255,6 +246,7 @@
 
   .c-bill-descript {
     color: $grey04;
+    margin-bottom: 15px;
   }
 }
 
@@ -288,6 +280,15 @@
 
       &.c-block-press-release {
         padding: 20px 0 35px;
+
+        .c-press-release--topic {
+          text-transform: uppercase;
+          font-family: $font-sans-bold;
+          font-size: 10px;
+          line-height: 1em;
+          letter-spacing: 0.05em;
+          color: $gen_blue_lgt;
+        }
       }
     }
   }
